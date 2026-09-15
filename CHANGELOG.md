@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Migration
 
+- Replace FAB speed-dial wrappers `.fab` and `.fixed-action-btn` with
+  `.fab-menu` and labelled actions. Remove `direction`, `hoverEnabled`,
+  `toolbarEnabled` and their markup switches. Use a toolbar for persistent
+  commands instead of FAB-to-toolbar expansion. Standalone FAB sizes and
+  extended variants are unchanged.
+
 - Replace banners with native inline messages for persistent nonblocking issues,
   snackbars for temporary feedback, or dialogs for blocking decisions.
   Remove banner classes, tokens and custom Sass imports. The existing
@@ -28,6 +34,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Removed component URLs redirect to their replacement documentation.
 
 ### Removed
+
+- FAB speed-dial styling, hover/directional layouts, toolbar expansion, and
+  legacy AutoInit selectors. The `FloatingActionButton` API now serves FAB menus.
 
 - Banner Sass, component semantics, generated component guides and variant tests.
 

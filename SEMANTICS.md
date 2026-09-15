@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**4 of 46 components declare conformance debt.**
+**3 of 46 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -131,19 +131,13 @@ Material 3 Expressive button groups support action buttons and opt-in toggle-but
 
 ### buttons
 
-Swept 0.8.0. The FAB and its speed dial live in this partial, so its withheld role is recorded here: FloatingActionButton used to set role="menu" on the action list and aria-haspopup="menu" on the trigger, and there is no arrow-key model behind either. The FAB menu withholds the same role from its own host, one row over.
-
-**Conformance debt:** `menu` is withheld pending keyboard model, and `fab-not-a-composite-widget` enforces that, keeping every composite role out.
+Icon-only controls need accessible names.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `icon-only-control-is-named` | require-accessible-name | `:is(a, button):has([aria-hidden="true"])` | must end up with an accessible name |
-| `fab-not-a-composite-widget` | forbid-composite-roles | `:is(.fab,.fixed-action-btn)` | must not match with any composite role |
-| `fab-expanded-is-not-authored` | forbid | `:is(.fab, .fixed-action-btn) [aria-expanded]` | must not match |
 
 - **icon-only-control-is-named** - Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
-- **fab-not-a-composite-widget** - The FAB's actions are reached with Tab, not arrow keys, so the list takes no composite role.
-- **fab-expanded-is-not-authored** - Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten.
 
 ### cards
 
@@ -289,7 +283,7 @@ Added 0.8.0. The compact article opens a named native dialog; its media and back
 
 ### fab-menu
 
-A FAB that expands into a list of labelled actions. It looks like a menu and is not one: its items are reached with Tab, so the role is withheld rather than declared. The `.fab` speed dial is the same script and withholds it under `buttons`, which owns the partial it is styled in.
+A FAB that expands into labelled actions reached with Tab. The runtime owns expanded state and makes closed actions inert; no composite menu role is promised.
 
 **Conformance debt:** `menu` is withheld pending keyboard model, and `fab-menu-not-a-composite-widget` enforces that, keeping every composite role out.
 
@@ -669,7 +663,7 @@ Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the cont
 
 ### toolbar
 
-Swept 0.8.0. A toolbar holds commands, not destinations. The role rule is written without an exception, so it also covers div.fixed-action-btn.toolbar, which $_toolbar excludes: a withheld role is withheld everywhere, and the FAB transition has no more claim to it.
+A toolbar holds commands, not destinations. It does not implement composite arrow-key navigation.
 
 **Conformance debt:** `toolbar` is withheld pending keyboard model, and `toolbar-not-a-composite-widget` enforces that, keeping every composite role out.
 

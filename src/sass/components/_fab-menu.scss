@@ -4,13 +4,6 @@
 // into a close button while it is open. `.fab-menu` is the host; `.active`
 // and `aria-expanded` are the framework's, never the author's.
 //
-// It shares the FloatingActionButton class with the `.fab` speed dial next
-// door and nothing else. The two never collide: `$_fab` is
-// `:is(.fab, .fixed-action-btn)`, and a class selector matches whole class
-// names, so `.fab` does not reach `.fab-menu`. The one name that looks shared
-// is `--md-comp-fab-menu-gap`, which is the speed dial's own gap token and is
-// deliberately not one of the names below.
-//
 // Tokens (M3 md.comp.fab-menu.*, DSP 34.0.21):
 //
 //   close-button   56x56, icon 20dp, corner.full, elevation 3, 8dp above list
@@ -82,6 +75,8 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
     margin: 0;
     padding: 0;
     list-style: none;
+    width: max-content;
+    max-inline-size: calc(100vw - 2 * var(--md-comp-fab-menu-offset));
     visibility: hidden;
     transition: visibility 0s var(--md-comp-fab-menu-duration);
 
@@ -95,18 +90,25 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
     li:nth-last-child(5) { --i: 4; }
     li:nth-last-child(6) { --i: 5; }
 
+    > li {
+      max-inline-size: 100%;
+    }
+
     > li > :is(a, button) {
       display: inline-flex;
       align-items: center;
       gap: var(--md-comp-fab-menu-menu-item-icon-label-space);
-      height: var(--md-comp-fab-menu-menu-item-container-height);
+      min-height: var(--md-comp-fab-menu-menu-item-container-height);
+      max-inline-size: 100%;
       padding-inline: var(--md-comp-fab-menu-menu-item-leading-space)
         var(--md-comp-fab-menu-menu-item-trailing-space);
       border: none;
       border-radius: 9999px;
       color: var(--md-comp-fab-menu-menu-item-label-text-color);
       background-color: var(--md-comp-fab-menu-menu-item-container-color);
-      white-space: nowrap;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      text-align: start;
       text-decoration: none;
       cursor: pointer;
       appearance: none;

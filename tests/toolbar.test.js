@@ -10,10 +10,6 @@ const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url),
 
 const rules = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)];
 
-// The host stopped being an element when a toolbar stopped claiming to be a
-// <nav>: it is `:is(nav.toolbar, .toolbar:not(.fixed-action-btn))` now. These
-// assert what the selector has to reach and has to miss, not how it is
-// spelled - a literal-text regex broke the moment the host was widened.
 const ruleWith = (...needles) =>
   rules.find((m) => needles.every((n) => m[1].includes(n)));
 
@@ -78,7 +74,7 @@ describe('Toolbar CSS', () => {
     // Not [vibrant]: that attribute is the emphasis foundation, whose ramp is
     // tertiary. Matching it here would render one variant two ways.
     assert.doesNotMatch(rule[1], /\[vibrant\]/, 'the attribute belongs to the foundation');
-    assert.doesNotMatch(rule[1], /\.fixed-action-btn(?!\))/, 'must miss the FAB transition');
+    assert.doesNotMatch(rule[1], /\.fixed-action-btn|\.fab\b/, 'contains removed speed-dial exclusions');
   });
 
   test('the companion FAB takes md.comp.toolbar.floating.fab colors', () => {

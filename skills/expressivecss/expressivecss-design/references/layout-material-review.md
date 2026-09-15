@@ -68,11 +68,11 @@ Reviewed sections: Overview; Specs; Guidelines; Accessibility.
 
 Requirements: Use one primary, non-destructive action. Current guidance replaces the small FAB, baseline extended FAB, surface-colored FABs and speed dials. The linked FAB guide maps each replacement to retained and current framework variants. Extended FABs have visible labels; FAB menus contain two to six labelled actions and must not hide focused controls.
 
-Framework comparison: The source includes sizes, extended FABs, .fab-menu and a legacy speed dial. Hover can reveal actions while runtime expanded state remains false. Keyboard closing does not restore focus from a hidden action.
+Framework comparison: The source includes standalone sizes, extended FABs and .fab-menu. Speed dials have been removed. The runtime owns click state, inert closed actions and focus recovery.
 
-Feature gap: Hover can reveal actions without runtime expanded state; Escape closing can leave focus on a hidden child. Next check: Reproduce hover and keyboard paths in a browser, unify expanded-state ownership and restore focus when hiding an active child.
+Verification gap: Full visual parity and spoken assistive-technology output remain unverified. Next check: Review rendered variants and spoken labels before claiming full parity.
 
-No browser check is directly mapped. Source and unit tests do not substitute for the concrete rendered check above.
+Mapped browser scope: Click state, hover inactivity, Tab, Escape, action activation, outside focus, reinitialization, reduced motion and narrow layout.
 
 ## [Panes](../../components/panes.md)
 

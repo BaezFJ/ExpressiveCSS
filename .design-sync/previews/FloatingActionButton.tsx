@@ -1,13 +1,3 @@
-// Floating action button. The FAB is a button with `button extra circle`
-// (56dp, primary-container, elevation 3); `small` is the 40dp size. Colors come
-// from the role utilities.
-//
-// `.fixed-action-btn` is the fixed-position host that pins a FAB to the viewport
-// corner and reveals a speed dial on hover — deliberately not used here, since
-// `position: fixed` escapes a preview card and the hover reveal is not static.
-//
-// NOTE: llm.md documents `.btn-floating` for this component. That class exists
-// nowhere in the stylesheet or the TypeScript — use `button extra circle`.
 const Row = ({ children }: { children: React.ReactNode }) => (
   <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>{children}</div>
 );

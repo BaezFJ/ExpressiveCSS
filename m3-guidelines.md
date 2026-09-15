@@ -566,7 +566,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 ## 5.3 Floating action button
 
-**M3:** FAB, small FAB, large FAB, extended FAB, FAB menu. **ExpressiveCSS:** `circle extra` (56 dp FAB), `extra circle small` (40 dp small FAB), `extra circle medium` (80 dp medium FAB), `extra circle large` (96 dp large FAB), `extend` (extended), and its sizes `extend small` / `extend medium` / `extend large`. FAB menu: `fab-menu`. Colour roles: `secondary-container`, `tertiary-container`. Speed-dial: wrap in `.fab`. `AutoInit()`.
+**M3:** FAB, small FAB, large FAB, extended FAB, FAB menu. **ExpressiveCSS:** `circle extra` (56 dp FAB), `extra circle small` (40 dp small FAB), `extra circle medium` (80 dp medium FAB), `extra circle large` (96 dp large FAB), `extend` (extended), and its sizes `extend small` / `extend medium` / `extend large`. FAB menu: `fab-menu`. Colour roles: `secondary-container`, `tertiary-container`. Use `AutoInit()` for FAB menus. Legacy speed dials have been removed.
 
 **Use when** there is **one** positive, primary action for the screen: Create, Compose, Add. Not every screen needs a FAB.
 
@@ -585,15 +585,14 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 | Medium extended FAB | `extend medium` | 80 dp, `title-large` label: the extended FAB on a large window |
 | Large extended FAB | `extend large` | 96 dp, `headline-small` label: the action *is* the screen's purpose, and needs its name |
 | FAB menu | `fab-menu` + `<ul>` of labelled pills | Three to six related actions that each need a name. The FAB morphs into the close button while it is open |
-| Speed-dial | `.fab` + `<ul>` of smaller FABs | Related shortcuts whose icons speak for themselves. The older, unlabelled form; prefer the FAB menu when the actions need names |
 
-**Anatomy.** Container + icon (required). Extended: icon + label. Speed-dial: primary FAB + list of related FABs. FAB menu: primary FAB (the close button once open) + list of pills, each an icon and a label in its own `<span>`.
+**Anatomy.** Container + icon (required). Extended: icon + label. FAB menu: primary FAB (the close button once open) + list of pills, each an icon and a label in its own `<span>`.
 
 **Placement.** Trailing lower corner, 16 dp from the edge on compact, 24 dp on larger windows. Above a navigation bar, never on it. May sit beside a floating toolbar. Offset a snackbar so they do not overlap.
 
 **Adaptive.** Compact: icon FAB. Expanded+: prefer **extended FAB**. Only one FAB per screen. A rail may host the FAB at the top of the rail instead of over the content.
 
-**Behavior.** `.fab` opens on hover when the pointer can hover; add `click-to-toggle` otherwise. `fab-menu` is always click, and closes on Escape, on an outside click, or on picking an action. Both are the same `FloatingActionButton` instance, which owns the expanded state — `active` and `aria-expanded` are never authored. Neither takes `role="menu"`: the actions are reached with Tab, not the arrow keys. Motion is CSS.
+**Behavior.** `fab-menu` opens on click and closes on Escape, outside click or action activation. `FloatingActionButton` owns expanded state and inert closed actions. Closing returns focus only when a focused action would be hidden. Actions use Tab navigation, not composite menu roles. Motion is CSS.
 
 **Don't**
 
@@ -605,7 +604,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 ## 5.4 Toolbars
 
-**M3:** Toolbars (docked / floating), M3 Expressive replacement for the retired bottom app bar. **ExpressiveCSS:** `div.toolbar`. CSS-only, and not a `<nav>` — a toolbar holds commands, not destinations. Not `div.fab.toolbar` either (that is the FAB-to-toolbar transition).
+**M3:** Toolbars (docked / floating), M3 Expressive replacement for the retired bottom app bar. **ExpressiveCSS:** `div.toolbar`. CSS-only, and not a `<nav>` — a toolbar holds commands, not destinations. The legacy FAB-to-toolbar transition has been removed.
 
 **Use when** the page has a **cluster of frequent actions** that apply to the current content (formatting, selection actions, playback).
 
@@ -1189,7 +1188,7 @@ These exist in ExpressiveCSS. Do not use them as if they were M3 building blocks
 | --- | --- | --- |
 | Lightbox (`.lightboxed`) | Media overlay (renamed from Materialbox) | A dialog, a gallery carousel, or a side sheet |
 | Media slider | Crossfading captions | An M3 carousel |
-| FAB-to-toolbar | `.fab.toolbar` morph | An M3 toolbar (`div.toolbar`) |
+| Removed FAB-to-toolbar | No current implementation | An M3 toolbar (`div.toolbar`) |
 
 ---
 
@@ -1199,7 +1198,7 @@ Do not invent markup for these. If the user needs the pattern, say it is not ava
 
 | M3 component | Substitute in ExpressiveCSS |
 | --- | --- |
-| FAB menu (M3 Expressive labelled menu) | `.fab` speed-dial, or a FAB that opens a `<menu>`. |
+| FAB menu (M3 Expressive labelled menu) | Use the current `.fab-menu` pattern with labelled actions. |
 
 ---
 
@@ -1264,7 +1263,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Button | `button` or `a.button` | Label (or `aria-label` if `circle`) | `disabled` |
 | Icon button | `button.icon-button` | Icon + `aria-label` | — |
 | FAB | `button.circle.extra` | Icon + `aria-label` | — |
-| FAB speed-dial | `.fab` | Primary FAB + `ul` of FABs | — |
+| FAB menu | `.fab-menu` | Primary FAB + `ul` of labelled actions | `FloatingActionButton` |
 | Split button | `div.split-button` | Leading button + `.menu-trigger[data-target]` + `menu#id` | `aria-expanded` (framework) |
 | Toolbar | `div.toolbar` | Action buttons | `.active` |
 | Card | `article` | Anything; heading + body typical; optional direct `.primary-action` link | `.dragged`; `aria-disabled` on primary action |
@@ -1302,7 +1301,7 @@ If training data or the user says the left column, emit the right.
 | “bottom navigation” as `.tabs` | `nav.navigation-bar` |
 | “navigation drawer” | `.navigation-rail.expanded`; split trees into peer categories and page lists |
 | `.btn`, `.btn-large`, `.btn-flat` | `<button>`, `large` / `extra`, `text` |
-| `.btn-floating` | `circle extra` / `.fab` |
+| `.btn-floating` | `circle extra` / `.fab-menu` |
 | `.card`, `.card-content`, `.card-title`, `.card-action` | `<article>`, heading, `<p>`, `.actions` |
 | `.collection` | `ul.list` |
 | `.modal`, `.modal-header`, `.modal-footer` | `<dialog>`, heading, `form method="dialog"` |

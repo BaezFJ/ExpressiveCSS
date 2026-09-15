@@ -20,7 +20,7 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | [Icon buttons](../components/icon-buttons.md) | Compact actions with recognizable icons. | An unfamiliar action needs a visible button label. | `buttons`, `tooltips` | css-only |
 | [Button groups](../components/button-groups.md) | Cluster commands or aria-pressed toggle buttons. | Submitted values need segmented or other native inputs. | `split-button`, `radio-buttons` | auto-init |
 | [Split button](../components/split-button.md) | Default action plus related menu actions. | Equal actions need a group; values need inputs. | `button-groups`, `menu` | auto-init |
-| [Floating action button](../components/fab.md) | A circular action that can open a menu of related shortcuts. | The action is not the single highest-priority screen action. | `buttons`, `toolbars` | auto-init |
+| [Floating action button](../components/fab.md) | One primary action or a FAB menu of related labelled actions.; Replace removed speed dials with fab-menu and labelled actions. | The action is not the single highest-priority screen action. | `buttons`, `toolbars` | auto-init |
 | [Cards](../components/cards.md) | Distinct items with their own content or actions. | Dense comparable rows need a list. | `lists`, `carousel`, `badges` | auto-init |
 | [Lists](../components/lists.md) | Scan repeated rows of text and images. | Rich independent items need cards. | `cards`, `carousel`, `panes` | css-only |
 | [Dialogs](../components/dialogs.md) | Focused prompts or decisions that interrupt the flow. | Ignorable feedback needs snackbar or inline feedback. | `snackbar`, `bottom-sheet`, `side-sheet`, `floating-sheet` | shared-runtime |

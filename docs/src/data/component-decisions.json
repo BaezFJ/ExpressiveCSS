@@ -912,10 +912,7 @@
         "semantics": [
           "buttons"
         ],
-        "excludeRules": [
-          "fab-not-a-composite-widget",
-          "fab-expanded-is-not-authored"
-        ]
+        "excludeRules": []
       },
       "jobs": [
         "Material Design 3 common buttons, icon buttons, and FABs — from the HTML."
@@ -1329,6 +1326,7 @@
       "title": "Floating action button",
       "aliases": [
         "fab",
+        "fab menu",
         "speed dial"
       ],
       "guideSource": {
@@ -1341,10 +1339,11 @@
         ]
       },
       "jobs": [
-        "A circular action that can open a menu of related shortcuts."
+        "One primary action or a FAB menu of related labelled actions."
       ],
       "useWhen": [
-        "A circular action that can open a menu of related shortcuts."
+        "One primary action or a FAB menu of related labelled actions.",
+        "Replace removed speed dials with fab-menu and labelled actions."
       ],
       "avoidWhen": [
         "The action is not the single highest-priority screen action."
@@ -1372,7 +1371,7 @@
           "documentedSupport": "FAB sizes, extended FABs, and menus of related actions.",
           "webAdaptation": "Floating action behavior uses the documented FAB runtime.",
           "limitations": [
-            "Hover can reveal actions without runtime expanded state; Escape closing can leave focus on a hidden child."
+            "Full visual parity and spoken assistive-technology output remain unverified."
           ]
         },
         "relationship": "component",
@@ -1410,7 +1409,7 @@
         ],
         "specHref": "https://m3.material.io/components/floating-action-button/specs",
         "guidelinesHref": "https://m3.material.io/components/floating-action-button/guidelines",
-        "reason": "Google no longer recommends small FABs, baseline extended FABs or surface-colored FABs. Use a current FAB size, extend small for the current small extended FAB, and supported primary/secondary/tertiary container roles. circle extra small is the retained 40dp FAB; sizeless extend is baseline. The small extended FAB remains recommended. Use fab-menu instead of fab speed dials or stacked small FABs. These are design replacements, not removed APIs."
+        "reason": "Google no longer recommends small FABs, baseline extended FABs or surface-colored FABs. Use a current FAB size, extend small for the current small extended FAB, and supported primary/secondary/tertiary container roles. circle extra small is the retained 40dp FAB; sizeless extend is baseline. The small extended FAB remains recommended. Use fab-menu instead of fab speed dials or stacked small FABs. Speed-dial APIs are removed; size and color variants remain for a separate migration."
       },
       "capabilityReview": {
         "reviewedOn": "2026-09-13",
@@ -1431,15 +1430,21 @@
         ],
         "gaps": [
           {
-            "kind": "feature",
-            "description": "Hover can reveal actions without runtime expanded state; Escape closing can leave focus on a hidden child.",
-            "nextStep": "Reproduce hover and keyboard paths in a browser, unify expanded-state ownership and restore focus when hiding an active child."
+            "kind": "verification",
+            "description": "Full visual parity and spoken assistive-technology output remain unverified.",
+            "nextStep": "Review rendered variants and spoken labels before claiming full parity."
           }
         ],
-        "browserChecks": [],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-lifecycle-browser.test.js",
+            "name": "FAB menu preserves keyboard, dismissal and responsive behavior",
+            "scope": "Click state, hover inactivity, Tab, Escape, action activation, outside focus, reinitialization, reduced motion and narrow layout."
+          }
+        ],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
       },
-      "selectionExample": "The syntax below is a retained speed-dial example, not the default for new designs. Use the documented fab-menu variant for labelled actions and verify focus when it closes."
+      "selectionExample": "Speed dials have been removed. Replace legacy fab or fixed-action-btn wrappers with fab-menu and labelled actions; use a toolbar for persistent commands."
     },
     {
       "slug": "cards",
@@ -4341,7 +4346,7 @@
       },
       {
         "path": "src/sass/components/_buttons.scss",
-        "sha256": "cc0b3dd320002682c9b2cbe9e2192dd0af124047fd7ced7811456fecfc9b689a"
+        "sha256": "3f431f5d18034d6700fa4cfc19142883a6bc5218b9930227f457147f8e83ca8a"
       },
       {
         "path": "src/sass/components/_cards.scss",
@@ -4377,7 +4382,7 @@
       },
       {
         "path": "src/sass/components/_fab-menu.scss",
-        "sha256": "f1d7b579ea34271824a0fdc75d209d00830a1beb352ddbbd670d31bebf5548d0"
+        "sha256": "e40c4871f38141ec874e1acf48db87727e433b3ec9c7cae6b51712306c9ec2b3"
       },
       {
         "path": "src/sass/components/_floating-sheet.scss",
@@ -4477,7 +4482,7 @@
       },
       {
         "path": "src/sass/components/_toolbar.scss",
-        "sha256": "8fb21bf9336332897e0b4290b80b7ea31a523410a7db893ab7b49cd8abee005b"
+        "sha256": "f4e91a095401ebd35ab97ecf7e8bb63c980b0a66be88b7d84e944bd17fba7d3a"
       },
       {
         "path": "src/sass/components/_tooltip.scss",
@@ -4617,7 +4622,7 @@
       },
       {
         "path": "src/ts/components/buttons.ts",
-        "sha256": "8f693be33245b1984742a4f51272c4f39927f4a75c735583583f530ace701940"
+        "sha256": "c7eea0b21aff031b74d2dbfa0d6dcdd278707b459cc01aa8dc18e18ad8798f61"
       },
       {
         "path": "src/ts/components/cards.ts",
@@ -4661,7 +4666,7 @@
       },
       {
         "path": "src/ts/components/registry.ts",
-        "sha256": "6afe610acbab9447cf6b135e50de7d8278fbe51781baaa4df0ca20f2ff564794"
+        "sha256": "7009af5bbf63275b5f6f90295e74178caf84b6a798096ba5ad9118025bb734c9"
       },
       {
         "path": "src/ts/components/scrollspy.ts",
@@ -4713,7 +4718,7 @@
       },
       {
         "path": "src/ts/README.md",
-        "sha256": "5ec08252ee6611d1ae8b68707ce9b446c74f3d72c8381a54d866af3a73b8ebc2"
+        "sha256": "9adbfcc3a6356a64faea7061e4dcab08625b5a4fe21f4a70fc85193186dd2803"
       },
       {
         "path": "tests/app-bar-js.test.js",
@@ -4725,7 +4730,7 @@
       },
       {
         "path": "tests/autoinit.test.js",
-        "sha256": "c12496ba880304582d7da20fab7fab7e0aa400b705e53a43be67f6b12ccd1e18"
+        "sha256": "8ad7af9f497ce4cd720781537aad0656487de45bfb074d4aa9ab3de8a62e0c30"
       },
       {
         "path": "tests/badges.test.js",
@@ -4789,7 +4794,7 @@
       },
       {
         "path": "tests/components.test.js",
-        "sha256": "ba72a0751ce68f7ad7f87e5e8145db5ca1fd2a479784123b81e1a1db21323b1a"
+        "sha256": "9e6ec7d51fa5edce03401f833b29f2d99ff485df7fa55b81ea9f372b243346b0"
       },
       {
         "path": "tests/container-validation.test.js",
@@ -4873,7 +4878,7 @@
       },
       {
         "path": "tests/expressivecss-lifecycle-browser.test.js",
-        "sha256": "830b9507d96a9834eabb887e1160663aad5ead1ccbfe42db8bc1b51e8746a2d3"
+        "sha256": "46bdce94e18e7770c3db7cac5ab18a1e3870797154f600cf27fd8f6bfb0e0d8f"
       },
       {
         "path": "tests/expressivecss-material-quality.test.js",
@@ -4989,7 +4994,7 @@
       },
       {
         "path": "tests/fixtures.js",
-        "sha256": "2ff9d1433a479a769b222eef17d43508498d61bb75e7662127d8ed5a2dafd5bf"
+        "sha256": "ceaa2e4471aacef119548bb230b3d26c5e3aa4c836852b9cd68bee09cbf2ea48"
       },
       {
         "path": "tests/floating-sheet.test.js",
@@ -5033,7 +5038,7 @@
       },
       {
         "path": "tests/m3-naming.test.js",
-        "sha256": "7928a6811497961ced14b74538c7c82f739ef2a5f3b9f5a3d17a2c017f3018f4"
+        "sha256": "bcdd7cd12dd41a51a6d30f02fabe2bff8f68efb916694c3ee38d4a1bc10d6079"
       },
       {
         "path": "tests/m3-reference-ramps.js",
@@ -5073,7 +5078,7 @@
       },
       {
         "path": "tests/regressions.test.js",
-        "sha256": "e0169abe5005fc8cc8a82cd10afdbc7104b64b317d2251bf24807b4e068a2019"
+        "sha256": "e14aa20ee19483d40b717b32f8a54b14615e3473e4a73c6f5429dcbe48e1319e"
       },
       {
         "path": "tests/release.test.js",
@@ -5121,7 +5126,7 @@
       },
       {
         "path": "tests/teardown.test.js",
-        "sha256": "f1730c87c1861e149f88f89b9973a8a2351f09d39dc6d7e40fa54e24eb185259"
+        "sha256": "13856c2295de29534a3ff8b9149a1ee1cc835cae9e3200ae99b630d8e777bc14"
       },
       {
         "path": "tests/tokens.test.js",
@@ -5129,7 +5134,7 @@
       },
       {
         "path": "tests/toolbar.test.js",
-        "sha256": "ed4ea138464cc38af0402ef70a3edbf71fa2471c404ce44446c7ca6e5d246823"
+        "sha256": "a637f582241363015fe8bec63247bc405fae48733775155d4d9b9fe2f9d47cb9"
       },
       {
         "path": "tests/typography.test.js",
@@ -5141,19 +5146,19 @@
       },
       {
         "path": "dist/css/expressive.css",
-        "sha256": "b2862973ffa8ca94082274daa67d4bd05acb3fdb1fb4ce845fd9bdde54c1529d"
+        "sha256": "933f8fa80856ec510740dcc0c8156077c473d3951fabc0fe49e13e2d50b61995"
       },
       {
         "path": "dist/css/expressive.css.map",
-        "sha256": "7a56ba600af830279fbf2d04167f6d15893b7304419c07ffaa3a63736e432878"
+        "sha256": "d26844057f383b5b728114a9bcd3cdc37d0bd8d34082e744d044886e6beed4ef"
       },
       {
         "path": "dist/css/expressive.min.css",
-        "sha256": "4a031579192707ebc3e08ac6dff12fcef91bd536eb00b2a402340b7e5a461bbc"
+        "sha256": "38a34b2f44cb36ea74167ca3ce12012ccf0eff43c81c6954b86d9424bc0d7cea"
       },
       {
         "path": "dist/css/expressive.min.css.map",
-        "sha256": "c333de519b16192ab24bef09290e9610abe70a348fdc19e2a3e7951bfecaf265"
+        "sha256": "637172a41eca5806c1aa9f046142a255b34f7396bed75167a6229b97cfce0672"
       },
       {
         "path": "dist/fonts/LICENSE-material-symbols",
@@ -5210,14 +5215,6 @@
       {
         "path": "dist/js/chunks/chunk-4LHO4FIV.mjs.map",
         "sha256": "bf4825432e2dcc8cea2b05a7acb0f5f58dc0fdb2efd49c8aae476599eb706a98"
-      },
-      {
-        "path": "dist/js/chunks/chunk-5MP7TWN6.mjs",
-        "sha256": "6e47ff006071b4ee804dc3923e1ff2e63384554e89432d55398dcc3155af7283"
-      },
-      {
-        "path": "dist/js/chunks/chunk-5MP7TWN6.mjs.map",
-        "sha256": "69b695ac6cf834f54aec543dc1dca29f8f3abdc0b27722c75d5e696f0edfea3a"
       },
       {
         "path": "dist/js/chunks/chunk-7BFWSEBI.mjs",
@@ -5356,6 +5353,14 @@
         "sha256": "d32e8c1ad573c7b829687ec8ce04a2cacd57bbb681a822ff3df451b7b3ad07a0"
       },
       {
+        "path": "dist/js/chunks/chunk-QYOOISGA.mjs",
+        "sha256": "3b0d57811fc6c3b4eac2cbf2b86854744b4124dfc77596326e3c1484f1505bd6"
+      },
+      {
+        "path": "dist/js/chunks/chunk-QYOOISGA.mjs.map",
+        "sha256": "0116d4f83e57548b7ba51ef4aa7fe3976e484e58c1811f2e612babbaf0cd2f57"
+      },
+      {
         "path": "dist/js/chunks/chunk-S6OIYWZP.mjs",
         "sha256": "ba02005038a3786585c86363d6a6b6e28310f13b158d2c5d7d11ee6c9dd92579"
       },
@@ -5364,12 +5369,12 @@
         "sha256": "23fd296f688f4f372eed392584d088d1c205c9a3f14b191b6ca0d85acfb021f4"
       },
       {
-        "path": "dist/js/chunks/chunk-TGU6MUZR.mjs",
-        "sha256": "45496ffeda0476173de1acbdcefd927f141806d80314cadf5592364db387a3f7"
+        "path": "dist/js/chunks/chunk-SLFAHEFV.mjs",
+        "sha256": "044bf759c45edbe7368e6794327bd835ee6a19079792e0532803ac81c969ba74"
       },
       {
-        "path": "dist/js/chunks/chunk-TGU6MUZR.mjs.map",
-        "sha256": "bf8f56f1327be6bfc2099f68a895be05d38adb849a09d323c7a67758a027e52d"
+        "path": "dist/js/chunks/chunk-SLFAHEFV.mjs.map",
+        "sha256": "c9580328d39e3bb1df53c774b4ffc123fa0632f09f3590634430ef4aacfc5c96"
       },
       {
         "path": "dist/js/chunks/chunk-TUIB2QN6.mjs",
@@ -5445,31 +5450,31 @@
       },
       {
         "path": "dist/js/expressive.cjs",
-        "sha256": "0ec3ce8721180a6bec4fe01873bc1c8236624d40475045bb91e92762bae45231"
+        "sha256": "723939e809a92a86a00c3acedd8cb7ccbe5f38fdcdb88d4284a290b25f7bbf3a"
       },
       {
         "path": "dist/js/expressive.cjs.map",
-        "sha256": "d633beb053e4daf1add71edc0f6098b8adbe950b861ade7933098620133f6728"
+        "sha256": "21447f4255715c9417f9c3ce5865bf6b9ab4fb66d81526c33159ab6ce9211474"
       },
       {
         "path": "dist/js/expressive.js",
-        "sha256": "d59143a7e955302239d46a243a6e39fbc7011f671df94b7432f1a89b4d030490"
+        "sha256": "df472b644a1fd32853e3e293a7f8b5f49f1deb94581c27b5c8cee19edb0cc759"
       },
       {
         "path": "dist/js/expressive.js.map",
-        "sha256": "ef97d6d93baeb6ae0414c774dbe63f7457015bf07b8558ae63e69615ec6fb1a1"
+        "sha256": "6e51d48e9e8b56b8340d8f2a10439323e8fd5c7e536fb72c9118aeb08c5d6ffe"
       },
       {
         "path": "dist/js/expressive.min.js",
-        "sha256": "f680e8ef4451eafdb69bba1196c009524cec683a0d99e9e4ca3614d88c02563f"
+        "sha256": "346394006ef74cd74238add5d51331c741e4e3416c48372c7215e166cfd52461"
       },
       {
         "path": "dist/js/expressive.min.js.map",
-        "sha256": "f0fe4f3f5f54ba45dc528a33d21ef448ab02536c42bdde608c6bcdc51d6646b9"
+        "sha256": "eb9eec77b88b1c35b1067eff6d32b7ad8582c66d004f2b3e646f59a08234c845"
       },
       {
         "path": "dist/js/expressive.mjs",
-        "sha256": "41845775c366491bf9e89992ec7ba0f22d483d251db6d513450e8270f49f0b82"
+        "sha256": "20e40bedd73c86b6ddc2746659a22d05bfaf891372430bc15a84c38061795f03"
       },
       {
         "path": "dist/js/expressive.mjs.map",
@@ -5541,7 +5546,7 @@
       },
       {
         "path": "dist/js/internal/components/buttons.mjs",
-        "sha256": "38c5acdc442313d17724660b239d0da1a144e8cec8d10f4ba9120541032bcbdc"
+        "sha256": "122f2f86f2416012d29103ceaeac7b89868bd13ebe3f45f8d95e1a7bd9bce65c"
       },
       {
         "path": "dist/js/internal/components/buttons.mjs.map",
@@ -5597,7 +5602,7 @@
       },
       {
         "path": "dist/js/internal/components/index.mjs",
-        "sha256": "3e1ada3b6add63537021ff086c81efef8fa0d58be9f545ebc8164fc0b501bc9f"
+        "sha256": "9006b519635a30a354bf7f38c9378c4262e01d0b7d746beb2c033de58fc75064"
       },
       {
         "path": "dist/js/internal/components/index.mjs.map",
@@ -5629,7 +5634,7 @@
       },
       {
         "path": "dist/js/internal/components/registry.mjs",
-        "sha256": "d425fec68b6768bb88f62181b6aefa0f2c7870095a0cf5fb04fb80be9ab3d7e0"
+        "sha256": "63d4ee5f14ebdee17c20d24b71f196d4fcf71ea60636de7769a7f5e41273036c"
       },
       {
         "path": "dist/js/internal/components/registry.mjs.map",
@@ -5717,7 +5722,7 @@
       },
       {
         "path": "dist/js/modular.mjs",
-        "sha256": "9e31ac0280d3ba672e9b76451f46cb40df0fb7816ecc4a756fb4b9d4e088d0c9"
+        "sha256": "42dc7e622a9db62cf9da25777f507655400098b5edcbd37b16100ae8d5306e25"
       },
       {
         "path": "dist/js/modular.mjs.map",
@@ -5757,7 +5762,7 @@
       },
       {
         "path": "dist/types/components/buttons.d.ts",
-        "sha256": "a8a2f58246dd27ecd65a87174b4468793617023e415b476824c07ff889b858a4"
+        "sha256": "c5073e35e4a78ea59cfd11be32cdfcdca0297679c1246143bb56b4fda6070117"
       },
       {
         "path": "dist/types/components/cards.d.ts",
@@ -6013,7 +6018,7 @@
       },
       {
         "path": "semantics.json",
-        "sha256": "fede0ccc7ed1c4b1bd711807e70e5de7a59ad44c214ef7d5ba75b9861cf6dafc"
+        "sha256": "94223e6d27971130e4d42f318760cc46b15846a5fd6e4cf2c647e2b41f48b016"
       }
     ],
     "results": [
@@ -6021,225 +6026,237 @@
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group toggle colors resolve in a browser",
         "status": "passed",
-        "durationMs": 175.631291
+        "durationMs": 164.724625
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group geometry resolves for overrides, targets, and RTL",
         "status": "passed",
-        "durationMs": 131.09291
+        "durationMs": 118.843928
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "standard press redistribution keeps its rendered width stable",
         "status": "passed",
-        "durationMs": 670.067827
+        "durationMs": 662.008547
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "keyboard press changes icon widths and rendered corners",
         "status": "passed",
-        "durationMs": 1189.901227
+        "durationMs": 1183.98812
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "dragged and picked-up states override simultaneous pointer states",
         "status": "passed",
-        "durationMs": 752.327695
+        "durationMs": 746.180562
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "invalid disclosures keep their panels visible and operable",
         "status": "passed",
-        "durationMs": 165.528301
+        "durationMs": 151.779962
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
         "status": "passed",
-        "durationMs": 126.948679
+        "durationMs": 125.324213
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (chromium)",
         "status": "passed",
-        "durationMs": 1829.332388
+        "durationMs": 1812.511635
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (chromium)",
         "status": "passed",
-        "durationMs": 230.997566
+        "durationMs": 231.31587
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete settings example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10208.606532
+        "durationMs": 10325.816804
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete editor example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10473.368613
+        "durationMs": 10589.112873
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete list-detail example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10479.972857
+        "durationMs": 10477.785054
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
         "status": "passed",
-        "durationMs": 849.596021
+        "durationMs": 843.232838
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "resource observations detect omitted teardown after a partial replacement",
         "status": "passed",
-        "durationMs": 174.902065
+        "durationMs": 174.236439
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip positioning preserves margins and viewport edges after scrolling",
         "status": "passed",
-        "durationMs": 173.876263
+        "durationMs": 170.617924
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip destroy cancels pending delay and animation callbacks",
         "status": "passed",
-        "durationMs": 156.469884
+        "durationMs": 153.947468
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Node can import the ESM bundle but runtime initialization requires a document",
         "status": "passed",
-        "durationMs": 75.052859
+        "durationMs": 73.492798
+      },
+      {
+        "file": "tests/expressivecss-lifecycle-browser.test.js",
+        "name": "speed-dial CSS and runtime options are removed",
+        "status": "passed",
+        "durationMs": 0.556816
+      },
+      {
+        "file": "tests/expressivecss-lifecycle-browser.test.js",
+        "name": "FAB menu preserves keyboard, dismissal and responsive behavior",
+        "status": "passed",
+        "durationMs": 679.417588
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material grading rejects candidate evidence and missing or malformed operator observations",
         "status": "passed",
-        "durationMs": 14.520449
+        "durationMs": 14.905058
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
         "status": "passed",
-        "durationMs": 22724.390038
+        "durationMs": 22812.634198
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material review fixture is semantically valid despite intrusive feedback and mismatched selection intent",
         "status": "passed",
-        "durationMs": 577.708208
+        "durationMs": 588.153881
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "web accessibility fixture exposes target geometry, keyboard reorder, and forced-color defects",
         "status": "passed",
-        "durationMs": 242.998283
+        "durationMs": 250.571558
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: tooltip hover, dismissal, reduced motion and native form behavior",
         "status": "passed",
-        "durationMs": 5003.327156
+        "durationMs": 4981.36916
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining native controls preserve names, keyboard state and form values",
         "status": "passed",
-        "durationMs": 333.601074
+        "durationMs": 314.530481
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
         "status": "passed",
-        "durationMs": 217.37179
+        "durationMs": 235.856688
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining progress and loading variants stop spatial motion",
         "status": "passed",
-        "durationMs": 194.098032
+        "durationMs": 189.657074
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining snackbar retains a focused action until focus leaves",
         "status": "passed",
-        "durationMs": 1260.382198
+        "durationMs": 1260.566497
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining lightbox supports Space and preserves its image on teardown",
         "status": "passed",
-        "durationMs": 290.029447
+        "durationMs": 291.2394
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
         "status": "passed",
-        "durationMs": 419.836925
+        "durationMs": 426.732924
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
         "status": "passed",
-        "durationMs": 243.832907
+        "durationMs": 242.129436
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining lightbox teardown cancels pending work and preserves native button focus",
         "status": "passed",
-        "durationMs": 378.084545
+        "durationMs": 374.59575
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining slider accepts zero maximum and keeps value labels aligned after resize",
         "status": "passed",
-        "durationMs": 284.900151
+        "durationMs": 172.498081
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining autocomplete preserves a preselected display label on focus",
         "status": "passed",
-        "durationMs": 177.374709
+        "durationMs": 167.128578
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "select and calendar treat external values as data (chromium)",
         "status": "passed",
-        "durationMs": 134.425896
+        "durationMs": 143.043862
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu cancels superseded callbacks and teardown work (chromium)",
         "status": "passed",
-        "durationMs": 214.940678
+        "durationMs": 216.637669
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
         "status": "passed",
-        "durationMs": 179.008777
+        "durationMs": 174.852315
       }
     ],
     "directories": [
       {
         "path": "src",
-        "sha256": "146ce7a9aed461402c2a635d2b6040980efb02d1184e87eebab2c1c9392ab9fa"
+        "sha256": "a1bdd3e14264fd4c65c6d667a77e522880c6ccf4a9e94f225afe50dce64cb0fa"
       },
       {
         "path": "tests",
-        "sha256": "5db83576393c736bbf73a25ff5bb1b136017f41536fc1ddede77becbb64376c6"
+        "sha256": "024b9118582f78e4e60cae8e5b61be90c3160b5ca45bbe4cc6889feed9939e12"
       },
       {
         "path": "dist",
-        "sha256": "437738cd7d1ce686f147ede8f66e6aefe12e9106c8779750c4201d29242c6ce3"
+        "sha256": "2f5c3ccf632e2c2e8eb020ec9222a2995cba26a57eb25067ceb9734e7a290861"
       },
       {
         "path": "skills/expressivecss/assets/examples",
@@ -6251,7 +6268,7 @@
       }
     ],
     "inputsUnchanged": true,
-    "reportSha256": "e508a21bbeb8f8c699e04f8431f846f28b98ff44b93656098986ee4984acd6ff"
+    "reportSha256": "14bf5cf7b4f22275d71eba6a22a637897f4463805390b446dd73c32189a08dd9"
   },
   "sourceRevision": "b3821bb0390b985c31a858ab7f4e3dbf0de2d71c"
 }

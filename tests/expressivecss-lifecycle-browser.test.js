@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { writeFile, rm } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
@@ -209,4 +209,93 @@ test('Node can import the ESM bundle but runtime initialization requires a docum
   assert.equal(observed.initialization.name, 'ReferenceError');
   assert.match(observed.initialization.message, /document is not defined/);
   t.diagnostic(JSON.stringify(observed));
+});
+
+const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
+
+test('speed-dial CSS and runtime options are removed', () => {
+  assert.doesNotMatch(css, /\.fab(?![\w-])|\.fixed-action-btn|\.fab-backdrop/);
+  assert.doesNotMatch(css, /--md-comp-fab-(?:offset|z|menu-gap|duration|stagger|easing|travel|hidden-transform)\b/);
+  const types = readFileSync(new URL('../dist/types/components/buttons.d.ts', import.meta.url), 'utf8');
+  assert.doesNotMatch(types, /hoverEnabled|toolbarEnabled|direction/);
+});
+
+browserTest('FAB menu preserves keyboard, dismissal and responsive behavior', async () => {
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage({ viewport: { width: 320, height: 700 } });
+  try {
+    await page.setContent(`
+      <style>${css}</style>
+      <button id="outside">Outside</button>
+      <div class="fab-menu">
+        <button id="trigger" type="button" class="button circle extra" aria-label="Create">
+          <span aria-hidden="true">+</span>
+        </button>
+        <ul>
+          <li><button id="action" type="button"><span>Create a new document with a long translated label</span></button></li>
+          <li><a id="link" href="#destination"><span>Open destination</span></a></li>
+          <li><button disabled id="disabled">Unavailable</button></li>
+        </ul>
+      </div>
+      <div class="fab" id="legacy"></div>
+      <div class="fixed-action-btn" id="alias"></div>
+      <div id="destination"></div>
+    `);
+    await page.addScriptTag({ content: js });
+    await page.evaluate(() => {
+      Expressive.AutoInit();
+      window.instance = Expressive.FloatingActionButton.getInstance(document.querySelector('.fab-menu'));
+      window.actions = 0;
+      document.querySelector('#action').addEventListener('click', () => window.actions++);
+    });
+    assert.equal(await page.evaluate(() => Boolean(Expressive.FloatingActionButton.getInstance(document.querySelector('#legacy')))), false);
+    assert.equal(await page.evaluate(() => Boolean(Expressive.FloatingActionButton.getInstance(document.querySelector('#alias')))), false);
+    await page.locator('#trigger').hover();
+    assert.equal(await page.locator('#trigger').getAttribute('aria-expanded'), 'false');
+    assert.equal(await page.locator('ul').evaluate(el => el.inert), true);
+    for (const motion of ['no-preference', 'reduce']) {
+      await page.emulateMedia({ reducedMotion: motion });
+      await page.locator('#trigger').focus();
+      await page.keyboard.press('Enter');
+      assert.equal(await page.locator('#trigger').getAttribute('aria-expanded'), 'true');
+      await page.keyboard.press('Tab');
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'action');
+      await page.keyboard.press('Escape');
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'trigger');
+      assert.equal(await page.locator('ul').evaluate(el => el.inert), true);
+      await page.keyboard.press('Tab');
+      assert.notEqual(await page.evaluate(() => document.activeElement.id), 'action');
+      await page.locator('#trigger').click();
+      await page.locator('#action').click();
+      assert.equal(await page.locator('#trigger').getAttribute('aria-expanded'), 'false');
+      await page.locator('#trigger').click();
+      await page.locator('#link').click();
+      assert.equal(await page.evaluate(() => location.hash), '#destination');
+      await page.locator('#trigger').click();
+      await page.locator('#outside').click();
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'outside');
+      assert.equal(await page.locator('#trigger').getAttribute('aria-expanded'), 'false');
+    }
+    assert.equal(await page.evaluate(() => window.actions), 2);
+    await page.evaluate(() => {
+      window.instance = Expressive.FloatingActionButton.init(document.querySelector('.fab-menu'));
+      window.instance.open();
+    });
+    for (const width of [320, 768, 1280]) {
+      await page.setViewportSize({ width, height: 700 });
+      assert.equal(await page.locator('#action').evaluate(el => {
+        const r = el.getBoundingClientRect();
+        return r.left >= 0 && r.right <= innerWidth && el.scrollWidth <= el.clientWidth;
+      }), true);
+    }
+    await page.locator('#action').focus();
+    await page.evaluate(() => window.instance.destroy());
+    assert.equal(await page.evaluate(() => document.activeElement.id), 'trigger');
+    await page.locator('#trigger').click();
+    assert.equal(await page.locator('#trigger').getAttribute('aria-expanded'), 'false');
+  } finally {
+    await page.evaluate(() => window.instance?.destroy()).catch(() => {});
+    await browser.close();
+  }
 });

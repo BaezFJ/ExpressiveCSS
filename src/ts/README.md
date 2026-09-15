@@ -108,11 +108,8 @@ read-it-off-the-element access that key provides.
   32dp heading. Standard and grouped menus receive
   `menu` / `menuitem` roles, focus their first item when opened, and keep
   disabled items focusable but inert.
-- **FAB speed dial is CSS.** `.active` (and `:hover` when the pointer
-  can hover) opens the menu. `.click-to-toggle` and `.direction-*` are
-  markup switches. JS toggles the class, Escape, and click-outside.
-  Do not write `transform` / `opacity` onto the children. Toolbar mode
-  is `.toolbar.active` — no backdrop scale math.
+- **FAB menus use .fab-menu.** JS owns expanded state, click activation, Escape,
+  outside dismissal and focus recovery. Hidden actions are inert. Motion is CSS.
 - **ScrollSpy is IntersectionObserver.** No window scroll listener and
   no click hijack. Offset is `scroll-margin-block-start` /
   `--md-comp-scrollspy-offset`. Default link lookup compares `href`

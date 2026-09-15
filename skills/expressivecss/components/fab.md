@@ -11,19 +11,19 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `36962b517cdc84cd0db5a787546ecdd2b8bb78885998be6bfe928a30d9001a9d`
+Contract SHA-256: `0d06e05b0976f6e1e3201e83c71cc35db89c76a5277d738d4634f2773f8003b1`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/floating-action-button/overview)
 
-Example: The syntax below is a retained speed-dial example, not the default for new designs. Use the documented fab-menu variant for labelled actions and verify focus when it closes.
+Example: Speed dials have been removed. Replace legacy fab or fixed-action-btn wrappers with fab-menu and labelled actions; use a toolbar for persistent commands.
 
 - expanded window: variant. Use the extended FAB when the action benefits from a visible label.
 
 #### Material mapping
 
-Relationship: component. Google no longer recommends small FABs, baseline extended FABs or surface-colored FABs. Use a current FAB size, extend small for the current small extended FAB, and supported primary/secondary/tertiary container roles. circle extra small is the retained 40dp FAB; sizeless extend is baseline. The small extended FAB remains recommended. Use fab-menu instead of fab speed dials or stacked small FABs. These are design replacements, not removed APIs.
+Relationship: component. Google no longer recommends small FABs, baseline extended FABs or surface-colored FABs. Use a current FAB size, extend small for the current small extended FAB, and supported primary/secondary/tertiary container roles. circle extra small is the retained 40dp FAB; sizeless extend is baseline. The small extended FAB remains recommended. Use fab-menu instead of fab speed dials or stacked small FABs. Speed-dial APIs are removed; size and color variants remain for a separate migration.
 
 Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/floating-action-button/overview).
 
@@ -41,30 +41,29 @@ Support (2026-09-13, `llm.md#floating-action-button`): FAB sizes, extended FABs,
 
 Web adaptation: Floating action behavior uses the documented FAB runtime.
 
-Known boundary: Hover can reveal actions without runtime expanded state; Escape closing can leave focus on a hidden child.
+Known boundary: Full visual parity and spoken assistive-technology output remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#fab).
 
 #### Contract
 
-A circular action that can open a menu of related shortcuts.
+Use a standalone FAB for the primary action or a FAB menu for related labelled actions.
 
-If you want a fixed floating action button, you can add multiple actions that appear on hover. The live demo is in the bottom-right corner of the page.
+`fab-menu` is the FAB that expands into a list of labelled actions. The trigger is an ordinary FAB; the actions are a `<ul>` (or `<menu>`) of pills, each an icon and a label at 56dp on a full corner. Click the FAB to expand; click it again, click outside, or press Escape to collapse.
 
-Wrap a 56dp FAB (`circle extra`) and a list of 40dp ones (`circle extra small`) in `fab`. That class pins the control to the corner and styles its direct children. `AutoInit()` starts every matching element except those marked `no-autoinit`.
+Expanded is the framework's state, not the author's: the constructor stamps `aria-expanded` on the trigger and `open()` / `close()` move it along with the `active` class. Do not write either into the markup.
 
 #### Syntax
 
 ```html
-<div class="fab">
-  <button type="button" class="button circle extra" aria-label="Edit">
-    <span class="material-symbols" aria-hidden="true">mode_edit</span>
+<div class="fab-menu">
+  <button type="button" class="button extra circle" aria-label="Create">
+    <span class="material-symbols" aria-hidden="true">add</span>
+    <span class="material-symbols" aria-hidden="true">close</span>
   </button>
   <ul>
-    <li><a class="button circle extra small error on-error-text" href="#!" aria-label="Chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
-    <li><a class="button circle extra small secondary on-secondary-text" href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
-    <li><a class="button circle extra small tertiary on-tertiary-text" href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
-    <li><a class="button circle extra small primary on-primary-text" href="#!" aria-label="Attach"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
+    <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
+    <li><button type="button"><span class="material-symbols" aria-hidden="true">image</span><span>Add photo</span></button></li>
   </ul>
 </div>
 ```
@@ -74,8 +73,6 @@ Wrap a 56dp FAB (`circle extra`) and a list of 40dp ones (`circle extra small`) 
 The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
 - `icon-only-control-is-named`: Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
-- `fab-not-a-composite-widget`: The FAB's actions are reached with Tab, not arrow keys, so the list takes no composite role.
-- `fab-expanded-is-not-authored`: Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten.
 - `fab-menu-not-a-composite-widget`: The FAB menu takes no composite role; its actions are reached with Tab, not arrow keys.
 - `fab-menu-expanded-is-not-authored`: Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten.
 

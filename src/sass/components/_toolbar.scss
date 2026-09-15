@@ -47,9 +47,6 @@
 //
 // Do not show a toolbar at the same time as nav.navigation-bar.
 //
-// #{$_toolbar} only - do not style every <nav>. div.fixed-action-btn.toolbar
-// is the FAB-to-toolbar transition, not this component.
-
 // The host. A toolbar holds commands, not destinations, so it is not a <nav>
 // (rule 4) - and not role="toolbar" either, because that is a composite role
 // promising arrow-key navigation nothing here implements (rule 2). The <nav>
@@ -58,7 +55,7 @@
 // Wrapped in :is() so it stays one compound selector: interpolating a bare
 // comma-separated list breaks out of its context. That mistake shipped once
 // already, in $_bar.
-$_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
+$_toolbar: ".toolbar";
 
 // The two axes. `.max` is BeerCSS's name for docked; `.filled` is the older
 // name for vibrant. Both stay in the :is() lists.

@@ -275,7 +275,7 @@ Opt an element out when it needs manual options:
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.timepicker` |
 | `Tooltip` | `.tooltipped` |
-| `FloatingActionButton` | `.fab` |
+| `FloatingActionButton` | `.fab-menu` |
 
 `Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, and ExpandingCard behaviors.
 
@@ -2527,25 +2527,7 @@ Wrap the row in an `<a>` or `<label>` to make the whole item the target. `aria-c
 
 ## Floating Action Button
 
-A circular action that can open a menu of related shortcuts.
-
-If you want a fixed floating action button, you can add multiple actions that appear on hover. The live demo is in the bottom-right corner of the page.
-
-Wrap a 56dp FAB (`circle extra`) and a list of 40dp ones (`circle extra small`) in `fab`. That class pins the control to the corner and styles its direct children. `AutoInit()` starts every matching element except those marked `no-autoinit`.
-
-```html
-<div class="fab">
-  <button type="button" class="button circle extra" aria-label="Edit">
-    <span class="material-symbols" aria-hidden="true">mode_edit</span>
-  </button>
-  <ul>
-    <li><a class="button circle extra small error on-error-text" href="#!" aria-label="Chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
-    <li><a class="button circle extra small secondary on-secondary-text" href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
-    <li><a class="button circle extra small tertiary on-tertiary-text" href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
-    <li><a class="button circle extra small primary on-primary-text" href="#!" aria-label="Attach"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
-  </ul>
-</div>
-```
+Use a standalone FAB for the primary action or a FAB menu for related labelled actions.
 
 ### FAB menu
 
@@ -2574,7 +2556,7 @@ The colour axis is the same three roles as the extended FAB, and one class moves
 <div class="fab-menu secondary-container">…</div>
 ```
 
-It is the same `FloatingActionButton` instance as the `fab` speed dial, so `AutoInit()` starts it and `open()`, `close()` and `isOpen` all work. The two never style each other, and neither reaches the `.fab.toolbar` transition. `direction` and `hoverEnabled` are inert on a FAB menu: it opens upward, on click, both decided in CSS. Beyond six actions the stagger runs out and the rest arrive together.
+The `FloatingActionButton` runtime owns `active`, `aria-expanded` and inert closed actions. It opens upward on click. Escape, outside click and action activation close it; focus returns to the trigger only when closing would hide the focused action. Actions use ordinary Tab navigation. Beyond six actions the stagger runs out and the rest arrive together.
 
 Neither host declares `role="menu"`, and the trigger carries no `aria-haspopup`. The actions are reached with Tab, not the arrow keys, so the role is withheld rather than promised — see `SEMANTICS.md`.
 
@@ -2597,32 +2579,7 @@ Neither host declares `role="menu"`, and the trigger carries no `aria-haspopup`.
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.FloatingActionButton`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.fab` with the defaults below.
-
-```js
-document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.fab');
-  const instances = Expressive.FloatingActionButton.init(elems, {
-    // specify options here
-  });
-});
-```
-
-Per-instance options can also be passed through AutoInit:
-
-```js
-Expressive.AutoInit(document.body, {
-  FloatingActionButton: { direction: 'top' }
-});
-```
-
-### Options
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `direction` | String | `'top'` | Direction the menu opens. One of `'top'`, `'right'`, `'bottom'`, or `'left'`. The constructor adds the matching `direction-*` class. |
-| `hoverEnabled` | Boolean | `true` | When `true`, the menu opens on hover. When `false`, it toggles on click. There is no `click-to-toggle` class — this option is the only switch. |
-| `toolbarEnabled` | Boolean | `false` | Expand the FAB into a toolbar on click. See FAB to Toolbar. |
+`Expressive.AutoInit()` starts `.fab-menu` unless marked `no-autoinit`. For manual ownership, use `FloatingActionButton.init(element)`. There are no component-specific options.
 
 ### Methods
 
@@ -2664,59 +2621,9 @@ instance.destroy();
 | `options` | Object | The options the instance was initialized with. |
 | `isOpen` | Boolean | Describes the open/close state of the FAB. |
 
-### Horizontal FAB
+### Speed-dial migration
 
-Creating a horizontal FAB is easy. Set the `direction` option to `'left'` or `'right'`.
-
-```js
-document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.fab');
-  const instances = Expressive.FloatingActionButton.init(elems, {
-    direction: 'left'
-  });
-});
-```
-
-### Click-only FAB
-
-To disable hover and toggle the menu when the large button is clicked — useful on touch devices — pass `hoverEnabled: false`. Expressive does not read a `click-to-toggle` class; the option is the only way to switch.
-
-```js
-document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.fab');
-  const instances = Expressive.FloatingActionButton.init(elems, {
-    direction: 'left',
-    hoverEnabled: false
-  });
-});
-```
-
-### FAB to Toolbar
-
-`toolbarEnabled: true` is still in the options object and expands the button into a full-width toolbar on click. Add the `toolbar` class yourself — the constructor only adds `direction-*`, not `toolbar`.
-
-Materialize deprecated this pattern in 2.1.0. Prefer a hover or click-only menu unless you specifically need the toolbar transition.
-
-```html
-<div class="fab toolbar">
-  <button type="button" class="button circle extra" aria-label="Edit">
-    <span class="material-symbols" aria-hidden="true">mode_edit</span>
-  </button>
-  <ul>
-    <li><a href="#!" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
-    <li><a href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
-    <li><a href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
-    <li><a href="#!" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
-  </ul>
-</div>
-```
-
-```js
-Expressive.FloatingActionButton.init(
-  document.querySelector('.fab.toolbar'),
-  { toolbarEnabled: true }
-);
-```
+Replace `.fab` and `.fixed-action-btn` wrappers with `.fab-menu` and labelled actions using the markup above. Remove `direction`, `hoverEnabled`, `toolbarEnabled`, their markup switches and speed-dial-only tokens. Hover opening, directional layouts and FAB-to-toolbar expansion have been removed. Use a current toolbar for persistent commands. Standalone FAB sizes and extended variants are unchanged.
 
 ---
 
@@ -3637,7 +3544,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.timepicker` |
 | `Tooltip` | `.tooltipped` |
-| `FloatingActionButton` | `.fab` |
+| `FloatingActionButton` | `.fab-menu` |
 
 Snackbar, CharacterCounter, and Range stay out of this table. Range still starts itself when the bundle loads. Forms, Chips, Cards, and ExpandingCard also run an import-time `Init()`; Chips and Cards appear in the table as well so a later `AutoInit()` can pick up elements added after load.
 
@@ -4736,7 +4643,7 @@ A `<div class="toolbar">` is the bar — not a `<nav>`, because a toolbar holds 
 
 Tokens follow the [M3 toolbar spec](https://m3.material.io/components/toolbars/specs). Actions are 48dp targets with a 24dp icon, transparent at rest, `on-surface-variant`, 4dp apart.
 
-This is not the FAB-to-toolbar transition (`div.fab.toolbar`). That stays on Floating Action Button. Do not put `toolbar` on every `<nav>` — app bars, card actions, and radio rows stay as they are.
+The FAB-to-toolbar transition has been removed. Use this toolbar for persistent commands. Do not put `toolbar` on every `<nav>`; app bars, card actions, and radio rows remain separate.
 
 ```html
 <div class="toolbar">
