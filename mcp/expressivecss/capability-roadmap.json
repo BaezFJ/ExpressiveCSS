@@ -4,13 +4,13 @@
   "sourceRevision": "b3821bb0390b985c31a858ab7f4e3dbf0de2d71c",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
-    "recordedOn": "2026-09-15",
+    "recordedOn": "2026-09-16",
     "engine": "chromium",
     "engineVersion": "153.0.8010.12",
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "e508a21bbeb8f8c699e04f8431f846f28b98ff44b93656098986ee4984acd6ff",
+    "reportSha256": "12b333bef9df50ba771741da5151f27507a1dfefe935be12f0859f73f7a39718",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -895,13 +895,20 @@
       ],
       "gaps": [
         {
-          "kind": "feature",
-          "description": "Hover can reveal actions without runtime expanded state; Escape closing can leave focus on a hidden child.",
-          "nextStep": "Reproduce hover and keyboard paths in a browser, unify expanded-state ownership and restore focus when hiding an active child."
+          "kind": "verification",
+          "description": "Full visual parity and spoken assistive-technology output remain unverified.",
+          "nextStep": "Review rendered variants and spoken labels before claiming full parity."
         }
       ],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-lifecycle-browser.test.js",
+          "name": "FAB menu preserves keyboard, dismissal and responsive behavior",
+          "scope": "Click state, hover inactivity, Tab, Escape, action activation, outside focus, reinitialization, reduced motion and narrow layout.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

@@ -591,6 +591,19 @@ try {
   assert.equal(blockedInline.structuredContent.status, 'blocked');
   assert.deepEqual(blockedInline.structuredContent.suggestions, []);
 
+  const speedDial = await client.callTool({
+    name: 'creative_director',
+    arguments: { projectRoot: matchingDir, goal: 'Replace a legacy speed dial with current labelled FAB actions.', maxSuggestions: 1 },
+  });
+  assert.equal(speedDial.structuredContent.suggestions[0].slug, 'fab');
+  assert.match(speedDial.structuredContent.suggestions[0].useWhen.join(' '), /removed speed dials.*fab-menu/);
+  const fabSyntax = await client.callTool({
+    name: 'component_syntax_expert',
+    arguments: { projectRoot: matchingDir, components: ['fab'] },
+  });
+  assert.match(JSON.stringify(fabSyntax.structuredContent), /fab-menu/);
+  assert.doesNotMatch(JSON.stringify(fabSyntax.structuredContent), /class=\\"fab\\"/);
+
   const removedBanner = await client.callTool({
     name: 'component_syntax_expert',
     arguments: { projectRoot: matchingDir, components: ['banners'] },

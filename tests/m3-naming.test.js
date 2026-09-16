@@ -23,7 +23,6 @@ describe('M3 names reach the same rules as the old ones', () => {
   // Each pair is [old class, new class] and must appear together wherever the
   // component is styled - the point of :is(.old, .new) in the Sass.
   const PAIRS = [
-    ['fixed-action-btn', 'fab'],
     ['datepicker', 'date-picker'],
     ['timepicker', 'time-picker'],
     ['searchbar', 'search-bar'],
@@ -66,7 +65,6 @@ describe('AutoInit accepts both spellings', () => {
   beforeEach(resetBody);
 
   const CASES = [
-    ['fab', 'fixed-action-btn', 'FloatingActionButton', (c) => `<div class="${c}"><a class="button extra circle" aria-label="Add">+</a><ul><li><a class="button extra circle small" aria-label="Edit">e</a></li></ul></div>`],
     ['date-picker', 'datepicker', 'Datepicker', (c) => `<input type="text" class="${c}">`],
     ['time-picker', 'timepicker', 'Timepicker', (c) => `<input type="text" class="${c}">`]
   ];

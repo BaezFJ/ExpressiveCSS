@@ -147,11 +147,11 @@ describe('destroy() releases shared listeners', () => {
 
   test('FloatingActionButton detaches the document handlers open() adds', () => {
     document.body.innerHTML = `
-      <div class="fixed-action-btn">
+      <div class="fab-menu">
         <a class="button extra circle">+</a>
         <ul><li><a class="button extra circle small">e</a></li></ul>
       </div>`;
-    const instance = Expressive.FloatingActionButton.init(document.querySelector('.fixed-action-btn'));
+    const instance = Expressive.FloatingActionButton.init(document.querySelector('.fab-menu'));
 
     instance.open();
     assert.ok(watch.live().includes('click'), 'open() did not attach a document click handler');

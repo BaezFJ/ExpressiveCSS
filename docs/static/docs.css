@@ -573,11 +573,6 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   height: 70px;
 }
 
-.fab-demo :is(.fab, .fixed-action-btn) {
-  position: absolute;
-  inset-inline-end: 24px;
-  bottom: 0;
-}
 
 /* A reference table wider than a compact window scrolls in place, rather
    than pushing the whole page sideways. */
@@ -612,6 +607,7 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
    viewport instead. */
 .fab-menu-demo {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-around;
   gap: 1.5rem;
@@ -620,6 +616,11 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
 }
 
 .fab-menu-demo .fab-menu {
+  flex: 0 0 14rem;
+  max-inline-size: 100%;
+  margin-block-start: 14rem;
+  display: flex;
+  justify-content: flex-end;
   position: relative;
   inset: auto;
   z-index: auto;

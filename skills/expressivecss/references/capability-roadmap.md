@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-15, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `e508a21bbeb8f8c699e04f8431f846f28b98ff44b93656098986ee4984acd6ff`.
+Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `12b333bef9df50ba771741da5151f27507a1dfefe935be12f0859f73f7a39718`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -28,7 +28,7 @@ Last operator collection: 2026-09-15, Chromium 153.0.8010.12, passed; inputs mat
 | [Icon buttons](#icon-buttons) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Button groups](#button-groups) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Split button](#split-button) | unassessed | needs-review | no-mapped-checks | 0 |
-| [Floating action button](#fab) | unassessed | needs-review | no-mapped-checks | 1 |
+| [Floating action button](#fab) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Cards](#cards) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Lists](#lists) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
@@ -305,9 +305,9 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 
 Web adaptation: Floating action behavior uses the documented FAB runtime.
 
-- feature: Hover can reveal actions without runtime expanded state; Escape closing can leave focus on a hidden child. Next: Reproduce hover and keyboard paths in a browser, unify expanded-state ownership and restore focus when hiding an active child.
+- verification: Full visual parity and spoken assistive-technology output remain unverified. Next: Review rendered variants and spoken labels before claiming full parity.
 
-No directly scoped browser check is mapped. This does not mean the component fails or has no unit tests.
+- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-lifecycle-browser.test.js): `FAB menu preserves keyboard, dismissal and responsive behavior`. Click state, hover inactivity, Tab, Escape, action activation, outside focus, reinitialization, reduced motion and narrow layout.
 
 <a id="cards"></a>
 

@@ -3,7 +3,6 @@ import DocsLayout from "../layouts/DocsLayout.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
-import OptionsTable from "../components/api/OptionsTable.astro";
 import PropertiesTable from "../components/api/PropertiesTable.astro";
 import InstanceNote from "../components/api/InstanceNote.astro";
 import { defineSections } from "../lib/sections";
@@ -13,55 +12,20 @@ const S = defineSections([
   { id: "sizes", label: "Sizes", heading: "FAB sizes" },
   { id: "extended", label: "Extended", heading: "Extended FAB" },
   { id: "fab-menu", label: "FAB menu" },
+  { id: "migration", label: "Speed-dial migration" },
   { id: "initialization", label: "Initialization" },
-  { id: "options", label: "Options" },
   { id: "methods", label: "Methods" },
   { id: "properties", label: "Properties" },
-  { id: "horizontal", label: "Horizontal", heading: "Horizontal FAB" },
-  { id: "click-only", label: "Click Only FAB", heading: "Click-only FAB" },
-  { id: "toolbar", label: "FAB to Toolbar" },
 ]);
 ---
 <DocsLayout page="floating_action_button">
-<div class="fab">
-  <button type="button" class="button extra circle" aria-label="Edit">
-    <span class="material-symbols" aria-hidden="true">mode_edit</span>
-  </button>
-  <ul>
-    <li><a class="button extra circle small error on-error-text" href="#!" aria-label="Chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
-    <li><a class="button extra circle small secondary on-secondary-text" href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
-    <li><a class="button extra circle small tertiary on-tertiary-text" href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
-    <li><a class="button extra circle small primary on-primary-text" href="#!" aria-label="Attach"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
-  </ul>
-</div>
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
   <Section {...S.introduction}>
-        <p class="flow-text">
-          If you want a fixed floating action button, you can add multiple actions that appear on hover.
-          The live demo is in the bottom-right corner of the page.
-        </p>
-        <p>
-          Wrap a large <code>extra circle small</code> (or <code>circle extra</code>)
-          and a list of smaller ones in <code>fab</code>.
-          That class pins the control to the corner. The menu opens on
-          hover when the pointer can hover; add <code>click-to-toggle</code>
-          to toggle on click. <code>AutoInit()</code> starts every matching
-          element except those marked <code>no-autoinit</code>. Motion is CSS.
-        </p>
-<Code code={`
-<div class="fab">
-  <button type="button" class="button extra circle" aria-label="Edit">
-    <span class="material-symbols" aria-hidden="true">mode_edit</span>
-  </button>
-  <ul>
-    <li><a class="button extra circle small" href="#!" aria-label="Attach">…</a></li>
-  </ul>
-</div>
-`} />
+    <p class="flow-text">Use one FAB for the primary action, or a FAB menu for related labelled actions. The menu opens on click and keeps ordinary Tab navigation.</p>
+    <p>See <a href="#fab-menu">FAB menu</a> for markup and <a href="#migration">migration guidance</a> for removed speed dials.</p>
   </Section>
   <Section {...S.sizes}>
         <p>
@@ -317,15 +281,7 @@ const S = defineSections([
 <div class="fab-menu secondary-container">…</div>
 `} />
         <p>
-          It is the same <code>FloatingActionButton</code> instance as the
-          <code>fab</code> speed dial, so <code>AutoInit()</code> starts it and
-          <code>open()</code>, <code>close()</code> and <code>isOpen</code>
-          all work. The two never style each other, and neither reaches the
-          <a href="#toolbar">FAB to Toolbar</a> transition, which is
-          <code>.fab.toolbar</code> and stays there. <code>direction</code> and
-          <code>hoverEnabled</code> are inert on a FAB menu: it opens upward,
-          on click, both decided in CSS.
-        </p>
+          <code>FloatingActionButton</code> owns the menu state. It opens upward on click, closes on Escape, outside click or action activation, and returns focus when closing would hide the focused action. Closed actions are inert. Ordinary Tab navigation is preserved.        </p>
         <p>
           Beyond six actions the stagger runs out and the rest arrive
           together, which is past where Material 3 stops recommending them.
@@ -349,53 +305,14 @@ const S = defineSections([
         </TokenTable>
         </div>
   </Section>
-  <Section {...S.initialization}>
-        <p>
-          The IIFE bundle exposes <code>Expressive.FloatingActionButton</code>.
-          Call <code>init</code> yourself when you need options other than the defaults,
-          or let <code>Expressive.AutoInit()</code> start every
-          <code>.fab</code> with the defaults below.
-        </p>
-<Code code={`
-document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.fab');
-  const instances = Expressive.FloatingActionButton.init(elems, {
-    // specify options here
-  });
-});
-`} />
-        <p>
-          Per-instance options can also be passed through AutoInit:
-        </p>
-<Code code={`
-Expressive.AutoInit(document.body, {
-  FloatingActionButton: { direction: 'top' }
-});
-`} />
+  <Section {...S.migration}>
+    <p>Replace <code>.fab</code> and <code>.fixed-action-btn</code> speed-dial wrappers with <code>.fab-menu</code> and visible labels on each action. This requires updating the markup, not just renaming the wrapper.</p>
+    <p>Remove <code>direction</code>, <code>hoverEnabled</code>, <code>toolbarEnabled</code>, their markup switches and speed-dial-only token overrides. Hover opening and FAB-to-toolbar expansion have been removed. Use the <a href="/toolbars.html">toolbar component</a> for persistent commands.</p>
+    <p>Standalone FAB sizes and extended FAB variants are unchanged.</p>
   </Section>
-  <Section {...S.options}>
-        <div class="docs-table-scroll">
-        <OptionsTable>
-            <tr>
-              <td><code>direction</code></td>
-              <td>String</td>
-              <td><code>'top'</code></td>
-              <td>Direction the menu opens. One of <code>'top'</code>, <code>'right'</code>, <code>'bottom'</code>, or <code>'left'</code>. Write <code>direction-left</code> (etc.) on the element, or pass this option — the constructor stamps the class.</td>
-            </tr>
-            <tr>
-              <td><code>hoverEnabled</code></td>
-              <td>Boolean</td>
-              <td><code>true</code></td>
-              <td>When <code>true</code>, the menu opens on hover (CSS). When <code>false</code>, it toggles on click. <code>.click-to-toggle</code> is the markup switch.</td>
-            </tr>
-            <tr>
-              <td><code>toolbarEnabled</code></td>
-              <td>Boolean</td>
-              <td><code>false</code></td>
-              <td>Expand the FAB into a toolbar on click. <code>.toolbar</code> is the markup switch. See <a href="#toolbar">FAB to Toolbar</a>.</td>
-            </tr>
-  </OptionsTable>
-        </div>
+  <Section {...S.initialization}>
+    <p><code>Expressive.AutoInit()</code> initializes <code>.fab-menu</code>. For manual ownership, add <code>no-autoinit</code> and initialize it yourself. There are no component-specific options.</p>
+    <Code code={`const instance = Expressive.FloatingActionButton.init(document.querySelector(".fab-menu.no-autoinit"));`} />
   </Section>
   <Section {...S.methods}>
         <InstanceNote plugin="FloatingActionButton" />
@@ -427,78 +344,7 @@ instance.destroy();
             </tr>
   </PropertiesTable>
   </Section>
-  <Section {...S.horizontal}>
-        <p>Creating a horizontal FAB is easy. Set the <code>direction</code> option to <code>'left'</code> or <code>'right'</code>.</p>
-        <p>
-          Add <code>direction-left</code> or <code>direction-right</code>
-          on the wrapper. The JS <code>direction</code> option stamps the
-          same class.
-        </p>
-        <div class="fab-demo">
-          <div class="fab direction-left" id="fab-horizontal">
-            <button type="button" class="button extra circle" aria-label="Edit">
-              <span class="material-symbols" aria-hidden="true">mode_edit</span>
-            </button>
-            <ul>
-              <li><a class="button extra circle small error on-error-text" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
-              <li><a class="button extra circle small secondary on-secondary-text" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
-              <li><a class="button extra circle small tertiary on-tertiary-text" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
-              <li><a class="button extra circle small primary on-primary-text" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
-            </ul>
-          </div>
-        </div>
-<Code code={`
-<div class="fab direction-left">…</div>
-`} />
-  </Section>
-  <Section {...S["click-only"]}>
-        <p>
-          To disable hover and toggle the menu when the large button is clicked — useful on touch devices —
-          add <code>click-to-toggle</code> (or pass
-          <code>hoverEnabled: false</code>). On a device with no hover,
-          click is used even without the class.
-        </p>
-        <div class="fab-demo">
-          <div class="fab direction-left click-to-toggle" id="fab-click-only">
-            <button type="button" class="button extra circle" aria-label="Menu">
-              <span class="material-symbols" aria-hidden="true">menu</span>
-            </button>
-            <ul>
-              <li><a class="button extra circle small error on-error-text" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
-              <li><a class="button extra circle small secondary on-secondary-text" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
-              <li><a class="button extra circle small tertiary on-tertiary-text" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
-              <li><a class="button extra circle small primary on-primary-text" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
-            </ul>
-          </div>
-        </div>
-<Code code={`
-<div class="fab direction-left click-to-toggle">…</div>
-`} />
-  </Section>
-  <Section {...S.toolbar}>
-        <p>
-          Add <code>toolbar</code> (or pass <code>toolbarEnabled: true</code>)
-          to expand the button into a full-width bar on click. Prefer a hover
-          or click-only menu unless you specifically need the bar.
-        </p>
-<Code code={`
-<div class="fab toolbar">
-  <a class="button extra circle" aria-label="Edit"><span class="material-symbols large" aria-hidden="true">mode_edit</span></a>
-  <ul>
-    <li><a href="#!" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
-    <li><a href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
-    <li><a href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
-    <li><a href="#!" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
-  </ul>
-</div>
-`} />
-<Code code={`
-Expressive.FloatingActionButton.init(
-  document.querySelector('.fixed-action-btn.toolbar'),
-  { toolbarEnabled: true }
-);
-`} />
-  </Section>    </div>
+    </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">

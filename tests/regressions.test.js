@@ -46,62 +46,6 @@ function splitSelectors(list) {
   return out.filter((s) => s.trim());
 }
 
-describe('FloatingActionButton toolbar mode', () => {
-  beforeEach(resetBody);
-
-  test('opens without throwing and does not inject a backdrop', () => {
-    document.body.innerHTML = `
-      <div class="fixed-action-btn">
-        <a class="button extra circle"><i class="material-symbols">add</i></a>
-        <ul><li><a class="button extra circle small"><i class="material-symbols">edit</i></a></li></ul>
-      </div>`;
-    const el = document.querySelector('.fixed-action-btn');
-    const instance = Expressive.FloatingActionButton.init(el, { toolbarEnabled: true });
-
-    instance.open();
-
-    assert.ok(el.classList.contains('active'));
-    assert.equal(el.querySelectorAll('.fab-backdrop').length, 0, 'toolbar mode should not inject a backdrop');
-    instance.destroy();
-  });
-
-  test('closing clears .active and does not leave a backdrop', () => {
-    document.body.innerHTML = `
-      <div class="fixed-action-btn">
-        <a class="button extra circle"><i class="material-symbols">add</i></a>
-        <ul><li><a class="button extra circle small"><i class="material-symbols">edit</i></a></li></ul>
-      </div>`;
-    const el = document.querySelector('.fixed-action-btn');
-    const instance = Expressive.FloatingActionButton.init(el, { toolbarEnabled: true });
-
-    try {
-      instance.open();
-      instance.close();
-      assert.equal(el.classList.contains('active'), false);
-      assert.equal(el.querySelectorAll('.fab-backdrop').length, 0, 'a backdrop was injected');
-      assert.equal(el.style.width, '', 'toolbar mode wrote leftover inline styles');
-
-      instance.open();
-      instance.close();
-      assert.equal(el.classList.contains('active'), false);
-      assert.equal(el.querySelectorAll('.fab-backdrop').length, 0, 'backdrops accumulated');
-    } finally {
-      instance.destroy();
-    }
-  });
-
-  test('a FAB with no menu list does not throw', () => {
-    document.body.innerHTML = `<div class="fixed-action-btn"><a class="button extra circle">+</a></div>`;
-
-    const instance = Expressive.FloatingActionButton.init(
-      document.querySelector('.fixed-action-btn')
-    );
-
-    assert.ok(instance);
-    instance.destroy();
-  });
-});
-
 describe('Lightbox dimensions', () => {
   beforeEach(resetBody);
 
@@ -1293,9 +1237,6 @@ describe('Icon selectors keyed on <i>, second sweep', () => {
     );
   });
 
-  test('the FAB toolbar hides the icons of its collapsed actions', () => {
-    assertIconIsAClass('fab toolbar', /toolbar/, /opacity:\s*0/);
-  });
 
   test('navigation rail draws the active indicator pill', () => {
     assertIconIsAClass(
@@ -1357,7 +1298,6 @@ describe('Surfaces that lost the ripple keep a pressed state layer', () => {
   const PRESSED = [
     ['card reveal trigger', /\.card-reveal-trigger:active\s*\{[^}]*state-layer-opacity/],
     ['expanding card trigger', /\.expanding-card-trigger:active\s*\{[^}]*state-layer-opacity/],
-    ['FAB toolbar action', /\.toolbar\b[^{]*:is\(a, button\):active\s*\{[^}]*state-layer-opacity/],
     ['pagination item', /\.pagination :is\(a, button\):active\s*\{[^}]*state-layer-opacity/]
   ];
 
