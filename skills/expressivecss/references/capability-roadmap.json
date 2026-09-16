@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "223db240f4e6be040c04b7cd10cc3d23d60a2139853452049271a23241acb399",
+    "reportSha256": "20730fb351b7e745a436566289db9d927304a208f0e60e1a0a14035712a21047",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -2576,12 +2576,19 @@
         },
         {
           "kind": "feature",
-          "description": "Hour/minute inputs are unnamed and AM/PM controls have no role or selected state; modal and complete keyboard behavior remain incomplete.",
-          "nextStep": "Design localized input names and period controls, then test keyboard entry, 12/24-hour modes and dialog focus."
+          "description": "The unreleased source names hour/minute inputs and exposes AM/PM button state. Clock-dial arrow navigation and modal keyboard behavior remain unimplemented.",
+          "nextStep": "Use the digital inputs for keyboard entry; separately assess dial navigation and modal focus before claiming complete keyboard parity."
         }
       ],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: time picker exposes named keyboard controls in inline and docked modes",
+          "scope": "Localized hour name and fallback minute name, native AM/PM keyboard activation and selected state, no form submission, docked opening focus, and 12/24-hour digital entry including midnight. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

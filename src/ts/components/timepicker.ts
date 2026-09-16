@@ -59,7 +59,7 @@ export interface TimepickerOptions extends BaseOptions {
   /**
    * Internationalization options.
    */
-  i18n: Partial<I18nOptions>;
+  i18n: Partial<I18nOptions & { hours: string; minutes: string }>;
   /**
    * Use 12 hour AM/PM clock instead of 24 hour clock.
    * @default true
@@ -115,7 +115,9 @@ const _defaults: TimepickerOptions = {
   i18n: {
     cancel: 'Cancel',
     clear: 'Clear',
-    done: 'Ok'
+    done: 'Ok',
+    hours: 'Hours',
+    minutes: 'Minutes'
   },
   twelveHour: true, // change to 12 hour AM/PM clock from 24 hour
   vibrate: true, // vibrate the device when dragging clock hand
@@ -166,8 +168,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   hoursView: HTMLElement;
   spanAmPm: HTMLSpanElement;
   footer: HTMLElement;
-  private _amBtn: HTMLElement;
-  private _pmBtn: HTMLElement;
+  private _amBtn: HTMLButtonElement;
+  private _pmBtn: HTMLButtonElement;
   bg: Element;
   bearing: Element;
   g: Element;
@@ -182,7 +184,8 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.el['Expressive_Timepicker'] = this;
     this.options = {
       ...Timepicker.defaults,
-      ...options
+      ...options,
+      i18n: { ...Timepicker.defaults.i18n, ...options?.i18n }
     };
     this.id = Utils.guid();
     this._insertHTMLIntoDOM();
@@ -274,18 +277,18 @@ export class Timepicker extends Component<TimepickerOptions> {
     // Before focus(): focusing inputHours fires the handler that calls
     // showView, and an already-focused input fires nothing at all.
     this._ensureClockBuilt();
+    if (this.displayPlugin) this.displayPlugin.show();
     this.inputHours.focus();
     if (typeof this.options.onInputInteraction === 'function') this.options.onInputInteraction.call(this);
-    if (this.displayPlugin) this.displayPlugin.show();
   };
 
   _handleInputKeydown = (e: KeyboardEvent) => {
     if (e.key === Utils.keys.ENTER) {
       e.preventDefault();
       this._ensureClockBuilt();
+      if (this.displayPlugin) this.displayPlugin.show();
       this.inputHours.focus();
       if (typeof this.options.onInputInteraction === 'function') this.options.onInputInteraction.call(this);
-      if (this.displayPlugin) this.displayPlugin.show();
     }
   };
 
@@ -397,6 +400,8 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.minutesView = this.containerEl.querySelector('.timepicker-minutes');
     this.inputHours = this.containerEl.querySelector('.timepicker-input-hours');
     this.inputMinutes = this.containerEl.querySelector('.timepicker-input-minutes');
+    this.inputHours.setAttribute('aria-label', this.options.i18n.hours);
+    this.inputMinutes.setAttribute('aria-label', this.options.i18n.minutes);
     this.spanAmPm = this.containerEl.querySelector('.timepicker-span-am-pm');
     this.footer = this.containerEl.querySelector('.timepicker-footer');
     this.amOrPm = 'PM';
@@ -446,20 +451,18 @@ export class Timepicker extends Component<TimepickerOptions> {
   _clockSetup() {
     if (this.options.twelveHour) {
       // AM Button
-      this._amBtn = document.createElement('div');
+      this._amBtn = document.createElement('button');
+      this._amBtn.type = 'button';
       this._amBtn.classList.add('am-btn');
       this._amBtn.innerText = 'AM';
-      this._amBtn.tabIndex = 0;
       this._amBtn.addEventListener('click', this._handleAmPmClick);
-      this._amBtn.addEventListener('keypress', this._handleAmPmKeypress);
       this.spanAmPm.appendChild(this._amBtn);
       // PM Button
-      this._pmBtn = document.createElement('div');
+      this._pmBtn = document.createElement('button');
+      this._pmBtn.type = 'button';
       this._pmBtn.classList.add('pm-btn');
       this._pmBtn.innerText = 'PM';
-      this._pmBtn.tabIndex = 0;
       this._pmBtn.addEventListener('click', this._handleAmPmClick);
-      this._pmBtn.addEventListener('keypress', this._handleAmPmKeypress);
       this.spanAmPm.appendChild(this._pmBtn);
     }
     this._buildHoursView();
@@ -557,12 +560,6 @@ export class Timepicker extends Component<TimepickerOptions> {
     this._handleAmPmInteraction(<HTMLElement>e.target);
   };
 
-  _handleAmPmKeypress = (e: KeyboardEvent) => {
-    if (e.key === Utils.keys.ENTER) {
-      this._handleAmPmInteraction(<HTMLElement>e.target);
-    }
-  };
-
   _handleAmPmInteraction = (e: HTMLElement) => {
     this.amOrPm = e.classList.contains('am-btn') ? 'AM' : 'PM';
     this._updateAmPmView();
@@ -572,6 +569,10 @@ export class Timepicker extends Component<TimepickerOptions> {
     // _updateTimeFromInput settles amOrPm before the dial is built; the
     // buttons pick the state up in _ensureClockBuilt.
     if (!this._amBtn || !this._pmBtn) return;
+    this._amBtn.setAttribute('aria-pressed', String(this.amOrPm === 'AM'));
+    this._pmBtn.setAttribute('aria-pressed', String(this.amOrPm === 'PM'));
+    this._amBtn.classList.toggle('outlined', this.amOrPm !== 'AM');
+    this._pmBtn.classList.toggle('outlined', this.amOrPm !== 'PM');
     if (this.options.twelveHour) {
       if (this.amOrPm === 'PM') {
         this._amBtn.classList.remove('filled');
@@ -670,7 +671,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     const isHours = this.currentView === 'hours';
     if (isHours && this.inputHours.value !== '') {
       const value = parseInt(this.inputHours.value);
-      if (value > 0 && value < (this.options.twelveHour ? 13 : 24)) {
+      if (value >= (this.options.twelveHour ? 1 : 0) && value < (this.options.twelveHour ? 13 : 24)) {
         this.hours = value;
       } else {
         this.setHoursDefault();

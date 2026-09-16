@@ -273,6 +273,57 @@ scenario('remaining snackbar retains a focused action until focus leaves', '<but
   } finally { await page.evaluate(()=>Expressive.Snackbar.dismissAll()); }
 });
 
+scenario('time picker exposes named keyboard controls in inline and docked modes', '<form><label for="appointment">Appointment</label><input id="appointment" value="03:45 PM"></form>', async page => {
+  for (const docked of [false, true]) {
+    for (const twelveHour of [true, false]) {
+      try {
+        await page.evaluate(({ docked, twelveHour }) => {
+          window.submits = 0;
+          document.querySelector('form').onsubmit = event => { event.preventDefault(); window.submits++; };
+          const input = document.querySelector('#appointment');
+          input.value = twelveHour ? '03:45 PM' : '23:45';
+          window.instances = [Expressive.Timepicker.init(input, {
+            twelveHour, autoSubmit: false, duration: 0, vibrate: false,
+            displayPlugin: docked ? 'docked' : null,
+            displayPluginOptions: { duration: 0 }, i18n: { hours: 'Horas' }
+          })];
+        }, { docked, twelveHour });
+        await page.locator('#appointment').focus();
+        await page.keyboard.press('Enter');
+        await expect(page.getByRole('textbox', { name: 'Horas', exact: true })).toBeFocused();
+        await page.keyboard.press('ControlOrMeta+A');
+        await page.keyboard.type(twelveHour ? '11' : '00');
+        await page.keyboard.press('Tab');
+        await expect(page.getByRole('textbox', { name: 'Minutes', exact: true })).toBeFocused();
+        await page.keyboard.press('ControlOrMeta+A');
+        await page.keyboard.type('25');
+        await page.keyboard.press('Tab');
+        if (twelveHour) {
+          const am = page.getByRole('button', { name: 'AM', exact: true });
+          const pm = page.getByRole('button', { name: 'PM', exact: true });
+          await expect(am).toBeFocused();
+          await expect(pm).toHaveAttribute('aria-pressed', 'true');
+          await page.keyboard.press('Space');
+          await expect(am).toHaveAttribute('aria-pressed', 'true');
+          await expect(pm).toHaveAttribute('aria-pressed', 'false');
+          await page.keyboard.press('Tab');
+          await page.keyboard.press('Enter');
+          await expect(pm).toHaveAttribute('aria-pressed', 'true');
+          await expect(am).toHaveAttribute('aria-pressed', 'false');
+        } else {
+          await expect(page.locator('.am-btn, .pm-btn')).toHaveCount(0);
+        }
+        await page.getByRole('button', { name: 'Ok', exact: true }).focus();
+        await page.keyboard.press('Enter');
+        await expect(page.locator('#appointment')).toHaveValue(twelveHour ? '11:25 PM' : '00:25');
+        assert.equal(await page.evaluate(() => window.submits), 0);
+      } finally {
+        await page.evaluate(() => { window.instances?.forEach(instance => instance.destroy()); window.instances = []; });
+      }
+    }
+  }
+});
+
 scenario('actionable snackbar persists and restores focus on keyboard dismissal', '<button id="outside">Continue</button><button id="next">Next</button>', async page => {
   await page.locator('#outside').focus();
   try {

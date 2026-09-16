@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `223db240f4e6be040c04b7cd10cc3d23d60a2139853452049271a23241acb399`.
+Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `20730fb351b7e745a436566289db9d927304a208f0e60e1a0a14035712a21047`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -55,7 +55,7 @@ Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs mat
 | [Chips](#chips) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Autocomplete](#autocomplete) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Date picker](#date-picker) | unassessed | needs-review | no-mapped-checks | 2 |
-| [Time picker](#time-picker) | unassessed | needs-review | no-mapped-checks | 2 |
+| [Time picker](#time-picker) | unassessed | needs-review | recorded-scoped-pass | 2 |
 | [Typography](#typography) | unassessed | needs-review | recorded-scoped-pass | 2 |
 | [Shape](#shape) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Motion](#motion) | unassessed | needs-review | recorded-scoped-pass | 1 |
@@ -756,9 +756,9 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
 
 - feature: Modal picker parity is not provided by the documented inline API. Next: Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs.
-- feature: Hour/minute inputs are unnamed and AM/PM controls have no role or selected state; modal and complete keyboard behavior remain incomplete. Next: Design localized input names and period controls, then test keyboard entry, 12/24-hour modes and dialog focus.
+- feature: The unreleased source names hour/minute inputs and exposes AM/PM button state. Clock-dial arrow navigation and modal keyboard behavior remain unimplemented. Next: Use the digital inputs for keyboard entry; separately assess dial navigation and modal focus before claiming complete keyboard parity.
 
-No directly scoped browser check is mapped. This does not mean the component fails or has no unit tests.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker exposes named keyboard controls in inline and docked modes`. Localized hour name and fallback minute name, native AM/PM keyboard activation and selected state, no form submission, docked opening focus, and 12/24-hour digital entry including midnight. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.
 
 <a id="typography"></a>
 
