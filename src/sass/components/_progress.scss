@@ -49,6 +49,10 @@
   -webkit-appearance: none;
 }
 
+.progress:not(.circular) {
+  writing-mode: horizontal-tb;
+}
+
 progress.progress {
   vertical-align: baseline;
 
