@@ -12,6 +12,7 @@ export class FloatingActionButton
   isOpen: boolean;
   private _anchor: HTMLElement | null;
   private _list: HTMLElement | null;
+  private _listWasInert: boolean;
 
   constructor(el: HTMLElement, options: Partial<FloatingActionButtonOptions>) {
     super(el, options, FloatingActionButton);
@@ -20,6 +21,7 @@ export class FloatingActionButton
     this.isOpen = false;
     this._anchor = this.el.querySelector(':scope > a, :scope > button');
     this._list = this.el.querySelector(':scope > ul, :scope > menu');
+    this._listWasInert = this._list?.inert ?? false;
     this.el.classList.remove('active');
     if (this._list) this._list.inert = true;
     this._anchor?.setAttribute('aria-expanded', 'false');
@@ -49,6 +51,7 @@ export class FloatingActionButton
 
   destroy() {
     this.close();
+    if (this._list) this._list.inert = this._listWasInert;
     this.el.removeEventListener('click', this._handleFABClick);
     this._anchor?.removeEventListener('keydown', this._handleAnchorKeydown);
     this.el['Expressive_FloatingActionButton'] = undefined;

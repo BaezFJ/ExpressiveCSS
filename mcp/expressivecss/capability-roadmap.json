@@ -4,13 +4,13 @@
   "sourceRevision": "b3821bb0390b985c31a858ab7f4e3dbf0de2d71c",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
-    "recordedOn": "2026-09-15",
+    "recordedOn": "2026-09-16",
     "engine": "chromium",
     "engineVersion": "153.0.8010.12",
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "14bf5cf7b4f22275d71eba6a22a637897f4463805390b446dd73c32189a08dd9",
+    "reportSha256": "12b333bef9df50ba771741da5151f27507a1dfefe935be12f0859f73f7a39718",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [

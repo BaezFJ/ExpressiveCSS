@@ -217,8 +217,8 @@ const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'u
 test('speed-dial CSS and runtime options are removed', () => {
   assert.doesNotMatch(css, /\.fab(?![\w-])|\.fixed-action-btn|\.fab-backdrop/);
   assert.doesNotMatch(css, /--md-comp-fab-(?:offset|z|menu-gap|duration|stagger|easing|travel|hidden-transform)\b/);
-  const types = readFileSync(new URL('../dist/types/components/buttons.d.ts', import.meta.url), 'utf8');
-  assert.doesNotMatch(types, /hoverEnabled|toolbarEnabled|direction/);
+  const source = readFileSync(new URL('../src/ts/components/buttons.ts', import.meta.url), 'utf8');
+  assert.doesNotMatch(source, /hoverEnabled|toolbarEnabled|direction/);
 });
 
 browserTest('FAB menu preserves keyboard, dismissal and responsive behavior', async () => {
@@ -292,8 +292,25 @@ browserTest('FAB menu preserves keyboard, dismissal and responsive behavior', as
     await page.locator('#action').focus();
     await page.evaluate(() => window.instance.destroy());
     assert.equal(await page.evaluate(() => document.activeElement.id), 'trigger');
+    assert.equal(await page.locator('ul').evaluate(el => el.inert), false);
     await page.locator('#trigger').click();
     assert.equal(await page.locator('#trigger').getAttribute('aria-expanded'), 'false');
+    for (const inert of [false, true]) {
+      for (const open of [false, true]) {
+        assert.equal(await page.evaluate(({ inert, open }) => {
+          const host = document.querySelector('.fab-menu');
+          const list = host.querySelector('ul');
+          list.inert = inert;
+          window.instance = Expressive.FloatingActionButton.init(host);
+          try {
+            if (open) window.instance.open();
+          } finally {
+            window.instance.destroy();
+          }
+          return list.inert;
+        }, { inert, open }), inert);
+      }
+    }
   } finally {
     await page.evaluate(() => window.instance?.destroy()).catch(() => {});
     await browser.close();

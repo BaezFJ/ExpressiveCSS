@@ -223,7 +223,7 @@ Material Symbols, outlined by default. The compiled sheet ships the variable fon
 | Action inside a dialog, card, or snackbar | **Text button** |
 | Minor action, no room for a label | **Icon button** (`.icon-button`) + tooltip |
 | One usual action plus a few related ones | **Split button** (`.split-button`), not a button beside a separate icon button |
-| Several related shortcuts from a FAB | **FAB speed-dial** (`.fab`), not a second FAB |
+| Several related shortcuts from a FAB | **FAB menu** (`.fab-menu`) with labelled actions |
 | Frequent actions for *this* page, not destinations | **Toolbar** (floating or docked) |
 | Smart / automated action, or a filter / input token | **Chip** (see chip types) |
 | Confirm or cancel in a blocking prompt | Dialog **text buttons**, not a FAB |
@@ -1188,17 +1188,12 @@ These exist in ExpressiveCSS. Do not use them as if they were M3 building blocks
 | --- | --- | --- |
 | Lightbox (`.lightboxed`) | Media overlay (renamed from Materialbox) | A dialog, a gallery carousel, or a side sheet |
 | Media slider | Crossfading captions | An M3 carousel |
-| Removed FAB-to-toolbar | No current implementation | An M3 toolbar (`div.toolbar`) |
 
 ---
 
-# 11. Material 3 components this framework does not ship
+# 11. Check component availability
 
-Do not invent markup for these. If the user needs the pattern, say it is not available and use the substitute.
-
-| M3 component | Substitute in ExpressiveCSS |
-| --- | --- |
-| FAB menu (M3 Expressive labelled menu) | Use the current `.fab-menu` pattern with labelled actions. |
+Use the component catalogue and its documented markup to check support. FAB menus are supported through `.fab-menu` with labelled actions. Legacy speed dials and FAB-to-toolbar expansion are removed; use a FAB menu or a standalone `.toolbar` instead.
 
 ---
 
