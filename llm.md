@@ -4254,7 +4254,7 @@ Primary tabs stack the icon above the label (64dp). Add `horizontal` (or `tabs-h
 
 ## Snackbar
 
-Unreleased source pauses finite timers while focus or the pointer is inside and resumes after departure. For persistent actionable feedback use the existing displayLength: Infinity and dismissible: true options; keyboard reach, Escape and focus recovery need application verification. Published 0.9.1 does not include these repairs.
+Unreleased source makes snackbars with an action persistent and dismissible by default. Escape dismisses a focused snackbar; closing restores focus only when it remains inside the bar. Explicit finite timers still pause during focus or hover. Published 0.9.1 does not include these changes.
 
 Material Design 3 snackbars, from the HTML.
 
@@ -4262,7 +4262,7 @@ Snackbars show short updates about app processes at the bottom of the screen. Th
 
 Tokens follow the [M3 snackbar spec](https://m3.material.io/components/snackbar/specs). The container is `inverse-surface`, 4dp corners, elevation 3, 48dp minimum. Supporting text is `body-medium` / `inverse-on-surface`, two lines max. The action is a `label-large` / `inverse-primary` text button. Close is a 24dp `inverse-on-surface` icon. On Compact viewports the bar is inset 8dp from the edges; from the Medium breakpoint up it hugs content (344–672dp) and sits centered 24dp from the bottom.
 
-A snackbar can time out on its own (4 seconds, or 10 with an action) or stay until the user acts (`displayLength: Infinity`). Only one shows at a time. The live region is `role="status"` / `aria-live="polite"` and does not steal focus. Snackbar is not in `AutoInit()`.
+A text-only snackbar defaults to 4 seconds. Setting `action` defaults to `displayLength: Infinity` and `dismissible: true`; explicit options override these defaults. Only one shows at a time. The live region is `role="status"` / `aria-live="polite"` and does not steal focus. Snackbar is not in `AutoInit()`. Use ordinary Tab navigation for its actions and Dismiss. For quicker access, provide a visible notification-actions button near the task trigger whose click handler calls `instance.el.querySelector('button, a[href]')?.focus()`. Never autofocus on creation. Escape within a snackbar dismisses it without closing an enclosing dialog. Closing restores the prior connected focus target only if focus remains inside; application-directed focus is preserved. For custom template controls, explicitly set `displayLength: Infinity` and `dismissible: true`.
 
 Show Show with action Show with close
 
@@ -4347,9 +4347,9 @@ You can customize each snackbar with these options.
 | `text` | String | `''` | Plain-text supporting text, wrapped in a `<p>`. If set, it replaces any HTML from `snackbarId`. |
 | `action` | String | `''` | Optional action label. Rendered as a trailing text button. |
 | `onAction` | Function | `null` | Called when the action button is pressed. The snackbar still dismisses. |
-| `dismissible` | Boolean | `false` | Show a trailing close icon button. |
+| `dismissible` | Boolean | `false`, or `true` with an action | Show a trailing close icon button. An explicit false is preserved. |
 | `snackbarId` | String | — | Id of a `<template>` (or another element) used as the snackbar body. |
-| `displayLength` | Number | `4000` | How long the snackbar stays before it dismisses, in milliseconds. M3 recommends 4–10 seconds. |
+| `displayLength` | Number | `4000` | Default 4000ms without an action, or Infinity with an action. Explicit finite timers need equivalent persistent feedback in the application. |
 | `inDuration` | Number | `300` | Enter transition duration, in milliseconds. |
 | `outDuration` | Number | `375` | Exit transition duration, in milliseconds. |
 | `classes` | String | `''` | Space-separated classes added to the snackbar. `rounded` is a stadium. `top` moves the bar off the bottom. |
@@ -4410,7 +4410,7 @@ This is snackbar nº2
 ```
 
 ```js
-new Expressive.Snackbar({ snackbarId: 'my-snackbar-1' });
+new Expressive.Snackbar({ snackbarId: 'my-snackbar-1', displayLength: Infinity, dismissible: true });
 ```
 
 ### Callback

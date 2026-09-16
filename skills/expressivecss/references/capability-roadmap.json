@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "28f9e468c8fd72294a8ce76b9603a72b6dc0c7d9a3f7473ee2b94bf6aa052b5f",
+    "reportSha256": "223db240f4e6be040c04b7cd10cc3d23d60a2139853452049271a23241acb399",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1481,7 +1481,7 @@
       "lastReviewedSupport": "partial",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
-      "scope": "Transient message with optional action and close control.",
+      "scope": "Timed text feedback or persistent actionable messages, with optional close control and focused Escape dismissal.",
       "adaptation": "Use the documented announcement and timeout behavior.",
       "upstream": {
         "source": "https://m3.material.io/components/snackbar/overview",
@@ -1513,9 +1513,9 @@
       ],
       "gaps": [
         {
-          "kind": "feature",
-          "description": "Focus/hover pause does not satisfy persistent actionable snackbar guidance; default action timeout is finite and Escape handling is absent.",
-          "nextStep": "Use existing displayLength: Infinity and dismissible: true for persistent actions; provide a documented reach shortcut and test Escape and spoken delivery."
+          "kind": "verification",
+          "description": "Application keyboard reach controls, custom template actions and spoken live-region delivery need application-level verification.",
+          "nextStep": "Provide a visible notification-actions control, persistent inline equivalents for timed feedback, and verify screen-reader announcements in the target application."
         }
       ],
       "browserChecks": [
@@ -1523,6 +1523,12 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining snackbar retains a focused action until focus leaves",
           "scope": "Focused action survives its timeout and activates once; timer resumes after focus leaves a second snackbar.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: actionable snackbar persists and restores focus on keyboard dismissal",
+          "scope": "Persistent action defaults, native Tab navigation, focused Escape, inert closing controls, action-directed and replacement focus recovery, shadow roots and nested dialogs. Firefox and WebKit variants run in the browser suite.",
           "state": "recorded-passed"
         }
       ],

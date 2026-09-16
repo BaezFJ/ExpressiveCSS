@@ -885,7 +885,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 **Adaptive.** Compact: 48–64 dp tall, may grow to two lines. Medium+: single-line when possible, hugging content width.
 
-**Behavior.** One at a time. Default timeout 4 s, 10 s with an action, or `displayLength: Infinity` until the user acts. Action is optional and must not be the only way to complete a required task.
+**Behavior.** One at a time. Text-only feedback defaults to 4 s. An action defaults to persistent `displayLength: Infinity` with a Dismiss control. Explicit finite timers need equivalent persistent inline feedback. Actions use Tab; applications should provide a nearby notification-actions control for direct keyboard access. Escape within the snackbar dismisses it and restores focus only when focus remains inside. Action is optional and must not be the only way to complete a required task.
 
 ---
 

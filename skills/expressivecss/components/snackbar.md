@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `27b86252d56091f9b325d434150d58f4f1e8fad5e924438c64f4d07021be8ba5`
+Contract SHA-256: `79890b235d4a2e299cdbf8c5df77c29cfedecb410790f0e065c7e595a94e36e8`
 
 #### Selection and adaptation
 
@@ -33,17 +33,17 @@ Requirements and boundaries: design reference feedback-material-review. Full vis
 
 [Google guidelines](https://m3.material.io/components/snackbar/guidelines).
 
-Support (2026-09-13, `llm.md#snackbar`): Transient message with optional action and close control.
+Support (2026-09-13, `llm.md#snackbar`): Timed text feedback or persistent actionable messages, with optional close control and focused Escape dismissal.
 
 Web adaptation: Use the documented announcement and timeout behavior.
 
-Known boundary: Focus/hover pause does not satisfy persistent actionable snackbar guidance; default action timeout is finite and Escape handling is absent.
+Known boundary: Custom template actions require explicit persistence and a close control. Application keyboard reach controls and spoken live-region delivery need verification.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#snackbar).
 
 #### Contract
 
-Unreleased source pauses finite timers while focus or the pointer is inside and resumes after departure. For persistent actionable feedback use the existing displayLength: Infinity and dismissible: true options; keyboard reach, Escape and focus recovery need application verification. Published 0.9.1 does not include these repairs.
+Unreleased source makes snackbars with an action persistent and dismissible by default. Escape dismisses a focused snackbar; closing restores focus only when it remains inside the bar. Explicit finite timers still pause during focus or hover. Published 0.9.1 does not include these changes.
 
 Material Design 3 snackbars, from the HTML.
 

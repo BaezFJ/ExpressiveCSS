@@ -273,6 +273,96 @@ scenario('remaining snackbar retains a focused action until focus leaves', '<but
   } finally { await page.evaluate(()=>Expressive.Snackbar.dismissAll()); }
 });
 
+scenario('actionable snackbar persists and restores focus on keyboard dismissal', '<button id="outside">Continue</button><button id="next">Next</button>', async page => {
+  await page.locator('#outside').focus();
+  try {
+    await page.evaluate(() => {
+      window.actions = 0;
+      window.snack = new Expressive.Snackbar({ text: 'Archived', action: 'Undo', inDuration: 0, outDuration: 200, onAction: () => window.actions++ });
+    });
+    await expect(page.locator('#outside')).toBeFocused();
+    assert.equal(await page.evaluate(() => window.snack.options.displayLength === Infinity && window.snack.counterTimeout == null), true);
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('button', { name: 'Undo', exact: true })).toBeVisible();
+    await page.locator('#next').focus();
+    await page.keyboard.press('Tab');
+    await expect(page.getByRole('button', { name: 'Undo', exact: true })).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(page.getByRole('button', { name: 'Dismiss', exact: true })).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#next')).toBeFocused();
+    assert.equal(await page.evaluate(() => window.snack.el.inert), true);
+    await page.keyboard.press('Tab');
+    await expect(page.getByRole('button', { name: 'Dismiss', exact: true })).not.toBeFocused();
+    await expect(page.getByRole('status')).toHaveCount(0);
+
+    await page.locator('#outside').focus();
+    await page.evaluate(() => { window.snack = new Expressive.Snackbar({ text: 'Archived', action: 'Undo', inDuration: 0, outDuration: 0, onAction: () => { window.actions++; document.querySelector('#next').focus(); } }); });
+    await page.getByRole('button', { name: 'Undo', exact: true }).focus();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('#next')).toBeFocused();
+    assert.equal(await page.evaluate(() => window.actions), 1);
+    await expect(page.getByRole('status')).toHaveCount(0);
+
+    await page.evaluate(() => { window.snack = new Expressive.Snackbar({ text: 'Archived', action: 'Undo', inDuration: 0, outDuration: 0 }); });
+    await page.getByRole('button', { name: 'Undo', exact: true }).focus();
+    await page.evaluate(() => new Expressive.Snackbar({ text: 'Replacement', action: 'Review', inDuration: 0, outDuration: 0 }));
+    await expect(page.locator('#next')).toBeFocused();
+    await page.getByRole('button', { name: 'Dismiss', exact: true }).click();
+    await expect(page.locator('#next')).toBeFocused();
+    await expect(page.getByRole('status')).toHaveCount(0);
+
+    await page.evaluate(() => {
+      window.snack = new Expressive.Snackbar({ text: 'Before reentry', action: 'Undo', inDuration: 0, outDuration: 0 });
+      window.snack.el.querySelector('button').focus();
+      document.querySelector('#next').addEventListener('focus', () => {
+        window.nestedSnack = new Expressive.Snackbar({ text: 'Nested', action: 'Undo', inDuration: 0, outDuration: 0 });
+      }, { once: true });
+      window.snack = new Expressive.Snackbar({ text: 'After reentry', action: 'Review', inDuration: 0, outDuration: 0 });
+    });
+    await expect(page.locator('.snackbar')).toHaveCount(1);
+    await expect(page.getByRole('status')).toContainText('After reentry');
+    assert.equal(await page.evaluate(() => !window.nestedSnack.el.isConnected && Expressive.Snackbar._snackbars.length === 1), true);
+    await page.evaluate(() => Expressive.Snackbar.dismissAll());
+    await expect(page.locator('.snackbar')).toHaveCount(0);
+
+    await page.evaluate(() => {
+      const host = document.createElement('div');
+      host.id = 'shadow-snackbar';
+      document.body.append(host);
+      const root = host.attachShadow({ mode: 'open' });
+      const trigger = document.createElement('button');
+      trigger.id = 'shadow-trigger';
+      trigger.textContent = 'Shadow action';
+      root.append(trigger);
+      trigger.focus();
+      window.snack = new Expressive.Snackbar({ text: 'Shadow update', action: 'Undo', root: trigger, inDuration: 0, outDuration: 0 });
+    });
+    await page.getByRole('button', { name: 'Undo', exact: true }).focus();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#shadow-trigger')).toBeFocused();
+    await expect(page.getByRole('status')).toHaveCount(0);
+
+    await page.evaluate(() => {
+      const dialog = document.createElement('dialog');
+      dialog.id = 'snackbar-dialog';
+      dialog.innerHTML = '<button id="dialog-trigger">Save</button>';
+      document.body.append(dialog);
+      dialog.showModal();
+      window.snack = new Expressive.Snackbar({ text: 'Saved', action: 'Undo', inDuration: 0, outDuration: 0 });
+      dialog.append(window.snack.el);
+    });
+    await page.getByRole('button', { name: 'Undo', exact: true }).focus();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#snackbar-dialog')).toHaveAttribute('open', '');
+    await expect(page.locator('#dialog-trigger')).toBeFocused();
+    await expect(page.getByRole('status')).toHaveCount(0);
+    await page.evaluate(() => document.querySelector('#snackbar-dialog').close());
+  } finally {
+    await page.evaluate(() => Expressive.Snackbar.dismissAll());
+  }
+});
+
 scenario('remaining lightbox supports Space and preserves its image on teardown', `
 <img id="photo" class="lightboxed" width="120" height="80" style="border-radius:4px" tabindex="0" role="button" alt="Mountain lake">
 <button id="after-photo">Next action</button>`, async page => {

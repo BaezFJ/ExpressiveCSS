@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Migration
 
+- Snackbars with `action` now default to `displayLength: Infinity` and
+  `dismissible: true`. Explicit options still override these defaults. Custom
+  template controls need these options explicitly. Timed feedback needs an
+  equivalent persistent message in the application.
+
 - Replace `circle extra small` with `circle extra` for the 56dp FAB.
   Extended FABs require an explicit size: replace sizeless `extend` with
   `extend small`, or choose `extend medium` or `extend large`.
@@ -33,6 +38,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   state with those inputs in application code.
 
 ### Changed
+
+- Escape dismisses a focused snackbar without closing its parent dialog.
+  Dismissal and replacement recover focus when it remains inside the snackbar;
+  closing controls are inert, and application-directed focus is preserved.
 
 - The documentation shell now uses a five-category rail with a page list on
   wide layouts and a native full-screen navigation dialog on compact layouts.

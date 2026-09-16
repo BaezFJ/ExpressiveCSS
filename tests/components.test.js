@@ -721,13 +721,27 @@ describe("Snackbar", () => {
     }
   });
 
-  test("an action snackbar stays longer unless displayLength is set", () => {
+  test("an action snackbar persists with a close control by default", () => {
     const snackbar = new Expressive.Snackbar({
       text: "Archived",
       action: "Undo",
     });
     try {
-      assert.equal(snackbar.options.displayLength, 10000);
+      assert.equal(snackbar.options.displayLength, Infinity);
+      assert.equal(snackbar.options.dismissible, true);
+      assert.ok(snackbar.el.querySelector('button[aria-label="Dismiss"]'));
+      assert.equal(snackbar.counterTimeout, undefined);
+    } finally {
+      snackbar.dismiss();
+    }
+  });
+
+  test("action snackbar options can explicitly retain timed feedback and omit close", () => {
+    const snackbar = new Expressive.Snackbar({ text: 'Saved', action: 'Review', displayLength: 4000, dismissible: false });
+    try {
+      assert.equal(snackbar.options.displayLength, 4000);
+      assert.equal(snackbar.options.dismissible, false);
+      assert.equal(snackbar.el.querySelector('button.circle'), null);
     } finally {
       snackbar.dismiss();
     }

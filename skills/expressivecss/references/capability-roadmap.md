@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `28f9e468c8fd72294a8ce76b9603a72b6dc0c7d9a3f7473ee2b94bf6aa052b5f`.
+Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `223db240f4e6be040c04b7cd10cc3d23d60a2139853452049271a23241acb399`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -38,7 +38,7 @@ Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs mat
 | [Drag handle](#drag-handle) | unassessed | needs-review | no-mapped-checks | 1 |
 | [Badges](#badges) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Snackbar](#snackbar) | unassessed | needs-review | recorded-scoped-pass | 1 |
+| [Snackbar](#snackbar) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Progress indicators](#progress) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Carousel](#carousel) | unassessed | needs-review | no-mapped-checks | 0 |
@@ -465,7 +465,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 ## Snackbar
 
-**unassessed within the stated scope.** Transient message with optional action and close control.
+**unassessed within the stated scope.** Timed text feedback or persistent actionable messages, with optional close control and focused Escape dismissal.
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_snackbar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_snackbar.scss), [src/ts/components/snackbar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/snackbar.ts).
 
@@ -473,9 +473,10 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 
 Web adaptation: Use the documented announcement and timeout behavior.
 
-- feature: Focus/hover pause does not satisfy persistent actionable snackbar guidance; default action timeout is finite and Escape handling is absent. Next: Use existing displayLength: Infinity and dismissible: true for persistent actions; provide a documented reach shortcut and test Escape and spoken delivery.
+- verification: Application keyboard reach controls, custom template actions and spoken live-region delivery need application-level verification. Next: Provide a visible notification-actions control, persistent inline equivalents for timed feedback, and verify screen-reader announcements in the target application.
 
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining snackbar retains a focused action until focus leaves`. Focused action survives its timeout and activates once; timer resumes after focus leaves a second snackbar.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: actionable snackbar persists and restores focus on keyboard dismissal`. Persistent action defaults, native Tab navigation, focused Escape, inert closing controls, action-directed and replacement focus recovery, shadow roots and nested dialogs. Firefox and WebKit variants run in the browser suite.
 
 <a id="progress"></a>
 

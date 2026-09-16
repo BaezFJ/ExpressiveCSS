@@ -19,7 +19,7 @@ export interface SnackbarOptions extends BaseOptions {
   onAction: () => void;
   /**
    * Show a trailing close icon button.
-   * @default false
+   * Defaults to true when action is set, otherwise false.
    */
   dismissible: boolean;
   /**
@@ -30,7 +30,7 @@ export interface SnackbarOptions extends BaseOptions {
   /**
    * Length in ms the Snackbar stays before dismissal.
    * `Infinity` keeps it on screen until the user acts.
-   * When `action` is set and this is omitted, the default is 10000.
+   * When `action` is set and this is omitted, the default is Infinity.
    * @default 4000
    */
   displayLength: number;
@@ -108,6 +108,7 @@ export class Snackbar {
   deltaX: number;
   velocityX: number;
   private _dismissed = false;
+  private _returnFocus: HTMLElement | null = null;
 
   static _snackbars: Snackbar[];
   static _container: HTMLElement;
@@ -120,23 +121,24 @@ export class Snackbar {
       ...Snackbar.defaults,
       ...options
     };
-    // With an action, stay long enough to tap it. Pass Infinity to remain
-    // until the user acts; pass an explicit displayLength to override.
     if (options.displayLength === undefined && this.options.action) {
-      this.options.displayLength = 10000;
+      this.options.displayLength = Infinity;
     }
+    if (options.dismissible === undefined && this.options.action) this.options.dismissible = true;
     this.message = this.options.text;
     this.panning = false;
     this.timeRemaining = this.options.displayLength;
     // One snackbar at a time so a new update does not stack over the page.
-    if (Snackbar._snackbars.length > 0) {
-      for (const snackbar of [...Snackbar._snackbars]) {
-        snackbar._dismissed = true;
-        clearTimeout(snackbar.counterTimeout);
-        snackbar.el.remove();
-      }
-      Snackbar._snackbars.length = 0;
+    while (Snackbar._snackbars.length > 0) {
+      const snackbar = Snackbar._snackbars.shift();
+      snackbar._dismissed = true;
+      clearTimeout(snackbar.counterTimeout);
+      snackbar._restoreFocus();
+      snackbar.el.remove();
     }
+    let focused = document.activeElement;
+    while (focused?.shadowRoot?.activeElement) focused = focused.shadowRoot.activeElement;
+    this._returnFocus = focused instanceof HTMLElement ? focused : null;
     // One container serves every snackbar, and only one snackbar shows at a
     // time — so it is moved rather than duplicated when the root changes.
     const root = Utils.portalRoot(this.options.root ?? document.body);
@@ -294,7 +296,19 @@ export class Snackbar {
     snackbar.setAttribute('role', 'status');
     snackbar.setAttribute('aria-live', 'polite');
     snackbar.setAttribute('aria-atomic', 'true');
-    snackbar.addEventListener('focusin', () => this._pauseTimer());
+    snackbar.inert = false;
+    snackbar.addEventListener('focusin', (e) => {
+      if (e.relatedTarget instanceof HTMLElement && !snackbar.contains(e.relatedTarget)) {
+        this._returnFocus = e.relatedTarget;
+      }
+      this._pauseTimer();
+    });
+    snackbar.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || e.defaultPrevented || this._dismissed) return;
+      e.preventDefault();
+      e.stopPropagation();
+      this.dismiss();
+    });
     snackbar.addEventListener('focusout', () => setTimeout(() => this._resumeTimer(), 0));
     snackbar.addEventListener('pointerenter', () => this._pauseTimer());
     snackbar.addEventListener('pointerleave', () => this._resumeTimer());
@@ -313,10 +327,12 @@ export class Snackbar {
       action.textContent = this.options.action;
       action.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (typeof this.options.onAction === 'function') {
-          this.options.onAction();
+        if (this._dismissed) return;
+        try {
+          if (typeof this.options.onAction === 'function') this.options.onAction();
+        } finally {
+          this.dismiss();
         }
-        this.dismiss();
       });
       snackbar.appendChild(action);
     }
@@ -381,6 +397,14 @@ export class Snackbar {
     this._setTimer();
   }
 
+  private _restoreFocus() {
+    const focused = (this.el.getRootNode() as Document | ShadowRoot).activeElement;
+    if (focused && this.el.contains(focused) && this._returnFocus?.isConnected) {
+      this._returnFocus.focus({ preventScroll: true });
+    }
+    this.el.inert = true;
+  }
+
   /**
    * Dismiss snackbar with animation.
    */
@@ -389,6 +413,7 @@ export class Snackbar {
     this._dismissed = true;
     clearTimeout(this.counterTimeout);
     this.counterTimeout = null;
+    this._restoreFocus();
     const activationDistance = this.el.offsetWidth * this.options.activationPercent;
 
     if (this.wasSwiped) {
