@@ -365,7 +365,8 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 | Variant | Width | FAB | When |
 | --- | --- | --- | --- |
 | Collapsed (default) | 96 dp | Icon-only | Medium+ persistent nav |
-| Expanded (`.expanded`) | 220–360 dp | Modal (`.modal`, or expanded on compact) | Overlay + scrim | — | Overflow menu on small windows |
+| Expanded (`.expanded`) | 220–360 dp | Extended FAB | Labels needed, or as the drawer replacement |
+| Modal (`.modal`, or expanded on compact) | Overlay + scrim | — | Overflow menu on small windows |
 
 **Anatomy**
 
@@ -578,7 +579,6 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 | FAB | `circle extra` | Default primary action |
 | Medium FAB | `extra circle medium` | 80 dp: one prominent action on a large window, where a 56 dp disc reads as undersized |
 | Large FAB | `extra circle large` | 96 dp: the action *is* the screen's purpose. Needs the `extra` — `circle large` alone is the default FAB |
-| Extended FAB | `extend` (icon + `<span>` label) | Large windows, or when the label is needed to explain a non-standard icon |
 | Small extended FAB | `extend small` | 56 dp with a symmetric 16 dp inset and a title-medium label |
 | Medium extended FAB | `extend medium` | 80 dp, `title-large` label: the extended FAB on a large window |
 | Large extended FAB | `extend large` | 96 dp, `headline-small` label: the action *is* the screen's purpose, and needs its name |

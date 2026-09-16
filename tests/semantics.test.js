@@ -331,6 +331,18 @@ const examples = [
 
 const enforcedRules = rulesOf(data);
 
+test('Material guidance preserves rail variants and only recommends sized extended FABs', () => {
+  const guidance = read('m3-guidelines.md');
+  for (const variant of ['Expanded', 'Modal']) {
+    const row = guidance.split('\n').find(line => line.startsWith(`| ${variant} (`));
+    assert.ok(row, `missing ${variant} rail variant`);
+    assert.equal(row.split('|').length, 6, `${variant} rail variant must have four cells`);
+  }
+  const fab = guidance.split('## 5.3 Floating action button')[1].split('## 5.4')[0];
+  assert.doesNotMatch(fab, /^\|[^\n]*\|\s*`extend`/m);
+  for (const size of ['small', 'medium', 'large']) assert.ok(fab.includes(`\`extend ${size}\``));
+});
+
 test('FAB migration rules reject removed variants without rejecting current sizes or surface utilities', () => {
   const fabRules = data.rows.buttons.rules.filter(rule => ['fab-no-small-variant', 'extended-fab-requires-size', 'fab-no-surface-color'].includes(rule.id));
   assert.equal(fabRules.length, 3);
