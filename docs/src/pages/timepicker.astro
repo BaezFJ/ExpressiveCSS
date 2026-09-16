@@ -152,7 +152,7 @@ Expressive.Timepicker.init(elem, {
               <td><code>i18n</code></td>
               <td>Object</td>
               <td>See below</td>
-              <td>Labels for Cancel, Clear, and Ok.</td>
+              <td>Labels for Cancel, Clear, Ok, Hours, and Minutes.</td>
             </tr>
             <tr>
               <td><code>twelveHour</code></td>
@@ -206,7 +206,7 @@ Expressive.Timepicker.init(elem, {
   </Section>
 
   <Section {...S.internationalization}>
-        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults.</p>
+        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults. The unreleased source adds <code>hours</code> and <code>minutes</code> as accessible input names. AM/PM buttons expose their selected state and support Enter and Space. Use Tab to move between controls; the dial does not implement arrow-key navigation.</p>
         <table class="striped">
           <thead>
             <tr>
@@ -227,6 +227,8 @@ Expressive.Timepicker.init(elem, {
               <td><code>done</code></td>
               <td><code>'Ok'</code></td>
             </tr>
+            <tr><td><code>hours</code></td><td><code>'Hours'</code></td></tr>
+            <tr><td><code>minutes</code></td><td><code>'Minutes'</code></td></tr>
           </tbody>
         </table>
   </Section>

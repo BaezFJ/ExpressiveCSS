@@ -5,6 +5,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Time picker hour/minute inputs have localized accessible names. Native AM/PM
+  buttons expose selected state and support Enter and Space without submitting
+  forms. Docked opening focuses the visible hour input; 24-hour entry accepts 00.
+
 ### Migration
 
 - Snackbars with `action` now default to `displayLength: Infinity` and

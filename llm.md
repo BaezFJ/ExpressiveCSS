@@ -5032,7 +5032,7 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 | `autoSubmit` | Boolean | `true` | If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added. |
 | `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` string (optionally with `AM`/`PM`). |
 | `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |
-| `i18n` | Object | See below | Labels for Cancel, Clear, and Ok. |
+| `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, and Minutes. |
 | `twelveHour` | Boolean | `true` | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. |
 | `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
 | `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
@@ -5051,6 +5051,8 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 | `cancel` | `'Cancel'` |
 | `clear` | `'Clear'` |
 | `done` | `'Ok'` |
+
+The unreleased source adds `i18n.hours` and `i18n.minutes`, defaulting to `Hours` and `Minutes`, as accessible input names. AM/PM buttons expose their selected state and support Enter and Space. Tab moves between controls; the dial does not implement arrow-key navigation. These additions are not in published 0.9.1.
 
 ### 12-hour and 24-hour
 
