@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Date picker calendars support a single Tab stop, arrow keys, Home/End,
+  PageUp/PageDown and Shift for year navigation. Redraws preserve calendar focus,
+  and disabled days expose their unavailable state without allowing selection.
+
 - Time picker hour/minute inputs have localized accessible names. Native AM/PM
   buttons expose selected state and support Enter and Space without submitting
   forms. Docked opening focuses the visible hour input; 24-hour entry accepts 00.

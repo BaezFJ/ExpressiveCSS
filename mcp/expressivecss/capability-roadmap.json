@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "20730fb351b7e745a436566289db9d927304a208f0e60e1a0a14035712a21047",
+    "reportSha256": "71a66cede032a52f516c236897821e387af78351e7a832fc8320b83615e4a5d8",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -2508,12 +2508,19 @@
         },
         {
           "kind": "feature",
-          "description": "Calendar markup claims a grid but lacks calendar arrow, Home/End and month-navigation key handling; modal/range coverage remains incomplete.",
-          "nextStep": "Implement and test the calendar keyboard contract or choose native date input; verify locale and constrained-date behavior."
+          "description": "The unreleased source adds calendar grid keyboard navigation and redraw focus recovery. Modal and range-specific keyboard coverage remain incomplete.",
+          "nextStep": "Verify range and multiple-date selection and spoken calendar context separately; preserve the existing inline and docked APIs."
         }
       ],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: date picker supports calendar keyboard navigation and redraw focus",
+          "scope": "Inline and docked calendar day/week/month/year navigation, leap-year clamping, disabled-date selection prevention, RTL, configured bounds and redraw focus. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
