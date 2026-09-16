@@ -4876,6 +4876,10 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 | `weekdaysShort` | `['Sun', …, 'Sat']` |
 | `weekdaysAbbrev` | `['S', 'M', 'T', 'W', 'T', 'F', 'S']` |
 
+### Calendar keyboard navigation
+
+The unreleased source adds keyboard navigation to the existing inline and docked calendars. Enter on a date input focuses the calendar. Tab enters or leaves its single day stop; arrow keys move by day or week. Left/Right follow `isRTL`. Home/End move to the first/last day of the week using `firstDay`. PageUp/PageDown change month, and Shift changes year, clamping to the last day of shorter months. Enter or Space selects an enabled day. Disabled dates remain focusable with `aria-disabled` but cannot be selected. Navigation respects date and year/month bounds and restores day focus after redraws without moving focus from outside the calendar. No modal picker is added. These additions are not in published 0.9.1.
+
 ### Date range
 
 Set `isDateRange: true`. Click a start day, then an end day that is on or after it. Point `dateRangeEndEl` at a second input, or omit it and a second input is created next to the first.

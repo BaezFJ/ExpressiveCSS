@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `20730fb351b7e745a436566289db9d927304a208f0e60e1a0a14035712a21047`.
+Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `71a66cede032a52f516c236897821e387af78351e7a832fc8320b83615e4a5d8`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -54,7 +54,7 @@ Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs mat
 | [Slider](#slider) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Chips](#chips) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Autocomplete](#autocomplete) | unassessed | needs-review | recorded-scoped-pass | 1 |
-| [Date picker](#date-picker) | unassessed | needs-review | no-mapped-checks | 2 |
+| [Date picker](#date-picker) | unassessed | needs-review | recorded-scoped-pass | 2 |
 | [Time picker](#time-picker) | unassessed | needs-review | recorded-scoped-pass | 2 |
 | [Typography](#typography) | unassessed | needs-review | recorded-scoped-pass | 2 |
 | [Shape](#shape) | unassessed | needs-review | recorded-scoped-pass | 1 |
@@ -739,9 +739,9 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
 
 - feature: Modal picker parity is not provided by the documented inline API. Next: Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs.
-- feature: Calendar markup claims a grid but lacks calendar arrow, Home/End and month-navigation key handling; modal/range coverage remains incomplete. Next: Implement and test the calendar keyboard contract or choose native date input; verify locale and constrained-date behavior.
+- feature: The unreleased source adds calendar grid keyboard navigation and redraw focus recovery. Modal and range-specific keyboard coverage remain incomplete. Next: Verify range and multiple-date selection and spoken calendar context separately; preserve the existing inline and docked APIs.
 
-No directly scoped browser check is mapped. This does not mean the component fails or has no unit tests.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker supports calendar keyboard navigation and redraw focus`. Inline and docked calendar day/week/month/year navigation, leap-year clamping, disabled-date selection prevention, RTL, configured bounds and redraw focus. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.
 
 <a id="time-picker"></a>
 

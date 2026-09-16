@@ -326,6 +326,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   private _controlsKey: string = null;
   /** id linking the controls element to the table's aria-labelledby. */
   private _randId: string = null;
+  private _focusedDate: Date = null;
   static _template: string;
 
   constructor(el: HTMLInputElement, options: Partial<DatepickerOptions>) {
@@ -1187,6 +1188,10 @@ export class Datepicker extends Component<DatepickerOptions> {
       this._drawDirty = true;
       return;
     }
+    const active = (this.calendarEl.getRootNode() as Document | ShadowRoot).activeElement;
+    const restoreDayFocus = active?.matches('.datepicker-day-button') && this.calendarEl.contains(active);
+    const restoreArrow = this.calendarEl.contains(active) && active?.matches('.month-prev, .month-next')
+      ? active.classList.contains('month-prev') ? '.month-prev' : '.month-next' : null;
     const opts = this.options,
       minYear = opts.minYear,
       maxYear = opts.maxYear,
@@ -1230,6 +1235,8 @@ export class Datepicker extends Component<DatepickerOptions> {
       this._rebuildControls(year, month);
     }
     this._renderCalendarTable(year, month);
+    this._syncCalendarFocus(!!restoreDayFocus);
+    if (restoreArrow) this.calendarEl.querySelector<HTMLButtonElement>(restoreArrow)?.focus();
 
     if (typeof this.options.onDraw === 'function') {
       this.options.onDraw.call(this);
@@ -1288,6 +1295,8 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.el.addEventListener('keydown', this._handleInputKeydown);
     this.el.addEventListener('change', this._handleInputChange);
     this.calendarEl.addEventListener('click', this._handleCalendarClick);
+    this.calendarEl.addEventListener('keydown', this._handleCalendarKeydown);
+    this.calendarEl.addEventListener('focusin', this._handleCalendarFocus);
     /* this.doneBtn.addEventListener('click', this._confirm);
     this.cancelBtn.addEventListener('click', this._cancel);
 
@@ -1353,9 +1362,11 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.el.removeEventListener('keydown', this._handleInputKeydown);
     this.el.removeEventListener('change', this._handleInputChange);
     this.calendarEl.removeEventListener('click', this._handleCalendarClick);
+    this.calendarEl.removeEventListener('keydown', this._handleCalendarKeydown);
+    this.calendarEl.removeEventListener('focusin', this._handleCalendarFocus);
     if (this.options.isDateRange && this.endDateEl) {
       this.endDateEl.removeEventListener('click', this._handleInputClick);
-      this.endDateEl.removeEventListener('keypress', this._handleInputKeydown);
+      this.endDateEl.removeEventListener('keydown', this._handleInputKeydown);
       this.endDateEl.removeEventListener('change', this._handleInputChange);
     }
   }
@@ -1379,11 +1390,71 @@ export class Datepicker extends Component<DatepickerOptions> {
       e.preventDefault();
       this._batchDraws(() => {
         this.setDateFromInput(e.target as HTMLInputElement);
+        this._focusedDate = e.target === this.endDateEl ? this.endDate : this.date;
         this.draw();
       });
       if (this.displayPlugin) this.displayPlugin.show();
+      this._syncCalendarFocus(true);
       if (this.options.onInputInteraction) this.options.onInputInteraction.call(this);
     }
+  };
+
+  private _dayDate(button: HTMLElement) {
+    const date = new Date(0);
+    date.setFullYear(Number(button.dataset.year), Number(button.dataset.month), Number(button.dataset.day));
+    Datepicker._setToStartOfDay(date);
+    return date;
+  }
+
+  private _syncCalendarFocus(restore = false) {
+    const buttons = [...this.calendarEl.querySelectorAll<HTMLButtonElement>('.datepicker-day-button')];
+    const current = buttons.filter(button => !button.parentElement.classList.contains('is-selection-disabled'));
+    const preferred = this._focusedDate || this.date || new Date();
+    const target = current.find(button => Datepicker._compareDates(this._dayDate(button), preferred))
+      || current.find(button => button.parentElement.classList.contains('is-selected'))
+      || current.find(button => !button.parentElement.classList.contains('is-disabled')) || current[0];
+    for (const button of buttons) {
+      button.tabIndex = button === target ? 0 : -1;
+      button.setAttribute('aria-disabled', String(button.parentElement.matches('.is-disabled, .is-selection-disabled')));
+    }
+    if (target) {
+      this._focusedDate = this._dayDate(target);
+      if (restore) target.focus();
+    }
+  }
+
+  private _handleCalendarFocus = (event: FocusEvent) => {
+    const button = event.target as HTMLElement;
+    if (!button.matches('.datepicker-day-button')) return;
+    this._focusedDate = this._dayDate(button);
+    this._syncCalendarFocus();
+  };
+
+  private _handleCalendarKeydown = (event: KeyboardEvent) => {
+    const button = event.target as HTMLElement;
+    if (!button.matches('.datepicker-day-button') || event.altKey || event.ctrlKey || event.metaKey) return;
+    const date = this._dayDate(button);
+    const weekday = (date.getDay() - this.options.firstDay + 7) % 7;
+    const offsets = { ArrowLeft: this.options.isRTL ? 1 : -1, ArrowRight: this.options.isRTL ? -1 : 1,
+      ArrowUp: -7, ArrowDown: 7, Home: -weekday, End: 6 - weekday };
+    if (Object.hasOwn(offsets, event.key)) date.setDate(date.getDate() + offsets[event.key]);
+    else if (event.key === 'PageUp' || event.key === 'PageDown') {
+      const day = date.getDate();
+      date.setDate(1);
+      date.setMonth(date.getMonth() + (event.key === 'PageUp' ? -1 : 1) * (event.shiftKey ? 12 : 1));
+      const last = new Date(date.getTime());
+      last.setMonth(last.getMonth() + 1, 0);
+      date.setDate(Math.min(day, last.getDate()));
+    } else return;
+    event.preventDefault();
+    const { minDate, maxDate, minYear, maxYear, minMonth, maxMonth } = this.options;
+    if (minDate && date < minDate) date.setTime(minDate.getTime());
+    if (maxDate && date > maxDate) date.setTime(maxDate.getTime());
+    if (date.getFullYear() < minYear || date.getFullYear() > maxYear
+      || (date.getFullYear() === minYear && date.getMonth() < (minMonth ?? 0))
+      || (date.getFullYear() === maxYear && date.getMonth() > (maxMonth ?? 11))) return;
+    this._focusedDate = date;
+    this.gotoDate(date);
   };
 
   _handleCalendarClick = (e) => {
@@ -1394,7 +1465,8 @@ export class Datepicker extends Component<DatepickerOptions> {
       if (
         target.classList.contains('datepicker-day-button') &&
         !target.classList.contains('is-empty') &&
-        !target.parentElement.classList.contains('is-disabled')
+        !target.parentElement.classList.contains('is-disabled') &&
+        !target.parentElement.classList.contains('is-selection-disabled')
       ) {
         const selectedDate = new Date(
           e.target.getAttribute('data-year'),
@@ -1509,7 +1581,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     // lookup that goes through it.
     dateInput.removeAttribute('id');
     dateInput.addEventListener('click', this._handleInputClick);
-    dateInput.addEventListener('keypress', this._handleInputKeydown);
+    dateInput.addEventListener('keydown', this._handleInputKeydown);
     dateInput.addEventListener('change', this._handleInputChange);
     this.el.parentElement.appendChild(dateInput);
     return dateInput;

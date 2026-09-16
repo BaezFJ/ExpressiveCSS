@@ -48,7 +48,7 @@ export class DockedDisplayPlugin {
   }
 
   private _handleDocumentClick = (e: MouseEvent) => {
-    if (this.visible && !(this.el === <HTMLElement>e.target) && !((<HTMLElement>e.target).closest('.display-docked'))) {
+    if (this.visible && !e.composedPath().includes(this.el) && !e.composedPath().includes(this.container)) {
       this.hide();
     }
   };

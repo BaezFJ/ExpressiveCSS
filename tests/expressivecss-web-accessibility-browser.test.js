@@ -273,6 +273,92 @@ scenario('remaining snackbar retains a focused action until focus leaves', '<but
   } finally { await page.evaluate(()=>Expressive.Snackbar.dismissAll()); }
 });
 
+scenario('date picker supports calendar keyboard navigation and redraw focus', '<label for="date">Appointment date</label><input id="date"><button id="after">After</button>', async page => {
+  const day = (year, month, date) => page.locator(`.datepicker-day-button[data-year="${year}"][data-month="${month}"][data-day="${date}"]`);
+  for (const docked of [false, true]) {
+    try {
+      await page.evaluate(docked => {
+        window.selections = 0;
+        window.instances = [Expressive.Datepicker.init(document.querySelector('#date'), {
+          defaultDate: new Date(2023, 11, 31), setDefaultDate: true, autoSubmit: false,
+          openByDefault: true,
+          firstDay: 1, disableWeekends: true, disableDayFn: date => date.getDate() === 2,
+          minDate: new Date(2023, 0, 1), maxDate: new Date(2025, 11, 31),
+          displayPlugin: docked ? 'docked' : null, onSelect: () => window.selections++
+        })];
+      }, docked);
+      await page.locator('#date').focus();
+      await page.keyboard.press('Enter');
+      await expect(day(2023, 11, 31)).toBeFocused();
+      await page.evaluate(() => { window.selections = 0; });
+      await expect(page.locator('.datepicker-day-button[tabindex="0"]')).toHaveCount(1);
+      await page.keyboard.press('ArrowRight');
+      await expect(day(2024, 0, 1)).toBeFocused();
+      await page.keyboard.press('ArrowRight');
+      await expect(day(2024, 0, 2)).toBeFocused();
+      await expect(day(2024, 0, 2)).toHaveAttribute('aria-disabled', 'true');
+      await page.keyboard.press('Enter');
+      assert.equal(await page.evaluate(() => window.selections), 0);
+      await page.keyboard.press('Home');
+      await expect(day(2024, 0, 1)).toBeFocused();
+      await page.keyboard.press('End');
+      await expect(day(2024, 0, 7)).toBeFocused();
+      await page.keyboard.press('Space');
+      assert.equal(await page.evaluate(() => window.selections), 0);
+      await page.keyboard.press('ArrowDown');
+      await expect(day(2024, 0, 14)).toBeFocused();
+      await page.keyboard.press('ArrowUp');
+      await page.keyboard.press('PageUp');
+      await expect(day(2023, 11, 7)).toBeFocused();
+      await page.keyboard.press('PageDown');
+      await expect(day(2024, 0, 7)).toBeFocused();
+      await page.evaluate(() => window.instances[0].gotoDate(new Date(2024, 0, 31)));
+      await day(2024, 0, 31).focus();
+      await page.keyboard.press('PageDown');
+      await expect(day(2024, 1, 29)).toBeFocused();
+      await page.keyboard.press('Shift+PageDown');
+      await expect(day(2025, 1, 28)).toBeFocused();
+      await page.keyboard.press('Enter');
+      await expect(day(2025, 1, 28)).toBeFocused();
+      assert.equal(await page.evaluate(() => window.selections), 1);
+      await page.evaluate(() => { window.instances[0].options.isRTL = true; window.instances[0].draw(); });
+      await page.keyboard.press('ArrowLeft');
+      await expect(day(2025, 2, 1)).toBeFocused();
+      await page.keyboard.press('ArrowRight');
+      await expect(day(2025, 1, 28)).toBeFocused();
+      await page.evaluate(() => window.instances[0].gotoDate(new Date(2025, 11, 31)));
+      await day(2025, 11, 31).focus();
+      await page.keyboard.press('ArrowLeft');
+      await expect(day(2025, 11, 31)).toBeFocused();
+      await page.evaluate(() => window.instances[0].gotoDate(new Date(2023, 0, 1)));
+      await day(2023, 0, 1).focus();
+      await page.keyboard.press('ArrowRight');
+      await expect(day(2023, 0, 1)).toBeFocused();
+      await page.keyboard.press('Tab');
+      await expect(day(2023, 0, 1)).not.toBeFocused();
+      await page.locator('#after').focus();
+      await page.evaluate(() => window.instances[0].draw());
+      await expect(page.locator('#after')).toBeFocused();
+      await page.evaluate(() => Object.assign(window.instances[0].options, {
+        isRTL: false, firstDay: 0, minYear: 2023, maxYear: 2023, minMonth: 0, maxMonth: 0
+      }));
+      await day(2023, 0, 3).focus();
+      await page.keyboard.press('Home');
+      await expect(day(2023, 0, 1)).toBeFocused();
+      await page.keyboard.press('End');
+      await expect(day(2023, 0, 7)).toBeFocused();
+      await page.keyboard.press('PageDown');
+      await expect(day(2023, 0, 7)).toBeFocused();
+      if (docked) {
+        await page.mouse.click(950, 850);
+        await expect(page.locator('.display-docked')).toBeHidden();
+      }
+    } finally {
+      await page.evaluate(() => { window.instances?.forEach(instance => instance.destroy()); window.instances = []; });
+    }
+  }
+});
+
 scenario('time picker exposes named keyboard controls in inline and docked modes', '<form><label for="appointment">Appointment</label><input id="appointment" value="03:45 PM"></form>', async page => {
   for (const docked of [false, true]) {
     for (const twelveHour of [true, false]) {
