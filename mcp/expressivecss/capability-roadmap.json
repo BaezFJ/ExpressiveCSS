@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "12b333bef9df50ba771741da5151f27507a1dfefe935be12f0859f73f7a39718",
+    "reportSha256": "28f9e468c8fd72294a8ce76b9603a72b6dc0c7d9a3f7473ee2b94bf6aa052b5f",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -905,6 +905,12 @@
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "FAB menu preserves keyboard, dismissal and responsive behavior",
           "scope": "Click state, hover inactivity, Tab, Escape, action activation, outside focus, reinitialization, reduced motion and narrow layout.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-lifecycle-browser.test.js",
+          "name": "current FAB sizes preserve geometry and explicit extended variants",
+          "scope": "Chromium: button and link FAB geometry, explicit extended sizes and label roles in light/dark themes; baseline extended styling is absent.",
           "state": "recorded-passed"
         }
       ],

@@ -7,11 +7,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Migration
 
+- Replace `circle extra small` with `circle extra` for the 56dp FAB.
+  Extended FABs require an explicit size: replace sizeless `extend` with
+  `extend small`, or choose `extend medium` or `extend large`.
+  Use primary, secondary or tertiary container colors instead of surface-colored
+  FABs. General surface utilities remain available for other components.
+
 - Replace FAB speed-dial wrappers `.fab` and `.fixed-action-btn` with
   `.fab-menu` and labelled actions. Remove `direction`, `hoverEnabled`,
   `toolbarEnabled` and their markup switches. Use a toolbar for persistent
-  commands instead of FAB-to-toolbar expansion. Standalone FAB sizes and
-  extended variants are unchanged.
+  commands instead of FAB-to-toolbar expansion.
 
 - Replace banners with native inline messages for persistent nonblocking issues,
   snackbars for temporary feedback, or dialogs for blocking decisions.
@@ -34,6 +39,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Removed component URLs redirect to their replacement documentation.
 
 ### Removed
+
+- The 40dp small FAB and baseline sizeless extended FAB styling. Current small
+  extended FABs, medium/large FABs and FAB menus remain supported.
 
 - FAB speed-dial styling, hover/directional layouts, toolbar expansion, and
   legacy AutoInit selectors. The `FloatingActionButton` API now serves FAB menus.

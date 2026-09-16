@@ -331,6 +331,30 @@ const examples = [
 
 const enforcedRules = rulesOf(data);
 
+test('Material guidance preserves rail variants and only recommends sized extended FABs', () => {
+  const guidance = read('m3-guidelines.md');
+  for (const variant of ['Expanded', 'Modal']) {
+    const row = guidance.split('\n').find(line => line.startsWith(`| ${variant} (`));
+    assert.ok(row, `missing ${variant} rail variant`);
+    assert.equal(row.split('|').length, 6, `${variant} rail variant must have four cells`);
+  }
+  const fab = guidance.split('## 5.3 Floating action button')[1].split('## 5.4')[0];
+  assert.doesNotMatch(fab, /^\|[^\n]*\|\s*`extend`/m);
+  for (const size of ['small', 'medium', 'large']) assert.ok(fab.includes(`\`extend ${size}\``));
+});
+
+test('FAB migration rules reject removed variants without rejecting current sizes or surface utilities', () => {
+  const fabRules = data.rows.buttons.rules.filter(rule => ['fab-no-small-variant', 'extended-fab-requires-size', 'fab-no-surface-color'].includes(rule.id));
+  assert.equal(fabRules.length, 3);
+  for (const classes of ['circle extra small', 'circle large small', 'extend', 'extend secondary-container', 'circle extra surface', 'extend small surface-container-high']) {
+    assert.equal(violations(`<button class="${classes}">Create</button>`, fabRules, data.compositeRoles).length, 1, classes);
+  }
+  for (const classes of ['circle extra', 'circle extra medium', 'circle extra large', 'extend small', 'extend medium', 'extend large', 'circle extra secondary-container on-secondary-container-text', 'small', 'surface']) {
+    assert.equal(violations(`<button class="${classes}">Create</button>`, fabRules, data.compositeRoles).length, 0, classes);
+  }
+  assert.equal(violations('<div class="surface-container">Content</div>', fabRules, data.compositeRoles).length, 0);
+});
+
 // --- tests ------------------------------------------------------------------
 
 describe('semantics.json', () => {
@@ -566,7 +590,7 @@ describe('prose that names markup', () => {
     .filter((c) => c.status === 'enforced')
     .flatMap((c) => c.rules)
     .filter((r) => FORBID_KINDS.includes(r.kind) && r.fragmentSafe)
-    .flatMap((r) => expandedSelector(r, data.compositeRoles).split(',').map((x) => x.trim()))
+    .flatMap((r) => splitCompounds(expandedSelector(r, data.compositeRoles)).map((x) => x.trim()))
     .filter((sel) => /^[a-z]+\.[\w-]+$/.test(sel));
 
   test('the rules yield shapes to look for', () => {

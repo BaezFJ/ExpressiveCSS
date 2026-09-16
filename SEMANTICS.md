@@ -136,8 +136,14 @@ Icon-only controls need accessible names.
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `icon-only-control-is-named` | require-accessible-name | `:is(a, button):has([aria-hidden="true"])` | must end up with an accessible name |
+| `fab-no-small-variant` | forbid | `:is(button, a.button, label.button).circle:is(.extra, .large).small` | must not match |
+| `extended-fab-requires-size` | forbid | `:is(button, a.button, label.button).extend:not(.small, .medium, .large)` | must not match |
+| `fab-no-surface-color` | forbid | `:is(button, a.button, label.button):is(.circle.extra, .circle.large, .extend):is(.surface, .surface-dim, .surface-bright, .surface-variant, .surface-container, .surface-container-lowest, .surface-container-low, .surface-container-high, .surface-container-highest)` | must not match |
 
 - **icon-only-control-is-named** - Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
+- **fab-no-small-variant** - The 40dp small FAB has been removed. Use circle extra for a 56dp FAB.
+- **extended-fab-requires-size** - The baseline extended FAB has been removed. Specify extend small, extend medium or extend large.
+- **fab-no-surface-color** - Use a primary, secondary or tertiary container color for a FAB instead of a surface color.
 
 ### cards
 

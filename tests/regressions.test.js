@@ -370,10 +370,7 @@ describe('FAB container shape', () => {
     const size = (cls) =>
       new RegExp(`\\.extra\\.circle\\.${cls}[^{]*\\{([^}]*)\\}`).exec(css)?.[1] ?? '';
 
-    const small = size('small');
-    assert.match(small, /--md-comp-fab-container-height:\s*40px/);
-    assert.match(small, /--md-comp-fab-container-width:\s*40px/);
-    assert.match(small, /--md-comp-fab-container-shape:\s*12px/);
+    assert.equal(size('small'), '');
 
     const medium = size('medium');
     assert.match(medium, /--md-comp-fab-container-height:\s*80px/);
@@ -418,9 +415,9 @@ describe('FAB container shape', () => {
       /padding-inline:\s*var\(--md-comp-extended-fab-leading-space\) var\(--md-comp-extended-fab-trailing-space\)/
     );
     assert.match(rule, /border-radius:\s*var\(--md-comp-extended-fab-container-shape\)/);
-    // The size classes are the same one class this rule is, so an
-    // `extend small` loses label-large unless the extended FAB restates it.
-    assert.match(rule, /font-size:\s*var\(--md-sys-typescale-label-large-font-size\)/);
+    assert.match(css, /:where\(\.small, \.medium, \.large\)\.extend\s*\{/);
+    assert.doesNotMatch(rule, /--md-comp-extended-fab-(?:container-height|trailing-space):/);
+    assert.doesNotMatch(rule, /font-size:/);
     // The original bug: `:has(> icon + label)` was two classes, so it won the
     // leading edge and pulled `extend small` to a 32dp common button's 12dp
     // inset. M3 Expressive's spacing is symmetric at every size, so that rule
@@ -440,9 +437,7 @@ describe('FAB container shape', () => {
     assert.match(small, /--md-comp-extended-fab-trailing-space:\s*16px/);
   });
 
-  // md.comp.extended-fab.{small,medium,large}.*, DSP 34.0.21. Leading and
-  // trailing space are equal at every named size; only the sizeless base
-  // family keeps M3's older 16/20 asymmetry.
+  // md.comp.extended-fab.{small,medium,large}.*, DSP 34.0.21.
   const EXTENDED_SIZES = {
     small: { height: 56, shape: 16, icon: 24, space: 16, gap: 8, label: 'title-medium' },
     medium: { height: 80, shape: 20, icon: 28, space: 26, gap: 12, label: 'title-large' },

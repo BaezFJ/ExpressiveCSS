@@ -12,7 +12,7 @@ const S = defineSections([
   { id: "sizes", label: "Sizes", heading: "FAB sizes" },
   { id: "extended", label: "Extended", heading: "Extended FAB" },
   { id: "fab-menu", label: "FAB menu" },
-  { id: "migration", label: "Speed-dial migration" },
+  { id: "migration", label: "Migration" },
   { id: "initialization", label: "Initialization" },
   { id: "methods", label: "Methods" },
   { id: "properties", label: "Properties" },
@@ -25,21 +25,17 @@ const S = defineSections([
 
   <Section {...S.introduction}>
     <p class="flow-text">Use one FAB for the primary action, or a FAB menu for related labelled actions. The menu opens on click and keeps ordinary Tab navigation.</p>
-    <p>See <a href="#fab-menu">FAB menu</a> for markup and <a href="#migration">migration guidance</a> for removed speed dials.</p>
+    <p>See <a href="#fab-menu">FAB menu</a> for markup and <a href="#migration">migration guidance</a> for removed FAB variants and speed dials.</p>
   </Section>
   <Section {...S.sizes}>
         <p>
           A FAB is <code>circle extra</code> (or its alias
           <code>circle large</code>): 56dp, 16dp corners,
-          <code>primary-container</code>, elevation 3. Three size classes
+          <code>primary-container</code>, elevation 3. The medium and large size classes
           go alongside the <code>extra</code>. The corner grows with the
           container, so a bigger FAB is not simply a scaled-up one.
         </p>
         <div class="fab-size-demo">
-          <div>
-            <button type="button" class="circle extra small" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
-            <span class="body-small"><code>small</code><br>40dp</span>
-          </div>
           <div>
             <button type="button" class="circle extra" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
             <span class="body-small">default<br>56dp</span>
@@ -54,9 +50,6 @@ const S = defineSections([
           </div>
         </div>
 <Code code={`
-<button type="button" class="circle extra small" aria-label="Add">
-  <span class="material-symbols" aria-hidden="true">add</span>
-</button>
 <button type="button" class="circle extra" aria-label="Add">
   <span class="material-symbols" aria-hidden="true">add</span>
 </button>
@@ -79,7 +72,6 @@ const S = defineSections([
                 </tr>
             </thead>
             <tbody>
-                <tr><td>Small</td><td><code>circle extra small</code></td><td>40dp</td><td>12dp</td><td>24dp</td></tr>
                 <tr><td>Default</td><td><code>circle extra</code></td><td>56dp</td><td>16dp</td><td>24dp</td></tr>
                 <tr><td>Medium</td><td><code>circle extra medium</code></td><td>80dp</td><td>20dp</td><td>26dp</td></tr>
                 <tr><td>Large</td><td><code>circle extra large</code></td><td>96dp</td><td>28dp</td><td>36dp</td></tr>
@@ -115,16 +107,12 @@ const S = defineSections([
   </Section>
   <Section {...S.extended}>
         <p>
-          <code>extend</code> is the extended FAB: an icon plus a label at
+          <code>extend small</code> is the extended FAB: an icon plus a label at
           56dp, 16dp corners, 8dp between the two. Wrap the label in its own
           <code>&lt;span&gt;</code> — the order of the two spans is the
           placement, and the wrapper is what earns the 16dp leading inset.
         </p>
         <div class="fab-size-demo">
-          <div>
-            <button type="button" class="extend"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
-            <span class="body-small"><code>extend</code><br>16dp / 20dp</span>
-          </div>
           <div>
             <button type="button" class="extend small"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
             <span class="body-small"><code>extend small</code><br>56dp</span>
@@ -138,12 +126,12 @@ const S = defineSections([
             <span class="body-small"><code>extend large</code><br>96dp</span>
           </div>
           <div>
-            <button type="button" class="extend"><span>Create</span><span class="material-symbols" aria-hidden="true">add</span></button>
-            <span class="body-small"><code>extend</code><br>trailing icon</span>
+            <button type="button" class="extend small"><span>Create</span><span class="material-symbols" aria-hidden="true">add</span></button>
+            <span class="body-small"><code>extend small</code><br>trailing icon</span>
           </div>
         </div>
 <Code code={`
-<button type="button" class="extend">
+<button type="button" class="extend small">
   <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 <button type="button" class="extend medium">
@@ -155,9 +143,7 @@ const S = defineSections([
           <code>large</code>, and the label role grows with the container:
           <code>title-medium</code>, <code>title-large</code>,
           <code>headline-small</code>. <code>extend small</code> is 56dp on a
-          symmetric 16dp inset. A sizeless <code>extend</code> is Material 3's
-          base extended FAB — 56dp on a 16dp / 20dp inset, label
-          <code>label-large</code>.
+          symmetric 16dp inset. Always specify a size; the sizeless baseline extended FAB has been removed.
         </p>
         <p>
           The container colour is a role rather than a value.
@@ -169,20 +155,20 @@ const S = defineSections([
         </p>
         <div class="fab-size-demo">
           <div>
-            <button type="button" class="extend"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
+            <button type="button" class="extend small"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
             <span class="body-small">default<br><code>primary-container</code></span>
           </div>
           <div>
-            <button type="button" class="extend secondary-container"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
+            <button type="button" class="extend small secondary-container"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
             <span class="body-small"><code>secondary-container</code></span>
           </div>
           <div>
-            <button type="button" class="extend tertiary-container"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
+            <button type="button" class="extend small tertiary-container"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
             <span class="body-small"><code>tertiary-container</code></span>
           </div>
         </div>
 <Code code={`
-<button type="button" class="extend secondary-container">
+<button type="button" class="extend small secondary-container">
   <span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span>
 </button>
 `} />
@@ -193,7 +179,7 @@ const S = defineSections([
             <tr><td><code>--md-comp-extended-fab-icon-size</code></td><td>24px (28px <code>medium</code>, 36px <code>large</code>)</td></tr>
             <tr><td><code>--md-comp-extended-fab-leading-space</code></td><td>16px (26px <code>medium</code>, 28px <code>large</code>)</td></tr>
             <tr><td><code>--md-comp-extended-fab-icon-label-space</code></td><td>8px (12px <code>medium</code>, 16px <code>large</code>)</td></tr>
-            <tr><td><code>--md-comp-extended-fab-trailing-space</code></td><td>20px (16px <code>small</code>, 26px <code>medium</code>, 28px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-trailing-space</code></td><td>16px (26px <code>medium</code>, 28px <code>large</code>)</td></tr>
             <tr><td><code>--md-comp-extended-fab-container-color</code></td><td><code>--md-sys-color-primary-container</code></td></tr>
             <tr><td><code>--md-comp-extended-fab-label-text-color</code></td><td><code>--md-sys-color-on-primary-container</code></td></tr>
         </TokenTable>
@@ -308,7 +294,7 @@ const S = defineSections([
   <Section {...S.migration}>
     <p>Replace <code>.fab</code> and <code>.fixed-action-btn</code> speed-dial wrappers with <code>.fab-menu</code> and visible labels on each action. This requires updating the markup, not just renaming the wrapper.</p>
     <p>Remove <code>direction</code>, <code>hoverEnabled</code>, <code>toolbarEnabled</code>, their markup switches and speed-dial-only token overrides. Hover opening and FAB-to-toolbar expansion have been removed. Use the <a href="/toolbars.html">toolbar component</a> for persistent commands.</p>
-    <p>Standalone FAB sizes and extended FAB variants are unchanged.</p>
+    <p>Replace <code>circle extra small</code> with <code>circle extra</code> for the current 56dp FAB. Replace sizeless <code>extend</code> with <code>extend small</code>, or choose <code>medium</code> or <code>large</code>. The small extended FAB remains supported. Replace surface color classes on FABs with <code>primary-container</code>, <code>secondary-container</code> or <code>tertiary-container</code> and the matching <code>on-*-container-text</code> for icon-only FABs. General surface utilities remain available for other components.</p>
   </Section>
   <Section {...S.initialization}>
     <p><code>Expressive.AutoInit()</code> initializes <code>.fab-menu</code>. For manual ownership, add <code>no-autoinit</code> and initialize it yourself. There are no component-specific options.</p>

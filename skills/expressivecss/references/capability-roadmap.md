@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `12b333bef9df50ba771741da5151f27507a1dfefe935be12f0859f73f7a39718`.
+Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `28f9e468c8fd72294a8ce76b9603a72b6dc0c7d9a3f7473ee2b94bf6aa052b5f`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -308,6 +308,7 @@ Web adaptation: Floating action behavior uses the documented FAB runtime.
 - verification: Full visual parity and spoken assistive-technology output remain unverified. Next: Review rendered variants and spoken labels before claiming full parity.
 
 - recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-lifecycle-browser.test.js): `FAB menu preserves keyboard, dismissal and responsive behavior`. Click state, hover inactivity, Tab, Escape, action activation, outside focus, reinitialization, reduced motion and narrow layout.
+- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-lifecycle-browser.test.js): `current FAB sizes preserve geometry and explicit extended variants`. Chromium: button and link FAB geometry, explicit extended sizes and label roles in light/dark themes; baseline extended styling is absent.
 
 <a id="cards"></a>
 

@@ -179,15 +179,14 @@ const S = defineSections([
         <p>
           A FAB is <code>circle extra</code> or <code>circle large</code>:
           56dp, 16dp corners, <code>primary-container</code>, elevation 3.
-          <code>extra circle small</code> is the 40dp small FAB,
-          <code>extra circle medium</code> the 80dp medium one (20dp
+          <code>extra circle medium</code> is the 80dp medium one (20dp
           corners, 26dp icon) and <code>extra circle large</code> the 96dp
           large one (28dp corners, 36dp icon). The large size needs the
           <code>extra</code>: <code>circle large</code> on its own is the
           alias for the default 56dp FAB.
-          <code>extend</code> is the extended FAB — icon plus
+          <code>extend small</code> is the extended FAB — icon plus
           label at 56dp, 16dp corners, 8dp between the two. It takes the
-          same three sizes: <code>extend small</code> is 56dp on a
+          three explicit sizes: <code>extend small</code> is 56dp on a
           symmetric 16dp inset, <code>extend medium</code> 80dp (20dp
           corners, 28dp icon) and <code>extend large</code> 96dp (28dp
           corners, 36dp icon), each with the label role Material gives it.
@@ -199,10 +198,8 @@ const S = defineSections([
         </p>
         <p>
           <button type="button" class="circle extra" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
-          <a class="button extra circle small" href="#!" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
           <button type="button" class="circle extra medium" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
           <button type="button" class="circle extra large" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
-          <button type="button" class="extend"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
           <button type="button" class="extend small"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
           <button type="button" class="extend medium"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
           <button type="button" class="extend large secondary-container"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
@@ -211,17 +208,11 @@ const S = defineSections([
 <button class="circle extra" aria-label="Add">
   <span class="material-symbols" aria-hidden="true">add</span>
 </button>
-<a class="button extra circle small" href="#!" aria-label="Add">
-  <span class="material-symbols" aria-hidden="true">add</span>
-</a>
 <button class="circle extra medium" aria-label="Add">
   <span class="material-symbols" aria-hidden="true">add</span>
 </button>
 <button class="circle extra large" aria-label="Add">
   <span class="material-symbols" aria-hidden="true">add</span>
-</button>
-<button class="extend">
-  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 <button class="extend small">
   <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>

@@ -106,6 +106,27 @@
           "kind": "require-accessible-name",
           "selector": ":is(a, button):has([aria-hidden=\"true\"])",
           "message": "Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label."
+        },
+        {
+          "id": "fab-no-small-variant",
+          "kind": "forbid",
+          "selector": ":is(button, a.button, label.button).circle:is(.extra, .large).small",
+          "fragmentSafe": true,
+          "message": "The 40dp small FAB has been removed. Use circle extra for a 56dp FAB."
+        },
+        {
+          "id": "extended-fab-requires-size",
+          "kind": "forbid",
+          "selector": ":is(button, a.button, label.button).extend:not(.small, .medium, .large)",
+          "fragmentSafe": true,
+          "message": "The baseline extended FAB has been removed. Specify extend small, extend medium or extend large."
+        },
+        {
+          "id": "fab-no-surface-color",
+          "kind": "forbid",
+          "selector": ":is(button, a.button, label.button):is(.circle.extra, .circle.large, .extend):is(.surface, .surface-dim, .surface-bright, .surface-variant, .surface-container, .surface-container-lowest, .surface-container-low, .surface-container-high, .surface-container-highest)",
+          "fragmentSafe": true,
+          "message": "Use a primary, secondary or tertiary container color for a FAB instead of a surface color."
         }
       ]
     },

@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `1366e11eb88e6562c6fb4c8054215c2ffe6b12288787211880b964c34b7bd1ee`
+Contract SHA-256: `27b86252d56091f9b325d434150d58f4f1e8fad5e924438c64f4d07021be8ba5`
 
 #### Selection and adaptation
 
@@ -23,7 +23,7 @@ Example: Speed dials have been removed. Replace legacy fab or fixed-action-btn w
 
 #### Material mapping
 
-Relationship: component. Google no longer recommends small FABs, baseline extended FABs or surface-colored FABs. Use a current FAB size, extend small for the current small extended FAB, and supported primary/secondary/tertiary container roles. circle extra small is the retained 40dp FAB; sizeless extend is baseline. The small extended FAB remains recommended. Use fab-menu instead of fab speed dials or stacked small FABs. Speed-dial APIs are removed; size and color variants remain for a separate migration.
+Relationship: component. Google no longer recommends small FABs, baseline extended FABs or surface-colored FABs. The 40dp FAB and sizeless extend variant are removed. Use circle extra for the 56dp FAB, or its medium and large sizes. Extended FABs require extend small, extend medium or extend large; the small extended FAB remains recommended. Use primary/secondary/tertiary container roles instead of surface colors. Use fab-menu for labelled related actions; speed-dial APIs are removed.
 
 Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/floating-action-button/overview).
 
@@ -73,6 +73,9 @@ Expanded is the framework's state, not the author's: the constructor stamps `ari
 The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
 - `icon-only-control-is-named`: Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
+- `fab-no-small-variant`: The 40dp small FAB has been removed. Use circle extra for a 56dp FAB.
+- `extended-fab-requires-size`: The baseline extended FAB has been removed. Specify extend small, extend medium or extend large.
+- `fab-no-surface-color`: Use a primary, secondary or tertiary container color for a FAB instead of a surface color.
 - `fab-menu-not-a-composite-widget`: The FAB menu takes no composite role; its actions are reached with Tab, not arrow keys.
 - `fab-menu-expanded-is-not-authored`: Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten.
 

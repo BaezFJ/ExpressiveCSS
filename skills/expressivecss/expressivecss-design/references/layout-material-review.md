@@ -66,7 +66,7 @@ Relationship: component. Sources: [overview](https://m3.material.io/components/f
 
 Reviewed sections: Overview; Specs; Guidelines; Accessibility.
 
-Requirements: Use one primary, non-destructive action. Current guidance replaces the small FAB, baseline extended FAB, surface-colored FABs and speed dials. The linked FAB guide maps each replacement to retained and current framework variants. Extended FABs have visible labels; FAB menus contain two to six labelled actions and must not hide focused controls.
+Requirements: Use one primary, non-destructive action. The 40dp FAB, sizeless extended FAB and speed dials are removed. Use a 56dp, medium or large FAB, an explicitly sized extended FAB, or a FAB menu. Choose primary, secondary or tertiary container roles instead of surface-colored FABs. The small extended FAB remains supported. Extended FABs have visible labels; FAB menus contain two to six labelled actions and must not hide focused controls.
 
 Framework comparison: The source includes standalone sizes, extended FABs and .fab-menu. Speed dials have been removed. The runtime owns click state, inert closed actions and focus recovery.
 
