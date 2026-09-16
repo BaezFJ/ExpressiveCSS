@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `fc2077306c75afc4ac4cd4f15f86d5d62a3554ff59e8b58492539485dc24ba4d`.
+Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `e4045d9c2470581388b43fffd0897fa6a6f22f94b9fc208679a142930d7d7692`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -491,9 +491,10 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 Web adaptation: Prefer native progress where applicable; supply accessible state for custom hosts.
 
 - verification: Reduced-motion static custom fill is checked; forced colors and native indicator rendering remain unverified. Next: Test native and custom determinate/indeterminate variants, visible static feedback and changing accessible values.
-- feature: Custom linear progress uses physical left fill in RTL; end-stop and wavy Expressive variants are not verified. Next: Test RTL native and custom bars; repair mirrored custom fill and assess an end stop for insufficient track contrast before claiming current variant parity.
+- feature: The unreleased source mirrors custom linear fill and motion in RTL. End-stop and wavy Expressive variants remain unverified. Next: Assess an end stop for insufficient track contrast and review wavy variants before claiming current variant parity.
 
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining progress and loading variants stop spatial motion`. Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: linear progress follows inherited and overridden RTL direction`. Custom child and token fills at 0/25/100 percent, inherited and overridden direction, mirrored indeterminate animation samples, RTL reduced-motion geometry, unchanged native value and absence of circular linear fill. Firefox and WebKit variants run in the browser suite.
 
 <a id="loading-indicator"></a>
 

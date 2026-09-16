@@ -13,9 +13,10 @@ const S = defineSections([
 ]);
 ---
 <DocsLayout page="preloader">
-<p>Unreleased source stops spatial animation under reduced motion and retains a visible static fill for custom indeterminate bars. Native rendering, forced colors and custom RTL fill require separate verification. Published 0.9.1 does not include these repairs.</p>
+<p>Unreleased source stops spatial animation under reduced motion and retains a visible static fill for custom indeterminate bars. Native rendering and forced colors require separate verification. Published 0.9.1 does not include these repairs.</p>
 
 <PageBody sections={S}>
+  <p>In unreleased source, custom linear progress fills from the left in LTR and from the right in RTL. Indeterminate motion and reduced-motion static fills follow the inherited direction, including nested overrides. Native determinate progress and circular indicators are unchanged. This fix is not in published 0.9.1.</p>
   <Section {...S.linear}>
         <p class="flow-text">
           If content will take a while to load, give the user feedback.
