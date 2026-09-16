@@ -214,6 +214,55 @@ test('Node can import the ESM bundle but runtime initialization requires a docum
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 
+browserTest('current FAB sizes preserve geometry and explicit extended variants', async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style>`);
+    for (const theme of ['light', 'dark']) {
+      await page.evaluate(theme => document.documentElement.setAttribute('theme', theme), theme);
+      for (const [classes, height, corner, icon, inset, font] of [
+        ['circle extra', 56, 16, 24],
+        ['circle large', 56, 16, 24],
+        ['circle extra medium', 80, 20, 26],
+        ['circle extra large', 96, 28, 36],
+        ['extend small', 56, 16, 24, 16, 16],
+        ['extend medium', 80, 20, 28, 26, 22],
+        ['extend large', 96, 28, 36, 28, 24]
+      ]) {
+        for (const tag of ['button', 'a']) {
+          const actual = await page.evaluate(({ classes, tag }) => {
+            const el = document.createElement(tag);
+            el.className = `button ${classes}`;
+            el.setAttribute('aria-label', 'Create');
+            if (tag === 'a') el.href = '#create';
+            el.innerHTML = '<span class="material-symbols" aria-hidden="true">add</span>' + (classes.includes('extend') ? '<span>Create</span>' : '');
+            document.body.append(el);
+            try {
+              const style = getComputedStyle(el);
+              return [parseFloat(style.height), parseFloat(style.borderRadius), parseFloat(getComputedStyle(el.firstElementChild).fontSize), parseFloat(style.paddingLeft), parseFloat(style.paddingRight), parseFloat(style.fontSize)];
+            } finally {
+              el.remove();
+            }
+          }, { classes, tag });
+          assert.deepEqual(actual.slice(0, 3), [height, corner, icon], `${theme} ${tag}.${classes}`);
+          if (inset) assert.deepEqual(actual.slice(3), [inset, inset, font], `${theme} ${tag}.${classes} label`);
+        }
+      }
+      const removed = await page.evaluate(() => {
+        const el = document.createElement('button');
+        el.className = 'extend';
+        document.body.append(el);
+        try { return getComputedStyle(el).getPropertyValue('--md-comp-extended-fab-container-color'); }
+        finally { el.remove(); }
+      });
+      assert.equal(removed, '');
+    }
+  } finally {
+    await browser.close();
+  }
+});
+
 test('speed-dial CSS and runtime options are removed', () => {
   assert.doesNotMatch(css, /\.fab(?![\w-])|\.fixed-action-btn|\.fab-backdrop/);
   assert.doesNotMatch(css, /--md-comp-fab-(?:offset|z|menu-gap|duration|stagger|easing|travel|hidden-transform)\b/);

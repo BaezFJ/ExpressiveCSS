@@ -17,8 +17,8 @@
 //   the size ladder in abstracts, corner.full at every size
 //   state layer 8% hover / 10% focus+press
 //   FAB 56dp (extra/large icon-only), primary-container, 16dp corners
-//   FAB sizes 40dp small / 56dp default / 80dp medium / 96dp large,
-//     24 / 24 / 26 / 36dp icon, 12 / 16 / 20 / 28dp corners
+//   FAB sizes 56dp default / 80dp medium / 96dp large,
+//     24 / 26 / 36dp icon, 16 / 20 / 28dp corners
 
 // The size axis is `$button-sizes` in abstracts, and `button-size()` sets its
 // tokens. Both moved there when button groups grew a size ladder of their own:
@@ -152,17 +152,15 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 
 // Extended FAB: an icon plus a label, on its own size and colour axes.
 //
-// Tokens (M3 md.comp.extended-fab.*, DSP 34.0.21). The sizeless case is the
-// base family; the three named sizes are `md.comp.extended-fab.{size}.*`:
+// Tokens (M3 md.comp.extended-fab.{size}.*, DSP 34.0.21):
 //
 //   size      height  shape  icon  lead  gap  trail  label
-//   (none)      56      16    24    16     8    20   label-large
 //   small       56      16    24    16     8    16   title-medium
 //   medium      80      20    28    26    12    26   title-large
 //   large       96      28    36    28    16    28   headline-small
 //
 // Leading and trailing space are equal at every named size, so the map states
-// one `space`; only the base family keeps M3's older 16/20 asymmetry.
+// one `space`.
 //
 // The colour axis is M3's three container roles, and it runs through two
 // tokens rather than a background per variant: the state layers mix the label
@@ -178,13 +176,7 @@ $_extend-sizes: (
   "large": (height: 96px, shape: 28px, icon: 36px, space: 28px, gap: 16px, label: "headline-small"),
 );
 
-:where(#{$_btn}).extend {
-  --md-comp-extended-fab-container-height: 56px;
-  --md-comp-extended-fab-container-shape: 16px;
-  --md-comp-extended-fab-icon-size: 24px;
-  --md-comp-extended-fab-leading-space: 16px;
-  --md-comp-extended-fab-icon-label-space: 8px;
-  --md-comp-extended-fab-trailing-space: 20px;
+:where(#{$_btn}):where(.small, .medium, .large).extend {
   --md-comp-extended-fab-container-color: var(--md-sys-color-primary-container);
   --md-comp-extended-fab-label-text-color: var(
     --md-sys-color-on-primary-container
@@ -195,7 +187,6 @@ $_extend-sizes: (
   padding-inline: var(--md-comp-extended-fab-leading-space)
     var(--md-comp-extended-fab-trailing-space);
   border-radius: var(--md-comp-extended-fab-container-shape);
-  font-size: var(--md-sys-typescale-label-large-font-size);
   color: var(--md-comp-extended-fab-label-text-color);
   background-color: var(--md-comp-extended-fab-container-color);
   @include z-depth("3");
@@ -255,15 +246,14 @@ $_extend-sizes: (
   }
 }
 
-// FAB. Icon-only .extra / .large is the 56dp regular FAB. Add .small for
-// the 40dp small FAB.
+// FAB. Icon-only .extra / .large is the 56dp regular FAB.
 //
 // Tokens (M3 md.comp.fab.*):
 //   --md-comp-fab-container-height  56dp
 //   --md-comp-fab-container-width   56dp
 //   --md-comp-fab-container-shape   16dp, corner.large - rounded, not a pill
 //   --md-comp-fab-icon-size         24dp
-// .small, .medium and .extra.large reset those four; nothing else varies
+// .medium and .extra.large reset those four; nothing else varies
 // by size.
 :where(#{$_btn}).extra.circle,
 :where(#{$_btn}).large.circle {
@@ -316,15 +306,8 @@ $_extend-sizes: (
     );
   }
 
-  // Small FAB: 40dp container, corner.medium, icon stays 24dp.
-  &.small {
-    --md-comp-fab-container-height: 40px;
-    --md-comp-fab-container-width: 40px;
-    --md-comp-fab-container-shape: 12px;
-  }
-
   // Medium FAB: 80dp container, 26dp icon. The corner continues the size
-  // ladder - 12dp small, 16dp default, 20dp here (corner.large-increased).
+  // ladder - 16dp default, 20dp here (corner.large-increased).
   &.medium {
     --md-comp-fab-container-height: 80px;
     --md-comp-fab-container-width: 80px;

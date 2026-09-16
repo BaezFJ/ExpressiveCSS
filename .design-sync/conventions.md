@@ -26,7 +26,7 @@ component. `<article>` is a card, `<footer>` with `<nav>` columns is a footer,
 | Family | Real class names |
 | --- | --- |
 | Button variants | bare `<button>` = filled; `tonal`, `outlined`, `elevated`, `text` |
-| Button shapes/sizes | `circle`, `extend`, `small`, `large`, `extra` (a FAB is `circle extra`; 40dp is `circle extra small`) |
+| Button shapes/sizes | `circle`, `extend`, `small`, `large`, `extra` (a FAB is `circle extra`; extended FABs require `extend small`, `extend medium` or `extend large`) |
 | Card variants | bare `<article>` = elevated; `filled`, `outlined` |
 | Color fills | `primary`, `secondary`, `tertiary`, `error`, and their `-container` forms; `surface`, `surface-container`, `-low`, `-lowest`, `-high`, `-highest` |
 | Color foregrounds | `on-primary-text`, `on-surface-text`, `on-error-container-text`, … — always pair a fill with its `on-*-text` |

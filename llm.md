@@ -1809,7 +1809,7 @@ Create Create
 
 ### Floating
 
-A FAB is `circle extra` or `circle large`: 56dp, 16dp corners, `primary-container`, elevation 3. The sizes are `circle extra small` (40dp, 12dp corners), `circle extra medium` (80dp, 20dp corners, 26dp icon) and `circle extra large` (96dp, 28dp corners, 36dp icon) — the large size needs the `extra`, because `circle large` on its own is the alias for the default 56dp FAB. `extend` is the extended FAB — icon plus label at 56dp, 16dp corners, 8dp between icon and label. Its sizes are `extend small` (56dp on a symmetric 16dp inset, `title-medium` label), `extend medium` (80dp, 20dp corners, 28dp icon, `title-large`) and `extend large` (96dp, 28dp corners, 36dp icon, `headline-small`); a sizeless `extend` keeps M3's base 16dp / 20dp inset and a `label-large` label. Its container colour is a role: `primary-container` is the default, and `secondary-container` and `tertiary-container` recolour the label and the state layers with it. On an `<a>`, add `button` — the size classes only match `button` or `a.button`.
+A FAB is `circle extra` or `circle large`: 56dp, 16dp corners, `primary-container`, elevation 3. The sizes are `circle extra medium` (80dp, 20dp corners, 26dp icon) and `circle extra large` (96dp, 28dp corners, 36dp icon) — the large size needs the `extra`, because `circle large` on its own is the alias for the default 56dp FAB. `extend small` is the extended FAB — icon plus label at 56dp, 16dp corners, 8dp between icon and label. Its required sizes are `extend small` (56dp on a symmetric 16dp inset, `title-medium` label), `extend medium` (80dp, 20dp corners, 28dp icon, `title-large`) and `extend large` (96dp, 28dp corners, 36dp icon, `headline-small`). Sizeless `extend` and the 40dp small FAB have been removed. Its container colour is a role: `primary-container` is the default, and `secondary-container` and `tertiary-container` recolour the label and the state layers with it. On an `<a>`, add `button` — the size classes only match `button` or `a.button`.
 
 Create
 
@@ -1817,17 +1817,11 @@ Create
 <button class="circle extra" aria-label="Add">
   <span class="material-symbols" aria-hidden="true">add</span>
 </button>
-<a class="button circle extra small" href="#!" aria-label="Add">
-  <span class="material-symbols" aria-hidden="true">add</span>
-</a>
 <button class="circle extra medium" aria-label="Add">
   <span class="material-symbols" aria-hidden="true">add</span>
 </button>
 <button class="circle extra large" aria-label="Add">
   <span class="material-symbols" aria-hidden="true">add</span>
-</button>
-<button class="extend">
-  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 <button class="extend small">
   <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
@@ -2623,7 +2617,7 @@ instance.destroy();
 
 ### Speed-dial migration
 
-Replace `.fab` and `.fixed-action-btn` wrappers with `.fab-menu` and labelled actions using the markup above. Remove `direction`, `hoverEnabled`, `toolbarEnabled`, their markup switches and speed-dial-only tokens. Hover opening, directional layouts and FAB-to-toolbar expansion have been removed. Use a current toolbar for persistent commands. Standalone FAB sizes and extended variants are unchanged.
+Replace `.fab` and `.fixed-action-btn` wrappers with `.fab-menu` and labelled actions using the markup above. Remove `direction`, `hoverEnabled`, `toolbarEnabled`, their markup switches and speed-dial-only tokens. Hover opening, directional layouts and FAB-to-toolbar expansion have been removed. Use a current toolbar for persistent commands. Replace `circle extra small` with `circle extra`, and sizeless `extend` with `extend small`. Medium and large FABs, all three explicit extended sizes, and FAB menus remain supported. Use primary, secondary or tertiary container colors instead of surface-colored FABs; pair icon-only FAB colors with the matching on-container text role. General surface utilities remain supported outside FABs.
 
 ---
 

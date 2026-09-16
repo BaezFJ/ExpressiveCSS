@@ -365,8 +365,7 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 | Variant | Width | FAB | When |
 | --- | --- | --- | --- |
 | Collapsed (default) | 96 dp | Icon-only | Medium+ persistent nav |
-| Expanded (`.expanded`) | 220–360 dp | Extended FAB | Labels needed, or as the drawer replacement |
-| Modal (`.modal`, or expanded on compact) | Overlay + scrim | — | Overflow menu on small windows |
+| Expanded (`.expanded`) | 220–360 dp | Modal (`.modal`, or expanded on compact) | Overlay + scrim | — | Overflow menu on small windows |
 
 **Anatomy**
 
@@ -566,7 +565,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 ## 5.3 Floating action button
 
-**M3:** FAB, small FAB, large FAB, extended FAB, FAB menu. **ExpressiveCSS:** `circle extra` (56 dp FAB), `extra circle small` (40 dp small FAB), `extra circle medium` (80 dp medium FAB), `extra circle large` (96 dp large FAB), `extend` (extended), and its sizes `extend small` / `extend medium` / `extend large`. FAB menu: `fab-menu`. Colour roles: `secondary-container`, `tertiary-container`. Use `AutoInit()` for FAB menus. Legacy speed dials have been removed.
+**M3:** FAB, medium FAB, large FAB, extended FAB, FAB menu. **ExpressiveCSS:** `circle extra` (56 dp FAB), `extra circle medium` (80 dp medium FAB), `extra circle large` (96 dp large FAB), explicit extended sizes `extend small` / `extend medium` / `extend large`. FAB menu: `fab-menu`. Colour roles: `secondary-container`, `tertiary-container`. Use `AutoInit()` for FAB menus. Legacy speed dials, 40 dp small FABs and sizeless extended FABs have been removed. Use a supported container color, not a surface-colored FAB.
 
 **Use when** there is **one** positive, primary action for the screen: Create, Compose, Add. Not every screen needs a FAB.
 
@@ -577,11 +576,10 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 | Variant | ExpressiveCSS | When |
 | --- | --- | --- |
 | FAB | `circle extra` | Default primary action |
-| Small FAB | `extra circle small` | Visual continuity with nearby small controls; not the default |
 | Medium FAB | `extra circle medium` | 80 dp: one prominent action on a large window, where a 56 dp disc reads as undersized |
 | Large FAB | `extra circle large` | 96 dp: the action *is* the screen's purpose. Needs the `extra` — `circle large` alone is the default FAB |
 | Extended FAB | `extend` (icon + `<span>` label) | Large windows, or when the label is needed to explain a non-standard icon |
-| Small extended FAB | `extend small` | 56 dp on a symmetric 16 dp inset — the tighter of the two when the label is short |
+| Small extended FAB | `extend small` | 56 dp with a symmetric 16 dp inset and a title-medium label |
 | Medium extended FAB | `extend medium` | 80 dp, `title-large` label: the extended FAB on a large window |
 | Large extended FAB | `extend large` | 96 dp, `headline-small` label: the action *is* the screen's purpose, and needs its name |
 | FAB menu | `fab-menu` + `<ul>` of labelled pills | Three to six related actions that each need a name. The FAB morphs into the close button while it is open |
