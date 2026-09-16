@@ -237,6 +237,71 @@ scenario('remaining suggestions and section links preserve selection and dismiss
 });
 
 
+scenario('linear progress follows inherited and overridden RTL direction', `
+<section id="direction" style="width:400px">
+<div id="fill" class="progress" role="progressbar" aria-label="Upload" aria-valuenow="25" style="--md-comp-progress-value:25%"><span class="determinate"></span></div>
+<div id="token" class="progress" role="progressbar" aria-label="Download" aria-valuenow="25" style="--md-comp-progress-value:25%"></div>
+<div id="motion" class="progress" role="progressbar" aria-label="Loading"><span class="indeterminate"></span></div>
+<div id="bare" class="progress" role="progressbar" aria-label="Preparing"></div>
+<progress id="native" class="progress" aria-label="Native upload" value="25" max="100"></progress>
+<div id="circle" class="progress circular" role="progressbar" aria-label="Connecting"></div>
+</section>`, async page => {
+  await page.addStyleTag({ content: '#fill .determinate, #token::after { transition:none; }' });
+  for (const direction of ['ltr', 'rtl']) {
+    await page.locator('#direction').evaluate((el, dir) => el.dir = dir, direction);
+    for (const value of [0, 25, 100]) {
+      const positions = await page.evaluate(value => {
+        return ['#fill', '#token'].map(selector => {
+          const host = document.querySelector(selector);
+          host.style.setProperty('--md-comp-progress-value', `${value}%`);
+          const child = host.querySelector('.determinate');
+          const style = getComputedStyle(child || host, child ? null : '::after');
+          return { left: parseFloat(style.left), right: parseFloat(style.right), width: parseFloat(style.width) };
+        });
+      }, value);
+      for (const position of positions) {
+        assert.equal(position.width, value * 4);
+        assert.equal(direction === 'rtl' ? position.right : position.left, 0);
+      }
+    }
+  }
+  await page.locator('#fill').evaluate(el => { el.dir = 'ltr'; el.style.setProperty('--md-comp-progress-value', '25%'); });
+  assert.equal(await page.locator('#fill .determinate').evaluate(el => getComputedStyle(el).left), '0px');
+  assert.equal(await page.locator('#fill .determinate').evaluate(el => getComputedStyle(el).right), '300px');
+  await page.locator('#fill').evaluate(el => el.removeAttribute('dir'));
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  const sample = async (direction, time) => page.evaluate(({ direction, time }) => {
+    document.querySelector('#direction').style.direction = direction;
+    for (const animation of document.getAnimations()) {
+      animation.pause();
+      animation.currentTime = time + Number(animation.effect.getTiming().delay);
+    }
+    return [['#motion .indeterminate', '::before'], ['#motion .indeterminate', '::after'], ['#bare', '::after']].map(([selector, pseudo]) => {
+      const style = getComputedStyle(document.querySelector(selector), pseudo);
+      return { left: parseFloat(style.left), right: parseFloat(style.right), width: parseFloat(style.width) };
+    });
+  }, { direction, time });
+  for (const time of [300, 900]) {
+    const ltr = await sample('ltr', time);
+    const rtl = await sample('rtl', time);
+    for (let index = 0; index < ltr.length; index++) {
+      assert.ok(Math.abs(ltr[index].left - rtl[index].right) < 0.1);
+      assert.ok(Math.abs(ltr[index].right - rtl[index].left) < 0.1);
+      assert.ok(Math.abs(ltr[index].width - rtl[index].width) < 0.1);
+    }
+  }
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const selector of ['#motion .indeterminate', '#bare']) {
+    const state = await page.locator(selector).evaluate(el => {
+      const style = getComputedStyle(el, '::after');
+      return { animation: style.animationName, width: style.width, right: style.right };
+    });
+    assert.deepEqual(state, { animation: 'none', width: '160px', right: '0px' });
+  }
+  await expect(page.locator('#native')).toHaveAttribute('value', '25');
+  assert.equal(await page.locator('#circle').evaluate(el => getComputedStyle(el, '::after').content), 'none');
+});
+
 scenario('remaining progress and loading variants stop spatial motion', `
 <label for="upload">Upload</label><progress id="upload" class="progress" value="40" max="100"></progress>
 <div id="custom-progress" class="progress" role="progressbar" aria-label="Preparing"></div>

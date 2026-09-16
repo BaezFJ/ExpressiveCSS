@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Custom linear progress fills and indeterminate motion follow the inherited
+  text direction, including RTL and nested direction overrides. Reduced-motion
+  static fills use the same starting edge.
+
 - Autocomplete exposes localized loading, result and multi-selection updates
   through a polite live region. Teardown removes owned status elements and Menu
   listeners, and late results after destruction are ignored.

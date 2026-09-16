@@ -3241,7 +3241,7 @@ Set these on the container to resize a layout.
 
 ## Progress indicators
 
-Unreleased source stops spatial animation under reduced motion and retains a visible static fill for custom indeterminate bars. Native rendering, forced colors and custom RTL fill require separate verification. Published 0.9.1 does not include these repairs.
+Unreleased source stops spatial animation under reduced motion and retains a visible static fill for custom indeterminate bars. Native rendering and forced colors require separate verification. Published 0.9.1 does not include these repairs.
 
 Activity and progress indicators for content that takes time to load.
 
@@ -3252,6 +3252,8 @@ For an indeterminate wait under about five seconds, prefer the [Loading indicato
 Prefer `<progress>`: it reports itself, and its value with it. A `<div class="progress">` is a bar drawn with CSS and reports nothing, so it needs `role="progressbar"` — and if it is determinate, `aria-valuenow` as well. A progressbar with no value is an *indeterminate* one by definition, which is a lie if the bar visibly shows 70%.
 
 ### Linear
+
+In unreleased source, custom linear fills start at the text-direction start edge: left in LTR and right in RTL. Indeterminate motion and reduced-motion static fills follow the same direction, including inherited and nested overrides. Native determinate progress and circular indicators are unchanged. This fix is not in published 0.9.1.
 
 There are two linear bars: determinate and indeterminate.
 

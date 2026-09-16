@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `bb7dcb04d211a9942df72f0a5a8e83439c363556167eeb6ae879c6688290a8fd`
+Contract SHA-256: `344f09d9f0f2e2cde0f7896749d80f36c41b7dfbc6691b3890b5988de9f3b4ec`
 
 #### Selection and adaptation
 
@@ -43,7 +43,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Unreleased source stops spatial animation under reduced motion and retains a visible static fill for custom indeterminate bars. Native rendering, forced colors and custom RTL fill require separate verification. Published 0.9.1 does not include these repairs.
+Unreleased source stops spatial animation under reduced motion and retains a visible static fill for custom indeterminate bars. Native rendering and forced colors require separate verification. Published 0.9.1 does not include these repairs.
 
 Activity and progress indicators for content that takes time to load.
 

@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "fc2077306c75afc4ac4cd4f15f86d5d62a3554ff59e8b58492539485dc24ba4d",
+    "reportSha256": "f3dc038fdf766797ff7f3b56fcd53d6bf7b7d61808e35ff0c993d55ebcbfadc9",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1584,8 +1584,8 @@
         },
         {
           "kind": "feature",
-          "description": "Custom linear progress uses physical left fill in RTL; end-stop and wavy Expressive variants are not verified.",
-          "nextStep": "Test RTL native and custom bars; repair mirrored custom fill and assess an end stop for insufficient track contrast before claiming current variant parity."
+          "description": "The unreleased source mirrors custom linear fill and motion in RTL. End-stop and wavy Expressive variants remain unverified.",
+          "nextStep": "Assess an end stop for insufficient track contrast and review wavy variants before claiming current variant parity."
         }
       ],
       "browserChecks": [
@@ -1593,6 +1593,12 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining progress and loading variants stop spatial motion",
           "scope": "Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: linear progress follows inherited and overridden RTL direction",
+          "scope": "Custom child and token fills at 0/25/100 percent, inherited and overridden direction, mirrored indeterminate animation samples, RTL reduced-motion geometry, unchanged native value and absence of circular linear fill. Firefox and WebKit variants run in the browser suite.",
           "state": "recorded-passed"
         }
       ],
