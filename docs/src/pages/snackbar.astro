@@ -22,7 +22,7 @@ const S = defineSections([
 ]);
 ---
 <DocsLayout page="snackbar">
-<p>Unreleased source pauses finite timers while focus or the pointer is inside and resumes after departure. For persistent actionable feedback use the existing displayLength: Infinity and dismissible: true options; keyboard reach, Escape and focus recovery need application verification. Published 0.9.1 does not include these repairs.</p>
+<p>Unreleased source makes snackbars with an action persistent and dismissible by default. Escape dismisses a focused snackbar; closing restores focus only when it remains inside the bar. Explicit finite timers still pause during focus or hover. Published 0.9.1 does not include these changes.</p>
 
 <PageBody sections={S}>
   <Section {...S.anatomy}>
@@ -48,9 +48,9 @@ const S = defineSections([
           hugs content (344–672dp) and sits centered 24dp from the bottom.
         </p>
         <p>
-          A snackbar can time out on its own (4 seconds, or 10 with an
-          action) or stay until the user acts
-          (<code>displayLength: Infinity</code>). Only one shows at a
+          A text-only snackbar defaults to 4 seconds. Setting <code>action</code>
+          defaults to <code>displayLength: Infinity</code> and
+          <code>dismissible: true</code>. Explicit options override these defaults. Only one shows at a
           time. Snackbar is not in <code>AutoInit()</code> — construct one
           when you need it, or drop a static <code>.snackbar</code> in
           the page and add <code>.active</code> to pin it.
@@ -100,6 +100,7 @@ new Expressive.Snackbar({
         </p>
   </Section>
   <Section {...S.initialization}>
+    <p>Actions and Dismiss use ordinary Tab navigation. Provide a visible notification-actions button near the task trigger when reaching the end of the page would be cumbersome. Its click handler can call <code>instance.el.querySelector('button, a[href]')?.focus()</code>. Do not call it automatically when showing a snackbar. Escape is handled only inside the snackbar and does not also dismiss an enclosing dialog. If an action moves focus elsewhere, closing preserves that focus. Keep an equivalent persistent message for timed feedback.</p>
         <p>
           The IIFE bundle exposes <code>Expressive.Snackbar</code>. Snackbar is
           not in <code>AutoInit()</code> — construct one when you need it.
@@ -179,7 +180,7 @@ document.getElementById('snackbar-basic').addEventListener('click', function() {
               <td><code>dismissible</code></td>
               <td>Boolean</td>
               <td><code>false</code></td>
-              <td>Show a trailing close icon button.</td>
+              <td>Show a trailing close icon button. Defaults to true when <code>action</code> is set; an explicit false is preserved.</td>
             </tr>
             <tr>
               <td><code>snackbarId</code></td>
@@ -191,7 +192,7 @@ document.getElementById('snackbar-basic').addEventListener('click', function() {
               <td><code>displayLength</code></td>
               <td>Number</td>
               <td><code>4000</code></td>
-              <td>How long the snackbar stays before it dismisses, in milliseconds. Default 4s, or 10s when <code>action</code> is set. Pass <code>Infinity</code> to remain until the user takes action.</td>
+              <td>How long the snackbar stays before it dismisses, in milliseconds. Default 4s without an action, or <code>Infinity</code> with an action. An explicit finite timeout requires equivalent persistent feedback elsewhere in the application.</td>
             </tr>
             <tr>
               <td><code>inDuration</code></td>
@@ -266,7 +267,7 @@ Expressive.Snackbar.dismissAll();
           Pass <code>snackbarId</code> pointing at a
           <code>&lt;template&gt;</code>. The first child of the template
           is cloned as the snackbar. Leave <code>text</code> empty so the
-          HTML is kept. Use the same anatomy as a static snackbar.
+          HTML is kept. Use the same anatomy as a static snackbar. For custom links or controls, explicitly set <code>displayLength: Infinity</code> and provide a close control with <code>dismissible: true</code>.
         </p>
         <p>
           <button type="button" class="tonal mr-3 mb-3" id="snackbar-html-1">Show Snackbar 1</button>
@@ -292,7 +293,7 @@ Expressive.Snackbar.dismissAll();
 </template>
 `} />
 <Code code={`
-new Expressive.Snackbar({ snackbarId: 'my-snackbar-1' });
+new Expressive.Snackbar({ snackbarId: 'my-snackbar-1', displayLength: Infinity, dismissible: true });
 `} />
   </Section>
   <Section {...S.callback}>

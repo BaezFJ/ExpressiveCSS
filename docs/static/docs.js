@@ -308,7 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("snackbar-html-1")?.addEventListener("click", () => {
-    new Expressive.Snackbar({ snackbarId: "my-snackbar-1" });
+    new Expressive.Snackbar({ snackbarId: "my-snackbar-1", displayLength: Infinity, dismissible: true });
   });
 
   document.getElementById("snackbar-html-2")?.addEventListener("click", () => {
