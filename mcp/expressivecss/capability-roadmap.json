@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "e4045d9c2470581388b43fffd0897fa6a6f22f94b9fc208679a142930d7d7692",
+    "reportSha256": "b6b31b64eac365af9142882c31dba3c54338a08567b438de51b476730aa5abb1",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1579,8 +1579,8 @@
       "gaps": [
         {
           "kind": "verification",
-          "description": "Reduced-motion static custom fill is checked; forced colors and native indicator rendering remain unverified.",
-          "nextStep": "Test native and custom determinate/indeterminate variants, visible static feedback and changing accessible values."
+          "description": "Forced-colors rendering is checked in browser emulation; Windows high-contrast and spoken output still require manual review.",
+          "nextStep": "Verify native and custom indicators with Windows contrast themes and screen readers before claiming platform-wide support."
         },
         {
           "kind": "feature",
@@ -1599,6 +1599,12 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: linear progress follows inherited and overridden RTL direction",
           "scope": "Custom child and token fills at 0/25/100 percent, inherited and overridden direction, mirrored indeterminate animation samples, RTL reduced-motion geometry, unchanged native value and absence of circular linear fill. Firefox and WebKit variants run in the browser suite.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: progress remains visible in forced colors",
+          "scope": "Emulated light/dark forced colors: native and custom linear/circular pixels at 0/25/100 percent, LTR/RTL, animated and reduced-motion feedback, legacy preloader, and restoration of custom colors. Firefox and WebKit variants run in the browser suite; no Windows or spoken-output assertion.",
           "state": "recorded-passed"
         }
       ],

@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `c3a678da6b3f7a715d9f2d8a9a76809bb45fe59f5bdfaa96efe381bef094558f`
+Contract SHA-256: `27411a82cd653d19b1487e0e573d602879b9ac19704ff1d610e328dd40cc5aba`
 
 #### Selection and adaptation
 
@@ -37,13 +37,13 @@ Support (2026-09-13, `llm.md#progress-indicators`): Linear and circular progress
 
 Web adaptation: Prefer native progress where applicable; supply accessible state for custom hosts.
 
-Known boundary: Reduced-motion static custom fill is checked; forced colors and native indicator rendering remain unverified.
+Known boundary: Forced-colors rendering is checked in browser emulation; Windows high-contrast and spoken output still require manual review.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#progress).
 
 #### Contract
 
-Unreleased source stops spatial animation under reduced motion and retains a visible static fill for custom indeterminate bars. Native rendering and forced colors require separate verification. Published 0.9.1 does not include these repairs.
+Unreleased source uses system colors for native and custom progress in forced-colors mode, outlines empty linear tracks, and preserves circular value segments. Reduced motion retains static feedback, including the legacy preloader. Browser emulation checks do not replace Windows high-contrast or screen-reader review. Published 0.9.1 does not include these repairs.
 
 Activity and progress indicators for content that takes time to load.
 

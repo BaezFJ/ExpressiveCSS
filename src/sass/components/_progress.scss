@@ -190,15 +190,56 @@ progress.progress:indeterminate {
   to { transform: rotate(1turn); }
 }
 
+@media (forced-colors: active) {
+  .progress,
+  .preloader {
+    forced-color-adjust: none;
+  }
+
+  .progress:not(.circular) {
+    background-color: Canvas;
+    outline: 1px solid CanvasText;
+    outline-offset: 1px;
+  }
+
+  .progress > .determinate,
+  .progress > .indeterminate::before,
+  .progress > .indeterminate::after,
+  .progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > .indeterminate))::after,
+  progress.progress:indeterminate::before,
+  progress.progress:indeterminate::after {
+    background-color: CanvasText;
+  }
+
+  progress.progress::-webkit-progress-bar { background-color: Canvas; }
+  progress.progress::-webkit-progress-value { background-color: CanvasText; }
+  progress.progress::-moz-progress-bar { background-color: CanvasText; }
+  progress.progress:indeterminate::-webkit-progress-value { background-color: transparent; }
+  progress.progress:indeterminate::-moz-progress-bar {
+    background-color: CanvasText;
+    width: 40%;
+  }
+
+  :is(.preloader, .progress.circular) {
+    background: conic-gradient(CanvasText 0 90deg, transparent 90deg 360deg);
+
+    &.determinate {
+      background: conic-gradient(
+        CanvasText 0 var(--md-comp-progress-value, 0%),
+        GrayText var(--md-comp-progress-value, 0%)
+      );
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .progress > .indeterminate::before,
   .progress > .indeterminate::after,
   .progress::after,
-  .progress.circular,
   progress.progress:indeterminate::before,
   progress.progress:indeterminate::after,
   .progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > .indeterminate)):not([style*="--md-comp-progress-value"])::after,
-  .preloader {
+  :is(.preloader, .progress.circular) {
     animation: none;
   }
 

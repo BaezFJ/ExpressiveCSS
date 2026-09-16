@@ -3241,7 +3241,7 @@ Set these on the container to resize a layout.
 
 ## Progress indicators
 
-Unreleased source stops spatial animation under reduced motion and retains a visible static fill for custom indeterminate bars. Native rendering and forced colors require separate verification. Published 0.9.1 does not include these repairs.
+Unreleased source uses system colors for native and custom progress in forced-colors mode, outlines empty linear tracks, and preserves circular value segments. Reduced motion retains static feedback, including the legacy preloader. Browser emulation checks do not replace Windows high-contrast or screen-reader review. Published 0.9.1 does not include these repairs.
 
 Activity and progress indicators for content that takes time to load.
 
