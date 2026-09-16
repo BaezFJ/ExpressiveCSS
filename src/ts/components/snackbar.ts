@@ -129,14 +129,12 @@ export class Snackbar {
     this.panning = false;
     this.timeRemaining = this.options.displayLength;
     // One snackbar at a time so a new update does not stack over the page.
-    if (Snackbar._snackbars.length > 0) {
-      for (const snackbar of [...Snackbar._snackbars]) {
-        snackbar._dismissed = true;
-        clearTimeout(snackbar.counterTimeout);
-        snackbar._restoreFocus();
-        snackbar.el.remove();
-      }
-      Snackbar._snackbars.length = 0;
+    while (Snackbar._snackbars.length > 0) {
+      const snackbar = Snackbar._snackbars.shift();
+      snackbar._dismissed = true;
+      clearTimeout(snackbar.counterTimeout);
+      snackbar._restoreFocus();
+      snackbar.el.remove();
     }
     let focused = document.activeElement;
     while (focused?.shadowRoot?.activeElement) focused = focused.shadowRoot.activeElement;

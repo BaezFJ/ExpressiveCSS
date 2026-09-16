@@ -313,6 +313,20 @@ scenario('actionable snackbar persists and restores focus on keyboard dismissal'
     await expect(page.getByRole('status')).toHaveCount(0);
 
     await page.evaluate(() => {
+      window.snack = new Expressive.Snackbar({ text: 'Before reentry', action: 'Undo', inDuration: 0, outDuration: 0 });
+      window.snack.el.querySelector('button').focus();
+      document.querySelector('#next').addEventListener('focus', () => {
+        window.nestedSnack = new Expressive.Snackbar({ text: 'Nested', action: 'Undo', inDuration: 0, outDuration: 0 });
+      }, { once: true });
+      window.snack = new Expressive.Snackbar({ text: 'After reentry', action: 'Review', inDuration: 0, outDuration: 0 });
+    });
+    await expect(page.locator('.snackbar')).toHaveCount(1);
+    await expect(page.getByRole('status')).toContainText('After reentry');
+    assert.equal(await page.evaluate(() => !window.nestedSnack.el.isConnected && Expressive.Snackbar._snackbars.length === 1), true);
+    await page.evaluate(() => Expressive.Snackbar.dismissAll());
+    await expect(page.locator('.snackbar')).toHaveCount(0);
+
+    await page.evaluate(() => {
       const host = document.createElement('div');
       host.id = 'shadow-snackbar';
       document.body.append(host);
