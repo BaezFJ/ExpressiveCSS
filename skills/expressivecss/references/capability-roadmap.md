@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `71a66cede032a52f516c236897821e387af78351e7a832fc8320b83615e4a5d8`.
+Last operator collection: 2026-09-16, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `fc2077306c75afc4ac4cd4f15f86d5d62a3554ff59e8b58492539485dc24ba4d`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -721,10 +721,11 @@ Google relationship: related. Upstream review: requirements-prose-reviewed (2026
 
 Web adaptation: Runtime combobox behavior attached to a text field; no standalone upstream component claim.
 
-- feature: Generated status-info does not announce new suggestion counts or asynchronous results. Next: Implement and verify an appropriate result-status update; test spoken delivery and multi-select keyboard behavior.
+- feature: The unreleased source exposes localized loading, result counts and multi-selection updates through a polite live region. Spoken delivery and application-owned async ordering remain unverified. Next: Check screen-reader delivery and application request cancellation, error handling and stale-response ordering.
 
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining suggestions and section links preserve selection and dismissal`. Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining autocomplete preserves a preselected display label on focus`. Initial selected record retains its display label and selection through first focus and Tab exit.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: autocomplete announces results and selection without moving focus`. Polite live-region text for synchronous and delayed results, plurals and localization defaults, clearing, multi-selection, focus preservation and teardown with late results. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.
 
 <a id="date-picker"></a>
 

@@ -24,6 +24,12 @@ export interface AutocompleteData {
 }
 
 export interface AutocompleteOptions extends BaseOptions {
+  i18n: Partial<{
+    loading: string;
+    noResults: string;
+    results: (count: number) => string;
+    selected: (count: number) => string;
+  }>;
   /**
    * Data object defining autocomplete options with
    * optional icon strings.
@@ -73,6 +79,12 @@ export interface AutocompleteOptions extends BaseOptions {
 }
 
 const _defaults: AutocompleteOptions = {
+  i18n: {
+    loading: 'Loading results.',
+    noResults: 'No results.',
+    results: count => `${count} ${count === 1 ? 'result' : 'results'} available.`,
+    selected: count => `${count} ${count === 1 ? 'item' : 'items'} selected.`
+  },
   data: [], // Autocomplete data set
   onAutocomplete: null, // Callback for when autocompleted
   menuOptions: {
@@ -111,6 +123,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   private oldVal: string;
   private $active: HTMLElement | null;
   private _openTimer: ReturnType<typeof setTimeout> | undefined;
+  private _statusInfo: HTMLElement;
+  private _announcer: HTMLElement;
 
   /**
    * The active entry, for both the eye and the screen reader. The class alone
@@ -146,7 +160,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
     this.options = {
       ...Autocomplete.defaults,
-      ...options
+      ...options,
+      i18n: { ...Autocomplete.defaults.i18n, ...options?.i18n }
     };
 
     this.isOpen = false;
@@ -227,7 +242,10 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       this._openTimer = undefined;
     }
     this._removeEventHandlers();
+    this.menu.destroy();
     this._removeMenu();
+    this._statusInfo.remove();
+    this._announcer.remove();
     this.el['Expressive_Autocomplete'] = undefined;
   }
 
@@ -316,8 +334,16 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // Add StatusInfo
     const div = document.createElement('div');
     div.classList.add('status-info');
+    div.setAttribute('aria-hidden', 'true');
     div.setAttribute('style', 'position: absolute;right:0;top:0;');
     this.el.parentElement.appendChild(div);
+    this._statusInfo = div;
+    this._announcer = document.createElement('div');
+    this._announcer.classList.add('autocomplete-status');
+    this._announcer.setAttribute('role', 'status');
+    this._announcer.setAttribute('aria-live', 'polite');
+    this._announcer.setAttribute('aria-atomic', 'true');
+    this.el.parentElement.appendChild(this._announcer);
     this._updateSelectedInfo();
   }
 
@@ -556,12 +582,19 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   _setStatusLoading() {
-    const statusElement = this.el.parentElement.querySelector('.status-info');
+    const statusElement = this._statusInfo;
     if (statusElement) statusElement.replaceChildren(Autocomplete._loadingIndicator());
+    this._announce(this.options.i18n.loading);
+  }
+
+  private _announce(message: string) {
+    if (!this._announcer) return;
+    const text = this.el.matches(':focus') && this.el.value.length >= this.options.minLength ? message : '';
+    if (this._announcer.textContent !== text) this._announcer.textContent = text;
   }
 
   _updateSelectedInfo() {
-    const statusElement = this.el.parentElement.querySelector('.status-info');
+    const statusElement = this._statusInfo;
     if (statusElement) {
       if (this.options.isMultiSelect)
         statusElement.textContent = this.selectedValues.length.toString();
@@ -592,6 +625,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (inputText.length >= this.options.minLength) {
       this.isOpen = true;
       this._renderMenu();
+      this._announce(this.menuItems.length ? this.options.i18n.results(this.menuItems.length) : this.options.i18n.noResults);
     }
     // Open menu
     if (!this.menu.isOpen) {
@@ -610,6 +644,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
    * Hide autocomplete.
    */
   close = () => {
+    if (this._announcer) this._announcer.textContent = '';
     if (this._openTimer !== undefined) {
       clearTimeout(this._openTimer);
       this._openTimer = undefined;
@@ -625,6 +660,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
    * @param open Option to conditionally open menu
    */
   setMenuItems(menuItems: AutocompleteData[], selected: number[] | string[] = null, open: boolean = true) {
+    if (this.el['Expressive_Autocomplete'] !== this) return;
+    const resultCount = menuItems.length;
     this.menuItems = menuItems;
     this.options.data = menuItems;
     if (selected) {
@@ -639,6 +676,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
     if (open) this.open();
     this._updateSelectedInfo();
+    this._announce(open ? resultCount ? this.options.i18n.results(resultCount) : this.options.i18n.noResults : '');
     this._triggerChanged();
   }
 
@@ -671,6 +709,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       this.close();
     }
     this._updateSelectedInfo();
+    if (this.options.isMultiSelect) this._announce(this.options.i18n.selected(this.selectedValues.length));
     this._triggerChanged();
   }
 }

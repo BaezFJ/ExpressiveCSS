@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "71a66cede032a52f516c236897821e387af78351e7a832fc8320b83615e4a5d8",
+    "reportSha256": "fc2077306c75afc4ac4cd4f15f86d5d62a3554ff59e8b58492539485dc24ba4d",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -2426,8 +2426,8 @@
       "gaps": [
         {
           "kind": "feature",
-          "description": "Generated status-info does not announce new suggestion counts or asynchronous results.",
-          "nextStep": "Implement and verify an appropriate result-status update; test spoken delivery and multi-select keyboard behavior."
+          "description": "The unreleased source exposes localized loading, result counts and multi-selection updates through a polite live region. Spoken delivery and application-owned async ordering remain unverified.",
+          "nextStep": "Check screen-reader delivery and application request cancellation, error handling and stale-response ordering."
         }
       ],
       "browserChecks": [
@@ -2441,6 +2441,12 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining autocomplete preserves a preselected display label on focus",
           "scope": "Initial selected record retains its display label and selection through first focus and Tab exit.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: autocomplete announces results and selection without moving focus",
+          "scope": "Polite live-region text for synchronous and delayed results, plurals and localization defaults, clearing, multi-selection, focus preservation and teardown with late results. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.",
           "state": "recorded-passed"
         }
       ],

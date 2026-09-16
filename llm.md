@@ -6090,12 +6090,17 @@ onSearch: function(text, autocomplete) {
 | `data` | Array | `[]` | Suggestion list. Each item needs an `id`; `text`, `image`, and `description` are optional. |
 | `isMultiSelect` | Boolean | `false` | If true, several values can be selected. `onAutocomplete` receives an array. |
 | `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
+| `i18n` | Object | See below | Partial overrides for live status messages. Available in unreleased source. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
 | `onSearch` | Function | filters `id` and `text` | Called when the input text changes. Load or filter data, then call `setMenuItems`. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
 | `selected` | Array | `[]` | Initial selected ids (strings or numbers). |
+
+The unreleased source provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
+
+Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still own asynchronous request cancellation, stale-response ordering and error handling. Results delivered after `destroy()` are ignored. Test actual spoken delivery with a screen reader. These additions are not in published 0.9.1.
 
 ### Methods
 

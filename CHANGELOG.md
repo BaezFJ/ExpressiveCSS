@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Autocomplete exposes localized loading, result and multi-selection updates
+  through a polite live region. Teardown removes owned status elements and Menu
+  listeners, and late results after destruction are ignored.
+
 - Date picker calendars support a single Tab stop, arrow keys, Home/End,
   PageUp/PageDown and Shift for year navigation. Redraws preserve calendar focus,
   and disabled days expose their unavailable state without allowing selection.
