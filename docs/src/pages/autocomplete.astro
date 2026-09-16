@@ -20,6 +20,9 @@ const S = defineSections([
 <p>Unreleased source preserves the original suggestion dataset and selected display label while editing. Escape and Tab close from the input, cancel pending opening, and keep listbox options outside sequential Tab order. Published 0.9.1 does not include these repairs.</p>
 
 <PageBody sections={S}>
+  <p>The unreleased source adds a visually hidden, polite live region for loading, result counts and multi-selection changes. The visible spinner and count stay unchanged. Announcements require input focus and <code>minLength</code>; closing clears the region. Check spoken delivery with a screen reader.</p>
+  <p>Override <code>i18n.loading</code> and <code>i18n.noResults</code>, which default to "Loading results." and "No results.". Supply <code>i18n.results(count)</code> and <code>i18n.selected(count)</code> functions for localized plurals. Defaults produce "1 result available." or "N results available." and "1 item selected." or "N items selected.". Missing keys retain defaults, and all messages are plain text. These options are not in published 0.9.1.</p>
+  <p>Updates announce the count passed to <code>setMenuItems</code>, excluding fallback selected items. Opening an existing list announces its displayed item count. Updates with <code>open: false</code> stay silent. Applications own request cancellation, stale-response ordering and error handling. Results delivered after <code>destroy()</code> are ignored.</p>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>autocomplete</code> to a text input inside <code>.field</code>.

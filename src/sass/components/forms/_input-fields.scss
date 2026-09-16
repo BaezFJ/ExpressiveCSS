@@ -295,6 +295,10 @@ textarea {
   }
 }
 
+.autocomplete-status {
+  @include visually-hidden;
+}
+
 .autocomplete-content {
   li {
     .highlight { color: var(--md-sys-color-on-surface); }

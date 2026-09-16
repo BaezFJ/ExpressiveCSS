@@ -273,6 +273,78 @@ scenario('remaining snackbar retains a focused action until focus leaves', '<but
   } finally { await page.evaluate(()=>Expressive.Snackbar.dismissAll()); }
 });
 
+scenario('autocomplete announces results and selection without moving focus', '<div class="field"><label for="query">Fruit</label><input id="query"></div><button id="after">After</button>', async page => {
+  try {
+    await page.evaluate(() => {
+      window.instances = [Expressive.Autocomplete.init(document.querySelector('#query'), {
+        data: [{ id: 'apple' }, { id: 'apricot' }],
+        menuOptions: { inDuration: 0, outDuration: 0 }
+      })];
+    });
+    const status = page.locator('.autocomplete-status');
+    await expect(status).toHaveAttribute('role', 'status');
+    await expect(status).toHaveAttribute('aria-live', 'polite');
+    await expect(status).toHaveAttribute('aria-atomic', 'true');
+    await page.locator('#query').focus();
+    await page.keyboard.type('a');
+    await expect(status).toHaveText('2 results available.');
+    await expect(page.locator('#query')).toBeFocused();
+    await page.keyboard.type('pp');
+    await expect(status).toHaveText('1 result available.');
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('#query')).toHaveValue('apple');
+    await expect(status).toBeEmpty();
+    await page.keyboard.press('ControlOrMeta+A');
+    await page.keyboard.type('z');
+    await expect(status).toHaveText('No results.');
+    await page.keyboard.press('Backspace');
+    await expect(status).toBeEmpty();
+    await page.evaluate(() => {
+      window.instances[0].destroy();
+      window.instances = [Expressive.Autocomplete.init(document.querySelector('#query'), {
+        isMultiSelect: true, i18n: { loading: 'Buscando', results: count => `${count} coincidencias` },
+        onSearch: (_query, instance) => { window.pending = instance; },
+        menuOptions: { inDuration: 0, outDuration: 0 }
+      })];
+    });
+    await page.keyboard.type('a');
+    await expect(status).toHaveText('Buscando');
+    await page.evaluate(() => window.pending.setMenuItems([{ id: 'apple' }, { id: 'apricot' }]));
+    await expect(status).toHaveText('2 coincidencias');
+    await expect(page.locator('#query')).toBeFocused();
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+    await expect(status).toHaveText('1 item selected.');
+    await expect(page.locator('.status-info')).toHaveText('1');
+    await expect(page.locator('.status-info')).toHaveAttribute('aria-hidden', 'true');
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+    await expect(status).toHaveText('0 items selected.');
+    await page.keyboard.press('Escape');
+    await expect(status).toBeEmpty();
+    await page.locator('#after').focus();
+    await page.evaluate(() => window.pending.setMenuItems([]));
+    await expect(status).toBeEmpty();
+    await expect(page.locator('#after')).toBeFocused();
+    await page.evaluate(() => { window.instances[0].destroy(); window.instances = []; window.pending.setMenuItems([{ id: 'late' }]); });
+    await expect(page.locator('.autocomplete-status, .status-info, .autocomplete-content')).toHaveCount(0);
+    await page.evaluate(() => {
+      document.querySelector('#query').value = '';
+      window.instances = [Expressive.Autocomplete.init(document.querySelector('#query'), {
+        minLength: 0, data: [{ id: 'apple' }], menuOptions: { inDuration: 0, outDuration: 0 }
+      })];
+    });
+    await page.locator('#query').focus();
+    await page.evaluate(() => window.instances[0].open());
+    await expect(status).toHaveText('1 result available.');
+    await page.evaluate(() => window.instances[0].setMenuItems([{ id: 'pear' }], null, false));
+    await expect(status).toBeEmpty();
+  } finally {
+    await page.evaluate(() => { window.instances?.forEach(instance => instance.destroy()); window.instances = []; });
+  }
+});
+
 scenario('date picker supports calendar keyboard navigation and redraw focus', '<label for="date">Appointment date</label><input id="date"><button id="after">After</button>', async page => {
   const day = (year, month, date) => page.locator(`.datepicker-day-button[data-year="${year}"][data-month="${month}"][data-day="${date}"]`);
   for (const docked of [false, true]) {
