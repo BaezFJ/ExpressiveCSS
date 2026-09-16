@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Native and custom progress indicators use system colors in forced-colors mode.
+  Empty linear tracks remain outlined, circular values retain a visible track,
+  and the legacy preloader stops rotating under reduced motion.
+
 - Custom linear progress fills and indeterminate motion follow the inherited
   text direction, including RTL and nested direction overrides. Reduced-motion
   static fills use the same starting edge.

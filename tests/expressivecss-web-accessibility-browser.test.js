@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { rm, writeFile } from 'node:fs/promises';
 import { chromium, firefox, webkit, expect } from '@playwright/test';
+import utilsBundle from 'playwright-core/lib/utilsBundle';
 import { materializeProjectFixture } from '../scripts/eval-expressivecss-skill.mjs';
 import { startFixtureServer, createRestrictedFixturePage } from '../scripts/expressivecss-eval-browser.mjs';
 
@@ -313,6 +314,87 @@ scenario('linear progress follows inherited and overridden RTL direction', `
     assert.equal(await page.locator('#circle').evaluate(el => getComputedStyle(el, '::after').content), 'none');
     assert.equal(await page.locator('#circle').evaluate(el => getComputedStyle(el).writingMode), writingMode);
   }
+});
+
+scenario('progress remains visible in forced colors', `
+<section id="contrast" style="width:400px">
+<progress id="native-fill" class="progress" aria-label="Native upload" value="25" max="100"></progress>
+<progress id="native-motion" class="progress" aria-label="Native loading"></progress>
+<div id="custom-fill" class="progress" role="progressbar" aria-label="Upload" aria-valuenow="25" style="--md-comp-progress-value:25%;--md-comp-progress-indicator:red"><span class="determinate"></span></div>
+<div id="token-fill" class="progress" role="progressbar" aria-label="Download" aria-valuenow="25" style="--md-comp-progress-value:25%"></div>
+<div id="custom-motion" class="progress" role="progressbar" aria-label="Loading"><span class="indeterminate"></span></div>
+<div id="bare-motion" class="progress" role="progressbar" aria-label="Preparing"></div>
+<span id="circle-fill" class="progress circular determinate" role="progressbar" aria-label="Circular upload" aria-valuenow="25" style="--md-comp-progress-value:25%"></span>
+<span id="circle-motion" class="progress circular" role="status" aria-label="Connecting"></span>
+<span id="legacy-motion" class="preloader" role="status" aria-label="Waiting"></span>
+</section>`, async page => {
+  await page.addStyleTag({ content: '#contrast *, #contrast ::after { transition:none; }' });
+  for (const colorScheme of ['light', 'dark']) {
+    await page.emulateMedia({ forcedColors: 'active', colorScheme, reducedMotion: 'reduce' });
+    assert.equal(await page.evaluate(() => matchMedia('(forced-colors: active)').matches), true);
+    const palette = await page.evaluate(() => {
+      const probe = document.createElement('span');
+      probe.style.cssText = 'forced-color-adjust:none;color:CanvasText;background:Canvas';
+      document.body.append(probe);
+      const style = getComputedStyle(probe);
+      const colors = [style.color, style.backgroundColor].map(value => value.match(/\d+/g).slice(0, 3).map(Number));
+      probe.remove();
+      return colors;
+    });
+    for (const direction of ['ltr', 'rtl']) {
+      await page.locator('#contrast').evaluate((el, dir) => el.dir = dir, direction);
+      for (const value of [0, 25, 100]) {
+        for (const id of ['native-fill', 'custom-fill', 'token-fill', 'circle-fill']) {
+          const indicator = page.locator(`#${id}`);
+          await indicator.evaluate((el, value) => {
+            if (el instanceof HTMLProgressElement) el.value = value;
+            else { el.style.setProperty('--md-comp-progress-value', `${value}%`); el.setAttribute('aria-valuenow', `${value}`); }
+          }, value);
+          const png = utilsBundle.PNG.sync.read(await indicator.screenshot());
+          const pixel = (x, y) => [...png.data.subarray((y * png.width + x) * 4, (y * png.width + x) * 4 + 3)];
+          if (id === 'circle-fill') {
+            const start = pixel(png.width - 4, Math.floor(png.height / 2) - 6);
+            const end = pixel(2, Math.floor(png.height / 2));
+            if (value > 0) assert.deepEqual(start, palette[0]);
+            if (value === 100) assert.deepEqual(end, palette[0]);
+            for (const track of value === 0 ? [start, end] : value === 25 ? [end] : []) {
+              assert.notDeepEqual(track, palette[0]);
+              assert.notDeepEqual(track, palette[1]);
+            }
+          } else {
+            const start = direction === 'rtl' ? png.width - 20 : 20;
+            const end = direction === 'rtl' ? 20 : png.width - 20;
+            assert.deepEqual(pixel(start, 2), palette[value === 0 ? 1 : 0], `${id} ${direction} ${value} start`);
+            assert.deepEqual(pixel(end, 2), palette[value === 100 ? 0 : 1], `${id} ${direction} ${value} end`);
+          }
+        }
+      }
+      for (const reducedMotion of ['no-preference', 'reduce']) {
+        await page.emulateMedia({ reducedMotion });
+        const animations = await page.evaluate(() => {
+          const animations = document.getAnimations();
+          for (const animation of animations) {
+            animation.pause();
+            animation.currentTime = 700 + Number(animation.effect.getTiming().delay);
+          }
+          return animations.length;
+        });
+        assert.equal(animations > 0, reducedMotion === 'no-preference');
+        for (const id of ['native-motion', 'custom-motion', 'bare-motion', 'circle-motion', 'legacy-motion']) {
+          const indicator = page.locator(`#${id}`);
+          const png = utilsBundle.PNG.sync.read(await indicator.screenshot());
+          let ink = 0;
+          for (let offset = 0; offset < png.data.length; offset += 4) {
+            if (palette[0].every((value, channel) => png.data[offset + channel] === value)) ink++;
+          }
+          assert.ok(ink > 20, `${id} retains visible feedback with ${reducedMotion}`);
+          assert.equal(await indicator.getAttribute('aria-valuenow'), null);
+        }
+      }
+    }
+  }
+  await page.emulateMedia({ forcedColors: 'none' });
+  assert.equal(await page.locator('#custom-fill .determinate').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(255, 0, 0)');
 });
 
 scenario('remaining progress and loading variants stop spatial motion', `
