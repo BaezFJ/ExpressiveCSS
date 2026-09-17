@@ -3913,6 +3913,8 @@ document.getElementById('sheet').show();      // standard, no scrim
 
 A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to the side. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.
 
+Docking is logical: `.start`, `.left` and `.left-sheet` use the start edge; the default, `.right` and `.right-sheet` use the end edge. In unreleased source, drag direction, inner-edge hit testing, modal corners and opening motion follow computed RTL direction. Headings and actions wrap; the body scrolls independently. Shared sheet dragging ignores secondary-pointer cancellation and resets when a sheet closes, is removed, or a primary press starts elsewhere. Dismissal thresholds are unchanged. Keep an explicit close control; native zoom, assistive technology and physical-device review remain pending.
+
 ```html
 <dialog class="side-sheet" aria-labelledby="headline-title">
   <header>

@@ -40,6 +40,28 @@ const url = (page) => route(page.id);
 /** The docs-site chrome, masked identically in both passes. See the note at the shutter. */
 const CHROME_MASK = (page) => [page.locator('#nav-mobile')];
 
+for (const variant of VARIANTS) for (const direction of ['ltr', 'rtl']) {
+  test(`side-sheet open ${direction} @ ${variant.name}`, async ({ page }) => {
+    await page.setViewportSize({ width: variant.width, height: variant.height });
+    await page.addInitScript(theme => localStorage.setItem('theme', theme), variant.theme);
+    await page.route('**/cdnjs.cloudflare.com/**', route => route.abort());
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/side-sheet.html');
+    await page.evaluate(async direction => {
+      document.documentElement.style.fontSize = '200%';
+      const dialog = document.querySelector('#sheet-modal');
+      dialog.dir = direction;
+      dialog.querySelector('h2').textContent = 'Datenschutzeinstellungenمعلوماتالتفضيلات';
+      dialog.querySelector('div').textContent = 'Überprüfen Sie Ihre Einstellungen. معلومات إضافية حول الإعدادات. '.repeat(70);
+      dialog.querySelector('button[value="save"]').textContent = 'Änderungen speichern';
+      dialog.querySelector('button[value="cancel"]').textContent = 'Abbrechen';
+      dialog.showModal();
+      await document.fonts.ready;
+    }, direction);
+    await expect(page.locator('#sheet-modal')).toHaveScreenshot(`side-sheet-open-${direction}--${variant.name}.png`);
+  });
+}
+
 for (const entry of PAGES) {
   // The page's route on the site, not its catalogue id. Nineteen ids carry an
   // underscore, which Playwright rewrites

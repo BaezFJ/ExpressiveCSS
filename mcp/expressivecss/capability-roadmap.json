@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "9d5354435f785b1c9158c2a9cbe315c638d50cfdcb29bec4e74bbc47575892ee",
+    "reportSha256": "255d52d21dc094b8b2eb9fee2e5f1bc165bb2e6aa5d36091d62b33a6dcb29125",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1133,7 +1133,7 @@
       "support": "unassessed",
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
+      "reviewedOn": "2026-09-17",
       "scope": "Standard and modal bottom sheets.",
       "adaptation": "Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.",
       "upstream": {
@@ -1171,13 +1171,13 @@
         },
         {
           "path": "src/ts/behaviors/sheetDrag.ts",
-          "sha256": "52d955d70b2d3b3d577787aa94b0a95d45eb37b5570158a6558359daecad40ee"
+          "sha256": "0f5714a2a1fbb5c20a45f0c6a8cc617959e7b8572128ee8860db909f0d96f3bd"
         }
       ],
       "gaps": [
         {
           "kind": "integration",
-          "description": "The shared handle dismisses rather than cycling sheet heights; long-content and drag behavior are outside the new modal check.",
+          "description": "The shared handle dismisses rather than cycling sheet heights. Interrupted-drag cleanup has rendered coverage; bottom-sheet long-content and physical-touch review remain pending.",
           "nextStep": "Use explicit close controls; separately verify reachable scrolling and any application-owned height changes."
         }
       ],
@@ -1186,6 +1186,12 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
           "scope": "Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Sheets cancel only the active pointer and clean interrupted drags (chromium)",
+          "scope": "Rendered bottom and side sheets with synthetic primary/secondary pointers, cancellation, closing, removal, same-task reopen/reattach, ancestor reattachment and a new primary press outside. Unrelated mutations preserve active drags. Physical touch review remains pending.",
           "state": "recorded-passed"
         }
       ],
@@ -1203,7 +1209,7 @@
       "support": "unassessed",
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
+      "reviewedOn": "2026-09-17",
       "scope": "Standard and modal side sheets.",
       "adaptation": "Native dialog and shared drag/dismiss behavior.",
       "upstream": {
@@ -1229,7 +1235,7 @@
       "sources": [
         {
           "path": "src/sass/components/_side-sheet.scss",
-          "sha256": "3a907e237d6eb6cb46894a980707c26e53fcd71feec7d1b45f4cab3d0dfe0263"
+          "sha256": "d4d4d836ef56b58a9c2bf644fb243d250834949042c846fe89d55951d41d29e5"
         },
         {
           "path": "src/ts/behaviors/dialogs.ts",
@@ -1237,21 +1243,39 @@
         },
         {
           "path": "src/ts/behaviors/sideSheets.ts",
-          "sha256": "29c28c886eeccf05b4e5834bb57c424b77ed48800e907de5436a384bb79cf749"
+          "sha256": "88d4923d0ef1cd15c310374e4868bcfba9d72782e65eb5d658f114db7a09f6b2"
         },
         {
           "path": "src/ts/behaviors/sheetDrag.ts",
-          "sha256": "52d955d70b2d3b3d577787aa94b0a95d45eb37b5570158a6558359daecad40ee"
+          "sha256": "0f5714a2a1fbb5c20a45f0c6a8cc617959e7b8572128ee8860db909f0d96f3bd"
         }
       ],
       "gaps": [
         {
           "kind": "verification",
-          "description": "Native modal/nonmodal focus is checked; start-docked RTL drag direction and long-content fit remain unverified.",
-          "nextStep": "Test the actual RTL edge, drag alternative, enlarged labels and reachable close action."
+          "description": "Browser checks cover logical aliases, RTL dragging, cancellation and enlarged translated text. Native zoom, spoken output and physical touch remain unverified.",
+          "nextStep": "Complete docs/agents/accessibility-manual-review.md on actual devices and assistive technology."
         }
       ],
       "browserChecks": [
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Side sheet rendered docking and drag direction (chromium)",
+          "scope": "All docking aliases, LTR/RTL, modal/nonmodal, ordinary/reduced motion, opening keyframes, inner corners, rendered drag translation, snapback, inward rejection, outward dismissal and mouse header dragging.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Sheets cancel only the active pointer and clean interrupted drags (chromium)",
+          "scope": "Shared side/bottom drag cleanup under cancellation, secondary pointers, closing, removal, same-task reopen/reattach, ancestor reattachment and another primary press. Unrelated mutations preserve active drags. Synthetic pointers do not establish physical touch usability.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Side sheet translated content and close actions remain reachable (chromium)",
+          "scope": "Compact/wide, LTR/RTL, modal/nonmodal, both motion settings, 200% root font size, translated wrapping, body scrolling, footer visibility, disabled control and native close-button pointer/Enter activation. Not native browser zoom.",
+          "state": "recorded-passed"
+        },
         {
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",

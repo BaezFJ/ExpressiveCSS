@@ -27,7 +27,7 @@ export interface SheetDragConfig {
   /** Whether a press at this point landed on the sheet's drag handle. */
   inHandle: (event: PointerEvent, dialog: HTMLDialogElement) => boolean;
   /**
-   * Called first on every `pointerdown`, before any guard rejects it. The
+   * Called on primary `pointerdown`, after clearing the previous drag. The
    * bottom sheet clears its dragged flag here so a sequence abandoned without
    * a `pointerup` cannot leave the flag set and swallow the next tap.
    */
@@ -49,6 +49,7 @@ const DRAG_SLOP = 4;
  */
 export function installSheetDrag(config: SheetDragConfig): void {
   const coord = (event: PointerEvent) => (config.axis === 'x' ? event.clientX : event.clientY);
+  let observer: MutationObserver;
 
   let drag: {
     dialog: HTMLDialogElement;
@@ -72,12 +73,13 @@ export function installSheetDrag(config: SheetDragConfig): void {
   };
 
   const onDown = (event: PointerEvent) => {
-    config.onPress?.();
     // A press that is not the primary pointer is ignored without disturbing a
     // drag already in flight - a second finger must not abort the first one.
     // A press that lands off the sheet or off its handle does clear it.
     if (!event.isPrimary) return;
     if (event.pointerType === 'mouse' && event.button !== 0) return;
+    onCancel();
+    config.onPress?.();
     const dialog = sheetFor(event.target);
     if (!dialog?.open) {
       drag = null;
@@ -97,10 +99,15 @@ export function installSheetDrag(config: SheetDragConfig): void {
       lastT: Date.now(),
       shift: 0
     };
+    observer.observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['open'], attributeOldValue: true });
   };
 
   const onMove = (event: PointerEvent) => {
     if (!drag || drag.pointerId !== event.pointerId) return;
+    if (!drag.dialog.open || !drag.dialog.isConnected) {
+      onCancel();
+      return;
+    }
     const delta = coord(event) - drag.start;
     // Only movement toward dismissal counts; dragging the other way is a no-op
     // rather than a sheet that lifts off its edge.
@@ -113,7 +120,12 @@ export function installSheetDrag(config: SheetDragConfig): void {
   const onUp = (event: PointerEvent) => {
     const held = drag;
     if (!held || held.pointerId !== event.pointerId) return;
+    if (!held.dialog.open || !held.dialog.isConnected) {
+      onCancel();
+      return;
+    }
     drag = null;
+    observer.disconnect();
     // Not `reset()`, though it looks like it: the two halves belong on either
     // side of close(). The transition has to be back before the sheet closes,
     // so the dismissal animates; the shift has to clear after, or a snap-back
@@ -130,7 +142,9 @@ export function installSheetDrag(config: SheetDragConfig): void {
     held.dialog.style.setProperty(config.property, '0px');
   };
 
-  const onCancel = () => {
+  const onCancel = (event?: PointerEvent) => {
+    if (event && drag?.pointerId !== event.pointerId) return;
+    observer.disconnect();
     config.onRelease?.(false);
     const held = drag;
     drag = null;
@@ -138,6 +152,13 @@ export function installSheetDrag(config: SheetDragConfig): void {
   };
 
   Utils.onDocumentReady(() => {
+    observer = new MutationObserver(records => {
+      const dialog = drag?.dialog;
+      if (dialog && (!dialog.open || !dialog.isConnected || records.some(record =>
+        (record.type === 'attributes' && record.target === dialog && record.oldValue === null) ||
+        [...record.removedNodes].some(node => node.contains(dialog))
+      ))) onCancel();
+    });
     document.addEventListener('pointerdown', onDown, { passive: true });
     document.addEventListener('pointermove', onMove, { passive: true });
     document.addEventListener('pointerup', onUp, { passive: true });

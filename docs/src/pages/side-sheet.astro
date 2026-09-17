@@ -66,9 +66,9 @@ const S = defineSections([
           </div>
         </dialog>
 
-        <dialog id="sheet-modal" class="side-sheet" aria-labelledby="headline-title">
+        <dialog id="sheet-modal" class="side-sheet" aria-labelledby="modal-headline-title">
           <header>
-            <h2 id="headline-title">Headline</h2>
+            <h2 id="modal-headline-title">Headline</h2>
             <form method="dialog">
               <button type="submit" aria-label="Close">
                 <span class="material-symbols" aria-hidden="true">close</span>
@@ -84,12 +84,12 @@ const S = defineSections([
           </form>
         </dialog>
 
-        <dialog id="sheet-back" class="side-sheet" aria-labelledby="headline-title">
+        <dialog id="sheet-back" class="side-sheet" aria-labelledby="back-headline-title">
           <header>
             <button type="button" aria-label="Back" onclick="this.closest('dialog').close()">
               <span class="material-symbols" aria-hidden="true">arrow_back</span>
             </button>
-            <h2 id="headline-title">Headline</h2>
+            <h2 id="back-headline-title">Headline</h2>
             <form method="dialog">
               <button type="submit" aria-label="Close">
                 <span class="material-symbols" aria-hidden="true">close</span>
@@ -116,7 +116,10 @@ const S = defineSections([
         <p>
           There is no extra class for the modal variant —
           <code>showModal()</code> vs <code>show()</code> is the split.
-          Add <code>.left</code> to dock to the start edge.
+          Add <code>.start</code>, <code>.left</code>, or <code>.left-sheet</code>
+          to dock to the logical start edge. The default, <code>.right</code>,
+          and <code>.right-sheet</code> dock to the logical end edge.
+          All mirror in RTL, including dragging and opening motion.
         </p>
   </Section>
   <Section {...S.header}>
@@ -149,6 +152,26 @@ const S = defineSections([
           <a href={route('bottom_sheet')}>bottom sheet</a>
           is often a better fit.
         </p>
+        <p>
+          Body content scrolls independently. Keep a named close control in the
+          header so dismissal never requires dragging. Long headings and action
+          rows wrap. Test your translations with enlarged text and native zoom.
+        </p>
+        <p>
+          <button type="button" onclick="document.getElementById('sheet-translated').showModal()">Show RTL long content</button>
+          <button type="button" class="outlined" onclick="document.getElementById('sheet-translated').show()">Show standard RTL content</button>
+        </p>
+        <dialog id="sheet-translated" class="side-sheet start" dir="rtl" lang="ar" aria-labelledby="translated-headline">
+          <header>
+            <h2 id="translated-headline">معلومات إضافية حول إعدادات الخصوصية</h2>
+            <form method="dialog"><button aria-label="إغلاق"><span class="material-symbols" aria-hidden="true">close</span></button></form>
+          </header>
+          <div>
+            {Array.from({ length: 12 }, () => <p>راجع إعدادات الخصوصية والإشعارات قبل حفظ التغييرات. يمكنك التمرير لقراءة جميع المعلومات وإغلاق هذه اللوحة في أي وقت.</p>)}
+            <a href="#layout">العودة إلى إرشادات التخطيط</a>
+          </div>
+          <form method="dialog"><button value="save">حفظ التغييرات</button><button class="outlined" value="cancel">إلغاء</button></form>
+        </dialog>
   </Section>
 </PageBody>
 </DocsLayout>

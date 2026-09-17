@@ -5,6 +5,9 @@ const startDocked = (dialog: HTMLDialogElement): boolean =>
   dialog.classList.contains('left-sheet') ||
   dialog.classList.contains('start');
 
+const leftDocked = (dialog: HTMLDialogElement): boolean =>
+  startDocked(dialog) !== (getComputedStyle(dialog).direction === 'rtl');
+
 /**
  * Drag-to-dismiss for side sheets (`dialog.side-sheet` / `.right` / `.left`).
  *
@@ -20,14 +23,12 @@ export class SideSheets {
         'dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dialog.left-sheet',
       axis: 'x',
       property: '--md-comp-side-sheet-shift',
-      // A start-docked sheet leaves toward the start edge, so its dismissal
-      // direction is the negative one.
-      direction: (dialog) => (startDocked(dialog) ? -1 : 1),
+      direction: (dialog) => (leftDocked(dialog) ? -1 : 1),
       inHandle: (event, dialog) => {
         const target = event.target;
         if (target instanceof Element && target.closest('header')) return true;
         const rect = dialog.getBoundingClientRect();
-        return startDocked(dialog)
+        return leftDocked(dialog)
           ? event.clientX >= rect.right - 24 && event.clientX <= rect.right
           : event.clientX >= rect.left && event.clientX <= rect.left + 24;
       }

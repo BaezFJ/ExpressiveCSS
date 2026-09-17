@@ -7,9 +7,181 @@ import utilsBundle from 'playwright-core/lib/utilsBundle';
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 assert.ok(!process.env.EXPRESSIVECSS_TEST_BROWSER || ['chromium', 'firefox', 'webkit'].includes(process.env.EXPRESSIVECSS_TEST_BROWSER));
+const sheetMarkup = `<dialog aria-labelledby="title"><header><h2 id="title">Details</h2><form method="dialog"><button aria-label="Close">×</button></form></header><div id="body"><p>Supporting content</p></div><form method="dialog"><button id="save">Save</button><button disabled>Unavailable</button></form></dialog>`;
+
+async function sheetFixture(page, { variant = 'side-sheet', direction = 'ltr', modal = true, motion = 'reduce' } = {}) {
+  await page.goto('about:blank');
+  await page.emulateMedia({ reducedMotion: motion });
+  await page.setContent(`<style>${css}</style>${sheetMarkup}`);
+  await page.addScriptTag({ content: js });
+  await page.evaluate(({ variant, direction, modal }) => {
+    document.body.dir = direction;
+    const dialog = document.querySelector('dialog');
+    dialog.className = variant;
+    modal ? dialog.showModal() : dialog.show();
+    getComputedStyle(dialog).translate;
+    window.entryShift = dialog.getAnimations().flatMap(animation => animation.effect.getKeyframes()).find(frame => frame.offset === 0 && frame.translate)?.translate;
+    window.pointer = (type, x, y, target = dialog, id = 1) => target.dispatchEvent(new PointerEvent(type, {
+      bubbles: true, pointerId: id, isPrimary: id === 1, pointerType: 'touch', clientX: x, clientY: y
+    }));
+  }, { variant, direction, modal });
+  if (motion === 'no-preference') await page.evaluate(() => Promise.all(document.querySelector('dialog').getAnimations().map(animation => animation.finished)));
+}
+
+
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+  browserTest(`Side sheet rendered docking and drag direction (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await browser.newPage({ viewport: { width: 800, height: 700 } });
+      for (const direction of ['ltr', 'rtl']) for (const variant of ['side-sheet', 'side-sheet end', 'right', 'right-sheet', 'side-sheet start', 'left', 'left-sheet']) for (const modal of [false, true]) for (const motion of ['reduce', 'no-preference']) {
+        await sheetFixture(page, { variant, direction, modal, motion });
+        const start = /start|left/.test(variant), left = start !== (direction === 'rtl');
+        if (motion === 'no-preference') assert.equal(await page.evaluate(() => parseFloat(entryShift)), left ? -100 : 100, `${variant} ${direction} enters from its docked edge`);
+        const result = await page.evaluate(async ({ left, motion }) => {
+          const dialog = document.querySelector('dialog'), rect = dialog.getBoundingClientRect();
+          const x = left ? rect.right - 8 : rect.left + 8, y = rect.top + 180, sign = left ? -1 : 1;
+          const corners = getComputedStyle(dialog);
+          const inner = left ? corners.borderTopRightRadius : corners.borderTopLeftRadius;
+          const outer = left ? corners.borderTopLeftRadius : corners.borderTopRightRadius;
+          pointer('pointerdown', x, y);
+          pointer('pointermove', x - sign * 130, y);
+          const inward = dialog.style.getPropertyValue('--md-comp-side-sheet-shift');
+          pointer('pointermove', x + sign * 30, y);
+          const shift = dialog.style.getPropertyValue('--md-comp-side-sheet-shift');
+          const translated = dialog.getBoundingClientRect().left - rect.left;
+          pointer('pointerup', x + sign * 30, y);
+          const snapped = dialog.open && dialog.style.getPropertyValue('--md-comp-side-sheet-shift') === '0px';
+          if (motion === 'no-preference') await Promise.all(dialog.getAnimations().map(animation => animation.finished));
+          pointer('pointerdown', x, y);
+          pointer('pointermove', x + sign * 130, y);
+          pointer('pointerup', x + sign * 130, y);
+          return { edge: left ? rect.left : innerWidth - rect.right, inward, shift, translated, snapped, closed: !dialog.open, inner, outer };
+        }, { left, motion });
+        const label = `${variant} ${direction} ${modal} ${motion}`;
+        assert.ok(Math.abs(result.edge) <= 1, `${label} docked edge`);
+        assert.equal(result.inward, '0px', `${label} ignores inward drag`);
+        assert.equal(result.shift, `${left ? -30 : 30}px`, `${label} inner-edge drag`);
+        assert.ok(Math.abs(result.translated - (left ? -30 : 30)) <= 1, `${label} rendered translation`);
+        assert.ok(result.snapped && result.closed, `${label} snapback and dismissal`);
+        assert.equal(result.inner, modal ? '28px' : '0px', `${label} inner corner`);
+        assert.equal(result.outer, '0px', `${label} outer corner`);
+        if (variant === 'side-sheet' && motion === 'reduce') {
+          await page.evaluate(modal => {
+            const dialog = document.querySelector('dialog');
+            modal ? dialog.showModal() : dialog.show();
+          }, modal);
+          const header = await page.locator('header h2').boundingBox();
+          const x = header.x + header.width / 2, y = header.y + header.height / 2;
+          await page.mouse.move(x, y);
+          await page.mouse.down();
+          await page.mouse.move(x + (left ? -130 : 130), y, { steps: 5 });
+          await page.mouse.up();
+          await expect(page.locator('dialog')).not.toHaveAttribute('open');
+        }
+      }
+    } finally { await browser.close(); }
+  });
+
+  browserTest(`Sheets cancel only the active pointer and clean interrupted drags (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await browser.newPage();
+      const failures = [];
+      for (const variant of ['side-sheet', 'bottom-sheet']) {
+        for (const end of ['cancel', 'close', 'remove', 'outside', 'reopen', 'reattach', 'ancestor-reattach', 'unchanged']) {
+          await sheetFixture(page, { variant });
+          const result = await page.evaluate(async ({ variant, end }) => {
+            const dialog = document.querySelector('dialog'), rect = dialog.getBoundingClientRect();
+            const x = rect.left + 10, y = rect.top + 10, vertical = variant === 'bottom-sheet';
+            const property = `--md-comp-${variant}-shift`;
+            pointer('pointerdown', x, y);
+            pointer('pointermove', x + (vertical ? 0 : 30), y + (vertical ? 30 : 0));
+            pointer('pointerdown', x, y, dialog, 2);
+            pointer('pointermove', x + 150, y + 150, dialog, 2);
+            pointer('pointercancel', x, y, dialog, 2);
+            const retained = dialog.style.getPropertyValue(property);
+            pointer('pointercancel', x, y);
+            pointer('pointerdown', x, y);
+            pointer('pointermove', x + (vertical ? 0 : 30), y + (vertical ? 30 : 0));
+            const started = dialog.style.getPropertyValue(property);
+            if (end === 'cancel') pointer('pointercancel', x, y);
+            if (end === 'close') dialog.close();
+            if (end === 'remove') dialog.remove();
+            if (end === 'reopen') { dialog.close(); dialog.showModal(); }
+            if (end === 'reattach') { dialog.remove(); document.body.append(dialog); }
+            if (end === 'ancestor-reattach') {
+              const parent = dialog.parentElement;
+              parent.remove();
+              document.documentElement.append(parent);
+            }
+            if (end === 'unchanged') {
+              dialog.setAttribute('open', '');
+              const other = document.createElement('dialog');
+              document.body.append(other);
+              other.show();
+              other.close();
+              other.remove();
+            }
+            if (end === 'outside') pointer('pointerdown', 0, 0, document.body);
+            await new Promise(resolve => setTimeout(resolve, 30));
+            const reset = dialog.style.getPropertyValue(property) === '0px' && dialog.style.transition === '';
+            if (!dialog.isConnected) document.body.append(dialog);
+            if (!dialog.open) dialog.showModal();
+            pointer('pointermove', x + 200, y + 200);
+            pointer('pointerup', x + 200, y + 200);
+            return { started, retained, reset, open: dialog.open };
+          }, { variant, end });
+          if (result.retained !== '30px') failures.push(`${variant} ${end} secondary cancellation`);
+          if (result.started !== '30px') failures.push(`${variant} ${end} missing active drag`);
+          const interrupted = end !== 'unchanged';
+          if (result.reset !== interrupted || result.open !== interrupted) failures.push(`${variant} ${end} drag lifetime`);
+        }
+      }
+      assert.deepEqual(failures, []);
+    } finally { await browser.close(); }
+  });
+
+  browserTest(`Side sheet translated content and close actions remain reachable (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await browser.newPage();
+      for (const width of [360, 1280]) for (const direction of ['ltr', 'rtl']) for (const modal of [false, true]) for (const motion of ['reduce', 'no-preference']) {
+        await page.setViewportSize({ width, height: 800 });
+        await sheetFixture(page, { direction, modal, motion });
+        await page.evaluate(() => {
+          document.documentElement.style.fontSize = '200%';
+          document.querySelector('#title').textContent = 'Datenschutzeinstellungenمعلوماتالتفضيلات';
+          document.querySelector('#body').textContent = 'Überprüfen Sie Ihre Einstellungen. معلومات إضافية حول الإعدادات. '.repeat(70);
+          document.querySelector('#save').textContent = 'Änderungen speichern';
+          document.querySelector('button[disabled]').textContent = 'Nicht verfügbar';
+        });
+        const result = await page.evaluate(() => {
+          const dialog = document.querySelector('dialog'), body = document.querySelector('#body');
+          const rect = body.getBoundingClientRect(), x = rect.left + rect.width / 2, y = rect.top + 30;
+          pointer('pointerdown', x, y, body);
+          pointer('pointermove', x + 160, y + 50, body);
+          pointer('pointerup', x + 160, y + 50, body);
+          body.scrollTop = body.scrollHeight;
+          return { open: dialog.open, scroll: body.scrollTop, overflow: Math.max(dialog.scrollWidth - dialog.clientWidth, body.scrollWidth - body.clientWidth) };
+        });
+        assert.ok(result.open && result.scroll > 0, 'body scrolls without dismissal');
+        assert.ok(result.overflow <= 1, `no horizontal overflow: ${width} ${direction} ${modal}`);
+        await expect(page.locator('#save')).toBeInViewport();
+        assert.ok(await page.locator('#save').evaluate(button => button.scrollHeight <= button.clientHeight), 'translated action label is not clipped');
+        await expect(page.locator('button[disabled]')).toBeDisabled();
+        await page.getByRole('button', { name: 'Close', exact: true }).click();
+        await expect(page.locator('dialog')).not.toBeVisible();
+        await page.evaluate(() => document.querySelector('dialog').showModal());
+        await page.getByRole('button', { name: 'Close', exact: true }).focus();
+        await page.keyboard.press('Enter');
+        await expect(page.locator('dialog')).not.toBeVisible();
+      }
+    } finally { await browser.close(); }
+  });
+
   browserTest(`Carousel navigation scrolls and focuses logical items (${engine})`, async () => {
     const browser = await type.launch();
     let page;

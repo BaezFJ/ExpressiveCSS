@@ -47,6 +47,7 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
   background-color: var(--md-comp-side-sheet-container-color);
   color: var(--md-sys-color-on-surface);
   outline: none;
+  overflow-wrap: anywhere;
   translate: var(--md-comp-side-sheet-shift) 0;
   transition: translate 280ms ease, border-radius 200ms ease;
 
@@ -59,8 +60,9 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
   }
 
   &:modal {
-    border-radius: var(--md-comp-side-sheet-container-shape) 0 0
-      var(--md-comp-side-sheet-container-shape);
+    border-radius: 0;
+    border-start-start-radius: var(--md-comp-side-sheet-container-shape);
+    border-end-start-radius: var(--md-comp-side-sheet-container-shape);
     @include z-depth("1");
   }
 
@@ -82,8 +84,10 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
     }
 
     &:modal {
-      border-radius: 0 var(--md-comp-side-sheet-container-shape)
-        var(--md-comp-side-sheet-container-shape) 0;
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+      border-start-end-radius: var(--md-comp-side-sheet-container-shape);
+      border-end-end-radius: var(--md-comp-side-sheet-container-shape);
     }
   }
 
@@ -95,7 +99,8 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
     box-sizing: border-box;
     min-height: 64px;
     margin: 0;
-    padding: 8px 12px 8px 24px;
+    padding-block: 8px;
+    padding-inline: 24px 12px;
     background: none;
     box-shadow: none;
   }
@@ -155,10 +160,18 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
   }
 
   > :is(form, nav):last-child {
+    flex-wrap: wrap;
     justify-content: flex-start;
     gap: 8px;
     padding: 16px 24px;
     border-block-start: 1px solid var(--md-sys-color-outline-variant);
+
+    > :is(button, a.button) {
+      max-width: 100%;
+      height: auto;
+      min-height: var(--md-comp-filled-button-container-height, 40px);
+      white-space: normal;
+    }
   }
 }
 
@@ -174,15 +187,20 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
 }
 
 @starting-style {
-  dialog.side-sheet[open],
-  dialog.right[open],
-  dialog.right-sheet[open] {
+  :is(#{$_sheet})[open] {
     translate: 100% 0;
-  }
 
-  dialog.left[open],
-  dialog.left-sheet[open] {
-    translate: -100% 0;
+    &:dir(rtl) {
+      translate: -100% 0;
+    }
+
+    &:is(.start, .left, .left-sheet) {
+      translate: -100% 0;
+
+      &:dir(rtl) {
+        translate: 100% 0;
+      }
+    }
   }
 }
 
