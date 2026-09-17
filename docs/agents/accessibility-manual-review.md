@@ -28,6 +28,7 @@ motion enabled in the operating system.
 | `/carousel.html` | Use arrows, Home/End, indicators and previous/next controls in horizontal LTR/RTL and vertical examples. Focused items must be visible. Edit embedded inputs without navigation. Start autoplay, pause it, move focus inside, hover, background the tab and change reduced motion. Explicit pause must persist. |
 | `/side-sheet.html` | Use “Show RTL long content” and “Show standard RTL content”. Scroll to the last link and activate header close and footer actions. Repeat with `.start` removed and direction changed to LTR, at compact and wide widths. Drag the header/inner edge outward, inward and less than 96px; interrupt with cancellation or closing. No horizontal overflow or stranded drag offset. |
 | `/bottom-sheet.html` | Repeat short/outward/cancelled drags after the shared drag changes. Body scrolling must not dismiss. Activate the handle button with keyboard and pointer. |
+| `/tabs.html` | Tab through ordinary and overflowing links, activate with Enter, and swipe the swipeable example in LTR/RTL. The selected link must announce the current section and match the visible panel. Selection must not move focus into the panel. Repeat with reduced motion, native zoom, and translated labels. Manual results remain pending. |
 
 ## Review record
 

@@ -305,13 +305,21 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       });
       await page.clock.runFor(1200);
       assert.equal(await page.evaluate(() => cycles), 0);
-      await page.emulateMedia({ reducedMotion: 'no-preference' });
-      await page.waitForTimeout(50); await page.clock.runFor(600);
+      const changeMotion = async reducedMotion => {
+        await page.evaluate(() => {
+          window.motionChanged = false;
+          carousel._motion.addEventListener('change', () => { motionChanged = true; }, { once: true });
+        });
+        await page.emulateMedia({ reducedMotion });
+        await expect.poll(() => page.evaluate(() => motionChanged)).toBe(true);
+      };
+      await changeMotion('no-preference');
+      await page.clock.runFor(600);
       assert.ok(await page.evaluate(() => cycles > 0), 'ordinary motion resumes after mounting under reduced motion');
       await page.locator('#toggle').click();
       const paused = await page.evaluate(() => cycles);
-      await page.emulateMedia({ reducedMotion: 'reduce' }); await page.waitForTimeout(50);
-      await page.emulateMedia({ reducedMotion: 'no-preference' }); await page.waitForTimeout(50);
+      await changeMotion('reduce');
+      await changeMotion('no-preference');
       await page.clock.runFor(1600);
       assert.equal(await page.evaluate(() => cycles), paused, 'motion changes do not cancel explicit pause');
       await page.locator('#toggle').click(); await page.mouse.move(600, 600);
@@ -325,7 +333,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         carousel.set(2);
         scrollBehaviors = [];
       });
-      await page.emulateMedia({ reducedMotion: 'reduce' }); await page.waitForTimeout(50);
+      await changeMotion('reduce');
       assert.ok(await page.evaluate(() => scrollBehaviors.includes('instant')), 'reduced motion cancels the in-flight smooth scroll');
       assert.ok(await page.evaluate(() => {
         const track = document.querySelector('.carousel-track').getBoundingClientRect();
@@ -980,5 +988,140 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       await expect(page.locator('#action')).toHaveCount(0);
       assert.equal(await page.evaluate(() => actions), 1);
     } finally { try { await page?.evaluate(() => window.chips?.destroy()); } finally { await browser.close(); } }
+  });
+}
+async function fixture(page, { direction = 'ltr', staleActive = false, ...options } = {}) {
+  await page.setContent(`<style>${css}</style><main style="width:320px">
+    <nav class="tabs" aria-label="Sections"><a href="#one">First translated section label</a><a href="#two">Second translated section label</a><a href="#three">Third translated section label</a><a target="_blank" href="https://example.test/#/guide">External guide</a></nav>
+    <section id="one" style="min-height:160px"><button>First action</button></section>
+    <section id="two" style="min-height:160px"><button>Second action</button></section>
+    <section id="three" style="min-height:160px"><button>Third action</button></section>
+  </main>`);
+  await page.evaluate(({ direction, staleActive }) => {
+    document.body.dir = direction;
+    if (staleActive) document.querySelector('#one').classList.add('active');
+  }, { direction, staleActive });
+  await page.addScriptTag({ content: js });
+  await page.evaluate(options => {
+    window.shown = [];
+    window.panelState = () => [...document.querySelectorAll('section')].map(el => ({ id: el.id, style: el.style.cssText, classes: el.className, label: el.getAttribute('aria-label'), tabindex: el.getAttribute('tabindex'), parent: el.parentElement.tagName }));
+    window.original = panelState();
+    window.tabs = Expressive.Tabs.init(document.querySelector('nav'), { duration: 40, ...options, onShow: panel => shown.push(panel.id) });
+  }, options);
+}
+
+for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
+  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
+  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+  browserTest(`Tabs synchronize swipe selection and callbacks (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      for (const direction of ['ltr', 'rtl']) for (const reducedMotion of ['reduce', 'no-preference']) {
+        await page.emulateMedia({ reducedMotion });
+        await fixture(page, { swipeable: true, direction });
+        await page.locator('a[href="#two"]').click();
+        await expect(page.locator('a[href="#two"]')).toBeFocused();
+        assert.deepEqual(await page.evaluate(() => shown), ['two']);
+        await page.evaluate(() => tabs._tabsCarousel.next());
+        await expect(page.locator('a[href="#three"]')).toHaveAttribute('aria-current', 'page');
+        assert.deepEqual(await page.evaluate(() => ({ shown, index: tabs.index, panel: tabs._content.id })), { shown: ['two', 'three'], index: 2, panel: 'three' });
+        await expect(page.locator('#three')).toHaveClass(/active/);
+        await page.evaluate(() => tabs.destroy());
+      }
+    } finally {
+      try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }
+    }
+  });
+
+  browserTest(`Tabs restore panels on teardown and remount (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      await fixture(page, { swipeable: true });
+      await page.evaluate(() => tabs.destroy());
+      assert.deepEqual(await page.evaluate(() => panelState()), await page.evaluate(() => original));
+      await expect(page.locator('.tabs-content, .indicator')).toHaveCount(0);
+      await page.evaluate(() => { tabs = Expressive.Tabs.init(document.querySelector('nav'), { swipeable: true, onShow: panel => shown.push(panel.id) }); });
+      await page.locator('a[href="#two"]').click();
+      assert.deepEqual(await page.evaluate(() => shown), ['two']);
+    } finally {
+      try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }
+    }
+  });
+
+  browserTest(`Tabs threshold keeps native links and ordinary panels (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ viewport: { width: 900, height: 700 } });
+      await fixture(page, { swipeable: true, responsiveThreshold: 800 });
+      await expect(page.locator('.tabs-content')).toHaveCount(0);
+      await expect(page.locator('#two')).toBeHidden();
+      await page.locator('a[href="#one"]').focus();
+      await page.keyboard.press('Tab');
+      await expect(page.locator('a[href="#two"]')).toBeFocused();
+      await page.keyboard.press('Enter');
+      await expect(page.locator('#two')).toBeVisible();
+      await page.evaluate(() => { document.querySelector('a[href="#three"]').setAttribute('aria-disabled', 'true'); tabs.select('three'); });
+      assert.equal(await page.evaluate(() => tabs.index), 1);
+      const prevented = await page.evaluate(() => {
+        const link = document.querySelector('a[href="#one"]');
+        link.target = '_blank';
+        let prevented;
+        document.addEventListener('click', event => { prevented = event.defaultPrevented; event.preventDefault(); }, { once: true });
+        link.click();
+        return prevented;
+      });
+      assert.equal(prevented, false);
+      assert.equal(await page.evaluate(() => tabs.index), 1);
+    } finally {
+      try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }
+    }
+  });
+
+  browserTest(`Tabs hash selection, native dragging and overflow geometry (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ viewport: { width: 800, height: 700 } });
+      for (const direction of ['ltr', 'rtl']) for (const reducedMotion of ['reduce', 'no-preference']) {
+        await page.goto('about:blank#two');
+        await page.emulateMedia({ reducedMotion });
+        await fixture(page, { swipeable: true, responsiveThreshold: 800, direction, staleActive: true });
+        assert.equal(await page.evaluate(() => tabs.index), 1);
+        assert.equal(await page.evaluate(() => tabs._tabsCarousel.center), 1);
+        await expect(page.locator('section.active')).toHaveAttribute('id', 'two');
+        assert.deepEqual(await page.evaluate(() => shown), []);
+        await expect(page.locator('a[href="#two"]')).toHaveAttribute('aria-current', 'page');
+        await page.waitForTimeout(450);
+        const box = await page.locator('.carousel-track').boundingBox();
+        const start = direction === 'ltr' ? box.x + box.width - 25 : box.x + 25;
+        const end = direction === 'ltr' ? box.x + 25 : box.x + box.width - 25;
+        await page.mouse.move(start, box.y + box.height - 20);
+        await page.mouse.down();
+        await page.mouse.move(end, box.y + box.height - 20, { steps: 15 });
+        await page.mouse.up();
+        await expect(page.locator('a[href="#three"]')).toHaveAttribute('aria-current', 'page');
+        assert.deepEqual(await page.evaluate(() => shown), ['three']);
+        await page.locator('a[href="#three"]').focus();
+        await page.waitForTimeout(200);
+        const geometry = await page.evaluate(() => {
+          const link = tabs._activeTabLink.getBoundingClientRect(), indicator = tabs._indicator.getBoundingClientRect();
+          const panel = tabs._content.getBoundingClientRect(), track = document.querySelector('.carousel-track').getBoundingClientRect();
+          return { delta: Math.abs(link.left - indicator.left), width: Math.abs(link.width - indicator.width), visible: panel.right > track.left && panel.left < track.right };
+        });
+        assert.ok(geometry.delta <= 2 && geometry.width <= 2 && geometry.visible, JSON.stringify(geometry));
+        await page.setViewportSize({ width: 1000, height: 700 });
+        assert.equal(await page.locator('.tabs-content').count(), 1);
+        await page.evaluate(() => tabs.destroy());
+        assert.deepEqual(await page.evaluate(() => panelState()), await page.evaluate(() => original));
+        await page.setViewportSize({ width: 800, height: 700 });
+      }
+    } finally {
+      try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }
+    }
   });
 }

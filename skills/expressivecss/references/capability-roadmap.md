@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `255d52d21dc094b8b2eb9fee2e5f1bc165bb2e6aa5d36091d62b33a6dcb29125`.
+Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `00345e7ccc581a8c7a00bd0597e10b82eb53773a360582eb49bb1246647e8d87`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -19,7 +19,7 @@ Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs mat
 | [Navigation rail](#navigation-rail) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Panes](#panes) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Footer](#footer) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Tabs](#tabs) | unassessed | needs-review | recorded-scoped-pass | 1 |
+| [Tabs](#tabs) | implemented | source-reviewed | recorded-scoped-pass | 1 |
 | [Breadcrumbs](#breadcrumbs) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Pagination](#pagination) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Menu](#menu) | unassessed | needs-review | recorded-scoped-pass | 0 |
@@ -144,17 +144,21 @@ Web adaptation: Web page landmark styled with theme roles.
 
 ## Tabs
 
-**unassessed within the stated scope.** Primary and secondary tabs; stacked and horizontal icon layouts.
+**implemented within the stated scope.** Primary and secondary tabs; stacked and horizontal icon layouts.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/_tabs.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_tabs.scss), [src/ts/components/tabs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/tabs.ts).
+Source review: source-reviewed, 2026-09-17. [src/sass/components/_tabs.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_tabs.scss), [src/ts/components/tabs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/tabs.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/tabs/overview).
 
 Web adaptation: Links target panels; use the shipped runtime keyboard contract.
 
-- integration: Native links use Tab and aria-current; runtime does not implement composite tab arrow keys. Next: Retain native anchor semantics; test overflow and selected-panel focus before adding tab roles.
+- integration: Native links use Tab and aria-current; runtime does not implement composite tab arrow keys. Next: Retain native anchor semantics. Rendered selection, overflow geometry and teardown are covered; verify spoken current-state output and physical touch manually.
 
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining suggestions and section links preserve selection and dismissal`. Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Tabs synchronize swipe selection and callbacks (chromium)`. LTR/RTL and ordinary/reduced motion selection state and single callbacks.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Tabs restore panels on teardown and remount (chromium)`. Panel order, owned styles and semantics, wrapper cleanup and remount.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Tabs threshold keeps native links and ordinary panels (chromium)`. Above-threshold ordinary panels, native Tab/Enter, disabled and external-target links.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Tabs hash selection, native dragging and overflow geometry (chromium)`. Initial hash overrides stale authored panel state without initialization callbacks and restores it on teardown; actual pointer dragging, RTL overflow indicator geometry and initialization-only threshold; no physical touch or native zoom claim.
 
 <a id="breadcrumbs"></a>
 

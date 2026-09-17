@@ -42,6 +42,8 @@ export class Tabs extends Component<TabsOptions> {
   _tabsCarousel: Carousel;
   _activeTabLink: HTMLAnchorElement;
   _content: HTMLElement;
+  private _originalPanels = new Map<HTMLElement, { display: string; priority: string; active: boolean; carousel: boolean; marker?: Comment }>();
+  private _originalLinks = new Map<HTMLAnchorElement, { active: boolean; current: string | null }>();
 
   constructor(el: HTMLElement, options: Partial<TabsOptions>) {
     super(el, options, Tabs);
@@ -53,6 +55,16 @@ export class Tabs extends Component<TabsOptions> {
     };
 
     this._tabLinks = this._queryTabLinks();
+    this._tabLinks.forEach(link => {
+      this._originalLinks.set(link, { active: link.classList.contains('active'), current: link.getAttribute('aria-current') });
+      if (link.hasAttribute('target')) return;
+      const panel = link.hash && document.querySelector<HTMLElement>(link.hash);
+      if (panel) this._originalPanels.set(panel, {
+        display: panel.style.display, priority: panel.style.getPropertyPriority('display'),
+        active: panel.classList.contains('active'), carousel: panel.classList.contains('carousel-item')
+      });
+    });
+    this.options.swipeable &&= window.innerWidth <= this.options.responsiveThreshold;
     this._index = 0;
     this._setupActiveTabLink();
     if (this.options.swipeable) {
@@ -100,12 +112,21 @@ export class Tabs extends Component<TabsOptions> {
 
   destroy() {
     this._removeEventHandlers();
-    this._indicator.parentNode.removeChild(this._indicator);
+    this._indicator.remove();
     if (this.options.swipeable) {
       this._teardownSwipeableTabs();
-    } else {
-      this._teardownNormalTabs();
     }
+    this._originalPanels.forEach((original, panel) => {
+      panel.style.setProperty('display', original.display, original.priority);
+      panel.classList.toggle('active', original.active);
+      panel.classList.toggle('carousel-item', original.carousel);
+      if (!panel.className) panel.removeAttribute('class');
+    });
+    this._originalLinks.forEach((original, link) => {
+      link.classList.toggle('active', original.active);
+      if (original.current === null) link.removeAttribute('aria-current');
+      else link.setAttribute('aria-current', original.current);
+    });
     this.el['Expressive_Tabs'] = undefined;
   }
 
@@ -157,34 +178,31 @@ export class Tabs extends Component<TabsOptions> {
     }
     // Act as regular link if target attribute is specified.
     if (tabLink.hasAttribute('target')) return;
+    if (this.options.swipeable) {
+      const panel = tabLink.hash && document.querySelector(tabLink.hash);
+      const index = this._tabsCarousel.images.indexOf(panel as HTMLElement);
+      if (index >= 0) this._tabsCarousel.set(index);
+      e.preventDefault();
+      return;
+    }
     const _oldContent = this._content;
     // Update the variables with the new link and content
     if (tabLink.hash) this._content = document.querySelector(tabLink.hash);
     this._tabLinks = this._queryTabLinks();
     // Moves the class and aria-current together, off the old tab and onto this
     // one - they used to be able to disagree.
-    this._setActiveTabLink(tabLink);
     const prevIndex = this._index;
-    this._index = Math.max(Array.from(this._tabLinks).indexOf(tabLink), 0);
+    this._setActiveTabLink(tabLink);
 
     // Swap content
-    if (this.options.swipeable) {
-      if (this._tabsCarousel) {
-        this._tabsCarousel.set(this._index, () => {
-          if (typeof this.options.onShow === 'function')
-            this.options.onShow.call(this, this._content);
-        });
-      }
-    } else {
-      if (this._content) {
-        this._content.style.display = 'block';
-        this._content.classList.add('active');
-        if (typeof this.options.onShow === 'function')
-          this.options.onShow.call(this, this._content);
-        if (_oldContent && _oldContent !== this._content) {
-          _oldContent.style.display = 'none';
-          _oldContent.classList.remove('active');
-        }
+    if (this._content) {
+      this._content.style.display = 'block';
+      this._content.classList.add('active');
+      if (typeof this.options.onShow === 'function')
+        this.options.onShow.call(this, this._content);
+      if (_oldContent && _oldContent !== this._content) {
+        _oldContent.style.display = 'none';
+        _oldContent.classList.remove('active');
       }
     }
     // Update widths after content is swapped (scrollbar bugfix)
@@ -222,6 +240,8 @@ export class Tabs extends Component<TabsOptions> {
     this._activeTabLink = tabLink;
     tabLink.classList.add('active');
     tabLink.setAttribute('aria-current', 'page');
+    this._index = Array.from(this._tabLinks).indexOf(tabLink);
+    this._content = tabLink.hasAttribute('target') ? null : document.getElementById(tabLink.hash.slice(1));
   }
 
   _setupActiveTabLink() {
@@ -239,21 +259,15 @@ export class Tabs extends Component<TabsOptions> {
     }
     this._setActiveTabLink(this._activeTabLink);
 
-    this._index = Math.max(Array.from(this._tabLinks).indexOf(this._activeTabLink), 0);
-    if (this._activeTabLink && this._activeTabLink.hash) {
-      this._content = document.querySelector(this._activeTabLink.hash);
-      if (this._content) this._content.classList.add('active');
-    }
+    this._originalPanels.forEach((_, panel) => panel.classList.toggle('active', panel === this._content));
   }
 
   _setupSwipeableTabs() {
-    // Change swipeable according to responsive threshold
-    if (window.innerWidth > this.options.responsiveThreshold) this.options.swipeable = false;
-
     const tabsContent = [];
     this._tabLinks.forEach((a) => {
-      if (a.hash) {
+      if (a.hash && !a.hasAttribute('target')) {
         const currContent = document.querySelector(a.hash);
+        if (!currContent) return;
         currContent.classList.add('carousel-item');
         tabsContent.push(currContent);
       }
@@ -266,6 +280,9 @@ export class Tabs extends Component<TabsOptions> {
     // Wrap around
     tabsContent[0].parentElement.insertBefore(tabsWrapper, tabsContent[0]);
     tabsContent.forEach((tabContent) => {
+      const marker = document.createComment('');
+      tabContent.before(marker);
+      this._originalPanels.get(tabContent).marker = marker;
       tabsWrapper.appendChild(tabContent);
       tabContent.style.display = '';
     });
@@ -273,46 +290,32 @@ export class Tabs extends Component<TabsOptions> {
     this._tabsCarousel = Carousel.init(tabsWrapper, {
       fullWidth: true,
       noWrap: true,
+      duration: this.options.duration,
       onCycleTo: (item) => {
         const prevIndex = this._index;
-        this._index = Array.from(item.parentNode.children).indexOf(item);
-        this._activeTabLink.classList.remove('active');
-        this._activeTabLink = Array.from(this._tabLinks)[this._index];
-        this._activeTabLink.classList.add('active');
+        this._setActiveTabLink(Array.from(this._tabLinks).find(a => !a.hasAttribute('target') && a.hash === '#' + item.id));
+        this._setTabsAndTabWidth();
         this._animateIndicator(prevIndex);
         if (typeof this.options.onShow === 'function')
           this.options.onShow.call(this, this._content);
       }
     });
-    // Set initial carousel slide to active tab
-    this._tabsCarousel.set(this._index);
   }
 
   _teardownSwipeableTabs() {
     const tabsWrapper = this._tabsCarousel.el;
     this._tabsCarousel.destroy();
-    // Unwrap
-    tabsWrapper.append(tabsWrapper.parentElement);
+    this._originalPanels.forEach((original, panel) => original.marker?.replaceWith(panel));
     tabsWrapper.remove();
   }
 
   _setupNormalTabs() {
     // Hide Tabs Content
     Array.from(this._tabLinks).forEach((a) => {
-      if (a === this._activeTabLink) return;
+      if (a === this._activeTabLink || a.hasAttribute('target')) return;
       if ((<HTMLAnchorElement>a).hash) {
         const currContent = document.querySelector((<HTMLAnchorElement>a).hash);
         if (currContent) (<HTMLElement>currContent).style.display = 'none';
-      }
-    });
-  }
-
-  _teardownNormalTabs() {
-    // show Tabs Content
-    this._tabLinks.forEach((a) => {
-      if (a.hash) {
-        const currContent = document.querySelector(a.hash) as HTMLElement;
-        if (currContent) currContent.style.display = '';
       }
     });
   }
