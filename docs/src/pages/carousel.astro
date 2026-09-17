@@ -196,7 +196,7 @@ const S = defineSections([
   </li>
   <li>Focus starts on the first item, never on the container.</li>
   <li>
-    Left and right arrows move through horizontal items. Up and down arrows move
+    Left and right arrows follow the horizontal reading direction, including RTL. Up and down arrows move
     through a full-screen carousel and otherwise leave the carousel.
   </li>
   <li>Home and End move directly to the first and last items.</li>
@@ -231,6 +231,37 @@ const S = defineSections([
   &mdash; a scroll track has ends, and auto-advance is the one caller that can
   loop back past them.
 </p>
+<p>
+  Unreleased source responds to reduced-motion changes while mounted without
+  clearing an explicit pause. Editable descendants keep their own navigation
+  keys. Actual screen-reader, native zoom and physical-device checks remain pending.
+</p>
+<h4>Application-owned pause control</h4>
+<p>
+  When enabling automatic movement, provide a visible pause/resume button using
+  <code>pause()</code> and <code>start()</code>. Resuming still respects hover,
+  focus, background-tab and reduced-motion suspension.
+</p>
+<button type="button" class="button tonal mb-1" id="carousel-motion-toggle" aria-controls="carousel-motion">Pause automatic movement</button>
+<div id="carousel-motion" class="carousel flat no-autoinit" aria-label="Automatic landscape collection">
+  <article class="carousel-item"><img src="https://picsum.photos/id/1015/800/500" alt="Mountain lake" /></article>
+  <article class="carousel-item"><img src="https://picsum.photos/id/1016/800/500" alt="Forest path" /></article>
+  <article class="carousel-item"><img src="https://picsum.photos/id/1018/800/500" alt="Rocky coastline" /></article>
+</div>
+<Code code={`
+const carousel = Expressive.Carousel.init(
+  document.querySelector('#carousel-motion'),
+  { interval: 4000, height: 200 }
+);
+const toggle = document.querySelector('#carousel-motion-toggle');
+let paused = false;
+toggle.addEventListener('click', () => {
+  paused = !paused;
+  if (paused) carousel.pause();
+  else carousel.start();
+  toggle.textContent = paused ? 'Resume automatic movement' : 'Pause automatic movement';
+});
+`} />
   </Section>
   <Section {...S.tokens}>
 <TokenTable>

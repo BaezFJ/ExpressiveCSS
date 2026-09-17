@@ -2319,6 +2319,10 @@ On a vertically scrolling page, put a **Show all** action 4dp below every horizo
 
 Focus starts on the first item rather than the container. Left/right arrows move through horizontal items. Up/down arrows move through portrait full-screen items and otherwise leave the carousel. Home/End move to the first/last item. Reduced-motion mode removes parallax and size morphing, uses equal widths, and disables smooth scrolling.
 
+Unreleased source mirrors horizontal keys and scroll placement in RTL while `next()` and `prev()` retain logical item order. Editable descendants keep their own keys. Auto-advance stays suspended during internal focus moves and responds to mounted reduced-motion changes without clearing an explicit pause. Enabling reduced motion stops in-flight smooth scrolling and realigns the active item. Native pointer and wheel gestures cancel deferred transition recentering until the next explicit navigation. Teardown cancels pending scroll-completion work.
+
+When enabling `interval`, provide a visible application-owned pause/resume button. Call `pause()` on pause and `start()` on resume, updating the button text to describe its next action. Keep that control outside the scrolling track. Resuming still respects hover, focus, background-tab and reduced-motion suspension. The Carousel docs page includes a working example. Native zoom, screen readers, physical devices and actual Windows contrast themes remain pending manual review.
+
 ### Tokens
 
 | Token | Default |

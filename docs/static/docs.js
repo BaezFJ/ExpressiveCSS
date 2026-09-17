@@ -255,6 +255,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const carouselContent = document.getElementById("carousel-content");
+  const carouselMotion = document.getElementById("carousel-motion");
+  if (carouselMotion) {
+    const carousel = Expressive.Carousel.init(carouselMotion, { interval: 4000, height: 200 });
+    const toggle = document.getElementById("carousel-motion-toggle");
+    let paused = false;
+    toggle.addEventListener("click", () => {
+      paused = !paused;
+      if (paused) carousel.pause();
+      else carousel.start();
+      toggle.textContent = paused ? "Resume automatic movement" : "Pause automatic movement";
+    });
+  }
   if (carouselContent) {
     Expressive.Carousel.init(carouselContent, { indicators: true });
   }

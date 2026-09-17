@@ -10,6 +10,198 @@ assert.ok(!process.env.EXPRESSIVECSS_TEST_BROWSER || ['chromium', 'firefox', 'we
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+  browserTest(`Carousel navigation scrolls and focuses logical items (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ viewport: { width: 600, height: 900 } });
+      for (const reducedMotion of ['reduce', 'no-preference']) for (const layout of ['flat', '', 'hero', 'hero center-aligned', 'uncontained', 'full-screen']) for (const direction of ['ltr', 'rtl']) {
+        await page.emulateMedia({ reducedMotion });
+        await page.setContent(`<style>${css}</style><button id="previous" type="button">Previous</button><button id="next" type="button">Next</button><div class="carousel ${layout}" dir="${direction}" style="width:360px" aria-label="Places">${[1, 2, 3, 4].map(n => `<article class="carousel-item" tabindex="0">Place ${n}<input aria-label="Note ${n}"><span contenteditable="">Edit</span></article>`).join('')}</div>`);
+        await page.addScriptTag({ content: js });
+        await page.evaluate(() => {
+          window.carousel = Expressive.Carousel.init(document.querySelector('.carousel'), { indicators: true, height: 240 });
+          document.querySelector('#previous').onclick = () => carousel.prev();
+          document.querySelector('#next').onclick = () => carousel.next();
+          window.navigationCalls = 0;
+          for (const method of ['set', 'next', 'prev']) {
+            const original = carousel[method].bind(carousel);
+            carousel[method] = (...args) => { navigationCalls++; return original(...args); };
+          }
+          window.editableKeys = [];
+          carousel.el.addEventListener('keydown', e => {
+            if (e.target.isContentEditable || e.target.matches('input')) editableKeys.push(e.defaultPrevented);
+          });
+        });
+        const vertical = layout === 'full-screen';
+        const visible = async index => {
+          await expect.poll(() => page.evaluate(() => carousel.center), { message: `${layout} ${direction} ${reducedMotion} index ${index}` }).toBe(index);
+          await expect.poll(() => page.evaluate(({ index, vertical }) => {
+            const track = document.querySelector('.carousel-track').getBoundingClientRect();
+            const item = carousel.images[index].getBoundingClientRect();
+            return vertical ? Math.max(track.top - item.top, item.bottom - track.bottom) : Math.max(track.left - item.left, item.right - track.right);
+          }, { index, vertical }), { message: `${layout} ${direction} ${reducedMotion}: item ${index} is inside the track` }).toBeLessThanOrEqual(1);
+        };
+        await page.locator('#next').click(); await visible(1);
+        await page.locator('#previous').click(); await visible(0);
+        await page.locator('.carousel-item').first().focus();
+        await page.keyboard.press(vertical ? 'ArrowDown' : direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight');
+        await visible(1); await expect(page.locator('.carousel-item').nth(1)).toBeFocused();
+        await page.keyboard.press('End'); await visible(3);
+        await expect.poll(() => page.locator('.carousel-track').evaluate((el, vertical) => Math.abs(vertical ? el.scrollTop : el.scrollLeft), vertical), { message: `${layout} ${direction} ${reducedMotion}: navigation changes actual scroll position` }).toBeGreaterThan(1);
+        await page.keyboard.press(vertical ? 'ArrowDown' : direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight');
+        await visible(3);
+        await page.keyboard.press('Home'); await visible(0);
+        await page.locator('.indicator-item').nth(2).click(); await visible(2);
+        for (const selector of ['input', '[contenteditable]']) {
+          await page.locator('.carousel-item').nth(2).locator(selector).focus();
+          const before = await page.evaluate(() => { editableKeys = []; return navigationCalls; });
+          await page.keyboard.press('Home'); await page.keyboard.press('ArrowLeft');
+          assert.equal(await page.evaluate(() => navigationCalls), before, `${layout} ${direction} ${reducedMotion} ${selector}: editable keys do not navigate`);
+          assert.deepEqual(await page.evaluate(() => editableKeys), [false, false], 'editable keys retain native defaults');
+        }
+        if (reducedMotion === 'no-preference') {
+          for (const gesture of ['touch', 'pen', 'wheel']) {
+            const result = await page.evaluate(gesture => {
+              carousel.set(1);
+              const track = document.querySelector('.carousel-track'), original = track.scrollTo;
+              let calls = 0;
+              track.scrollTo = (...args) => { calls++; original.apply(track, args); };
+              try {
+                const allowed = track.dispatchEvent(gesture === 'wheel'
+                  ? new WheelEvent('wheel', { deltaX: 80, bubbles: true, cancelable: true })
+                  : new PointerEvent('pointerdown', { pointerType: gesture, pointerId: 7, isPrimary: true, bubbles: true, cancelable: true }));
+                carousel.images[1].dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'flex-basis', bubbles: true }));
+                const duringGesture = calls;
+                track.dispatchEvent(new PointerEvent('pointercancel', { pointerId: 7, pointerType: gesture, bubbles: true }));
+                carousel.set(2);
+                calls = 0;
+                carousel.images[2].dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'flex-basis', bubbles: true }));
+                return { allowed, duringGesture, afterNavigation: calls };
+              } finally { track.scrollTo = original; }
+            }, gesture);
+            assert.equal(result.allowed, true, `${gesture} retains native defaults`);
+            assert.equal(result.duringGesture, 0, `${gesture} is not recentered by transition completion`);
+            assert.equal(result.afterNavigation, 1, 'explicit navigation restores alignment');
+          }
+        }
+        await page.evaluate(() => carousel.destroy());
+      }
+    } finally { try { await page?.evaluate(() => window.carousel?.destroy()); } finally { await browser.close(); } }
+  });
+
+  browserTest(`Carousel destroys pending scroll completion work (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.setContent(`<style>${css}</style><div class="carousel flat" style="width:320px"><article class="carousel-item">One</article><article class="carousel-item">Two</article></div>`);
+      await page.addScriptTag({ content: js });
+      const pending = await page.evaluate(() => {
+        const timers = new Set(), schedule = window.setTimeout, cancel = window.clearTimeout;
+        window.setTimeout = (callback, delay, ...args) => {
+          const id = schedule(() => { timers.delete(id); callback(...args); }, delay);
+          timers.add(id); return id;
+        };
+        window.clearTimeout = id => { timers.delete(id); cancel(id); };
+        window.carousel = Expressive.Carousel.init(document.querySelector('.carousel'), { interval: 500 });
+        carousel.next(); carousel.prev(); carousel.next();
+        carousel._handleThrottledResize(); carousel._handleThrottledResize();
+        carousel.destroy();
+        return timers.size;
+      });
+      assert.equal(pending, 0, 'destroy cancels auto-advance, resize and scroll-completion timers');
+    } finally { try { await page?.evaluate(() => window.carousel?.destroy()); } finally { await browser.close(); } }
+  });
+
+  browserTest(`Carousel mounted motion changes preserve explicit pause (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ reducedMotion: 'reduce' });
+      await page.clock.install();
+      await page.setContent(`<style>${css}</style><button id="toggle" type="button">Pause</button><button id="outside" type="button">Outside</button><div class="carousel flat" style="width:320px" aria-label="Places">${[1, 2, 3].map(n => `<article class="carousel-item" tabindex="0">Place ${n}</article>`).join('')}</div>`);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => {
+        window.cycles = 0;
+        window.carousel = Expressive.Carousel.init(document.querySelector('.carousel'), { interval: 500, duration: 0, onCycleTo: () => cycles++ });
+        document.querySelector('#toggle').onclick = e => {
+          const pause = e.currentTarget.textContent === 'Pause';
+          carousel[pause ? 'pause' : 'start']();
+          e.currentTarget.textContent = pause ? 'Resume' : 'Pause';
+        };
+      });
+      await page.clock.runFor(1200);
+      assert.equal(await page.evaluate(() => cycles), 0);
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await page.waitForTimeout(50); await page.clock.runFor(600);
+      assert.ok(await page.evaluate(() => cycles > 0), 'ordinary motion resumes after mounting under reduced motion');
+      await page.locator('#toggle').click();
+      const paused = await page.evaluate(() => cycles);
+      await page.emulateMedia({ reducedMotion: 'reduce' }); await page.waitForTimeout(50);
+      await page.emulateMedia({ reducedMotion: 'no-preference' }); await page.waitForTimeout(50);
+      await page.clock.runFor(1600);
+      assert.equal(await page.evaluate(() => cycles), paused, 'motion changes do not cancel explicit pause');
+      await page.locator('#toggle').click(); await page.mouse.move(600, 600);
+      await page.clock.runFor(600);
+      assert.ok(await page.evaluate(() => cycles) > paused, 'resume restarts automatic movement');
+      await page.evaluate(() => {
+        carousel.pause();
+        const track = document.querySelector('.carousel-track'), original = track.scrollTo.bind(track);
+        window.scrollBehaviors = [];
+        track.scrollTo = options => { scrollBehaviors.push(options.behavior); original(options); };
+        carousel.set(2);
+        scrollBehaviors = [];
+      });
+      await page.emulateMedia({ reducedMotion: 'reduce' }); await page.waitForTimeout(50);
+      assert.ok(await page.evaluate(() => scrollBehaviors.includes('instant')), 'reduced motion cancels the in-flight smooth scroll');
+      assert.ok(await page.evaluate(() => {
+        const track = document.querySelector('.carousel-track').getBoundingClientRect();
+        const item = carousel.images[carousel.center].getBoundingClientRect();
+        return item.left >= track.left - 1 && item.right <= track.right + 1;
+      }), 'reduced-motion sizing is realigned immediately');
+      const reduced = await page.evaluate(() => cycles);
+      await page.clock.runFor(1600);
+      assert.equal(await page.evaluate(() => cycles), reduced, 'mounted reduced motion suspends auto-advance');
+    } finally { try { await page?.evaluate(() => window.carousel?.destroy()); } finally { await browser.close(); } }
+  });
+
+  browserTest(`Carousel focus and visibility suspension survive teardown (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ reducedMotion: 'no-preference' });
+      await page.clock.install();
+      await page.setContent(`<style>${css}</style><button id="outside" type="button">Outside</button><div class="carousel flat" style="width:320px" aria-label="Places">${[1, 2, 3].map(n => `<article class="carousel-item" tabindex="0">Place ${n}<button type="button">Action ${n}</button></article>`).join('')}</div>`);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => {
+        window.cycles = 0;
+        window.options = { interval: 500, duration: 0, onCycleTo: () => cycles++ };
+        window.carousel = Expressive.Carousel.init(document.querySelector('.carousel'), options);
+        window.focusTimers = [];
+        carousel.el.addEventListener('focusout', () => focusTimers.push(carousel._autoAdvanceTimer));
+      });
+      await page.locator('.carousel-item').first().focus();
+      await page.locator('.carousel-item button').first().focus();
+      assert.deepEqual(await page.evaluate(() => focusTimers), [null], 'moving focus inside never rearms advancing');
+      await page.clock.runFor(1600); assert.equal(await page.evaluate(() => cycles), 0);
+      await page.locator('.carousel').hover(); await page.locator('#outside').focus();
+      await page.clock.runFor(1600); assert.equal(await page.evaluate(() => cycles), 0);
+      await page.mouse.move(600, 600);
+      await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange')); });
+      await page.clock.runFor(1600); assert.equal(await page.evaluate(() => cycles), 0);
+      await page.evaluate(() => { delete document.hidden; document.dispatchEvent(new Event('visibilitychange')); });
+      await page.clock.runFor(600); assert.ok(await page.evaluate(() => cycles > 0));
+      await page.evaluate(() => carousel.destroy());
+      const destroyed = await page.evaluate(() => cycles);
+      await page.clock.runFor(2000); assert.equal(await page.evaluate(() => cycles), destroyed);
+      await page.evaluate(() => { carousel = Expressive.Carousel.init(document.querySelector('.carousel'), options); cycles = 0; });
+      await page.clock.runFor(500); assert.equal(await page.evaluate(() => cycles), 1, 'remount advances once per interval');
+      await page.evaluate(() => carousel.destroy());
+      await expect(page.locator('.carousel-track')).toHaveCount(0);
+    } finally { try { await page?.evaluate(() => { window.carousel?.destroy(); delete document.hidden; }); } finally { await browser.close(); } }
+  });
+
   browserTest(`Slider labels follow native handles through direction and resize (${engine})`, async () => {
     const browser = await type.launch();
     let page;
