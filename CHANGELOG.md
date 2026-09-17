@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Closing menus immediately exclude their content from keyboard focus and
+  preserve focus moved by close callbacks. Nested keyboard navigation and
+  typeahead stay in their active menu; RTL flyouts mirror their keys and avoid
+  either viewport edge. Returning focus to a parent no longer reopens a flyout.
+
 - Native and custom progress indicators use system colors in forced-colors mode.
   Empty linear tracks remain outlined, circular values retain a visible track,
   and the legacy preloader stops rotating under reduced motion.
