@@ -97,10 +97,12 @@ export class Carousel extends Component<CarouselOptions> {
   private _ownIndicators: boolean = false;
   private _trackEl: HTMLElement | null = null;
   private _ignoreScroll: boolean = false;
+  private _scrollEndTimeout: ReturnType<typeof setTimeout>;
   private _trackRaf: number = null;
   private _started: boolean = false;
   private _vertical: boolean = false;
   private _resizeObserver: ResizeObserver | null = null;
+  private _resizeTimeout: ReturnType<typeof setTimeout> = null;
   private _usesWindowResize: boolean = false;
   private _dragPointerId: number | null = null;
   private _dragStartX: number = 0;
@@ -119,6 +121,7 @@ export class Carousel extends Component<CarouselOptions> {
   private _autoPaused: boolean = false;
   private _hovered: boolean = false;
   private _focused: boolean = false;
+  private _motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   private _generatedItemTabIndexes = new Set<HTMLElement>();
   private _generatedItemLabels = new Set<HTMLElement>();
   private _generatedItemDescriptions = new Set<HTMLElement>();
@@ -157,9 +160,6 @@ export class Carousel extends Component<CarouselOptions> {
     }
     this._vertical = this.el.classList.contains('full-screen');
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reducedMotion) this.options.duration = 1;
-
     this.pressed = false;
     this.dragged = false;
     this.images = this._collectItems();
@@ -179,7 +179,7 @@ export class Carousel extends Component<CarouselOptions> {
     this.showIndicators = this.options.indicators && this.hasMultipleSlides;
     this.count = this.images.length;
 
-    this._autoAdvances = this.options.interval > 0 && this.hasMultipleSlides && !reducedMotion;
+    this._autoAdvances = this.options.interval > 0 && this.hasMultipleSlides;
 
     this.images.forEach((item) => item.classList.add('carousel-item'));
     if (this.options.height !== null) {
@@ -314,6 +314,7 @@ export class Carousel extends Component<CarouselOptions> {
 
   _setupEventHandlers() {
     this.el.addEventListener('keydown', this._handleKeydown);
+    this._motion.addEventListener('change', this._handleMotionChange);
     if (this._autoAdvances) {
       this.el.addEventListener('mouseenter', this._handleAutoAdvanceState);
       this.el.addEventListener('mouseleave', this._handleAutoAdvanceState);
@@ -355,10 +356,12 @@ export class Carousel extends Component<CarouselOptions> {
     this._scroller.addEventListener('pointercancel', this._handleTrackPointerUp);
     this._scroller.addEventListener('click', this._handleTrackClick, true);
     this._scroller.addEventListener('dragstart', this._handleTrackDragStart);
+    this._scroller.addEventListener('transitionend', this._handleItemResize);
   }
 
   _removeEventHandlers() {
     this.el.removeEventListener('keydown', this._handleKeydown);
+    this._motion.removeEventListener('change', this._handleMotionChange);
     this.el.removeEventListener('mouseenter', this._handleAutoAdvanceState);
     this.el.removeEventListener('mouseleave', this._handleAutoAdvanceState);
     this.el.removeEventListener('focusin', this._handleAutoAdvanceState);
@@ -374,6 +377,7 @@ export class Carousel extends Component<CarouselOptions> {
     this._scroller.removeEventListener('pointercancel', this._handleTrackPointerUp);
     this._scroller.removeEventListener('click', this._handleTrackClick, true);
     this._scroller.removeEventListener('dragstart', this._handleTrackDragStart);
+    this._scroller.removeEventListener('transitionend', this._handleItemResize);
 
     this._resizeObserver?.disconnect();
     this._resizeObserver = null;
@@ -387,12 +391,15 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   private _teardown() {
+    this._started = false;
     this._removeEventHandlers();
+    this._finishScroll();
     this._autoAdvances = false;
     this._syncAutoAdvance();
     if (this._trackRaf !== null) cancelAnimationFrame(this._trackRaf);
     window.clearTimeout(this.scrollingTimeout);
     window.clearTimeout(this._suppressClickTimeout);
+    clearTimeout(this._resizeTimeout);
     if (this._ownIndicators) this._indicators?.remove();
     this._unwrapTrack();
     this.images.forEach((el) => {
@@ -424,14 +431,26 @@ export class Carousel extends Component<CarouselOptions> {
     }
   }
 
-  _handleThrottledResize = Utils.throttle(() => this._handleResize(), 200);
+  _handleThrottledResize = () => {
+    if (!this._started || this._resizeTimeout !== null) return;
+    this._handleResize();
+    this._resizeTimeout = setTimeout(() => {
+      this._resizeTimeout = null;
+      this._handleResize();
+    }, 200);
+  };
 
   _handleAutoAdvanceState = (e: Event) => {
     if (e.type === 'mouseenter') this._hovered = true;
     else if (e.type === 'mouseleave') this._hovered = false;
     else if (e.type === 'focusin') this._focused = true;
-    else if (e.type === 'focusout') this._focused = false;
+    else if (e.type === 'focusout') this._focused = this.el.contains((e as FocusEvent).relatedTarget as Node);
     this._syncAutoAdvance();
+  };
+
+  private _handleMotionChange = () => {
+    this._syncAutoAdvance();
+    this._updateParallax();
   };
 
   /** Start or stop the timer to match the current pause state. */
@@ -441,6 +460,7 @@ export class Carousel extends Component<CarouselOptions> {
       !this._autoPaused &&
       !this._hovered &&
       !this._focused &&
+      !this._motion.matches &&
       !document.hidden;
     if (run && this._autoAdvanceTimer === null) {
       // Each rest is armed after the move before it, never on a fixed phase.
@@ -547,6 +567,12 @@ export class Carousel extends Component<CarouselOptions> {
     if ((e.target as HTMLElement).closest('img, picture, video')) e.preventDefault();
   };
 
+  private _handleItemResize = (e: TransitionEvent) => {
+    if (!this.pressed && e.propertyName === 'flex-basis' && this.images.includes(e.target as HTMLElement)) {
+      this._scrollToIndex(this.center, false);
+    }
+  };
+
   _handleIndicatorClick = (e: Event) => {
     e.stopPropagation();
     const indicator = (e.target as HTMLElement).closest('.indicator-item');
@@ -558,9 +584,10 @@ export class Carousel extends Component<CarouselOptions> {
 
   _handleKeydown = (e: KeyboardEvent) => {
     const target = e.target as HTMLElement;
-    if (target.closest('input, textarea, select, [contenteditable="true"]')) return;
-    const forward = this._vertical ? e.key === 'ArrowDown' : e.key === Utils.keys.ARROW_RIGHT;
-    const backward = this._vertical ? e.key === 'ArrowUp' : e.key === Utils.keys.ARROW_LEFT;
+    if (target.isContentEditable || target.closest('input, textarea, select')) return;
+    const rtl = getComputedStyle(this._scroller).direction === 'rtl';
+    const forward = this._vertical ? e.key === 'ArrowDown' : e.key === (rtl ? Utils.keys.ARROW_LEFT : Utils.keys.ARROW_RIGHT);
+    const backward = this._vertical ? e.key === 'ArrowUp' : e.key === (rtl ? Utils.keys.ARROW_RIGHT : Utils.keys.ARROW_LEFT);
     if (e.key === 'Home') {
       e.preventDefault();
       this.set(0);
@@ -595,7 +622,7 @@ export class Carousel extends Component<CarouselOptions> {
   };
 
   _handleResize = () => {
-    if (!this.images.length) return;
+    if (!this._started || !this.images.length) return;
     this._syncAdaptiveMode();
     this._syncLayoutRoles(this.center);
     this._scrollToIndex(this.center, false);
@@ -746,17 +773,21 @@ export class Carousel extends Component<CarouselOptions> {
 
   private _nearestIndex(): number {
     const centered = this.el.classList.contains('center-aligned');
+    const style = getComputedStyle(this._scroller);
+    const rtl = !this._vertical && style.direction === 'rtl';
     const position = this._vertical ? this._scroller.scrollTop : this._scroller.scrollLeft;
-    const viewportCenter =
-      position + (this._vertical ? this._scroller.clientHeight : this._scroller.clientWidth) / 2;
-    let best = 0;
+    const viewport = this._vertical ? this._scroller.clientHeight : this._scroller.clientWidth;
+    const extent = (this._vertical ? this._scroller.scrollHeight : this._scroller.scrollWidth) - viewport;
+    const padding = parseFloat(this._vertical ? style.paddingBlockStart : style.paddingInlineStart) || 0;
+    let best = this.center;
     let bestDist = Infinity;
     this.images.forEach((el, i) => {
       const start = this._vertical ? el.offsetTop : el.offsetLeft;
       const size = this._vertical ? el.offsetHeight : el.offsetWidth;
-      const target = centered ? start + size / 2 : start;
-      const dist = Math.abs(target - (centered ? viewportCenter : position));
-      if (dist < bestDist) {
+      const target = centered ? start - (viewport - size) / 2 : start + (rtl ? size - viewport + padding : -padding);
+      const bounded = Math.max(rtl ? -extent : 0, Math.min(rtl ? 0 : extent, target));
+      const dist = Math.abs(bounded - position);
+      if (dist < bestDist || (dist === bestDist && i === this.center)) {
         bestDist = dist;
         best = i;
       }
@@ -767,32 +798,38 @@ export class Carousel extends Component<CarouselOptions> {
   private _scrollToIndex(n: number, smooth = true) {
     const el = this.images[n];
     if (!el) return;
+    this._finishScroll();
     const centered = this.el.classList.contains('center-aligned');
     const style = getComputedStyle(this._scroller);
     const inlinePadding = Number.parseFloat(style.paddingInlineStart) || 0;
     const blockPadding = Number.parseFloat(style.paddingBlockStart) || 0;
     const left = centered
       ? el.offsetLeft - (this._scroller.clientWidth - el.offsetWidth) / 2
-      : el.offsetLeft - inlinePadding;
+      : style.direction === 'rtl'
+        ? el.offsetLeft + el.offsetWidth - this._scroller.clientWidth + inlinePadding
+        : el.offsetLeft - inlinePadding;
     const top = el.offsetTop - blockPadding;
-    const current = this._vertical ? this._scroller.scrollTop : this._scroller.scrollLeft;
-    const target = this._vertical ? top : left;
-    if (Math.abs(current - target) < 1) {
-      this._syncActive(n, false);
-      return;
-    }
     this._ignoreScroll = true;
     this._scroller.scrollTo({
       left: this._vertical ? 0 : left,
       top: this._vertical ? top : 0,
-      behavior: smooth ? 'smooth' : 'auto'
+      behavior: smooth && !this._motion.matches ? 'smooth' : 'instant'
     });
-    const done = () => {
-      this._ignoreScroll = false;
-    };
-    this._scroller.addEventListener('scrollend', done, { once: true });
-    window.setTimeout(done, this.options.duration + 350);
+    this._scroller.addEventListener('scrollend', this._handleScrollEnd);
+    this._scrollEndTimeout = setTimeout(this._finishScroll, this.options.duration + 350);
   }
+
+  private _finishScroll = () => {
+    this._ignoreScroll = false;
+    clearTimeout(this._scrollEndTimeout);
+    this._scroller.removeEventListener('scrollend', this._handleScrollEnd);
+  };
+
+  private _handleScrollEnd = () => {
+    if (!this.images.some(item => item.getAnimations().some(animation => animation.playState === 'running'))) {
+      this._finishScroll();
+    }
+  };
 
   _cycleTo(n: number, callback: CarouselOptions['onCycleTo'] = null) {
     if (typeof callback === 'function') this.oneTimeCallback = callback;

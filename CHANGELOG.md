@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Carousel mirrors horizontal navigation and scroll placement in RTL, leaves
+  editable keys alone, and keeps auto-advance suspended during internal focus
+  moves. Mounted reduced-motion changes preserve explicit pause. Teardown
+  cancels scroll-completion timers and listeners. The docs demonstrate an
+  application-owned pause/resume button using the existing methods.
+
 - Slider labels and track gaps account for native handle travel in LTR, RTL and
   vertical layouts. Paired inputs accept native track clicks and their vertical
   track resizes with the inputs. Application input events update values without

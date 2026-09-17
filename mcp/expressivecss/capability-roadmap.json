@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "dbc7bf62d3cc4785c93ee55b8377908a04a947fa8e26675306a18f9d2c2c3a23",
+    "reportSha256": "5f56af739afb0aa00d9bb859673d3f36106591c41448b907138e7326388f60a1",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1698,7 +1698,7 @@
       "support": "unassessed",
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
+      "reviewedOn": "2026-09-17",
       "scope": "Adaptive visual collections with documented layout variants.",
       "adaptation": "Runtime owns sizing and navigation; reduced motion removes parallax and morphing.",
       "upstream": {
@@ -1728,18 +1728,43 @@
         },
         {
           "path": "src/ts/components/carousel.ts",
-          "sha256": "772609159091d79c516820e5a68042407d641cd67d78b1a7d09ed6346fe44ced"
+          "sha256": "d3571175d6e976a172d90a24a0a28eacb2359fefb4bfb697d657a1eb6e1131d9"
         }
       ],
       "gaps": [
         {
           "kind": "verification",
-          "description": "Existing DOM/timer checks do not prove rendered scrolling, RTL focus or visible pause-control usability.",
-          "nextStep": "Run keyboard, non-drag previous/next, pause, hover/focus and reduced-motion checks on the selected carousel."
+          "description": "Rendered browser checks do not establish native zoom, spoken announcements or physical touch-device usability.",
+          "nextStep": "Review native zoom, screen readers and physical iOS/Android devices with the selected layout and pause control."
         }
       ],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "browserChecks": [
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Carousel navigation scrolls and focuses logical items (chromium)",
+          "scope": "Actual scroll position, visible focused items, previous/next, indicators, Home/End, RTL, vertical navigation and editable descendants under ordinary and reduced motion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Carousel mounted motion changes preserve explicit pause (chromium)",
+          "scope": "Visible application-owned pause/resume button and mounted reduced-motion changes without cancelling explicit pause.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Carousel focus and visibility suspension survive teardown (chromium)",
+          "scope": "Hover and internal focus suspension, simulated document.hidden events, timer teardown and single advancement after remount. Actual background-device behavior pending.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Carousel destroys pending scroll completion work (chromium)",
+          "scope": "Rapid navigation and queued resize followed by destruction leave no auto-advance, resize or scroll-completion timers.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
