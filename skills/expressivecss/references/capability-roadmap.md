@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `7f7d46c2acc81dc1b85835694f5b23829f9e232ed16e4d952db34071f480b04b`.
+Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `fcb119f770a0cefc69268c3320763d7f6abe8fbc2ef8e60941285b1e5c5df5aa`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -126,6 +126,7 @@ Web adaptation: CSS viewport and container queries; the application chooses the 
 
 - recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Panes use the nearest available width at layout boundaries (chromium)`. Independent viewport/container widths, both sides and exact 840px/1200px boundaries, nearest-container precedence, viewport fallback, pane aliases, start/left supporting columns, equal/three-pane, separated/floating and RTL. Equivalent Firefox and WebKit cases run in the same suite.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Panes preserve footer icon-button geometry (chromium)`. All five icon-button sizes retain their height, width and block padding for native buttons and anchors across footer aliases. Equivalent Firefox and WebKit cases run in the same suite.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Panes preserve compact selection and independent scrolling (chromium)`. Active selection and first-pane fallback through resizing, independent body scrolling, DOM order, translated footer actions at enlarged root text size, both directions and motion preferences. Not native zoom or screen-reader verification.
 
 <a id="footer"></a>

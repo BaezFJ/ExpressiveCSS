@@ -10,7 +10,7 @@
     "nodeVersion": "v24.20.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "7f7d46c2acc81dc1b85835694f5b23829f9e232ed16e4d952db34071f480b04b",
+    "reportSha256": "fcb119f770a0cefc69268c3320763d7f6abe8fbc2ef8e60941285b1e5c5df5aa",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -205,7 +205,7 @@
       "sources": [
         {
           "path": "src/sass/components/_panes.scss",
-          "sha256": "31620143e0841d0dffd98bff49630288d17ce91e9da6c1e4b611960088b291b6"
+          "sha256": "107d45899b9a41448563215bf670c5f96f25cb9153b8ff173941d5f12b90839b"
         }
       ],
       "gaps": [
@@ -226,6 +226,12 @@
           "file": "tests/menu-field-browser.test.js",
           "name": "Panes use the nearest available width at layout boundaries (chromium)",
           "scope": "Independent viewport/container widths, both sides and exact 840px/1200px boundaries, nearest-container precedence, viewport fallback, pane aliases, start/left supporting columns, equal/three-pane, separated/floating and RTL. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Panes preserve footer icon-button geometry (chromium)",
+          "scope": "All five icon-button sizes retain their height, width and block padding for native buttons and anchors across footer aliases. Equivalent Firefox and WebKit cases run in the same suite.",
           "state": "recorded-passed"
         },
         {

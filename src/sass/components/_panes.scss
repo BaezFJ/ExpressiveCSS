@@ -294,7 +294,7 @@
     padding: 8px 16px;
     border-block-start: 1px solid var(--md-comp-pane-divider-color);
 
-    > :is(button, a) {
+    > :is(button, a):not(.icon-button) {
       min-width: 0;
       max-width: 100%;
       min-height: var(--md-comp-filled-button-container-height, 40px);

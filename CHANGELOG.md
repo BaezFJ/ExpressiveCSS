@@ -9,7 +9,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Pane layouts use the nearest ancestor query-container width, with viewport
   fallback, for columns, compact visibility, margins and dividers. Long footer
-  actions wrap without changing application-owned pane selection.
+  actions wrap without changing application-owned pane selection or icon-button sizes.
 
 - App-bar search dialogs stay closed during native focus restoration and reopen
   on a fresh focus or click. Teardown removes the search activation listeners.

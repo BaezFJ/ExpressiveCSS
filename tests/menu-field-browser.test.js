@@ -56,6 +56,22 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     } finally { await browser.close(); }
   });
 
+  browserTest(`Panes preserve footer icon-button geometry (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+      const sizes = { xsmall: 32, small: 40, medium: 56, large: 96, xlarge: 136 };
+      for (const footer of ['footer', 'div class="pane-footer"', 'nav']) {
+        const tag = footer.split(' ')[0];
+        await page.setContent(`<style>${css}</style><section class="pane"><${footer}>${['button', 'a'].flatMap(control => Object.keys(sizes).map(size => `<${control} class="icon-button ${size}" aria-label="More" ${control === 'a' ? 'href="#more"' : 'type="button"'}><span class="material-symbols" aria-hidden="true">more_vert</span></${control}>`)).join('')}</${tag}></section>`);
+        for (const [size, height] of Object.entries(sizes)) {
+          const geometry = await page.locator(`.icon-button.${size}`).evaluateAll(els => els.map(el => ({ height: el.getBoundingClientRect().height, width: el.getBoundingClientRect().width, padding: getComputedStyle(el).paddingBlock })));
+          assert.deepEqual(geometry, Array(2).fill({ height, width: height, padding: '0px' }), `${footer} ${size}`);
+        }
+      }
+    } finally { await browser.close(); }
+  });
+
   browserTest(`Panes preserve compact selection and independent scrolling (${engine})`, async () => {
     const browser = await type.launch();
     try {
