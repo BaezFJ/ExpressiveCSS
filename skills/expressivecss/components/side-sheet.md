@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `11c9bcafd20f910ae22d6ee190f4d822a5dc01c002f01356645e9d04c01d8241`
+Contract SHA-256: `15a8ba6f976cc6ccd5f8d6f4533ed221fc5e87ce3e48add10379be2739715318`
 
 #### Selection and adaptation
 
@@ -32,17 +32,19 @@ Requirements and boundaries: design reference layout-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/side-sheets/guidelines).
 
-Support (2026-09-13, `llm.md#side-sheet`): Standard and modal side sheets.
+Support (2026-09-17, `llm.md#side-sheet`): Standard and modal side sheets.
 
 Web adaptation: Native dialog and shared drag/dismiss behavior.
 
-Known boundary: Native modal/nonmodal focus is checked; start-docked RTL drag direction and long-content fit remain unverified.
+Known boundary: Rendered RTL docking, dragging and enlarged translated text are checked; native zoom, assistive technology and physical-device review remain pending.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#side-sheet).
 
 #### Contract
 
 A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to the side. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.
+
+Docking is logical: `.start`, `.left` and `.left-sheet` use the start edge; the default, `.right` and `.right-sheet` use the end edge. In unreleased source, drag direction, inner-edge hit testing, modal corners and opening motion follow computed RTL direction. Headings and actions wrap; the body scrolls independently. Shared sheet dragging ignores secondary-pointer cancellation and resets when a sheet closes, is removed, or a primary press starts elsewhere. Dismissal thresholds are unchanged. Keep an explicit close control; native zoom, assistive technology and physical-device review remain pending.
 
 #### Syntax
 

@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Side sheets mirror dragging, entry motion and modal corners in RTL while
+  preserving logical start/end aliases. Long headings and action rows wrap.
+  Side and bottom sheets ignore secondary-pointer cancellation and clear drag
+  state when closed, removed, or interrupted by another primary press.
+
 - Carousel mirrors horizontal navigation and scroll placement in RTL, leaves
   editable keys alone, and keeps auto-advance suspended during internal focus
   moves. Mounted reduced-motion changes preserve explicit pause and stop
