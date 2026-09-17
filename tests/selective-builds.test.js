@@ -69,6 +69,6 @@ test('default custom Sass matches the complete stylesheet and preserves configur
 test('complete minified artifacts stay within the reviewed gzip budgets', () => {
   const js = readFileSync(`${root}/dist/js/expressive.min.js`, 'utf8').replace(/^\/\/# sourceMappingURL=.*\n?/m, '');
   const css = readFileSync(`${root}/dist/css/expressive.min.css`, 'utf8').replace(/\/\*# sourceMappingURL=.*?\*\//, '').trimEnd();
-  assert.ok(sizes(js).gzip <= 42783, `JavaScript gzip: ${sizes(js).gzip}`);
+  assert.ok(sizes(js).gzip <= 42926, `JavaScript gzip: ${sizes(js).gzip}`);
   assert.ok(sizes(css).gzip <= 49675, `CSS gzip: ${sizes(css).gzip}`);
 });

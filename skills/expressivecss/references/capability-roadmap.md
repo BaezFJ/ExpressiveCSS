@@ -10,14 +10,14 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `fcb119f770a0cefc69268c3320763d7f6abe8fbc2ef8e60941285b1e5c5df5aa`.
+Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `b119521e59f40fb4724eeaff25d2e55868861b9f3a312c816276dca194d3adf7`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
 | [App bar](#app-bar) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Navigation bar](#navigation-bar) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Navigation rail](#navigation-rail) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Panes](#panes) | implemented | source-reviewed | recorded-scoped-pass | 1 |
+| [Panes](#panes) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Footer](#footer) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Tabs](#tabs) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Breadcrumbs](#breadcrumbs) | unassessed | needs-review | recorded-scoped-pass | 0 |
@@ -47,7 +47,7 @@ Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs mat
 | [Search](#search) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Text fields](#text-fields) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Select](#select) | unassessed | needs-review | recorded-scoped-pass | 0 |
+| [Select](#select) | implemented | source-reviewed | recorded-scoped-pass | 0 |
 | [Checkboxes](#checkboxes) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Radio buttons](#radio-buttons) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Switches](#switches) | unassessed | needs-review | recorded-scoped-pass | 1 |
@@ -114,9 +114,9 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 ## Panes
 
-**implemented within the stated scope.** List-detail, supporting pane, and equal panes.
+**unassessed within the stated scope.** List-detail, supporting pane, and equal panes.
 
-Source review: source-reviewed, 2026-09-17. [src/sass/components/_panes.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_panes.scss).
+Source review: needs-review, 2026-09-17. [src/sass/components/_panes.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_panes.scss).
 
 Google relationship: pattern. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/foundations/layout/canonical-examples/overview).
 
@@ -634,19 +634,23 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 ## Select
 
-**unassessed within the stated scope.** Single/multiple selection, optgroups, and browser-default fallback.
+**implemented within the stated scope.** Single/multiple selection, optgroups, and browser-default fallback.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/forms/_select.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/forms/_select.scss), [src/sass/components/_menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_menu.scss), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/select.ts), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/menu.ts).
+Source review: source-reviewed, 2026-09-17. [src/sass/components/forms/_select.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/forms/_select.scss), [src/sass/components/_menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_menu.scss), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/select.ts), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/menu.ts).
 
 Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/menus/overview).
 
 Web adaptation: Native select enhanced by runtime; this is related to menu/text-field patterns.
 
-- verification: Current browser evidence covers lifecycle and enlarged labels, not every disabled, grouped, or multiple-selection path. Next: Exercise native form submission, optgroups, disabled options and multiple selection in each target browser.
+- verification: Native zoom, screen-reader announcements, Windows contrast themes and physical-device form interaction remain unverified. Next: Complete the Select native-forms manual-review fixture and record actual browser, assistive technology and device results.
 
 - recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
 - recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `enhanced select keeps enlarged multiline labels clear of values (chromium)`. Filled enhanced select label/value separation with multiline LTR/RTL labels at 16px and 32px root text size. Native zoom, native and outlined selects are not covered. Equivalent Firefox and WebKit cases run in the same file.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Select native form synchronization: disabled (chromium)`. Single/multiple selected labels, disabled options and optgroups, empty selections and native FormData. Equivalent Firefox and WebKit cases run in the same file.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Select native form synchronization: reset (chromium)`. Successful and canceled native resets, default selections, generated selection semantics and no synthetic change events. Equivalent Firefox and WebKit cases run in the same file.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Select native form synchronization: refresh (chromium)`. Disabled/enabled refresh, changed and removed options, open-menu focus, Escape, stale rows, native change events and unrelated focus preservation. Equivalent Firefox and WebKit cases run in the same file.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Select native form synchronization: interaction (chromium)`. Pointer and keyboard multiple selection, event counts, checkbox state, native FormData, LTR/RTL, both motion preferences, reset teardown and instance isolation. Equivalent Firefox and WebKit cases run in the same file.
 
 <a id="checkboxes"></a>
 

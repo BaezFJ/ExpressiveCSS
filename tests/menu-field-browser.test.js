@@ -10,6 +10,163 @@ const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'u
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+  for (const scenario of ['disabled', 'reset', 'refresh', 'interaction']) browserTest(`Select native form synchronization: ${scenario} (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.setContent(`<style>${css}</style><form id="form"><select id="native" name="choice" class="browser-default"><option value="a" selected>Alpha</option><option value="b">Beta</option><option value="c" disabled>Charlie</option><optgroup label="Unavailable" disabled><option value="d">Delta</option></optgroup></select><button type="reset">Reset</button><button type="button" id="outside">Outside</button></form>`);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => {
+        const native = document.querySelector('select');
+        const enhanced = native.cloneNode(true);
+        enhanced.id = 'enhanced'; enhanced.className = '';
+        native.after(enhanced);
+        window.select = Expressive.FormSelect.init(enhanced, { menuOptions: { inDuration: 0, outDuration: 0 } });
+        window.changes = 0;
+        enhanced.addEventListener('change', () => window.changes++);
+      });
+      if (scenario === 'disabled') {
+        for (const multiple of [false, true]) {
+          await page.evaluate(multiple => {
+            window.select.destroy();
+            document.querySelectorAll('select').forEach(el => { el.multiple = multiple; el.value = 'a'; });
+            window.select = Expressive.FormSelect.init(document.querySelector('#enhanced'), { menuOptions: { inDuration: 0, outDuration: 0 } });
+          }, multiple);
+          assert.deepEqual(await page.evaluate(() => [...window.select.menuEl.querySelectorAll('[role="option"]')].map(el => el.getAttribute('aria-disabled') === 'true')), [false, false, true, true]);
+          await page.evaluate(() => window.select.menu.open());
+          for (const label of ['Charlie', 'Delta']) {
+            await page.evaluate(() => window.select.menu.open());
+            await page.locator('menu').getByRole('option', { name: label }).evaluate(el => el.click());
+            assert.deepEqual(await page.evaluate(() => window.select.getSelectedValues()), ['a']);
+          }
+          for (const [value, label] of [['c', 'Charlie'], ['d', 'Delta']]) {
+            await page.evaluate(value => {
+              document.querySelectorAll('select').forEach(el => { el.value = value; });
+              window.select.refresh();
+            }, value);
+            assert.equal(await page.evaluate(() => window.select.input.value), label);
+          }
+          assert.deepEqual(await page.evaluate(() => new FormData(document.querySelector('form')).getAll('choice')), []);
+          await page.evaluate(() => {
+            document.querySelectorAll('select').forEach(el => { el.selectedIndex = -1; });
+            window.select.refresh();
+          });
+          assert.equal(await page.evaluate(() => window.select.input.value), '');
+        }
+        assert.equal(await page.evaluate(() => window.changes), 0);
+      } else if (scenario === 'reset') {
+        for (const multiple of [false, true]) {
+          await page.evaluate(multiple => {
+            window.select.destroy();
+            document.querySelectorAll('select').forEach(el => { el.multiple = multiple; el.value = 'b'; });
+            window.select = Expressive.FormSelect.init(document.querySelector('#enhanced'));
+          }, multiple);
+          await page.getByRole('button', { name: 'Reset', exact: true }).click();
+          await expect(page.locator('input[role="combobox"]')).toHaveValue('Alpha');
+          assert.deepEqual(await page.evaluate(() => [...window.select.menuEl.querySelectorAll('[role="option"]')].map(el => el.ariaSelected)), ['true', 'false', 'false', 'false']);
+          assert.deepEqual(await page.evaluate(() => new FormData(document.querySelector('form')).getAll('choice')), ['a', 'a']);
+          await page.evaluate(() => {
+            document.querySelectorAll('select').forEach(el => { el.value = 'b'; });
+            window.select.refresh();
+            document.querySelector('form').addEventListener('reset', e => e.preventDefault(), { once: true });
+          });
+          await page.getByRole('button', { name: 'Reset', exact: true }).click();
+          await expect(page.locator('input[role="combobox"]')).toHaveValue('Beta');
+          assert.equal(await page.evaluate(() => window.changes), 0);
+        }
+      } else if (scenario === 'refresh') {
+        await page.evaluate(() => {
+          window.select.el.disabled = true;
+          window.select.refresh();
+        });
+        await expect(page.locator('input[role="combobox"]')).toBeDisabled();
+        assert.deepEqual(await page.evaluate(() => {
+          window.select.menuEl.querySelectorAll('[role="option"]')[1].click();
+          return new FormData(document.querySelector('form')).getAll('choice');
+        }), ['a']);
+        await page.evaluate(() => {
+          window.select.destroy();
+          window.select = Expressive.FormSelect.init(document.querySelector('#enhanced'), { menuOptions: { inDuration: 0, outDuration: 0 } });
+          window.select.el.disabled = false;
+          window.select.refresh();
+        });
+        await page.locator('input[role="combobox"]').click();
+        await expect(page.locator('menu')).toHaveCSS('opacity', '1');
+        await page.locator('menu').getByRole('option', { name: 'Beta', exact: true }).focus();
+        await page.evaluate(() => {
+          window.oldRow = window.select.menuEl.querySelectorAll('[role="option"]')[1];
+          window.select.el.options[1].textContent = 'Updated';
+          window.select.el.value = 'b';
+          window.select.refresh();
+        });
+        await expect(page.locator('menu').getByRole('option', { name: 'Updated', exact: true })).toBeFocused();
+        assert.equal(await page.evaluate(() => document.getElementById(window.select.input.getAttribute('aria-activedescendant'))?.textContent), 'Updated');
+        await page.keyboard.press('Escape');
+        await expect(page.locator('input[role="combobox"]')).toBeFocused();
+        await page.evaluate(() => window.oldRow.click());
+        assert.equal(await page.evaluate(() => window.changes), 0);
+        await page.locator('input[role="combobox"]').click();
+        await page.locator('menu').getByRole('option', { name: 'Alpha', exact: true }).press('Enter');
+        assert.equal(await page.evaluate(() => window.changes), 1);
+        await page.evaluate(() => {
+          window.select.el.value = 'b';
+          window.select.el.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+        assert.deepEqual(await page.evaluate(() => [...window.select.menuEl.querySelectorAll('[role="option"]')].map(el => el.ariaSelected)), ['false', 'true', 'false', 'false']);
+        await page.evaluate(() => {
+          document.querySelector('#outside').focus();
+          window.select.el.querySelector('optgroup').disabled = false;
+          window.select.el.options[0].remove();
+          window.select.refresh();
+        });
+        await expect(page.locator('#outside')).toBeFocused();
+        assert.equal(await page.evaluate(() => window.select.menuEl.querySelectorAll('[role="option"]')[2].ariaDisabled), null);
+      } else {
+        for (const direction of ['ltr', 'rtl']) for (const motion of ['reduce', 'no-preference']) {
+          await page.emulateMedia({ reducedMotion: motion });
+          await page.evaluate(direction => {
+            window.select.destroy();
+            document.documentElement.dir = direction;
+            const el = document.querySelector('#enhanced');
+            el.multiple = true; el.value = 'a';
+            window.select = Expressive.FormSelect.init(el, { menuOptions: { inDuration: 0, outDuration: 0 } });
+            window.changes = 0;
+          }, direction);
+          await page.locator('input[role="combobox"]').click();
+          await page.locator('menu').getByRole('option', { name: 'Beta', exact: true }).locator('label span').click();
+          assert.deepEqual(await page.evaluate(() => window.select.getSelectedValues()), ['a', 'b']);
+          await page.locator('menu').getByRole('option', { name: 'Beta', exact: true }).press(' ');
+          assert.deepEqual(await page.evaluate(() => window.select.getSelectedValues()), ['a']);
+          await page.locator('menu').getByRole('option', { name: 'Alpha', exact: true }).press('ArrowDown');
+          await expect(page.locator('menu').getByRole('option', { name: 'Beta', exact: true })).toBeFocused();
+          await page.keyboard.press('Enter');
+          assert.deepEqual(await page.evaluate(() => new FormData(document.querySelector('form')).getAll('choice')), ['a', 'a', 'b']);
+          assert.equal(await page.evaluate(() => window.changes), 3);
+          assert.deepEqual(await page.locator('menu input[type="checkbox"]').evaluateAll(els => els.map(el => el.checked)), [true, true]);
+          await page.keyboard.press('Escape');
+          await expect(page.locator('input[role="combobox"]')).toBeFocused();
+        }
+        await page.evaluate(() => {
+          document.querySelector('#native').classList.remove('browser-default');
+          window.other = Expressive.FormSelect.init(document.querySelector('#native'));
+          window.detachedInput = window.select.input;
+          document.querySelector('form').reset();
+          window.select.input.value = 'Keep detached';
+          window.select.destroy();
+        });
+        await page.waitForTimeout(30);
+        assert.equal(await page.evaluate(() => window.detachedInput.value), 'Keep detached');
+        assert.equal(await page.evaluate(() => window.other.input.value), 'Alpha');
+        assert.equal(await page.evaluate(() => document.querySelector('#enhanced').Expressive_FormSelect), undefined);
+      }
+    } finally { try { await page?.evaluate(() => { if (window.select?.el.Expressive_FormSelect) window.select.destroy(); window.other?.destroy(); }); } finally { await browser.close(); } }
+  });
+}
+
+for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
+  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
+  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
   browserTest(`Panes use the nearest available width at layout boundaries (${engine})`, async () => {
     const browser = await type.launch();
     try {

@@ -10,7 +10,7 @@
     "nodeVersion": "v24.20.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "fcb119f770a0cefc69268c3320763d7f6abe8fbc2ef8e60941285b1e5c5df5aa",
+    "reportSha256": "b119521e59f40fb4724eeaff25d2e55868861b9f3a312c816276dca194d3adf7",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -180,9 +180,9 @@
       "slug": "panes",
       "title": "Panes",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-17",
       "scope": "List-detail, supporting pane, and equal panes.",
       "adaptation": "CSS viewport and container queries; the application chooses the active compact pane.",
@@ -2122,10 +2122,10 @@
       "slug": "select",
       "title": "Select",
       "kind": "component",
-      "support": "unassessed",
+      "support": "implemented",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-17",
       "scope": "Single/multiple selection, optgroups, and browser-default fallback.",
       "adaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",
       "upstream": {
@@ -2157,22 +2157,22 @@
         },
         {
           "path": "src/sass/components/_menu.scss",
-          "sha256": "8ad4eab498fa24199203070cf2b5792f6d61aa52e18b75770549ffcc7e0c64dc"
+          "sha256": "64ef33e268c01dd8f24a9f28198b4ae982bcd2d9a4d7f59f7fc334e0d2916774"
         },
         {
           "path": "src/ts/components/select.ts",
-          "sha256": "33d9285e89d231522070ada3a4cc8e917a620cee245d86c09a2f3e4161fec49e"
+          "sha256": "96a8ff976f1f9568c8ba7e245f47ab6b00aa49563f764e4f422ab6f9313a3232"
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
+          "sha256": "e0fb0c0f6492652fdea2c7bf4189eabad261d5506ec93a22fac508da67d89660"
         }
       ],
       "gaps": [
         {
           "kind": "verification",
-          "description": "Current browser evidence covers lifecycle and enlarged labels, not every disabled, grouped, or multiple-selection path.",
-          "nextStep": "Exercise native form submission, optgroups, disabled options and multiple selection in each target browser."
+          "description": "Native zoom, screen-reader announcements, Windows contrast themes and physical-device form interaction remain unverified.",
+          "nextStep": "Complete the Select native-forms manual-review fixture and record actual browser, assistive technology and device results."
         }
       ],
       "browserChecks": [
@@ -2192,6 +2192,30 @@
           "file": "tests/menu-field-browser.test.js",
           "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
           "scope": "Filled enhanced select label/value separation with multiline LTR/RTL labels at 16px and 32px root text size. Native zoom, native and outlined selects are not covered. Equivalent Firefox and WebKit cases run in the same file.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Select native form synchronization: disabled (chromium)",
+          "scope": "Single/multiple selected labels, disabled options and optgroups, empty selections and native FormData. Equivalent Firefox and WebKit cases run in the same file.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Select native form synchronization: reset (chromium)",
+          "scope": "Successful and canceled native resets, default selections, generated selection semantics and no synthetic change events. Equivalent Firefox and WebKit cases run in the same file.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Select native form synchronization: refresh (chromium)",
+          "scope": "Disabled/enabled refresh, changed and removed options, open-menu focus, Escape, stale rows, native change events and unrelated focus preservation. Equivalent Firefox and WebKit cases run in the same file.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Select native form synchronization: interaction (chromium)",
+          "scope": "Pointer and keyboard multiple selection, event counts, checkbox state, native FormData, LTR/RTL, both motion preferences, reset teardown and instance isolation. Equivalent Firefox and WebKit cases run in the same file.",
           "state": "recorded-passed"
         }
       ],

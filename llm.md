@@ -5506,6 +5506,12 @@ Selected values as an array of strings.
 instance.getSelectedValues();
 ```
 
+#### .refresh();
+
+Re-read native values, option labels, options and disabled states. The generated rows are rebuilt while the field and an existing Menu instance remain. Refresh preserves focus on a surviving option in an open menu; it does not emit a user `change` event. Call it after programmatic changes; there is no mutation observer.
+
+The native select owns form submission. Disabled options and optgroups cannot be activated, even when selected programmatically. Their selected labels remain visible, but native `FormData` excludes disabled choices. An empty selection displays an empty field. Successful native form resets synchronize the field and selection semantics after the browser restores defaults. Canceled resets preserve selection; resets do not synthesize `change`.
+
 #### .destroy();
 
 Destroy the plugin instance, remove the menu, and restore the native select.
