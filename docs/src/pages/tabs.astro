@@ -237,7 +237,11 @@ instance.destroy();
           touch devices. Keep the tab panels in the same wrapping
           container. The implementation wraps those panels in a
           carousel. <code>responsiveThreshold</code> is the viewport
-          width below which swipeable mode turns on.
+          maximum width at which swipeable mode initializes. Resizing later
+          does not switch modes. Clicks and swipes update the current link and
+          call <code>onShow</code> once per changed selection with the shown panel.
+          <code>destroy()</code> removes the carousel wrapper and restores panel
+          positions and the state owned by Tabs.
         </p>
         <p>This demo is marked <code>no-autoinit</code> and started with <code>swipeable: true</code>.</p>
         <nav id="tabs-swipe" class="tabs no-autoinit" aria-label="Swipe demo">

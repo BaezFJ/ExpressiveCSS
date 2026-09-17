@@ -4213,7 +4213,7 @@ Tabs ignore default anchor behaviour. To keep a tab as a normal hyperlink, set `
 
 ### Swipeable Tabs
 
-Set `swipeable: true` to swipe between panels on touch devices. Keep the tab panels in the same wrapping container. The implementation wraps those panels in a carousel. `responsiveThreshold` is the viewport width below which swipeable mode turns on.
+Set `swipeable: true` to swipe between panels on touch devices. Keep the tab panels in the same wrapping container. The implementation wraps those panels in a carousel. `responsiveThreshold` is the maximum viewport width at which swipeable mode initializes; resizing later does not switch modes. Each changed swipeable selection updates `aria-current` and calls `onShow` once with the shown panel. `destroy()` removes the carousel wrapper and restores panel positions and Tabs-owned state.
 
 This demo is marked `no-autoinit` and started with `swipeable: true`.
 

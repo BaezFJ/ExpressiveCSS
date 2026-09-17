@@ -7,10 +7,10 @@
     "recordedOn": "2026-09-17",
     "engine": "chromium",
     "engineVersion": "153.0.8010.12",
-    "nodeVersion": "v22.23.1",
+    "nodeVersion": "v24.20.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "255d52d21dc094b8b2eb9fee2e5f1bc165bb2e6aa5d36091d62b33a6dcb29125",
+    "reportSha256": "7427be5ab80510bd450d2bdbed842578711b4e2203c8ff1dc524a061fe63ede2",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -265,10 +265,10 @@
       "slug": "tabs",
       "title": "Tabs",
       "kind": "component",
-      "support": "unassessed",
+      "support": "implemented",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-17",
       "scope": "Primary and secondary tabs; stacked and horizontal icon layouts.",
       "adaptation": "Links target panels; use the shipped runtime keyboard contract.",
       "upstream": {
@@ -297,14 +297,14 @@
         },
         {
           "path": "src/ts/components/tabs.ts",
-          "sha256": "154b97877b4683a1277d9cbfb1cb320a2d25c8dcefe900d0be3e6835ecf5d178"
+          "sha256": "1f9f6bc52153f3828ba7bee5a18345f8050d4c9a012e6372a36d626fb82f56a6"
         }
       ],
       "gaps": [
         {
           "kind": "integration",
           "description": "Native links use Tab and aria-current; runtime does not implement composite tab arrow keys.",
-          "nextStep": "Retain native anchor semantics; test overflow and selected-panel focus before adding tab roles."
+          "nextStep": "Retain native anchor semantics. Rendered selection, overflow geometry and teardown are covered; verify spoken current-state output and physical touch manually."
         }
       ],
       "browserChecks": [
@@ -312,6 +312,30 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
           "scope": "Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Tabs synchronize swipe selection and callbacks (chromium)",
+          "scope": "LTR/RTL and ordinary/reduced motion selection state and single callbacks.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Tabs restore panels on teardown and remount (chromium)",
+          "scope": "Panel order, owned styles and semantics, wrapper cleanup and remount.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Tabs threshold keeps native links and ordinary panels (chromium)",
+          "scope": "Above-threshold ordinary panels, native Tab/Enter, disabled and external-target links.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Tabs hash selection, native dragging and overflow geometry (chromium)",
+          "scope": "Initial hash, actual pointer dragging, RTL overflow indicator geometry and initialization-only threshold; no physical touch or native zoom claim.",
           "state": "recorded-passed"
         }
       ],
