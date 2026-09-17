@@ -13,13 +13,18 @@
   color: var(--md-sys-color-on-surface-variant);
   background-color: var(--md-sys-color-surface-container-low);
   display: inline-flex;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  min-width: 0;
   gap: 8px;
   margin: 0;
-  height: 32px;
+  min-height: 32px;
+  height: auto;
   padding-left: var(--padding);
   padding-right: var(--padding);
   font-size: var(--font-size);
+  line-height: 1.5;
   font-weight: 500;
   border-radius: 8px;
   align-items: center;
@@ -88,6 +93,7 @@
 }
 
 .chip > img {
+  flex-shrink: 0;
   margin: 0;
   width: 24px;
   height: 24px;
@@ -102,6 +108,7 @@
 
 // The delete affordance is a real <button>, so it needs the button reset too.
 .chip .close {
+  flex-shrink: 0;
   border-radius: 50%;
   height: 24px;
   width: 24px;
@@ -117,6 +124,14 @@
   font: inherit;
 
   @include focus-visible();
+}
+
+.chip > button:not(.close) {
+  min-width: 0;
+  height: auto;
+  font: inherit;
+  white-space: inherit;
+  overflow-wrap: inherit;
 }
 
 .chip .close:hover {

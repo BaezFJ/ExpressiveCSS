@@ -177,6 +177,13 @@ const S = defineSections([
           marks it <code>selected</code> and moves focus to its delete button.
         </p>
         <p>
+          Backspace and Delete remove the focused chip and select the preceding
+          survivor, otherwise the first survivor or the input. Activating a delete
+          button returns to the input. Programmatic deletion preserves unrelated
+          focus, and deletion callbacks can move focus without it being reset.
+          Long labels wrap while the delete control keeps its size.
+        </p>
+        <p>
           <code>allowUserInput</code> defaults to <code>false</code>. Without it there
           is no text field and rendered chips have no delete button. Pass
           <code>allowUserInput: true</code> for the interactive field.

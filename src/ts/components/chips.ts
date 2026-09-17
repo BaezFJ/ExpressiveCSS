@@ -211,9 +211,8 @@ export class Chips extends Component<ChipsOptions> {
 
   _setupEventHandlers() {
     this.el.addEventListener('click', this._handleChipClick);
-    // @todo why do we need this as document event listener, shouldn't we apply it to the element wrapper itself?
-    document.addEventListener('keydown', Chips._handleChipsKeydown);
-    document.addEventListener('keyup', Chips._handleChipsKeyup);
+    this.el.addEventListener('keydown', Chips._handleChipsKeydown);
+    this.el.addEventListener('keyup', Chips._handleChipsKeyup);
     this.el.addEventListener('blur', Chips._handleChipsBlur, true);
     this._input.addEventListener('focus', this._handleInputFocus);
     this._input.addEventListener('blur', this._handleInputBlur);
@@ -222,8 +221,8 @@ export class Chips extends Component<ChipsOptions> {
 
   _removeEventHandlers() {
     this.el.removeEventListener('click', this._handleChipClick);
-    document.removeEventListener('keydown', Chips._handleChipsKeydown);
-    document.removeEventListener('keyup', Chips._handleChipsKeyup);
+    this.el.removeEventListener('keydown', Chips._handleChipsKeydown);
+    this.el.removeEventListener('keyup', Chips._handleChipsKeyup);
     this.el.removeEventListener('blur', Chips._handleChipsBlur, true);
     this._input.removeEventListener('focus', this._handleInputFocus);
     this._input.removeEventListener('blur', this._handleInputBlur);
@@ -242,8 +241,7 @@ export class Chips extends Component<ChipsOptions> {
       const index = this._chips.indexOf(_chip as HTMLElement);
       if (index < 0) return;
       if (clickedClose) {
-        this.deleteChip(index);
-        this._input.focus();
+        this._deleteChip(index, 'input');
       } else {
         this.selectChip(index);
       }
@@ -266,17 +264,10 @@ export class Chips extends Component<ChipsOptions> {
     if (!currChips) return; // .chips markup without an instance behind it
 
     if (e.key === Utils.keys.BACKSPACE || e.key === Utils.keys.DELETE) {
+      const index = currChips._chips.indexOf((e.target as HTMLElement).closest('.chip'));
+      if (index < 0) return;
       e.preventDefault();
-      let selectIndex = currChips.chipsData.length;
-      if (currChips._selectedChip) {
-        const index = currChips._chips.indexOf(currChips._selectedChip);
-        currChips.deleteChip(index);
-        currChips._setSelected(null);
-        // Make sure selectIndex doesn't go negative
-        selectIndex = Math.max(index - 1, 0);
-      }
-      if (currChips.chipsData.length) currChips.selectChip(selectIndex);
-      else currChips._input.focus();
+      currChips._deleteChip(index, 'previous');
     } else if (e.key === Utils.keys.ARROW_LEFT) {
       if (currChips._selectedChip) {
         const selectIndex = currChips._chips.indexOf(currChips._selectedChip) - 1;
@@ -457,6 +448,11 @@ export class Chips extends Component<ChipsOptions> {
    * @param chipIndex  Index of chip
    */
   deleteChip(chipIndex: number) {
+    const root = this.el.getRootNode() as Document | ShadowRoot;
+    this._deleteChip(chipIndex, this._chips[chipIndex]?.contains(root.activeElement) ? 'input' : null);
+  }
+
+  private _deleteChip(chipIndex: number, focus: 'input' | 'previous' | null) {
     const chip = this._chips[chipIndex];
     if (!chip) return;
     if (this._selectedChip === chip) this._setSelected(null);
@@ -464,9 +460,21 @@ export class Chips extends Component<ChipsOptions> {
     this._chips.splice(chipIndex, 1);
     this.chipsData.splice(chipIndex, 1);
     this._setPlaceholder();
+    const focusPath: { root: Document | ShadowRoot; element: Element | null }[] = [];
+    let root = this.el.getRootNode() as Document | ShadowRoot;
+    while (root) {
+      focusPath.push({ root, element: root.activeElement });
+      root = 'host' in root ? root.host.getRootNode() as Document | ShadowRoot : null;
+    }
     // fire chipDelete callback
     if (typeof this.options.onChipDelete === 'function') {
       this.options.onChipDelete(this.el, chip);
+    }
+    if (!focus || focusPath.some(({ root, element }) => root.activeElement !== element) || this.el['Expressive_Chips'] !== this) return;
+    if (focus === 'previous' && this._chips.length) this.selectChip(Math.max(chipIndex - 1, 0));
+    else {
+      this._setSelected(null);
+      this._input?.focus();
     }
   }
 

@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `3c817bc9fcdf57b2463022ceecc5625c8d71f08f33c0a731bc9c808d01de5be2`.
+Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `a8a33e3ed03db2a8263abd95ee9758b86a63f3b12cca78bff9ea7b9876c5f7f6`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -710,8 +710,11 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 
 Web adaptation: Element choice defines behavior; display chips are a framework extension.
 
-- verification: Filter selection is checked; input-chip deletion, dual targets and focus after removal remain unverified. Next: Test keyboard and pointer removal, next-focus recovery, wrapping and nonoverlapping targets.
+- verification: Deletion and focus recovery are browser-tested; full effective-target sizing, spoken output and physical devices remain unverified. Next: Review 48dp effective targets and test with assistive technology and physical touch devices.
 
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Chips deletion targets and focus recovery (chromium)`. First, middle, last and only-chip pointer, native-button, keyboard and programmatic deletion; focus, callbacks and form values in LTR/RTL and both motion preferences. Equivalent Firefox/WebKit checks exist.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Chips callbacks and instance teardown preserve focus (chromium)`. Callback-owned and unrelated focus, selected survivor and independent instance teardown. Equivalent Firefox/WebKit checks exist.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Chips wrapped labels keep separate actions reachable (chromium)`. Compact LTR/RTL wrapping at 14px and 28px, separate action/delete controls and native disabled action. Does not verify 48dp effective targets. Equivalent Firefox/WebKit checks exist.
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
 
 <a id="autocomplete"></a>

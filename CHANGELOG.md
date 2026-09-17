@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Chips delete the focused token with Backspace/Delete and recover focus without
+  overriding deletion callbacks. Destroying one instance preserves other instances'
+  keyboard handlers. Input chips no longer inherit floating-label positioning;
+  long labels wrap without shrinking their delete controls.
+
 - Closing menus immediately exclude their content from keyboard focus and
   preserve focus moved by close callbacks. Nested keyboard navigation and
   typeahead stay in their active menu; RTL flyouts mirror their keys and avoid
