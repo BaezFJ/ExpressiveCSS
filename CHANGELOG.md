@@ -7,6 +7,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- App-bar search dialogs stay closed during native focus restoration and reopen
+  on a fresh focus or click. Teardown removes the search activation listeners.
+
 - Tabs keep swipe selection, `aria-current`, and the `onShow` panel synchronized
   without duplicate callbacks. Swipeable teardown restores panel positions and
   owned state; initialization above `responsiveThreshold` uses ordinary panels.

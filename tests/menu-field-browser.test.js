@@ -6,6 +6,150 @@ import utilsBundle from 'playwright-core/lib/utilsBundle';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
+
+for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
+  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
+  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+  browserTest(`AppBar focus ownership and teardown (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      for (const modal of [false, true]) {
+        await page.setContent(`<style>${css}</style><button id="outside">Outside</button>${[1, 2].map(n => `<header class="medium" id="bar${n}"><nav aria-label="Search ${n}"><search class="search-bar"><input type="search" aria-label="Search ${n}" aria-controls="view${n}"></search></nav></header>${modal ? '<dialog' : '<div hidden'} class="search-view" id="view${n}" aria-label="Results ${n}"><input aria-label="Query ${n}"></${modal ? 'dialog' : 'div'}>`).join('')}`);
+        await page.addScriptTag({ content: js });
+        await page.evaluate(() => {
+          window.bars = [...document.querySelectorAll('header')].map(el => Expressive.AppBar.init(el));
+          window.searchClosed = 0;
+          document.querySelector('#view1').addEventListener('close', () => { searchClosed++; document.querySelector('#outside').focus(); });
+        });
+        try {
+          await page.evaluate(() => { const input = document.querySelector('#bar2 input'); input.disabled = true; input.focus(); });
+          await expect(page.locator('#view2')).toBeHidden();
+          await page.evaluate(() => { document.querySelector('#bar2 input').disabled = false; });
+          await page.locator('#bar1 input').focus();
+          if (modal) {
+            await page.evaluate(() => document.querySelector('#view1').close());
+            await expect.poll(() => page.evaluate(() => searchClosed)).toBe(1);
+            await expect(page.locator('#outside')).toBeFocused();
+            await page.locator('#bar1 input').focus();
+            await expect(page.locator('#view1')).toHaveJSProperty('open', true);
+          } else {
+            await expect(page.locator('#view1')).toBeVisible();
+            await expect(page.locator('#bar1 input')).toHaveAttribute('aria-expanded', 'true');
+            await expect(page.locator('#view2')).toBeHidden();
+          }
+          await page.evaluate(modal => {
+            window.sentinel = bars[0]._sentinel;
+            bars[0].destroy();
+            if (modal) document.querySelector('#view1').close();
+            else document.querySelector('#view1').hidden = true;
+          }, modal);
+          if (modal) await expect.poll(() => page.evaluate(() => searchClosed)).toBe(2);
+          await page.locator('#outside').focus();
+          await page.locator('#bar1 input').click();
+          await expect(page.locator('#view1')).toBeHidden();
+          assert.equal(await page.evaluate(() => sentinel.isConnected), false);
+          await page.locator('#bar2 input').focus();
+          await expect(page.locator('#view2')).toBeVisible();
+          await page.evaluate(modal => {
+            if (modal) document.querySelector('#view2').close();
+            bars[0] = Expressive.AppBar.init(document.querySelector('#bar1'));
+            const view = document.querySelector('#view1');
+            window.opens = 0;
+            if (modal) {
+              const show = view.showModal.bind(view);
+              view.showModal = () => { opens++; show(); };
+            }
+          }, modal);
+          await page.locator('#bar1 input').click();
+          await expect(page.locator('#view1')).toBeVisible();
+          if (modal) assert.equal(await page.evaluate(() => opens), 1);
+        } finally { await page.evaluate(() => { bars.forEach(bar => bar.destroy()); document.querySelectorAll('dialog').forEach(el => el.close()); }); }
+      }
+    } finally { try { await page?.evaluate(() => window.bars?.forEach(bar => bar.destroy())); } finally { await browser.close(); } }
+  });
+
+  browserTest(`AppBar collapsed actions remain reachable (${engine})`, async () => {
+    const browser = await type.launch();
+    const fontCss = css.replace('../fonts/material-symbols-outlined.woff2', `data:font/woff2;base64,${readFileSync(new URL('../dist/fonts/material-symbols-outlined.woff2', import.meta.url)).toString('base64')}`);
+    let page;
+    try {
+      page = await browser.newPage({ viewport: { width: 320, height: 600 } });
+      for (const variant of ['medium', 'large']) for (const direction of ['ltr', 'rtl']) for (const motion of ['reduce', 'no-preference']) {
+        await page.emulateMedia({ reducedMotion: motion });
+        await page.setContent(`<style>${fontCss}</style><header class="${variant}" dir="${direction}" style="position:sticky;top:0"><nav aria-label="Main"><button id="back" aria-label="Back"><span class="material-symbols" aria-hidden="true">arrow_back</span></button><hgroup><h1 style="font-size:2em">Übersetzte lange Überschrift auf mehreren Zeilen</h1><p>Zusätzliche Informationen zur aktuellen Ansicht</p></hgroup><button id="more" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></button></nav></header><main style="height:1600px"></main>`);
+        await page.addScriptTag({ content: js });
+        await page.evaluate(() => document.fonts.ready);
+        await page.evaluate(() => { window.bar = Expressive.AppBar.init(document.querySelector('header')); });
+        try {
+          await page.locator('#back').focus();
+          await page.evaluate(() => scrollTo(0, 400));
+          await expect(page.locator('header')).toHaveClass(new RegExp('collapsed'));
+          await expect(page.locator('#back')).toBeFocused();
+          await page.keyboard.press('Tab');
+          await expect(page.locator('#more')).toBeFocused();
+          assert.ok(await page.locator('#more').evaluate(el => {
+            const rect = el.getBoundingClientRect();
+            return rect.left >= 0 && rect.right <= innerWidth && rect.top >= 0 && rect.bottom <= innerHeight && el.contains(document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2));
+          }), `${variant} ${direction} action is visible and unobscured`);
+          assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+          await page.evaluate(() => { window.sentinel = bar._sentinel; bar.destroy(); scrollTo(0, 0); });
+          assert.equal(await page.evaluate(() => sentinel.isConnected || bar._observer !== null), false);
+          await expect(page.locator('header')).not.toHaveClass(/collapsed/);
+        } finally { await page.evaluate(() => bar.destroy()); }
+      }
+    } finally { try { await page?.evaluate(() => window.bar?.destroy()); } finally { await browser.close(); } }
+  });
+
+  browserTest(`AppBar native search dismissal and reopening (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      for (const nested of [false, true]) for (const motion of ['reduce', 'no-preference']) for (const method of ['escape', 'button', 'form', 'programmatic']) {
+        await page.emulateMedia({ reducedMotion: motion });
+        const view = '<dialog id="results" class="search-view full-screen" aria-label="Results"><input id="query" aria-label="Query"><button id="close" type="button">Close</button><form method="dialog"><button id="submit">Done</button></form></dialog>';
+        await page.setContent(`<style>${css}</style><button id="outside">Outside</button><header dir="${nested ? 'rtl' : 'ltr'}"><nav aria-label="Main"><search class="search-bar"><input id="search" type="search" aria-label="Search" ${nested ? '' : 'aria-controls="results"'} value="retained query">${nested ? view : ''}</search></nav></header>${nested ? '' : view}`);
+        await page.addScriptTag({ content: js });
+        await page.evaluate(() => {
+          window.events = [];
+          const input = document.querySelector('#search'), dialog = document.querySelector('dialog');
+          input.addEventListener('focus', () => events.push('focus'));
+          dialog.addEventListener('close', () => events.push('close'));
+          document.querySelector('#close').onclick = () => dialog.close();
+          window.bar = Expressive.AppBar.init(document.querySelector('header'));
+        });
+        try {
+          await page.locator('#search').focus();
+          await expect(page.locator('dialog')).toHaveJSProperty('open', true);
+          await page.locator('#query').fill('results query');
+          await page.evaluate(() => { events = []; });
+          if (method === 'escape') {
+            await page.evaluate(() => document.querySelector('dialog').addEventListener('cancel', event => event.preventDefault(), { once: true }));
+            await page.keyboard.press('Escape');
+            await expect(page.locator('dialog')).toHaveJSProperty('open', true);
+          }
+          if (method === 'escape') await page.keyboard.press('Escape');
+          else if (method === 'programmatic') await page.evaluate(() => document.querySelector('dialog').close());
+          else await page.locator(method === 'form' ? '#submit' : '#close').click();
+          await expect.poll(() => page.evaluate(() => events.includes('close'))).toBe(true);
+          assert.equal(await page.locator('dialog').evaluate(el => el.open), false, `${method}: ${await page.evaluate(() => events.join(','))}`);
+          await expect(page.locator('#search')).toBeFocused();
+          await page.locator('#search').click();
+          await expect(page.locator('dialog')).toHaveJSProperty('open', true);
+          await page.evaluate(() => { events = []; document.querySelector('dialog').close(); });
+          await expect.poll(() => page.evaluate(() => events.includes('close'))).toBe(true);
+          await page.locator('#outside').focus();
+          await page.locator('#search').focus();
+          await expect(page.locator('dialog')).toHaveJSProperty('open', true);
+          await expect(page.locator('#search')).toHaveValue('retained query');
+          await expect(page.locator('#query')).toHaveValue('results query');
+        } finally { await page.evaluate(() => { bar.destroy(); document.querySelector('dialog').close(); }); }
+      }
+    } finally { try { await page?.evaluate(() => window.bar?.destroy()); } finally { await browser.close(); } }
+  });
+}
 assert.ok(!process.env.EXPRESSIVECSS_TEST_BROWSER || ['chromium', 'firefox', 'webkit'].includes(process.env.EXPRESSIVECSS_TEST_BROWSER));
 const sheetMarkup = `<dialog aria-labelledby="title"><header><h2 id="title">Details</h2><form method="dialog"><button aria-label="Close">×</button></form></header><div id="body"><p>Supporting content</p></div><form method="dialog"><button id="save">Save</button><button disabled>Unavailable</button></form></dialog>`;
 

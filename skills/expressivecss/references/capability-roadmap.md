@@ -10,16 +10,16 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `00345e7ccc581a8c7a00bd0597e10b82eb53773a360582eb49bb1246647e8d87`.
+Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `4363ea4291cd83871af55cb652266ff2fa8070123de0cb9963f3fda4e847554b`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
-| [App bar](#app-bar) | unassessed | needs-review | no-mapped-checks | 0 |
+| [App bar](#app-bar) | implemented | source-reviewed | recorded-scoped-pass | 0 |
 | [Navigation bar](#navigation-bar) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Navigation rail](#navigation-rail) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Panes](#panes) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Footer](#footer) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Tabs](#tabs) | implemented | source-reviewed | recorded-scoped-pass | 1 |
+| [Tabs](#tabs) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Breadcrumbs](#breadcrumbs) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Pagination](#pagination) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Menu](#menu) | unassessed | needs-review | recorded-scoped-pass | 0 |
@@ -64,17 +64,19 @@ Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs mat
 
 ## App bar
 
-**unassessed within the stated scope.** Small, medium flexible, large flexible, and search app bars.
+**implemented within the stated scope.** Small, medium flexible, large flexible, and search app bars.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/_navbar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_navbar.scss), [src/ts/components/appBar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/appBar.ts).
+Source review: source-reviewed, 2026-09-17. [src/sass/components/_navbar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_navbar.scss), [src/ts/components/appBar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/appBar.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/app-bars/overview).
 
 Web adaptation: Native header/nav composition; AppBar owns scroll collapse and search expansion.
 
-- verification: Real modal search close/focus ordering and collapsed-header focus clearance are not mapped. Next: Open and dismiss the actual search dialog; Tab through scroll collapse and enlarged headings.
+- verification: Native zoom, screen-reader announcements, contrast themes and physical mobile keyboard behavior remain pending manual review. Next: Run the App bar/search fixture in the accessibility manual-review checklist with the actual devices and assistive technology.
 
-No directly scoped browser check is mapped. This does not mean the component fails or has no unit tests.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `AppBar native search dismissal and reopening (chromium)`. Native Escape, canceled Escape, close-button, form and programmatic dismissal; focus-before-close ordering, fresh focus and pointer reopening, retained query, nested/referenced views and both motion preferences. Equivalent Firefox and WebKit cases run in the same suite.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `AppBar focus ownership and teardown (chromium)`. Application close-handler focus, disabled fields, two app bars, non-dialog views, observer/listener teardown and remount without duplicate opening.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `AppBar collapsed actions remain reachable (chromium)`. Medium/large sticky headers at 320px with translated enlarged headings, keyboard focus through real scroll collapse, LTR/RTL, both motion preferences and reachable unobscured actions. Not native zoom.
 
 <a id="navigation-bar"></a>
 
@@ -144,9 +146,9 @@ Web adaptation: Web page landmark styled with theme roles.
 
 ## Tabs
 
-**implemented within the stated scope.** Primary and secondary tabs; stacked and horizontal icon layouts.
+**unassessed within the stated scope.** Primary and secondary tabs; stacked and horizontal icon layouts.
 
-Source review: source-reviewed, 2026-09-17. [src/sass/components/_tabs.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_tabs.scss), [src/ts/components/tabs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/tabs.ts).
+Source review: needs-review, 2026-09-17. [src/sass/components/_tabs.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_tabs.scss), [src/ts/components/tabs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/tabs.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/tabs/overview).
 

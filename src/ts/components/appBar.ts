@@ -14,7 +14,7 @@ export class AppBar extends Component<BaseOptions> {
   private _sentinel: HTMLElement | null = null;
   private _input: HTMLInputElement | null = null;
   private _view: HTMLElement | null = null;
-  private _suppressSearchOpen = false;
+  private _searchOpen = false;
 
   constructor(el: HTMLElement, options: Partial<BaseOptions>) {
     super(el, options, AppBar);
@@ -47,6 +47,7 @@ export class AppBar extends Component<BaseOptions> {
     this._sentinel?.remove();
     this._sentinel = null;
     this._input?.removeEventListener('focus', this._onSearchFocus);
+    this._input?.removeEventListener('click', this._onSearchFocus);
     this._view?.removeEventListener('close', this._onSearchViewClose);
     this.el.classList.remove('collapsed');
     this.el['Expressive_AppBar'] = undefined;
@@ -83,24 +84,20 @@ export class AppBar extends Component<BaseOptions> {
     if (!this._view) return;
 
     this._input.addEventListener('focus', this._onSearchFocus);
+    this._input.addEventListener('click', this._onSearchFocus);
     if (this._view instanceof HTMLDialogElement) {
       this._view.addEventListener('close', this._onSearchViewClose);
     }
   }
 
   private _onSearchViewClose = () => {
-    // Closing restores focus to the field; swallow that one so the view
-    // does not immediately showModal() again.
-    this._suppressSearchOpen = true;
+    this._searchOpen = (this._view as HTMLDialogElement).open;
   };
 
   private _onSearchFocus = () => {
-    if (!this._view) return;
-    if (this._suppressSearchOpen) {
-      this._suppressSearchOpen = false;
-      return;
-    }
+    if (!this._view || this._searchOpen) return;
     if (this._view instanceof HTMLDialogElement) {
+      this._searchOpen = true;
       if (!this._view.open) this._view.showModal();
       return;
     }

@@ -10,7 +10,7 @@
     "nodeVersion": "v24.20.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "00345e7ccc581a8c7a00bd0597e10b82eb53773a360582eb49bb1246647e8d87",
+    "reportSha256": "4363ea4291cd83871af55cb652266ff2fa8070123de0cb9963f3fda4e847554b",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -18,10 +18,10 @@
       "slug": "app-bar",
       "title": "App bar",
       "kind": "component",
-      "support": "unassessed",
+      "support": "implemented",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-17",
       "scope": "Small, medium flexible, large flexible, and search app bars.",
       "adaptation": "Native header/nav composition; AppBar owns scroll collapse and search expansion.",
       "upstream": {
@@ -52,18 +52,37 @@
         },
         {
           "path": "src/ts/components/appBar.ts",
-          "sha256": "e9a494671ff1ad9675f378f47e1bd2b0e7026c9dc3fe6cff6d0cb552c8c45e00"
+          "sha256": "91ddc61000a36923995b3633743dd83452d43671c40ae923318dedfeff38893e"
         }
       ],
       "gaps": [
         {
           "kind": "verification",
-          "description": "Real modal search close/focus ordering and collapsed-header focus clearance are not mapped.",
-          "nextStep": "Open and dismiss the actual search dialog; Tab through scroll collapse and enlarged headings."
+          "description": "Native zoom, screen-reader announcements, contrast themes and physical mobile keyboard behavior remain pending manual review.",
+          "nextStep": "Run the App bar/search fixture in the accessibility manual-review checklist with the actual devices and assistive technology."
         }
       ],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "browserChecks": [
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "AppBar native search dismissal and reopening (chromium)",
+          "scope": "Native Escape, canceled Escape, close-button, form and programmatic dismissal; focus-before-close ordering, fresh focus and pointer reopening, retained query, nested/referenced views and both motion preferences. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "AppBar focus ownership and teardown (chromium)",
+          "scope": "Application close-handler focus, disabled fields, two app bars, non-dialog views, observer/listener teardown and remount without duplicate opening.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "AppBar collapsed actions remain reachable (chromium)",
+          "scope": "Medium/large sticky headers at 320px with translated enlarged headings, keyboard focus through real scroll collapse, LTR/RTL, both motion preferences and reachable unobscured actions. Not native zoom.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -265,9 +284,9 @@
       "slug": "tabs",
       "title": "Tabs",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-17",
       "scope": "Primary and secondary tabs; stacked and horizontal icon layouts.",
       "adaptation": "Links target panels; use the shipped runtime keyboard contract.",
