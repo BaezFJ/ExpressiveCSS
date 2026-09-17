@@ -411,7 +411,32 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       await page.evaluate(() => { two.options.onChipDelete = () => two.destroy(); });
       await page.keyboard.press('Delete');
       await expect(page.locator('#two .chip')).toHaveCount(0);
-    } finally { try { await page?.evaluate(() => { window.one?.destroy(); window.two?.destroy(); }); } finally { await browser.close(); } }
+      for (const mode of ['open', 'closed']) for (const destination of ['document', 'parent', 'local', 'none']) for (const action of ['Delete', 'Enter', 'programmatic']) {
+        await page.evaluate(({ mode, destination }) => {
+          window.shadowChips?.destroy(); window.shadowHost?.remove();
+          window.shadowHost = document.createElement('div'); document.body.append(shadowHost);
+          const parent = shadowHost.attachShadow({ mode });
+          const parentButton = document.createElement('button'); parentButton.textContent = 'Parent'; parent.append(parentButton);
+          const host = document.createElement('div'); parent.append(host);
+          const root = host.attachShadow({ mode });
+          const container = document.createElement('div'); root.append(container);
+          const localButton = document.createElement('button'); localButton.textContent = 'Local'; root.append(localButton);
+          window.focusTarget = destination === 'document' ? document.querySelector('#outside') : destination === 'parent' ? parentButton : localButton;
+          window.shadowChips = Expressive.Chips.init(container, {
+            allowUserInput: true, data: [{ id: 'First' }, { id: 'Last' }],
+            onChipDelete: destination === 'none' ? null : () => focusTarget.focus()
+          });
+          shadowChips.selectChip(0);
+        }, { mode, destination });
+        if (action === 'programmatic') await page.evaluate(() => shadowChips.deleteChip(0));
+        else await page.keyboard.press(action);
+        assert.equal(await page.evaluate(({ action, destination }) => {
+          const target = destination === 'none' ? (action === 'Delete' ? shadowChips._chips[0].querySelector('.close') : shadowChips._input) : focusTarget;
+          return target.getRootNode().activeElement === target;
+        }, { action, destination }), true, `${mode} ${destination} ${action}`);
+        assert.deepEqual(await page.evaluate(() => shadowChips.getData()), [{ id: 'Last' }]);
+      }
+    } finally { try { await page?.evaluate(() => { window.one?.destroy(); window.two?.destroy(); window.shadowChips?.destroy(); window.shadowHost?.remove(); }); } finally { await browser.close(); } }
   });
 
   browserTest(`Chips wrapped labels keep separate actions reachable (${engine})`, async () => {

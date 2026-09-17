@@ -460,13 +460,17 @@ export class Chips extends Component<ChipsOptions> {
     this._chips.splice(chipIndex, 1);
     this.chipsData.splice(chipIndex, 1);
     this._setPlaceholder();
-    const root = this.el.getRootNode() as Document | ShadowRoot;
-    const focused = root.activeElement;
+    const focusPath: { root: Document | ShadowRoot; element: Element | null }[] = [];
+    let root = this.el.getRootNode() as Document | ShadowRoot;
+    while (root) {
+      focusPath.push({ root, element: root.activeElement });
+      root = 'host' in root ? root.host.getRootNode() as Document | ShadowRoot : null;
+    }
     // fire chipDelete callback
     if (typeof this.options.onChipDelete === 'function') {
       this.options.onChipDelete(this.el, chip);
     }
-    if (!focus || root.activeElement !== focused || this.el['Expressive_Chips'] !== this) return;
+    if (!focus || focusPath.some(({ root, element }) => root.activeElement !== element) || this.el['Expressive_Chips'] !== this) return;
     if (focus === 'previous' && this._chips.length) this.selectChip(Math.max(chipIndex - 1, 0));
     else {
       this._setSelected(null);
