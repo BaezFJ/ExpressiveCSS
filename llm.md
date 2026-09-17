@@ -5553,6 +5553,8 @@ Material Design 3 sliders, from the HTML.
 
 An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label; `.range` and `.range-field` are the older names and still work.
 
+Unreleased source aligns labels and track gaps with native handle travel after resizing in LTR, RTL and vertical layouts. Vertical values increase from bottom to top. Paired inputs accept native track clicks and prevent crossing; use matching bounds and steps. Application-owned numeric fields can assign the range value and dispatch an `input` event to synchronize its label and track. Forced-colors tracks use system colors. Physical devices, screen readers and actual Windows contrast themes still need manual review.
+
 The plugin is `Expressive.Slider`, and `Expressive.Range` still resolves to it. Before 0.8.0 `.slider` and `Slider` meant the image slideshow; that component is now gone and Carousel covers the case, so `.slider` is the range control and nothing else.
 
 Three variants: **standard** (active from the start to the handle), **centered** (`.centered`, active grows from the midpoint), and **range** (two inputs in one host, active between the handles). Horizontal or `.vertical`. Five sizes, an optional inset icon, discrete stops, and a value indicator.

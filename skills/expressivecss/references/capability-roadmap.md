@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `a8a33e3ed03db2a8263abd95ee9758b86a63f3b12cca78bff9ea7b9876c5f7f6`.
+Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `dbc7bf62d3cc4785c93ee55b8377908a04a947fa8e26675306a18f9d2c2c3a23`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -687,16 +687,19 @@ Web adaptation: Input state owns selection and form value.
 
 **unassessed within the stated scope.** Standard, centered, range, horizontal/vertical, and five sizes.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/forms/_slider.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/forms/_slider.scss), [src/ts/components/slider.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/slider.ts).
+Source review: needs-review, 2026-09-17. [src/sass/components/forms/_slider.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/forms/_slider.scss), [src/ts/components/slider.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/slider.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/sliders/overview).
 
 Web adaptation: Native range inputs with runtime value-label and range coordination.
 
-- verification: Zero maximum and resized RTL value-label placement are checked; vertical, dual-range and forced-colors geometry remain unverified. Next: Measure noncentral vertical and paired handles; test a synchronized numeric input and non-drag pointer changes.
+- verification: Browser fixtures cover geometry, native keyboard and pointer interaction, numeric synchronization and emulated forced colors. Manual assistive-technology and device checks remain pending. Next: Review native zoom, screen readers, physical mobile devices and Windows contrast themes.
 
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining slider accepts zero maximum and keeps value labels aligned after resize`. Correct zero maximum fraction/stop count, resized value label, noncentral RTL geometry and native End key.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Slider labels follow native handles through direction and resize (chromium)`. Native handle pixels and label centers at endpoints and noncentral values, horizontal LTR/RTL and vertical, resizing and reduced motion.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Slider input events and paired ranges retain native interaction (chromium)`. Application numeric input, native track clicks and keys, vertical paired resizing, equal endpoints, negative bounds, fractional steps, crossing clamps and teardown.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Slider forced colors preserve tracks and handles (chromium)`. Emulated light/dark system-color tracks and handles in horizontal LTR/RTL and vertical layouts; actual Windows contrast themes pending.
 
 <a id="chips"></a>
 
