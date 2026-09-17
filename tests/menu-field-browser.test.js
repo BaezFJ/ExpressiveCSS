@@ -305,13 +305,21 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       });
       await page.clock.runFor(1200);
       assert.equal(await page.evaluate(() => cycles), 0);
-      await page.emulateMedia({ reducedMotion: 'no-preference' });
-      await page.waitForTimeout(50); await page.clock.runFor(600);
+      const changeMotion = async reducedMotion => {
+        await page.evaluate(() => {
+          window.motionChanged = false;
+          carousel._motion.addEventListener('change', () => { motionChanged = true; }, { once: true });
+        });
+        await page.emulateMedia({ reducedMotion });
+        await expect.poll(() => page.evaluate(() => motionChanged)).toBe(true);
+      };
+      await changeMotion('no-preference');
+      await page.clock.runFor(600);
       assert.ok(await page.evaluate(() => cycles > 0), 'ordinary motion resumes after mounting under reduced motion');
       await page.locator('#toggle').click();
       const paused = await page.evaluate(() => cycles);
-      await page.emulateMedia({ reducedMotion: 'reduce' }); await page.waitForTimeout(50);
-      await page.emulateMedia({ reducedMotion: 'no-preference' }); await page.waitForTimeout(50);
+      await changeMotion('reduce');
+      await changeMotion('no-preference');
       await page.clock.runFor(1600);
       assert.equal(await page.evaluate(() => cycles), paused, 'motion changes do not cancel explicit pause');
       await page.locator('#toggle').click(); await page.mouse.move(600, 600);
@@ -325,7 +333,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         carousel.set(2);
         scrollBehaviors = [];
       });
-      await page.emulateMedia({ reducedMotion: 'reduce' }); await page.waitForTimeout(50);
+      await changeMotion('reduce');
       assert.ok(await page.evaluate(() => scrollBehaviors.includes('instant')), 'reduced motion cancels the in-flight smooth scroll');
       assert.ok(await page.evaluate(() => {
         const track = document.querySelector('.carousel-track').getBoundingClientRect();
