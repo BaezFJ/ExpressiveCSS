@@ -154,10 +154,11 @@ describe('AppBar search view', () => {
     const instance = Expressive.AppBar.init(header);
     input.dispatchEvent(new window.Event('focus', { bubbles: true }));
     assert.equal(view.open, true);
-    view.close();
+    view.removeAttribute('open');
     assert.equal(view.open, false);
     input.dispatchEvent(new window.Event('focus', { bubbles: true }));
     assert.equal(view.open, false);
+    view.dispatchEvent(new window.Event('close'));
     input.dispatchEvent(new window.Event('focus', { bubbles: true }));
     assert.equal(view.open, true);
     instance.destroy();

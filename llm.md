@@ -2918,7 +2918,7 @@ Menus open on click by default (`hover: false`). Pass `{ hover: true }` to open 
 
 ### Search
 
-The search app bar is a `<search class="search-bar">` in the nav, in place of the headline. Icons beside it sit outside the search; icons inside it stay on the search-bar rules. The input is centered. Focusing the field opens the related `.search-view`: `aria-controls` on the input, or a `.search-view` descendant. A full-screen view is a `dialog.search-view.full-screen` opened with `showModal()`.
+The search app bar is a `<search class="search-bar">` in the nav, in place of the headline. Icons beside it sit outside the search; icons inside it stay on the search-bar rules. The input is centered. Focusing or clicking the field opens the related `.search-view`: `aria-controls` on the input, or a `.search-view` descendant. A full-screen view is a `dialog.search-view.full-screen` opened with `showModal()`. Dismissal stays closed when native focus restoration returns to the field; clicking it again or leaving and refocusing reopens it. Query text, native dialog behavior and application-managed focus are preserved. `destroy()` disconnects the collapse observer and removes the search focus, click and close listeners.
 
 ```html
 <header>

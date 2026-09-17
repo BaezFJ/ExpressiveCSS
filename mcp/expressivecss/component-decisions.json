@@ -41,11 +41,11 @@
         "href": "https://m3.material.io/components/app-bars/overview",
         "implementation": {
           "source": "llm.md#navbar",
-          "reviewedOn": "2026-09-13",
+          "reviewedOn": "2026-09-17",
           "documentedSupport": "Small, medium flexible, large flexible, and search app bars.",
           "webAdaptation": "Native header/nav composition; AppBar owns scroll collapse and search expansion.",
           "limitations": [
-            "Real modal search close/focus ordering and collapsed-header focus clearance are not mapped."
+            "Native zoom, screen-reader announcements, contrast themes and physical mobile keyboard behavior remain pending manual review."
           ]
         },
         "relationship": "component",
@@ -75,7 +75,7 @@
       },
       "selectionExample": "A Home/Search/Profile row belongs in navigation, even if placed at the top. Keep the app bar for the title and screen actions.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-13",
+        "reviewedOn": "2026-09-17",
         "support": "implemented",
         "sources": [
           {
@@ -84,18 +84,34 @@
           },
           {
             "path": "src/ts/components/appBar.ts",
-            "sha256": "e9a494671ff1ad9675f378f47e1bd2b0e7026c9dc3fe6cff6d0cb552c8c45e00"
+            "sha256": "91ddc61000a36923995b3633743dd83452d43671c40ae923318dedfeff38893e"
           }
         ],
         "gaps": [
           {
             "kind": "verification",
-            "description": "Real modal search close/focus ordering and collapsed-header focus clearance are not mapped.",
-            "nextStep": "Open and dismiss the actual search dialog; Tab through scroll collapse and enlarged headings."
+            "description": "Native zoom, screen-reader announcements, contrast themes and physical mobile keyboard behavior remain pending manual review.",
+            "nextStep": "Run the App bar/search fixture in the accessibility manual-review checklist with the actual devices and assistive technology."
           }
         ],
-        "browserChecks": [],
-        "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
+        "browserChecks": [
+          {
+            "file": "tests/menu-field-browser.test.js",
+            "name": "AppBar native search dismissal and reopening (chromium)",
+            "scope": "Native Escape, canceled Escape, close-button, form and programmatic dismissal; focus-before-close ordering, fresh focus and pointer reopening, retained query, nested/referenced views and both motion preferences. Equivalent Firefox and WebKit cases run in the same suite."
+          },
+          {
+            "file": "tests/menu-field-browser.test.js",
+            "name": "AppBar focus ownership and teardown (chromium)",
+            "scope": "Application close-handler focus, disabled fields, two app bars, non-dialog views, observer/listener teardown and remount without duplicate opening."
+          },
+          {
+            "file": "tests/menu-field-browser.test.js",
+            "name": "AppBar collapsed actions remain reachable (chromium)",
+            "scope": "Medium/large sticky headers at 320px with translated enlarged headings, keyboard focus through real scroll collapse, LTR/RTL, both motion preferences and reachable unobscured actions. Not native zoom."
+          }
+        ],
+        "inventorySha256": "998e4f3c88d34ed0eb0813d4bb19312aa1c81774bff30d1aaad40e50557cba2a"
       }
     },
     {
@@ -4754,7 +4770,7 @@
       },
       {
         "path": "src/ts/components/appBar.ts",
-        "sha256": "e9a494671ff1ad9675f378f47e1bd2b0e7026c9dc3fe6cff6d0cb552c8c45e00"
+        "sha256": "91ddc61000a36923995b3633743dd83452d43671c40ae923318dedfeff38893e"
       },
       {
         "path": "src/ts/components/autocomplete.ts",
@@ -4866,7 +4882,7 @@
       },
       {
         "path": "tests/app-bar-js.test.js",
-        "sha256": "015a2ce6aaec906bbc16cb5d28b4342f61644893bfb0ea83dc08300e3abd8d82"
+        "sha256": "92c40b66aad6966cda0c68cf3e7c12f699ec2aab3c7c4493f4137d50b268cedb"
       },
       {
         "path": "tests/app-bar.test.js",
@@ -5194,7 +5210,7 @@
       },
       {
         "path": "tests/menu-field-browser.test.js",
-        "sha256": "de6308004e58799fecdc4b20741481d649560083b6dc631b2c05c4c1219c536d"
+        "sha256": "21371627a48a997b7a0b12bca1ca8d16e4702bb67e8c40c8c2ea8e11a7f1363e"
       },
       {
         "path": "tests/menu.test.js",
@@ -5238,7 +5254,7 @@
       },
       {
         "path": "tests/selective-builds.test.js",
-        "sha256": "06bab1b3c5f60b46f8f713b7cafb37ff9bffd232c1d1aafef7545efbedb7b94c"
+        "sha256": "cd63c1a938777020bfd3f6160a8883d9e28c852a6816492b653e3e59890b9085"
       },
       {
         "path": "tests/semantics.test.js",
@@ -5393,12 +5409,20 @@
         "sha256": "2b92b5312b2a12468da48b9e36a759b1ec5748a410ba05bb71d904334d1994bc"
       },
       {
-        "path": "dist/js/chunks/chunk-DSX73KMR.mjs",
-        "sha256": "0f93ac2cfd887b7b43a6024a17a6856fe9be19f7977dbdb9d66c9fa803a016c8"
+        "path": "dist/js/chunks/chunk-EP3CVKB5.mjs",
+        "sha256": "ca5c7a678981ada15a357f8b2384b493eb3ddcd13ff46ea92efcd95ae47aed28"
       },
       {
-        "path": "dist/js/chunks/chunk-DSX73KMR.mjs.map",
-        "sha256": "e3ceef231f294735a4c4f76501e81859d59dcf372a4482355dc747dd6a6dafcb"
+        "path": "dist/js/chunks/chunk-EP3CVKB5.mjs.map",
+        "sha256": "1b3e15c8a2e5a30b0e19eacc5c65437053a93e43ae52aef4373027bfa972b540"
+      },
+      {
+        "path": "dist/js/chunks/chunk-GQMSNL7S.mjs",
+        "sha256": "9c0c016832461c8e8e80658dacf41c04595b287144429e474bd4a83d5a89871f"
+      },
+      {
+        "path": "dist/js/chunks/chunk-GQMSNL7S.mjs.map",
+        "sha256": "c9580328d39e3bb1df53c774b4ffc123fa0632f09f3590634430ef4aacfc5c96"
       },
       {
         "path": "dist/js/chunks/chunk-GY2Z5CJ2.mjs",
@@ -5407,14 +5431,6 @@
       {
         "path": "dist/js/chunks/chunk-GY2Z5CJ2.mjs.map",
         "sha256": "48233f53badd7149afbba63a6d8e63f9cf615102f01c923ecd8791a805936cdf"
-      },
-      {
-        "path": "dist/js/chunks/chunk-IMSPD7DG.mjs",
-        "sha256": "a80af43c0ce87d7422ed16eb53ffdab22cf608f3e72afde1d2bfdc656220601f"
-      },
-      {
-        "path": "dist/js/chunks/chunk-IMSPD7DG.mjs.map",
-        "sha256": "c9580328d39e3bb1df53c774b4ffc123fa0632f09f3590634430ef4aacfc5c96"
       },
       {
         "path": "dist/js/chunks/chunk-JKNPQQWY.mjs",
@@ -5594,31 +5610,31 @@
       },
       {
         "path": "dist/js/expressive.cjs",
-        "sha256": "8d14ecb7d97c3b3fe2f47eaf3d429b1a6f22295ddf656b2fa45eab8a0b4cf75c"
+        "sha256": "cb52e705e763ad0b4715f21b731aa35a87ad7fae95ee648dde534ac70a536cc9"
       },
       {
         "path": "dist/js/expressive.cjs.map",
-        "sha256": "7ca63039dbbe39fca85dea6a8960d387aef2b9bddb10819088d440a49fbed26d"
+        "sha256": "7e5bcb2f47c4329ec662f88b90f9a1477839cbcc06d92dfcc435022b2c023370"
       },
       {
         "path": "dist/js/expressive.js",
-        "sha256": "7c4478c6ca97f67d24e27adc967418806fa02bee925abc659b51bda1e13a954c"
+        "sha256": "cfb1aaa410c6da47924a5af6d03b07514947c84cf1894bb9032de085f74f893d"
       },
       {
         "path": "dist/js/expressive.js.map",
-        "sha256": "6cacaa5afd092ebc168260454ecd34347c69282a2f5d85edd095e6c1053b9452"
+        "sha256": "920431003475fbd63b9712f471bb5bd2eb3631dfacc9defc6dac68c56b42d116"
       },
       {
         "path": "dist/js/expressive.min.js",
-        "sha256": "36689a477ff6bc4d4052cf4f18dfc62d6229c20ad643d1b26cfeb8f2c9ba29d8"
+        "sha256": "25ae9008d806799b998b424ac82c53a6a471541484efafa0a78ac370107e0ec3"
       },
       {
         "path": "dist/js/expressive.min.js.map",
-        "sha256": "5e1d1fb9bcc865a3a746d3d3ea8d59d12c2662372533df64503a86e336bc9c8a"
+        "sha256": "d1e9499e175959d8a3a50be1e10af1af2075a2ce5dfa548004775dac9bf4442a"
       },
       {
         "path": "dist/js/expressive.mjs",
-        "sha256": "e154d50d140cfd4c444dc83021b0a4f6e7128d49d5c00135bb4b3ea8379db758"
+        "sha256": "0f97f718010338d04e4622ea8311c1786a3a54510ce3c74e166a254a7f6ebf10"
       },
       {
         "path": "dist/js/expressive.mjs.map",
@@ -5666,7 +5682,7 @@
       },
       {
         "path": "dist/js/internal/components/appBar.mjs",
-        "sha256": "7d0e4e25b6798aeb5eb43984f177aed96281f2438c4fc8a8b28c6ccde827f6f4"
+        "sha256": "fd6ecf32501c832769ad04fc30aa6c48d35790891010ec1d53a4b5fa74f1a6da"
       },
       {
         "path": "dist/js/internal/components/appBar.mjs.map",
@@ -5746,7 +5762,7 @@
       },
       {
         "path": "dist/js/internal/components/index.mjs",
-        "sha256": "159e4031d82256d4a9e8a763425a07dba697b9dccefa79d11e8b5bf4999711f0"
+        "sha256": "835a8c2fc5cac18b8767c160456d0dcf3888e36ebc2f11fd9477e8d55aa2ef66"
       },
       {
         "path": "dist/js/internal/components/index.mjs.map",
@@ -5778,7 +5794,7 @@
       },
       {
         "path": "dist/js/internal/components/registry.mjs",
-        "sha256": "dd7dd6731e3e89410fb03fcb7c009944a5ecb9d2c4f2f41997deb03229676b46"
+        "sha256": "e800655e998b551c14da6e4a9d37665f094b9b8a06ce1bf69b56da3d2cf5f8ad"
       },
       {
         "path": "dist/js/internal/components/registry.mjs.map",
@@ -5866,7 +5882,7 @@
       },
       {
         "path": "dist/js/modular.mjs",
-        "sha256": "29969579fb7281b4b18bf8d9bf166514b7b209d78fb40b59b51c3c3f168462d4"
+        "sha256": "6447c671e2188a44ec818c1bc4cd93928d7a0f999aad6e94cd673b06ea84b9df"
       },
       {
         "path": "dist/js/modular.mjs.map",
@@ -5894,7 +5910,7 @@
       },
       {
         "path": "dist/types/components/appBar.d.ts",
-        "sha256": "b61a52b2cd6f986760da9c4d4b15ef25ae97a1a0cd86769d05c03eebc5ae45a0"
+        "sha256": "53e0a688c6c1bf873ebafe30926385f7cc4833c3c386b5174d03f76e4ea33e69"
       },
       {
         "path": "dist/types/components/autocomplete.d.ts",
@@ -6170,399 +6186,417 @@
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group toggle colors resolve in a browser",
         "status": "passed",
-        "durationMs": 144.781333
+        "durationMs": 146.174834
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group geometry resolves for overrides, targets, and RTL",
         "status": "passed",
-        "durationMs": 108.728844
+        "durationMs": 108.788184
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "standard press redistribution keeps its rendered width stable",
         "status": "passed",
-        "durationMs": 648.392591
+        "durationMs": 649.519544
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "keyboard press changes icon widths and rendered corners",
         "status": "passed",
-        "durationMs": 1174.412988
+        "durationMs": 1167.935372
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "dragged and picked-up states override simultaneous pointer states",
         "status": "passed",
-        "durationMs": 734.804503
+        "durationMs": 732.064811
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "invalid disclosures keep their panels visible and operable",
         "status": "passed",
-        "durationMs": 132.460356
+        "durationMs": 137.554541
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
         "status": "passed",
-        "durationMs": 108.328647
+        "durationMs": 111.545675
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (chromium)",
         "status": "passed",
-        "durationMs": 1806.648225
+        "durationMs": 1802.644334
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (chromium)",
         "status": "passed",
-        "durationMs": 217.18483
+        "durationMs": 205.10386
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete settings example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10244.008863
+        "durationMs": 10151.30466
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete editor example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10510.171328
+        "durationMs": 10392.784737
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete list-detail example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10416.241556
+        "durationMs": 10384.561012
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
         "status": "passed",
-        "durationMs": 839.094677
+        "durationMs": 828.003312
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "resource observations detect omitted teardown after a partial replacement",
         "status": "passed",
-        "durationMs": 166.361869
+        "durationMs": 170.575851
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip positioning preserves margins and viewport edges after scrolling",
         "status": "passed",
-        "durationMs": 159.322576
+        "durationMs": 150.595644
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip destroy cancels pending delay and animation callbacks",
         "status": "passed",
-        "durationMs": 130.798917
+        "durationMs": 143.113324
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Node can import the ESM bundle but runtime initialization requires a document",
         "status": "passed",
-        "durationMs": 31.024683
+        "durationMs": 28.36308
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "current FAB sizes preserve geometry and explicit extended variants",
         "status": "passed",
-        "durationMs": 132.635924
+        "durationMs": 134.921889
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "speed-dial CSS and runtime options are removed",
         "status": "passed",
-        "durationMs": 0.672955
+        "durationMs": 0.740186
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "FAB menu preserves keyboard, dismissal and responsive behavior",
         "status": "passed",
-        "durationMs": 674.689504
+        "durationMs": 685.739222
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material grading rejects candidate evidence and missing or malformed operator observations",
         "status": "passed",
-        "durationMs": 7.370371
+        "durationMs": 7.070053
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
         "status": "passed",
-        "durationMs": 22585.080164
+        "durationMs": 22797.79387
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material review fixture is semantically valid despite intrusive feedback and mismatched selection intent",
         "status": "passed",
-        "durationMs": 544.282116
+        "durationMs": 557.268339
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "web accessibility fixture exposes target geometry, keyboard reorder, and forced-color defects",
         "status": "passed",
-        "durationMs": 210.938432
+        "durationMs": 210.101638
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: tooltip hover, dismissal, reduced motion and native form behavior",
         "status": "passed",
-        "durationMs": 4988.785937
+        "durationMs": 4991.087597
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining native controls preserve names, keyboard state and form values",
         "status": "passed",
-        "durationMs": 308.205982
+        "durationMs": 293.878388
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
         "status": "passed",
-        "durationMs": 224.621111
+        "durationMs": 223.069111
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: linear progress follows inherited and overridden RTL direction",
         "status": "passed",
-        "durationMs": 255.704033
+        "durationMs": 265.10032
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: progress remains visible in forced colors",
         "status": "passed",
-        "durationMs": 6028.449836
+        "durationMs": 6039.329586
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining progress and loading variants stop spatial motion",
         "status": "passed",
-        "durationMs": 182.563551
+        "durationMs": 177.099978
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining snackbar retains a focused action until focus leaves",
         "status": "passed",
-        "durationMs": 1246.486226
+        "durationMs": 1281.416464
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: autocomplete announces results and selection without moving focus",
         "status": "passed",
-        "durationMs": 211.399209
+        "durationMs": 204.349385
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker supports calendar keyboard navigation and redraw focus",
         "status": "passed",
-        "durationMs": 392.282811
+        "durationMs": 394.993973
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: time picker exposes named keyboard controls in inline and docked modes",
         "status": "passed",
-        "durationMs": 216.933152
+        "durationMs": 214.047451
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: actionable snackbar persists and restores focus on keyboard dismissal",
         "status": "passed",
-        "durationMs": 584.834655
+        "durationMs": 587.768565
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining lightbox supports Space and preserves its image on teardown",
         "status": "passed",
-        "durationMs": 261.295215
+        "durationMs": 259.803665
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
         "status": "passed",
-        "durationMs": 350.155651
+        "durationMs": 359.093802
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
         "status": "passed",
-        "durationMs": 209.139133
+        "durationMs": 225.447865
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining lightbox teardown cancels pending work and preserves native button focus",
         "status": "passed",
-        "durationMs": 365.572579
+        "durationMs": 355.775205
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining slider accepts zero maximum and keeps value labels aligned after resize",
         "status": "passed",
-        "durationMs": 164.288013
+        "durationMs": 160.408609
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining autocomplete preserves a preselected display label on focus",
         "status": "passed",
-        "durationMs": 154.956925
+        "durationMs": 162.592444
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "AppBar focus ownership and teardown (chromium)",
+        "status": "passed",
+        "durationMs": 597.758079
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "AppBar collapsed actions remain reachable (chromium)",
+        "status": "passed",
+        "durationMs": 3851.221346
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "AppBar native search dismissal and reopening (chromium)",
+        "status": "passed",
+        "durationMs": 4838.231456
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Side sheet rendered docking and drag direction (chromium)",
         "status": "passed",
-        "durationMs": 20954.044701
+        "durationMs": 20955.939111
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Sheets cancel only the active pointer and clean interrupted drags (chromium)",
         "status": "passed",
-        "durationMs": 1727.539585
+        "durationMs": 1700.066299
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Side sheet translated content and close actions remain reachable (chromium)",
         "status": "passed",
-        "durationMs": 4480.461101
+        "durationMs": 4489.880601
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel navigation scrolls and focuses logical items (chromium)",
         "status": "passed",
-        "durationMs": 26366.996259
+        "durationMs": 25612.420671
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel destroys pending scroll completion work (chromium)",
         "status": "passed",
-        "durationMs": 160.667107
+        "durationMs": 155.68144
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel mounted motion changes preserve explicit pause (chromium)",
         "status": "passed",
-        "durationMs": 654.187031
+        "durationMs": 660.47862
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel focus and visibility suspension survive teardown (chromium)",
         "status": "passed",
-        "durationMs": 231.032467
+        "durationMs": 236.105483
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Slider labels follow native handles through direction and resize (chromium)",
         "status": "passed",
-        "durationMs": 6563.34938
+        "durationMs": 6578.634164
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Slider input events and paired ranges retain native interaction (chromium)",
         "status": "passed",
-        "durationMs": 2576.498296
+        "durationMs": 2577.126942
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Slider forced colors preserve tracks and handles (chromium)",
         "status": "passed",
-        "durationMs": 2287.453005
+        "durationMs": 2303.261271
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "select and calendar treat external values as data (chromium)",
         "status": "passed",
-        "durationMs": 118.007542
+        "durationMs": 115.951596
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu cancels superseded callbacks and teardown work (chromium)",
         "status": "passed",
-        "durationMs": 201.789942
+        "durationMs": 197.803179
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu excludes closing content and preserves callback focus (chromium)",
         "status": "passed",
-        "durationMs": 229.583257
+        "durationMs": 231.173346
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu scopes nested keys and mirrors flyouts in RTL (chromium)",
         "status": "passed",
-        "durationMs": 431.118411
+        "durationMs": 468.937299
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu consumers keep values and focus through closing (chromium)",
         "status": "passed",
-        "durationMs": 200.446531
+        "durationMs": 202.048341
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
         "status": "passed",
-        "durationMs": 156.910362
+        "durationMs": 155.730611
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Chips deletion targets and focus recovery (chromium)",
         "status": "passed",
-        "durationMs": 1480.918891
+        "durationMs": 1493.770556
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Chips callbacks and instance teardown preserve focus (chromium)",
         "status": "passed",
-        "durationMs": 593.471037
+        "durationMs": 605.887984
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Chips wrapped labels keep separate actions reachable (chromium)",
         "status": "passed",
-        "durationMs": 220.1073
+        "durationMs": 227.129113
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs synchronize swipe selection and callbacks (chromium)",
         "status": "passed",
-        "durationMs": 486.919589
+        "durationMs": 487.004808
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs restore panels on teardown and remount (chromium)",
         "status": "passed",
-        "durationMs": 197.320293
+        "durationMs": 197.892449
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs threshold keeps native links and ordinary panels (chromium)",
         "status": "passed",
-        "durationMs": 156.816473
+        "durationMs": 158.414822
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs hash selection, native dragging and overflow geometry (chromium)",
         "status": "passed",
-        "durationMs": 4017.815499
+        "durationMs": 4035.289657
       }
     ],
     "directories": [
       {
         "path": "src",
-        "sha256": "62cf8d2542c30f2ee7bca0dc3ff45e14be17983ecaa18984cc39dd4effc8c4cf"
+        "sha256": "998e4f3c88d34ed0eb0813d4bb19312aa1c81774bff30d1aaad40e50557cba2a"
       },
       {
         "path": "tests",
-        "sha256": "d32a7d4e0e67f9b600a192cf0c1c417f48bb5a689bb83f8fbdf3529631c940f1"
+        "sha256": "a58de2ff7463d7b1b91922b7113847937129c24fa9f15bf3559c249efcd24773"
       },
       {
         "path": "dist",
-        "sha256": "73c2ead45fe098ed4153d941e87ff5881abe9ae433a502923c0174fbb0bbe148"
+        "sha256": "dc8e58030f789b5bf275af7c12af94d44acd2b127d7be8d6d2adbdc25208a614"
       },
       {
         "path": "skills/expressivecss/assets/examples",
@@ -6574,7 +6608,7 @@
       }
     ],
     "inputsUnchanged": true,
-    "reportSha256": "00345e7ccc581a8c7a00bd0597e10b82eb53773a360582eb49bb1246647e8d87"
+    "reportSha256": "4363ea4291cd83871af55cb652266ff2fa8070123de0cb9963f3fda4e847554b"
   },
   "sourceRevision": "b3821bb0390b985c31a858ab7f4e3dbf0de2d71c"
 }

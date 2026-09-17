@@ -352,8 +352,10 @@ document.addEventListener('DOMContentLoaded', function() {
           The search app bar is a <code>&lt;search class="search-bar"&gt;</code>
           in the nav, in place of the headline. Icons beside it sit outside
           the search; icons inside it stay on the search-bar. The input is
-          centered. Focusing the field opens the related
-          <code>.search-view</code>.
+          centered. Focusing or clicking the field opens the related
+          <code>.search-view</code>. Native dialog dismissal stays closed when
+          focus returns to the field. Click it again, or leave and refocus it,
+          to reopen. Query text and application-managed focus are preserved.
         </p>
         <header class="mb-3">
           <nav aria-label="Main — Search">
@@ -362,11 +364,18 @@ document.addEventListener('DOMContentLoaded', function() {
             </button>
             <search class="search-bar" aria-label="Search">
               <span class="material-symbols" aria-hidden="true">search</span>
-              <input id="navbar-search" type="search" placeholder="Search" aria-label="Search">
+              <input id="navbar-search" type="search" placeholder="Search" aria-label="Search" aria-controls="navbar-search-view">
             </search>
             <a href="#!" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></a>
           </nav>
         </header>
+        <dialog id="navbar-search-view" class="search-view full-screen" aria-label="Search">
+          <form method="dialog">
+            <input type="search" aria-label="Search query" placeholder="Search">
+            <button type="submit">Close search</button>
+          </form>
+          <p>Search results are provided by your application.</p>
+        </dialog>
 <Code code={`
 <header>
   <nav aria-label="Main">
@@ -375,10 +384,16 @@ document.addEventListener('DOMContentLoaded', function() {
     </button>
     <search class="search-bar" aria-label="Search">
       <span class="material-symbols" aria-hidden="true">search</span>
-      <input type="search" placeholder="Search" aria-label="Search">
+      <input type="search" placeholder="Search" aria-label="Search" aria-controls="search-results">
     </search>
   </nav>
 </header>
+<dialog id="search-results" class="search-view full-screen" aria-label="Search">
+  <form method="dialog">
+    <input type="search" aria-label="Search query">
+    <button type="submit">Close search</button>
+  </form>
+</dialog>
 `} />
         <p>
           A <code>&lt;form&gt;</code> in the nav still fills the space between

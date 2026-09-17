@@ -32,6 +32,14 @@ motion enabled in the operating system.
 
 ## Review record
 
+App bar/search: at `/navbar.html#search-docs`, focus the search field, enter a
+query, close with Escape or Close search, and click the still-focused field to
+reopen. Leave and refocus it, too. Dismissal must stay closed and query text must
+remain. Repeat in RTL and reduced motion. Test the medium/large bars with long
+translated titles and native zoom; keyboard actions must remain reachable during
+collapse. Screen-reader announcements, physical mobile keyboards and actual
+contrast themes remain pending in the records below.
+
 For every row, enter reviewer, date, physical device, operating system,
 browser/assistive-technology version, result and evidence. Keep unavailable checks
 pending. Link recordings, screenshots or detailed notes, including failures.

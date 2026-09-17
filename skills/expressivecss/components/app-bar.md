@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `aca1fd9769f274cb1691f7a45a57484c6af9f5f4e49278ad36db7da4d5be8c14`
+Contract SHA-256: `432137d637f889b613ebb51c3fa3c07025987a572074bdc71754d989e4b1e742`
 
 #### Selection and adaptation
 
@@ -33,11 +33,11 @@ Requirements and boundaries: design reference layout-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/app-bars/guidelines).
 
-Support (2026-09-13, `llm.md#navbar`): Small, medium flexible, large flexible, and search app bars.
+Support (2026-09-17, `llm.md#navbar`): Small, medium flexible, large flexible, and search app bars.
 
 Web adaptation: Native header/nav composition; AppBar owns scroll collapse and search expansion.
 
-Known boundary: Real modal search close/focus ordering and collapsed-header focus clearance are not mapped.
+Known boundary: Native zoom, screen-reader announcements, contrast themes and physical mobile keyboard behavior remain pending manual review.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#app-bar).
 
