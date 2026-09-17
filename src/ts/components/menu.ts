@@ -590,7 +590,6 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
   private _focusRow(item: HTMLElement) {
     this.focusedIndex = Array.from(item.parentElement.children).indexOf(item);
-    if (!this.options.autoFocus) return;
     item.focus({ preventScroll: true });
     item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }
