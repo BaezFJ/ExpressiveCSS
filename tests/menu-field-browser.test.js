@@ -982,14 +982,17 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     } finally { try { await page?.evaluate(() => window.chips?.destroy()); } finally { await browser.close(); } }
   });
 }
-async function fixture(page, { direction = 'ltr', ...options } = {}) {
+async function fixture(page, { direction = 'ltr', staleActive = false, ...options } = {}) {
   await page.setContent(`<style>${css}</style><main style="width:320px">
     <nav class="tabs" aria-label="Sections"><a href="#one">First translated section label</a><a href="#two">Second translated section label</a><a href="#three">Third translated section label</a><a target="_blank" href="https://example.test/#/guide">External guide</a></nav>
     <section id="one" style="min-height:160px"><button>First action</button></section>
     <section id="two" style="min-height:160px"><button>Second action</button></section>
     <section id="three" style="min-height:160px"><button>Third action</button></section>
   </main>`);
-  await page.evaluate(direction => { document.body.dir = direction; }, direction);
+  await page.evaluate(({ direction, staleActive }) => {
+    document.body.dir = direction;
+    if (staleActive) document.querySelector('#one').classList.add('active');
+  }, { direction, staleActive });
   await page.addScriptTag({ content: js });
   await page.evaluate(options => {
     window.shown = [];
@@ -1079,8 +1082,11 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       for (const direction of ['ltr', 'rtl']) for (const reducedMotion of ['reduce', 'no-preference']) {
         await page.goto('about:blank#two');
         await page.emulateMedia({ reducedMotion });
-        await fixture(page, { swipeable: true, responsiveThreshold: 800, direction });
+        await fixture(page, { swipeable: true, responsiveThreshold: 800, direction, staleActive: true });
         assert.equal(await page.evaluate(() => tabs.index), 1);
+        assert.equal(await page.evaluate(() => tabs._tabsCarousel.center), 1);
+        await expect(page.locator('section.active')).toHaveAttribute('id', 'two');
+        assert.deepEqual(await page.evaluate(() => shown), []);
         await expect(page.locator('a[href="#two"]')).toHaveAttribute('aria-current', 'page');
         await page.waitForTimeout(450);
         const box = await page.locator('.carousel-track').boundingBox();
@@ -1103,6 +1109,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         await page.setViewportSize({ width: 1000, height: 700 });
         assert.equal(await page.locator('.tabs-content').count(), 1);
         await page.evaluate(() => tabs.destroy());
+        assert.deepEqual(await page.evaluate(() => panelState()), await page.evaluate(() => original));
         await page.setViewportSize({ width: 800, height: 700 });
       }
     } finally {

@@ -259,7 +259,7 @@ export class Tabs extends Component<TabsOptions> {
     }
     this._setActiveTabLink(this._activeTabLink);
 
-    if (this._content) this._content.classList.add('active');
+    this._originalPanels.forEach((_, panel) => panel.classList.toggle('active', panel === this._content));
   }
 
   _setupSwipeableTabs() {

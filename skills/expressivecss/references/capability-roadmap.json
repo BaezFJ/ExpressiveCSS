@@ -10,7 +10,7 @@
     "nodeVersion": "v24.20.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "7427be5ab80510bd450d2bdbed842578711b4e2203c8ff1dc524a061fe63ede2",
+    "reportSha256": "97cb99c9ce693b1defd0bff804a81875066c62f57e73dd313f9e881e4e773705",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -297,7 +297,7 @@
         },
         {
           "path": "src/ts/components/tabs.ts",
-          "sha256": "1f9f6bc52153f3828ba7bee5a18345f8050d4c9a012e6372a36d626fb82f56a6"
+          "sha256": "72657d5e40d49a8d84357753eb81d488a8756827f83bb5102b9f6269854516cf"
         }
       ],
       "gaps": [
@@ -335,7 +335,7 @@
         {
           "file": "tests/menu-field-browser.test.js",
           "name": "Tabs hash selection, native dragging and overflow geometry (chromium)",
-          "scope": "Initial hash, actual pointer dragging, RTL overflow indicator geometry and initialization-only threshold; no physical touch or native zoom claim.",
+          "scope": "Initial hash overrides stale authored panel state without initialization callbacks and restores it on teardown; actual pointer dragging, RTL overflow indicator geometry and initialization-only threshold; no physical touch or native zoom claim.",
           "state": "recorded-passed"
         }
       ],

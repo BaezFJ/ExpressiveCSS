@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `7427be5ab80510bd450d2bdbed842578711b4e2203c8ff1dc524a061fe63ede2`.
+Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `97cb99c9ce693b1defd0bff804a81875066c62f57e73dd313f9e881e4e773705`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -158,7 +158,7 @@ Web adaptation: Links target panels; use the shipped runtime keyboard contract.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Tabs synchronize swipe selection and callbacks (chromium)`. LTR/RTL and ordinary/reduced motion selection state and single callbacks.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Tabs restore panels on teardown and remount (chromium)`. Panel order, owned styles and semantics, wrapper cleanup and remount.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Tabs threshold keeps native links and ordinary panels (chromium)`. Above-threshold ordinary panels, native Tab/Enter, disabled and external-target links.
-- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Tabs hash selection, native dragging and overflow geometry (chromium)`. Initial hash, actual pointer dragging, RTL overflow indicator geometry and initialization-only threshold; no physical touch or native zoom claim.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Tabs hash selection, native dragging and overflow geometry (chromium)`. Initial hash overrides stale authored panel state without initialization callbacks and restores it on teardown; actual pointer dragging, RTL overflow indicator geometry and initialization-only threshold; no physical touch or native zoom claim.
 
 <a id="breadcrumbs"></a>
 

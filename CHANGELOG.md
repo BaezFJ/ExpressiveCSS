@@ -10,6 +10,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Tabs keep swipe selection, `aria-current`, and the `onShow` panel synchronized
   without duplicate callbacks. Swipeable teardown restores panel positions and
   owned state; initialization above `responsiveThreshold` uses ordinary panels.
+  Initial hash selection takes precedence over stale authored panel state.
 
 - Side sheets mirror dragging, entry motion and modal corners in RTL while
   preserving logical start/end aliases. Long headings and action rows wrap.
