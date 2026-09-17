@@ -97,7 +97,7 @@ read-it-off-the-element access that key provides.
   swipeable tabs.
   `destroy()` removes generated labels, size roles, indicators, and wrappers.
 - **Menu nested menus are markup.** A `<menu>` inside an `<li>`
-  is a flyout. Hover / `:focus-within` on `(hover: hover) and
+  is a flyout. Hover on `(hover: hover) and
   (pointer: fine)`; `.open` is the tap/keyboard switch. Flyouts
   fade and scale; the active surface uses 12dp corners and the parent
   contracts to 8dp. Do not start a second Menu. `closeOnClick` ignores the

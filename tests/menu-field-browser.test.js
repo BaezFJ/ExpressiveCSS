@@ -123,6 +123,154 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     } finally { try { await page?.evaluate(() => window.menu?.destroy()); } finally { await browser.close(); } }
   });
 
+  browserTest(`Menu excludes closing content and preserves callback focus (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.setContent(`<style>${css}</style><button id="before">Before</button><button id="trigger" data-target="actions">Actions</button><menu id="actions"><li><button>Copy</button></li></menu><button id="after">After</button>`);
+      await page.addScriptTag({ content: js });
+      await page.clock.install();
+      await page.evaluate(() => window.menu = Expressive.Menu.init(document.querySelector('#trigger'), { inDuration: 40, outDuration: 1000 }));
+      for (const reducedMotion of ['no-preference', 'reduce']) {
+        await page.emulateMedia({ reducedMotion });
+        await page.evaluate(() => menu.open());
+        await page.clock.runFor(60);
+        await page.keyboard.press('Escape');
+        await expect(page.locator('#trigger')).toBeFocused();
+        assert.equal(await page.locator('#actions').evaluate(el => getComputedStyle(el).display), 'block');
+        await page.keyboard.press('Tab');
+        await expect(page.locator('#after')).toBeFocused();
+        await page.keyboard.press('Shift+Tab');
+        await expect(page.locator('#trigger')).toBeFocused();
+        await page.evaluate(() => menu.open());
+        await page.clock.runFor(60);
+        await expect(page.locator('#actions > li')).toBeFocused();
+        await page.evaluate(() => {
+          menu.options.onCloseStart = () => document.querySelector('#after').focus();
+          menu.close();
+        });
+        await expect(page.locator('#after')).toBeFocused();
+        await page.clock.runFor(1100);
+        await expect(page.locator('#after')).toBeFocused();
+        await page.evaluate(() => { menu.options.onCloseStart = null; menu.options.autoFocus = false; menu.open(); });
+        await page.clock.runFor(60);
+        await page.locator('#actions button').focus();
+        await page.evaluate(() => menu.close());
+        await page.keyboard.press('Tab');
+        assert.equal(await page.locator('#actions').evaluate(el => el.contains(document.activeElement)), false);
+        await page.evaluate(() => { menu.destroy(); window.menu = Expressive.Menu.init(document.querySelector('#trigger'), { inDuration: 40, outDuration: 1000 }); });
+        assert.equal(await page.locator('#actions').getAttribute('inert'), null);
+      }
+      await page.evaluate(() => { menu.destroy(); document.querySelector('#actions').setAttribute('inert', ''); window.menu = Expressive.Menu.init(document.querySelector('#trigger')); menu.open(); menu.close(); menu.destroy(); });
+      assert.equal(await page.locator('#actions').getAttribute('inert'), '');
+    } finally { try { await page?.evaluate(() => window.menu?.destroy()); } finally { await browser.close(); } }
+  });
+
+  browserTest(`Menu scopes nested keys and mirrors flyouts in RTL (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ viewport: { width: 900, height: 700 }, reducedMotion: 'reduce' });
+      await page.setContent(`<style>${css}</style><button id="trigger" style="position:absolute;top:20px;left:20px" data-target="actions">Actions</button><menu id="actions">
+        <li id="root">Root</li><li id="parent"><button>More</button><menu>
+          <li class="label">Heading</li><li id="alpha">Alpha</li><li id="disabled" class="disabled">Blocked</li><li id="beta">Beta</li>
+          <li id="deep"><button>More again</button><menu><li id="leaf"><button>Leaf</button></li></menu></li>
+        </menu></li><li id="last">Last</li></menu>`);
+      await page.addScriptTag({ content: js });
+      await page.clock.install();
+      await page.evaluate(() => { window.activations = 0; window.menu = Expressive.Menu.init(document.querySelector('#trigger'), { inDuration: 40, outDuration: 60, onItemClick: () => activations++ }); });
+      for (const direction of ['ltr', 'rtl']) {
+        await page.evaluate(dir => { document.documentElement.dir = dir; menu.open(); }, direction);
+        await page.clock.runFor(60);
+        await page.locator('#parent').focus();
+        const openKey = direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+        const backKey = direction === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+        await page.keyboard.press(openKey);
+        await expect(page.locator('#alpha')).toBeFocused();
+        const target = await page.locator('#alpha').boundingBox();
+        assert.ok(target.width >= 44 && target.height >= 44);
+        await page.keyboard.press('ArrowDown');
+        await expect(page.locator('#disabled')).toBeFocused();
+        await page.keyboard.press('Enter');
+        assert.equal(await page.evaluate(() => activations), direction === 'ltr' ? 0 : 1);
+        await page.keyboard.press('ArrowDown');
+        await expect(page.locator('#beta')).toBeFocused();
+        await page.keyboard.press('Shift');
+        await page.keyboard.press('Control+a');
+        assert.deepEqual(await page.evaluate(() => menu.filterQuery), []);
+        await page.keyboard.press('a');
+        await expect(page.locator('#alpha')).toBeFocused();
+        await page.clock.runFor(1100);
+        await page.keyboard.press('b');
+        await expect(page.locator('#beta')).toBeFocused();
+        await page.keyboard.press('ArrowDown');
+        await expect(page.locator('#deep')).toBeFocused();
+        await page.keyboard.press(openKey);
+        await expect(page.locator('#leaf')).toBeFocused();
+        await page.keyboard.press('Escape');
+        await expect(page.locator('#deep')).toBeFocused();
+        await page.clock.runFor(220);
+        await expect(page.locator('#leaf')).toBeHidden();
+        await expect(page.locator('#parent > button')).toHaveAttribute('aria-expanded', 'true');
+        await page.keyboard.press(backKey);
+        await expect(page.locator('#parent')).toBeFocused();
+        await page.clock.runFor(220);
+        await expect(page.locator('#alpha')).toBeHidden();
+        for (const left of [20, 820]) {
+          await page.evaluate(left => { menu.close(); document.querySelector('#trigger').style.left = `${left}px`; menu.open(); }, left);
+          await page.clock.runFor(60);
+          await page.locator('#parent').focus();
+          await page.keyboard.press(openKey);
+          await page.clock.runFor(220);
+          const box = await page.locator('#parent > menu').boundingBox();
+          assert.ok(box.x >= 7 && box.x + box.width <= 893, `${direction}: ${JSON.stringify(box)}`);
+        }
+        await page.locator('#beta').focus();
+        await page.keyboard.press('Enter');
+        await page.clock.runFor(100);
+        assert.equal(await page.evaluate(() => activations), direction === 'ltr' ? 1 : 2);
+      }
+    } finally { try { await page?.evaluate(() => window.menu?.destroy()); } finally { await browser.close(); } }
+  });
+
+  browserTest(`Menu consumers keep values and focus through closing (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.setContent(`<style>${css}</style><form><div class="field"><label for="choice">Choice</label><select id="choice" name="choice"><option value="one">One</option><option value="two">Two</option></select></div><div class="field"><label for="query">Fruit</label><input id="query" name="fruit"></div><button id="after" type="button">After</button></form>`);
+      await page.addScriptTag({ content: js });
+      await page.clock.install();
+      await page.evaluate(() => {
+        window.changes = 0;
+        document.querySelector('#choice').addEventListener('change', () => changes++);
+        window.select = Expressive.FormSelect.init(document.querySelector('#choice'), { menuOptions: { inDuration: 40, outDuration: 1000 } });
+        window.autocomplete = Expressive.Autocomplete.init(document.querySelector('#query'), { data: [{ id: 'apple' }, { id: 'apricot' }], menuOptions: { inDuration: 40, outDuration: 1000 } });
+        select.menu.open();
+      });
+      await page.clock.runFor(60);
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('Enter');
+      await expect(page.locator('#choice')).toHaveValue('two');
+      assert.equal(await page.evaluate(() => changes), 1);
+      assert.equal(await page.evaluate(() => new FormData(document.querySelector('form')).get('choice')), 'two');
+      await expect(page.locator('input[role="combobox"]').first()).toBeFocused();
+      await page.keyboard.press('Tab');
+      await expect(page.locator('#query')).toBeFocused();
+      await page.keyboard.type('app');
+      await page.clock.runFor(60);
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('Enter');
+      await expect(page.locator('#query')).toHaveValue('apple');
+      await expect(page.locator('#query')).toBeFocused();
+      await page.keyboard.press('Tab');
+      await expect(page.locator('#after')).toBeFocused();
+      await page.clock.runFor(1100);
+      await expect(page.locator('#after')).toBeFocused();
+    } finally { try { await page?.evaluate(() => { window.autocomplete?.destroy(); window.select?.destroy(); }); } finally { await browser.close(); } }
+  });
+
   browserTest(`enhanced select keeps enlarged multiline labels clear of values (${engine})`, async () => {
     const browser = await type.launch();
     let page;

@@ -120,6 +120,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
   filterTimeout: ReturnType<typeof setTimeout>;
   private _pendingTimers = new Set<ReturnType<typeof setTimeout>>();
   private _transition = 0;
+  private _originalInert: string | null;
 
   constructor(el: HTMLElement, options: Partial<MenuOptions>) {
     super(el, options, Menu);
@@ -128,6 +129,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     Menu._menus.push(this);
     this.id = Utils.getIdFromTrigger(el);
     this.menuEl = Utils.getElementById(el, this.id);
+    this._originalInert = this.menuEl?.getAttribute('inert') ?? null;
 
     this.options = {
       ...Menu.defaults,
@@ -190,6 +192,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.el.ariaExpanded = 'false';
     clearTimeout(this.filterTimeout);
     this._resetMenuStyles();
+    this._restoreInert();
     this._removeEventHandlers();
     // Temporary handlers only exist while open, but removing them is a no-op
     // otherwise and leaving them attached leaks the instance.
@@ -427,7 +430,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     // rect is readable without temporarily painting the menu.
     li.classList.remove('submenu-start');
     const rect = menu.getBoundingClientRect();
-    if (rect.right > window.innerWidth - 8) li.classList.add('submenu-start');
+    if (rect.left < 8 || rect.right > window.innerWidth - 8) li.classList.add('submenu-start');
   }
 
   private _closeSubmenus() {
@@ -454,37 +457,48 @@ export class Menu extends Component<MenuOptions> implements Openable {
   }
 
   _handleMenuKeydown = (e: KeyboardEvent) => {
+    if (!this.isOpen || e.ctrlKey || e.metaKey || e.altKey || e.isComposing) return;
+    const list = this._containingSubmenu(e) ?? this.menuEl;
+    const rtl = getComputedStyle(list).direction === 'rtl';
+    const openKey = rtl ? Utils.keys.ARROW_LEFT : Utils.keys.ARROW_RIGHT;
+    const backKey = rtl ? Utils.keys.ARROW_RIGHT : Utils.keys.ARROW_LEFT;
+    if ([openKey, backKey, Utils.keys.ARROW_UP, Utils.keys.ARROW_DOWN, Utils.keys.ESC, Utils.keys.TAB].includes(e.key)) {
+      clearTimeout(this.filterTimeout);
+      this._resetFilterQuery();
+    }
     const arrowUpOrDown =
       e.key === Utils.keys.ARROW_DOWN || e.key === Utils.keys.ARROW_UP;
     if (e.key === Utils.keys.TAB) {
       e.preventDefault();
       this.close();
-    } else if (e.key === Utils.keys.ARROW_RIGHT && this.isOpen) {
+    } else if (e.key === openKey) {
       const li = this._focusedRow(e);
-      if (li?.querySelector(':scope > menu')) {
+      if (li?.querySelector(':scope > menu') && !li.matches('.disabled, [aria-disabled="true"]')) {
         e.preventDefault();
         li.classList.add('open');
         this._alignSubmenu(li);
         this._syncSubmenuAria(li, true);
-        const first = li.querySelector(':scope > menu > li') as HTMLElement | null;
-        first?.focus();
+        const first = Array.from(li.querySelector(':scope > menu').children).find(
+          child => child instanceof HTMLElement && child.tabIndex !== -1
+        ) as HTMLElement | undefined;
+        if (first) this._focusRow(first);
       }
-    } else if (e.key === Utils.keys.ARROW_LEFT && this.isOpen) {
+    } else if (e.key === backKey) {
       const submenu = this._containingSubmenu(e);
       if (submenu) {
         e.preventDefault();
         const parentLi = submenu.parentElement as HTMLElement;
         parentLi.classList.remove('open', 'submenu-start');
         this._syncSubmenuAria(parentLi, false);
-        parentLi.focus();
+        this._focusRow(parentLi);
       }
     }
     // Navigate down menu list
     else if (arrowUpOrDown && this.isOpen) {
       e.preventDefault();
       const direction = e.key === Utils.keys.ARROW_DOWN ? 1 : -1;
-      const list = this._containingSubmenu(e) ?? this.menuEl;
-      let newFocusedIndex = this.focusedIndex;
+      const row = this._focusedRow(e);
+      let newFocusedIndex = row ? Array.from(list.children).indexOf(row) : this.focusedIndex;
       let hasFoundNewIndex = false;
       do {
         newFocusedIndex = newFocusedIndex + direction;
@@ -499,10 +513,9 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
       if (hasFoundNewIndex) {
         if (this.focusedIndex >= 0) list.children[this.focusedIndex]?.classList.remove('active');
-        this.focusedIndex = newFocusedIndex;
-        const item = list.children[this.focusedIndex] as HTMLElement;
+        const item = list.children[newFocusedIndex] as HTMLElement;
         item.classList.add('active');
-        item.focus({ preventScroll: true });
+        this._focusRow(item);
       }
     }
     // SPACE OR ENTER selects the focused item.
@@ -515,7 +528,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
         return;
       }
       const focusedElement = li ?? this.menuEl.children[this.focusedIndex];
-      const activatableElement = <HTMLElement>focusedElement?.querySelector('a, button');
+      const activatableElement = <HTMLElement>focusedElement?.querySelector(':scope > a, :scope > button');
       if (!!activatableElement) {
         activatableElement.click();
       } else if (focusedElement instanceof HTMLElement) {
@@ -525,45 +538,37 @@ export class Menu extends Component<MenuOptions> implements Openable {
     // Close menu on ESC
     else if (e.key === Utils.keys.ESC && this.isOpen) {
       e.preventDefault();
-      const openSub = this.menuEl.querySelector('li.open');
+      const openSub = this._containingSubmenu(e)?.parentElement ??
+        Array.from(this.menuEl.querySelectorAll('li.open')).reverse()[0];
       if (openSub) {
         openSub.classList.remove('open', 'submenu-start');
         this._syncSubmenuAria(openSub as HTMLElement, false);
-        (openSub as HTMLElement).focus();
+        this._focusRow(openSub as HTMLElement);
       } else {
         this.close();
       }
     }
 
-    // CASE WHEN USER TYPE LTTERS
     const keyText = e.key.toLowerCase();
-    const isLetter = /[a-zA-Z0-9-_]/.test(keyText);
-    const specialKeys = [
-      Utils.keys.ARROW_DOWN,
-      Utils.keys.ARROW_UP,
-      Utils.keys.ENTER,
-      Utils.keys.ESC,
-      Utils.keys.TAB,
-      SPACE
-    ];
-    if (isLetter && !specialKeys.includes(e.key)) {
+    if (e.key.length === 1 && e.key !== SPACE && !e.ctrlKey && !e.metaKey && !e.altKey && !e.isComposing) {
       this.filterQuery.push(keyText);
       const string = this.filterQuery.join('');
       // textContent rather than innerText: this scans every item on every
       // keystroke, and innerText forces a layout flush per item.
-      const list = this._containingSubmenu(e) ?? this.menuEl;
       const newOptionEl = Array.from(list.querySelectorAll(':scope > li')).find(
-        (el) => el.textContent.trim().toLowerCase().indexOf(string) === 0
+        (el) => (el as HTMLElement).tabIndex !== -1 &&
+          !el.matches('.disabled, [aria-disabled="true"]') &&
+          Array.from(el.childNodes).filter(node => !(node instanceof Element && node.matches('menu')))
+            .map(node => node.textContent).join('').trim().toLowerCase().startsWith(string)
       );
       if (newOptionEl) {
-        this.focusedIndex = [...newOptionEl.parentNode.children].indexOf(newOptionEl);
-        this._focusFocusedItem();
+        this._focusRow(newOptionEl as HTMLElement);
       }
+      // Re-arm rather than stack: without the clear, every keystroke left a live
+      // timer behind and the query could reset while the user was still typing.
+      clearTimeout(this.filterTimeout);
+      this.filterTimeout = setTimeout(this._resetFilterQuery, 1000);
     }
-    // Re-arm rather than stack: without the clear, every keystroke left a live
-    // timer behind and the query could reset while the user was still typing.
-    clearTimeout(this.filterTimeout);
-    this.filterTimeout = setTimeout(this._resetFilterQuery, 1000);
   };
 
   _handleWindowResize = () => {
@@ -577,6 +582,18 @@ export class Menu extends Component<MenuOptions> implements Openable {
   _resetFilterQuery = () => {
     this.filterQuery = [];
   };
+
+  private _restoreInert() {
+    if (this._originalInert === null) this.menuEl?.removeAttribute('inert');
+    else this.menuEl?.setAttribute('inert', this._originalInert);
+  }
+
+  private _focusRow(item: HTMLElement) {
+    this.focusedIndex = Array.from(item.parentElement.children).indexOf(item);
+    if (!this.options.autoFocus) return;
+    item.focus({ preventScroll: true });
+    item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
 
   _resetMenuStyles() {
     this.menuEl.style.display = '';
@@ -868,6 +885,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     // Reset styles
     this._resetMenuStyles();
     this.menuEl.style.display = 'block';
+    this._restoreInert();
     this._placeMenu();
     // Do this one frame later so that we don't bind an event handler that's immediately
     // called when the event bubbles up to the document and closes the menu
@@ -883,7 +901,12 @@ export class Menu extends Component<MenuOptions> implements Openable {
   close = () => {
     if (!this.isOpen) return;
     const transition = this._clearPendingTimers();
+    const root = this.menuEl.getRootNode() as Document | ShadowRoot;
+    const focused = root.activeElement;
     this.isOpen = false;
+    this.menuEl.setAttribute('inert', '');
+    clearTimeout(this.filterTimeout);
+    this._resetFilterQuery();
     this.focusedIndex = -1;
     this._closeSubmenus();
     // onCloseStart callback
@@ -894,7 +917,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this._animateOut();
     this._removeTemporaryEventHandlers();
     this.el.ariaExpanded = 'false';
-    if (this.options.autoFocus) {
+    if (this.options.autoFocus && (root.activeElement === focused || !root.activeElement || root.activeElement === document.body)) {
       this.el.focus();
     }
   };

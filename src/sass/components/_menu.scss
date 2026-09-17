@@ -506,7 +506,7 @@ menu[id] {
 }
 
 // Nested menu. Optional, desktop-first. No second Menu instance —
-// a <menu> inside an <li> is a flyout. Hover / :focus-within on fine
+// a <menu> inside an <li> is a flyout. Hover on fine
 // pointers; .open is the tap / keyboard switch.
 menu[id] li > menu {
   @include menu-surface;
@@ -530,7 +530,7 @@ menu[id] li > menu {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  menu[id] li:is(:hover, :focus-within) > menu {
+  menu[id] li:hover > menu {
     visibility: visible;
     opacity: 1;
     pointer-events: auto;

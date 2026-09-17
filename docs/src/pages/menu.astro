@@ -114,6 +114,13 @@ const S = defineSections([
           Disabled items remain focusable so their presence and label are
           discoverable, but they cannot be selected.
         </p>
+        <p>
+          Unreleased source excludes closing menus from keyboard focus and
+          preserves focus moved by close callbacks. Submenu entry and return
+          arrows mirror in RTL; typeahead stays in the active list and skips
+          headings and disabled items. Escape closes the innermost submenu
+          first. Published 0.9.1 does not include these repairs.
+        </p>
 </Section>
   <Section {...S["layout-types"]}>
         <p>
@@ -466,10 +473,11 @@ Expressive.Menu.init(document.querySelector('#hover'), {
         <p>
           Optional and desktop-first. Put a <code>&lt;menu&gt;</code> inside an
           <code>&lt;li&gt;</code> — no extra trigger, no second instance.
-          On a fine pointer the flyout opens on hover or focus with a short
+          On a fine pointer the flyout opens on hover with a short
           scale and fade; the open flyout rounds up and the parent rounds
           down. On touch, a tap toggles <code>.open</code> on that row.
           A click on the parent row does not close the root menu.
+          Keyboard users open it with Enter, Space, or the submenu entry arrow.
         </p>
         <p>
           <button type="button" class="menu-trigger no-autoinit" id="menu-nested-trigger" data-target="menu-nested">Nested</button>

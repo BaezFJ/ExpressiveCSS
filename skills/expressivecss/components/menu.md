@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `27411a82cd653d19b1487e0e573d602879b9ac19704ff1d610e328dd40cc5aba`
+Contract SHA-256: `02772841718336bd39c6970604ba6cf11986b91e69f888cf8b674cb020b24994`
 
 #### Selection and adaptation
 
@@ -35,7 +35,7 @@ Support (2026-09-13, `llm.md#menu`): Vertical menus, nested flyouts, grouping, a
 
 Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavior.
 
-Known boundary: Closing animation focus exclusion, submenu RTL, item targets and typeahead need a rendered check.
+Known boundary: Closing focus exclusion, scoped nested keys, RTL flyout placement and representative item targets have browser checks. Spoken output and full visual parity remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#menu).
 
@@ -43,9 +43,9 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Material Design 3 menus, from the HTML.
 
-A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by default; add `.suffix` to send it to the trailing edge, since a lone icon is indistinguishable from a leading one in CSS. A `<kbd>` or a `.badge` is always trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid (it still renders); a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
+Unreleased source excludes closing menus from keyboard focus and preserves focus moved by close callbacks. Submenu entry/return keys mirror in RTL; typeahead stays in the active list and skips headings and disabled items. Escape closes the innermost submenu first. Fine-pointer hover opens flyouts; keyboard activation uses Enter, Space, or the submenu entry arrow. Published 0.9.1 does not include these repairs.
 
-This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https://m3.material.io/components/menus/specs). The container is `surface-container-low`, large (16dp) corners, elevation 2, 2dp group padding, 112–280dp wide. Items are 44dp with extra-small (4dp) corners, `label-large` / `on-surface`; the first and last item round their outer corners to 12dp. Icons are 20dp `on-surface-variant`. Selected items use medium (12dp) corners and `tertiary-container` / `on-tertiary-container`. Hover is an 8% state layer, focus and press 10%, none of which span the container. Dividers are inset. Add `.vibrant` for the tertiary mapping. Submenus fade and scale in; the open flyout rounds up and the parent rounds down.
+A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by default; add `.suffix` to send it to the trailing edge, since a lone icon is indistinguishable from a leading one in CSS. A `<kbd>` or a `.badge` is always trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid (it still renders); a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
 
 #### Syntax
 
