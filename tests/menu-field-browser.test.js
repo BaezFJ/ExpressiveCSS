@@ -180,9 +180,16 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       await page.addScriptTag({ content: js });
       await page.clock.install();
       await page.evaluate(() => { window.activations = 0; window.menu = Expressive.Menu.init(document.querySelector('#trigger'), { inDuration: 40, outDuration: 60, onItemClick: () => activations++ }); });
-      for (const direction of ['ltr', 'rtl']) {
-        await page.evaluate(dir => { document.documentElement.dir = dir; menu.open(); }, direction);
+      for (const autoFocus of [true, false]) for (const direction of ['ltr', 'rtl']) {
+        await page.evaluate(({ direction, autoFocus }) => {
+          activations = 0;
+          document.documentElement.dir = direction;
+          menu.options.autoFocus = autoFocus;
+          document.querySelector('#trigger').focus();
+          menu.open();
+        }, { direction, autoFocus });
         await page.clock.runFor(60);
+        await expect(page.locator(autoFocus ? '#root' : '#trigger')).toBeFocused();
         await page.locator('#parent').focus();
         const openKey = direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
         const backKey = direction === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
@@ -193,7 +200,11 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         await page.keyboard.press('ArrowDown');
         await expect(page.locator('#disabled')).toBeFocused();
         await page.keyboard.press('Enter');
-        assert.equal(await page.evaluate(() => activations), direction === 'ltr' ? 0 : 1);
+        assert.equal(await page.evaluate(() => activations), 0);
+        await page.keyboard.press('ArrowDown');
+        await expect(page.locator('#beta')).toBeFocused();
+        await page.keyboard.press('ArrowUp');
+        await expect(page.locator('#disabled')).toBeFocused();
         await page.keyboard.press('ArrowDown');
         await expect(page.locator('#beta')).toBeFocused();
         await page.keyboard.press('Shift');
@@ -229,7 +240,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         await page.locator('#beta').focus();
         await page.keyboard.press('Enter');
         await page.clock.runFor(100);
-        assert.equal(await page.evaluate(() => activations), direction === 'ltr' ? 1 : 2);
+        assert.equal(await page.evaluate(() => activations), 1);
       }
     } finally { try { await page?.evaluate(() => window.menu?.destroy()); } finally { await browser.close(); } }
   });
