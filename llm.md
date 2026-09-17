@@ -5812,6 +5812,8 @@ Put a `button.close` inside the chip. Give it `type="button"` so it cannot submi
 
 The plugin turns a `.chips` container into an editable tag field. Type a value and press Enter to add a chip. Delete with the chip's delete button, or select a chip and press Backspace or Delete. Selecting a chip marks it `selected` and moves focus to its delete button.
 
+Unreleased: Backspace and Delete target the focused chip, then select the preceding survivor, otherwise the first survivor or the input. Delete-button activation returns to the input. Programmatic deletion recovers focus to the input only when it removes the focused chip. Deletion callbacks retain any focus they move. Long labels wrap without shrinking delete controls. These fixes are not in the published 0.9.1 package.
+
 `allowUserInput` defaults to `false`. Without it there is no text field and rendered chips have no delete button. Pass `allowUserInput: true` for the interactive field. `AutoInit()` starts every `.chips` except `no-autoinit`, but it uses the defaults, so those wrappers stay display-only until you call `init` with options.
 
 Empty field — type a tag and press Enter:

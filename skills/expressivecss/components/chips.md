@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `cea8f95ea13e34c85aa8b9a5fa3deeacad09506d3013ef2f3314b21b2a541c0c`
+Contract SHA-256: `fe4260a142e4ccd5303322adde3c8c8ba53ef7d9a6db8625c26b6c2860c6b304`
 
 #### Selection and adaptation
 
@@ -37,7 +37,7 @@ Support (2026-09-13, `llm.md#chips`): Assist, suggestion, filter, input, and dis
 
 Web adaptation: Element choice defines behavior; display chips are a framework extension.
 
-Known boundary: Filter selection is checked; input-chip deletion, dual targets and focus after removal remain unverified.
+Known boundary: Rendered deletion, focus recovery and wrapped action/delete controls are checked. Full effective-target sizing, spoken output and physical-device behavior remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#chips).
 

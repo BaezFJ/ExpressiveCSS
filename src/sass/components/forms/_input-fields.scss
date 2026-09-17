@@ -45,7 +45,7 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
 // .suffix to four of five is exactly the bug this variable prevents: the
 // leading icon inherited the label's position and sat at 16px with
 // pointer-events: none.
-$_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix, .suffix";
+$_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix, .suffix, .chip";
 
 .field {
   --md-comp-filled-text-field-container-color: var(--md-sys-color-surface-container-highest);

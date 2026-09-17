@@ -323,4 +323,135 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       assert.equal(prefixGeometry.fieldBackground, 'rgba(0, 0, 0, 0)');
     } finally { try { await page?.evaluate(() => window.select?.destroy()); } finally { await browser.close(); } }
   });
+
+  browserTest(`Chips deletion targets and focus recovery (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.setContent(`<style>${css}</style><form><div id="chips"><input name="tags" aria-label="Tags"></div><button id="outside" type="button">Outside</button></form>`);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => window.chips = null);
+      await page.evaluate(() => document.querySelector('form').addEventListener('submit', e => { e.preventDefault(); window.submits++; }));
+      for (const direction of ['ltr', 'rtl']) for (const reducedMotion of ['reduce', 'no-preference']) {
+        await page.emulateMedia({ reducedMotion });
+        await page.evaluate(direction => document.documentElement.dir = direction, direction);
+        for (const action of ['Backspace', 'Delete', 'click', 'Enter', 'Space', 'programmatic']) for (const [count, index] of [[3, 0], [3, 1], [3, 2], [1, 0]]) {
+          await page.evaluate(count => {
+            window.chips?.destroy();
+            window.deletions = 0; window.selections = 0; window.submits = 0;
+            window.chips = Expressive.Chips.init(document.querySelector('#chips'), {
+              allowUserInput: true, data: ['Apple', 'Pear', 'Plum'].slice(0, count).map(id => ({ id })),
+              onChipDelete: () => deletions++, onChipSelect: () => selections++
+            });
+            chips.selectChip(count - 1);
+            chips._input.value = 'Draft';
+            selections = 0;
+          }, count);
+          const close = page.locator('#chips .close').nth(index);
+          await close.focus();
+          if (action === 'click') await close.locator('span').click();
+          else if (action === 'programmatic') await page.evaluate(index => chips.deleteChip(index), index);
+          else await page.keyboard.press(action);
+          const expected = ['Apple', 'Pear', 'Plum'].slice(0, count).filter((_, i) => i !== index);
+          assert.deepEqual(await page.evaluate(() => chips.getData().map(chip => chip.id)), expected);
+          await expect(page.locator('#chips .chip')).toHaveCount(count - 1);
+          assert.equal(await page.evaluate(() => deletions), 1);
+          assert.equal(await page.evaluate(() => submits), 0);
+          assert.equal(await page.evaluate(() => new FormData(document.querySelector('form')).get('tags')), 'Draft');
+          const keyboardDelete = ['Backspace', 'Delete'].includes(action);
+          if (keyboardDelete && count > 1) {
+            const previous = Math.max(index - 1, 0);
+            await expect(page.locator('#chips .close').nth(previous)).toBeFocused();
+            await expect(page.locator('#chips .chip').nth(previous)).toHaveClass(/selected/);
+            assert.equal(await page.evaluate(() => selections), 1);
+          } else await expect(page.locator('#chips input')).toBeFocused();
+        }
+      }
+    } finally { try { await page?.evaluate(() => window.chips?.destroy()); } finally { await browser.close(); } }
+  });
+
+  browserTest(`Chips callbacks and instance teardown preserve focus (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.setContent(`<style>${css}</style><div id="one"></div><div id="two"></div><button id="outside">Outside</button>`);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => { window.one = null; window.two = null; });
+      for (const action of ['Backspace', 'Delete', 'programmatic', 'click', 'Enter', 'Space']) {
+        await page.evaluate(() => {
+          window.one?.destroy(); window.two?.destroy(); window.deletions = 0;
+          window.one = Expressive.Chips.init(document.querySelector('#one'), { allowUserInput: true, data: [{ id: 'One' }] });
+          window.two = Expressive.Chips.init(document.querySelector('#two'), { allowUserInput: true, data: [{ id: 'Two' }, { id: 'Three' }], onChipDelete: () => { deletions++; document.querySelector('#outside').focus(); } });
+          one.destroy();
+        });
+        await page.locator('#two .close').first().focus();
+        if (action === 'programmatic') await page.evaluate(() => two.deleteChip(0));
+        else if (action === 'click') await page.locator('#two .close').first().click();
+        else await page.keyboard.press(action);
+        await expect(page.locator('#outside')).toBeFocused();
+        assert.equal(await page.evaluate(() => deletions), 1);
+        assert.deepEqual(await page.evaluate(() => two.getData()), [{ id: 'Three' }]);
+      }
+      await page.evaluate(() => {
+        two.options.onChipDelete = null;
+        document.querySelector('#outside').focus();
+        two.deleteChip(0);
+      });
+      await expect(page.locator('#outside')).toBeFocused();
+      await page.evaluate(() => { two.addChip({ id: 'New' }); two.selectChip(0); two.deleteChip(0); });
+      await expect(page.locator('#two input')).toBeFocused();
+      await page.evaluate(() => {
+        two.addChip({ id: 'First' }); two.addChip({ id: 'Last' }); two.selectChip(1);
+        two.deleteChip(0);
+      });
+      await expect(page.locator('#two .close')).toBeFocused();
+      await expect(page.locator('#two .chip')).toHaveClass(/selected/);
+      await page.evaluate(() => { two.options.onChipDelete = () => two.destroy(); });
+      await page.keyboard.press('Delete');
+      await expect(page.locator('#two .chip')).toHaveCount(0);
+    } finally { try { await page?.evaluate(() => { window.one?.destroy(); window.two?.destroy(); }); } finally { await browser.close(); } }
+  });
+
+  browserTest(`Chips wrapped labels keep separate actions reachable (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ viewport: { width: 320, height: 600 } });
+      await page.setContent(`<style>${css}</style><div class="chips" style="width:280px"><span class="chip"><button type="button" id="action">A translated chip label with several words</button><button type="button" class="close" aria-label="Remove label">X</button></span></div><div id="editable" style="width:280px"></div>`);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => { window.chips = Expressive.Chips.init(document.querySelector('#editable'), { allowUserInput: true, data: [{ id: 'A translated label with several words and averylongunbrokentextvalue' }] }); });
+      for (const direction of ['ltr', 'rtl']) for (const size of [14, 28]) {
+        await page.evaluate(({ direction, size }) => {
+          document.documentElement.dir = direction;
+          document.querySelectorAll('.chip').forEach(chip => chip.style.setProperty('--font-size', `${size}px`));
+        }, { direction, size });
+        const geometry = await page.evaluate(() => Array.from(document.querySelectorAll('.chip')).map(chip => {
+          const box = chip.getBoundingClientRect(), close = chip.querySelector('.close').getBoundingClientRect();
+          const range = document.createRange(); range.selectNodeContents(chip.querySelector('#action') ?? chip.firstChild);
+          const label = range.getBoundingClientRect();
+          return { left: box.left, right: box.right, labelTop: label.top, labelBottom: label.bottom, top: box.top, bottom: box.bottom,
+            separate: label.right <= close.left || close.right <= label.left, closeWidth: close.width, closeHeight: close.height, overflow: document.documentElement.scrollWidth > innerWidth };
+        }));
+        for (const box of geometry) {
+          assert.ok(!box.overflow && box.left >= 0 && box.right <= 320, JSON.stringify(box));
+          assert.ok(box.separate && box.labelTop >= box.top && box.labelBottom <= box.bottom, JSON.stringify(box));
+          assert.ok(box.closeWidth >= 24 && box.closeHeight >= 24, JSON.stringify(box));
+        }
+      }
+      await page.evaluate(() => {
+        window.actions = 0;
+        document.querySelector('#action').addEventListener('click', () => actions++);
+      });
+      await page.locator('#action').click();
+      assert.equal(await page.evaluate(() => actions), 1);
+      await expect(page.locator('#action')).toBeVisible();
+      await page.evaluate(() => document.querySelector('#action').disabled = true);
+      await expect(page.locator('#action')).toBeDisabled();
+      await page.locator('.chips').first().locator('.close').click();
+      await expect(page.locator('#action')).toHaveCount(0);
+      assert.equal(await page.evaluate(() => actions), 1);
+    } finally { try { await page?.evaluate(() => window.chips?.destroy()); } finally { await browser.close(); } }
+  });
 }
