@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `5f56af739afb0aa00d9bb859673d3f36106591c41448b907138e7326388f60a1`.
+Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `9d5354435f785b1c9158c2a9cbe315c638d50cfdcb29bec4e74bbc47575892ee`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -530,8 +530,8 @@ Web adaptation: Runtime owns sizing and navigation; reduced motion removes paral
 
 - verification: Rendered browser checks do not establish native zoom, spoken announcements or physical touch-device usability. Next: Review native zoom, screen readers and physical iOS/Android devices with the selected layout and pause control.
 
-- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Carousel navigation scrolls and focuses logical items (chromium)`. Actual scroll position, visible focused items, previous/next, indicators, Home/End, RTL, vertical navigation and editable descendants under ordinary and reduced motion.
-- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Carousel mounted motion changes preserve explicit pause (chromium)`. Visible application-owned pause/resume button and mounted reduced-motion changes without cancelling explicit pause.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Carousel navigation scrolls and focuses logical items (chromium)`. Actual scroll position, visible focused items, previous/next, indicators, Home/End, RTL, vertical navigation and editable descendants under ordinary and reduced motion. Synthetic touch, pen and wheel events cancel transition recentering without preventing native defaults.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Carousel mounted motion changes preserve explicit pause (chromium)`. Visible application-owned pause/resume button and mounted reduced-motion changes without cancelling explicit pause; enabling reduced motion interrupts smooth scrolling and immediately realigns the active item.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Carousel focus and visibility suspension survive teardown (chromium)`. Hover and internal focus suspension, simulated document.hidden events, timer teardown and single advancement after remount. Actual background-device behavior pending.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Carousel destroys pending scroll completion work (chromium)`. Rapid navigation and queued resize followed by destruction leave no auto-advance, resize or scroll-completion timers.
 

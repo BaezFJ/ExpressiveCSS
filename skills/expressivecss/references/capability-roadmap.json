@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "5f56af739afb0aa00d9bb859673d3f36106591c41448b907138e7326388f60a1",
+    "reportSha256": "9d5354435f785b1c9158c2a9cbe315c638d50cfdcb29bec4e74bbc47575892ee",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1728,7 +1728,7 @@
         },
         {
           "path": "src/ts/components/carousel.ts",
-          "sha256": "d3571175d6e976a172d90a24a0a28eacb2359fefb4bfb697d657a1eb6e1131d9"
+          "sha256": "9559aa36e59e4f15b5fbfbc7ff6acd0ff85ce2498972ae7a42b2510825c22224"
         }
       ],
       "gaps": [
@@ -1742,13 +1742,13 @@
         {
           "file": "tests/menu-field-browser.test.js",
           "name": "Carousel navigation scrolls and focuses logical items (chromium)",
-          "scope": "Actual scroll position, visible focused items, previous/next, indicators, Home/End, RTL, vertical navigation and editable descendants under ordinary and reduced motion.",
+          "scope": "Actual scroll position, visible focused items, previous/next, indicators, Home/End, RTL, vertical navigation and editable descendants under ordinary and reduced motion. Synthetic touch, pen and wheel events cancel transition recentering without preventing native defaults.",
           "state": "recorded-passed"
         },
         {
           "file": "tests/menu-field-browser.test.js",
           "name": "Carousel mounted motion changes preserve explicit pause (chromium)",
-          "scope": "Visible application-owned pause/resume button and mounted reduced-motion changes without cancelling explicit pause.",
+          "scope": "Visible application-owned pause/resume button and mounted reduced-motion changes without cancelling explicit pause; enabling reduced motion interrupts smooth scrolling and immediately realigns the active item.",
           "state": "recorded-passed"
         },
         {

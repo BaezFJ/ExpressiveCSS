@@ -60,6 +60,31 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
           assert.equal(await page.evaluate(() => navigationCalls), before, `${layout} ${direction} ${reducedMotion} ${selector}: editable keys do not navigate`);
           assert.deepEqual(await page.evaluate(() => editableKeys), [false, false], 'editable keys retain native defaults');
         }
+        if (reducedMotion === 'no-preference') {
+          for (const gesture of ['touch', 'pen', 'wheel']) {
+            const result = await page.evaluate(gesture => {
+              carousel.set(1);
+              const track = document.querySelector('.carousel-track'), original = track.scrollTo;
+              let calls = 0;
+              track.scrollTo = (...args) => { calls++; original.apply(track, args); };
+              try {
+                const allowed = track.dispatchEvent(gesture === 'wheel'
+                  ? new WheelEvent('wheel', { deltaX: 80, bubbles: true, cancelable: true })
+                  : new PointerEvent('pointerdown', { pointerType: gesture, pointerId: 7, isPrimary: true, bubbles: true, cancelable: true }));
+                carousel.images[1].dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'flex-basis', bubbles: true }));
+                const duringGesture = calls;
+                track.dispatchEvent(new PointerEvent('pointercancel', { pointerId: 7, pointerType: gesture, bubbles: true }));
+                carousel.set(2);
+                calls = 0;
+                carousel.images[2].dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'flex-basis', bubbles: true }));
+                return { allowed, duringGesture, afterNavigation: calls };
+              } finally { track.scrollTo = original; }
+            }, gesture);
+            assert.equal(result.allowed, true, `${gesture} retains native defaults`);
+            assert.equal(result.duringGesture, 0, `${gesture} is not recentered by transition completion`);
+            assert.equal(result.afterNavigation, 1, 'explicit navigation restores alignment');
+          }
+        }
         await page.evaluate(() => carousel.destroy());
       }
     } finally { try { await page?.evaluate(() => window.carousel?.destroy()); } finally { await browser.close(); } }
@@ -120,7 +145,21 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       await page.locator('#toggle').click(); await page.mouse.move(600, 600);
       await page.clock.runFor(600);
       assert.ok(await page.evaluate(() => cycles) > paused, 'resume restarts automatic movement');
+      await page.evaluate(() => {
+        carousel.pause();
+        const track = document.querySelector('.carousel-track'), original = track.scrollTo.bind(track);
+        window.scrollBehaviors = [];
+        track.scrollTo = options => { scrollBehaviors.push(options.behavior); original(options); };
+        carousel.set(2);
+        scrollBehaviors = [];
+      });
       await page.emulateMedia({ reducedMotion: 'reduce' }); await page.waitForTimeout(50);
+      assert.ok(await page.evaluate(() => scrollBehaviors.includes('instant')), 'reduced motion cancels the in-flight smooth scroll');
+      assert.ok(await page.evaluate(() => {
+        const track = document.querySelector('.carousel-track').getBoundingClientRect();
+        const item = carousel.images[carousel.center].getBoundingClientRect();
+        return item.left >= track.left - 1 && item.right <= track.right + 1;
+      }), 'reduced-motion sizing is realigned immediately');
       const reduced = await page.evaluate(() => cycles);
       await page.clock.runFor(1600);
       assert.equal(await page.evaluate(() => cycles), reduced, 'mounted reduced motion suspends auto-advance');

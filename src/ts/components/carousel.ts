@@ -97,6 +97,7 @@ export class Carousel extends Component<CarouselOptions> {
   private _ownIndicators: boolean = false;
   private _trackEl: HTMLElement | null = null;
   private _ignoreScroll: boolean = false;
+  private _alignAfterResize = false;
   private _scrollEndTimeout: ReturnType<typeof setTimeout>;
   private _trackRaf: number = null;
   private _started: boolean = false;
@@ -351,6 +352,7 @@ export class Carousel extends Component<CarouselOptions> {
       passive: true
     });
     this._scroller.addEventListener('pointerdown', this._handleTrackPointerDown);
+    this._scroller.addEventListener('wheel', this._handleNativeScroll, { passive: true });
     this._scroller.addEventListener('pointermove', this._handleTrackPointerMove);
     this._scroller.addEventListener('pointerup', this._handleTrackPointerUp);
     this._scroller.addEventListener('pointercancel', this._handleTrackPointerUp);
@@ -372,6 +374,7 @@ export class Carousel extends Component<CarouselOptions> {
     }
     this._scroller.removeEventListener('scroll', this._handleTrackScroll);
     this._scroller.removeEventListener('pointerdown', this._handleTrackPointerDown);
+    this._scroller.removeEventListener('wheel', this._handleNativeScroll);
     this._scroller.removeEventListener('pointermove', this._handleTrackPointerMove);
     this._scroller.removeEventListener('pointerup', this._handleTrackPointerUp);
     this._scroller.removeEventListener('pointercancel', this._handleTrackPointerUp);
@@ -450,6 +453,7 @@ export class Carousel extends Component<CarouselOptions> {
 
   private _handleMotionChange = () => {
     this._syncAutoAdvance();
+    if (this._motion.matches) this._scrollToIndex(this.center, false);
     this._updateParallax();
   };
 
@@ -502,7 +506,13 @@ export class Carousel extends Component<CarouselOptions> {
     this.set(0);
   };
 
+  private _handleNativeScroll = () => {
+    this._alignAfterResize = false;
+    this._finishScroll();
+  };
+
   _handleTrackPointerDown = (e: PointerEvent) => {
+    this._handleNativeScroll();
     if (e.pointerType !== 'mouse' || e.button !== 0) return;
     this.pressed = true;
     this.dragged = false;
@@ -568,7 +578,7 @@ export class Carousel extends Component<CarouselOptions> {
   };
 
   private _handleItemResize = (e: TransitionEvent) => {
-    if (!this.pressed && e.propertyName === 'flex-basis' && this.images.includes(e.target as HTMLElement)) {
+    if (this._alignAfterResize && !this.pressed && e.propertyName === 'flex-basis' && this.images.includes(e.target as HTMLElement)) {
       this._scrollToIndex(this.center, false);
     }
   };
@@ -832,6 +842,7 @@ export class Carousel extends Component<CarouselOptions> {
   };
 
   _cycleTo(n: number, callback: CarouselOptions['onCycleTo'] = null) {
+    this._alignAfterResize = true;
     if (typeof callback === 'function') this.oneTimeCallback = callback;
     this._syncActive(n, false);
     this._scrollToIndex(n);
