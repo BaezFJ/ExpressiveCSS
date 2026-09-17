@@ -99,7 +99,7 @@ export function installSheetDrag(config: SheetDragConfig): void {
       lastT: Date.now(),
       shift: 0
     };
-    observer.observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['open'] });
+    observer.observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['open'], attributeOldValue: true });
   };
 
   const onMove = (event: PointerEvent) => {
@@ -152,8 +152,12 @@ export function installSheetDrag(config: SheetDragConfig): void {
   };
 
   Utils.onDocumentReady(() => {
-    observer = new MutationObserver(() => {
-      if (drag && (!drag.dialog.open || !drag.dialog.isConnected)) onCancel();
+    observer = new MutationObserver(records => {
+      const dialog = drag?.dialog;
+      if (dialog && (!dialog.open || !dialog.isConnected || records.some(record =>
+        (record.type === 'attributes' && record.target === dialog && record.oldValue === null) ||
+        [...record.removedNodes].some(node => node.contains(dialog))
+      ))) onCancel();
     });
     document.addEventListener('pointerdown', onDown, { passive: true });
     document.addEventListener('pointermove', onMove, { passive: true });

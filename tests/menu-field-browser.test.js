@@ -91,7 +91,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       const page = await browser.newPage();
       const failures = [];
       for (const variant of ['side-sheet', 'bottom-sheet']) {
-        for (const end of ['cancel', 'close', 'remove', 'outside']) {
+        for (const end of ['cancel', 'close', 'remove', 'outside', 'reopen', 'reattach', 'ancestor-reattach', 'unchanged']) {
           await sheetFixture(page, { variant });
           const result = await page.evaluate(async ({ variant, end }) => {
             const dialog = document.querySelector('dialog'), rect = dialog.getBoundingClientRect();
@@ -110,17 +110,34 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
             if (end === 'cancel') pointer('pointercancel', x, y);
             if (end === 'close') dialog.close();
             if (end === 'remove') dialog.remove();
+            if (end === 'reopen') { dialog.close(); dialog.showModal(); }
+            if (end === 'reattach') { dialog.remove(); document.body.append(dialog); }
+            if (end === 'ancestor-reattach') {
+              const parent = dialog.parentElement;
+              parent.remove();
+              document.documentElement.append(parent);
+            }
+            if (end === 'unchanged') {
+              dialog.setAttribute('open', '');
+              const other = document.createElement('dialog');
+              document.body.append(other);
+              other.show();
+              other.close();
+              other.remove();
+            }
             if (end === 'outside') pointer('pointerdown', 0, 0, document.body);
             await new Promise(resolve => setTimeout(resolve, 30));
             const reset = dialog.style.getPropertyValue(property) === '0px' && dialog.style.transition === '';
             if (!dialog.isConnected) document.body.append(dialog);
             if (!dialog.open) dialog.showModal();
+            pointer('pointermove', x + 200, y + 200);
             pointer('pointerup', x + 200, y + 200);
             return { started, retained, reset, open: dialog.open };
           }, { variant, end });
           if (result.retained !== '30px') failures.push(`${variant} ${end} secondary cancellation`);
           if (result.started !== '30px') failures.push(`${variant} ${end} missing active drag`);
-          if (!result.reset || !result.open) failures.push(`${variant} ${end} stale drag`);
+          const interrupted = end !== 'unchanged';
+          if (result.reset !== interrupted || result.open !== interrupted) failures.push(`${variant} ${end} drag lifetime`);
         }
       }
       assert.deepEqual(failures, []);

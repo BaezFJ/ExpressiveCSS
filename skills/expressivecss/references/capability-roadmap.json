@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "5d313e09a4a73d77a081835ec42c9d783ac95276e685a91f8cee58a6325b2c93",
+    "reportSha256": "255d52d21dc094b8b2eb9fee2e5f1bc165bb2e6aa5d36091d62b33a6dcb29125",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1171,7 +1171,7 @@
         },
         {
           "path": "src/ts/behaviors/sheetDrag.ts",
-          "sha256": "95a6d74826ac0bd605a002f7a366cb9338aaffe1fbb30a0bcd6c4f65905fc4e8"
+          "sha256": "0f5714a2a1fbb5c20a45f0c6a8cc617959e7b8572128ee8860db909f0d96f3bd"
         }
       ],
       "gaps": [
@@ -1191,7 +1191,7 @@
         {
           "file": "tests/menu-field-browser.test.js",
           "name": "Sheets cancel only the active pointer and clean interrupted drags (chromium)",
-          "scope": "Rendered bottom and side sheets with synthetic primary/secondary pointers, cancellation, closing, removal and a new primary press outside. Physical touch review remains pending.",
+          "scope": "Rendered bottom and side sheets with synthetic primary/secondary pointers, cancellation, closing, removal, same-task reopen/reattach, ancestor reattachment and a new primary press outside. Unrelated mutations preserve active drags. Physical touch review remains pending.",
           "state": "recorded-passed"
         }
       ],
@@ -1247,7 +1247,7 @@
         },
         {
           "path": "src/ts/behaviors/sheetDrag.ts",
-          "sha256": "95a6d74826ac0bd605a002f7a366cb9338aaffe1fbb30a0bcd6c4f65905fc4e8"
+          "sha256": "0f5714a2a1fbb5c20a45f0c6a8cc617959e7b8572128ee8860db909f0d96f3bd"
         }
       ],
       "gaps": [
@@ -1267,7 +1267,7 @@
         {
           "file": "tests/menu-field-browser.test.js",
           "name": "Sheets cancel only the active pointer and clean interrupted drags (chromium)",
-          "scope": "Shared side/bottom drag cleanup under cancellation, secondary pointers, closing, removal and another primary press. Synthetic pointers do not establish physical touch usability.",
+          "scope": "Shared side/bottom drag cleanup under cancellation, secondary pointers, closing, removal, same-task reopen/reattach, ancestor reattachment and another primary press. Unrelated mutations preserve active drags. Synthetic pointers do not establish physical touch usability.",
           "state": "recorded-passed"
         },
         {

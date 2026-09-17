@@ -10,7 +10,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Side sheets mirror dragging, entry motion and modal corners in RTL while
   preserving logical start/end aliases. Long headings and action rows wrap.
   Side and bottom sheets ignore secondary-pointer cancellation and clear drag
-  state when closed, removed, or interrupted by another primary press.
+  state when closed, removed, or interrupted by another primary press, including
+  close/reopen and remove/reattach sequences within one JavaScript task.
 
 - Carousel mirrors horizontal navigation and scroll placement in RTL, leaves
   editable keys alone, and keeps auto-advance suspended during internal focus
