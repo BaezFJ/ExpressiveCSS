@@ -10,6 +10,116 @@ const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'u
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+  browserTest(`Panes use the nearest available width at layout boundaries (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css}</style><div id="outer" style="container-type:inline-size"><div id="host"><div id="layout"><section class="list-pane">List</section><section class="detail-pane">Detail</section><section class="supporting-pane">Supporting</section></div></div></div>`);
+      for (const variant of ['panes', 'pane-layout', 'list-detail', 'panes list-detail', 'panes supporting', 'supporting-pane-layout', 'panes supporting start', 'panes supporting left', 'supporting-pane-layout start', 'supporting-pane-layout left', 'panes equal', 'pane-layout equal', 'panes three-pane', 'pane-layout three-pane', 'panes equal separated', 'pane-layout equal floating']) {
+        for (const direction of ['ltr', 'rtl']) for (const viewport of [700, 1440]) {
+          await page.setViewportSize({ width: viewport, height: 700 });
+          for (const width of [320, 839, 840, 841, 1199, 1200, 1201]) {
+            const result = await page.evaluate(({ variant, direction, width }) => {
+              const host = document.querySelector('#host'), layout = document.querySelector('#layout');
+              host.style.cssText = `container-type:inline-size;width:${width}px;height:400px`;
+              layout.className = variant;
+              layout.dir = direction;
+              if (!variant.includes('three-pane') && layout.children.length === 3) layout.lastElementChild.remove();
+              if (variant.includes('three-pane') && layout.children.length === 2) layout.appendChild(Object.assign(document.createElement('section'), { className: 'supporting-pane', textContent: 'Supporting' }));
+              const children = [...layout.children];
+              const columns = getComputedStyle(layout).gridTemplateColumns.split(' ').map(parseFloat);
+              return { columns, visible: children.map(el => getComputedStyle(el).display !== 'none'), positions: children.map(el => el.getBoundingClientRect().x), margin: parseFloat(getComputedStyle(layout).marginInlineStart), divider: getComputedStyle(children[0]).borderInlineEndWidth };
+            }, { variant, direction, width });
+            const label = `${variant} ${direction} viewport ${viewport} container ${width}`;
+            const count = width < 840 ? 1 : variant.includes('three-pane') && width >= 1200 ? 3 : 2;
+            assert.equal(result.columns.length, count, label);
+            assert.deepEqual(result.visible, result.visible.map((_, i) => width >= 840 || i === 0), label);
+            assert.equal(result.margin, width < 600 ? 16 : 24, label);
+            if (width >= 840) {
+              assert.equal(result.positions[0] < result.positions[1], direction === 'ltr', label);
+              if (variant.includes('equal')) assert.ok(Math.abs(result.columns[0] - result.columns[1]) < 1, label);
+              else assert.equal(result.columns[variant.includes('supporting') && !/start|left/.test(variant) ? 1 : 0], 360, label);
+            } else assert.equal(result.divider, '0px', label);
+          }
+        }
+      }
+      await page.evaluate(() => {
+        document.querySelector('#outer').style.containerType = 'normal';
+        document.querySelector('#host').style.cssText = 'height:400px';
+        document.querySelector('#layout').className = 'panes three-pane';
+        if (document.querySelector('#layout').children.length === 2) document.querySelector('#layout').appendChild(Object.assign(document.createElement('section'), { className: 'supporting-pane', textContent: 'Supporting' }));
+      });
+      for (const width of [839, 840, 841, 1199, 1200, 1201]) {
+        await page.setViewportSize({ width, height: 700 });
+        assert.equal(await page.locator('#layout').evaluate(el => getComputedStyle(el).gridTemplateColumns.split(' ').length), width < 840 ? 1 : width < 1200 ? 2 : 3, `viewport fallback ${width}`);
+      }
+    } finally { await browser.close(); }
+  });
+
+  browserTest(`Panes preserve footer icon-button geometry (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+      const sizes = { xsmall: 32, small: 40, medium: 56, large: 96, xlarge: 136 };
+      for (const footer of ['footer', 'div class="pane-footer"', 'nav']) {
+        const tag = footer.split(' ')[0];
+        await page.setContent(`<style>${css}</style><section class="pane"><${footer}>${['button', 'a'].flatMap(control => Object.keys(sizes).map(size => `<${control} class="icon-button ${size}" aria-label="More" ${control === 'a' ? 'href="#more"' : 'type="button"'}><span class="material-symbols" aria-hidden="true">more_vert</span></${control}>`)).join('')}</${tag}></section>`);
+        for (const [size, height] of Object.entries(sizes)) {
+          const geometry = await page.locator(`.icon-button.${size}`).evaluateAll(els => els.map(el => ({ height: el.getBoundingClientRect().height, width: el.getBoundingClientRect().width, padding: getComputedStyle(el).paddingBlock })));
+          assert.deepEqual(geometry, Array(2).fill({ height, width: height, padding: '0px' }), `${footer} ${size}`);
+        }
+      }
+    } finally { await browser.close(); }
+  });
+
+  browserTest(`Panes preserve compact selection and independent scrolling (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 800 } });
+      for (const direction of ['ltr', 'rtl']) for (const motion of ['reduce', 'no-preference']) {
+        await page.emulateMedia({ reducedMotion: motion });
+        await page.setContent(`<style>${css}</style><div id="host" style="container-type:inline-size;width:320px;height:600px"><div class="panes equal" dir="${direction}">${[1, 2].map(n => `<section class="pane" id="pane${n}"><header><h2>Übersetzte Überschrift معلومات إضافية</h2><button type="button">Mehr</button></header><div class="pane-body">${'<p>Weitere Informationen zum ausgewählten Eintrag.</p>'.repeat(40)}<a href="#end">Letzter Eintrag ${n}</a></div><footer><button type="button">Änderungen speichern</button><button type="button">Abbrechen</button></footer></section>`).join('')}</div></div>`);
+        await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
+        await expect(page.locator('#pane1')).toBeVisible();
+        await expect(page.locator('#pane2')).toBeHidden();
+        await page.locator('#pane2').evaluate(el => el.classList.add('active'));
+        await expect(page.locator('#pane1')).toBeHidden();
+        await expect(page.locator('#pane2')).toBeVisible();
+        for (const width of [320, 840, 1200]) {
+          await page.locator('#host').evaluate((el, width) => { el.style.width = `${width}px`; }, width);
+          await page.locator('#pane2 a').focus();
+          await expect(page.locator('#pane2 a')).toBeFocused();
+          assert.ok(await page.locator('#pane2 .pane-body').evaluate(el => el.scrollTop > 0));
+          assert.equal(await page.locator('#pane1 .pane-body').evaluate(el => el.scrollTop), 0);
+          for (const target of ['#pane2 header button', '#pane2 footer button:first-child', '#pane2 footer button:last-child']) {
+            await page.locator(target).focus();
+            assert.ok(await page.locator(target).evaluate(el => {
+              const range = document.createRange();
+              range.selectNodeContents(el);
+              const text = range.getBoundingClientRect(), button = el.getBoundingClientRect();
+              return text.top >= button.top - 1 && text.bottom <= button.bottom + 1;
+            }), `${direction} ${width} ${target} contains its label`);
+            assert.ok(await page.locator(target).evaluate(el => {
+              const r = el.getBoundingClientRect(), pane = el.closest('.pane').getBoundingClientRect();
+              return r.left >= pane.left - 1 && r.right <= pane.right + 1 && r.top >= pane.top && r.bottom <= pane.bottom && el.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2));
+            }), `${direction} ${width} ${target} reachable`);
+          }
+          assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+          assert.deepEqual(await page.locator('.pane').evaluateAll(els => els.map(el => el.id)), ['pane1', 'pane2']);
+        }
+        await page.locator('#host').evaluate(el => { el.style.width = '320px'; });
+        await expect(page.locator('#pane1')).toBeHidden();
+        await page.locator('#pane2').evaluate(el => el.classList.remove('active'));
+        await expect(page.locator('#pane1')).toBeVisible();
+        await expect(page.locator('#pane2')).toBeHidden();
+      }
+    } finally { await browser.close(); }
+  });
+}
+
+for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
+  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
+  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
   browserTest(`AppBar focus ownership and teardown (${engine})`, async () => {
     const browser = await type.launch();
     let page;

@@ -10,7 +10,7 @@
     "nodeVersion": "v24.20.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "4363ea4291cd83871af55cb652266ff2fa8070123de0cb9963f3fda4e847554b",
+    "reportSha256": "fcb119f770a0cefc69268c3320763d7f6abe8fbc2ef8e60941285b1e5c5df5aa",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -18,9 +18,9 @@
       "slug": "app-bar",
       "title": "App bar",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-17",
       "scope": "Small, medium flexible, large flexible, and search app bars.",
       "adaptation": "Native header/nav composition; AppBar owns scroll collapse and search expansion.",
@@ -180,10 +180,10 @@
       "slug": "panes",
       "title": "Panes",
       "kind": "component",
-      "support": "unassessed",
+      "support": "implemented",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-17",
       "scope": "List-detail, supporting pane, and equal panes.",
       "adaptation": "CSS viewport and container queries; the application chooses the active compact pane.",
       "upstream": {
@@ -205,14 +205,14 @@
       "sources": [
         {
           "path": "src/sass/components/_panes.scss",
-          "sha256": "09f9d783b94ba5464410e8a005f8b4b3d25ed7f1afcf8533e023fcd5194915b8"
+          "sha256": "107d45899b9a41448563215bf670c5f96f25cb9153b8ff173941d5f12b90839b"
         }
       ],
       "gaps": [
         {
           "kind": "integration",
-          "description": "Viewport rules at 840px override narrow-container collapse; compact supporting layouts hide rather than stack supporting content.",
-          "nextStep": "Use an explicit application layout when both panes must remain visible; test actual container width, reading order, selection and scrolling."
+          "description": "Compact supporting layouts retain one-active-pane selection rather than automatic stacking. Native zoom, assistive technology and physical-device review remain pending.",
+          "nextStep": "Keep selection application-owned and complete the Panes manual-review fixture before making accessibility-parity claims."
         }
       ],
       "browserChecks": [
@@ -220,6 +220,24 @@
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete list-detail example preserves both treatments and its task path",
           "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Panes use the nearest available width at layout boundaries (chromium)",
+          "scope": "Independent viewport/container widths, both sides and exact 840px/1200px boundaries, nearest-container precedence, viewport fallback, pane aliases, start/left supporting columns, equal/three-pane, separated/floating and RTL. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Panes preserve footer icon-button geometry (chromium)",
+          "scope": "All five icon-button sizes retain their height, width and block padding for native buttons and anchors across footer aliases. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Panes preserve compact selection and independent scrolling (chromium)",
+          "scope": "Active selection and first-pane fallback through resizing, independent body scrolling, DOM order, translated footer actions at enlarged root text size, both directions and motion preferences. Not native zoom or screen-reader verification.",
           "state": "recorded-passed"
         }
       ],
