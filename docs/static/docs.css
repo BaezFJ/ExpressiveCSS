@@ -663,9 +663,6 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   background-color: var(--md-sys-color-surface-container);
 }
 
-/* Force compact (single-pane) so the docs can show .active without
-   shrinking the window. The component uses display:flex !important
-   at 840px, so inactive panes are stacked and hidden instead. */
 .panes-demo.compact {
   grid-template-columns: 1fr !important;
   grid-template-rows: 1fr;

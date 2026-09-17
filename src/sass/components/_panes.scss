@@ -40,41 +40,36 @@
   --md-comp-pane-list-width: 360px;
   --md-comp-pane-supporting-width: 360px;
   --md-comp-pane-primary-min-width: 360px;
+  --md-comp-pane-margin: 16px;
+  --_pane-columns: 1fr;
+  --_pane-expanded-columns: var(--md-comp-pane-list-width) 1fr;
+  --_pane-wide-columns: var(--_pane-expanded-columns);
+  --_pane-display: none;
+  --_pane-divider: 0px;
 
   box-sizing: border-box;
   display: grid;
-  width: 100%;
+  width: calc(100% - (2 * var(--md-comp-pane-margin)));
   height: 100%;
   min-height: 0;
-  margin: 0;
+  margin: 0 var(--md-comp-pane-margin);
   padding: 0;
   container-type: inline-size;
   background-color: var(--md-comp-pane-container-color);
   color: var(--md-sys-color-on-surface);
 
-  // Default: single pane on Compact and Medium windows (< 840px).
-  grid-template-columns: 1fr;
+  grid-template-columns: var(--_pane-columns);
   gap: 0;
 
-  // M3 layout margins are the inline space between content and the window
-  // edges. Keep the full-height pane model and inset layouts below Large.
-  @include bp-down("medium") {
-    --md-comp-pane-margin: 16px;
-    width: calc(100% - (2 * var(--md-comp-pane-margin)));
-    margin-inline: var(--md-comp-pane-margin);
-  }
-
-  @include bp-between("medium", "expanded") {
+  @include bp-up("medium") {
     --md-comp-pane-margin: 24px;
-    width: calc(100% - (2 * var(--md-comp-pane-margin)));
-    margin-inline: var(--md-comp-pane-margin);
     gap: var(--md-comp-pane-gap);
   }
 
   // Panes in compact mode: list/primary visible by default, detail/supporting hidden
   // unless marked .active
   > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane) {
-    display: none;
+    display: var(--_pane-display);
     min-width: 0;
     min-height: 0;
     overflow: hidden;
@@ -90,46 +85,40 @@
     }
   }
 
-  // Expanded Viewports: Dual-pane side-by-side (via container query or breakpoint)
   @include bp-up("expanded") {
-    grid-template-columns: var(--md-comp-pane-list-width) 1fr;
-    gap: 0;
+    --_pane-columns: var(--_pane-expanded-columns);
+    --_pane-display: flex;
+    --_pane-divider: 1px;
+  }
 
-    > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane) {
-      display: flex !important;
-    }
+  @include bp-up("large") {
+    --_pane-columns: var(--_pane-wide-columns);
+  }
+
+  @container (width < 600px) {
+    --md-comp-pane-margin: 16px;
+    gap: 0;
+  }
+
+  @container (width >= 600px) {
+    --md-comp-pane-margin: 24px;
+    gap: var(--md-comp-pane-gap);
+  }
+
+  @container (width < 840px) {
+    --_pane-columns: 1fr;
+    --_pane-display: none;
+    --_pane-divider: 0px;
   }
 
   @container (min-width: 840px) {
-    grid-template-columns: var(--md-comp-pane-list-width) 1fr;
-    gap: 0;
-
-    > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane) {
-      display: flex !important;
-    }
+    --_pane-columns: var(--_pane-expanded-columns);
+    --_pane-display: flex;
+    --_pane-divider: 1px;
   }
 
-  // This follows both two-pane rules so their base gap cannot cancel the M3
-  // Expanded spacer when the viewport and container queries both match.
-  @include bp-between("expanded", "large") {
-    --md-comp-pane-margin: 24px;
-    width: calc(100% - (2 * var(--md-comp-pane-margin)));
-    margin-inline: var(--md-comp-pane-margin);
-    gap: var(--md-comp-pane-gap);
-  }
-
-  @include bp-between("large", "extra-large") {
-    --md-comp-pane-margin: 24px;
-    width: calc(100% - (2 * var(--md-comp-pane-margin)));
-    margin-inline: var(--md-comp-pane-margin);
-    gap: var(--md-comp-pane-gap);
-  }
-
-  @include bp-up("extra-large") {
-    --md-comp-pane-margin: 24px;
-    width: calc(100% - (2 * var(--md-comp-pane-margin)));
-    margin-inline: var(--md-comp-pane-margin);
-    gap: var(--md-comp-pane-gap);
+  @container (min-width: 1200px) {
+    --_pane-columns: var(--_pane-wide-columns);
   }
 }
 
@@ -140,49 +129,25 @@
 // 1. Supporting Pane Layout
 .supporting-pane-layout,
 .panes.supporting {
-  @include bp-up("expanded") {
-    grid-template-columns: 1fr var(--md-comp-pane-supporting-width);
-  }
-
-  @container (min-width: 840px) {
-    grid-template-columns: 1fr var(--md-comp-pane-supporting-width);
-  }
+  --_pane-expanded-columns: 1fr var(--md-comp-pane-supporting-width);
 
   // Leading supporting pane (.start / .left)
   &.start,
   &.left {
-    @include bp-up("expanded") {
-      grid-template-columns: var(--md-comp-pane-supporting-width) 1fr;
-    }
-
-    @container (min-width: 840px) {
-      grid-template-columns: var(--md-comp-pane-supporting-width) 1fr;
-    }
+    --_pane-expanded-columns: var(--md-comp-pane-supporting-width) 1fr;
   }
 }
 
 // 2. Equal / Proportional Pane Layout
 .panes.equal,
 .pane-layout.equal {
-  @include bp-up("expanded") {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @container (min-width: 840px) {
-    grid-template-columns: 1fr 1fr;
-  }
+  --_pane-expanded-columns: 1fr 1fr;
 }
 
 // 3. Three-Pane Layout (List + Primary Focus + Supporting)
 .panes.three-pane,
 .pane-layout.three-pane {
-  @include bp-up("large") {
-    grid-template-columns: var(--md-comp-pane-list-width) 1fr var(--md-comp-pane-supporting-width);
-  }
-
-  @container (min-width: 1200px) {
-    grid-template-columns: var(--md-comp-pane-list-width) 1fr var(--md-comp-pane-supporting-width);
-  }
+  --_pane-wide-columns: var(--md-comp-pane-list-width) 1fr var(--md-comp-pane-supporting-width);
 }
 
 // ---------------------------------------------------------------------------
@@ -220,13 +185,7 @@
 // ---------------------------------------------------------------------------
 :is(.panes, .pane-layout, .list-detail, .supporting-pane-layout):not(.separated, .floating) {
   > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane):not(:last-child) {
-    @include bp-up("expanded") {
-      border-inline-end: 1px solid var(--md-comp-pane-divider-color);
-    }
-
-    @container (min-width: 840px) {
-      border-inline-end: 1px solid var(--md-comp-pane-divider-color);
-    }
+    border-inline-end: var(--_pane-divider) solid var(--md-comp-pane-divider-color);
   }
 }
 
@@ -322,14 +281,27 @@
   }
 
   // Footer / Action Bar
+  > footer:not(:has(> nav:only-child)),
   > :is(footer, .pane-footer, nav:last-child) {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 8px;
     flex: 0 0 auto;
     box-sizing: border-box;
     min-height: 56px;
+    margin: 0;
     padding: 8px 16px;
     border-block-start: 1px solid var(--md-comp-pane-divider-color);
+
+    > :is(button, a) {
+      min-width: 0;
+      max-width: 100%;
+      min-height: var(--md-comp-filled-button-container-height, 40px);
+      height: auto;
+      padding-block: 8px;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
   }
 }

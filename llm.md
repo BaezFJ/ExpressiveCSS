@@ -3119,7 +3119,7 @@ Add `nowrap` to keep a long run on one row and scroll it sideways instead of wra
 
 Material 3 canonical layouts — list-detail, supporting pane, and equal panes.
 
-Panes are CSS-only. A container (`panes`, or one of the named aliases `list-detail`, `supporting-pane-layout`, `pane-layout`) holds two or three `pane` children. Compact windows (`< 600px`) use 16px inline margins. Every wider layout uses 24px inline margins and 24px spacers. Below 840px only one pane shows at a time; at 840px and up the panes sit side by side. The container declares inline-size containment, but the viewport media rules still show all panes at 840px and above. Do not assume a narrow nested column collapses independently. Google recommends stacking supporting content below primary content on compact and medium layouts; the current one-active-pane behavior is a framework adaptation.
+Panes are CSS-only. A container (`panes`, or one of the named aliases `list-detail`, `supporting-pane-layout`, `pane-layout`) holds two or three `pane` children. Layout decisions use the nearest ancestor with inline-size or size containment, falling back to viewport media rules when none exists. Set `container-type: inline-size` on the containing column for nested layouts. The pane layout cannot query its own size. Compact widths (`< 600px`) use 16px inline margins; wider layouts use 24px margins and spacers. Below 840px only one pane shows at a time; at 840px and up the panes sit side by side. Google recommends stacking supporting content below primary content on compact and medium layouts; the current one-active-pane behavior is a framework adaptation. Footer actions wrap to keep translated labels reachable.
 
 Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane` counts as a pane child — the specific names are for readability.
 
@@ -3152,7 +3152,7 @@ Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane`
 
 ### Compact
 
-On Compact windows (`< 600px`) the container has 16px inline margins. Medium and wider windows use 24px inline margins and 24px spacers. On Compact and Medium windows (`< 840px`) the container shows one pane. The first pane wins by default; add `active` to the pane you want instead, and move that class to switch panes. At 840px and up `active` is ignored and every pane shows.
+At Compact widths (`< 600px`) the container has 16px inline margins. Medium and wider widths use 24px inline margins and 24px spacers. Below 840px the container shows one pane. The first pane wins by default; add `active` to the pane you want instead, and move that class to switch panes. At 840px and up `active` is ignored and every pane shows. These thresholds use the applicable ancestor query container, or the viewport fallback.
 
 ```html
 <div class="panes list-detail">

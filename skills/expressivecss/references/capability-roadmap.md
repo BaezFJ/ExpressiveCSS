@@ -10,14 +10,14 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `4363ea4291cd83871af55cb652266ff2fa8070123de0cb9963f3fda4e847554b`.
+Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `7f7d46c2acc81dc1b85835694f5b23829f9e232ed16e4d952db34071f480b04b`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
-| [App bar](#app-bar) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [App bar](#app-bar) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Navigation bar](#navigation-bar) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Navigation rail](#navigation-rail) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Panes](#panes) | unassessed | needs-review | recorded-scoped-pass | 1 |
+| [Panes](#panes) | implemented | source-reviewed | recorded-scoped-pass | 1 |
 | [Footer](#footer) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Tabs](#tabs) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Breadcrumbs](#breadcrumbs) | unassessed | needs-review | recorded-scoped-pass | 0 |
@@ -64,9 +64,9 @@ Last operator collection: 2026-09-17, Chromium 153.0.8010.12, passed; inputs mat
 
 ## App bar
 
-**implemented within the stated scope.** Small, medium flexible, large flexible, and search app bars.
+**unassessed within the stated scope.** Small, medium flexible, large flexible, and search app bars.
 
-Source review: source-reviewed, 2026-09-17. [src/sass/components/_navbar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_navbar.scss), [src/ts/components/appBar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/appBar.ts).
+Source review: needs-review, 2026-09-17. [src/sass/components/_navbar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_navbar.scss), [src/ts/components/appBar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/appBar.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/app-bars/overview).
 
@@ -114,17 +114,19 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 ## Panes
 
-**unassessed within the stated scope.** List-detail, supporting pane, and equal panes.
+**implemented within the stated scope.** List-detail, supporting pane, and equal panes.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/_panes.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_panes.scss).
+Source review: source-reviewed, 2026-09-17. [src/sass/components/_panes.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_panes.scss).
 
 Google relationship: pattern. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/foundations/layout/canonical-examples/overview).
 
 Web adaptation: CSS viewport and container queries; the application chooses the active compact pane.
 
-- integration: Viewport rules at 840px override narrow-container collapse; compact supporting layouts hide rather than stack supporting content. Next: Use an explicit application layout when both panes must remain visible; test actual container width, reading order, selection and scrolling.
+- integration: Compact supporting layouts retain one-active-pane selection rather than automatic stacking. Native zoom, assistive technology and physical-device review remain pending. Next: Keep selection application-owned and complete the Panes manual-review fixture before making accessibility-parity claims.
 
 - recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Panes use the nearest available width at layout boundaries (chromium)`. Independent viewport/container widths, both sides and exact 840px/1200px boundaries, nearest-container precedence, viewport fallback, pane aliases, start/left supporting columns, equal/three-pane, separated/floating and RTL. Equivalent Firefox and WebKit cases run in the same suite.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Panes preserve compact selection and independent scrolling (chromium)`. Active selection and first-pane fallback through resizing, independent body scrolling, DOM order, translated footer actions at enlarged root text size, both directions and motion preferences. Not native zoom or screen-reader verification.
 
 <a id="footer"></a>
 

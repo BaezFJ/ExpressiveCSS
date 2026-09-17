@@ -32,6 +32,14 @@ motion enabled in the operating system.
 
 ## Review record
 
+Panes: at `/panes.html#list-detail`, change `#pane-column` to 839px, 840px,
+1199px and 1200px in developer tools while keeping the viewport wide. Select a
+list item and return with Back at compact widths. Repeat in RTL, with translated
+labels and native 200%/400% zoom. Check independent body scrolling, reading order
+and reachable header/footer actions. The application owns the active pane;
+supporting content is not automatically stacked. Record actual device and
+assistive-technology results below; they remain pending.
+
 App bar/search: at `/navbar.html#search-docs`, focus the search field, enter a
 query, close with Escape or Close search, and click the still-focused field to
 reopen. Leave and refocus it, too. Dismissal must stay closed and query text must

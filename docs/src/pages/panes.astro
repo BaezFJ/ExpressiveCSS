@@ -33,12 +33,13 @@ const S = defineSections([
         Tokens follow the
         <a href="https://m3.material.io/foundations/layout/canonical-layouts">M3 canonical layouts</a>.
         Coplanar is the default: full-bleed surfaces and a 1dp
-        <code>outline-variant</code> divider. The split is 840px, from
-        viewport media rules. Inline-size containment does not make a narrow
-        nested layout collapse at wide viewport sizes. Below the split, one pane
+        <code>outline-variant</code> divider. The split is 840px, measured against
+        the nearest ancestor with inline-size or size containment. Without one,
+        viewport media rules apply. Put <code>container-type: inline-size</code>
+        on the containing column to adapt a nested layout. Below the split, one pane
         shows at a time. Google recommends stacking supporting content below
         primary content on compact and medium layouts; this component's
-        one-active-pane behavior is a framework adaptation. Compact windows add 16dp inline margins; every wider
+        one-active-pane behavior is a framework adaptation. Compact widths add 16dp inline margins; every wider
         layout uses 24dp margins and 24dp spacers. Give the container a
         height — it is <code>height: 100%</code>.
       </p>
@@ -60,6 +61,7 @@ const S = defineSections([
         Pair the list pane with a
         <a href={route('lists')}>list</a>.
       </p>
+      <div id="pane-column" style="container-type: inline-size; width: 100%;">
       <div class="list-detail panes-demo" data-pane-select>
         <section class="list-pane">
           <header>
@@ -118,7 +120,9 @@ const S = defineSections([
           </footer>
         </section>
       </div>
+      </div>
 <Code code={`
+<div style="container-type: inline-size">
 <div class="list-detail">
   <section class="list-pane">
     <header>
@@ -133,25 +137,26 @@ const S = defineSections([
     <div>…</div>
   </section>
 </div>
+</div>
 `} />
   </Section>
   <Section {...S.compact}>
       <p>
-        On Compact windows (below 600px), the layout has 16dp inline
-        margins. Medium, Expanded, Large, and Extra-large windows use
+        At Compact widths (below 600px), the layout has 16dp inline
+        margins. Medium, Expanded, Large, and Extra-large widths use
         24dp inline margins and 24dp spacers. On Compact and Medium
-        windows (below 840px), every pane is hidden except
+        widths (below 840px), every pane is hidden except
         <code>active</code>. If none is active, the first pane shows.
         Toggle <code>active</code> yourself when the user picks a row
         or taps back — <code>AutoInit()</code> does not start panes.
-        On Expanded windows both panes are shown regardless of
+        At Expanded widths both panes are shown regardless of
         <code>active</code>, so the same markup works at every size.
       </p>
       <p>
         The illustration below is forced to one pane so the swap is
-        visible here. Narrow the window below 840px to see the
-        component do it itself — the list-detail demo above is the
-        live compact view.
+        visible here. Change the width of <code>#pane-column</code> in developer
+        tools to test the list-detail demo above without resizing the viewport.
+        Its nearest containing column controls the split.
       </p>
       <div class="list-detail panes-demo compact" data-pane-select>
         <section class="list-pane active">
@@ -289,7 +294,7 @@ back.addEventListener('click', () => {
             <h2>Draft</h2>
           </header>
           <div>
-            <p>Write in this pane. Both columns grow equally once the window is at least 840px wide.</p>
+            <p>Write in this pane. Both columns grow equally once the applicable container or viewport is at least 840px wide.</p>
           </div>
         </section>
         <section class="pane">
@@ -311,7 +316,8 @@ back.addEventListener('click', () => {
   <Section {...S["three-pane"]}>
       <p>
         <code>three-pane</code> is list + focus + supporting. It
-        needs 1200px: 360dp list, a flexible middle, 360dp supporting.
+        needs 1200px of container width, or viewport width without a query
+        container: 360dp list, a flexible middle, 360dp supporting.
         Between 840px and 1200px the default two-column list-detail
         grid still applies, so the third pane wraps. Below 840px it
         is the same single-pane <code>active</code> pattern as the
