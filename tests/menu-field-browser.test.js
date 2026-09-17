@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit, expect } from '@playwright/test';
+import utilsBundle from 'playwright-core/lib/utilsBundle';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -9,6 +10,143 @@ assert.ok(!process.env.EXPRESSIVECSS_TEST_BROWSER || ['chromium', 'firefox', 'we
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+  browserTest(`Slider labels follow native handles through direction and resize (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ viewport: { width: 700, height: 600 } });
+      await page.setContent(`<style>${css} input[type=range] { --md-comp-slider-handle-color: rgb(255,0,0); }</style><div id="host" class="slider" style="margin:60px;width:320px"><input type="range" min="-100" max="0" step="5" value="-50" aria-label="Temperature"></div>`);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => window.slider = Expressive.Slider.init(document.querySelector('input')));
+      for (const reducedMotion of ['reduce', 'no-preference']) for (const vertical of [false, true]) for (const direction of ['ltr', 'rtl']) for (const size of [320, 220]) {
+        await page.emulateMedia({ reducedMotion });
+        await page.evaluate(({ vertical, direction, size }) => {
+          document.documentElement.dir = direction;
+          const host = document.querySelector('#host'), input = host.querySelector('input');
+          host.classList.toggle('vertical', vertical);
+          host.style.width = vertical ? '60px' : `${size}px`;
+          input.style.height = vertical ? `${size}px` : '';
+        }, { vertical, direction, size });
+        await page.waitForTimeout(200);
+        for (const value of [-100, -75, 0]) {
+          await page.evaluate(value => { slider.el.value = value; slider.el.dispatchEvent(new Event('change', { bubbles: true })); }, value);
+          await expect(page.locator('.value')).toHaveText(String(value));
+          const png = utilsBundle.PNG.sync.read(await page.locator('input').screenshot({ animations: 'disabled' }));
+          const points = [];
+          for (let y = 0; y < png.height; y++) for (let x = 0; x < png.width; x++) {
+            const i = (y * png.width + x) * 4;
+            if (png.data[i] > 250 && png.data[i + 1] < 5 && png.data[i + 2] < 5) points.push(vertical ? y + .5 : x + .5);
+          }
+          assert.ok(points.length, 'native handle is painted');
+          const center = (Math.min(...points) + Math.max(...points)) / 2;
+          const label = await page.locator('input').evaluate((el, vertical) => {
+            const input = el.getBoundingClientRect(), bubble = el.nextElementSibling.getBoundingClientRect();
+            return vertical ? bubble.y + bubble.height / 2 - input.y : bubble.x + bubble.width / 2 - input.x;
+          }, vertical);
+          assert.ok(Math.abs(center - label) < 1, `${vertical} ${direction} ${size} ${value}: native ${center}, label ${label}`);
+        }
+      }
+    } finally { try { await page?.evaluate(() => window.slider?.destroy()); } finally { await browser.close(); } }
+  });
+
+  browserTest(`Slider input events and paired ranges retain native interaction (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.setContent(`<style>${css} #pair { --md-comp-slider-active-track-color: rgb(0,0,255); --md-comp-slider-inactive-track-color: rgb(128,128,128); }</style><div id="pair" class="slider" style="margin:60px;width:320px"><input id="start" type="range" min="-10" max="10" step="0.5" value="-5" aria-label="Start"><input id="end" type="range" min="-10" max="10" step="0.5" value="5" aria-label="End"></div><label>Start value<input type="number" id="number" min="-10" max="10" step="0.5" value="-5"></label>`);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => {
+        window.sliders = [...document.querySelectorAll('[type=range]')].map(el => Expressive.Slider.init(el));
+        const range = document.querySelector('#start'), number = document.querySelector('#number');
+        number.addEventListener('input', () => { range.value = number.value; range.dispatchEvent(new Event('input', { bubbles: true })); number.value = range.value; });
+        range.addEventListener('input', () => number.value = range.value);
+      });
+      await page.locator('#number').fill('-2.5');
+      await expect(page.locator('#start + .thumb .value')).toHaveText('-2.5');
+      for (const vertical of [false, true]) for (const direction of ['ltr', 'rtl']) for (const size of [320, 220]) {
+        await page.evaluate(({ direction, vertical, size }) => {
+          document.documentElement.dir = direction;
+          const host = document.querySelector('#pair');
+          host.classList.toggle('vertical', vertical);
+          host.style.width = vertical ? '44px' : `${size}px`;
+          for (const input of host.querySelectorAll('input')) input.style.height = vertical ? `${size}px` : '';
+          for (const [i, slider] of sliders.entries()) { slider.el.value = i ? '5' : '-5'; slider.el.dispatchEvent(new Event('input', { bubbles: true })); }
+        }, { direction, vertical, size });
+        await page.waitForTimeout(200);
+        const box = await page.locator('#start').boundingBox();
+        if (vertical) assert.equal(await page.locator('#pair').evaluate(el => parseFloat(getComputedStyle(el, '::before').height)), box.height, 'paired track resizes with native inputs');
+        const png = utilsBundle.PNG.sync.read(await page.locator('#pair').screenshot());
+        const center = (Math.floor(png.height / 2) * png.width + Math.floor(png.width / 2)) * 4;
+        assert.deepEqual([...png.data.subarray(center, center + 3)], [0, 0, 255], 'paired active interval is painted between handles');
+        for (const [id, fraction] of [['start', .25], ['end', .75]]) {
+          const label = await page.locator(`#${id}`).evaluate((el, vertical) => {
+            const input = el.getBoundingClientRect(), bubble = el.nextElementSibling.getBoundingClientRect();
+            return vertical ? bubble.y + bubble.height / 2 - input.y : bubble.x + bubble.width / 2 - input.x;
+          }, vertical);
+          const position = 2 + fraction * ((vertical ? box.height : box.width) - 4);
+          assert.ok(Math.abs(label - (vertical || direction === 'rtl' ? (vertical ? box.height : box.width) - position : position)) < 1, 'paired label follows its handle');
+        }
+        await page.mouse.click(box.x + box.width * (vertical ? .5 : direction === 'rtl' ? .65 : .35), box.y + box.height * (vertical ? .65 : .5));
+        assert.ok(Number(await page.locator('#start').inputValue()) > -5, 'start responds to a track click');
+        await page.mouse.click(box.x + box.width * (vertical ? .5 : direction === 'rtl' ? .1 : .9), box.y + box.height * (vertical ? .1 : .5));
+        assert.ok(Number(await page.locator('#end').inputValue()) > 5, 'end responds to a track click');
+        await page.locator('#start').focus(); await page.keyboard.press('End');
+        assert.equal(await page.locator('#start').inputValue(), await page.locator('#end').inputValue());
+        await page.locator('#end').focus(); await page.keyboard.press('Home');
+        assert.equal(await page.locator('#start').inputValue(), await page.locator('#end').inputValue());
+        await page.locator('#start').focus(); await page.keyboard.press('Home');
+        await expect(page.locator('#start')).toHaveValue('-10');
+        await page.keyboard.press('ArrowUp');
+        await expect(page.locator('#start')).toHaveValue('-9.5');
+      }
+      await page.locator('#start').evaluate(el => { el.disabled = true; });
+      const disabledValue = await page.locator('#start').inputValue();
+      const disabledBox = await page.locator('#start').boundingBox();
+      await page.mouse.click(disabledBox.x + disabledBox.width / 2, disabledBox.y + disabledBox.height * .8);
+      await expect(page.locator('#start')).toHaveValue(disabledValue);
+      await page.evaluate(() => {
+        for (const slider of sliders) { slider.el.min = '0'; slider.el.max = '0'; slider.el.value = '0'; slider.el.dispatchEvent(new Event('input')); }
+      });
+      await expect(page.locator('#pair .value')).toHaveText(['0', '0']);
+      assert.equal(await page.locator('#pair').evaluate(el => /NaN|Infinity/.test(el.getAttribute('style'))), false);
+      await page.evaluate(() => { sliders.forEach(slider => slider.destroy()); });
+      await expect(page.locator('.thumb')).toHaveCount(0);
+    } finally { try { await page?.evaluate(() => window.sliders?.forEach(slider => slider.destroy())); } finally { await browser.close(); } }
+  });
+
+  browserTest(`Slider forced colors preserve tracks and handles (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ forcedColors: 'active', colorScheme: 'light' });
+      await page.setContent(`<style>${css} body {background:Canvas}</style><div class="slider" style="width:320px;margin:60px"><input type="range" min="0" max="100" value="35" aria-label="Volume"></div>`);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => window.slider = Expressive.Slider.init(document.querySelector('input')));
+      assert.equal(await page.evaluate(() => matchMedia('(forced-colors: active)').matches), true);
+      for (const colorScheme of ['light', 'dark']) for (const vertical of [false, true]) for (const direction of ['ltr', 'rtl']) {
+      await page.emulateMedia({ colorScheme });
+      await page.evaluate(({ vertical, direction }) => {
+        document.documentElement.dir = direction;
+        slider.el.parentElement.classList.toggle('vertical', vertical);
+        slider.el.style.height = vertical ? '320px' : '';
+      }, { vertical, direction });
+      await page.waitForTimeout(200);
+      const png = utilsBundle.PNG.sync.read(await page.locator('input').screenshot());
+      const pixel = (x, y) => {
+        if (vertical) [x, y] = [y, 319 - x];
+        else if (direction === 'rtl') x = 319 - x;
+        return [...png.data.subarray((y * png.width + x) * 4, (y * png.width + x) * 4 + 3)];
+      };
+      const canvas = pixel(20, 1);
+      assert.notDeepEqual(pixel(30, 22), canvas, 'active track remains visible');
+      assert.notDeepEqual(pixel(270, 22), canvas, 'inactive track remains visible');
+      assert.ok([5, 10, 34, 38].some(y => pixel(112, y).some((value, i) => value !== canvas[i])), `${colorScheme} ${vertical} ${direction}: native handle remains visible outside the track`);
+      assert.notDeepEqual(pixel(30, 22), pixel(270, 22), 'active and inactive tracks differ');
+      }
+    } finally { try { await page?.evaluate(() => window.slider?.destroy()); } finally { await browser.close(); } }
+  });
+
   browserTest(`select and calendar treat external values as data (${engine})`, async () => {
     const browser = await type.launch();
     let page;

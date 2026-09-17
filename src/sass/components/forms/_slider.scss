@@ -103,6 +103,11 @@ input[type="range"] {
   --md-comp-slider-icon-size: 32px;
 }
 
+:is(#{$_host}):dir(rtl),
+input[type="range"]:dir(rtl) {
+  --md-comp-slider-gradient: to left;
+}
+
 :is(#{$_host}).vertical {
   --md-comp-slider-gradient: to top;
   --md-comp-slider-stop-at-start: 50% var(--md-comp-slider-stop-inset);
@@ -187,7 +192,7 @@ input[type="range"] {
         max(
           0%,
           calc(
-            var(--md-comp-slider-active-fraction) - var(--md-comp-slider-gap) -
+            var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -195,7 +200,7 @@ input[type="range"] {
         max(
           0%,
           calc(
-            var(--md-comp-slider-active-fraction) - var(--md-comp-slider-gap) -
+            var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -203,7 +208,7 @@ input[type="range"] {
         min(
           100%,
           calc(
-            var(--md-comp-slider-active-fraction) + var(--md-comp-slider-gap) +
+            var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction)) + var(--md-comp-slider-gap) +
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -211,7 +216,7 @@ input[type="range"] {
         min(
           100%,
           calc(
-            var(--md-comp-slider-active-fraction) + var(--md-comp-slider-gap) +
+            var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction)) + var(--md-comp-slider-gap) +
               var(--md-comp-slider-handle-width) / 2
           )
         )
@@ -236,7 +241,7 @@ input[type="range"] {
         max(
           0%,
           calc(
-            min(50%, var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
+            min(50%, var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction))) - var(--md-comp-slider-gap) -
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -244,7 +249,7 @@ input[type="range"] {
         max(
           0%,
           calc(
-            min(50%, var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
+            min(50%, var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction))) - var(--md-comp-slider-gap) -
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -252,7 +257,7 @@ input[type="range"] {
         min(
           100%,
           calc(
-            min(50%, var(--md-comp-slider-active-fraction)) + var(--md-comp-slider-gap) +
+            min(50%, var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction))) + var(--md-comp-slider-gap) +
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -260,7 +265,7 @@ input[type="range"] {
         min(
           100%,
           calc(
-            min(50%, var(--md-comp-slider-active-fraction)) + var(--md-comp-slider-gap) +
+            min(50%, var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction))) + var(--md-comp-slider-gap) +
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -268,7 +273,7 @@ input[type="range"] {
         max(
           0%,
           calc(
-            max(50%, var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
+            max(50%, var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction))) - var(--md-comp-slider-gap) -
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -276,7 +281,7 @@ input[type="range"] {
         max(
           0%,
           calc(
-            max(50%, var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
+            max(50%, var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction))) - var(--md-comp-slider-gap) -
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -284,7 +289,7 @@ input[type="range"] {
         min(
           100%,
           calc(
-            max(50%, var(--md-comp-slider-active-fraction)) + var(--md-comp-slider-gap) +
+            max(50%, var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction))) + var(--md-comp-slider-gap) +
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -292,7 +297,7 @@ input[type="range"] {
         min(
           100%,
           calc(
-            max(50%, var(--md-comp-slider-active-fraction)) + var(--md-comp-slider-gap) +
+            max(50%, var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction))) + var(--md-comp-slider-gap) +
               var(--md-comp-slider-handle-width) / 2
           )
         )
@@ -317,7 +322,7 @@ input[type="range"] {
         max(
           0%,
           calc(
-            var(--md-comp-slider-start-fraction) - var(--md-comp-slider-gap) -
+            var(--md-comp-slider-start-position, var(--md-comp-slider-start-fraction)) - var(--md-comp-slider-gap) -
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -325,7 +330,7 @@ input[type="range"] {
         max(
           0%,
           calc(
-            var(--md-comp-slider-start-fraction) - var(--md-comp-slider-gap) -
+            var(--md-comp-slider-start-position, var(--md-comp-slider-start-fraction)) - var(--md-comp-slider-gap) -
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -333,7 +338,7 @@ input[type="range"] {
         min(
           100%,
           calc(
-            var(--md-comp-slider-start-fraction) + var(--md-comp-slider-gap) +
+            var(--md-comp-slider-start-position, var(--md-comp-slider-start-fraction)) + var(--md-comp-slider-gap) +
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -341,7 +346,7 @@ input[type="range"] {
         min(
           100%,
           calc(
-            var(--md-comp-slider-start-fraction) + var(--md-comp-slider-gap) +
+            var(--md-comp-slider-start-position, var(--md-comp-slider-start-fraction)) + var(--md-comp-slider-gap) +
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -349,7 +354,7 @@ input[type="range"] {
         max(
           0%,
           calc(
-            var(--md-comp-slider-end-fraction) - var(--md-comp-slider-gap) -
+            var(--md-comp-slider-end-position, var(--md-comp-slider-end-fraction)) - var(--md-comp-slider-gap) -
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -357,7 +362,7 @@ input[type="range"] {
         max(
           0%,
           calc(
-            var(--md-comp-slider-end-fraction) - var(--md-comp-slider-gap) -
+            var(--md-comp-slider-end-position, var(--md-comp-slider-end-fraction)) - var(--md-comp-slider-gap) -
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -365,7 +370,7 @@ input[type="range"] {
         min(
           100%,
           calc(
-            var(--md-comp-slider-end-fraction) + var(--md-comp-slider-gap) +
+            var(--md-comp-slider-end-position, var(--md-comp-slider-end-fraction)) + var(--md-comp-slider-gap) +
               var(--md-comp-slider-handle-width) / 2
           )
         ),
@@ -373,7 +378,7 @@ input[type="range"] {
         min(
           100%,
           calc(
-            var(--md-comp-slider-end-fraction) + var(--md-comp-slider-gap) +
+            var(--md-comp-slider-end-position, var(--md-comp-slider-end-fraction)) + var(--md-comp-slider-gap) +
               var(--md-comp-slider-handle-width) / 2
           )
         )
@@ -498,6 +503,7 @@ input[type="range"]:active:not(:disabled)::-moz-range-thumb {
 
 // Dual-handle range. Two inputs share one host; the host paints the track.
 :is(#{$_host}):has(> [type="range"] ~ [type="range"]) {
+  --slider-split: calc((var(--md-comp-slider-start-fraction) + var(--md-comp-slider-end-fraction)) / 2);
   display: grid;
   align-items: center;
   min-height: var(--md-comp-slider-handle-height);
@@ -511,12 +517,25 @@ input[type="range"]:active:not(:disabled)::-moz-range-thumb {
     @include range-track-fill-dual;
   }
 
+  > [type="range"]:first-of-type {
+    clip-path: inset(-24px calc(100% - var(--slider-split)) -24px -8px);
+  }
+
+  &:dir(rtl) > [type="range"] {
+    clip-path: inset(-24px var(--slider-split) -24px -8px);
+  }
+
+  &:dir(rtl) > [type="range"]:first-of-type {
+    clip-path: inset(-24px -8px -24px calc(100% - var(--slider-split)));
+  }
+
   > [type="range"] {
     grid-area: 1 / 1;
     width: 100%;
     margin: 0;
     background: none;
-    pointer-events: none;
+    pointer-events: auto;
+    clip-path: inset(-24px -8px -24px var(--slider-split));
   }
 
   > [type="range"]::-webkit-slider-runnable-track {
@@ -546,8 +565,21 @@ input[type="range"]:active:not(:disabled)::-moz-range-thumb {
 
 :is(#{$_host}).vertical:has(> [type="range"] ~ [type="range"])::before {
   width: var(--md-comp-slider-track-height);
-  height: 200px;
+  height: 100%;
   justify-self: center;
+}
+
+:is(#{$_host}).vertical:has(> [type="range"] ~ [type="range"]) {
+  width: var(--md-comp-slider-handle-height);
+
+  > [type="range"] {
+    width: var(--md-comp-slider-handle-height);
+    clip-path: inset(-8px -24px var(--slider-split) -24px);
+  }
+
+  > [type="range"]:first-of-type {
+    clip-path: inset(calc(100% - var(--slider-split)) -24px -8px -24px);
+  }
 }
 
 // Discrete stops. Dots along the active track; JS sets --stop-count.
@@ -560,7 +592,7 @@ input[type="range"]:active:not(:disabled)::-moz-range-thumb {
   width: max(
     0px,
     calc(
-      var(--md-comp-slider-active-fraction) - var(--md-comp-slider-gap) -
+      var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
         var(--md-comp-slider-handle-width) / 2
     )
   );
@@ -578,11 +610,11 @@ input[type="range"]:active:not(:disabled)::-moz-range-thumb {
 }
 
 :is(#{$_host}).stops.centered::after {
-  left: min(50%, var(--md-comp-slider-active-fraction));
+  left: min(50%, var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction)));
   width: max(
     0%,
     calc(
-      abs(50% - var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
+      abs(50% - var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction))) - var(--md-comp-slider-gap) -
         var(--md-comp-slider-handle-width) / 2
     )
   );
@@ -630,5 +662,29 @@ input[type="range"] + .thumb {
 
   &.active {
     transform: translate(calc(100% + 4px), -50%) scale(1);
+  }
+}
+
+@media (forced-colors: active) {
+  :is(#{$_host}), input[type="range"] {
+    --md-comp-slider-active-track-color: Highlight;
+    --md-comp-slider-inactive-track-color: GrayText;
+    --md-comp-slider-handle-color: CanvasText;
+    --md-comp-slider-stop-color: CanvasText;
+  }
+
+  input[type="range"],
+  :is(#{$_host})::before {
+    forced-color-adjust: none;
+  }
+
+  input[type="range"]:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 4px;
+  }
+
+  input[type="range"]:disabled {
+    --md-comp-slider-handle-color: GrayText;
+    opacity: 1;
   }
 }

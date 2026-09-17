@@ -123,8 +123,8 @@ export class Slider extends Component<SliderOptions> {
     this.thumb.classList.add('active');
   };
 
-  _handleRangeInputOrMove = () => {
-    if (this._pointerDown) {
+  _handleRangeInputOrMove = (e: Event) => {
+    if (e.type === 'input' || this._pointerDown) {
       this._clampDual();
       this._sync();
       this.thumb.classList.add('active');
@@ -196,9 +196,15 @@ export class Slider extends Component<SliderOptions> {
     const top = this.el.offsetTop;
     const width = this.el.offsetWidth;
     const height = this.el.offsetHeight;
-    const rtl = getComputedStyle(this.el).direction === 'rtl';
+    const style = getComputedStyle(this.el);
+    const rtl = style.direction === 'rtl';
+    const vertical = this._isVertical();
+    const handle = parseFloat(style.getPropertyValue('--md-comp-slider-handle-width')) || 4;
+    const length = vertical ? height : width;
+    const position = handle / 2 + percent * (length - handle);
 
     this.el.style.setProperty('--md-comp-slider-active-fraction', fraction);
+    this.el.style.setProperty('--md-comp-slider-active-position', `${position}px`);
 
     const host = this._host();
     const peers = host?.querySelectorAll('input[type="range"]');
@@ -206,6 +212,8 @@ export class Slider extends Component<SliderOptions> {
       const nums = Array.from(peers).map((el) => this._fraction(el as HTMLInputElement));
       host.style.setProperty('--md-comp-slider-start-fraction', `${Math.min(...nums) * 100}%`);
       host.style.setProperty('--md-comp-slider-end-fraction', `${Math.max(...nums) * 100}%`);
+      host.style.setProperty('--md-comp-slider-start-position', `${handle / 2 + Math.min(...nums) * (length - handle)}px`);
+      host.style.setProperty('--md-comp-slider-end-position', `${handle / 2 + Math.max(...nums) * (length - handle)}px`);
     }
     if (host?.classList.contains('stops')) {
       const parsedMax = parseFloat(this.el.max);
@@ -219,11 +227,11 @@ export class Slider extends Component<SliderOptions> {
     }
 
     this.value.textContent = this.el.value;
-    if (this._isVertical()) {
+    if (vertical) {
       this.thumb.style.left = `${left + width / 2}px`;
-      this.thumb.style.top = `${top + (1 - percent) * height}px`;
+      this.thumb.style.top = `${top + height - position}px`;
     } else {
-      this.thumb.style.left = `${left + (rtl ? 1 - percent : percent) * width}px`;
+      this.thumb.style.left = `${left + (rtl ? width - position : position)}px`;
       this.thumb.style.top = `${top}px`;
     }
   }

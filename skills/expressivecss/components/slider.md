@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `0883fb01779418aa40f5d170ba25a204eba6212ae9fc8e7e10588078cffc4671`
+Contract SHA-256: `4c1eee4946c40b5392d3954b9f97d8bb349d85193f749892e13fed8fef41fc1a`
 
 #### Selection and adaptation
 
@@ -33,11 +33,11 @@ Requirements and boundaries: design reference inputs-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/sliders/guidelines).
 
-Support (2026-09-13, `llm.md#sliders`): Standard, centered, range, horizontal/vertical, and five sizes.
+Support (2026-09-17, `llm.md#sliders`): Standard, centered, range, horizontal/vertical, and five sizes.
 
 Web adaptation: Native range inputs with runtime value-label and range coordination.
 
-Known boundary: Zero maximum and resized RTL value-label placement are checked; vertical, dual-range and forced-colors geometry remain unverified.
+Known boundary: Native-handle alignment, paired interaction and emulated forced colors have browser coverage. Screen readers, physical touch devices and actual Windows contrast themes remain pending.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#slider).
 

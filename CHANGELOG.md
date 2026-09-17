@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Slider labels and track gaps account for native handle travel in LTR, RTL and
+  vertical layouts. Paired inputs accept native track clicks and their vertical
+  track resizes with the inputs. Application input events update values without
+  dragging, and forced-colors tracks use system colors.
+
 - Chips delete the focused token with Backspace/Delete and recover focus without
   overriding deletion callbacks. Destroying one instance preserves other instances'
   keyboard handlers. Input chips no longer inherit floating-label positioning;
