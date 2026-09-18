@@ -3724,7 +3724,7 @@ Media components handle large objects such as images. For responsive images and 
 
 ### Lightbox
 
-Unreleased source supports Space and native button activation, cancels pending animation callbacks on destroy and retains the original image. This does not supply a modal-gallery focus contract. Published 0.9.1 does not include these repairs.
+Unreleased source supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. Shared ancestor overflow remains visible until the last open Lightbox releases it. This does not supply a modal-gallery focus contract. Published 0.9.1 does not include these repairs.
 
 Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
 
