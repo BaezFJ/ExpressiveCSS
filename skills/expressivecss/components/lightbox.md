@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `046fe41ef63b4a675c6a66cb0cc432399c59a2371b96baca59b33539fa1d6104`
+Contract SHA-256: `ae7b393505877dc35f9b7e9bb71b44b862cc732098114c9d770fd46a123f9981`
 
 #### Selection and adaptation
 
@@ -39,7 +39,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Unreleased source supports Space and native button activation, cancels pending animation callbacks on destroy and retains the original image. This does not supply a modal-gallery focus contract. Published 0.9.1 does not include these repairs.
+Unreleased source supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. Shared ancestor overflow remains visible until the last open Lightbox releases it. This does not supply a modal-gallery focus contract. Published 0.9.1 does not include these repairs.
 
 Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
 

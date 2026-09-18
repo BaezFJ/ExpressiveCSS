@@ -10,7 +10,7 @@
     "nodeVersion": "v24.20.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "cb4550bfc7753b5e25d540893f00f4eeb00dfd9f5544f41e92a830dd4878d847",
+    "reportSha256": "f5d977f59427f2db6b0910e7fa5f1002a92e0ecd49cfa9bfc46adb4fdbc295de",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1860,10 +1860,10 @@
       "slug": "lightbox",
       "title": "Lightbox",
       "kind": "component",
-      "support": "unassessed",
+      "support": "implemented",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-18",
       "scope": "Enlarge-on-activation image and dismissal.",
       "adaptation": "ExpressiveCSS media behavior, not an upstream component contract.",
       "upstream": {
@@ -1885,14 +1885,14 @@
         },
         {
           "path": "src/ts/components/lightbox.ts",
-          "sha256": "6513452ede942293fd996d647d8b574f30726975829ec93f40ab3eefb721af34"
+          "sha256": "1ebd52a61f6854ccec9b5f9c1691300bada8e349e8e5470e395a4ef045dd4d1f"
         }
       ],
       "gaps": [
         {
           "kind": "verification",
-          "description": "Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified.",
-          "nextStep": "Treat this as image enlargement, not a verified modal gallery; test closing interruption and actual focus ownership."
+          "description": "Native zoom, screen-reader announcements, actual Windows contrast themes and physical-device interaction remain unverified.",
+          "nextStep": "Complete the Lightbox manual-review fixture. Treat this as image enlargement, not a verified modal gallery."
         }
       ],
       "browserChecks": [
@@ -1906,6 +1906,54 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining lightbox teardown cancels pending work and preserves native button focus",
           "scope": "Native button Space opens without duplicate image Tab stop; destroy cancels opening callbacks and retains image. Subsequent Tab order only.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: Lightbox transition reliability: interrupt",
+          "scope": "Repeated requests and immediate closing cancel stale completion callbacks and restore image styles and overflow.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: Lightbox transition reliability: reopen",
+          "scope": "Reopening during closing preserves the current overlay, caption, dimensions and callback sequence.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: Lightbox transition reliability: motion",
+          "scope": "Mounted reduced-motion changes finish opening and closing without waiting for configured durations.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: Lightbox transition reliability: focus",
+          "scope": "Destroying an opening image preserves its focus and cancels completion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: Lightbox transition reliability: isolation",
+          "scope": "Overlapping instances retain their own captions and share ancestor overflow until the final close.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: Lightbox transition reliability: triggers",
+          "scope": "Image and native button pointer/Enter/Space activation, Escape, overlay, scroll and resize dismissal, LTR/RTL and both motion preferences.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: Lightbox transition reliability: callbacks",
+          "scope": "Start callbacks may close, reopen or destroy without stale work or overriding application focus.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: Lightbox transition reliability: destroy",
+          "scope": "Opening/closing teardown restores attributes, styles and overflow, preserves unrelated focus, and supports remounting. All transition reliability cases also run in Firefox and WebKit.",
           "state": "recorded-passed"
         }
       ],
@@ -2122,9 +2170,9 @@
       "slug": "select",
       "title": "Select",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-17",
       "scope": "Single/multiple selection, optgroups, and browser-default fallback.",
       "adaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",

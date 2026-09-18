@@ -56,6 +56,18 @@ translated titles and native zoom; keyboard actions must remain reachable during
 collapse. Screen-reader announcements, physical mobile keyboards and actual
 contrast themes remain pending in the records below.
 
+Lightbox: at `/media.html#lightbox`, open with pointer, Enter and Space, then
+dismiss with Escape, overlay click, scrolling and resizing. Repeat in LTR/RTL
+with native 200%/400% zoom and long translated captions. In developer tools, call
+`Expressive.Lightbox.getInstance(document.querySelector('.lightboxed'))` and use
+its existing `open()`, `close()` and `destroy()` methods during transitions.
+Reopen during closing and toggle the operating system's reduced-motion setting
+while open and while closing. Check that images, captions and focus remain
+usable and no overlay or altered page scrolling remains after teardown. Repeat
+with an image inside a native button. Screen-reader announcements, Windows
+contrast themes and physical-device interaction remain pending. Lightbox is
+image enlargement, not a modal-gallery contract.
+
 For every row, enter reviewer, date, physical device, operating system,
 browser/assistive-technology version, result and evidence. Keep unavailable checks
 pending. Link recordings, screenshots or detailed notes, including failures.

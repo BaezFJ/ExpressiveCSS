@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `cb4550bfc7753b5e25d540893f00f4eeb00dfd9f5544f41e92a830dd4878d847`.
+Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `f5d977f59427f2db6b0910e7fa5f1002a92e0ecd49cfa9bfc46adb4fdbc295de`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -42,12 +42,12 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs mat
 | [Progress indicators](#progress) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Carousel](#carousel) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Lightbox](#lightbox) | unassessed | needs-review | recorded-scoped-pass | 0 |
+| [Lightbox](#lightbox) | implemented | source-reviewed | recorded-scoped-pass | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Search](#search) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Text fields](#text-fields) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Select](#select) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Select](#select) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Checkboxes](#checkboxes) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Radio buttons](#radio-buttons) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Switches](#switches) | unassessed | needs-review | recorded-scoped-pass | 1 |
@@ -552,18 +552,26 @@ Web adaptation: Runtime owns sizing and navigation; reduced motion removes paral
 
 ## Lightbox
 
-**unassessed within the stated scope.** Enlarge-on-activation image and dismissal.
+**implemented within the stated scope.** Enlarge-on-activation image and dismissal.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/_lightbox.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/lightbox.ts).
+Source review: source-reviewed, 2026-09-18. [src/sass/components/_lightbox.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/lightbox.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components).
 
 Web adaptation: ExpressiveCSS media behavior, not an upstream component contract.
 
-- verification: Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified. Next: Treat this as image enlargement, not a verified modal gallery; test closing interruption and actual focus ownership.
+- verification: Native zoom, screen-reader announcements, actual Windows contrast themes and physical-device interaction remain unverified. Next: Complete the Lightbox manual-review fixture. Treat this as image enlargement, not a verified modal gallery.
 
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining lightbox supports Space and preserves its image on teardown`. Space opens image enlargement; Escape closes; destroy preserves original image/style.
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining lightbox teardown cancels pending work and preserves native button focus`. Native button Space opens without duplicate image Tab stop; destroy cancels opening callbacks and retains image. Subsequent Tab order only.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: interrupt`. Repeated requests and immediate closing cancel stale completion callbacks and restore image styles and overflow.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: reopen`. Reopening during closing preserves the current overlay, caption, dimensions and callback sequence.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: motion`. Mounted reduced-motion changes finish opening and closing without waiting for configured durations.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: focus`. Destroying an opening image preserves its focus and cancels completion.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: isolation`. Overlapping instances retain their own captions and share ancestor overflow until the final close.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: triggers`. Image and native button pointer/Enter/Space activation, Escape, overlay, scroll and resize dismissal, LTR/RTL and both motion preferences.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: callbacks`. Start callbacks may close, reopen or destroy without stale work or overriding application focus.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: destroy`. Opening/closing teardown restores attributes, styles and overflow, preserves unrelated focus, and supports remounting. All transition reliability cases also run in Firefox and WebKit.
 
 <a id="toolbars"></a>
 
@@ -634,9 +642,9 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 ## Select
 
-**implemented within the stated scope.** Single/multiple selection, optgroups, and browser-default fallback.
+**unassessed within the stated scope.** Single/multiple selection, optgroups, and browser-default fallback.
 
-Source review: source-reviewed, 2026-09-17. [src/sass/components/forms/_select.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/forms/_select.scss), [src/sass/components/_menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_menu.scss), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/select.ts), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/menu.ts).
+Source review: needs-review, 2026-09-17. [src/sass/components/forms/_select.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/forms/_select.scss), [src/sass/components/_menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_menu.scss), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/select.ts), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/menu.ts).
 
 Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/menus/overview).
 
