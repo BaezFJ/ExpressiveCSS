@@ -1,0 +1,12 @@
+@use "pkg:@expressivecss/expressive/scss/custom" with (
+  $components: (
+    "icons-material-design",
+    "buttons",
+    "button-groups",
+    "navigation-rail",
+    "toolbar",
+    "snackbar",
+    "fab-menu"
+  ),
+  $utilities: ()
+);
