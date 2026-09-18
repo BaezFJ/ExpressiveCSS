@@ -57,7 +57,8 @@ export class Lightbox extends Component<LightboxOptions> {
   private originInlineStyles: string;
   private placeholder: HTMLElement;
   /** Ancestors forced to `overflow: visible`, with the inline value to put back. */
-  private _changedAncestorList: [HTMLElement, string][];
+  private _changedAncestorList: HTMLElement[] = [];
+  private static _overflow = new WeakMap<HTMLElement, { count: number; value: string; priority: string }>();
   private newHeight: number;
   private newWidth: number;
   private windowWidth: number;
@@ -68,7 +69,11 @@ export class Lightbox extends Component<LightboxOptions> {
   private _photoCaption: HTMLElement;
   private _trigger: HTMLElement;
   private _tabindex: string | null;
-  private _timers = new Set<ReturnType<typeof setTimeout>>();
+  private _timers = new Map<ReturnType<typeof setTimeout>, () => void>();
+  private _motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  private _isOpen = false;
+  private _destroyed = false;
+  private _revision = 0;
 
   constructor(el: HTMLElement, options: Partial<LightboxOptions>) {
     super(el, options, Lightbox);
@@ -129,39 +134,80 @@ export class Lightbox extends Component<LightboxOptions> {
   }
 
   destroy() {
+    if (this._destroyed) return;
+    this._destroyed = true;
+    const root = this.el.getRootNode() as Document | ShadowRoot;
+    const focused = root.activeElement === this.el;
     this._removeEventHandlers();
-    for (const timer of this._timers) clearTimeout(timer);
-    this._timers.clear();
+    this._cancel();
+    this._reset();
+    this.placeholder.replaceWith(this.el);
+    let active = document.activeElement;
+    while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
+    if (focused && (active === document.body || active === (root as ShadowRoot).host)) this._trigger.focus();
+    if (this._tabindex === null) this.el.removeAttribute('tabindex');
+    else this.el.setAttribute('tabindex', this._tabindex);
+    this.el['Expressive_Lightbox'] = undefined;
+  }
+
+  private _reset() {
     window.removeEventListener('scroll', this._handleWindowScroll);
     window.removeEventListener('resize', this._handleWindowResize);
     window.removeEventListener('keyup', this._handleWindowEscape);
     this._overlay?.remove();
     this._photoCaption?.remove();
-    this._changedAncestorList?.forEach(([ancestor, overflow]) => ancestor.style.overflow = overflow);
-    if (this.attrWidth) this.el.setAttribute('width', this.attrWidth);
-    if (this.attrHeight) this.el.setAttribute('height', this.attrHeight);
+    for (const ancestor of this._changedAncestorList) {
+      const saved = Lightbox._overflow.get(ancestor);
+      if (--saved.count === 0) {
+        ancestor.style.setProperty('overflow', saved.value, saved.priority);
+        Lightbox._overflow.delete(ancestor);
+      }
+    }
+    this._changedAncestorList = [];
+    if (this.attrWidth !== null && this.attrWidth !== undefined) this.el.setAttribute('width', this.attrWidth);
+    if (this.attrHeight !== null && this.attrHeight !== undefined) this.el.setAttribute('height', this.attrHeight);
     this.el.classList.remove('active');
-    this.placeholder.replaceWith(this.el);
+    this.placeholder.removeAttribute('style');
     if (this.originInlineStyles === null) this.el.removeAttribute('style');
     else this.el.setAttribute('style', this.originInlineStyles);
-    if (this._tabindex === null) this.el.removeAttribute('tabindex');
-    else this.el.setAttribute('tabindex', this._tabindex);
     this.overlayActive = false;
+    this._isOpen = false;
     this.doneAnimating = true;
-    this.el['Expressive_Lightbox'] = undefined;
+  }
+
+  private _cancel() {
+    for (const timer of this._timers.keys()) clearTimeout(timer);
+    this._timers.clear();
+    return ++this._revision;
   }
 
   private _schedule(callback: () => void, delay: number) {
+    if (this._motion.matches) { callback(); return; }
     const timer = setTimeout(() => { this._timers.delete(timer); callback(); }, delay);
-    this._timers.add(timer);
+    this._timers.set(timer, callback);
   }
 
+  private _handleMotionChange = () => {
+    if (!this._motion.matches) return;
+    const callbacks = [...this._timers.values()];
+    const revision = this._cancel();
+    for (const callback of callbacks) {
+      if (revision !== this._revision) break;
+      callback();
+    }
+    if (this.overlayActive) {
+      for (const el of [this.el, this._overlay, this._photoCaption]) if (el) el.style.transition = 'none';
+    }
+  };
+
   private _setupEventHandlers() {
+    this._motion.addEventListener('change', this._handleMotionChange);
     this._trigger.addEventListener('click', this._handleLightboxClick);
     this.el.addEventListener('keydown', this._handleLightboxKeypress);
   }
 
   private _removeEventHandlers() {
+    this._motion.removeEventListener('change', this._handleMotionChange);
     this._trigger.removeEventListener('click', this._handleLightboxClick);
     this.el.removeEventListener('keydown', this._handleLightboxKeypress);
   }
@@ -179,7 +225,7 @@ export class Lightbox extends Component<LightboxOptions> {
 
   private _handleLightboxToggle = () => {
     // If already modal, return to original
-    if (this.doneAnimating === false || (this.overlayActive && this.doneAnimating)) this.close();
+    if (this._isOpen) this.close();
     else this.open();
   };
 
@@ -192,7 +238,7 @@ export class Lightbox extends Component<LightboxOptions> {
   };
 
   private _handleWindowEscape = (e: KeyboardEvent) => {
-    if (e.key === Utils.keys.ESC && this.doneAnimating && this.overlayActive) this.close();
+    if (e.key === Utils.keys.ESC) this.close();
   };
 
   private _makeAncestorsOverflowVisible() {
@@ -201,10 +247,13 @@ export class Lightbox extends Component<LightboxOptions> {
     while (ancestor !== null && ancestor !== undefined && ancestor !== document) {
       const curr = <HTMLElement>ancestor;
       // A shadow root has no style; the clipping ancestors are above its host.
-      if (curr.style && curr.style.overflow !== 'visible') {
+      if (curr.style && (curr.style.overflow !== 'visible' || Lightbox._overflow.has(curr))) {
         // Read before the write: an author's inline `overflow` has to come
         // back on close, and restoring '' would silently discard it.
-        this._changedAncestorList.push([curr, curr.style.overflow]);
+        const saved = Lightbox._overflow.get(curr) ?? { count: 0, value: curr.style.overflow, priority: curr.style.getPropertyPriority('overflow') };
+        saved.count++;
+        Lightbox._overflow.set(curr, saved);
+        this._changedAncestorList.push(curr);
         curr.style.overflow = 'visible';
       }
       ancestor = ancestor.parentNode ?? (<ShadowRoot>ancestor).host;
@@ -229,7 +278,7 @@ export class Lightbox extends Component<LightboxOptions> {
   private _animateImageIn(): void {
     this.el.style.maxHeight = this.newHeight.toString() + 'px';
     this.el.style.maxWidth = this.newWidth.toString() + 'px';
-    const duration = this.options.inDuration;
+    const duration = this._motion.matches ? 0 : this.options.inDuration;
     // from
     this.el.style.transition = 'none';
     this.el.style.height = this.originalHeight + 'px';
@@ -266,33 +315,9 @@ export class Lightbox extends Component<LightboxOptions> {
       if (typeof this.options.onOpenEnd === 'function') this.options.onOpenEnd.call(this, this.el);
     }, duration);
 
-    /*
-    anim({
-      targets: this.el, // image
-      height: [this.originalHeight, this.newHeight],
-      width: [this.originalWidth, this.newWidth],
-      left:
-        Utils.getDocumentScrollLeft() +
-        this.windowWidth / 2 -
-        this._offset(this.placeholder).left -
-        this.newWidth / 2,
-      top:
-        Utils.getDocumentScrollTop() +
-        this.windowHeight / 2 -
-        this._offset(this.placeholder).top -
-        this.newHeight / 2,
-
-      duration: this.options.inDuration,
-      easing: 'easeOutQuad',
-      complete: () => {
-        this.doneAnimating = true;
-        if (typeof this.options.onOpenEnd === 'function') this.options.onOpenEnd.call(this, this.el);
-      }
-    });
-    */
   }
   private _animateImageOut(): void {
-    const duration = this.options.outDuration;
+    const duration = this._motion.matches ? 0 : this.options.outDuration;
     // easeOutQuad
     this.el.style.transition = `height ${duration}ms ease,
       width ${duration}ms ease,
@@ -305,21 +330,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this.el.style.left = '0';
     this.el.style.top = '0';
     this._schedule(() => {
-      this.placeholder.style.height = '';
-      this.placeholder.style.width = '';
-      this.placeholder.style.position = '';
-      this.placeholder.style.top = '';
-      this.placeholder.style.left = '';
-      // Revert to width or height attribute
-      if (this.attrWidth) this.el.setAttribute('width', this.attrWidth.toString());
-      if (this.attrHeight) this.el.setAttribute('height', this.attrHeight.toString());
-      this.el.removeAttribute('style');
-      if (this.originInlineStyles) this.el.setAttribute('style', this.originInlineStyles);
-      // Remove class
-      this.el.classList.remove('active');
-      this.doneAnimating = true;
-      // Remove overflow overrides on ancestors
-      this._changedAncestorList.forEach(([ancestor, overflow]) => (ancestor.style.overflow = overflow));
+      this._reset();
       // onCloseEnd callback
       if (typeof this.options.onCloseEnd === 'function')
         this.options.onCloseEnd.call(this, this.el);
@@ -336,19 +347,16 @@ export class Lightbox extends Component<LightboxOptions> {
     // Animate
     this._photoCaption.style.transition = 'none';
     this._photoCaption.style.opacity = '0';
-    const duration = this.options.inDuration;
+    const duration = this._motion.matches ? 0 : this.options.inDuration;
     this._schedule(() => {
       this._photoCaption.style.transition = `opacity ${duration}ms ease`;
       this._photoCaption.style.opacity = '1';
     }, 1);
   }
   private _removeCaption(): void {
-    const duration = this.options.outDuration;
+    const duration = this._motion.matches ? 0 : this.options.outDuration;
     this._photoCaption.style.transition = `opacity ${duration}ms ease`;
     this._photoCaption.style.opacity = '0';
-    this._schedule(() => {
-      this._photoCaption.remove();
-    }, duration);
   }
 
   // Overlay
@@ -357,8 +365,9 @@ export class Lightbox extends Component<LightboxOptions> {
     this._overlay.id = 'lightbox-overlay';
     this._overlay.addEventListener(
       'click',
-      () => {
-        if (this.doneAnimating) this.close();
+      (event) => {
+        event.stopPropagation();
+        this.close();
       },
       { once: true }
     );
@@ -376,26 +385,26 @@ export class Lightbox extends Component<LightboxOptions> {
     // Animate
     this._overlay.style.transition = 'none';
     this._overlay.style.opacity = '0';
-    const duration = this.options.inDuration;
+    const duration = this._motion.matches ? 0 : this.options.inDuration;
     this._schedule(() => {
       this._overlay.style.transition = `opacity ${duration}ms ease`;
       this._overlay.style.opacity = '1';
     }, 1);
   }
   private _removeOverlay(): void {
-    const duration = this.options.outDuration;
+    const duration = this._motion.matches ? 0 : this.options.outDuration;
     this._overlay.style.transition = `opacity ${duration}ms ease`;
     this._overlay.style.opacity = '0';
-    this._schedule(() => {
-      this.overlayActive = false;
-      this._overlay.remove();
-    }, duration);
   }
 
   /**
    * Open lightbox.
    */
   open = () => {
+    if (this._destroyed || this._isOpen) return;
+    const revision = this._cancel();
+    if (this.overlayActive) this._reset();
+    this._isOpen = true;
     this._updateVars();
     // Both rects are read up front: measuring the placeholder after writing
     // its width forced a second layout for the height.
@@ -410,6 +419,7 @@ export class Lightbox extends Component<LightboxOptions> {
     // onOpenStart callback
     if (typeof this.options.onOpenStart === 'function')
       this.options.onOpenStart.call(this, this.el);
+    if (revision !== this._revision) return;
     // Set positioning for placeholder
     this.placeholder.style.width = placeholderRect.width + 'px';
     this.placeholder.style.height = placeholderRect.height + 'px';
@@ -451,28 +461,31 @@ export class Lightbox extends Component<LightboxOptions> {
       this.newWidth = this.windowHeight * 0.9 * ratio;
       this.newHeight = this.windowHeight * 0.9;
     }
-    this._animateImageIn();
     // Handle Exit triggers
     window.addEventListener('scroll', this._handleWindowScroll, { passive: true });
     window.addEventListener('resize', this._handleWindowResize, { passive: true });
     window.addEventListener('keyup', this._handleWindowEscape);
+    this._animateImageIn();
   };
 
   /**
    * Close lightbox.
    */
   close = () => {
-    this._updateVars();
+    if (this._destroyed || !this._isOpen) return;
+    const revision = this._cancel();
+    this._isOpen = false;
     this.doneAnimating = false;
     // onCloseStart callback
     if (typeof this.options.onCloseStart === 'function')
       this.options.onCloseStart.call(this, this.el);
+    if (revision !== this._revision) return;
     // disable exit handlers
     window.removeEventListener('scroll', this._handleWindowScroll);
     window.removeEventListener('resize', this._handleWindowResize);
     window.removeEventListener('keyup', this._handleWindowEscape);
-    this._removeOverlay();
+    if (this._overlay) this._removeOverlay();
+    if (this._photoCaption) this._removeCaption();
     this._animateImageOut();
-    if (this.caption !== '') this._removeCaption();
   };
 }
