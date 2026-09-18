@@ -56,7 +56,7 @@ Requirements: Show one snackbar at a time without autofocus or a focus trap. Act
 
 Framework comparison: Version 0.10.0 pauses finite timers during focus or hover and resumes after departure. Actionable snackbars default to `displayLength: Infinity` and `dismissible: true`; applications still own any global shortcut.
 
-Feature gap: Focus/hover pause does not satisfy persistent actionable snackbar guidance; default action timeout is finite and Escape handling is absent. Next check: Use existing displayLength: Infinity and dismissible: true for persistent actions; provide a documented reach shortcut and test Escape and spoken delivery.
+Feature gap: Applications still own a global reach shortcut, and spoken live-region delivery remains unverified. Next check: Provide a documented reach shortcut and verify spoken delivery.
 
 Mapped browser scope: Focused action survives its timeout and activates once; timer resumes after focus leaves a second snackbar.
 
@@ -74,13 +74,13 @@ Reviewed sections: Overview/M3 Expressive update, Previous updates; Specs/Config
 
 Requirements: Report accurate determinate values and omit values for unknown progress. Keep the same process recognizable when its state changes. Mirror linear progress in RTL and provide an end stop when track contrast needs it. Loading indicators cover many short waits; circular progress remains useful in buttons and processes that become determinate.
 
-Framework comparison: Native progress and custom CSS bars have different rendering paths. Custom linear fill uses physical left positioning; end-stop and wavy Expressive behavior are not verified.
+Framework comparison: Native progress and custom CSS bars have different rendering paths. End-stop and wavy Expressive behavior are not verified.
 
 Version 0.10.0 stops spatial animation in reduced-motion variants, preserves a visible static custom fill, and mirrors custom linear fill in RTL. End-stop and wavy Expressive variants are not verified.
 
 Verification gap: Reduced-motion static custom fill is checked; forced colors and native indicator rendering remain unverified. Next check: Test native and custom determinate/indeterminate variants, visible static feedback and changing accessible values.
 
-Feature gap: Custom linear progress uses physical left fill in RTL; end-stop and wavy Expressive variants are not verified. Next check: Test RTL native and custom bars; repair mirrored custom fill and assess an end stop for insufficient track contrast before claiming current variant parity.
+Feature gap: End-stop and wavy Expressive variants are not verified. Next check: Assess an end stop for insufficient track contrast and the wavy variant before claiming current variant parity.
 
 Mapped browser scope: Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
 
