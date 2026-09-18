@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `86159be7c56a13a4e10d602be96e60f3d275e5e0001dd268f9c480e67b69ad7f`
+Contract SHA-256: `89d8163a26c9588eb095348aeee7aefe22a027bc99073ed9a6b31fee7be50764`
 
 #### Selection and adaptation
 
@@ -33,13 +33,13 @@ Requirements and boundaries: design reference inputs-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/time-pickers/guidelines).
 
-Support (2026-09-13, `llm.md#time-picker`): Inline clock and digital input; 12-hour and 24-hour formats.
+Support (2026-09-18, `llm.md#time-picker`): Inline clock and digital input; 12-hour and 24-hour formats.
 
 Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
 
 Known boundary: Modal picker parity is not provided by the documented inline API.
 
-Known boundary: Hour/minute inputs are unnamed and AM/PM controls have no role or selected state; modal and complete keyboard behavior remain incomplete.
+Known boundary: Named digital inputs, AM/PM state and input-event synchronization have browser coverage. Modal and clock-dial keyboard behavior remain incomplete.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#time-picker).
 

@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `5abbe577b4d97b77fec5a0833ee215db4647ef08bcf369a984c71fe2928173d2`.
+Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `e9189f027f02aa5f1610d3c15aea06b1702341025cca10b9f7ba7ced100495d3`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -42,7 +42,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs mat
 | [Progress indicators](#progress) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Carousel](#carousel) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Lightbox](#lightbox) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Lightbox](#lightbox) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Search](#search) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | recorded-scoped-pass | 0 |
@@ -552,9 +552,9 @@ Web adaptation: Runtime owns sizing and navigation; reduced motion removes paral
 
 ## Lightbox
 
-**implemented within the stated scope.** Enlarge-on-activation image and dismissal.
+**unassessed within the stated scope.** Enlarge-on-activation image and dismissal.
 
-Source review: source-reviewed, 2026-09-18. [src/sass/components/_lightbox.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/lightbox.ts).
+Source review: needs-review, 2026-09-18. [src/sass/components/_lightbox.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/lightbox.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components).
 
@@ -789,7 +789,7 @@ Web adaptation: Default inline presentation with optional docked display plugin;
 
 **unassessed within the stated scope.** Inline clock and digital input; 12-hour and 24-hour formats.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/_timepicker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_timepicker.scss), [src/sass/components/_docked-display.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_docked-display.scss), [src/ts/components/timepicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/timepicker.ts), [src/ts/plugins/dockedDisplayPlugin.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/plugins/dockedDisplayPlugin.ts).
+Source review: needs-review, 2026-09-18. [src/sass/components/_timepicker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_timepicker.scss), [src/sass/components/_docked-display.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_docked-display.scss), [src/ts/components/timepicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/timepicker.ts), [src/ts/plugins/dockedDisplayPlugin.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/plugins/dockedDisplayPlugin.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/time-pickers/overview).
 
@@ -799,6 +799,9 @@ Web adaptation: Default inline presentation with optional docked display plugin;
 - feature: The unreleased source names hour/minute inputs and exposes AM/PM button state. Clock-dial arrow navigation and modal keyboard behavior remain unimplemented. Next: Use the digital inputs for keyboard entry; separately assess dial navigation and modal focus before claiming complete keyboard parity.
 
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker exposes named keyboard controls in inline and docked modes`. Localized hour name and fallback minute name, native AM/PM keyboard activation and selected state, no form submission, docked opening focus, and 12/24-hour digital entry including midnight. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker digital values: input`. Input-only edits, invalid-value recovery, confirmation change counts and form values in 12/24-hour, inline/docked, LTR/RTL and ordinary/reduced motion fixtures. Physical keyboard and clipboard checks remain pending.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker digital values: empty`. Empty hour/minute fallback display and submitted values agree, including twelve-hour midnight normalization and retained AM/PM state.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker digital values: boundaries`. Reinitialization from midnight, noon, late-night 24-hour strings and lowercase AM/PM preserves twelve-hour display and period state.
 
 <a id="typography"></a>
 
