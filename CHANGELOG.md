@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Connected button groups preserve equal-width items when translated labels
+  exceed the available width. The group expands inside an overflow container
+  instead of letting labels overlap adjacent controls.
+
 - Timepicker digital fields synchronize native input events, including paste,
   without depending on keyup. Invalid edits restore the last valid value on blur;
   empty fields display the same fallback values they submit. Twelve-hour defaults

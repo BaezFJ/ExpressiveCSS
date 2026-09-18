@@ -241,3 +241,106 @@ browserTest('keyboard press changes icon widths and rendered corners', async () 
     await browser.close();
   }
 });
+
+browserTest('selection-required skips disabled controls and preserves a selection', async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`
+      <style>${css}</style>
+      <div id="group" class="button-group connected" data-selection="single" data-selection-required>
+        <button id="native-disabled" type="button" class="button tonal" aria-pressed="false" disabled>Day</button>
+        <button id="aria-disabled" type="button" class="button tonal" aria-pressed="false" aria-disabled="true">Week</button>
+        <button id="class-disabled" type="button" class="button tonal disabled" aria-pressed="false">Month</button>
+        <button id="selected" type="button" class="button tonal" aria-pressed="false">Quarter</button>
+        <button id="other" type="button" class="button tonal" aria-pressed="false">Year</button>
+      </div>
+      <div id="optional" class="button-group connected" data-selection="single">
+        <button id="optional-one" type="button" class="button tonal" aria-pressed="false">List</button>
+        <button type="button" class="button tonal" aria-pressed="false">Grid</button>
+      </div>
+    `);
+    await page.addScriptTag({ content: js });
+    await page.evaluate(() => window.Expressive.AutoInit());
+
+    const states = () => page.locator('#group > button').evaluateAll((buttons) =>
+      buttons.map((button) => button.getAttribute('aria-pressed'))
+    );
+    assert.deepEqual(await states(), ['false', 'false', 'false', 'true', 'false']);
+
+    await page.evaluate(() => {
+      for (const id of ['native-disabled', 'aria-disabled', 'class-disabled']) {
+        const button = document.getElementById(id);
+        button.click();
+        button.dispatchEvent(new PointerEvent('pointerdown', { button: 0, bubbles: true }));
+      }
+    });
+    assert.deepEqual(await states(), ['false', 'false', 'false', 'true', 'false']);
+    assert.equal(await page.locator('.button-group-pressed').count(), 0);
+
+    await page.locator('#selected').click();
+    assert.deepEqual(await states(), ['false', 'false', 'false', 'true', 'false']);
+    await page.locator('#other').click();
+    assert.deepEqual(await states(), ['false', 'false', 'false', 'false', 'true']);
+
+    const optionalStates = () => page.locator('#optional > button').evaluateAll((buttons) =>
+      buttons.map((button) => button.getAttribute('aria-pressed'))
+    );
+    assert.deepEqual(await optionalStates(), ['false', 'false']);
+    await page.locator('#optional-one').click();
+    assert.deepEqual(await optionalStates(), ['true', 'false']);
+    await page.locator('#optional-one').click();
+    assert.deepEqual(await optionalStates(), ['false', 'false']);
+  } finally {
+    await browser.close();
+  }
+});
+
+browserTest('connected translated labels remain reachable in a constrained scroller', async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 320, height: 600 } });
+    await page.setContent(`
+      <style>${css}</style>
+      <main id="scroller" style="width: 280px; overflow-x: auto">
+        <div id="group" class="button-group connected" data-selection="single">
+          <button type="button" class="button tonal" aria-pressed="true">An vorheriger Position ausrichten</button>
+          <button type="button" class="button tonal" aria-pressed="false">An der Mitte des Inhalts ausrichten</button>
+          <button type="button" class="button tonal" aria-pressed="false">An nächster Position ausrichten</button>
+        </div>
+      </main>
+    `);
+
+    const geometry = await page.evaluate(() => {
+      const scroller = document.querySelector('#scroller');
+      const group = document.querySelector('#group');
+      const buttons = [...group.children];
+      return {
+        pageOverflow: document.documentElement.scrollWidth - innerWidth,
+        scrollable: scroller.scrollWidth > scroller.clientWidth,
+        groupWidth: group.getBoundingClientRect().width,
+        widths: buttons.map((button) => button.getBoundingClientRect().width),
+        labelsFit: buttons.every((button) => button.scrollWidth <= button.clientWidth),
+        labelsStayOnOneLine: buttons.every((button) => getComputedStyle(button).whiteSpace === 'nowrap')
+      };
+    });
+    assert.equal(geometry.pageOverflow, 0);
+    assert.equal(geometry.scrollable, true);
+    assert.equal(geometry.labelsFit, true);
+    assert.equal(geometry.labelsStayOnOneLine, true);
+    assert.ok(geometry.groupWidth > 280);
+    assert.ok(Math.max(...geometry.widths) - Math.min(...geometry.widths) < 1);
+
+    await page.locator('#scroller').evaluate((scroller) => {
+      scroller.scrollLeft = scroller.scrollWidth;
+    });
+    const end = await page.evaluate(() => {
+      const scroller = document.querySelector('#scroller').getBoundingClientRect();
+      const last = document.querySelector('#group > button:last-child').getBoundingClientRect();
+      return { scrollerRight: scroller.right, lastRight: last.right };
+    });
+    assert.ok(Math.abs(end.scrollerRight - end.lastRight) < 1);
+  } finally {
+    await browser.close();
+  }
+});

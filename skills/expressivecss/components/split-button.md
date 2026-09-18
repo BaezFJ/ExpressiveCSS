@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `89d8163a26c9588eb095348aeee7aefe22a027bc99073ed9a6b31fee7be50764`
+Contract SHA-256: `5c2ae9e5533799faf348dc14fbfe99244f72a87e93eb0fb7b5a138a6d2ecb25c`
 
 #### Selection and adaptation
 
@@ -33,11 +33,11 @@ Requirements and boundaries: design reference layout-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/split-button/guidelines).
 
-Support (2026-09-13, `llm.md#split-button`): Leading action and trailing menu trigger with matching styles.
+Support (2026-09-18, `llm.md#split-button`): Leading action and trailing menu trigger with matching styles.
 
 Web adaptation: Reuses Menu; no separate split-button runtime.
 
-Known boundary: Full leading-action versus trailing-menu activation and Escape return are not directly mapped.
+Known boundary: Separate 48dp effective targets, native zoom, spoken output and physical-device behavior remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#split-button).
 

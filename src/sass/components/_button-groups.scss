@@ -299,7 +299,11 @@ $_connected-corners: (
     --md-comp-button-group-pressed-inner-corner-corner-size: 4px;
     --md-comp-button-group-selected-inner-corner-corner-size: 50%;
 
-    width: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    width: max-content;
+    min-width: 100%;
 
     @each $name, $c in $_connected-corners {
       &.#{$name} {

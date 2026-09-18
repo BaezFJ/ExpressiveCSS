@@ -12,13 +12,16 @@
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { chromium } from 'playwright';
 import { Expressive, window } from './setup.js';
 
 const { document } = window;
 
 const root = new URL('../', import.meta.url);
 const css = readFileSync(new URL('dist/css/expressive.css', root), 'utf8');
+const js = readFileSync(new URL('dist/js/expressive.js', root), 'utf8');
+const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
 
 const rules = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].map((m) => ({
   selector: m[1].trim(),
@@ -250,4 +253,78 @@ describe('Split button expanded state', () => {
     // way round, and this is the half of that contract a selector cannot check.
     assert.doesNotMatch(markup, /aria-expanded/);
   });
+});
+
+browserTest('split-button halves activate separately and Escape returns focus', async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`
+      <style>${css}</style>
+      <div class="split-button">
+        <button id="lead" type="button" class="button">Export PDF</button>
+        <button id="more" type="button" class="button menu-trigger" data-target="formats" aria-label="More export formats">
+          <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+        </button>
+      </div>
+      <menu id="formats"><li><button id="csv" type="button">Export CSV</button></li></menu>
+      <div class="split-button">
+        <button id="disabled-lead" type="button" class="button" disabled>Export PDF</button>
+        <button id="disabled-more" type="button" class="button menu-trigger" data-target="disabled-formats" aria-label="More export formats" disabled>
+          <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+        </button>
+      </div>
+      <menu id="disabled-formats"><li><button type="button">Export CSV</button></li></menu>
+    `);
+    await page.addScriptTag({ content: js });
+    await page.evaluate(() => {
+      window.activations = { lead: 0, csv: 0, disabledLead: 0 };
+      document.querySelector('#lead').addEventListener('click', () => window.activations.lead++);
+      document.querySelector('#csv').addEventListener('click', () => window.activations.csv++);
+      document.querySelector('#disabled-lead').addEventListener('click', () => window.activations.disabledLead++);
+      window.Expressive.AutoInit();
+    });
+
+    await page.locator('#lead').click();
+    assert.deepEqual(await page.evaluate(() => window.activations), {
+      lead: 1,
+      csv: 0,
+      disabledLead: 0
+    });
+    assert.equal(await page.locator('#more').getAttribute('aria-expanded'), 'false');
+
+    await page.locator('#more').click();
+    await page.waitForFunction(() => document.activeElement?.querySelector('#csv'));
+    assert.equal(await page.locator('#more').getAttribute('aria-expanded'), 'true');
+    assert.equal((await page.evaluate(() => window.activations)).lead, 1);
+
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#more').getAttribute('aria-expanded'), 'false');
+    assert.equal(await page.evaluate(() => document.activeElement?.id), 'more');
+
+    await page.locator('#lead').focus();
+    await page.keyboard.press('Enter');
+    assert.equal((await page.evaluate(() => window.activations)).lead, 2);
+    assert.equal(await page.locator('#more').getAttribute('aria-expanded'), 'false');
+
+    await page.locator('#more').focus();
+    await page.keyboard.press('Enter');
+    await page.waitForFunction(() => document.activeElement?.querySelector('#csv'));
+    assert.equal(await page.locator('#more').getAttribute('aria-expanded'), 'true');
+    await page.locator('#csv').click();
+    assert.deepEqual(await page.evaluate(() => window.activations), {
+      lead: 2,
+      csv: 1,
+      disabledLead: 0
+    });
+
+    await page.evaluate(() => {
+      document.querySelector('#disabled-lead').click();
+      document.querySelector('#disabled-more').click();
+    });
+    assert.equal(await page.locator('#disabled-more').getAttribute('aria-expanded'), 'false');
+    assert.equal((await page.evaluate(() => window.activations)).disabledLead, 0);
+  } finally {
+    await browser.close();
+  }
 });
