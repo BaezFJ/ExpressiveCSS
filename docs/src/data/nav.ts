@@ -295,7 +295,7 @@ export const NAV: DocsGroup[] = [
         route: "/dialogs.html",
         description:
           "Important prompts in a user flow. Dedicated to a single task.",
-        aliases: ["/modals.html"],
+        aliases: ["/floating-sheet.html", "/modals.html"],
       },
       {
         id: "bottom_sheet",
