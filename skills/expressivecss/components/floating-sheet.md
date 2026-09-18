@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `f3d74cc5c1a4accc0bd496799de88705f40204394445d67bbc97f3fc1d190ccc`
+Contract SHA-256: `9e353ed78feeac25da2327fbe12be6952a823fcd3648f11211d789691198e159`
 
 #### Selection and adaptation
 
@@ -33,11 +33,11 @@ Requirements and boundaries: design reference layout-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/dialogs/guidelines).
 
-Support (2026-09-13, `llm.md#floating-sheet`): Inset floating dialog surface.
+Support (2026-09-18, `llm.md#floating-sheet`): Inset floating dialog surface.
 
 Web adaptation: Shares Dialogs initialization; no edge attachment or drag handle.
 
-Known boundary: Native dialog focus and close are checked; long-content zoom and inset geometry remain unverified.
+Known boundary: Long-content scrolling, compact inset geometry and 200% root-text reflow are checked; native browser zoom remains unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#floating-sheet).
 

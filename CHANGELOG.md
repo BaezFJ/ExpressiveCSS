@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Bottom and floating sheets keep long bodies scrollable and action rows reachable
+  at compact widths with enlarged text. Shared dialog headings and action labels
+  wrap instead of overflowing their inset container without resizing icon buttons
+  or FABs.
+
 - Datepicker initializes multiple-date defaults safely, keeps generated inputs
   synchronized when selections shrink or grow, and preserves the original input
   when cleared. Range-end inputs supplied by applications receive input and
