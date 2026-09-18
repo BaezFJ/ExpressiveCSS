@@ -4,7 +4,7 @@ ExpressiveCSS is a Material Design 3 front-end framework built with Sass and
 TypeScript. It provides theme tokens, layout and utility classes, styled form
 controls, and JavaScript components in browser, ES module, and CommonJS builds.
 
-> ExpressiveCSS is currently at version `0.9.1` and under active development.
+> ExpressiveCSS version `0.9.1` is under active development.
 
 Documentation: [www.expressivecss.com](https://www.expressivecss.com)
 
@@ -24,14 +24,14 @@ Documentation: [www.expressivecss.com](https://www.expressivecss.com)
 - [Node.js](https://nodejs.org/) 20 or newer
 - npm
 
-Use Node 24 for repository development, selected by `.nvmrc`. The framework's
-runtime compatibility range remains unchanged. See [CONTRIBUTING.md](CONTRIBUTING.md)
+Use Node 24 for repository development, selected by `.nvmrc`. The framework still
+supports its existing runtime compatibility range. See [CONTRIBUTING.md](CONTRIBUTING.md)
 for setup, checks, and the community workflow.
 
 ## MCP server for AI workflows
 
-This repository includes a local MCP server at `mcp/expressivecss/` that exposes an
-ExpressiveCSS design-to-QA workflow:
+A local MCP server at `mcp/expressivecss/` provides an ExpressiveCSS design-to-QA
+workflow:
 
 - Setup Expert
 - Rules Enforcer
@@ -43,7 +43,7 @@ ExpressiveCSS design-to-QA workflow:
 The MCP entry point is `mcp/expressivecss/server.js`, with sample config in
 `mcp/expressivecss/mcp.json`.
 
-Quick start:
+Start the server:
 
 ```sh
 cd mcp/expressivecss
@@ -51,7 +51,7 @@ npm ci
 node server.js
 ```
 
-To use it with your MCP client, point the command to:
+Configure your MCP client with either command:
 
 - `node mcp/expressivecss/server.js`
 - or `node ./server.js` from `mcp/expressivecss` as the working directory.
@@ -65,7 +65,7 @@ npm ci
 npm run build
 ```
 
-The compiled assets are written to `dist/`:
+The build writes compiled assets to `dist/`:
 
 ```text
 dist/
@@ -88,16 +88,15 @@ dist/
 └── types/
 ```
 
-Source maps are produced alongside the CSS and JavaScript bundles. The
-stylesheet loads fonts from `../fonts/`, so keep `dist/fonts/` next to
-`dist/css/`.
+The build writes source maps beside the CSS and JavaScript bundles. The stylesheet
+loads fonts from `../fonts/`, so keep `dist/fonts/` next to `dist/css/`.
 
 ## Usage
 
 ### Browser bundle
 
-Include the compiled stylesheet and browser bundle, then initialize components
-after the page has loaded:
+Load the compiled stylesheet and browser bundle, then initialize components after
+the page loads:
 
 ```html
 <link rel="stylesheet" href="dist/css/expressive.min.css">
@@ -127,9 +126,8 @@ const element = document.querySelector('.custom-tooltip');
 Tooltip.init(element, { position: 'top' });
 ```
 
-`AutoInit()` scans `document.body` by default. Pass a container to limit the
-scan, or add the `no-autoinit` class to an element that should be initialized
-manually:
+`AutoInit()` scans `document.body` by default. Pass a container to limit the scan.
+Add the `no-autoinit` class to any element you want to initialize manually:
 
 ```js
 AutoInit(document.querySelector('#app'), {
@@ -148,12 +146,11 @@ Use the framework's Sass entry point in another Sass project:
 @use "@expressivecss/expressive/src/sass/expressive";
 ```
 
-When working directly in this repository, the entry point is
-`src/sass/expressive.scss`.
+For work in this repository, the Sass entry point is `src/sass/expressive.scss`.
 
-### Smaller page downloads
+### Reduce page downloads
 
-Use the optional ESM entry with a bundler to remove unused components:
+Use the optional ESM entry so a bundler can remove unused components:
 
 ```ts
 import { Tabs } from '@expressivecss/expressive/modular';
@@ -162,15 +159,15 @@ import type { TabsOptions } from '@expressivecss/expressive/modular';
 const tabs = Tabs.init(document.querySelector('.tabs'));
 ```
 
-The type import is for TypeScript consumers. Initialize after the markup exists
-and call `tabs.destroy()` when removing it. The modular entry performs no
-initialization on import. `AutoInit` remains available, but importing and calling
-it includes the full registry. Importing the root entry retains the existing
-shared behaviors. Both ESM entries share constructors; copy the entire `dist/js`
-directory when hosting ESM files directly. Direct browser imports do not remove
-unused exports. The existing single-file IIFE and CommonJS builds remain available.
+The type import supports TypeScript consumers. Initialize Tabs after its markup
+exists, and call `tabs.destroy()` when removing it. The modular entry does not
+initialize components on import. `AutoInit` remains available, but calling it
+includes the full registry. The root entry retains the existing shared behaviors.
+Both ESM entries share constructors. Copy the entire `dist/js` directory when
+hosting ESM files directly. Direct browser imports do not remove unused exports.
+The existing single-file IIFE and CommonJS builds remain available.
 
-| Feature | Explicit initialization with the modular entry |
+| Feature | Initialization with the modular entry |
 | --- | --- |
 | AppBar, Autocomplete, FloatingActionButton, ButtonGroup, Carousel, CharacterCounter, Datepicker, Menu, Lightbox, ScrollSpy, FormSelect, NavigationRail, Tabs, Timepicker, Tooltip | Call the component's `.init(element, options)` |
 | Cards, ExpandingCard, Slider | Call `.init(element, options)` for owned elements, or `.Init()` once to discover matching document elements |
@@ -181,11 +178,11 @@ unused exports. The existing single-file IIFE and CommonJS builds remain availab
 | Bottom-sheet drag dismissal | Call `BottomSheets.Init()` once; add `Dialogs.Init()` for light dismissal |
 | Side-sheet drag dismissal | Call `SideSheets.Init()` once; add `Dialogs.Init()` for light dismissal |
 
-`Range` retains its Slider alias. Component initializers include their internal
-dependencies, such as Menu in FormSelect,
-FormSelect in Datepicker, and Carousel in swipeable Tabs. Do not initialize those
-internal instances separately. Document behaviors are page-level setup; avoid
-repeating their `.Init()` calls on route changes or alongside the root entry.
+`Range` retains its Slider alias. Component initializers include internal
+dependencies such as Menu in FormSelect, FormSelect in Datepicker, and Carousel in
+swipeable Tabs. Do not initialize those instances separately. Document behaviors
+apply to the whole page, so do not repeat their `.Init()` calls on route changes or
+alongside the root entry.
 
 Choose Sass partials with the custom entry. With Sass's Node package importer,
 compile using `sass --pkg-importer=node app.scss app.css`:
@@ -218,13 +215,13 @@ const datepicker = Datepicker.init(document.querySelector('#date'), { openByDefa
 Destroy both component instances when removing that view. Add `"docked-display"`
 before `"forms"` if using the picker's optional docked display plugin.
 
-Tokens and base styles are always included. Lists load in the order written,
-inside the original cascade layers. Partial names are relative to `components/`
-or `utilities/`, without underscores or extensions. Keep icons first and preserve
-the order in the corresponding `_index.scss` when combining recipes. Add supporting
-partials for features used by your markup. For example, `$utilities: ("spacing",
-"visibility")` includes those helpers. A `null` list includes the complete group,
-which is the default; `()` omits it. An unknown partial fails compilation.
+Tokens and base styles are always included. Lists load in the order written within
+the original cascade layers. Partial names are relative to `components/` or
+`utilities/`, without underscores or extensions. Keep icons first and follow the
+order in the corresponding `_index.scss` when combining recipes. Add the supporting
+partials required by your markup. For example, `$utilities: ("spacing",
+"visibility")` includes those helpers. A `null` list includes the complete group by
+default; `()` omits it. An unknown partial fails compilation.
 
 Bundlers that resolve Sass package paths can use
 `@expressivecss/expressive/scss/custom`; plain Sass with a `node_modules` load path
@@ -233,10 +230,9 @@ entry per stylesheet. The original full entry and compiled CSS are unchanged.
 
 #### Smaller icon fonts
 
-Full fonts remain available. Browsers fetch only the families used on the page;
-choosing just outlined icons already avoids downloading rounded and sharp fonts.
-For a smaller outlined font, supply a subset from your own font tooling and turn
-off the bundled font declarations:
+Browsers fetch only the font families used on the page. Using outlined icons alone
+avoids downloading the rounded and sharp fonts. To reduce the outlined font, create
+a subset with your own font tooling and turn off the bundled font declarations:
 
 ```scss
 @use "pkg:@expressivecss/expressive/scss/custom" with (
@@ -287,9 +283,9 @@ off the bundled font declarations:
 ```
 
 Copy the four text fonts from `dist/fonts` into `/assets`, along with their license
-notices. Disabling bundled faces disables text fonts too; the declarations above
-restore their existing names and weights. Supply corresponding subset faces for
-rounded or sharp icons if the site uses them. Retain ligature shaping and the
+notices. Turning off the bundled faces also disables the text fonts. The declarations
+above restore their existing names and weights. Supply corresponding subset faces
+for rounded or sharp icons if the site uses them. Retain ligature shaping and the
 `opsz`, `wght`, `FILL`, and `GRAD` axes in each variable subset.
 
 Include icon names from templates, dynamic content, and framework-generated UI:
@@ -301,11 +297,11 @@ Include icon names from templates, dynamic content, and framework-generated UI:
 | Expandable navigation rail summaries | `expand_more`, generated by CSS |
 
 FormSelect uses CSS masks for its caret and selection marks. Datepicker uses text
-for its configurable previous/next labels. Neither requires an icon-font glyph
-by default. Custom markup and option values may add requirements. Subsets do not
-automatically cover new icons, so retain full fonts for unrestricted icon names.
+for its configurable previous/next labels. By default, neither requires an
+icon-font glyph. Custom markup and option values may add requirements. Subsets do
+not cover new icons automatically, so retain full fonts for unrestricted icon names.
 
-Run `node --test tests/selective-builds.test.js` after building to record raw,
+After building, run `node --test tests/selective-builds.test.js`. It records raw,
 gzip, and Brotli sizes in `.cache/selective-builds/sizes.json`. The browser suite
 records font requests and full/selective screenshots separately in that directory.
 
@@ -325,7 +321,7 @@ document.documentElement.setAttribute('theme', 'dark');
 
 ## Development
 
-Available npm commands include:
+The repository provides these npm commands:
 
 | Command | Purpose |
 | --- | --- |
@@ -348,13 +344,12 @@ Run the documentation and smoke-test site:
 npm run docs:dev
 ```
 
-This builds the framework, then starts the Sass and esbuild watchers alongside
-the documentation server. Refresh the browser to see source changes. Astro
-prints the server URL.
+This command builds the framework, then starts the Sass and esbuild watchers with
+the documentation server. Refresh the browser to see source changes. Astro prints
+the server URL.
 
-It is the same site published at
-[www.expressivecss.com](https://www.expressivecss.com), authored in
-`docs/src/`.
+The documentation source lives in `docs/src/` and is published at
+[www.expressivecss.com](https://www.expressivecss.com).
 
 ## Project structure
 
