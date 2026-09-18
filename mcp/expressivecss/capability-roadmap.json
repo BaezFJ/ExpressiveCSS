@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "7f6b87c27830ab603da6362138754bf9329e32f9d8ae4b897545a4599e75c8fe",
+    "reportSha256": "5777e67403861540605d77c5a5055086a49e8fe086297abd8a4bb6cf399c1666",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -859,7 +859,7 @@
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "connected translated labels remain reachable in a constrained scroller",
-          "scope": "Equal connected widths, unwrapped German labels, local horizontal scrolling, end-item reachability and no page overflow at a 320px viewport.",
+          "scope": "Equal connected widths, unwrapped German labels, local horizontal scrolling, visible focus rings on both edge controls and no page overflow at a 320px viewport.",
           "state": "recorded-passed"
         }
       ],

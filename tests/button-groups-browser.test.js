@@ -302,11 +302,11 @@ browserTest('connected translated labels remain reachable in a constrained scrol
     const page = await browser.newPage({ viewport: { width: 320, height: 600 } });
     await page.setContent(`
       <style>${css}</style>
-      <main id="scroller" style="width: 280px; overflow-x: auto">
+      <main id="scroller" style="width: 300px; overflow-x: auto; padding: 5px">
         <div id="group" class="button-group connected" data-selection="single">
-          <button type="button" class="button tonal" aria-pressed="true">An vorheriger Position ausrichten</button>
+          <button id="first" type="button" class="button tonal" aria-pressed="true">An vorheriger Position ausrichten</button>
           <button type="button" class="button tonal" aria-pressed="false">An der Mitte des Inhalts ausrichten</button>
-          <button type="button" class="button tonal" aria-pressed="false">An nächster Position ausrichten</button>
+          <button id="last" type="button" class="button tonal" aria-pressed="false">An nächster Position ausrichten</button>
         </div>
       </main>
     `);
@@ -328,18 +328,36 @@ browserTest('connected translated labels remain reachable in a constrained scrol
     assert.equal(geometry.scrollable, true);
     assert.equal(geometry.labelsFit, true);
     assert.equal(geometry.labelsStayOnOneLine, true);
-    assert.ok(geometry.groupWidth > 280);
+    assert.ok(geometry.groupWidth > 300);
     assert.ok(Math.max(...geometry.widths) - Math.min(...geometry.widths) < 1);
 
-    await page.locator('#scroller').evaluate((scroller) => {
-      scroller.scrollLeft = scroller.scrollWidth;
+    const focusedOutline = () => page.evaluate(() => {
+      const scroller = document.querySelector('#scroller');
+      const viewport = scroller.getBoundingClientRect();
+      const button = document.activeElement;
+      const bounds = button.getBoundingClientRect();
+      const style = getComputedStyle(button);
+      const inset = parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset);
+      return {
+        id: button.id,
+        outlineWidth: style.outlineWidth,
+        outlineOffset: style.outlineOffset,
+        fits: bounds.left - inset >= viewport.left - 0.5
+          && bounds.right + inset <= viewport.right + 0.5
+          && bounds.top - inset >= viewport.top - 0.5
+          && bounds.bottom + inset <= viewport.bottom + 0.5
+      };
     });
-    const end = await page.evaluate(() => {
-      const scroller = document.querySelector('#scroller').getBoundingClientRect();
-      const last = document.querySelector('#group > button:last-child').getBoundingClientRect();
-      return { scrollerRight: scroller.right, lastRight: last.right };
+
+    await page.keyboard.press('Tab');
+    assert.deepEqual(await focusedOutline(), {
+      id: 'first', outlineWidth: '3px', outlineOffset: '2px', fits: true
     });
-    assert.ok(Math.abs(end.scrollerRight - end.lastRight) < 1);
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    assert.deepEqual(await focusedOutline(), {
+      id: 'last', outlineWidth: '3px', outlineOffset: '2px', fits: true
+    });
   } finally {
     await browser.close();
   }

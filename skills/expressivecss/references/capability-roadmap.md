@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `7f6b87c27830ab603da6362138754bf9329e32f9d8ae4b897545a4599e75c8fe`.
+Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `5777e67403861540605d77c5a5055086a49e8fe086297abd8a4bb6cf399c1666`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -288,7 +288,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 - recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Rendered group behavior; does not establish standalone common/icon-button parity.
 - recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
 - recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/button-groups-browser.test.js): `selection-required skips disabled controls and preserves a selection`. Required single selection skips native, aria-disabled and class-disabled controls, blocks deselecting the last choice, moves selection, and leaves optional single selection empty when toggled off.
-- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/button-groups-browser.test.js): `connected translated labels remain reachable in a constrained scroller`. Equal connected widths, unwrapped German labels, local horizontal scrolling, end-item reachability and no page overflow at a 320px viewport.
+- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/button-groups-browser.test.js): `connected translated labels remain reachable in a constrained scroller`. Equal connected widths, unwrapped German labels, local horizontal scrolling, visible focus rings on both edge controls and no page overflow at a 320px viewport.
 
 <a id="split-button"></a>
 
