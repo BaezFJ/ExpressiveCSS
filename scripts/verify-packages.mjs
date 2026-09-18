@@ -1,13 +1,13 @@
 // Pack real artifacts and exercise them outside this checkout.
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readdirSync, readFileSync, writeFileSync, rmSync, mkdirSync, existsSync } from 'node:fs';
+import { copyFileSync, mkdtempSync, readdirSync, readFileSync, writeFileSync, rmSync, mkdirSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { JSDOM } from 'jsdom';
-import { compile, compileString, NodePackageImporter } from 'sass';
+import { compile, NodePackageImporter } from 'sass';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const packages = { framework: '.', mcp: 'mcp/expressivecss' };
@@ -56,24 +56,49 @@ try {
       assert.match(license, /normalize.css/);
       assert.match(license, /Polymer/);
       assert.ok(compile(join(installed, 'src/sass/expressive.scss')).css.length);
-      const custom = compileString('@use "pkg:@expressivecss/expressive/scss/custom" with ($components: ("tabs", "carousel"), $utilities: ());', {
+      for (const file of ['index.html', 'app.mts', 'app.scss']) {
+        copyFileSync(join(root, 'tests/fixtures/migration-consumer', file), join(target, file));
+      }
+      const custom = compile(join(target, 'app.scss'), {
         importers: [new NodePackageImporter(target)],
       }).css;
-      assert.match(custom, /\.tabs/);
-      assert.doesNotMatch(custom, /\.datepicker/);
-      writeFileSync(join(target, 'consumer.mjs'), `import * as modular from '${manifest.name}/modular';\nimport * as legacy from '${manifest.name}';\nimport assert from 'node:assert/strict';\nassert.equal(modular.Tabs, legacy.Tabs);\nassert.equal(modular.version, '${manifest.version}');\n`);
+      for (const selector of ['.button-group', '.navigation-rail', '.toolbar', '.snackbar', '.fab-menu']) {
+        assert.ok(custom.includes(selector), `Missing ${selector}`);
+      }
+      for (const selector of ['.banner', '.bottom-app-bar', '.navigation-drawer', '.segmented-button', '.fixed-action-btn']) {
+        assert.ok(!custom.includes(selector), `Unexpected ${selector}`);
+      }
+      writeFileSync(join(target, 'consumer.mjs'), `import * as modular from '${manifest.name}/modular';\nimport * as framework from '${manifest.name}';\nimport assert from 'node:assert/strict';\nfor (const name of ['ButtonGroup', 'FloatingActionButton', 'NavigationRail', 'Snackbar']) assert.equal(modular[name], framework[name]);\nfor (const name of ['Banner', 'NavigationDrawer', 'Sidenav']) assert.equal(name in modular, false);\nassert.equal(modular.version, '${manifest.version}');\n`);
       run('node', ['consumer.mjs'], target);
-      writeFileSync(join(target, 'consumer.mts'), `import { Tabs, type TabsOptions, type DatepickerOptions } from '${manifest.name}/modular';\nconst options: Partial<TabsOptions> = { swipeable: true };\nTabs.init(document.createElement('nav'), options);\nconst dateOptions: Partial<DatepickerOptions> = {};\n`);
-      run(join(root, 'node_modules/.bin/tsc'), ['--noEmit', '--module', 'esnext', '--moduleResolution', 'bundler', '--target', 'es2020', 'consumer.mts'], target);
-      const dom = new JSDOM('<!doctype html><html><body></body></html>', {
+      run(join(root, 'node_modules/.bin/tsc'), ['--noEmit', '--module', 'esnext', '--moduleResolution', 'bundler', '--target', 'es2020', 'app.mts'], target);
+      const dom = new JSDOM(readFileSync(join(target, 'index.html'), 'utf8'), {
         url: 'http://localhost/', runScripts: 'outside-only', pretendToBeVisual: true,
       });
+      const instances = [];
       try {
+        dom.window.matchMedia = (query) => ({
+          matches: false, media: query, onchange: null, addListener() {}, removeListener() {},
+          addEventListener() {}, removeEventListener() {}, dispatchEvent: () => false,
+        });
         dom.window.eval(readFileSync(join(installed, 'dist/js/expressive.min.js'), 'utf8'));
         assert.equal(dom.window.Expressive.version, manifest.version);
-        assert.equal(typeof dom.window.Expressive.AutoInit, 'function');
         dom.window.Expressive.AutoInit();
-      } finally { dom.window.close(); }
+        const { ButtonGroup, FloatingActionButton, NavigationRail } = dom.window.Expressive;
+        const group = dom.window.document.querySelector('.button-group');
+        const rail = dom.window.document.querySelector('.navigation-rail');
+        const fab = dom.window.document.querySelector('.fab-menu');
+        instances.push(ButtonGroup.getInstance(group), NavigationRail.getInstance(rail), FloatingActionButton.getInstance(fab));
+        instances.forEach((instance) => assert.ok(instance));
+        group.querySelectorAll('button')[1].click();
+        assert.equal(group.querySelectorAll('button')[1].getAttribute('aria-pressed'), 'true');
+        rail.querySelector('button').click();
+        assert.equal(rail.classList.contains('expanded'), true);
+        fab.querySelector(':scope > button').click();
+        assert.equal(fab.classList.contains('active'), true);
+      } finally {
+        instances.forEach((instance) => instance?.destroy());
+        dom.window.close();
+      }
     }
     console.log(`Verified isolated ${manifest.name}@${manifest.version}`);
   }

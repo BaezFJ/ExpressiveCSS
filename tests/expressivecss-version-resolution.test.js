@@ -2,6 +2,7 @@ import { afterEach, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { existsSync } from 'node:fs';
 import { cp, mkdtemp, mkdir, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -605,7 +606,7 @@ describe('ExpressiveCSS version resolution', () => {
     ];
     const decisions = JSON.parse(await readFile(path.join(sourceRoot, 'docs/src/data/component-decisions.json'), 'utf8'));
     // Include reviewed inputs so the Git-free snapshot has the same evidence availability.
-    inputs.push(...(decisions.capabilityBrowserEvidence?.inputs ?? []).map((input) => input.path));
+    inputs.push(...(decisions.capabilityBrowserEvidence?.inputs ?? []).map((input) => input.path).filter(input => existsSync(path.join(sourceRoot, input))));
     for (const directory of ['src', 'tests', 'dist', 'skills/expressivecss/assets/examples', 'scripts']) {
       await cp(path.join(sourceRoot, directory), path.join(projectRoot, directory), { recursive: true });
     }

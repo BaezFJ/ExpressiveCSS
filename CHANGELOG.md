@@ -12,6 +12,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   wrap instead of overflowing their inset container without resizing icon buttons
   or FABs.
 
+- Datepicker initializes multiple-date defaults safely, keeps generated inputs
+  synchronized when selections shrink or grow, and preserves the original input
+  when cleared. Range-end inputs supplied by applications receive input and
+  keyboard handlers. Teardown removes generated fields and their listeners.
+
 - Timepicker digital fields synchronize native input events, including paste,
   without depending on keyup. Invalid edits restore the last valid value on blur;
   empty fields display the same fallback values they submit. Twelve-hour defaults
