@@ -4894,6 +4894,9 @@ The unreleased source adds keyboard navigation to the existing inline and docked
 
 Set `isDateRange: true`. Click a start day, then an end day that is on or after it. Point `dateRangeEndEl` at a second input, or omit it and a second input is created next to the first.
 
+An authored end input supports typing and Enter-to-calendar navigation. Destroy
+preserves authored inputs and removes generated inputs and their listeners.
+
 ```js
 Expressive.Datepicker.init(document.getElementById('datepicker-range'), {
   openByDefault: true,
@@ -4905,6 +4908,12 @@ Expressive.Datepicker.init(document.getElementById('datepicker-range'), {
 ### Multiple dates
 
 Set `isMultipleSelection: true`. Click a day to add it; click it again to remove it. Each selected date gets its own input.
+
+Defaults initialize the selected dates before drawing. Dates are compared at
+local midnight. Removing the last selection or using Clear keeps the original
+input empty; extra generated fields are removed. Destroy removes generated
+fields and recovers focus on the original input if a removed field had focus
+and application code has not moved it elsewhere.
 
 ```js
 Expressive.Datepicker.init(document.getElementById('datepicker-multi'), {

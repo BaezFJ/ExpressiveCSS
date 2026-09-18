@@ -444,6 +444,8 @@ Expressive.Datepicker.init(elem, {
           Set <code>isDateRange: true</code>. Click a start day, then an end day that is on or
           after it. Point <code>dateRangeEndEl</code> at a second input, or omit it and a second
           input is created next to the first.
+          An authored end input supports typing and Enter-to-calendar navigation.
+          Destroying the picker preserves authored inputs and removes generated ones.
         </p>
         <div class="field">
           <input type="text" class="date-picker no-autoinit" id="datepicker-range">
@@ -466,6 +468,8 @@ Expressive.Datepicker.init(document.getElementById('datepicker-range'), {
         <p>
           Set <code>isMultipleSelection: true</code>. Click a day to add it; click it again to
           remove it. Each selected date gets its own input.
+          Removing the last date or using Clear keeps the original input empty.
+          Extra generated inputs are removed on deselection or destruction.
         </p>
         <div class="field mb-3">
           <input type="text" class="date-picker no-autoinit" id="datepicker-multi">
