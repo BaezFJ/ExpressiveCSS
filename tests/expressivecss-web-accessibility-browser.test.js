@@ -832,6 +832,28 @@ for (const action of ['interrupt', 'reopen', 'motion', 'focus', 'isolation', 'tr
     await expect(page.locator('#photo')).toBeFocused();
     await page.waitForTimeout(180);
     assert.deepEqual(await page.evaluate(() => window.events), ['open-start']);
+    for (const moveFocus of [false, true]) {
+      await page.evaluate(moveFocus => {
+        const host = document.createElement('div');
+        document.body.append(host);
+        const root = host.attachShadow({ mode: 'open' });
+        const photo = document.querySelector('#photo').cloneNode(true);
+        root.append(photo);
+        const box = Expressive.Lightbox.init(photo);
+        window.instances.push(box);
+        photo.focus();
+        if (moveFocus) {
+          photo.addEventListener('blur', () => document.querySelector('#outside').focus(), { once: true });
+          const placeholder = photo.parentElement;
+          const replace = placeholder.replaceWith;
+          placeholder.replaceWith = function (...nodes) { photo.blur(); replace.apply(this, nodes); };
+        }
+        box.destroy();
+        window.focusPreserved = moveFocus ? document.activeElement.id === 'outside' : root.activeElement === photo;
+        host.remove();
+      }, moveFocus);
+      assert.equal(await page.evaluate(() => window.focusPreserved), true, `shadow teardown, moved focus: ${moveFocus}`);
+    }
   } else if (action === 'isolation') {
     await page.evaluate(() => { window.instances[0].open(); window.instances[1].open(); });
     await page.waitForTimeout(150);
@@ -857,6 +879,10 @@ for (const action of ['interrupt', 'reopen', 'motion', 'focus', 'isolation', 'tr
       }
     }
     await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.evaluate(() => window.instances[1].open());
+    await page.waitForTimeout(150);
+    await page.locator('#lightbox-overlay').click({ position: { x: 5, y: 5 } });
+    await expect(page.locator('#lightbox-overlay')).toHaveCount(0);
     for (const dismissal of ['overlay', 'scroll', 'resize']) {
       await page.evaluate(() => { window.instances[0].options.inDuration = 2000; window.instances[0].open(); });
       if (dismissal === 'overlay') await page.locator('#lightbox-overlay').dispatchEvent('click');

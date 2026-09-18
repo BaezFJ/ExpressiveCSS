@@ -10,6 +10,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Lightbox cancels interrupted transitions, honors mounted reduced-motion changes,
   preserves teardown focus and releases shared ancestor overflow after the last
   open instance closes. Canceled transitions no longer report completion.
+  Overlay dismissal stays closed inside button triggers, and shadow-root teardown
+  respects focus moved outside the root by application handlers.
 
 - Enhanced selects synchronize native form resets, selection semantics and
   refreshed disabled states. Disabled optgroups cannot be selected, and refresh

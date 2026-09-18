@@ -10,7 +10,7 @@
     "nodeVersion": "v24.20.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "f5d977f59427f2db6b0910e7fa5f1002a92e0ecd49cfa9bfc46adb4fdbc295de",
+    "reportSha256": "5abbe577b4d97b77fec5a0833ee215db4647ef08bcf369a984c71fe2928173d2",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1885,7 +1885,7 @@
         },
         {
           "path": "src/ts/components/lightbox.ts",
-          "sha256": "1ebd52a61f6854ccec9b5f9c1691300bada8e349e8e5470e395a4ef045dd4d1f"
+          "sha256": "1e334f6efb12867bc2d75793f042d3b0df0488bcc8cab97236992387c696746e"
         }
       ],
       "gaps": [

@@ -142,7 +142,9 @@ export class Lightbox extends Component<LightboxOptions> {
     this._cancel();
     this._reset();
     this.placeholder.replaceWith(this.el);
-    if (focused && (!root.activeElement || root.activeElement === document.body)) this._trigger.focus();
+    let active = document.activeElement;
+    while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
+    if (focused && (active === document.body || active === (root as ShadowRoot).host)) this._trigger.focus();
     if (this._tabindex === null) this.el.removeAttribute('tabindex');
     else this.el.setAttribute('tabindex', this._tabindex);
     this.el['Expressive_Lightbox'] = undefined;
@@ -363,7 +365,8 @@ export class Lightbox extends Component<LightboxOptions> {
     this._overlay.id = 'lightbox-overlay';
     this._overlay.addEventListener(
       'click',
-      () => {
+      (event) => {
+        event.stopPropagation();
         this.close();
       },
       { once: true }
