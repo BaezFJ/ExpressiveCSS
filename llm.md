@@ -2,7 +2,7 @@
 
 ExpressiveCSS is a Material Design 3 front-end framework built with Sass and TypeScript. It provides design tokens, light and dark themes, a responsive grid, utilities, styled controls, and interactive browser components.
 
-This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.9.1`, which is under active development.
+This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.10.0`, which is under active development.
 
 - Package: `@expressivecss/expressive`
 - Runtime target: modern browsers; the last five Chrome and Firefox versions
@@ -313,7 +313,7 @@ Learn how to start using Expressive and integrate it into your project.
 
 ### Download
 
-Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.9.1` and is still growing, so the usual path is to build from the repository.
+Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.10.0` and is still growing, so the usual path is to build from the repository.
 
 #### Expressive
 
@@ -2318,7 +2318,7 @@ On a vertically scrolling page, put a **Show all** action 4dp below every horizo
 
 Focus starts on the first item rather than the container. Left/right arrows move through horizontal items. Up/down arrows move through portrait full-screen items and otherwise leave the carousel. Home/End move to the first/last item. Reduced-motion mode removes parallax and size morphing, uses equal widths, and disables smooth scrolling.
 
-Unreleased source mirrors horizontal keys and scroll placement in RTL while `next()` and `prev()` retain logical item order. Editable descendants keep their own keys. Auto-advance stays suspended during internal focus moves and responds to mounted reduced-motion changes without clearing an explicit pause. Enabling reduced motion stops in-flight smooth scrolling and realigns the active item. Native pointer and wheel gestures cancel deferred transition recentering until the next explicit navigation. Teardown cancels pending scroll-completion work.
+Horizontal keys and scroll placement mirror in RTL while `next()` and `prev()` retain logical item order. Editable descendants keep their own keys. Auto-advance stays suspended during internal focus moves and responds to mounted reduced-motion changes without clearing an explicit pause. Enabling reduced motion stops in-flight smooth scrolling and realigns the active item. Native pointer and wheel gestures cancel deferred transition recentering until the next explicit navigation. Teardown cancels pending scroll-completion work.
 
 When enabling `interval`, provide a visible application-owned pause/resume button. Call `pause()` on pause and `start()` on resume, updating the button text to describe its next action. Keep that control outside the scrolling track. Resuming still respects hover, focus, background-tab and reduced-motion suspension. The Carousel docs page includes a working example. Native zoom, screen readers, physical devices and actual Windows contrast themes remain pending manual review.
 
@@ -3244,7 +3244,7 @@ Set these on the container to resize a layout.
 
 ## Progress indicators
 
-Unreleased source uses system colors for native and custom progress in forced-colors mode, outlines empty linear tracks, and preserves circular value segments. Reduced motion retains static feedback, including the legacy preloader. Browser emulation checks do not replace Windows high-contrast or screen-reader review. Published 0.9.1 does not include these repairs.
+Native and custom progress use system colors in forced-colors mode, outline empty linear tracks, and preserve circular value segments. Reduced motion retains static feedback, including the legacy preloader. Browser emulation checks do not replace Windows high-contrast or screen-reader review.
 
 Activity and progress indicators for content that takes time to load.
 
@@ -3256,7 +3256,7 @@ Prefer `<progress>`: it reports itself, and its value with it. A `<div class="pr
 
 ### Linear
 
-In unreleased source, custom linear fills start at the text-direction start edge: left in LTR and right in RTL. Indeterminate motion and reduced-motion static fills follow the same direction, including inherited and nested overrides. Native determinate progress and circular indicators are unchanged. This fix is not in published 0.9.1.
+Custom linear fills start at the text-direction start edge: left in LTR and right in RTL. Indeterminate motion and reduced-motion static fills follow the same direction, including inherited and nested overrides. Native determinate progress and circular indicators are unchanged.
 
 There are two linear bars: determinate and indeterminate.
 
@@ -3568,7 +3568,7 @@ Expressive.Tooltip.init(
 
 Material Design 3 menus, from the HTML.
 
-Unreleased source excludes closing menus from keyboard focus and preserves focus moved by close callbacks. Submenu entry/return keys mirror in RTL; typeahead stays in the active list and skips headings and disabled items. Escape closes the innermost submenu first. Fine-pointer hover opens flyouts; keyboard activation uses Enter, Space, or the submenu entry arrow. Published 0.9.1 does not include these repairs.
+Closing menus are excluded from keyboard focus, and close callbacks preserve focus they move. Submenu entry/return keys mirror in RTL; typeahead stays in the active list and skips headings and disabled items. Escape closes the innermost submenu first. Fine-pointer hover opens flyouts; keyboard activation uses Enter, Space, or the submenu entry arrow.
 
 A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by default; add `.suffix` to send it to the trailing edge, since a lone icon is indistinguishable from a leading one in CSS. A `<kbd>` or a `.badge` is always trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid (it still renders); a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
 
@@ -3723,7 +3723,7 @@ Media components handle large objects such as images. For responsive images and 
 
 ### Lightbox
 
-Unreleased source supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. Shared ancestor overflow remains visible until the last open Lightbox releases it. This does not supply a modal-gallery focus contract. Published 0.9.1 does not include these repairs.
+Lightbox supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. Shared ancestor overflow remains visible until the last open Lightbox releases it. This does not supply a modal-gallery focus contract.
 
 Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
 
@@ -3912,7 +3912,7 @@ document.getElementById('sheet').show();      // standard, no scrim
 
 A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to the side. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.
 
-Docking is logical: `.start`, `.left` and `.left-sheet` use the start edge; the default, `.right` and `.right-sheet` use the end edge. In unreleased source, drag direction, inner-edge hit testing, modal corners and opening motion follow computed RTL direction. Headings and actions wrap; the body scrolls independently. Shared sheet dragging ignores secondary-pointer cancellation and resets when a sheet closes, is removed, or a primary press starts elsewhere. Dismissal thresholds are unchanged. Keep an explicit close control; native zoom, assistive technology and physical-device review remain pending.
+Docking is logical: `.start`, `.left` and `.left-sheet` use the start edge; the default, `.right` and `.right-sheet` use the end edge. Drag direction, inner-edge hit testing, modal corners and opening motion follow computed RTL direction. Headings and actions wrap; the body scrolls independently. Shared sheet dragging ignores secondary-pointer cancellation and resets when a sheet closes, is removed, or a primary press starts elsewhere. Dismissal thresholds are unchanged. Keep an explicit close control; native zoom, assistive technology and physical-device review remain pending.
 
 ```html
 <dialog class="side-sheet" aria-labelledby="headline-title">
@@ -4242,7 +4242,7 @@ Primary tabs stack the icon above the label (64dp). Add `horizontal` (or `tabs-h
 
 ## Snackbar
 
-Unreleased source makes snackbars with an action persistent and dismissible by default. Escape dismisses a focused snackbar; closing restores focus only when it remains inside the bar. Explicit finite timers still pause during focus or hover. Published 0.9.1 does not include these changes.
+Snackbars with an action are persistent and dismissible by default. Escape dismisses a focused snackbar; closing restores focus only when it remains inside the bar. Explicit finite timers still pause during focus or hover.
 
 Material Design 3 snackbars, from the HTML.
 
@@ -4866,7 +4866,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 
 ### Calendar keyboard navigation
 
-The unreleased source adds keyboard navigation to the existing inline and docked calendars. Enter on a date input focuses the calendar. Tab enters or leaves its single day stop; arrow keys move by day or week. Left/Right follow `isRTL`. Home/End move to the first/last day of the week using `firstDay`. PageUp/PageDown change month, and Shift changes year, clamping to the last day of shorter months. Enter or Space selects an enabled day. Disabled dates remain focusable with `aria-disabled` but cannot be selected. Navigation respects date and year/month bounds and restores day focus after redraws without moving focus from outside the calendar. No modal picker is added. These additions are not in published 0.9.1.
+The inline and docked calendars support keyboard navigation. Enter on a date input focuses the calendar. Tab enters or leaves its single day stop; arrow keys move by day or week. Left/Right follow `isRTL`. Home/End move to the first/last day of the week using `firstDay`. PageUp/PageDown change month, and Shift changes year, clamping to the last day of shorter months. Enter or Space selects an enabled day. Disabled dates remain focusable with `aria-disabled` but cannot be selected. Navigation respects date and year/month bounds and restores day focus after redraws without moving focus from outside the calendar. No modal picker is added.
 
 ### Date range
 
@@ -5058,7 +5058,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 | `clear` | `'Clear'` |
 | `done` | `'Ok'` |
 
-The unreleased source adds `i18n.hours` and `i18n.minutes`, defaulting to `Hours` and `Minutes`, as accessible input names. AM/PM buttons expose their selected state and support Enter and Space. Tab moves between controls; the dial does not implement arrow-key navigation. These additions are not in published 0.9.1.
+`i18n.hours` and `i18n.minutes` default to `Hours` and `Minutes` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. Tab moves between controls; the dial does not implement arrow-key navigation.
 
 ### 12-hour and 24-hour
 
@@ -5551,13 +5551,13 @@ Browser Disabled Choose your option Option 1 Option 2 Option 3
 
 ## Sliders
 
-Unreleased source handles a maximum of zero and updates value-label placement when the input resizes, including horizontal RTL placement. Published 0.9.1 does not include these repairs.
+Sliders handle a maximum of zero and update value-label placement when the input resizes, including horizontal RTL placement.
 
 Material Design 3 sliders, from the HTML.
 
 An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label; `.range` and `.range-field` are the older names and still work.
 
-Unreleased source aligns labels and track gaps with native handle travel after resizing in LTR, RTL and vertical layouts. Vertical values increase from bottom to top. Paired inputs accept native track clicks and prevent crossing; use matching bounds and steps. Application-owned numeric fields can assign the range value and dispatch an `input` event to synchronize its label and track. Forced-colors tracks use system colors. Physical devices, screen readers and actual Windows contrast themes still need manual review.
+Labels and track gaps align with native handle travel after resizing in LTR, RTL and vertical layouts. Vertical values increase from bottom to top. Paired inputs accept native track clicks and prevent crossing; use matching bounds and steps. Application-owned numeric fields can assign the range value and dispatch an `input` event to synchronize its label and track. Forced-colors tracks use system colors. Physical devices, screen readers and actual Windows contrast themes still need manual review.
 
 The plugin is `Expressive.Slider`, and `Expressive.Range` still resolves to it. Before 0.8.0 `.slider` and `Slider` meant the image slideshow; that component is now gone and Carousel covers the case, so `.slider` is the range control and nothing else.
 
@@ -5818,7 +5818,7 @@ Put a `button.close` inside the chip. Give it `type="button"` so it cannot submi
 
 The plugin turns a `.chips` container into an editable tag field. Type a value and press Enter to add a chip. Delete with the chip's delete button, or select a chip and press Backspace or Delete. Selecting a chip marks it `selected` and moves focus to its delete button.
 
-Unreleased: Backspace and Delete target the focused chip, then select the preceding survivor, otherwise the first survivor or the input. Delete-button activation returns to the input. Programmatic deletion recovers focus to the input only when it removes the focused chip. Deletion callbacks retain any focus they move. Long labels wrap without shrinking delete controls. These fixes are not in the published 0.9.1 package.
+Backspace and Delete target the focused chip, then select the preceding survivor, otherwise the first survivor or the input. Delete-button activation returns to the input. Programmatic deletion recovers focus to the input only when it removes the focused chip. Deletion callbacks retain any focus they move. Long labels wrap without shrinking delete controls.
 
 `allowUserInput` defaults to `false`. Without it there is no text field and rendered chips have no delete button. Pass `allowUserInput: true` for the interactive field. `AutoInit()` starts every `.chips` except `no-autoinit`, but it uses the defaults, so those wrappers stay display-only until you call `init` with options.
 
@@ -6026,7 +6026,7 @@ Add `aria-invalid="true"` or `class="invalid"` on the input. The box uses `error
 
 ## Autocomplete
 
-Unreleased source preserves the original suggestion dataset and selected display label while editing. Escape and Tab close from the input, cancel pending opening, and keep listbox options outside sequential Tab order. Published 0.9.1 does not include these repairs.
+Autocomplete preserves the original suggestion dataset and selected display label while editing. Escape and Tab close from the input, cancel pending opening, and keep listbox options outside sequential Tab order.
 
 Suggest values under a text field as the user types.
 
@@ -6102,7 +6102,7 @@ onSearch: function(text, autocomplete) {
 | `data` | Array | `[]` | Suggestion list. Each item needs an `id`; `text`, `image`, and `description` are optional. |
 | `isMultiSelect` | Boolean | `false` | If true, several values can be selected. `onAutocomplete` receives an array. |
 | `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
-| `i18n` | Object | See below | Partial overrides for live status messages. Available in unreleased source. |
+| `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
 | `onSearch` | Function | filters `id` and `text` | Called when the input text changes. Load or filter data, then call `setMenuItems`. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
@@ -6110,9 +6110,9 @@ onSearch: function(text, autocomplete) {
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
 | `selected` | Array | `[]` | Initial selected ids (strings or numbers). |
 
-The unreleased source provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
+Autocomplete provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
 
-Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still own asynchronous request cancellation, stale-response ordering and error handling. Results delivered after `destroy()` are ignored. Test actual spoken delivery with a screen reader. These additions are not in published 0.9.1.
+Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still own asynchronous request cancellation, stale-response ordering and error handling. Results delivered after `destroy()` are ignored. Test actual spoken delivery with a screen reader.
 
 ### Methods
 

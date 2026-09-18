@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "frameworkVersion": "0.9.1",
+  "frameworkVersion": "0.10.0",
   "authority": "This catalogue owns component-selection metadata. Component guides own syntax and semantics.json owns authored semantics.",
   "components": [
     {
@@ -2533,7 +2533,7 @@
           },
           {
             "kind": "feature",
-            "description": "The unreleased source mirrors custom linear fill and motion in RTL. End-stop and wavy Expressive variants remain unverified.",
+            "description": "Version 0.10.0 mirrors custom linear fill and motion in RTL. End-stop and wavy Expressive variants remain unverified.",
             "nextStep": "Assess an end stop for insufficient track contrast and review wavy variants before claiming current variant parity."
           }
         ],
@@ -3971,7 +3971,7 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "The unreleased source exposes localized loading, result counts and multi-selection updates through a polite live region. Spoken delivery and application-owned async ordering remain unverified.",
+            "description": "Version 0.10.0 exposes localized loading, result counts and multi-selection updates through a polite live region. Spoken delivery and application-owned async ordering remain unverified.",
             "nextStep": "Check screen-reader delivery and application request cancellation, error handling and stale-response ordering."
           }
         ],
@@ -4224,7 +4224,7 @@
           },
           {
             "kind": "feature",
-            "description": "The unreleased source names hour/minute inputs and exposes AM/PM button state. Clock-dial arrow navigation and modal keyboard behavior remain unimplemented.",
+            "description": "Version 0.10.0 names hour/minute inputs and exposes AM/PM button state. Clock-dial arrow navigation and modal keyboard behavior remain unimplemented.",
             "nextStep": "Use the digital inputs for keyboard entry; separately assess dial navigation and modal focus before claiming complete keyboard parity."
           }
         ],

@@ -13,10 +13,10 @@ const S = defineSections([
 ]);
 ---
 <DocsLayout page="preloader">
-<p>Unreleased source uses system colors for native and custom progress in forced-colors mode, outlines empty linear tracks, and preserves circular value segments. Reduced motion retains static feedback, including the legacy preloader. Browser emulation checks do not replace Windows high-contrast or screen-reader review. Published 0.9.1 does not include these repairs.</p>
+<p>Native and custom progress use system colors in forced-colors mode, outline empty linear tracks, and preserve circular value segments. Reduced motion retains static feedback, including the legacy preloader. Browser emulation checks do not replace Windows high-contrast or screen-reader review.</p>
 
 <PageBody sections={S}>
-  <p>In unreleased source, custom linear progress fills from the left in LTR and from the right in RTL. Indeterminate motion and reduced-motion static fills follow the inherited direction, including nested overrides. Native determinate progress and circular indicators are unchanged. This fix is not in published 0.9.1.</p>
+  <p>Custom linear progress fills from the left in LTR and from the right in RTL. Indeterminate motion and reduced-motion static fills follow the inherited direction, including nested overrides. Native determinate progress and circular indicators are unchanged.</p>
   <Section {...S.linear}>
         <p class="flow-text">
           If content will take a while to load, give the user feedback.

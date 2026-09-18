@@ -5,13 +5,13 @@ Material Design 3 menus, from the HTML.
 
 Component ID: `menu`
 
-[Component documentation](https://www.expressivecss.com/menu.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/menu.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/menu.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/menu.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.0)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `608f945c38f92dcf05e72d94289019de61b2d3fc781a366bbe5a02649543bf13`
+Contract SHA-256: `552c2303a67d6b85e32cc24a33d1c5777d3f82a0b0f12736d8cfffe6d2af1ec4`
 
 #### Selection and adaptation
 
@@ -43,7 +43,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Material Design 3 menus, from the HTML.
 
-Unreleased source excludes closing menus from keyboard focus and preserves focus moved by close callbacks. Submenu entry/return keys mirror in RTL; typeahead stays in the active list and skips headings and disabled items. Escape closes the innermost submenu first. Fine-pointer hover opens flyouts; keyboard activation uses Enter, Space, or the submenu entry arrow. Published 0.9.1 does not include these repairs.
+Closing menus are excluded from keyboard focus, and close callbacks preserve focus they move. Submenu entry/return keys mirror in RTL; typeahead stays in the active list and skips headings and disabled items. Escape closes the innermost submenu first. Fine-pointer hover opens flyouts; keyboard activation uses Enter, Space, or the submenu entry arrow.
 
 A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by default; add `.suffix` to send it to the trailing edge, since a lone icon is indistinguishable from a leading one in CSS. A `<kbd>` or a `.badge` is always trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid (it still renders); a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
 

@@ -23,7 +23,7 @@ const S = defineSections([
 ---
 <DocsLayout page="datepicker">
 <PageBody sections={S}>
-<p>The unreleased source adds calendar keyboard navigation. Enter on the date input focuses a day. Tab enters or leaves the grid; arrow keys move by day or week. Home/End follow <code>firstDay</code>, and Left/Right follow <code>isRTL</code>. PageUp/PageDown change month; hold Shift to change year. Enter or Space selects an enabled day. Disabled dates remain focusable and are announced as unavailable. Navigation respects configured bounds and preserves focus after redraws. This applies to the existing inline and docked calendars, not a modal picker, and is not included in published 0.9.1.</p>
+<p>The inline and docked calendars support keyboard navigation. Enter on the date input focuses a day. Tab enters or leaves the grid; arrow keys move by day or week. Home/End follow <code>firstDay</code>, and Left/Right follow <code>isRTL</code>. PageUp/PageDown change month; hold Shift to change year. Enter or Space selects an enabled day. Disabled dates remain focusable and are announced as unavailable. Navigation respects configured bounds and preserves focus after redraws. This does not apply to modal pickers.</p>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>datepicker</code> to a text input. <code>AutoInit()</code> starts every
