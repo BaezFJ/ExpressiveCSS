@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `f5755f49757a16843f11e100503005a9b2f6af6e856902613a6b17d09801d872`.
+Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `b9c05cf91100e64ca04c8fc93715773fac9a20d025e0c125fee834db8db65826`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -34,7 +34,6 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs mat
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Side sheet](#side-sheet) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Floating sheet](#floating-sheet) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Drag handle](#drag-handle) | unassessed | needs-review | no-mapped-checks | 1 |
 | [Badges](#badges) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | recorded-scoped-pass | 0 |
@@ -390,7 +389,7 @@ Web adaptation: Native dialog.show()/showModal(); shared runtime handles draggin
 
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Sheets cancel only the active pointer and clean interrupted drags (chromium)`. Rendered bottom and side sheets with synthetic primary/secondary pointers, cancellation, closing, removal, same-task reopen/reattach, ancestor reattachment and a new primary press outside. Unrelated mutations preserve active drags. Physical touch review remains pending.
-- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Bottom and floating sheets keep long content and actions reachable at compact widths (chromium)`. Bottom and floating sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Bottom sheets keep long content and actions reachable at compact widths (chromium)`. Bottom sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.
 
 <a id="side-sheet"></a>
 
@@ -410,23 +409,6 @@ Web adaptation: Native dialog and shared drag/dismiss behavior.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Sheets cancel only the active pointer and clean interrupted drags (chromium)`. Shared side/bottom drag cleanup under cancellation, secondary pointers, closing, removal, same-task reopen/reattach, ancestor reattachment and another primary press. Unrelated mutations preserve active drags. Synthetic pointers do not establish physical touch usability.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Side sheet translated content and close actions remain reachable (chromium)`. Compact/wide, LTR/RTL, modal/nonmodal, both motion settings, 200% root font size, translated wrapping, body scrolling, footer visibility, disabled control and native close-button pointer/Enter activation. Not native browser zoom.
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
-
-<a id="floating-sheet"></a>
-
-## Floating sheet
-
-**unassessed within the stated scope.** Inset floating dialog surface.
-
-Source review: needs-review, 2026-09-18. [src/sass/components/_floating-sheet.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_floating-sheet.scss), [src/sass/components/_dialog.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/dialogs.ts).
-
-Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/dialogs/overview).
-
-Web adaptation: Shares Dialogs initialization; no edge attachment or drag handle.
-
-- verification: Native focus and close, compact inset geometry, long-content scrolling and 200% root-text action access are checked. Native browser zoom remains unverified. Next: Repeat the long-content flow with native browser zoom at 200% and 400%.
-
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
-- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Bottom and floating sheets keep long content and actions reachable at compact widths (chromium)`. Bottom and floating sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.
 
 <a id="drag-handle"></a>
 

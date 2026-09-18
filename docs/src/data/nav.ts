@@ -295,7 +295,7 @@ export const NAV: DocsGroup[] = [
         route: "/dialogs.html",
         description:
           "Important prompts in a user flow. Dedicated to a single task.",
-        aliases: ["/modals.html"],
+        aliases: ["/floating-sheet.html", "/modals.html"],
       },
       {
         id: "bottom_sheet",
@@ -310,13 +310,6 @@ export const NAV: DocsGroup[] = [
         route: "/side-sheet.html",
         description:
           "Optional content and actions, without interrupting the main view.",
-      },
-      {
-        id: "floating_sheet",
-        label: "Floating sheet",
-        route: "/floating-sheet.html",
-        description:
-          "Secondary content on a surface that floats free of every window edge.",
       },
       {
         id: "drag_handle",

@@ -239,7 +239,7 @@ describe('the compatibility routes Astro publishes', () => {
     assert.deepEqual(
       ALIASES.map((a) => a.from).filter((from) => from !== '/index.html').sort(),
       ['/bottom-app-bar.html', '/collapsible.html', '/collections.html',
-       '/dropdown.html', '/modals.html', '/range.html',
+       '/dropdown.html', '/floating-sheet.html', '/modals.html', '/range.html',
        '/segmented-buttons.html', '/sidenav.html', '/toasts.html'],
       'the set of legacy routes changed',
     );

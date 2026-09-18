@@ -72,7 +72,6 @@ describe('ExpressiveCSS component decisions', () => {
       ['button-groups', 'split-button'],
       ['checkboxes', 'button-groups'],
       ['checkboxes', 'chips'],
-      ['dialogs', 'floating-sheet'],
       ['lists', 'cards'],
       ['lists', 'carousel'],
       ['lightbox', 'carousel'],
@@ -112,7 +111,7 @@ describe('ExpressiveCSS component decisions', () => {
   test('replaces generic warnings with concrete selection examples in the guides', async () => {
     const exampleSlugs = [
       'app-bar', 'panes', 'footer', 'breadcrumbs', 'pagination', 'scrollspy',
-      'buttons', 'icon-buttons', 'split-button', 'cards', 'lists', 'floating-sheet',
+      'buttons', 'icon-buttons', 'split-button', 'cards', 'lists',
       'badges', 'carousel', 'lightbox', 'toolbars', 'fieldsets', 'slider', 'chips',
       'date-picker', 'time-picker', 'tabs', 'navigation-bar',
       'button-groups', 'snackbar', 'dialogs', 'progress', 'loading-indicator',
@@ -161,7 +160,7 @@ describe('ExpressiveCSS component decisions', () => {
         assert.ok(guide.includes(evidence), `${component.slug} dropped mapping evidence: ${evidence}`);
       }
     }
-    for (const slug of ['fieldsets', 'floating-sheet', 'select', 'autocomplete', 'drag-handle']) assert.equal(bySlug.get(slug).materialGuidance.relationship, 'related');
+    for (const slug of ['fieldsets', 'select', 'autocomplete', 'drag-handle']) assert.equal(bySlug.get(slug).materialGuidance.relationship, 'related');
     for (const slug of ['footer', 'breadcrumbs', 'pagination', 'scrollspy', 'lightbox']) assert.equal(bySlug.get(slug).materialGuidance.relationship, 'none');
     assert.equal(bySlug.get('panes').materialGuidance.relationship, 'pattern');
     assert.ok(bySlug.get('date-picker').materialGuidance.implementation.limitations.length);
@@ -169,7 +168,7 @@ describe('ExpressiveCSS component decisions', () => {
   });
 
   test('separates native host semantics from shared runtime ownership', () => {
-    for (const slug of ['dialogs', 'bottom-sheet', 'side-sheet', 'floating-sheet']) {
+    for (const slug of ['dialogs', 'bottom-sheet', 'side-sheet']) {
       assert.equal(bySlug.get(slug).runtime, 'shared-runtime', `${slug} must route through shared dialog runtime guidance`);
     }
   });
@@ -177,7 +176,7 @@ describe('ExpressiveCSS component decisions', () => {
   test('accounts for the remaining Material and web component reviews without claiming full parity', async () => {
     const prior = new Set(['buttons','navigation-bar','navigation-rail','toolbars','text-fields','dialogs','tooltips']);
     const remaining = data.components.filter(entry => !prior.has(entry.slug));
-    assert.equal(remaining.length, 35);
+    assert.equal(remaining.length, 34);
     const names = ['inputs-material-review','layout-material-review','feedback-material-review','web-extensions-review'];
     const references = (await Promise.all(names.map(name => readFile(new URL(`../skills/expressivecss/expressivecss-design/references/${name}.md`, import.meta.url), 'utf8')))).join('\n');
     for (const entry of remaining) {

@@ -116,6 +116,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Remove banner classes, tokens and custom Sass imports. The existing
   `/banners.html` route now explains the migration.
 
+- Replace `.floating-sheet` with a dialog for blocking work, a bottom sheet on
+  compact layouts, or a side sheet for optional content on wider layouts.
+
 - Replace `.bottom-app-bar` with `.toolbar.docked` or `.toolbar.fixed`. Place an
   adjacent FAB in `.toolbar-group` when the layout needs one.
 - Replace `.navigation-drawer`, `.sidenav`, `NavigationDrawer`, and `Sidenav`
@@ -144,6 +147,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   legacy AutoInit selectors. The `FloatingActionButton` API now serves FAB menus.
 
 - Banner Sass, component semantics, generated component guides and variant tests.
+
+- Floating sheet Sass, documentation, semantics, generated guides and tests.
 
 - Bottom app bar Sass, navigation drawer Sass and runtime APIs, segmented
   button Sass, their documentation pages, semantics, generated guides, and
