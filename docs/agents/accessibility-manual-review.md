@@ -68,6 +68,14 @@ with an image inside a native button. Screen-reader announcements, Windows
 contrast themes and physical-device interaction remain pending. Lightbox is
 image enlargement, not a modal-gallery contract.
 
+Datepicker: at `/datepicker.html#date-range`, enter an end date and use Enter to
+reach the calendar. Select the end with the keyboard, including leap day and RTL.
+At `/datepicker.html#multiple`, add dates, remove middle/last/all selections, add
+them again and clear. The original input must remain usable. Check submitted
+values, selected-state announcements and generated-field names. Repeat with
+native 200%/400% zoom and physical mobile keyboards. Screen-reader results,
+actual contrast themes and device checks remain pending.
+
 Timepicker: at `/timepicker.html`, type and paste into the hour/minute fields in
 12-hour and 24-hour examples. Check empty and invalid edits, midnight/noon, AM/PM,
 confirmation and submitted values. Repeat in inline/docked modes, LTR/RTL and

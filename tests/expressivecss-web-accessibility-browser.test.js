@@ -591,6 +591,97 @@ scenario('date picker supports calendar keyboard navigation and redraw focus', '
   }
 });
 
+for (const action of ['default', 'multiple', 'range', 'clear']) scenario(`date picker selection lifecycle: ${action}`, `
+<form><div id="dates"><label for="date">Start date</label><input id="date" name="dates"></div>
+<div><label for="end">End date</label><input id="end" name="end"></div></form>
+<button id="after">After</button>`, async page => {
+  const day = value => page.locator(`.datepicker-day-button[data-year="2024"][data-month="1"][data-day="${value}"]`);
+  await page.emulateMedia({ reducedMotion: action === 'range' ? 'no-preference' : 'reduce' });
+  await page.evaluate(action => {
+    window.selections = 0;
+    document.documentElement.dir = action === 'range' ? 'rtl' : 'ltr';
+    const input = document.querySelector('#date');
+    if (action === 'clear') input.type = 'date';
+    window.instances = [Expressive.Datepicker.init(input, {
+      openByDefault: true, defaultDate: new Date(2024, 1, 20, 12),
+      setDefaultDate: action === 'default' || action === 'clear',
+      isMultipleSelection: action === 'default' || action === 'multiple',
+      isDateRange: action === 'range', dateRangeEndEl: '#end',
+      showClearBtn: true, autoSubmit: true, format: 'yyyy-mm-dd', isRTL: action === 'range',
+      disableDayFn: date => date.getDate() === 22,
+      onSelect: () => window.selections++
+    })];
+  }, action);
+  if (action === 'default') {
+    await expect(page.locator('#date')).toHaveValue('2024-02-20');
+    assert.deepEqual(await page.evaluate(() => window.instances[0].dates.map(date => date.getDate())), [20]);
+    await expect(day(20).locator('..')).toHaveAttribute('aria-selected', 'true');
+    await page.evaluate(() => window.instances[0].setDate(new Date(2024, 1, 20, 18)));
+    assert.deepEqual(await page.evaluate(() => window.instances[0].dates), []);
+  } else if (action === 'multiple') {
+    for (const value of [20, 21, 20, 23]) await day(value).click();
+    await expect(page.locator('#dates input')).toHaveCount(2);
+    assert.deepEqual(await page.locator('#dates input').evaluateAll(inputs => inputs.map(input => input.value)), ['2024-02-21', '2024-02-23']);
+    assert.deepEqual(await page.evaluate(() => new FormData(document.querySelector('form')).getAll('dates')), ['2024-02-21', '2024-02-23']);
+    await day(22).focus();
+    await page.keyboard.press('Enter');
+    assert.equal(await page.evaluate(() => window.selections), 4);
+    for (const value of [21, 23]) {
+      await day(value).focus();
+      await page.keyboard.press('Space');
+      await expect(day(value)).toBeFocused();
+    }
+    await expect(page.locator('#date')).toBeAttached();
+    await expect(page.locator('#date')).toHaveValue('');
+    await expect(page.locator('#dates input')).toHaveCount(1);
+    await day(29).click();
+    await day(28).click();
+    await page.getByRole('button', { name: 'Clear', exact: true }).click();
+    assert.deepEqual(await page.evaluate(() => window.instances[0].dates), []);
+    await expect(page.locator('#dates input')).toHaveCount(1);
+    await day(28).click();
+    await day(29).click();
+    await page.locator('#after').focus();
+    await page.evaluate(() => window.instances.pop().destroy());
+    await expect(page.locator('#dates input')).toHaveCount(1);
+    await expect(page.locator('#after')).toBeFocused();
+    await page.evaluate(() => {
+      const input = document.querySelector('#date');
+      input.value = '';
+      const picker = Expressive.Datepicker.init(input, { isDateRange: true, openByDefault: true });
+      window.instances = [picker];
+      picker.endDateEl.focus();
+    });
+    await page.evaluate(() => window.instances.pop().destroy());
+    await expect(page.locator('#date')).toBeFocused();
+    await expect(page.locator('#dates input')).toHaveCount(1);
+  } else if (action === 'range') {
+    await day(20).focus();
+    await page.keyboard.press('Enter');
+    await page.locator('#end').fill('2024-02-29');
+    await page.locator('#after').focus();
+    assert.equal(await page.evaluate(() => window.instances[0].endDate?.getDate()), 29);
+    await page.locator('#end').focus();
+    await page.keyboard.press('Enter');
+    await expect(day(29)).toBeFocused();
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('#end')).toHaveValue('2024-02-28');
+    await day(19).click();
+    await expect(page.locator('#date')).toHaveValue('2024-02-20');
+    await expect(page.locator('#end')).toHaveValue('2024-02-28');
+    await page.locator('#after').focus();
+    await page.evaluate(() => { window.destroyed = window.instances.pop(); window.destroyed.destroy(); });
+    await page.locator('#end').fill('2024-02-27');
+    await page.locator('#after').focus();
+    assert.equal(await page.evaluate(() => window.destroyed.endDate.getDate()), 28);
+  } else {
+    await page.getByRole('button', { name: 'Clear', exact: true }).click();
+    await expect(page.locator('#date')).toHaveValue('');
+    await expect(page.locator('#date')).toHaveAttribute('data-date', '');
+  }
+});
+
 for (const action of ['input', 'empty', 'boundaries']) scenario(`time picker digital values: ${action}`, '<form><label for="time">Time</label><input id="time" name="time"></form><button id="after">After</button>', async page => {
   await page.clock.setFixedTime(new Date(2024, 0, 1, 0, 37));
   for (const twelveHour of [true, false]) for (const docked of [false, true]) {
