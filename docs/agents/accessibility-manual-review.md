@@ -68,6 +68,14 @@ with an image inside a native button. Screen-reader announcements, Windows
 contrast themes and physical-device interaction remain pending. Lightbox is
 image enlargement, not a modal-gallery contract.
 
+ScrollSpy: at `/scrollspy.html`, follow the contents links with the keyboard and
+scroll between sections. Check the current link, sticky-header offset, native
+fragment navigation and focus in LTR/RTL and reduced motion. Repeat at native
+200%/400% zoom. For independent contents lists, use the two-navigation fixture in
+`tests/expressivecss-web-accessibility-browser.test.js`, whose ScrollSpy isolation
+checks cover offsets, groups, teardown and anchors. Spoken current-link state,
+Windows contrast themes and physical-device checks remain pending.
+
 For every row, enter reviewer, date, physical device, operating system,
 browser/assistive-technology version, result and evidence. Keep unavailable checks
 pending. Link recordings, screenshots or detailed notes, including failures.

@@ -10,7 +10,7 @@
     "nodeVersion": "v24.20.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "5abbe577b4d97b77fec5a0833ee215db4647ef08bcf369a984c71fe2928173d2",
+    "reportSha256": "e8042a0c5b061c53737a011463ed515872500085b2e8d48915f67d13c8e31a74",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -579,11 +579,11 @@
       "slug": "scrollspy",
       "title": "Scrollspy",
       "kind": "component",
-      "support": "unassessed",
+      "support": "implemented",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
-      "scope": "Section tracking and table-of-contents links.",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-17",
+      "scope": "Section tracking with per-section offsets and independent tables of contents grouped by getActiveElement callback identity.",
       "adaptation": "Web document navigation helper.",
       "upstream": {
         "source": "https://m3.material.io/components",
@@ -608,14 +608,14 @@
         },
         {
           "path": "src/ts/components/scrollspy.ts",
-          "sha256": "d35d756f8cabcd9bf95aafe9646630309606977fc1bc0347f3e1ded5eba5a3a6"
+          "sha256": "dd7d9babc18578824804f6c8c6b622c307712a7a93e6a40f4cbd6727f4814fd2"
         }
       ],
       "gaps": [
         {
           "kind": "verification",
-          "description": "A scoped TOC current link is checked; shared observer behavior with different offsets and multiple independent TOCs remains unverified.",
-          "nextStep": "Use getActiveElement to select the correct TOC; test independent offsets and teardown before claiming multi-TOC support."
+          "description": "Offsets, independent TOCs, per-instance active classes, fallback, teardown and native anchors have rendered coverage. Spoken current-link state, native zoom, actual contrast themes and physical devices remain unverified.",
+          "nextStep": "Complete the ScrollSpy fixtures in the accessibility manual-review checklist with actual browsers, assistive technology and devices."
         }
       ],
       "browserChecks": [
@@ -623,6 +623,30 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
           "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: ScrollSpy isolation: offsets",
+          "scope": "Per-section observer offsets and removal of the previous section's active class.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: ScrollSpy isolation: groups",
+          "scope": "Independent callback groups retain separate current links and fallback state during scrolling and destruction.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: ScrollSpy isolation: teardown",
+          "scope": "Repeated destruction and remount restore authored offset value and priority and update surviving current links.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: ScrollSpy isolation: anchors",
+          "scope": "Native keyboard fragment navigation and actual scrolling in LTR/RTL with ordinary and reduced motion.",
           "state": "recorded-passed"
         }
       ],
@@ -1860,9 +1884,9 @@
       "slug": "lightbox",
       "title": "Lightbox",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-18",
       "scope": "Enlarge-on-activation image and dismissal.",
       "adaptation": "ExpressiveCSS media behavior, not an upstream component contract.",

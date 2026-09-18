@@ -120,8 +120,12 @@ Expressive.AutoInit(document.body, {
         </OptionsTable>
         <h5 class="light">getActiveElement</h5>
         <p>
-          Only needed when the TOC is not <code>a[href="#id"]</code>.
           Return a CSS selector. Escape any author-controlled id yourself.
+          Sections sharing the same callback function share one current link.
+          For independent tables of contents, use a separate callback for each
+          navigation and reuse it for all its sections. The default callback
+          groups all default instances together. Each section honors its own
+          <code>scrollOffset</code> and <code>activeClass</code>.
         </p>
 <Code code={`
 function(id) {
@@ -133,7 +137,7 @@ function(id) {
         <InstanceNote plugin="ScrollSpy" />
 
         <h5 class="light">.destroy();</h5>
-        <p>Unobserve the section and tear down the shared observer when it is the last spy.</p>
+        <p>Disconnect the section's observer, restore its original offset style, and update the current link within its group. Repeated destruction is safe.</p>
 <Code code={`
 instance.destroy();
 `} />

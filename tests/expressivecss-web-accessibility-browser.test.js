@@ -941,6 +941,73 @@ for (const action of ['interrupt', 'reopen', 'motion', 'focus', 'isolation', 'tr
   }
 });
 
+for (const action of ['offsets', 'groups', 'teardown', 'anchors']) scenario(`ScrollSpy isolation: ${action}`, `
+<nav id="toc-a" aria-label="First contents"><a href="#spy-a">First</a><a href="#spy-b">Second</a></nav>
+<nav id="toc-b" aria-label="Other contents"><a href="#spy-c">Other first</a><a href="#spy-d">Other second</a></nav>
+<section class="scrollspy" id="spy-a" style="position:absolute;top:120px;left:10px;width:200px;height:100px;--md-comp-scrollspy-offset:12px!important">First section</section>
+<section class="scrollspy" id="spy-b" style="position:absolute;top:120px;left:230px;width:200px;height:100px">Second section</section>
+<section class="scrollspy" id="spy-c" style="position:absolute;top:120px;left:450px;width:200px;height:100px">Other section</section>
+<section class="scrollspy" id="spy-d" style="position:absolute;top:1600px;width:200px;height:100px">Last section</section>
+<div style="height:2500px"></div>`, async page => {
+  await page.evaluate(action => {
+    const first = id => `#toc-a a[href="#${id}"]`;
+    const other = id => `#toc-b a[href="#${id}"]`;
+    window.instances = [];
+    for (const id of ['spy-a', 'spy-b']) window.instances.push(Expressive.ScrollSpy.init(document.getElementById(id), {
+      getActiveElement: first, scrollOffset: action === 'offsets' && id === 'spy-b' ? 250 : 0,
+      activeClass: id === 'spy-a' ? 'first-active' : 'second-active', keepTopElementActive: action === 'groups'
+    }));
+    if (action === 'groups') {
+      document.querySelector('#spy-b').style.top = '1600px';
+      for (const id of ['spy-c', 'spy-d']) window.instances.push(Expressive.ScrollSpy.init(document.getElementById(id), {
+        getActiveElement: other, scrollOffset: 0, activeClass: 'other-active'
+      }));
+    }
+  }, action);
+  await expect(page.locator('#toc-a a[aria-current]')).toHaveText('First');
+  if (action === 'offsets') {
+    await page.locator('#spy-a').evaluate(el => { el.style.top = '-500px'; });
+    await expect(page.locator('#toc-a a[aria-current]')).toHaveCount(0);
+    await page.locator('#spy-b').evaluate(el => { el.style.top = '300px'; });
+    await expect(page.locator('#toc-a a[aria-current]')).toHaveText('Second');
+    await expect(page.locator('#toc-a a').first()).not.toHaveClass(/first-active/);
+  } else if (action === 'groups') {
+    await expect(page.locator('#toc-b a[aria-current]')).toHaveText('Other first');
+    await page.evaluate(() => {
+      document.querySelector('#spy-a').style.top = '-500px';
+      document.querySelector('#spy-c').style.top = '-500px';
+    });
+    await expect(page.locator('#toc-b a[aria-current]')).toHaveCount(0);
+    await expect(page.locator('#toc-a a[aria-current]')).toHaveText('First');
+    await page.evaluate(() => {
+      window.instances[0].destroy(); window.instances[0].destroy();
+      document.querySelector('#spy-c').style.top = '120px';
+    });
+    await expect(page.locator('#toc-a a[aria-current]')).toHaveText('Second');
+    await expect(page.locator('#toc-b a[aria-current]')).toHaveText('Other first');
+  } else if (action === 'teardown') {
+    await page.evaluate(() => window.instances[0].destroy());
+    await expect(page.locator('#spy-a')).toHaveCSS('--md-comp-scrollspy-offset', '12px');
+    assert.equal(await page.locator('#spy-a').evaluate(el => el.style.getPropertyPriority('--md-comp-scrollspy-offset')), 'important');
+    await expect(page.locator('#toc-a a[aria-current]')).toHaveText('Second');
+    await page.evaluate(() => { window.instances[1].destroy(); window.instances[1].destroy(); });
+    await expect(page.locator('#toc-a a[aria-current]')).toHaveCount(0);
+    assert.equal(await page.locator('#spy-b').evaluate(el => el.style.getPropertyValue('--md-comp-scrollspy-offset')), '');
+    await page.evaluate(() => { window.instances = Expressive.ScrollSpy.init(document.querySelectorAll('#spy-a, #spy-b'), { scrollOffset: 0 }); });
+    await expect(page.locator('#toc-a a[aria-current]')).toHaveText('First');
+  } else {
+    for (const direction of ['ltr', 'rtl']) for (const motion of ['reduce', 'no-preference']) {
+      await page.emulateMedia({ reducedMotion: motion });
+      await page.evaluate(direction => { document.documentElement.dir = direction; document.querySelector('#spy-b').style.top = '1600px'; scrollTo(0, 0); }, direction);
+      await page.locator('#toc-a a').nth(1).focus();
+      await page.keyboard.press('Enter');
+      await expect.poll(() => page.evaluate(() => location.hash)).toBe('#spy-b');
+      await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(1000);
+      await expect(page.locator('#toc-a a[aria-current]')).toHaveText('Second');
+    }
+  }
+});
+
 scenario('remaining lightbox teardown cancels pending work and preserves native button focus', `
 <button id="photo-button" type="button" aria-label="Enlarge mountain lake"><img id="wrapped-photo" class="lightboxed" width="120" height="80" alt="Mountain lake"></button><button id="next-photo">Next</button>`, async page => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });

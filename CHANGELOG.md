@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- ScrollSpy honors per-section offsets and active classes, isolates tables of
+  contents through shared `getActiveElement` callbacks, and restores authored
+  offset styles on teardown. Native anchor navigation remains unchanged.
+
 - Lightbox cancels interrupted transitions, honors mounted reduced-motion changes,
   preserves teardown focus and releases shared ancestor overflow after the last
   open instance closes. Canceled transitions no longer report completion.

@@ -100,6 +100,40 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), []);
   });
 
+  test('ScrollSpy ignores late observer callbacks after destroy and remount', () => {
+    document.body.innerHTML = '<section id="spy"></section><a href="#spy">Section</a>';
+    const original = globalThis.IntersectionObserver;
+    const observers = [];
+    const instances = [];
+    globalThis.IntersectionObserver = class {
+      constructor(callback) { this.callback = callback; observers.push(this); }
+      observe() {}
+      disconnect() { this.disconnected = true; }
+    };
+    try {
+      const section = document.querySelector('section');
+      const link = document.querySelector('a');
+      instances.push(Expressive.ScrollSpy.init(section));
+      observers[0].callback([{ isIntersecting: true, intersectionRatio: 1 }]);
+      assert.equal(link.getAttribute('aria-current'), 'true');
+      instances[0].destroy();
+      assert.equal(observers[0].disconnected, true);
+      instances.push(Expressive.ScrollSpy.init(section));
+      observers[0].callback([{ isIntersecting: true, intersectionRatio: 1 }]);
+      assert.equal(link.hasAttribute('aria-current'), false);
+      observers[1].callback([{ isIntersecting: true, intersectionRatio: 1 }]);
+      assert.equal(link.getAttribute('aria-current'), 'true');
+      instances[1].destroy();
+      observers[1].callback([{ isIntersecting: true, intersectionRatio: 1 }]);
+      assert.equal(link.hasAttribute('aria-current'), false);
+      assert.equal(Expressive.ScrollSpy._elements.length, 0);
+      assert.equal(observers[1].disconnected, true);
+    } finally {
+      instances.forEach(instance => instance.destroy());
+      globalThis.IntersectionObserver = original;
+    }
+  });
+
   test('Carousel detaches the shared resize listener', () => {
     document.body.innerHTML = `
       <div class="carousel">

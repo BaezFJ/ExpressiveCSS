@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `86159be7c56a13a4e10d602be96e60f3d275e5e0001dd268f9c480e67b69ad7f`
+Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
 
 #### Selection and adaptation
 
@@ -29,11 +29,11 @@ Upstream: web-extension-inventory-reviewed (2026-09-13); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
 
-Support (2026-09-13, `llm.md#scrollspy`): Section tracking and table-of-contents links.
+Support (2026-09-17, `llm.md#scrollspy`): Section tracking with per-section offsets and independent tables of contents grouped by getActiveElement callback identity.
 
 Web adaptation: Web document navigation helper.
 
-Known boundary: A scoped TOC current link is checked; shared observer behavior with different offsets and multiple independent TOCs remains unverified.
+Known boundary: Independent TOCs must reuse one getActiveElement function per group. Screen-reader announcements, native zoom and physical-device checks remain pending.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#scrollspy).
 

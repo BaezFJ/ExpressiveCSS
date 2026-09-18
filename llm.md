@@ -4038,16 +4038,20 @@ The documentation TOC is `position: sticky`. Scrollspy only updates which link i
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `throttle` | Number | `100` | Throttle of the scroll handler, in milliseconds. |
-| `scrollOffset` | Number | `200` | Offset used when deciding which section is in view. A larger value lets sections near the bottom of the page become active sooner. |
+| `scrollOffset` | Number | `200` | Per-section observer top inset and `--md-comp-scrollspy-offset` for native anchor scroll margins. |
 | `activeClass` | String | `'active'` | Class applied to the active table-of-contents link. |
 | `getActiveElement` | Function | see below | Returns a CSS selector for the element that should receive `activeClass`, given the section’s id. |
 | `keepTopElementActive` | Boolean | `false` | If true, keep the last section above the viewport active when the scrollbar is outside all spy sections. If there is no such section, the first one stays active. |
-| `animationDuration` | Number | `null` | Duration of the click-to-scroll animation, in milliseconds. `null` uses the browser’s native `scrollIntoView({ behavior: 'smooth' })`. |
 
 #### getActiveElement
 
 Default function for finding the active link. `id` is the id of the `.scrollspy` section. Return a CSS selector for the element that should be marked active.
+
+Sections sharing the same `getActiveElement` function share one current link.
+Use a separate callback for each independent table of contents and reuse that
+function for all its sections. Default instances belong to one group. Each
+section honors its own `scrollOffset` and `activeClass`. Custom selectors must
+escape author-controlled IDs. The default lookup compares literal hrefs.
 
 ```text
 function(id) {
@@ -4065,7 +4069,8 @@ const instance = Expressive.ScrollSpy.getInstance(elem);
 
 #### .destroy();
 
-Destroy the plugin instance and tear down its event handlers.
+Disconnect the section's observer, restore its original offset style, and update
+the current link within its group. Repeated destruction is safe.
 
 ```text
 instance.destroy();

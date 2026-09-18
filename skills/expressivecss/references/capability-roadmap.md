@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `5abbe577b4d97b77fec5a0833ee215db4647ef08bcf369a984c71fe2928173d2`.
+Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `e8042a0c5b061c53737a011463ed515872500085b2e8d48915f67d13c8e31a74`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -23,7 +23,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs mat
 | [Breadcrumbs](#breadcrumbs) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Pagination](#pagination) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Menu](#menu) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Scrollspy](#scrollspy) | unassessed | needs-review | recorded-scoped-pass | 0 |
+| [Scrollspy](#scrollspy) | implemented | source-reviewed | recorded-scoped-pass | 0 |
 | [Buttons](#buttons) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Icon buttons](#icon-buttons) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Button groups](#button-groups) | unassessed | needs-review | recorded-scoped-pass | 0 |
@@ -42,7 +42,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs mat
 | [Progress indicators](#progress) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Carousel](#carousel) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Lightbox](#lightbox) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Lightbox](#lightbox) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Search](#search) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | recorded-scoped-pass | 0 |
@@ -222,17 +222,21 @@ Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavio
 
 ## Scrollspy
 
-**unassessed within the stated scope.** Section tracking and table-of-contents links.
+**implemented within the stated scope.** Section tracking with per-section offsets and independent tables of contents grouped by getActiveElement callback identity.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/_scrollspy.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_scrollspy.scss), [src/sass/components/_table_of_contents.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_table_of_contents.scss), [src/ts/components/scrollspy.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/scrollspy.ts).
+Source review: source-reviewed, 2026-09-17. [src/sass/components/_scrollspy.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_scrollspy.scss), [src/sass/components/_table_of_contents.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_table_of_contents.scss), [src/ts/components/scrollspy.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/scrollspy.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components).
 
 Web adaptation: Web document navigation helper.
 
-- verification: A scoped TOC current link is checked; shared observer behavior with different offsets and multiple independent TOCs remains unverified. Next: Use getActiveElement to select the correct TOC; test independent offsets and teardown before claiming multi-TOC support.
+- verification: Offsets, independent TOCs, per-instance active classes, fallback, teardown and native anchors have rendered coverage. Spoken current-link state, native zoom, actual contrast themes and physical devices remain unverified. Next: Complete the ScrollSpy fixtures in the accessibility manual-review checklist with actual browsers, assistive technology and devices.
 
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: offsets`. Per-section observer offsets and removal of the previous section's active class.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: groups`. Independent callback groups retain separate current links and fallback state during scrolling and destruction.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: teardown`. Repeated destruction and remount restore authored offset value and priority and update surviving current links.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: anchors`. Native keyboard fragment navigation and actual scrolling in LTR/RTL with ordinary and reduced motion.
 
 <a id="buttons"></a>
 
@@ -552,9 +556,9 @@ Web adaptation: Runtime owns sizing and navigation; reduced motion removes paral
 
 ## Lightbox
 
-**implemented within the stated scope.** Enlarge-on-activation image and dismissal.
+**unassessed within the stated scope.** Enlarge-on-activation image and dismissal.
 
-Source review: source-reviewed, 2026-09-18. [src/sass/components/_lightbox.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/lightbox.ts).
+Source review: needs-review, 2026-09-18. [src/sass/components/_lightbox.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/lightbox.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components).
 
