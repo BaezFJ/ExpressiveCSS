@@ -47,7 +47,6 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
   background-color: var(--md-comp-side-sheet-container-color);
   color: var(--md-sys-color-on-surface);
   outline: none;
-  overflow-wrap: anywhere;
   translate: var(--md-comp-side-sheet-shift) 0;
   transition: translate 280ms ease, border-radius 200ms ease;
 
@@ -165,13 +164,6 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
     gap: 8px;
     padding: 16px 24px;
     border-block-start: 1px solid var(--md-sys-color-outline-variant);
-
-    > :is(button, a.button) {
-      max-width: 100%;
-      height: auto;
-      min-height: var(--md-comp-filled-button-container-height, 40px);
-      white-space: normal;
-    }
   }
 }
 
