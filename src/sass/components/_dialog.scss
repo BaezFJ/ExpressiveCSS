@@ -142,7 +142,7 @@ dialog > :is(form, nav):last-child {
   border: 0;
   background: none;
 
-  > :is(button, a.button) {
+  > :is(button, a.button):not(.icon-button, .circle, .extend) {
     max-width: 100%;
     height: auto;
     min-height: var(--md-comp-filled-button-container-height, 40px);

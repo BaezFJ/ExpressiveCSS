@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "dbf70412d26c5f17d5720ccf09928bb8a7e805f290faa909ea7d4511090db85f",
+    "reportSha256": "6f55420321ff84dd43a3968db47dc259f85d512fc75bdb5b373758b7b5618eab",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1155,9 +1155,9 @@
       "slug": "dialogs",
       "title": "Dialogs",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-18",
       "scope": "Basic and full-screen dialogs.",
       "adaptation": "Native dialog.showModal()/close(); shared dialog behavior is separate from AutoInit.",
@@ -1171,7 +1171,7 @@
       "sources": [
         {
           "path": "src/sass/components/_dialog.scss",
-          "sha256": "f51ca0e5642864b93d1286f48f184d555751ef6e3fe004f244decc92dcb93e49"
+          "sha256": "f4bb79a9f217ab1dfc7cd33325438d502065abec0474b6fd1c66a15d62f8ed30"
         },
         {
           "path": "src/ts/behaviors/dialogs.ts",
@@ -1191,9 +1191,9 @@
       "slug": "bottom-sheet",
       "title": "Bottom sheet",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-18",
       "scope": "Standard and modal bottom sheets.",
       "adaptation": "Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.",
@@ -1224,7 +1224,7 @@
         },
         {
           "path": "src/sass/components/_dialog.scss",
-          "sha256": "f51ca0e5642864b93d1286f48f184d555751ef6e3fe004f244decc92dcb93e49"
+          "sha256": "f4bb79a9f217ab1dfc7cd33325438d502065abec0474b6fd1c66a15d62f8ed30"
         },
         {
           "path": "src/ts/behaviors/dialogs.ts",
@@ -1262,7 +1262,7 @@
         {
           "file": "tests/menu-field-browser.test.js",
           "name": "Bottom and floating sheets keep long content and actions reachable at compact widths (chromium)",
-          "scope": "Bottom and floating sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions and keyboard dismissal. Root text enlargement is not native browser zoom.",
+          "scope": "Bottom and floating sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.",
           "state": "recorded-passed"
         }
       ],
@@ -1277,9 +1277,9 @@
       "slug": "side-sheet",
       "title": "Side sheet",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-18",
       "scope": "Standard and modal side sheets.",
       "adaptation": "Native dialog and shared drag/dismiss behavior.",
@@ -1310,7 +1310,7 @@
         },
         {
           "path": "src/sass/components/_dialog.scss",
-          "sha256": "f51ca0e5642864b93d1286f48f184d555751ef6e3fe004f244decc92dcb93e49"
+          "sha256": "f4bb79a9f217ab1dfc7cd33325438d502065abec0474b6fd1c66a15d62f8ed30"
         },
         {
           "path": "src/ts/behaviors/dialogs.ts",
@@ -1369,9 +1369,9 @@
       "slug": "floating-sheet",
       "title": "Floating sheet",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-18",
       "scope": "Inset floating dialog surface.",
       "adaptation": "Shares Dialogs initialization; no edge attachment or drag handle.",
@@ -1399,7 +1399,7 @@
         },
         {
           "path": "src/sass/components/_dialog.scss",
-          "sha256": "f51ca0e5642864b93d1286f48f184d555751ef6e3fe004f244decc92dcb93e49"
+          "sha256": "f4bb79a9f217ab1dfc7cd33325438d502065abec0474b6fd1c66a15d62f8ed30"
         },
         {
           "path": "src/ts/behaviors/dialogs.ts",
@@ -1423,7 +1423,7 @@
         {
           "file": "tests/menu-field-browser.test.js",
           "name": "Bottom and floating sheets keep long content and actions reachable at compact widths (chromium)",
-          "scope": "Bottom and floating sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions and keyboard dismissal. Root text enlargement is not native browser zoom.",
+          "scope": "Bottom and floating sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.",
           "state": "recorded-passed"
         }
       ],

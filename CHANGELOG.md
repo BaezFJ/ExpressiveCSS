@@ -9,7 +9,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Bottom and floating sheets keep long bodies scrollable and action rows reachable
   at compact widths with enlarged text. Shared dialog headings and action labels
-  wrap instead of overflowing their inset container.
+  wrap instead of overflowing their inset container without resizing icon buttons
+  or FABs.
 
 - Timepicker digital fields synchronize native input events, including paste,
   without depending on keyup. Invalid edits restore the last valid value on blur;
