@@ -4107,12 +4107,12 @@
         "href": "https://m3.material.io/components/date-pickers/overview",
         "implementation": {
           "source": "llm.md#date-picker",
-          "reviewedOn": "2026-09-13",
+          "reviewedOn": "2026-09-17",
           "documentedSupport": "Inline single-date, range, and multiple-date calendar.",
           "webAdaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
           "limitations": [
             "Modal picker parity is not provided by the documented inline API.",
-            "Calendar markup claims a grid but lacks calendar arrow, Home/End and month-navigation key handling; modal/range coverage remains incomplete."
+            "Calendar keyboard navigation and range/multiple selection lifecycle have browser coverage. Spoken calendar context, native zoom and physical devices remain unverified."
           ]
         },
         "relationship": "component",
@@ -4137,7 +4137,7 @@
       },
       "selectionExample": "A single date with no calendar-specific requirements can use a labeled native date input. Do not choose this picker expecting a popup: its calendar is inline and requires the documented visibility option.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-13",
+        "reviewedOn": "2026-09-17",
         "support": "partial",
         "sources": [
           {
@@ -4150,7 +4150,7 @@
           },
           {
             "path": "src/ts/components/datepicker.ts",
-            "sha256": "f45b22b2bfff14e704c10b9f7bc90867ae8f4b076be19ec0a5d53a49166d893e"
+            "sha256": "44f9df3b5058be3a31d31fe318c2582a8839282438d17e04db08df17c51a185c"
           },
           {
             "path": "src/ts/components/select.ts",
@@ -4168,9 +4168,9 @@
             "nextStep": "Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs."
           },
           {
-            "kind": "feature",
-            "description": "The unreleased source adds calendar grid keyboard navigation and redraw focus recovery. Modal and range-specific keyboard coverage remain incomplete.",
-            "nextStep": "Verify range and multiple-date selection and spoken calendar context separately; preserve the existing inline and docked APIs."
+            "kind": "verification",
+            "description": "Range-end typing and keyboard selection, multiple-date defaults, shrink/regrow/clear, form values and generated-input teardown have rendered coverage. Custom parsing, range constraints through typed input and spoken calendar context need further review.",
+            "nextStep": "Complete the manual picker checklist and separately verify custom parsing and typed range constraints. Do not infer modal or complete accessibility parity."
           }
         ],
         "browserChecks": [
@@ -4178,9 +4178,29 @@
             "file": "tests/expressivecss-web-accessibility-browser.test.js",
             "name": "chromium: date picker supports calendar keyboard navigation and redraw focus",
             "scope": "Inline and docked calendar day/week/month/year navigation, leap-year clamping, disabled-date selection prevention, RTL, configured bounds and redraw focus. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: date picker selection lifecycle: default",
+            "scope": "Multiple-date initialization and same-day normalization with nonmidnight defaults."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: date picker selection lifecycle: multiple",
+            "scope": "Pointer and keyboard add/remove, disabled day, form values, shrink/regrow/clear, preservation of the original input, generated-field teardown and focus recovery."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: date picker selection lifecycle: range",
+            "scope": "Authored end-input typing, Enter-to-calendar, RTL keyboard end selection, rejection of an earlier calendar end and listener cleanup."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: date picker selection lifecycle: clear",
+            "scope": "Clearing a native date input resets its value and data-date without throwing."
           }
         ],
-        "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
+        "inventorySha256": "73dfbba1ba5e037d42b8c354021ac69e264a6d5f6c11905a3122f1cf5dd8ef01"
       }
     },
     {

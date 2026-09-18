@@ -54,7 +54,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Slider](#slider) | unassessed | needs-review | needs-rerun | 0 |
 | [Chips](#chips) | unassessed | needs-review | needs-rerun | 0 |
 | [Autocomplete](#autocomplete) | unassessed | needs-review | needs-rerun | 1 |
-| [Date picker](#date-picker) | unassessed | needs-review | needs-rerun | 2 |
+| [Date picker](#date-picker) | unassessed | needs-review | needs-rerun | 1 |
 | [Time picker](#time-picker) | unassessed | needs-review | needs-rerun | 2 |
 | [Typography](#typography) | unassessed | needs-review | needs-rerun | 2 |
 | [Shape](#shape) | unassessed | needs-review | needs-rerun | 1 |
@@ -772,16 +772,20 @@ Web adaptation: Runtime combobox behavior attached to a text field; no standalon
 
 **unassessed within the stated scope.** Inline single-date, range, and multiple-date calendar.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/_datepicker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_datepicker.scss), [src/sass/components/_docked-display.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_docked-display.scss), [src/ts/components/datepicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/datepicker.ts), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/select.ts), [src/ts/plugins/dockedDisplayPlugin.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/plugins/dockedDisplayPlugin.ts).
+Source review: needs-review, 2026-09-17. [src/sass/components/_datepicker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_datepicker.scss), [src/sass/components/_docked-display.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_docked-display.scss), [src/ts/components/datepicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/datepicker.ts), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/select.ts), [src/ts/plugins/dockedDisplayPlugin.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/plugins/dockedDisplayPlugin.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/date-pickers/overview).
 
 Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
 
 - feature: Modal picker parity is not provided by the documented inline API. Next: Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs.
-- feature: The unreleased source adds calendar grid keyboard navigation and redraw focus recovery. Modal and range-specific keyboard coverage remain incomplete. Next: Verify range and multiple-date selection and spoken calendar context separately; preserve the existing inline and docked APIs.
+- verification: Range-end typing and keyboard selection, multiple-date defaults, shrink/regrow/clear, form values and generated-input teardown have rendered coverage. Custom parsing, range constraints through typed input and spoken calendar context need further review. Next: Complete the manual picker checklist and separately verify custom parsing and typed range constraints. Do not infer modal or complete accessibility parity.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker supports calendar keyboard navigation and redraw focus`. Inline and docked calendar day/week/month/year navigation, leap-year clamping, disabled-date selection prevention, RTL, configured bounds and redraw focus. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.
+- not-recorded: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker selection lifecycle: default`. Multiple-date initialization and same-day normalization with nonmidnight defaults.
+- not-recorded: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker selection lifecycle: multiple`. Pointer and keyboard add/remove, disabled day, form values, shrink/regrow/clear, preservation of the original input, generated-field teardown and focus recovery.
+- not-recorded: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker selection lifecycle: range`. Authored end-input typing, Enter-to-calendar, RTL keyboard end selection, rejection of an earlier calendar end and listener cleanup.
+- not-recorded: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker selection lifecycle: clear`. Clearing a native date input resets its value and data-date without throwing.
 
 <a id="time-picker"></a>
 
