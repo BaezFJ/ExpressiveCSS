@@ -14,6 +14,7 @@ const S = defineSections([
   { id: "initialization", label: "Initialization" },
   { id: "options", label: "Options" },
   { id: "methods", label: "Methods" },
+  { id: "native-forms", label: "Native forms" },
   { id: "properties", label: "Properties" },
   { id: "disabled", label: "Disabled Styles" },
 ]);
@@ -215,9 +216,10 @@ instance.getSelectedValues();
         <h5 class="light">.refresh();</h5>
         <p>
           Re-read the native <code>&lt;select&gt;</code>. Call this after changing
-          <code>select.value</code> or after adding or removing
-          <code>&lt;option&gt;</code>s. The menu is rebuilt; the field and
-          Menu instance stay put.
+          <code>select.value</code>, option labels, options or disabled states.
+          The menu rows are rebuilt; the field and an existing Menu instance stay put.
+          Refreshing an open menu preserves focus on a surviving option.
+          These programmatic updates do not emit a user <code>change</code> event.
         </p>
 <Code code={`
 instance.refresh();
@@ -228,6 +230,32 @@ instance.refresh();
 <Code code={`
 instance.destroy();
 `} />
+  </Section>
+  <Section {...S["native-forms"]}>
+        <p>The native select owns selection and form submission. Disabled options and
+          disabled optgroups cannot be chosen in the generated menu. A selected
+          disabled option remains visible in the field, but native form submission
+          excludes it. An empty selection displays an empty field.</p>
+        <p>Use the form's Reset button or <code>form.reset()</code> to restore defaults.
+          The generated field synchronizes after the browser resets the native control,
+          without a <code>change</code> event. Canceling the reset preserves selection.</p>
+        <form id="select-form-example">
+          <div class="field mb-5">
+            <select id="select-form-enhanced" name="enhanced">
+              <option value="a" selected>Alpha</option>
+              <option value="b">Beta</option>
+              <optgroup label="Unavailable" disabled><option value="c">Charlie</option></optgroup>
+            </select>
+            <label for="select-form-enhanced">Enhanced choice</label>
+          </div>
+          <label for="select-form-native">Native choice</label>
+          <select id="select-form-native" class="browser-default" name="native">
+            <option value="a" selected>Alpha</option>
+            <option value="b">Beta</option>
+            <optgroup label="Unavailable" disabled><option value="c">Charlie</option></optgroup>
+          </select>
+          <button type="reset">Reset choices</button>
+        </form>
   </Section>
   <Section {...S.properties}>
         <PropertiesTable el="The native <code>&lt;select&gt;</code> the plugin was initialized with.">

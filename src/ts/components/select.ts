@@ -46,6 +46,8 @@ export class FormSelect extends Component<FormSelectOptions> {
   private _values: ValueStruct[];
   private _createdWrapper: boolean;
   private _originalLabelFor: string | null;
+  private _form: HTMLFormElement | null;
+  private _resetTimer: ReturnType<typeof setTimeout>;
   nativeTabIndex: number;
 
   constructor(el: HTMLSelectElement, options: FormSelectOptions) {
@@ -124,9 +126,21 @@ export class FormSelect extends Component<FormSelectOptions> {
    */
   refresh() {
     if (!this.menuEl) return;
+    this._bindForm();
+    const root = this.menuEl.getRootNode() as Document | ShadowRoot;
+    const focused = this._values.find(value => value.optionEl.contains(root.activeElement))?.el;
+    this.input.disabled = this.el.matches(':disabled');
+    this.wrapper.classList.toggle('disabled', this.input.disabled);
+    if (this.input.disabled) this.menu?.close();
+    else if (!this.menu) this._initMenu();
+    this.input.removeAttribute('aria-activedescendant');
     this._rebuildOptions();
-    this._setValueToInput();
-    this._setSelectedStates();
+    this._handleSelectChange();
+    if (this.menu) this.menu.focusedIndex = -1;
+    if (this.menu?.isOpen) {
+      this.menu.recalculateDimensions();
+      if (focused) (this._values.find(value => value.el === focused)?.optionEl ?? this.input).focus();
+    }
   }
 
   _setupEventHandlers() {
@@ -134,6 +148,13 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.el.addEventListener('change', this._handleSelectChange);
     this.input.addEventListener('click', this._handleInputClick);
     this.menuEl.addEventListener('focusin', this._handleOptionFocus);
+    this._bindForm();
+  }
+
+  private _bindForm() {
+    this._form?.removeEventListener('reset', this._handleReset);
+    this._form = this.el.form;
+    this._form?.addEventListener('reset', this._handleReset);
   }
 
   _removeEventHandlers() {
@@ -141,6 +162,8 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.el.removeEventListener('change', this._handleSelectChange);
     this.input?.removeEventListener('click', this._handleInputClick);
     this.menuEl?.removeEventListener('focusin', this._handleOptionFocus);
+    this._form?.removeEventListener('reset', this._handleReset);
+    clearTimeout(this._resetTimer);
   }
 
   private _setupOptionHandlers() {
@@ -159,6 +182,14 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   _handleSelectChange = () => {
     this._setValueToInput();
+    this._setSelectedStates();
+  };
+
+  private _handleReset = (e: Event) => {
+    clearTimeout(this._resetTimer);
+    this._resetTimer = setTimeout(() => {
+      if (!e.defaultPrevented) this._handleSelectChange();
+    }, 0);
   };
 
   // Named rather than inline so that _removeEventHandlers can actually detach
@@ -190,12 +221,13 @@ export class FormSelect extends Component<FormSelectOptions> {
   }
 
   _selectOptionElement(virtualOption: HTMLElement) {
+    if (this.el.matches(':disabled')) return;
     if (
       !virtualOption.classList.contains('disabled') &&
       !virtualOption.classList.contains('optgroup')
     ) {
       const value = this._values.find((value) => value.optionEl === virtualOption);
-      if (!value) return;
+      if (!value || value.el.matches(':disabled')) return;
       const previousSelectedValues = this.getSelectedValues();
       if (this.isMultiple) {
         this._toggleEntryFromArray(value);
@@ -203,7 +235,7 @@ export class FormSelect extends Component<FormSelectOptions> {
         this._deselectAll();
         this._selectValue(value);
       }
-      this._setValueToInput();
+      this._handleSelectChange();
       const actualSelectedValues = this.getSelectedValues();
       const selectionHasChanged = !this._arraysEqual(previousSelectedValues, actualSelectedValues);
       if (selectionHasChanged)
@@ -229,7 +261,7 @@ export class FormSelect extends Component<FormSelectOptions> {
 
     this._setupWrapper();
     this._hideNativeSelect();
-    if (this.el.disabled) this.wrapper.classList.add('disabled');
+    if (this.el.matches(':disabled')) this.wrapper.classList.add('disabled');
 
     this.menuEl = document.createElement('menu');
     this.menuEl.id = `select-options-${Utils.guid()}`;
@@ -287,7 +319,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.input.setAttribute('data-target', this.menuEl.id);
     this.input.ariaReadOnly = 'true';
     this.input.ariaRequired = this.el.hasAttribute('required').toString();
-    if (this.el.disabled) this.input.disabled = true;
+    this.input.disabled = this.el.matches(':disabled');
     this.input.setAttribute('tabindex', this.nativeTabIndex.toString());
 
     const attrs = this.el.attributes;
@@ -319,7 +351,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   }
 
   private _initMenu() {
-    if (this.el.disabled) return;
+    if (this.el.matches(':disabled')) return;
     const menuOptions = { ...this.options.menuOptions };
     menuOptions.coverTrigger = false;
     const userOnOpenEnd = menuOptions.onOpenEnd;
@@ -439,7 +471,8 @@ export class FormSelect extends Component<FormSelectOptions> {
     li.id = 'select-option-' + Utils.guid();
     li.setAttribute('role', 'option');
     li.tabIndex = 0;
-    if (realOption.disabled) {
+    const disabled = this.el.matches(':disabled') || realOption.matches(':disabled');
+    if (disabled) {
       li.classList.add('disabled');
       li.ariaDisabled = 'true';
       li.tabIndex = -1;
@@ -451,7 +484,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     // that way instead of handing it back to the parser.
     const optionText = realOption.textContent;
     const span = document.createElement('span');
-    if (this.isMultiple && !realOption.disabled) {
+    if (this.isMultiple && !disabled) {
       const label = document.createElement('label');
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
@@ -528,24 +561,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   }
 
   _setValueToInput() {
-    const selectedRealOptions = this._getSelectedOptions();
-    const selectedOptionPairs = this._values.filter(
-      (value) => selectedRealOptions.indexOf(value.el) >= 0
-    );
-    const notDisabledOptionPairs = selectedOptionPairs.filter((op) => !op.el.disabled);
-    // textContent, not innerText: innerText is layout-dependent, so reading it
-    // once per selected option forced a reflow each time.
-    const texts = notDisabledOptionPairs.map((value) =>
-      value.optionEl.querySelector('span').textContent.trim()
-    );
-    if (texts.length === 0) {
-      const firstDisabledOption = <HTMLOptionElement>this.el.querySelector('option:disabled');
-      if (firstDisabledOption && firstDisabledOption.value === '') {
-        this.input.value = firstDisabledOption.textContent;
-        return;
-      }
-    }
-    this.input.value = texts.join(', ');
+    this.input.value = this._getSelectedOptions().map(option => option.textContent.trim()).join(', ');
   }
 
   _setSelectedStates() {

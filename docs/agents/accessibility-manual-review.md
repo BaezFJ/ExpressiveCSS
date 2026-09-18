@@ -32,6 +32,14 @@ motion enabled in the operating system.
 
 ## Review record
 
+Select: at `/select.html#native-forms`, choose Beta in both fields and activate
+Reset choices. Both must return to Alpha without a change announcement caused
+by a synthetic event. Check disabled optgroups, keyboard navigation, Escape and
+focus recovery. In developer tools, change values or disabled states and call
+`Expressive.FormSelect.getInstance(document.querySelector('#select-form-enhanced')).refresh()`.
+Repeat the multiple-select example, native 200%/400% zoom and translated labels
+in LTR/RTL. Record actual screen-reader and device results below as pending until checked.
+
 Panes: at `/panes.html#list-detail`, change `#pane-column` to 839px, 840px,
 1199px and 1200px in developer tools while keeping the viewport wide. Select a
 list item and return with Back at compact widths. Repeat in RTL, with translated
