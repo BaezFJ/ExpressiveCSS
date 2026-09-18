@@ -126,6 +126,7 @@ export class FormSelect extends Component<FormSelectOptions> {
    */
   refresh() {
     if (!this.menuEl) return;
+    this._bindForm();
     const root = this.menuEl.getRootNode() as Document | ShadowRoot;
     const focused = this._values.find(value => value.optionEl.contains(root.activeElement))?.el;
     this.input.disabled = this.el.matches(':disabled');
@@ -147,6 +148,11 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.el.addEventListener('change', this._handleSelectChange);
     this.input.addEventListener('click', this._handleInputClick);
     this.menuEl.addEventListener('focusin', this._handleOptionFocus);
+    this._bindForm();
+  }
+
+  private _bindForm() {
+    this._form?.removeEventListener('reset', this._handleReset);
     this._form = this.el.form;
     this._form?.addEventListener('reset', this._handleReset);
   }

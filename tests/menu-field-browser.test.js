@@ -75,6 +75,44 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
           await expect(page.locator('input[role="combobox"]')).toHaveValue('Beta');
           assert.equal(await page.evaluate(() => window.changes), 0);
         }
+        await page.evaluate(() => {
+          window.select.el.form.addEventListener('reset', () => window.select.refresh(), { once: true });
+          window.select.el.form.reset();
+        });
+        await expect(page.locator('input[role="combobox"]')).toHaveValue('Alpha');
+        assert.deepEqual(await page.evaluate(() => [...window.select.menuEl.querySelectorAll('[role="option"]')].map(el => el.ariaSelected)), ['true', 'false', 'false', 'false']);
+        for (const method of ['attribute', 'move']) {
+          await page.evaluate(method => {
+            const form = document.createElement('form');
+            form.id = `owner-${method}`;
+            document.body.append(form);
+            if (method === 'attribute') window.select.el.setAttribute('form', form.id);
+            else {
+              window.select.el.removeAttribute('form');
+              form.append(window.select.wrapper);
+            }
+            window.select.el.value = 'b';
+            window.select.refresh();
+            form.reset();
+          }, method);
+          await expect(page.locator('input[role="combobox"]')).toHaveValue('Alpha');
+          assert.deepEqual(await page.evaluate(() => [...window.select.menuEl.querySelectorAll('[role="option"]')].map(el => el.ariaSelected)), ['true', 'false', 'false', 'false']);
+          await page.evaluate(() => {
+            window.select.el.value = 'b';
+            window.select.refresh();
+            window.select.el.form.addEventListener('reset', e => e.preventDefault(), { once: true });
+            window.select.el.form.reset();
+          });
+          await expect(page.locator('input[role="combobox"]')).toHaveValue('Beta');
+        }
+        await page.evaluate(() => {
+          window.select.el.value = 'a';
+          document.querySelector('#form').reset();
+          document.querySelector('#owner-attribute').reset();
+        });
+        await page.waitForTimeout(30);
+        await expect(page.locator('input[role="combobox"]')).toHaveValue('Beta');
+        assert.equal(await page.evaluate(() => window.changes), 0);
       } else if (scenario === 'refresh') {
         await page.evaluate(() => {
           window.select.el.disabled = true;

@@ -9,7 +9,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Enhanced selects synchronize native form resets, selection semantics and
   refreshed disabled states. Disabled optgroups cannot be selected, and refresh
-  preserves focus on a surviving option in an open menu.
+  preserves focus on a surviving option in an open menu and rebinds reset handling
+  after form-owner changes.
 
 - Pane layouts use the nearest ancestor query-container width, with viewport
   fallback, for columns, compact visibility, margins and dividers. Long footer

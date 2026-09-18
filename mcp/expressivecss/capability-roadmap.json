@@ -4,13 +4,13 @@
   "sourceRevision": "b3821bb0390b985c31a858ab7f4e3dbf0de2d71c",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
-    "recordedOn": "2026-09-17",
+    "recordedOn": "2026-09-18",
     "engine": "chromium",
     "engineVersion": "153.0.8010.12",
     "nodeVersion": "v24.20.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "b119521e59f40fb4724eeaff25d2e55868861b9f3a312c816276dca194d3adf7",
+    "reportSha256": "cb4550bfc7753b5e25d540893f00f4eeb00dfd9f5544f41e92a830dd4878d847",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -2161,7 +2161,7 @@
         },
         {
           "path": "src/ts/components/select.ts",
-          "sha256": "96a8ff976f1f9568c8ba7e245f47ab6b00aa49563f764e4f422ab6f9313a3232"
+          "sha256": "42977975bb11210ec87701131c3536809b3109e173ccffd724e89817d9561af7"
         },
         {
           "path": "src/ts/components/menu.ts",
