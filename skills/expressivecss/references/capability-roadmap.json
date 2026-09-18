@@ -10,7 +10,7 @@
     "nodeVersion": "v24.20.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "5abbe577b4d97b77fec5a0833ee215db4647ef08bcf369a984c71fe2928173d2",
+    "reportSha256": "e9189f027f02aa5f1610d3c15aea06b1702341025cca10b9f7ba7ced100495d3",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1860,9 +1860,9 @@
       "slug": "lightbox",
       "title": "Lightbox",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-18",
       "scope": "Enlarge-on-activation image and dismissal.",
       "adaptation": "ExpressiveCSS media behavior, not an upstream component contract.",
@@ -2788,7 +2788,7 @@
       "support": "unassessed",
       "lastReviewedSupport": "partial",
       "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
+      "reviewedOn": "2026-09-18",
       "scope": "Inline clock and digital input; 12-hour and 24-hour formats.",
       "adaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
       "upstream": {
@@ -2822,7 +2822,7 @@
         },
         {
           "path": "src/ts/components/timepicker.ts",
-          "sha256": "18dab00c2eee80f24412878729e16847a0d2242c0917f3fd79e1516ee03cc01a"
+          "sha256": "1f74375f4917dce48e955b25f482af13a06bdc9bd7e16f967b661c3168a3bf15"
         },
         {
           "path": "src/ts/plugins/dockedDisplayPlugin.ts",
@@ -2846,6 +2846,24 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: time picker exposes named keyboard controls in inline and docked modes",
           "scope": "Localized hour name and fallback minute name, native AM/PM keyboard activation and selected state, no form submission, docked opening focus, and 12/24-hour digital entry including midnight. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: time picker digital values: input",
+          "scope": "Input-only edits, invalid-value recovery, confirmation change counts and form values in 12/24-hour, inline/docked, LTR/RTL and ordinary/reduced motion fixtures. Physical keyboard and clipboard checks remain pending.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: time picker digital values: empty",
+          "scope": "Empty hour/minute fallback display and submitted values agree, including twelve-hour midnight normalization and retained AM/PM state.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: time picker digital values: boundaries",
+          "scope": "Reinitialization from midnight, noon, late-night 24-hour strings and lowercase AM/PM preserves twelve-hour display and period state.",
           "state": "recorded-passed"
         }
       ],

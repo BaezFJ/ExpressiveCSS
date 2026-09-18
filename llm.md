@@ -4995,6 +4995,11 @@ Wrap the input in its own small parent — a `.field`, or a bare `<div>`. The cl
 
 Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital hour and minute fields.
 
+Digital edits use native input events, including paste. Invalid edits restore
+the last valid value on blur. Empty fields use the current hour or minute without
+changing the selected AM/PM period. Twelve-hour initialization converts 24-hour
+strings and accepts either case for AM/PM. No modal or dial-keyboard API is added.
+
 ### Initialization
 
 The IIFE bundle exposes `Expressive.Timepicker`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.timepicker`. Unlike Datepicker, the default options already show the clock.

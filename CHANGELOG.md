@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Timepicker digital fields synchronize native input events, including paste,
+  without depending on keyup. Invalid edits restore the last valid value on blur;
+  empty fields display the same fallback values they submit. Twelve-hour defaults
+  handle midnight, noon, 24-hour input strings and lowercase AM/PM consistently.
+
 - Lightbox cancels interrupted transitions, honors mounted reduced-motion changes,
   preserves teardown focus and releases shared ancestor overflow after the last
   open instance closes. Canceled transitions no longer report completion.

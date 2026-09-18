@@ -49,6 +49,9 @@ const S = defineSections([
           <code>autoSubmit: true</code>, finishing the minute writes the input
           (<code>HH:MM AM</code> or <code>HH:MM PM</code>). You can also type in the digital
           hour and minute fields.
+          Digital edits use native input events, including paste. Invalid edits
+          restore the last valid value when focus leaves the field. Empty fields
+          use the current hour or minute without changing the selected AM/PM period.
         </p>
   </Section>
 
