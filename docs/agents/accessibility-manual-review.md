@@ -68,6 +68,12 @@ with an image inside a native button. Screen-reader announcements, Windows
 contrast themes and physical-device interaction remain pending. Lightbox is
 image enlargement, not a modal-gallery contract.
 
+Timepicker: at `/timepicker.html`, type and paste into the hour/minute fields in
+12-hour and 24-hour examples. Check empty and invalid edits, midnight/noon, AM/PM,
+confirmation and submitted values. Repeat in inline/docked modes, LTR/RTL and
+reduced motion. Check real mobile keyboard and assistive-technology behavior;
+browser input-event emulation does not satisfy these pending manual checks.
+
 For every row, enter reviewer, date, physical device, operating system,
 browser/assistive-technology version, result and evidence. Keep unavailable checks
 pending. Link recordings, screenshots or detailed notes, including failures.
