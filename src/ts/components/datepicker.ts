@@ -1370,7 +1370,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   private _removeDateInput(input: HTMLInputElement) {
-    const focused = document.activeElement === input;
+    const focused = (input.getRootNode() as Document | ShadowRoot).activeElement === input;
     this._removeInputEventHandlers(input);
     input.remove();
     if (focused && document.activeElement === document.body) this.el.focus();
@@ -1565,6 +1565,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       date = new Date(Date.parse((e.target as HTMLInputElement).value));
     }
     if (Datepicker._isDate(date)) {
+      if (el == this.endDateEl && date < this.date) return this.setInputValue(el, this.endDate);
       this.setDate(date, false, el == this.endDateEl, true);
       if (e.type == 'date') {
         this.setDataDate(e, date);

@@ -655,12 +655,27 @@ for (const action of ['default', 'multiple', 'range', 'clear']) scenario(`date p
     await page.evaluate(() => window.instances.pop().destroy());
     await expect(page.locator('#date')).toBeFocused();
     await expect(page.locator('#dates input')).toHaveCount(1);
+    assert.equal(await page.evaluate(() => {
+      const host = document.body.appendChild(document.createElement('div'));
+      const root = host.attachShadow({ mode: 'open' });
+      root.innerHTML = '<div><input></div>';
+      const picker = Expressive.Datepicker.init(root.querySelector('input'), { isDateRange: true });
+      picker.endDateEl.focus();
+      picker.destroy();
+      const restored = root.activeElement === picker.el;
+      host.remove();
+      return restored;
+    }), true);
   } else if (action === 'range') {
     await day(20).focus();
     await page.keyboard.press('Enter');
     await page.locator('#end').fill('2024-02-29');
     await page.locator('#after').focus();
     assert.equal(await page.evaluate(() => window.instances[0].endDate?.getDate()), 29);
+    await page.locator('#end').fill('2024-02-19');
+    await page.locator('#after').focus();
+    await expect(page.locator('#end')).toHaveValue('2024-02-29');
+    assert.equal(await page.evaluate(() => new FormData(document.querySelector('form')).get('end')), '2024-02-29');
     await page.locator('#end').focus();
     await page.keyboard.press('Enter');
     await expect(day(29)).toBeFocused();
