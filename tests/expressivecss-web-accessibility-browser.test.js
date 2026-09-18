@@ -782,8 +782,168 @@ scenario('remaining web navigation, badges and list controls expose their meanin
   await expect(page.getByRole('link',{name:'Privacy'})).toBeFocused();
 });
 
+for (const action of ['interrupt', 'reopen', 'motion', 'focus', 'isolation', 'triggers', 'callbacks', 'destroy']) scenario(`Lightbox transition reliability: ${action}`, `
+<div id="clip" style="overflow:hidden"><img id="photo" class="lightboxed" width="120" height="80" style="border-radius:4px" tabindex="0" role="button" alt="Lake" data-caption="Lake"><button id="wrapped" type="button"><img id="second" class="lightboxed" width="100" height="60" alt="Forest" data-caption="Forest"></button></div><button id="outside">Outside</button>`, async page => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.evaluate(() => {
+    window.events = [];
+    window.instances = [...document.querySelectorAll('img')].map(el => Expressive.Lightbox.init(el, {
+      inDuration: 120, outDuration: 120,
+      onOpenStart: () => window.events.push('open-start'), onOpenEnd: () => window.events.push('open-end'),
+      onCloseStart: () => window.events.push('close-start'), onCloseEnd: () => window.events.push('close-end')
+    }));
+  });
+  if (action === 'interrupt') {
+    await page.evaluate(() => { const box = window.instances[0]; box.open(); box.open(); box.close(); box.close(); });
+    await page.waitForTimeout(180);
+    assert.deepEqual(await page.evaluate(() => window.events), ['open-start', 'close-start', 'close-end']);
+    await expect(page.locator('#lightbox-overlay, .lightbox-caption')).toHaveCount(0);
+    await expect(page.locator('#photo')).toHaveAttribute('style', 'border-radius:4px');
+    await expect(page.locator('#clip')).toHaveCSS('overflow', 'hidden');
+  } else if (action === 'reopen') {
+    await page.evaluate(() => window.instances[0].open());
+    await page.waitForTimeout(150);
+    await page.evaluate(() => { window.events = []; const box = window.instances[0]; box.close(); box.open(); });
+    await page.waitForTimeout(180);
+    await expect(page.locator('#lightbox-overlay')).toHaveCount(1);
+    await expect(page.locator('.lightbox-caption')).toHaveText('Lake');
+    assert.deepEqual(await page.evaluate(() => window.events), ['close-start', 'open-start', 'open-end']);
+    await page.evaluate(() => window.instances[0].close());
+    await page.waitForTimeout(150);
+    await expect(page.locator('#photo')).toHaveAttribute('width', '120');
+    await expect(page.locator('#clip')).toHaveCSS('overflow', 'hidden');
+  } else if (action === 'motion') {
+    await page.evaluate(() => { window.instances[0].options.inDuration = 2000; window.instances[0].open(); });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect.poll(() => page.evaluate(() => window.instances[0].doneAnimating), { timeout: 500 }).toBe(true);
+    await page.evaluate(() => { window.instances[0].options.outDuration = 2000; window.instances[0].close(); });
+    await expect(page.locator('#lightbox-overlay')).toHaveCount(0, { timeout: 500 });
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.evaluate(() => { window.instances[0].options.inDuration = 0; window.instances[0].open(); });
+    await page.waitForTimeout(20);
+    await page.evaluate(() => window.instances[0].close());
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(page.locator('#lightbox-overlay')).toHaveCount(0, { timeout: 500 });
+    await expect(page.locator('#photo')).toHaveAttribute('style', 'border-radius:4px');
+  } else if (action === 'focus') {
+    await page.locator('#photo').focus();
+    await page.keyboard.press('Enter');
+    await page.evaluate(() => window.instances.shift().destroy());
+    await expect(page.locator('#photo')).toBeFocused();
+    await page.waitForTimeout(180);
+    assert.deepEqual(await page.evaluate(() => window.events), ['open-start']);
+    for (const moveFocus of [false, true]) {
+      await page.evaluate(moveFocus => {
+        const host = document.createElement('div');
+        document.body.append(host);
+        const root = host.attachShadow({ mode: 'open' });
+        const photo = document.querySelector('#photo').cloneNode(true);
+        root.append(photo);
+        const box = Expressive.Lightbox.init(photo);
+        window.instances.push(box);
+        photo.focus();
+        if (moveFocus) {
+          photo.addEventListener('blur', () => document.querySelector('#outside').focus(), { once: true });
+          const placeholder = photo.parentElement;
+          const replace = placeholder.replaceWith;
+          placeholder.replaceWith = function (...nodes) { photo.blur(); replace.apply(this, nodes); };
+        }
+        box.destroy();
+        window.focusPreserved = moveFocus ? document.activeElement.id === 'outside' : root.activeElement === photo;
+        host.remove();
+      }, moveFocus);
+      assert.equal(await page.evaluate(() => window.focusPreserved), true, `shadow teardown, moved focus: ${moveFocus}`);
+    }
+  } else if (action === 'isolation') {
+    await page.evaluate(() => { window.instances[0].open(); window.instances[1].open(); });
+    await page.waitForTimeout(150);
+    await page.evaluate(() => window.instances[0].close());
+    await page.waitForTimeout(150);
+    await expect(page.locator('#clip')).toHaveCSS('overflow', 'visible');
+    await expect(page.locator('.lightbox-caption')).toHaveText('Forest');
+    await page.evaluate(() => window.instances[1].close());
+    await page.waitForTimeout(150);
+    await expect(page.locator('#clip')).toHaveCSS('overflow', 'hidden');
+  } else if (action === 'triggers') {
+    for (const direction of ['ltr', 'rtl']) for (const motion of ['reduce', 'no-preference']) {
+      await page.evaluate(direction => { document.documentElement.dir = direction; }, direction);
+      await page.emulateMedia({ reducedMotion: motion });
+      for (const trigger of ['#photo', '#wrapped']) for (const activation of ['Enter', 'Space', 'click']) {
+        await page.locator(trigger).focus();
+        if (activation === 'click') await page.locator(trigger).click();
+        else await page.keyboard.press(activation);
+        await expect(page.locator('#lightbox-overlay')).toHaveCount(1);
+        await page.keyboard.press('Escape');
+        await expect(page.locator('#lightbox-overlay')).toHaveCount(0);
+        if (activation !== 'click') await expect(page.locator(trigger)).toBeFocused();
+      }
+    }
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.evaluate(() => window.instances[1].open());
+    await page.waitForTimeout(150);
+    await page.locator('#lightbox-overlay').click({ position: { x: 5, y: 5 } });
+    await expect(page.locator('#lightbox-overlay')).toHaveCount(0);
+    for (const dismissal of ['overlay', 'scroll', 'resize']) {
+      await page.evaluate(() => { window.instances[0].options.inDuration = 2000; window.instances[0].open(); });
+      if (dismissal === 'overlay') await page.locator('#lightbox-overlay').dispatchEvent('click');
+      else if (dismissal === 'resize') await page.setViewportSize({ width: 900, height: 800 });
+      else await page.evaluate(() => window.dispatchEvent(new Event('scroll')));
+      await expect(page.locator('#lightbox-overlay')).toHaveCount(0);
+    }
+  } else if (action === 'callbacks') {
+    await page.evaluate(() => {
+      const box = window.instances[0];
+      box.options.onOpenStart = () => box.close();
+      box.open();
+    });
+    await page.waitForTimeout(180);
+    await expect(page.locator('#lightbox-overlay, .lightbox-caption')).toHaveCount(0);
+    await page.evaluate(() => {
+      const box = window.instances[0];
+      box.options.onOpenStart = null;
+      box.open();
+      box.options.onCloseStart = () => { box.options.onCloseStart = null; box.open(); document.querySelector('#outside').focus(); };
+      box.close();
+    });
+    await page.waitForTimeout(180);
+    await expect(page.locator('#lightbox-overlay')).toHaveCount(1);
+    await expect(page.locator('#outside')).toBeFocused();
+    await page.evaluate(() => {
+      const box = window.instances[0];
+      box.options.onCloseStart = () => box.destroy();
+      box.close();
+    });
+    await page.waitForTimeout(180);
+    await expect(page.locator('#lightbox-overlay, .lightbox-caption')).toHaveCount(0);
+    await expect(page.locator('#outside')).toBeFocused();
+  } else {
+    for (const phase of ['opening', 'closing']) {
+      await page.evaluate(phase => {
+        let box = window.instances[0];
+        if (phase === 'closing') {
+          box = Expressive.Lightbox.init(document.querySelector('#photo'), { inDuration: 120, outDuration: 120, onCloseEnd: () => window.events.push('close-end') });
+          window.instances[0] = box;
+        }
+        box.open();
+        if (phase === 'closing') box.close();
+        document.querySelector('#outside').focus();
+        box.destroy(); box.destroy(); box.open(); box.close();
+      }, phase);
+      await page.waitForTimeout(180);
+      await expect(page.locator('#outside')).toBeFocused();
+      await expect(page.locator('#photo')).toHaveAttribute('width', '120');
+      await expect(page.locator('#photo')).toHaveAttribute('height', '80');
+      await expect(page.locator('#photo')).toHaveAttribute('style', 'border-radius:4px');
+      await expect(page.locator('#lightbox-overlay, .lightbox-caption')).toHaveCount(0);
+      await expect(page.locator('#clip')).toHaveCSS('overflow', 'hidden');
+    }
+    assert.deepEqual(await page.evaluate(() => window.events), ['open-start']);
+  }
+});
+
 scenario('remaining lightbox teardown cancels pending work and preserves native button focus', `
 <button id="photo-button" type="button" aria-label="Enlarge mountain lake"><img id="wrapped-photo" class="lightboxed" width="120" height="80" alt="Mountain lake"></button><button id="next-photo">Next</button>`, async page => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.evaluate(()=>{window.completed=0;window.instances=[Expressive.Lightbox.init(document.querySelector('img'),{inDuration:150,outDuration:150,onOpenEnd:()=>window.completed++})];});
   await page.locator('#photo-button').focus();await page.keyboard.press('Space');
   await expect.poll(()=>page.evaluate(()=>window.instances[0].overlayActive)).toBe(true);

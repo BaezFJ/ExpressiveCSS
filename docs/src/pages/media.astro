@@ -31,6 +31,13 @@ const S = defineSections([
           <code>AutoInit()</code> starts every <code>.lightboxed</code> image except those marked
           <code>no-autoinit</code>.
         </p>
+        <p>
+          Repeated open or close requests are ignored. Reopening during closing cancels the
+          old transition; canceled transitions do not call their completion callback.
+          Reduced motion skips animation, including when the preference changes while mounted.
+          Destroy restores the image and releases owned styles, listeners and pending callbacks.
+          Lightbox enlarges images; it does not provide a modal-gallery focus contract.
+        </p>
         <img class="lightboxed responsive-img" tabindex="0" role="button" src="https://picsum.photos/id/1015/800/400" alt="A mountain lake that opens in a lightbox">
 <Code code={`
 <img class="lightboxed" tabindex="0" role="button" width="650" alt="A mountain lake" src="images/sample-1.jpg">
