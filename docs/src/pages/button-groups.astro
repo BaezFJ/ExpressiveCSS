@@ -166,6 +166,12 @@ const S = defineSections([
       Give every item its initial <code>aria-pressed</code> value;
       <code>ButtonGroup</code> maintains it after <code>AutoInit()</code>.
     </p>
+    <p>
+      Connected items stay equal in width. If unwrapped translated labels need
+      more room than the containing block, the group expands; place it in an
+      <code>overflow-x: auto; padding: 5px</code> container to keep every label
+      and keyboard focus ring reachable on narrow screens.
+    </p>
     <div>
       <div class="button-group connected"
            data-selection="multiple"

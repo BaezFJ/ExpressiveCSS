@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "b9c05cf91100e64ca04c8fc93715773fac9a20d025e0c125fee834db8db65826",
+    "reportSha256": "5777e67403861540605d77c5a5055086a49e8fe086297abd8a4bb6cf399c1666",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -781,10 +781,10 @@
       "slug": "button-groups",
       "title": "Button groups",
       "kind": "component",
-      "support": "unassessed",
+      "support": "implemented",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-18",
       "scope": "Standard and connected groups; commands and opt-in selection.",
       "adaptation": "Runtime coordinates neighboring widths and selection; CSS handles connected shapes.",
       "upstream": {
@@ -811,20 +811,14 @@
       "sources": [
         {
           "path": "src/sass/components/_button-groups.scss",
-          "sha256": "43a5b36f05b1596edb4d3f3a7686eb14f96819e6b67b5ac50dc76b4c179b6d38"
+          "sha256": "45bd7960a6da74e0baf80607334334c7253d132a20651f822a6b142c2e7fb5c8"
         },
         {
           "path": "src/ts/components/buttonGroup.ts",
           "sha256": "e628a02ce4d2f6d1d9cbd61c61191f54e4b6de98bcf05b5a19ec7cd4b2da58b8"
         }
       ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Existing geometry and keyboard checks do not cover every required-selection and overflow configuration.",
-          "nextStep": "Exercise empty optional and required selection, disabled neighbors and constrained translated labels."
-        }
-      ],
+      "gaps": [],
       "browserChecks": [
         {
           "file": "tests/button-groups-browser.test.js",
@@ -855,6 +849,18 @@
           "name": "complete editor example preserves both treatments and its task path",
           "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.",
           "state": "recorded-passed"
+        },
+        {
+          "file": "tests/button-groups-browser.test.js",
+          "name": "selection-required skips disabled controls and preserves a selection",
+          "scope": "Required single selection skips native, aria-disabled and class-disabled controls, blocks deselecting the last choice, moves selection, and leaves optional single selection empty when toggled off.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/button-groups-browser.test.js",
+          "name": "connected translated labels remain reachable in a constrained scroller",
+          "scope": "Equal connected widths, unwrapped German labels, local horizontal scrolling, visible focus rings on both edge controls and no page overflow at a 320px viewport.",
+          "state": "recorded-passed"
         }
       ],
       "browserEvidence": "recorded-scoped-pass",
@@ -868,10 +874,10 @@
       "slug": "split-button",
       "title": "Split button",
       "kind": "component",
-      "support": "unassessed",
+      "support": "implemented",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-18",
       "scope": "Leading action and trailing menu trigger with matching styles.",
       "adaptation": "Reuses Menu; no separate split-button runtime.",
       "upstream": {
@@ -901,18 +907,25 @@
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
+          "sha256": "e0fb0c0f6492652fdea2c7bf4189eabad261d5506ec93a22fac508da67d89660"
         }
       ],
       "gaps": [
         {
           "kind": "verification",
-          "description": "Full leading-action versus trailing-menu activation and Escape return are not directly mapped.",
-          "nextStep": "Activate both halves with keyboard and pointer; verify expanded state and separate effective targets."
+          "description": "Pointer and keyboard activation, disabled controls, expanded state and Escape focus return have browser coverage; effective target size remains unverified.",
+          "nextStep": "Verify separate 48dp effective targets at the two smaller sizes."
         }
       ],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "browserChecks": [
+        {
+          "file": "tests/split-button.test.js",
+          "name": "split-button halves activate separately and Escape returns focus",
+          "scope": "Pointer and keyboard activation keep the leading action separate from the trailing menu, Escape returns focus, alternate actions remain distinct, and disabled halves stay inert.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

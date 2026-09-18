@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `b9c05cf91100e64ca04c8fc93715773fac9a20d025e0c125fee834db8db65826`.
+Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `5777e67403861540605d77c5a5055086a49e8fe086297abd8a4bb6cf399c1666`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -26,8 +26,8 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs mat
 | [Scrollspy](#scrollspy) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Buttons](#buttons) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Icon buttons](#icon-buttons) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Button groups](#button-groups) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Split button](#split-button) | unassessed | needs-review | no-mapped-checks | 0 |
+| [Button groups](#button-groups) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Split button](#split-button) | implemented | source-reviewed | recorded-scoped-pass | 0 |
 | [Floating action button](#fab) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Cards](#cards) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Lists](#lists) | unassessed | needs-review | recorded-scoped-pass | 1 |
@@ -272,37 +272,39 @@ Web adaptation: Accessible name belongs to the control; the glyph is decorative.
 
 ## Button groups
 
-**unassessed within the stated scope.** Standard and connected groups; commands and opt-in selection.
+**implemented within the stated scope.** Standard and connected groups; commands and opt-in selection.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/_button-groups.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/buttonGroup.ts).
+Source review: source-reviewed, 2026-09-18. [src/sass/components/_button-groups.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/buttonGroup.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/button-groups/overview).
 
 Web adaptation: Runtime coordinates neighboring widths and selection; CSS handles connected shapes.
 
-- verification: Existing geometry and keyboard checks do not cover every required-selection and overflow configuration. Next: Exercise empty optional and required selection, disabled neighbors and constrained translated labels.
+No gap identified within the stated scope; broader upstream parity remains unassessed.
 
 - recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/button-groups-browser.test.js): `button-group toggle colors resolve in a browser`. Rendered group behavior; does not establish standalone common/icon-button parity.
 - recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Rendered group behavior; does not establish standalone common/icon-button parity.
 - recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/button-groups-browser.test.js): `standard press redistribution keeps its rendered width stable`. Rendered group behavior; does not establish standalone common/icon-button parity.
 - recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Rendered group behavior; does not establish standalone common/icon-button parity.
 - recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
+- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/button-groups-browser.test.js): `selection-required skips disabled controls and preserves a selection`. Required single selection skips native, aria-disabled and class-disabled controls, blocks deselecting the last choice, moves selection, and leaves optional single selection empty when toggled off.
+- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/button-groups-browser.test.js): `connected translated labels remain reachable in a constrained scroller`. Equal connected widths, unwrapped German labels, local horizontal scrolling, visible focus rings on both edge controls and no page overflow at a 320px viewport.
 
 <a id="split-button"></a>
 
 ## Split button
 
-**unassessed within the stated scope.** Leading action and trailing menu trigger with matching styles.
+**implemented within the stated scope.** Leading action and trailing menu trigger with matching styles.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/_split-button.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_split-button.scss), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/menu.ts).
+Source review: source-reviewed, 2026-09-18. [src/sass/components/_split-button.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_split-button.scss), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/menu.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/split-button/overview).
 
 Web adaptation: Reuses Menu; no separate split-button runtime.
 
-- verification: Full leading-action versus trailing-menu activation and Escape return are not directly mapped. Next: Activate both halves with keyboard and pointer; verify expanded state and separate effective targets.
+- verification: Pointer and keyboard activation, disabled controls, expanded state and Escape focus return have browser coverage; effective target size remains unverified. Next: Verify separate 48dp effective targets at the two smaller sizes.
 
-No directly scoped browser check is mapped. This does not mean the component fails or has no unit tests.
+- recorded-passed: [tests/split-button.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/split-button.test.js): `split-button halves activate separately and Escape returns focus`. Pointer and keyboard activation keep the leading action separate from the trailing menu, Escape returns focus, alternate actions remain distinct, and disabled halves stay inert.
 
 <a id="fab"></a>
 

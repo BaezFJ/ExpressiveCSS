@@ -1957,7 +1957,7 @@ Action-group items are direct controls: a `<button>`, or an `<a class="button" h
 
 Standard is the default: every item keeps its own separate shape, the gap closes as the buttons grow (18dp at `xsmall`, 12dp at `small`, and 8dp at the three largest), and pressing an item widens it while morphing toward the square shape for its size.
 
-Add `connected` for equal-width toggle items that fill the available width. Connected groups are selection controls, not one-shot action rows, so pair the class with `data-selection`. Items sit 2dp apart at every size; the ends stay round and the joins are squared off. Pressing an item changes its inner corners from 8dp to 4dp at the three smaller sizes, 16dp to 12dp at `large`, and 20dp to 16dp at `xlarge`. Add `square` to use the size-specific inner corner on the outer edge too.
+Add `connected` for equal-width toggle items that fill the available width. Connected groups are selection controls, not one-shot action rows, so pair the class with `data-selection`. Items sit 2dp apart at every size; the ends stay round and the joins are squared off. Pressing an item changes its inner corners from 8dp to 4dp at the three smaller sizes, 16dp to 12dp at `large`, and 20dp to 16dp at `xlarge`. Add `square` to use the size-specific inner corner on the outer edge too. If unwrapped translated labels need more room than the containing block, the group expands; place it in a container with `overflow-x: auto` and `padding: 5px` to keep every label and keyboard focus ring reachable on narrow screens.
 
 ```html
 <div class="button-group connected" data-selection="single" data-selection-required role="group" aria-label="Text alignment">
