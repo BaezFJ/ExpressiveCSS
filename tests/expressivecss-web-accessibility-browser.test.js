@@ -591,6 +591,66 @@ scenario('date picker supports calendar keyboard navigation and redraw focus', '
   }
 });
 
+for (const action of ['input', 'empty', 'boundaries']) scenario(`time picker digital values: ${action}`, '<form><label for="time">Time</label><input id="time" name="time"></form><button id="after">After</button>', async page => {
+  await page.clock.setFixedTime(new Date(2024, 0, 1, 0, 37));
+  for (const twelveHour of [true, false]) for (const docked of [false, true]) {
+    try {
+      await page.emulateMedia({ reducedMotion: docked ? 'no-preference' : 'reduce' });
+      await page.evaluate(({ twelveHour, docked }) => {
+        document.documentElement.dir = docked ? 'rtl' : 'ltr';
+        document.querySelector('#time').value = twelveHour ? '03:45 PM' : '23:45';
+        window.changes = 0;
+        document.querySelector('#time').onchange = () => window.changes++;
+        window.instances = [Expressive.Timepicker.init(document.querySelector('#time'), {
+          twelveHour, autoSubmit: false, duration: 0, vibrate: false,
+          displayPlugin: docked ? 'docked' : null, displayPluginOptions: { duration: 0 }
+        })];
+      }, { twelveHour, docked });
+      await page.locator('#time').focus();
+      await page.keyboard.press('Enter');
+      const hours = page.getByRole('textbox', { name: 'Hours', exact: true });
+      const minutes = page.getByRole('textbox', { name: 'Minutes', exact: true });
+      if (action === 'input') {
+        await hours.fill(twelveHour ? '02' : '00');
+        await minutes.fill('19');
+        await page.getByRole('button', { name: 'Ok', exact: true }).click();
+        await expect(page.locator('#time')).toHaveValue(twelveHour ? '02:19 PM' : '00:19');
+        assert.equal(await page.evaluate(() => window.changes), 1);
+        await hours.fill('4x');
+        await minutes.fill('99');
+        await page.getByRole('button', { name: 'Ok', exact: true }).click();
+        await expect(page.locator('#time')).toHaveValue(twelveHour ? '02:19 PM' : '00:19');
+        assert.equal(await page.evaluate(() => window.changes), 1);
+        assert.equal(await page.evaluate(() => new FormData(document.querySelector('form')).get('time')), twelveHour ? '02:19 PM' : '00:19');
+      } else if (action === 'empty') {
+        await hours.fill('');
+        await minutes.fill('');
+        await page.getByRole('button', { name: 'Ok', exact: true }).click();
+        await expect(hours).toHaveValue(twelveHour ? '12' : '00');
+        await expect(minutes).toHaveValue('37');
+        await expect(page.locator('#time')).toHaveValue(twelveHour ? '12:37 PM' : '00:37');
+      } else {
+        for (const [value, expected] of [['00:15', '12:15 AM'], ['12:30', '12:30 PM'], ['23:45', '11:45 PM'], ['03:45 am', '03:45 AM']]) {
+          if (!twelveHour && value.includes('am')) continue;
+          await page.evaluate(value => {
+            const { el, options } = window.instances[0];
+            window.instances.pop().destroy();
+            el.value = value;
+            window.instances = [Expressive.Timepicker.init(el, options)];
+            window.instances[0].done();
+          }, value);
+          await expect(page.locator('#time')).toHaveValue(twelveHour ? expected : value);
+          await page.locator('#time').focus();
+          await page.keyboard.press('Enter');
+          if (twelveHour) await expect(page.getByRole('button', { name: expected.slice(-2), exact: true })).toHaveAttribute('aria-pressed', 'true');
+        }
+      }
+    } finally {
+      await page.evaluate(() => { window.instances?.forEach(instance => instance.destroy()); window.instances = []; });
+    }
+  }
+});
+
 scenario('time picker exposes named keyboard controls in inline and docked modes', '<form><label for="appointment">Appointment</label><input id="appointment" value="03:45 PM"></form>', async page => {
   for (const docked of [false, true]) {
     for (const twelveHour of [true, false]) {
