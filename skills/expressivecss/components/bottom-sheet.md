@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `5c2ae9e5533799faf348dc14fbfe99244f72a87e93eb0fb7b5a138a6d2ecb25c`
+Contract SHA-256: `614d7fcc6aa26d6fe64266744017471a63b32d271312cf76dfe1e7c81bcd9773`
 
 #### Selection and adaptation
 
@@ -31,11 +31,11 @@ Requirements and boundaries: design reference layout-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/bottom-sheets/guidelines).
 
-Support (2026-09-13, `llm.md#bottom-sheet`): Standard and modal bottom sheets.
+Support (2026-09-18, `llm.md#bottom-sheet`): Standard and modal bottom sheets.
 
 Web adaptation: Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.
 
-Known boundary: The shared handle dismisses rather than cycling sheet heights; long-content and drag behavior are outside the new modal check.
+Known boundary: The shared handle dismisses rather than cycling sheet heights. Long-content scrolling and enlarged-text action access are checked; native zoom and physical touch remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#bottom-sheet).
 

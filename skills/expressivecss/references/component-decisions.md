@@ -23,10 +23,9 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | [Floating action button](../components/fab.md) | One primary action or a FAB menu of related labelled actions.; Replace removed speed dials with fab-menu and labelled actions. | The action is not the single highest-priority screen action. | `buttons`, `toolbars` | auto-init |
 | [Cards](../components/cards.md) | Distinct items with their own content or actions. | Dense comparable rows need a list. | `lists`, `carousel`, `badges` | auto-init |
 | [Lists](../components/lists.md) | Scan repeated rows of text and images. | Rich independent items need cards. | `cards`, `carousel`, `panes` | css-only |
-| [Dialogs](../components/dialogs.md) | Focused prompts or decisions that interrupt the flow. | Ignorable feedback needs snackbar or inline feedback. | `snackbar`, `bottom-sheet`, `side-sheet`, `floating-sheet` | shared-runtime |
+| [Dialogs](../components/dialogs.md) | Focused prompts or decisions that interrupt the flow. | Ignorable feedback needs snackbar or inline feedback. | `snackbar`, `bottom-sheet`, `side-sheet` | shared-runtime |
 | [Bottom sheet](../components/bottom-sheet.md) | Secondary content anchored to the bottom of the screen. | Persistent wider-window secondary content or a small anchored choice fits another component. | `side-sheet`, `menu`, `dialogs` | shared-runtime |
 | [Side sheet](../components/side-sheet.md) | Optional content and actions, without interrupting the main view. | The content is peer navigation or requires a blocking modal decision. | `navigation-rail`, `bottom-sheet`, `dialogs` | shared-runtime |
-| [Floating sheet](../components/floating-sheet.md) | Detached secondary content or tools. | Urgent decisions need dialogs; edge content needs sheets. | `dialogs`, `bottom-sheet`, `side-sheet` | shared-runtime |
 | [Drag handle](../components/drag-handle.md) | The bar that says a thing can be dragged — and nothing that does the dragging. | The containing component lacks drag behavior, keyboard operation, or an equivalent single-pointer path without dragging. | `bottom-sheet`, `side-sheet` | css-only |
 | [Badges](../components/badges.md) | Attach counts or status to another item. | Interactive filters need chips; messages need feedback. | `chips`, `cards` | css-only |
 | [Tooltips](../components/tooltips.md) | Material Design 3 tooltips, from the HTML. | The icon already has visible text, or the tooltip would be the control’s only accessible name. | `icon-buttons` | auto-init |
@@ -34,7 +33,7 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | [Progress indicators](../components/progress.md) | Measured progress or longer indeterminate waits. | Brief unknown waits fit loading indicator; instant work needs none. | `loading-indicator` | css-only |
 | [Loading indicator](../components/loading-indicator.md) | Brief waits under about five seconds, no known fraction. | Measured or long-running work needs progress. | `progress` | css-only |
 | [Carousel](../components/carousel.md) | Browse a visual collection horizontally. | Dense comparisons need lists; enlargement needs lightbox. | `lists`, `cards`, `lightbox` | auto-init |
-| [Lightbox](../components/lightbox.md) | Enlarge an image on activation. | Tasks need dialogs; browsing collections needs carousel. | `carousel`, `dialogs`, `floating-sheet` | auto-init |
+| [Lightbox](../components/lightbox.md) | Enlarge an image on activation. | Tasks need dialogs; browsing collections needs carousel. | `carousel`, `dialogs` | auto-init |
 | [Toolbars](../components/toolbars.md) | Contextual actions; docked toolbars replace bottom app bars in new Expressive layouts. | Destinations need navigation; page identity needs app bar. | `navigation-bar`, `app-bar` | css-only |
 | [Search](../components/search.md) | A search bar, and the view it expands into. | The field is ordinary data entry rather than finding content. | `text-fields`, `autocomplete` | css-only |
 | [Fieldsets](../components/fieldsets.md) | Name related form controls with a legend. | Visual content grouping needs cards or sections. | `cards` | css-only |

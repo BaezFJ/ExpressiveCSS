@@ -11,9 +11,10 @@ import { resetBody, window } from './setup.js';
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 
 describe('Dialog CSS', () => {
-  test('the retired top sheet is not in the sheet', () => {
+  test('retired sheet variants are not in the sheet', () => {
     assert.doesNotMatch(css, /dialog\.top(?:-sheet)?[\s,{]/);
     assert.doesNotMatch(css, /--md-comp-basic-dialog-sheet-width/);
+    assert.doesNotMatch(css, /floating-sheet/);
   });
 
   test('basic uses surface-container-high, 28dp corners, 280–560dp', () => {

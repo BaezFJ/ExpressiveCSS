@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "add4360d19d519e729a0833d005ea171251e9276840920f06645bfdd00856723",
+    "reportSha256": "7f6b87c27830ab603da6362138754bf9329e32f9d8ae4b897545a4599e75c8fe",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1171,7 +1171,7 @@
       "support": "unassessed",
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-18",
       "scope": "Basic and full-screen dialogs.",
       "adaptation": "Native dialog.showModal()/close(); shared dialog behavior is separate from AutoInit.",
       "upstream": {
@@ -1184,7 +1184,7 @@
       "sources": [
         {
           "path": "src/sass/components/_dialog.scss",
-          "sha256": "05a7ec3c2578a3e850548b8d6207043e1ff66fdb2fd44d1e3328b73dce95b3f6"
+          "sha256": "f4bb79a9f217ab1dfc7cd33325438d502065abec0474b6fd1c66a15d62f8ed30"
         },
         {
           "path": "src/ts/behaviors/dialogs.ts",
@@ -1207,7 +1207,7 @@
       "support": "unassessed",
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-17",
+      "reviewedOn": "2026-09-18",
       "scope": "Standard and modal bottom sheets.",
       "adaptation": "Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.",
       "upstream": {
@@ -1236,6 +1236,10 @@
           "sha256": "0f6edc494bfafba25fd34dbddee8d405f8d9b5e4567be6ca99bd0b19cb41f54c"
         },
         {
+          "path": "src/sass/components/_dialog.scss",
+          "sha256": "f4bb79a9f217ab1dfc7cd33325438d502065abec0474b6fd1c66a15d62f8ed30"
+        },
+        {
           "path": "src/ts/behaviors/dialogs.ts",
           "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
         },
@@ -1251,8 +1255,8 @@
       "gaps": [
         {
           "kind": "integration",
-          "description": "The shared handle dismisses rather than cycling sheet heights. Interrupted-drag cleanup has rendered coverage; bottom-sheet long-content and physical-touch review remain pending.",
-          "nextStep": "Use explicit close controls; separately verify reachable scrolling and any application-owned height changes."
+          "description": "The shared handle dismisses rather than cycling sheet heights. Interrupted-drag cleanup, long-content scrolling and enlarged-text action access have rendered coverage; application-owned height changes, native zoom and physical touch remain pending.",
+          "nextStep": "Use explicit close controls; verify application-owned height changes, native zoom and physical touch separately."
         }
       ],
       "browserChecks": [
@@ -1266,6 +1270,12 @@
           "file": "tests/menu-field-browser.test.js",
           "name": "Sheets cancel only the active pointer and clean interrupted drags (chromium)",
           "scope": "Rendered bottom and side sheets with synthetic primary/secondary pointers, cancellation, closing, removal, same-task reopen/reattach, ancestor reattachment and a new primary press outside. Unrelated mutations preserve active drags. Physical touch review remains pending.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Bottom sheets keep long content and actions reachable at compact widths (chromium)",
+          "scope": "Bottom sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.",
           "state": "recorded-passed"
         }
       ],
@@ -1283,7 +1293,7 @@
       "support": "unassessed",
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-17",
+      "reviewedOn": "2026-09-18",
       "scope": "Standard and modal side sheets.",
       "adaptation": "Native dialog and shared drag/dismiss behavior.",
       "upstream": {
@@ -1309,7 +1319,11 @@
       "sources": [
         {
           "path": "src/sass/components/_side-sheet.scss",
-          "sha256": "d4d4d836ef56b58a9c2bf644fb243d250834949042c846fe89d55951d41d29e5"
+          "sha256": "6b1110f3fb68032d603d2b6e05832ad4020cd285d76bf940f993fb941accb067"
+        },
+        {
+          "path": "src/sass/components/_dialog.scss",
+          "sha256": "f4bb79a9f217ab1dfc7cd33325438d502065abec0474b6fd1c66a15d62f8ed30"
         },
         {
           "path": "src/ts/behaviors/dialogs.ts",
@@ -1350,65 +1364,6 @@
           "scope": "Compact/wide, LTR/RTL, modal/nonmodal, both motion settings, 200% root font size, translated wrapping, body scrolling, footer visibility, disabled control and native close-button pointer/Enter activation. Not native browser zoom.",
           "state": "recorded-passed"
         },
-        {
-          "file": "tests/expressivecss-web-accessibility-browser.test.js",
-          "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
-          "scope": "Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.",
-          "state": "recorded-passed"
-        }
-      ],
-      "browserEvidence": "recorded-scoped-pass",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "floating-sheet",
-      "title": "Floating sheet",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
-      "scope": "Inset floating dialog surface.",
-      "adaptation": "Shares Dialogs initialization; no edge attachment or drag handle.",
-      "upstream": {
-        "source": "https://m3.material.io/components/dialogs/overview",
-        "reviewedOn": "2026-09-13",
-        "scope": "requirements-prose-reviewed",
-        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "Related Dialogs/Usage and Accessibility/Keyboard; no standalone floating-sheet specification"
-        ],
-        "sources": [
-          "https://m3.material.io/components/dialogs/overview",
-          "https://m3.material.io/components/dialogs/specs",
-          "https://m3.material.io/components/dialogs/guidelines",
-          "https://m3.material.io/components/dialogs/accessibility"
-        ],
-        "requirements": "Apply the relevant dialog naming, keyboard, focus and dismissal guidance. Google has no standalone floating-sheet specification; its inset geometry is a framework choice."
-      },
-      "relationship": "related",
-      "sources": [
-        {
-          "path": "src/sass/components/_floating-sheet.scss",
-          "sha256": "a638bb17dc87b76273e94a37db584f5603a3ce5fd518353f8c4594546b664d10"
-        },
-        {
-          "path": "src/ts/behaviors/dialogs.ts",
-          "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Native dialog focus and close are checked; long-content zoom and inset geometry remain unverified.",
-          "nextStep": "Verify content scrolling and action reachability in the chosen inset dialog."
-        }
-      ],
-      "browserChecks": [
         {
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
@@ -2725,7 +2680,7 @@
       "support": "unassessed",
       "lastReviewedSupport": "partial",
       "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
+      "reviewedOn": "2026-09-17",
       "scope": "Inline single-date, range, and multiple-date calendar.",
       "adaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
       "upstream": {
@@ -2756,7 +2711,7 @@
         },
         {
           "path": "src/ts/components/datepicker.ts",
-          "sha256": "f45b22b2bfff14e704c10b9f7bc90867ae8f4b076be19ec0a5d53a49166d893e"
+          "sha256": "44f9df3b5058be3a31d31fe318c2582a8839282438d17e04db08df17c51a185c"
         },
         {
           "path": "src/ts/components/select.ts",
@@ -2774,9 +2729,9 @@
           "nextStep": "Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs."
         },
         {
-          "kind": "feature",
-          "description": "The unreleased source adds calendar grid keyboard navigation and redraw focus recovery. Modal and range-specific keyboard coverage remain incomplete.",
-          "nextStep": "Verify range and multiple-date selection and spoken calendar context separately; preserve the existing inline and docked APIs."
+          "kind": "verification",
+          "description": "Range-end typing and keyboard selection, multiple-date defaults, shrink/regrow/clear, form values and generated-input teardown have rendered coverage. Custom parsing, range constraints through typed input and spoken calendar context need further review.",
+          "nextStep": "Complete the manual picker checklist and separately verify custom parsing and typed range constraints. Do not infer modal or complete accessibility parity."
         }
       ],
       "browserChecks": [
@@ -2784,6 +2739,30 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: date picker supports calendar keyboard navigation and redraw focus",
           "scope": "Inline and docked calendar day/week/month/year navigation, leap-year clamping, disabled-date selection prevention, RTL, configured bounds and redraw focus. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: date picker selection lifecycle: default",
+          "scope": "Multiple-date initialization and same-day normalization with nonmidnight defaults.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: date picker selection lifecycle: multiple",
+          "scope": "Pointer and keyboard add/remove, disabled day, form values, shrink/regrow/clear, preservation of the original input, generated-field teardown and focus recovery.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: date picker selection lifecycle: range",
+          "scope": "Authored end-input typing, Enter-to-calendar, RTL keyboard end selection, rejection of an earlier calendar end and listener cleanup.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: date picker selection lifecycle: clear",
+          "scope": "Clearing a native date input resets its value and data-date without throwing.",
           "state": "recorded-passed"
         }
       ],

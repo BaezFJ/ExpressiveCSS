@@ -11,6 +11,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   exceed the available width. The group expands inside an overflow container
   instead of letting labels overlap adjacent controls.
 
+- Bottom and floating sheets keep long bodies scrollable and action rows reachable
+  at compact widths with enlarged text. Shared dialog headings and action labels
+  wrap instead of overflowing their inset container without resizing icon buttons
+  or FABs.
+
+- Datepicker initializes multiple-date defaults safely, keeps generated inputs
+  synchronized when selections shrink or grow, and preserves the original input
+  when cleared. Range-end inputs supplied by applications receive input and
+  keyboard handlers. Teardown removes generated fields and their listeners.
+
 - Timepicker digital fields synchronize native input events, including paste,
   without depending on keyup. Invalid edits restore the last valid value on blur;
   empty fields display the same fallback values they submit. Twelve-hour defaults
@@ -110,6 +120,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Remove banner classes, tokens and custom Sass imports. The existing
   `/banners.html` route now explains the migration.
 
+- Replace `.floating-sheet` with a dialog for blocking work, a bottom sheet on
+  compact layouts, or a side sheet for optional content on wider layouts.
+
 - Replace `.bottom-app-bar` with `.toolbar.docked` or `.toolbar.fixed`. Place an
   adjacent FAB in `.toolbar-group` when the layout needs one.
 - Replace `.navigation-drawer`, `.sidenav`, `NavigationDrawer`, and `Sidenav`
@@ -138,6 +151,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   legacy AutoInit selectors. The `FloatingActionButton` API now serves FAB menus.
 
 - Banner Sass, component semantics, generated component guides and variant tests.
+
+- Floating sheet Sass, documentation, semantics, generated guides and tests.
 
 - Bottom app bar Sass, navigation drawer Sass and runtime APIs, segmented
   button Sass, their documentation pages, semantics, generated guides, and

@@ -129,17 +129,3 @@ Framework comparison: The contract supports native show/showModal and shared dra
 Verification gap: Native modal/nonmodal focus is checked; start-docked RTL drag direction and long-content fit remain unverified. Next check: Test the actual RTL edge, drag alternative, enlarged labels and reachable close action.
 
 Mapped browser scope: Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
-
-## [Floating sheet](../../components/floating-sheet.md)
-
-Relationship: related. Sources: [overview](https://m3.material.io/components/dialogs/overview), [specs](https://m3.material.io/components/dialogs/specs), [guidelines](https://m3.material.io/components/dialogs/guidelines), [accessibility](https://m3.material.io/components/dialogs/accessibility).
-
-Reviewed sections: Related Dialogs/Usage and Accessibility/Keyboard; no standalone floating-sheet specification.
-
-Requirements: Apply the relevant dialog naming, keyboard, focus and dismissal guidance. Google has no standalone floating-sheet specification; its inset geometry is a framework choice.
-
-Framework comparison: This is an inset native-dialog extension. Its width, corners and elevation are framework choices, not a separate Google specification.
-
-Verification gap: Native dialog focus and close are checked; long-content zoom and inset geometry remain unverified. Next check: Verify content scrolling and action reachability in the chosen inset dialog.
-
-Mapped browser scope: Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.

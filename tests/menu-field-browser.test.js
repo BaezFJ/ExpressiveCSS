@@ -457,6 +457,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
 }
 assert.ok(!process.env.EXPRESSIVECSS_TEST_BROWSER || ['chromium', 'firefox', 'webkit'].includes(process.env.EXPRESSIVECSS_TEST_BROWSER));
 const sheetMarkup = `<dialog aria-labelledby="title"><header><h2 id="title">Details</h2><form method="dialog"><button aria-label="Close">×</button></form></header><div id="body"><p>Supporting content</p></div><form method="dialog"><button id="save">Save</button><button disabled>Unavailable</button></form></dialog>`;
+const longSheetMarkup = `<dialog aria-labelledby="long-title"><h2 id="long-title">Notification preferences</h2><div id="long-body"><p>${'Review each setting before saving your changes. '.repeat(80)}</p></div><form method="dialog"><button id="save-long" value="save">Save notification preferences</button><button id="cancel-long" class="outlined" value="cancel">Cancel</button></form></dialog>`;
 
 async function sheetFixture(page, { variant = 'side-sheet', direction = 'ltr', modal = true, motion = 'reduce' } = {}) {
   await page.goto('about:blank');
@@ -628,6 +629,60 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         await page.keyboard.press('Enter');
         await expect(page.locator('dialog')).not.toBeVisible();
       }
+    } finally { await browser.close(); }
+  });
+
+  browserTest(`Bottom sheets keep long content and actions reachable at compact widths (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await browser.newPage();
+      const variant = 'bottom-sheet';
+      for (const width of [320, 599]) for (const modal of [false, true]) {
+        await page.setViewportSize({ width, height: 640 });
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.setContent(`<style>${css}</style>${longSheetMarkup}`);
+        await page.evaluate(({ variant, modal }) => {
+          document.documentElement.style.fontSize = '200%';
+          const dialog = document.querySelector('dialog');
+          dialog.className = variant;
+          modal ? dialog.showModal() : dialog.show();
+        }, { variant, modal });
+        const result = await page.locator('#long-body').evaluate(body => {
+          body.scrollTop = body.scrollHeight;
+          const dialog = body.closest('dialog'), title = dialog.querySelector('h2');
+          return {
+            scrollable: body.scrollHeight > body.clientHeight,
+            scrolled: body.scrollTop > 0,
+            overflow: Math.max(document.documentElement.scrollWidth - innerWidth, dialog.scrollWidth - dialog.clientWidth, body.scrollWidth - body.clientWidth),
+            titleClipped: title.scrollWidth > title.clientWidth || title.scrollHeight > title.clientHeight,
+          };
+        });
+        const label = `${variant} ${width}px ${modal ? 'modal' : 'standard'}`;
+        assert.ok(result.scrollable && result.scrolled, `${label} body scrolls`);
+        assert.ok(result.overflow <= 1, `${label} has no horizontal overflow`);
+        assert.equal(result.titleClipped, false, `${label} enlarged heading is not clipped`);
+        for (const id of ['#save-long', '#cancel-long']) {
+          assert.ok(await page.locator(id).evaluate(button => {
+            const rect = button.getBoundingClientRect();
+            return rect.left >= 0 && rect.right <= innerWidth && rect.top >= 0 && rect.bottom <= innerHeight
+              && button.scrollWidth <= button.clientWidth && button.scrollHeight <= button.clientHeight
+              && button.contains(document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2));
+          }), `${label} ${id} is visible, unclipped and unobscured`);
+        }
+        await page.locator('#save-long').focus();
+        await expect(page.locator('#save-long')).toBeFocused();
+        await page.keyboard.press('Tab');
+        await expect(page.locator('#cancel-long')).toBeFocused();
+        await page.keyboard.press('Enter');
+        await expect(page.locator('dialog')).not.toBeVisible();
+      }
+      await page.setContent(`<style>${css}</style><dialog class="${variant}" open><form method="dialog"><button class="icon-button xsmall" aria-label="Compact"><span class="material-symbols" aria-hidden="true">close</span></button><button class="icon-button xlarge" aria-label="Large"><span class="material-symbols" aria-hidden="true">close</span></button><button class="circle extra medium" aria-label="Create"><span class="material-symbols" aria-hidden="true">add</span></button><button class="extend medium"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button></form></dialog>`);
+      const geometry = await page.locator('form > button').evaluateAll(buttons => buttons.map(button => {
+        const { width, height } = button.getBoundingClientRect();
+        return { width, height };
+      }));
+      assert.deepEqual(geometry.map(({ height }) => height), [32, 136, 80, 80], `${variant} preserves self-sized action heights`);
+      assert.deepEqual(geometry.slice(0, 3).map(({ width, height }) => [width, height]), [[32, 32], [136, 136], [80, 80]], `${variant} preserves square action controls`);
     } finally { await browser.close(); }
   });
 

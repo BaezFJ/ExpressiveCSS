@@ -71,7 +71,6 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Dialogs
 - Bottom sheet
 - Side sheet
-- Floating sheet
 - Scrollspy
 - Tabs
 - Snackbar
@@ -3934,27 +3933,6 @@ document.getElementById('sheet').show();      // standard
 document.getElementById('sheet').showModal(); // modal
 ```
 
-### Floating sheet
-
-A `dialog.floating-sheet` is secondary content on a surface detached from every window edge - an ExpressiveCSS dialog extension, not a verified standalone M3 component. `show()` is standard (no scrim, the page stays interactive); `showModal()` is modal (scrim). The container is `surface-container-low`, 28dp corners all round, elevation 1, 24dp in from every edge, 400dp max width. It is a `<dialog>`, so the ordinary dialog slots apply and there is no floating-sheet module - light dismiss on the scrim is `Dialogs.Init()`, the same as any dialog. It does not drag, so it takes no handle.
-
-There are no edge modifiers: `.bottom` selects a bottom sheet and `.left` / `.right` a side sheet. Anchor it with `inset` / `margin`, or move it with `--md-comp-floating-sheet-inset` and `--md-comp-floating-sheet-container-max-width`.
-
-```html
-<dialog class="floating-sheet" aria-labelledby="now-playing-title">
-  <h2 id="now-playing-title">Now playing</h2>
-  <p>Secondary content, floating above the page.</p>
-  <form method="dialog">
-    <button type="submit" value="done">Done</button>
-  </form>
-</dialog>
-```
-
-```js
-document.getElementById('sheet').show();      // standard, no scrim
-document.getElementById('sheet').showModal(); // modal, with scrim
-```
-
 ### Full-screen
 
 Add `max` for a full-viewport dialog with no corners. That is the M3 full-screen dialog, typically used on small screens.
@@ -4894,6 +4872,9 @@ The unreleased source adds keyboard navigation to the existing inline and docked
 
 Set `isDateRange: true`. Click a start day, then an end day that is on or after it. Point `dateRangeEndEl` at a second input, or omit it and a second input is created next to the first.
 
+An authored end input supports typing and Enter-to-calendar navigation. Destroy
+preserves authored inputs and removes generated inputs and their listeners.
+
 ```js
 Expressive.Datepicker.init(document.getElementById('datepicker-range'), {
   openByDefault: true,
@@ -4905,6 +4886,12 @@ Expressive.Datepicker.init(document.getElementById('datepicker-range'), {
 ### Multiple dates
 
 Set `isMultipleSelection: true`. Click a day to add it; click it again to remove it. Each selected date gets its own input.
+
+Defaults initialize the selected dates before drawing. Dates are compared at
+local midnight. Removing the last selection or using Clear keeps the original
+input empty; extra generated fields are removed. Destroy removes generated
+fields and recovers focus on the original input if a removed field had focus
+and application code has not moved it elsewhere.
 
 ```js
 Expressive.Datepicker.init(document.getElementById('datepicker-multi'), {

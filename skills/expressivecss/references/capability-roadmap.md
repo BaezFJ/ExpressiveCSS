@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `add4360d19d519e729a0833d005ea171251e9276840920f06645bfdd00856723`.
+Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `7f6b87c27830ab603da6362138754bf9329e32f9d8ae4b897545a4599e75c8fe`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -34,7 +34,6 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs mat
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Side sheet](#side-sheet) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Floating sheet](#floating-sheet) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Drag handle](#drag-handle) | unassessed | needs-review | no-mapped-checks | 1 |
 | [Badges](#badges) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | recorded-scoped-pass | 0 |
@@ -54,7 +53,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs mat
 | [Slider](#slider) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Chips](#chips) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Autocomplete](#autocomplete) | unassessed | needs-review | recorded-scoped-pass | 1 |
-| [Date picker](#date-picker) | unassessed | needs-review | recorded-scoped-pass | 2 |
+| [Date picker](#date-picker) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Time picker](#time-picker) | unassessed | needs-review | recorded-scoped-pass | 2 |
 | [Typography](#typography) | unassessed | needs-review | recorded-scoped-pass | 2 |
 | [Shape](#shape) | unassessed | needs-review | recorded-scoped-pass | 1 |
@@ -366,7 +365,7 @@ Web adaptation: Native list semantics; visual selection alone does not justify a
 
 **unassessed within the stated scope.** Basic and full-screen dialogs.
 
-Source review: needs-review, 2026-09-12. [src/sass/components/_dialog.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/dialogs.ts).
+Source review: needs-review, 2026-09-18. [src/sass/components/_dialog.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/dialogs.ts).
 
 Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/dialogs/overview).
 
@@ -382,16 +381,17 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **unassessed within the stated scope.** Standard and modal bottom sheets.
 
-Source review: needs-review, 2026-09-17. [src/sass/components/_bottom-sheet.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_bottom-sheet.scss), [src/ts/behaviors/dialogs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/dialogs.ts), [src/ts/behaviors/bottomSheets.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/bottomSheets.ts), [src/ts/behaviors/sheetDrag.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/sheetDrag.ts).
+Source review: needs-review, 2026-09-18. [src/sass/components/_bottom-sheet.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_bottom-sheet.scss), [src/sass/components/_dialog.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/dialogs.ts), [src/ts/behaviors/bottomSheets.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/bottomSheets.ts), [src/ts/behaviors/sheetDrag.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/sheetDrag.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/bottom-sheets/overview).
 
 Web adaptation: Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.
 
-- integration: The shared handle dismisses rather than cycling sheet heights. Interrupted-drag cleanup has rendered coverage; bottom-sheet long-content and physical-touch review remain pending. Next: Use explicit close controls; separately verify reachable scrolling and any application-owned height changes.
+- integration: The shared handle dismisses rather than cycling sheet heights. Interrupted-drag cleanup, long-content scrolling and enlarged-text action access have rendered coverage; application-owned height changes, native zoom and physical touch remain pending. Next: Use explicit close controls; verify application-owned height changes, native zoom and physical touch separately.
 
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Sheets cancel only the active pointer and clean interrupted drags (chromium)`. Rendered bottom and side sheets with synthetic primary/secondary pointers, cancellation, closing, removal, same-task reopen/reattach, ancestor reattachment and a new primary press outside. Unrelated mutations preserve active drags. Physical touch review remains pending.
+- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Bottom sheets keep long content and actions reachable at compact widths (chromium)`. Bottom sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.
 
 <a id="side-sheet"></a>
 
@@ -399,7 +399,7 @@ Web adaptation: Native dialog.show()/showModal(); shared runtime handles draggin
 
 **unassessed within the stated scope.** Standard and modal side sheets.
 
-Source review: needs-review, 2026-09-17. [src/sass/components/_side-sheet.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_side-sheet.scss), [src/ts/behaviors/dialogs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/dialogs.ts), [src/ts/behaviors/sideSheets.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/sideSheets.ts), [src/ts/behaviors/sheetDrag.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/sheetDrag.ts).
+Source review: needs-review, 2026-09-18. [src/sass/components/_side-sheet.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_side-sheet.scss), [src/sass/components/_dialog.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/dialogs.ts), [src/ts/behaviors/sideSheets.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/sideSheets.ts), [src/ts/behaviors/sheetDrag.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/sheetDrag.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/side-sheets/overview).
 
@@ -410,22 +410,6 @@ Web adaptation: Native dialog and shared drag/dismiss behavior.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Side sheet rendered docking and drag direction (chromium)`. All docking aliases, LTR/RTL, modal/nonmodal, ordinary/reduced motion, opening keyframes, inner corners, rendered drag translation, snapback, inward rejection, outward dismissal and mouse header dragging.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Sheets cancel only the active pointer and clean interrupted drags (chromium)`. Shared side/bottom drag cleanup under cancellation, secondary pointers, closing, removal, same-task reopen/reattach, ancestor reattachment and another primary press. Unrelated mutations preserve active drags. Synthetic pointers do not establish physical touch usability.
 - recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/menu-field-browser.test.js): `Side sheet translated content and close actions remain reachable (chromium)`. Compact/wide, LTR/RTL, modal/nonmodal, both motion settings, 200% root font size, translated wrapping, body scrolling, footer visibility, disabled control and native close-button pointer/Enter activation. Not native browser zoom.
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
-
-<a id="floating-sheet"></a>
-
-## Floating sheet
-
-**unassessed within the stated scope.** Inset floating dialog surface.
-
-Source review: needs-review, 2026-09-13. [src/sass/components/_floating-sheet.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_floating-sheet.scss), [src/ts/behaviors/dialogs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/behaviors/dialogs.ts).
-
-Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/dialogs/overview).
-
-Web adaptation: Shares Dialogs initialization; no edge attachment or drag handle.
-
-- verification: Native dialog focus and close are checked; long-content zoom and inset geometry remain unverified. Next: Verify content scrolling and action reachability in the chosen inset dialog.
-
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
 
 <a id="drag-handle"></a>
@@ -774,16 +758,20 @@ Web adaptation: Runtime combobox behavior attached to a text field; no standalon
 
 **unassessed within the stated scope.** Inline single-date, range, and multiple-date calendar.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/_datepicker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_datepicker.scss), [src/sass/components/_docked-display.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_docked-display.scss), [src/ts/components/datepicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/datepicker.ts), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/select.ts), [src/ts/plugins/dockedDisplayPlugin.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/plugins/dockedDisplayPlugin.ts).
+Source review: needs-review, 2026-09-17. [src/sass/components/_datepicker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_datepicker.scss), [src/sass/components/_docked-display.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_docked-display.scss), [src/ts/components/datepicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/datepicker.ts), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/select.ts), [src/ts/plugins/dockedDisplayPlugin.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/plugins/dockedDisplayPlugin.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/date-pickers/overview).
 
 Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
 
 - feature: Modal picker parity is not provided by the documented inline API. Next: Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs.
-- feature: The unreleased source adds calendar grid keyboard navigation and redraw focus recovery. Modal and range-specific keyboard coverage remain incomplete. Next: Verify range and multiple-date selection and spoken calendar context separately; preserve the existing inline and docked APIs.
+- verification: Range-end typing and keyboard selection, multiple-date defaults, shrink/regrow/clear, form values and generated-input teardown have rendered coverage. Custom parsing, range constraints through typed input and spoken calendar context need further review. Next: Complete the manual picker checklist and separately verify custom parsing and typed range constraints. Do not infer modal or complete accessibility parity.
 
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker supports calendar keyboard navigation and redraw focus`. Inline and docked calendar day/week/month/year navigation, leap-year clamping, disabled-date selection prevention, RTL, configured bounds and redraw focus. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker selection lifecycle: default`. Multiple-date initialization and same-day normalization with nonmidnight defaults.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker selection lifecycle: multiple`. Pointer and keyboard add/remove, disabled day, form values, shrink/regrow/clear, preservation of the original input, generated-field teardown and focus recovery.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker selection lifecycle: range`. Authored end-input typing, Enter-to-calendar, RTL keyboard end selection, rejection of an earlier calendar end and listener cleanup.
+- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker selection lifecycle: clear`. Clearing a native date input resets its value and data-date without throwing.
 
 <a id="time-picker"></a>
 
