@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `89d8163a26c9588eb095348aeee7aefe22a027bc99073ed9a6b31fee7be50764`
+Contract SHA-256: `f3d74cc5c1a4accc0bd496799de88705f40204394445d67bbc97f3fc1d190ccc`
 
 #### Selection and adaptation
 
@@ -33,13 +33,13 @@ Requirements and boundaries: design reference inputs-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/date-pickers/guidelines).
 
-Support (2026-09-13, `llm.md#date-picker`): Inline single-date, range, and multiple-date calendar.
+Support (2026-09-17, `llm.md#date-picker`): Inline single-date, range, and multiple-date calendar.
 
 Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
 
 Known boundary: Modal picker parity is not provided by the documented inline API.
 
-Known boundary: Calendar markup claims a grid but lacks calendar arrow, Home/End and month-navigation key handling; modal/range coverage remains incomplete.
+Known boundary: Calendar keyboard navigation and range/multiple selection lifecycle have browser coverage. Spoken calendar context, native zoom and physical devices remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#date-picker).
 
