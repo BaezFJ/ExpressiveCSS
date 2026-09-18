@@ -2,7 +2,7 @@
 
 Reviewed on 2026-09-13. Google evidence covers the linked rendered prose and textual measurements. Collapsed token tables, image-only measurements, full visual parity, native zoom and spoken assistive-technology output remain unverified. dp values are design references, not automatic CSS-pixel conformance.
 
-Read the linked component guide for the existing markup and API contract. Repairs described as unreleased apply to this upstream source checkout, not published 0.9.1 or RoutePlate runtime assets. The [capability roadmap](../../references/capability-roadmap.md) records source pins and scoped browser results.
+Read the linked component guide for the ExpressiveCSS 0.10.0 markup and API contract. RoutePlate runtime assets may differ. The [capability roadmap](../../references/capability-roadmap.md) records source pins and scoped browser results.
 
 ## [Menu](../../components/menu.md)
 
@@ -70,7 +70,7 @@ Requirements: Provide a labelled text field, reachable suggestions and clear sel
 
 Framework comparison: Runtime supplies combobox/listbox and selection state. status-info does not provide result announcements.
 
-Unreleased source repairs preserve the search dataset, replacement queries and initial display labels; input Escape cancels pending opening, and listbox options stay outside sequential Tab order.
+Version 0.10.0 preserves the search dataset, replacement queries and initial display labels; input Escape cancels pending opening, and listbox options stay outside sequential Tab order.
 
 Feature gap: Generated status-info does not announce new suggestion counts or asynchronous results. Next check: Implement and verify an appropriate result-status update; test spoken delivery and multi-select keyboard behavior.
 
@@ -158,9 +158,9 @@ Reviewed sections: Overview; Specs; Guidelines; Accessibility.
 
 Requirements: Choose standard, centered or range selection and an appropriate track size. Verify immediate values, arrows, Home/End, stops and orientation. Provide synchronized numeric entry when precise values matter.
 
-Framework comparison: Native range and paired range clamping exist. Zero-maximum and resized value-label defects were reproduced and repaired in unreleased source.
+Framework comparison: Native range and paired range clamping exist. Version 0.10.0 repairs zero-maximum and resized value-label defects.
 
-Unreleased source repairs zero maximum calculations and updates value-label geometry on resize, including RTL.
+Version 0.10.0 repairs zero maximum calculations and updates value-label geometry on resize, including RTL.
 
 Verification gap: Zero maximum and resized RTL value-label placement are checked; vertical, dual-range and forced-colors geometry remain unverified. Next check: Measure noncentral vertical and paired handles; test a synchronized numeric input and non-drag pointer changes.
 

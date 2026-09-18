@@ -2,7 +2,7 @@
 
 Reviewed on 2026-09-13. Google evidence covers the linked rendered prose and textual measurements. Collapsed token tables, image-only measurements, full visual parity, native zoom and spoken assistive-technology output remain unverified. dp values are design references, not automatic CSS-pixel conformance.
 
-Read the linked component guide for the existing markup and API contract. Repairs described as unreleased apply to this upstream source checkout, not published 0.9.1 or RoutePlate runtime assets. The [capability roadmap](../../references/capability-roadmap.md) records source pins and scoped browser results.
+Read the linked component guide for the ExpressiveCSS 0.10.0 markup and API contract. RoutePlate runtime assets may differ. The [capability roadmap](../../references/capability-roadmap.md) records source pins and scoped browser results.
 
 ## [Cards](../../components/cards.md)
 
@@ -54,9 +54,9 @@ Reviewed sections: Guidelines/Accessibility requirements for web, Placement, Beh
 
 Requirements: Show one snackbar at a time without autofocus or a focus trap. Actionable snackbars persist until acted on or dismissed. Timed web feedback needs an equivalent persistent inline message. Document a keyboard route to actions, support Escape when focused and restore logical focus.
 
-Framework comparison: Unreleased source pauses finite timers during focus or hover and resumes after departure. This does not make finite actionable snackbars conformant. Use displayLength: Infinity and dismissible: true; application shortcut, Escape and focus recovery still need work.
+Framework comparison: Version 0.10.0 pauses finite timers during focus or hover and resumes after departure. Actionable snackbars default to `displayLength: Infinity` and `dismissible: true`; applications still own any global shortcut.
 
-Feature gap: Focus/hover pause does not satisfy persistent actionable snackbar guidance; default action timeout is finite and Escape handling is absent. Next check: Use existing displayLength: Infinity and dismissible: true for persistent actions; provide a documented reach shortcut and test Escape and spoken delivery.
+Feature gap: Applications still own a global reach shortcut, and spoken live-region delivery remains unverified. Next check: Provide a documented reach shortcut and verify spoken delivery.
 
 Mapped browser scope: Focused action survives its timeout and activates once; timer resumes after focus leaves a second snackbar.
 
@@ -74,13 +74,13 @@ Reviewed sections: Overview/M3 Expressive update, Previous updates; Specs/Config
 
 Requirements: Report accurate determinate values and omit values for unknown progress. Keep the same process recognizable when its state changes. Mirror linear progress in RTL and provide an end stop when track contrast needs it. Loading indicators cover many short waits; circular progress remains useful in buttons and processes that become determinate.
 
-Framework comparison: Native progress and custom CSS bars have different rendering paths. Custom linear fill uses physical left positioning; end-stop and wavy Expressive behavior are not verified.
+Framework comparison: Native progress and custom CSS bars have different rendering paths. End-stop and wavy Expressive behavior are not verified.
 
-Unreleased source stops spatial animation in reduced-motion variants and preserves a visible static custom fill. Custom linear fill still starts from the physical left in RTL; end-stop and wavy Expressive variants are not verified.
+Version 0.10.0 stops spatial animation in reduced-motion variants, preserves a visible static custom fill, and mirrors custom linear fill in RTL. End-stop and wavy Expressive variants are not verified.
 
 Verification gap: Reduced-motion static custom fill is checked; forced colors and native indicator rendering remain unverified. Next check: Test native and custom determinate/indeterminate variants, visible static feedback and changing accessible values.
 
-Feature gap: Custom linear progress uses physical left fill in RTL; end-stop and wavy Expressive variants are not verified. Next check: Test RTL native and custom bars; repair mirrored custom fill and assess an end stop for insufficient track contrast before claiming current variant parity.
+Feature gap: End-stop and wavy Expressive variants are not verified. Next check: Assess an end stop for insufficient track contrast and the wavy variant before claiming current variant parity.
 
 Mapped browser scope: Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
 
@@ -122,7 +122,7 @@ Requirements: Provide a named keyboard-operable enlargement trigger, Escape and 
 
 Framework comparison: This is a framework media extension. Do not add aria-modal or claim full dialog focus containment without implementing that behavior.
 
-Unreleased source supports Space and native-button activation, cancels pending animation timers on destroy and retains the original image. This is not a modal-gallery contract.
+Version 0.10.0 supports Space and native-button activation, cancels pending animation timers on destroy and retains the original image. This is not a modal-gallery contract.
 
 Verification gap: Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified. Next check: Treat this as image enlargement, not a verified modal gallery; test closing interruption and actual focus ownership.
 

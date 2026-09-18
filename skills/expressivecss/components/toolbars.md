@@ -5,13 +5,13 @@ Frequently used actions for the current page.
 
 Component ID: `toolbars`
 
-[Component documentation](https://www.expressivecss.com/toolbars.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/toolbars.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/toolbars.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/toolbars.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.0)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `608f945c38f92dcf05e72d94289019de61b2d3fc781a366bbe5a02649543bf13`
+Contract SHA-256: `552c2303a67d6b85e32cc24a33d1c5777d3f82a0b0f12736d8cfffe6d2af1ec4`
 
 #### Selection and adaptation
 
