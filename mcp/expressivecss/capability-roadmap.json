@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "f5755f49757a16843f11e100503005a9b2f6af6e856902613a6b17d09801d872",
+    "reportSha256": "703f2084e85362c15cca29c84ab3cfdd82a61be2a9754314a7b4daf3738059d1",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1261,8 +1261,8 @@
         },
         {
           "file": "tests/menu-field-browser.test.js",
-          "name": "Bottom and floating sheets keep long content and actions reachable at compact widths (chromium)",
-          "scope": "Bottom and floating sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.",
+          "name": "Bottom sheets keep long content and actions reachable at compact widths (chromium)",
+          "scope": "Bottom sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.",
           "state": "recorded-passed"
         }
       ],
@@ -1355,75 +1355,6 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
           "scope": "Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.",
-          "state": "recorded-passed"
-        }
-      ],
-      "browserEvidence": "recorded-scoped-pass",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "floating-sheet",
-      "title": "Floating sheet",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-18",
-      "scope": "Inset floating dialog surface.",
-      "adaptation": "Shares Dialogs initialization; no edge attachment or drag handle.",
-      "upstream": {
-        "source": "https://m3.material.io/components/dialogs/overview",
-        "reviewedOn": "2026-09-13",
-        "scope": "requirements-prose-reviewed",
-        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "Related Dialogs/Usage and Accessibility/Keyboard; no standalone floating-sheet specification"
-        ],
-        "sources": [
-          "https://m3.material.io/components/dialogs/overview",
-          "https://m3.material.io/components/dialogs/specs",
-          "https://m3.material.io/components/dialogs/guidelines",
-          "https://m3.material.io/components/dialogs/accessibility"
-        ],
-        "requirements": "Apply the relevant dialog naming, keyboard, focus and dismissal guidance. Google has no standalone floating-sheet specification; its inset geometry is a framework choice."
-      },
-      "relationship": "related",
-      "sources": [
-        {
-          "path": "src/sass/components/_floating-sheet.scss",
-          "sha256": "a638bb17dc87b76273e94a37db584f5603a3ce5fd518353f8c4594546b664d10"
-        },
-        {
-          "path": "src/sass/components/_dialog.scss",
-          "sha256": "f4bb79a9f217ab1dfc7cd33325438d502065abec0474b6fd1c66a15d62f8ed30"
-        },
-        {
-          "path": "src/ts/behaviors/dialogs.ts",
-          "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Native focus and close, compact inset geometry, long-content scrolling and 200% root-text action access are checked. Native browser zoom remains unverified.",
-          "nextStep": "Repeat the long-content flow with native browser zoom at 200% and 400%."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/expressivecss-web-accessibility-browser.test.js",
-          "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
-          "scope": "Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.",
-          "state": "recorded-passed"
-        },
-        {
-          "file": "tests/menu-field-browser.test.js",
-          "name": "Bottom and floating sheets keep long content and actions reachable at compact widths (chromium)",
-          "scope": "Bottom and floating sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.",
           "state": "recorded-passed"
         }
       ],

@@ -914,7 +914,7 @@ scenario('remaining lightbox supports Space and preserves its image on teardown'
 
 scenario('remaining sheet variants retain native modal focus and explicit close actions', '<button id="open-sheet">Open details</button><button id="outside-sheet">Outside</button><dialog id="sheet" aria-labelledby="sheet-title"><h2 id="sheet-title">Details</h2><p>Review the current selection.</p><button id="close-sheet" type="button">Close details</button></dialog>', async page => {
   await page.evaluate(()=>{document.querySelector('#open-sheet').onclick=()=>document.querySelector('dialog').showModal();document.querySelector('#close-sheet').onclick=()=>document.querySelector('dialog').close();});
-  for (const variant of ['bottom-sheet','side-sheet','floating-sheet']) {
+  for (const variant of ['bottom-sheet','side-sheet']) {
     await page.locator('dialog').evaluate((el,name)=>el.className=name,variant);
     await page.locator('#open-sheet').focus();await page.keyboard.press('Enter');
     await expect(page.getByRole('dialog',{name:'Details'})).toBeVisible();

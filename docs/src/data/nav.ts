@@ -312,13 +312,6 @@ export const NAV: DocsGroup[] = [
           "Optional content and actions, without interrupting the main view.",
       },
       {
-        id: "floating_sheet",
-        label: "Floating sheet",
-        route: "/floating-sheet.html",
-        description:
-          "Secondary content on a surface that floats free of every window edge.",
-      },
-      {
         id: "drag_handle",
         label: "Drag handle",
         route: "/drag-handle.html",

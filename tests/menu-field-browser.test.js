@@ -632,11 +632,12 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     } finally { await browser.close(); }
   });
 
-  browserTest(`Bottom and floating sheets keep long content and actions reachable at compact widths (${engine})`, async () => {
+  browserTest(`Bottom sheets keep long content and actions reachable at compact widths (${engine})`, async () => {
     const browser = await type.launch();
     try {
       const page = await browser.newPage();
-      for (const variant of ['bottom-sheet', 'floating-sheet']) for (const width of [320, 599]) for (const modal of [false, true]) {
+      const variant = 'bottom-sheet';
+      for (const width of [320, 599]) for (const modal of [false, true]) {
         await page.setViewportSize({ width, height: 640 });
         await page.emulateMedia({ reducedMotion: 'reduce' });
         await page.setContent(`<style>${css}</style>${longSheetMarkup}`);
@@ -675,15 +676,13 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         await page.keyboard.press('Enter');
         await expect(page.locator('dialog')).not.toBeVisible();
       }
-      for (const variant of ['bottom-sheet', 'floating-sheet']) {
-        await page.setContent(`<style>${css}</style><dialog class="${variant}" open><form method="dialog"><button class="icon-button xsmall" aria-label="Compact"><span class="material-symbols" aria-hidden="true">close</span></button><button class="icon-button xlarge" aria-label="Large"><span class="material-symbols" aria-hidden="true">close</span></button><button class="circle extra medium" aria-label="Create"><span class="material-symbols" aria-hidden="true">add</span></button><button class="extend medium"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button></form></dialog>`);
-        const geometry = await page.locator('form > button').evaluateAll(buttons => buttons.map(button => {
-          const { width, height } = button.getBoundingClientRect();
-          return { width, height };
-        }));
-        assert.deepEqual(geometry.map(({ height }) => height), [32, 136, 80, 80], `${variant} preserves self-sized action heights`);
-        assert.deepEqual(geometry.slice(0, 3).map(({ width, height }) => [width, height]), [[32, 32], [136, 136], [80, 80]], `${variant} preserves square action controls`);
-      }
+      await page.setContent(`<style>${css}</style><dialog class="${variant}" open><form method="dialog"><button class="icon-button xsmall" aria-label="Compact"><span class="material-symbols" aria-hidden="true">close</span></button><button class="icon-button xlarge" aria-label="Large"><span class="material-symbols" aria-hidden="true">close</span></button><button class="circle extra medium" aria-label="Create"><span class="material-symbols" aria-hidden="true">add</span></button><button class="extend medium"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button></form></dialog>`);
+      const geometry = await page.locator('form > button').evaluateAll(buttons => buttons.map(button => {
+        const { width, height } = button.getBoundingClientRect();
+        return { width, height };
+      }));
+      assert.deepEqual(geometry.map(({ height }) => height), [32, 136, 80, 80], `${variant} preserves self-sized action heights`);
+      assert.deepEqual(geometry.slice(0, 3).map(({ width, height }) => [width, height]), [[32, 32], [136, 136], [80, 80]], `${variant} preserves square action controls`);
     } finally { await browser.close(); }
   });
 

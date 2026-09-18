@@ -157,8 +157,7 @@ dialog:not(
     .right,
     .right-sheet,
     .left,
-    .left-sheet,
-    .floating-sheet
+    .left-sheet
   )
   > :is(form, nav):last-child
   > :is(button, a.button):not(.tonal, .outlined, .elevated, .filled, .icon-button) {
