@@ -10,7 +10,8 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "expressivecss-mcp": "server.js"
+    "expressivecss-mcp": "server.js",
+    "expressivecss-lint": "lint.mjs"
   },
   "main": "server.js",
   "engines": {
@@ -22,6 +23,7 @@
   },
   "files": [
     "server.js",
+    "lint.mjs",
     "component-guides.json",
     "component-decisions.json",
     "capability-roadmap.json",

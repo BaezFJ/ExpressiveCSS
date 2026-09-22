@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { access, mkdir, mkdtemp, readFile, rm, symlink, truncate, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -240,6 +241,22 @@ const transport = new StdioClientTransport({
     EXPRESSIVECSS_TEST_SECRET: 'must-not-reach-child',
   },
 });
+// The lint bin shares the static checks with rules_enforcer and must not start the server.
+{
+  const lint = (args, input) => spawnSync(process.execPath, [path.join(packageDir, 'lint.mjs'), ...args], { input, encoding: 'utf8', timeout: 30_000 });
+  const failing = lint([invalidMarkupFile, retiredMarkupFile]);
+  assert.equal(failing.status, 1, failing.stderr);
+  assert.match(failing.stdout, /navigation-bar-marks-current/u);
+  assert.match(failing.stdout, /retired-markup\.html:1:\d+ legacy-input-field/u);
+  assert.equal(lint([outsideFile]).status, 0);
+  const hook = lint(['--hook'], JSON.stringify({ tool_input: { file_path: invalidMarkupFile } }));
+  assert.equal(hook.status, 2);
+  assert.equal(hook.stdout, '');
+  assert.match(hook.stderr, /Fix them before continuing/u);
+  assert.equal(lint(['--hook'], JSON.stringify({ tool_input: { file_path: mechanicalFile } })).status, 0, 'non-markup files are skipped in hook mode');
+  assert.equal(execFileSync(process.execPath, ['--input-type=module', '-e', "import('./server.js').then(() => console.log('imported'))"], { cwd: packageDir, encoding: 'utf8', timeout: 30_000 }).trim(), 'imported');
+}
+
 const client = new Client({ name: 'expressivecss-mcp-smoke', version: '0.1.0' });
 
 try {

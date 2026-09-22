@@ -93,6 +93,8 @@ MCP is optional; the Markdown workflow stands alone. For autonomous work, read [
 | `component_syntax_expert` | Retrieve candidate syntax and contract details. |
 | `quality_inspector` | Run static checks and declared verification commands. |
 
+Without an MCP client, run `npx --package @expressivecss/mcp-server expressivecss-lint <files>` on every markup file you touched before finishing; it runs the same static checks and exits 1 on findings. A consuming project can wire `expressivecss-lint --hook` as a Claude Code `PostToolUse` hook so the checks run on every edit (see the MCP package README).
+
 An MCP pass covers only `checksPerformed` and named sources. It does not establish browser, visual, or accessibility conformance. Report `uncheckedAreas`, `coverageStatus`, and `blockedChecks`. Contract mismatch blocks dependent claims until matching evidence exists.
 
 ## Framework contribution path

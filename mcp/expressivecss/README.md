@@ -70,6 +70,47 @@ For a framework source checkout, the server accepts only the generated contract'
 
 Static inspection uses descriptor-level, no-follow bounded reads and rechecks file identity after each read. It caps files at 2 MiB each and 16 MiB per request by default, stops after 200 issues per file or 1,000 per request, and applies a five-second scan budget. Any unread, changed, over-budget, or partially scanned file appears under `filesUninspected`, which prevents a pass.
 
+## Command-line lint and agent hook
+
+`expressivecss-lint` runs the same static checks as `rules_enforcer` (bundled
+semantics rules, retired Materialize patterns, initialization checks) without
+an MCP client. It exits 1 when it finds anything, so it fits `pre-commit` and CI:
+
+```bash
+npx --package @expressivecss/mcp-server expressivecss-lint src/pages/*.astro src/components/*.jsx
+```
+
+`--hook` reads a Claude Code `PostToolUse` payload on stdin, lints
+`tool_input.file_path` when it is a markup file (`.html`, `.astro`, `.jsx`,
+`.tsx`, `.vue`, `.svelte`), and exits 2 with the findings on
+stderr. Claude Code feeds that output back to the agent, so every edit is
+checked without the agent choosing to call a tool. Add to the consuming
+project's `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command", "command": "npx --package @expressivecss/mcp-server expressivecss-lint --hook" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Agents without hook support get the same enforcement from the `pre-commit`
+or CI invocation above. The checks are heuristic: JSX, Astro, Vue, and Svelte
+files are parsed as HTML after `className` is rewritten to `class`, so
+markup built from expressions can escape a selector rule, and markup kept in
+a string prop (this repository's docs pages pass examples through
+`<Code code={...}>`) is parsed as if it were inline, which produces false
+findings. Semantics findings report line 1 because the parser keeps no
+source positions; the snippet identifies the element.
+
 ## Consumer browser scenarios
 
 `quality_inspector` accepts `runType: "consumer"` with `runCommands: true` to run
