@@ -12,17 +12,25 @@
 import { readFileSync, realpathSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { inspectAuthoringRules } from './server.js';
+import { inspectAuthoringRules, readInspectionFile } from './server.js';
 
 // Markdown is left out: a doc concatenates many independent examples, so page-level rules misfire.
 const MARKUP = new Set(['.html', '.htm', '.astro', '.jsx', '.tsx', '.vue', '.svelte']);
 const MAX_BYTES = 2 * 1024 * 1024;
+const problem = (id, rule) => ({ id, severity: 'high', rule, location: { line: 1, column: 1 }, snippet: '' });
 
-export function lintFile(file) {
-  const source = readFileSync(file);
-  if (source.length > MAX_BYTES) return [{ id: 'file-too-large', severity: 'high', rule: `Skipped: over ${MAX_BYTES} bytes`, location: { line: 1, column: 1 }, snippet: '' }];
+/** Findings for one file. A file that cannot be fully inspected is a finding too, never a silent pass. */
+export async function lintFile(file) {
+  let text;
+  try {
+    ({ text } = await readInspectionFile(file, process.cwd(), MAX_BYTES));
+  } catch (error) {
+    return [problem('file-not-inspected', `Skipped: ${error.message}. Files must be regular, inside the working directory, and at most ${MAX_BYTES} bytes.`)];
+  }
   // ponytail: JSX/Astro/Vue are parsed as HTML after `className` -> `class`; expression-heavy markup can hide from selector rules.
-  return inspectAuthoringRules(source.toString('utf8').replace(/\bclassName=/gu, 'class='));
+  const issues = inspectAuthoringRules(text.replace(/\bclassName=/gu, 'class='));
+  if (issues.truncatedReason) issues.push(problem('inspection-truncated', `Static inspection stopped early: ${issues.truncatedReason}. Split the file or reduce its markup.`));
+  return issues;
 }
 
 export function format(file, issues) {
@@ -31,12 +39,12 @@ export function format(file, issues) {
     .join('\n');
 }
 
-function main(argv) {
+async function main(argv) {
   if (argv[0] === '--hook') {
     const payload = JSON.parse(readFileSync(0, 'utf8') || '{}');
     const file = payload.tool_input?.file_path;
     if (!file || !MARKUP.has(path.extname(file).toLowerCase())) return 0;
-    const issues = lintFile(file);
+    const issues = await lintFile(file);
     if (!issues.length) return 0;
     console.error(`ExpressiveCSS lint found ${issues.length} issue(s). Fix them before continuing:\n${format(file, issues)}`);
     return 2;
@@ -47,7 +55,7 @@ function main(argv) {
   }
   let total = 0;
   for (const file of argv) {
-    const issues = lintFile(file);
+    const issues = await lintFile(file);
     total += issues.length;
     if (issues.length) console.log(format(file, issues));
   }
@@ -56,5 +64,5 @@ function main(argv) {
 }
 
 if (process.argv[1] && pathToFileURL(realpathSync(process.argv[1])).href === import.meta.url) {
-  process.exitCode = main(process.argv.slice(2));
+  process.exitCode = await main(process.argv.slice(2));
 }

@@ -102,8 +102,11 @@ project's `.claude/settings.json`:
 }
 ```
 
-Agents without hook support get the same enforcement from the `pre-commit`
-or CI invocation above. The checks are heuristic: JSX, Astro, Vue, and Svelte
+Files must be regular files inside the working directory and at most 2 MiB;
+symbolic links, anything else, and an inspection that stops early (over
+4,000 tags, or the five-second budget) are reported as findings rather than
+passed. Agents without hook support get the same enforcement from the
+`pre-commit` or CI invocation above. The checks are heuristic: JSX, Astro, Vue, and Svelte
 files are parsed as HTML after `className` is rewritten to `class`, so
 markup built from expressions can escape a selector rule, and markup kept in
 a string prop (this repository's docs pages pass examples through

@@ -1412,7 +1412,7 @@ function redactSensitiveText(value) {
     .replace(/[A-Z]:\\+Users\\+[^\\\s]+(?:\\+[^\s]*)?/giu, '[LOCAL_PATH]');
 }
 
-async function readInspectionFile(filePath, projectRoot, byteLimit) {
+export async function readInspectionFile(filePath, projectRoot, byteLimit) {
   const resolvedRoot = await realpath(projectRoot);
   const noFollow = Number.isInteger(fsConstants.O_NOFOLLOW) ? fsConstants.O_NOFOLLOW : 0;
   const handle = await open(filePath, fsConstants.O_RDONLY | noFollow);
