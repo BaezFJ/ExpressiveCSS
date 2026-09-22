@@ -5,13 +5,13 @@ Material 3 adaptive carousels for visual collections.
 
 Component ID: `carousel`
 
-[Component documentation](https://www.expressivecss.com/carousel.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/carousel.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.0)
+[Component documentation](https://www.expressivecss.com/carousel.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/carousel.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.10.0
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `56e9688b69bcd4d5fb887be4edeafac201b6de3321703cd605a83bc8b3549a5e`
+Contract SHA-256: `73f79062ae2c8e7cb2fabbd70f2b6d681a2ec8d16a35d4b580c2746141129ad7`
 
 #### Selection and adaptation
 
