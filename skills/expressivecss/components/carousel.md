@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `552c2303a67d6b85e32cc24a33d1c5777d3f82a0b0f12736d8cfffe6d2af1ec4`
+Contract SHA-256: `56e9688b69bcd4d5fb887be4edeafac201b6de3321703cd605a83bc8b3549a5e`
 
 #### Selection and adaptation
 
@@ -66,6 +66,19 @@ The default is multi-browse: one large, one medium, and one small item adapt as 
 </div>
 <div class="mt-1"><a class="button text" href="all-landscapes.html">Show all</a></div>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `duration` | Number | `200` | Milliseconds allowed for a programmatic scroll to land, and the part of each auto-advance rest that is not `interval`. |
+| `fullWidth` | Boolean | `false` | Full-width compatibility layout used by swipeable tabs. Prefer an M3 layout class for new carousels. |
+| `indicators` | Boolean | `false` | Legacy paging dots. M3 recommends a nearby Show all path instead of overlay controls. |
+| `noWrap` | Boolean | `false` | Stop auto-advance at the last item instead of looping back to the first. Arrow keys and `set()` stop at the ends either way — a scroll track has ends. |
+| `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. Each rest is armed by the move before it rather than on a fixed phase. |
+| `height` | Number | `null` | Fixed track height in pixels. `null` sizes the carousel from its content. |
+| `onCycleTo` | Function | `null` | Called when the active item changes. |
+| `i18n` | Object | `{ carousel: 'Carousel', item: 'Item', of: 'of', indicators: 'Slides', slide: 'Slide' }` | Generated accessible label strings. `indicators` names the indicator row and `slide` prefixes each dot, giving "Slide 1". Partial objects are merged with the defaults. |
 
 #### Rules
 

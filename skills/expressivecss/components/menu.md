@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `552c2303a67d6b85e32cc24a33d1c5777d3f82a0b0f12736d8cfffe6d2af1ec4`
+Contract SHA-256: `56e9688b69bcd4d5fb887be4edeafac201b6de3321703cd605a83bc8b3549a5e`
 
 #### Selection and adaptation
 
@@ -64,6 +64,32 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
   </li>
 </menu>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `alignment` | String | `'left'` | Edge the menu is aligned to. `'left'` or `'right'`. |
+| `autoFocus` | Boolean | `true` | If true, automatically focus the menu for keyboard navigation. This option is named `autoFocus`, not `autoTrigger`. |
+| `constrainWidth` | Boolean | `true` | If true, the menu is as wide as the trigger. M3 menus are independently sized — pass `false` for that. |
+| `container` | Element | `null` | Element that will contain the menu. When omitted, the menu is moved next to the trigger. |
+| `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |
+| `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. |
+| `hover` | Boolean | `false` | If true, the menu opens on hover instead of click. |
+| `inDuration` | Number | `150` | Enter transition duration, in milliseconds. |
+| `outDuration` | Number | `250` | Exit transition duration, in milliseconds. |
+| `onOpenStart` | Function | `null` | Called when the menu starts opening. |
+| `onOpenEnd` | Function | `null` | Called when opening completes; superseded transitions and destruction cancel it. |
+| `onCloseStart` | Function | `null` | Called when the menu starts closing. |
+| `onCloseEnd` | Function | `null` | Called when closing completes; reopening and destruction cancel it. |
+| `onItemClick` | Function | `null` | Called when an item is clicked. Receives the `li`. |
+
+#### Methods
+
+- `.open()`: Open the menu.
+- `.close()`: Close the menu.
+- `.recalculateDimensions()`: While the menu is open, recalculate its dimensions if its contents have changed.
+- `.destroy()`: Destroy the plugin instance and tear down its event handlers.
 
 #### Rules
 

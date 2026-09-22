@@ -5,6 +5,26 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Flex helpers: `.flex`, `.inline-flex`, `.flex-column`, `.flex-wrap`,
+  `.justify-start|center|end|between`, `.align-start|center|end|stretch`,
+  `.flex-1`, `.flex-none`, and `.gap-0` to `.gap-6` on the spacing scale. One
+  declaration per class, in the utilities layer; the helpers page, `llm.md`,
+  and the skill's helper reference document them.
+
+### Changed
+
+- **Offline design context for the ExpressiveCSS skill.** The generator now
+  copies the hard rules, window-size tables, component chooser, screen recipes,
+  anatomy cheat sheet, and Materialize name map from `m3-guidelines.md` into
+  `skills/expressivecss/references/design-rules.md`, and the root, Design,
+  Usage, and Install guides route to it. JavaScript component guides inline the
+  options table and method names from `llm.md`. The Install guide carries a
+  complete page skeleton. The Design guide states the framework spacing scale
+  and control-text rules. Six catalogue entries that repeated their page tagline
+  as the selection rule now say when to use the component.
+
 ## [0.10.0] - 2026-09-18
 
 ### Fixed

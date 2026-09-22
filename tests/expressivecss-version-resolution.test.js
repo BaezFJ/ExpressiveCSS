@@ -597,6 +597,7 @@ describe('ExpressiveCSS version resolution', () => {
       'scripts/lib/consumer-browser.mjs',
       'scripts/lib/bounded-file.mjs',
       'llm.md',
+      'm3-guidelines.md',
       'semantics.json',
       'docs/src/data/nav.ts',
       'docs/src/data/component-decisions.json',
@@ -626,6 +627,7 @@ describe('ExpressiveCSS version resolution', () => {
     for (const output of [
       'skills/expressivecss/references/contract.json',
       'skills/expressivecss/references/component-decisions.md',
+      'skills/expressivecss/references/design-rules.md',
       'skills/expressivecss/references/capability-roadmap.md',
       'skills/expressivecss/references/capability-roadmap.json',
       'skills/expressivecss/components/app-bar.md',

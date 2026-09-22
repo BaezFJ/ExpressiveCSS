@@ -7,6 +7,24 @@
 // Positioning
 .valign-wrapper { display: flex; align-items: center; }
 
+// Flex layout. One declaration each; combine on the container, and pair with
+// .gap-* from _spacing.scss for the space between items. Row direction and
+// start alignment are the flex defaults, so only the overrides get a class.
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.flex-column { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.justify-start { justify-content: flex-start; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.justify-between { justify-content: space-between; }
+.align-start { align-items: flex-start; }
+.align-center { align-items: center; }
+.align-end { align-items: flex-end; }
+.align-stretch { align-items: stretch; }
+.flex-1 { flex: 1 1 0; }
+.flex-none { flex: none; }
+
 // Text alignment
 .left-align { text-align: left; }
 .right-align { text-align: right }

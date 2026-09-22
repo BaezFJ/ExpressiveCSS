@@ -19,7 +19,7 @@ Do not load this guide when the task concerns only setup, visual tokens, or life
 4. Choose the component from the user's job and behavior, not only from a requested visual resemblance.
 5. Use one component per job, one persistent peer-navigation pattern at each width, one feedback surface per event, and at most one high-emphasis action per region.
 6. Prefer, in order: documented component variants, the grid or layout primitives, single-purpose utilities, then app-specific custom CSS.
-7. Use current ExpressiveCSS names only. Do not emit Materialize-era surfaces such as `M`, `.btn`, `.modal`, `.nav-wrapper`, `.brand-logo`, `.card-content`, `.lever`, or `.filled-in`.
+7. Use current ExpressiveCSS names only. Do not emit Materialize-era surfaces such as `M`, `.btn`, `.modal`, `.nav-wrapper`, `.brand-logo`, `.card-content`, `.lever`, or `.filled-in`; the name map in the [design rules](../references/design-rules.md) gives each replacement.
 8. Add responsive behavior whenever a layout uses the grid, panes, persistent navigation, sheets, or app bars.
 9. Keep application CSS unlayered unless the project deliberately participates in the framework's `tokens`, `base`, `components`, and `utilities` cascade layers.
 10. Treat the target version's documentation and source as authoritative over cached examples, including these guides.

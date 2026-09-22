@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `552c2303a67d6b85e32cc24a33d1c5777d3f82a0b0f12736d8cfffe6d2af1ec4`
+Contract SHA-256: `56e9688b69bcd4d5fb887be4edeafac201b6de3321703cd605a83bc8b3549a5e`
 
 #### Selection and adaptation
 
@@ -71,6 +71,21 @@ Put `scrollspy` and an `id` on each section. The table of contents is a set of d
   </div>
 </div>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `throttle` | Number | `100` | Throttle of the scroll handler, in milliseconds. |
+| `scrollOffset` | Number | `200` | Offset used when deciding which section is in view. A larger value lets sections near the bottom of the page become active sooner. |
+| `activeClass` | String | `'active'` | Class applied to the active table-of-contents link. |
+| `getActiveElement` | Function | see below | Returns a CSS selector for the element that should receive `activeClass`, given the section’s id. |
+| `keepTopElementActive` | Boolean | `false` | If true, keep the last section above the viewport active when the scrollbar is outside all spy sections. If there is no such section, the first one stays active. |
+| `animationDuration` | Number | `null` | Duration of the click-to-scroll animation, in milliseconds. `null` uses the browser’s native `scrollIntoView({ behavior: 'smooth' })`. |
+
+#### Methods
+
+- `.destroy()`: Destroy the plugin instance and tear down its event handlers.
 
 #### Rules
 

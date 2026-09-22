@@ -1055,6 +1055,36 @@ These classes are for horizontally aligning content: `.left-align`, `.right-alig
 
 To center text on mobile only, add `center-on-small-only`.
 
+### Flex
+
+One class per declaration, applied to the container. Row direction and start alignment are the flex defaults, so only the overrides have a class.
+
+| Class | Declaration |
+| --- | --- |
+| `.flex` | `display: flex` |
+| `.inline-flex` | `display: inline-flex` |
+| `.flex-column` | `flex-direction: column` |
+| `.flex-wrap` | `flex-wrap: wrap` |
+| `.justify-start`, `.justify-center`, `.justify-end`, `.justify-between` | `justify-content` |
+| `.align-start`, `.align-center`, `.align-end`, `.align-stretch` | `align-items` |
+| `.flex-1` | `flex: 1 1 0` on a child, so it takes the remaining space |
+| `.flex-none` | `flex: none` on a child, so it keeps its content size |
+| `.gap-0` to `.gap-6` | `gap` on the spacing scale, `!important`; also works on grid containers |
+
+```html
+<div class="flex align-center justify-between gap-3">
+  <h2 class="title-medium my-0">Members</h2>
+  <button class="tonal">Invite</button>
+</div>
+
+<div class="flex flex-wrap gap-2">
+  <span class="chip">Design</span>
+  <span class="chip">Research</span>
+</div>
+```
+
+`justify-*` and `align-*` use `flex-start` and `flex-end`, so they follow the writing direction and mirror in RTL. Components that already lay out their children (app bars, toolbars, card `.actions`, button groups) do not need these classes.
+
 ### Hiding/Showing Content
 
 We provide easy to use classes to hide/show content on specific screen sizes.

@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `552c2303a67d6b85e32cc24a33d1c5777d3f82a0b0f12736d8cfffe6d2af1ec4`
+Contract SHA-256: `56e9688b69bcd4d5fb887be4edeafac201b6de3321703cd605a83bc8b3549a5e`
 
 #### Selection and adaptation
 
@@ -59,6 +59,34 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
   <label for="lunchtime">Lunchtime</label>
 </div>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `duration` | Number | `350` | Transition between the hours and minutes views, in milliseconds. |
+| `container` | Element or String | `null` | Element or selector to render the clock into. When omitted, it is appended to the input’s parent. |
+| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
+| `autoSubmit` | Boolean | `true` | If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added. |
+| `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` string (optionally with `AM`/`PM`). |
+| `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |
+| `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, and Minutes. |
+| `twelveHour` | Boolean | `true` | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. |
+| `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
+| `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
+| `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
+| `onDone` | Function | `null` | Called when the Ok button is used. Only created when `autoSubmit` is false. |
+| `onCancel` | Function | `null` | Called when the Cancel button is used. Only created when `autoSubmit` is false. |
+| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. |
+| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
+
+#### Methods
+
+- `.showView()`: Show the hours or minutes face.
+- `.done()`: Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.
+- `.clear()`: Clear the input. Same as `done(true)`.
+- `.destroy()`: Destroy the plugin instance, remove the clock, and tear down its event handlers.
+- `.open(); / .close()`: These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking. No modal implementation is available.
 
 #### Rules
 

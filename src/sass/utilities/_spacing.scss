@@ -1,4 +1,4 @@
-// Margin and padding scale: .m-3, .pt-2, .px-4, .my-auto, ...
+// Margin, padding and gap scale: .m-3, .pt-2, .px-4, .my-auto, .gap-2, ...
 //
 // Shortcut x value x direction, all !important so a helper wins over the
 // component it is applied to. Edit the maps here to change the scale.
@@ -35,5 +35,12 @@ $spacing-values: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "5
         #{$property}-bottom: $value !important;
       }
     }
+  }
+}
+
+// Gap on the same scale for flex and grid containers: .gap-0 ... .gap-6.
+@each $name, $value in $spacing-values {
+  @if $name != "auto" {
+    .gap-#{$name} { gap: $value !important; }
   }
 }

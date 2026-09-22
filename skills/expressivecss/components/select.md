@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `552c2303a67d6b85e32cc24a33d1c5777d3f82a0b0f12736d8cfffe6d2af1ec4`
+Contract SHA-256: `56e9688b69bcd4d5fb887be4edeafac201b6de3321703cd605a83bc8b3549a5e`
 
 #### Selection and adaptation
 
@@ -99,6 +99,19 @@ Select turns a native `<select>` into a menu. Wrap it in a `.field` and give the
   <option value="1">Option 1</option>
 </select>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `classes` | String | `''` | Space-separated classes added to the generated `.select-wrapper`. |
+| `menuOptions` | Object | `{}` | Options passed to `Menu`. See Menu. `coverTrigger` is forced to `false` and `closeOnClick` is forced to `false`. |
+
+#### Methods
+
+- `.getSelectedValues()`: Selected values as an array of strings.
+- `.refresh()`: Re-read native values, option labels, options and disabled states. The generated rows are rebuilt while the field and an existing Menu instance remain. Refresh preserves focus on a surviving option in an open menu; it does not emit a user `change` event. Call it after programmatic changes, including moving the select to another form or changing its `form` attribute, to rebind reset handling. There is no mutation observer.
+- `.destroy()`: Destroy the plugin instance, remove the menu, and restore the native select.
 
 #### Rules
 

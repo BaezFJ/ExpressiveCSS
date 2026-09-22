@@ -15,6 +15,18 @@ const RESOLVER_DESTINATIONS = [
   resolve(ROOT, 'mcp/expressivecss/scripts/resolve-version.mjs'),
 ];
 const DECISIONS_SOURCE = resolve(ROOT, 'docs/src/data/component-decisions.json');
+const GUIDELINES_SOURCE = resolve(ROOT, 'm3-guidelines.md');
+const DESIGN_RULES_DESTINATION = resolve(ROOT, 'skills/expressivecss/references/design-rules.md');
+// Sections of m3-guidelines.md that decide a design before any component guide is opened.
+const DESIGN_RULE_SECTIONS = [
+  ['Hard rules', 2],
+  ['1.2 What changes with window size', 2],
+  ['1.4 Navigation by window size', 2],
+  ['3. Component chooser', 1],
+  ['12. Screen recipes', 1],
+  ['13. Quick anatomy cheat sheet', 1],
+  ['14. Name map (Materialize / M2 → M3 / ExpressiveCSS)', 1],
+];
 const DECISIONS_DESTINATION = resolve(ROOT, 'skills/expressivecss/references/component-decisions.md');
 const CONTRACT_DESTINATIONS = [
   resolve(ROOT, 'skills/expressivecss/references/contract.json'),
@@ -94,6 +106,20 @@ function renderDecisionIndex(data) {
 async function syncDecisionIndex(checkOnly) {
   const expected = renderDecisionIndex(decisionData);
   if ((await syncGeneratedFiles([DECISIONS_DESTINATION], expected, checkOnly)).length) throw new Error('Generated component decision index is stale.');
+}
+
+function renderDesignRules(guidelines) {
+  const hash = createHash('sha256').update(guidelines).digest('hex');
+  const sections = DESIGN_RULE_SECTIONS.map(([title, level]) => {
+    const body = sectionFor(guidelines, title, level).replace(/\n---\s*$/u, '').trim();
+    return `## ${title}\n\n${level === 1 ? body.replace(/^## /gmu, '### ') : body}`;
+  });
+  return `${GENERATED_MARKER}\n\n# ExpressiveCSS design rules\n\nCopied from \`m3-guidelines.md\` (SHA-256 \`${hash}\`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.\n\n${sections.join('\n\n')}\n`;
+}
+
+async function syncDesignRules(checkOnly) {
+  const expected = renderDesignRules(await readFile(GUIDELINES_SOURCE, 'utf8'));
+  if ((await syncGeneratedFiles([DESIGN_RULES_DESTINATION], expected, checkOnly)).length) throw new Error('Generated design rules are stale.');
 }
 
 async function contractManifest() {
@@ -223,6 +249,20 @@ function semanticRules(rows, names, excluded = []) {
   return rules;
 }
 
+// Options table and method names from the component's llm.md section, so an agent
+// can initialize a JavaScript component without fetching the full documentation.
+function apiSummary(section) {
+  const parts = [];
+  const options = /\n### Options\n([\s\S]*?)(?=\n### |$)/u.exec(section)?.[1] ?? '';
+  const table = options.split('\n').filter((line) => line.startsWith('|'));
+  if (table.length > 2) parts.push(`#### Options\n\n${table.join('\n')}`);
+  const methods = /\n### Methods\n([\s\S]*?)(?=\n### |$)/u.exec(section)?.[1] ?? '';
+  const names = [...methods.matchAll(/^#### (.+?);?\n\n([^\n]*)/gmu)]
+    .map(([, name, description]) => `- \`${name.trim()}\`: ${description.trim()}`);
+  if (names.length) parts.push(`#### Methods\n\n${names.join('\n')}`);
+  return parts;
+}
+
 function sourcePagePath(page) {
   const routeSlug = page.route.replace(/^\//u, '').replace(/\.html$/u, '');
   return `https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/${routeSlug}.astro`;
@@ -278,8 +318,9 @@ function renderGuide(component, page, section, rules, provenance) {
   const selectionExample = component.selectionExample
     ? `Example: ${component.selectionExample}\n\n`
     : '';
+  const api = apiSummary(section).map((part) => `${part}\n\n`).join('');
 
-  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${selectionExample}${adaptive}\n\n#### Material mapping\n\n${mappingLines}\n\n#### Contract\n\n${contractSummary(section)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n#### Rules\n\nThe following are end-state semantic invariants. The rule IDs come directly from \`semantics.json\`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.\n\n${ruleLines}\n\n#### Guide checks\n\n${guideCheckLines.join('\n')}\n`;
+  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${selectionExample}${adaptive}\n\n#### Material mapping\n\n${mappingLines}\n\n#### Contract\n\n${contractSummary(section)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n${api}#### Rules\n\nThe following are end-state semantic invariants. The rule IDs come directly from \`semantics.json\`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.\n\n${ruleLines}\n\n#### Guide checks\n\n${guideCheckLines.join('\n')}\n`;
 }
 
 async function generatedGuides() {
@@ -349,6 +390,7 @@ const checkOnly = process.argv.includes('--check');
 await syncResolver(checkOnly);
 await syncConsumerTools(checkOnly);
 await syncDecisionIndex(checkOnly);
+await syncDesignRules(checkOnly);
 await syncContractManifest(checkOnly);
 const roadmap = await buildCapabilityRoadmap(decisionData, ROOT);
 for (const [name, expected] of [['capability-roadmap.json', JSON.stringify(roadmap, null, 2) + '\n'], ['capability-roadmap.md', renderCapabilityRoadmap(roadmap)]]) {

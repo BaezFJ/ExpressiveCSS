@@ -47,6 +47,9 @@ describe('ExpressiveCSS component decisions', () => {
       assert.ok(component.guideSource.semantics.length, `${component.slug} has no semantics sources`);
       assert.ok(component.jobs.length, `${component.slug} has no jobs`);
       assert.ok(component.useWhen.length, `${component.slug} has no useWhen`);
+      for (const rule of component.useWhen) {
+        assert.doesNotMatch(rule, /from the HTML/, `${component.slug} useWhen repeats the page tagline instead of a selection rule`);
+      }
       assert.ok(component.avoidWhen.length, `${component.slug} has no avoidWhen`);
       assert.ok(Array.isArray(component.alternatives), `${component.slug} has no alternatives`);
       assert.ok(['css-only', 'auto-init', 'manual', 'native', 'shared-runtime'].includes(component.runtime));
