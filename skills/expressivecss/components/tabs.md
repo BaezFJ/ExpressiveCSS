@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `552c2303a67d6b85e32cc24a33d1c5777d3f82a0b0f12736d8cfffe6d2af1ec4`
+Contract SHA-256: `56e9688b69bcd4d5fb887be4edeafac201b6de3321703cd605a83bc8b3549a5e`
 
 #### Selection and adaptation
 
@@ -70,6 +70,21 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 <div id="luggage">Luggage</div>
 <div id="explore">Explore</div>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `duration` | Number | `300` | Indicator transition duration, in milliseconds. |
+| `onShow` | Function | `null` | Called when a new tab panel is shown. Receives the panel element. |
+| `swipeable` | Boolean | `false` | Enable swipeable tabs. Uses `responsiveThreshold`. Wraps the panels in a carousel. |
+| `responsiveThreshold` | Number | `Infinity` | Maximum viewport width, in pixels, at which swipeable mode starts. Wider viewports stay non-swipeable. |
+
+#### Methods
+
+- `.select()`: Show the panel that belongs to the tab with this id.
+- `.updateTabIndicator()`: Recalculate the indicator position. Useful if the bar was hidden or resized.
+- `.destroy()`: Destroy the plugin instance and tear down its event handlers.
 
 #### Rules
 

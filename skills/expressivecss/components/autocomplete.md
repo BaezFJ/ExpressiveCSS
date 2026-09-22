@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `552c2303a67d6b85e32cc24a33d1c5777d3f82a0b0f12736d8cfffe6d2af1ec4`
+Contract SHA-256: `56e9688b69bcd4d5fb887be4edeafac201b6de3321703cd605a83bc8b3549a5e`
 
 #### Selection and adaptation
 
@@ -56,6 +56,29 @@ Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every 
   <label for="autocomplete-input">Autocomplete</label>
 </div>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | Array | `[]` | Suggestion list. Each item needs an `id`; `text`, `image`, and `description` are optional. |
+| `isMultiSelect` | Boolean | `false` | If true, several values can be selected. `onAutocomplete` receives an array. |
+| `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
+| `i18n` | Object | See below | Partial overrides for live status messages. |
+| `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
+| `onSearch` | Function | filters `id` and `text` | Called when the input text changes. Load or filter data, then call `setMenuItems`. |
+| `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
+| `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
+| `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
+| `selected` | Array | `[]` | Initial selected ids (strings or numbers). |
+
+#### Methods
+
+- `.open()`: Open the suggestion menu if the input meets `minLength`.
+- `.close()`: Close the suggestion menu.
+- `.selectOption()`: Select (or toggle, when multi-select) the entry with this id.
+- `.setMenuItems()`: Replace the visible suggestions. Optionally pass selected ids and whether to open the menu (default `true`).
+- `.destroy()`: Destroy the plugin instance, remove the menu, and tear down its event handlers.
 
 #### Rules
 

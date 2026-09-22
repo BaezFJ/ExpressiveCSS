@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `552c2303a67d6b85e32cc24a33d1c5777d3f82a0b0f12736d8cfffe6d2af1ec4`
+Contract SHA-256: `56e9688b69bcd4d5fb887be4edeafac201b6de3321703cd605a83bc8b3549a5e`
 
 #### Selection and adaptation
 
@@ -66,6 +66,28 @@ new Expressive.Snackbar({
   dismissible: true
 });
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `text` | String | `''` | Plain-text supporting text, wrapped in a `<p>`. If set, it replaces any HTML from `snackbarId`. |
+| `action` | String | `''` | Optional action label. Rendered as a trailing text button. |
+| `onAction` | Function | `null` | Called when the action button is pressed. The snackbar still dismisses. |
+| `dismissible` | Boolean | `false`, or `true` with an action | Show a trailing close icon button. An explicit false is preserved. |
+| `snackbarId` | String | — | Id of a `<template>` (or another element) used as the snackbar body. |
+| `displayLength` | Number | `4000` | Default 4000ms without an action, or Infinity with an action. Explicit finite timers need equivalent persistent feedback in the application. |
+| `inDuration` | Number | `300` | Enter transition duration, in milliseconds. |
+| `outDuration` | Number | `375` | Exit transition duration, in milliseconds. |
+| `classes` | String | `''` | Space-separated classes added to the snackbar. `rounded` is a stadium. `top` moves the bar off the bottom. |
+| `completeCallback` | Function | `null` | Called when the snackbar is dismissed. |
+| `activationPercent` | Number | `0.8` | Fraction of the snackbar’s width a drag must travel to dismiss it. |
+| `root` | Element | `null` | Any element in the tree the snackbar should render into. Pass one when the page lives in a shadow root, so the container is appended there rather than to `document.body`. |
+
+#### Methods
+
+- `.dismiss()`: Dismiss this snackbar with its exit animation. Runs `completeCallback` when the animation finishes.
+- `Snackbar.dismissAll()`: Dismiss every snackbar that is currently showing.
 
 #### Rules
 

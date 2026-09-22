@@ -771,7 +771,7 @@
         "Material Design 3 menus, from the HTML."
       ],
       "useWhen": [
-        "Material Design 3 menus, from the HTML."
+        "Pick one action or option from a list opened by a control."
       ],
       "avoidWhen": [
         "The choices need persistent layout space, blocking interaction, or peer navigation."
@@ -2277,7 +2277,7 @@
         "Material Design 3 tooltips, from the HTML."
       ],
       "useWhen": [
-        "Material Design 3 tooltips, from the HTML."
+        "Name or explain an icon-only control on hover and focus."
       ],
       "avoidWhen": [
         "The icon already has visible text, or the tooltip would be the control’s only accessible name."
@@ -3165,7 +3165,7 @@
         "Material Design 3 text fields, from the HTML."
       ],
       "useWhen": [
-        "Material Design 3 text fields, from the HTML."
+        "Enter or edit free-form text, numbers, or passwords."
       ],
       "avoidWhen": [
         "The value comes from a constrained set better represented by selection controls."
@@ -3385,7 +3385,7 @@
         "Material Design 3 checkboxes, from the HTML."
       ],
       "useWhen": [
-        "Material Design 3 checkboxes, from the HTML."
+        "Turn several options on or off, saved by a later action."
       ],
       "avoidWhen": [
         "The setting applies immediately or exactly one option must be chosen."
@@ -3484,7 +3484,7 @@
         "Material Design 3 radios, from the HTML."
       ],
       "useWhen": [
-        "Material Design 3 radios, from the HTML."
+        "Choose exactly one of a short visible set."
       ],
       "avoidWhen": [
         "Several choices may be selected or compact direct manipulation is better."
@@ -3576,7 +3576,7 @@
         "Material Design 3 switches, from the HTML."
       ],
       "useWhen": [
-        "Material Design 3 switches, from the HTML."
+        "Toggle one setting that applies immediately."
       ],
       "avoidWhen": [
         "A later Save action commits the choice."

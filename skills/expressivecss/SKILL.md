@@ -44,7 +44,7 @@ For support gaps, read the [capability roadmap](./references/capability-roadmap.
 
 ## Component discovery protocol
 
-1. Identify the user's job, behavior, content, and reachable window classes. Read the index entry for the named or likely component.
+1. Identify the user's job, behavior, content, and reachable window classes. When no component is named, pick one with the chooser in the [design rules](./references/design-rules.md), then read the index entry.
 2. Compare use when, avoid when, alternatives, and runtime ownership. For an unambiguous component, read only its selected guide. When selection remains uncertain, read all plausible candidate guides before choosing; names and appearance alone do not prove fit.
 3. Apply the selected guide's adaptive decisions and define the next narrower layout. Choose the smallest component or combination that fully meets the job.
 4. Copy the documented host, children, relationships, classes, and initialization mode. Apply the guide's semantic rules.
@@ -66,7 +66,7 @@ The resolver reads the bundled contract manifest; `--contract-version` overrides
 
 Use the source that owns the question, at the resolved version:
 
-- **Design intent:** [Material guidance](https://www.expressivecss.com/m3-guidelines.md) for component choice and adaptive behavior; the live Material specification resolves design disagreements.
+- **Design intent:** the bundled [design rules](./references/design-rules.md), copied from [Material guidance](https://www.expressivecss.com/m3-guidelines.md), for component choice and adaptive behavior; the live Material specification resolves design disagreements.
 - **Shipped contract:** [API reference](https://www.expressivecss.com/llm.md) and component pages for elements, classes, tokens, options, methods, and events. Installed source wins on shipped behavior.
 - **Authored semantics:** [semantics.json](https://github.com/BaezFJ/ExpressiveCSS/blob/master/semantics.json); [SEMANTICS.md](https://www.expressivecss.com/SEMANTICS.md) is generated from it.
 - **Runtime truth:** Sass, TypeScript, registry, neighboring examples, and tests when contributing or resolving drift.

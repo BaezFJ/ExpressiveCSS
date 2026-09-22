@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `552c2303a67d6b85e32cc24a33d1c5777d3f82a0b0f12736d8cfffe6d2af1ec4`
+Contract SHA-256: `56e9688b69bcd4d5fb887be4edeafac201b6de3321703cd605a83bc8b3549a5e`
 
 #### Selection and adaptation
 
@@ -74,6 +74,31 @@ A chip is a `.chip`, and **the element says which kind it is** — the four Mate
   </button>
 </span>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | Array | `[]` | Initial chips. Each item is a chip data object. |
+| `placeholder` | String | `''` | Placeholder when there are no chips. Requires `allowUserInput`. |
+| `secondaryPlaceholder` | String | `''` | Placeholder after at least one chip exists. |
+| `closeIconClass` | String | `'material-symbols'` | Class on the icon inside the delete button. |
+| `allowUserInput` | Boolean | `false` | If true, render a text field and a delete button per chip, so the user can add and remove chips. |
+| `i18n` | Object | `{ remove: 'Remove' }` | Strings the component generates. `remove` prefixes the delete button's accessible name, giving "Remove Apple". |
+| `autocompleteOptions` | Object | `{}` | Options passed to Autocomplete on the input. A non-empty object enables autocomplete. |
+| `autocompleteOnly` | Boolean | `false` | If true, Enter will not add a value that is not in the autocomplete list. |
+| `limit` | Number | `Infinity` | Maximum number of chips. |
+| `onChipAdd` | Function | `null` | Called after a chip is added. Receives the container and the chip element. |
+| `onChipSelect` | Function | `null` | Called when a chip is selected. Receives the container and the chip element. |
+| `onChipDelete` | Function | `null` | Called after a chip is deleted. Receives the container and the chip element. |
+
+#### Methods
+
+- `.addChip()`: Add a chip. Ignored if `id` is missing, already present, or the limit is reached.
+- `.deleteChip()`: Delete the chip at this index.
+- `.selectChip()`: Focus the chip at this index.
+- `.getData()`: The current chips as an array of chip data objects.
+- `.destroy()`: Destroy the plugin instance, remove rendered chips, and tear down its event handlers.
 
 #### Rules
 

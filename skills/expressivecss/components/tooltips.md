@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `552c2303a67d6b85e32cc24a33d1c5777d3f82a0b0f12736d8cfffe6d2af1ec4`
+Contract SHA-256: `56e9688b69bcd4d5fb887be4edeafac201b6de3321703cd605a83bc8b3549a5e`
 
 #### Selection and adaptation
 
@@ -58,6 +58,27 @@ Tokens follow the [M3 tooltip spec](https://m3.material.io/components/tooltips/s
   <span class="tooltip bottom" id="tip-below">Below</span>
 </button>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `exitDelay` | Number | `200` | Delay before the tooltip disappears, in milliseconds. |
+| `enterDelay` | Number | `0` | Delay before the tooltip appears, in milliseconds. |
+| `tooltipId` | String | — | Id of an element used as the tooltip body. Set by `data-tooltip-id`. Marks the bubble `rich`. |
+| `text` | String | `''` | Plain-text content. Set by `data-tooltip`. Ignored when `tooltipId` is set. |
+| `margin` | Number | `4` | Distance from the activator, in pixels, not counting `transitionMovement`. M3 is 4dp. |
+| `inDuration` | Number | `250` | Enter transition duration, in milliseconds. |
+| `opacity` | Number | `1` | Opacity of the tooltip when shown. |
+| `outDuration` | Number | `200` | Exit transition duration, in milliseconds. |
+| `position` | String | `'bottom'` | Direction: `'top'`, `'right'`, `'bottom'`, or `'left'`. Set by `data-position`. The CSS-only default is above. |
+| `transitionMovement` | Number | `10` | How far the tooltip moves during its transition, in pixels. |
+
+#### Methods
+
+- `.open()`: Show the tooltip.
+- `.close()`: Hide the tooltip.
+- `.destroy()`: Destroy the plugin instance, remove the tooltip element, and tear down its event handlers.
 
 #### Rules
 
