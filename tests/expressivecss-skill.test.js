@@ -311,6 +311,11 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(tabs, /#### Methods\n\n- `\.select\(\)`: /);
     assert.match(tabs, /- `\.destroy\(\)`: /);
     assert.doesNotMatch(guide('buttons.md'), /#### Options|#### Methods/);
+    // Carousel documents its methods in prose rather than headings; keep them and the pause contract.
+    const carousel = guide('carousel.md');
+    assert.match(carousel, /#### Methods\n\n`next\(\)` and `prev\(\)`[^\n]*`destroy\(\)`/);
+    assert.match(carousel, /pause contract is mandatory/);
+    assert.doesNotMatch(carousel, /#### Methods[\s\S]*(```|^> )[\s\S]*#### Rules/m);
     for (const line of tabs.split('\n').filter((entry) => entry.startsWith('| `'))) {
       assert.ok(llm.includes(line), `tabs option row is not in llm.md: ${line}`);
     }

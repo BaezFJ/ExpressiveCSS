@@ -259,7 +259,16 @@ function apiSummary(section) {
   const methods = /\n### Methods\n([\s\S]*?)(?=\n### |$)/u.exec(section)?.[1] ?? '';
   const names = [...methods.matchAll(/^#### (.+?);?\n\n([^\n]*)/gmu)]
     .map(([, name, description]) => `- \`${name.trim()}\`: ${description.trim()}`);
-  if (names.length) parts.push(`#### Methods\n\n${names.join('\n')}`);
+  if (names.length) {
+    parts.push(`#### Methods\n\n${names.join('\n')}`);
+  } else if (methods.trim()) {
+    // Some sections (Carousel) describe their methods in prose instead of headings.
+    const prose = methods.replace(/```[\s\S]*?```/gu, '').split(/\n\s*\n/u)
+      .map((paragraph) => paragraph.trim())
+      .filter((paragraph) => paragraph && !paragraph.startsWith('>'))
+      .map((paragraph) => paragraph.replaceAll('\n', ' '));
+    if (prose.length) parts.push(`#### Methods\n\n${prose.join('\n\n')}`);
+  }
   return parts;
 }
 
