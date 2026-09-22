@@ -5,6 +5,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.10.1] - 2026-09-22
+
 ### Added
 
 - Flex helpers: `.flex`, `.inline-flex`, `.flex-column`, `.flex-wrap`,
@@ -24,6 +26,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   complete page skeleton. The Design guide states the framework spacing scale
   and control-text rules. Six catalogue entries that repeated their page tagline
   as the selection rule now say when to use the component.
+
+- The ExpressiveCSS skill tells agents without an MCP client to run
+  `expressivecss-lint` from `@expressivecss/mcp-server` on the markup files they
+  touched before finishing.
 
 ## [0.10.0] - 2026-09-18
 
@@ -1684,7 +1690,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.10.1...HEAD
+[0.10.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.8.0...v0.9.0
