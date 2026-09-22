@@ -2,7 +2,7 @@
 import { existsSync, closeSync, constants as fsConstants, fstatSync, lstatSync, openSync, readFileSync, realpathSync } from 'node:fs';
 import { lstat, open, readdir, readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { JSDOM } from 'jsdom';
@@ -956,7 +956,7 @@ function lineForMatch(text, index) {
   return { line, column: col };
 }
 
-function inspectAuthoringRules(
+export function inspectAuthoringRules(
   snippet,
   maxIssues = MAX_STATIC_ISSUES,
   deadline = Date.now() + STATIC_INSPECTION_TIMEOUT_MS,
@@ -1412,7 +1412,7 @@ function redactSensitiveText(value) {
     .replace(/[A-Z]:\\+Users\\+[^\\\s]+(?:\\+[^\s]*)?/giu, '[LOCAL_PATH]');
 }
 
-async function readInspectionFile(filePath, projectRoot, byteLimit) {
+export async function readInspectionFile(filePath, projectRoot, byteLimit) {
   const resolvedRoot = await realpath(projectRoot);
   const noFollow = Number.isInteger(fsConstants.O_NOFOLLOW) ? fsConstants.O_NOFOLLOW : 0;
   const handle = await open(filePath, fsConstants.O_RDONLY | noFollow);
@@ -2370,7 +2370,10 @@ async function startServer() {
   console.error('ExpressiveCSS MCP server running on stdio transport.');
 }
 
-startServer().catch((error) => {
-  console.error('ExpressiveCSS MCP server failed to start:', error);
-  process.exitCode = 1;
-});
+// Only run as the entry point; lint.mjs imports the static checks without starting the server.
+if (process.argv[1] && pathToFileURL(realpathSync(process.argv[1])).href === import.meta.url) {
+  startServer().catch((error) => {
+    console.error('ExpressiveCSS MCP server failed to start:', error);
+    process.exitCode = 1;
+  });
+}
