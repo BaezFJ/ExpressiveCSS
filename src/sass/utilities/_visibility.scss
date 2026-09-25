@@ -5,6 +5,11 @@
 
 .hide { display: none !important; }
 
+// Hidden from sight, still announced: a visible label's longer twin, an
+// icon-only control's name, a live region's text. Important for the same
+// reason `.hide` is.
+.visually-hidden { @include visually-hidden(true); }
+
 .hide-on-compact-only,
 .hide-on-small-only,
 .hide-on-small-and-down {

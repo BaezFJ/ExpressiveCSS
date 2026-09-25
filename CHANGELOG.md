@@ -5,6 +5,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `.visually-hidden` hides an element from sight and keeps it in the
+  accessibility tree, so screen readers still announce it. It exposes the
+  existing `visually-hidden` mixin, which now also clears the border and takes
+  an `$important` flag for the utility. The filter chip's checkbox uses the
+  mixin instead of its own copy.
+
 ## [0.10.1] - 2026-09-22
 
 ### Added

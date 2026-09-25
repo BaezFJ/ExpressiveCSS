@@ -87,6 +87,14 @@ Compatibility aliases remain in the stylesheet: `.hide-on-small-only`, `.hide-on
 
 Never use display hiding as the only way to provide required content or actions. Confirm hidden content is intentionally removed from visual layout and the accessibility tree.
 
+### Screen-reader-only text
+
+`.visually-hidden` removes an element from sight without removing it from the accessibility tree, so screen readers still announce it. Use it for text the layout does not show, such as context that makes a repeated link unique or the text of a live region. Every declaration is `!important`, like `.hide`. A focused element stays invisible, so do not put the class on a focusable control unless its focus is drawn somewhere else.
+
+```html
+<a href="/orders/42">View<span class="visually-hidden"> order 42</span></a>
+```
+
 ## Alignment and layout helpers
 
 | Class | Effect | Use carefully |
@@ -206,6 +214,7 @@ Apply `.browser-default` to an `<input>` or `<select>` when the target-version c
 - A forced `display: block` does not break flex, grid, inline, or table layout.
 - Flex containers that hold wrapping content carry `.flex-wrap`, and one-line rows are checked with long labels.
 - Hidden content is not the only copy of required information or actions.
+- `.visually-hidden` carries only text that assistive technology needs; it is not on a control that receives focus.
 - Truncated text remains available when users need the full value.
 - Utility `!important` rules do not accidentally erase component spacing.
 - Component variants remain preferred over utility-built imitations.

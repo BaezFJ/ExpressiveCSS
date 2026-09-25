@@ -1113,6 +1113,14 @@ Legacy `small`, `med`, and `xxl` utility names remain aliases for compatibility.
 <div class="hide-on-compact-only"></div>
 ```
 
+#### Visually hidden
+
+`visually-hidden` removes an element from sight but keeps it in the accessibility tree, so screen readers still announce it. Use it for text the layout does not show, such as context that makes a repeated link unique or the text of a live region. Like `.hide`, it is `!important`. A focused element stays invisible, so do not put it on a focusable control unless focus is drawn somewhere else, the way a filter chip draws it on its label.
+
+```html
+<a href="/orders/42">View<span class="visually-hidden"> order 42</span></a>
+```
+
 ### Spacing
 
 These classes help space elements with margin and padding helpers for all directions. This works by combining a margin/padding prefix, a direction infix and value suffix.
