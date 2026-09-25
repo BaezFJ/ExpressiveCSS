@@ -51,6 +51,20 @@ const S = defineSections([
           12% container.
         </p>
         <p>
+          A label that does not fit wraps between words and the button grows
+          taller, so enlarged text, 200% zoom and narrow columns keep the label
+          inside the button and the button inside its parent. The size's height
+          is the minimum, so a label that fits looks the same. Keep the label
+          in its own <code>&lt;span&gt;</code> so a single word longer than the
+          parent can break as well. <code>circle</code> buttons, FABs, extended
+          FABs, and buttons in button groups, split buttons, toolbars, top app
+          bars, dialog and sheet headers, navigation bars and rails, tabs,
+          pagination and snackbars stay on one line at a fixed height. A rule
+          that gives a button a smaller <code>height</code> must set
+          <code>min-height</code> too, or set
+          <code>--md-comp-filled-button-container-height</code> instead.
+        </p>
+        <p>
           <button type="button">Create</button>
           <button type="button"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
           <button type="button"><span>Send</span><span class="material-symbols" aria-hidden="true">send</span></button>

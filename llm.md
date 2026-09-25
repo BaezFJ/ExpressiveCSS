@@ -1756,6 +1756,8 @@ Two independent axes dress it: a style (`filled`, `tonal`, `outlined`, `elevated
 
 Tokens follow the [M3 button spec](https://m3.material.io/components/buttons/specs). The default is the small size: 40dp tall, label `label-large`, fully round corners, a 20dp icon on an 8dp gap, and a symmetric 16dp inset. State layers are 8% hover and 10% focus or press. Disabled is `on-surface` at 38% on a 12% container.
 
+A label that does not fit wraps between words and the button grows taller, so enlarged text, 200% zoom and narrow columns keep the label inside the button and the button inside its parent. The size's height is the minimum, so a label that fits looks the same. Keep the label in its own `<span>` so a single word longer than the parent can break as well. `circle` buttons, FABs, extended FABs, and buttons in button groups, split buttons, toolbars, top app bars, dialog and sheet headers, navigation bars and rails, tabs, pagination and snackbars stay on one line at a fixed height. A rule that gives a button a smaller `height` must set `min-height` too, or set `--md-comp-filled-button-container-height` instead.
+
 Create Create Send
 
 ```html
@@ -5796,6 +5798,8 @@ Put the labels in a `<div class="inline">` to sit them on one line. A bare group
 Small blocks for contacts, tags, and filters.
 
 A chip is a `.chip`, and **the element says which kind it is** — the four Material 3 chip types, plus a non-interactive display chip, across three root elements. Add `outlined` for a bordered style. Static chips are CSS. The JavaScript plugin lives on a `.chips` wrapper.
+
+A long label wraps and the chip grows from its 32dp minimum, with 4dp above and below the lines. It never grows wider than its parent.
 
 | Type | Element | Why |
 | --- | --- | --- |

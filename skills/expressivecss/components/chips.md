@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `dca2173804009288155e241554fc8de5b68ffe750742c47c8c403ec28fa3451b`
+Contract SHA-256: `aaa2f1994a9ef734b706991dd2ce76c88cc8cb21863a5128cbe925b39673f20c`
 
 #### Selection and adaptation
 
@@ -46,6 +46,8 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 Small blocks for contacts, tags, and filters.
 
 A chip is a `.chip`, and **the element says which kind it is** — the four Material 3 chip types, plus a non-interactive display chip, across three root elements. Add `outlined` for a bordered style. Static chips are CSS. The JavaScript plugin lives on a `.chips` wrapper.
+
+A long label wraps and the chip grows from its 32dp minimum, with 4dp above and below the lines. It never grows wider than its parent.
 
 #### Syntax
 
