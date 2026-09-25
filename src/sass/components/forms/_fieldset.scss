@@ -5,7 +5,8 @@
 // Anatomy is the HTML. A <fieldset> is the group. A <legend> is the
 // headline. Direct children are the fields — .field, radios, switches,
 // a .inline row of radios, a trailing <small> as supporting text. No wrapper
-// class. .filled / .border / .rounded are helpers markup cannot express.
+// class. .filled / .border / .rounded / .plain are helpers markup cannot
+// express.
 //
 // M3 has no fieldset component. Tokens follow the outlined grouping
 // container used around related form content, and the outlined text-field
@@ -97,6 +98,24 @@ fieldset.border {
 
 fieldset.rounded {
   --md-comp-fieldset-container-shape: 12px;
+}
+
+// Plain groups radios or checkboxes inside a surface that already frames them,
+// such as a card, a dialog or a filled section. No outline, fill, padding or
+// sibling margin, and the legend starts where the content starts instead of
+// sitting in a notch 4dp outside it.
+fieldset.plain {
+  --md-comp-fieldset-container-color: transparent;
+  --md-comp-fieldset-outline-width: 0;
+
+  margin: 0;
+  padding: 0;
+
+  > legend {
+    max-width: 100%;
+    margin-inline-start: 0;
+    padding-inline: 0;
+  }
 }
 
 fieldset:disabled,

@@ -12,6 +12,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   existing `visually-hidden` mixin, which now also clears the border and takes
   an `$important` flag for the utility. The filter chip's checkbox uses the
   mixin instead of its own copy.
+- `fieldset.plain` groups radios or checkboxes inside a surface that already
+  frames them. It has no outline, fill, padding, or margin from a preceding
+  fieldset, and its legend starts flush with the content.
 
 ## [0.10.1] - 2026-09-22
 

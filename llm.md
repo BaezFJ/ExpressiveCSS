@@ -5343,6 +5343,16 @@ A fieldset is also the right parent for a radio, checkbox, or switch group — t
 
 The default is outlined. `filled` is a `surface-variant` well with no stroke — pair it with `outlined` fields so the wells stay distinct. `rounded` is 12dp corners (M3 medium, like a card). `outlined` and `border` name the default if you need to say it.
 
+`plain` drops the container for a group that already sits on a surface, such as radios in a card or a dialog: no outline, fill, padding, or margin from a preceding fieldset, and the legend starts flush with the content.
+
+```html
+<fieldset class="plain">
+  <legend>Delivery</legend>
+  <label><input type="radio" name="delivery" value="daily" checked>Daily</label>
+  <label><input type="radio" name="delivery" value="weekly">Weekly</label>
+</fieldset>
+```
+
 ```html
 <fieldset class="filled">
   <legend>

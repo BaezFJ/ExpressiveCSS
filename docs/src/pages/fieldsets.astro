@@ -176,6 +176,26 @@ const S = defineSections([
   …
 </fieldset>
 `} />
+        <p>
+          <code>plain</code> drops the container for a group that already sits
+          on a surface, such as radios in a card or a dialog: no outline, fill,
+          padding, or margin from a preceding fieldset, and the legend starts
+          flush with the content.
+        </p>
+        <div class="surface-container-low p-4">
+          <fieldset class="plain">
+            <legend>Delivery</legend>
+            <label><input type="radio" name="fs-delivery" value="daily" checked>Daily</label>
+            <label><input type="radio" name="fs-delivery" value="weekly">Weekly</label>
+          </fieldset>
+        </div>
+<Code code={`
+<fieldset class="plain">
+  <legend>Delivery</legend>
+  <label><input type="radio" name="delivery" value="daily" checked>Daily</label>
+  <label><input type="radio" name="delivery" value="weekly">Weekly</label>
+</fieldset>
+`} />
   </Section>
   <Section {...S.disabled}>
         <p>
