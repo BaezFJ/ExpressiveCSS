@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <InstanceNote plugin="Tabs" />
 
         <h5 class="light">.select();</h5>
-        <p>Show the panel that belongs to the tab with this id.</p>
+        <p>Show the panel that belongs to the tab with this id. Panel IDs are matched literally, including numeric IDs and IDs containing dots, colons or brackets, in normal and swipeable modes.</p>
         <p><strong>String:</strong> The id of the tab panel (without <code>#</code>).</p>
 <Code code={`
 instance.select('tab_id');

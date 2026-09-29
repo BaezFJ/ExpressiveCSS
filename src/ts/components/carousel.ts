@@ -836,7 +836,8 @@ export class Carousel extends Component<CarouselOptions> {
   };
 
   private _handleScrollEnd = () => {
-    if (!this.images.some(item => item.getAnimations().some(animation => animation.playState === 'running'))) {
+    // An earlier scroll can finish after a new navigation has started.
+    if (this._nearestIndex() === this.center && !this.images.some(item => item.getAnimations().some(animation => animation.playState === 'running'))) {
       this._finishScroll();
     }
   };

@@ -5,13 +5,13 @@ Choose one option, or several, from a styled menu.
 
 Component ID: `select`
 
-[Component documentation](https://www.expressivecss.com/select.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/select.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
+[Component documentation](https://www.expressivecss.com/select.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/select.astro)
 
 Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `aaa2f1994a9ef734b706991dd2ce76c88cc8cb21863a5128cbe925b39673f20c`
+Contract SHA-256: `94240fc94f4e771ee1c3aff5a112c24a3cfa2f3ece1139309f41d8e91e7d89ce`
 
 #### Selection and adaptation
 
@@ -111,7 +111,7 @@ Select turns a native `<select>` into a menu. Wrap it in a `.field` and give the
 
 - `.getSelectedValues()`: Selected values as an array of strings.
 - `.refresh()`: Re-read native values, option labels, options and disabled states. The generated rows are rebuilt while the field and an existing Menu instance remain. Refresh preserves focus on a surviving option in an open menu; it does not emit a user `change` event. Call it after programmatic changes, including moving the select to another form or changing its `form` attribute, to rebind reset handling. There is no mutation observer.
-- `.destroy()`: Destroy the plugin instance, remove the menu, and restore the native select.
+- `.destroy()`: Destroy the plugin instance, remove the menu, and restore the native select. Associated labels keep their original nodes and event listeners; teardown restores their attributes and authored positions.
 
 #### Rules
 

@@ -5,13 +5,13 @@ Select a date, a range, or several dates from a calendar.
 
 Component ID: `date-picker`
 
-[Component documentation](https://www.expressivecss.com/datepicker.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/datepicker.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
+[Component documentation](https://www.expressivecss.com/datepicker.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/datepicker.astro)
 
 Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `aaa2f1994a9ef734b706991dd2ce76c88cc8cb21863a5128cbe925b39673f20c`
+Contract SHA-256: `94240fc94f4e771ee1c3aff5a112c24a3cfa2f3ece1139309f41d8e91e7d89ce`
 
 #### Selection and adaptation
 

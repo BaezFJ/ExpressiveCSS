@@ -58,7 +58,7 @@ export class Tabs extends Component<TabsOptions> {
     this._tabLinks.forEach(link => {
       this._originalLinks.set(link, { active: link.classList.contains('active'), current: link.getAttribute('aria-current') });
       if (link.hasAttribute('target')) return;
-      const panel = link.hash && document.querySelector<HTMLElement>(link.hash);
+      const panel = link.hash && document.getElementById(link.hash.slice(1));
       if (panel) this._originalPanels.set(panel, {
         display: panel.style.display, priority: panel.style.getPropertyPriority('display'),
         active: panel.classList.contains('active'), carousel: panel.classList.contains('carousel-item')
@@ -179,15 +179,13 @@ export class Tabs extends Component<TabsOptions> {
     // Act as regular link if target attribute is specified.
     if (tabLink.hasAttribute('target')) return;
     if (this.options.swipeable) {
-      const panel = tabLink.hash && document.querySelector(tabLink.hash);
+      const panel = tabLink.hash && document.getElementById(tabLink.hash.slice(1));
       const index = this._tabsCarousel.images.indexOf(panel as HTMLElement);
       if (index >= 0) this._tabsCarousel.set(index);
       e.preventDefault();
       return;
     }
     const _oldContent = this._content;
-    // Update the variables with the new link and content
-    if (tabLink.hash) this._content = document.querySelector(tabLink.hash);
     this._tabLinks = this._queryTabLinks();
     // Moves the class and aria-current together, off the old tab and onto this
     // one - they used to be able to disagree.
@@ -266,7 +264,7 @@ export class Tabs extends Component<TabsOptions> {
     const tabsContent = [];
     this._tabLinks.forEach((a) => {
       if (a.hash && !a.hasAttribute('target')) {
-        const currContent = document.querySelector(a.hash);
+        const currContent = document.getElementById(a.hash.slice(1));
         if (!currContent) return;
         currContent.classList.add('carousel-item');
         tabsContent.push(currContent);
@@ -313,9 +311,9 @@ export class Tabs extends Component<TabsOptions> {
     // Hide Tabs Content
     Array.from(this._tabLinks).forEach((a) => {
       if (a === this._activeTabLink || a.hasAttribute('target')) return;
-      if ((<HTMLAnchorElement>a).hash) {
-        const currContent = document.querySelector((<HTMLAnchorElement>a).hash);
-        if (currContent) (<HTMLElement>currContent).style.display = 'none';
+      if (a.hash) {
+        const currContent = document.getElementById(a.hash.slice(1));
+        if (currContent) currContent.style.display = 'none';
       }
     });
   }

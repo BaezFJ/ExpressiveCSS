@@ -4178,7 +4178,7 @@ const instance = Expressive.Tabs.getInstance(elem);
 
 #### .select();
 
-Show the panel that belongs to the tab with this id.
+Show the panel that belongs to the tab with this id. Panel IDs are matched literally, including numeric IDs and IDs containing dots, colons or brackets, in normal and swipeable modes.
 
 **String:** The id of the tab panel (without `#`).
 
@@ -4872,6 +4872,10 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 
 ### Date format options
 
+Without a custom `parse` callback, `YYYY-MM-DD` input is a local calendar date.
+Impossible dates such as `2023-02-29` do not change the selection. Other strings
+use the browser's date parser. Supply `parse` for other input formats.
+
 Use these tokens in the `format` string.
 
 | Key | Description | Output |
@@ -5554,9 +5558,11 @@ Re-read native values, option labels, options and disabled states. The generated
 
 The native select owns form submission. Disabled options and optgroups cannot be activated, even when selected programmatically. Their selected labels remain visible, but native `FormData` excludes disabled choices. An empty selection displays an empty field. Successful native form resets synchronize the field and selection semantics after the browser restores defaults. Canceled resets preserve selection; resets do not synthesize `change`.
 
+The enhanced field exposes one combobox to assistive technology. All associated labels contribute to its name in their original order, unless an authored `aria-label` or `aria-labelledby` supplies the name. Each label targets the visible control. The native select stays visually hidden and excluded from the accessibility tree while initialized. Required and custom validation errors use its browser-provided message, displayed as supporting text associated with the visible field. Native validation chooses which field receives focus, and the enhanced select forwards that focus to its visible field. `checkValidity()` preserves focus; `reportValidity()` on a select reports that control even when an earlier field is invalid. After changing `setCustomValidity()` from script, call `refresh()` to update an existing error. Correcting the value clears resolved errors; resetting the form clears displayed errors without changing native validation rules. `destroy()` removes generated error messages and restores the native control.
+
 #### .destroy();
 
-Destroy the plugin instance, remove the menu, and restore the native select.
+Destroy the plugin instance, remove the menu, and restore the native select. Associated labels keep their original nodes and event listeners; teardown restores their attributes and authored positions.
 
 ```text
 instance.destroy();
@@ -6156,7 +6162,7 @@ onSearch: function(text, autocomplete) {
 | `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
 | `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
-| `onSearch` | Function | filters `id` and `text` | Called when the input text changes. Load or filter data, then call `setMenuItems`. |
+| `onSearch` | Function | filters `id` and `text` | Called when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
@@ -6227,7 +6233,7 @@ instance.destroy();
 | `el` | Element | The input the plugin was initialized with. |
 | `options` | Object | The options the instance was initialized with. |
 | `isOpen` | Boolean | Whether the suggestion menu is open. |
-| `count` | Number | Number of matching options (reset on each keyup/focus). |
+| `count` | Number | Number of matching options (reset on each input/focus). |
 | `activeIndex` | Number | Index of the keyboard-highlighted option, or `-1`. |
 | `menu` | Menu | The Menu instance for this autocomplete. |
 | `selectedValues` | Array | The currently selected entries. |

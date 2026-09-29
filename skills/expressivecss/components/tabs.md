@@ -5,13 +5,13 @@ Material Design 3 tabs, from the HTML.
 
 Component ID: `tabs`
 
-[Component documentation](https://www.expressivecss.com/tabs.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/tabs.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
+[Component documentation](https://www.expressivecss.com/tabs.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/tabs.astro)
 
 Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `aaa2f1994a9ef734b706991dd2ce76c88cc8cb21863a5128cbe925b39673f20c`
+Contract SHA-256: `94240fc94f4e771ee1c3aff5a112c24a3cfa2f3ece1139309f41d8e91e7d89ce`
 
 #### Selection and adaptation
 
@@ -82,7 +82,7 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 
 #### Methods
 
-- `.select()`: Show the panel that belongs to the tab with this id.
+- `.select()`: Show the panel that belongs to the tab with this id. Panel IDs are matched literally, including numeric IDs and IDs containing dots, colons or brackets, in normal and swipeable modes.
 - `.updateTabIndicator()`: Recalculate the indicator position. Useful if the bar was hidden or resized.
 - `.destroy()`: Destroy the plugin instance and tear down its event handlers.
 

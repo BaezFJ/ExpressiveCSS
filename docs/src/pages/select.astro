@@ -226,7 +226,7 @@ instance.refresh();
 `} />
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove the menu, and restore the native select.</p>
+        <p>Destroy the plugin instance, remove the menu, and restore the native select. Associated labels keep their original nodes and event listeners; teardown restores their attributes and authored positions.</p>
 <Code code={`
 instance.destroy();
 `} />
@@ -236,6 +236,21 @@ instance.destroy();
           disabled optgroups cannot be chosen in the generated menu. A selected
           disabled option remains visible in the field, but native form submission
           excludes it. An empty selection displays an empty field.</p>
+        <p>The enhanced field exposes one combobox to assistive technology. All associated
+          labels contribute to its name in their original order, unless an authored
+          <code>aria-label</code> or <code>aria-labelledby</code> supplies the name. Each label
+          targets the visible control. The native
+          select stays visually hidden and excluded from the accessibility tree while initialized. Required and custom validation errors
+          use its browser-provided message, displayed as supporting text associated
+          with the visible field. Native validation chooses which field receives focus,
+          and the enhanced select forwards that focus to its visible field.
+          <code>checkValidity()</code> preserves focus; <code>reportValidity()</code>
+          on a select reports that control even when an earlier field is invalid.</p>
+        <p>After changing <code>setCustomValidity()</code> from script, call
+          <code>refresh()</code> to update an existing error. Correcting the value clears
+          resolved errors; resetting the form clears displayed errors without changing
+          native validation rules. <code>destroy()</code> removes generated error messages
+          and restores the native control.</p>
         <p>Use the form's Reset button or <code>form.reset()</code> to restore defaults.
           The generated field synchronizes after the browser resets the native control,
           without a <code>change</code> event. Canceling the reset preserves selection.</p>
