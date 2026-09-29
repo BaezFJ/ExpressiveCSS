@@ -145,6 +145,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         await page.evaluate(() => window.oldRow.click());
         assert.equal(await page.evaluate(() => window.changes), 0);
         await page.locator('input[role="combobox"]').click();
+        await expect(page.locator('menu').getByRole('option', { name: 'Updated', exact: true })).toBeFocused();
         await page.locator('menu').getByRole('option', { name: 'Alpha', exact: true }).press('Enter');
         assert.equal(await page.evaluate(() => window.changes), 1);
         await page.evaluate(() => {
@@ -763,6 +764,34 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         }
         await page.evaluate(() => carousel.destroy());
       }
+    } finally { try { await page?.evaluate(() => window.carousel?.destroy()); } finally { await browser.close(); } }
+  });
+
+  browserTest(`Carousel ignores stale scrollend during a newer navigation (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ reducedMotion: 'no-preference' });
+      await page.setContent(`<style>${css}</style><div class="carousel flat" style="width:320px">
+        <article class="carousel-item">One</article><article class="carousel-item">Two</article><article class="carousel-item active">Three</article></div>`);
+      await page.addScriptTag({ content: js });
+      const pending = await page.evaluate(() => {
+        window.carousel = Expressive.Carousel.init(document.querySelector('.carousel'), { duration: 0 });
+        const track = document.querySelector('.carousel-track'), scrollTo = track.scrollTo;
+        let requested;
+        // Deliver the previous scroll's completion before the new scroll moves.
+        track.scrollTo = options => { requested = options; };
+        try {
+          carousel.set(1);
+          track.dispatchEvent(new Event('scrollend'));
+          return { ignoring: carousel._ignoreScroll, current: carousel.center, nearest: carousel._nearestIndex() };
+        } finally {
+          track.scrollTo = scrollTo;
+          scrollTo.call(track, requested);
+        }
+      });
+      assert.deepEqual(pending, { ignoring: true, current: 1, nearest: 2 });
+      await expect.poll(() => page.evaluate(() => ({ current: carousel.center, nearest: carousel._nearestIndex(), ignoring: carousel._ignoreScroll }))).toEqual({ current: 1, nearest: 1, ignoring: false });
     } finally { try { await page?.evaluate(() => window.carousel?.destroy()); } finally { await browser.close(); } }
   });
 
@@ -1533,6 +1562,54 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         assert.deepEqual(await page.evaluate(() => ({ shown, index: tabs.index, panel: tabs._content.id })), { shown: ['two', 'three'], index: 2, panel: 'three' });
         await expect(page.locator('#three')).toHaveClass(/active/);
         await page.evaluate(() => tabs.destroy());
+      }
+    } finally {
+      try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }
+    }
+  });
+
+  browserTest(`Tabs resolve literal panel IDs in normal and swipeable modes (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      const ids = ['123', 'panel.dot', 'panel:details', 'panel[x]'];
+      for (const swipeable of [false, true]) {
+        await page.goto('about:blank#panel:details');
+        await page.setContent(`<style>${css}</style><main style="width:320px">
+          <nav class="tabs">${ids.map((id, index) => `<a href="#${id}">Section ${index}</a>`).join('')}</nav>
+          ${ids.map(id => `<section id="${id}" style="min-height:160px">${id}</section>`).join('')}
+          <aside id="panel" class="dot" x>Decoy</aside></main>`);
+        await page.addScriptTag({ content: js });
+        await page.evaluate(swipeable => {
+          window.shown = [];
+          window.panelState = () => [...document.querySelectorAll('section, aside')].map(el => ({ id: el.id, style: el.style.cssText, classes: el.className, parent: el.parentElement.tagName }));
+          window.original = panelState();
+          window.tabs = Expressive.Tabs.init(document.querySelector('nav'), { swipeable, duration: 0, onShow: panel => shown.push(panel.id) });
+        }, swipeable);
+        assert.equal(await page.evaluate(() => tabs._content.id), 'panel:details');
+        assert.deepEqual(await page.evaluate(() => shown), []);
+        if (swipeable) await page.waitForTimeout(450);
+        for (const [index, id] of ids.entries()) {
+          if (index % 2) await page.getByRole('link', { name: `Section ${index}` }).click();
+          else await page.evaluate(id => tabs.select(id), id);
+          await expect(page.locator('section.active')).toHaveAttribute('id', id);
+          await expect(page.locator('a[aria-current="page"]')).toHaveAttribute('href', '#' + id);
+          assert.equal(await page.evaluate(() => tabs._content.id), id);
+          assert.deepEqual(await page.evaluate(() => shown), ids.slice(0, index + 1));
+        }
+        await expect(page.locator('aside')).toBeVisible();
+        await expect(page.locator('aside')).toHaveClass('dot');
+        await page.evaluate(() => tabs.destroy());
+        assert.deepEqual(await page.evaluate(() => panelState()), await page.evaluate(() => original));
+        await expect(page.locator('.tabs-content, .indicator')).toHaveCount(0);
+        await page.evaluate(swipeable => {
+          tabs = Expressive.Tabs.init(document.querySelector('nav'), { swipeable, duration: 0 });
+          tabs.select('panel.dot');
+        }, swipeable);
+        await expect(page.locator('section.active')).toHaveAttribute('id', 'panel.dot');
+        await page.evaluate(() => tabs.destroy());
+        assert.deepEqual(await page.evaluate(() => panelState()), await page.evaluate(() => original));
       }
     } finally {
       try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }

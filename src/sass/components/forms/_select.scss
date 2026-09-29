@@ -112,8 +112,9 @@ select.browser-default {
     transform: rotate(180deg);
   }
 
-  // Keep the native select in the field's box so constraint-validation
-  // bubbles land on the control, not at (0, 0).
+  // Keep native validation focus available and its geometry at the field.
+  // The aria-hidden wrapper excludes it from the accessibility tree; JS
+  // forwards native focus to the visible combobox after reporting finishes.
   .hide-select {
     position: absolute;
     inset: 0;
