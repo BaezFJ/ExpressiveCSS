@@ -138,7 +138,7 @@ fileTest(`file triggers center legacy labels and reserve space for selected file
 browserTest('fixed-geometry buttons and one-line hosts keep one line at a fixed height', async () => {
   const browser = await chromium.launch({ headless: true });
   try {
-    const page = await browser.newPage({ viewport: { width: 1200, height: 900 } });
+    const page = await browser.newPage({ viewport: { width: 600, height: 900 } });
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.setContent(`<style>${css}</style>
       <div style="width: 120px">
@@ -151,12 +151,19 @@ browserTest('fixed-geometry buttons and one-line hosts keep one line at a fixed 
         <button id="split">${long}</button>
         <button class="menu-trigger" data-target="menu" aria-label="More"><span class="material-symbols" aria-hidden="true">keyboard_arrow_down</span></button>
       </div>
-      <div class="toolbar" style="width: 160px"><button id="toolbar">${long}</button></div>`);
+      <div class="toolbar" style="width: 160px"><button id="toolbar">${long}</button></div>
+      <div class="timepicker-container"><div class="timepicker-span-am-pm">
+        <button id="am" class="am-btn">AM</button><button id="pm" class="pm-btn">PM</button>
+      </div></div>`);
     const boxes = await measure(page);
-    for (const [id, height] of [['circle', 40], ['fab', 56], ['extend', 56], ['group', 40], ['split', 40], ['toolbar', 48]]) {
+    for (const [id, height] of [['circle', 40], ['fab', 56], ['extend', 56], ['group', 40], ['split', 40], ['toolbar', 48], ['am', 46], ['pm', 46]]) {
       assert.equal(boxes[id].whiteSpace, 'nowrap', id);
       assert.equal(boxes[id].height, height, id);
       assert.ok(boxes[id].lines <= 1, id);
+    }
+    for (const id of ['am', 'pm']) {
+      const width = await page.locator(`#${id}`).evaluate(el => el.getBoundingClientRect().width);
+      assert.ok(Math.abs(width - 57.6) < 0.1, `${id}: ${width}px`);
     }
   } finally {
     await browser.close();

@@ -23,8 +23,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   grows from its size's container height, which is now a minimum, and it never
   grows wider than its parent. A label that fits renders at the same size as
   before; 4dp of block padding keeps wrapped lines off the edges. Circle
-  buttons, FABs, extended FABs, the chip delete button, carousel dots, and
-  buttons in button groups, split buttons, toolbars, top app bars, dialog and
+  buttons, FABs, extended FABs, the chip delete button, carousel dots, Timepicker
+  AM/PM controls, and buttons in button groups, split buttons, toolbars, top app
+  bars, dialog and
   sheet headers, navigation bars and rails, tabs, pagination and snackbars keep
   one line at a fixed height. The file input trigger grows from its 48dp
   minimum the same way. Dialog action rows drop their own copy of this rule.

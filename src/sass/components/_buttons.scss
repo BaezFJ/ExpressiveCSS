@@ -369,14 +369,14 @@ $_extend-sizes: (
 // minimum, so such a word overflows as it always did.
 //
 // Fixed geometry keeps `nowrap` and the fixed height: `.circle` and the FABs,
-// the extended FAB, the chip's delete button and the carousel's dots, and
-// hosts whose layout assumes one line. Button groups set item widths in
+// the extended FAB, the chip's delete button, the carousel's dots, Timepicker's
+// AM/PM controls, and hosts whose layout assumes one line. Button groups set item widths in
 // script and would rewrap mid-press; a split button's two halves share one
 // height; toolbars, the top app bar, dialog and sheet headers, navigation
 // bars and rails, tabs, pagination and snackbar actions are fixed-height
 // slots. `:where()` keeps the whole rule at zero specificity; it only has to
 // come after the base rule above, whose `height` and `nowrap` it replaces.
-$_fixed: ".circle, .extend, .indicator-item, .chip .close, :is(.button-group, .split-button, .toolbar, .navigation-bar, .navigation-rail, .snackbar) > *, header > :is(nav, .bar) > *, :is(.pagination, .tabs, .snackbar > nav, dialog > header) *";
+$_fixed: ".circle, .extend, .indicator-item, .chip .close, :is(.timepicker-container, .time-picker-container) :is(.am-btn, .pm-btn), :is(.button-group, .split-button, .toolbar, .navigation-bar, .navigation-rail, .snackbar) > *, header > :is(nav, .bar) > *, :is(.pagination, .tabs, .snackbar > nav, dialog > header) *";
 
 :where(#{$_btn}):where(:not(#{$_fixed})) {
   height: auto;
