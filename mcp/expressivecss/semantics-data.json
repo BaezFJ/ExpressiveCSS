@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "generatedBy": "mcp/expressivecss/scripts/sync-guides.mjs",
-  "frameworkVersion": "0.9.1",
+  "frameworkVersion": "0.10.1",
   "semantics": {
     "about": "Normative HTML semantics for ExpressiveCSS. This data file is the single source of truth: SEMANTICS.md is generated from it by scripts/gen-semantics.mjs, and tests/semantics.test.js enforces it. One row per roster entry, each stating its kind - component, foundation or behavior, as CONTEXT.md defines them. CONTEXT.md defines the rest of the vocabulary.",
     "scope": "Element choice, landmark structure, and the ARIA that element choice implies. Keyboard interaction, focus management and colour contrast are deliberately out of scope.",
@@ -551,11 +551,6 @@
             "message": "Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten."
           }
         ]
-      },
-      "floating-sheet": {
-        "status": "enforced",
-        "note": "A <dialog>, so the dialog rules carry it.",
-        "rules": []
       },
       "forms/checkboxes": {
         "status": "enforced",

@@ -5,13 +5,13 @@ Lightbox for enlarge-on-click images.
 
 Component ID: `lightbox`
 
-[Component documentation](https://www.expressivecss.com/media.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/media.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/media.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/media.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -39,7 +39,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Unreleased source supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. Shared ancestor overflow remains visible until the last open Lightbox releases it. This does not supply a modal-gallery focus contract. Published 0.9.1 does not include these repairs.
+Lightbox supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. Shared ancestor overflow remains visible until the last open Lightbox releases it. This does not supply a modal-gallery focus contract.
 
 Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
 

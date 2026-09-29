@@ -5,13 +5,13 @@ Optional content and actions, without interrupting the main view.
 
 Component ID: `side-sheet`
 
-[Component documentation](https://www.expressivecss.com/side-sheet.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/side-sheet.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/side-sheet.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/side-sheet.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -44,7 +44,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to the side. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.
 
-Docking is logical: `.start`, `.left` and `.left-sheet` use the start edge; the default, `.right` and `.right-sheet` use the end edge. In unreleased source, drag direction, inner-edge hit testing, modal corners and opening motion follow computed RTL direction. Headings and actions wrap; the body scrolls independently. Shared sheet dragging ignores secondary-pointer cancellation and resets when a sheet closes, is removed, or a primary press starts elsewhere. Dismissal thresholds are unchanged. Keep an explicit close control; native zoom, assistive technology and physical-device review remain pending.
+Docking is logical: `.start`, `.left` and `.left-sheet` use the start edge; the default, `.right` and `.right-sheet` use the end edge. Drag direction, inner-edge hit testing, modal corners and opening motion follow computed RTL direction. Headings and actions wrap; the body scrolls independently. Shared sheet dragging ignores secondary-pointer cancellation and resets when a sheet closes, is removed, or a primary press starts elsewhere. Dismissal thresholds are unchanged. Keep an explicit close control; native zoom, assistive technology and physical-device review remain pending.
 
 #### Syntax
 

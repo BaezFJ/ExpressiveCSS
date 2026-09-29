@@ -5,13 +5,13 @@ Small blocks for contacts, tags, and filters.
 
 Component ID: `chips`
 
-[Component documentation](https://www.expressivecss.com/chips.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/chips.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/chips.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/chips.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -74,6 +74,31 @@ A chip is a `.chip`, and **the element says which kind it is** — the four Mate
   </button>
 </span>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | Array | `[]` | Initial chips. Each item is a chip data object. |
+| `placeholder` | String | `''` | Placeholder when there are no chips. Requires `allowUserInput`. |
+| `secondaryPlaceholder` | String | `''` | Placeholder after at least one chip exists. |
+| `closeIconClass` | String | `'material-symbols'` | Class on the icon inside the delete button. |
+| `allowUserInput` | Boolean | `false` | If true, render a text field and a delete button per chip, so the user can add and remove chips. |
+| `i18n` | Object | `{ remove: 'Remove' }` | Strings the component generates. `remove` prefixes the delete button's accessible name, giving "Remove Apple". |
+| `autocompleteOptions` | Object | `{}` | Options passed to Autocomplete on the input. A non-empty object enables autocomplete. |
+| `autocompleteOnly` | Boolean | `false` | If true, Enter will not add a value that is not in the autocomplete list. |
+| `limit` | Number | `Infinity` | Maximum number of chips. |
+| `onChipAdd` | Function | `null` | Called after a chip is added. Receives the container and the chip element. |
+| `onChipSelect` | Function | `null` | Called when a chip is selected. Receives the container and the chip element. |
+| `onChipDelete` | Function | `null` | Called after a chip is deleted. Receives the container and the chip element. |
+
+#### Methods
+
+- `.addChip()`: Add a chip. Ignored if `id` is missing, already present, or the limit is reached.
+- `.deleteChip()`: Delete the chip at this index.
+- `.selectChip()`: Focus the chip at this index.
+- `.getData()`: The current chips as an array of chip data objects.
+- `.destroy()`: Destroy the plugin instance, remove rendered chips, and tear down its event handlers.
 
 #### Rules
 

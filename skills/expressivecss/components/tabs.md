@@ -5,13 +5,13 @@ Material Design 3 tabs, from the HTML.
 
 Component ID: `tabs`
 
-[Component documentation](https://www.expressivecss.com/tabs.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/tabs.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/tabs.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/tabs.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -70,6 +70,21 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 <div id="luggage">Luggage</div>
 <div id="explore">Explore</div>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `duration` | Number | `300` | Indicator transition duration, in milliseconds. |
+| `onShow` | Function | `null` | Called when a new tab panel is shown. Receives the panel element. |
+| `swipeable` | Boolean | `false` | Enable swipeable tabs. Uses `responsiveThreshold`. Wraps the panels in a carousel. |
+| `responsiveThreshold` | Number | `Infinity` | Maximum viewport width, in pixels, at which swipeable mode starts. Wider viewports stay non-swipeable. |
+
+#### Methods
+
+- `.select()`: Show the panel that belongs to the tab with this id. Panel IDs are matched literally, including numeric IDs and IDs containing dots, colons or brackets, in normal and swipeable modes.
+- `.updateTabIndicator()`: Recalculate the indicator position. Useful if the bar was hidden or resized.
+- `.destroy()`: Destroy the plugin instance and tear down its event handlers.
 
 #### Rules
 

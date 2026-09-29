@@ -5,13 +5,13 @@ Material Design 3 snackbars, from the HTML.
 
 Component ID: `snackbar`
 
-[Component documentation](https://www.expressivecss.com/snackbar.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/snackbar.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/snackbar.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/snackbar.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -43,7 +43,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Unreleased source makes snackbars with an action persistent and dismissible by default. Escape dismisses a focused snackbar; closing restores focus only when it remains inside the bar. Explicit finite timers still pause during focus or hover. Published 0.9.1 does not include these changes.
+Snackbars with an action are persistent and dismissible by default. Escape dismisses a focused snackbar; closing restores focus only when it remains inside the bar. Explicit finite timers still pause during focus or hover.
 
 Material Design 3 snackbars, from the HTML.
 
@@ -66,6 +66,28 @@ new Expressive.Snackbar({
   dismissible: true
 });
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `text` | String | `''` | Plain-text supporting text, wrapped in a `<p>`. If set, it replaces any HTML from `snackbarId`. |
+| `action` | String | `''` | Optional action label. Rendered as a trailing text button. |
+| `onAction` | Function | `null` | Called when the action button is pressed. The snackbar still dismisses. |
+| `dismissible` | Boolean | `false`, or `true` with an action | Show a trailing close icon button. An explicit false is preserved. |
+| `snackbarId` | String | — | Id of a `<template>` (or another element) used as the snackbar body. |
+| `displayLength` | Number | `4000` | Default 4000ms without an action, or Infinity with an action. Explicit finite timers need equivalent persistent feedback in the application. |
+| `inDuration` | Number | `300` | Enter transition duration, in milliseconds. |
+| `outDuration` | Number | `375` | Exit transition duration, in milliseconds. |
+| `classes` | String | `''` | Space-separated classes added to the snackbar. `rounded` is a stadium. `top` moves the bar off the bottom. |
+| `completeCallback` | Function | `null` | Called when the snackbar is dismissed. |
+| `activationPercent` | Number | `0.8` | Fraction of the snackbar’s width a drag must travel to dismiss it. |
+| `root` | Element | `null` | Any element in the tree the snackbar should render into. Pass one when the page lives in a shadow root, so the container is appended there rather than to `document.body`. |
+
+#### Methods
+
+- `.dismiss()`: Dismiss this snackbar with its exit animation. Runs `completeCallback` when the animation finishes.
+- `Snackbar.dismissAll()`: Dismiss every snackbar that is currently showing.
 
 #### Rules
 

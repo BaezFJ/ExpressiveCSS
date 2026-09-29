@@ -10,7 +10,8 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "expressivecss-mcp": "server.js"
+    "expressivecss-mcp": "server.js",
+    "expressivecss-lint": "lint.mjs"
   },
   "main": "server.js",
   "engines": {
@@ -22,6 +23,7 @@
   },
   "files": [
     "server.js",
+    "lint.mjs",
     "component-guides.json",
     "component-decisions.json",
     "capability-roadmap.json",
@@ -38,8 +40,8 @@
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
-    "jsdom": "^30.0.1",
-    "zod": "^4.6.2"
+    "jsdom": "^30.1.1",
+    "zod": "^4.6.5"
   },
   "overrides": {
     "qs": "6.16.0"

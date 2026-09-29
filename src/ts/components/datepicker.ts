@@ -348,13 +348,18 @@ export class Datepicker extends Component<DatepickerOptions> {
     if (this.options.maxDate) this.options.maxDate.setHours(0, 0, 0, 0);
 
     this.id = Utils.guid();
+    if (this.options.isMultipleSelection) {
+      this.multiple = true;
+      this.dates = [];
+      this.dateEls = [el];
+    }
 
     this._setupVariables();
     this._insertHTMLIntoDOM();
     this._setupEventHandlers();
 
     if (!this.options.defaultDate) {
-      this.options.defaultDate = new Date(Date.parse(this.el.value));
+      this.options.defaultDate = Datepicker._parseDate(this.el.value);
     }
 
     const defDate = this.options.defaultDate;
@@ -377,12 +382,6 @@ export class Datepicker extends Component<DatepickerOptions> {
           this.setInputValue(this.endDateEl, defEndDate);
         }
       }
-    }
-    if (this.options.isMultipleSelection) {
-      this.multiple = true;
-      this.dates = [];
-      this.dateEls = [];
-      this.dateEls.push(el);
     }
     if (this.options.displayPlugin) {
       if (this.options.displayPlugin === 'docked') this.displayPlugin = DockedDisplayPlugin.init(this.el, this.containerEl, this.options.displayPluginOptions);
@@ -442,6 +441,14 @@ export class Datepicker extends Component<DatepickerOptions> {
     return /Date/.test(Object.prototype.toString.call(obj)) && !isNaN(obj.getTime());
   }
 
+  private static _parseDate(value: string): Date {
+    value = value.trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return new Date(Date.parse(value));
+    // An ISO time without an offset is local. Reject days that roll into the next month.
+    const date = new Date(value + 'T00:00:00');
+    return date.getDate() === Number(value.slice(-2)) ? date : new Date(NaN);
+  }
+
   static _isWeekend(date) {
     const day = date.getDay();
     return day === 0 || day === 6;
@@ -484,6 +491,8 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   destroy() {
     this._removeEventHandlers();
+    this.dateEls?.slice(1).forEach(input => this._removeDateInput(input));
+    if (!this.options.dateRangeEndEl && this.endDateEl) this._removeDateInput(this.endDateEl);
     this.displayPlugin?.destroy();
     this.containerEl.remove();
     this.destroySelects();
@@ -593,7 +602,7 @@ export class Datepicker extends Component<DatepickerOptions> {
    * Sets date from input field.
    */
   setDateFromInput(el: HTMLInputElement) {
-    const date = new Date(Date.parse(el.value));
+    const date = Datepicker._parseDate(el.value);
     this.setDate(date, false, el == this.endDateEl, true);
   }
 
@@ -614,9 +623,9 @@ export class Datepicker extends Component<DatepickerOptions> {
     if (!selectedDate) {
       return;
     }
+    Datepicker._setToStartOfDay(selectedDate);
     if (!this.options.isMultipleSelection) this.setSingleDate(selectedDate, isEndDate);
     else if (!fromUserInput) this.setMultiDate(selectedDate);
-    Datepicker._setToStartOfDay(selectedDate);
     this.gotoDate(selectedDate);
     if (!preventOnSelect && typeof this.options.onSelect === 'function') {
       this.options.onSelect.call(this, selectedDate);
@@ -629,7 +638,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       return this.draw();
     }
     if (typeof date === 'string') {
-      date = new Date(Date.parse(date));
+      date = Datepicker._parseDate(date);
     }
     if (!Datepicker._isDate(date)) {
       return;
@@ -695,29 +704,21 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   setMultipleSelectionInputValues() {
-    const dateElsArr = Array.from(this.dateEls).filter((el, index) => {
-      if (index > this.dates.length - 1) return el;
-    });
-    dateElsArr.forEach((el) => {
-      el.remove();
-    });
-    this.dates.forEach((date: Date, index: number) => {
-      if (Array.from(this.dateEls)[index]) {
-        this.setInputValue(this.dateEls[index], date);
-        return;
-      }
-
-      const dateEl = this.createDateInput();
-      this.setInputValue(dateEl, date);
-      this.dateEls.push(dateEl);
-    });
+    const count = Math.max(1, this.dates.length);
+    for (const input of this.dateEls.splice(count)) this._removeDateInput(input);
+    while (this.dateEls.length < count) this.dateEls.push(this.createDateInput());
+    this.dateEls.forEach((input, index) => this.setInputValue(input, this.dates[index] ?? null));
   }
 
   /**
    * Sets given date as the input value on the given element.
    */
   setInputValue(el, date) {
-    if (el.type == 'date') {
+    if (!el) return;
+    if (!Datepicker._isDate(date)) {
+      el.value = '';
+      if (el.type === 'date') el.setAttribute('data-date', '');
+    } else if (el.type == 'date') {
       this.setDataDate(el, date);
       el.value = this.formatDate(date, 'yyyy-mm-dd');
     } else {
@@ -1294,6 +1295,9 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.el.addEventListener('click', this._handleInputClick);
     this.el.addEventListener('keydown', this._handleInputKeydown);
     this.el.addEventListener('change', this._handleInputChange);
+    this.endDateEl?.addEventListener('click', this._handleInputClick);
+    this.endDateEl?.addEventListener('keydown', this._handleInputKeydown);
+    this.endDateEl?.addEventListener('change', this._handleInputChange);
     this.calendarEl.addEventListener('click', this._handleCalendarClick);
     this.calendarEl.addEventListener('keydown', this._handleCalendarKeydown);
     this.calendarEl.addEventListener('focusin', this._handleCalendarFocus);
@@ -1358,17 +1362,26 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   _removeEventHandlers() {
-    this.el.removeEventListener('click', this._handleInputClick);
-    this.el.removeEventListener('keydown', this._handleInputKeydown);
-    this.el.removeEventListener('change', this._handleInputChange);
+    for (const input of this.dateEls ?? [this.el]) this._removeInputEventHandlers(input);
     this.calendarEl.removeEventListener('click', this._handleCalendarClick);
     this.calendarEl.removeEventListener('keydown', this._handleCalendarKeydown);
     this.calendarEl.removeEventListener('focusin', this._handleCalendarFocus);
     if (this.options.isDateRange && this.endDateEl) {
-      this.endDateEl.removeEventListener('click', this._handleInputClick);
-      this.endDateEl.removeEventListener('keydown', this._handleInputKeydown);
-      this.endDateEl.removeEventListener('change', this._handleInputChange);
+      this._removeInputEventHandlers(this.endDateEl);
     }
+  }
+
+  private _removeInputEventHandlers(input: HTMLInputElement) {
+    input.removeEventListener('click', this._handleInputClick);
+    input.removeEventListener('keydown', this._handleInputKeydown);
+    input.removeEventListener('change', this._handleInputChange);
+  }
+
+  private _removeDateInput(input: HTMLInputElement) {
+    const focused = (input.getRootNode() as Document | ShadowRoot).activeElement === input;
+    this._removeInputEventHandlers(input);
+    input.remove();
+    if (focused && document.activeElement === document.body) this.el.focus();
   }
 
   _handleInputClick = (e) => {
@@ -1514,6 +1527,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   _clearDates = () => {
     this.date = null;
     this.endDate = null;
+    this.dates?.splice(0);
     this.draw();
   };
 
@@ -1556,9 +1570,10 @@ export class Datepicker extends Component<DatepickerOptions> {
           : this.options.format
       );
     } else {
-      date = new Date(Date.parse((e.target as HTMLInputElement).value));
+      date = Datepicker._parseDate((e.target as HTMLInputElement).value);
     }
     if (Datepicker._isDate(date)) {
+      if (el == this.endDateEl && date < this.date) return this.setInputValue(el, this.endDate);
       this.setDate(date, false, el == this.endDateEl, true);
       if (e.type == 'date') {
         this.setDataDate(e, date);

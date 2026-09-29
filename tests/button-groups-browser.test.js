@@ -241,3 +241,124 @@ browserTest('keyboard press changes icon widths and rendered corners', async () 
     await browser.close();
   }
 });
+
+browserTest('selection-required skips disabled controls and preserves a selection', async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`
+      <style>${css}</style>
+      <div id="group" class="button-group connected" data-selection="single" data-selection-required>
+        <button id="native-disabled" type="button" class="button tonal" aria-pressed="false" disabled>Day</button>
+        <button id="aria-disabled" type="button" class="button tonal" aria-pressed="false" aria-disabled="true">Week</button>
+        <button id="class-disabled" type="button" class="button tonal disabled" aria-pressed="false">Month</button>
+        <button id="selected" type="button" class="button tonal" aria-pressed="false">Quarter</button>
+        <button id="other" type="button" class="button tonal" aria-pressed="false">Year</button>
+      </div>
+      <div id="optional" class="button-group connected" data-selection="single">
+        <button id="optional-one" type="button" class="button tonal" aria-pressed="false">List</button>
+        <button type="button" class="button tonal" aria-pressed="false">Grid</button>
+      </div>
+    `);
+    await page.addScriptTag({ content: js });
+    await page.evaluate(() => window.Expressive.AutoInit());
+
+    const states = () => page.locator('#group > button').evaluateAll((buttons) =>
+      buttons.map((button) => button.getAttribute('aria-pressed'))
+    );
+    assert.deepEqual(await states(), ['false', 'false', 'false', 'true', 'false']);
+
+    await page.evaluate(() => {
+      for (const id of ['native-disabled', 'aria-disabled', 'class-disabled']) {
+        const button = document.getElementById(id);
+        button.click();
+        button.dispatchEvent(new PointerEvent('pointerdown', { button: 0, bubbles: true }));
+      }
+    });
+    assert.deepEqual(await states(), ['false', 'false', 'false', 'true', 'false']);
+    assert.equal(await page.locator('.button-group-pressed').count(), 0);
+
+    await page.locator('#selected').click();
+    assert.deepEqual(await states(), ['false', 'false', 'false', 'true', 'false']);
+    await page.locator('#other').click();
+    assert.deepEqual(await states(), ['false', 'false', 'false', 'false', 'true']);
+
+    const optionalStates = () => page.locator('#optional > button').evaluateAll((buttons) =>
+      buttons.map((button) => button.getAttribute('aria-pressed'))
+    );
+    assert.deepEqual(await optionalStates(), ['false', 'false']);
+    await page.locator('#optional-one').click();
+    assert.deepEqual(await optionalStates(), ['true', 'false']);
+    await page.locator('#optional-one').click();
+    assert.deepEqual(await optionalStates(), ['false', 'false']);
+  } finally {
+    await browser.close();
+  }
+});
+
+browserTest('connected translated labels remain reachable in a constrained scroller', async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 320, height: 600 } });
+    await page.setContent(`
+      <style>${css}</style>
+      <main id="scroller" style="width: 300px; overflow-x: auto; padding: 5px">
+        <div id="group" class="button-group connected" data-selection="single">
+          <button id="first" type="button" class="button tonal" aria-pressed="true">An vorheriger Position ausrichten</button>
+          <button type="button" class="button tonal" aria-pressed="false">An der Mitte des Inhalts ausrichten</button>
+          <button id="last" type="button" class="button tonal" aria-pressed="false">An nächster Position ausrichten</button>
+        </div>
+      </main>
+    `);
+
+    const geometry = await page.evaluate(() => {
+      const scroller = document.querySelector('#scroller');
+      const group = document.querySelector('#group');
+      const buttons = [...group.children];
+      return {
+        pageOverflow: document.documentElement.scrollWidth - innerWidth,
+        scrollable: scroller.scrollWidth > scroller.clientWidth,
+        groupWidth: group.getBoundingClientRect().width,
+        widths: buttons.map((button) => button.getBoundingClientRect().width),
+        labelsFit: buttons.every((button) => button.scrollWidth <= button.clientWidth),
+        labelsStayOnOneLine: buttons.every((button) => getComputedStyle(button).whiteSpace === 'nowrap')
+      };
+    });
+    assert.equal(geometry.pageOverflow, 0);
+    assert.equal(geometry.scrollable, true);
+    assert.equal(geometry.labelsFit, true);
+    assert.equal(geometry.labelsStayOnOneLine, true);
+    assert.ok(geometry.groupWidth > 300);
+    assert.ok(Math.max(...geometry.widths) - Math.min(...geometry.widths) < 1);
+
+    const focusedOutline = () => page.evaluate(() => {
+      const scroller = document.querySelector('#scroller');
+      const viewport = scroller.getBoundingClientRect();
+      const button = document.activeElement;
+      const bounds = button.getBoundingClientRect();
+      const style = getComputedStyle(button);
+      const inset = parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset);
+      return {
+        id: button.id,
+        outlineWidth: style.outlineWidth,
+        outlineOffset: style.outlineOffset,
+        fits: bounds.left - inset >= viewport.left - 0.5
+          && bounds.right + inset <= viewport.right + 0.5
+          && bounds.top - inset >= viewport.top - 0.5
+          && bounds.bottom + inset <= viewport.bottom + 0.5
+      };
+    });
+
+    await page.keyboard.press('Tab');
+    assert.deepEqual(await focusedOutline(), {
+      id: 'first', outlineWidth: '3px', outlineOffset: '2px', fits: true
+    });
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    assert.deepEqual(await focusedOutline(), {
+      id: 'last', outlineWidth: '3px', outlineOffset: '2px', fits: true
+    });
+  } finally {
+    await browser.close();
+  }
+});

@@ -145,6 +145,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         await page.evaluate(() => window.oldRow.click());
         assert.equal(await page.evaluate(() => window.changes), 0);
         await page.locator('input[role="combobox"]').click();
+        await expect(page.locator('menu').getByRole('option', { name: 'Updated', exact: true })).toBeFocused();
         await page.locator('menu').getByRole('option', { name: 'Alpha', exact: true }).press('Enter');
         assert.equal(await page.evaluate(() => window.changes), 1);
         await page.evaluate(() => {
@@ -457,6 +458,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
 }
 assert.ok(!process.env.EXPRESSIVECSS_TEST_BROWSER || ['chromium', 'firefox', 'webkit'].includes(process.env.EXPRESSIVECSS_TEST_BROWSER));
 const sheetMarkup = `<dialog aria-labelledby="title"><header><h2 id="title">Details</h2><form method="dialog"><button aria-label="Close">×</button></form></header><div id="body"><p>Supporting content</p></div><form method="dialog"><button id="save">Save</button><button disabled>Unavailable</button></form></dialog>`;
+const longSheetMarkup = `<dialog aria-labelledby="long-title"><h2 id="long-title">Notification preferences</h2><div id="long-body"><p>${'Review each setting before saving your changes. '.repeat(80)}</p></div><form method="dialog"><button id="save-long" value="save">Save notification preferences</button><button id="cancel-long" class="outlined" value="cancel">Cancel</button></form></dialog>`;
 
 async function sheetFixture(page, { variant = 'side-sheet', direction = 'ltr', modal = true, motion = 'reduce' } = {}) {
   await page.goto('about:blank');
@@ -631,6 +633,60 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     } finally { await browser.close(); }
   });
 
+  browserTest(`Bottom sheets keep long content and actions reachable at compact widths (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await browser.newPage();
+      const variant = 'bottom-sheet';
+      for (const width of [320, 599]) for (const modal of [false, true]) {
+        await page.setViewportSize({ width, height: 640 });
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.setContent(`<style>${css}</style>${longSheetMarkup}`);
+        await page.evaluate(({ variant, modal }) => {
+          document.documentElement.style.fontSize = '200%';
+          const dialog = document.querySelector('dialog');
+          dialog.className = variant;
+          modal ? dialog.showModal() : dialog.show();
+        }, { variant, modal });
+        const result = await page.locator('#long-body').evaluate(body => {
+          body.scrollTop = body.scrollHeight;
+          const dialog = body.closest('dialog'), title = dialog.querySelector('h2');
+          return {
+            scrollable: body.scrollHeight > body.clientHeight,
+            scrolled: body.scrollTop > 0,
+            overflow: Math.max(document.documentElement.scrollWidth - innerWidth, dialog.scrollWidth - dialog.clientWidth, body.scrollWidth - body.clientWidth),
+            titleClipped: title.scrollWidth > title.clientWidth || title.scrollHeight > title.clientHeight,
+          };
+        });
+        const label = `${variant} ${width}px ${modal ? 'modal' : 'standard'}`;
+        assert.ok(result.scrollable && result.scrolled, `${label} body scrolls`);
+        assert.ok(result.overflow <= 1, `${label} has no horizontal overflow`);
+        assert.equal(result.titleClipped, false, `${label} enlarged heading is not clipped`);
+        for (const id of ['#save-long', '#cancel-long']) {
+          assert.ok(await page.locator(id).evaluate(button => {
+            const rect = button.getBoundingClientRect();
+            return rect.left >= 0 && rect.right <= innerWidth && rect.top >= 0 && rect.bottom <= innerHeight
+              && button.scrollWidth <= button.clientWidth && button.scrollHeight <= button.clientHeight
+              && button.contains(document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2));
+          }), `${label} ${id} is visible, unclipped and unobscured`);
+        }
+        await page.locator('#save-long').focus();
+        await expect(page.locator('#save-long')).toBeFocused();
+        await page.keyboard.press('Tab');
+        await expect(page.locator('#cancel-long')).toBeFocused();
+        await page.keyboard.press('Enter');
+        await expect(page.locator('dialog')).not.toBeVisible();
+      }
+      await page.setContent(`<style>${css}</style><dialog class="${variant}" open><form method="dialog"><button class="icon-button xsmall" aria-label="Compact"><span class="material-symbols" aria-hidden="true">close</span></button><button class="icon-button xlarge" aria-label="Large"><span class="material-symbols" aria-hidden="true">close</span></button><button class="circle extra medium" aria-label="Create"><span class="material-symbols" aria-hidden="true">add</span></button><button class="extend medium"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button></form></dialog>`);
+      const geometry = await page.locator('form > button').evaluateAll(buttons => buttons.map(button => {
+        const { width, height } = button.getBoundingClientRect();
+        return { width, height };
+      }));
+      assert.deepEqual(geometry.map(({ height }) => height), [32, 136, 80, 80], `${variant} preserves self-sized action heights`);
+      assert.deepEqual(geometry.slice(0, 3).map(({ width, height }) => [width, height]), [[32, 32], [136, 136], [80, 80]], `${variant} preserves square action controls`);
+    } finally { await browser.close(); }
+  });
+
   browserTest(`Carousel navigation scrolls and focuses logical items (${engine})`, async () => {
     const browser = await type.launch();
     let page;
@@ -708,6 +764,34 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         }
         await page.evaluate(() => carousel.destroy());
       }
+    } finally { try { await page?.evaluate(() => window.carousel?.destroy()); } finally { await browser.close(); } }
+  });
+
+  browserTest(`Carousel ignores stale scrollend during a newer navigation (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ reducedMotion: 'no-preference' });
+      await page.setContent(`<style>${css}</style><div class="carousel flat" style="width:320px">
+        <article class="carousel-item">One</article><article class="carousel-item">Two</article><article class="carousel-item active">Three</article></div>`);
+      await page.addScriptTag({ content: js });
+      const pending = await page.evaluate(() => {
+        window.carousel = Expressive.Carousel.init(document.querySelector('.carousel'), { duration: 0 });
+        const track = document.querySelector('.carousel-track'), scrollTo = track.scrollTo;
+        let requested;
+        // Deliver the previous scroll's completion before the new scroll moves.
+        track.scrollTo = options => { requested = options; };
+        try {
+          carousel.set(1);
+          track.dispatchEvent(new Event('scrollend'));
+          return { ignoring: carousel._ignoreScroll, current: carousel.center, nearest: carousel._nearestIndex() };
+        } finally {
+          track.scrollTo = scrollTo;
+          scrollTo.call(track, requested);
+        }
+      });
+      assert.deepEqual(pending, { ignoring: true, current: 1, nearest: 2 });
+      await expect.poll(() => page.evaluate(() => ({ current: carousel.center, nearest: carousel._nearestIndex(), ignoring: carousel._ignoreScroll }))).toEqual({ current: 1, nearest: 1, ignoring: false });
     } finally { try { await page?.evaluate(() => window.carousel?.destroy()); } finally { await browser.close(); } }
   });
 
@@ -1478,6 +1562,54 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         assert.deepEqual(await page.evaluate(() => ({ shown, index: tabs.index, panel: tabs._content.id })), { shown: ['two', 'three'], index: 2, panel: 'three' });
         await expect(page.locator('#three')).toHaveClass(/active/);
         await page.evaluate(() => tabs.destroy());
+      }
+    } finally {
+      try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }
+    }
+  });
+
+  browserTest(`Tabs resolve literal panel IDs in normal and swipeable modes (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      const ids = ['123', 'panel.dot', 'panel:details', 'panel[x]'];
+      for (const swipeable of [false, true]) {
+        await page.goto('about:blank#panel:details');
+        await page.setContent(`<style>${css}</style><main style="width:320px">
+          <nav class="tabs">${ids.map((id, index) => `<a href="#${id}">Section ${index}</a>`).join('')}</nav>
+          ${ids.map(id => `<section id="${id}" style="min-height:160px">${id}</section>`).join('')}
+          <aside id="panel" class="dot" x>Decoy</aside></main>`);
+        await page.addScriptTag({ content: js });
+        await page.evaluate(swipeable => {
+          window.shown = [];
+          window.panelState = () => [...document.querySelectorAll('section, aside')].map(el => ({ id: el.id, style: el.style.cssText, classes: el.className, parent: el.parentElement.tagName }));
+          window.original = panelState();
+          window.tabs = Expressive.Tabs.init(document.querySelector('nav'), { swipeable, duration: 0, onShow: panel => shown.push(panel.id) });
+        }, swipeable);
+        assert.equal(await page.evaluate(() => tabs._content.id), 'panel:details');
+        assert.deepEqual(await page.evaluate(() => shown), []);
+        if (swipeable) await page.waitForTimeout(450);
+        for (const [index, id] of ids.entries()) {
+          if (index % 2) await page.getByRole('link', { name: `Section ${index}` }).click();
+          else await page.evaluate(id => tabs.select(id), id);
+          await expect(page.locator('section.active')).toHaveAttribute('id', id);
+          await expect(page.locator('a[aria-current="page"]')).toHaveAttribute('href', '#' + id);
+          assert.equal(await page.evaluate(() => tabs._content.id), id);
+          assert.deepEqual(await page.evaluate(() => shown), ids.slice(0, index + 1));
+        }
+        await expect(page.locator('aside')).toBeVisible();
+        await expect(page.locator('aside')).toHaveClass('dot');
+        await page.evaluate(() => tabs.destroy());
+        assert.deepEqual(await page.evaluate(() => panelState()), await page.evaluate(() => original));
+        await expect(page.locator('.tabs-content, .indicator')).toHaveCount(0);
+        await page.evaluate(swipeable => {
+          tabs = Expressive.Tabs.init(document.querySelector('nav'), { swipeable, duration: 0 });
+          tabs.select('panel.dot');
+        }, swipeable);
+        await expect(page.locator('section.active')).toHaveAttribute('id', 'panel.dot');
+        await page.evaluate(() => tabs.destroy());
+        assert.deepEqual(await page.evaluate(() => panelState()), await page.evaluate(() => original));
       }
     } finally {
       try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }

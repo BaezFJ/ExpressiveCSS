@@ -1,6 +1,6 @@
 # ExpressiveCSS helper-class reference
 
-Read this after the Usage guide when a task needs spacing, alignment, visibility, formatting, responsive media, or elevation helpers. Reuse the root guide's installed-version resolution. The [target-version Helpers documentation](https://www.expressivecss.com/helpers.html.md), [Shadow documentation](https://www.expressivecss.com/shadow.html.md), [helper Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_helpers.scss), [spacing Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_spacing.scss), [visibility Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_visibility.scss), and [elevation Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/abstracts/_elevation.scss) override this summary if they differ.
+Read this after the Usage guide when a task needs spacing, flex layout, alignment, visibility, formatting, responsive media, or elevation helpers. Reuse the root guide's installed-version resolution. The [target-version Helpers documentation](https://www.expressivecss.com/helpers.html.md), [Shadow documentation](https://www.expressivecss.com/shadow.html.md), [helper Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_helpers.scss), [spacing Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_spacing.scss), [visibility Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_visibility.scss), and [elevation Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/abstracts/_elevation.scss) override this summary if they differ.
 
 ## Agent procedure
 
@@ -39,6 +39,8 @@ Examples: `.m-0`, `.mt-4`, `.mx-auto`, `.p-3`, `.py-2`, `.pl-6`.
   <p class="my-0">Body</p>
 </section>
 ```
+
+`.gap-0` to `.gap-6` set `gap` on the same scale for a flex or grid container; there is no `.gap-auto`.
 
 All generated spacing declarations use `!important`, so they intentionally beat component declarations. `auto` is meaningful for margin only; do not use `.p-auto`, `.pt-auto`, or another padding-auto form because CSS rejects `padding: auto`. The `l` and `r` forms are physical directions; use application CSS with logical properties when spacing must mirror in RTL.
 
@@ -102,6 +104,31 @@ Never use display hiding as the only way to provide required content or actions.
   <p class="my-0">Vertically centered content</p>
 </div>
 ```
+
+## Flex helpers
+
+Apply one class per declaration to the container. Row direction and start alignment are the flex defaults and have no class. `.flex-1` and `.flex-none` go on a child.
+
+| Class | Declaration | Use carefully |
+| --- | --- | --- |
+| `.flex` | `display: flex` | Changes the container's display; children lose block margins collapsing. |
+| `.inline-flex` | `display: inline-flex` | For a control-sized container inside text. |
+| `.flex-column` | `flex-direction: column` | Vertical stacks; `.justify-*` then works on the vertical axis. |
+| `.flex-wrap` | `flex-wrap: wrap` | Required for chip sets and action rows that must reflow on Compact. |
+| `.justify-start`, `.justify-center`, `.justify-end`, `.justify-between` | `justify-content` | `flex-start`/`flex-end` follow writing direction and mirror in RTL. |
+| `.align-start`, `.align-center`, `.align-end`, `.align-stretch` | `align-items` | `.align-center` on the container is the same as `.valign-wrapper`. |
+| `.flex-1` | `flex: 1 1 0` | The child takes remaining space; add `min-width: 0` in app CSS if its text must truncate. |
+| `.flex-none` | `flex: none` | The child keeps its content size. |
+| `.gap-0` to `.gap-6` | `gap`, `!important` | Spacing scale above; use `.g-*` on `.row` instead. |
+
+```html
+<div class="flex align-center justify-between gap-3">
+  <h2 class="title-medium my-0">Members</h2>
+  <button type="button" class="tonal">Invite</button>
+</div>
+```
+
+Components that already lay out their children (app bars, toolbars, card `.actions`, button groups, navigation bars) do not need these classes. Reach for `.row` and column spans when the layout has more than one line of content; use flex helpers for one line of controls or a stack.
 
 ## Shape and text helpers
 
@@ -177,6 +204,7 @@ Apply `.browser-default` to an `<input>` or `<select>` when the target-version c
 - Physical left/right spacing and alignment are checked in RTL.
 - Show helpers pair with `.hide` when the content should be absent outside the show range.
 - A forced `display: block` does not break flex, grid, inline, or table layout.
+- Flex containers that hold wrapping content carry `.flex-wrap`, and one-line rows are checked with long labels.
 - Hidden content is not the only copy of required information or actions.
 - Truncated text remains available when users need the full value.
 - Utility `!important` rules do not accidentally erase component spacing.

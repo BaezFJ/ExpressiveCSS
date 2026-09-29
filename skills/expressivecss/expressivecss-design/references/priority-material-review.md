@@ -2,7 +2,7 @@
 
 Reviewed on 2026-09-13 against Google's rendered Overview, Specs, Guidelines, and Accessibility prose for the seven components below. This review covers named requirements, not full component parity. Collapsed token tables, image-only measurements, native zoom, and assistive-technology output remain unverified. Google dp measurements are design references; verify the web result in CSS pixels and at text enlargement.
 
-The bundled component guides remain the markup/API authority. These findings do not add framework APIs. The source tooltip fix described below is unreleased; published 0.9.1 does not include it.
+The bundled component guides remain the markup/API authority. These findings do not add framework APIs. Version 0.10.0 includes the tooltip fix described below.
 
 | Component and inspected sources | Reviewed requirement and section | Framework comparison and next check |
 | --- | --- | --- |

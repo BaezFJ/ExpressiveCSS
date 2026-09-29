@@ -251,6 +251,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   _setupEventHandlers() {
     this.el.addEventListener('blur', this._handleInputBlur);
+    this.el.addEventListener('input', this._handleInput);
     this.el.addEventListener('keyup', this._handleInputKeyup);
     this.el.addEventListener('focus', this._handleInputFocus);
     this.el.addEventListener('keydown', this._handleInputKeydown);
@@ -265,6 +266,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   _removeEventHandlers() {
     this.el.removeEventListener('blur', this._handleInputBlur);
+    this.el.removeEventListener('input', this._handleInput);
     this.el.removeEventListener('keyup', this._handleInputKeyup);
     this.el.removeEventListener('focus', this._handleInputFocus);
     this.el.removeEventListener('keydown', this._handleInputKeydown);
@@ -359,19 +361,13 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
   };
 
-  _handleInputKeyup = (e: KeyboardEvent) => {
-    if (e.type === 'keyup') Autocomplete._keydown = false;
+  _handleInputKeyup = () => {
+    Autocomplete._keydown = false;
+  };
+
+  _handleInput = () => {
     this.count = 0;
     const actualValue = this.el.value.toLocaleLowerCase();
-    // Don't capture enter or arrow key usage.
-    if (
-      e.key === Utils.keys.ENTER ||
-      e.key === Utils.keys.ARROW_UP ||
-      e.key === Utils.keys.ARROW_DOWN ||
-      e.key === Utils.keys.ESC ||
-      e.key === 'Tab'
-    )
-      return;
     // Check if the input isn't empty, and that focus arrived by keyboard -
     // which is what `:focus-visible` means, and used to be a global flag this
     // bundle maintained from four capture-phase document listeners.

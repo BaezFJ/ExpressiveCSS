@@ -104,7 +104,7 @@ For custom tooltips and other nonmodal content triggered by hover or focus, appl
 
 Unmodified user-agent presentation is excepted. Native browser tooltips and custom CSS bubbles are not interchangeable for that exception. Test hover and keyboard focus separately, including dismissal without losing focus. Naming or aria-describedby checks alone cannot satisfy these interaction requirements.
 
-Inspect the actual tooltip variant. Published 0.9.1 CSS-only plain tooltips have pointer-events disabled and no own Escape handler; those source facts warrant hoverability and dismissal checks, not a blanket claim of failure or success. Rich and runtime variants need their own evidence. If the chosen path cannot satisfy an applicable condition, record the framework limitation and use persistent supporting text or another verified presentation when appropriate. Do not invent a tooltip API.
+Inspect the actual tooltip variant. Version 0.10.0 CSS-only plain tooltips accept pointer events but have no own Escape handler; those source facts warrant hoverability and dismissal checks, not a blanket claim of failure or success. Rich and runtime variants need their own evidence. If the chosen path cannot satisfy an applicable condition, record the framework limitation and use persistent supporting text or another verified presentation when appropriate. Do not invent a tooltip API.
 
 ## Text-spacing overrides
 

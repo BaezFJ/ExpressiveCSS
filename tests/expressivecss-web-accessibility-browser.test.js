@@ -141,12 +141,12 @@ const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 const engines = { chromium, firefox, webkit };
 if (requested && !Object.hasOwn(engines, requested)) throw new Error('Unknown EXPRESSIVECSS_TEST_BROWSER');
 
-function scenario(name, markup, check) {
+function scenario(name, markup, check, timezoneId) {
   for (const [engine, type] of Object.entries(engines).filter(([name]) => !requested || requested === name)) {
     test(`${engine}: ${name}`, { timeout: 30000 }, async t => {
       if (!existsSync(type.executablePath())) { t.skip(`${engine} is not installed`); return; }
       const browser = await type.launch();
-      const page = await browser.newPage({ viewport: { width: 1000, height: 900 }, reducedMotion: 'reduce' });
+      const page = await browser.newPage({ viewport: { width: 1000, height: 900 }, reducedMotion: 'reduce', timezoneId });
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       page.setDefaultTimeout(4000);
@@ -162,6 +162,206 @@ function scenario(name, markup, check) {
     });
   }
 }
+
+scenario('select exposes only the generated control and restores native accessibility', `
+<button id="before">Before</button><form id="choices"><div class="field"><label for="choice">Choice</label>
+<select id="choice" name="choice" aria-describedby="hint"><option value="one">One</option><option value="two">Two</option></select>
+<small id="hint">Choose an option.</small></div></form><button id="after">After</button>`, async page => {
+  for (const multiple of [false, true]) {
+    await page.evaluate(multiple => {
+      const el = document.querySelector('select');
+      el.multiple = multiple; el.value = 'one';
+      window.instances = [Expressive.FormSelect.init(el, { menuOptions: { inDuration: 0, outDuration: 0 } })];
+    }, multiple);
+    const input = page.getByRole('combobox', { name: 'Choice', exact: true });
+    await expect(page.getByRole('combobox')).toHaveCount(1);
+    await expect(page.getByRole('listbox')).toHaveCount(0);
+    await expect(input).toHaveAccessibleDescription('Choose an option.');
+    if (page.context().browser().browserType().name() === 'chromium') {
+      const session = await page.context().newCDPSession(page);
+      try {
+        const { nodes } = await session.send('Accessibility.getFullAXTree');
+        assert.deepEqual(nodes.filter(node => !node.ignored && ['combobox', 'listbox'].includes(node.role?.value)).map(node => [node.role.value, node.name?.value]), [['combobox', 'Choice']]);
+      } finally { await session.detach(); }
+    }
+    await page.locator('#before').focus();
+    await page.keyboard.press('Tab');
+    await expect(input).toBeFocused();
+    await input.click();
+    await expect(input).toHaveAttribute('aria-expanded', 'true');
+    // Menu installs its temporary keyboard listeners on the next timer turn.
+    await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 0)));
+    await expect(page.getByRole('listbox')).toHaveCount(1);
+    await expect(page.getByRole('option')).toHaveCount(2);
+    await page.getByRole('option', { name: 'Two', exact: true }).press('Enter');
+    if (multiple) await page.getByRole('option', { name: 'Two', exact: true }).press('Escape');
+    await expect(input).toBeFocused();
+    assert.deepEqual(await page.evaluate(() => new FormData(document.querySelector('form')).getAll('choice')), multiple ? ['one', 'two'] : ['two']);
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#after')).toBeFocused();
+    await page.evaluate(() => { window.instances[0].destroy(); window.instances = []; });
+    await expect(page.getByRole(multiple ? 'listbox' : 'combobox', { name: 'Choice' })).toHaveCount(1);
+    await expect(page.locator('#choice')).toBeVisible();
+    await expect(page.locator('#choice')).toHaveAttribute('aria-describedby', 'hint');
+    await expect(page.locator('.hide-select, input[role="combobox"]')).toHaveCount(0);
+  }
+});
+
+scenario('select preserves every associated label and authored naming precedence', `
+<label id="shipping" for="pick:zone">Shipping</label><label for="pick:zone">destination</label>
+<select id="pick:zone"><option>One</option><option>Two</option></select>
+<div><label id="" for="pick:zone">required</label></div><span id="override">Custom name</span>`, async page => {
+  for (const multiple of [false, true]) {
+    await page.locator('select').evaluate((el, multiple) => { el.multiple = multiple; }, multiple);
+    await expect(page.getByRole(multiple ? 'listbox' : 'combobox')).toHaveAccessibleName('Shipping destination required');
+    for (const nameAttribute of [null, 'aria-label', 'aria-labelledby']) {
+      await page.locator('select').evaluate((el, attr) => {
+        if (attr) el.setAttribute(attr, attr === 'aria-label' ? 'Explicit name' : 'override');
+      }, nameAttribute);
+      const expected = nameAttribute === 'aria-label' ? 'Explicit name' : nameAttribute === 'aria-labelledby' ? 'Custom name' : 'Shipping destination required';
+      for (let cycle = 0; cycle < 2; cycle++) {
+        await page.evaluate(() => { window.instances = [Expressive.FormSelect.init(document.querySelector('select'), { menuOptions: { inDuration: 0, outDuration: 0, autoFocus: false } })]; });
+        const input = page.getByRole('combobox');
+        await expect(input).toHaveCount(1);
+        await expect(input).toHaveAccessibleName(expected);
+        for (const label of await page.locator('label').filter({ hasText: /^(Shipping|destination|required)$/ }).all()) {
+          assert.equal(await label.evaluate(el => el.control === window.instances[0].input), true);
+          await label.click();
+          await expect(input).toBeFocused();
+          await page.evaluate(() => window.instances[0].menu.close());
+        }
+      }
+      await page.evaluate(() => { window.instances[0].destroy(); window.instances = []; });
+      await expect(page.getByRole(multiple ? 'listbox' : 'combobox')).toHaveAccessibleName(expected);
+      assert.deepEqual(await page.locator('label').evaluateAll(labels => labels.map(label => [label.getAttribute('id'), label.getAttribute('for')])), [['shipping', 'pick:zone'], [null, 'pick:zone'], ['', 'pick:zone']]);
+      await page.locator('select').evaluate((el, attr) => { if (attr) el.removeAttribute(attr); }, nameAttribute);
+    }
+  }
+  // Either the first or a later label may contain the native select.
+  for (const wrappingFirst of [false, true]) {
+    await page.evaluate(wrappingFirst => {
+      const el = document.querySelector('select');
+      el.multiple = false;
+      const labels = [...document.querySelectorAll('label')];
+      labels[wrappingFirst ? 0 : 1].append(el);
+      window.instances = [Expressive.FormSelect.init(el)];
+    }, wrappingFirst);
+    await expect(page.getByRole('combobox')).toHaveAccessibleName('Shipping destination required');
+    await page.evaluate(() => { window.instances[0].destroy(); window.instances = []; });
+  }
+});
+
+for (const multiple of [false, true]) scenario(`select validation remains usable with a hidden native control: multiple=${multiple}`, `
+<form id="choices"><input id="first" aria-label="First">
+<div class="field"><label for="a">Choice A</label><select id="a" name="a" required aria-describedby="hint" aria-invalid="false">
+<option value="">Choose</option><option value="one">One</option></select><small id="hint">Keep this hint.</small></div>
+<button id="submit">Save</button><button type="reset">Reset</button></form>
+<div class="field"><label for="b">Choice B</label><select id="b" name="b" form="choices" required>
+<option value="">Choose</option><option value="two">Two</option></select></div>`, async page => {
+  const errors = [];
+  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.evaluate(multiple => {
+    document.querySelectorAll('select').forEach(el => { el.multiple = multiple; if (multiple) el.selectedIndex = -1; });
+    window.instances = Expressive.FormSelect.init(document.querySelectorAll('select'));
+    window.submissions = [];
+    document.querySelector('form').addEventListener('submit', event => {
+      event.preventDefault(); window.submissions.push([...new FormData(event.target)]);
+    });
+  }, multiple);
+  const a = page.getByRole('combobox', { name: 'Choice A' });
+  const b = page.getByRole('combobox', { name: 'Choice B' });
+  await page.locator('#submit').click();
+  await expect(a).toBeFocused();
+  await expect(a).toHaveAttribute('aria-invalid', 'true');
+  await expect(b).toHaveAttribute('aria-invalid', 'true');
+  const requiredMessage = await page.locator('#a').evaluate(el => el.validationMessage);
+  await expect(a).toHaveAccessibleDescription('Keep this hint. ' + requiredMessage);
+  await expect(page.locator('small').filter({ hasText: requiredMessage })).toHaveCount(2);
+  assert.deepEqual(await page.evaluate(() => window.submissions), []);
+  await page.evaluate(() => {
+    window.instances.forEach(instance => { instance.el.selectedIndex = 1; instance.el.dispatchEvent(new Event('change', { bubbles: true })); });
+  });
+  await expect(a).toHaveAttribute('aria-invalid', 'false');
+  await expect(b).not.toHaveAttribute('aria-invalid');
+  await expect(a).toHaveAccessibleDescription('Keep this hint.');
+  await page.locator('#submit').click();
+  assert.deepEqual(await page.evaluate(() => window.submissions), [[['a', 'one'], ['b', 'two']]]);
+  const customMessage = '<img src=x onerror=alert(1)> Choose another option.';
+  assert.equal(await page.evaluate(message => { const el = document.querySelector('#a'); el.setCustomValidity(message); return el.reportValidity(); }, customMessage), false);
+  await expect(a).toBeFocused();
+  await expect(a).toHaveAccessibleDescription('Keep this hint. ' + customMessage);
+  await expect(page.locator('.field img')).toHaveCount(0);
+  await page.evaluate(() => { document.querySelector('form').addEventListener('reset', event => event.preventDefault(), { once: true }); });
+  await page.getByRole('button', { name: 'Reset' }).click();
+  await expect(a).toHaveAttribute('aria-invalid', 'true');
+  await page.getByRole('button', { name: 'Reset' }).click();
+  await expect(a).toHaveAttribute('aria-invalid', 'false');
+  await expect(a).toHaveAccessibleDescription('Keep this hint.');
+  await page.evaluate(() => { const el = document.querySelector('#a'); el.setCustomValidity(''); el.disabled = true; window.instances[0].refresh(); });
+  await expect(a).toBeDisabled();
+  await page.locator('#submit').click();
+  await expect(b).toBeFocused();
+  await page.evaluate(() => { document.querySelector('#first').required = true; });
+  await page.locator('#submit').click();
+  await expect(page.locator('#first')).toBeFocused();
+  assert.deepEqual(errors, []);
+});
+
+for (const multiple of [false, true]) scenario(`select validation preserves native focus scope: multiple=${multiple}`, `
+<form id="choices"><input id="before" aria-label="Before">
+<label for="a">Choice A</label><select id="a" required><option value="">Choose</option><option>One</option></select>
+<input id="after" aria-label="After" required><button id="submit">Save</button></form>
+<label for="b">Choice B</label><select id="b" form="choices" required><option value="">Choose</option><option>Two</option></select>`, async page => {
+  const errors = [];
+  page.on('console', message => { if (['warning', 'error'].includes(message.type())) errors.push(message.text()); });
+  await page.evaluate(multiple => {
+    document.querySelectorAll('select').forEach(el => { el.multiple = multiple; if (multiple) el.selectedIndex = -1; });
+    window.instances = Expressive.FormSelect.init(document.querySelectorAll('select'));
+    window.submissions = 0;
+    document.querySelector('form').onsubmit = event => { event.preventDefault(); window.submissions++; };
+  }, multiple);
+  const a = page.getByRole('combobox', { name: 'Choice A' });
+  const b = page.getByRole('combobox', { name: 'Choice B' });
+  for (const selector of ['form', '#a', '#b']) {
+    await page.locator('#after').focus();
+    assert.equal(await page.locator(selector).evaluate(el => el.checkValidity()), false);
+    await expect(page.locator('#after')).toBeFocused();
+  }
+  await page.locator('#after').evaluate(el => { el.oninput = () => el.form.checkValidity(); });
+  await page.keyboard.type('typing');
+  await expect(page.locator('#after')).toHaveValue('typing');
+  await expect(page.locator('#after')).toBeFocused();
+  await page.locator('#after').fill('');
+  // Reporting one control must ignore invalid controls elsewhere in its form.
+  assert.equal(await page.locator('#b').evaluate(el => el.reportValidity()), false);
+  await expect(b).toBeFocused();
+  // Native controls on either side must retain their place in reporting order.
+  for (const earlierNativeInvalid of [false, true]) {
+    await page.locator('#before').evaluate((el, required) => { el.required = required; }, earlierNativeInvalid);
+    for (const action of ['report', 'request', 'click']) {
+      await page.locator('#submit').focus();
+      if (action === 'report') assert.equal(await page.locator('form').evaluate(el => el.reportValidity()), false);
+      else if (action === 'request') await page.locator('form').evaluate(el => el.requestSubmit());
+      else await page.locator('#submit').click();
+      await expect(earlierNativeInvalid ? page.locator('#before') : a).toBeFocused();
+    }
+  }
+  await page.locator('#before').evaluate(el => { el.required = false; });
+  await page.locator('#a').evaluate(el => { el.addEventListener('invalid', event => event.preventDefault(), { once: true }); });
+  await page.locator('form').evaluate(el => el.reportValidity());
+  await expect(page.locator('#after')).toBeFocused();
+  assert.equal(await page.evaluate(() => window.submissions), 0);
+  await expect(page.getByRole('combobox')).toHaveCount(2);
+  await expect(page.getByRole('listbox')).toHaveCount(0);
+  if (page.context().browser().browserType().name() === 'chromium') {
+    const session = await page.context().newCDPSession(page);
+    try {
+      const { nodes } = await session.send('Accessibility.getFullAXTree');
+      assert.deepEqual(nodes.filter(node => !node.ignored && ['combobox', 'listbox'].includes(node.role?.value)).map(node => node.name?.value).sort(), ['Choice A', 'Choice B']);
+    } finally { await session.detach(); }
+  }
+  assert.deepEqual(errors, []);
+});
 
 scenario('remaining native controls preserve names, keyboard state and form values', `
 <form id="choices"><fieldset><legend>Delivery preferences</legend>
@@ -433,6 +633,40 @@ scenario('remaining snackbar retains a focused action until focus leaves', '<but
   } finally { await page.evaluate(()=>Expressive.Snackbar.dismissAll()); }
 });
 
+scenario('autocomplete searches input-only edits without duplicate keyboard searches', '<div class="field"><label for="query">Fruit</label><input id="query"></div><button id="after">After</button>', async page => {
+  await page.evaluate(() => {
+    window.queries = [];
+    window.instances = [Expressive.Autocomplete.init(document.querySelector('#query'), {
+      data: [{ id: 'apple' }, { id: 'apricot' }, { id: 'banana' }],
+      onSearch: (value, instance) => {
+        window.queries.push(value);
+        Expressive.Autocomplete.defaults.onSearch(value, instance);
+      },
+      menuOptions: { inDuration: 0, outDuration: 0 }
+    })];
+  });
+  const input = page.locator('#query');
+  await input.focus();
+  await page.keyboard.insertText('ap');
+  await expect(page.getByRole('option')).toHaveText(['apple', 'apricot']);
+  assert.deepEqual(await page.evaluate(() => window.queries), ['ap']);
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect(input).toHaveValue('apple');
+  await input.fill('ban');
+  await expect(page.getByRole('option')).toHaveText(['banana']);
+  assert.equal(await page.evaluate(() => window.instances[0].selectedValues.length), 0);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('listbox')).toBeHidden();
+  await input.fill('');
+  await page.keyboard.type('ap');
+  await expect(page.getByRole('option')).toHaveText(['apple', 'apricot']);
+  assert.deepEqual(await page.evaluate(() => window.queries), ['ap', 'ban', '', 'a', 'ap']);
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#after')).toBeFocused();
+  await expect(page.getByRole('listbox')).toBeHidden();
+});
+
 scenario('autocomplete announces results and selection without moving focus', '<div class="field"><label for="query">Fruit</label><input id="query"></div><button id="after">After</button>', async page => {
   try {
     await page.evaluate(() => {
@@ -584,6 +818,250 @@ scenario('date picker supports calendar keyboard navigation and redraw focus', '
       if (docked) {
         await page.mouse.click(950, 850);
         await expect(page.locator('.display-docked')).toBeHidden();
+      }
+    } finally {
+      await page.evaluate(() => { window.instances?.forEach(instance => instance.destroy()); window.instances = []; });
+    }
+  }
+});
+
+for (const action of ['default', 'multiple', 'range', 'clear']) scenario(`date picker selection lifecycle: ${action}`, `
+<form><div id="dates"><label for="date">Start date</label><input id="date" name="dates"></div>
+<div><label for="end">End date</label><input id="end" name="end"></div></form>
+<button id="after">After</button>`, async page => {
+  const day = value => page.locator(`.datepicker-day-button[data-year="2024"][data-month="1"][data-day="${value}"]`);
+  await page.emulateMedia({ reducedMotion: action === 'range' ? 'no-preference' : 'reduce' });
+  await page.evaluate(action => {
+    window.selections = 0;
+    document.documentElement.dir = action === 'range' ? 'rtl' : 'ltr';
+    const input = document.querySelector('#date');
+    if (action === 'clear') input.type = 'date';
+    window.instances = [Expressive.Datepicker.init(input, {
+      openByDefault: true, defaultDate: new Date(2024, 1, 20, 12),
+      setDefaultDate: action === 'default' || action === 'clear',
+      isMultipleSelection: action === 'default' || action === 'multiple',
+      isDateRange: action === 'range', dateRangeEndEl: '#end',
+      showClearBtn: true, autoSubmit: true, format: 'yyyy-mm-dd', isRTL: action === 'range',
+      disableDayFn: date => date.getDate() === 22,
+      onSelect: () => window.selections++
+    })];
+  }, action);
+  if (action === 'default') {
+    await expect(page.locator('#date')).toHaveValue('2024-02-20');
+    assert.deepEqual(await page.evaluate(() => window.instances[0].dates.map(date => date.getDate())), [20]);
+    await expect(day(20).locator('..')).toHaveAttribute('aria-selected', 'true');
+    await page.evaluate(() => window.instances[0].setDate(new Date(2024, 1, 20, 18)));
+    assert.deepEqual(await page.evaluate(() => window.instances[0].dates), []);
+  } else if (action === 'multiple') {
+    for (const value of [20, 21, 20, 23]) await day(value).click();
+    await expect(page.locator('#dates input')).toHaveCount(2);
+    assert.deepEqual(await page.locator('#dates input').evaluateAll(inputs => inputs.map(input => input.value)), ['2024-02-21', '2024-02-23']);
+    assert.deepEqual(await page.evaluate(() => new FormData(document.querySelector('form')).getAll('dates')), ['2024-02-21', '2024-02-23']);
+    await day(22).focus();
+    await page.keyboard.press('Enter');
+    assert.equal(await page.evaluate(() => window.selections), 4);
+    for (const value of [21, 23]) {
+      await day(value).focus();
+      await page.keyboard.press('Space');
+      await expect(day(value)).toBeFocused();
+    }
+    await expect(page.locator('#date')).toBeAttached();
+    await expect(page.locator('#date')).toHaveValue('');
+    await expect(page.locator('#dates input')).toHaveCount(1);
+    await day(29).click();
+    await day(28).click();
+    await page.getByRole('button', { name: 'Clear', exact: true }).click();
+    assert.deepEqual(await page.evaluate(() => window.instances[0].dates), []);
+    await expect(page.locator('#dates input')).toHaveCount(1);
+    await day(28).click();
+    await day(29).click();
+    await page.locator('#after').focus();
+    await page.evaluate(() => window.instances.pop().destroy());
+    await expect(page.locator('#dates input')).toHaveCount(1);
+    await expect(page.locator('#after')).toBeFocused();
+    await page.evaluate(() => {
+      const input = document.querySelector('#date');
+      input.value = '';
+      const picker = Expressive.Datepicker.init(input, { isDateRange: true, openByDefault: true });
+      window.instances = [picker];
+      picker.endDateEl.focus();
+    });
+    await page.evaluate(() => window.instances.pop().destroy());
+    await expect(page.locator('#date')).toBeFocused();
+    await expect(page.locator('#dates input')).toHaveCount(1);
+    assert.equal(await page.evaluate(() => {
+      const host = document.body.appendChild(document.createElement('div'));
+      const root = host.attachShadow({ mode: 'open' });
+      root.innerHTML = '<div><input></div>';
+      const picker = Expressive.Datepicker.init(root.querySelector('input'), { isDateRange: true });
+      picker.endDateEl.focus();
+      picker.destroy();
+      const restored = root.activeElement === picker.el;
+      host.remove();
+      return restored;
+    }), true);
+  } else if (action === 'range') {
+    await day(20).focus();
+    await page.keyboard.press('Enter');
+    await page.locator('#end').fill('2024-02-29');
+    await page.locator('#after').focus();
+    assert.equal(await page.evaluate(() => window.instances[0].endDate?.getDate()), 29);
+    await page.locator('#end').fill('2024-02-19');
+    await page.locator('#after').focus();
+    await expect(page.locator('#end')).toHaveValue('2024-02-29');
+    assert.equal(await page.evaluate(() => new FormData(document.querySelector('form')).get('end')), '2024-02-29');
+    await page.locator('#end').focus();
+    await page.keyboard.press('Enter');
+    await expect(day(29)).toBeFocused();
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('#end')).toHaveValue('2024-02-28');
+    await day(19).click();
+    await expect(page.locator('#date')).toHaveValue('2024-02-20');
+    await expect(page.locator('#end')).toHaveValue('2024-02-28');
+    await page.locator('#after').focus();
+    await page.evaluate(() => { window.destroyed = window.instances.pop(); window.destroyed.destroy(); });
+    await page.locator('#end').fill('2024-02-27');
+    await page.locator('#after').focus();
+    assert.equal(await page.evaluate(() => window.destroyed.endDate.getDate()), 28);
+  } else {
+    await page.getByRole('button', { name: 'Clear', exact: true }).click();
+    await expect(page.locator('#date')).toHaveValue('');
+    await expect(page.locator('#date')).toHaveAttribute('data-date', '');
+  }
+});
+
+for (const timezone of ['America/Chicago', 'UTC', 'Asia/Tokyo']) scenario(`date picker calendar-date parsing in ${timezone}`, `
+<form><label for="date">Start date</label><input id="date" value="2024-02-29">
+<label for="end">End date</label><input id="end"></form><button id="after">After</button>`, async page => {
+  await page.evaluate(() => {
+    window.instances = [Expressive.Datepicker.init(document.querySelector('#date'), {
+      format: 'yyyy-mm-dd', setDefaultDate: true, openByDefault: true, isDateRange: true, dateRangeEndEl: '#end'
+    })];
+  });
+  const selected = () => page.evaluate(() => {
+    const picker = window.instances[0];
+    return [picker.toString(), picker.date.getHours(), picker.el.value];
+  });
+  assert.deepEqual(await selected(), ['2024-02-29', 0, '2024-02-29'], 'initial input stays on its calendar day');
+
+  // Leap day, a month boundary, and both Chicago daylight-saving transitions.
+  for (const value of ['2024-03-01', '2024-03-10', '2024-11-03', '2024-02-29']) {
+    await page.locator('#date').fill(value);
+    await page.locator('#after').focus();
+    assert.deepEqual(await selected(), [value, 0, value], 'change parses a local calendar date');
+    await page.locator('#date').click();
+    assert.deepEqual(await selected(), [value, 0, value], 'click preserves the selected date');
+    await page.keyboard.press('Enter');
+    assert.deepEqual(await selected(), [value, 0, value], 'Enter preserves the selected date');
+    const [year, month, day] = value.split('-').map(Number);
+    await expect(page.locator(`.datepicker-day-button[data-year="${year}"][data-month="${month - 1}"][data-day="${day}"]`)).toBeFocused();
+  }
+
+  await page.locator('#end').fill('2024-03-01');
+  await page.locator('#after').focus();
+  assert.equal(await page.evaluate(() => window.instances[0].toString(window.instances[0].endDate)), '2024-03-01');
+  await page.locator('#end').fill('2024-02-28');
+  await page.locator('#after').focus();
+  await expect(page.locator('#end')).toHaveValue('2024-03-01');
+  await page.locator('#end').click();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.datepicker-day-button[data-year="2024"][data-month="2"][data-day="1"]')).toBeFocused();
+
+  assert.deepEqual(await page.evaluate(() => {
+    const picker = window.instances[0];
+    picker.setDate('2024-02-29');
+    const fromString = picker.toString();
+    const earlyYear = picker.validateDate('0099-01-02');
+    const invalid = ['2023-02-29', '2024-02-30', '2024-04-31', '2024-00-10', '2024-13-01', '2024-01-00', 'invalid', ''];
+    const rejected = invalid.map(value => {
+      picker.el.value = value;
+      picker.el.dispatchEvent(new Event('change'));
+      return picker.toString() === fromString;
+    });
+    const timestamp = '2024-02-29T01:30:00Z';
+    const instant = new Date(timestamp);
+    const timestampPreserved = picker.validateDate(timestamp).getTime() === instant.getTime();
+    picker.setDate(instant);
+    const objectPreserved = picker.date.getDate() === instant.getDate() && instant.getUTCHours() === 1;
+    picker.options.minDate = new Date(2024, 1, 20);
+    picker.options.maxDate = new Date(2024, 1, 29);
+    picker.setDate('2024-03-01');
+    const clampedMax = picker.toString();
+    picker.setDate('2024-02-19');
+    const clampedMin = picker.toString();
+    let parserArgs;
+    picker.options.parse = (value, format) => {
+      parserArgs = [value, format];
+      return new Date(2024, 1, 25);
+    };
+    picker.el.value = '2024-02-29';
+    picker.el.dispatchEvent(new Event('change'));
+    return {
+      fromString, earlyYear: [earlyYear.getFullYear(), earlyYear.getMonth(), earlyYear.getDate()],
+      rejected, timestampPreserved, objectPreserved, clampedMax, clampedMin,
+      customDate: picker.toString(), parserArgs
+    };
+  }), {
+    fromString: '2024-02-29', earlyYear: [99, 0, 2], rejected: Array(8).fill(true),
+    timestampPreserved: true, objectPreserved: true, clampedMax: '2024-02-29', clampedMin: '2024-02-20',
+    customDate: '2024-02-25', parserArgs: ['2024-02-29', 'yyyy-mm-dd']
+  });
+}, timezone);
+
+for (const action of ['input', 'empty', 'boundaries']) scenario(`time picker digital values: ${action}`, '<form><label for="time">Time</label><input id="time" name="time"></form><button id="after">After</button>', async page => {
+  await page.clock.setFixedTime(new Date(2024, 0, 1, 0, 37));
+  for (const twelveHour of [true, false]) for (const docked of [false, true]) {
+    try {
+      await page.emulateMedia({ reducedMotion: docked ? 'no-preference' : 'reduce' });
+      await page.evaluate(({ twelveHour, docked }) => {
+        document.documentElement.dir = docked ? 'rtl' : 'ltr';
+        document.querySelector('#time').value = twelveHour ? '03:45 PM' : '23:45';
+        window.changes = 0;
+        document.querySelector('#time').onchange = () => window.changes++;
+        window.instances = [Expressive.Timepicker.init(document.querySelector('#time'), {
+          twelveHour, autoSubmit: false, duration: 0, vibrate: false,
+          displayPlugin: docked ? 'docked' : null, displayPluginOptions: { duration: 0 }
+        })];
+      }, { twelveHour, docked });
+      await page.locator('#time').focus();
+      await page.keyboard.press('Enter');
+      const hours = page.getByRole('textbox', { name: 'Hours', exact: true });
+      const minutes = page.getByRole('textbox', { name: 'Minutes', exact: true });
+      if (action === 'input') {
+        await hours.fill(twelveHour ? '02' : '00');
+        await minutes.fill('19');
+        await page.getByRole('button', { name: 'Ok', exact: true }).click();
+        await expect(page.locator('#time')).toHaveValue(twelveHour ? '02:19 PM' : '00:19');
+        assert.equal(await page.evaluate(() => window.changes), 1);
+        await hours.fill('4x');
+        await minutes.fill('99');
+        await page.getByRole('button', { name: 'Ok', exact: true }).click();
+        await expect(page.locator('#time')).toHaveValue(twelveHour ? '02:19 PM' : '00:19');
+        assert.equal(await page.evaluate(() => window.changes), 1);
+        assert.equal(await page.evaluate(() => new FormData(document.querySelector('form')).get('time')), twelveHour ? '02:19 PM' : '00:19');
+      } else if (action === 'empty') {
+        await hours.fill('');
+        await minutes.fill('');
+        await page.getByRole('button', { name: 'Ok', exact: true }).click();
+        await expect(hours).toHaveValue(twelveHour ? '12' : '00');
+        await expect(minutes).toHaveValue('37');
+        await expect(page.locator('#time')).toHaveValue(twelveHour ? '12:37 PM' : '00:37');
+      } else {
+        for (const [value, expected] of [['00:15', '12:15 AM'], ['12:30', '12:30 PM'], ['23:45', '11:45 PM'], ['03:45 am', '03:45 AM']]) {
+          if (!twelveHour && value.includes('am')) continue;
+          await page.evaluate(value => {
+            const { el, options } = window.instances[0];
+            window.instances.pop().destroy();
+            el.value = value;
+            window.instances = [Expressive.Timepicker.init(el, options)];
+            window.instances[0].done();
+          }, value);
+          await expect(page.locator('#time')).toHaveValue(twelveHour ? expected : value);
+          await page.locator('#time').focus();
+          await page.keyboard.press('Enter');
+          if (twelveHour) await expect(page.getByRole('button', { name: expected.slice(-2), exact: true })).toHaveAttribute('aria-pressed', 'true');
+        }
       }
     } finally {
       await page.evaluate(() => { window.instances?.forEach(instance => instance.destroy()); window.instances = []; });
@@ -748,7 +1226,7 @@ scenario('remaining lightbox supports Space and preserves its image on teardown'
 
 scenario('remaining sheet variants retain native modal focus and explicit close actions', '<button id="open-sheet">Open details</button><button id="outside-sheet">Outside</button><dialog id="sheet" aria-labelledby="sheet-title"><h2 id="sheet-title">Details</h2><p>Review the current selection.</p><button id="close-sheet" type="button">Close details</button></dialog>', async page => {
   await page.evaluate(()=>{document.querySelector('#open-sheet').onclick=()=>document.querySelector('dialog').showModal();document.querySelector('#close-sheet').onclick=()=>document.querySelector('dialog').close();});
-  for (const variant of ['bottom-sheet','side-sheet','floating-sheet']) {
+  for (const variant of ['bottom-sheet','side-sheet']) {
     await page.locator('dialog').evaluate((el,name)=>el.className=name,variant);
     await page.locator('#open-sheet').focus();await page.keyboard.press('Enter');
     await expect(page.getByRole('dialog',{name:'Details'})).toBeVisible();

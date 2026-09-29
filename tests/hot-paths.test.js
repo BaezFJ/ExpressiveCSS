@@ -309,10 +309,10 @@ describe('Timepicker dial construction', () => {
       assert.equal(document.activeElement, instance.inputHours);
       assert.equal(dialSize(instance).svg, true);
       instance.inputHours.value = '05';
-      instance.inputHours.dispatchEvent(new window.KeyboardEvent('keyup', { key: '5', bubbles: true }));
+      instance.inputHours.dispatchEvent(new window.Event('input', { bubbles: true }));
       instance.inputMinutes.focus();
       instance.inputMinutes.value = '20';
-      instance.inputMinutes.dispatchEvent(new window.KeyboardEvent('keyup', { key: 'Enter', bubbles: true }));
+      instance.inputMinutes.dispatchEvent(new window.Event('input', { bubbles: true }));
       instance.confirm();
       assert.equal(input.value, '05:20 PM');
     } finally {

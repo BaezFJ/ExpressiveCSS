@@ -5,13 +5,13 @@ Suggest values under a text field as the user types.
 
 Component ID: `autocomplete`
 
-[Component documentation](https://www.expressivecss.com/autocomplete.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/autocomplete.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/autocomplete.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/autocomplete.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -41,7 +41,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Unreleased source preserves the original suggestion dataset and selected display label while editing. Escape and Tab close from the input, cancel pending opening, and keep listbox options outside sequential Tab order. Published 0.9.1 does not include these repairs.
+Autocomplete preserves the original suggestion dataset and selected display label while editing. Escape and Tab close from the input, cancel pending opening, and keep listbox options outside sequential Tab order.
 
 Suggest values under a text field as the user types.
 
@@ -56,6 +56,29 @@ Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every 
   <label for="autocomplete-input">Autocomplete</label>
 </div>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | Array | `[]` | Suggestion list. Each item needs an `id`; `text`, `image`, and `description` are optional. |
+| `isMultiSelect` | Boolean | `false` | If true, several values can be selected. `onAutocomplete` receives an array. |
+| `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
+| `i18n` | Object | See below | Partial overrides for live status messages. |
+| `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
+| `onSearch` | Function | filters `id` and `text` | Called when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. |
+| `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
+| `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
+| `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
+| `selected` | Array | `[]` | Initial selected ids (strings or numbers). |
+
+#### Methods
+
+- `.open()`: Open the suggestion menu if the input meets `minLength`.
+- `.close()`: Close the suggestion menu.
+- `.selectOption()`: Select (or toggle, when multi-select) the entry with this id.
+- `.setMenuItems()`: Replace the visible suggestions. Optionally pass selected ids and whether to open the menu (default `true`).
+- `.destroy()`: Destroy the plugin instance, remove the menu, and tear down its event handlers.
 
 #### Rules
 

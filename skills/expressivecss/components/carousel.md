@@ -5,13 +5,13 @@ Material 3 adaptive carousels for visual collections.
 
 Component ID: `carousel`
 
-[Component documentation](https://www.expressivecss.com/carousel.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/carousel.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/carousel.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/carousel.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -66,6 +66,25 @@ The default is multi-browse: one large, one medium, and one small item adapt as 
 </div>
 <div class="mt-1"><a class="button text" href="all-landscapes.html">Show all</a></div>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `duration` | Number | `200` | Milliseconds allowed for a programmatic scroll to land, and the part of each auto-advance rest that is not `interval`. |
+| `fullWidth` | Boolean | `false` | Full-width compatibility layout used by swipeable tabs. Prefer an M3 layout class for new carousels. |
+| `indicators` | Boolean | `false` | Legacy paging dots. M3 recommends a nearby Show all path instead of overlay controls. |
+| `noWrap` | Boolean | `false` | Stop auto-advance at the last item instead of looping back to the first. Arrow keys and `set()` stop at the ends either way — a scroll track has ends. |
+| `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. Each rest is armed by the move before it rather than on a fixed phase. |
+| `height` | Number | `null` | Fixed track height in pixels. `null` sizes the carousel from its content. |
+| `onCycleTo` | Function | `null` | Called when the active item changes. |
+| `i18n` | Object | `{ carousel: 'Carousel', item: 'Item', of: 'of', indicators: 'Slides', slide: 'Slide' }` | Generated accessible label strings. `indicators` names the indicator row and `slide` prefixes each dot, giving "Slide 1". Partial objects are merged with the defaults. |
+
+#### Methods
+
+`next()` and `prev()` move one item or an optional item count. `set(index, callback)` moves to a zero-based item index. `pause()` and `start()` stop and resume auto-advance, and do nothing without an `interval`. `destroy()` removes generated labels, size roles, indicators, listeners, the scroll-track wrapper, and the auto-advance timer.
+
+An `interval` makes the carousel advance on its own, so the pause contract is mandatory: it always pauses on hover, on focus within, and while the tab is hidden, and `prefers-reduced-motion: reduce` suppresses auto-advance entirely. No option disables any of that. An explicit `noWrap: true` stops auto-advance after one pass instead of looping. Arrow keys and `set()` stop at the ends either way — a scroll track has ends, and auto-advance is the one caller that can loop back past them. A `height` gives the indicators their own row below the track (`.fixed-height`) instead of laying them over the media; markup can do the same by carrying `.fixed-height` and setting `--carousel-height`.
 
 #### Rules
 

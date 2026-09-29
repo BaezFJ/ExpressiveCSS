@@ -5,13 +5,13 @@ Pick a time from a clock face, in 12-hour or 24-hour form.
 
 Component ID: `time-picker`
 
-[Component documentation](https://www.expressivecss.com/timepicker.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/timepicker.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/timepicker.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/timepicker.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -33,13 +33,13 @@ Requirements and boundaries: design reference inputs-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/time-pickers/guidelines).
 
-Support (2026-09-13, `llm.md#time-picker`): Inline clock and digital input; 12-hour and 24-hour formats.
+Support (2026-09-18, `llm.md#time-picker`): Inline clock and digital input; 12-hour and 24-hour formats.
 
 Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
 
 Known boundary: Modal picker parity is not provided by the documented inline API.
 
-Known boundary: Hour/minute inputs are unnamed and AM/PM controls have no role or selected state; modal and complete keyboard behavior remain incomplete.
+Known boundary: Named digital inputs, AM/PM state and input-event synchronization have browser coverage. Modal and clock-dial keyboard behavior remain incomplete.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#time-picker).
 
@@ -59,6 +59,34 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
   <label for="lunchtime">Lunchtime</label>
 </div>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `duration` | Number | `350` | Transition between the hours and minutes views, in milliseconds. |
+| `container` | Element or String | `null` | Element or selector to render the clock into. When omitted, it is appended to the input’s parent. |
+| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
+| `autoSubmit` | Boolean | `true` | If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added. |
+| `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` string (optionally with `AM`/`PM`). |
+| `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |
+| `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, and Minutes. |
+| `twelveHour` | Boolean | `true` | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. |
+| `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
+| `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
+| `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
+| `onDone` | Function | `null` | Called when the Ok button is used. Only created when `autoSubmit` is false. |
+| `onCancel` | Function | `null` | Called when the Cancel button is used. Only created when `autoSubmit` is false. |
+| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. |
+| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
+
+#### Methods
+
+- `.showView()`: Show the hours or minutes face.
+- `.done()`: Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.
+- `.clear()`: Clear the input. Same as `done(true)`.
+- `.destroy()`: Destroy the plugin instance, remove the clock, and tear down its event handlers.
+- `.open(); / .close()`: These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking. No modal implementation is available.
 
 #### Rules
 

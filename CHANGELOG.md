@@ -11,6 +11,82 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   contents through shared `getActiveElement` callbacks, and restores authored
   offset styles on teardown. Native anchor navigation remains unchanged.
 
+- Carousel ignores stale scroll-completion events from earlier navigation, so
+  selecting a swipeable tab immediately after initialization keeps that selection.
+
+- FormSelect preserves every associated label when enhanced, including naming
+  order, label activation and authored naming overrides. Teardown restores label
+  attributes and removes generated label IDs.
+
+- FormSelect hides the native control from assistive technology, leaving one
+  named combobox. Required and custom validation errors appear beside the visible
+  field; the native select retains form values and validation rules. Static
+  validity checks preserve focus, and interactive validation forwards native
+  focus to the visible field, including in forms with mixed native controls.
+
+- Tabs resolves panel IDs directly, so numeric IDs and IDs containing dots,
+  colons or brackets work in normal and swipeable modes without selector errors
+  or accidental matches against other elements.
+
+- Autocomplete searches on input events, including paste, replacement and deletion
+  without key events. Keyboard typing does not repeat the search on keyup.
+
+- FormSelect restores the authored label and node order during teardown and
+  reinitialization, including when it creates the field wrapper.
+
+- Datepicker treats `YYYY-MM-DD` input as a local calendar date during
+  initialization, editing and reopening, so dates no longer shift backward in
+  timezones west of UTC. Impossible dates such as `2023-02-29` are rejected.
+
+## [0.10.1] - 2026-09-22
+
+### Added
+
+- Flex helpers: `.flex`, `.inline-flex`, `.flex-column`, `.flex-wrap`,
+  `.justify-start|center|end|between`, `.align-start|center|end|stretch`,
+  `.flex-1`, `.flex-none`, and `.gap-0` to `.gap-6` on the spacing scale. One
+  declaration per class, in the utilities layer; the helpers page, `llm.md`,
+  and the skill's helper reference document them.
+
+### Changed
+
+- **Offline design context for the ExpressiveCSS skill.** The generator now
+  copies the hard rules, window-size tables, component chooser, screen recipes,
+  anatomy cheat sheet, and Materialize name map from `m3-guidelines.md` into
+  `skills/expressivecss/references/design-rules.md`, and the root, Design,
+  Usage, and Install guides route to it. JavaScript component guides inline the
+  options table and method names from `llm.md`. The Install guide carries a
+  complete page skeleton. The Design guide states the framework spacing scale
+  and control-text rules. Six catalogue entries that repeated their page tagline
+  as the selection rule now say when to use the component.
+
+- The ExpressiveCSS skill tells agents without an MCP client to run
+  `expressivecss-lint` from `@expressivecss/mcp-server` on the markup files they
+  touched before finishing.
+
+## [0.10.0] - 2026-09-18
+
+### Fixed
+
+- Connected button groups preserve equal-width items when translated labels
+  exceed the available width. The group expands inside an overflow container
+  instead of letting labels overlap adjacent controls.
+
+- Bottom and floating sheets keep long bodies scrollable and action rows reachable
+  at compact widths with enlarged text. Shared dialog headings and action labels
+  wrap instead of overflowing their inset container without resizing icon buttons
+  or FABs.
+
+- Datepicker initializes multiple-date defaults safely, keeps generated inputs
+  synchronized when selections shrink or grow, and preserves the original input
+  when cleared. Range-end inputs supplied by applications receive input and
+  keyboard handlers. Teardown removes generated fields and their listeners.
+
+- Timepicker digital fields synchronize native input events, including paste,
+  without depending on keyup. Invalid edits restore the last valid value on blur;
+  empty fields display the same fallback values they submit. Twelve-hour defaults
+  handle midnight, noon, 24-hour input strings and lowercase AM/PM consistently.
+
 - Lightbox cancels interrupted transitions, honors mounted reduced-motion changes,
   preserves teardown focus and releases shared ancestor overflow after the last
   open instance closes. Canceled transitions no longer report completion.
@@ -105,6 +181,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Remove banner classes, tokens and custom Sass imports. The existing
   `/banners.html` route now explains the migration.
 
+- Replace `.floating-sheet` with a dialog for blocking work, a bottom sheet on
+  compact layouts, or a side sheet for optional content on wider layouts.
+
 - Replace `.bottom-app-bar` with `.toolbar.docked` or `.toolbar.fixed`. Place an
   adjacent FAB in `.toolbar-group` when the layout needs one.
 - Replace `.navigation-drawer`, `.sidenav`, `NavigationDrawer`, and `Sidenav`
@@ -133,6 +212,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   legacy AutoInit selectors. The `FloatingActionButton` API now serves FAB menus.
 
 - Banner Sass, component semantics, generated component guides and variant tests.
+
+- Floating sheet Sass, documentation, semantics, generated guides and tests.
 
 - Bottom app bar Sass, navigation drawer Sass and runtime APIs, segmented
   button Sass, their documentation pages, semantics, generated guides, and
@@ -1642,7 +1723,9 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.9.1...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.10.1...HEAD
+[0.10.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.10.0...v0.10.1
+[0.10.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.7.0...v0.8.0

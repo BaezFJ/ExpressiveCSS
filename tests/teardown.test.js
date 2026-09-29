@@ -19,10 +19,14 @@ const capture = (opts) => (typeof opts === 'object' && opts !== null ? !!opts.ca
 // jsdom lazily attaches its own window-level handlers the first time a form
 // control needs focus/keyboard/mouse activation behaviour. They are part of the
 // environment, never removed, and not ours - so they stay out of the ledger.
+// The selector engine in jsdom 30.1 binds these handlers, prefixing their names.
 const JSDOM_INTERNAL_HANDLERS = new Set([
   'handleFocusEvent',
   'handleKeyboardEvent',
-  'handleMouseEvent'
+  'handleMouseEvent',
+  'bound handleFocusEvent',
+  'bound handleKeyboardEvent',
+  'bound handleMouseEvent'
 ]);
 
 /**
@@ -213,12 +217,14 @@ describe('destroy() releases shared listeners', () => {
     const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
       displayPlugin: 'docked'
     });
-    assert.ok(
-      watch.live().includes('click'),
-      'the docked plugin did not attach a document click handler'
-    );
-
-    instance.destroy();
+    try {
+      assert.ok(
+        watch.live().includes('click'),
+        'the docked plugin did not attach a document click handler'
+      );
+    } finally {
+      instance.destroy();
+    }
 
     assert.deepEqual(watch.live(), [], 'the docked plugin outlived the picker that owns it');
   });

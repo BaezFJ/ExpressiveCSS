@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ExpressiveCSS migration rehearsal</title>
+  </head>
+  <body>
+    <nav class="navigation-rail" aria-label="Main">
+      <button type="button" aria-label="Menu">
+        <span class="material-symbols" aria-hidden="true">menu</span>
+      </button>
+      <a href="/" aria-current="page">
+        <span class="material-symbols" aria-hidden="true">home</span>
+        Home
+      </a>
+      <a href="/settings">
+        <span class="material-symbols" aria-hidden="true">settings</span>
+        Settings
+      </a>
+    </nav>
+
+    <main>
+      <section aria-labelledby="offline-title">
+        <h1 id="offline-title">You're offline</h1>
+        <p>Edits are saved locally and will sync later.</p>
+        <button class="button text" type="button">Retry sync</button>
+      </section>
+
+      <div class="button-group connected" data-selection="single" data-selection-required role="group" aria-label="Text alignment">
+        <button type="button" class="button tonal" aria-pressed="true">Left</button>
+        <button type="button" class="button tonal" aria-pressed="false">Right</button>
+      </div>
+    </main>
+
+    <div class="toolbar docked">
+      <button type="button"><span>Back</span></button>
+      <span class="max"></span>
+      <button type="button" class="filled"><span>Next</span></button>
+    </div>
+
+    <div class="fab-menu">
+      <button type="button" class="button extra circle" aria-label="Create">
+        <span class="material-symbols" aria-hidden="true">add</span>
+        <span class="material-symbols" aria-hidden="true">close</span>
+      </button>
+      <ul>
+        <li><button type="button"><span>Compose</span></button></li>
+        <li><button type="button"><span>Add photo</span></button></li>
+      </ul>
+    </div>
+  </body>
+</html>

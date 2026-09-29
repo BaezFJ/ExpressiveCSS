@@ -2,6 +2,7 @@ import { afterEach, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { existsSync } from 'node:fs';
 import { cp, mkdtemp, mkdir, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -570,7 +571,7 @@ describe('ExpressiveCSS version resolution', () => {
   test('generated component guides carry deterministic contract provenance', async () => {
     const directory = new URL('../skills/expressivecss/components/', import.meta.url);
     const names = (await readdir(directory)).filter((name) => name.endsWith('.md'));
-    assert.equal(names.length, 42);
+    assert.equal(names.length, 41);
     const hashes = new Set();
     for (const name of names) {
       const guide = await readFile(new URL(name, directory), 'utf8');
@@ -596,6 +597,7 @@ describe('ExpressiveCSS version resolution', () => {
       'scripts/lib/consumer-browser.mjs',
       'scripts/lib/bounded-file.mjs',
       'llm.md',
+      'm3-guidelines.md',
       'semantics.json',
       'docs/src/data/nav.ts',
       'docs/src/data/component-decisions.json',
@@ -605,7 +607,7 @@ describe('ExpressiveCSS version resolution', () => {
     ];
     const decisions = JSON.parse(await readFile(path.join(sourceRoot, 'docs/src/data/component-decisions.json'), 'utf8'));
     // Include reviewed inputs so the Git-free snapshot has the same evidence availability.
-    inputs.push(...(decisions.capabilityBrowserEvidence?.inputs ?? []).map((input) => input.path));
+    inputs.push(...(decisions.capabilityBrowserEvidence?.inputs ?? []).map((input) => input.path).filter(input => existsSync(path.join(sourceRoot, input))));
     for (const directory of ['src', 'tests', 'dist', 'skills/expressivecss/assets/examples', 'scripts']) {
       await cp(path.join(sourceRoot, directory), path.join(projectRoot, directory), { recursive: true });
     }
@@ -625,6 +627,7 @@ describe('ExpressiveCSS version resolution', () => {
     for (const output of [
       'skills/expressivecss/references/contract.json',
       'skills/expressivecss/references/component-decisions.md',
+      'skills/expressivecss/references/design-rules.md',
       'skills/expressivecss/references/capability-roadmap.md',
       'skills/expressivecss/references/capability-roadmap.json',
       'skills/expressivecss/components/app-bar.md',

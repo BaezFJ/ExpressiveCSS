@@ -5,13 +5,13 @@ A circular action that can open a menu of related shortcuts.
 
 Component ID: `fab`
 
-[Component documentation](https://www.expressivecss.com/floating-action-button.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/floating-action-button.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/floating-action-button.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/floating-action-button.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -67,6 +67,12 @@ Expanded is the framework's state, not the author's: the constructor stamps `ari
   </ul>
 </div>
 ```
+
+#### Methods
+
+- `.open()`: Opens the FAB menu.
+- `.close()`: Closes the FAB menu.
+- `.destroy()`: Destroy the plugin instance and tear down its event handlers.
 
 #### Rules
 

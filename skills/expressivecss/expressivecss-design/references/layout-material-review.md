@@ -2,7 +2,7 @@
 
 Reviewed on 2026-09-13. Google evidence covers the linked rendered prose and textual measurements. Collapsed token tables, image-only measurements, full visual parity, native zoom and spoken assistive-technology output remain unverified. dp values are design references, not automatic CSS-pixel conformance.
 
-Read the linked component guide for the existing markup and API contract. Repairs described as unreleased apply to this upstream source checkout, not published 0.9.1 or RoutePlate runtime assets. The [capability roadmap](../../references/capability-roadmap.md) records source pins and scoped browser results.
+Read the linked component guide for the ExpressiveCSS 0.10.1 markup and API contract. RoutePlate runtime assets may differ. The [capability roadmap](../../references/capability-roadmap.md) records source pins and scoped browser results.
 
 ## [App bar](../../components/app-bar.md)
 
@@ -127,19 +127,5 @@ Requirements: Use standard or modal sheets for optional supporting content. Mirr
 Framework comparison: The contract supports native show/showModal and shared dragging. Supply a named close action that works without dragging.
 
 Verification gap: Native modal/nonmodal focus is checked; start-docked RTL drag direction and long-content fit remain unverified. Next check: Test the actual RTL edge, drag alternative, enlarged labels and reachable close action.
-
-Mapped browser scope: Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
-
-## [Floating sheet](../../components/floating-sheet.md)
-
-Relationship: related. Sources: [overview](https://m3.material.io/components/dialogs/overview), [specs](https://m3.material.io/components/dialogs/specs), [guidelines](https://m3.material.io/components/dialogs/guidelines), [accessibility](https://m3.material.io/components/dialogs/accessibility).
-
-Reviewed sections: Related Dialogs/Usage and Accessibility/Keyboard; no standalone floating-sheet specification.
-
-Requirements: Apply the relevant dialog naming, keyboard, focus and dismissal guidance. Google has no standalone floating-sheet specification; its inset geometry is a framework choice.
-
-Framework comparison: This is an inset native-dialog extension. Its width, corners and elevation are framework choices, not a separate Google specification.
-
-Verification gap: Native dialog focus and close are checked; long-content zoom and inset geometry remain unverified. Next check: Verify content scrolling and action reachability in the chosen inset dialog.
 
 Mapped browser scope: Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.

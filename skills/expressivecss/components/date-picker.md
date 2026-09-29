@@ -5,13 +5,13 @@ Select a date, a range, or several dates from a calendar.
 
 Component ID: `date-picker`
 
-[Component documentation](https://www.expressivecss.com/datepicker.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/datepicker.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/datepicker.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/datepicker.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -33,13 +33,13 @@ Requirements and boundaries: design reference inputs-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/date-pickers/guidelines).
 
-Support (2026-09-13, `llm.md#date-picker`): Inline single-date, range, and multiple-date calendar.
+Support (2026-09-17, `llm.md#date-picker`): Inline single-date, range, and multiple-date calendar.
 
 Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
 
 Known boundary: Modal picker parity is not provided by the documented inline API.
 
-Known boundary: Calendar markup claims a grid but lacks calendar arrow, Home/End and month-navigation key handling; modal/range coverage remains incomplete.
+Known boundary: Calendar keyboard navigation and range/multiple selection lifecycle have browser coverage. Spoken calendar context, native zoom and physical devices remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#date-picker).
 
@@ -59,6 +59,51 @@ The calendar is inline, not a modal. `open()` and `close()` are not provided. Wi
   <label for="birthdate">Birthdate</label>
 </div>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `format` | String or Function | `'mmm dd, yyyy'` | Output written to the input, or a function that takes a `Date` and returns a string. |
+| `parse` | Function | `null` | Turn the current input string back into a `Date`. Receives `(value, format)`. |
+| `isDateRange` | Boolean | `false` | Select a start date and an end date. |
+| `dateRangeEndEl` | String | `null` | Selector for an existing end-date input. If omitted, a second input is created. |
+| `isMultipleSelection` | Boolean | `false` | Toggle several dates. Extra inputs are created as dates are added. |
+| `defaultDate` | Date | `null` | Initial date to view. Falls back to the input’s current value, then today. |
+| `defaultEndDate` | Date | `null` | Initial end date when `isDateRange` is true. |
+| `setDefaultDate` | Boolean | `false` | If true, `defaultDate` is also the selected value. |
+| `setDefaultEndDate` | Boolean | `false` | If true, `defaultEndDate` is also the selected end value. |
+| `disableWeekends` | Boolean | `false` | Prevent selecting Saturday and Sunday. |
+| `disableDayFn` | Function | `null` | Return true to disable that day. Receives a `Date`. |
+| `firstDay` | Number | `0` | First day of the week. `0` is Sunday, `1` is Monday. |
+| `minDate` | Date | `null` | Earliest selectable date. |
+| `maxDate` | Date | `null` | Latest selectable date. |
+| `yearRange` | Number or Array | `10` | Years on either side of the viewed year, or `[minYear, maxYear]`. |
+| `yearRangeReverse` | Boolean | `false` | Sort the year list in reverse order. |
+| `isRTL` | Boolean | `false` | Render the calendar right-to-left. |
+| `showMonthAfterYear` | Boolean | `false` | Show the month after the year in the title. |
+| `showDaysInNextAndPreviousMonths` | Boolean | `false` | Render days that fall in the adjoining months. |
+| `openByDefault` | Boolean | `false` | If true, the calendar is visible. If false, it is given `display: none`. |
+| `container` | Element or String | `null` | Element or selector to render the calendar into. When set, the calendar is not hidden. |
+| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
+| `autoSubmit` | Boolean | `true` | If true, selecting a day writes the input immediately. If false, Ok and Cancel buttons are added. |
+| `i18n` | Object | See below | Labels and month/weekday names. Partial objects are merged with the defaults. |
+| `events` | Array | `[]` | Strings from `Date.toDateString()`. Matching days get a `has-event` class. The default stylesheet does not style that class. |
+| `onSelect` | Function | `null` | Called when a date is selected. Receives the `Date`. |
+| `onDraw` | Function | `null` | Called after the calendar HTML is redrawn. |
+| `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
+| `onConfirm` | Function | `null` | Called when the Ok button is used. Only created when `autoSubmit` is false. |
+| `onCancel` | Function | `null` | Called when the Cancel button is used. Only created when `autoSubmit` is false. |
+| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. Pair with `openByDefault: true`. |
+| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
+
+#### Methods
+
+- `.toString()`: String form of the selected date, using `format`. You can pass another date and format.
+- `.setDate()`: Select a date and move the calendar to it.
+- `.gotoDate()`: Change the visible month without changing the selection.
+- `.destroy()`: Destroy the plugin instance, remove the calendar, and tear down its event handlers.
+- `.open(); / .close()`: These methods are not provided. The calendar defaults to inline presentation; `displayPlugin: 'docked'` enables docking. Both require `openByDefault: true` to show the calendar. No modal implementation is available.
 
 #### Rules
 

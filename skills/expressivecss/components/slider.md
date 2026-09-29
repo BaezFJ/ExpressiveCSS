@@ -5,13 +5,13 @@ Selections from a range of values.
 
 Component ID: `slider`
 
-[Component documentation](https://www.expressivecss.com/slider.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/slider.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/slider.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/slider.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -43,7 +43,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Unreleased source handles a maximum of zero and updates value-label placement when the input resizes, including horizontal RTL placement. Published 0.9.1 does not include these repairs.
+Sliders handle a maximum of zero and update value-label placement when the input resizes, including horizontal RTL placement.
 
 Material Design 3 sliders, from the HTML.
 
@@ -57,6 +57,10 @@ An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) 
   <input type="range" min="0" max="100" value="40">
 </label>
 ```
+
+#### Methods
+
+- `.destroy()`: Destroy the plugin instance, remove the value label, and tear down its event handlers.
 
 #### Rules
 

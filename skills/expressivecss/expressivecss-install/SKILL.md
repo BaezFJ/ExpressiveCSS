@@ -42,7 +42,34 @@ The package also exports `@expressivecss/expressive/scss` and individual `scss/*
 
 Load the compiled stylesheet, then the IIFE JavaScript bundle near the end of `<body>`. Call `Expressive.AutoInit()` after the component markup exists. The IIFE global is `Expressive`, not `M`.
 
-A complete page also needs `<meta name="viewport" content="width=device-width, initial-scale=1">`.
+```html
+<!doctype html>
+<html lang="en" theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="dist/css/expressive.min.css">
+  </head>
+  <body>
+    <header>
+      <nav aria-label="Main">
+        <h1>Page title</h1>
+      </nav>
+    </header>
+    <main class="container">
+      <!-- ExpressiveCSS markup -->
+    </main>
+    <script src="dist/js/expressive.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        Expressive.AutoInit();
+      });
+    </script>
+  </body>
+</html>
+```
+
+The `theme` attribute only works on `<html>` (or a shadow host). Drop both `<script>` tags on a CSS-only page. Add persistent navigation (a `nav.navigation-bar` after `<main>` on Compact, a `nav.navigation-rail` before it from Medium) from the screen recipes in the [design rules](../references/design-rules.md).
 
 The compiled stylesheet ships `@font-face` rules for Material Symbols (outlined, rounded, sharp), Roboto 400/500, and Noto Sans 400/500. Keep `dist/fonts/` next to `dist/css/` so the relative `url(../fonts/...)` paths resolve. Override the brand/plain tokens when the page uses different typefaces. `.material-icons` is a compat alias that uses Symbols; do not load the older Material Icons stylesheet.
 

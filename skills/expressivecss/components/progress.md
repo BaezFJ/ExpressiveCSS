@@ -5,13 +5,13 @@ Activity and progress. The HTML is the indicator.
 
 Component ID: `progress`
 
-[Component documentation](https://www.expressivecss.com/preloader.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/preloader.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/preloader.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/preloader.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -43,7 +43,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Unreleased source uses system colors for native and custom progress in forced-colors mode, outlines empty linear tracks, and preserves circular value segments. Reduced motion retains static feedback, including the legacy preloader. Browser emulation checks do not replace Windows high-contrast or screen-reader review. Published 0.9.1 does not include these repairs.
+Native and custom progress use system colors in forced-colors mode, outline empty linear tracks, and preserve circular value segments. Reduced motion retains static feedback, including the legacy preloader. Browser emulation checks do not replace Windows high-contrast or screen-reader review.
 
 Activity and progress indicators for content that takes time to load.
 

@@ -23,7 +23,7 @@ const S = defineSections([
 ---
 <DocsLayout page="datepicker">
 <PageBody sections={S}>
-<p>The unreleased source adds calendar keyboard navigation. Enter on the date input focuses a day. Tab enters or leaves the grid; arrow keys move by day or week. Home/End follow <code>firstDay</code>, and Left/Right follow <code>isRTL</code>. PageUp/PageDown change month; hold Shift to change year. Enter or Space selects an enabled day. Disabled dates remain focusable and are announced as unavailable. Navigation respects configured bounds and preserves focus after redraws. This applies to the existing inline and docked calendars, not a modal picker, and is not included in published 0.9.1.</p>
+<p>The inline and docked calendars support keyboard navigation. Enter on the date input focuses a day. Tab enters or leaves the grid; arrow keys move by day or week. Home/End follow <code>firstDay</code>, and Left/Right follow <code>isRTL</code>. PageUp/PageDown change month; hold Shift to change year. Enter or Space selects an enabled day. Disabled dates remain focusable and are announced as unavailable. Navigation respects configured bounds and preserves focus after redraws. This does not apply to modal pickers.</p>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>datepicker</code> to a text input. <code>AutoInit()</code> starts every
@@ -321,6 +321,7 @@ Expressive.Datepicker.init(elem, {
   </Section>
 
   <Section {...S["date-format"]}>
+        <p>Without a custom <code>parse</code> callback, <code>YYYY-MM-DD</code> input is a local calendar date. Impossible dates such as <code>2023-02-29</code> do not change the selection. Other strings use the browser's date parser. Supply <code>parse</code> for other input formats.</p>
         <p>Use these tokens in the <code>format</code> string.</p>
         <table class="striped">
           <thead>
@@ -444,6 +445,8 @@ Expressive.Datepicker.init(elem, {
           Set <code>isDateRange: true</code>. Click a start day, then an end day that is on or
           after it. Point <code>dateRangeEndEl</code> at a second input, or omit it and a second
           input is created next to the first.
+          An authored end input supports typing and Enter-to-calendar navigation.
+          Destroying the picker preserves authored inputs and removes generated ones.
         </p>
         <div class="field">
           <input type="text" class="date-picker no-autoinit" id="datepicker-range">
@@ -466,6 +469,8 @@ Expressive.Datepicker.init(document.getElementById('datepicker-range'), {
         <p>
           Set <code>isMultipleSelection: true</code>. Click a day to add it; click it again to
           remove it. Each selected date gets its own input.
+          Removing the last date or using Clear keeps the original input empty.
+          Extra generated inputs are removed on deselection or destruction.
         </p>
         <div class="field mb-3">
           <input type="text" class="date-picker no-autoinit" id="datepicker-multi">

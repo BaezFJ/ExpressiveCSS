@@ -5,13 +5,13 @@ Material Design 3 tooltips, from the HTML.
 
 Component ID: `tooltips`
 
-[Component documentation](https://www.expressivecss.com/tooltips.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/tooltips.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/tooltips.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/tooltips.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -58,6 +58,27 @@ Tokens follow the [M3 tooltip spec](https://m3.material.io/components/tooltips/s
   <span class="tooltip bottom" id="tip-below">Below</span>
 </button>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `exitDelay` | Number | `200` | Delay before the tooltip disappears, in milliseconds. |
+| `enterDelay` | Number | `0` | Delay before the tooltip appears, in milliseconds. |
+| `tooltipId` | String | — | Id of an element used as the tooltip body. Set by `data-tooltip-id`. Marks the bubble `rich`. |
+| `text` | String | `''` | Plain-text content. Set by `data-tooltip`. Ignored when `tooltipId` is set. |
+| `margin` | Number | `4` | Distance from the activator, in pixels, not counting `transitionMovement`. M3 is 4dp. |
+| `inDuration` | Number | `250` | Enter transition duration, in milliseconds. |
+| `opacity` | Number | `1` | Opacity of the tooltip when shown. |
+| `outDuration` | Number | `200` | Exit transition duration, in milliseconds. |
+| `position` | String | `'bottom'` | Direction: `'top'`, `'right'`, `'bottom'`, or `'left'`. Set by `data-position`. The CSS-only default is above. |
+| `transitionMovement` | Number | `10` | How far the tooltip moves during its transition, in pixels. |
+
+#### Methods
+
+- `.open()`: Show the tooltip.
+- `.close()`: Hide the tooltip.
+- `.destroy()`: Destroy the plugin instance, remove the tooltip element, and tear down its event handlers.
 
 #### Rules
 

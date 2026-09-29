@@ -14,7 +14,7 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | [Tabs](../components/tabs.md) | Switch related content panels within one page. | App destinations need navigation; values need inputs. | `navigation-bar`, `button-groups` | auto-init |
 | [Breadcrumbs](../components/breadcrumbs.md) | Ancestor path to the current page. | Peer views need tabs; numbered results need pagination. | `tabs`, `pagination` | css-only |
 | [Pagination](../components/pagination.md) | Move through pages of one result set. | In-page sections need anchors or scrollspy. | `scrollspy` | css-only |
-| [Menu](../components/menu.md) | Material Design 3 menus, from the HTML. | The choices need persistent layout space, blocking interaction, or peer navigation. | `bottom-sheet`, `side-sheet`, `navigation-rail` | auto-init |
+| [Menu](../components/menu.md) | Pick one action or option from a list opened by a control. | The choices need persistent layout space, blocking interaction, or peer navigation. | `bottom-sheet`, `side-sheet`, `navigation-rail` | auto-init |
 | [Scrollspy](../components/scrollspy.md) | Track visible sections in a table of contents. | Separate views need navigation or tabs. | `tabs`, `navigation-bar` | auto-init |
 | [Buttons](../components/buttons.md) | Run an action with a visible label. | Stored choices need inputs; destinations need links. | `button-groups`, `icon-buttons` | css-only |
 | [Icon buttons](../components/icon-buttons.md) | Compact actions with recognizable icons. | An unfamiliar action needs a visible button label. | `buttons`, `tooltips` | css-only |
@@ -23,26 +23,25 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | [Floating action button](../components/fab.md) | One primary action or a FAB menu of related labelled actions.; Replace removed speed dials with fab-menu and labelled actions. | The action is not the single highest-priority screen action. | `buttons`, `toolbars` | auto-init |
 | [Cards](../components/cards.md) | Distinct items with their own content or actions. | Dense comparable rows need a list. | `lists`, `carousel`, `badges` | auto-init |
 | [Lists](../components/lists.md) | Scan repeated rows of text and images. | Rich independent items need cards. | `cards`, `carousel`, `panes` | css-only |
-| [Dialogs](../components/dialogs.md) | Focused prompts or decisions that interrupt the flow. | Ignorable feedback needs snackbar or inline feedback. | `snackbar`, `bottom-sheet`, `side-sheet`, `floating-sheet` | shared-runtime |
+| [Dialogs](../components/dialogs.md) | Focused prompts or decisions that interrupt the flow. | Ignorable feedback needs snackbar or inline feedback. | `snackbar`, `bottom-sheet`, `side-sheet` | shared-runtime |
 | [Bottom sheet](../components/bottom-sheet.md) | Secondary content anchored to the bottom of the screen. | Persistent wider-window secondary content or a small anchored choice fits another component. | `side-sheet`, `menu`, `dialogs` | shared-runtime |
 | [Side sheet](../components/side-sheet.md) | Optional content and actions, without interrupting the main view. | The content is peer navigation or requires a blocking modal decision. | `navigation-rail`, `bottom-sheet`, `dialogs` | shared-runtime |
-| [Floating sheet](../components/floating-sheet.md) | Detached secondary content or tools. | Urgent decisions need dialogs; edge content needs sheets. | `dialogs`, `bottom-sheet`, `side-sheet` | shared-runtime |
 | [Drag handle](../components/drag-handle.md) | The bar that says a thing can be dragged — and nothing that does the dragging. | The containing component lacks drag behavior, keyboard operation, or an equivalent single-pointer path without dragging. | `bottom-sheet`, `side-sheet` | css-only |
 | [Badges](../components/badges.md) | Attach counts or status to another item. | Interactive filters need chips; messages need feedback. | `chips`, `cards` | css-only |
-| [Tooltips](../components/tooltips.md) | Material Design 3 tooltips, from the HTML. | The icon already has visible text, or the tooltip would be the control’s only accessible name. | `icon-buttons` | auto-init |
+| [Tooltips](../components/tooltips.md) | Name or explain an icon-only control on hover and focus. | The icon already has visible text, or the tooltip would be the control’s only accessible name. | `icon-buttons` | auto-init |
 | [Snackbar](../components/snackbar.md) | Brief, nonblocking feedback after an action. | Persistent issues need inline messages; decisions need dialogs. | `dialogs` | shared-runtime |
 | [Progress indicators](../components/progress.md) | Measured progress or longer indeterminate waits. | Brief unknown waits fit loading indicator; instant work needs none. | `loading-indicator` | css-only |
 | [Loading indicator](../components/loading-indicator.md) | Brief waits under about five seconds, no known fraction. | Measured or long-running work needs progress. | `progress` | css-only |
 | [Carousel](../components/carousel.md) | Browse a visual collection horizontally. | Dense comparisons need lists; enlargement needs lightbox. | `lists`, `cards`, `lightbox` | auto-init |
-| [Lightbox](../components/lightbox.md) | Enlarge an image on activation. | Tasks need dialogs; browsing collections needs carousel. | `carousel`, `dialogs`, `floating-sheet` | auto-init |
+| [Lightbox](../components/lightbox.md) | Enlarge an image on activation. | Tasks need dialogs; browsing collections needs carousel. | `carousel`, `dialogs` | auto-init |
 | [Toolbars](../components/toolbars.md) | Contextual actions; docked toolbars replace bottom app bars in new Expressive layouts. | Destinations need navigation; page identity needs app bar. | `navigation-bar`, `app-bar` | css-only |
 | [Search](../components/search.md) | A search bar, and the view it expands into. | The field is ordinary data entry rather than finding content. | `text-fields`, `autocomplete` | css-only |
 | [Fieldsets](../components/fieldsets.md) | Name related form controls with a legend. | Visual content grouping needs cards or sections. | `cards` | css-only |
-| [Text fields](../components/text-fields.md) | Material Design 3 text fields, from the HTML. | The value comes from a constrained set better represented by selection controls. | `search`, `autocomplete`, `select` | css-only |
+| [Text fields](../components/text-fields.md) | Enter or edit free-form text, numbers, or passwords. | The value comes from a constrained set better represented by selection controls. | `search`, `autocomplete`, `select` | css-only |
 | [Select](../components/select.md) | Choose one option, or several, from a styled menu. | A short option set should remain visible or free-form entry is required. | `radio-buttons`, `autocomplete` | auto-init |
-| [Checkboxes](../components/checkboxes.md) | Material Design 3 checkboxes, from the HTML. | The setting applies immediately or exactly one option must be chosen. | `switches`, `radio-buttons`, `button-groups`, `chips` | css-only |
-| [Radio buttons](../components/radio-buttons.md) | Material Design 3 radios, from the HTML. | Several choices may be selected or compact direct manipulation is better. | `button-groups`, `checkboxes` | css-only |
-| [Switches](../components/switches.md) | Material Design 3 switches, from the HTML. | A later Save action commits the choice. | `checkboxes` | css-only |
+| [Checkboxes](../components/checkboxes.md) | Turn several options on or off, saved by a later action. | The setting applies immediately or exactly one option must be chosen. | `switches`, `radio-buttons`, `button-groups`, `chips` | css-only |
+| [Radio buttons](../components/radio-buttons.md) | Choose exactly one of a short visible set. | Several choices may be selected or compact direct manipulation is better. | `button-groups`, `checkboxes` | css-only |
+| [Switches](../components/switches.md) | Toggle one setting that applies immediately. | A later Save action commits the choice. | `checkboxes` | css-only |
 | [Slider](../components/slider.md) | Adjust a bounded numeric range. | Exact typed values need a numeric field. | `text-fields` | shared-runtime |
 | [Chips](../components/chips.md) | Compact filters, tags, or contextual actions. | Passive counts need badges; primary actions need buttons. | `checkboxes`, `badges` | auto-init |
 | [Autocomplete](../components/autocomplete.md) | Suggest values under a text field as the user types. | Suggestions are unavailable or the value must be limited to a small visible set. | `text-fields`, `select` | auto-init |

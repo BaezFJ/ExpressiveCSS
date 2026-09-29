@@ -5,13 +5,13 @@ Secondary content anchored to the bottom of the screen.
 
 Component ID: `bottom-sheet`
 
-[Component documentation](https://www.expressivecss.com/bottom-sheet.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/bottom-sheet.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/bottom-sheet.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/bottom-sheet.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -31,11 +31,11 @@ Requirements and boundaries: design reference layout-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/bottom-sheets/guidelines).
 
-Support (2026-09-13, `llm.md#bottom-sheet`): Standard and modal bottom sheets.
+Support (2026-09-18, `llm.md#bottom-sheet`): Standard and modal bottom sheets.
 
 Web adaptation: Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.
 
-Known boundary: The shared handle dismisses rather than cycling sheet heights; long-content and drag behavior are outside the new modal check.
+Known boundary: The shared handle dismisses rather than cycling sheet heights. Long-content scrolling and enlarged-text action access are checked; native zoom and physical touch remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#bottom-sheet).
 

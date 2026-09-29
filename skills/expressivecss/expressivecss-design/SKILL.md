@@ -46,7 +46,7 @@ Do not ask the user to choose raw CSS values. Translate product and brand answer
 
 ## 2. Set a Material 3 Expressive direction
 
-Material 3 Expressive governs design intent, component choice, adaptive behavior, and interaction. The ExpressiveCSS semantics contract governs authored semantics, while the accessibility guide supplies the WCAG checks. The consuming app's brand enters through semantic color roles, type tokens, icon style and axes, content voice, imagery, and assets. Do not replace familiar Material behavior merely to make the app look more branded.
+Material 3 Expressive governs design intent, component choice, adaptive behavior, and interaction. Start from the bundled [design rules](../references/design-rules.md): its hard rules, window-size table, component chooser, and screen recipes decide the shape of a surface before any component guide is opened. The ExpressiveCSS semantics contract governs authored semantics, while the accessibility guide supplies the WCAG checks. The consuming app's brand enters through semantic color roles, type tokens, icon style and axes, content voice, imagery, and assets. Do not replace familiar Material behavior merely to make the app look more branded.
 
 For a decision involving expressive foundations, read only the relevant Theming reference: [typography and emphasis](../expressivecss-theming/references/typography.md), [shape](../expressivecss-theming/references/shape.md), or [motion](../expressivecss-theming/references/motion.md). Each separates Google's design intent from implemented web contracts and framework gaps. Do not claim an Android capability exists in ExpressiveCSS without matching implementation evidence.
 
@@ -76,6 +76,8 @@ Build the task path before adding decoration.
 
 - Use window size classes, panes, and documented navigation changes. Do not shrink a wide layout into Compact or leave phone navigation unchanged at wide sizes.
 - Use proximity and spacing before wrapping every group in a card. Reserve containment for groups that need a boundary, state, interaction, or distinct surface role.
+- Keep spacing on the framework's scale. Window-edge margins are 16px on Compact and 24px from Medium, and panes sit 24px apart; the pane layout applies them through `--md-comp-pane-margin` and `--md-comp-pane-gap`, and `.container` bounds ordinary content with its own responsive widths, so do not add page margins on top of either. Inside a region, use `.p-4` (16px) or `.p-6` (48px) for section padding, the default `.row` gap (24px) between grid items, and `.mb-2` (8px) to `.mb-4` (16px) between related controls. Increase space between groups before adding dividers or cards.
+- Write control text as the action it performs. Button labels are verbs ("Delete", "Save draft"), never "OK", "Yes", or "Submit". A dialog headline states the decision ("Delete 3 photos?") and its confirming button repeats the verb. An error message says what happened and how to recover, next to the control it concerns. Snackbar text is one short sentence with at most one action.
 - Rank actions with Material containment. Use one filled or FAB-level action per region, then tonal, outlined, text, or icon actions as the hierarchy requires.
 - Use surface roles for most of the interface. Reserve `primary` for important actions and use `vibrant` for one focal subtree, not the page.
 - Use the shared 32, 40, 56, 96, and 136 dp control scale only where the documented component supports it. Large controls must communicate hierarchy, not compensate for weak layout.

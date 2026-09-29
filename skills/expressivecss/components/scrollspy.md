@@ -5,13 +5,13 @@ Highlight the table of contents as the page scrolls.
 
 Component ID: `scrollspy`
 
-[Component documentation](https://www.expressivecss.com/scrollspy.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/scrollspy.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/scrollspy.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/scrollspy.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -71,6 +71,19 @@ Put `scrollspy` and an `id` on each section. The table of contents is a set of d
   </div>
 </div>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scrollOffset` | Number | `200` | Per-section observer top inset and `--md-comp-scrollspy-offset` for native anchor scroll margins. |
+| `activeClass` | String | `'active'` | Class applied to the active table-of-contents link. |
+| `getActiveElement` | Function | see below | Returns a CSS selector for the element that should receive `activeClass`, given the section’s id. |
+| `keepTopElementActive` | Boolean | `false` | If true, keep the last section above the viewport active when the scrollbar is outside all spy sections. If there is no such section, the first one stays active. |
+
+#### Methods
+
+- `.destroy()`: Disconnect the section's observer, restore its original offset style, and update
 
 #### Rules
 

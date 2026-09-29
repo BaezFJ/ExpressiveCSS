@@ -5,13 +5,13 @@ Choose one option, or several, from a styled menu.
 
 Component ID: `select`
 
-[Component documentation](https://www.expressivecss.com/select.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/select.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
+[Component documentation](https://www.expressivecss.com/select.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/select.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.10.1)
 
-Contract: ExpressiveCSS 0.9.1
+Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e15f97d48a256d00d07615d37236346bdd526793b5e04ae86518bf9f18af995c`
+Contract SHA-256: `b411ecec2e4ec71194242292d45feda9962145c56249c26d9b9d42de405031ab`
 
 #### Selection and adaptation
 
@@ -99,6 +99,19 @@ Select turns a native `<select>` into a menu. Wrap it in a `.field` and give the
   <option value="1">Option 1</option>
 </select>
 ```
+
+#### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `classes` | String | `''` | Space-separated classes added to the generated `.select-wrapper`. |
+| `menuOptions` | Object | `{}` | Options passed to `Menu`. See Menu. `coverTrigger` is forced to `false` and `closeOnClick` is forced to `false`. |
+
+#### Methods
+
+- `.getSelectedValues()`: Selected values as an array of strings.
+- `.refresh()`: Re-read native values, option labels, options and disabled states. The generated rows are rebuilt while the field and an existing Menu instance remain. Refresh preserves focus on a surviving option in an open menu; it does not emit a user `change` event. Call it after programmatic changes, including moving the select to another form or changing its `form` attribute, to rebind reset handling. There is no mutation observer.
+- `.destroy()`: Destroy the plugin instance, remove the menu, and restore the native select. Associated labels keep their original nodes and event listeners; teardown restores their attributes and authored positions.
 
 #### Rules
 
