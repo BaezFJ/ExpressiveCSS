@@ -145,6 +145,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         await page.evaluate(() => window.oldRow.click());
         assert.equal(await page.evaluate(() => window.changes), 0);
         await page.locator('input[role="combobox"]').click();
+        await expect(page.locator('menu').getByRole('option', { name: 'Updated', exact: true })).toBeFocused();
         await page.locator('menu').getByRole('option', { name: 'Alpha', exact: true }).press('Enter');
         assert.equal(await page.evaluate(() => window.changes), 1);
         await page.evaluate(() => {
