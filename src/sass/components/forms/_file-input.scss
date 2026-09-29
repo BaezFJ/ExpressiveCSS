@@ -2,9 +2,9 @@
 
 .file-field {
   display: grid;
-  // `auto`, not `min-content`: the trigger's label wraps now, and a
-  // min-content track would break it at every word even with room to spare.
-  grid-template-columns: auto minmax(0, 1fr);
+  // Short triggers keep their intrinsic width; long labels leave room for
+  // the selected filename instead of consuming the entire field.
+  grid-template-columns: fit-content(50%) minmax(0, 1fr);
   gap: 10px;
   //position: relative;
 
@@ -20,12 +20,16 @@
   > label.button,
   > button,
   > .btn {
+    display: block;
+    align-content: center;
+    overflow-wrap: break-word;
     position: relative;
     overflow: hidden;
     // A minimum rather than a height, so a wrapped label grows the trigger.
     // `start` keeps the grid from stretching it to the 56dp text field.
     align-self: start;
     min-height: 3rem;
+    min-width: 0;
   }
 
   span {
