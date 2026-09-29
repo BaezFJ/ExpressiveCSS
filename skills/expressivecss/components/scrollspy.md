@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `768210d175ed71d1d8c49f87cf0d2380b0d40c79e658c16f20039fbddb1db247`
+Contract SHA-256: `0bb434ddae9311d99f98a11f4ede9040c9b9fa92b046f9743bbca6fca985ed1e`
 
 #### Selection and adaptation
 
@@ -29,11 +29,11 @@ Upstream: web-extension-inventory-reviewed (2026-09-13); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
 
-Support (2026-09-13, `llm.md#scrollspy`): Section tracking and table-of-contents links.
+Support (2026-09-17, `llm.md#scrollspy`): Section tracking with per-section offsets and independent tables of contents grouped by getActiveElement callback identity.
 
 Web adaptation: Web document navigation helper.
 
-Known boundary: A scoped TOC current link is checked; shared observer behavior with different offsets and multiple independent TOCs remains unverified.
+Known boundary: Independent TOCs must reuse one getActiveElement function per group. Screen-reader announcements, native zoom and physical-device checks remain pending.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#scrollspy).
 
@@ -76,16 +76,14 @@ Put `scrollspy` and an `id` on each section. The table of contents is a set of d
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `throttle` | Number | `100` | Throttle of the scroll handler, in milliseconds. |
-| `scrollOffset` | Number | `200` | Offset used when deciding which section is in view. A larger value lets sections near the bottom of the page become active sooner. |
+| `scrollOffset` | Number | `200` | Per-section observer top inset and `--md-comp-scrollspy-offset` for native anchor scroll margins. |
 | `activeClass` | String | `'active'` | Class applied to the active table-of-contents link. |
 | `getActiveElement` | Function | see below | Returns a CSS selector for the element that should receive `activeClass`, given the section’s id. |
 | `keepTopElementActive` | Boolean | `false` | If true, keep the last section above the viewport active when the scrollbar is outside all spy sections. If there is no such section, the first one stays active. |
-| `animationDuration` | Number | `null` | Duration of the click-to-scroll animation, in milliseconds. `null` uses the browser’s native `scrollIntoView({ behavior: 'smooth' })`. |
 
 #### Methods
 
-- `.destroy()`: Destroy the plugin instance and tear down its event handlers.
+- `.destroy()`: Disconnect the section's observer, restore its original offset style, and update the current link within its group. Repeated destruction is safe.
 
 #### Rules
 

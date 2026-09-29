@@ -257,8 +257,8 @@ function apiSummary(section) {
   const table = options.split('\n').filter((line) => line.startsWith('|'));
   if (table.length > 2) parts.push(`#### Options\n\n${table.join('\n')}`);
   const methods = /\n### Methods\n([\s\S]*?)(?=\n### |$)/u.exec(section)?.[1] ?? '';
-  const names = [...methods.matchAll(/^#### (.+?);?\n\n([^\n]*)/gmu)]
-    .map(([, name, description]) => `- \`${name.trim()}\`: ${description.trim()}`);
+  const names = [...methods.matchAll(/^#### (.+?);?\n\n([^\n]+(?:\n[^\n]+)*)/gmu)]
+    .map(([, name, description]) => `- \`${name.trim()}\`: ${description.trim().replaceAll('\n', ' ')}`);
   if (names.length) {
     parts.push(`#### Methods\n\n${names.join('\n')}`);
   } else if (methods.trim()) {

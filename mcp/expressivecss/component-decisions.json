@@ -909,11 +909,11 @@
         "status": "framework-extra",
         "implementation": {
           "source": "llm.md#scrollspy",
-          "reviewedOn": "2026-09-13",
-          "documentedSupport": "Section tracking and table-of-contents links.",
+          "reviewedOn": "2026-09-17",
+          "documentedSupport": "Section tracking with per-section offsets and independent tables of contents grouped by getActiveElement callback identity.",
           "webAdaptation": "Web document navigation helper.",
           "limitations": [
-            "A scoped TOC current link is checked; shared observer behavior with different offsets and multiple independent TOCs remains unverified."
+            "Independent TOCs must reuse one getActiveElement function per group. Screen-reader announcements, native zoom and physical-device checks remain pending."
           ]
         },
         "relationship": "none",
@@ -933,7 +933,7 @@
       },
       "selectionExample": "A settings screen with mutually exclusive panels needs tabs. Scrollspy only tracks sections already present in the scrolling document.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-13",
+        "reviewedOn": "2026-09-17",
         "support": "implemented",
         "sources": [
           {
@@ -946,14 +946,14 @@
           },
           {
             "path": "src/ts/components/scrollspy.ts",
-            "sha256": "d35d756f8cabcd9bf95aafe9646630309606977fc1bc0347f3e1ded5eba5a3a6"
+            "sha256": "dd7d9babc18578824804f6c8c6b622c307712a7a93e6a40f4cbd6727f4814fd2"
           }
         ],
         "gaps": [
           {
             "kind": "verification",
-            "description": "A scoped TOC current link is checked; shared observer behavior with different offsets and multiple independent TOCs remains unverified.",
-            "nextStep": "Use getActiveElement to select the correct TOC; test independent offsets and teardown before claiming multi-TOC support."
+            "description": "Offsets, independent TOCs, per-instance active classes, fallback, teardown and native anchors have rendered coverage. Spoken current-link state, native zoom, actual contrast themes and physical devices remain unverified.",
+            "nextStep": "Complete the ScrollSpy fixtures in the accessibility manual-review checklist with actual browsers, assistive technology and devices."
           }
         ],
         "browserChecks": [
@@ -961,9 +961,29 @@
             "file": "tests/expressivecss-web-accessibility-browser.test.js",
             "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
             "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: ScrollSpy isolation: offsets",
+            "scope": "Per-section observer offsets and removal of the previous section's active class."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: ScrollSpy isolation: groups",
+            "scope": "Independent callback groups retain separate current links and fallback state during scrolling and destruction."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: ScrollSpy isolation: teardown",
+            "scope": "Repeated destruction and remount restore authored offset value and priority and update surviving current links."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: ScrollSpy isolation: anchors",
+            "scope": "Native keyboard fragment navigation and actual scrolling in LTR/RTL with ordinary and reduced motion."
           }
         ],
-        "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
+        "inventorySha256": "c04a890acc518f0e6c2c339b320e0eb1e90e734d0d897c367bd6c15d655858fa"
       }
     },
     {

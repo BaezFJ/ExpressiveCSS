@@ -221,17 +221,21 @@ Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavio
 
 ## Scrollspy
 
-**unassessed within the stated scope.** Section tracking and table-of-contents links.
+**unassessed within the stated scope.** Section tracking with per-section offsets and independent tables of contents grouped by getActiveElement callback identity.
 
-Source review: needs-review, 2026-09-13. [src/sass/components/_scrollspy.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_scrollspy.scss), [src/sass/components/_table_of_contents.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_table_of_contents.scss), [src/ts/components/scrollspy.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/scrollspy.ts).
+Source review: needs-review, 2026-09-17. [src/sass/components/_scrollspy.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_scrollspy.scss), [src/sass/components/_table_of_contents.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_table_of_contents.scss), [src/ts/components/scrollspy.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/ts/components/scrollspy.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components).
 
 Web adaptation: Web document navigation helper.
 
-- verification: A scoped TOC current link is checked; shared observer behavior with different offsets and multiple independent TOCs remains unverified. Next: Use getActiveElement to select the correct TOC; test independent offsets and teardown before claiming multi-TOC support.
+- verification: Offsets, independent TOCs, per-instance active classes, fallback, teardown and native anchors have rendered coverage. Spoken current-link state, native zoom, actual contrast themes and physical devices remain unverified. Next: Complete the ScrollSpy fixtures in the accessibility manual-review checklist with actual browsers, assistive technology and devices.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+- not-recorded: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: offsets`. Per-section observer offsets and removal of the previous section's active class.
+- not-recorded: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: groups`. Independent callback groups retain separate current links and fallback state during scrolling and destruction.
+- not-recorded: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: teardown`. Repeated destruction and remount restore authored offset value and priority and update surviving current links.
+- not-recorded: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: anchors`. Native keyboard fragment navigation and actual scrolling in LTR/RTL with ordinary and reduced motion.
 
 <a id="buttons"></a>
 
