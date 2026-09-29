@@ -4862,6 +4862,10 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 
 ### Date format options
 
+Without a custom `parse` callback, `YYYY-MM-DD` input is a local calendar date.
+Impossible dates such as `2023-02-29` do not change the selection. Other strings
+use the browser's date parser. Supply `parse` for other input formats.
+
 Use these tokens in the `format` string.
 
 | Key | Description | Output |

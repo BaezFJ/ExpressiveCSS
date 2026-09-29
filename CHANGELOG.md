@@ -5,6 +5,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Datepicker treats `YYYY-MM-DD` input as a local calendar date during
+  initialization, editing and reopening, so dates no longer shift backward in
+  timezones west of UTC. Impossible dates such as `2023-02-29` are rejected.
+
 ## [0.10.1] - 2026-09-22
 
 ### Added

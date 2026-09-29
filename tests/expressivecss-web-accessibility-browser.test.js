@@ -141,12 +141,12 @@ const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 const engines = { chromium, firefox, webkit };
 if (requested && !Object.hasOwn(engines, requested)) throw new Error('Unknown EXPRESSIVECSS_TEST_BROWSER');
 
-function scenario(name, markup, check) {
+function scenario(name, markup, check, timezoneId) {
   for (const [engine, type] of Object.entries(engines).filter(([name]) => !requested || requested === name)) {
     test(`${engine}: ${name}`, { timeout: 30000 }, async t => {
       if (!existsSync(type.executablePath())) { t.skip(`${engine} is not installed`); return; }
       const browser = await type.launch();
-      const page = await browser.newPage({ viewport: { width: 1000, height: 900 }, reducedMotion: 'reduce' });
+      const page = await browser.newPage({ viewport: { width: 1000, height: 900 }, reducedMotion: 'reduce', timezoneId });
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       page.setDefaultTimeout(4000);
@@ -696,6 +696,84 @@ for (const action of ['default', 'multiple', 'range', 'clear']) scenario(`date p
     await expect(page.locator('#date')).toHaveAttribute('data-date', '');
   }
 });
+
+for (const timezone of ['America/Chicago', 'UTC', 'Asia/Tokyo']) scenario(`date picker calendar-date parsing in ${timezone}`, `
+<form><label for="date">Start date</label><input id="date" value="2024-02-29">
+<label for="end">End date</label><input id="end"></form><button id="after">After</button>`, async page => {
+  await page.evaluate(() => {
+    window.instances = [Expressive.Datepicker.init(document.querySelector('#date'), {
+      format: 'yyyy-mm-dd', setDefaultDate: true, openByDefault: true, isDateRange: true, dateRangeEndEl: '#end'
+    })];
+  });
+  const selected = () => page.evaluate(() => {
+    const picker = window.instances[0];
+    return [picker.toString(), picker.date.getHours(), picker.el.value];
+  });
+  assert.deepEqual(await selected(), ['2024-02-29', 0, '2024-02-29'], 'initial input stays on its calendar day');
+
+  // Leap day, a month boundary, and both Chicago daylight-saving transitions.
+  for (const value of ['2024-03-01', '2024-03-10', '2024-11-03', '2024-02-29']) {
+    await page.locator('#date').fill(value);
+    await page.locator('#after').focus();
+    assert.deepEqual(await selected(), [value, 0, value], 'change parses a local calendar date');
+    await page.locator('#date').click();
+    assert.deepEqual(await selected(), [value, 0, value], 'click preserves the selected date');
+    await page.keyboard.press('Enter');
+    assert.deepEqual(await selected(), [value, 0, value], 'Enter preserves the selected date');
+    const [year, month, day] = value.split('-').map(Number);
+    await expect(page.locator(`.datepicker-day-button[data-year="${year}"][data-month="${month - 1}"][data-day="${day}"]`)).toBeFocused();
+  }
+
+  await page.locator('#end').fill('2024-03-01');
+  await page.locator('#after').focus();
+  assert.equal(await page.evaluate(() => window.instances[0].toString(window.instances[0].endDate)), '2024-03-01');
+  await page.locator('#end').fill('2024-02-28');
+  await page.locator('#after').focus();
+  await expect(page.locator('#end')).toHaveValue('2024-03-01');
+  await page.locator('#end').click();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.datepicker-day-button[data-year="2024"][data-month="2"][data-day="1"]')).toBeFocused();
+
+  assert.deepEqual(await page.evaluate(() => {
+    const picker = window.instances[0];
+    picker.setDate('2024-02-29');
+    const fromString = picker.toString();
+    const earlyYear = picker.validateDate('0099-01-02');
+    const invalid = ['2023-02-29', '2024-02-30', '2024-04-31', '2024-00-10', '2024-13-01', '2024-01-00', 'invalid', ''];
+    const rejected = invalid.map(value => {
+      picker.el.value = value;
+      picker.el.dispatchEvent(new Event('change'));
+      return picker.toString() === fromString;
+    });
+    const timestamp = '2024-02-29T01:30:00Z';
+    const instant = new Date(timestamp);
+    const timestampPreserved = picker.validateDate(timestamp).getTime() === instant.getTime();
+    picker.setDate(instant);
+    const objectPreserved = picker.date.getDate() === instant.getDate() && instant.getUTCHours() === 1;
+    picker.options.minDate = new Date(2024, 1, 20);
+    picker.options.maxDate = new Date(2024, 1, 29);
+    picker.setDate('2024-03-01');
+    const clampedMax = picker.toString();
+    picker.setDate('2024-02-19');
+    const clampedMin = picker.toString();
+    let parserArgs;
+    picker.options.parse = (value, format) => {
+      parserArgs = [value, format];
+      return new Date(2024, 1, 25);
+    };
+    picker.el.value = '2024-02-29';
+    picker.el.dispatchEvent(new Event('change'));
+    return {
+      fromString, earlyYear: [earlyYear.getFullYear(), earlyYear.getMonth(), earlyYear.getDate()],
+      rejected, timestampPreserved, objectPreserved, clampedMax, clampedMin,
+      customDate: picker.toString(), parserArgs
+    };
+  }), {
+    fromString: '2024-02-29', earlyYear: [99, 0, 2], rejected: Array(8).fill(true),
+    timestampPreserved: true, objectPreserved: true, clampedMax: '2024-02-29', clampedMin: '2024-02-20',
+    customDate: '2024-02-25', parserArgs: ['2024-02-29', 'yyyy-mm-dd']
+  });
+}, timezone);
 
 for (const action of ['input', 'empty', 'boundaries']) scenario(`time picker digital values: ${action}`, '<form><label for="time">Time</label><input id="time" name="time"></form><button id="after">After</button>', async page => {
   await page.clock.setFixedTime(new Date(2024, 0, 1, 0, 37));
