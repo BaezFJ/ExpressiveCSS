@@ -766,6 +766,34 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     } finally { try { await page?.evaluate(() => window.carousel?.destroy()); } finally { await browser.close(); } }
   });
 
+  browserTest(`Carousel ignores stale scrollend during a newer navigation (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ reducedMotion: 'no-preference' });
+      await page.setContent(`<style>${css}</style><div class="carousel flat" style="width:320px">
+        <article class="carousel-item">One</article><article class="carousel-item">Two</article><article class="carousel-item active">Three</article></div>`);
+      await page.addScriptTag({ content: js });
+      const pending = await page.evaluate(() => {
+        window.carousel = Expressive.Carousel.init(document.querySelector('.carousel'), { duration: 0 });
+        const track = document.querySelector('.carousel-track'), scrollTo = track.scrollTo;
+        let requested;
+        // Deliver the previous scroll's completion before the new scroll moves.
+        track.scrollTo = options => { requested = options; };
+        try {
+          carousel.set(1);
+          track.dispatchEvent(new Event('scrollend'));
+          return { ignoring: carousel._ignoreScroll, current: carousel.center, nearest: carousel._nearestIndex() };
+        } finally {
+          track.scrollTo = scrollTo;
+          scrollTo.call(track, requested);
+        }
+      });
+      assert.deepEqual(pending, { ignoring: true, current: 1, nearest: 2 });
+      await expect.poll(() => page.evaluate(() => ({ current: carousel.center, nearest: carousel._nearestIndex(), ignoring: carousel._ignoreScroll }))).toEqual({ current: 1, nearest: 1, ignoring: false });
+    } finally { try { await page?.evaluate(() => window.carousel?.destroy()); } finally { await browser.close(); } }
+  });
+
   browserTest(`Carousel destroys pending scroll completion work (${engine})`, async () => {
     const browser = await type.launch();
     let page;

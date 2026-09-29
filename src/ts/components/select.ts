@@ -45,7 +45,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   selectOptions: (HTMLOptionElement | HTMLOptGroupElement)[];
   private _values: ValueStruct[];
   private _createdWrapper: boolean;
-  private _originalLabelFor: string | null;
+  private _originalLabels = new Map<HTMLLabelElement, { for: string | null; id: string | null }>();
   private _labelPlaceholder: Comment;
   private _form: HTMLFormElement | null;
   private _resetTimer: ReturnType<typeof setTimeout>;
@@ -67,7 +67,6 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.el.tabIndex = -1;
     this._values = [];
     this._createdWrapper = false;
-    this._originalLabelFor = null;
     this._setupMenu();
     this._setupEventHandlers();
   }
@@ -308,7 +307,10 @@ export class FormSelect extends Component<FormSelectOptions> {
     // selector out of the id instead meant an id with any CSS-special
     // character either threw or matched something else entirely.
     this.labelEl = this.el.labels?.[0] ?? null;
-    if (this.labelEl) {
+    Array.from(this.el.labels ?? []).forEach(label => {
+      this._originalLabels.set(label, { for: label.getAttribute('for'), id: label.getAttribute('id') });
+    });
+    if (this.labelEl && !this.el.closest('label')) {
       this._labelPlaceholder = document.createComment('');
       this.labelEl.before(this._labelPlaceholder);
     }
@@ -330,7 +332,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._buildCaret();
     this._initMenu();
     this._setSelectedStates();
-    if (this.labelEl) this.input.after(this.labelEl);
+    if (this._labelPlaceholder) this.input.after(this.labelEl);
   }
 
   private _setupWrapper() {
@@ -389,9 +391,14 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.input.setAttribute('aria-controls', this.menuEl.id);
     this.input.placeholder = ' ';
 
-    if (this.labelEl) {
-      this._originalLabelFor = this.labelEl.htmlFor;
-      this.labelEl.htmlFor = this.input.id;
+    this._originalLabels.forEach((_, label) => { label.htmlFor = this.input.id; });
+    // Moving the first label can change DOM order. Preserve the original naming
+    // order without overriding an author's explicit accessible name.
+    if (this._labelPlaceholder && this._originalLabels.size > 1 && !this.input.getAttribute('aria-label') && !this.input.getAttribute('aria-labelledby')) {
+      this.input.setAttribute('aria-labelledby', Array.from(this._originalLabels.keys(), (label, index) => {
+        if (!label.id) label.id = `${this.input.id}-label-${index}`;
+        return label.id;
+      }).join(' '));
     }
 
     this.wrapper.prepend(this.input);
@@ -504,10 +511,13 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.menuEl?.remove();
     const hide = this.el.parentElement;
     if (hide?.classList.contains('hide-select')) hide.replaceWith(this.el);
-    if (this.labelEl && this._originalLabelFor !== null) {
-      this.labelEl.htmlFor = this._originalLabelFor;
-      this._labelPlaceholder?.replaceWith(this.labelEl);
-    }
+    this._originalLabels.forEach((original, label) => {
+      for (const name of ['for', 'id'] as const) {
+        if (original[name] === null) label.removeAttribute(name);
+        else label.setAttribute(name, original[name]);
+      }
+    });
+    this._labelPlaceholder?.replaceWith(this.labelEl);
     if (!this.wrapper) return;
     if (this._createdWrapper) {
       this.wrapper.replaceWith(this.el);

@@ -207,6 +207,50 @@ scenario('select exposes only the generated control and restores native accessib
   }
 });
 
+scenario('select preserves every associated label and authored naming precedence', `
+<label id="shipping" for="pick:zone">Shipping</label><label for="pick:zone">destination</label>
+<select id="pick:zone"><option>One</option><option>Two</option></select>
+<div><label id="" for="pick:zone">required</label></div><span id="override">Custom name</span>`, async page => {
+  for (const multiple of [false, true]) {
+    await page.locator('select').evaluate((el, multiple) => { el.multiple = multiple; }, multiple);
+    await expect(page.getByRole(multiple ? 'listbox' : 'combobox')).toHaveAccessibleName('Shipping destination required');
+    for (const nameAttribute of [null, 'aria-label', 'aria-labelledby']) {
+      await page.locator('select').evaluate((el, attr) => {
+        if (attr) el.setAttribute(attr, attr === 'aria-label' ? 'Explicit name' : 'override');
+      }, nameAttribute);
+      const expected = nameAttribute === 'aria-label' ? 'Explicit name' : nameAttribute === 'aria-labelledby' ? 'Custom name' : 'Shipping destination required';
+      for (let cycle = 0; cycle < 2; cycle++) {
+        await page.evaluate(() => { window.instances = [Expressive.FormSelect.init(document.querySelector('select'), { menuOptions: { inDuration: 0, outDuration: 0, autoFocus: false } })]; });
+        const input = page.getByRole('combobox');
+        await expect(input).toHaveCount(1);
+        await expect(input).toHaveAccessibleName(expected);
+        for (const label of await page.locator('label').filter({ hasText: /^(Shipping|destination|required)$/ }).all()) {
+          assert.equal(await label.evaluate(el => el.control === window.instances[0].input), true);
+          await label.click();
+          await expect(input).toBeFocused();
+          await page.evaluate(() => window.instances[0].menu.close());
+        }
+      }
+      await page.evaluate(() => { window.instances[0].destroy(); window.instances = []; });
+      await expect(page.getByRole(multiple ? 'listbox' : 'combobox')).toHaveAccessibleName(expected);
+      assert.deepEqual(await page.locator('label').evaluateAll(labels => labels.map(label => [label.getAttribute('id'), label.getAttribute('for')])), [['shipping', 'pick:zone'], [null, 'pick:zone'], ['', 'pick:zone']]);
+      await page.locator('select').evaluate((el, attr) => { if (attr) el.removeAttribute(attr); }, nameAttribute);
+    }
+  }
+  // Either the first or a later label may contain the native select.
+  for (const wrappingFirst of [false, true]) {
+    await page.evaluate(wrappingFirst => {
+      const el = document.querySelector('select');
+      el.multiple = false;
+      const labels = [...document.querySelectorAll('label')];
+      labels[wrappingFirst ? 0 : 1].append(el);
+      window.instances = [Expressive.FormSelect.init(el)];
+    }, wrappingFirst);
+    await expect(page.getByRole('combobox')).toHaveAccessibleName('Shipping destination required');
+    await page.evaluate(() => { window.instances[0].destroy(); window.instances = []; });
+  }
+});
+
 for (const multiple of [false, true]) scenario(`select validation remains usable with a hidden native control: multiple=${multiple}`, `
 <form id="choices"><input id="first" aria-label="First">
 <div class="field"><label for="a">Choice A</label><select id="a" name="a" required aria-describedby="hint" aria-invalid="false">

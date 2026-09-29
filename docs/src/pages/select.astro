@@ -226,7 +226,7 @@ instance.refresh();
 `} />
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove the menu, and restore the native select. The original label returns to its authored position and points to the native select again. Reinitialization preserves the same label node and its event listeners.</p>
+        <p>Destroy the plugin instance, remove the menu, and restore the native select. Associated labels keep their original nodes and event listeners; teardown restores their attributes and authored positions.</p>
 <Code code={`
 instance.destroy();
 `} />
@@ -236,7 +236,10 @@ instance.destroy();
           disabled optgroups cannot be chosen in the generated menu. A selected
           disabled option remains visible in the field, but native form submission
           excludes it. An empty selection displays an empty field.</p>
-        <p>The enhanced field exposes one combobox to assistive technology. The native
+        <p>The enhanced field exposes one combobox to assistive technology. All associated
+          labels contribute to its name in their original order, unless an authored
+          <code>aria-label</code> or <code>aria-labelledby</code> supplies the name. Each label
+          targets the visible control. The native
           select stays visually hidden and excluded from the accessibility tree while initialized. Required and custom validation errors
           use its browser-provided message, displayed as supporting text associated
           with the visible field. Native validation chooses which field receives focus,

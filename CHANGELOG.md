@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Carousel ignores stale scroll-completion events from earlier navigation, so
+  selecting a swipeable tab immediately after initialization keeps that selection.
+
+- FormSelect preserves every associated label when enhanced, including naming
+  order, label activation and authored naming overrides. Teardown restores label
+  attributes and removes generated label IDs.
+
 - FormSelect hides the native control from assistive technology, leaving one
   named combobox. Required and custom validation errors appear beside the visible
   field; the native select retains form values and validation rules. Static

@@ -177,39 +177,43 @@ describe("FormSelect", () => {
     "label after select": '<span>Before</span><select id="pick"><option>One</option></select><label for="pick">Pick</label>',
     "label in another parent": '<div><span>Before</span><label for="pick">Pick</label><span>After</span></div><select id="pick"><option>One</option></select>',
     "existing field": fieldHtml,
+    "multiple labels before and after": '<label id="authored" for="pick">Pick</label><label for="pick">a number</label><select id="pick"><option>One</option></select><div><label id="" for="pick">below</label></div>',
+    "multiple labels with existing field": '<div class="field"><label for="pick">Pick</label><select id="pick"><option>One</option></select></div><label for="pick">a number</label>',
+    "wrapping and external labels": '<label>Pick<select id="pick"><option>One</option></select></label><label for="pick">a number</label>',
+    "external and wrapping labels": '<label for="pick">Pick</label><label for="pick">a number<select id="pick"><option>One</option></select></label>',
     "no label": '<span>Before</span><select id="pick" aria-label="Pick"><option>One</option></select><span>After</span>',
   })) {
     for (const reinitialize of [false, true]) test(`restores authored label and node order: ${name}, reinitialize=${reinitialize}`, () => {
       document.body.innerHTML = html;
       const select = document.querySelector("select");
-      const label = select.labels[0];
-      const originalFor = label?.getAttribute("for");
-      const parents = new Set([select.parentNode, label?.parentNode].filter(Boolean));
+      const labels = [...select.labels];
+      const originalAttributes = labels.map(label => [label.getAttribute("for"), label.getAttribute("id")]);
+      const parents = new Set([select.parentNode, ...labels.map(label => label.parentNode)]);
       const originalChildren = [...parents].map(parent => [parent, [...parent.childNodes]]);
       let labelClicks = 0;
-      label?.addEventListener("click", () => labelClicks++);
+      labels.forEach(label => label.addEventListener("click", event => { if (event.target === label) labelClicks++; }));
       for (let cycle = 0; cycle < 2; cycle++) {
         let instance;
         try {
           instance = Expressive.FormSelect.init(select);
           if (reinitialize) instance = Expressive.FormSelect.init(select);
-          assert.equal(instance.labelEl, label ?? null);
-          if (label) {
+          assert.equal(instance.labelEl, labels[0] ?? null);
+          for (const label of labels) {
             assert.equal(label.control, instance.input);
             label.click();
-            assert.equal(labelClicks, cycle + 1, "the original label listener survives");
           }
+          assert.equal(labelClicks, (cycle + 1) * labels.length, "the original label listeners survive");
         } finally {
           Expressive.FormSelect.getInstance(select)?.destroy();
         }
         for (const [parent, children] of originalChildren) {
           assert.deepEqual([...parent.childNodes], children, "teardown restores the original nodes and removes placeholders");
         }
-        if (label) {
-          assert.equal(label.getAttribute("for"), originalFor);
+        labels.forEach((label, index) => {
+          assert.deepEqual([label.getAttribute("for"), label.getAttribute("id")], originalAttributes[index]);
           assert.equal(label.control, select);
-          assert.equal(select.labels[0], label);
-        }
+        });
+        assert.deepEqual([...select.labels], labels);
       }
     });
   }
