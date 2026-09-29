@@ -83,7 +83,7 @@ Put `scrollspy` and an `id` on each section. The table of contents is a set of d
 
 #### Methods
 
-- `.destroy()`: Disconnect the section's observer, restore its original offset style, and update
+- `.destroy()`: Disconnect the section's observer, restore its original offset style, and update the current link within its group. Repeated destruction is safe.
 
 #### Rules
 
