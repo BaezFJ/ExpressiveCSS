@@ -863,6 +863,44 @@ describe('Autocomplete', () => {
 describe('Tabs', () => {
   beforeEach(resetBody);
 
+  for (const id of ['123', 'panel.dot', 'panel:details', 'panel[x]']) {
+    test(`Tabs resolves the exact panel ID: ${id}`, () => {
+      document.body.innerHTML = `<nav class="tabs"><a href="#base">Base</a><a href="#${id}">Special</a></nav>
+        <section id="base" style="display:block">Base</section>
+        <section id="${id}" class="authored" style="display:inline-block !important">Special</section>
+        <aside id="panel" class="dot" x>Decoy</aside>`;
+      const nav = document.querySelector('nav');
+      const panel = document.getElementById(id);
+      const decoy = document.getElementById('panel');
+      const decoyMarkup = decoy.outerHTML;
+      const shown = [];
+      for (const hash of ['#' + id, '']) {
+        let instance;
+        window.location.hash = hash;
+        try {
+          instance = Expressive.Tabs.init(nav, { onShow: content => shown.push(content) });
+          assert.equal(instance._content, hash ? panel : document.getElementById('base'));
+          if (!hash) assert.equal(panel.style.display, 'none');
+          instance.select('base');
+          shown.length = 0;
+          nav.querySelectorAll('a')[1].click();
+          assert.equal(instance._content, panel);
+          assert.deepEqual(shown, [panel]);
+          assert.equal(panel.style.display, 'block');
+          assert.equal(nav.querySelector('[aria-current="page"]').hash, '#' + id);
+          assert.equal(decoy.outerHTML, decoyMarkup);
+        } finally {
+          instance?.destroy();
+          window.location.hash = '';
+        }
+        assert.equal(panel.style.display, 'inline-block');
+        assert.equal(panel.style.getPropertyPriority('display'), 'important');
+        assert.equal(panel.className, 'authored');
+        assert.equal(document.querySelector('.indicator'), null);
+      }
+    });
+  }
+
   test('aria-current follows the active tab instead of staying where it was written', () => {
     // The markup names the initially current tab. Its *value* then changes as
     // the user clicks, which makes it the component's to maintain - the class

@@ -148,7 +148,7 @@ onSearch: function(text, autocomplete) {
               <td><code>onSearch</code></td>
               <td>Function</td>
               <td>filters <code>id</code> and <code>text</code></td>
-              <td>Called when the input text changes. Load or filter data, then call <code>setMenuItems</code>.</td>
+              <td>Called when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call <code>setMenuItems</code>.</td>
             </tr>
             <tr>
               <td><code>minLength</code></td>
@@ -237,7 +237,7 @@ instance.destroy();
             <tr>
               <td><code>count</code></td>
               <td>Number</td>
-              <td>Number of matching options (reset on each keyup/focus).</td>
+              <td>Number of matching options (reset on each input/focus).</td>
             </tr>
             <tr>
               <td><code>activeIndex</code></td>

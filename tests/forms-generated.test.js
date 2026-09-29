@@ -21,6 +21,7 @@ import { Expressive, resetBody, window } from './setup.js';
 /** Type into an autocomplete: the menu is only built while filtering. */
 function type(el, value) {
   el.value = value;
+  el.dispatchEvent(new window.InputEvent('input', { bubbles: true, inputType: 'insertText' }));
   el.dispatchEvent(new window.KeyboardEvent('keyup', { bubbles: true, key: value.slice(-1) }));
 }
 
@@ -68,6 +69,74 @@ describe('FormSelect generated listbox', () => {
     } finally {
       inst.destroy();
     }
+  });
+
+  test('native validation is shown as text on the visible field and cleared on refresh', async () => {
+    const inst = mount('required aria-describedby="help" aria-invalid="false"');
+    const help = document.createElement('small');
+    help.id = 'help';
+    help.textContent = 'Choose a number.';
+    inst.wrapper.append(help);
+    try {
+      assert.equal(inst.el.parentElement.ariaHidden, 'true');
+      assert.equal(inst.el.willValidate, true);
+      const focused = document.activeElement;
+      assert.equal(inst.el.reportValidity(), false);
+      assert.equal(inst.input.ariaInvalid, 'true');
+      // JSDOM dispatches invalid but does not implement native reporting focus.
+      assert.equal(document.activeElement, focused);
+      inst.el.focus();
+      await Promise.resolve();
+      assert.equal(document.activeElement, inst.input);
+      const ids = inst.input.getAttribute('aria-describedby').split(' ');
+      assert.equal(ids[0], 'help');
+      const error = document.getElementById(ids[1]);
+      assert.equal(error.textContent, inst.el.validationMessage);
+      inst.el.setCustomValidity('<img src=x onerror=alert(1)>');
+      inst.refresh();
+      assert.equal(error.textContent, inst.el.validationMessage);
+      assert.equal(error.children.length, 0);
+      inst.el.reportValidity();
+      assert.equal(inst.input.getAttribute('aria-describedby'), ids.join(' '));
+      inst.el.setCustomValidity('');
+      inst.el.value = '1';
+      inst.refresh();
+      assert.equal(error.isConnected, false);
+      assert.equal(inst.input.ariaInvalid, 'false');
+      assert.equal(inst.input.getAttribute('aria-describedby'), 'help');
+      assert.equal(inst.el.getAttribute('aria-describedby'), 'help');
+      assert.equal(inst.el.ariaInvalid, 'false');
+    } finally {
+      inst.destroy();
+    }
+    assert.equal(document.getElementById('s').hidden, false);
+    assert.equal(help.textContent, 'Choose a number.');
+  });
+
+  test('validation messages and listeners are removed on reinitialization and destroy', async () => {
+    const first = mount('required');
+    const select = first.el;
+    try {
+      select.reportValidity();
+      const errorId = first.input.getAttribute('aria-describedby');
+      assert.ok(errorId);
+      const next = Expressive.FormSelect.init(select);
+      assert.equal(document.getElementById(errorId), null);
+      assert.equal(next.input.getAttribute('aria-describedby'), null);
+      select.reportValidity();
+      assert.equal(next.wrapper.querySelectorAll('.supporting-text').length, 1);
+    } finally {
+      select.focus();
+      Expressive.FormSelect.getInstance(select)?.destroy();
+      await Promise.resolve();
+    }
+    const event = new window.Event('invalid', { cancelable: true });
+    select.dispatchEvent(event);
+    assert.equal(event.defaultPrevented, false);
+    select.focus();
+    assert.equal(document.activeElement, select, 'destroy removes the native focus forwarding listener');
+    assert.equal(document.querySelector('.supporting-text'), null);
+    assert.equal(select.labels[0].htmlFor, select.id);
   });
 
   test('every option carries a selection state, not just the chosen one', () => {
@@ -192,6 +261,74 @@ describe('Autocomplete generated combobox', () => {
     // A second open() used to overwrite the tracked timer, so destroy()
     // cancelled only the later one and the first fired at a dead menu.
     await new Promise((r) => setTimeout(r, 10));
+  });
+
+  test('input-only edits search once and clear stale selections', () => {
+    const inst = mount();
+    const queries = [];
+    let changes = 0;
+    inst.options.onSearch = (value, autocomplete) => {
+      queries.push(value);
+      Expressive.Autocomplete.defaults.onSearch(value, autocomplete);
+    };
+    inst.options.onAutocomplete = () => changes++;
+    try {
+      inst.selectOption('a');
+      for (const [inputType, value, ids] of [
+        ['insertFromPaste', 'ap', ['a']],
+        ['insertReplacementText', 'ban', ['b']],
+        ['deleteByCut', '', ['a', 'b']],
+      ]) {
+        inst.el.value = value;
+        inst.el.dispatchEvent(new window.InputEvent('input', { bubbles: true, inputType }));
+        assert.equal(queries.at(-1), value);
+        assert.deepEqual(inst.menuItems.map(item => item.id), ids);
+        assert.deepEqual(inst.selectedValues, []);
+        const changesAfterInput = changes;
+        inst.el.dispatchEvent(new window.KeyboardEvent('keyup', { bubbles: true, key: 'Backspace' }));
+        assert.equal(changes, changesAfterInput, 'keyup must not repeat change callbacks');
+      }
+      assert.deepEqual(queries, ['ap', 'ban', '']);
+    } finally {
+      inst.destroy();
+    }
+  });
+
+  test('input listeners are removed on destroy and reinitialization', () => {
+    const first = mount();
+    const el = first.el;
+    const queries = [];
+    first.options.onSearch = value => queries.push(`old:${value}`);
+    try {
+      type(el, 'ap');
+      Expressive.Autocomplete.init(el, { onSearch: value => queries.push(`new:${value}`) });
+      type(el, 'ban');
+    } finally {
+      Expressive.Autocomplete.getInstance(el)?.destroy();
+    }
+    type(el, 'pear');
+    assert.deepEqual(queries, ['old:ap', 'new:ban']);
+  });
+
+  test('Chips autocomplete accepts input-only edits before keyboard selection', () => {
+    document.body.innerHTML = '<div class="chips"></div>';
+    const chips = Expressive.Chips.init(document.querySelector('.chips'), {
+      allowUserInput: true,
+      autocompleteOptions: { data: [{ id: 'apple', text: 'Apple' }, { id: 'banana', text: 'Banana' }] },
+    });
+    try {
+      const el = chips.el.querySelector('input');
+      el.focus();
+      el.value = 'app';
+      el.dispatchEvent(new window.InputEvent('input', { bubbles: true, inputType: 'insertFromPaste' }));
+      assert.deepEqual([...chips.autocomplete.container.querySelectorAll('[role="option"]')].map(item => item.textContent), ['Apple']);
+      key(el, 'ArrowDown');
+      key(el, 'Enter');
+      assert.deepEqual(chips.chipsData.map(item => item.id), ['apple']);
+      assert.equal(el.value, '');
+    } finally {
+      chips.destroy();
+    }
   });
 });
 

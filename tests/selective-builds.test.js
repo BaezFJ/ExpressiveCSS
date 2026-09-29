@@ -69,7 +69,7 @@ test('default custom Sass matches the complete stylesheet and preserves configur
 test('complete minified artifacts stay within the reviewed gzip budgets', () => {
   const js = readFileSync(`${root}/dist/js/expressive.min.js`, 'utf8').replace(/^\/\/# sourceMappingURL=.*\n?/m, '');
   const css = readFileSync(`${root}/dist/css/expressive.min.css`, 'utf8').replace(/\/\*# sourceMappingURL=.*?\*\//, '').trimEnd();
-  // Local calendar-date parsing and overflow validation add 74 gzip bytes.
-  assert.ok(sizes(js).gzip <= 43481, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed full bundle with native select validation focus: 43,822 gzip bytes.
+  assert.ok(sizes(js).gzip <= 43824, `JavaScript gzip: ${sizes(js).gzip}`);
   assert.ok(sizes(css).gzip <= 49675, `CSS gzip: ${sizes(css).gzip}`);
 });

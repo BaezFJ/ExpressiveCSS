@@ -163,6 +163,162 @@ function scenario(name, markup, check, timezoneId) {
   }
 }
 
+scenario('select exposes only the generated control and restores native accessibility', `
+<button id="before">Before</button><form id="choices"><div class="field"><label for="choice">Choice</label>
+<select id="choice" name="choice" aria-describedby="hint"><option value="one">One</option><option value="two">Two</option></select>
+<small id="hint">Choose an option.</small></div></form><button id="after">After</button>`, async page => {
+  for (const multiple of [false, true]) {
+    await page.evaluate(multiple => {
+      const el = document.querySelector('select');
+      el.multiple = multiple; el.value = 'one';
+      window.instances = [Expressive.FormSelect.init(el, { menuOptions: { inDuration: 0, outDuration: 0 } })];
+    }, multiple);
+    const input = page.getByRole('combobox', { name: 'Choice', exact: true });
+    await expect(page.getByRole('combobox')).toHaveCount(1);
+    await expect(page.getByRole('listbox')).toHaveCount(0);
+    await expect(input).toHaveAccessibleDescription('Choose an option.');
+    if (page.context().browser().browserType().name() === 'chromium') {
+      const session = await page.context().newCDPSession(page);
+      try {
+        const { nodes } = await session.send('Accessibility.getFullAXTree');
+        assert.deepEqual(nodes.filter(node => !node.ignored && ['combobox', 'listbox'].includes(node.role?.value)).map(node => [node.role.value, node.name?.value]), [['combobox', 'Choice']]);
+      } finally { await session.detach(); }
+    }
+    await page.locator('#before').focus();
+    await page.keyboard.press('Tab');
+    await expect(input).toBeFocused();
+    await input.click();
+    await expect(input).toHaveAttribute('aria-expanded', 'true');
+    // Menu installs its temporary keyboard listeners on the next timer turn.
+    await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 0)));
+    await expect(page.getByRole('listbox')).toHaveCount(1);
+    await expect(page.getByRole('option')).toHaveCount(2);
+    await page.getByRole('option', { name: 'Two', exact: true }).press('Enter');
+    if (multiple) await page.getByRole('option', { name: 'Two', exact: true }).press('Escape');
+    await expect(input).toBeFocused();
+    assert.deepEqual(await page.evaluate(() => new FormData(document.querySelector('form')).getAll('choice')), multiple ? ['one', 'two'] : ['two']);
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#after')).toBeFocused();
+    await page.evaluate(() => { window.instances[0].destroy(); window.instances = []; });
+    await expect(page.getByRole(multiple ? 'listbox' : 'combobox', { name: 'Choice' })).toHaveCount(1);
+    await expect(page.locator('#choice')).toBeVisible();
+    await expect(page.locator('#choice')).toHaveAttribute('aria-describedby', 'hint');
+    await expect(page.locator('.hide-select, input[role="combobox"]')).toHaveCount(0);
+  }
+});
+
+for (const multiple of [false, true]) scenario(`select validation remains usable with a hidden native control: multiple=${multiple}`, `
+<form id="choices"><input id="first" aria-label="First">
+<div class="field"><label for="a">Choice A</label><select id="a" name="a" required aria-describedby="hint" aria-invalid="false">
+<option value="">Choose</option><option value="one">One</option></select><small id="hint">Keep this hint.</small></div>
+<button id="submit">Save</button><button type="reset">Reset</button></form>
+<div class="field"><label for="b">Choice B</label><select id="b" name="b" form="choices" required>
+<option value="">Choose</option><option value="two">Two</option></select></div>`, async page => {
+  const errors = [];
+  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.evaluate(multiple => {
+    document.querySelectorAll('select').forEach(el => { el.multiple = multiple; if (multiple) el.selectedIndex = -1; });
+    window.instances = Expressive.FormSelect.init(document.querySelectorAll('select'));
+    window.submissions = [];
+    document.querySelector('form').addEventListener('submit', event => {
+      event.preventDefault(); window.submissions.push([...new FormData(event.target)]);
+    });
+  }, multiple);
+  const a = page.getByRole('combobox', { name: 'Choice A' });
+  const b = page.getByRole('combobox', { name: 'Choice B' });
+  await page.locator('#submit').click();
+  await expect(a).toBeFocused();
+  await expect(a).toHaveAttribute('aria-invalid', 'true');
+  await expect(b).toHaveAttribute('aria-invalid', 'true');
+  const requiredMessage = await page.locator('#a').evaluate(el => el.validationMessage);
+  await expect(a).toHaveAccessibleDescription('Keep this hint. ' + requiredMessage);
+  await expect(page.locator('small').filter({ hasText: requiredMessage })).toHaveCount(2);
+  assert.deepEqual(await page.evaluate(() => window.submissions), []);
+  await page.evaluate(() => {
+    window.instances.forEach(instance => { instance.el.selectedIndex = 1; instance.el.dispatchEvent(new Event('change', { bubbles: true })); });
+  });
+  await expect(a).toHaveAttribute('aria-invalid', 'false');
+  await expect(b).not.toHaveAttribute('aria-invalid');
+  await expect(a).toHaveAccessibleDescription('Keep this hint.');
+  await page.locator('#submit').click();
+  assert.deepEqual(await page.evaluate(() => window.submissions), [[['a', 'one'], ['b', 'two']]]);
+  const customMessage = '<img src=x onerror=alert(1)> Choose another option.';
+  assert.equal(await page.evaluate(message => { const el = document.querySelector('#a'); el.setCustomValidity(message); return el.reportValidity(); }, customMessage), false);
+  await expect(a).toBeFocused();
+  await expect(a).toHaveAccessibleDescription('Keep this hint. ' + customMessage);
+  await expect(page.locator('.field img')).toHaveCount(0);
+  await page.evaluate(() => { document.querySelector('form').addEventListener('reset', event => event.preventDefault(), { once: true }); });
+  await page.getByRole('button', { name: 'Reset' }).click();
+  await expect(a).toHaveAttribute('aria-invalid', 'true');
+  await page.getByRole('button', { name: 'Reset' }).click();
+  await expect(a).toHaveAttribute('aria-invalid', 'false');
+  await expect(a).toHaveAccessibleDescription('Keep this hint.');
+  await page.evaluate(() => { const el = document.querySelector('#a'); el.setCustomValidity(''); el.disabled = true; window.instances[0].refresh(); });
+  await expect(a).toBeDisabled();
+  await page.locator('#submit').click();
+  await expect(b).toBeFocused();
+  await page.evaluate(() => { document.querySelector('#first').required = true; });
+  await page.locator('#submit').click();
+  await expect(page.locator('#first')).toBeFocused();
+  assert.deepEqual(errors, []);
+});
+
+for (const multiple of [false, true]) scenario(`select validation preserves native focus scope: multiple=${multiple}`, `
+<form id="choices"><input id="before" aria-label="Before">
+<label for="a">Choice A</label><select id="a" required><option value="">Choose</option><option>One</option></select>
+<input id="after" aria-label="After" required><button id="submit">Save</button></form>
+<label for="b">Choice B</label><select id="b" form="choices" required><option value="">Choose</option><option>Two</option></select>`, async page => {
+  const errors = [];
+  page.on('console', message => { if (['warning', 'error'].includes(message.type())) errors.push(message.text()); });
+  await page.evaluate(multiple => {
+    document.querySelectorAll('select').forEach(el => { el.multiple = multiple; if (multiple) el.selectedIndex = -1; });
+    window.instances = Expressive.FormSelect.init(document.querySelectorAll('select'));
+    window.submissions = 0;
+    document.querySelector('form').onsubmit = event => { event.preventDefault(); window.submissions++; };
+  }, multiple);
+  const a = page.getByRole('combobox', { name: 'Choice A' });
+  const b = page.getByRole('combobox', { name: 'Choice B' });
+  for (const selector of ['form', '#a', '#b']) {
+    await page.locator('#after').focus();
+    assert.equal(await page.locator(selector).evaluate(el => el.checkValidity()), false);
+    await expect(page.locator('#after')).toBeFocused();
+  }
+  await page.locator('#after').evaluate(el => { el.oninput = () => el.form.checkValidity(); });
+  await page.keyboard.type('typing');
+  await expect(page.locator('#after')).toHaveValue('typing');
+  await expect(page.locator('#after')).toBeFocused();
+  await page.locator('#after').fill('');
+  // Reporting one control must ignore invalid controls elsewhere in its form.
+  assert.equal(await page.locator('#b').evaluate(el => el.reportValidity()), false);
+  await expect(b).toBeFocused();
+  // Native controls on either side must retain their place in reporting order.
+  for (const earlierNativeInvalid of [false, true]) {
+    await page.locator('#before').evaluate((el, required) => { el.required = required; }, earlierNativeInvalid);
+    for (const action of ['report', 'request', 'click']) {
+      await page.locator('#submit').focus();
+      if (action === 'report') assert.equal(await page.locator('form').evaluate(el => el.reportValidity()), false);
+      else if (action === 'request') await page.locator('form').evaluate(el => el.requestSubmit());
+      else await page.locator('#submit').click();
+      await expect(earlierNativeInvalid ? page.locator('#before') : a).toBeFocused();
+    }
+  }
+  await page.locator('#before').evaluate(el => { el.required = false; });
+  await page.locator('#a').evaluate(el => { el.addEventListener('invalid', event => event.preventDefault(), { once: true }); });
+  await page.locator('form').evaluate(el => el.reportValidity());
+  await expect(page.locator('#after')).toBeFocused();
+  assert.equal(await page.evaluate(() => window.submissions), 0);
+  await expect(page.getByRole('combobox')).toHaveCount(2);
+  await expect(page.getByRole('listbox')).toHaveCount(0);
+  if (page.context().browser().browserType().name() === 'chromium') {
+    const session = await page.context().newCDPSession(page);
+    try {
+      const { nodes } = await session.send('Accessibility.getFullAXTree');
+      assert.deepEqual(nodes.filter(node => !node.ignored && ['combobox', 'listbox'].includes(node.role?.value)).map(node => node.name?.value).sort(), ['Choice A', 'Choice B']);
+    } finally { await session.detach(); }
+  }
+  assert.deepEqual(errors, []);
+});
+
 scenario('remaining native controls preserve names, keyboard state and form values', `
 <form id="choices"><fieldset><legend>Delivery preferences</legend>
 <label id="check-label"><input id="check" type="checkbox" name="email">Email notifications</label>
@@ -431,6 +587,40 @@ scenario('remaining snackbar retains a focused action until focus leaves', '<but
     await expect(page.getByRole('button',{name:'Review'})).toBeFocused();
     await page.locator('#outside').focus();await expect(page.getByRole('status')).toHaveCount(0);
   } finally { await page.evaluate(()=>Expressive.Snackbar.dismissAll()); }
+});
+
+scenario('autocomplete searches input-only edits without duplicate keyboard searches', '<div class="field"><label for="query">Fruit</label><input id="query"></div><button id="after">After</button>', async page => {
+  await page.evaluate(() => {
+    window.queries = [];
+    window.instances = [Expressive.Autocomplete.init(document.querySelector('#query'), {
+      data: [{ id: 'apple' }, { id: 'apricot' }, { id: 'banana' }],
+      onSearch: (value, instance) => {
+        window.queries.push(value);
+        Expressive.Autocomplete.defaults.onSearch(value, instance);
+      },
+      menuOptions: { inDuration: 0, outDuration: 0 }
+    })];
+  });
+  const input = page.locator('#query');
+  await input.focus();
+  await page.keyboard.insertText('ap');
+  await expect(page.getByRole('option')).toHaveText(['apple', 'apricot']);
+  assert.deepEqual(await page.evaluate(() => window.queries), ['ap']);
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect(input).toHaveValue('apple');
+  await input.fill('ban');
+  await expect(page.getByRole('option')).toHaveText(['banana']);
+  assert.equal(await page.evaluate(() => window.instances[0].selectedValues.length), 0);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('listbox')).toBeHidden();
+  await input.fill('');
+  await page.keyboard.type('ap');
+  await expect(page.getByRole('option')).toHaveText(['apple', 'apricot']);
+  assert.deepEqual(await page.evaluate(() => window.queries), ['ap', 'ban', '', 'a', 'ap']);
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#after')).toBeFocused();
+  await expect(page.getByRole('listbox')).toBeHidden();
 });
 
 scenario('autocomplete announces results and selection without moving focus', '<div class="field"><label for="query">Fruit</label><input id="query"></div><button id="after">After</button>', async page => {
