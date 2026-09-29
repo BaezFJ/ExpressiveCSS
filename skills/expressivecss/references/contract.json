@@ -3,8 +3,18 @@
   "generatedBy": "scripts/gen-expressivecss-skill.mjs",
   "frameworkVersion": "0.10.1",
   "skillVersion": "0.7.0",
-  "matchingTag": null,
-  "releaseTags": [],
+  "matchingTag": "v0.10.1",
+  "releaseTags": [
+    "v0.10.0",
+    "v0.10.1",
+    "v0.5.0",
+    "v0.6.0",
+    "v0.7.0",
+    "v0.7.0-rc.0",
+    "v0.8.0",
+    "v0.9.0",
+    "v0.9.1"
+  ],
   "sources": [
     "llm.md",
     "semantics.json",
@@ -13,5 +23,5 @@
     "package.json",
     "CHANGELOG.md"
   ],
-  "sourceHash": "94240fc94f4e771ee1c3aff5a112c24a3cfa2f3ece1139309f41d8e91e7d89ce"
+  "sourceHash": "69346718a3c8fc083a1cc14cc5f5b3236af4a01ad11f55edca9c249f2a99d251"
 }
