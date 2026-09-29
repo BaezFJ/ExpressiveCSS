@@ -2,7 +2,9 @@
 
 .file-field {
   display: grid;
-  grid-template-columns: min-content auto;
+  // Short triggers keep their intrinsic width; long labels leave room for
+  // the selected filename instead of consuming the entire field.
+  grid-template-columns: fit-content(50%) minmax(0, 1fr);
   gap: 10px;
   //position: relative;
 
@@ -18,10 +20,16 @@
   > label.button,
   > button,
   > .btn {
+    display: block;
+    align-content: center;
+    overflow-wrap: break-word;
     position: relative;
     overflow: hidden;
-    height: 3rem;
-    line-height: 3rem;
+    // A minimum rather than a height, so a wrapped label grows the trigger.
+    // `start` keeps the grid from stretching it to the 56dp text field.
+    align-self: start;
+    min-height: 3rem;
+    min-width: 0;
   }
 
   span {

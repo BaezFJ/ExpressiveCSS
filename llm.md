@@ -1113,6 +1113,14 @@ Legacy `small`, `med`, and `xxl` utility names remain aliases for compatibility.
 <div class="hide-on-compact-only"></div>
 ```
 
+#### Visually hidden
+
+`visually-hidden` removes an element from sight but keeps it in the accessibility tree, so screen readers still announce it. Use it for text the layout does not show, such as context that makes a repeated link unique or the text of a live region. Like `.hide`, it is `!important`. A focused element stays invisible, so do not put it on a focusable control unless focus is drawn somewhere else, the way a filter chip draws it on its label.
+
+```html
+<a href="/orders/42">View<span class="visually-hidden"> order 42</span></a>
+```
+
 ### Spacing
 
 These classes help space elements with margin and padding helpers for all directions. This works by combining a margin/padding prefix, a direction infix and value suffix.
@@ -1747,6 +1755,8 @@ A `<button>` is a filled common button. An `<a class="button">` is the same thin
 Two independent axes dress it: a style (`filled`, `tonal`, `outlined`, `elevated`, `text`) and a size (`xsmall` through `xlarge`). Any style combines with any size — nine classes, not twenty-five, because the size sets the geometry and the style sets the color.
 
 Tokens follow the [M3 button spec](https://m3.material.io/components/buttons/specs). The default is the small size: 40dp tall, label `label-large`, fully round corners, a 20dp icon on an 8dp gap, and a symmetric 16dp inset. State layers are 8% hover and 10% focus or press. Disabled is `on-surface` at 38% on a 12% container.
+
+A label that does not fit wraps between words and the button grows taller, so enlarged text, 200% zoom and narrow columns keep the label inside the button and the button inside its parent. The size's height is the minimum, so a label that fits looks the same. Keep the label in its own `<span>` so a single word longer than the parent can break as well. `circle` buttons, FABs, extended FABs, Timepicker AM/PM controls, and buttons in button groups, split buttons, toolbars, top app bars, dialog and sheet headers, navigation bars and rails, tabs, pagination and snackbars stay on one line at a fixed height. A rule that gives a button a smaller `height` must set `min-height` too, or set `--md-comp-filled-button-container-height` instead.
 
 Create Create Send
 
@@ -5344,6 +5354,16 @@ A fieldset is also the right parent for a radio, checkbox, or switch group — t
 
 The default is outlined. `filled` is a `surface-variant` well with no stroke — pair it with `outlined` fields so the wells stay distinct. `rounded` is 12dp corners (M3 medium, like a card). `outlined` and `border` name the default if you need to say it.
 
+`plain` drops the container for a group that already sits on a surface, such as radios in a card or a dialog: no outline, fill, padding, or margin from a preceding fieldset, and the legend starts flush with the content.
+
+```html
+<fieldset class="plain">
+  <legend>Delivery</legend>
+  <label><input type="radio" name="delivery" value="daily" checked>Daily</label>
+  <label><input type="radio" name="delivery" value="weekly">Weekly</label>
+</fieldset>
+```
+
 ```html
 <fieldset class="filled">
   <legend>
@@ -5789,6 +5809,8 @@ Put the labels in a `<div class="inline">` to sit them on one line. A bare group
 Small blocks for contacts, tags, and filters.
 
 A chip is a `.chip`, and **the element says which kind it is** — the four Material 3 chip types, plus a non-interactive display chip, across three root elements. Add `outlined` for a bordered style. Static chips are CSS. The JavaScript plugin lives on a `.chips` wrapper.
+
+A long label wraps and the chip grows from its 32dp minimum, with 4dp above and below the lines. It never grows wider than its parent.
 
 | Type | Element | Why |
 | --- | --- | --- |

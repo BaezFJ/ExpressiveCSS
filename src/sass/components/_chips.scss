@@ -21,6 +21,10 @@
   margin: 0;
   min-height: 32px;
   height: auto;
+  // 4dp keeps wrapped lines off the edges. It is also exactly what a 24dp
+  // avatar or delete target leaves in the 32dp container, so a chip that fits
+  // on one line keeps its height.
+  padding-block: 4px;
   padding-left: var(--padding);
   padding-right: var(--padding);
   font-size: var(--font-size);
@@ -65,15 +69,7 @@
 // Filter chip. The checkbox carries the state and the form value; the label is
 // the chip. Kept focusable rather than `display: none` so it stays reachable.
 .chip-input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+  @include visually-hidden;
 }
 
 .chip-input:checked + .chip {

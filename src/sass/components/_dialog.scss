@@ -141,13 +141,6 @@ dialog > :is(form, nav):last-child {
   padding: 0 24px 24px;
   border: 0;
   background: none;
-
-  > :is(button, a.button):not(.icon-button, .circle, .extend) {
-    max-width: 100%;
-    height: auto;
-    min-height: var(--md-comp-filled-button-container-height, 40px);
-    white-space: normal;
-  }
 }
 
 dialog:not(

@@ -346,3 +346,48 @@ $_extend-sizes: (
 :where(#{$_btn}).disabled {
   @include btn-disabled;
 }
+
+// Reflow. A label that does not fit (enlarged text, 200% zoom, a narrow
+// column) wraps between words and the container grows, instead of running
+// out of the button or out of its parent. The size's container height becomes
+// a minimum, so a label that fits renders exactly as before. The 4dp block
+// padding only shows once the label wraps: it keeps the lines off the edges
+// and fits inside every size's height with an outline and a line to spare.
+//
+// A minimum rather than a padding-derived height, because hosts restate
+// `padding` far more often than `height`: a clear action or a list's trailing
+// button that sets `padding: 0 12px` would otherwise collapse to one line of
+// text. The cost is the other way round - a rule that sets a smaller `height`
+// has to set `min-height` too, or name the size with the container-height
+// token instead.
+//
+// `break-word`, not `anywhere`: `anywhere` also lowers the min-content width
+// to a single character, so two buttons in a row a few pixels too narrow both
+// shrink and split mid-word ("Cance|l") where they used to sit at full width.
+// With `min-width: 0` on the label <span>, `break-word` still splits a single
+// word longer than the parent. A bare text label has no element to take that
+// minimum, so such a word overflows as it always did.
+//
+// Fixed geometry keeps `nowrap` and the fixed height: `.circle` and the FABs,
+// the extended FAB, the chip's delete button, the carousel's dots, Timepicker's
+// AM/PM controls, and hosts whose layout assumes one line. Button groups set item widths in
+// script and would rewrap mid-press; a split button's two halves share one
+// height; toolbars, the top app bar, dialog and sheet headers, navigation
+// bars and rails, tabs, pagination and snackbar actions are fixed-height
+// slots. `:where()` keeps the whole rule at zero specificity; it only has to
+// come after the base rule above, whose `height` and `nowrap` it replaces.
+$_fixed: ".circle, .extend, .indicator-item, .chip .close, :is(.timepicker-container, .time-picker-container) :is(.am-btn, .pm-btn), :is(.button-group, .split-button, .toolbar, .navigation-bar, .navigation-rail, .snackbar) > *, header > :is(nav, .bar) > *, :is(.pagination, .tabs, .snackbar > nav, dialog > header) *";
+
+:where(#{$_btn}):where(:not(#{$_fixed})) {
+  height: auto;
+  min-height: var(--md-comp-filled-button-container-height);
+  max-width: 100%;
+  padding-block: 4px;
+  white-space: normal;
+  overflow-wrap: break-word;
+  text-align: center;
+
+  > * {
+    min-width: 0;
+  }
+}
