@@ -359,7 +359,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     this._setupEventHandlers();
 
     if (!this.options.defaultDate) {
-      this.options.defaultDate = new Date(Date.parse(this.el.value));
+      this.options.defaultDate = Datepicker._parseDate(this.el.value);
     }
 
     const defDate = this.options.defaultDate;
@@ -439,6 +439,14 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   static _isDate(obj) {
     return /Date/.test(Object.prototype.toString.call(obj)) && !isNaN(obj.getTime());
+  }
+
+  private static _parseDate(value: string): Date {
+    value = value.trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return new Date(Date.parse(value));
+    // An ISO time without an offset is local. Reject days that roll into the next month.
+    const date = new Date(value + 'T00:00:00');
+    return date.getDate() === Number(value.slice(-2)) ? date : new Date(NaN);
   }
 
   static _isWeekend(date) {
@@ -594,7 +602,7 @@ export class Datepicker extends Component<DatepickerOptions> {
    * Sets date from input field.
    */
   setDateFromInput(el: HTMLInputElement) {
-    const date = new Date(Date.parse(el.value));
+    const date = Datepicker._parseDate(el.value);
     this.setDate(date, false, el == this.endDateEl, true);
   }
 
@@ -630,7 +638,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       return this.draw();
     }
     if (typeof date === 'string') {
-      date = new Date(Date.parse(date));
+      date = Datepicker._parseDate(date);
     }
     if (!Datepicker._isDate(date)) {
       return;
@@ -1562,7 +1570,7 @@ export class Datepicker extends Component<DatepickerOptions> {
           : this.options.format
       );
     } else {
-      date = new Date(Date.parse((e.target as HTMLInputElement).value));
+      date = Datepicker._parseDate((e.target as HTMLInputElement).value);
     }
     if (Datepicker._isDate(date)) {
       if (el == this.endDateEl && date < this.date) return this.setInputValue(el, this.endDate);

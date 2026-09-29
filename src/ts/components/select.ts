@@ -45,9 +45,11 @@ export class FormSelect extends Component<FormSelectOptions> {
   selectOptions: (HTMLOptionElement | HTMLOptGroupElement)[];
   private _values: ValueStruct[];
   private _createdWrapper: boolean;
-  private _originalLabelFor: string | null;
+  private _originalLabels = new Map<HTMLLabelElement, { for: string | null; id: string | null }>();
+  private _labelPlaceholder: Comment;
   private _form: HTMLFormElement | null;
   private _resetTimer: ReturnType<typeof setTimeout>;
+  private _validationMessage: HTMLElement | null = null;
   nativeTabIndex: number;
 
   constructor(el: HTMLSelectElement, options: FormSelectOptions) {
@@ -65,7 +67,6 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.el.tabIndex = -1;
     this._values = [];
     this._createdWrapper = false;
-    this._originalLabelFor = null;
     this._setupMenu();
     this._setupEventHandlers();
   }
@@ -107,6 +108,7 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   destroy() {
     this._removeEventHandlers();
+    this._clearValidationError();
     // The Menu holds itself in the static Menu._menus registry
     // until its own destroy() runs, so dropping the elements is not enough -
     // every rebuilt select used to leave an instance behind for good.
@@ -146,6 +148,8 @@ export class FormSelect extends Component<FormSelectOptions> {
   _setupEventHandlers() {
     this._setupOptionHandlers();
     this.el.addEventListener('change', this._handleSelectChange);
+    this.el.addEventListener('invalid', this._handleInvalid);
+    this.el.addEventListener('focus', this._handleNativeFocus);
     this.input.addEventListener('click', this._handleInputClick);
     this.menuEl.addEventListener('focusin', this._handleOptionFocus);
     this._bindForm();
@@ -160,6 +164,8 @@ export class FormSelect extends Component<FormSelectOptions> {
   _removeEventHandlers() {
     this._removeOptionHandlers();
     this.el.removeEventListener('change', this._handleSelectChange);
+    this.el.removeEventListener('invalid', this._handleInvalid);
+    this.el.removeEventListener('focus', this._handleNativeFocus);
     this.input?.removeEventListener('click', this._handleInputClick);
     this.menuEl?.removeEventListener('focusin', this._handleOptionFocus);
     this._form?.removeEventListener('reset', this._handleReset);
@@ -183,12 +189,55 @@ export class FormSelect extends Component<FormSelectOptions> {
   _handleSelectChange = () => {
     this._setValueToInput();
     this._setSelectedStates();
+    this._syncValidationError();
   };
+
+  private _handleInvalid = (e: Event) => {
+    if (e.defaultPrevented) return;
+    if (!this._validationMessage) {
+      this._validationMessage = document.createElement('small');
+      this._validationMessage.id = this.input.id + '-error';
+      this._validationMessage.className = 'supporting-text';
+      this._validationMessage.style.color = 'var(--md-sys-color-error)';
+      this.wrapper.append(this._validationMessage);
+      this.input.setAttribute('aria-describedby',
+        [this.input.getAttribute('aria-describedby'), this._validationMessage.id].filter(Boolean).join(' '));
+    }
+    this.input.ariaInvalid = 'true';
+    this._syncValidationError();
+  };
+
+  // Native reporting chooses the control; static checks never focus. Wait until
+  // reporting finishes so Firefox dismisses its native popup when focus moves.
+  private _handleNativeFocus = () => queueMicrotask(() => {
+    if (FormSelect.getInstance(this.el) === this && this.el.matches(':focus')) this.input.focus();
+  });
+
+  private _syncValidationError() {
+    if (!this._validationMessage) return;
+    if (this.el.willValidate && !this.el.validity.valid) {
+      this._validationMessage.textContent = this.el.validationMessage;
+    } else this._clearValidationError();
+  }
+
+  private _clearValidationError() {
+    if (!this._validationMessage) return;
+    const descriptions = this.input.getAttribute('aria-describedby')?.split(/\s+/)
+      .filter(id => id !== this._validationMessage.id).join(' ');
+    if (descriptions) this.input.setAttribute('aria-describedby', descriptions);
+    else this.input.removeAttribute('aria-describedby');
+    this.input.ariaInvalid = this.el.ariaInvalid;
+    this._validationMessage.remove();
+    this._validationMessage = null;
+  }
 
   private _handleReset = (e: Event) => {
     clearTimeout(this._resetTimer);
     this._resetTimer = setTimeout(() => {
-      if (!e.defaultPrevented) this._handleSelectChange();
+      if (!e.defaultPrevented) {
+        this._handleSelectChange();
+        this._clearValidationError();
+      }
     }, 0);
   };
 
@@ -258,6 +307,13 @@ export class FormSelect extends Component<FormSelectOptions> {
     // selector out of the id instead meant an id with any CSS-special
     // character either threw or matched something else entirely.
     this.labelEl = this.el.labels?.[0] ?? null;
+    Array.from(this.el.labels ?? []).forEach(label => {
+      this._originalLabels.set(label, { for: label.getAttribute('for'), id: label.getAttribute('id') });
+    });
+    if (this.labelEl && !this.el.closest('label')) {
+      this._labelPlaceholder = document.createComment('');
+      this.labelEl.before(this._labelPlaceholder);
+    }
 
     this._setupWrapper();
     this._hideNativeSelect();
@@ -276,7 +332,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._buildCaret();
     this._initMenu();
     this._setSelectedStates();
-    if (this.labelEl) this.input.after(this.labelEl);
+    if (this._labelPlaceholder) this.input.after(this.labelEl);
   }
 
   private _setupWrapper() {
@@ -303,9 +359,10 @@ export class FormSelect extends Component<FormSelectOptions> {
   private _hideNativeSelect() {
     const hiddenDiv = document.createElement('div');
     hiddenDiv.classList.add('hide-select');
+    hiddenDiv.ariaHidden = 'true';
     this.el.before(hiddenDiv);
     hiddenDiv.appendChild(this.el);
-    this.wrapper.append(hiddenDiv);
+    if (this._createdWrapper) this.wrapper.append(hiddenDiv);
   }
 
   private _buildInput() {
@@ -334,9 +391,14 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.input.setAttribute('aria-controls', this.menuEl.id);
     this.input.placeholder = ' ';
 
-    if (this.labelEl) {
-      this._originalLabelFor = this.labelEl.htmlFor;
-      this.labelEl.htmlFor = this.input.id;
+    this._originalLabels.forEach((_, label) => { label.htmlFor = this.input.id; });
+    // Moving the first label can change DOM order. Preserve the original naming
+    // order without overriding an author's explicit accessible name.
+    if (this._labelPlaceholder && this._originalLabels.size > 1 && !this.input.getAttribute('aria-label') && !this.input.getAttribute('aria-labelledby')) {
+      this.input.setAttribute('aria-labelledby', Array.from(this._originalLabels.keys(), (label, index) => {
+        if (!label.id) label.id = `${this.input.id}-label-${index}`;
+        return label.id;
+      }).join(' '));
     }
 
     this.wrapper.prepend(this.input);
@@ -449,9 +511,13 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.menuEl?.remove();
     const hide = this.el.parentElement;
     if (hide?.classList.contains('hide-select')) hide.replaceWith(this.el);
-    if (this.labelEl && this._originalLabelFor !== null) {
-      this.labelEl.htmlFor = this._originalLabelFor;
-    }
+    this._originalLabels.forEach((original, label) => {
+      for (const name of ['for', 'id'] as const) {
+        if (original[name] === null) label.removeAttribute(name);
+        else label.setAttribute(name, original[name]);
+      }
+    });
+    this._labelPlaceholder?.replaceWith(this.labelEl);
     if (!this.wrapper) return;
     if (this._createdWrapper) {
       this.wrapper.replaceWith(this.el);

@@ -321,6 +321,7 @@ Expressive.Datepicker.init(elem, {
   </Section>
 
   <Section {...S["date-format"]}>
+        <p>Without a custom <code>parse</code> callback, <code>YYYY-MM-DD</code> input is a local calendar date. Impossible dates such as <code>2023-02-29</code> do not change the selection. Other strings use the browser's date parser. Supply <code>parse</code> for other input formats.</p>
         <p>Use these tokens in the <code>format</code> string.</p>
         <table class="striped">
           <thead>
