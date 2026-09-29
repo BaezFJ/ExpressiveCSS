@@ -68,7 +68,6 @@ with an image inside a native button. Screen-reader announcements, Windows
 contrast themes and physical-device interaction remain pending. Lightbox is
 image enlargement, not a modal-gallery contract.
 
-
 Datepicker: at `/datepicker.html#date-range`, enter an end date and use Enter to
 reach the calendar. Select the end with the keyboard, including leap day and RTL.
 At `/datepicker.html#multiple`, add dates, remove middle/last/all selections, add
@@ -82,3 +81,31 @@ Timepicker: at `/timepicker.html`, type and paste into the hour/minute fields in
 confirmation and submitted values. Repeat in inline/docked modes, LTR/RTL and
 reduced motion. Check real mobile keyboard and assistive-technology behavior;
 browser input-event emulation does not satisfy these pending manual checks.
+
+ScrollSpy: at `/scrollspy.html`, follow the contents links with the keyboard and
+scroll between sections. Check the current link, sticky-header offset, native
+fragment navigation and focus in LTR/RTL and reduced motion. Repeat at native
+200%/400% zoom. For independent contents lists, use the two-navigation fixture in
+`tests/expressivecss-web-accessibility-browser.test.js`, whose ScrollSpy isolation
+checks cover offsets, groups, teardown and anchors. Spoken current-link state,
+Windows contrast themes and physical-device checks remain pending.
+
+For every row, enter reviewer, date, physical device, operating system,
+browser/assistive-technology version, result and evidence. Keep unavailable checks
+pending. Link recordings, screenshots or detailed notes, including failures.
+
+| Check | Reviewer | Date | Device / OS | Browser / AT version | Result | Evidence / revision |
+| --- | --- | --- | --- | --- | --- | --- |
+| Native browser zoom 200%, all fixtures | Pending | Pending | Pending | Pending | Pending | Pending |
+| Native browser zoom 400%, all fixtures | Pending | Pending | Pending | Pending | Pending | Pending |
+| NVDA with Firefox or Chrome: names, roles, states, focus recovery | Pending | Pending | Pending | Pending | Pending | Pending |
+| VoiceOver with Safari: names, states, reading and focus order | Pending | Pending | Pending | Pending | Pending | Pending |
+| Actual Windows contrast themes: tracks, handles, selected states, focus | Pending | Pending | Pending | Pending | Pending | Pending |
+| Physical iOS Safari: portrait/landscape, touch, onscreen keyboard | Pending | Pending | Pending | Pending | Pending | Pending |
+| Physical Android Chrome: portrait/landscape, touch, onscreen keyboard | Pending | Pending | Pending | Pending | Pending | Pending |
+| Translated wrapping and font coverage, LTR/RTL | Pending | Pending | Pending | Pending | Pending | Pending |
+| Reduced motion while mounted and explicit pause recovery | Pending | Pending | Pending | Pending | Pending | Pending |
+
+For a failure, record exact reproduction steps and whether it prevents completing
+the task. Do not substitute viewport emulation for native zoom, emulated contrast
+for Windows themes, or synthetic pointer events for physical touch testing.
