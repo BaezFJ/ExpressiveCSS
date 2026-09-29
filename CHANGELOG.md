@@ -40,6 +40,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- ScrollSpy honors per-section offsets and active classes, isolates tables of
+  contents through shared `getActiveElement` callbacks, and restores authored
+  offset styles on teardown. Native anchor navigation remains unchanged.
+
 - Carousel ignores stale scroll-completion events from earlier navigation, so
   selecting a swipeable tab immediately after initialization keeps that selection.
 

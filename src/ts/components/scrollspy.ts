@@ -42,9 +42,12 @@ const _defaults: ScrollSpyOptions = {
  */
 export class ScrollSpy extends Component<ScrollSpyOptions> {
   static _elements: ScrollSpy[] = [];
-  private static _observer: IntersectionObserver | null = null;
-  private static _ratios = new Map<Element, number>();
-  private static _active: Element | null = null;
+  private static _active = new Map<ScrollSpyOptions['getActiveElement'], ScrollSpy>();
+  private _observer: IntersectionObserver;
+  private _ratio = 0;
+  private _link: Element | null = null;
+  private _offset: string;
+  private _offsetPriority: string;
 
   constructor(el: HTMLElement, options: Partial<ScrollSpyOptions>) {
     super(el, options, ScrollSpy);
@@ -55,14 +58,25 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
       ...options
     };
 
+    this._offset = this.el.style.getPropertyValue('--md-comp-scrollspy-offset');
+    this._offsetPriority = this.el.style.getPropertyPriority('--md-comp-scrollspy-offset');
     this.el.style.setProperty(
       '--md-comp-scrollspy-offset',
       `${this.options.scrollOffset}px`
     );
 
     ScrollSpy._elements.push(this);
-    ScrollSpy._ensureObserver(this.options.scrollOffset);
-    ScrollSpy._observer?.observe(this.el);
+    if (typeof IntersectionObserver !== 'undefined') {
+      this._observer = new IntersectionObserver((entries) => {
+        if (ScrollSpy.getInstance(this.el) !== this) return;
+        for (const entry of entries) this._ratio = entry.isIntersecting ? entry.intersectionRatio : 0;
+        ScrollSpy._syncActive(this.options.getActiveElement);
+      }, {
+        rootMargin: `-${this.options.scrollOffset}px 0px -45% 0px`,
+        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1]
+      });
+      this._observer.observe(this.el);
+    }
   }
 
   static get defaults(): ScrollSpyOptions {
@@ -84,58 +98,23 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
 
   destroy() {
     const index = ScrollSpy._elements.indexOf(this);
-    if (index >= 0) ScrollSpy._elements.splice(index, 1);
-    ScrollSpy._ratios.delete(this.el);
-    ScrollSpy._observer?.unobserve(this.el);
-
-    const link = ScrollSpy._linkFor(this.el.id, this.options);
-    if (link && link === ScrollSpy._active) {
-      ScrollSpy._clearActive(this.options);
-    } else {
-      link?.classList.remove(this.options.activeClass);
-      link?.removeAttribute('aria-current');
-    }
-
-    if (ScrollSpy._elements.length === 0) {
-      ScrollSpy._observer?.disconnect();
-      ScrollSpy._observer = null;
-      ScrollSpy._ratios.clear();
-      ScrollSpy._active = null;
-    } else {
-      ScrollSpy._syncActive();
-    }
-
+    if (index < 0) return;
+    ScrollSpy._elements.splice(index, 1);
+    this._observer?.disconnect();
+    const resolver = this.options.getActiveElement;
+    if (ScrollSpy._active.get(resolver) === this) ScrollSpy._clearActive(resolver);
+    this.el.style.setProperty('--md-comp-scrollspy-offset', this._offset, this._offsetPriority);
     this.el['Expressive_ScrollSpy'] = undefined;
+    ScrollSpy._syncActive(resolver);
   }
 
-  private static _ensureObserver(offset: number) {
-    if (ScrollSpy._observer) return;
-    if (typeof IntersectionObserver === 'undefined') return;
-    ScrollSpy._observer = new IntersectionObserver(ScrollSpy._onIntersect, {
-      rootMargin: `-${offset}px 0px -45% 0px`,
-      threshold: [0, 0.1, 0.25, 0.5, 0.75, 1]
-    });
-  }
-
-  private static _onIntersect = (entries: IntersectionObserverEntry[]) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting && entry.intersectionRatio > 0) {
-        ScrollSpy._ratios.set(entry.target, entry.intersectionRatio);
-      } else {
-        ScrollSpy._ratios.delete(entry.target);
-      }
-    }
-    ScrollSpy._syncActive();
-  };
-
-  private static _syncActive() {
-    if (!ScrollSpy._elements.length) return;
-    const options = ScrollSpy._elements[0].options;
+  private static _syncActive(resolver: ScrollSpyOptions['getActiveElement']) {
+    const elements = ScrollSpy._elements.filter(spy => spy.options.getActiveElement === resolver);
 
     let best: ScrollSpy | null = null;
     let bestRatio = 0;
-    for (const spy of ScrollSpy._elements) {
-      const ratio = ScrollSpy._ratios.get(spy.el) ?? 0;
+    for (const spy of elements) {
+      const ratio = spy._ratio;
       if (ratio > bestRatio) {
         bestRatio = ratio;
         best = spy;
@@ -143,27 +122,25 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     }
 
     if (!best) {
-      if (options.keepTopElementActive) {
-        best = ScrollSpy._nearestAbove() ?? ScrollSpy._elements[0];
-      } else {
-        ScrollSpy._clearActive(options);
-        return;
-      }
+      const retained = elements.filter(spy => spy.options.keepTopElementActive);
+      best = ScrollSpy._nearestAbove(retained) ?? retained[0];
     }
 
-    const next = ScrollSpy._linkFor(best.el.id, best.options);
-    if (next === ScrollSpy._active) return;
-    ScrollSpy._clearActive(options);
+    const next = best ? ScrollSpy._linkFor(best.el.id, best.options) : null;
+    const active = ScrollSpy._active.get(resolver);
+    if (active === best && active?._link === next) return;
+    ScrollSpy._clearActive(resolver);
     if (!next) return;
     next.classList.add(best.options.activeClass);
     next.setAttribute('aria-current', 'true');
-    ScrollSpy._active = next;
+    best._link = next;
+    ScrollSpy._active.set(resolver, best);
   }
 
-  private static _nearestAbove(): ScrollSpy | null {
+  private static _nearestAbove(elements: ScrollSpy[]): ScrollSpy | null {
     let best: ScrollSpy | null = null;
     let bestTop = -Infinity;
-    for (const spy of ScrollSpy._elements) {
+    for (const spy of elements) {
       const top = spy.el.getBoundingClientRect().top;
       if (top <= 0 && top >= bestTop) {
         bestTop = top;
@@ -173,11 +150,13 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     return best;
   }
 
-  private static _clearActive(options: ScrollSpyOptions) {
-    if (!ScrollSpy._active) return;
-    ScrollSpy._active.classList.remove(options.activeClass);
-    ScrollSpy._active.removeAttribute('aria-current');
-    ScrollSpy._active = null;
+  private static _clearActive(resolver: ScrollSpyOptions['getActiveElement']) {
+    const active = ScrollSpy._active.get(resolver);
+    if (!active) return;
+    active._link?.classList.remove(active.options.activeClass);
+    active._link?.removeAttribute('aria-current');
+    active._link = null;
+    ScrollSpy._active.delete(resolver);
   }
 
   /**

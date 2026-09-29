@@ -310,6 +310,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(tabs, /^\| `swipeable` \| Boolean \| `false` \|/m);
     assert.match(tabs, /#### Methods\n\n- `\.select\(\)`: /);
     assert.match(tabs, /- `\.destroy\(\)`: /);
+    assert.match(guide('scrollspy.md'), /- `\.destroy\(\)`: Disconnect the section's observer, restore its original offset style, and update the current link within its group\. Repeated destruction is safe\./);
     assert.doesNotMatch(guide('buttons.md'), /#### Options|#### Methods/);
     // Carousel documents its methods in prose rather than headings; keep them and the pause contract.
     const carousel = guide('carousel.md');
