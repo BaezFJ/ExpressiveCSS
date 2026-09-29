@@ -1001,7 +1001,7 @@
         "excludeRules": []
       },
       "jobs": [
-        "Material Design 3 common buttons, icon buttons, and FABs \u2014 from the HTML."
+        "Material Design 3 common buttons, icon buttons, and FABs — from the HTML."
       ],
       "useWhen": [
         "Run an action with a visible label."
@@ -2117,10 +2117,10 @@
         ]
       },
       "jobs": [
-        "The bar that says a thing can be dragged \u2014 and nothing that does the dragging."
+        "The bar that says a thing can be dragged — and nothing that does the dragging."
       ],
       "useWhen": [
-        "The bar that says a thing can be dragged \u2014 and nothing that does the dragging."
+        "The bar that says a thing can be dragged — and nothing that does the dragging."
       ],
       "avoidWhen": [
         "The containing component lacks drag behavior, keyboard operation, or an equivalent single-pointer path without dragging."
@@ -2300,7 +2300,7 @@
         "Name or explain an icon-only control on hover and focus."
       ],
       "avoidWhen": [
-        "The icon already has visible text, or the tooltip would be the control\u2019s only accessible name."
+        "The icon already has visible text, or the tooltip would be the control’s only accessible name."
       ],
       "alternatives": [
         "icon-buttons"
