@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>List-detail | My project</title>
+  <!-- Copy this file as index.html beside the framework's complete dist directory. -->
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+  <style>
+    body { display: flex; flex-direction: column; height: 100dvh; margin: 0; }
+    .workspace { flex: 1; min-height: 0; container-type: inline-size; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="bar">
+      <h2>My project</h2>
+      <a class="button text" href="https://www.expressivecss.com/">Docs</a>
+    </div>
+  </header>
+  <main id="main" class="workspace">
+    <div class="list-detail">
+      <section id="items" class="list-pane active" aria-labelledby="items-title">
+        <header><h1 id="items-title">Reading list</h1></header>
+        <ul class="list">
+          <li><a href="#detail" aria-current="true" data-title="Plan your next project" data-body="Write down the task your users need to complete. Choose a layout that gives that task enough space."><div>Plan your next project<p>Start with the user's task.</p></div></a></li>
+          <li><a href="#detail" data-title="Choose your components" data-body="Use lists for indexes and cards for distinct items. Give every control an accessible name and a real action."><div>Choose your components<p>Use the framework's documented markup.</p></div></a></li>
+          <li><a href="#detail" data-title="Test the compact view" data-body="Resize the window below 840px. Select an item to show its detail, then use Back to return to the list."><div>Test the compact view<p>Keep navigation and content reachable.</p></div></a></li>
+        </ul>
+      </section>
+      <section id="detail" class="detail-pane" aria-labelledby="detail-title">
+        <header>
+          <button id="back" type="button" class="hide-on-expanded-and-up" aria-label="Back to reading list">
+            <span class="material-symbols" aria-hidden="true">arrow_back</span>
+          </button>
+          <h2 id="detail-title" tabindex="-1">Plan your next project</h2>
+        </header>
+        <div><p id="detail-body">Write down the task your users need to complete. Choose a layout that gives that task enough space.</p></div>
+      </section>
+    </div>
+  </main>
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Expressive.AutoInit();
+      // Panes are CSS layouts. The application owns selection and focus.
+      const items = document.getElementById('items');
+      const detail = document.getElementById('detail');
+      const title = document.getElementById('detail-title');
+      items.addEventListener('click', (event) => {
+        const link = event.target.closest('a[data-title]');
+        if (!link) return;
+        event.preventDefault();
+        items.querySelector('[aria-current]')?.removeAttribute('aria-current');
+        link.setAttribute('aria-current', 'true');
+        title.textContent = link.dataset.title;
+        document.getElementById('detail-body').textContent = link.dataset.body;
+        items.classList.remove('active');
+        detail.classList.add('active');
+        title.focus();
+      });
+      document.getElementById('back').addEventListener('click', () => {
+        detail.classList.remove('active');
+        items.classList.add('active');
+        items.querySelector('[aria-current]').focus();
+      });
+    });
+  </script>
+</body>
+</html>

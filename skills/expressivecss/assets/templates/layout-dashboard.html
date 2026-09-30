@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | My project</title>
+  <!-- Copy this file as index.html beside the framework's complete dist directory. -->
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+  <style>
+    body { margin: 0; }
+    .app-shell { display: grid; grid-template-columns: minmax(0, 1fr); min-height: 100dvh; }
+    .app-content { display: flex; flex-direction: column; min-width: 0; min-height: 100dvh; }
+    main { flex: 1; min-width: 0; }
+    .app-navigation { position: sticky; bottom: 0; }
+    .navigation-rail { position: sticky; top: 0; height: 100dvh; align-self: start; overflow-y: auto; }
+    @media (width >= 600px) { .app-shell { grid-template-columns: auto minmax(0, 1fr); } }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <nav class="navigation-rail hide-on-compact-only" aria-label="Primary navigation">
+      <button type="button" aria-label="Toggle navigation"><span class="material-symbols" aria-hidden="true">menu</span></button>
+      <a href="#main" aria-current="page"><span class="material-symbols" aria-hidden="true">home</span>Overview</a>
+      <a href="https://www.expressivecss.com/buttons.html"><span class="material-symbols" aria-hidden="true">widgets</span>Components</a>
+      <a href="https://www.expressivecss.com/"><span class="material-symbols" aria-hidden="true">help</span>Setup</a>
+    </nav>
+    <div class="app-content">
+      <header>
+        <div class="bar">
+          <h2>My project</h2>
+          <a class="button text" href="https://www.expressivecss.com/">Docs</a>
+        </div>
+      </header>
+      <main id="main" class="container py-4" tabindex="-1">
+        <h1>Project overview</h1>
+        <p class="flow-text">Sample data. Replace these values with your project's metrics.</p>
+        <div class="row mb-4">
+          <div class="s12 m6 l4"><article class="filled"><h2>Active projects</h2><p class="headline-large">12</p><p class="supporting-text">Projects currently in progress.</p></article></div>
+          <div class="s12 m6 l4"><article class="filled"><h2>Completed tasks</h2><p class="headline-large">48</p><p class="supporting-text">Tasks completed this month.</p></article></div>
+          <div class="s12 m6 l4"><article class="filled"><h2>Team members</h2><p class="headline-large">8</p><p class="supporting-text">People working on the project.</p></article></div>
+        </div>
+        <div class="row">
+          <div class="s12 l8">
+            <h2>Recent activity</h2>
+            <ul class="list">
+              <li><div>Project created<p>Your workspace is ready for content.</p></div></li>
+              <li><div>Layout selected<p>Cards stack as the window narrows.</p></div></li>
+              <li><div>Theme configured<p>The system scheme controls light and dark mode.</p></div></li>
+            </ul>
+          </div>
+          <div class="s12 l4">
+            <article class="outlined">
+              <h2>Build your next screen</h2>
+              <p class="supporting-text">Choose components for the task your users need to complete.</p>
+              <div class="actions"><a class="button filled" href="https://www.expressivecss.com/">Browse components</a></div>
+            </article>
+          </div>
+        </div>
+      </main>
+      <!-- Replace these documentation destinations with your application's URLs. -->
+      <footer class="app-navigation hide-on-med-and-up">
+        <nav class="navigation-bar" aria-label="Compact navigation">
+          <a href="#main" aria-current="page"><span class="material-symbols" aria-hidden="true">home</span>Overview</a>
+          <a href="https://www.expressivecss.com/buttons.html"><span class="material-symbols" aria-hidden="true">widgets</span>Components</a>
+          <a href="https://www.expressivecss.com/"><span class="material-symbols" aria-hidden="true">help</span>Setup</a>
+        </nav>
+      </footer>
+    </div>
+  </div>
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Expressive.AutoInit();
+    });
+  </script>
+</body>
+</html>

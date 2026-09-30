@@ -111,8 +111,11 @@ files are parsed as HTML after `className` is rewritten to `class`, so
 markup built from expressions can escape a selector rule, and markup kept in
 a string prop (this repository's docs pages pass examples through
 `<Code code={...}>`) is parsed as if it were inline, which produces false
-findings. Semantics findings report line 1 because the parser keeps no
-source positions; the snippet identifies the element.
+findings. Semantics findings report the line and column of the element's
+start tag. Elements the parser creates itself, such as the `<p>` implied by a
+stray `</p>`, have no start tag and report 1:1, as do all findings in very
+large files with thousands of tags. After the `className` rewrite, later
+columns on the same line read four lower per rewritten attribute.
 
 ## Consumer browser scenarios
 

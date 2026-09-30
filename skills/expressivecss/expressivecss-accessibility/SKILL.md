@@ -3,7 +3,7 @@ name: expressivecss-accessibility
 description: Implement and review ExpressiveCSS semantics, keyboard, focus, names, contrast, forced colors, target sizes, dragging alternatives, reflow, and motion. Use for interface implementations, visual critiques, and audits; exclude setup and tokens that leave accessibility unchanged.
 ---
 
-## ExpressiveCSS accessibility rules
+# ExpressiveCSS accessibility rules
 
 ## When to use
 
@@ -12,6 +12,8 @@ Use for interface implementation, Critique, or Audit, including visual reviews a
 ## Do not use when
 
 Skip setup-only work and token or lifecycle changes that leave accessibility behavior unchanged. Use the selected component and runtime contracts.
+
+## Rules
 
 Reuse root version resolution and selected component rules. `semantics.json` owns package markup rules; it does not establish WCAG conformance. Consult matching contracts for gaps or conflicts.
 

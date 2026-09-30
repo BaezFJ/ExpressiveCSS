@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `425faa2b1b68a0dd95d0718e81b94405ff8ab3b34a2c95e5cfc1b71ef2894a65`
+Contract SHA-256: `6a544619111be5da11d4c03661c2f02ec394007cac174346302aab3f78e9babc`
 
 #### Selection and adaptation
 
@@ -87,6 +87,10 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 - `.clear()`: Clear the input. Same as `done(true)`.
 - `.destroy()`: Destroy the plugin instance, remove the clock, and tear down its event handlers.
 - `.open(); / .close()`: These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking. No modal implementation is available.
+
+#### Also documented
+
+The Time Picker section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Display, Internationalization, 12-hour and 24-hour, Properties.
 
 #### Rules
 

@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `425faa2b1b68a0dd95d0718e81b94405ff8ab3b34a2c95e5cfc1b71ef2894a65`
+Contract SHA-256: `6a544619111be5da11d4c03661c2f02ec394007cac174346302aab3f78e9babc`
 
 #### Selection and adaptation
 
@@ -101,6 +101,10 @@ A long label wraps and the chip grows from its 32dp minimum, with 4dp above and 
 - `.selectChip()`: Focus the chip at this index.
 - `.getData()`: The current chips as an array of chip data objects.
 - `.destroy()`: Destroy the plugin instance, remove rendered chips, and tear down its event handlers.
+
+#### Also documented
+
+The Chips section of the [API reference](https://www.expressivecss.com/llm.md) also covers Contacts, Tags, Javascript Plugin, Initialization, Properties.
 
 #### Rules
 

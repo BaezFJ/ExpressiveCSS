@@ -3,7 +3,7 @@ name: expressivecss-install
 description: Install and configure @expressivecss/expressive, imports, package versions, assets, and build integration. Use for setup or version uncertainty; exclude unrelated markup and visual refinement.
 ---
 
-## Install ExpressiveCSS
+# Install ExpressiveCSS
 
 ## When to use
 
@@ -13,10 +13,12 @@ Use this guide for setup, imports, package changes, version problems, or contrac
 
 Do not load this guide when the project already loads the target version and the task changes only unrelated markup. Use the usage and selected component guides instead.
 
+## Steps
+
 Reuse the root version resolution, or run its bundled resolver if loaded directly. This matching bundled guide covers the setup below; consult [getting-started documentation](https://www.expressivecss.com/index.html.md) for missing details. The public site's version is unverified until provenance proves it. For an older installed version, inspect `node_modules/@expressivecss/expressive` and the matching repository tag or commit before applying contract-dependent changes.
 
 1. Inspect the project's manifest and lockfile first. Preserve its package manager and pinned ExpressiveCSS version.
-2. For a new npm installation, use `terminal(command="npm install @expressivecss/expressive", timeout=600)`.
+2. For a new npm installation, run `npm install @expressivecss/expressive`.
 3. Load only the surfaces the application uses.
 
 ### ES modules
@@ -40,7 +42,7 @@ The package also exports `@expressivecss/expressive/scss` and individual `scss/*
 
 ### Browser build
 
-Load the compiled stylesheet, then the IIFE JavaScript bundle near the end of `<body>`. Call `Expressive.AutoInit()` after the component markup exists. The IIFE global is `Expressive`, not `M`.
+Load the compiled stylesheet, then the IIFE JavaScript bundle near the end of `<body>`. Call `Expressive.AutoInit()` after the component markup exists. The IIFE global is `Expressive`, not `M`. For a complete page, copy the bundled [starter page](../assets/templates/starter.html) beside `dist/`. The minimum document is:
 
 ```html
 <!doctype html>
@@ -51,11 +53,6 @@ Load the compiled stylesheet, then the IIFE JavaScript bundle near the end of `<
     <link rel="stylesheet" href="dist/css/expressive.min.css">
   </head>
   <body>
-    <header>
-      <nav aria-label="Main">
-        <h1>Page title</h1>
-      </nav>
-    </header>
     <main class="container">
       <!-- ExpressiveCSS markup -->
     </main>
@@ -69,7 +66,7 @@ Load the compiled stylesheet, then the IIFE JavaScript bundle near the end of `<
 </html>
 ```
 
-The `theme` attribute only works on `<html>` (or a shadow host). Drop both `<script>` tags on a CSS-only page. Add persistent navigation (a `nav.navigation-bar` after `<main>` on Compact, a `nav.navigation-rail` before it from Medium) from the screen recipes in the [design rules](../references/design-rules.md).
+The `theme` attribute only works on `<html>` (or a shadow host). Drop both `<script>` tags on a CSS-only page. For persistent navigation, start from the matching layout template: [compact](../assets/templates/layout-compact.html), [navigation rail](../assets/templates/layout-rail.html), [expanded rail](../assets/templates/layout-expanded.html), [list-detail](../assets/templates/layout-list-detail.html), or [dashboard](../assets/templates/layout-dashboard.html). The screen recipes in the [design rules](../references/design-rules.md) explain when each fits.
 
 The compiled stylesheet ships `@font-face` rules for Material Symbols (outlined, rounded, sharp), Roboto 400/500, and Noto Sans 400/500. Keep `dist/fonts/` next to `dist/css/` so the relative `url(../fonts/...)` paths resolve. Override the brand/plain tokens when the page uses different typefaces. `.material-icons` is a compat alias that uses Symbols; do not load the older Material Icons stylesheet.
 

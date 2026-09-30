@@ -94,6 +94,9 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(description, /exclude.*without ExpressiveCSS/i);
     assert.doesNotMatch(skill, /\/home\/|[A-Z]:\\Users\\/, 'skill contains a machine-local path');
     assert.doesNotMatch(skill, /\]\(\.\.\//, 'root skill links outside the portable skill directory');
+    for (const [, target] of skill.matchAll(/\]\((\.\/[^)#\s]+)/g)) {
+      assert.ok(existsSync(new URL(target, skillUrl)), `root skill links to missing ${target}`);
+    }
   });
 
   test('routes each task to a focused guide with valid frontmatter', () => {
@@ -110,6 +113,9 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.ok(description.endsWith('.'), `${path} description is not a sentence`);
       assert.doesNotMatch(guide, /\/home\/|[A-Z]:\\Users\\/, `${path} contains a machine-local path`);
       assert.doesNotMatch(guide, /\]\(\.\.\/\.\.\//, `${path} links outside the portable skill directory`);
+      for (const [, target] of guide.matchAll(/\]\((\.{1,2}\/[^)#\s]+)/g)) {
+        assert.ok(existsSync(new URL(target, url)), `${path} links to missing ${target}`);
+      }
     }
   });
 
@@ -146,6 +152,7 @@ describe('the ExpressiveCSS agent skill', () => {
         [],
         `${name} must not teach retired Materialize classes`,
       );
+      assert.doesNotMatch(syntax, /href="#!?"/, `${name} teaches a placeholder link`);
       assert.doesNotMatch(guide, /\]\(\.\.\/\.\.\//, `${name} links outside the portable skill directory`);
       assert.doesNotMatch(guide, /\]\(#[^)]+\)/, `${name} contains a fragment from its source document`);
       assert.doesNotMatch(guide, /\/home\/|[A-Z]:\\Users\\/, `${name} contains a machine-local path`);

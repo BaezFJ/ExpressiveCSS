@@ -29,8 +29,9 @@ const S = defineSections([
           <code>&lt;span&gt;</code> — there is no <code>icon-left</code> /
           <code>icon-right</code> class; the order of the two spans is the
           placement. An icon-only button needs an <code>aria-label</code>,
-          because the icon is hidden from assistive technology. Add <code>circle</code> for a 40dp
-          icon button.
+          because the icon is hidden from assistive technology. Add <code>circle</code> for a round
+          common button. Icon buttons are
+          <a href={route('icon_buttons')}><code>.icon-button</code></a>.
         </p>
         <p>
           Two independent axes dress it: a <a href="#filled">style</a>
@@ -169,10 +170,13 @@ const S = defineSections([
   </Section>
   <Section {...S.icon}>
         <p>
-          Add <code>circle</code> for a 40dp icon button. The variant
-          helpers still apply: default is filled, <code>text</code> is the
-          standard (transparent) icon button, <code>tonal</code> and
-          <code>outlined</code> match the common-button colors.
+          <a href={route('icon_buttons')}><code>.icon-button</code></a> is its
+          own component. <code>circle</code> on a common button is the older
+          round common-button form and still works. It follows the size
+          ladder, 40dp by default. The variant helpers still apply:
+          default is filled, <code>text</code> is the standard (transparent)
+          icon button, <code>tonal</code> and <code>outlined</code> match the
+          common-button colors.
         </p>
         <p>
           <button type="button" class="circle" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>

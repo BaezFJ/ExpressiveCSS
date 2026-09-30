@@ -3,7 +3,7 @@ name: expressivecss-runtime
 description: Initialize and destroy ExpressiveCSS JavaScript components, repair remounts, and inspect interaction performance. Use for Auto Init, manual or shared runtime work; exclude CSS-only markup and token changes.
 ---
 
-## ExpressiveCSS JavaScript runtime
+# ExpressiveCSS JavaScript runtime
 
 ## When to use
 
@@ -12,6 +12,8 @@ Use this guide for interactive components, initialization, dynamic content, remo
 ## Do not use when
 
 Do not load this guide for a CSS-only Audit, static markup with no JavaScript behavior, or visual-token work. Critique does not need it unless interaction evidence is in scope.
+
+## Initialization and lifecycle
 
 Reuse the root version resolution and read the selected component guide. Consult [Auto Init](https://www.expressivecss.com/auto-init.html.md) or component documentation only for missing lifecycle details, conflicts, or version uncertainty.
 

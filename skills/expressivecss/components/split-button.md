@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `425faa2b1b68a0dd95d0718e81b94405ff8ab3b34a2c95e5cfc1b71ef2894a65`
+Contract SHA-256: `6a544619111be5da11d4c03661c2f02ec394007cac174346302aab3f78e9babc`
 
 #### Selection and adaptation
 
@@ -56,8 +56,8 @@ The trailing half is an ordinary Menu trigger, so everything Menu does it does h
     <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
   </button>
   <menu id="save-menu">
-    <li><a href="#!">Save a copy</a></li>
-    <li><a href="#!">Save as template</a></li>
+    <li><button type="button">Save a copy</button></li>
+    <li><button type="button">Save as template</button></li>
   </menu>
 </div>
 ```

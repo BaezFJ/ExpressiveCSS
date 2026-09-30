@@ -1750,7 +1750,7 @@ Breadcrumbs are a good way to display your current location. This is usually use
 
 Material Design 3 common buttons, icon buttons, and FABs — from the HTML.
 
-A `<button>` is a filled common button. An `<a class="button">` is the same thing for a link — on an anchor the class is `button`; the older `.btn` spelling only ever worked on a `<button>`, which is styled as one anyway. Put a `<span class="material-symbols" aria-hidden="true">` icon before or after the label and wrap the label in its own `<span>` — there is no `icon-left` / `icon-right` class, the order of the two spans is the placement. Add `circle` for a 40dp icon button, and give it an `aria-label`: the icon is hidden, so it is the only name the button would have.
+A `<button>` is a filled common button. An `<a class="button">` is the same thing for a link — on an anchor the class is `button`; the older `.btn` spelling only ever worked on a `<button>`, which is styled as one anyway. Put a `<span class="material-symbols" aria-hidden="true">` icon before or after the label and wrap the label in its own `<span>` — there is no `icon-left` / `icon-right` class, the order of the two spans is the placement. Add `circle` for a round common button and name it with `aria-label`, since the icon is hidden. Icon buttons are `.icon-button`.
 
 Two independent axes dress it: a style (`filled`, `tonal`, `outlined`, `elevated`, `text`) and a size (`xsmall` through `xlarge`). Any style combines with any size — nine classes, not twenty-five, because the size sets the geometry and the style sets the color.
 
@@ -1772,7 +1772,7 @@ Create Create Send
   <span class="material-symbols" aria-hidden="true">add</span>
 </button>
 
-<a class="button" href="#!">Link</a>
+<a class="button" href="/docs">Docs</a>
 ```
 
 ### Filled
@@ -1787,7 +1787,7 @@ Create Create Link
 <button>
   <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
-<a class="button" href="#!">Link</a>
+<a class="button" href="/docs">Docs</a>
 ```
 
 ### Tonal
@@ -1835,7 +1835,7 @@ Create Create
 
 ### Icon buttons
 
-`.icon-button` is its own component, documented below. `circle` on a common button is the older 40dp icon button and still works: default is filled, `text` is the standard (transparent) one, `tonal` and `outlined` match the common-button colors. Its glyph is the button ladder's 20dp, not the icon button's 24dp — `.icon-button` is the control that carries those.
+`.icon-button` is its own component, documented below. `circle` on a common button is the older round common-button form and still works. It follows the size ladder, 40dp by default. Default is filled, `text` is the standard (transparent) one, `tonal` and `outlined` match the common-button colors. Its glyph is the button ladder's 20dp, not the icon button's 24dp — `.icon-button` is the control that carries those.
 
 ```html
 <button class="circle" aria-label="Add">
@@ -2050,8 +2050,8 @@ The trailing half is an ordinary Menu trigger, so everything Menu does it does h
     <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
   </button>
   <menu id="save-menu">
-    <li><a href="#!">Save a copy</a></li>
-    <li><a href="#!">Save as template</a></li>
+    <li><button type="button">Save a copy</button></li>
+    <li><button type="button">Save as template</button></li>
   </menu>
 </div>
 ```
@@ -2073,8 +2073,8 @@ Exactly two controls, lead action first and trigger second, both direct children
     <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
   </button>
   <menu id="reply-menu">
-    <li><a href="#!">Reply all</a></li>
-    <li><a href="#!">Forward</a></li>
+    <li><button type="button">Reply all</button></li>
+    <li><button type="button">Forward</button></li>
   </menu>
 </div>
 ```
@@ -2693,12 +2693,12 @@ You can use rows and columns here to organize your footer content.
   </section>
   <nav aria-labelledby="footer-links">
     <h2 id="footer-links">Links</h2>
-    <a href="#!">Link 1</a>
-    <a href="#!">Link 2</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
   </nav>
   <small>
     <span>&copy; 2026 Copyright Text</span>
-    <a href="#!">More Links</a>
+    <a href="/privacy">Privacy</a>
   </small>
 </footer>
 ```
@@ -2798,8 +2798,8 @@ Default. Leading icon, headline, trailing actions. DOM order is the layout — t
       <span class="material-symbols" aria-hidden="true">menu</span>
     </button>
     <h2>Title</h2>
-    <a href="#!" aria-label="Search"><span class="material-symbols" aria-hidden="true">search</span></a>
-    <a href="#!" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></a>
+    <a href="/search" aria-label="Search"><span class="material-symbols" aria-hidden="true">search</span></a>
+    <button type="button" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></button>
   </nav>
 </header>
 ```
@@ -3063,9 +3063,9 @@ Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp,
   <button type="button" aria-label="Menu">
     <span class="material-symbols" aria-hidden="true">menu</span>
   </button>
-  <a class="button extra" href="#!">
+  <a class="button extra" href="/compose">
     <span class="material-symbols" aria-hidden="true">edit</span>
-    <span>Label</span>
+    <span>Compose</span>
   </a>
   <a href="/" aria-current="page">
     <span class="material-symbols" aria-hidden="true">star</span>
@@ -3173,8 +3173,8 @@ Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane`
       <h2>Inbox</h2>
     </header>
     <ul class="list">
-      <li><a href="#!">Brunch this weekend?</a></li>
-      <li><a href="#!">Design review</a></li>
+      <li><a href="/inbox/brunch">Brunch this weekend?</a></li>
+      <li><a href="/inbox/design-review">Design review</a></li>
     </ul>
   </div>
   <div class="detail-pane">
@@ -3621,15 +3621,15 @@ Drop me
 ```html
 <button class="menu-trigger" data-target="menu1">Drop me</button>
 <menu id="menu1">
-  <li><a href="#!">One</a></li>
-  <li><a href="#!">Two</a></li>
+  <li><button type="button">One</button></li>
+  <li><button type="button">Two</button></li>
   <li class="divider" role="separator"></li>
-  <li><a href="#!">Three</a></li>
+  <li><button type="button">Three</button></li>
   <li>
-    <a href="#!">
+    <button type="button">
       <span class="material-symbols" aria-hidden="true">cloud</span>
       <span>Five</span>
-    </a>
+    </button>
   </li>
 </menu>
 ```
@@ -3860,24 +3860,6 @@ A `<dialog>` is a basic dialog. A heading is the headline, a `<p>` (or a wrappin
 Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is `--md-comp-scrim-color`. Actions sit at the end with an 8dp gap.
 
 Open it with `showModal()` and close it with `close()` — the Dialog API, not a plugin. There is no `Modal` export and nothing for `AutoInit()` to start; `Dialogs.Init()` runs at import time and only adds light-dismiss.
-
-Show Show with icon Show with long content
-
-### Use location services?
-
-Let the app use your location to suggest nearby stops and live arrival times.
-
-### Use location services?
-
-Let the app use your location to suggest nearby stops and live arrival times.
-
-### Terms of service
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ```html
 <button type="button" onclick="document.getElementById('dialog1').showModal()">

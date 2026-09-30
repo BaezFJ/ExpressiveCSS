@@ -248,6 +248,18 @@ const transport = new StdioClientTransport({
   assert.equal(failing.status, 1, failing.stderr);
   assert.match(failing.stdout, /navigation-bar-marks-current/u);
   assert.match(failing.stdout, /retired-markup\.html:1:\d+ legacy-input-field/u);
+  // Semantics findings report the element's line and column, also in JSX after lint rewrites className.
+  const locatedMarkup = path.join(outsideDir, 'located.jsx');
+  await writeFile(locatedMarkup, 'export const Nav = () => (\n  <>\n    <nav className="navigation-bar"><a href="/">Home</a></nav>\n    <nav aria-label="Main"><a href="/">Home</a></nav>\n    <nav aria-label="Main"><a href="/a">A</a></nav>\n  </>\n);\n');
+  const located = lint([locatedMarkup]);
+  assert.match(located.stdout, /located\.jsx:3:5 nav-needs-label/u);
+  assert.match(located.stdout, /located\.jsx:5:5 duplicate-navigation-landmark-name/u);
+  // Large files within the structure limit still finish inside the inspection budget.
+  const longMarkup = path.join(outsideDir, 'long.html');
+  await writeFile(longMarkup, `<nav><a href="/">Home</a></nav>${'<br>'.repeat(3_990)}${'x\n'.repeat(235_000)}`);
+  const long = lint([longMarkup]);
+  assert.match(long.stdout, /long\.html:1:1 nav-needs-label/u);
+  assert.doesNotMatch(long.stdout, /inspection-truncated/u);
   assert.equal(lint([outsideFile]).status, 0);
   // Files the bounded reader refuses, and inspections that stop early, fail instead of passing silently.
   const linkedMarkup = path.join(outsideDir, 'linked.html');

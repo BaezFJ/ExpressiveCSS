@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `425faa2b1b68a0dd95d0718e81b94405ff8ab3b34a2c95e5cfc1b71ef2894a65`
+Contract SHA-256: `6a544619111be5da11d4c03661c2f02ec394007cac174346302aab3f78e9babc`
 
 #### Selection and adaptation
 
@@ -66,6 +66,10 @@ A radio only means anything as one of a set, so the set is a `<fieldset>` and th
   </label>
 </fieldset>
 ```
+
+#### Also documented
+
+The Radio Buttons section of the [API reference](https://www.expressivecss.com/llm.md) also covers In a row.
 
 #### Rules
 

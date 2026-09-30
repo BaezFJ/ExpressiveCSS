@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `425faa2b1b68a0dd95d0718e81b94405ff8ab3b34a2c95e5cfc1b71ef2894a65`
+Contract SHA-256: `6a544619111be5da11d4c03661c2f02ec394007cac174346302aab3f78e9babc`
 
 #### Selection and adaptation
 
@@ -45,7 +45,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Material Design 3 common buttons, icon buttons, and FABs — from the HTML.
 
-A `<button>` is a filled common button. An `<a class="button">` is the same thing for a link — on an anchor the class is `button`; the older `.btn` spelling only ever worked on a `<button>`, which is styled as one anyway. Put a `<span class="material-symbols" aria-hidden="true">` icon before or after the label and wrap the label in its own `<span>` — there is no `icon-left` / `icon-right` class, the order of the two spans is the placement. Add `circle` for a 40dp icon button, and give it an `aria-label`: the icon is hidden, so it is the only name the button would have.
+A `<button>` is a filled common button. An `<a class="button">` is the same thing for a link — on an anchor the class is `button`; the older `.btn` spelling only ever worked on a `<button>`, which is styled as one anyway. Put a `<span class="material-symbols" aria-hidden="true">` icon before or after the label and wrap the label in its own `<span>` — there is no `icon-left` / `icon-right` class, the order of the two spans is the placement. Add `circle` for a round common button and name it with `aria-label`, since the icon is hidden. Icon buttons are `.icon-button`.
 
 Two independent axes dress it: a style (`filled`, `tonal`, `outlined`, `elevated`, `text`) and a size (`xsmall` through `xlarge`). Any style combines with any size — nine classes, not twenty-five, because the size sets the geometry and the style sets the color.
 
@@ -63,8 +63,12 @@ Two independent axes dress it: a style (`filled`, `tonal`, `outlined`, `elevated
   <span class="material-symbols" aria-hidden="true">add</span>
 </button>
 
-<a class="button" href="#!">Link</a>
+<a class="button" href="/docs">Docs</a>
 ```
+
+#### Also documented
+
+The Buttons section of the [API reference](https://www.expressivecss.com/llm.md) also covers Filled, Tonal, Outlined, Elevated, Text, Icon buttons, Floating, Sizes, Disabled.
 
 #### Rules
 

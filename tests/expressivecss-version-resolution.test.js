@@ -604,6 +604,12 @@ describe('ExpressiveCSS version resolution', () => {
       'package.json',
       'CHANGELOG.md',
       'skills/expressivecss/SKILL.md',
+      'docs/public/starter.html',
+      'docs/public/layout-compact.html',
+      'docs/public/layout-rail.html',
+      'docs/public/layout-expanded.html',
+      'docs/public/layout-list-detail.html',
+      'docs/public/layout-dashboard.html',
     ];
     const decisions = JSON.parse(await readFile(path.join(sourceRoot, 'docs/src/data/component-decisions.json'), 'utf8'));
     // Include reviewed inputs so the Git-free snapshot has the same evidence availability.
@@ -636,6 +642,7 @@ describe('ExpressiveCSS version resolution', () => {
       'skills/expressivecss/scripts/verify-consumer.mjs',
       'skills/expressivecss/scripts/consumer-browser.mjs',
       'skills/expressivecss/scripts/bounded-file.mjs',
+      'skills/expressivecss/assets/templates/starter.html',
       'mcp/expressivecss/contract.json',
       'mcp/expressivecss/scripts/resolve-version.mjs',
     ]) {

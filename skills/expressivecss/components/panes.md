@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `425faa2b1b68a0dd95d0718e81b94405ff8ab3b34a2c95e5cfc1b71ef2894a65`
+Contract SHA-256: `6a544619111be5da11d4c03661c2f02ec394007cac174346302aab3f78e9babc`
 
 #### Selection and adaptation
 
@@ -54,8 +54,8 @@ Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane`
       <h2>Inbox</h2>
     </header>
     <ul class="list">
-      <li><a href="#!">Brunch this weekend?</a></li>
-      <li><a href="#!">Design review</a></li>
+      <li><a href="/inbox/brunch">Brunch this weekend?</a></li>
+      <li><a href="/inbox/design-review">Design review</a></li>
     </ul>
   </div>
   <div class="detail-pane">
@@ -69,6 +69,10 @@ Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane`
   </div>
 </div>
 ```
+
+#### Also documented
+
+The Panes section of the [API reference](https://www.expressivecss.com/llm.md) also covers List-detail, Compact, Supporting pane, Equal, Three-pane, Appearance, Pane anatomy, Tokens.
 
 #### Rules
 

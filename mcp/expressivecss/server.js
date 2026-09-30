@@ -24,6 +24,9 @@ const DEFAULT_QA_MAX_TOTAL_MB = 16;
 const MAX_STATIC_ISSUES = 200;
 const MAX_STATIC_ISSUES_PER_REQUEST = 1_000;
 const MAX_STATIC_MARKUP_DELIMITERS = 4_000;
+// Source locations make parse5 copy a parent's children for each text run, so the cost grows with
+// characters times tags. Past this product, semantics findings report 1:1 to stay within the budget.
+const MAX_LOCATED_MARKUP_WORK = 100_000_000;
 const STATIC_INSPECTION_TIMEOUT_MS = 5_000;
 const DEFAULT_COMMAND_TIMEOUT_MS = 120_000;
 const MAX_PROJECT_ROOT_CHARS = 4_096;
@@ -879,7 +882,15 @@ function inspectSemanticRules(snippet, maxIssues = MAX_STATIC_ISSUES, deadline =
   const { semantics, frameworkVersion } = loadSemanticsContract();
   if (maxIssues <= 0) return markInspectionTruncated([], 'issue limit reached');
   if (markupStructureExceedsLimit(snippet)) return markInspectionTruncated([], 'markup structure limit reached');
-  const { document } = new JSDOM(`<!doctype html><body>${snippet}</body>`).window;
+  const prefix = '<!doctype html><body>';
+  const includeNodeLocations = snippet.length * (snippet.split('<').length - 1) <= MAX_LOCATED_MARKUP_WORK;
+  const dom = new JSDOM(`${prefix}${snippet}</body>`, { includeNodeLocations });
+  const { document } = dom.window;
+  // Elements the parser creates without a start tag have no source offset, so they report the start.
+  const locate = (element) => {
+    const offset = includeNodeLocations ? dom.nodeLocation(element)?.startOffset ?? -1 : -1;
+    return offset >= prefix.length ? lineForMatch(snippet, offset - prefix.length) : { line: 1, column: 1 };
+  };
   const issues = [];
 
   for (const rule of enforcedSemanticRules(semantics)) {
@@ -890,7 +901,7 @@ function inspectSemanticRules(snippet, maxIssues = MAX_STATIC_ISSUES, deadline =
       for (const element of hits) {
         const stop = inspectionStopReason(issues, maxIssues, deadline);
         if (stop) return markInspectionTruncated(issues, stop);
-        issues.push(semanticIssue(rule, element, frameworkVersion));
+        issues.push(semanticIssue(rule, element, frameworkVersion, locate(element)));
       }
     } else if (rule.kind === 'require-attr') {
       for (const element of hits) {
@@ -899,7 +910,7 @@ function inspectSemanticRules(snippet, maxIssues = MAX_STATIC_ISSUES, deadline =
         const value = element.getAttribute(rule.attr);
         const valid = rule.equals ? value === rule.equals : value !== null && value !== '';
         if (!valid) {
-          issues.push(semanticIssue(rule, element, frameworkVersion));
+          issues.push(semanticIssue(rule, element, frameworkVersion, locate(element)));
         }
       }
     } else if (rule.kind === 'require-accessible-name') {
@@ -907,7 +918,7 @@ function inspectSemanticRules(snippet, maxIssues = MAX_STATIC_ISSUES, deadline =
         const stop = inspectionStopReason(issues, maxIssues, deadline);
         if (stop) return markInspectionTruncated(issues, stop);
         if (!accessibleName(element, document)) {
-          issues.push(semanticIssue(rule, element, frameworkVersion));
+          issues.push(semanticIssue(rule, element, frameworkVersion, locate(element)));
         }
       }
     }
@@ -928,7 +939,7 @@ function inspectSemanticRules(snippet, maxIssues = MAX_STATIC_ISSUES, deadline =
         component: 'landmarks',
         frameworkVersion,
         rule: `Navigation landmarks on one page need distinct names; "${name}" is repeated.`,
-        location: { line: 1, column: 1 },
+        location: locate(nav),
         snippet: nav.outerHTML.slice(0, 140),
       });
     }
@@ -938,14 +949,14 @@ function inspectSemanticRules(snippet, maxIssues = MAX_STATIC_ISSUES, deadline =
   return issues;
 }
 
-function semanticIssue(rule, element, frameworkVersion) {
+function semanticIssue(rule, element, frameworkVersion, location) {
   return {
     id: rule.id,
     severity: 'high',
     component: rule.component,
     frameworkVersion,
     rule: rule.message,
-    location: { line: 1, column: 1 },
+    location,
     snippet: element.outerHTML.slice(0, 140),
   };
 }
