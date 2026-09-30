@@ -123,6 +123,13 @@ section :is(button, a.button):not(nav :is(button, a.button)) {
   padding-block: clamp(1.5rem, 1rem + 1vw, 2.5rem);
 }
 
+/* Embedded app bars scroll with their examples so site controls stay reachable. */
+.docs-page-content header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
+  position: static;
+  z-index: auto;
+  animation: none;
+}
+
 .docs-page-content .docs-section-title {
   max-width: 28ch;
   margin-bottom: 1rem;

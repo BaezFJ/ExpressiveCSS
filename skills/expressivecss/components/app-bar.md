@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.10.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `65c8fb83fcd437e6569ce26c1303f0e3048feef759bb33d8873705e66bbe4697`
+Contract SHA-256: `880040f0eb793dd08c7749508a8b7ed958e3bef25ac1e1b3c706e07f3552fb17`
 
 #### Selection and adaptation
 
@@ -45,7 +45,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Material Design 3 top app bars, from the HTML.
 
-The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. The heading is the headline; wrap it in `<hgroup>` with a `<p>` for a subtitle. Icon-only links and buttons are the leading and trailing actions. A `<menu>` (or `<ul>`) holds text destinations. A `<search class="search-bar">` in the nav is the search app bar. There is no `navbar`, `nav-wrapper`, or `brand-logo` class.
+The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. Top app bars stay pinned to the top by default, without a helper class. The heading is the headline; wrap it in `<hgroup>` with a `<p>` for a subtitle. Icon-only links and buttons are the leading and trailing actions. A `<menu>` (or `<ul>`) holds text destinations. A `<search class="search-bar">` in the nav is the search app bar. There is no `navbar`, `nav-wrapper`, or `brand-logo` class.
 
 Small is 64dp at `title-large`. `medium` is the Expressive medium-flexible bar: 112dp / `headline-medium`, 136dp with a subtitle. `large` is large-flexible: 120dp / `display-small`, 152dp with a subtitle. `AppBar` (started by `AutoInit()`) collapses those two on scroll and opens the related search view when the search field is selected. Icons are 24dp in a 48dp target and inherit the header color so a fill + `on-*` pair stays readable.
 

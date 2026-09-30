@@ -43,6 +43,7 @@ const S = defineSections([
           <code>on-*</code> text class if you want a colored bar.
         </p>
         <p>
+          Top app bars stay pinned to the top by default, without a helper class.
           The bar is CSS for layout. <code>AppBar</code> collapses
           <code>header.medium</code> and <code>header.large</code> on scroll,
           and opens the related search view when a search field in the bar is
@@ -228,8 +229,9 @@ const S = defineSections([
   </Section>
   <Section {...S.fixed}>
         <p>
-          Add <code>fixed</code> to pin a top bar with <code>position: sticky</code>.
-          No wrapper is required. At rest the bar is <code>surface</code>,
+          Every top app bar stays pinned with <code>position: sticky</code>
+          and <code>top: 0</code>. No helper class or wrapper is required.
+          At rest the bar is <code>surface</code>,
           the same as the page. Once content scrolls under it, supporting
           browsers fill it with <code>surface-container</code> via
           <code>animation-timeline: scroll()</code> so it separates from the
@@ -242,7 +244,7 @@ const S = defineSections([
           is the site header itself.
         </p>
 <Code code={`
-<header class="fixed">
+<header>
   <nav aria-label="Main">
     <h2>Title</h2>
     <a href="#!" aria-label="Search"><span class="material-symbols" aria-hidden="true">search</span></a>

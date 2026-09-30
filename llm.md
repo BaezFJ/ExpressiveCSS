@@ -2781,7 +2781,7 @@ The same size classes apply to Material Symbols.
 
 Material Design 3 top app bars, from the HTML.
 
-The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. The heading is the headline; wrap it in `<hgroup>` with a `<p>` for a subtitle. Icon-only links and buttons are the leading and trailing actions. A `<menu>` (or `<ul>`) holds text destinations. A `<search class="search-bar">` in the nav is the search app bar. There is no `navbar`, `nav-wrapper`, or `brand-logo` class.
+The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. Top app bars stay pinned to the top by default, without a helper class. The heading is the headline; wrap it in `<hgroup>` with a `<p>` for a subtitle. Icon-only links and buttons are the leading and trailing actions. A `<menu>` (or `<ul>`) holds text destinations. A `<search class="search-bar">` in the nav is the search app bar. There is no `navbar`, `nav-wrapper`, or `brand-logo` class.
 
 Small is 64dp at `title-large`. `medium` is the Expressive medium-flexible bar: 112dp / `headline-medium`, 136dp with a subtitle. `large` is large-flexible: 120dp / `display-small`, 152dp with a subtitle. `AppBar` (started by `AutoInit()`) collapses those two on scroll and opens the related search view when the search field is selected. Icons are 24dp in a 48dp target and inherit the header color so a fill + `on-*` pair stays readable.
 
@@ -2882,12 +2882,12 @@ A subtitle is an `<hgroup>` wrapping the heading and a `<p>`. There is no `subti
 
 ### Fixed
 
-Add `fixed` to pin a top bar with `position: sticky`. No wrapper is required. At rest the bar is `surface`, the same as the page. Once content scrolls under it, supporting browsers fill it with `surface-container` via `animation-timeline: scroll()` so it separates from the body — that is the M3 Expressive treatment, not a shadow. Without that API the bar stays at rest.
+Every top app bar stays pinned with `position: sticky` and `top: 0`. No helper class or wrapper is required. At rest the bar is `surface`, the same as the page. Once content scrolls under it, supporting browsers fill it with `surface-container` via `animation-timeline: scroll()` so it separates from the body. Without that API the bar stays at rest.
 
 The documentation header on this site is a fixed small bar. A second fixed bar on this page would sit on top of it, so the live example is the site header itself.
 
 ```html
-<header class="fixed">
+<header>
   <nav aria-label="Main">
     <h2>Title</h2>
     <a href="#!" aria-label="Search"><span class="material-symbols" aria-hidden="true">search</span></a>

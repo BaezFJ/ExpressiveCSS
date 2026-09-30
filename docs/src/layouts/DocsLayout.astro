@@ -23,7 +23,7 @@ const pageName = entry.title ?? entry.label;
     {/* A page that needs its own <head> content -- an extra font, say -- fills this. */}
     <slot name="head" slot="head" />
 
-    <header class="fixed">
+    <header>
         <div class="bar">
             <button type="button" id="docs-navigation-trigger" class="hide-on-expanded-and-up" aria-label="Browse documentation" aria-haspopup="dialog" aria-controls="docs-navigation-dialog">
                 <span class="material-symbols" aria-hidden="true">menu</span>
