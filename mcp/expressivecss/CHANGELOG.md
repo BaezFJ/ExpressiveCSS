@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1 - 2026-09-30
+
+- `rules_enforcer` requires an identifier boundary before a manual `.init(` call,
+  so a long identifier run no longer slows the scan.
+- Component guides say top app bars are pinned by default.
+- Bundled framework guidance: ExpressiveCSS 0.11.0.
+
 ## 0.2.0 - 2026-09-29
 
 - Add the `expressivecss-lint` bin: the `rules_enforcer` static checks as a command with a `--hook` mode for Claude Code `PostToolUse`, so agent edits are checked without a tool call. `server.js` now starts the server only when run as the entry point.
