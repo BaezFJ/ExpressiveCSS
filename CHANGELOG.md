@@ -5,6 +5,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-09-30
+
 ### Added
 
 - `.visually-hidden` hides an element from sight and keeps it in the
@@ -15,6 +17,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `fieldset.plain` groups radios or checkboxes inside a surface that already
   frames them. It has no outline, fill, padding, or margin from a preceding
   fieldset, and its legend starts flush with the content.
+- The docs ship a downloadable starter page (`docs/public/starter.html`) and five
+  copyable responsive layouts: compact, navigation rail, expanded rail,
+  list-detail and dashboard.
 
 ### Changed
 
@@ -31,12 +36,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   minimum the same way. Dialog action rows drop their own copy of this rule.
 - Chips add 4dp of block padding, so a wrapped label no longer touches the
   chip's edges. A chip that fits on one line keeps its 32dp height.
+- Every top app bar is pinned to the top of the page with `position: sticky`.
+  It no longer needs the `fixed` class.
 
 ### Migration
 
 - A common button's container height is now a `min-height`. A rule that gives
   a button a smaller `height` must also set `min-height`, or set
   `--md-comp-filled-button-container-height` instead.
+- Remove `fixed` from top app bar headers; it has no effect. To let a bar
+  scroll away with the page, set `position: static` on its `<header>`.
 
 ### Fixed
 
@@ -1756,7 +1765,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.10.1...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.10.1...v0.11.0
 [0.10.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.9.0...v0.9.1
