@@ -262,13 +262,15 @@ function semanticRules(rows, names, excluded = []) {
 
 // Options table and method names from the component's llm.md section, so an agent
 // can initialize a JavaScript component without fetching the full documentation.
-function apiSummary(section) {
+function apiSummary(section, level = 2) {
   const parts = [];
-  const options = /\n### Options\n([\s\S]*?)(?=\n### |$)/u.exec(section)?.[1] ?? '';
+  // Subsections sit one level below the component heading; method names one level further.
+  const block = (title) => new RegExp(`\\n#{${level + 1}} ${title}\\n([\\s\\S]*?)(?=\\n#{1,${level + 1}} |$)`, 'u').exec(section)?.[1] ?? '';
+  const options = block('Options');
   const table = options.split('\n').filter((line) => line.startsWith('|'));
   if (table.length > 2) parts.push(`#### Options\n\n${table.join('\n')}`);
-  const methods = /\n### Methods\n([\s\S]*?)(?=\n### |$)/u.exec(section)?.[1] ?? '';
-  const names = [...methods.matchAll(/^#### (.+?);?\n\n([^\n]+(?:\n[^\n]+)*)/gmu)]
+  const methods = block('Methods');
+  const names = [...methods.matchAll(new RegExp(`^#{${level + 2}} (.+?);?\\n\\n([^\\n]+(?:\\n[^\\n]+)*)`, 'gmu'))]
     .map(([, name, description]) => `- \`${name.trim()}\`: ${description.trim().replaceAll('\n', ' ')}`);
   if (names.length) {
     parts.push(`#### Methods\n\n${names.join('\n')}`);
@@ -338,7 +340,7 @@ function renderGuide(component, page, section, rules, provenance) {
   const selectionExample = component.selectionExample
     ? `Example: ${component.selectionExample}\n\n`
     : '';
-  const apiParts = apiSummary(section);
+  const apiParts = apiSummary(section, component.level ?? 2);
   const api = apiParts.map((part) => `${part}\n\n`).join('');
   // contractSummary keeps only the prose before the first example, so name the llm.md subsections
   // it leaves out. Headings that repeat an example's own heading are demo content, not sections.

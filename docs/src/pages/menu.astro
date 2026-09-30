@@ -67,24 +67,24 @@ const S = defineSections([
         </p>
         <menu id="menu1">
           <li>
-            <a href="#!">Refresh<span class="material-symbols suffix" aria-hidden="true">refresh</span></a>
+            <button type="button">Refresh<span class="material-symbols suffix" aria-hidden="true">refresh</span></button>
           </li>
           <li>
-            <a href="#!">Settings<span class="material-symbols suffix" aria-hidden="true">settings</span></a>
+            <button type="button">Settings<span class="material-symbols suffix" aria-hidden="true">settings</span></button>
           </li>
           <li>
-            <a href="#!">Help<span class="material-symbols suffix" aria-hidden="true">help</span></a>
+            <button type="button">Help<span class="material-symbols suffix" aria-hidden="true">help</span></button>
           </li>
           <li>
-            <a href="#!">More<span class="material-symbols suffix" aria-hidden="true">more_vert</span></a>
+            <button type="button">More<span class="material-symbols suffix" aria-hidden="true">more_vert</span></button>
           </li>
         </menu>
 <Code code={`
 <button class="menu-trigger" data-target="menu1">Drop me</button>
 <menu id="menu1">
-  <li><a href="#!">Refresh<span class="material-symbols suffix" aria-hidden="true">refresh</span></a></li>
-  <li><a href="#!">Settings<span class="material-symbols suffix" aria-hidden="true">settings</span></a></li>
-  <li><a href="#!">Help<span class="material-symbols suffix" aria-hidden="true">help</span></a></li>
+  <li><button type="button">Refresh<span class="material-symbols suffix" aria-hidden="true">refresh</span></button></li>
+  <li><button type="button">Settings<span class="material-symbols suffix" aria-hidden="true">settings</span></button></li>
+  <li><button type="button">Help<span class="material-symbols suffix" aria-hidden="true">help</span></button></li>
 </menu>
 `} />
         <p>
@@ -135,38 +135,38 @@ const S = defineSections([
             <h6>1. Standard</h6>
             <button type="button" class="menu-trigger no-autoinit" id="menu-standard-trigger" data-target="menu-standard">Open standard menu</button>
             <menu id="menu-standard">
-              <li><a href="#!">Refresh<span class="material-symbols suffix" aria-hidden="true">refresh</span></a></li>
-              <li><a href="#!">Settings<span class="material-symbols suffix" aria-hidden="true">settings</span></a></li>
-              <li><a href="#!">Help<span class="material-symbols suffix" aria-hidden="true">help</span></a></li>
-              <li><a href="#!">More<span class="material-symbols suffix" aria-hidden="true">more_vert</span></a></li>
+              <li><button type="button">Refresh<span class="material-symbols suffix" aria-hidden="true">refresh</span></button></li>
+              <li><button type="button">Settings<span class="material-symbols suffix" aria-hidden="true">settings</span></button></li>
+              <li><button type="button">Help<span class="material-symbols suffix" aria-hidden="true">help</span></button></li>
+              <li><button type="button">More<span class="material-symbols suffix" aria-hidden="true">more_vert</span></button></li>
             </menu>
           </div>
           <div class="col s12 m6">
             <h6>2. Grouped</h6>
             <button type="button" class="menu-trigger no-autoinit" id="menu-grouped-trigger" data-target="menu-grouped">Open grouped menu</button>
             <menu id="menu-grouped" class="grouped">
-              <li><a href="#!"><span class="material-symbols" aria-hidden="true">visibility</span>Item 1</a></li>
-              <li><a href="#!"><span class="material-symbols" aria-hidden="true">content_copy</span>Item 2<kbd>⌘C</kbd></a></li>
-              <li class="selected"><a href="#!"><span class="material-symbols" aria-hidden="true">check</span>Item 3</a></li>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">visibility</span>Item 1</button></li>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">content_copy</span>Item 2<kbd>⌘C</kbd></button></li>
+              <li class="selected"><button type="button"><span class="material-symbols" aria-hidden="true">check</span>Item 3</button></li>
               <li class="gap" aria-hidden="true"></li>
-              <li><a href="#!"><span class="material-symbols" aria-hidden="true">person</span>Item 4</a></li>
-              <li><a href="#!"><span class="material-symbols" aria-hidden="true">settings</span>Item 5</a></li>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">person</span>Item 4</button></li>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">settings</span>Item 5</button></li>
             </menu>
           </div>
         </div>
 <Code code={`
 <!-- Standard is the default: it has no modifier class. -->
 <menu id="standard-menu">
-  <li><a href="#!">Refresh</a></li>
-  <li><a href="#!">Settings</a></li>
+  <li><button type="button">Refresh</button></li>
+  <li><button type="button">Settings</button></li>
 </menu>
 
 <!-- A gap starts a new grouped surface. -->
 <menu id="grouped-menu" class="grouped">
-  <li><a href="#!">Item 1</a></li>
-  <li class="selected"><a href="#!">Item 2</a></li>
+  <li><button type="button">Item 1</button></li>
+  <li class="selected"><button type="button">Item 2</button></li>
   <li class="gap" aria-hidden="true"></li>
-  <li><a href="#!">Item 3</a></li>
+  <li><button type="button">Item 3</button></li>
 </menu>
 `} />
 </Section>
@@ -289,27 +289,27 @@ Expressive.AutoInit(document.body, {
           <button type="button" class="menu-trigger no-autoinit" id="menu-right-trigger" data-target="menu-right">Right</button>
         </p>
         <menu id="menu-left">
-          <li><a href="#!">One</a></li>
-          <li><a href="#!">Two</a></li>
+          <li><button type="button">One</button></li>
+          <li><button type="button">Two</button></li>
           <li class="divider" role="separator"></li>
-          <li><a href="#!">Three</a></li>
+          <li><button type="button">Three</button></li>
           <li>
-            <a href="#!">
+            <button type="button">
               <span class="material-symbols" aria-hidden="true">view_module</span>
               <span>Four</span>
-            </a>
+            </button>
           </li>
         </menu>
         <menu id="menu-right">
-          <li><a href="#!">One</a></li>
-          <li><a href="#!">Two</a></li>
+          <li><button type="button">One</button></li>
+          <li><button type="button">Two</button></li>
           <li class="divider" role="separator"></li>
-          <li><a href="#!">Three</a></li>
+          <li><button type="button">Three</button></li>
           <li>
-            <a href="#!">
+            <button type="button">
               <span class="material-symbols" aria-hidden="true">cloud</span>
               <span>Five</span>
-            </a>
+            </button>
           </li>
         </menu>
 <Code code={`
@@ -327,10 +327,10 @@ Expressive.Menu.init(document.querySelector('#left'), {
           <button type="button" class="menu-trigger no-autoinit" id="menu-hover-trigger" data-target="menu-hover">Hover me</button>
         </p>
         <menu id="menu-hover">
-          <li><a href="#!">One</a></li>
-          <li><a href="#!">Two</a></li>
+          <li><button type="button">One</button></li>
+          <li><button type="button">Two</button></li>
           <li class="divider" role="separator"></li>
-          <li><a href="#!">Three</a></li>
+          <li><button type="button">Three</button></li>
         </menu>
 <Code code={`
 Expressive.Menu.init(document.querySelector('#hover'), {
@@ -359,75 +359,75 @@ Expressive.Menu.init(document.querySelector('#hover'), {
         </p>
         <menu id="menu-rich" class="grouped">
           <li>
-            <a href="#!">
+            <button type="button">
               <span class="material-symbols" aria-hidden="true">visibility</span>
               Item 1
               <span class="badge">4</span>
-            </a>
+            </button>
           </li>
           <li>
-            <a href="#!">
+            <button type="button">
               <span class="material-symbols" aria-hidden="true">content_copy</span>
               <span class="menu-item-text">
                 <span>Item 2</span>
                 <span class="supporting-text">Supporting text</span>
               </span>
               <kbd>⌘C</kbd>
-            </a>
+            </button>
           </li>
           <li class="selected">
-            <a href="#!">
+            <button type="button">
               <span class="material-symbols" aria-hidden="true">check</span>
               Item 3
-            </a>
+            </button>
           </li>
           <li class="gap" aria-hidden="true"></li>
           <li>
-            <a href="#!">
+            <button type="button">
               <span class="material-symbols" aria-hidden="true">person</span>
               Item 4
-            </a>
+            </button>
             <menu>
-              <li><a href="#!">Nested one</a></li>
-              <li><a href="#!">Nested two</a></li>
+              <li><button type="button">Nested one</button></li>
+              <li><button type="button">Nested two</button></li>
             </menu>
           </li>
           <li>
-            <a href="#!">
+            <button type="button">
               <span class="material-symbols" aria-hidden="true">settings</span>
               Item 5
-            </a>
+            </button>
           </li>
           <li class="disabled" aria-disabled="true">
-            <a href="#!" tabindex="-1">
+            <button type="button" tabindex="-1">
               <span class="material-symbols" aria-hidden="true">redo</span>
               Redo
-            </a>
+            </button>
           </li>
         </menu>
 <Code code={`
 <menu id="menu-rich" class="grouped">
-  <li><a href="#!"><span class="material-symbols" aria-hidden="true">visibility</span> Item 1 <span class="badge">4</span></a></li>
+  <li><button type="button"><span class="material-symbols" aria-hidden="true">visibility</span> Item 1 <span class="badge">4</span></button></li>
   <li>
-    <a href="#!">
+    <button type="button">
       <span class="material-symbols" aria-hidden="true">content_copy</span>
       <span class="menu-item-text">
         <span>Item 2</span>
         <span class="supporting-text">Supporting text</span>
       </span>
       <kbd>⌘C</kbd>
-    </a>
+    </button>
   </li>
   <li class="selected">
-    <a href="#!"><span class="material-symbols" aria-hidden="true">check</span> Item 3</a>
+    <button type="button"><span class="material-symbols" aria-hidden="true">check</span> Item 3</button>
   </li>
   <li class="gap" aria-hidden="true"></li>
   <li>
-    <a href="#!"><span class="material-symbols" aria-hidden="true">person</span> Item 4</a>
+    <button type="button"><span class="material-symbols" aria-hidden="true">person</span> Item 4</button>
     <menu>…</menu>
   </li>
   <li class="disabled" aria-disabled="true">
-    <a href="#!" tabindex="-1"><span class="material-symbols" aria-hidden="true">redo</span> Redo</a>
+    <button type="button" tabindex="-1"><span class="material-symbols" aria-hidden="true">redo</span> Redo</button>
   </li>
 </menu>
 `} />
@@ -444,28 +444,28 @@ Expressive.Menu.init(document.querySelector('#hover'), {
         </p>
         <menu id="menu-vibrant" class="vibrant">
           <li>
-            <a href="#!">
+            <button type="button">
               <span class="material-symbols" aria-hidden="true">visibility</span>
               Item 1
-            </a>
+            </button>
           </li>
           <li class="selected">
-            <a href="#!">
+            <button type="button">
               <span class="material-symbols" aria-hidden="true">check</span>
               Item 2
-            </a>
+            </button>
           </li>
           <li>
-            <a href="#!">
+            <button type="button">
               <span class="material-symbols" aria-hidden="true">settings</span>
               Item 3
-            </a>
+            </button>
           </li>
         </menu>
 <Code code={`
 <menu id="menu-vibrant" class="vibrant">
-  <li><a href="#!"><span class="material-symbols" aria-hidden="true">visibility</span> Item 1</a></li>
-  <li class="selected"><a href="#!"><span class="material-symbols" aria-hidden="true">check</span> Item 2</a></li>
+  <li><button type="button"><span class="material-symbols" aria-hidden="true">visibility</span> Item 1</button></li>
+  <li class="selected"><button type="button"><span class="material-symbols" aria-hidden="true">check</span> Item 2</button></li>
 </menu>
 `} />
   </Section>
@@ -483,25 +483,25 @@ Expressive.Menu.init(document.querySelector('#hover'), {
           <button type="button" class="menu-trigger no-autoinit" id="menu-nested-trigger" data-target="menu-nested">Nested</button>
         </p>
         <menu id="menu-nested">
-          <li><a href="#!">One</a></li>
+          <li><button type="button">One</button></li>
           <li>
-            <a href="#!">More</a>
+            <button type="button">More</button>
             <menu>
-              <li><a href="#!">Nested one</a></li>
-              <li><a href="#!">Nested two</a></li>
+              <li><button type="button">Nested one</button></li>
+              <li><button type="button">Nested two</button></li>
             </menu>
           </li>
-          <li><a href="#!">Three</a></li>
+          <li><button type="button">Three</button></li>
         </menu>
 <Code code={`
 <button class="menu-trigger" data-target="menu1">Nested</button>
 <menu id="menu1">
-  <li><a href="#!">One</a></li>
+  <li><button type="button">One</button></li>
   <li>
-    <a href="#!">More</a>
+    <button type="button">More</button>
     <menu>
-      <li><a href="#!">Nested one</a></li>
-      <li><a href="#!">Nested two</a></li>
+      <li><button type="button">Nested one</button></li>
+      <li><button type="button">Nested two</button></li>
     </menu>
   </li>
 </menu>

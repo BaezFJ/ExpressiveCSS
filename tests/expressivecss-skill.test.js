@@ -327,9 +327,10 @@ describe('the ExpressiveCSS agent skill', () => {
     for (const line of tabs.split('\n').filter((entry) => entry.startsWith('| `'))) {
       assert.ok(llm.includes(line), `tabs option row is not in llm.md: ${line}`);
     }
-    // Every llm.md options table except Auto Init's belongs to a catalogue component.
+    // Every llm.md options table except Auto Init's belongs to a catalogue component; Lightbox nests one level deeper.
     const optionCount = componentFiles.filter((name) => /#### Options/.test(guide(name))).length;
-    assert.equal(optionCount, (llm.match(/^### Options$/gm) ?? []).length - 1);
+    assert.equal(optionCount, (llm.match(/^####? Options$/gm) ?? []).length - 1);
+    assert.match(guide('lightbox.md'), /#### Options\n\n\|[\s\S]*#### Methods\n\n- `\.open\(\)`/);
   });
 
   test('gives agents exact grid and helper-class references', () => {

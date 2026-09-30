@@ -139,16 +139,16 @@ const S = defineSections([
           <code>no-autoinit</code>. The generated element gets both
           <code>.tooltip</code> and <code>.material-tooltip</code>.
         </p>
-        <p>
-          <a class="tooltipped" href="#!" data-position="bottom" data-tooltip="I am a tooltip">Bottom</a>
-          <a class="tooltipped" href="#!" data-position="top" data-tooltip="I am a tooltip">Top</a>
-          <a class="tooltipped" href="#!" data-position="left" data-tooltip="I am a tooltip">Left</a>
-          <a class="tooltipped" href="#!" data-position="right" data-tooltip="I am a tooltip">Right</a>
+        <p class="flex flex-wrap gap-2">
+          <button type="button" class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip">Bottom</button>
+          <button type="button" class="tooltipped" data-position="top" data-tooltip="I am a tooltip">Top</button>
+          <button type="button" class="tooltipped" data-position="left" data-tooltip="I am a tooltip">Left</button>
+          <button type="button" class="tooltipped" data-position="right" data-tooltip="I am a tooltip">Right</button>
         </p>
 <Code code={`
-<a class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip" href="#!">
+<button type="button" class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip">
   Hover me
-</a>
+</button>
 `} />
         <p>
           For HTML, point <code>data-tooltip-id</code> at an element.
@@ -158,7 +158,7 @@ const S = defineSections([
           attribute and no <code>unsafeHTML</code> option.
         </p>
         <p>
-          <a class="tooltipped" href="#!" data-position="bottom" data-tooltip-id="tooltip-content">With HTML</a>
+          <button type="button" class="tooltipped" data-position="bottom" data-tooltip-id="tooltip-content">With HTML</button>
         </p>
         <div id="tooltip-content" style="display: none;">
           <h3>Chart</h3>
@@ -166,10 +166,10 @@ const S = defineSections([
           and a <span class="material-symbols" aria-hidden="true">insert_chart</span>.</p>
         </div>
 <Code code={`
-<a class="tooltipped" href="#!"
-   data-position="bottom" data-tooltip-id="tooltip-content">
+<button type="button" class="tooltipped"
+        data-position="bottom" data-tooltip-id="tooltip-content">
   With HTML
-</a>
+</button>
 <div id="tooltip-content" hidden>
   <h3>Chart</h3>
   <p>This is a tooltip with a <a href="https://github.com">link</a>.</p>
@@ -273,7 +273,7 @@ Expressive.AutoInit(document.body, {
         <InstanceNote plugin="Tooltip" />
 
         <p>
-          <a class="tooltipped" href="#!" id="tooltip-method-demo" data-position="bottom" data-tooltip="I am a tooltip">Hover me</a>
+          <button type="button" class="tooltipped" id="tooltip-method-demo" data-position="bottom" data-tooltip="I am a tooltip">Hover me</button>
           <button type="button" class="tonal" id="tooltip-open">Open</button>
           <button type="button" class="tonal" id="tooltip-close">Close</button>
         </p>

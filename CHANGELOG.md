@@ -19,6 +19,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   examples use real link targets, and menu actions are buttons. The Buttons
   reference calls `circle` a round common button and points icon buttons to
   `.icon-button`.
+- Documentation examples no longer use `href="#!"` in copyable code. Menu,
+  split-button, app-bar and tooltip actions are `<button type="button">`,
+  and code samples link to realistic paths. Live navigation demos on the docs
+  site keep `#!`. The app-bar Search icon is a button. The API reference drops
+  rendered demo text that had been copied into it, and the Lightbox guide
+  includes its options and methods.
 
 ## [0.11.0] - 2026-09-30
 

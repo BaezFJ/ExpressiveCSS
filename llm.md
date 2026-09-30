@@ -564,8 +564,6 @@ document.getElementById('theme-toggle').addEventListener('click', (event) => {
 });
 ```
 
-Toggle theme
-
 The same control lives in the top-right of every docs page, and the choice survives a reload.
 
 ### Creating a theme
@@ -719,10 +717,6 @@ Mix `in oklab`, not `in srgb`. sRGB interpolation dips in lightness through the 
 
 A role is a job, not a color: `error` means "this went wrong", and what that looks like is the theme's business.
 
-##### #
-
-##### Line and overlay
-
 ### Sass
 
 Do not `@extend` these classes across files — that is how the old stylesheet lost control of cascade order. In a component partial, read the token directly.
@@ -834,12 +828,6 @@ Attention! Offsets are calculated absolutely starting from the left. If you need
 
 There is a default gap between the columns (g-3). You can easily change the gap with the gap classes. Simply add `g-0` to `g-5` to the element with the `row` class.
 
-Standard Gaps (g-3)
-
-No Gap (g-0)
-
-Bigger Gap (g-4)
-
 ```html
 <div class="row g-4">
   <div class="s3">1</div>
@@ -869,18 +857,6 @@ Dividers are 1 pixel lines that help break up your content. Just add the `divide
 
 #### Example Sections and Dividers
 
-#### Section 1
-
-Stuff
-
-#### Section 2
-
-Stuff
-
-#### Section 3
-
-Stuff
-
 ```html
 <div class="divider"></div>
 <div class="section">
@@ -902,18 +878,6 @@ Stuff
 #### Example Promotion Table
 
 If we want 3 divs that are equal size, we define the divs with a width of 4-columns, as 4+4+4 nicely adds up to 12. Inside those divs, we can put our content.
-
-Speeds up development
-
-Most of the heavy lifting is done for you to provide default stylings that incorporate our custom components. We also refined animations and transitions to provide a smoother experience for developers.
-
-User Experience Focused
-
-By utilizing elements and principles of Material Design, we were able to create a framework that focuses on User Experience.
-
-Easy to work with
-
-We have provided detailed documentation as well as specific code examples to help new users get started.
 
 ```html
 <div class="row">
@@ -1034,12 +998,6 @@ You can easily vertically center things by adding the class `valign-wrapper` to 
 #### Text Align
 
 These classes are for horizontally aligning content: `.left-align`, `.right-align` and `.center-align`. `.center` is an alias of `.center-align`.
-
-#### This should be left aligned
-
-#### This should be right aligned
-
-#### This should be center aligned
 
 ```html
 <div>
@@ -1201,8 +1159,6 @@ These classes help format various content on your site.
 #### Truncation
 
 To truncate long lines of text in an ellipsis, add the class `truncate` to the tag which contains the text. See an example below of a header being truncated inside a card.
-
-#### This is an extremely long title that will be truncated
 
 ```html
 <h4 class="truncate">This is an extremely long title that will be truncated</h4>
@@ -1445,9 +1401,9 @@ With reduced motion requested, scale state changes happen immediately. Scaling o
 
 ```html
 <!-- Scaled in -->
-<a id="scale-demo" href="#!" class="button circle extra scale-transition" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
+<button id="scale-demo" type="button" class="button circle extra scale-transition" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
 <!-- Scaled out -->
-<a id="scale-demo" href="#!" class="button circle extra scale-transition scale-out" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
+<button id="scale-demo" type="button" class="button circle extra scale-transition scale-out" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
 ```
 
 ---
@@ -1463,20 +1419,6 @@ Tokens follow the [M3 type system](https://m3.material.io/styles/typography/over
 M3's `--md-ref-typeface-brand` and `--md-ref-typeface-plain` tokens both default to Roboto. Large display, headline, and title-large roles use brand; smaller title, body, and label roles use plain. Noto Sans is the fallback for characters Roboto cannot cover. The compiled stylesheet ships Latin Roboto and Noto Sans at 400 and 500. Override the reference tokens to use a different family.
 
 ### Semantic map
-
-### Heading 2
-
-### Heading 3
-
-#### Heading 4
-
-#### Heading 5
-
-##### Heading 6
-
-A paragraph uses body-large. It is for longer reading, not chrome.
-
-Small print and figcaptions use body-small.
 
 ```html
 <h1>Heading 1</h1>
@@ -1500,36 +1442,6 @@ Small print and figcaptions use body-small.
 ### The fifteen roles
 
 When the tag cannot say the role, use the class. Display-large and display-medium have no heading — they are for short, important numerals and hero lines.
-
-Display Large
-
-Display Medium
-
-Display Small
-
-Headline Large
-
-Headline Medium
-
-Headline Small
-
-Title Large
-
-Title Medium
-
-Title Small
-
-Body Large
-
-Body Medium
-
-Body Small
-
-Label Large
-
-Label Medium
-
-Label Small
 
 ```html
 <p class="display-large">Display Large</p>
@@ -1573,8 +1485,6 @@ Label Small
 
 Blockquotes emphasize a quote or citation. The left bar uses `--md-sys-color-primary`.
 
-> This is an example quotation that uses the blockquote tag. Here is another line to make it look bigger.
-
 ```html
 <blockquote>
   This is an example quotation that uses the blockquote tag.
@@ -1583,11 +1493,7 @@ Blockquotes emphasize a quote or citation. The left bar uses `--md-sys-color-pri
 
 ### Flow Text
 
-Toggle flow-text
-
 `flow-text` scales font size with the viewport so line length stays readable. Resize the window and watch the sample change, or use the button to compare with unscaled body text.
-
-To see Flow Text in action, slowly resize your browser and watch the size of this text body change. Use the button above to toggle flow-text off and on to see the difference.
 
 ```html
 <p class="flow-text">I am Flow Text</p>
@@ -1675,7 +1581,7 @@ Put a number or short label in the badge. Height is 16dp, corners are a stadium,
 Nest the badge in the destination icon, or leave it as a sibling — the bar and rail place a sibling on the icon’s upper trailing corner. Tabs take the nested form.
 
 ```html
-<a href="#!" aria-label="Inbox, 3 unread">
+<a href="/inbox" aria-label="Inbox, 3 unread">
   <span class="material-symbols" aria-hidden="true">inbox<span class="badge">3</span></span>
   Inbox
 </a>
@@ -1758,8 +1664,6 @@ Tokens follow the [M3 button spec](https://m3.material.io/components/buttons/spe
 
 A label that does not fit wraps between words and the button grows taller, so enlarged text, 200% zoom and narrow columns keep the label inside the button and the button inside its parent. The size's height is the minimum, so a label that fits looks the same. Keep the label in its own `<span>` so a single word longer than the parent can break as well. `circle` buttons, FABs, extended FABs, Timepicker AM/PM controls, and buttons in button groups, split buttons, toolbars, top app bars, dialog and sheet headers, navigation bars and rails, tabs, pagination and snackbars stay on one line at a fixed height. A rule that gives a button a smaller `height` must set `min-height` too, or set `--md-comp-filled-button-container-height` instead.
 
-Create Create Send
-
 ```html
 <button>Create</button>
 <button>
@@ -1779,8 +1683,6 @@ Create Create Send
 
 High emphasis. This is the default — the main action on a page. Container `primary`, label `on-primary`, no elevation. It has a class of its own, `filled`, so the style axis reads as five names rather than four and a silence; writing it changes nothing.
 
-Create Create Link
-
 ```html
 <button>Create</button>
 <button class="filled">Create</button>
@@ -1794,8 +1696,6 @@ Create Create Link
 
 Medium emphasis. Add `tonal`. Container `secondary-container`, label `on-secondary-container`.
 
-Create Create
-
 ```html
 <button class="tonal">Create</button>
 <button class="tonal">
@@ -1807,8 +1707,6 @@ Create Create
 
 Medium emphasis, no fill. Add `outlined` (or `border`). Outline is `outline`, label is `primary`.
 
-Create Create
-
 ```html
 <button class="outlined">Create</button>
 ```
@@ -1817,8 +1715,6 @@ Create Create
 
 Medium emphasis with a shadow. Container `surface`, label `primary`, elevation 1 at rest and 2 on hover. Use sparingly so the page does not fill with shadows.
 
-Create Create
-
 ```html
 <button class="elevated">Create</button>
 ```
@@ -1826,8 +1722,6 @@ Create Create
 ### Text
 
 Low emphasis. Add `text` (or `transparent`, or the older `btn-flat`). No container, label `primary`. Use these inside cards and dialogs so they do not stack shadows.
-
-Create Create
 
 ```html
 <button class="text">Create</button>
@@ -1849,8 +1743,6 @@ Create Create
 ### Floating
 
 A FAB is `circle extra` or `circle large`: 56dp, 16dp corners, `primary-container`, elevation 3. The sizes are `circle extra medium` (80dp, 20dp corners, 26dp icon) and `circle extra large` (96dp, 28dp corners, 36dp icon) — the large size needs the `extra`, because `circle large` on its own is the alias for the default 56dp FAB. `extend small` is the extended FAB — icon plus label at 56dp, 16dp corners, 8dp between icon and label. Its required sizes are `extend small` (56dp on a symmetric 16dp inset, `title-medium` label), `extend medium` (80dp, 20dp corners, 28dp icon, `title-large`) and `extend large` (96dp, 28dp corners, 36dp icon, `headline-small`). Sizeless `extend` and the 40dp small FAB have been removed. Its container colour is a role: `primary-container` is the default, and `secondary-container` and `tertiary-container` recolour the label and the state layers with it. On an `<a>`, add `button` — the size classes only match `button` or `a.button`.
-
-Create
 
 ```html
 <button class="circle extra" aria-label="Add">
@@ -1877,8 +1769,6 @@ Create
 
 Five sizes. `small` is the default at 40dp with a 20dp icon, so it needs no class. The rest are `xsmall` (32dp, 20dp icon), `medium` (56dp, 24dp, `title-medium` label), `large` (96dp, 32dp, `headline-small`) and `xlarge` (136dp, 40dp, `headline-large`). The inset and the icon gap grow with the size, and an `outlined` button's border thickens with it — 1dp up to medium, 2dp large, 3dp extra large. `extra` is the pre-1.0 name for the 56dp button and still gives you that geometry, though not `medium`'s bigger label — it never carried one. The ladder is the common button's, and `circle` is on it: a `circle` is a round common button, so it takes its rung's box *and* its rung's glyph — 40dp with a 20dp icon by default, 136dp with a 40dp icon at `xlarge`. Only `circle extra` / `circle large` step off it, because those are FAB sizes with a ladder of their own. If you want the icon *button*'s numbers — 40dp with a 24dp icon — that component is `.icon-button`.
 
-Extra small Small Medium Large Extra large
-
 ```html
 <button class="xsmall">Extra small</button>
 <button>Small</button>
@@ -1897,8 +1787,6 @@ The two axes are written side by side — there is no per-combination class, so 
 
 For a form submit, use a real `<button type="submit">` rather than an input.
 
-Submit
-
 ```html
 <button type="submit">
   <span>Submit</span><span class="material-symbols" aria-hidden="true">send</span>
@@ -1909,12 +1797,10 @@ Submit
 
 The `disabled` attribute, or the `disabled` class on a link. Applies to every variant.
 
-Filled Tonal Outlined Text
-
 ```html
 <button disabled>Filled</button>
 <button class="tonal" disabled>Tonal</button>
-<a class="button disabled" href="#!">Link</a>
+<a class="button disabled">Link</a>
 ```
 
 ---
@@ -2674,17 +2560,6 @@ Put the page in the three HTML5 landmarks `header`, `main`, and `footer`. Anatom
 
 Expressive’s footer is unfilled by default. It draws a dashed top border and uses the theme tokens for paragraph and link color — not a solid primary bar.
 
-#### Footer Content
-
-You can use rows and columns here to organize your footer content.
-
-#### Links
-
-- Link 1
-- Link 2
-- Link 3
-- Link 4
-
 ```html
 <footer>
   <section>
@@ -2742,14 +2617,6 @@ Google publishes a [Material Symbols list](https://fonts.google.com/icons?icon.s
 
 The compiled stylesheet ships the outlined, rounded, and sharp variable fonts. Keep `dist/fonts/` next to `dist/css/` so the relative `url(../fonts/...)` paths resolve. Browsers download a family only after markup uses it.
 
-Icons
-
-Outlined
-
-Rounded
-
-Sharp
-
 ```html
 <span class="material-symbols" aria-hidden="true">add</span>
 <span class="material-symbols-outlined" aria-hidden="true">add</span>
@@ -2798,7 +2665,7 @@ Default. Leading icon, headline, trailing actions. DOM order is the layout — t
       <span class="material-symbols" aria-hidden="true">menu</span>
     </button>
     <h2>Title</h2>
-    <a href="/search" aria-label="Search"><span class="material-symbols" aria-hidden="true">search</span></a>
+    <button type="button" aria-label="Search"><span class="material-symbols" aria-hidden="true">search</span></button>
     <button type="button" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></button>
   </nav>
 </header>
@@ -2813,9 +2680,9 @@ Text links go in a `<menu>`. Put the menu after the heading to align it on the e
   <nav aria-label="Main">
     <h2>Title</h2>
     <menu>
-      <li><a href="#!">Sass</a></li>
-      <li><a href="#!">Components</a></li>
-      <li><a class="active" href="#!">JavaScript</a></li>
+      <li><a href="/sass">Sass</a></li>
+      <li><a href="/components">Components</a></li>
+      <li><a class="active" href="/javascript">JavaScript</a></li>
     </menu>
   </nav>
 </header>
@@ -2834,7 +2701,7 @@ Add `center` to the header. The headline is taken out of flow so the leading and
       <span class="material-symbols" aria-hidden="true">arrow_back</span>
     </button>
     <h2>Title</h2>
-    <a href="#!" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></a>
+    <button type="button" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></button>
   </nav>
 </header>
 ```
@@ -2850,7 +2717,7 @@ Same markup as the small bar. `medium` is the Expressive medium-flexible bar: 11
       <span class="material-symbols" aria-hidden="true">arrow_back</span>
     </button>
     <h2>Medium title</h2>
-    <a href="#!" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></a>
+    <button type="button" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></button>
   </nav>
 </header>
 
@@ -2871,7 +2738,7 @@ A subtitle is an `<hgroup>` wrapping the heading and a `<p>`. There is no `subti
       <h2>Medium title</h2>
       <p>Subtitle</p>
     </hgroup>
-    <a href="#!" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></a>
+    <button type="button" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></button>
   </nav>
 </header>
 ```
@@ -2890,7 +2757,7 @@ The documentation header on this site is a fixed small bar. A second fixed bar o
 <header>
   <nav aria-label="Main">
     <h2>Title</h2>
-    <a href="#!" aria-label="Search"><span class="material-symbols" aria-hidden="true">search</span></a>
+    <button type="button" aria-label="Search"><span class="material-symbols" aria-hidden="true">search</span></button>
   </nav>
 </header>
 ```
@@ -2925,17 +2792,17 @@ Point a `menu-trigger` at a `<menu>` whose `id` matches `data-target`. `AutoInit
 
 ```html
 <menu id="menu1">
-  <li><a href="#!">one</a></li>
-  <li><a href="#!">two</a></li>
+  <li><button type="button">one</button></li>
+  <li><button type="button">two</button></li>
   <li class="divider" role="separator"></li>
-  <li><a href="#!">three</a></li>
+  <li><button type="button">three</button></li>
 </menu>
 <header>
   <nav aria-label="Main">
     <h2>Title</h2>
     <menu>
       <li>
-        <a class="menu-trigger" href="#!" data-target="menu1">
+        <a class="menu-trigger" href="#menu1" data-target="menu1">
           Menu<span class="material-symbols right" aria-hidden="true">arrow_drop_down</span>
         </a>
       </li>
@@ -2970,7 +2837,7 @@ The search app bar is a `<search class="search-bar">` in the nav, in place of th
       <input type="search" placeholder="Search" aria-label="Search recipes" aria-controls="results" aria-expanded="false">
       <div class="search-view" id="results" hidden></div>
     </search>
-    <a href="#!" aria-label="Account"><span class="material-symbols" aria-hidden="true">account_circle</span></a>
+    <a href="/account" aria-label="Account"><span class="material-symbols" aria-hidden="true">account_circle</span></a>
   </nav>
 </header>
 ```
@@ -3616,8 +3483,6 @@ This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https:
 
 `AutoInit()` starts every `.menu-trigger` except those marked `no-autoinit`. Menus open on click, below the trigger. Pass `coverTrigger: true` to cover the trigger. Pass `constrainWidth: false` so the menu sizes independently of the trigger.
 
-Drop me
-
 ```html
 <button class="menu-trigger" data-target="menu1">Drop me</button>
 <menu id="menu1">
@@ -3679,8 +3544,6 @@ Expressive.AutoInit(document.body, {
 
 These two menus set `constrainWidth: false` so the list can be wider than the button, and use `alignment` to pick an edge.
 
-Left Right
-
 ```js
 Expressive.Menu.init(document.querySelector('#left'), {
   alignment: 'left',
@@ -3690,8 +3553,6 @@ Expressive.Menu.init(document.querySelector('#left'), {
 ```
 
 Hover is off by default. Pass `hover: true` to open on mouse enter instead of click.
-
-Hover me
 
 ```js
 Expressive.Menu.init(document.querySelector('#hover'), {
@@ -3801,7 +3662,7 @@ document.addEventListener('DOMContentLoaded', function() {
 const instance = Expressive.Lightbox.getInstance(elem);
 ```
 
-#### .open();
+##### .open();
 
 Open the lightbox.
 
@@ -3809,7 +3670,7 @@ Open the lightbox.
 instance.open();
 ```
 
-#### .close();
+##### .close();
 
 Close the lightbox.
 
@@ -3817,7 +3678,7 @@ Close the lightbox.
 instance.close();
 ```
 
-#### .destroy();
+##### .destroy();
 
 Destroy the plugin instance and tear down its event handlers.
 
@@ -3958,12 +3819,6 @@ document.getElementById('sheet').showModal(); // modal
 ### Full-screen
 
 Add `max` for a full-viewport dialog with no corners. That is the M3 full-screen dialog, typically used on small screens.
-
-Show full-screen
-
-### New message
-
-A full-screen dialog fills the viewport. Put the primary action in the form at the end.
 
 ```html
 <dialog class="max" aria-labelledby="new-message-title">
@@ -4279,14 +4134,6 @@ Tokens follow the [M3 snackbar spec](https://m3.material.io/components/snackbar/
 
 A text-only snackbar defaults to 4 seconds. Setting `action` defaults to `displayLength: Infinity` and `dismissible: true`; explicit options override these defaults. Only one shows at a time. The live region is `role="status"` / `aria-live="polite"` and does not steal focus. Snackbar is not in `AutoInit()`. Use ordinary Tab navigation for its actions and Dismiss. For quicker access, provide a visible notification-actions button near the task trigger whose click handler calls `instance.el.querySelector('button, a[href]')?.focus()`. Never autofocus on creation. Escape within a snackbar dismisses it without closing an enclosing dialog. Closing restores the prior connected focus target only if focus remains inside; application-directed focus is preserved. For custom template controls, explicitly set `displayLength: Infinity` and `dismissible: true`.
 
-Show Show with action Show with close
-
-Photo saved to album
-
-Item archived
-
-Can't send photo. Retry in 5 seconds.
-
 ```js
 new Expressive.Snackbar({ text: 'Photo saved to album' });
 
@@ -4330,10 +4177,6 @@ document.getElementById('snackbar-basic').addEventListener('click', function() {
 ### Markup
 
 The same anatomy works as static HTML. Without `.active` the bar is in-flow — useful for previews. With `.active` it pins to the bottom of the viewport, centered from the Medium breakpoint.
-
-Show static snackbar
-
-I'm a snackbar
 
 ```html
 <div class="snackbar">
@@ -4409,12 +4252,6 @@ Expressive.Snackbar.dismissAll();
 
 Pass `snackbarId` pointing at a `<template>`. The first child of the template is cloned as the snackbar. Leave `text` empty so the HTML is kept. Use the same anatomy as a static snackbar.
 
-Show Snackbar 1 Show Snackbar 2
-
-This is snackbar nº1 with a [link](https://github.com)
-
-This is snackbar nº2
-
 ```html
 <button type="button" class="tonal" id="snackbar-html-1">Show Snackbar 1</button>
 <template id="my-snackbar-1">
@@ -4432,8 +4269,6 @@ new Expressive.Snackbar({ snackbarId: 'my-snackbar-1', displayLength: Infinity, 
 
 Run a function when the snackbar is dismissed.
 
-Show Snackbar
-
 ```js
 new Expressive.Snackbar({
   text: 'I will call back when dismissed',
@@ -4446,8 +4281,6 @@ new Expressive.Snackbar({
 ### Styling
 
 Pass classes in the `classes` option. `rounded` is a 24dp stadium — the M3 default is 4dp. Snackbars sit at the bottom; `top` is the exception.
-
-Show round Snackbar Show at top
 
 ```js
 new Expressive.Snackbar({
@@ -4464,8 +4297,6 @@ new Expressive.Snackbar({
 ### Dismiss a Snackbar Programmatically
 
 To remove a specific snackbar, get the instance from the snackbar element and call `dismiss()`. Swipe also dismisses — drag past 80% of the width (or flick). The action and close buttons are not swipe handles.
-
-Show Snackbar Dismiss a snackbar Dismiss all
 
 ```js
 const snackbarElement = document.querySelector('.snackbar');
@@ -4491,8 +4322,6 @@ Tokens follow the [M3 tooltip spec](https://m3.material.io/components/tooltips/s
 
 Inside a `<button>` the bubble has to be a `<span>` — a `<div>` is not phrasing content and the parser will hoist it. Icon-only buttons still need `.circle` so the span is not treated as a label.
 
-Add to album Above Below Start End
-
 ```html
 <button type="button" class="circle" aria-label="Add" aria-describedby="tip-add-to-album">
   <span class="material-symbols" aria-hidden="true">add</span>
@@ -4508,10 +4337,6 @@ Add to album Above Below Start End
 ### Rich
 
 `rich` (or BeerCSS’s `max`) is the rich tooltip: `surface`, elevation 2, 12dp corners, 320dp max. A heading is the title (`title-small`), a `<p>` is supporting text (`body-medium`), and a trailing `<nav>` is the action. Rich bubbles can receive pointer events so the action is usable.
-
-### Saved offline
-
-This stop is stored on the device so it still opens without a signal.
 
 ```html
 <div>
@@ -4532,27 +4357,19 @@ A rich tooltip with an action cannot live inside a `<button>` — that would nes
 
 The CSS path does not need AutoInit. The JS plugin is still there for `data-tooltip`, delayed show/hide, and keeping the bubble inside the viewport. Add `tooltipped` to the activator. `data-tooltip` is the text; `data-position` is `top`, `right`, `bottom`, or `left`. `AutoInit()` starts every `.tooltipped` except those marked `no-autoinit`. The generated element gets both `.tooltip` and `.material-tooltip`.
 
-Bottom Top Left Right
-
 ```html
-<a class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip" href="#!">
+<button type="button" class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip">
   Hover me
-</a>
+</button>
 ```
 
 For HTML, point `data-tooltip-id` at an element. That element is moved into the tooltip and the bubble is marked `rich`. Leave `data-tooltip` off so the HTML is kept. There is no `data-html` attribute and no `unsafeHTML` option.
 
-With HTML
-
-### Chart
-
-This is a tooltip with a [link](https://github.com) and a .
-
 ```html
-<a class="tooltipped" href="#!"
-   data-position="bottom" data-tooltip-id="tooltip-content">
+<button type="button" class="tooltipped"
+        data-position="bottom" data-tooltip-id="tooltip-content">
   With HTML
-</a>
+</button>
 <div id="tooltip-content" hidden>
   <h3>Chart</h3>
   <p>This is a tooltip with a <a href="https://github.com">link</a>.</p>
@@ -4604,8 +4421,6 @@ Constructor and `init` options. `data-tooltip`, `data-position`, and `data-toolt
 ```js
 const instance = Expressive.Tooltip.getInstance(elem);
 ```
-
-Hover me Open Close
 
 #### .open();
 
@@ -5216,8 +5031,6 @@ A side is required on a field icon. The old markup let a bare `<i>` fall to whic
 
 Add `inline` to sit the field in a line of text.
 
-This is an inline input field: Email
-
 ```html
 This is an inline input field:
 <span class="field inline">
@@ -5382,14 +5195,6 @@ A `<label class="switch">` wrapping `<input type="checkbox">` is the control. Th
 
 Tokens follow the [M3 switch spec](https://m3.material.io/components/switch/specs). The track is 52×32dp. Unselected is `surface-variant` with a 2dp `outline` and a 16dp handle. Selected is a `primary` track and a 24dp `on-primary` handle. The state layer is 40dp at 8% hover and 10% focus. The touch target is 48dp. The label is `body-large` / `on-surface`. Disabled is 38%.
 
-Wi-Fi
-
-Bluetooth
-
-Airplane mode
-
-Location
-
 ```html
 <label class="switch">
   <input type="checkbox">
@@ -5439,8 +5244,6 @@ Put an image URL in `data-icon` on an option. Classes on that option are copied 
 Icon URLs may be relative, HTTP(S), blob URLs, or image data URLs (AVIF, BMP, GIF, JPEG, PNG, SVG, WebP, or ICO). Invalid URLs and other schemes are ignored; the option remains selectable.
 
 Add `browser-default` to skip the menu and keep the native select.
-
-Browser Select Choose your option Option 1 Option 2 Option 3
 
 ```html
 <div class="field">
@@ -5571,8 +5374,6 @@ instance.destroy();
 ### Disabled Styles
 
 `disabled` on the `<select>` disables the whole control. `disabled` on an `<option>` makes that item unselectable.
-
-Browser Disabled Choose your option Option 1 Option 2 Option 3
 
 ```html
 <div class="field">
