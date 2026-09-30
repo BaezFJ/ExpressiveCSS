@@ -10,6 +10,26 @@ const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'u
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+  browserTest(`AppBar documentation demos leave site controls reachable (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await browser.newPage({ viewport: { width: 375, height: 600 } });
+      const docsCss = readFileSync(new URL('../docs/static/docs.css', import.meta.url), 'utf8');
+      for (const tag of ['nav', 'div']) {
+        const bar = tag === 'nav' ? 'aria-label="Demo"' : 'class="bar"';
+        await page.setContent(`<style>${css}\n${docsCss}</style><body class="docs"><header id="site"><div class="bar"><button id="control" type="button">Docs menu</button></div></header><main class="docs-page-content"><div class="docs-section"><p style="height:600px">Before demo</p><header id="demo"><${tag} ${bar}><h2>Demo</h2></${tag}></header><p style="height:1200px">After demo</p></div></main></body>`);
+        const demoY = await page.locator('#demo').evaluate(el => el.getBoundingClientRect().top + scrollY);
+        await page.evaluate(y => scrollTo({ top: y + 80, behavior: 'instant' }), demoY);
+        assert.ok(await page.locator('#demo').evaluate(el => el.getBoundingClientRect().bottom <= 0), 'embedded demo scrolls out of view');
+        assert.equal(await page.locator('#site').evaluate(el => el.getBoundingClientRect().top), 0, 'site app bar stays pinned');
+        assert.ok(await page.locator('#control').evaluate(el => {
+          const r = el.getBoundingClientRect();
+          return el.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2));
+        }), 'site control is unobscured');
+        await page.locator('#control').click();
+      }
+    } finally { await browser.close(); }
+  });
   for (const scenario of ['disabled', 'reset', 'refresh', 'interaction']) browserTest(`Select native form synchronization: ${scenario} (${engine})`, async () => {
     const browser = await type.launch();
     let page;
