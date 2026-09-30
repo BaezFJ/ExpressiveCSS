@@ -335,8 +335,9 @@ new Expressive.Snackbar({
   <Section {...S.dismissal}>
         <p>
           To remove a specific snackbar, get the instance from the snackbar
-          element and call <code>dismiss()</code>. Swipe also dismisses —
-          drag past 80% of the width (or flick). The action and close
+          element and call <code>dismiss()</code>. Swipe also dismisses when you
+          drag past 80% of the width or flick. Cancelling a swipe leaves the snackbar
+          open and does not affect the next gesture. The action and close
           buttons are not swipe handles.
         </p>
         <p>

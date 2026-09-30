@@ -209,6 +209,7 @@ export class Snackbar {
       snackbar.el.style.transition = '';
       Snackbar._dragPointerId = e.pointerId;
       snackbar.startingXPos = e.clientX;
+      snackbar.velocityX = 0;
       snackbar.time = Date.now();
       snackbar.xPos = e.clientX;
     }

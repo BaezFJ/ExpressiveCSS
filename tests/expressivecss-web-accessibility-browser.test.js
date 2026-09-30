@@ -973,12 +973,19 @@ for (const timezone of ['America/Chicago', 'UTC', 'Asia/Tokyo']) scenario(`date 
     picker.setDate('2024-02-29');
     const fromString = picker.toString();
     const earlyYear = picker.validateDate('0099-01-02');
-    const invalid = ['2023-02-29', '2024-02-30', '2024-04-31', '2024-00-10', '2024-13-01', '2024-01-00', 'invalid', ''];
+    const invalid = ['2023-02-29', '2024-02-30', '2024-04-31', '2024-00-10', '2024-13-01', '2024-01-00', 'invalid'];
     const rejected = invalid.map(value => {
       picker.el.value = value;
       picker.el.dispatchEvent(new Event('change'));
       return picker.toString() === fromString;
     });
+    picker.el.value = '';
+    picker.el.dispatchEvent(new Event('change'));
+    const clearedRange = {
+      start: picker.date,
+      end: picker.toString(picker.endDate),
+      shaded: picker.calendarEl.querySelectorAll('.is-daterange').length
+    };
     const timestamp = '2024-02-29T01:30:00Z';
     const instant = new Date(timestamp);
     const timestampPreserved = picker.validateDate(timestamp).getTime() === instant.getTime();
@@ -999,11 +1006,12 @@ for (const timezone of ['America/Chicago', 'UTC', 'Asia/Tokyo']) scenario(`date 
     picker.el.dispatchEvent(new Event('change'));
     return {
       fromString, earlyYear: [earlyYear.getFullYear(), earlyYear.getMonth(), earlyYear.getDate()],
-      rejected, timestampPreserved, objectPreserved, clampedMax, clampedMin,
+      rejected, clearedRange, timestampPreserved, objectPreserved, clampedMax, clampedMin,
       customDate: picker.toString(), parserArgs
     };
   }), {
-    fromString: '2024-02-29', earlyYear: [99, 0, 2], rejected: Array(8).fill(true),
+    fromString: '2024-02-29', earlyYear: [99, 0, 2], rejected: Array(7).fill(true),
+    clearedRange: { start: null, end: '2024-03-01', shaded: 0 },
     timestampPreserved: true, objectPreserved: true, clampedMax: '2024-02-29', clampedMin: '2024-02-20',
     customDate: '2024-02-25', parserArgs: ['2024-02-29', 'yyyy-mm-dd']
   });

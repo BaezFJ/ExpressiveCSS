@@ -106,8 +106,9 @@ const S = defineSections([
         <p>
           Drag the top 48dp (or an explicit
           <a href={route('drag_handle')}>drag handle</a>) down to
-          dismiss. A flick counts. The rest of the sheet scrolls if the
-          body overflows.
+          dismiss. A recent flick counts even if the pointer stops moving at release.
+          For short drags, pausing for at least 100ms or reversing direction lets
+          the sheet snap back. The rest of the sheet scrolls if the body overflows.
         </p>
 <Code code={`
 <dialog class="bottom-sheet" aria-labelledby="title-title">

@@ -444,6 +444,8 @@ Expressive.Datepicker.init(elem, {
           after it. Point <code>dateRangeEndEl</code> at a second input, or omit it and a second
           input is created next to the first.
           An authored end input supports typing and Enter-to-calendar navigation.
+          A range with only an end date can be reopened safely. Clearing either
+          input preserves the other date and removes the range shading until both dates are set.
           Destroying the picker preserves authored inputs and removes generated ones.
         </p>
         <div class="field">

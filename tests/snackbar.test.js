@@ -23,6 +23,48 @@ describe('Snackbar', () => {
     assert.match(css, /#snackbar-container\s*\{[^}]*pointer-events:\s*none/s);
   });
 
+  test('a cancelled flick does not turn the next stationary tap into a dismissal', t => {
+    resetBody();
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    let now = 0;
+    t.mock.method(Date, 'now', () => now);
+    let snackbar;
+    const pointer = (type, clientX) => (type === 'pointerdown' ? snackbar.el : document).dispatchEvent(
+      new window.PointerEvent(type, {
+        bubbles: true, cancelable: true, isPrimary: true, pointerId: 1,
+        pointerType: 'touch', button: 0, clientX
+      })
+    );
+    try {
+      snackbar = new Expressive.Snackbar({ text: 'Saved', displayLength: Infinity, outDuration: 0 });
+      Object.defineProperty(snackbar.el, 'offsetWidth', { value: 300 });
+      t.mock.timers.tick(1);
+      pointer('pointerdown', 0);
+      now += 10;
+      pointer('pointermove', 50);
+      pointer('pointercancel', 50);
+      assert.equal(snackbar.el.style.transform, '');
+      pointer('pointerdown', 50);
+      pointer('pointerup', 50);
+      t.mock.timers.tick(1);
+      assert.equal(snackbar.el.isConnected, true, 'the stationary tap must leave the snackbar open');
+      assert.notEqual(snackbar.wasSwiped, true);
+
+      pointer('pointerdown', 0);
+      now += 10;
+      pointer('pointermove', 50);
+      pointer('pointerup', 50);
+      t.mock.timers.tick(1);
+      assert.equal(snackbar.wasSwiped, true, 'a fresh short flick still dismisses by velocity');
+      assert.equal(snackbar.el.isConnected, false);
+    } finally {
+      snackbar?.dismiss();
+      t.mock.timers.runAll();
+      t.mock.timers.reset();
+      resetBody();
+    }
+  });
+
   test('reuses an authored body after dismissal and during replacement without stale state', async () => {
     resetBody();
     document.body.innerHTML = '<section><div id="notice" class="authored" style="display:none"><p>Saved</p><button type="button">Details</button></div><span>After</span></section>';

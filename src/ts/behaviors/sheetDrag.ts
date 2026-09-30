@@ -40,6 +40,8 @@ export interface SheetDragConfig {
 const DISMISS_DISTANCE = 96;
 /** Past this a flick dismisses whatever the distance, in pixels per millisecond. */
 const DISMISS_VELOCITY = 0.5;
+/** Ignore a flick after the pointer has rested for this many milliseconds. */
+const FLICK_TIMEOUT = 100;
 /** Past this the pointer was dragging, not tapping. Hand jitter, in pixels. */
 const DRAG_SLOP = 4;
 
@@ -58,6 +60,7 @@ export function installSheetDrag(config: SheetDragConfig): void {
     start: number;
     last: number;
     lastT: number;
+    velocity: number;
     shift: number;
   } | null = null;
 
@@ -97,6 +100,7 @@ export function installSheetDrag(config: SheetDragConfig): void {
       start: coord(event),
       last: coord(event),
       lastT: Date.now(),
+      velocity: 0,
       shift: 0
     };
     observer.observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['open'], attributeOldValue: true });
@@ -112,8 +116,12 @@ export function installSheetDrag(config: SheetDragConfig): void {
     // Only movement toward dismissal counts; dragging the other way is a no-op
     // rather than a sheet that lifts off its edge.
     drag.shift = drag.direction === 1 ? Math.max(0, delta) : Math.min(0, delta);
-    drag.last = coord(event);
-    drag.lastT = Date.now();
+    if (coord(event) !== drag.last) {
+      const now = Date.now();
+      drag.velocity = (coord(event) - drag.last) / Math.max(1, now - drag.lastT);
+      drag.last = coord(event);
+      drag.lastT = now;
+    }
     drag.dialog.style.setProperty(config.property, `${drag.shift}px`);
   };
 
@@ -124,6 +132,7 @@ export function installSheetDrag(config: SheetDragConfig): void {
       onCancel();
       return;
     }
+    onMove(event);
     drag = null;
     observer.disconnect();
     // Not `reset()`, though it looks like it: the two halves belong on either
@@ -131,13 +140,13 @@ export function installSheetDrag(config: SheetDragConfig): void {
     // so the dismissal animates; the shift has to clear after, or a snap-back
     // would jump to zero before the transition could carry it there.
     held.dialog.style.transition = '';
-    const dt = Math.max(1, Date.now() - held.lastT);
-    const velocity = (coord(event) - held.last) / dt;
-    config.onRelease?.(Math.abs(held.shift) > DRAG_SLOP);
-    const dismiss =
-      held.direction === 1
+    const velocity = Date.now() - held.lastT < FLICK_TIMEOUT ? held.velocity : 0;
+    const dragged = Math.abs(held.shift) > DRAG_SLOP;
+    config.onRelease?.(dragged);
+    const dismiss = dragged &&
+      (held.direction === 1
         ? held.shift > DISMISS_DISTANCE || velocity > DISMISS_VELOCITY
-        : held.shift < -DISMISS_DISTANCE || velocity < -DISMISS_VELOCITY;
+        : held.shift < -DISMISS_DISTANCE || velocity < -DISMISS_VELOCITY);
     if (dismiss && held.dialog.open) held.dialog.close();
     held.dialog.style.setProperty(config.property, '0px');
   };

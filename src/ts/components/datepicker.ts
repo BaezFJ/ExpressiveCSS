@@ -602,6 +602,12 @@ export class Datepicker extends Component<DatepickerOptions> {
    * Sets date from input field.
    */
   setDateFromInput(el: HTMLInputElement) {
+    if (this.options.isDateRange && !el.value.trim()) {
+      this.setSingleDate(null, el === this.endDateEl);
+      if (el.type === 'date') el.setAttribute('data-date', '');
+      this.draw();
+      return;
+    }
     const date = Datepicker._parseDate(el.value);
     this.setDate(date, false, el == this.endDateEl, true);
   }
@@ -858,6 +864,7 @@ export class Datepicker extends Component<DatepickerOptions> {
         isDateRangeEnd = this.options.isDateRange && this.endDate && Datepicker._compareDates(this.endDate, day),
         isDateRange =
           this.options.isDateRange &&
+          Datepicker._isDate(this.date) &&
           Datepicker._isDate(this.endDate) &&
           Datepicker._compareWithinRange(day, this.date, this.endDate);
       let dayNumber = 1 + (i - before),
@@ -1557,9 +1564,10 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   _handleInputChange = (e: Event) => {
     let date;
-    const el = e.target as HTMLElement;
+    const el = e.target as HTMLInputElement;
     // Prevent change event from being fired when triggered by the plugin
     if (e['detail']?.firedBy === this) return;
+    if (this.options.isDateRange && !el.value.trim()) return this.setDateFromInput(el);
     // Prevent change event from being fired if an end date is set without a start date
     if (el == this.endDateEl && !this.date) return;
     if (this.options.parse) {

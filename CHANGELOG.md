@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Component `init()` methods return an empty array for empty element collections,
+  matching their TypeScript return types.
+- Datepicker can reopen a range when only its end date is set. Clearing
+  either endpoint preserves the other and removes incomplete range shading.
+- A cancelled Snackbar swipe cannot carry its velocity into the next gesture.
+- Bottom and side sheets recognize a recent flick when the release coordinates
+  match the last pointer move, while paused or reversed short drags stay open.
 - Carousel preserves ordinary button and link clicks inside slides while keeping
   mouse dragging available, including in swipeable tab panels.
 - Chips autocomplete preserves the query while filtering and clears it after

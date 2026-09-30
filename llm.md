@@ -289,7 +289,7 @@ const current = Expressive.ComponentName.getInstance(element);
 current?.destroy();
 ```
 
-`init()` also accepts a NodeList and returns component instances for the provided elements. Re-initializing an element destroys its previous instance first. Component-specific sections below define additional methods, properties, callbacks, and option defaults.
+`init()` also accepts a NodeList or HTMLCollection and returns an array of component instances. Empty collections return an empty array. Re-initializing an element destroys its previous instance first. Component-specific sections below define additional methods, properties, callbacks, and option defaults.
 
 ## Public JavaScript surface
 
@@ -3774,6 +3774,8 @@ Override these on the `<dialog>` if you need a different surface or width.
 
 ### Bottom sheet
 
+A recent flick dismisses the sheet even if the pointer stops moving at release. For short drags, pausing for at least 100ms or reversing direction lets it snap back.
+
 A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss. A named `<button>` handle also dismisses on click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>. A decorative handle needs another non-drag pointer and keyboard dismiss path, such as a `form method="dialog"` close button. Verify native Escape against the opening mode, browser, and `closedby` policy.
 
 ```html
@@ -3792,6 +3794,8 @@ document.getElementById('sheet').show();      // standard, no scrim
 ```
 
 ### Side sheet
+
+A recent flick toward the docked edge dismisses the sheet. For short drags, pausing for at least 100ms or reversing direction lets it snap back.
 
 A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to the side. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.
 
@@ -4296,7 +4300,7 @@ new Expressive.Snackbar({
 
 ### Dismiss a Snackbar Programmatically
 
-To remove a specific snackbar, get the instance from the snackbar element and call `dismiss()`. Swipe also dismisses — drag past 80% of the width (or flick). The action and close buttons are not swipe handles.
+To remove a specific snackbar, get the instance from the snackbar element and call `dismiss()`. Swipe also dismisses when you drag past 80% of the width or flick. Cancelling a swipe leaves the snackbar open and does not affect the next gesture. The action and close buttons are not swipe handles.
 
 ```js
 const snackbarElement = document.querySelector('.snackbar');
@@ -4717,6 +4721,8 @@ The inline and docked calendars support keyboard navigation. Enter on a date inp
 ### Date range
 
 Set `isDateRange: true`. Click a start day, then an end day that is on or after it. Point `dateRangeEndEl` at a second input, or omit it and a second input is created next to the first.
+
+A range with only an end date can be reopened safely. Clearing either input preserves the other date and removes the range shading until both dates are set.
 
 An authored end input supports typing and Enter-to-calendar navigation. Destroy
 preserves authored inputs and removes generated inputs and their listeners.
