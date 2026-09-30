@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `43834c8b5c15f01b05d32745bf6467d4b8ed11408762de7ccee5acd1a6b64881`
+Contract SHA-256: `06e75c53aa8a4c2f66d3e41b763a1b2a770c045cfec3db7226b50d5ac1b8ce31`
 
 #### Selection and adaptation
 
@@ -92,8 +92,8 @@ The calendar is inline, not a modal. `open()` and `close()` are not provided. Wi
 | `onSelect` | Function | `null` | Called when a date is selected. Receives the `Date`. |
 | `onDraw` | Function | `null` | Called after the calendar HTML is redrawn. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
-| `onConfirm` | Function | `null` | Called when the Ok button is used. Only created when `autoSubmit` is false. |
-| `onCancel` | Function | `null` | Called when the Cancel button is used. Only created when `autoSubmit` is false. |
+| `onConfirm` | Function | `null` | Called once when Ok is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
+| `onCancel` | Function | `null` | Called once when Cancel is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
 | `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. Pair with `openByDefault: true`. |
 | `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
 

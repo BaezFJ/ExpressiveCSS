@@ -185,13 +185,13 @@ Expressive.Timepicker.init(elem, {
               <td><code>onDone</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the Ok button is used. Only created when <code>autoSubmit</code> is false.</td>
+              <td>Called once when Ok is activated by click, Enter or Space. The button is created when <code>autoSubmit</code> is false.</td>
             </tr>
             <tr>
               <td><code>onCancel</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the Cancel button is used. Only created when <code>autoSubmit</code> is false.</td>
+              <td>Called once when Cancel is activated by click, Enter or Space. The button is created when <code>autoSubmit</code> is false.</td>
             </tr>
             <tr>
               <td><code>displayPlugin</code></td>
@@ -278,7 +278,7 @@ instance.clear();
 `} />
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove the clock, and tear down its event handlers.</p>
+        <p>Destroy the plugin instance, remove the clock, and tear down its event handlers. Pending automatic submission is cancelled, so the destroyed instance cannot write to the input.</p>
 <Code code={`
 instance.destroy();
 `} />

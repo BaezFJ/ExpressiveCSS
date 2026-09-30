@@ -319,14 +319,28 @@ describe('Autocomplete generated combobox', () => {
     try {
       const el = chips.el.querySelector('input');
       el.focus();
-      el.value = 'app';
-      el.dispatchEvent(new window.InputEvent('input', { bubbles: true, inputType: 'insertFromPaste' }));
+      for (const value of ['a', 'ap', 'app']) {
+        el.value = value;
+        el.dispatchEvent(new window.InputEvent('input', { bubbles: true, inputType: 'insertText' }));
+        assert.equal(el.value, value, 'search results must preserve the query');
+        assert.deepEqual(chips.chipsData, []);
+      }
       assert.deepEqual([...chips.autocomplete.container.querySelectorAll('[role="option"]')].map(item => item.textContent), ['Apple']);
       key(el, 'ArrowDown');
       key(el, 'Enter');
       assert.deepEqual(chips.chipsData.map(item => item.id), ['apple']);
       assert.equal(el.value, '');
+      el.value = 'ban';
+      el.dispatchEvent(new window.InputEvent('input', { bubbles: true, inputType: 'insertFromPaste' }));
+      assert.equal(el.value, 'ban');
+      assert.deepEqual(chips.chipsData.map(item => item.id), ['apple']);
+      assert.deepEqual([...chips.autocomplete.container.querySelectorAll('[role="option"]')].map(item => item.textContent), ['Banana']);
+      key(el, 'ArrowDown');
+      key(el, 'Enter');
+      assert.deepEqual(chips.chipsData.map(item => item.id), ['apple', 'banana']);
+      assert.equal(el.value, '');
     } finally {
+      chips.autocomplete.destroy();
       chips.destroy();
     }
   });

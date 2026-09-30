@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `43834c8b5c15f01b05d32745bf6467d4b8ed11408762de7ccee5acd1a6b64881`
+Contract SHA-256: `06e75c53aa8a4c2f66d3e41b763a1b2a770c045cfec3db7226b50d5ac1b8ce31`
 
 #### Selection and adaptation
 
@@ -75,8 +75,8 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 | `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
 | `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
-| `onDone` | Function | `null` | Called when the Ok button is used. Only created when `autoSubmit` is false. |
-| `onCancel` | Function | `null` | Called when the Cancel button is used. Only created when `autoSubmit` is false. |
+| `onDone` | Function | `null` | Called once when Ok is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
+| `onCancel` | Function | `null` | Called once when Cancel is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
 | `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. |
 | `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
 
@@ -85,7 +85,7 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 - `.showView()`: Show the hours or minutes face.
 - `.done()`: Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.
 - `.clear()`: Clear the input. Same as `done(true)`.
-- `.destroy()`: Destroy the plugin instance, remove the clock, and tear down its event handlers.
+- `.destroy()`: Destroy the plugin instance, remove the clock, and tear down its event handlers. Pending automatic submission is cancelled, so the destroyed instance cannot write to the input.
 - `.open(); / .close()`: These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking. No modal implementation is available.
 
 #### Also documented

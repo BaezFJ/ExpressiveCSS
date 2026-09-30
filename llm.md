@@ -2238,7 +2238,7 @@ The text treatment is an opaque `surface` / `on-surface` bounding shape, so its 
 <div class="carousel full-screen" aria-label="Featured stories">…</div>
 ```
 
-Multi-browse, hero, and full-screen snap. Uncontained uses free scrolling unless `snap` is added. The rendered container width fits two, three, or four large items at medium, large, and extra-large widths, including pane-only resizes. Fine pointers can drag the track while trackpads keep native scrolling. Full-screen is vertical and edge-to-edge in portrait compact and medium layouts, then automatically adapts to a horizontal hero in landscape or at expanded widths.
+Multi-browse, hero, and full-screen snap. Uncontained uses free scrolling unless `snap` is added. The rendered container width fits two, three, or four large items at medium, large, and extra-large widths, including pane-only resizes. Fine pointers can drag the track while trackpads keep native scrolling. Buttons and links inside items keep ordinary click activation; dragging does not activate them. Full-screen is vertical and edge-to-edge in portrait compact and medium layouts, then automatically adapts to a horizontal hero in landscape or at expanded widths.
 
 On a vertically scrolling page, put a **Show all** action 4dp below every horizontal carousel. It should open a normal vertically scrolling view of the same items. If there is a heading, a 48dp arrow action may sit beside the heading instead. Do not overlay previous/next controls or place them beside the carousel edges.
 
@@ -4667,8 +4667,8 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 | `onSelect` | Function | `null` | Called when a date is selected. Receives the `Date`. |
 | `onDraw` | Function | `null` | Called after the calendar HTML is redrawn. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
-| `onConfirm` | Function | `null` | Called when the Ok button is used. Only created when `autoSubmit` is false. |
-| `onCancel` | Function | `null` | Called when the Cancel button is used. Only created when `autoSubmit` is false. |
+| `onConfirm` | Function | `null` | Called once when Ok is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
+| `onCancel` | Function | `null` | Called once when Cancel is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
 | `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. Pair with `openByDefault: true`. |
 | `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
 
@@ -4889,8 +4889,8 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 | `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
 | `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
-| `onDone` | Function | `null` | Called when the Ok button is used. Only created when `autoSubmit` is false. |
-| `onCancel` | Function | `null` | Called when the Cancel button is used. Only created when `autoSubmit` is false. |
+| `onDone` | Function | `null` | Called once when Ok is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
+| `onCancel` | Function | `null` | Called once when Cancel is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
 | `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. |
 | `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
 
@@ -4953,7 +4953,7 @@ instance.clear();
 
 #### .destroy();
 
-Destroy the plugin instance, remove the clock, and tear down its event handlers.
+Destroy the plugin instance, remove the clock, and tear down its event handlers. Pending automatic submission is cancelled, so the destroyed instance cannot write to the input.
 
 ```text
 instance.destroy();
@@ -5691,7 +5691,7 @@ The classes `chips-initial`, `chips-placeholder`, and `chips-autocomplete` are o
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.Chips`. Call `init` with `allowUserInput: true` (and any other options) for an editable field. Re-init after adding a container dynamically.
+The IIFE bundle exposes `Expressive.Chips`. Call `init` with `allowUserInput: true` (and any other options) for an editable field. Re-init after adding a container dynamically. Autocomplete keeps the query while filtering and clears it after an item is selected.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {

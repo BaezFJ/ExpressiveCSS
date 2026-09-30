@@ -329,14 +329,7 @@ export class Utils {
     button.type = 'button';
     button.tabIndex = !!visibility ? 0 : -1;
     button.innerText = text;
-    // The keypress handler used to call `callback` unconditionally, so a
-    // button created without one threw on Enter.
-    if (typeof callback === 'function') {
-      button.addEventListener('click', callback);
-      button.addEventListener('keypress', (e) => {
-        if (e.key === Utils.keys.ENTER) callback(e);
-      });
-    }
+    if (typeof callback === 'function') button.addEventListener('click', callback);
     container.append(button);
   }
 

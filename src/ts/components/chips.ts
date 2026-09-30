@@ -376,14 +376,15 @@ export class Chips extends Component<ChipsOptions> {
 
   _setupAutocomplete() {
     this.options.autocompleteOptions.onAutocomplete = (items) => {
-      if (items.length > 0)
+      if (items.length > 0) {
         this.addChip({
           id: items[0].id,
           text: items[0].text,
           image: items[0].image
         });
-      this._input.value = '';
-      this._input.focus();
+        this._input.value = '';
+        this._input.focus();
+      }
     };
     this.autocomplete = Autocomplete.init(this._input, this.options.autocompleteOptions);
   }

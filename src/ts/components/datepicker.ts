@@ -128,9 +128,9 @@ export interface DatepickerOptions extends BaseOptions {
   showClearBtn: boolean;
   /**
    *  Autosubmit calendar day select to input field
-   *  @default false
+   *  @default true
    */
-  autoSubmit: true;
+  autoSubmit: boolean;
   /**
    * Internationalization options.
    */

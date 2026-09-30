@@ -353,9 +353,9 @@ export class Carousel extends Component<CarouselOptions> {
     });
     this._scroller.addEventListener('pointerdown', this._handleTrackPointerDown);
     this._scroller.addEventListener('wheel', this._handleNativeScroll, { passive: true });
-    this._scroller.addEventListener('pointermove', this._handleTrackPointerMove);
-    this._scroller.addEventListener('pointerup', this._handleTrackPointerUp);
-    this._scroller.addEventListener('pointercancel', this._handleTrackPointerUp);
+    document.addEventListener('pointermove', this._handleTrackPointerMove);
+    document.addEventListener('pointerup', this._handleTrackPointerUp);
+    document.addEventListener('pointercancel', this._handleTrackPointerUp);
     this._scroller.addEventListener('click', this._handleTrackClick, true);
     this._scroller.addEventListener('dragstart', this._handleTrackDragStart);
     this._scroller.addEventListener('transitionend', this._handleItemResize);
@@ -375,9 +375,9 @@ export class Carousel extends Component<CarouselOptions> {
     this._scroller.removeEventListener('scroll', this._handleTrackScroll);
     this._scroller.removeEventListener('pointerdown', this._handleTrackPointerDown);
     this._scroller.removeEventListener('wheel', this._handleNativeScroll);
-    this._scroller.removeEventListener('pointermove', this._handleTrackPointerMove);
-    this._scroller.removeEventListener('pointerup', this._handleTrackPointerUp);
-    this._scroller.removeEventListener('pointercancel', this._handleTrackPointerUp);
+    document.removeEventListener('pointermove', this._handleTrackPointerMove);
+    document.removeEventListener('pointerup', this._handleTrackPointerUp);
+    document.removeEventListener('pointercancel', this._handleTrackPointerUp);
     this._scroller.removeEventListener('click', this._handleTrackClick, true);
     this._scroller.removeEventListener('dragstart', this._handleTrackDragStart);
     this._scroller.removeEventListener('transitionend', this._handleItemResize);
@@ -521,11 +521,6 @@ export class Carousel extends Component<CarouselOptions> {
     this._dragStartX = e.clientX;
     this._dragStartY = e.clientY;
     this._dragStartScroll = this._vertical ? this._scroller.scrollTop : this._scroller.scrollLeft;
-    try {
-      this._scroller.setPointerCapture(e.pointerId);
-    } catch {
-      // Pointer capture is optional in older browsers and test DOMs.
-    }
   };
 
   _handleTrackPointerMove = (e: PointerEvent) => {
@@ -539,6 +534,11 @@ export class Carousel extends Component<CarouselOptions> {
       if (Math.abs(primaryDelta) < 6 || Math.abs(primaryDelta) <= Math.abs(crossDelta)) return;
       this.dragged = true;
       this.el.classList.add('dragging');
+      try {
+        this._scroller.setPointerCapture(e.pointerId);
+      } catch {
+        // Pointer capture is optional in older browsers and test DOMs.
+      }
     }
 
     if (this._vertical) this._scroller.scrollTop = this._dragStartScroll - deltaY;
@@ -574,7 +574,7 @@ export class Carousel extends Component<CarouselOptions> {
   };
 
   _handleTrackDragStart = (e: DragEvent) => {
-    if ((e.target as HTMLElement).closest('img, picture, video')) e.preventDefault();
+    if ((e.target as HTMLElement).closest('a, img, picture, video')) e.preventDefault();
   };
 
   private _handleItemResize = (e: TransitionEvent) => {

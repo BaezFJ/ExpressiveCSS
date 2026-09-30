@@ -1069,6 +1069,28 @@ for (const action of ['input', 'empty', 'boundaries']) scenario(`time picker dig
   }
 });
 
+for (const picker of ['Datepicker', 'Timepicker']) scenario(`${picker} footer activates once per Enter or Space`, '<form><label for="appointment">Appointment</label><input id="appointment"></form>', async page => {
+  await page.evaluate(picker => {
+    window.callbacks = { confirm: 0, cancel: 0 };
+    window.submits = 0;
+    document.querySelector('form').onsubmit = event => { event.preventDefault(); window.submits++; };
+    window.instances = [Expressive[picker].init(document.querySelector('#appointment'), {
+      autoSubmit: false, openByDefault: true, duration: 0, vibrate: false,
+      onConfirm: () => window.callbacks.confirm++,
+      onDone: () => window.callbacks.confirm++,
+      onCancel: () => window.callbacks.cancel++
+    })];
+  }, picker);
+  for (const action of ['confirm', 'cancel']) {
+    for (const [index, key] of ['Enter', 'Space'].entries()) {
+      await page.locator(`.btn-${action}`).focus();
+      await page.keyboard.press(key);
+      assert.equal(await page.evaluate(action => window.callbacks[action], action), index + 1);
+    }
+  }
+  assert.equal(await page.evaluate(() => window.submits), 0);
+});
+
 scenario('time picker exposes named keyboard controls in inline and docked modes', '<form><label for="appointment">Appointment</label><input id="appointment" value="03:45 PM"></form>', async page => {
   for (const docked of [false, true]) {
     for (const twelveHour of [true, false]) {

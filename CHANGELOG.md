@@ -5,6 +5,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Carousel preserves ordinary button and link clicks inside slides while keeping
+  mouse dragging available, including in swipeable tab panels.
+- Chips autocomplete preserves the query while filtering and clears it after
+  an item is selected.
+- Destroying a Timepicker cancels pending automatic submission, so an old
+  instance cannot overwrite a replacement input value.
+- Datepicker and Timepicker confirmation buttons invoke their callbacks once
+  per Enter press. Both TypeScript option interfaces accept `autoSubmit: false`.
+
 ### Changed
 
 - The ExpressiveCSS skill bundles the starter page and the five layout
