@@ -274,6 +274,7 @@ const client = new Client({ name: 'expressivecss-mcp-smoke', version: '0.1.0' })
 
 try {
   await client.connect(transport);
+  assert.equal(client.getServerVersion()?.version, JSON.parse(await readFile(path.join(packageDir, 'package.json'), 'utf8')).version);
 
   const listed = await client.listTools();
   const expectedTools = [

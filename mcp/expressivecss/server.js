@@ -14,6 +14,7 @@ import { resolveExpressiveVersion } from './scripts/resolve-version.mjs';
 const SERVER_DIR = path.dirname(fileURLToPath(import.meta.url));
 const COMPONENT_DECISIONS = JSON.parse(readFileSync(path.join(SERVER_DIR, 'component-decisions.json'), 'utf8'));
 const CAPABILITY_ROADMAP = JSON.parse(readFileSync(path.join(SERVER_DIR, 'capability-roadmap.json'), 'utf8'));
+const SERVER_VERSION = JSON.parse(readFileSync(path.join(SERVER_DIR, 'package.json'), 'utf8')).version;
 const CAPABILITIES_BY_SLUG = new Map(CAPABILITY_ROADMAP.entries.map((entry) => [entry.slug, entry]));
 const COMPONENT_DECISIONS_BY_SLUG = new Map(COMPONENT_DECISIONS.components.map((entry) => [entry.slug, entry]));
 const DEFAULT_MAX_COMPONENT_RESPONSE_CHARS = 24_000;
@@ -2307,7 +2308,7 @@ async function startServer() {
   const server = new McpServer(
     {
       name: 'ExpressiveCSS MCP',
-      version: '0.1.0',
+      version: SERVER_VERSION,
     },
     {
       capabilities: {
