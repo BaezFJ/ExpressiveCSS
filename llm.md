@@ -289,7 +289,7 @@ const current = Expressive.ComponentName.getInstance(element);
 current?.destroy();
 ```
 
-`init()` also accepts a NodeList and returns component instances for the provided elements. Re-initializing an element destroys its previous instance first. Component-specific sections below define additional methods, properties, callbacks, and option defaults.
+`init()` also accepts a NodeList or HTMLCollection and returns an array of component instances. Empty collections return an empty array. Re-initializing an element destroys its previous instance first. Component-specific sections below define additional methods, properties, callbacks, and option defaults.
 
 ## Public JavaScript surface
 
@@ -2238,7 +2238,7 @@ The text treatment is an opaque `surface` / `on-surface` bounding shape, so its 
 <div class="carousel full-screen" aria-label="Featured stories">…</div>
 ```
 
-Multi-browse, hero, and full-screen snap. Uncontained uses free scrolling unless `snap` is added. The rendered container width fits two, three, or four large items at medium, large, and extra-large widths, including pane-only resizes. Fine pointers can drag the track while trackpads keep native scrolling. Full-screen is vertical and edge-to-edge in portrait compact and medium layouts, then automatically adapts to a horizontal hero in landscape or at expanded widths.
+Multi-browse, hero, and full-screen snap. Uncontained uses free scrolling unless `snap` is added. The rendered container width fits two, three, or four large items at medium, large, and extra-large widths, including pane-only resizes. Fine pointers can drag the track while trackpads keep native scrolling. Buttons and links inside items keep ordinary click activation; dragging does not activate them. Full-screen is vertical and edge-to-edge in portrait compact and medium layouts, then automatically adapts to a horizontal hero in landscape or at expanded widths.
 
 On a vertically scrolling page, put a **Show all** action 4dp below every horizontal carousel. It should open a normal vertically scrolling view of the same items. If there is a heading, a 48dp arrow action may sit beside the heading instead. Do not overlay previous/next controls or place them beside the carousel edges.
 
@@ -3580,7 +3580,7 @@ instance.open();
 
 #### .close()
 
-Close the menu.
+Close the menu. With `autoFocus`, focus returns to the trigger when it remains in the menu. Focus moved to an outside control is preserved.
 
 ```text
 instance.close();
@@ -3774,6 +3774,8 @@ Override these on the `<dialog>` if you need a different surface or width.
 
 ### Bottom sheet
 
+A recent flick dismisses the sheet even if the pointer stops moving at release. For short drags, pausing for at least 100ms or reversing direction lets it snap back.
+
 A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss. A named `<button>` handle also dismisses on click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>. A decorative handle needs another non-drag pointer and keyboard dismiss path, such as a `form method="dialog"` close button. Verify native Escape against the opening mode, browser, and `closedby` policy.
 
 ```html
@@ -3792,6 +3794,8 @@ document.getElementById('sheet').show();      // standard, no scrim
 ```
 
 ### Side sheet
+
+A recent flick toward the docked edge dismisses the sheet. For short drags, pausing for at least 100ms or reversing direction lets it snap back.
 
 A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to the side. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.
 
@@ -4206,7 +4210,7 @@ You can customize each snackbar with these options.
 | `action` | String | `''` | Optional action label. Rendered as a trailing text button. |
 | `onAction` | Function | `null` | Called when the action button is pressed. The snackbar still dismisses. |
 | `dismissible` | Boolean | `false`, or `true` with an action | Show a trailing close icon button. An explicit false is preserved. |
-| `snackbarId` | String | — | Id of a `<template>` (or another element) used as the snackbar body. |
+| `snackbarId` | String | — | Id of a `<template>` (or another element) used as the snackbar body. Templates are cloned. Other elements are moved into the snackbar and restored on dismissal or replacement, so the same ID can be reused. |
 | `displayLength` | Number | `4000` | Default 4000ms without an action, or Infinity with an action. Explicit finite timers need equivalent persistent feedback in the application. |
 | `inDuration` | Number | `300` | Enter transition duration, in milliseconds. |
 | `outDuration` | Number | `375` | Exit transition duration, in milliseconds. |
@@ -4296,7 +4300,7 @@ new Expressive.Snackbar({
 
 ### Dismiss a Snackbar Programmatically
 
-To remove a specific snackbar, get the instance from the snackbar element and call `dismiss()`. Swipe also dismisses — drag past 80% of the width (or flick). The action and close buttons are not swipe handles.
+To remove a specific snackbar, get the instance from the snackbar element and call `dismiss()`. Swipe also dismisses when you drag past 80% of the width or flick. Cancelling a swipe leaves the snackbar open and does not affect the next gesture. The action and close buttons are not swipe handles.
 
 ```js
 const snackbarElement = document.querySelector('.snackbar');
@@ -4440,7 +4444,7 @@ instance.close();
 
 #### .destroy();
 
-Destroy the plugin instance, remove the tooltip element, and tear down its event handlers.
+Destroy the plugin instance and remove its generated tooltip and event handlers. Rich content returns to its authored position and presentation state. Existing description associations are preserved, so the same content can be initialized again.
 
 ```text
 instance.destroy();
@@ -4629,7 +4633,7 @@ Expressive.Datepicker.init(elem, {
 });
 ```
 
-The popover is positioned in document coordinates and then appended to the input’s parent. A `position: relative` parent — `.field` among them — shifts that position, so the calendar will not sit next to the field. Prefer a static wrapper if you use docked, or keep the calendar inline with `openByDefault`.
+The popover stays inside the input’s parent and accounts for its positioning and scroll offsets. Positioned wrappers such as `.field` can be used directly.
 
 Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `duration` (`250`), and `align` (`'left'`).
 
@@ -4667,8 +4671,8 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 | `onSelect` | Function | `null` | Called when a date is selected. Receives the `Date`. |
 | `onDraw` | Function | `null` | Called after the calendar HTML is redrawn. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
-| `onConfirm` | Function | `null` | Called when the Ok button is used. Only created when `autoSubmit` is false. |
-| `onCancel` | Function | `null` | Called when the Cancel button is used. Only created when `autoSubmit` is false. |
+| `onConfirm` | Function | `null` | Called once when Ok is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
+| `onCancel` | Function | `null` | Called once when Cancel is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
 | `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. Pair with `openByDefault: true`. |
 | `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
 
@@ -4717,6 +4721,8 @@ The inline and docked calendars support keyboard navigation. Enter on a date inp
 ### Date range
 
 Set `isDateRange: true`. Click a start day, then an end day that is on or after it. Point `dateRangeEndEl` at a second input, or omit it and a second input is created next to the first.
+
+A range with only an end date can be reopened safely. Clearing either input preserves the other date and removes the range shading until both dates are set.
 
 An authored end input supports typing and Enter-to-calendar navigation. Destroy
 preserves authored inputs and removes generated inputs and their listeners.
@@ -4870,7 +4876,7 @@ Expressive.Timepicker.init(elem, {
 });
 ```
 
-The popover is positioned in document coordinates and then appended to the input’s parent. A `position: relative` parent — `.field` among them — shifts that position, so the clock will not sit next to the field. Prefer a static wrapper if you use docked, or keep the clock inline.
+The popover stays inside the input’s parent and accounts for its positioning and scroll offsets. Positioned wrappers such as `.field` can be used directly.
 
 Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `duration` (`250`), and `align` (`'left'`).
 
@@ -4889,8 +4895,8 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 | `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
 | `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
-| `onDone` | Function | `null` | Called when the Ok button is used. Only created when `autoSubmit` is false. |
-| `onCancel` | Function | `null` | Called when the Cancel button is used. Only created when `autoSubmit` is false. |
+| `onDone` | Function | `null` | Called once when Ok is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
+| `onCancel` | Function | `null` | Called once when Cancel is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
 | `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. |
 | `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
 
@@ -4953,7 +4959,7 @@ instance.clear();
 
 #### .destroy();
 
-Destroy the plugin instance, remove the clock, and tear down its event handlers.
+Destroy the plugin instance, remove the clock, and tear down its event handlers. Pending automatic submission is cancelled, so the destroyed instance cannot write to the input.
 
 ```text
 instance.destroy();
@@ -5691,7 +5697,7 @@ The classes `chips-initial`, `chips-placeholder`, and `chips-autocomplete` are o
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.Chips`. Call `init` with `allowUserInput: true` (and any other options) for an editable field. Re-init after adding a container dynamically.
+The IIFE bundle exposes `Expressive.Chips`. Call `init` with `allowUserInput: true` (and any other options) for an editable field. Re-init after adding a container dynamically. Autocomplete keeps the query while filtering and clears it after an item is selected.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
@@ -5784,7 +5790,7 @@ instance.getData();
 
 #### .destroy();
 
-Destroy the plugin instance, remove rendered chips, and tear down its event handlers.
+Destroy the plugin instance, remove rendered chips, and tear down its event handlers. This also destroys the owned Autocomplete and its Menu.
 
 ```text
 instance.destroy();

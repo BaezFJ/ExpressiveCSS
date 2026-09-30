@@ -186,7 +186,7 @@ document.getElementById('snackbar-basic').addEventListener('click', function() {
               <td><code>snackbarId</code></td>
               <td>String</td>
               <td>—</td>
-              <td>Id of a <code>&lt;template&gt;</code> (or another element) used as the snackbar body.</td>
+              <td>Id of a <code>&lt;template&gt;</code> (or another element) used as the snackbar body. Templates are cloned. Other elements are moved into the snackbar and restored on dismissal or replacement, so the same ID can be reused.</td>
             </tr>
             <tr>
               <td><code>displayLength</code></td>
@@ -335,8 +335,9 @@ new Expressive.Snackbar({
   <Section {...S.dismissal}>
         <p>
           To remove a specific snackbar, get the instance from the snackbar
-          element and call <code>dismiss()</code>. Swipe also dismisses —
-          drag past 80% of the width (or flick). The action and close
+          element and call <code>dismiss()</code>. Swipe also dismisses when you
+          drag past 80% of the width or flick. Cancelling a swipe leaves the snackbar
+          open and does not affect the next gesture. The action and close
           buttons are not swipe handles.
         </p>
         <p>

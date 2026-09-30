@@ -512,24 +512,30 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         const start = /start|left/.test(variant), left = start !== (direction === 'rtl');
         if (motion === 'no-preference') assert.equal(await page.evaluate(() => parseFloat(entryShift)), left ? -100 : 100, `${variant} ${direction} enters from its docked edge`);
         const result = await page.evaluate(async ({ left, motion }) => {
-          const dialog = document.querySelector('dialog'), rect = dialog.getBoundingClientRect();
-          const x = left ? rect.right - 8 : rect.left + 8, y = rect.top + 180, sign = left ? -1 : 1;
-          const corners = getComputedStyle(dialog);
-          const inner = left ? corners.borderTopRightRadius : corners.borderTopLeftRadius;
-          const outer = left ? corners.borderTopLeftRadius : corners.borderTopRightRadius;
-          pointer('pointerdown', x, y);
-          pointer('pointermove', x - sign * 130, y);
-          const inward = dialog.style.getPropertyValue('--md-comp-side-sheet-shift');
-          pointer('pointermove', x + sign * 30, y);
-          const shift = dialog.style.getPropertyValue('--md-comp-side-sheet-shift');
-          const translated = dialog.getBoundingClientRect().left - rect.left;
-          pointer('pointerup', x + sign * 30, y);
-          const snapped = dialog.open && dialog.style.getPropertyValue('--md-comp-side-sheet-shift') === '0px';
-          if (motion === 'no-preference') await Promise.all(dialog.getAnimations().map(animation => animation.finished));
-          pointer('pointerdown', x, y);
-          pointer('pointermove', x + sign * 130, y);
-          pointer('pointerup', x + sign * 130, y);
-          return { edge: left ? rect.left : innerWidth - rect.right, inward, shift, translated, snapped, closed: !dialog.open, inner, outer };
+          const originalNow = Date.now;
+          let now = originalNow();
+          Date.now = () => now;
+          try {
+            const dialog = document.querySelector('dialog'), rect = dialog.getBoundingClientRect();
+            const x = left ? rect.right - 8 : rect.left + 8, y = rect.top + 180, sign = left ? -1 : 1;
+            const corners = getComputedStyle(dialog);
+            const inner = left ? corners.borderTopRightRadius : corners.borderTopLeftRadius;
+            const outer = left ? corners.borderTopLeftRadius : corners.borderTopRightRadius;
+            pointer('pointerdown', x, y);
+            pointer('pointermove', x - sign * 130, y);
+            const inward = dialog.style.getPropertyValue('--md-comp-side-sheet-shift');
+            now += 400;
+            pointer('pointermove', x + sign * 30, y);
+            const shift = dialog.style.getPropertyValue('--md-comp-side-sheet-shift');
+            const translated = dialog.getBoundingClientRect().left - rect.left;
+            pointer('pointerup', x + sign * 30, y);
+            const snapped = dialog.open && dialog.style.getPropertyValue('--md-comp-side-sheet-shift') === '0px';
+            if (motion === 'no-preference') await Promise.all(dialog.getAnimations().map(animation => animation.finished));
+            pointer('pointerdown', x, y);
+            pointer('pointermove', x + sign * 130, y);
+            pointer('pointerup', x + sign * 130, y);
+            return { edge: left ? rect.left : innerWidth - rect.right, inward, shift, translated, snapped, closed: !dialog.open, inner, outer };
+          } finally { Date.now = originalNow; }
         }, { left, motion });
         const label = `${variant} ${direction} ${modal} ${motion}`;
         assert.ok(Math.abs(result.edge) <= 1, `${label} docked edge`);
@@ -554,6 +560,45 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         }
       }
     } finally { await browser.close(); }
+  });
+
+  browserTest(`Sheets distinguish recent flicks from pauses and reversals (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage({ viewport: { width: 800, height: 700 } });
+      for (const variant of ['bottom-sheet', 'side-sheet', 'side-sheet start']) for (const direction of ['ltr', 'rtl']) {
+        for (const gesture of ['flick', 'pause', 'reverse', 'cancel']) {
+          await sheetFixture(page, { variant, direction });
+          const result = await page.evaluate(({ variant, direction, gesture }) => {
+            const originalNow = Date.now;
+            let now = 1000;
+            Date.now = () => now;
+            try {
+              const dialog = document.querySelector('dialog'), handle = dialog.querySelector('header');
+              const rect = dialog.getBoundingClientRect(), vertical = variant === 'bottom-sheet';
+              const sign = vertical || variant.includes('start') === (direction === 'rtl') ? 1 : -1;
+              const point = (distance) => [rect.left + 120 + (vertical ? 0 : distance * sign), rect.top + 10 + (vertical ? distance : 0)];
+              pointer('pointerdown', ...point(0), handle);
+              now += 10;
+              pointer('pointermove', ...point(60), handle);
+              let distance = 60;
+              if (gesture === 'pause') now += 200;
+              if (gesture === 'reverse') {
+                now += 10;
+                distance = 40;
+                pointer('pointermove', ...point(distance), handle);
+              }
+              now += 1;
+              pointer(gesture === 'cancel' ? 'pointercancel' : 'pointerup', ...point(distance), handle);
+              return { open: dialog.open, shift: dialog.style.getPropertyValue(`--md-comp-${vertical ? 'bottom' : 'side'}-sheet-shift`) };
+            } finally { Date.now = originalNow; }
+          }, { variant, direction, gesture });
+          assert.equal(result.open, gesture !== 'flick', `${variant} ${direction} ${gesture}`);
+          assert.equal(result.shift, '0px');
+        }
+      }
+    } finally { try { await page?.evaluate(() => document.querySelector('dialog')?.close()); } finally { await browser.close(); } }
   });
 
   browserTest(`Sheets cancel only the active pointer and clean interrupted drags (${engine})`, async () => {
@@ -1184,6 +1229,46 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       await expect(page.locator('#trigger')).toBeFocused();
       await expect(page.locator('#actions')).not.toBeVisible();
     } finally { try { await page?.evaluate(() => window.menu?.destroy()); } finally { await browser.close(); } }
+  });
+
+  browserTest(`Menu dismissal preserves outside input and callback focus (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      for (const shadow of [false, true]) {
+        await page.setContent(`<style>${css}</style><div id="host"></div><input id="outside" aria-label="Outside input" style="margin-top:200px">`);
+        await page.addScriptTag({ content: js });
+        await page.evaluate(({ shadow, css }) => {
+          const host = document.querySelector('#host');
+          const root = shadow ? host.attachShadow({ mode: 'open' }) : host;
+          root.innerHTML = `<style>${css}</style><button id="trigger" data-target="actions">Actions</button><menu id="actions"><li>Copy</li></menu>`;
+          window.menu = Expressive.Menu.init(root.querySelector('#trigger'), { inDuration: 0, outDuration: 0 });
+        }, { shadow, css });
+        try {
+          await page.locator('#trigger').click();
+          await expect(page.locator('#actions > li')).toBeFocused();
+          await page.locator('#outside').click();
+          await expect(page.locator('#trigger')).toHaveAttribute('aria-expanded', 'false');
+          await expect(page.locator('#outside')).toBeFocused();
+          await page.keyboard.type('Keep this focus');
+          await expect(page.locator('#outside')).toHaveValue('Keep this focus');
+          await page.locator('#trigger').click();
+          await expect(page.locator('#actions > li')).toBeFocused();
+          await page.keyboard.press('Escape');
+          await expect(page.locator('#trigger')).toBeFocused();
+          await page.locator('#trigger').click();
+          await expect(page.locator('#actions > li')).toBeFocused();
+          await page.evaluate(() => {
+            menu.options.onCloseStart = () => document.querySelector('#outside').focus();
+            menu.close();
+          });
+          await expect(page.locator('#outside')).toBeFocused();
+        } finally {
+          await page.evaluate(() => menu.destroy());
+        }
+      }
+    } finally { try { await page?.evaluate(() => window.menu?.el.Expressive_Menu && menu.destroy()); } finally { await browser.close(); } }
   });
 
   browserTest(`Menu excludes closing content and preserves callback focus (${engine})`, async () => {

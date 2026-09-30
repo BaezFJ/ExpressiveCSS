@@ -225,6 +225,7 @@ const S = defineSections([
           The IIFE bundle exposes <code>Expressive.Chips</code>.
           Call <code>init</code> with <code>allowUserInput: true</code> (and any other
           options) for an editable field. Re-init after adding a container dynamically.
+          Autocomplete keeps the query while filtering and clears it after an item is selected.
         </p>
 <Code code={`
 document.addEventListener('DOMContentLoaded', function() {
@@ -362,7 +363,7 @@ instance.getData();
 `} />
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove rendered chips, and tear down its event handlers.</p>
+        <p>Destroy the plugin instance, remove rendered chips, and tear down its event handlers. This also destroys the owned Autocomplete and its Menu.</p>
 <Code code={`
 instance.destroy();
 `} />

@@ -5,6 +5,32 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Component `init()` methods return an empty array for empty element collections,
+  matching their TypeScript return types.
+- Datepicker can reopen a range when only its end date is set. Clearing
+  either endpoint preserves the other and removes incomplete range shading.
+- A cancelled Snackbar swipe cannot carry its velocity into the next gesture.
+- Bottom and side sheets recognize a recent flick when the release coordinates
+  match the last pointer move, while paused or reversed short drags stay open.
+- Carousel preserves ordinary button and link clicks inside slides while keeping
+  mouse dragging available, including in swipeable tab panels.
+- Chips autocomplete preserves the query while filtering and clears it after
+  an item is selected.
+- Destroying a Timepicker cancels pending automatic submission, so an old
+  instance cannot overwrite a replacement input value.
+- Datepicker and Timepicker confirmation buttons invoke their callbacks once
+  per Enter press. Both TypeScript option interfaces accept `autoSubmit: false`.
+- Closing a Menu preserves focus on an outside input or another control.
+- Docked Datepicker and Timepicker popovers account for their positioning
+  parent, including `.field` wrappers and scrolled containers.
+- Destroying Chips also destroys its owned Autocomplete and Menu.
+- Tooltip teardown restores authored rich content and preserves existing
+  description associations, allowing the same content to be initialized again.
+- Snackbars can reuse an element supplied through `snackbarId` without deleting
+  it or retaining callbacks and controls from an earlier instance.
+
 ### Changed
 
 - The ExpressiveCSS skill bundles the starter page and the five layout

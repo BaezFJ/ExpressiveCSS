@@ -973,12 +973,19 @@ for (const timezone of ['America/Chicago', 'UTC', 'Asia/Tokyo']) scenario(`date 
     picker.setDate('2024-02-29');
     const fromString = picker.toString();
     const earlyYear = picker.validateDate('0099-01-02');
-    const invalid = ['2023-02-29', '2024-02-30', '2024-04-31', '2024-00-10', '2024-13-01', '2024-01-00', 'invalid', ''];
+    const invalid = ['2023-02-29', '2024-02-30', '2024-04-31', '2024-00-10', '2024-13-01', '2024-01-00', 'invalid'];
     const rejected = invalid.map(value => {
       picker.el.value = value;
       picker.el.dispatchEvent(new Event('change'));
       return picker.toString() === fromString;
     });
+    picker.el.value = '';
+    picker.el.dispatchEvent(new Event('change'));
+    const clearedRange = {
+      start: picker.date,
+      end: picker.toString(picker.endDate),
+      shaded: picker.calendarEl.querySelectorAll('.is-daterange').length
+    };
     const timestamp = '2024-02-29T01:30:00Z';
     const instant = new Date(timestamp);
     const timestampPreserved = picker.validateDate(timestamp).getTime() === instant.getTime();
@@ -999,11 +1006,12 @@ for (const timezone of ['America/Chicago', 'UTC', 'Asia/Tokyo']) scenario(`date 
     picker.el.dispatchEvent(new Event('change'));
     return {
       fromString, earlyYear: [earlyYear.getFullYear(), earlyYear.getMonth(), earlyYear.getDate()],
-      rejected, timestampPreserved, objectPreserved, clampedMax, clampedMin,
+      rejected, clearedRange, timestampPreserved, objectPreserved, clampedMax, clampedMin,
       customDate: picker.toString(), parserArgs
     };
   }), {
-    fromString: '2024-02-29', earlyYear: [99, 0, 2], rejected: Array(8).fill(true),
+    fromString: '2024-02-29', earlyYear: [99, 0, 2], rejected: Array(7).fill(true),
+    clearedRange: { start: null, end: '2024-03-01', shaded: 0 },
     timestampPreserved: true, objectPreserved: true, clampedMax: '2024-02-29', clampedMin: '2024-02-20',
     customDate: '2024-02-25', parserArgs: ['2024-02-29', 'yyyy-mm-dd']
   });
@@ -1069,6 +1077,28 @@ for (const action of ['input', 'empty', 'boundaries']) scenario(`time picker dig
   }
 });
 
+for (const picker of ['Datepicker', 'Timepicker']) scenario(`${picker} footer activates once per Enter or Space`, '<form><label for="appointment">Appointment</label><input id="appointment"></form>', async page => {
+  await page.evaluate(picker => {
+    window.callbacks = { confirm: 0, cancel: 0 };
+    window.submits = 0;
+    document.querySelector('form').onsubmit = event => { event.preventDefault(); window.submits++; };
+    window.instances = [Expressive[picker].init(document.querySelector('#appointment'), {
+      autoSubmit: false, openByDefault: true, duration: 0, vibrate: false,
+      onConfirm: () => window.callbacks.confirm++,
+      onDone: () => window.callbacks.confirm++,
+      onCancel: () => window.callbacks.cancel++
+    })];
+  }, picker);
+  for (const action of ['confirm', 'cancel']) {
+    for (const [index, key] of ['Enter', 'Space'].entries()) {
+      await page.locator(`.btn-${action}`).focus();
+      await page.keyboard.press(key);
+      assert.equal(await page.evaluate(action => window.callbacks[action], action), index + 1);
+    }
+  }
+  assert.equal(await page.evaluate(() => window.submits), 0);
+});
+
 scenario('time picker exposes named keyboard controls in inline and docked modes', '<form><label for="appointment">Appointment</label><input id="appointment" value="03:45 PM"></form>', async page => {
   for (const docked of [false, true]) {
     for (const twelveHour of [true, false]) {
@@ -1117,6 +1147,59 @@ scenario('time picker exposes named keyboard controls in inline and docked modes
         await page.evaluate(() => { window.instances?.forEach(instance => instance.destroy()); window.instances = []; });
       }
     }
+  }
+});
+
+for (const operation of ['dismiss', 'replace']) scenario(`authored snackbar survives focus reentry during ${operation}`, '<button id="outside">Continue</button><section id="source"><div id="notice" class="authored" style="display:none"><p>Saved</p><button type="button">Details</button></div><span>After</span></section>', async page => {
+  try {
+    await page.locator('#outside').focus();
+    await page.evaluate(() => {
+      window.authoredNotice = document.querySelector('#notice');
+      window.originalNotice = authoredNotice.outerHTML;
+      window.replacementActions = 0;
+      window.oldCompletions = 0;
+      window.snackOptions = { snackbarId: 'notice', displayLength: Infinity, inDuration: 0, outDuration: 40 };
+      window.firstSnack = new Expressive.Snackbar({ ...snackOptions, action: 'Undo', completeCallback: () => oldCompletions++ });
+    });
+    await page.getByRole('button', { name: 'Undo', exact: true }).focus();
+    await page.evaluate(operation => {
+      const options = { ...snackOptions, action: 'Use replacement', onAction: () => replacementActions++ };
+      window.reopenOnFocus = () => { window.nestedSnack = new Expressive.Snackbar(options); };
+      document.querySelector('#outside').addEventListener('focus', reopenOnFocus, { once: true });
+      if (operation === 'dismiss') {
+        firstSnack.dismiss();
+        window.currentSnack = nestedSnack;
+      } else {
+        window.currentSnack = new Expressive.Snackbar(options);
+      }
+    }, operation);
+    // The old dismissal must not hide or disable the replacement after its timer expires.
+    await page.waitForTimeout(80);
+    assert.deepEqual(await page.evaluate(() => ({
+      sameSource: currentSnack.el === authoredNotice,
+      registered: Expressive.Snackbar.getInstance(authoredNotice) === currentSnack,
+      instances: Expressive.Snackbar._snackbars.length,
+      inert: authoredNotice.inert,
+      opacity: authoredNotice.style.opacity,
+      margin: authoredNotice.style.marginTop,
+      completions: oldCompletions
+    })), { sameSource: true, registered: true, instances: 1, inert: false, opacity: '1', margin: '', completions: 0 });
+    await expect(page.locator('#notice')).toHaveCount(1);
+    await expect(page.locator('#notice button')).toHaveCount(3);
+    const action = page.getByRole('button', { name: 'Use replacement', exact: true });
+    await action.focus();
+    await expect(action).toBeFocused();
+    await page.keyboard.press('Enter');
+    assert.equal(await page.evaluate(() => replacementActions), 1);
+    await expect(page.locator('#snackbar-container')).toHaveCount(0);
+    assert.equal(await page.locator('#source > #notice').evaluate(el => el === authoredNotice && el.outerHTML === originalNotice), true);
+    assert.equal(await page.evaluate(() => Expressive.Snackbar.getInstance(authoredNotice)), undefined);
+  } finally {
+    await page.evaluate(() => {
+      document.querySelector('#outside').removeEventListener('focus', window.reopenOnFocus);
+      Expressive.Snackbar.dismissAll();
+    });
+    await page.waitForTimeout(80);
   }
 });
 

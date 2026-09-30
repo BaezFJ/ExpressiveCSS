@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `43834c8b5c15f01b05d32745bf6467d4b8ed11408762de7ccee5acd1a6b64881`
+Contract SHA-256: `5017d36c40d2519ccd54905a773cacd9d1d425ea644d5c7936c1ee3526404e4b`
 
 #### Selection and adaptation
 
@@ -75,7 +75,7 @@ new Expressive.Snackbar({
 | `action` | String | `''` | Optional action label. Rendered as a trailing text button. |
 | `onAction` | Function | `null` | Called when the action button is pressed. The snackbar still dismisses. |
 | `dismissible` | Boolean | `false`, or `true` with an action | Show a trailing close icon button. An explicit false is preserved. |
-| `snackbarId` | String | — | Id of a `<template>` (or another element) used as the snackbar body. |
+| `snackbarId` | String | — | Id of a `<template>` (or another element) used as the snackbar body. Templates are cloned. Other elements are moved into the snackbar and restored on dismissal or replacement, so the same ID can be reused. |
 | `displayLength` | Number | `4000` | Default 4000ms without an action, or Infinity with an action. Explicit finite timers need equivalent persistent feedback in the application. |
 | `inDuration` | Number | `300` | Enter transition duration, in milliseconds. |
 | `outDuration` | Number | `375` | Exit transition duration, in milliseconds. |

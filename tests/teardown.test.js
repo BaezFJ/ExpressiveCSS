@@ -77,6 +77,72 @@ function watchSharedListeners() {
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
 
+describe('Timepicker pending submission', () => {
+  beforeEach(resetBody);
+
+  function selectMinutes(picker) {
+    picker.showView('minutes');
+    for (const type of ['pointerdown', 'pointerup']) {
+      picker.plate.dispatchEvent(new window.PointerEvent(type, {
+        bubbles: true, cancelable: true, isPrimary: true, pointerId: 1,
+        pointerType: 'mouse', button: 0, clientX: 240, clientY: 135
+      }));
+    }
+  }
+
+  test('only the latest completed selection submits after the delay', t => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    document.body.innerHTML = '<input value="03:45 PM">';
+    const input = document.querySelector('input');
+    let picker;
+    try {
+      picker = Expressive.Timepicker.init(input, { duration: 100, vibrate: false });
+      const done = t.mock.method(picker, 'done');
+      selectMinutes(picker);
+      t.mock.timers.tick(10);
+      selectMinutes(picker);
+      t.mock.timers.tick(40);
+      assert.equal(input.value, '03:45 PM');
+      t.mock.timers.tick(10);
+      assert.equal(input.value, '03:15 PM');
+      assert.equal(done.mock.callCount(), 1);
+    } finally {
+      picker?.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  for (const action of ['destroy', 'reinitialize']) {
+    test(`${action} cancels all pending submissions`, t => {
+      t.mock.timers.enable({ apis: ['setTimeout'] });
+      document.body.innerHTML = '<input value="03:45 PM">';
+      const input = document.querySelector('input');
+      let changes = 0;
+      let selections = 0;
+      const onChange = () => changes++;
+      input.addEventListener('change', onChange);
+      try {
+        const picker = Expressive.Timepicker.init(input, {
+          duration: 100, vibrate: false, onSelect: () => selections++
+        });
+        selectMinutes(picker);
+        selectMinutes(picker);
+        assert.equal(selections, 2);
+        if (action === 'destroy') picker.destroy();
+        else Expressive.Timepicker.init(input, { duration: 0, vibrate: false });
+        input.value = '09:30 AM';
+        t.mock.timers.tick(100);
+        assert.equal(input.value, '09:30 AM');
+        assert.equal(changes, 0);
+      } finally {
+        Expressive.Timepicker.getInstance(input)?.destroy();
+        input.removeEventListener('change', onChange);
+        t.mock.timers.reset();
+      }
+    });
+  }
+});
+
 describe('destroy() releases shared listeners', () => {
   let watch;
 

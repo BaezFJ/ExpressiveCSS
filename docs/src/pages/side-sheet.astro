@@ -120,6 +120,8 @@ const S = defineSections([
           to dock to the logical start edge. The default, <code>.right</code>,
           and <code>.right-sheet</code> dock to the logical end edge.
           All mirror in RTL, including dragging and opening motion.
+          A recent flick toward the docked edge dismisses the sheet. For short
+          drags, pausing for at least 100ms or reversing direction lets it snap back.
         </p>
   </Section>
   <Section {...S.header}>

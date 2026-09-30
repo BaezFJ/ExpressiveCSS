@@ -4,8 +4,13 @@ import {
   FloatingActionButton,
   NavigationRail,
   Snackbar,
+  type DatepickerOptions,
   type SnackbarOptions,
+  type TimepickerOptions,
 } from "@expressivecss/expressive/modular";
+
+export const manualDatepicker: Partial<DatepickerOptions> = { autoSubmit: false };
+export const manualTimepicker: Partial<TimepickerOptions> = { autoSubmit: false };
 
 export function start(root: HTMLElement = document.body) {
   AutoInit(root);

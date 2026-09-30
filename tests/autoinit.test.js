@@ -4,6 +4,18 @@ import assert from "node:assert/strict";
 import { Expressive, resetBody } from "./setup.js";
 import { AUTO_INIT_FIXTURES } from "./fixtures.js";
 
+test("component init returns an empty array for empty element collections", () => {
+  const parent = document.createElement("div");
+  const names = [...AUTO_INIT_FIXTURES.map(({ name }) => name), "Slider", "CharacterCounter"];
+  for (const name of names) {
+    for (const elements of [parent.querySelectorAll("*"), parent.children]) {
+      const instances = Expressive[name].init(elements);
+      assert.deepEqual(instances, [], `${name} with ${elements.constructor.name}`);
+      instances.forEach(() => assert.fail("an empty collection must not construct an instance"));
+    }
+  }
+});
+
 describe("AutoInit", () => {
   beforeEach(resetBody);
 

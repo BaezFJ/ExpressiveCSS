@@ -329,14 +329,7 @@ export class Utils {
     button.type = 'button';
     button.tabIndex = !!visibility ? 0 : -1;
     button.innerText = text;
-    // The keypress handler used to call `callback` unconditionally, so a
-    // button created without one threw on Enter.
-    if (typeof callback === 'function') {
-      button.addEventListener('click', callback);
-      button.addEventListener('keypress', (e) => {
-        if (e.key === Utils.keys.ENTER) callback(e);
-      });
-    }
+    if (typeof callback === 'function') button.addEventListener('click', callback);
     container.append(button);
   }
 
@@ -392,6 +385,16 @@ export class Utils {
       transitionMovement,
       align
     );
+
+    const parent = container.offsetParent as HTMLElement;
+    // A static body uses document coordinates; positioned parents use their
+    // padding edge, including borders and local scrolling.
+    if (parent && (parent !== document.body || getComputedStyle(parent).position !== 'static')) {
+      const rect = parent.getBoundingClientRect();
+      const root = parent === document.scrollingElement;
+      newCoordinates.x -= rect.left + Utils.getDocumentScrollLeft() + parent.clientLeft - (root ? 0 : parent.scrollLeft);
+      newCoordinates.y -= rect.top + Utils.getDocumentScrollTop() + parent.clientTop - (root ? 0 : parent.scrollTop);
+    }
 
     container.style.top = newCoordinates.y + 'px';
     container.style.left = newCoordinates.x + 'px';

@@ -105,11 +105,9 @@ Expressive.Datepicker.init(elem, {
 });
 `} />
         <p>
-          The popover is positioned in document coordinates and then appended to the
-          input’s parent. A <code>position: relative</code> parent — including
-          <code>.field</code> — shifts that position, so the calendar will not sit
-          next to the field. Prefer a static wrapper if you use docked, or keep the
-          calendar inline with <code>openByDefault</code>.
+          The popover stays inside the input’s parent and accounts for its
+          positioning and scroll offsets. Positioned wrappers such as
+          <code>.field</code> can be used directly.
         </p>
         <p>
           Optional <code>displayPluginOptions</code>: <code>margin</code> (default
@@ -297,13 +295,13 @@ Expressive.Datepicker.init(elem, {
               <td><code>onConfirm</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the Ok button is used. Only created when <code>autoSubmit</code> is false.</td>
+              <td>Called once when Ok is activated by click, Enter or Space. The button is created when <code>autoSubmit</code> is false.</td>
             </tr>
             <tr>
               <td><code>onCancel</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the Cancel button is used. Only created when <code>autoSubmit</code> is false.</td>
+              <td>Called once when Cancel is activated by click, Enter or Space. The button is created when <code>autoSubmit</code> is false.</td>
             </tr>
             <tr>
               <td><code>displayPlugin</code></td>
@@ -446,6 +444,8 @@ Expressive.Datepicker.init(elem, {
           after it. Point <code>dateRangeEndEl</code> at a second input, or omit it and a second
           input is created next to the first.
           An authored end input supports typing and Enter-to-calendar navigation.
+          A range with only an end date can be reopened safely. Clearing either
+          input preserves the other date and removes the range shading until both dates are set.
           Destroying the picker preserves authored inputs and removes generated ones.
         </p>
         <div class="field">

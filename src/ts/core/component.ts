@@ -99,7 +99,7 @@ export class Component<O extends BaseOptions> {
     let instances = null;
     if (els instanceof Element) {
       instances = new classDef(<HTMLElement>els, options);
-    } else if (!!els && els.length) {
+    } else if (els) {
       instances = [];
       for (let i = 0; i < els.length; i++) {
         instances.push(new classDef(<HTMLElement>els[i], options));

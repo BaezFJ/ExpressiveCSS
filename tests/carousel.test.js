@@ -421,6 +421,53 @@ describe('Material 3 Carousel behavior', () => {
       instance.destroy();
     }
   });
+
+  test('pointer capture starts only after a drag crosses the threshold', () => {
+    document.body.innerHTML = markup();
+    const el = document.querySelector('.carousel');
+    const instance = Expressive.Carousel.init(el);
+    const track = el.querySelector('.carousel-track');
+    const captures = [];
+    track.setPointerCapture = (id) => captures.push(id);
+    try {
+      track.dispatchEvent(pointerEvent('pointerdown', { bubbles: true, clientX: 200 }));
+      assert.deepEqual(captures, []);
+      track.dispatchEvent(pointerEvent('pointermove', { bubbles: true, clientX: 197 }));
+      assert.deepEqual(captures, []);
+      track.dispatchEvent(pointerEvent('pointermove', { bubbles: true, clientX: 150 }));
+      assert.deepEqual(captures, [1]);
+      assert.equal(track.scrollLeft, 50);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('release and cancellation outside the track end a pending drag', () => {
+    document.body.innerHTML = markup();
+    const el = document.querySelector('.carousel');
+    const instance = Expressive.Carousel.init(el);
+    const track = el.querySelector('.carousel-track');
+    try {
+      for (const type of ['pointerup', 'pointercancel']) {
+        track.dispatchEvent(pointerEvent('pointerdown', { bubbles: true, clientX: 200 }));
+        document.dispatchEvent(pointerEvent(type));
+        track.dispatchEvent(pointerEvent('pointermove', { bubbles: true, clientX: 150 }));
+        assert.equal(instance.pressed, false);
+        assert.equal(track.scrollLeft, 0);
+      }
+      track.dispatchEvent(pointerEvent('pointerdown', { bubbles: true, clientX: 200 }));
+      document.dispatchEvent(pointerEvent('pointermove', { clientX: 150 }));
+      assert.equal(track.scrollLeft, 50);
+      document.dispatchEvent(pointerEvent('pointercancel'));
+      assert.equal(el.classList.contains('dragging'), false);
+      track.dispatchEvent(pointerEvent('pointerdown', { bubbles: true, clientX: 200 }));
+    } finally {
+      instance.destroy();
+    }
+    document.dispatchEvent(pointerEvent('pointermove', { clientX: 100 }));
+    assert.equal(track.scrollLeft, 50, 'destroy removes document drag listeners');
+    assert.equal(el.classList.contains('dragging'), false);
+  });
 });
 
 // Auto-advance is the carousel's only live timer. Every case here tears down in

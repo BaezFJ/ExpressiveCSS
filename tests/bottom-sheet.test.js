@@ -82,13 +82,20 @@ describe('Bottom sheet drag', () => {
     assert.equal(dialog.open, false);
   });
 
-  test('a short drag on the handle snaps back', () => {
+  test('a slow short drag on the handle snaps back', (t) => {
     const dialog = openSheet();
-    tap(dialog, 'pointerdown', { x: 180, y: 420 });
-    tap(dialog, 'pointermove', { x: 180, y: 450 });
-    tap(dialog, 'pointerup', { x: 180, y: 450 });
-    assert.equal(dialog.open, true);
-    assert.equal(dialog.style.getPropertyValue('--md-comp-bottom-sheet-shift'), '0px');
+    t.mock.timers.enable({ apis: ['Date'], now: 1000 });
+    try {
+      tap(dialog, 'pointerdown', { x: 180, y: 420 });
+      t.mock.timers.tick(100);
+      tap(dialog, 'pointermove', { x: 180, y: 450 });
+      tap(dialog, 'pointerup', { x: 180, y: 450 });
+      assert.equal(dialog.open, true);
+      assert.equal(dialog.style.getPropertyValue('--md-comp-bottom-sheet-shift'), '0px');
+    } finally {
+      dialog.close();
+      t.mock.timers.reset();
+    }
   });
 
   test('a drag that starts in the body does not dismiss', () => {
@@ -154,25 +161,40 @@ describe('Bottom sheet handle button', () => {
   // The regression this pairs with: a drag ends in a click on the element it
   // started on, so without the slop check the click would dismiss the sheet the
   // drag had just decided not to dismiss.
-  test('the click ending a snapped-back drag does not dismiss', () => {
+  test('the click ending a snapped-back drag does not dismiss', (t) => {
     const dialog = openSheet();
     const handle = dialog.querySelector('.drag-handle');
-    tap(handle, 'pointerdown', { x: 180, y: 420 });
-    tap(handle, 'pointermove', { x: 180, y: 450 });
-    tap(handle, 'pointerup', { x: 180, y: 450 });
-    assert.equal(dialog.open, true, 'the drag itself should have snapped back');
-    activate(handle, { detail: 1 });
-    assert.equal(dialog.open, true);
+    t.mock.timers.enable({ apis: ['Date'], now: 1000 });
+    try {
+      tap(handle, 'pointerdown', { x: 180, y: 420 });
+      t.mock.timers.tick(100);
+      tap(handle, 'pointermove', { x: 180, y: 450 });
+      tap(handle, 'pointerup', { x: 180, y: 450 });
+      assert.equal(dialog.open, true, 'the drag itself should have snapped back');
+      activate(handle, { detail: 1 });
+      assert.equal(dialog.open, true);
+    } finally {
+      dialog.close();
+      t.mock.timers.reset();
+    }
   });
 
-  test('a keyboard activation still works after a snapped-back drag', () => {
+  test('a keyboard activation still works after a snapped-back drag', (t) => {
     const dialog = openSheet();
     const handle = dialog.querySelector('.drag-handle');
-    tap(handle, 'pointerdown', { x: 180, y: 420 });
-    tap(handle, 'pointermove', { x: 180, y: 450 });
-    tap(handle, 'pointerup', { x: 180, y: 450 });
-    activate(handle);
-    assert.equal(dialog.open, false);
+    t.mock.timers.enable({ apis: ['Date'], now: 1000 });
+    try {
+      tap(handle, 'pointerdown', { x: 180, y: 420 });
+      t.mock.timers.tick(100);
+      tap(handle, 'pointermove', { x: 180, y: 450 });
+      tap(handle, 'pointerup', { x: 180, y: 450 });
+      assert.equal(dialog.open, true, 'the drag itself should have snapped back');
+      activate(handle);
+      assert.equal(dialog.open, false);
+    } finally {
+      dialog.close();
+      t.mock.timers.reset();
+    }
   });
 
   test('a decorative handle is not a control', () => {

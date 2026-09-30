@@ -45,7 +45,7 @@ export interface TimepickerOptions extends BaseOptions {
    *  Autosubmit timepicker selection to input field
    *  @default true
    */
-  autoSubmit: true;
+  autoSubmit: boolean;
   /**
    * Default time to set on the timepicker 'now' or '13:14'.
    * @default 'now';
@@ -175,6 +175,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   g: Element;
   toggleViewTimer: ReturnType<typeof setTimeout>;
   vibrateTimer: ReturnType<typeof setTimeout>;
+  private _autoSubmitTimer: ReturnType<typeof setTimeout>;
   private displayPlugin: DockedDisplayPlugin;
   /** Whether the dial (ticks + SVG + AM/PM buttons) has been built yet. */
   private _clockBuilt = false;
@@ -246,6 +247,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   destroy() {
+    clearTimeout(this._autoSubmitTimer);
     this._removeEventHandlers();
     this.displayPlugin?.destroy();
     this.containerEl.remove();
@@ -344,8 +346,9 @@ export class Timepicker extends Component<TimepickerOptions> {
       this.inputMinutes.focus();
       this.showView('minutes', this.options.duration / 2);
     } else {
-      // this.minutesView.classList.add('timepicker-dial-out');
-      setTimeout(() => {
+      clearTimeout(this._autoSubmitTimer);
+      this._autoSubmitTimer = setTimeout(() => {
+        this._autoSubmitTimer = null;
         if (this.options.autoSubmit) this.done();
       }, this.options.duration / 2);
     }

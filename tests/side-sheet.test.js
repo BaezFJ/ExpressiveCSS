@@ -87,13 +87,20 @@ describe('Side sheet drag', () => {
     assert.equal(dialog.open, false);
   });
 
-  test('a short drag snaps back', () => {
+  test('a slow short drag snaps back', (t) => {
     const dialog = openSheet();
-    tap(dialog, 'pointerdown', { x: 410, y: 200 });
-    tap(dialog, 'pointermove', { x: 440, y: 200 });
-    tap(dialog, 'pointerup', { x: 440, y: 200 });
-    assert.equal(dialog.open, true);
-    assert.equal(dialog.style.getPropertyValue('--md-comp-side-sheet-shift'), '0px');
+    t.mock.timers.enable({ apis: ['Date'], now: 1000 });
+    try {
+      tap(dialog, 'pointerdown', { x: 410, y: 200 });
+      t.mock.timers.tick(100);
+      tap(dialog, 'pointermove', { x: 440, y: 200 });
+      tap(dialog, 'pointerup', { x: 440, y: 200 });
+      assert.equal(dialog.open, true);
+      assert.equal(dialog.style.getPropertyValue('--md-comp-side-sheet-shift'), '0px');
+    } finally {
+      dialog.close();
+      t.mock.timers.reset();
+    }
   });
 
   test('a drag that starts in the body does not dismiss', () => {

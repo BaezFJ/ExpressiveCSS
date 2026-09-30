@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `43834c8b5c15f01b05d32745bf6467d4b8ed11408762de7ccee5acd1a6b64881`
+Contract SHA-256: `5017d36c40d2519ccd54905a773cacd9d1d425ea644d5c7936c1ee3526404e4b`
 
 #### Selection and adaptation
 
@@ -87,7 +87,7 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
 #### Methods
 
 - `.open()`: Open the menu.
-- `.close()`: Close the menu.
+- `.close()`: Close the menu. With `autoFocus`, focus returns to the trigger when it remains in the menu. Focus moved to an outside control is preserved.
 - `.recalculateDimensions()`: While the menu is open, recalculate its dimensions if its contents have changed.
 - `.destroy()`: Destroy the plugin instance and tear down its event handlers.
 

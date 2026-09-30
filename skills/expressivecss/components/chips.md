@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `43834c8b5c15f01b05d32745bf6467d4b8ed11408762de7ccee5acd1a6b64881`
+Contract SHA-256: `5017d36c40d2519ccd54905a773cacd9d1d425ea644d5c7936c1ee3526404e4b`
 
 #### Selection and adaptation
 
@@ -100,7 +100,7 @@ A long label wraps and the chip grows from its 32dp minimum, with 4dp above and 
 - `.deleteChip()`: Delete the chip at this index.
 - `.selectChip()`: Focus the chip at this index.
 - `.getData()`: The current chips as an array of chip data objects.
-- `.destroy()`: Destroy the plugin instance, remove rendered chips, and tear down its event handlers.
+- `.destroy()`: Destroy the plugin instance, remove rendered chips, and tear down its event handlers. This also destroys the owned Autocomplete and its Menu.
 
 #### Also documented
 

@@ -86,6 +86,14 @@ export class Tooltip extends Component<TooltipOptions> {
   private _exitDelayTimeout: ReturnType<typeof setTimeout>;
   private _enterDelayTimeout: ReturnType<typeof setTimeout>;
   private _animationTimeout: ReturnType<typeof setTimeout>;
+  private _originalContent: {
+    el: HTMLElement;
+    marker: Comment;
+    display: string;
+    priority: string;
+    hidden: string | null;
+    contentClass: boolean;
+  };
   xMovement: number;
   yMovement: number;
 
@@ -145,8 +153,21 @@ export class Tooltip extends Component<TooltipOptions> {
     this.isOpen = false;
     this.isHovered = false;
     this.isFocused = false;
-    if (this.el.getAttribute('aria-describedby') === this.tooltipEl.id) {
-      this.el.removeAttribute('aria-describedby');
+    const descriptions = this.el.getAttribute('aria-describedby')?.split(/\s+/);
+    if (descriptions?.includes(this.tooltipEl.id)) {
+      const remaining = descriptions.filter(id => id && id !== this.tooltipEl.id).join(' ');
+      if (remaining) this.el.setAttribute('aria-describedby', remaining);
+      else this.el.removeAttribute('aria-describedby');
+    }
+    if (this._originalContent) {
+      const { el, marker, display, priority, hidden, contentClass } = this._originalContent;
+      el.style.setProperty('display', display, priority);
+      if (hidden === null) el.removeAttribute('hidden');
+      else el.setAttribute('hidden', hidden);
+      el.classList.toggle('tooltip-content', contentClass);
+      if (!el.className) el.removeAttribute('class');
+      marker.replaceWith(el);
+      this._originalContent = null;
     }
     this.tooltipEl.remove();
     this._removeEventHandlers();
@@ -158,13 +179,23 @@ export class Tooltip extends Component<TooltipOptions> {
     this.tooltipEl.classList.add('tooltip');
     this.tooltipEl.id = `tooltip-${Utils.guid()}`;
     this.tooltipEl.setAttribute('role', 'tooltip');
-    this.el.setAttribute('aria-describedby', this.tooltipEl.id);
+    this.el.setAttribute('aria-describedby', [this.el.getAttribute('aria-describedby'), this.tooltipEl.id].filter(Boolean).join(' '));
 
     const tooltipContentEl = this.options.tooltipId
       ? Utils.getElementById(this.el, this.options.tooltipId)
       : document.createElement('div');
     if (this.options.tooltipId) {
       this.tooltipEl.classList.add('rich');
+      const marker = document.createComment('');
+      tooltipContentEl.before(marker);
+      this._originalContent = {
+        el: tooltipContentEl, marker,
+        display: tooltipContentEl.style.display,
+        priority: tooltipContentEl.style.getPropertyPriority('display'),
+        hidden: tooltipContentEl.getAttribute('hidden'),
+        contentClass: tooltipContentEl.classList.contains('tooltip-content')
+      };
+      tooltipContentEl.removeAttribute('hidden');
     }
     tooltipContentEl.style.display = '';
     tooltipContentEl.classList.add('tooltip-content');
