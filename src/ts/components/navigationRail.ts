@@ -153,7 +153,18 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   };
 
   private _onKeyDown = (e: KeyboardEvent) => {
-    if (e.key !== 'Escape') return;
-    if (this.isExpanded && this._isModal()) this.collapse();
+    if (e.key !== 'Escape' || e.defaultPrevented) return;
+    if (this.isExpanded && this._isModal()) {
+      const root = this.el.getRootNode() as Document | ShadowRoot;
+      const restoreFocus = this.el.contains(root.activeElement);
+      let focused = root.activeElement;
+      while (focused?.shadowRoot?.activeElement) focused = focused.shadowRoot.activeElement;
+      this.collapse();
+      let active = root.activeElement;
+      while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
+      if (!this.isExpanded && restoreFocus && active === focused) {
+        this._toggle?.focus();
+      }
+    }
   };
 }

@@ -610,8 +610,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   }
 
   _isValueSelected(value: ValueStruct) {
-    const realValues = this.getSelectedValues();
-    return realValues.some((realValue) => realValue === value.el.value);
+    return value.el.selected;
   }
 
   _toggleEntryFromArray(value: ValueStruct) {

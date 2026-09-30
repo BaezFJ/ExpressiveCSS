@@ -176,6 +176,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   toggleViewTimer: ReturnType<typeof setTimeout>;
   vibrateTimer: ReturnType<typeof setTimeout>;
   private _autoSubmitTimer: ReturnType<typeof setTimeout>;
+  private _clockResetTimer: ReturnType<typeof setTimeout>;
   private displayPlugin: DockedDisplayPlugin;
   /** Whether the dial (ticks + SVG + AM/PM buttons) has been built yet. */
   private _clockBuilt = false;
@@ -248,6 +249,9 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   destroy() {
     clearTimeout(this._autoSubmitTimer);
+    clearTimeout(this.toggleViewTimer);
+    clearTimeout(this.vibrateTimer);
+    this._cancelClockReset();
     this._removeEventHandlers();
     this.displayPlugin?.destroy();
     this.containerEl.remove();
@@ -277,6 +281,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   _handleInputClick = () => {
+    this._updateTimeFromInput();
     // Before focus(): focusing inputHours fires the handler that calls
     // showView, and an already-focused input fires nothing at all.
     this._ensureClockBuilt();
@@ -288,10 +293,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   _handleInputKeydown = (e: KeyboardEvent) => {
     if (e.key === Utils.keys.ENTER) {
       e.preventDefault();
-      this._ensureClockBuilt();
-      if (this.displayPlugin) this.displayPlugin.show();
-      this.inputHours.focus();
-      if (typeof this.options.onInputInteraction === 'function') this.options.onInputInteraction.call(this);
+      this._handleInputClick();
     }
   };
 
@@ -589,6 +591,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   _updateTimeFromInput() {
+    this._cancelClockReset();
     // Get the time
     let value = ((this.el.value || this.options.defaultTime || '') + '').trim().toUpperCase().split(':');
     const period = value[1]?.match(/AM|PM/)?.[0];
@@ -644,7 +647,14 @@ export class Timepicker extends Component<TimepickerOptions> {
     }, this.options.duration);
   };
 
+  private _cancelClockReset() {
+    clearTimeout(this._clockResetTimer);
+    this._clockResetTimer = null;
+    this._canvas?.classList.remove('timepicker-canvas-out');
+  }
+
   resetClock(delay) {
+    this._cancelClockReset();
     const view = this.currentView,
       value = this[view],
       isHours = view === 'hours',
@@ -657,8 +667,7 @@ export class Timepicker extends Component<TimepickerOptions> {
 
     if (delay) {
       this._canvas?.classList.add('timepicker-canvas-out');
-      setTimeout(() => {
-        this._canvas?.classList.remove('timepicker-canvas-out');
+      this._clockResetTimer = setTimeout(() => {
         this.setHand(x, y);
       }, delay);
     } else {
@@ -670,6 +679,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     const input = event.target as HTMLInputElement;
     const isHours = input === this.inputHours;
     if (!isHours && input !== this.inputMinutes) return;
+    this._cancelClockReset();
     const value = Number(input.value);
     const min = isHours && this.options.twelveHour ? 1 : 0;
     const max = isHours ? (this.options.twelveHour ? 12 : 23) : 59;
@@ -692,6 +702,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   setHand(x, y, roundBy5: boolean = false) {
+    this._cancelClockReset();
     const isHours = this.currentView === 'hours',
       unit = Math.PI / (isHours || roundBy5 ? 6 : 30),
       z = Math.sqrt(x * x + y * y),

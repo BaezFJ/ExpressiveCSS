@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `5017d36c40d2519ccd54905a773cacd9d1d425ea644d5c7936c1ee3526404e4b`
+Contract SHA-256: `47b668632466d8ab6f9acaac9057322d5baa6d792e2d1a9750bfe568036a2f22`
 
 #### Selection and adaptation
 
@@ -96,7 +96,7 @@ A long label wraps and the chip grows from its 32dp minimum, with 4dp above and 
 
 #### Methods
 
-- `.addChip()`: Add a chip. Ignored if `id` is missing, already present, or the limit is reached.
+- `.addChip()`: Add a chip, including when `allowUserInput` is false. Numeric id `0` is valid. Ignored if `id` is missing, already present, or the limit is reached.
 - `.deleteChip()`: Delete the chip at this index.
 - `.selectChip()`: Focus the chip at this index.
 - `.getData()`: The current chips as an array of chip data objects.

@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `5017d36c40d2519ccd54905a773cacd9d1d425ea644d5c7936c1ee3526404e4b`
+Contract SHA-256: `47b668632466d8ab6f9acaac9057322d5baa6d792e2d1a9750bfe568036a2f22`
 
 #### Selection and adaptation
 
@@ -76,7 +76,7 @@ Tokens follow the [M3 tooltip spec](https://m3.material.io/components/tooltips/s
 
 #### Methods
 
-- `.open()`: Show the tooltip.
+- `.open()`: `open()` and `open(true)` show the tooltip after its enter delay without requiring hover or focus. `open(false)` uses the automatic behavior and requires hover or focus when the delay ends.
 - `.close()`: Hide the tooltip.
 - `.destroy()`: Destroy the plugin instance and remove its generated tooltip and event handlers. Rich content returns to its authored position and presentation state. Existing description associations are preserved, so the same content can be initialized again.
 

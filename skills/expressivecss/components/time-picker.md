@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `5017d36c40d2519ccd54905a773cacd9d1d425ea644d5c7936c1ee3526404e4b`
+Contract SHA-256: `47b668632466d8ab6f9acaac9057322d5baa6d792e2d1a9750bfe568036a2f22`
 
 #### Selection and adaptation
 
@@ -85,7 +85,7 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 - `.showView()`: Show the hours or minutes face.
 - `.done()`: Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.
 - `.clear()`: Clear the input. Same as `done(true)`.
-- `.destroy()`: Destroy the plugin instance, remove the clock, and tear down its event handlers. Pending automatic submission is cancelled, so the destroyed instance cannot write to the input.
+- `.destroy()`: Destroy the plugin instance, remove the clock, and tear down its event handlers. Pending automatic submission and clock updates are cancelled, so the destroyed instance cannot write to the input.
 - `.open(); / .close()`: These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking. No modal implementation is available.
 
 #### Also documented

@@ -121,6 +121,11 @@ const S = defineSections([
           headings and disabled items. Escape closes the innermost submenu
           first.
         </p>
+        <p>
+          Inside open or closed shadow roots, <code>closeOnClick</code> controls
+          item clicks just as it does in the document. Submenu triggers keep the
+          parent menu open; outside clicks dismiss it.
+        </p>
 </Section>
   <Section {...S["layout-types"]}>
         <p>

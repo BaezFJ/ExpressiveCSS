@@ -279,7 +279,11 @@ Expressive.AutoInit(document.body, {
         </p>
 
         <h5 class="light">.open();</h5>
-        <p>Show the tooltip.</p>
+        <p>
+          <code>open()</code> and <code>open(true)</code> show the tooltip after
+          its enter delay without requiring hover or focus. <code>open(false)</code>
+          uses the automatic behavior and requires hover or focus when the delay ends.
+        </p>
 <Code code={`
 instance.open();
 `} />

@@ -33,6 +33,11 @@ const S = defineSections([
           every breakpoint.
         </p>
         <p>
+          Escape closes an open nested menu first. A second Escape collapses
+          the modal rail and returns focus from inside it to the rail toggle,
+          unless a close callback moves focus elsewhere.
+        </p>
+        <p>
           Compact windows that need persistent destinations still use a
           <a href={route('navigation_bar')}>navigation bar</a>.
           Larger hierarchies should be split into peer categories and a

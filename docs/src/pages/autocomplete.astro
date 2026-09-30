@@ -18,6 +18,7 @@ const S = defineSections([
 ---
 <DocsLayout page="autocomplete">
 <p>Autocomplete preserves the original suggestion dataset and selected display label while editing. Escape and Tab close from the input, cancel pending opening, and keep listbox options outside sequential Tab order.</p>
+<p><code>isOpen</code> follows the suggestion menu through rerenders and dismissal. Selection changes emit a bubbling, composed <code>change</code> event from the input, so delegated form listeners can observe them.</p>
 
 <PageBody sections={S}>
   <p>Autocomplete adds a visually hidden, polite live region for loading, result counts and multi-selection changes. The visible spinner and count stay unchanged. Announcements require input focus and <code>minLength</code>; closing clears the region. Check spoken delivery with a screen reader.</p>
@@ -177,7 +178,7 @@ onSearch: function(text, autocomplete) {
               <td><code>selected</code></td>
               <td>Array</td>
               <td><code>[]</code></td>
-              <td>Initial selected ids (strings or numbers).</td>
+              <td>Initial selected ids (strings or numbers). An id without loaded data displays the id. Pass the selected ids to <code>setMenuItems</code> with the loaded data to resolve their labels.</td>
             </tr>
         </OptionsTable>
   </Section>

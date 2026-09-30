@@ -1231,6 +1231,126 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     } finally { try { await page?.evaluate(() => window.menu?.destroy()); } finally { await browser.close(); } }
   });
 
+  browserTest(`NavigationRail dismisses a nested menu before handling Escape (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.setContent(`<style>${css}</style><nav class="navigation-rail modal">
+        <button id="rail-toggle" aria-label="Toggle navigation">Menu</button>
+        <div><button id="actions-trigger" data-target="actions">Actions</button>
+        <menu id="actions"><li>Copy</li></menu></div></nav>`);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => {
+        window.rail = Expressive.NavigationRail.init(document.querySelector('nav'));
+        window.menu = Expressive.Menu.init(document.querySelector('#actions-trigger'), {
+          inDuration: 0, outDuration: 0
+        });
+      });
+      await page.locator('#rail-toggle').click();
+      await page.locator('#actions-trigger').click();
+      await expect(page.locator('#actions > li')).toBeFocused();
+      await page.keyboard.press('Escape');
+      assert.equal(await page.evaluate(() => menu.isOpen), false);
+      assert.equal(await page.evaluate(() => rail.isExpanded), true);
+      await expect(page.locator('#actions-trigger')).toBeFocused();
+      await page.keyboard.press('Escape');
+      assert.equal(await page.evaluate(() => rail.isExpanded), false);
+      await expect(page.locator('#rail-toggle')).toBeFocused();
+    } finally {
+      try {
+        await page?.evaluate(() => { window.menu?.destroy(); window.rail?.destroy(); });
+      } finally {
+        await browser.close();
+      }
+    }
+  });
+
+  browserTest(`NavigationRail preserves callback focus inside child shadow roots (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      for (const callback of ['onCloseStart', 'onCloseEnd']) {
+        await page.setContent(`<style>${css}</style><nav class="navigation-rail modal">
+          <button id="rail-toggle">Menu</button><div id="host"></div></nav>`);
+        await page.addScriptTag({ content: js });
+        await page.evaluate(callback => {
+          const shadow = document.querySelector('#host').attachShadow({ mode: 'open' });
+          shadow.innerHTML = '<input id="first" aria-label="First"><input id="second" aria-label="Second">';
+          window.rail = Expressive.NavigationRail.init(document.querySelector('nav'), {
+            [callback]: () => shadow.querySelector('#second').focus()
+          });
+          rail.expand();
+        }, callback);
+        try {
+          await page.getByRole('textbox', { name: 'First', exact: true }).focus();
+          await page.keyboard.press('Escape');
+          assert.equal(await page.evaluate(() => rail.isExpanded), false);
+          await expect(page.getByRole('textbox', { name: 'Second', exact: true })).toBeFocused();
+        } finally {
+          await page.evaluate(() => rail.destroy());
+        }
+      }
+    } finally {
+      try {
+        await page?.evaluate(() => window.rail?.el.Expressive_NavigationRail && rail.destroy());
+      } finally {
+        await browser.close();
+      }
+    }
+  });
+
+  browserTest(`Menu click containment follows closeOnClick inside shadow roots (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      for (const mode of [null, 'open', 'closed']) for (const closeOnClick of [false, true]) {
+        await page.setContent(`<style>${css}</style><div id="host"></div><button id="outside" style="margin-top:240px">Outside</button>`);
+        await page.addScriptTag({ content: js });
+        await page.evaluate(({ mode, closeOnClick, css }) => {
+          const host = document.querySelector('#host');
+          const root = mode ? host.attachShadow({ mode }) : host;
+          window.menuRoot = root;
+          root.innerHTML = `<style>${css}</style><button id="trigger" data-target="actions">Actions</button><menu id="actions"><li id="item"><span>Copy</span></li><li id="parent"><button>More</button><menu><li>Nested</li></menu></li></menu><button id="sibling" style="margin-left:320px">Sibling</button>`;
+          window.menu = Expressive.Menu.init(root.querySelector('#trigger'), { closeOnClick, inDuration: 0, outDuration: 0 });
+        }, { mode, closeOnClick, css });
+        const click = async selector => {
+          const point = await page.evaluate(selector => {
+            const el = menuRoot.querySelector(selector) || document.querySelector(selector);
+            const rect = el.getBoundingClientRect();
+            return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+          }, selector);
+          await page.mouse.click(point.x, point.y);
+          await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 0)));
+        };
+        try {
+          await click('#trigger');
+          await click('#item span');
+          assert.equal(await page.evaluate(() => menu.isOpen), !closeOnClick, `${mode}: inside click`);
+          if (closeOnClick) await click('#trigger');
+          await click('#parent > button');
+          assert.equal(await page.evaluate(() => menuRoot.querySelector('#parent').classList.contains('open')), true, `${mode}: submenu opened`);
+          assert.equal(await page.evaluate(() => menu.isOpen), true, `${mode}: submenu keeps parent open`);
+          await click('#sibling');
+          assert.equal(await page.evaluate(() => menu.isOpen), false, `${mode}: outside in the same root`);
+          await click('#trigger');
+          await click('#outside');
+          assert.equal(await page.evaluate(() => menu.isOpen), false, `${mode}: outside in the document`);
+        } finally {
+          await page.evaluate(() => menu.destroy());
+        }
+      }
+    } finally {
+      try {
+        await page?.evaluate(() => window.menu?.el.Expressive_Menu && menu.destroy());
+      } finally {
+        await browser.close();
+      }
+    }
+  });
+
   browserTest(`Menu dismissal preserves outside input and callback focus (${engine})`, async () => {
     const browser = await type.launch();
     let page;

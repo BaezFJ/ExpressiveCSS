@@ -1,8 +1,56 @@
 import { test, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { Expressive, resetBody } from './setup.js';
+import { Expressive, resetBody, window } from './setup.js';
 
 afterEach(resetBody);
+
+for (const manual of ['default', true]) {
+  test(`Tooltip open(${manual === 'default' ? '' : 'true'}) shows without focus or hover`, t => {
+    document.body.innerHTML = '<button data-tooltip="Help text">Help</button>';
+    const trigger = document.querySelector('button');
+    const instance = Expressive.Tooltip.init(trigger, { enterDelay: 10, inDuration: 0 });
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    try {
+      assert.notEqual(document.activeElement, trigger);
+      assert.equal(instance.isHovered, false);
+      if (manual === 'default') instance.open();
+      else instance.open(true);
+      t.mock.timers.tick(10);
+      t.mock.timers.tick(1);
+      assert.equal(instance.tooltipEl.style.visibility, 'visible');
+      assert.equal(instance.tooltipEl.style.opacity, '1');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+}
+
+test('Tooltip open(false) requires focus or hover and automatic hover still opens and closes', t => {
+  document.body.innerHTML = '<button data-tooltip="Help text">Help</button>';
+  const trigger = document.querySelector('button');
+  const instance = Expressive.Tooltip.init(trigger, { enterDelay: 10, exitDelay: 0, inDuration: 0, outDuration: 0 });
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  try {
+    instance.open(false);
+    t.mock.timers.tick(10);
+    t.mock.timers.tick(1);
+    assert.notEqual(instance.tooltipEl.style.visibility, 'visible');
+    instance.close();
+    trigger.dispatchEvent(new window.MouseEvent('mouseenter'));
+    t.mock.timers.tick(10);
+    t.mock.timers.tick(1);
+    assert.equal(instance.tooltipEl.style.opacity, '1');
+    trigger.dispatchEvent(new window.MouseEvent('mouseleave'));
+    t.mock.timers.tick(0);
+    t.mock.timers.tick(1);
+    t.mock.timers.tick(0);
+    assert.equal(instance.tooltipEl.style.visibility, 'hidden');
+  } finally {
+    instance.destroy();
+    t.mock.timers.reset();
+  }
+});
 
 for (const shadow of [false, true]) {
   test(`rich Tooltip restores authored content through reinitialization (${shadow ? 'shadow' : 'document'})`, () => {

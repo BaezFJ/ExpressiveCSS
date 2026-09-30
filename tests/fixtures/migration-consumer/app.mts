@@ -4,6 +4,7 @@ import {
   FloatingActionButton,
   NavigationRail,
   Snackbar,
+  Tooltip,
   type DatepickerOptions,
   type SnackbarOptions,
   type TimepickerOptions,
@@ -11,6 +12,12 @@ import {
 
 export const manualDatepicker: Partial<DatepickerOptions> = { autoSubmit: false };
 export const manualTimepicker: Partial<TimepickerOptions> = { autoSubmit: false };
+
+export function checkTooltipContract(tooltip: Tooltip) {
+  tooltip.open();
+  tooltip.open(true);
+  tooltip.open(false);
+}
 
 export function start(root: HTMLElement = document.body) {
   AutoInit(root);

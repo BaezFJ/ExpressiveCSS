@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `5017d36c40d2519ccd54905a773cacd9d1d425ea644d5c7936c1ee3526404e4b`
+Contract SHA-256: `47b668632466d8ab6f9acaac9057322d5baa6d792e2d1a9750bfe568036a2f22`
 
 #### Selection and adaptation
 
@@ -43,9 +43,9 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Autocomplete preserves the original suggestion dataset and selected display label while editing. Escape and Tab close from the input, cancel pending opening, and keep listbox options outside sequential Tab order.
 
-Suggest values under a text field as the user types.
+`isOpen` follows the suggestion menu through rerenders and dismissal. Selection changes emit a bubbling, composed `change` event from the input, so delegated form listeners can observe them.
 
-Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every `.autocomplete` except `no-autoinit`, but the default `data` list is empty — pass options (or call `init`) to give it something to suggest.
+Suggest values under a text field as the user types.
 
 #### Syntax
 
@@ -70,7 +70,7 @@ Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every 
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
-| `selected` | Array | `[]` | Initial selected ids (strings or numbers). |
+| `selected` | Array | `[]` | Initial selected ids, strings or numbers. An id without loaded data displays the id. Pass the selected ids to `setMenuItems` with the loaded data to resolve their labels. |
 
 #### Methods
 

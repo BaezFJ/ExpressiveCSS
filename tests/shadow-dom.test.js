@@ -28,6 +28,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { parseRules, sheet } from './css.js';
+import { Expressive, resetBody, window } from './setup.js';
 
 // The parser lives in tests/css.js; its header records why comments are
 // stripped and why the selector list is split on top-level commas only. Both
@@ -115,4 +116,47 @@ describe('Shadow-only loading', () => {
     assert.ok(roles.selectors.includes(':host'), 'the roles reach a shadow host');
     assert.ok(pairs.selectors.includes(':host'), 'so do the pairs they resolve through');
   });
+});
+
+describe('Menu click containment', () => {
+  for (const mode of [null, 'open', 'closed']) {
+    for (const closeOnClick of [false, true]) {
+      test(`${mode ? `${mode} shadow` : 'light'} DOM honors closeOnClick=${closeOnClick}`, t => {
+        resetBody();
+        t.mock.timers.enable({ apis: ['setTimeout'] });
+        const host = document.createElement('div');
+        document.body.append(host);
+        const root = mode ? host.attachShadow({ mode }) : host;
+        root.innerHTML = '<button data-target="actions">Actions</button><menu id="actions"><li id="item"><span>Copy</span></li></menu><button id="outside">Outside menu</button>';
+        const menu = Expressive.Menu.init(root.querySelector('button'), {
+          closeOnClick, inDuration: 0, outDuration: 0
+        });
+        const click = target => {
+          target.dispatchEvent(new window.MouseEvent('click', { bubbles: true, composed: true }));
+          t.mock.timers.tick(0);
+        };
+        try {
+          menu.open();
+          t.mock.timers.tick(0);
+          root.querySelector('#item span').dispatchEvent(new window.Event('touchmove', { bubbles: true, composed: true }));
+          click(root.querySelector('#item span'));
+          assert.equal(menu.isOpen, true, 'a scrolling touch does not select an item');
+          click(root.querySelector('#item span'));
+          assert.equal(menu.isOpen, !closeOnClick, 'inside click follows closeOnClick');
+          menu.open();
+          t.mock.timers.tick(0);
+          click(root.querySelector('#outside'));
+          assert.equal(menu.isOpen, false, 'outside click in the same root closes the menu');
+          menu.open();
+          t.mock.timers.tick(0);
+          click(document.body);
+          assert.equal(menu.isOpen, false, 'outside click in the document closes the menu');
+        } finally {
+          menu.destroy();
+          host.remove();
+          t.mock.timers.reset();
+        }
+      });
+    }
+  }
 });

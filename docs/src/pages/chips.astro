@@ -335,7 +335,7 @@ const chip = {
         <InstanceNote plugin="Chips" />
 
         <h5 class="light">.addChip();</h5>
-        <p>Add a chip. Ignored if <code>id</code> is missing, already present, or the limit is reached.</p>
+        <p>Add a chip, including when <code>allowUserInput</code> is false. Numeric id <code>0</code> is valid. Ignored if <code>id</code> is missing, already present, or the limit is reached.</p>
 <Code code={`
 instance.addChip({
   id: 1337,
