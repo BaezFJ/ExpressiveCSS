@@ -31,8 +31,13 @@ export function assertForwardRelease(version, current) {
   assert.ok(candidate && previous, 'Registry version must be valid SemVer');
   assert.ok(compareSemver(candidate, previous) > 0, 'A release must advance its npm dist-tag');
 }
-export function isCurrentStable(version, latest) {
-  return /^\d+\.\d+\.\d+$/.test(version) && version === latest;
+// Docs deploy only for the stable release npm reports as latest. An older latest
+// means the registry has not caught up with the publish yet, so the caller waits.
+export function docsDeployState(version, latest) {
+  if (!/^\d+\.\d+\.\d+$/.test(version)) return 'skip';
+  if (version === latest) return 'deploy';
+  const current = latest && parseSemver(latest);
+  return current && compareSemver(current, parseSemver(version)) > 0 ? 'skip' : 'wait';
 }
 function npmView(spec) {
   try {
