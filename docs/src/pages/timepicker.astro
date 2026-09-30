@@ -99,11 +99,9 @@ Expressive.Timepicker.init(elem, {
 });
 `} />
         <p>
-          The popover is positioned in document coordinates and then appended to the
-          input’s parent. A <code>position: relative</code> parent — including
-          <code>.field</code> — shifts that position, so the clock will not sit
-          next to the field. Prefer a static wrapper if you use docked, or keep the
-          clock inline.
+          The popover stays inside the input’s parent and accounts for its
+          positioning and scroll offsets. Positioned wrappers such as
+          <code>.field</code> can be used directly.
         </p>
         <p>
           Optional <code>displayPluginOptions</code>: <code>margin</code> (default

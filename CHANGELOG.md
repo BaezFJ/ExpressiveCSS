@@ -15,6 +15,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   instance cannot overwrite a replacement input value.
 - Datepicker and Timepicker confirmation buttons invoke their callbacks once
   per Enter press. Both TypeScript option interfaces accept `autoSubmit: false`.
+- Closing a Menu preserves focus on an outside input or another control.
+- Docked Datepicker and Timepicker popovers account for their positioning
+  parent, including `.field` wrappers and scrolled containers.
+- Destroying Chips also destroys its owned Autocomplete and Menu.
+- Tooltip teardown restores authored rich content and preserves existing
+  description associations, allowing the same content to be initialized again.
+- Snackbars can reuse an element supplied through `snackbarId` without deleting
+  it or retaining callbacks and controls from an earlier instance.
 
 ### Changed
 

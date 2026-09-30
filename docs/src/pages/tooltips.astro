@@ -291,7 +291,7 @@ instance.close();
 `} />
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove the tooltip element, and tear down its event handlers.</p>
+        <p>Destroy the plugin instance and remove its generated tooltip and event handlers. Rich content returns to its authored position and presentation state. Existing description associations are preserved, so the same content can be initialized again.</p>
 <Code code={`
 instance.destroy();
 `} />

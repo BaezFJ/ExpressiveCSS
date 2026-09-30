@@ -1142,6 +1142,59 @@ scenario('time picker exposes named keyboard controls in inline and docked modes
   }
 });
 
+for (const operation of ['dismiss', 'replace']) scenario(`authored snackbar survives focus reentry during ${operation}`, '<button id="outside">Continue</button><section id="source"><div id="notice" class="authored" style="display:none"><p>Saved</p><button type="button">Details</button></div><span>After</span></section>', async page => {
+  try {
+    await page.locator('#outside').focus();
+    await page.evaluate(() => {
+      window.authoredNotice = document.querySelector('#notice');
+      window.originalNotice = authoredNotice.outerHTML;
+      window.replacementActions = 0;
+      window.oldCompletions = 0;
+      window.snackOptions = { snackbarId: 'notice', displayLength: Infinity, inDuration: 0, outDuration: 40 };
+      window.firstSnack = new Expressive.Snackbar({ ...snackOptions, action: 'Undo', completeCallback: () => oldCompletions++ });
+    });
+    await page.getByRole('button', { name: 'Undo', exact: true }).focus();
+    await page.evaluate(operation => {
+      const options = { ...snackOptions, action: 'Use replacement', onAction: () => replacementActions++ };
+      window.reopenOnFocus = () => { window.nestedSnack = new Expressive.Snackbar(options); };
+      document.querySelector('#outside').addEventListener('focus', reopenOnFocus, { once: true });
+      if (operation === 'dismiss') {
+        firstSnack.dismiss();
+        window.currentSnack = nestedSnack;
+      } else {
+        window.currentSnack = new Expressive.Snackbar(options);
+      }
+    }, operation);
+    // The old dismissal must not hide or disable the replacement after its timer expires.
+    await page.waitForTimeout(80);
+    assert.deepEqual(await page.evaluate(() => ({
+      sameSource: currentSnack.el === authoredNotice,
+      registered: Expressive.Snackbar.getInstance(authoredNotice) === currentSnack,
+      instances: Expressive.Snackbar._snackbars.length,
+      inert: authoredNotice.inert,
+      opacity: authoredNotice.style.opacity,
+      margin: authoredNotice.style.marginTop,
+      completions: oldCompletions
+    })), { sameSource: true, registered: true, instances: 1, inert: false, opacity: '1', margin: '', completions: 0 });
+    await expect(page.locator('#notice')).toHaveCount(1);
+    await expect(page.locator('#notice button')).toHaveCount(3);
+    const action = page.getByRole('button', { name: 'Use replacement', exact: true });
+    await action.focus();
+    await expect(action).toBeFocused();
+    await page.keyboard.press('Enter');
+    assert.equal(await page.evaluate(() => replacementActions), 1);
+    await expect(page.locator('#snackbar-container')).toHaveCount(0);
+    assert.equal(await page.locator('#source > #notice').evaluate(el => el === authoredNotice && el.outerHTML === originalNotice), true);
+    assert.equal(await page.evaluate(() => Expressive.Snackbar.getInstance(authoredNotice)), undefined);
+  } finally {
+    await page.evaluate(() => {
+      document.querySelector('#outside').removeEventListener('focus', window.reopenOnFocus);
+      Expressive.Snackbar.dismissAll();
+    });
+    await page.waitForTimeout(80);
+  }
+});
+
 scenario('actionable snackbar persists and restores focus on keyboard dismissal', '<button id="outside">Continue</button><button id="next">Next</button>', async page => {
   await page.locator('#outside').focus();
   try {

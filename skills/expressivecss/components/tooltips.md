@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `06e75c53aa8a4c2f66d3e41b763a1b2a770c045cfec3db7226b50d5ac1b8ce31`
+Contract SHA-256: `de15faef6518fb43395054d158e153c59d4bbd09d70e24a0add41f6e22633c92`
 
 #### Selection and adaptation
 
@@ -78,7 +78,7 @@ Tokens follow the [M3 tooltip spec](https://m3.material.io/components/tooltips/s
 
 - `.open()`: Show the tooltip.
 - `.close()`: Hide the tooltip.
-- `.destroy()`: Destroy the plugin instance, remove the tooltip element, and tear down its event handlers.
+- `.destroy()`: Destroy the plugin instance and remove its generated tooltip and event handlers. Rich content returns to its authored position and presentation state. Existing description associations are preserved, so the same content can be initialized again.
 
 #### Also documented
 

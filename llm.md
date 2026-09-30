@@ -3580,7 +3580,7 @@ instance.open();
 
 #### .close()
 
-Close the menu.
+Close the menu. With `autoFocus`, focus returns to the trigger when it remains in the menu. Focus moved to an outside control is preserved.
 
 ```text
 instance.close();
@@ -4206,7 +4206,7 @@ You can customize each snackbar with these options.
 | `action` | String | `''` | Optional action label. Rendered as a trailing text button. |
 | `onAction` | Function | `null` | Called when the action button is pressed. The snackbar still dismisses. |
 | `dismissible` | Boolean | `false`, or `true` with an action | Show a trailing close icon button. An explicit false is preserved. |
-| `snackbarId` | String | — | Id of a `<template>` (or another element) used as the snackbar body. |
+| `snackbarId` | String | — | Id of a `<template>` (or another element) used as the snackbar body. Templates are cloned. Other elements are moved into the snackbar and restored on dismissal or replacement, so the same ID can be reused. |
 | `displayLength` | Number | `4000` | Default 4000ms without an action, or Infinity with an action. Explicit finite timers need equivalent persistent feedback in the application. |
 | `inDuration` | Number | `300` | Enter transition duration, in milliseconds. |
 | `outDuration` | Number | `375` | Exit transition duration, in milliseconds. |
@@ -4440,7 +4440,7 @@ instance.close();
 
 #### .destroy();
 
-Destroy the plugin instance, remove the tooltip element, and tear down its event handlers.
+Destroy the plugin instance and remove its generated tooltip and event handlers. Rich content returns to its authored position and presentation state. Existing description associations are preserved, so the same content can be initialized again.
 
 ```text
 instance.destroy();
@@ -4629,7 +4629,7 @@ Expressive.Datepicker.init(elem, {
 });
 ```
 
-The popover is positioned in document coordinates and then appended to the input’s parent. A `position: relative` parent — `.field` among them — shifts that position, so the calendar will not sit next to the field. Prefer a static wrapper if you use docked, or keep the calendar inline with `openByDefault`.
+The popover stays inside the input’s parent and accounts for its positioning and scroll offsets. Positioned wrappers such as `.field` can be used directly.
 
 Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `duration` (`250`), and `align` (`'left'`).
 
@@ -4870,7 +4870,7 @@ Expressive.Timepicker.init(elem, {
 });
 ```
 
-The popover is positioned in document coordinates and then appended to the input’s parent. A `position: relative` parent — `.field` among them — shifts that position, so the clock will not sit next to the field. Prefer a static wrapper if you use docked, or keep the clock inline.
+The popover stays inside the input’s parent and accounts for its positioning and scroll offsets. Positioned wrappers such as `.field` can be used directly.
 
 Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `duration` (`250`), and `align` (`'left'`).
 
@@ -5784,7 +5784,7 @@ instance.getData();
 
 #### .destroy();
 
-Destroy the plugin instance, remove rendered chips, and tear down its event handlers.
+Destroy the plugin instance, remove rendered chips, and tear down its event handlers. This also destroys the owned Autocomplete and its Menu.
 
 ```text
 instance.destroy();

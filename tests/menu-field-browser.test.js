@@ -1186,6 +1186,46 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     } finally { try { await page?.evaluate(() => window.menu?.destroy()); } finally { await browser.close(); } }
   });
 
+  browserTest(`Menu dismissal preserves outside input and callback focus (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      for (const shadow of [false, true]) {
+        await page.setContent(`<style>${css}</style><div id="host"></div><input id="outside" aria-label="Outside input" style="margin-top:200px">`);
+        await page.addScriptTag({ content: js });
+        await page.evaluate(({ shadow, css }) => {
+          const host = document.querySelector('#host');
+          const root = shadow ? host.attachShadow({ mode: 'open' }) : host;
+          root.innerHTML = `<style>${css}</style><button id="trigger" data-target="actions">Actions</button><menu id="actions"><li>Copy</li></menu>`;
+          window.menu = Expressive.Menu.init(root.querySelector('#trigger'), { inDuration: 0, outDuration: 0 });
+        }, { shadow, css });
+        try {
+          await page.locator('#trigger').click();
+          await expect(page.locator('#actions > li')).toBeFocused();
+          await page.locator('#outside').click();
+          await expect(page.locator('#trigger')).toHaveAttribute('aria-expanded', 'false');
+          await expect(page.locator('#outside')).toBeFocused();
+          await page.keyboard.type('Keep this focus');
+          await expect(page.locator('#outside')).toHaveValue('Keep this focus');
+          await page.locator('#trigger').click();
+          await expect(page.locator('#actions > li')).toBeFocused();
+          await page.keyboard.press('Escape');
+          await expect(page.locator('#trigger')).toBeFocused();
+          await page.locator('#trigger').click();
+          await expect(page.locator('#actions > li')).toBeFocused();
+          await page.evaluate(() => {
+            menu.options.onCloseStart = () => document.querySelector('#outside').focus();
+            menu.close();
+          });
+          await expect(page.locator('#outside')).toBeFocused();
+        } finally {
+          await page.evaluate(() => menu.destroy());
+        }
+      }
+    } finally { try { await page?.evaluate(() => window.menu?.el.Expressive_Menu && menu.destroy()); } finally { await browser.close(); } }
+  });
+
   browserTest(`Menu excludes closing content and preserves callback focus (${engine})`, async () => {
     const browser = await type.launch();
     let page;

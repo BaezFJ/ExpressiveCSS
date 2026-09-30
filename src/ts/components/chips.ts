@@ -201,6 +201,9 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   destroy() {
+    if (this.autocomplete && Autocomplete.getInstance(this._input) === this.autocomplete) {
+      this.autocomplete.destroy();
+    }
     if (this.options.allowUserInput) {
       this._removeEventHandlers();
     }
@@ -376,6 +379,7 @@ export class Chips extends Component<ChipsOptions> {
 
   _setupAutocomplete() {
     this.options.autocompleteOptions.onAutocomplete = (items) => {
+      if (Chips.getInstance(this.el) !== this) return;
       if (items.length > 0) {
         this.addChip({
           id: items[0].id,

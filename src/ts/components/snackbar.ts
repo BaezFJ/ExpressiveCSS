@@ -109,6 +109,11 @@ export class Snackbar {
   velocityX: number;
   private _dismissed = false;
   private _returnFocus: HTMLElement | null = null;
+  private _events: AbortController;
+  private _restoreElement: (() => void) | null = null;
+  private _transitionTimer: ReturnType<typeof setTimeout>;
+  private _dismissTimer: ReturnType<typeof setTimeout>;
+  private _focusTimer: ReturnType<typeof setTimeout>;
 
   static _snackbars: Snackbar[];
   static _container: HTMLElement;
@@ -132,13 +137,12 @@ export class Snackbar {
     while (Snackbar._snackbars.length > 0) {
       const snackbar = Snackbar._snackbars.shift();
       snackbar._dismissed = true;
-      clearTimeout(snackbar.counterTimeout);
-      snackbar._restoreFocus();
-      snackbar.el.remove();
+      snackbar._restoreFocus(true);
     }
     let focused = document.activeElement;
     while (focused?.shadowRoot?.activeElement) focused = focused.shadowRoot.activeElement;
     this._returnFocus = focused instanceof HTMLElement ? focused : null;
+    this.el = this._createSnackbar();
     // One container serves every snackbar, and only one snackbar shows at a
     // time — so it is moved rather than duplicated when the root changes.
     const root = Utils.portalRoot(this.options.root ?? document.body);
@@ -150,10 +154,9 @@ export class Snackbar {
       if (Snackbar._container) Snackbar._removeContainer();
       Snackbar._createContainer(root);
     }
+    Snackbar._container.appendChild(this.el);
+    this.el['Expressive_Snackbar'] = this;
     Snackbar._snackbars.push(this);
-    const snackbarElement = this._createSnackbar();
-    snackbarElement['Expressive_Snackbar'] = this;
-    this.el = snackbarElement;
     this._animateIn();
     this._setTimer();
   }
@@ -291,7 +294,24 @@ export class Snackbar {
     if (snackbar instanceof HTMLTemplateElement) {
       const node = (snackbar as HTMLTemplateElement).content.cloneNode(true);
       snackbar = (node as HTMLElement).firstElementChild as HTMLElement;
+    } else if (snackbar && this.options.snackbarId) {
+      const placeholder = document.createComment('');
+      snackbar.before(placeholder);
+      const children = [...snackbar.childNodes];
+      const attributes = ['class', 'style', 'role', 'aria-live', 'aria-atomic', 'inert']
+        .map(name => [name, snackbar.getAttribute(name)]);
+      this._restoreElement = () => {
+        snackbar.replaceChildren(...children);
+        for (const [name, value] of attributes) {
+          if (value === null) snackbar.removeAttribute(name);
+          else snackbar.setAttribute(name, value);
+        }
+        placeholder.replaceWith(snackbar);
+      };
     }
+    if (!snackbar) throw new Error('Snackbar body not found');
+    this._events = new (snackbar.ownerDocument.defaultView ?? window).AbortController();
+    const listenerOptions = { signal: this._events.signal };
     snackbar.classList.add('snackbar');
     snackbar.setAttribute('role', 'status');
     snackbar.setAttribute('aria-live', 'polite');
@@ -302,16 +322,19 @@ export class Snackbar {
         this._returnFocus = e.relatedTarget;
       }
       this._pauseTimer();
-    });
+    }, listenerOptions);
     snackbar.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape' || e.defaultPrevented || this._dismissed) return;
       e.preventDefault();
       e.stopPropagation();
       this.dismiss();
-    });
-    snackbar.addEventListener('focusout', () => setTimeout(() => this._resumeTimer(), 0));
-    snackbar.addEventListener('pointerenter', () => this._pauseTimer());
-    snackbar.addEventListener('pointerleave', () => this._resumeTimer());
+    }, listenerOptions);
+    snackbar.addEventListener('focusout', () => {
+      clearTimeout(this._focusTimer);
+      this._focusTimer = setTimeout(() => this._resumeTimer(), 0);
+    }, listenerOptions);
+    snackbar.addEventListener('pointerenter', () => this._pauseTimer(), listenerOptions);
+    snackbar.addEventListener('pointerleave', () => this._resumeTimer(), listenerOptions);
     // Add custom classes onto snackbar
     if (this.options.classes.length > 0) {
       snackbar.classList.add(...this.options.classes.split(' ').filter(Boolean));
@@ -333,7 +356,7 @@ export class Snackbar {
         } finally {
           this.dismiss();
         }
-      });
+      }, listenerOptions);
       snackbar.appendChild(action);
     }
     if (this.options.dismissible) {
@@ -349,11 +372,32 @@ export class Snackbar {
       close.addEventListener('click', (e) => {
         e.stopPropagation();
         this.dismiss();
-      });
+      }, listenerOptions);
       snackbar.appendChild(close);
     }
-    Snackbar._container.appendChild(snackbar);
     return snackbar;
+  }
+
+  private _remove() {
+    if (this._events.signal.aborted) return;
+    this._events.abort();
+    clearTimeout(this.counterTimeout);
+    clearTimeout(this._transitionTimer);
+    clearTimeout(this._dismissTimer);
+    clearTimeout(this._focusTimer);
+    this.counterTimeout = null;
+    if (Snackbar._draggedSnackbar === this) {
+      Snackbar._draggedSnackbar = null;
+      Snackbar._dragPointerId = null;
+    }
+    this.el['Expressive_Snackbar'] = undefined;
+    if (this._restoreElement) this._restoreElement();
+    else this.el.remove();
+    const index = Snackbar._snackbars.indexOf(this);
+    if (index >= 0) Snackbar._snackbars.splice(index, 1);
+    if (!Snackbar._snackbars.length && Snackbar._container?.childElementCount === 0) {
+      Snackbar._removeContainer();
+    }
   }
 
   _animateIn() {
@@ -364,7 +408,7 @@ export class Snackbar {
       transform ${this.options.inDuration}ms ease,
       opacity ${this.options.inDuration}ms ease
     `;
-    setTimeout(() => {
+    this._transitionTimer = setTimeout(() => {
       this.el.style.transform = '';
       this.el.style.opacity = '1';
     }, 1);
@@ -397,12 +441,12 @@ export class Snackbar {
     this._setTimer();
   }
 
-  private _restoreFocus() {
+  private _restoreFocus(remove = false) {
     const focused = (this.el.getRootNode() as Document | ShadowRoot).activeElement;
-    if (focused && this.el.contains(focused) && this._returnFocus?.isConnected) {
-      this._returnFocus.focus({ preventScroll: true });
-    }
+    const returnFocus = focused && this.el.contains(focused) ? this._returnFocus : null;
     this.el.inert = true;
+    if (remove) this._remove();
+    if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
   }
 
   /**
@@ -414,6 +458,7 @@ export class Snackbar {
     clearTimeout(this.counterTimeout);
     this.counterTimeout = null;
     this._restoreFocus();
+    if (this._events.signal.aborted) return;
     const activationDistance = this.el.offsetWidth * this.options.activationPercent;
 
     if (this.wasSwiped) {
@@ -427,30 +472,17 @@ export class Snackbar {
       margin ${this.options.outDuration}ms ease,
       opacity ${this.options.outDuration}ms ease`;
 
-    setTimeout(() => {
+    clearTimeout(this._transitionTimer);
+    this._transitionTimer = setTimeout(() => {
       this.el.style.opacity = '0';
       this.el.style.marginTop = '-40px';
     }, 1);
 
-    setTimeout(() => {
+    this._dismissTimer = setTimeout(() => {
+      this._remove();
       // Call the optional callback
       if (typeof this.options.completeCallback === 'function') {
         this.options.completeCallback();
-      }
-      // Remove snackbar from DOM
-      if (this.el.id != this.options.snackbarId) {
-        this.el.remove();
-        // Guarded: splice(-1, 1) on an already-removed snackbar would drop an
-        // unrelated one off the end of the list.
-        const index = Snackbar._snackbars.indexOf(this);
-        if (index >= 0) Snackbar._snackbars.splice(index, 1);
-        if (
-          Snackbar._snackbars.length === 0 &&
-          Snackbar._container &&
-          Snackbar._container.childElementCount === 0
-        ) {
-          Snackbar._removeContainer();
-        }
       }
     }, this.options.outDuration);
   }

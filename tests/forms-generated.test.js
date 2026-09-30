@@ -340,9 +340,43 @@ describe('Autocomplete generated combobox', () => {
       assert.deepEqual(chips.chipsData.map(item => item.id), ['apple', 'banana']);
       assert.equal(el.value, '');
     } finally {
-      chips.autocomplete.destroy();
       chips.destroy();
     }
+  });
+
+  test('Chips destroys its autocomplete and releases it before reinitialization', async () => {
+    document.body.innerHTML = '<div class="chips"><input></div>';
+    const el = document.querySelector('.chips');
+    const input = el.querySelector('input');
+    const menuCount = Expressive.Menu._menus.length;
+    const options = { allowUserInput: true, autocompleteOptions: { data: [{ id: 'apple', text: 'Apple' }] } };
+    let chips = Expressive.Chips.init(el, options);
+    const oldAutocomplete = chips.autocomplete;
+    try {
+      oldAutocomplete.open();
+      chips.destroy();
+      oldAutocomplete.selectOption('apple');
+      assert.deepEqual(chips.chipsData, [], 'a retained autocomplete must not recreate chips after teardown');
+      assert.equal(Expressive.Autocomplete.getInstance(input), undefined);
+      assert.equal(oldAutocomplete.container.isConnected, false);
+      assert.equal(Expressive.Menu._menus.length, menuCount);
+      await new Promise(resolve => setTimeout(resolve, 5));
+      chips = Expressive.Chips.init(el, options);
+      const previous = chips.autocomplete;
+      chips = Expressive.Chips.init(el, options);
+      assert.equal(previous.container.isConnected, false);
+      assert.equal(Expressive.Menu._menus.length, menuCount + 1);
+      input.focus();
+      type(input, 'app');
+      key(input, 'ArrowDown');
+      key(input, 'Enter');
+      assert.deepEqual(chips.chipsData.map(item => item.id), ['apple']);
+    } finally {
+      chips.destroy();
+      // Also clean up the original bundle when this regression fails before the fix.
+      Expressive.Autocomplete.getInstance(input)?.destroy();
+    }
+    assert.equal(Expressive.Menu._menus.length, menuCount);
   });
 });
 

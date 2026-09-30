@@ -916,7 +916,8 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this._animateOut();
     this._removeTemporaryEventHandlers();
     this.el.ariaExpanded = 'false';
-    if (this.options.autoFocus && (root.activeElement === focused || !root.activeElement || root.activeElement === document.body)) {
+    if (this.options.autoFocus && this.menuEl.contains(focused) &&
+      (root.activeElement === focused || this.el.ownerDocument.activeElement === this.el.ownerDocument.body)) {
       this.el.focus();
     }
   };

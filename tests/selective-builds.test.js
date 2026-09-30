@@ -69,7 +69,7 @@ test('default custom Sass matches the complete stylesheet and preserves configur
 test('complete minified artifacts stay within the reviewed gzip budgets', () => {
   const js = readFileSync(`${root}/dist/js/expressive.min.js`, 'utf8').replace(/^\/\/# sourceMappingURL=.*\n?/m, '');
   const css = readFileSync(`${root}/dist/css/expressive.min.css`, 'utf8').replace(/\/\*# sourceMappingURL=.*?\*\//, '').trimEnd();
-  // Reviewed full bundle with select labels and scroll-completion guard: 43,966 gzip bytes.
-  assert.ok(sizes(js).gzip <= 43968, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed docked positioning and reusable component cleanup: 44,522 gzip bytes (+594).
+  assert.ok(sizes(js).gzip <= 44524, `JavaScript gzip: ${sizes(js).gzip}`);
   assert.ok(sizes(css).gzip <= 49675, `CSS gzip: ${sizes(css).gzip}`);
 });
