@@ -428,6 +428,13 @@ try {
   assert.equal(nestedMarkup.structuredContent.status, 'blocked');
   assert.ok(nestedMarkup.structuredContent.blockedChecks.includes('static inspection limit reached'));
 
+  const identifierRunStartedAt = Date.now();
+  await client.callTool({
+    name: 'rules_enforcer',
+    arguments: { projectRoot: packageDir, snippet: 'A'.repeat(200_000) },
+  });
+  assert.ok(Date.now() - identifierRunStartedAt < 5_000);
+
   const validRail = await client.callTool({
     name: 'rules_enforcer',
     arguments: {

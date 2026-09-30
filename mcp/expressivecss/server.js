@@ -987,7 +987,7 @@ export function inspectAuthoringRules(
   }
 
   const autoInit = /(?:Expressive\.)?AutoInit\s*\(/u.test(snippet);
-  const manualInitPattern = /(?:(?:const|let|var)\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*)?(?:Expressive\.)?[A-Z][A-Za-z0-9]*\.init\s*\(/gu;
+  const manualInitPattern = /(?<![A-Za-z0-9_$])(?:(?:const|let|var)\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*)?(?:Expressive\.)?[A-Z][A-Za-z0-9]*\.init\s*\(/gu;
   let manualInit;
   while ((manualInit = manualInitPattern.exec(snippet)) !== null) {
     const stop = inspectionStopReason(issues, maxIssues, deadline);
