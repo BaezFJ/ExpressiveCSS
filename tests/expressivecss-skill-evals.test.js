@@ -166,7 +166,7 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     const bundle = await assembleSkillBundle(item, new URL('..', import.meta.url));
     assert.match(bundle, /# ExpressiveCSS/);
     assert.doesNotMatch(bundle, /# ExpressiveCSS design and review/);
-    assert.doesNotMatch(bundle, /## ExpressiveCSS JavaScript runtime/);
+    assert.doesNotMatch(bundle, /^# ExpressiveCSS JavaScript runtime$/m);
     assert.doesNotMatch(bundle, /\/home\/|[A-Z]:\\Users\\/);
 
     const result = evaluateCase(item, responses[item.id], executionEvidence[item.id]);

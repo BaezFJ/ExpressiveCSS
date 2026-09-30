@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `425faa2b1b68a0dd95d0718e81b94405ff8ab3b34a2c95e5cfc1b71ef2894a65`
+Contract SHA-256: `43834c8b5c15f01b05d32745bf6467d4b8ed11408762de7ccee5acd1a6b64881`
 
 #### Selection and adaptation
 
@@ -79,6 +79,10 @@ Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every 
 - `.selectOption()`: Select (or toggle, when multi-select) the entry with this id.
 - `.setMenuItems()`: Replace the visible suggestions. Optionally pass selected ids and whether to open the menu (default `true`).
 - `.destroy()`: Destroy the plugin instance, remove the menu, and tear down its event handlers.
+
+#### Also documented
+
+The Autocomplete section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Properties.
 
 #### Rules
 

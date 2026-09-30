@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `425faa2b1b68a0dd95d0718e81b94405ff8ab3b34a2c95e5cfc1b71ef2894a65`
+Contract SHA-256: `43834c8b5c15f01b05d32745bf6467d4b8ed11408762de7ccee5acd1a6b64881`
 
 #### Selection and adaptation
 
@@ -55,15 +55,19 @@ Put the page in the three HTML5 landmarks `header`, `main`, and `footer`. Anatom
   </section>
   <nav aria-labelledby="footer-links">
     <h2 id="footer-links">Links</h2>
-    <a href="#!">Link 1</a>
-    <a href="#!">Link 2</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
   </nav>
   <small>
     <span>&copy; 2026 Copyright Text</span>
-    <a href="#!">More Links</a>
+    <a href="/privacy">Privacy</a>
   </small>
 </footer>
 ```
+
+#### Also documented
+
+The Footer section of the [API reference](https://www.expressivecss.com/llm.md) also covers Sticky Footer.
 
 #### Rules
 

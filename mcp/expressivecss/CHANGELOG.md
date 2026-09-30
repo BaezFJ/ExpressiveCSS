@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Semantics findings from `rules_enforcer`, `quality_inspector`, and
+  `expressivecss-lint` report the element's line and column instead of 1:1.
+- Component guides list the API reference subsections they leave out. Their
+  examples use real link targets, and menu actions are buttons. The Buttons
+  guide calls `circle` a round common button and points icon buttons to
+  `.icon-button`.
+- The Lightbox guide includes its options and methods. The app-bar guide's
+  Search icon is a button.
+
 ## 0.2.1 - 2026-09-30
 
 - `rules_enforcer` requires an identifier boundary before a manual `.init(` call,

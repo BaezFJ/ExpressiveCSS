@@ -3,7 +3,7 @@ name: expressivecss-usage
 description: Write and repair ExpressiveCSS HTML, JSX, templates, layouts, utilities, and component choices. Use for interface implementation and review; exclude setup-only, token-only, and narrow lifecycle tasks.
 ---
 
-## ExpressiveCSS usage rules
+# ExpressiveCSS usage rules
 
 ## When to use
 
@@ -12,6 +12,8 @@ Use this guide for classes, markup, layout, utilities, or component selection an
 ## Do not use when
 
 Do not load this guide when the task concerns only setup, visual tokens, or lifecycle code. Use the installation, theming, or runtime guide that owns that work. This guide does not replace a selected component's target-version contract.
+
+## Rules
 
 1. Reuse the root version resolution. Resolve only when loaded directly or dependency evidence changed.
 2. Read the selected `../components/` guide. Fetch full matching documentation only for gaps, conflicts, or version uncertainty.

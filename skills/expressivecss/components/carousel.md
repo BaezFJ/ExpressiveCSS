@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `425faa2b1b68a0dd95d0718e81b94405ff8ab3b34a2c95e5cfc1b71ef2894a65`
+Contract SHA-256: `43834c8b5c15f01b05d32745bf6467d4b8ed11408762de7ccee5acd1a6b64881`
 
 #### Selection and adaptation
 
@@ -85,6 +85,10 @@ The default is multi-browse: one large, one medium, and one small item adapt as 
 `next()` and `prev()` move one item or an optional item count. `set(index, callback)` moves to a zero-based item index. `pause()` and `start()` stop and resume auto-advance, and do nothing without an `interval`. `destroy()` removes generated labels, size roles, indicators, listeners, the scroll-track wrapper, and the auto-advance timer.
 
 An `interval` makes the carousel advance on its own, so the pause contract is mandatory: it always pauses on hover, on focus within, and while the tab is hidden, and `prefers-reduced-motion: reduce` suppresses auto-advance entirely. No option disables any of that. An explicit `noWrap: true` stops auto-advance after one pass instead of looping. Arrow keys and `set()` stop at the ends either way — a scroll track has ends, and auto-advance is the one caller that can loop back past them. A `height` gives the indicators their own row below the track (`.fixed-height`) instead of laying them over the media; markup can do the same by carrying `.fixed-height` and setting `--carousel-height`.
+
+#### Also documented
+
+The Carousel section of the [API reference](https://www.expressivecss.com/llm.md) also covers Layouts, Tokens, Initialization, Properties.
 
 #### Rules
 

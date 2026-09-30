@@ -99,8 +99,4 @@ An MCP pass covers only `checksPerformed` and named sources. It does not establi
 
 ## Framework contribution path
 
-Read the repository's contributor instructions, `CLAUDE.md`, and relevant domain README before editing. Trace callers and the owning documentation, Sass or TypeScript, semantics, fixtures, and tests. Preserve exports, markup compatibility, accessibility, upstream references, and license notices. Fix the shared source, add a focused regression check, and run the applicable contributor, browser, and MCP/package checks.
-
-The catalogue owns page inventory; `llm.md` and `semantics.json` own generated component contracts. Run `npm run build:semantics` and `npm run build:skill` after changing their sources; never edit generated copies by hand. Do not publish as part of ordinary contribution work.
-
-[Research and rationale](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/agents/expressivecss-skill-research.md) explain workflow decisions.
+To change ExpressiveCSS itself, read the [contribution reference](./references/contributing.md) first. [Research and rationale](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/agents/expressivecss-skill-research.md) explain workflow decisions.

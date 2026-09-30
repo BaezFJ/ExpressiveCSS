@@ -3,7 +3,7 @@ name: expressivecss-theming
 description: Theme ExpressiveCSS color roles, brand seeds, typography, shape, motion, icons, elevation, state layers, and light/dark schemes. Use for visual tokens and brand changes; exclude unrelated markup and runtime lifecycle repairs.
 ---
 
-## ExpressiveCSS themes and colors
+# ExpressiveCSS themes and colors
 
 ## When to use
 
@@ -12,6 +12,8 @@ Use this guide for color, typography, icon styling, themes, schemes, vibrant reg
 ## Do not use when
 
 Do not load this guide for unrelated markup repair, setup, or JavaScript lifecycle work. It does not replace the selected component contract or Material 3 component behavior.
+
+## Before changing tokens
 
 Reuse the root version resolution and load only the relevant focused reference below. Consult its linked target-version documentation for missing details, conflicts, or version uncertainty.
 
@@ -29,6 +31,8 @@ Load only the references needed for the task:
 - For component corners, state shape changes, and shape support gaps, read the [shape reference](./references/shape.md).
 - For spatial versus effects motion, component timing ownership, and reduced motion, read the [motion reference](./references/motion.md).
 - For hover, focus, pressed, and dragged opacity tokens, overlay and ring forms, and per-component overrides, read the [state-layers reference](./references/state-layers.md).
+
+## Color and scheme rules
 
 ### Select a scheme
 

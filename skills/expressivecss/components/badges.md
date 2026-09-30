@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `425faa2b1b68a0dd95d0718e81b94405ff8ab3b34a2c95e5cfc1b71ef2894a65`
+Contract SHA-256: `43834c8b5c15f01b05d32745bf6467d4b8ed11408762de7ccee5acd1a6b64881`
 
 #### Selection and adaptation
 
@@ -56,6 +56,10 @@ Nesting has a consequence worth stating: **a badge inside a hidden icon is hidde
 <span class="material-symbols" role="img" aria-label="Mail, 1 unread">mail<span class="badge">1</span></span>
 <span class="material-symbols" role="img" aria-label="Mail, 999+ unread">mail<span class="badge">999+</span></span>
 ```
+
+#### Also documented
+
+The Badges section of the [API reference](https://www.expressivecss.com/llm.md) also covers Small, Large, On navigation, In a list, Color.
 
 #### Rules
 

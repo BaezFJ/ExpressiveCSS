@@ -5,6 +5,27 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- The ExpressiveCSS skill bundles the starter page and the five layout
+  templates under `assets/templates/`, and the Install and Design guides point
+  to them. The Install guide gives a plain `npm install` command, and its
+  minimum page no longer puts the page heading in an app bar without
+  destinations.
+- Skill guides put their steps under their own headings instead of under
+  "Do not use when". The framework contribution path moved to
+  `references/contributing.md`.
+- Component guides list the API reference subsections they leave out. Their
+  examples use real link targets, and menu actions are buttons. The Buttons
+  reference calls `circle` a round common button and points icon buttons to
+  `.icon-button`.
+- Documentation examples no longer use `href="#!"` in copyable code. Menu,
+  split-button, app-bar and tooltip actions are `<button type="button">`,
+  and code samples link to realistic paths. Live navigation demos on the docs
+  site keep `#!`. The app-bar Search icon is a button. The API reference drops
+  rendered demo text that had been copied into it, and the Lightbox guide
+  includes its options and methods.
+
 ## [0.11.0] - 2026-09-30
 
 ### Added

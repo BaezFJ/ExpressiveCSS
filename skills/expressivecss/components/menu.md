@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `425faa2b1b68a0dd95d0718e81b94405ff8ab3b34a2c95e5cfc1b71ef2894a65`
+Contract SHA-256: `43834c8b5c15f01b05d32745bf6467d4b8ed11408762de7ccee5acd1a6b64881`
 
 #### Selection and adaptation
 
@@ -52,15 +52,15 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
 ```html
 <button class="menu-trigger" data-target="menu1">Drop me</button>
 <menu id="menu1">
-  <li><a href="#!">One</a></li>
-  <li><a href="#!">Two</a></li>
+  <li><button type="button">One</button></li>
+  <li><button type="button">Two</button></li>
   <li class="divider" role="separator"></li>
-  <li><a href="#!">Three</a></li>
+  <li><button type="button">Three</button></li>
   <li>
-    <a href="#!">
+    <button type="button">
       <span class="material-symbols" aria-hidden="true">cloud</span>
       <span>Five</span>
-    </a>
+    </button>
   </li>
 </menu>
 ```
@@ -90,6 +90,10 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
 - `.close()`: Close the menu.
 - `.recalculateDimensions()`: While the menu is open, recalculate its dimensions if its contents have changed.
 - `.destroy()`: Destroy the plugin instance and tear down its event handlers.
+
+#### Also documented
+
+The Menu section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Properties.
 
 #### Rules
 
