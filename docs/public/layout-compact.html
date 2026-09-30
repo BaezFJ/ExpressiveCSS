@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Compact app | My project</title>
+  <!-- Copy this file as index.html beside the framework's complete dist directory. -->
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+  <style>
+    body { margin: 0; }
+    .app-shell { display: grid; grid-template-columns: minmax(0, 1fr); min-height: 100dvh; }
+    .app-content { display: flex; flex-direction: column; min-width: 0; min-height: 100dvh; }
+    main { flex: 1; min-width: 0; }
+    .app-navigation { position: sticky; bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="app-content">
+      <header>
+        <div class="bar">
+          <h2>My project</h2>
+          <a class="button text" href="https://www.expressivecss.com/">Docs</a>
+        </div>
+      </header>
+      <main id="main" class="container py-4" style="max-width: 600px" tabindex="-1">
+        <h1>Overview</h1>
+        <p class="flow-text">A place for your project's content.</p>
+        <article class="outlined mb-4">
+          <h2>Welcome back</h2>
+          <p class="supporting-text">Replace this content with your own. The layout uses ExpressiveCSS components and spacing helpers.</p>
+          <div class="actions">
+            <a class="button filled" href="https://www.expressivecss.com/">Start building</a>
+          </div>
+        </article>
+        <h2>Next steps</h2>
+        <ul class="list">
+          <li><a href="https://www.expressivecss.com/themes.html"><div>Choose your theme<p>Use the system scheme or choose light or dark.</p></div></a></li>
+          <li><a href="https://www.expressivecss.com/grid.html"><div>Arrange your content<p>Use the responsive grid for your page sections.</p></div></a></li>
+          <li><a href="https://www.expressivecss.com/auto-init.html"><div>Add interactions<p>AutoInit starts the components in your markup.</p></div></a></li>
+        </ul>
+      </main>
+      <!-- Replace these documentation destinations with your application's URLs. -->
+      <footer class="app-navigation">
+        <nav class="navigation-bar" aria-label="Primary navigation">
+          <a href="#main" aria-current="page"><span class="material-symbols" aria-hidden="true">home</span>Overview</a>
+          <a href="https://www.expressivecss.com/buttons.html"><span class="material-symbols" aria-hidden="true">widgets</span>Components</a>
+          <a href="https://www.expressivecss.com/"><span class="material-symbols" aria-hidden="true">help</span>Setup</a>
+        </nav>
+      </footer>
+    </div>
+  </div>
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Expressive.AutoInit();
+    });
+  </script>
+</body>
+</html>
