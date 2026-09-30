@@ -60,6 +60,14 @@ export const NAV: DocsGroup[] = [
         aliases: ["/index.html"],
       },
       {
+        id: "layouts",
+        label: "Layout templates",
+        icon: "dashboard",
+        route: "/layouts.html",
+        description:
+          "Preview and copy complete app layouts with navigation, panes, and responsive grids.",
+      },
+      {
         id: "auto_init",
         label: "Auto Init",
         icon: "bolt",

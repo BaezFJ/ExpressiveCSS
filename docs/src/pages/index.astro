@@ -5,6 +5,7 @@ import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
 import { route } from "../lib/catalogue";
+import starter from "../../public/starter.html?raw";
 
 const S = defineSections([
   { id: "download", label: "Download" },
@@ -177,8 +178,38 @@ document.documentElement.setAttribute('theme', 'dark');
   </Section>
 
   <Section {...S.templates}>
+                    <p><a class="button tonal" href={route("layouts")}>Browse layout templates</a></p>
+                    <h5>Basic starter</h5>
+                    <p>Download this HTML file as <code>index.html</code> and put the framework's
+                        <code>dist/</code> directory beside it. It includes an app bar, responsive cards,
+                        a tooltip, and a theme that follows your system settings. No bundler is required.</p>
+                    <p><a class="button filled" href="/starter.html" download="index.html">Download starter HTML</a>
+                        <a class="button outlined" href="/starter.html">Preview starter</a></p>
+                    <p>From a built repository checkout, create a separate starter directory:</p>
+                    <Code code={`
+mkdir my-site
+cp docs/public/starter.html my-site/index.html
+cp -R dist my-site/dist
+`} />
+                    <p>If you installed the npm package, copy its built assets instead:</p>
+                    <Code code={`
+cp -R node_modules/@expressivecss/expressive/dist my-site/dist
+`} />
+                    <p>Keep the <code>css/</code>, <code>js/</code>, and <code>fonts/</code> directories together.</p>
+                    <Code code={`
+my-site/
+├── index.html
+└── dist/
+    ├── css/
+    ├── js/
+    └── fonts/
+`} />
+                    <p>Open <code>my-site/index.html</code> in your browser. Edit the title and content to start your project,
+                        or copy the complete template below.</p>
+                    <Code code={starter} />
+                    <h5>Layout reference</h5>
                     <p class="flow-text">
-                        Start from a documented layout instead of an empty page. These two pages show how Expressive
+                        These two pages show how Expressive
                         structures content,
                         and you can copy the markup they use.
                     </p>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A starter page for your ExpressiveCSS project.">
+    <title>My project</title>
+    <!-- Keep dist/fonts next to dist/css so the bundled fonts load. -->
+    <link rel="stylesheet" href="dist/css/expressive.min.css">
+  </head>
+  <body>
+    <header>
+      <nav aria-label="Main">
+        <h2>My project</h2>
+        <menu>
+          <li><a href="https://www.expressivecss.com/">Documentation</a></li>
+        </menu>
+      </nav>
+    </header>
+
+    <main class="container py-5">
+      <section aria-labelledby="welcome-title" class="mb-5">
+        <h1 id="welcome-title">Your project starts here</h1>
+        <p class="flow-text">Replace this content with your own. ExpressiveCSS handles the layout, typography, and theme.</p>
+        <a class="button filled tooltipped" href="https://www.expressivecss.com/"
+           data-tooltip="Read the setup guide and browse components.">Start building</a>
+      </section>
+
+      <!-- Full-width cards on phones, two columns from 600px. -->
+      <div class="row">
+        <div class="s12 m6">
+          <article class="outlined">
+            <h2>Your content</h2>
+            <p class="supporting-text">Use this card for a feature, a project summary, or a next step.</p>
+            <div class="actions">
+              <a class="button outlined" href="https://www.expressivecss.com/grid.html">Explore layouts</a>
+            </div>
+          </article>
+        </div>
+        <div class="s12 m6">
+          <article class="outlined">
+            <h2>Make it yours</h2>
+            <p class="supporting-text">The page follows your system theme. Set the root theme attribute to light or dark to choose a fixed scheme.</p>
+            <div class="actions">
+              <a class="button text" href="https://www.expressivecss.com/themes.html">Customize the theme</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </main>
+
+    <footer class="container py-3">
+      <p>My project</p>
+    </footer>
+
+    <script src="dist/js/expressive.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        Expressive.AutoInit();
+      });
+    </script>
+  </body>
+</html>

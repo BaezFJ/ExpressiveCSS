@@ -151,6 +151,12 @@ for (const asset of [
   '/dist/js/expressive.min.js',
   '/static/docs.css',
   '/static/docs.js',
+  '/starter.html',
+  '/layout-compact.html',
+  '/layout-rail.html',
+  '/layout-expanded.html',
+  '/layout-list-detail.html',
+  '/layout-dashboard.html',
   '/CNAME',
 ]) {
   nonempty(asset, 'asset');

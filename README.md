@@ -93,6 +93,27 @@ loads fonts from `../fonts/`, so keep `dist/fonts/` next to `dist/css/`.
 
 ## Usage
 
+### Copy the starter
+
+After building the framework, copy the [basic starter](docs/public/starter.html)
+and the compiled assets into a new directory:
+
+```sh
+mkdir my-site
+cp docs/public/starter.html my-site/index.html
+cp -R dist my-site/dist
+```
+
+Open `my-site/index.html` in your browser. The template includes an app bar,
+responsive cards, a tooltip initialized with `AutoInit()`, and automatic light
+and dark themes. Edit the title and content to make it your own. Keep
+`dist/fonts/` beside `dist/css/` so the bundled fonts load.
+
+For complete app layouts, open the [layout gallery](https://www.expressivecss.com/layouts.html).
+The source templates are `docs/public/layout-*.html`: compact, navigation rail,
+expanded rail, list-detail, and dashboard. Copy any one as `index.html` with the
+same `dist/` directory.
+
 ### Browser bundle
 
 Load the compiled stylesheet and browser bundle, then initialize components after

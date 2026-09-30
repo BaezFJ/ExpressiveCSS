@@ -1,0 +1,104 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const sources = import.meta.glob<string>("../../public/layout-*.html", {
+  query: "?raw", import: "default", eager: true,
+});
+const layouts = [
+  { id: "compact", title: "Compact app", description: "One content column with a bottom navigation bar. Use it for a small app or a focused mobile screen." },
+  { id: "rail", title: "Navigation rail", description: "A collapsed rail beside your content from 600px. Compact windows use the bottom navigation bar." },
+  { id: "expanded", title: "Expanded rail", description: "An expanded rail for destinations with longer labels. Below 840px, the bottom navigation bar takes over." },
+  { id: "list-detail", title: "List-detail", description: "A selectable list beside its detail from 840px. Narrow windows show one pane, with a Back action and keyboard focus recovery." },
+  { id: "dashboard", title: "Dashboard", description: "A navigation rail with a responsive card grid and activity list. Cards stack as the content area narrows." },
+];
+const S = defineSections([
+  { id: "choose", label: "Choose a layout" },
+  { id: "setup", label: "Copy and run" },
+  ...layouts.map(({ id, title }) => ({ id, label: title })),
+]);
+---
+<DocsLayout page="layouts">
+<PageBody sections={S} containerClass="layouts-page" contentClass="s12 m9 l10" tocClass="m3 l2">
+  <Section {...S.choose}>
+    <p>Choose a structure, preview it, and copy the complete HTML into your project.
+      These templates use ExpressiveCSS navigation, panes, and grid classes.
+      The gallery follows the diagram-and-example approach in
+      <a href="https://www.beercss.com/">BeerCSS's main layouts</a>.</p>
+    <div class="layout-grid">
+      {layouts.map((layout) => (
+        <div>
+          <article class="outlined layout-card">
+            <a class="layout-choice" href={`#${layout.id}`}>
+              <svg viewBox="0 0 240 160" aria-hidden="true" focusable="false">
+                <rect class="diagram-surface" x="4" y="4" width="232" height="152" rx="16" />
+                {layout.id === "compact" ? <>
+                  <rect class="diagram-content" x="72" y="16" width="96" height="96" rx="12" />
+                  <rect class="diagram-navigation" x="72" y="124" width="96" height="20" rx="10" />
+                </> : <>
+                  {layout.id !== "list-detail" && <rect class="diagram-navigation" x="16" y="16" width={layout.id === "expanded" ? 64 : 28} height="128" rx="10" />}
+                  {layout.id === "list-detail" ? <>
+                    <rect class="diagram-navigation" x="16" y="16" width="80" height="128" rx="12" />
+                    <rect class="diagram-content" x="108" y="16" width="116" height="128" rx="12" />
+                  </> : layout.id === "dashboard" ? <>
+                    {[56, 146].flatMap((x) => [16, 86].map((y) => <rect class="diagram-content" x={x} y={y} width="78" height="58" rx="12" />))}
+                  </> : <rect class="diagram-content" x={layout.id === "expanded" ? 92 : 56} y="16" width={layout.id === "expanded" ? 132 : 168} height="128" rx="12" />}
+                </>}
+              </svg>
+              <h4>{layout.title}</h4>
+            </a>
+            <p class="supporting-text">{layout.description}</p>
+          </article>
+        </div>
+      ))}
+    </div>
+  </Section>
+  <Section {...S.setup}>
+    <p>Download a template as <code>index.html</code>. Put the framework's complete
+      <code>dist/</code> directory beside it, including fonts, then open the HTML file.
+      From a built repository checkout:</p>
+    <Code code={`mkdir my-site
+cp docs/public/layout-rail.html my-site/index.html
+cp -R dist my-site/dist`} />
+    <p>For an npm installation, copy the package's built assets:</p>
+    <Code code={`cp -R node_modules/@expressivecss/expressive/dist my-site/dist`} />
+    <p>Replace the sample content and documentation destinations with your application's URLs.
+      Every template follows your system theme. Change <code>theme="auto"</code> to
+      <code>light</code> or <code>dark</code> for a fixed scheme.</p>
+  </Section>
+  {layouts.map((layout) => (
+    <Section {...S[layout.id]}>
+      <p>{layout.description}</p>
+      <div class="flex flex-wrap gap-2 mb-3">
+        <a class="button filled" href={`/layout-${layout.id}.html`} download="index.html">Download HTML</a>
+        <a class="button outlined" href={`/layout-${layout.id}.html`}>Open full preview</a>
+      </div>
+      <iframe class:list={["layout-preview", { "compact-preview": layout.id === "compact" }]}
+        src={`/layout-${layout.id}.html`} title={`${layout.title} live preview`} loading="lazy"></iframe>
+      <details class="my-3">
+        <summary>Copy complete HTML</summary>
+        <Code code={sources[`../../public/layout-${layout.id}.html`]} />
+      </details>
+    </Section>
+  ))}
+</PageBody>
+</DocsLayout>
+
+<style>
+  :global(.layouts-page) { --md-comp-container-width: 90%; }
+  .layout-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 24px; }
+  .layout-card { height: 100%; }
+  .layout-choice { display: block; color: inherit; text-decoration: none; border-radius: 12px; }
+  .layout-choice:focus-visible { outline: 3px solid var(--md-sys-color-primary); outline-offset: 4px; }
+  .layout-choice h4 { margin: 16px 0 8px; }
+  svg { display: block; width: 100%; }
+  .diagram-surface { fill: var(--md-sys-color-surface-container); }
+  .diagram-content { fill: var(--md-sys-color-primary-container); }
+  .diagram-navigation { fill: var(--md-sys-color-secondary-container); }
+  .layout-preview { display: block; width: 100%; height: 460px; border: 1px solid var(--md-sys-color-outline-variant); border-radius: 16px; }
+  .compact-preview { max-width: 375px; height: 600px; margin-inline: auto; }
+  summary { cursor: pointer; padding-block: 12px; }
+</style>
