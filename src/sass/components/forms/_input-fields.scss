@@ -310,24 +310,44 @@ textarea {
   }
 }
 
-:is(.datepicker-date-input, .date-picker-date-input) {
-  position: relative;
-  text-indent: -9999px;
+// Datepicker paints its formatted date over the native value with ::after.
+// Firefox renders no generated content on an <input>, so hiding the native
+// value there left the field blank. The engines that do render it are the ones
+// that expose ::-webkit-datetime-edit.
+@supports selector(::-webkit-datetime-edit) {
+  // The positioned input would paint its filled container over the field's
+  // icons, which come before it. Raise them inside the field's own stacking
+  // context, so they do not also rise over the docked search view or a
+  // sticky header. A docked calendar in the field has to escape it.
+  .field:has(> :is(.datepicker-date-input, .date-picker-date-input)) {
+    &:not(:has(> .display-docked)) {
+      isolation: isolate;
+    }
 
-  &::after {
-    display: block;
-    position: absolute;
-    top: 1.1rem;
-    content: attr(data-date);
-    color: var(--input-color);
-    text-indent: 0;
+    > :is(i, .prefix, .suffix) {
+      z-index: 1;
+    }
   }
 
-  &:focus-visible {
-    text-indent: 0;
-  }
-
-  &:focus-visible:after {
+  :is(.datepicker-date-input, .date-picker-date-input) {
+    position: relative;
     text-indent: -9999px;
+
+    &::after {
+      display: block;
+      position: absolute;
+      top: 1.1rem;
+      content: attr(data-date);
+      color: var(--input-color);
+      text-indent: 0;
+    }
+
+    &:focus-visible {
+      text-indent: 0;
+    }
+
+    &:focus-visible:after {
+      text-indent: -9999px;
+    }
   }
 }

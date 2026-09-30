@@ -2587,7 +2587,7 @@ A sticky footer stays at the bottom of the viewport when the page is short, and 
 ```text
 body {
   display: flex;
-  min-height: 100vh;
+  min-height: 100dvh;
   flex-direction: column;
 }
 
@@ -2745,7 +2745,7 @@ A subtitle is an `<hgroup>` wrapping the heading and a `<p>`. There is no `subti
 
 ### Collapse
 
-`AppBar` watches a 1px sentinel immediately before `header.medium` and `header.large`. When the sentinel leaves the viewport the header gets `.collapsed` and the bar is the small 64dp row (`title-large`, single line). `destroy()` removes the sentinel. The class is also legal to set by hand.
+`AppBar` places a zero-height sentinel after `header.medium` and `header.large`, 64px above the header's bottom edge. When the page scrolls past the sentinel, the header gets `.collapsed` and the bar is the small 64dp row (`title-large`, single line). The sentinel moves with the page, so when scroll anchoring corrects the scroll position after the bar shrinks, the bar stays collapsed. It expands again once the page scrolls back to the top of the bar. `destroy()` removes the sentinel. The class is also legal to set by hand.
 
 ### Fixed
 
@@ -5454,7 +5454,7 @@ XS is the default: a 16dp track and a 44dp handle. `s` / `small` is S, `m` / `me
 
 ### Inset icon, stops, value
 
-A leading icon sits inside the active track; M, L, and XL are tall enough for it. `stops` plus a `step` paints ticks along the track.
+A leading icon sits inside the active track; M, L, and XL are tall enough for it. `stops` plus a numeric `step` paints a dot on the active track at each step from `min`, except under the icon. Without a `step`, or with `step="any"`, the track has no dots.
 
 ```html
 <div class="slider m">
@@ -5512,7 +5512,7 @@ const instance = Expressive.Slider.getInstance(elem);
 
 #### .destroy();
 
-Destroy the plugin instance, remove the value label, and tear down its event handlers.
+Destroy the plugin instance, remove the value label, tear down its event handlers, and restore the inline custom properties it changed.
 
 ```text
 instance.destroy();

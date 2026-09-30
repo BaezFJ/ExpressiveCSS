@@ -76,7 +76,6 @@
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     overscroll-behavior-inline: contain;
-    touch-action: pan-x;
     scrollbar-width: none;
 
     &::-webkit-scrollbar {
@@ -485,7 +484,6 @@
     scroll-snap-type: y mandatory;
     overscroll-behavior-inline: auto;
     overscroll-behavior-block: contain;
-    touch-action: pan-y;
   }
 
   .carousel-track > .carousel-item {
@@ -527,7 +525,6 @@
     scroll-snap-type: x mandatory;
     overscroll-behavior-inline: contain;
     overscroll-behavior-block: auto;
-    touch-action: pan-x;
   }
 
   .carousel-track > .carousel-item {
@@ -565,17 +562,22 @@
     cursor: grab;
   }
 
-  .carousel.dragging {
+  // A drag writes the scroll position directly, and snapping would pull each
+  // write back to a snap point. Each layout that sets scroll-snap-type with
+  // more classes than `.carousel.dragging` needs its own arm here.
+  .carousel.dragging,
+  .carousel.uncontained.snap.dragging,
+  .carousel.full-screen.full-screen-horizontal.dragging {
     > .carousel-track {
       cursor: grabbing;
       scroll-behavior: auto;
       scroll-snap-type: none;
       user-select: none;
     }
+  }
 
-    .carousel-item {
-      pointer-events: none;
-    }
+  .carousel.dragging .carousel-item {
+    pointer-events: none;
   }
 }
 

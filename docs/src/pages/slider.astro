@@ -136,9 +136,11 @@ const S = defineSections([
   <Section {...S.icon}>
         <p>
           A leading icon sits in the active track —
-          M, L, and XL are tall enough. <code>stops</code> plus
-          <code>step</code> paints ticks on the active track. Dragging
-          shows the value in a 40dp bubble.
+          M, L, and XL are tall enough. <code>stops</code> plus a
+          numeric <code>step</code> paints a dot on the active track at
+          each step from <code>min</code>, except under the icon. Without a
+          <code>step</code>, or with <code>step="any"</code>, the track has
+          no dots. Dragging shows the value in a 40dp bubble.
         </p>
         <form>
           <div class="slider m">
@@ -208,7 +210,7 @@ Expressive.Range.init(document.querySelector('#volume'));
 const instance = Expressive.Range.getInstance(elem);
 instance.destroy();
 `} />
-        <p>Destroy the plugin instance, remove the value label, and tear down its event handlers.</p>
+        <p>Destroy the plugin instance, remove the value label, tear down its event handlers, and restore the inline custom properties it changed.</p>
   </Section>
 
 </PageBody>
