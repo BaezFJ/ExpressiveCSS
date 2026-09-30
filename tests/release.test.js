@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { releaseMetadata, assertForwardRelease, isCurrentStable } from '../scripts/release.mjs';
+import { releaseMetadata, assertForwardRelease, docsDeployState } from '../scripts/release.mjs';
 
 test('release policy rejects mismatches and prevents stable rollback', () => {
   const manifests = {
@@ -31,7 +31,10 @@ test('release policy rejects mismatches and prevents stable rollback', () => {
   assert.throws(() => assertForwardRelease('0.2.0-rc.1', '0.2.0-rc.1'));
   assert.throws(() => assertForwardRelease('0.9.0', '0.9.0'));
   assert.throws(() => assertForwardRelease('0.8.9', '0.9.0'));
-  assert.equal(isCurrentStable('0.9.0', '0.9.0'), true);
-  assert.equal(isCurrentStable('0.8.0', '0.9.0'), false);
-  assert.equal(isCurrentStable('0.9.0-rc.1', '0.9.0-rc.1'), false);
+  assert.equal(docsDeployState('0.9.0', '0.9.0'), 'deploy');
+  assert.equal(docsDeployState('0.8.0', '0.9.0'), 'skip');
+  assert.equal(docsDeployState('0.9.0-rc.1', '0.9.0-rc.1'), 'skip');
+  assert.equal(docsDeployState('0.9.0', '0.8.0'), 'wait');
+  assert.equal(docsDeployState('0.9.0', '0.9.0-rc.1'), 'wait');
+  assert.equal(docsDeployState('0.9.0', null), 'wait');
 });

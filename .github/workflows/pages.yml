@@ -75,11 +75,23 @@ jobs:
           node --input-type=module <<'JS'
           import { execFileSync } from 'node:child_process';
           import { appendFileSync } from 'node:fs';
-          import { isCurrentStable } from './scripts/release.mjs';
-          const latest = JSON.parse(execFileSync('npm', ['view', '@expressivecss/expressive@latest', 'version', '--json'], { encoding: 'utf8', timeout: 60000 }));
-          const current = isCurrentStable(process.env.RELEASE_VERSION, latest);
-          appendFileSync(process.env.GITHUB_OUTPUT, `current=${current}\n`);
-          if (!current) appendFileSync(process.env.GITHUB_STEP_SUMMARY, 'Skipped documentation deployment: this release is no longer npm latest.\n');
+          import { docsDeployState } from './scripts/release.mjs';
+          const version = process.env.RELEASE_VERSION;
+          // npm's CDN can serve the previous latest for minutes after a publish.
+          let state;
+          for (let attempt = 1; attempt <= 40; attempt++) {
+            const latest = JSON.parse(execFileSync('npm', ['view', '@expressivecss/expressive@latest', 'version', '--json', '--prefer-online'], { encoding: 'utf8', timeout: 60000 }));
+            state = docsDeployState(version, latest);
+            console.log(`npm latest is ${latest}; ${state} for ${version}`);
+            if (state !== 'wait') break;
+            await new Promise((done) => setTimeout(done, 15000));
+          }
+          if (state === 'wait') {
+            console.error(`npm latest never reached ${version}. Re-run this job once it does.`);
+            process.exit(1);
+          }
+          appendFileSync(process.env.GITHUB_OUTPUT, `current=${state === 'deploy'}\n`);
+          if (state === 'skip') appendFileSync(process.env.GITHUB_STEP_SUMMARY, 'Skipped documentation deployment: a newer release is npm latest.\n');
           JS
       - id: deployment
         if: steps.current.outputs.current == 'true'
