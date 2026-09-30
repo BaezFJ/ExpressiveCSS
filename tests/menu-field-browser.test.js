@@ -384,7 +384,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       page = await browser.newPage({ viewport: { width: 320, height: 600 } });
       for (const variant of ['medium', 'large']) for (const direction of ['ltr', 'rtl']) for (const motion of ['reduce', 'no-preference']) {
         await page.emulateMedia({ reducedMotion: motion });
-        await page.setContent(`<style>${fontCss}</style><header class="${variant}" dir="${direction}" style="position:sticky;top:0"><nav aria-label="Main"><button id="back" aria-label="Back"><span class="material-symbols" aria-hidden="true">arrow_back</span></button><hgroup><h1 style="font-size:2em">Übersetzte lange Überschrift auf mehreren Zeilen</h1><p>Zusätzliche Informationen zur aktuellen Ansicht</p></hgroup><button id="more" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></button></nav></header><main style="height:1600px"></main>`);
+        await page.setContent(`<style>${fontCss}</style><header class="${variant}" dir="${direction}"><nav aria-label="Main"><button id="back" aria-label="Back"><span class="material-symbols" aria-hidden="true">arrow_back</span></button><hgroup><h1 style="font-size:2em">Übersetzte lange Überschrift auf mehreren Zeilen</h1><p>Zusätzliche Informationen zur aktuellen Ansicht</p></hgroup><button id="more" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></button></nav></header><main style="height:1600px"></main>`);
         await page.addScriptTag({ content: js });
         await page.evaluate(() => document.fonts.ready);
         await page.evaluate(() => { window.bar = Expressive.AppBar.init(document.querySelector('header')); });

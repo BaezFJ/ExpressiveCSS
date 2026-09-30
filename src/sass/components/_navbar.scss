@@ -5,7 +5,7 @@
 // Anatomy is the HTML. A header whose child is a nav is a top app bar.
 // Headings are the headline, icon-only links/buttons are the leading and
 // trailing actions, <menu> / <ul> hold text destinations. Helpers are only
-// for variants the markup cannot express: .center, .medium, .large, .fixed.
+// for variants the markup cannot express: .center, .medium, .large.
 // `.medium` and `.large` are the Expressive flexible bars.
 // Destinations at the bottom of the screen are nav.navigation-bar, not this.
 //
@@ -490,12 +490,12 @@ header.large.collapsed:has(> #{$_bar}) > #{$_bar} {
   }
 }
 
-// Pin the bar. On scroll, fill with surface-container so it separates
+// Pin every top app bar. On scroll, fill with surface-container so it separates
 // from the body (M3 Expressive). The animation only drives the mix
 // progress; a utility class on the header sets background-color itself
 // and is not overwritten. Without animation-timeline the bar stays at
 // rest (surface), the spec default.
-header.fixed:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
+header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
   position: sticky;
   top: 0;
   z-index: 997;

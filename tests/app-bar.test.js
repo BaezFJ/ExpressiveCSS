@@ -15,6 +15,18 @@ function hasTypescale(body, role) {
   return body.includes(`var(--md-sys-typescale-${role}-font-size)`);
 }
 
+test('top app bars are pinned without a fixed class', () => {
+  const pinned = rules.find((r) =>
+    r.selector === 'header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar))' &&
+    /position:\s*sticky/.test(r.body),
+  );
+  assert.ok(pinned, 'top app bars are not pinned by default');
+  assert.match(pinned.body, /top:\s*0/);
+  assert.match(pinned.body, /z-index:\s*997/);
+  assert.match(pinned.body, /animation-timeline:\s*scroll\(root\)/);
+  assert.doesNotMatch(css, /header\.fixed/);
+});
+
 describe('App bar M3 Expressive types', () => {
   test('medium flexible is 112dp with a headline-medium title', () => {
     const height = rules.find(
