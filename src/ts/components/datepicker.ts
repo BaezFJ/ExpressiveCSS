@@ -612,9 +612,10 @@ export class Datepicker extends Component<DatepickerOptions> {
    * Sets date from input field.
    */
   setDateFromInput(el: HTMLInputElement) {
+    // The native input's overlay follows edits, including cleared or partial values.
+    if (el.type === 'date') this.setDataDate(el, Datepicker._parseDate(el.value));
     if ((this.options.isDateRange || !this.options.isMultipleSelection) && !el.value.trim()) {
       this.setSingleDate(null, el === this.endDateEl);
-      if (el.type === 'date') el.setAttribute('data-date', '');
       this.draw();
       return;
     }
@@ -712,7 +713,7 @@ export class Datepicker extends Component<DatepickerOptions> {
    * Sets the data-date attribute on the date input field
    */
   setDataDate(el, date) {
-    el.setAttribute('data-date', this.toString(date));
+    el.setAttribute('data-date', Datepicker._isDate(date) ? this.toString(date) : '');
   }
 
   /**
@@ -741,11 +742,10 @@ export class Datepicker extends Component<DatepickerOptions> {
    */
   setInputValue(el, date) {
     if (!el) return;
+    if (el.type == 'date') this.setDataDate(el, date);
     if (!Datepicker._isDate(date)) {
       el.value = '';
-      if (el.type === 'date') el.setAttribute('data-date', '');
     } else if (el.type == 'date') {
-      this.setDataDate(el, date);
       el.value = this.formatDate(date, 'yyyy-mm-dd');
     } else {
       el.value = this.toString(date);
@@ -1412,10 +1412,8 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   _handleInputClick = (e) => {
-    // Prevents default browser datepicker modal rendering
-    if (e.type == 'date') {
-      e.preventDefault();
-    }
+    // Block the native date picker only when the calendar is shown to replace it.
+    if (e.target.type == 'date' && (this.options.openByDefault || this.options.container)) e.preventDefault();
     this._batchDraws(() => {
       this.setDateFromInput(e.target as HTMLInputElement);
       this.draw();

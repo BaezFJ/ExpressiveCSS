@@ -1615,3 +1615,270 @@ scenario('remaining autocomplete preserves a preselected display label on focus'
   assert.equal(await page.evaluate(()=>window.instances[0].selectedValues[0]?.id),'alpha');
   await page.keyboard.press('Tab');await expect(page.locator('#leave')).toBeFocused();
 });
+
+scenario('carousel tracks keep default touch-action so a vertical swipe scrolls the page', `
+<div class="carousel" id="places" aria-label="Places"><a class="carousel-item" href="#one">One</a><a class="carousel-item" href="#two">Two</a><a class="carousel-item" href="#three">Three</a><a class="carousel-item" href="#four">Four</a></div>
+<div class="carousel full-screen"><div class="carousel-track"><div class="carousel-item">Feed</div></div></div>
+<div class="carousel full-screen full-screen-horizontal"><div class="carousel-track"><div class="carousel-item">Hero</div></div></div>`, async page => {
+  await page.evaluate(() => { window.instances = [Expressive.Carousel.init(document.querySelector('#places'))]; });
+  assert.deepEqual(await page.locator('.carousel-track').evaluateAll(tracks => tracks.map(track => getComputedStyle(track).touchAction)), ['auto', 'auto', 'auto']);
+  if (page.context().browser().browserType().name() !== 'chromium') return;
+  // A vertical touch swipe that starts on the horizontal track scrolls the page.
+  const box = await page.locator('#places .carousel-track').boundingBox();
+  const x = box.x + box.width / 2, y = box.y + box.height / 2;
+  const session = await page.context().newCDPSession(page);
+  try {
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
+    for (let step = 1; step <= 10; step += 1) await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: y - step * 20 }] });
+    await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  } finally { await session.detach(); }
+  await expect.poll(() => page.evaluate(() => scrollY), { timeout: 2000 }).toBeGreaterThan(0);
+});
+
+scenario('top app bar rests on surface and fills only once the page scrolls', '<header id="app-bar"><nav><h1>Inbox</h1></nav></header><div style="height:2000px"></div><i id="rest" style="position:fixed;bottom:0;left:0;width:4px;height:4px;background:var(--md-sys-color-surface)"></i><i id="fill" style="position:fixed;bottom:0;left:4px;width:4px;height:4px;background:var(--md-sys-color-surface-container)"></i>', async page => {
+  // Read the bottom-right pixel, which the title never covers. The bar has square corners.
+  const paint = async selector => [...utilsBundle.PNG.sync.read(await page.locator(selector).screenshot()).data.subarray(-4, -1)];
+  const [surface, container] = [await paint('#rest'), await paint('#fill')];
+  assert.notDeepEqual(surface, container);
+  // Firefox has no scroll timelines, so an unguarded animation runs for 0s there and holds the filled keyframe at rest.
+  assert.deepEqual(await paint('#app-bar'), surface);
+  if (await page.evaluate(() => CSS.supports('animation-timeline: scroll()'))) {
+    await page.evaluate(() => scrollTo(0, 40));
+    await expect.poll(() => paint('#app-bar')).toEqual(container);
+  }
+});
+
+scenario('slider stops paint a dot on the active track at each step before the handle', `
+<div id="stops-ltr" class="slider stops" style="width:404px;--md-sys-color-on-primary:red"><input type="range" aria-label="Stops" min="0" max="100" step="20" value="40"></div>
+<div id="stops-rtl" class="slider stops" dir="rtl" style="width:404px;--md-sys-color-on-primary:red"><input type="range" aria-label="Stops" min="0" max="100" step="20" value="40"></div>
+<div id="stops-centered" class="slider stops centered" style="width:404px;--md-sys-color-on-primary:red"><input type="range" aria-label="Centered" min="0" max="100" step="20" value="80"></div>
+<div id="stops-centered-rtl" class="slider stops centered" dir="rtl" style="width:404px;--md-sys-color-on-primary:red"><input type="range" aria-label="Centered" min="0" max="100" step="20" value="80"></div>
+<label id="stops-label" class="slider stops" style="width:404px;--md-sys-color-on-primary:red">Level<input type="range" min="0" max="100" step="20" value="40"></label>
+<div class="slider stops"><input type="range" aria-label="Wide" min="0" max="100" step="50" value="50"></div>`, async page => {
+  await page.evaluate(() => { window.instances = [...document.querySelectorAll('.stops input')].map(el => Expressive.Slider.init(el)); });
+  // A 404px host leaves 400px of handle travel: whole 80px steps, handle centre at 2 + 80k.
+  // Value 40 puts stops 0 and 20 on the active track; stop 40 is under the handle.
+  // Centered at 80 is active from the midpoint to the handle, which holds only stop 60.
+  for (const [id, stops] of [['stops-ltr', [2, 82]], ['stops-rtl', [322, 402]], ['stops-centered', [242]], ['stops-centered-rtl', [162]], ['stops-label', [2, 82]]]) {
+    const png = utilsBundle.PNG.sync.read(await page.locator(`#${id}`).screenshot());
+    // The track centre, not the host centre: a label's text makes the host taller.
+    const y = Math.floor(await page.locator(`#${id} input`).evaluate(el => el.offsetTop + el.offsetHeight / 2));
+    const runs = [];
+    for (let x = 0; x < png.width; x++) {
+      const [r, g, b] = png.data.subarray((y * png.width + x) * 4);
+      if (r > 200 && g < 80 && b < 80) { if (runs.at(-1)?.[1] === x - 1) runs.at(-1)[1] = x; else runs.push([x, x]); }
+    }
+    const dots = runs.map(([start, end]) => (start + end + 1) / 2);
+    assert.equal(dots.length, stops.length, `${id} dots at ${dots}`);
+    dots.forEach((x, i) => assert.ok(Math.abs(x - stops[i]) <= 1, `${id} dot at ${x}, stop at ${stops[i]}`));
+  }
+  // The dot row stays inside a full-width host, so the page does not scroll sideways.
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true);
+});
+
+scenario('native indeterminate progress keeps its track and a 40% indicator', `
+<section id="native" style="width:400px">
+<progress id="native-motion" class="progress" aria-label="Native loading"></progress>
+<progress id="native-fill" class="progress" aria-label="Native upload" value="0" max="100"></progress>
+</section>`, async page => {
+  const firefox = page.context().browser().browserType().name() === 'firefox';
+  const trackColor = await page.locator('#native-fill').evaluate(el => getComputedStyle(el).backgroundColor);
+  assert.equal(await page.locator('#native-motion').evaluate(el => getComputedStyle(el).backgroundColor), trackColor);
+  // Firefox keeps ::-moz-progress-bar animations out of document.getAnimations(), so pin the time in CSS.
+  if (firefox) await page.addStyleTag({ content: '#native-motion::-moz-progress-bar{animation-play-state:paused;animation-delay:-1s}' });
+  for (const dir of ['ltr', 'rtl']) {
+    await page.locator('#native').evaluate((el, dir) => el.dir = dir, dir);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    // x is measured from the inline-start edge.
+    const row = async id => {
+      const png = utilsBundle.PNG.sync.read(await page.locator(`#${id}`).screenshot());
+      return x => { if (dir === 'rtl') x = png.width - 1 - x; return [...png.data.subarray((2 * png.width + x) * 4, (2 * png.width + x) * 4 + 3)]; };
+    };
+    await page.locator('#native-fill').evaluate(el => el.value = 0);
+    const track = (await row('native-fill'))(200);
+    await page.locator('#native-fill').evaluate(el => el.value = 100);
+    const indicator = (await row('native-fill'))(200);
+    const still = await row('native-motion');
+    for (const x of [20, 140]) assert.deepEqual(still(x), indicator, `${dir} static indicator at ${x}px`);
+    for (const x of [180, 380]) assert.deepEqual(still(x), track, `${dir} static track at ${x}px`);
+    if (firefox) {
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      const moving = await row('native-motion');
+      assert.deepEqual(moving(20), track, `${dir} bar has left the start edge after 1s`);
+      assert.deepEqual(moving(200), indicator, `${dir} bar covers the middle after 1s`);
+    }
+  }
+});
+
+scenario('remaining datepicker date input shows its date where inputs cannot render ::after', '<button id="before-due">Before</button><div class="field"><input id="due" type="date"><label for="due">Due</label></div>', async page => {
+  await page.evaluate(()=>window.instances=[Expressive.Datepicker.init(document.querySelector('#due'),{setDefaultDate:true,defaultDate:new Date(2024,1,29)})]);
+  const input=page.locator('#due');await expect(input).toHaveAttribute('data-date','Feb 29, 2024');
+  const shot=async style=>utilsBundle.PNG.sync.read(await input.screenshot({animations:'disabled',style}));
+  // Pixels in the left half (the text, not the picker icon or the rounded corners) that change when the native text or the ::after is hidden.
+  const ink=async()=>{const none=await shot('#due{color:transparent!important}#due::after{content:none!important}');const count=async style=>{const png=await shot(style);let n=0;for(let y=4;y<png.height-4;y++)for(let x=12;x<png.width/2;x++){const i=(y*png.width+x)*4;if(png.data[i]!==none.data[i]||png.data[i+1]!==none.data[i+1]||png.data[i+2]!==none.data[i+2])n++;}return n;};return{native:await count('#due::after{content:none!important}'),after:await count('#due{color:transparent!important}')};};
+  const overlay=page.context().browser().browserType().name()!=='firefox';
+  const rest=await ink();
+  if(overlay){assert.equal(rest.native,0,'the native value is hidden under the overlay');assert.ok(rest.after>50,'the formatted date is painted');}
+  else{assert.ok(rest.native>50,'Firefox shows the native value');assert.equal(rest.after,0);}
+  await page.locator('#before-due').focus();await page.keyboard.press('Tab');await expect(input).toBeFocused();
+  assert.equal(await input.evaluate(el=>el.matches(':focus-visible')),true);
+  const focused=await ink();assert.ok(focused.native>50,'keyboard focus shows the editable native value');assert.equal(focused.after,0,'keyboard focus hides the overlay');
+});
+
+scenario('carousel mouse drag scrolls every snapping layout and a drag never follows a link', `
+<div class="carousel full-screen" id="feed" aria-label="Feed"><a class="carousel-item" href="#feed-1">One</a><a class="carousel-item" href="#feed-2">Two</a><a class="carousel-item" href="#feed-3">Three</a><div class="carousel-item"><span id="host"></span></div></div>
+<div class="carousel uncontained snap" id="stories" aria-label="Stories"><a class="carousel-item" href="#story-1"><span>One</span></a><a class="carousel-item" href="#story-2"><span>Two</span></a><a class="carousel-item" href="#story-3"><span>Three</span></a><a class="carousel-item" href="#story-4"><span>Four</span></a><a class="carousel-item" href="#story-5"><span>Five</span></a></div>`, async page => {
+  await page.evaluate(() => {
+    const button = document.createElement('button');
+    button.textContent = 'Inner';
+    button.onclick = () => { window.innerClicks = (window.innerClicks || 0) + 1; };
+    document.querySelector('#host').attachShadow({ mode: 'open' }).append(button);
+    window.instances = [...document.querySelectorAll('.carousel')].map(el => Expressive.Carousel.init(el));
+  });
+  // The first resize realigns again 200 ms later. Wait for it so it cannot move a track mid-drag.
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(resolve, 200)))));
+  // At this width the feed is a horizontal hero. Its snap rule and the .snap rule both outnumber .carousel.dragging.
+  await expect(page.locator('#feed')).toHaveClass(/full-screen-horizontal/);
+  for (const id of ['feed', 'stories']) {
+    const track = page.locator(`#${id} .carousel-track`);
+    const box = await track.boundingBox();
+    const y = box.y + box.height / 2;
+    await page.mouse.move(box.x + box.width - 50, y);
+    await page.mouse.down();
+    // Firefox starts a native link drag here, then cancels the pointer, unless the carousel prevents it.
+    await page.mouse.move(box.x + box.width - 250, y, { steps: 10 });
+    assert.equal(Math.round(await track.evaluate(el => el.scrollLeft)), 200, `${id} track follows the pointer`);
+    await page.mouse.up();
+    assert.equal(await page.evaluate(() => location.hash), '', `${id} drag does not navigate`);
+  }
+  // A re-render replaces the pressed node mid-drag, and the button comes up outside the track.
+  const label = page.locator('#stories .carousel-item span').nth(2);
+  const box = await label.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 - 100, box.y + box.height / 2, { steps: 5 });
+  await label.evaluate(el => el.replaceWith(el.cloneNode(true)));
+  await page.mouse.move(box.x + box.width / 2 - 100, 4, { steps: 5 });
+  await page.mouse.up();
+  await expect(page.locator('#stories')).not.toHaveClass(/dragging/);
+  await page.locator('#feed .carousel-item').first().click();
+  await expect.poll(() => page.evaluate(() => location.hash)).toBe('#feed-1');
+  // A plain click reaches a control in an item's shadow root.
+  await page.locator('#host button').click();
+  await expect.poll(() => page.evaluate(() => window.innerClicks)).toBe(1);
+});
+
+scenario('datepicker date input overlay follows edits to the native value', '<div class="field"><input id="due" type="date"><label for="due">Due</label></div><button id="after">After</button>', async page => {
+  await page.evaluate(() => window.instances = [Expressive.Datepicker.init(document.querySelector('#due'), { setDefaultDate: true, defaultDate: new Date(2024, 1, 29) })]);
+  const input = page.locator('#due');
+  // fill() fires input and change like a segment edit; WebKit on Linux cannot type into date fields.
+  await input.fill('2025-03-15');
+  await page.locator('#after').focus();
+  await expect(input).toHaveAttribute('data-date', 'Mar 15, 2025');
+  assert.equal(await page.evaluate(() => window.instances[0].toString()), 'Mar 15, 2025');
+  await input.fill('');
+  await expect(input).toHaveAttribute('data-date', '');
+});
+
+scenario('datepicker replaces the native date picker only while its calendar is shown', '<div class="field"><input id="shown" type="date"><label for="shown">Shown</label></div><div class="field"><input id="hidden" type="date"><label for="hidden">Hidden</label></div><div class="field"><input id="text"><label for="text">Text</label></div>', async page => {
+  await page.evaluate(() => window.instances = [
+    Expressive.Datepicker.init(document.querySelector('#shown'), { openByDefault: true }),
+    Expressive.Datepicker.init(document.querySelector('#hidden')),
+    Expressive.Datepicker.init(document.querySelector('#text'), { openByDefault: true })
+  ]);
+  await page.evaluate(() => { window.prevented = []; document.addEventListener('click', e => window.prevented.push(e.defaultPrevented)); });
+  // The picker indicator sits at the inline end, inside the 16px padding.
+  const clickIndicator = async id => { const box = await page.locator(id).boundingBox(); await page.mouse.click(box.x + box.width - 26, box.y + box.height / 2); };
+  const open = id => page.locator(id).evaluate(el => el.matches(':open'));
+  await clickIndicator('#shown');
+  await page.waitForTimeout(300);
+  assert.equal(await open('#shown'), false, 'the shown calendar stands in for the native picker');
+  await clickIndicator('#text');
+  await clickIndicator('#hidden');
+  await expect.poll(() => open('#hidden')).toBe(true);
+  assert.deepEqual(await page.evaluate(() => window.prevented), [true, false, false]);
+});
+
+scenario('field icons paint above a datepicker date input and under a docked search view', '<div class="search-bar"><input aria-label="Search"><div class="search-view" hidden><ul class="list"><li>One</li><li>Two</li><li>Three</li><li>Four</li></ul></div></div><div class="field"><span class="material-symbols prefix" aria-hidden="true">event</span><span class="material-symbols suffix" aria-hidden="true">error</span><input id="due" type="date"><label for="due">Due</label></div><div class="field"><span class="material-symbols prefix" aria-hidden="true">person</span><input id="name"><label for="name">Name</label></div>', async page => {
+  await page.evaluate(() => window.instances = [Expressive.Datepicker.init(document.querySelector('#due'), { setDefaultDate: true, defaultDate: new Date(2024, 1, 29) })]);
+  // Hit testing follows paint order. The icons opt out of pointer events, so opt them back in to probe it.
+  await page.addStyleTag({ content: '.field>:is(.prefix,.suffix){pointer-events:auto!important}' });
+  const onTop = () => page.locator('.field > :is(.prefix, .suffix)').evaluateAll(icons => icons.map(el => { const r = el.getBoundingClientRect(); return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) === el; }));
+  assert.deepEqual(await onTop(), [true, true, true], 'icons paint above the filled container');
+  await page.locator('.search-view').evaluate(el => { el.hidden = false; });
+  assert.deepEqual(await onTop(), [false, false, false], 'the open search view still covers every field icon');
+});
+
+scenario('slider stops sit at each step from min, need a usable step and clear on destroy', `
+<div id="uneven" class="slider stops" style="width:364px;--md-sys-color-on-primary:red"><input type="range" aria-label="Uneven" min="0" max="100" step="30" value="90"></div>
+<div id="uneven-rtl" class="slider stops" dir="rtl" style="width:364px;--md-sys-color-on-primary:red"><input type="range" aria-label="Uneven" min="0" max="100" step="30" value="90"></div>
+<div id="ltr-input" class="slider stops" dir="rtl" style="width:364px;--md-sys-color-on-primary:red"><input dir="ltr" type="range" aria-label="Left to right" min="0" max="100" step="30" value="90"></div>
+<div id="icon" class="slider m stops" style="width:364px;--md-sys-color-on-primary:red"><i aria-hidden="true"></i><input type="range" aria-label="Icon" min="0" max="100" step="5" value="30"></div>
+<div id="no-step" class="slider stops" style="width:364px;--md-sys-color-on-primary:red"><input type="range" aria-label="No step" min="0" max="100" value="90"></div>
+<div id="any-step" class="slider stops" style="width:364px;--md-sys-color-on-primary:red"><input type="range" aria-label="Any step" min="0" max="100" step="any" value="90"></div>
+<div id="zero-step" class="slider stops" style="width:364px;--md-sys-color-on-primary:red"><input type="range" aria-label="Zero step" min="0" max="100" step="0" value="90"></div>`, async page => {
+  await page.evaluate(() => { window.instances = [...document.querySelectorAll('.stops input')].map(el => Expressive.Slider.init(el)); });
+  const dots = async id => {
+    const png = utilsBundle.PNG.sync.read(await page.locator(`#${id}`).screenshot());
+    const y = Math.floor(await page.locator(`#${id} input`).evaluate(el => el.offsetTop + el.offsetHeight / 2));
+    const runs = [];
+    for (let x = 0; x < png.width; x++) {
+      const [r, g, b] = png.data.subarray((y * png.width + x) * 4);
+      if (r > 200 && g < 80 && b < 80) { if (runs.at(-1)?.[1] === x - 1) runs.at(-1)[1] = x; else runs.push([x, x]); }
+    }
+    return runs.map(([start, end]) => (start + end + 1) / 2);
+  };
+  // 360px of travel. Step 30 stops at 0, 30, 60 and 90, 108px apart, and 90 is under the handle.
+  // Step 5 is 18px apart; the M icon covers 12-36px, so the first dot is 38.
+  for (const [id, stops] of [['uneven', [2, 110, 218]], ['uneven-rtl', [146, 254, 362]], ['ltr-input', [2, 110, 218]], ['icon', [38, 56, 74, 92]], ['no-step', []], ['any-step', []], ['zero-step', []]]) {
+    const found = await dots(id);
+    assert.equal(found.length, stops.length, `${id} dots at ${found}`);
+    found.forEach((x, i) => assert.ok(Math.abs(x - stops[i]) <= 1, `${id} dot at ${x}, stop at ${stops[i]}`));
+  }
+  await page.evaluate(() => { for (const instance of window.instances.splice(0)) instance.destroy(); });
+  assert.deepEqual(await dots('uneven'), []);
+  // Only the authored inline properties are left.
+  assert.deepEqual(await page.locator('.stops, .stops input').evaluateAll(els => els.map(el => [...el.style].join())), Array(7).fill(['width,--md-sys-color-on-primary', '']).flat());
+});
+
+scenario('a header that holds only tabs is not a pinned top app bar', '<header id="tabs-only"><nav class="tabs" aria-label="Sections"><a class="active" href="#one" aria-current="page">One</a><a href="#two">Two</a></nav></header><div id="one" style="height:2000px"></div><div id="two"></div>', async page => {
+  // Tabs sit under the app bar, never in it, so a header that holds only tabs is neither pinned nor filled.
+  assert.deepEqual(await page.locator('#tabs-only').evaluate(el => { const s = getComputedStyle(el); return [s.position, s.zIndex, s.animationName, s.backgroundColor]; }), ['static', 'auto', 'none', 'rgba(0, 0, 0, 0)']);
+});
+
+scenario('flexible app bars keep the scroll position when they collapse', '<header id="app-bar"><nav aria-label="Main"><h1>Inbox</h1></nav></header><div style="height:2000px"></div>', async page => {
+  const settle = () => page.evaluate(() => new Promise(resolve => setTimeout(resolve, 200)));
+  const state = () => page.evaluate(() => [scrollY, document.querySelector('#app-bar').classList.contains('collapsed')]);
+  const timeline = await page.evaluate(() => CSS.supports('animation-timeline: scroll()'));
+  for (const size of ['medium', 'large']) {
+    await page.evaluate(size => { const bar = document.querySelector('#app-bar'); bar.className = size; window.instances = [Expressive.AppBar.init(bar)]; }, size);
+    // Collapsing shrinks the bar. Scroll anchoring must not pull a short scroll back to the top and expand the bar again.
+    await page.evaluate(() => scrollTo(0, 40));
+    await settle();
+    assert.deepEqual(await state(), [40, false], `${size} after a 40px scroll`);
+    if (timeline) await expect.poll(() => page.locator('#app-bar').evaluate(el => getComputedStyle(el).getPropertyValue('--md-comp-top-app-bar-scroll'))).toBe('1');
+    await page.evaluate(() => scrollTo(0, 400));
+    await expect.poll(state).toEqual([expect.any(Number), true]);
+    await settle();
+    const [y, collapsed] = await state();
+    assert.ok(collapsed && y > 300, `${size} stays collapsed at ${y}`);
+    await page.evaluate(() => scrollTo(0, 0));
+    await expect.poll(state).toEqual([0, false]);
+    await page.evaluate(() => window.instances.pop().destroy());
+  }
+});
+
+scenario('a flexible app bar low in the viewport keeps its size', '<div style="height:1000px"></div><header id="low-bar" class="medium"><nav aria-label="Main"><h1>Inbox</h1></nav></header><div style="height:2000px"></div>', async page => {
+  // The bar's top edge sits 30px above the bottom of the viewport. The page has not scrolled past it, so it stays expanded and does not switch sizes.
+  const result = await page.evaluate(async () => {
+    const bar = document.querySelector('#low-bar');
+    window.instances = [Expressive.AppBar.init(bar)];
+    scrollTo(0, bar.getBoundingClientRect().top + scrollY - innerHeight + 30);
+    await new Promise(resolve => setTimeout(resolve, 200));
+    let changes = 0;
+    new MutationObserver(() => changes++).observe(bar, { attributes: true, attributeFilter: ['class'] });
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return [changes, bar.classList.contains('collapsed')];
+  });
+  assert.deepEqual(result, [0, false]);
+});

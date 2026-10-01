@@ -104,17 +104,21 @@ const S = defineSections([
   </Section>
   <Section {...S["sticky-footer"]}>
         <p>
-          When the <code>&lt;footer&gt;</code> is a direct child of <code>body</code>,
-          the page is at least the viewport tall and <code>main</code> grows so the
-          footer sits at the bottom on a short page. That is not a fixed footer,
-          and it is not a navigation bar.
+          A sticky footer sits at the bottom of a short page and moves down when
+          the content is taller. It is not a fixed footer. Expressive does not
+          include these rules; add them to your own stylesheet once the page has
+          <code>header</code>, <code>main</code> and <code>footer</code> landmarks.
         </p>
 <Code code={`
-<body>
-  <header>...</header>
-  <main>...</main>
-  <footer>...</footer>
-</body>
+body {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
 `} />
   </Section>
 </PageBody>

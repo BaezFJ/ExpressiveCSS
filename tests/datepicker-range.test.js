@@ -111,6 +111,57 @@ for (const interaction of ['change', 'click', 'Enter']) {
   }
 }
 
+for (const interaction of ['change', 'click', 'Enter']) {
+  test(`native range overlays follow accepted, rejected, and cleared dates on ${interaction}`, () => {
+    resetBody();
+    document.body.innerHTML = '<div><input id="start" type="date"><input id="end" type="date"></div>';
+    const start = document.getElementById('start');
+    const end = document.getElementById('end');
+    const picker = Expressive.Datepicker.init(start, {
+      isDateRange: true, dateRangeEndEl: '#end', autoSubmit: false,
+      defaultDate: new Date(2026, 8, 20), setDefaultDate: true,
+      defaultEndDate: new Date(2026, 8, 25), setDefaultEndDate: true
+    });
+    const edit = (input, value) => {
+      input.value = value;
+      input.dispatchEvent(interaction === 'Enter'
+        ? new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })
+        : new window.Event(interaction, { bubbles: true, cancelable: true }));
+    };
+    try {
+      edit(start, '2026-09-18');
+      assert.equal(start.getAttribute('data-date'), 'Sep 18, 2026');
+      assert.equal(picker.date.getDate(), 18);
+      edit(end, '2026-09-27');
+      assert.equal(end.getAttribute('data-date'), 'Sep 27, 2026');
+      assert.equal(picker.endDate.getDate(), 27);
+
+      edit(start, '2026-09-30');
+      assert.equal(start.value, '2026-09-18');
+      assert.equal(start.getAttribute('data-date'), 'Sep 18, 2026');
+      edit(end, '2026-09-01');
+      assert.equal(end.value, '2026-09-27');
+      assert.equal(end.getAttribute('data-date'), 'Sep 27, 2026');
+
+      edit(start, '');
+      assert.equal(start.getAttribute('data-date'), '');
+      assert.equal(picker.date, null);
+      edit(end, '2026-09-28');
+      assert.equal(end.getAttribute('data-date'), 'Sep 28, 2026');
+      assert.equal(picker.endDate.getDate(), 28, 'an end-first range remains supported');
+      edit(end, '');
+      assert.equal(end.getAttribute('data-date'), '');
+      assert.equal(picker.endDate, null);
+      picker._confirm();
+      assert.equal(start.value, '');
+      assert.equal(end.value, '');
+    } finally {
+      picker.destroy();
+      resetBody();
+    }
+  });
+}
+
 for (const opening of ['click', 'Enter']) {
   test(`date ranges can start with the end date and reopen by ${opening}`, () => {
     resetBody();

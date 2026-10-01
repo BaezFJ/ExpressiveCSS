@@ -55,6 +55,46 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   description associations, allowing the same content to be initialized again.
 - Snackbars can reuse an element supplied through `snackbarId` without deleting
   it or retaining callbacks and controls from an earlier instance.
+- A vertical touch swipe that starts on a carousel scrolls the page again, and
+  pinch-zoom works over it. The carousel tracks no longer restrict
+  `touch-action`.
+- In Firefox the top app bar is `surface` at rest instead of
+  `surface-container`. The scroll fill now runs only where `animation-timeline`
+  is supported.
+- `.slider.stops` draws its dots. Each dot sits at a step position on the
+  active track, including centered and right-to-left sliders. Vertical and
+  two-handle sliders show no dots.
+- In Firefox an indeterminate `<progress class="progress">` shows its track and
+  a moving 40% bar, which stays still under reduced motion.
+- In Firefox a date input with a Datepicker shows its value. The formatted
+  overlay only applies in engines that render it.
+- Mouse drag moves the carousel track again in the horizontal full-screen
+  layout and in `.uncontained.snap`. Snapping used to pull the track back on
+  every move.
+- Editing or clearing a Datepicker `<input type="date">` with the keyboard
+  updates the formatted date painted over the field in Chrome and Safari.
+  After the field lost focus it used to show the previous date.
+- Clicking a Datepicker date input no longer opens the browser's date picker on
+  top of a visible Datepicker calendar (`openByDefault` or `container`). When
+  the calendar is hidden, the default, the browser picker still opens.
+- Leading `.prefix` and trailing `.suffix` icons stay visible on a Datepicker
+  date input in Chrome and Safari. The input's filled background used to cover
+  them.
+- `.slider.stops` puts each dot at `min` plus a whole number of steps, so a
+  `step` that does not divide the range no longer spreads the dots over the
+  whole track. With no `step`, `step="any"`, or a zero or negative step, the
+  slider shows no dots. Dots follow the range input's direction and leave the
+  inset icon uncovered.
+- `Slider.destroy()` removes the custom properties it set on the input and its
+  host, so stop dots and the track fill no longer stay painted. Inline values
+  set before init come back.
+- A `<header>` that holds only a `nav.tabs` is no longer styled as a top app
+  bar, so it no longer sticks to the top of the page or takes the app bar fill.
+- Medium and large app bars no longer send the page back to the top when they
+  collapse. A short or slow scroll near the top used to snap back and leave the
+  bar switching between sizes. The bar now collapses once the page has
+  scrolled by the height it gives up, and expands when the page returns to the
+  top of the bar.
 
 ### Changed
 
@@ -76,6 +116,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   site keep `#!`. The app-bar Search icon is a button. The API reference drops
   rendered demo text that had been copied into it, and the Lightbox guide
   includes its options and methods.
+- The footer partial no longer carries sticky-footer rules. Their nested
+  `:has()` selector was invalid, so browsers had always dropped them. The
+  Footer page now gives the two rules to add yourself, as the API reference
+  already did.
 
 ## [0.11.0] - 2026-09-30
 

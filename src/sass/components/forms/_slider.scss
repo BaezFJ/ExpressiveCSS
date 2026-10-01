@@ -54,7 +54,6 @@ input[type="range"] {
   --md-comp-slider-active-fraction: 0%;
   --md-comp-slider-start-fraction: 0%;
   --md-comp-slider-end-fraction: 100%;
-  --md-comp-slider-stop-count: 6;
 }
 
 :is(#{$_host}) {
@@ -582,42 +581,65 @@ input[type="range"]:active:not(:disabled)::-moz-range-thumb {
   }
 }
 
-// Discrete stops. Dots along the active track; JS sets --stop-count.
-:is(#{$_host}).stops::after {
+// Discrete stops. Dots on the active track, horizontal only. Stop k sits where
+// the handle centre sits at min + k * step: handle / 2 + k * spacing from the
+// input's start edge. JS writes --md-comp-slider-stop-spacing only for a usable
+// step, and for a single input the handle position and track centre, on the
+// host. Tiles repeat from the start edge with the dot half a handle in, and
+// clip-path keeps the stretch from --_from to --_to, measured from that edge.
+// Without a spacing the tile is 0px wide and nothing paints. A centered slider
+// leaves out the dot on the midpoint; an inset icon hides the dots under it.
+//
+// WebKit rounds a background tile to whole device pixels, so at 1x its dot k
+// drifts by k times that rounding. Every tiled image does this there, and the
+// exact repeating-linear-gradient row has square dots. WebKit is outside the
+// Chrome/Firefox baseline, so the dots stay round.
+:is(#{$_host}).stops:not(.vertical)::after {
+  --_position: var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction));
+  --_start: calc(var(--_position) + var(--md-comp-slider-gap) + var(--md-comp-slider-handle-width) / 2);
+  --_end: calc(var(--_position) - var(--md-comp-slider-gap) - var(--md-comp-slider-handle-width) / 2);
+  --_from: 0px;
+  --_to: var(--_end);
+  --_icon: 0px;
+  --_dot: calc(var(--md-comp-slider-handle-width) / 2);
+
   content: "";
   position: absolute;
   z-index: 1;
   left: 0;
-  top: 50%;
-  width: max(
-    0px,
-    calc(
-      var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
-        var(--md-comp-slider-handle-width) / 2
-    )
-  );
+  top: var(--md-comp-slider-track-center, 50%);
+  width: 100%;
   height: var(--md-comp-slider-track-height);
   translate: 0 -50%;
   pointer-events: none;
-  background-image: radial-gradient(
-    circle var(--md-comp-slider-stop-size),
-    var(--md-sys-color-on-primary) 99%,
-    transparent
-  );
-  background-size: calc(100% / max(1, var(--md-comp-slider-stop-count) - 1)) 100%;
-  background-repeat: repeat-x;
-  background-position: center;
+  background: radial-gradient(
+      circle var(--md-comp-slider-stop-size) at var(--_dot) 50%,
+      var(--md-sys-color-on-primary) 99%,
+      transparent
+    )
+    0 0 / var(--md-comp-slider-stop-spacing, 0px) 100% repeat-x;
+  // The inset icon stays on the left in both directions, so --_icon clips the left.
+  clip-path: inset(0 calc(100% - var(--_to)) 0 max(var(--_from), var(--_icon)));
 }
 
-:is(#{$_host}).stops.centered::after {
-  left: min(50%, var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction)));
-  width: max(
-    0%,
-    calc(
-      abs(50% - var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction))) - var(--md-comp-slider-gap) -
-        var(--md-comp-slider-handle-width) / 2
-    )
-  );
+// The input's direction, not the host's: it decides which end is min.
+:is(#{$_host}).stops:not(.vertical):has([type="range"]:dir(rtl))::after {
+  --_dot: calc(100% - var(--md-comp-slider-handle-width) / 2);
+  background-position-x: right;
+  clip-path: inset(0 var(--_from) 0 max(calc(100% - var(--_to)), var(--_icon)));
+}
+
+:is(#{$_host}).stops.centered:not(.vertical)::after {
+  --_from: min(50% + var(--md-comp-slider-stop-size), var(--_start));
+  --_to: max(50% - var(--md-comp-slider-stop-size), var(--_end));
+}
+
+:is(#{$_host}).stops:not(.vertical):has(> #{$icon}:first-child)::after {
+  --_icon: calc(var(--md-comp-slider-stop-inset) + var(--md-comp-slider-icon-size));
+}
+
+:is(#{$_host}).stops:has(> [type="range"]:disabled)::after {
+  opacity: 0.38;
 }
 
 // Value label — 40dp, 4dp above the handle. JS inserts this after the input.

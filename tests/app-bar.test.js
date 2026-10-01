@@ -17,13 +17,19 @@ function hasTypescale(body, role) {
 
 test('top app bars are pinned without a fixed class', () => {
   const pinned = rules.find((r) =>
-    r.selector === 'header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar))' &&
+    r.selector === 'header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar))' &&
     /position:\s*sticky/.test(r.body),
   );
   assert.ok(pinned, 'top app bars are not pinned by default');
   assert.match(pinned.body, /top:\s*0/);
   assert.match(pinned.body, /z-index:\s*997/);
-  assert.match(pinned.body, /animation-timeline:\s*scroll\(root\)/);
+  assert.doesNotMatch(pinned.body, /animation/, 'the scroll fill must not run outside @supports');
+  // Firefox drops animation-timeline and would run a 0s animation that holds
+  // the scrolled keyframe at rest, so the whole animation sits behind @supports.
+  assert.match(
+    css,
+    /@supports \(animation-timeline: scroll\(\)\)\s*\{\s*header:has\(> :is\(nav:not\(\.tabs, \.navigation-bar, \.navigation-rail\), \.bar\)\)\s*\{[^}]*animation: top-app-bar-scroll linear both;[^}]*animation-timeline:\s*scroll\(root\)/,
+  );
   assert.doesNotMatch(css, /header\.fixed/);
 });
 
