@@ -73,7 +73,7 @@ Static inspection uses descriptor-level, no-follow bounded reads and rechecks fi
 ## Command-line lint and agent hook
 
 `expressivecss-lint` runs the same static checks as `rules_enforcer` (bundled
-semantics rules, retired Materialize patterns, initialization checks) without
+semantics rules, retired markup patterns, initialization checks) without
 an MCP client. It exits 1 when it finds anything, so it fits `pre-commit` and CI:
 
 ```bash
@@ -183,7 +183,7 @@ The real `projectRoot` must equal or be contained by one of those roots. A tool 
 }
 ```
 
-The packaged config targets the npm release, following the same `npx ...@latest` shape as daisyUI Blueprint. Before the first publish, configure local development with `node` and an absolute path to this folder's `server.js` instead.
+The packaged config targets the npm release through `npx ...@latest`. Before the first publish, configure local development with `node` and an absolute path to this folder's `server.js` instead.
 
 ### Hermes
 

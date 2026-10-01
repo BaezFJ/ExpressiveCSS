@@ -57,7 +57,7 @@
 // already, in $_bar.
 $_toolbar: ".toolbar";
 
-// The two axes. `.max` is BeerCSS's name for docked; `.filled` is the older
+// The two axes. `.max` is an alias for docked; `.filled` is the older
 // name for vibrant. Both stay in the :is() lists.
 $_floating: "#{$_toolbar}:is(.floating, :not(.docked, .max))";
 $_docked: "#{$_toolbar}:is(.docked, .max)";

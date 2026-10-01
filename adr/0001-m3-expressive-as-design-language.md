@@ -12,7 +12,7 @@ define one is worse for its users than one that diverges deliberately.
 
 **M3 as implementation.** Treat M3's component list as ExpressiveCSS's list:
 anything outside it is out of charter and removed by default. There is real
-precedent for this reading — the legacy Materialize palette was cut on exactly
+precedent for this reading — the legacy color palette was cut on exactly
 these grounds, for "expressing a design opinion the framework does not hold".
 Rejected because the same argument deletes Breadcrumb, Pagination, Lightbox and
 Page footer, none of which M3 declines to define on principle; it simply is not

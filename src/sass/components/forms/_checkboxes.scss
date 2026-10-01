@@ -4,7 +4,7 @@
 //
 // Anatomy is the HTML. A <label> wrapping <input type="checkbox"> is
 // the control. The label text is a sibling of the input — no extra class,
-// no required <span>. input + span still works (legacy / BeerCSS / Select).
+// no required <span>. input + span still works (legacy / Select).
 // label.switch is a switch, not a checkbox — leave it alone.
 //
 // Tokens follow https://m3.material.io/components/checkbox/specs
@@ -206,7 +206,7 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
   cursor: default;
 }
 
-// Legacy / BeerCSS / Select / Autocomplete: input + span draws the same
+// Legacy / Select / Autocomplete: input + span draws the same
 // 18dp anatomy. Exclude .switch — that file paints the track on a span.
 $_cb-span: "*:not(.switch) > [type='checkbox'] + span:not(.lever, .supporting-text, .character-counter, .file-path)";
 

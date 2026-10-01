@@ -33,7 +33,7 @@ describe('Badge', () => {
     assert.match(css, /transform:\s*translate\(-50%,\s*-50%\)/);
   });
 
-  test('does not emit the Materialize caption suffix', () => {
+  test('does not emit the retired caption suffix', () => {
     assert.doesNotMatch(css, /content:\s*" new"/);
     assert.doesNotMatch(css, /data-badge-caption/);
   });

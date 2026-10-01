@@ -2,7 +2,7 @@
 
 # ExpressiveCSS design rules
 
-Copied from `m3-guidelines.md` (SHA-256 `e55f0ded680972a4cef643a3c9707a8dcf460ad6fd67cf55d5021327878a89e8`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
+Copied from `m3-guidelines.md` (SHA-256 `a1d3fb3d3d9d78ba3e74d1656ca64398a5095ef619fd1ddc94e76eac3f414522`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
 
 ## Hard rules
 
@@ -200,7 +200,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Search bar | `search.search-bar` | `input[type=search]` + `aria-label` | — |
 | Search view | `.search-view` (or `dialog.search-view.full-screen`) | Content; header is a `.search-bar` | `hidden` / `showModal()` |
 
-## 14. Name map (Materialize / M2 → M3 / ExpressiveCSS)
+## 14. Name map (retired names → ExpressiveCSS)
 
 If training data or the user says the left column, emit the right.
 

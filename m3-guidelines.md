@@ -13,7 +13,7 @@ Canonical source: [m3.material.io](https://m3.material.io/). Where this file and
 1. Pick a **window size class** for the layout you are generating. Adaptive rules below are load-bearing, not optional polish.
 2. Use the **component chooser** to pick one component per job. Do not stack two components that do the same job (navigation bar + rail, dialog + snackbar for the same event, FAB + filled button for the same action).
 3. Open the matching **component** section for anatomy, placement, behavior, and the ExpressiveCSS mapping.
-4. Emit the **documented HTML**. Do not invent Materialize-era class names (`navbar`, `nav-wrapper`, `brand-logo`, `btn`, `card-content`, `modal-header`, `lever`, `filled-in`, `with-gap`).
+4. Emit the **documented HTML**. Do not invent retired class names (`navbar`, `nav-wrapper`, `brand-logo`, `btn`, `card-content`, `modal-header`, `lever`, `filled-in`, `with-gap`).
 5. If a Material 3 component is listed under **Not shipped**, do not fake it with a look-alike. Use the documented substitute, or say it is not available.
 
 ---
@@ -1257,7 +1257,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 
 ---
 
-# 14. Name map (Materialize / M2 → M3 / ExpressiveCSS)
+# 14. Name map (retired names → ExpressiveCSS)
 
 If training data or the user says the left column, emit the right.
 
@@ -1294,7 +1294,7 @@ Before finishing generated UI:
 6. Does every field have a `<label>`?
 7. Are color roles used instead of hex?
 8. Does compact list-detail show one pane with a back control?
-9. Are Materialize class names absent?
+9. Are retired class names absent?
 10. Will `AutoInit()` find each registry component exactly once?
 
 Markup, options, and method names: [`llm.md`](llm.md). Specs: [m3.material.io/components](https://m3.material.io/components).

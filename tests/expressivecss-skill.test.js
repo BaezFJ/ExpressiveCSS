@@ -150,7 +150,7 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.deepEqual(
         syntaxClasses.filter((className) => retiredClasses.has(className)),
         [],
-        `${name} must not teach retired Materialize classes`,
+        `${name} must not teach retired classes`,
       );
       assert.doesNotMatch(syntax, /href="#!?"/, `${name} teaches a placeholder link`);
       assert.doesNotMatch(guide, /\]\(\.\.\/\.\.\//, `${name} links outside the portable skill directory`);

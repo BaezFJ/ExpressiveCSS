@@ -173,10 +173,6 @@ Before delivery, confirm:
 - every reachable state exists and gives the user a next step;
 - keyboard, focus, names, announcements, contrast, zoom, reflow, reduced motion, and touch targets pass;
 - light and dark schemes, long content, and relevant right-to-left layouts hold;
-- no legacy Materialize names, duplicate initialization, console errors, or stale generated guides remain.
+- no retired names, duplicate initialization, console errors, or stale generated guides remain.
 
 For changes to ExpressiveCSS itself, also follow the framework contribution path in the root skill and run the focused tests, `npm run typecheck`, the applicable full suite, `npm run build:skill`, docs verification, and visual checks.
-
-## Workflow provenance
-
-This workflow adapts the evidence-first review, refinement-versus-redesign boundary, state hardening, and bounded inspection ideas from [Impeccable](https://github.com/pbakaus/impeccable/tree/0330f61cef1c88291755beb373c81bef5f15be70/skill). Material 3 and the ExpressiveCSS contract replace Impeccable's open-ended visual-direction rules.

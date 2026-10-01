@@ -4,7 +4,7 @@ Engineering reference for contributors and agents. Paths in code spans are relat
 
 ## What this project is
 
-ExpressiveCSS is a front-end framework based on vendored MaterializeCSS v2.2.2 source (`src/ts` and `src/sass`), with Astro documentation and examples in `docs/`.
+ExpressiveCSS is a Material Design 3 front-end framework. Framework source lives in `src/ts` and `src/sass`, with Astro documentation and examples in `docs/`.
 
 For agents, `llm.md` covers markup and JavaScript APIs; `m3-guidelines.md` covers Material 3 usage, anatomy, placement, adaptive design, and component behavior.
 
@@ -22,7 +22,7 @@ The compiled CSS includes unlayered `@font-face` rules. `dist/fonts/` holds the 
 
 `.material-icons` is a compatibility alias that uses Symbols; do not ship the older Material Icons font. The `--md-sys-*` and `--md-ref-*` tokens retain their Material Design 3 spec names.
 
-Links to `github.com/materializecss/materialize` issues in code comments are real upstream references and should stay.
+Preserve third-party copyright and license notices in `LICENSE` and the packaged license.
 
 ## Build commands
 
@@ -547,7 +547,7 @@ Two color systems coexist:
    The **error ramp is deliberately literal hex, not generated** — M3 fixes the error hue rather than deriving it, and it is also the highest-chroma ramp, where OKLab and CIELAB lightness diverge most (it was the only ramp to exceed JND when generated). Do not add `"error"` to `$ramps`.
 
    `tests/color-drift.test.js` reads the constants out of the Sass, recomputes every ramp entry, and fails if any moves more than `DRIFT_BUDGET` (0.010) from the checked-in Material Theme Builder values in `tests/m3-reference-ramps.js`. It reports each ramp's remaining headroom as a diagnostic. If headroom shrinks toward zero, re-fit the constants — minimising **worst-case** drift, not mean — rather than raising the budget. `tokens/_theme.scss` maps those onto the live `--md-sys-color-*` names once, via `light-dark()` in an `@each` over `$sys-color-roles`, and `:root[theme='light'|'dark']` only set `color-scheme`. The `-light`/`-dark` pairs are public API (the docs' Themes page documents overriding them) and must stay. `light-dark()` resolves against the element's used `color-scheme` at the point of use, so `color-scheme` is load-bearing and a subtree can be re-themed on its own. `utilities/_colors.scss` exposes the live names as utility classes (`.primary`, `.on-surface-text`, …). New styling should consume `--md-sys-color-*` — never the `-light`/`-dark` pair, which locks the rule to one theme.
-2. **Legacy Materialize palette — removed.** `abstracts/_palette.scss` (`$colors`, `colorFunc()`) and `utilities/_palette-classes.scss` (`.red.lighten-2`) are gone: 532 rules, 18% of the compiled sheet, expressing a design opinion the framework does not hold, and never theme-aware. The framework consumed exactly one value from it (`$link-color`), now `var(--md-sys-color-primary)`. There is deliberately no Sass color function — a build-time function cannot follow a theme the user switches at runtime. Do not reintroduce one.
+2. **Legacy color palette — removed.** `abstracts/_palette.scss` (`$colors`, `colorFunc()`) and `utilities/_palette-classes.scss` (`.red.lighten-2`) are gone: 532 rules, 18% of the compiled sheet, expressing a design opinion the framework does not hold, and never theme-aware. The framework consumed exactly one value from it (`$link-color`), now `var(--md-sys-color-primary)`. There is deliberately no Sass color function — a build-time function cannot follow a theme the user switches at runtime. Do not reintroduce one.
 
 All `color-mix()` uses `in oklab`, never `in srgb`: sRGB interpolation dips in lightness through the midtones, so the same percentage reads differently per hue. `oklab` rather than `oklch` because `oklch` interpolates the hue angle and can swing a tint through unrelated hues.
 

@@ -99,19 +99,19 @@ const LegacyPatternList = [
   {
     id: 'legacy-nav-wrapper',
     severity: 'high',
-    description: '`.nav-wrapper` is legacy Materialize structure; use ExpressiveCSS nav components directly.',
+    description: '`.nav-wrapper` is retired markup structure; use ExpressiveCSS nav components directly.',
     pattern: /\bnav-wrapper\b/g,
   },
   {
     id: 'legacy-brand-logo',
     severity: 'medium',
-    description: '`.brand-logo` is Materialize-era naming; prefer native layout semantics in ExpressiveCSS pages.',
+    description: '`.brand-logo` is retired naming; prefer native layout semantics in ExpressiveCSS pages.',
     pattern: /\bbrand-logo\b/g,
   },
   {
     id: 'legacy-lever',
     severity: 'medium',
-    description: '`.lever` is a Materialize switch token, replace with Expressive switches per component guide.',
+    description: '`.lever` is a retired switch token, replace with Expressive switches per component guide.',
     pattern: /\blever\b/g,
   },
   {
@@ -1931,7 +1931,7 @@ async function rulesEnforcerHandler(args) {
       ],
       guidance: {
         alwaysPrefer: 'Read component guides before adding structure.',
-        compatibility: 'Avoid Materialize-era selectors and prefer source-of-truth component contracts.',
+        compatibility: 'Avoid retired selectors and prefer source-of-truth component contracts.',
       },
     },
     workflowId,

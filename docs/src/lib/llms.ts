@@ -37,7 +37,7 @@ component a job calls for, how it is structured, and where it sits;
 framework actually ships. Where they disagree with the Material 3 spec,
 \`llm.md\` wins on what exists and the spec wins on design intent.
 
-The public surface is not Materialize's. There is no \`.btn\`, \`.card-content\`,
+Use current ExpressiveCSS names. There is no \`.btn\`, \`.card-content\`,
 \`.nav-wrapper\`, \`.brand-logo\`, \`.modal-header\`, \`.lever\`, or \`.filled-in\` --
 components are carried by the HTML element (\`<button>\`, \`<article>\`,
 \`<dialog>\`, \`<footer>\`), and a class modifies a component rather than making
