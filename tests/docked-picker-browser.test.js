@@ -14,7 +14,6 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     let page;
     try {
       page = await browser.newPage();
-      await page.clock.install({ time: new Date('2026-09-30T12:00:00Z') });
       await page.clock.pauseAt(new Date('2026-09-30T12:00:00Z'));
       await page.setContent(`<!doctype html><style>${css}</style>
         <style>*, *::before, *::after { transition: none !important; }</style>

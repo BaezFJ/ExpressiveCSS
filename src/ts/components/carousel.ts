@@ -635,7 +635,7 @@ export class Carousel extends Component<CarouselOptions> {
     if (!this._started || !this.images.length) return;
     this._syncAdaptiveMode();
     this._syncLayoutRoles(this.center);
-    this._scrollToIndex(this.center, false);
+    if (!this.pressed) this._scrollToIndex(this.center, false);
     this._updateParallax();
   };
 

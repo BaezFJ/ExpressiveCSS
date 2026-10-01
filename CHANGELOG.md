@@ -7,6 +7,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Carousel preserves an active mouse drag when delayed resize work completes.
 - Snackbar ignores flick velocity after a pause of 100ms or more before release;
   dragging past the distance threshold still dismisses it.
 - Tooltip supports `open()` in its public TypeScript declarations and honors

@@ -280,7 +280,8 @@ describe('Autocomplete generated combobox', () => {
     });
   }
 
-  test('open state follows rendering, selection, dismissal, and teardown', async () => {
+  test('open state follows rendering, selection, dismissal, and teardown', t => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
     const calls = [];
     const inst = mount({
       menuOptions: {
@@ -290,11 +291,11 @@ describe('Autocomplete generated combobox', () => {
         onCloseStart(el) { calls.push(['close', this, el, Expressive.Autocomplete.getInstance(el).isOpen]); },
       },
     });
-    const waitForMenu = () => new Promise(resolve => setTimeout(resolve, 10));
     try {
       assert.equal(inst.isOpen, false);
       type(inst.el, 'a');
-      await waitForMenu();
+      // Flush both the deferred open and Menu's deferred event listeners.
+      t.mock.timers.tick(1);
       assert.equal(inst.menu.isOpen, true);
       assert.equal(inst.isOpen, true);
       inst.open();
@@ -304,20 +305,20 @@ describe('Autocomplete generated combobox', () => {
       assert.equal(inst.isOpen, false);
 
       inst.open();
-      await waitForMenu();
+      t.mock.timers.tick(1);
       key(inst.container, 'Escape');
       assert.equal(inst.menu.isOpen, false);
       assert.equal(inst.isOpen, false, 'Menu-driven Escape also updates Autocomplete');
       inst.open();
-      await waitForMenu();
+      t.mock.timers.tick(1);
       document.body.click();
-      await waitForMenu();
+      t.mock.timers.tick(1);
       assert.equal(inst.menu.isOpen, false);
       assert.equal(inst.isOpen, false, 'outside dismissal also updates Autocomplete');
 
       inst.open();
       inst.close();
-      await waitForMenu();
+      t.mock.timers.tick(1);
       assert.equal(inst.menu.isOpen, false, 'closing cancels a pending open');
       assert.equal(inst.isOpen, false);
       assert.deepEqual(calls.map(([action, , , state]) => [action, state]), [
@@ -328,9 +329,10 @@ describe('Autocomplete generated combobox', () => {
         assert.equal(el, inst.el, 'callbacks retain the trigger argument');
       }
       inst.open();
-      await waitForMenu();
+      t.mock.timers.tick(1);
     } finally {
       inst.destroy();
+      t.mock.timers.reset();
     }
     assert.equal(inst.isOpen, false);
   });
