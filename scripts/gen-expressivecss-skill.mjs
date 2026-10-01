@@ -25,7 +25,7 @@ const DESIGN_RULE_SECTIONS = [
   ['3. Component chooser', 1],
   ['12. Screen recipes', 1],
   ['13. Quick anatomy cheat sheet', 1],
-  ['14. Name map (Materialize / M2 → M3 / ExpressiveCSS)', 1],
+  ['14. Name map (retired names → ExpressiveCSS)', 1],
 ];
 const DECISIONS_DESTINATION = resolve(ROOT, 'skills/expressivecss/references/component-decisions.md');
 const CONTRACT_DESTINATIONS = [

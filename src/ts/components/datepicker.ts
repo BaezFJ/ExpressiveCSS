@@ -1159,7 +1159,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/><path d="M0-.5h24v24H0z" fill="none"/></svg>';
     html += `<button class="month-prev${
       prev ? '' : ' is-disabled'
-      // @todo remove button class and add scss mixin, current implementation temporary for focus states, @see https://github.com/materializecss/materialize/issues/566
+      // @todo remove button class and add scss mixin, current implementation temporary for focus states
     }" type="button">${leftArrow}</button>`;
 
     html += '<div class="selects-container">';
@@ -1174,7 +1174,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/><path d="M0-.25h24v24H0z" fill="none"/></svg>';
     html += `<button class="month-next${
       next ? '' : ' is-disabled'
-      // @todo remove button class and add scss mixin, current implementation temporary for focus states, @see https://github.com/materializecss/materialize/issues/566
+      // @todo remove button class and add scss mixin, current implementation temporary for focus states
     }" type="button">${rightArrow}</button>`;
 
     return (html += '</div>');
@@ -1278,7 +1278,7 @@ export class Datepicker extends Component<DatepickerOptions> {
 
     const yearSelect = this.calendarEl.querySelector('.orig-select-year') as HTMLSelectElement;
     const monthSelect = this.calendarEl.querySelector('.orig-select-month') as HTMLSelectElement;
-    // @todo fix accessibility @see https://github.com/materializecss/materialize/issues/522
+    // @todo fix accessibility
     FormSelect.init(yearSelect, {
       classes: 'select-year',
       menuOptions: { container: Utils.portalRoot(this.el), constrainWidth: false }

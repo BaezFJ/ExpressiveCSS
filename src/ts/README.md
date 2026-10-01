@@ -53,7 +53,7 @@ instance first, so re-initializing an element is safe.
 
 The `el['Expressive_Thing']` stashing backs `Expressive.Thing.getInstance(el)`,
 and page code can read `el.Expressive_Thing` directly. The key was `M_Thing`
-while this was a Materialize fork, so anything written against the upstream
+in older versions, so anything written against the old
 property name needs updating. It is duplicated in every component; replacing it
 with a WeakMap in the base class would be cleaner, but would drop the
 read-it-off-the-element access that key provides.

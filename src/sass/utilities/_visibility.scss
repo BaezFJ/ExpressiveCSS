@@ -1,7 +1,7 @@
 @use "../abstracts" as *;
 
 // Showing and hiding by the exact M3 window size classes.
-// The Materialize-era small/med/xxl names remain aliases for compatibility.
+// The older small/med/xxl names remain aliases for compatibility.
 
 .hide { display: none !important; }
 

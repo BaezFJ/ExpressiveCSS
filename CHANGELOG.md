@@ -211,7 +211,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - **Offline design context for the ExpressiveCSS skill.** The generator now
   copies the hard rules, window-size tables, component chooser, screen recipes,
-  anatomy cheat sheet, and Materialize name map from `m3-guidelines.md` into
+  anatomy cheat sheet, and retired name map from `m3-guidelines.md` into
   `skills/expressivecss/references/design-rules.md`, and the root, Design,
   Usage, and Install guides route to it. JavaScript component guides inline the
   options table and method names from `llm.md`. The Install guide carries a
@@ -820,7 +820,7 @@ semantics sweep keeps rendering — nothing warns at runtime — so each
   the same promise with no keyboard model behind it. `semantics.json` records
   the rejection.
 
-  **Migration.** `.searchbar`, the pre-1.0 Materialize navbar search field,
+  **Migration.** `.searchbar`, the pre-1.0 navbar search field,
   is now an alias of `.search-bar` and moves out of `forms/_input-fields.scss`
   into `components/_search.scss`. Old markup keeps working and picks up the M3
   container; `tests/m3-naming.test.js` holds the alias to every rule.
@@ -1166,7 +1166,7 @@ semantics sweep keeps rendering — nothing warns at runtime — so each
   `height` above and leave `full-screen` off.
 
 - **The coverflow carousel layout is gone.** `.coverflow` was the 3D
-  perspective tween inherited from the vendored MaterializeCSS source, and
+  perspective tween inherited from the older source, and
   Material 3 defines it at no layout and no size. It hand-wrote a momentum
   simulation the browser already performs — velocity smoothing over a
   `Date.now()` delta, exponential-decay easing toward a target, modular index
@@ -1333,7 +1333,7 @@ semantics sweep keeps rendering — nothing warns at runtime — so each
   instead of the spec's 56. Keyed on the shared `$icon` list now, the way
   `_buttons` and `_toolbar` already were.
 - **Five more tokens were declared or referenced but not both**, found by the
-  new check below. The time picker's AM/PM buttons referenced Materialize's
+  new check below. The time picker's AM/PM buttons referenced retired
   `--btn-padding` and `--btn-border-radius`, which no longer exist — the
   declarations were invalid at computed-value time, which does *not* fall back
   to the rule underneath, so the padding rendered as 0 while a base button rule
@@ -1714,7 +1714,7 @@ LLM-facing documentation, and the docs site's own templates.
 ### Fixed
 
 - **`llm.md` taught classes that do not exist.** It is the markup contract other
-  tools and models read, and several sections still carried Materialize-era
+  tools and models read, and several sections still carried retired
   names the Material Design 3 rewrite removed. Each replacement was verified
   against `dist/css/expressive.css` and `src/ts`:
   - `.btn-floating`, `.btn-large` and `.btn-small` (16 references) — a FAB is
@@ -1797,7 +1797,7 @@ guidelines document. No breaking changes.
 
 ## [0.5.0] - 2026-08-19
 
-The release that finishes moving the vendored Materialize surface onto Material
+The release that finishes moving the older component set onto Material
 Design 3 Expressive. Components with no M3 counterpart are gone, several were
 renamed to their M3 names, and the color layer now carries the full role set.
 Pre-1.0, so the breaking changes below are not gated behind a deprecation cycle

@@ -6,8 +6,8 @@
 //    INVALID AT COMPUTED-VALUE TIME. That is not the same as the declaration
 //    being ignored: it still wins the cascade, and *then* resolves to unset,
 //    so the property falls to its inherited or initial value rather than to
-//    the rule underneath. `.am-btn` in the time picker referenced Materialize's
-//    long-gone --btn-padding and rendered with padding 0 while a base button
+//    the rule underneath. `.am-btn` in the time picker referenced the
+//    retired --btn-padding and rendered with padding 0 while a base button
 //    rule sat right there offering 24px. The typescale classes did nothing at
 //    all for the same reason.
 //

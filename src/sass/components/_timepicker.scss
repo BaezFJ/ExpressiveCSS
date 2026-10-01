@@ -101,7 +101,7 @@ input[type=text]:is(.timepicker-input-minutes, .time-picker-input-minutes) {
 :is(.timepicker-container, .time-picker-container) .pm-btn {
   width: 3.6rem;
   height: 50%;
-  // --btn-padding is a Materialize variable that no longer exists, so this
+  // --btn-padding is a retired variable that no longer exists, so this
   // was invalid at computed-value time and the padding resolved to 0 - not
   // to the base button's inline space, which the invalid declaration still
   // beat in the cascade. Written as the 0 it has always rendered as.
@@ -278,7 +278,7 @@ input[type=text]:is(.timepicker-input-minutes, .time-picker-input-minutes) {
   :is(.timepicker-container, .time-picker-container) .pm-btn {
     flex-grow: 1;
     /*width: auto;*/
-    // Same two dead Materialize variables as above; both declarations
+    // Same two retired variables as above; both declarations
     // rendered as 0. The corner rules that follow square off the inner
     // edges, so the outer ones are the only radius in play.
     padding-inline: 0;

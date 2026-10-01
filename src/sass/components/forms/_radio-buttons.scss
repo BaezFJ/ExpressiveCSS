@@ -4,7 +4,7 @@
 //
 // Anatomy is the HTML. A <label> wrapping <input type="radio"> is the
 // control. The label text is a sibling of the input — no extra class, no
-// required <span>. input + span still works (legacy / BeerCSS).
+// required <span>. input + span still works (legacy).
 //
 // Tokens follow https://m3.material.io/components/radio-button/specs
 //   icon           20dp ring, 2dp stroke, on-surface-variant
@@ -136,7 +136,7 @@ label:has(> [type="radio"]:disabled),
   cursor: default;
 }
 
-// Legacy / BeerCSS: input + span draws the same 20/10 anatomy.
+// Legacy: input + span draws the same 20/10 anatomy.
 [type="radio"] + span {
   position: relative;
   display: inline-flex;

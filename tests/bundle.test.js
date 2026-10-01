@@ -37,7 +37,7 @@ describe("IIFE bundle", () => {
     assert.equal(
       dom.window.M,
       undefined,
-      "the old Materialize global is still present",
+      "the retired global is still present",
     );
   });
 

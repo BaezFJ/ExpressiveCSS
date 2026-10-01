@@ -5,7 +5,7 @@
 // Anatomy is the HTML. A <label class="switch"> wrapping
 // <input type="checkbox"> is the control. The label text is a sibling of
 // the input — no .lever required. input + .lever and input + span still
-// work (legacy / BeerCSS).
+// work (legacy).
 //
 // Tokens follow https://m3.material.io/components/switch/specs
 //   track          52×32dp, 16dp corners
@@ -129,7 +129,7 @@
   cursor: default;
 }
 
-// Legacy / BeerCSS: input + .lever or input + span draws the same anatomy.
+// Legacy: input + .lever or input + span draws the same anatomy.
 .switch [type="checkbox"] + .lever,
 .switch [type="checkbox"] + span {
   position: relative;
@@ -207,7 +207,7 @@
   cursor: default;
 }
 
-// BeerCSS: span holds the label text as well as the track.
+// The span holds the label text as well as the track.
 .switch [type="checkbox"] + span:not(.lever):not(:empty) {
   width: auto;
   min-width: var(--md-comp-switch-track-width);

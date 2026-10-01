@@ -6,7 +6,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": [],
 
-    // The vendored Materialize sources predate class-field "define" semantics:
+    // The component sources predate class-field "define" semantics:
     // subclasses declare fields that the constructor assigns after super().
     // Keep assignment semantics so those values are not reset to undefined.
     "useDefineForClassFields": false,

@@ -48,7 +48,7 @@ Three documentation conflicts found during this research demonstrate why domain 
 - Window classes and grid prefixes are Compact `<600px` / `.s`, Medium `600–839px` / `.m`, Expanded `840–1199px` / `.l`, Large `1200–1599px` / `.xl`, and Extra-large `>=1600px` / `.xxl`. Reason in window widths, not device labels; a landscape phone can be Expanded and a narrow desktop window Compact. (`m3-guidelines.md`; `llm.md`; `src/sass/abstracts/_breakpoints.scss`)
 - Compact layouts normally use one pane and a navigation bar; Medium may use a bar or collapsed rail; Expanded and larger favor rails and two-pane list/detail where appropriate. Never render a bar and rail together or a fixed drawer beside a rail. Compact list/detail shows one active pane and a back action; Expanded+ splits the panes. (`m3-guidelines.md`; `docs/src/pages/panes.astro`)
 - Choose feedback by urgency: dialogs block high-priority work, snackbars report ignorable status, bottom sheets suit compact transient actions, menus suit the same job from Medium upward, and standard side sheets hold optional persistent content at Expanded+. (`m3-guidelines.md`)
-- Use only shipped components and current ExpressiveCSS names. Do not resurrect Materialize/M2 classes such as `btn`, `modal`, `nav-wrapper`, `brand-logo`, `card-content`, `lever`, `filled-in`, or `with-gap`, and do not fake a Material component listed as not shipped. (`m3-guidelines.md`; `CLAUDE.md`)
+- Use only shipped components and current ExpressiveCSS names. Do not resurrect retired classes such as `btn`, `modal`, `nav-wrapper`, `brand-logo`, `card-content`, `lever`, `filled-in`, or `with-gap`, and do not fake a Material component listed as not shipped. (`m3-guidelines.md`; `CLAUDE.md`)
 
 ## Accessibility and HTML semantics
 
@@ -69,9 +69,9 @@ Three documentation conflicts found during this research demonstrate why domain 
 - Before handing off generated UI, verify: the next narrower layout, exactly one persistent navigation pattern, at most one high-emphasis action per region, the correct feedback surface, accessible icon controls and labelled fields, role tokens rather than hex, one-pane compact list/detail behavior, no legacy classes, and exactly one initialization path per registry component. (`m3-guidelines.md`)
 - Exercise keyboard-only operation, visible focus, modal focus return/Escape behavior, zoom/reflow, light and dark themes, reduced motion, and text/non-text contrast in a real browser; jsdom and the semantics checker cannot prove these. (`semantics.json`; `CLAUDE.md`; [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/))
 
-## Impeccable comparison and adaptation
+## Design workflow
 
-The design workflow added in skill version 0.3.0 and sharpened in version 0.4.0 was informed by the [Impeccable skill](https://github.com/pbakaus/impeccable/tree/0330f61cef1c88291755beb373c81bef5f15be70/skill), reviewed at commit `0330f61cef1c88291755beb373c81bef5f15be70`. Its strongest transferable ideas were process rules rather than aesthetics:
+The design workflow added in skill version 0.3.0 and sharpened in version 0.4.0 uses these process rules:
 
 - choose an explicit Implement, Refine, Redesign, Critique, or Audit mode before editing so reviews remain non-destructive and refinement does not turn into an unapproved redesign;
 - inspect the existing product, rendered surface, real content, and project constraints before proposing a direction;
@@ -81,9 +81,9 @@ The design workflow added in skill version 0.3.0 and sharpened in version 0.4.0 
 - batch responsive screenshots and fixes into bounded inspection rounds instead of polishing one detail at a time;
 - report review findings with pass, intentional-adaptation, fail, or not-applicable status plus impact, evidence, priority, location, and a concrete correction rather than a numerical score or a list of tastes.
 
-The adaptation deliberately does **not** import Impeccable's broad command system, open-ended visual-world selection, generic device breakpoints, 44 px target rule, font prohibitions, or web aesthetic bans. ExpressiveCSS already has a narrower authority split: Material 3 Expressive governs design intent, component choice, 48 dp targets, type roles, shape, state layers, motion, window size classes, and adaptive navigation; `semantics.json` governs authored element choice, landmark structure, and implied ARIA; target-version documentation and source govern shipped behavior. Product identity is expressed through Material role tokens, type and icon tokens, content, imagery, and assets without replacing familiar Material behavior.
+The workflow does **not** import a broad command system, open-ended visual-world selection, generic device breakpoints, 44 px target rule, font prohibitions, or web aesthetic bans. ExpressiveCSS assigns design and implementation authority as follows: Material 3 Expressive governs design intent, component choice, 48 dp targets, type roles, shape, state layers, motion, window size classes, and adaptive navigation; `semantics.json` governs authored element choice, landmark structure, and implied ARIA; target-version documentation and source govern shipped behavior. Product identity is expressed through Material role tokens, type and icon tokens, content, imagery, and assets without replacing familiar Material behavior.
 
-The resulting [`expressivecss-design` guide](../../skills/expressivecss/expressivecss-design/SKILL.md) is therefore a framework-specific design and review procedure, not a port of Impeccable. Its text is original and its external inspiration is attributed here and in the guide.
+The [`expressivecss-design` guide](../../skills/expressivecss/expressivecss-design/SKILL.md) records this framework-specific design and review procedure.
 
 ## Deterministic skill contracts and evidence
 
@@ -96,7 +96,7 @@ The resulting [`expressivecss-design` guide](../../skills/expressivecss/expressi
 
 ## Skill packaging and maintenance
 
-- The root skill is a discovery and routing surface, modeled on the daisyUI skill's task guides and per-component references rather than one monolithic procedure. Design and review, installation, usage, theming, runtime, and accessibility rules live in focused `SKILL.md` files so an agent loads the contract needed for the current task without paying for every other concern.
+- The root skill is a discovery and routing surface, with task guides and per-component references. Design and review, installation, usage, theming, runtime, and accessibility rules live in focused `SKILL.md` files so an agent loads the contract needed for the current task without paying for every other concern.
 - The root component catalogue mirrors the public Structure, Components, and Forms documentation groups. Each component guide contains a concise contract, one canonical syntax example, the applicable semantic rule messages, and links to the full page-level Markdown and repository source.
 - Component guides are generated by `scripts/gen-expressivecss-skill.mjs` from `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `llm.md`, and `semantics.json`. `npm run build:skill` refreshes them, while `tests/expressivecss-skill.test.js` runs the generator in check mode so documentation, selection metadata, or semantic changes cannot leave stale component guidance behind.
 - The generator transforms `docs/src/data/nav.ts` in memory with esbuild instead of importing TypeScript directly, so it still runs on the package's Node 20 minimum. Component-specific syntax language and rule exclusions handle contracts where the first HTML example or a whole semantics row would be misleading.

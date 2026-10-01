@@ -751,7 +751,7 @@ When practical, rename or supplement broad statuses with scoped wording such as 
 
 Add mechanical rules for high-confidence defects already named by the skill, when they can be detected without excessive false positives:
 
-- retired Materialize classes and globals;
+- retired classes and globals;
 - card actions inside navigation landmarks;
 - authored dynamic ARIA where the selected component owns it;
 - duplicate initialization patterns;
@@ -935,7 +935,7 @@ All recommendations are complete only when:
 
 ## Out of scope
 
-- Recreating Impeccable's broad command suite.
+- Adding a broad design command suite.
 - A numeric Material or design-quality score.
 - A live visual overlay or always-running review service.
 - Generic aesthetic bans unrelated to Material 3 Expressive.

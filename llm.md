@@ -4344,7 +4344,7 @@ Inside a `<button>` the bubble has to be a `<span>` — a `<div>` is not phrasin
 
 ### Rich
 
-`rich` (or BeerCSS’s `max`) is the rich tooltip: `surface`, elevation 2, 12dp corners, 320dp max. A heading is the title (`title-small`), a `<p>` is supporting text (`body-medium`), and a trailing `<nav>` is the action. Rich bubbles can receive pointer events so the action is usable.
+`rich` (or its `max` alias) is the rich tooltip: `surface`, elevation 2, 12dp corners, 320dp max. A heading is the title (`title-small`), a `<p>` is supporting text (`body-medium`), and a trailing `<nav>` is the action. Rich bubbles can receive pointer events so the action is usable.
 
 ```html
 <div>
@@ -4514,7 +4514,7 @@ Four, from two independent axes — a **shape** (floating or docked) and a **col
 | **floating** | `class="toolbar"` | `class="toolbar vibrant"` |
 | **docked** | `class="toolbar docked"` | `class="toolbar docked vibrant"` |
 
-Floating is the default shape and standard the default color, so neither needs a class — but `floating` and `standard` are both accepted, so a bar can name all of what it is. `filled` is the older name for `vibrant`, and `max` the BeerCSS name for `docked`; both still work.
+Floating is the default shape and standard the default color, so neither needs a class — but `floating` and `standard` are both accepted, so a bar can name all of what it is. `filled` is the older name for `vibrant`, and `max` an alias for `docked`; both still work.
 
 **Floating** hugs its actions: 64dp tall, 32dp stadium corners, elevation 3, 8dp end insets, 16dp from the viewport edge (24dp when `vertical`). **Docked** is full width, square, unlifted, 16dp end insets, its actions between 4dp and 32dp apart. `vertical` stacks a floating bar; a docked bar stays a horizontal strip.
 
@@ -4530,7 +4530,7 @@ The `vibrant` *attribute* is a different thing, and the bar deliberately does no
 
 ### Docked
 
-`docked` (the M3 name; `max` is the BeerCSS alias) stretches the bar to the full width, drops the stadium and the elevation, and spaces the actions. Use it for page actions at the bottom of the screen; destinations belong on a navigation bar. A child `.max` is a spacer, not the bar.
+`docked`, also accepted as `max`, stretches the bar to the full width, drops the stadium and the elevation, and spaces the actions. Use it for page actions at the bottom of the screen; destinations belong on a navigation bar. A child `.max` is a spacer, not the bar.
 
 ```html
 <div class="toolbar docked">
@@ -5064,7 +5064,7 @@ This is an inline input field:
 
 ### Textarea
 
-Use `textarea.expressive-textarea` inside `.field`. That class name is Expressive’s; there is no `.materialize-textarea`. Textareas grow with their content. `Forms.Init()` starts every `.expressive-textarea` on `DOMContentLoaded`.
+Use `textarea.expressive-textarea` inside `.field`. Textareas grow with their content. `Forms.Init()` starts every `.expressive-textarea` on `DOMContentLoaded`.
 
 ```html
 <div class="field">
@@ -5577,7 +5577,7 @@ Use the same `name` on every radio in a group. Add `disabled` to disable one. `w
 </fieldset>
 ```
 
-An `input + span` still works if you already have that markup, or if you follow BeerCSS’s `<label class="radio">` pattern.
+An `input + span` still works if you already have that markup, including the `<label class="radio">` pattern.
 
 ```html
 <fieldset>
@@ -5856,7 +5856,7 @@ Put the input first. Add `checked` or `disabled` on the input. Indeterminate is 
 document.getElementById('indeterminate-checkbox').indeterminate = true;
 ```
 
-An `input + span` still works if you already have that markup, or if you follow BeerCSS’s `<label class="checkbox">` pattern. Multiple `<select>` still emits `input + span` that way.
+An `input + span` still works if you already have that markup, including the `<label class="checkbox">` pattern. Multiple `<select>` still emits `input + span` that way.
 
 ```html
 <label class="checkbox">

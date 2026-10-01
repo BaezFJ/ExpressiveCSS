@@ -46,7 +46,7 @@ const S = defineSections([
           neither needs a class — but <code>floating</code> and
           <code>standard</code> are both accepted, so a bar can name all of
           what it is. <code>filled</code> is the older name for
-          <code>vibrant</code>, and <code>max</code> the BeerCSS name for
+          <code>vibrant</code>, and <code>max</code> an alias for
           <code>docked</code>; both still work.
         </p>
         <table class="striped">
@@ -230,9 +230,8 @@ const S = defineSections([
   </Section>
   <Section {...S.docked}>
         <p>
-          <code>docked</code> (the M3 name; <code>max</code> is the
-          BeerCSS alias) stretches the bar to the full width, drops the
-          stadium and the elevation, takes 16dp end insets, and spaces the
+          <code>docked</code>, also accepted as <code>max</code>, stretches
+          the bar to the full width, drops the stadium and the elevation, takes 16dp end insets, and spaces the
           actions between 4dp and 32dp apart as the bar widens. It replaces
           the bottom app bar: same job, shorter (64dp, not 80). Use it
           for page actions; destinations belong on a
