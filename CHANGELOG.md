@@ -5,6 +5,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-10-01
+
 ### Added
 
 - Utility classes for shrinking flex and grid children, scrolling or clipping
@@ -1917,7 +1919,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.10.1...v0.11.0
 [0.10.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.9.1...v0.10.0

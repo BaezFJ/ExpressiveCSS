@@ -14,6 +14,7 @@
   Time picker guides use `.date-picker` and `.time-picker`, the Select guide
   describes the `.field` wrapper instead of `.select-wrapper`, and the
   Scrollspy example uses `hide-on-compact-only`.
+- Bundled framework guidance: ExpressiveCSS 0.12.0.
 
 ## 0.2.1 - 2026-09-30
 
