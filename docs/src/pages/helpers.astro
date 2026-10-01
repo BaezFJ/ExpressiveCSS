@@ -8,6 +8,7 @@ import { defineSections } from "../lib/sections";
 const S = defineSections([
   { id: "valign", label: "Alignment" },
   { id: "flex", label: "Flex" },
+  { id: "overflow", label: "Sizing and overflow" },
   { id: "hiding", label: "Hiding/Showing Content" },
   { id: "spacing", label: "Spacing Content", heading: "Spacing" },
   { id: "formatting", label: "Formatting" },
@@ -37,6 +38,8 @@ const S = defineSections([
         <p>
           These classes are for horizontally aligning content:
           <code>.left-align</code>, <code>.right-align</code> and <code>.center-align</code>.
+          Use <code>.start-align</code> and <code>.end-align</code> to follow the
+          text direction. The physical left and right classes keep their existing behavior.
         </p>
         <article class="surface-variant">
           <h5 class="left-align">This should be left aligned</h5>
@@ -107,6 +110,46 @@ const S = defineSections([
           <code>flex-end</code>, so they follow the writing direction and mirror in RTL. Components
           that already lay out their children (app bars, toolbars, card <code>.actions</code>,
           button groups) do not need these classes.
+        </p>
+  </Section>
+  <Section {...S.overflow}>
+        <p>
+          Flex and grid children can retain a minimum size based on their content.
+          Clear that minimum when a child needs to shrink, truncate, or scroll.
+        </p>
+        <table class="striped">
+          <thead><tr><th>Class</th><th>Declaration</th></tr></thead>
+          <tbody>
+            <tr><td><code>.min-w-0</code></td><td><code>min-width: 0</code></td></tr>
+            <tr><td><code>.min-h-0</code></td><td><code>min-height: 0</code></td></tr>
+            <tr><td><code>.overflow-x-auto</code></td><td><code>overflow-x: auto</code></td></tr>
+            <tr><td><code>.overflow-y-auto</code></td><td><code>overflow-y: auto</code></td></tr>
+            <tr><td><code>.overflow-hidden</code></td><td><code>overflow: hidden</code></td></tr>
+          </tbody>
+        </table>
+<Code code={`
+<div class="flex gap-2" style="max-width: 24rem">
+  <span class="flex-1 min-w-0 truncate">A long filename that must fit beside its action.pdf</span>
+  <button type="button" class="flex-none">Download</button>
+</div>
+
+<section class="flex flex-column" style="height: 12rem" aria-labelledby="activity-title">
+  <h2 id="activity-title" class="title-medium flex-none">Activity</h2>
+  <div class="flex-1 min-h-0 overflow-y-auto p-2" tabindex="0" role="region" aria-label="Recent activity">
+    <p>09:00 Report uploaded.</p>
+    <p>09:15 Review requested.</p>
+    <p>09:30 Comments received.</p>
+    <p>09:45 Changes approved.</p>
+  </div>
+</section>
+`} />
+        <p>
+          Scrolling needs a bounded size. Use <code>.overflow-x-auto</code> for wide
+          tables or action rows. Give a generic scroll region <code>tabindex="0"</code>
+          and an accessible name when keyboard users cannot otherwise focus and scroll it.
+          Leave padding for child focus rings, such as <code>.p-2</code>.
+          <code>.overflow-hidden</code> clips content and focus rings, so use it only
+          when the clipped content is intentionally unavailable visually.
         </p>
   </Section>
   <Section {...S.hiding}>
@@ -184,7 +227,18 @@ const S = defineSections([
         <h5>Usage</h5>
 <Code code={`
 <div class="hide-on-compact-only"></div>
+
+<div class="flex hide-on-compact-only gap-2">
+  <a href="/reports">Reports</a>
+  <a href="/settings">Settings</a>
+</div>
 `} />
+        <p>
+          The flex example is hidden below 600px and keeps its flex layout above that
+          width. Show helpers set <code>display: block !important</code> within their
+          range; they do not hide content outside it. Use <code>.hide</code> with a
+          show helper only when block display is appropriate.
+        </p>
         <h5>Visually hidden</h5>
         <p>
           <code>visually-hidden</code> removes an element from sight but keeps
@@ -197,6 +251,19 @@ const S = defineSections([
         </p>
 <Code code={`
 <a href="/orders/42">View<span class="visually-hidden"> order 42</span></a>
+`} />
+        <h5>Reveal on focus</h5>
+        <p>
+          Use <code>.visually-hidden-focusable</code> for a skip link or a container
+          that should appear when it or a descendant receives focus. It uses the same
+          hidden styles only while focus is outside. Do not combine it with
+          <code>.visually-hidden</code>, which would keep it hidden.
+        </p>
+<Code code={`
+<a class="visually-hidden-focusable" href="#main-content">Skip to content</a>
+<main id="main-content" tabindex="-1">
+  <h1>Page content</h1>
+</main>
 `} />
   </Section>
   <Section {...S.spacing}>
@@ -249,6 +316,14 @@ const S = defineSections([
               <td>Applies modifier to the left side of the element</td>
             </tr>
             <tr>
+              <td><code><strong>*s</strong></code></td>
+              <td>Applies modifier to the inline-start side, following the writing direction</td>
+            </tr>
+            <tr>
+              <td><code><strong>*e</strong></code></td>
+              <td>Applies modifier to the inline-end side, following the writing direction</td>
+            </tr>
+            <tr>
               <td><code><strong>*x</strong></code></td>
               <td>Applies modifier to the left and right sides of the element</td>
             </tr>
@@ -259,7 +334,7 @@ const S = defineSections([
           </tbody>
         </table>
         <h5>Suffix values</h5>
-        <p>Any margin or padding modifier must be appended with one of these value suffixes.</p>
+        <p>Append a value suffix to each modifier. Values 0 through 6 work for margin and padding; <code>auto</code> is for margin only.</p>
         <table class="striped">
           <thead>
             <tr>
@@ -302,8 +377,29 @@ const S = defineSections([
             </tr>
           </tbody>
         </table>
-        <h5>Tables of all spacing helpers</h5>
-        <p>All margin helpers</p>
+        <h5>Logical spacing</h5>
+        <p>
+          These helpers use the same scale and <code>!important</code> declarations.
+          Inline start and end mirror in RTL. Existing physical spacing classes remain available;
+          avoid combining physical and logical helpers that set the same side.
+        </p>
+        <table class="striped">
+          <thead><tr><th>Property</th><th>Classes</th></tr></thead>
+          <tbody>
+            <tr><td><code>margin-inline-start</code></td><td><code>ms-0</code> through <code>ms-6</code>, <code>ms-auto</code></td></tr>
+            <tr><td><code>margin-inline-end</code></td><td><code>me-0</code> through <code>me-6</code>, <code>me-auto</code></td></tr>
+            <tr><td><code>padding-inline-start</code></td><td><code>ps-0</code> through <code>ps-6</code></td></tr>
+            <tr><td><code>padding-inline-end</code></td><td><code>pe-0</code> through <code>pe-6</code></td></tr>
+          </tbody>
+        </table>
+<Code code={`
+<div class="flex align-center gap-2">
+  <span class="start-align">Account</span>
+  <a class="ms-auto" href="/settings">Settings</a>
+</div>
+`} />
+        <h5>Physical spacing</h5>
+        <p>Margin helpers</p>
         <table class="responsive-table">
           <thead>
             <tr>
@@ -418,13 +514,13 @@ const S = defineSections([
             </tr>
           </tbody>
         </table>
-        <p>All padding helpers</p>
+        <p>Padding helpers</p>
         <table class="responsive-table">
           <thead>
             <tr>
               <th>Property</th>
               <th>Prefix</th>
-              <th colspan="8">Classes</th>
+              <th colspan="7">Classes</th>
             </tr>
           </thead>
           <tbody>
@@ -438,7 +534,6 @@ const S = defineSections([
               <td><code><strong>p-4</strong></code></td>
               <td><code><strong>p-5</strong></code></td>
               <td><code><strong>p-6</strong></code></td>
-              <td><code><strong>p-auto</strong></code></td>
             </tr>
             <tr>
               <td><code><strong>padding-top</strong></code></td>
@@ -450,7 +545,6 @@ const S = defineSections([
               <td><code><strong>pt-4</strong></code></td>
               <td><code><strong>pt-5</strong></code></td>
               <td><code><strong>pt-6</strong></code></td>
-              <td><code><strong>pt-auto</strong></code></td>
             </tr>
             <tr>
               <td><code><strong>padding-right</strong></code></td>
@@ -462,7 +556,6 @@ const S = defineSections([
               <td><code><strong>pr-4</strong></code></td>
               <td><code><strong>pr-5</strong></code></td>
               <td><code><strong>pr-6</strong></code></td>
-              <td><code><strong>pr-auto</strong></code></td>
             </tr>
             <tr>
               <td><code><strong>padding-bottom</strong></code></td>
@@ -474,7 +567,6 @@ const S = defineSections([
               <td><code><strong>pb-4</strong></code></td>
               <td><code><strong>pb-5</strong></code></td>
               <td><code><strong>pb-6</strong></code></td>
-              <td><code><strong>pb-auto</strong></code></td>
             </tr>
             <tr>
               <td><code><strong>padding-left</strong></code></td>
@@ -486,7 +578,6 @@ const S = defineSections([
               <td><code><strong>pl-4</strong></code></td>
               <td><code><strong>pl-5</strong></code></td>
               <td><code><strong>pl-6</strong></code></td>
-              <td><code><strong>pl-auto</strong></code></td>
             </tr>
             <tr>
               <td>
@@ -502,7 +593,6 @@ const S = defineSections([
               <td><code><strong>py-4</strong></code></td>
               <td><code><strong>py-5</strong></code></td>
               <td><code><strong>py-6</strong></code></td>
-              <td><code><strong>py-auto</strong></code></td>
             </tr>
             <tr>
               <td>
@@ -518,7 +608,6 @@ const S = defineSections([
               <td><code><strong>px-4</strong></code></td>
               <td><code><strong>px-5</strong></code></td>
               <td><code><strong>px-6</strong></code></td>
-              <td><code><strong>px-auto</strong></code></td>
             </tr>
             <tr>
               <td colspan="2">Values</td>
@@ -529,7 +618,6 @@ const S = defineSections([
               <td>1rem</td>
               <td>1.5rem</td>
               <td>3rem</td>
-              <td>auto</td>
             </tr>
           </tbody>
         </table>
@@ -547,6 +635,7 @@ const S = defineSections([
         <p>
           To truncate long lines of text in an ellipsis, add the class
           <code>truncate</code> to the tag which contains the text. See an example below of a header being truncated inside a card.
+          A flex or grid child may also need <code>.min-w-0</code> to shrink.
         </p>
         <div class="row">
           <div class="s6 offset-s3">
@@ -558,6 +647,17 @@ const S = defineSections([
 <Code code={`
 <h4 class="truncate">This is an extremely long title that will be truncated</h4>
 `} />
+
+        <h5>Text wrapping</h5>
+        <table class="striped">
+          <thead><tr><th>Class</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td><code>.break-words</code></td><td><code>overflow-wrap: anywhere</code> lets long URLs or identifiers wrap within their container.</td></tr>
+            <tr><td><code>.text-nowrap</code></td><td><code>white-space: nowrap</code> keeps text on one line without clipping or ellipsis.</td></tr>
+            <tr><td><code>.text-wrap</code></td><td><code>white-space: normal</code> restores ordinary wrapping.</td></tr>
+          </tbody>
+        </table>
+        <p>Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.</p>
 
         <h5>Hover</h5>
         <p>

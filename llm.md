@@ -997,7 +997,7 @@ You can easily vertically center things by adding the class `valign-wrapper` to 
 
 #### Text Align
 
-These classes are for horizontally aligning content: `.left-align`, `.right-align` and `.center-align`. `.center` is an alias of `.center-align`.
+These classes are for horizontally aligning content: `.left-align`, `.right-align` and `.center-align`. Use `.start-align` and `.end-align` to follow the text direction with `text-align: start` and `text-align: end`. The physical left and right classes keep their existing behavior.
 
 ```html
 <div>
@@ -1043,6 +1043,37 @@ One class per declaration, applied to the container. Row direction and start ali
 
 `justify-*` and `align-*` use `flex-start` and `flex-end`, so they follow the writing direction and mirror in RTL. Components that already lay out their children (app bars, toolbars, card `.actions`, button groups) do not need these classes.
 
+### Sizing and overflow
+
+Flex and grid children can retain a minimum size based on their content. Clear that minimum when a child needs to shrink, truncate, or scroll.
+
+| Class | Declaration |
+| --- | --- |
+| `.min-w-0` | `min-width: 0` |
+| `.min-h-0` | `min-height: 0` |
+| `.overflow-x-auto` | `overflow-x: auto` |
+| `.overflow-y-auto` | `overflow-y: auto` |
+| `.overflow-hidden` | `overflow: hidden` |
+
+```html
+<div class="flex gap-2" style="max-width: 24rem">
+  <span class="flex-1 min-w-0 truncate">A long filename that must fit beside its action.pdf</span>
+  <button type="button" class="flex-none">Download</button>
+</div>
+
+<section class="flex flex-column" style="height: 12rem" aria-labelledby="activity-title">
+  <h2 id="activity-title" class="title-medium flex-none">Activity</h2>
+  <div class="flex-1 min-h-0 overflow-y-auto p-2" tabindex="0" role="region" aria-label="Recent activity">
+    <p>09:00 Report uploaded.</p>
+    <p>09:15 Review requested.</p>
+    <p>09:30 Comments received.</p>
+    <p>09:45 Changes approved.</p>
+  </div>
+</section>
+```
+
+Scrolling needs a bounded size. Use `.overflow-x-auto` for wide tables or action rows. Give a generic scroll region `tabindex="0"` and an accessible name when keyboard users cannot otherwise focus and scroll it. Leave padding for child focus rings, such as `.p-2`. `.overflow-hidden` clips content and focus rings, so use it only when the clipped content is intentionally unavailable visually.
+
 ### Hiding/Showing Content
 
 We provide easy to use classes to hide/show content on specific screen sizes.
@@ -1069,7 +1100,14 @@ Legacy `small`, `med`, and `xxl` utility names remain aliases for compatibility.
 
 ```html
 <div class="hide-on-compact-only"></div>
+
+<div class="flex hide-on-compact-only gap-2">
+  <a href="/reports">Reports</a>
+  <a href="/settings">Settings</a>
+</div>
 ```
+
+The flex example is hidden below 600px and keeps its flex layout above that width. Show helpers set `display: block !important` within their range; they do not hide content outside it. Use `.hide` with a show helper only when block display is appropriate.
 
 #### Visually hidden
 
@@ -1077,6 +1115,17 @@ Legacy `small`, `med`, and `xxl` utility names remain aliases for compatibility.
 
 ```html
 <a href="/orders/42">View<span class="visually-hidden"> order 42</span></a>
+```
+
+#### Reveal on focus
+
+Use `.visually-hidden-focusable` for a skip link or a container that should appear when it or a descendant receives focus. It uses the same hidden styles only while focus is outside. Do not combine it with `.visually-hidden`, which would keep it hidden.
+
+```html
+<a class="visually-hidden-focusable" href="#main-content">Skip to content</a>
+<main id="main-content" tabindex="-1">
+  <h1>Page content</h1>
+</main>
 ```
 
 ### Spacing
@@ -1098,12 +1147,14 @@ These classes help space elements with margin and padding helpers for all direct
 | `***r**` | Applies modifier to the right side of the element |
 | `***b**` | Applies modifier to the bottom side of the element |
 | `***l**` | Applies modifier to the left side of the element |
+| `***s**` | Applies modifier to the inline-start side, following the writing direction |
+| `***e**` | Applies modifier to the inline-end side, following the writing direction |
 | `***x**` | Applies modifier to the left and right sides of the element |
 | `***y**` | Applies modifier to the top and bottom sides of the element |
 
 #### Suffix values
 
-Any margin or padding modifier must be appended with one of these value suffixes.
+Append a value suffix to each modifier. Values 0 through 6 work for margin and padding; `auto` is for margin only.
 
 | Suffix | Value |
 | --- | --- |
@@ -1116,9 +1167,27 @@ Any margin or padding modifier must be appended with one of these value suffixes
 | `***-6**` | `**3rem**` |
 | `***-auto**` | `**auto**` |
 
-#### Tables of all spacing helpers
+#### Logical spacing
 
-All margin helpers
+These helpers use the same scale and `!important` declarations. Inline start and end mirror in RTL. Existing physical spacing classes remain available; avoid combining physical and logical helpers that set the same side.
+
+| Property | Classes |
+| --- | --- |
+| `margin-inline-start` | `ms-0` through `ms-6`, `ms-auto` |
+| `margin-inline-end` | `me-0` through `me-6`, `me-auto` |
+| `padding-inline-start` | `ps-0` through `ps-6` |
+| `padding-inline-end` | `pe-0` through `pe-6` |
+
+```html
+<div class="flex align-center gap-2">
+  <span class="start-align">Account</span>
+  <a class="ms-auto" href="/settings">Settings</a>
+</div>
+```
+
+#### Physical spacing
+
+Margin helpers
 
 | Property | Prefix | Classes |  |  |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1129,20 +1198,20 @@ All margin helpers
 | `**margin-left**` | `**ml**` | `**ml-0**` | `**ml-1**` | `**ml-2**` | `**ml-3**` | `**ml-4**` | `**ml-5**` | `**ml-6**` | `**ml-auto**` |
 | `**margin-top**` and `**margin-bottom**` | `**my**` | `**my-0**` | `**my-1**` | `**my-2**` | `**my-3**` | `**my-4**` | `**my-5**` | `**my-6**` | `**my-auto**` |
 | `**margin-left**` and `**margin-right**` | `**mx**` | `**mx-0**` | `**mx-1**` | `**mx-2**` | `**mx-3**` | `**mx-4**` | `**mx-5**` | `**mx-6**` | `**mx-auto**` |
-| Values | 0 | 0.25rem | 0.5rem | 0.75rem | 1rem | 1.5rem | 3rem | auto |  |
+| Values |  | 0 | 0.25rem | 0.5rem | 0.75rem | 1rem | 1.5rem | 3rem | auto |
 
-All padding helpers
+Padding helpers
 
-| Property | Prefix | Classes |  |  |  |  |  |  |  |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `**padding**` | `**p**` | `**p-0**` | `**p-1**` | `**p-2**` | `**p-3**` | `**p-4**` | `**p-5**` | `**p-6**` | `**p-auto**` |
-| `**padding-top**` | `**pt**` | `**pt-0**` | `**pt-1**` | `**pt-2**` | `**pt-3**` | `**pt-4**` | `**pt-5**` | `**pt-6**` | `**pt-auto**` |
-| `**padding-right**` | `**pr**` | `**pr-0**` | `**pr-1**` | `**pr-2**` | `**pr-3**` | `**pr-4**` | `**pr-5**` | `**pr-6**` | `**pr-auto**` |
-| `**padding-bottom**` | `**pb**` | `**pb-0**` | `**pb-1**` | `**pb-2**` | `**pb-3**` | `**pb-4**` | `**pb-5**` | `**pb-6**` | `**pb-auto**` |
-| `**padding-left**` | `**pl**` | `**pl-0**` | `**pl-1**` | `**pl-2**` | `**pl-3**` | `**pl-4**` | `**pl-5**` | `**pl-6**` | `**pl-auto**` |
-| `**padding-top**` and `**padding-bottom**` | `**py**` | `**py-0**` | `**py-1**` | `**py-2**` | `**py-3**` | `**py-4**` | `**py-5**` | `**py-6**` | `**py-auto**` |
-| `**padding-left**` and `**padding-right**` | `**px**` | `**px-0**` | `**px-1**` | `**px-2**` | `**px-3**` | `**px-4**` | `**px-5**` | `**px-6**` | `**px-auto**` |
-| Values | 0 | 0.25rem | 0.5rem | 0.75rem | 1rem | 1.5rem | 3rem | auto |  |
+| Property | Prefix | Classes |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `**padding**` | `**p**` | `**p-0**` | `**p-1**` | `**p-2**` | `**p-3**` | `**p-4**` | `**p-5**` | `**p-6**` |
+| `**padding-top**` | `**pt**` | `**pt-0**` | `**pt-1**` | `**pt-2**` | `**pt-3**` | `**pt-4**` | `**pt-5**` | `**pt-6**` |
+| `**padding-right**` | `**pr**` | `**pr-0**` | `**pr-1**` | `**pr-2**` | `**pr-3**` | `**pr-4**` | `**pr-5**` | `**pr-6**` |
+| `**padding-bottom**` | `**pb**` | `**pb-0**` | `**pb-1**` | `**pb-2**` | `**pb-3**` | `**pb-4**` | `**pb-5**` | `**pb-6**` |
+| `**padding-left**` | `**pl**` | `**pl-0**` | `**pl-1**` | `**pl-2**` | `**pl-3**` | `**pl-4**` | `**pl-5**` | `**pl-6**` |
+| `**padding-top**` and `**padding-bottom**` | `**py**` | `**py-0**` | `**py-1**` | `**py-2**` | `**py-3**` | `**py-4**` | `**py-5**` | `**py-6**` |
+| `**padding-left**` and `**padding-right**` | `**px**` | `**px-0**` | `**px-1**` | `**px-2**` | `**px-3**` | `**px-4**` | `**px-5**` | `**px-6**` |
+| Values |  | 0 | 0.25rem | 0.5rem | 0.75rem | 1rem | 1.5rem | 3rem |
 
 #### Usage
 
@@ -1158,11 +1227,21 @@ These classes help format various content on your site.
 
 #### Truncation
 
-To truncate long lines of text in an ellipsis, add the class `truncate` to the tag which contains the text. See an example below of a header being truncated inside a card.
+To truncate long lines of text in an ellipsis, add the class `truncate` to the tag which contains the text. A flex or grid child may also need `.min-w-0` to shrink.
 
 ```html
 <h4 class="truncate">This is an extremely long title that will be truncated</h4>
 ```
+
+#### Text wrapping
+
+| Class | Use |
+| --- | --- |
+| `.break-words` | `overflow-wrap: anywhere` lets long URLs or identifiers wrap within their container. |
+| `.text-nowrap` | `white-space: nowrap` keeps text on one line without clipping or ellipsis. |
+| `.text-wrap` | `white-space: normal` restores ordinary wrapping. |
+
+Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.
 
 #### Hover
 

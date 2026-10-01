@@ -8,7 +8,8 @@
 // Hidden from sight, still announced: a visible label's longer twin, an
 // icon-only control's name, a live region's text. Important for the same
 // reason `.hide` is.
-.visually-hidden { @include visually-hidden(true); }
+.visually-hidden,
+.visually-hidden-focusable:not(:focus-within) { @include visually-hidden(true); }
 
 .hide-on-compact-only,
 .hide-on-small-only,

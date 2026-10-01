@@ -5,8 +5,18 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Utility classes for shrinking flex and grid children, scrolling or clipping
+  overflow, logical inline spacing and text alignment, and text wrapping.
+  Physical spacing and alignment classes retain their existing behavior.
+- `.visually-hidden-focusable` hides skip links and other content until the
+  element or a descendant receives focus. Use it independently of `.visually-hidden`.
+
 ### Fixed
 
+- Spacing output and documentation omit padding-auto classes, since CSS does
+  not accept `auto` for padding. Margin-auto helpers remain available.
 - Carousel preserves an active mouse drag when delayed resize work completes.
 - Snackbar ignores flick velocity after a pause of 100ms or more before release;
   dragging past the distance threshold still dismisses it.
