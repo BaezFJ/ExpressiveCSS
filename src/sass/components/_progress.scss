@@ -71,10 +71,22 @@ progress.progress {
     border-radius: var(--md-comp-progress-shape);
   }
 
-  &:indeterminate::-webkit-progress-value,
+  // Firefox draws no ::before/::after on <progress> and paints the track as the
+  // element's own background, so its indeterminate bar is the native one. It
+  // places that bar from the physical left and reads only margin-left, which is
+  // margin-inline-end in RTL, so both inline margins move. Keep this out of any
+  // -webkit- selector list: Chromium drops a list naming a pseudo-element it
+  // does not know.
   &:indeterminate::-moz-progress-bar {
-    background-color: transparent;
+    width: 40%;
+    margin-inline-end: 60%;
+    animation: progress-indeterminate-moz 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
   }
+}
+
+@keyframes progress-indeterminate-moz {
+  from { margin-inline-start: -40%; margin-inline-end: 100%; }
+  to   { margin-inline-start: 100%; margin-inline-end: -40%; }
 }
 
 .progress > .determinate {
@@ -107,10 +119,12 @@ progress.progress {
   }
 }
 
+.progress > .indeterminate {
+  background-color: transparent;
+}
+
 .progress > .indeterminate,
 progress.progress:indeterminate {
-  background-color: transparent;
-
   &::before,
   &::after {
     content: "";
@@ -218,6 +232,7 @@ progress.progress:indeterminate {
   progress.progress:indeterminate::-moz-progress-bar {
     background-color: CanvasText;
     width: 40%;
+    animation: none;
   }
 
   :is(.preloader, .progress.circular) {
@@ -253,5 +268,9 @@ progress.progress:indeterminate {
 
   .preloader {
     transform: none;
+  }
+
+  progress.progress:indeterminate::-moz-progress-bar {
+    animation: none;
   }
 }

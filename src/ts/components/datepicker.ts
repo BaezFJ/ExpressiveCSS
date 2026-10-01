@@ -692,7 +692,7 @@ export class Datepicker extends Component<DatepickerOptions> {
    * Sets the data-date attribute on the date input field
    */
   setDataDate(el, date) {
-    el.setAttribute('data-date', this.toString(date));
+    el.setAttribute('data-date', Datepicker._isDate(date) ? this.toString(date) : '');
   }
 
   /**
@@ -721,11 +721,10 @@ export class Datepicker extends Component<DatepickerOptions> {
    */
   setInputValue(el, date) {
     if (!el) return;
+    if (el.type == 'date') this.setDataDate(el, date);
     if (!Datepicker._isDate(date)) {
       el.value = '';
-      if (el.type === 'date') el.setAttribute('data-date', '');
     } else if (el.type == 'date') {
-      this.setDataDate(el, date);
       el.value = this.formatDate(date, 'yyyy-mm-dd');
     } else {
       el.value = this.toString(date);
@@ -1392,10 +1391,8 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   _handleInputClick = (e) => {
-    // Prevents default browser datepicker modal rendering
-    if (e.type == 'date') {
-      e.preventDefault();
-    }
+    // Block the native date picker only when the calendar is shown to replace it.
+    if (e.target.type == 'date' && (this.options.openByDefault || this.options.container)) e.preventDefault();
     this._batchDraws(() => {
       this.setDateFromInput(e.target as HTMLInputElement);
       this.draw();
@@ -1567,26 +1564,25 @@ export class Datepicker extends Component<DatepickerOptions> {
     const el = e.target as HTMLInputElement;
     // Prevent change event from being fired when triggered by the plugin
     if (e['detail']?.firedBy === this) return;
+    // The ::after overlay paints data-date over a native date input, so it
+    // follows every edit, including a cleared or partial one.
+    if (el.type == 'date') this.setDataDate(el, Datepicker._parseDate(el.value));
     if (this.options.isDateRange && !el.value.trim()) return this.setDateFromInput(el);
     // Prevent change event from being fired if an end date is set without a start date
     if (el == this.endDateEl && !this.date) return;
     if (this.options.parse) {
       date = this.options.parse(
-        (e.target as HTMLInputElement).value,
+        el.value,
         typeof this.options.format === 'function'
           ? this.options.format(new Date(this.el.value))
           : this.options.format
       );
     } else {
-      date = Datepicker._parseDate((e.target as HTMLInputElement).value);
+      date = Datepicker._parseDate(el.value);
     }
     if (Datepicker._isDate(date)) {
       if (el == this.endDateEl && date < this.date) return this.setInputValue(el, this.endDate);
       this.setDate(date, false, el == this.endDateEl, true);
-      if (e.type == 'date') {
-        this.setDataDate(e, date);
-        this.setInputValues();
-      }
     }
   };
 

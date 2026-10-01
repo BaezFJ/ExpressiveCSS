@@ -76,10 +76,10 @@ describe('AppBar collapse', () => {
     document.body.innerHTML = mediumBar;
     const header = document.querySelector('header');
     const instance = Expressive.AppBar.init(header);
-    const sentinel = header.previousElementSibling;
+    const sentinel = header.nextElementSibling;
     assert.ok(sentinel, 'no collapse sentinel');
     instance.destroy();
-    assert.equal(header.previousElementSibling, null);
+    assert.equal(header.nextElementSibling, null);
     assert.equal(Expressive.AppBar.getInstance(header), undefined);
     assert.deepEqual(observers[0].targets, []);
   });

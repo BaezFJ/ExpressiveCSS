@@ -95,3 +95,42 @@ describe('Range plugin', () => {
     }
   });
 });
+
+describe('Slider stops and destroy', () => {
+  beforeEach(resetBody);
+
+  test('stops count only the steps that fit before max', () => {
+    document.body.innerHTML = `<div class="slider stops"><input type="range" min="0" max="100" step="40" value="40"></div>`;
+    const instance = Expressive.Slider.init(document.querySelector('input'));
+    try {
+      // 0, 40 and 80; 120 is past max.
+      assert.equal(document.querySelector('.slider').style.getPropertyValue('--md-comp-slider-stop-count'), '3');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('destroy removes the properties it wrote and keeps what the author set', () => {
+    document.body.innerHTML = `
+      <div class="slider stops" style="--md-comp-slider-stop-count: 3"><input type="range" min="0" max="100" step="20" value="40" style="--md-comp-slider-active-fraction: 40%"></div>
+      <div class="slider stops" style="--md-comp-slider-start-fraction: 10%">
+        <input type="range" min="0" max="100" value="25" aria-label="start">
+        <input type="range" min="0" max="100" value="75" aria-label="end">
+      </div>`;
+    const [single, dual] = document.querySelectorAll('.slider');
+    const instances = [...document.querySelectorAll('input')].map((el) => Expressive.Slider.init(el));
+    try {
+      assert.equal(single.style.getPropertyValue('--md-comp-slider-stop-count'), '6');
+      instances[0].destroy();
+      assert.equal(single.style.cssText, '--md-comp-slider-stop-count: 3;');
+      assert.equal(single.querySelector('input').style.cssText, '--md-comp-slider-active-fraction: 40%;');
+      // The end handle still runs, so the range keeps its interval.
+      instances[1].destroy();
+      assert.equal(dual.style.getPropertyValue('--md-comp-slider-start-fraction'), '25%');
+      instances[2].destroy();
+      assert.equal(dual.style.cssText, '--md-comp-slider-start-fraction: 10%;');
+    } finally {
+      for (const instance of instances) if (Expressive.Slider.getInstance(instance.el) === instance) instance.destroy();
+    }
+  });
+});

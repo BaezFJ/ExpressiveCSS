@@ -25,7 +25,7 @@ describe('Navigation bar', () => {
     // The bar host is now :is(nav:not(...), .bar) - a bar with no destinations
     // is a .bar div rather than an empty <nav> landmark. What must not change
     // is that neither selector reaches nav.navigation-bar or nav.tabs.
-    assert.match(css, /header:has\(>\s*:is\(nav:not\(\.navigation-bar,\s*\.navigation-rail\),\s*\.bar\)\)/);
+    assert.match(css, /header:has\(>\s*:is\(nav:not\(\.tabs,\s*\.navigation-bar,\s*\.navigation-rail\),\s*\.bar\)\)/);
     assert.match(css, /:is\(nav:not\(\.tabs,\s*\.navigation-bar,\s*\.navigation-rail\),\s*\.bar\)/);
     // .bar must never escape its compound and become a top-level selector.
     assert.doesNotMatch(css, /^\.bar\s*[,{]/m);

@@ -140,14 +140,3 @@ footer:not(:has(> nav:only-child)) > .container > small:last-child {
   }
 }
 
-// Sticky: pin the footer to the bottom of a short page. Only when the
-// landmark is a direct child of body — not a footer nested in a demo.
-body:has(> footer:not(:has(> nav:only-child))) {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-}
-
-body:has(> footer:not(:has(> nav:only-child))) > main {
-  flex: 1 0 auto;
-}

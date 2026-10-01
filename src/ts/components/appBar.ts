@@ -6,7 +6,7 @@ const _defaults: BaseOptions = {};
  * Collapse medium/large flexible app bars on scroll, and open the related
  * search view when the search field in a search app bar is selected.
  *
- * Observation is IntersectionObserver on a 1px sentinel ahead of the header.
+ * Observation is IntersectionObserver on a sentinel after the header.
  * A scroll listener would re-enter layout on every tick; this does not.
  */
 export class AppBar extends Component<BaseOptions> {
@@ -59,11 +59,18 @@ export class AppBar extends Component<BaseOptions> {
     }
     if (typeof IntersectionObserver === 'undefined') return;
 
+    // Collapsing shrinks the header, and scroll anchoring then scrolls the page
+    // back by the height it lost. The sentinel follows the header, so it moves
+    // with the page and that correction cannot bring it back into view. It sits
+    // 64px, the small bar's height, above the header's bottom edge. An expanded
+    // bar therefore collapses once the page has scrolled by the height that
+    // collapsing removes, and a collapsed bar expands when the page is back at
+    // its top. Zero height and no margins keep it out of the layout.
     this._sentinel = document.createElement('span');
     this._sentinel.setAttribute('aria-hidden', 'true');
     this._sentinel.style.cssText =
-      'display:block;width:100%;height:1px;margin-top:-1px;pointer-events:none;visibility:hidden';
-    this.el.insertAdjacentElement('beforebegin', this._sentinel);
+      'display:block;height:0;position:relative;top:-64px;pointer-events:none;visibility:hidden';
+    this.el.insertAdjacentElement('afterend', this._sentinel);
     this._observer = new IntersectionObserver(this._onIntersect);
     this._observer.observe(this._sentinel);
   }
@@ -71,7 +78,13 @@ export class AppBar extends Component<BaseOptions> {
   private _onIntersect = (entries: IntersectionObserverEntry[]) => {
     const entry = entries[0];
     if (!entry) return;
-    this.el.classList.toggle('collapsed', !entry.isIntersecting);
+    // Collapse only when the sentinel has gone above the pinned header. A
+    // sentinel below the viewport would move back into view as the bar shrank,
+    // and the bar would switch sizes on every frame.
+    this.el.classList.toggle(
+      'collapsed',
+      !entry.isIntersecting && entry.boundingClientRect.top < this.el.getBoundingClientRect().top
+    );
   };
 
   private _setupSearch() {

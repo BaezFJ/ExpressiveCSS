@@ -53,7 +53,7 @@ $_heading: ":is(h1, h2, h3, h4, h5, h6)";
 $_title: ":is(#{$_heading}, hgroup)";
 $_search: ":is(.search-bar, .searchbar)";
 
-header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
+header:has(> #{$_bar}) {
   --md-comp-top-app-bar-container-color: var(--md-sys-color-surface);
   --md-comp-top-app-bar-scrolled-container-color: var(--md-sys-color-surface-container);
   --md-comp-top-app-bar-headline-color: var(--md-sys-color-on-surface);
@@ -494,14 +494,19 @@ header.large.collapsed:has(> #{$_bar}) > #{$_bar} {
 // from the body (M3 Expressive). The animation only drives the mix
 // progress; a utility class on the header sets background-color itself
 // and is not overwritten. Without animation-timeline the bar stays at
-// rest (surface), the spec default.
-header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
+// rest (surface), the spec default. The @supports guard is load-bearing: an
+// engine that drops animation-timeline runs a 0s animation instead, and
+// fill-mode both holds the scrolled keyframe from the first frame.
+header:has(> #{$_bar}) {
   position: sticky;
   top: 0;
   z-index: 997;
-  animation: top-app-bar-scroll linear both;
-  animation-timeline: scroll(root);
-  animation-range: 0 8px;
+
+  @supports (animation-timeline: scroll()) {
+    animation: top-app-bar-scroll linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 8px;
+  }
 }
 
 @keyframes top-app-bar-scroll {

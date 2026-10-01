@@ -6,6 +6,11 @@ export interface SliderOptions extends BaseOptions {}
 
 const _defaults: SliderOptions = {};
 
+// Inline values _set() replaced, per element, so destroy() can put back what
+// an author wrote. Per element, not per instance: both handles of a range
+// write the same host properties.
+const _authored = new WeakMap<HTMLElement, Record<string, string>>();
+
 export class Slider extends Component<SliderOptions> {
   declare el: HTMLInputElement;
   private _pointerDown: boolean;
@@ -72,6 +77,20 @@ export class Slider extends Component<SliderOptions> {
     this._removeEventHandlers();
     this._removeThumb();
     this.el['Expressive_Slider'] = undefined;
+    const host = this._host();
+    for (const el of [this.el, host]) {
+      for (const name in _authored.get(el)) el.style.setProperty(name, _authored.get(el)[name]);
+      _authored.delete(el);
+    }
+    // The other handle of a range writes the shared host properties again.
+    host?.querySelectorAll('input[type="range"]').forEach((el) => el['Expressive_Slider']?._sync());
+  }
+
+  _set(el: HTMLElement, name: string, value: string) {
+    const authored = _authored.get(el) ?? {};
+    _authored.set(el, authored);
+    authored[name] ??= el.style.getPropertyValue(name);
+    el.style.setProperty(name, value);
   }
 
   // Eleven listeners used to cover four stages, because each one was written
@@ -203,26 +222,34 @@ export class Slider extends Component<SliderOptions> {
     const length = vertical ? height : width;
     const position = handle / 2 + percent * (length - handle);
 
-    this.el.style.setProperty('--md-comp-slider-active-fraction', fraction);
-    this.el.style.setProperty('--md-comp-slider-active-position', `${position}px`);
+    this._set(this.el, '--md-comp-slider-active-fraction', fraction);
+    this._set(this.el, '--md-comp-slider-active-position', `${position}px`);
 
     const host = this._host();
     const peers = host?.querySelectorAll('input[type="range"]');
     if (host && peers && peers.length === 2) {
       const nums = Array.from(peers).map((el) => this._fraction(el as HTMLInputElement));
-      host.style.setProperty('--md-comp-slider-start-fraction', `${Math.min(...nums) * 100}%`);
-      host.style.setProperty('--md-comp-slider-end-fraction', `${Math.max(...nums) * 100}%`);
-      host.style.setProperty('--md-comp-slider-start-position', `${handle / 2 + Math.min(...nums) * (length - handle)}px`);
-      host.style.setProperty('--md-comp-slider-end-position', `${handle / 2 + Math.max(...nums) * (length - handle)}px`);
+      this._set(host, '--md-comp-slider-start-fraction', `${Math.min(...nums) * 100}%`);
+      this._set(host, '--md-comp-slider-end-fraction', `${Math.max(...nums) * 100}%`);
+      this._set(host, '--md-comp-slider-start-position', `${handle / 2 + Math.min(...nums) * (length - handle)}px`);
+      this._set(host, '--md-comp-slider-end-position', `${handle / 2 + Math.max(...nums) * (length - handle)}px`);
     }
     if (host?.classList.contains('stops')) {
       const parsedMax = parseFloat(this.el.max);
       const max = Number.isNaN(parsedMax) ? 100 : parsedMax;
       const min = parseFloat(this.el.min) || 0;
       const step = parseFloat(this.el.step);
-      if (step > 0 && Number.isFinite(step)) {
-        const n = Math.round((max - min) / step) + 1;
-        host.style.setProperty('--md-comp-slider-stop-count', String(Math.max(2, n)));
+      // Stops sit at min + k * step up to max, so a step that does not divide
+      // the range ends short of max. No step, `any`, zero or a negative step
+      // clears the spacing, and the host paints no dots.
+      const stops = step > 0 && Number.isFinite(step) && max > min;
+      this._set(host, '--md-comp-slider-stop-count', stops ? String(Math.floor((max - min) / step + 1e-9) + 1) : '');
+      this._set(host, '--md-comp-slider-stop-spacing', stops ? `${((length - handle) * step) / (max - min)}px` : '');
+      // The tick row is the host's ::after, which cannot read the input's
+      // properties. A dual host has no single position.
+      if (peers?.length === 1) {
+        this._set(host, '--md-comp-slider-active-position', `${position}px`);
+        this._set(host, '--md-comp-slider-track-center', `${top + height / 2}px`);
       }
     }
 

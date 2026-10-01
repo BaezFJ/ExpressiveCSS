@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `5017d36c40d2519ccd54905a773cacd9d1d425ea644d5c7936c1ee3526404e4b`
+Contract SHA-256: `02fa2c21f2aef98f60bef89072eb9dcb39c8ca304baac680d0dc5fb113e931d0`
 
 #### Selection and adaptation
 
@@ -60,7 +60,7 @@ An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) 
 
 #### Methods
 
-- `.destroy()`: Destroy the plugin instance, remove the value label, and tear down its event handlers.
+- `.destroy()`: Destroy the plugin instance, remove the value label, tear down its event handlers, and restore the inline custom properties it changed.
 
 #### Also documented
 
