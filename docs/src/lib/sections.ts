@@ -13,7 +13,7 @@ export interface SectionMeta {
   /** Heading text when it differs from the label, or `false` for no heading (intro sections). */
   heading?: string | false;
   /** Heading level. `h3` unless the page needs another. */
-  tag?: "h2" | "h3" | "h4";
+  tag?: "h2" | "h3";
 }
 
 /** The sections of one page, keyed by id and kept in declaration order. */

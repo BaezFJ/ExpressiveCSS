@@ -215,7 +215,7 @@ Apply one elevation class when a plain element needs a documented Material shado
 | --- | --- |
 | `.z-depth-0` | Removes the shadow with `box-shadow: none !important`; use it to flatten a component-owned shadow deliberately. |
 | `.z-depth-1` | Elevation level 1. |
-| `.z-depth-1-half` | In-between elevation used by some component hover states. |
+| `.z-depth-1-half` | In-between level from the same elevation map. |
 | `.z-depth-2` | Elevation level 2. |
 | `.z-depth-3` | Elevation level 3. |
 | `.z-depth-4` | Elevation level 4. |

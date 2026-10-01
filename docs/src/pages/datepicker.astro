@@ -26,8 +26,8 @@ const S = defineSections([
 <p>The inline and docked calendars support keyboard navigation. Enter on the date input focuses a day. Tab enters or leaves the grid; arrow keys move by day or week. Home/End follow <code>firstDay</code>, and Left/Right follow <code>isRTL</code>. PageUp/PageDown change month; hold Shift to change year. Enter or Space selects an enabled day. Disabled dates remain focusable and are announced as unavailable. Navigation respects configured bounds and preserves focus after redraws. This does not apply to modal pickers.</p>
   <Section {...S.introduction}>
         <p class="flow-text">
-          Add <code>datepicker</code> to a text input. <code>AutoInit()</code> starts every
-          <code>.datepicker</code> except those marked <code>no-autoinit</code>.
+          Add <code>date-picker</code> to a text input. <code>AutoInit()</code> starts every
+          <code>.date-picker</code> except those marked <code>no-autoinit</code>.
         </p>
         <p>
           The calendar is inline, not a modal. With the default options the
@@ -46,7 +46,7 @@ const S = defineSections([
 </div>
 `} />
 <Code code={`
-Expressive.Datepicker.init(document.querySelectorAll('.datepicker'), {
+Expressive.Datepicker.init(document.querySelectorAll('.date-picker'), {
   openByDefault: true
 });
 `} />
@@ -60,13 +60,13 @@ Expressive.Datepicker.init(document.querySelectorAll('.datepicker'), {
         <p>
           The IIFE bundle exposes <code>Expressive.Datepicker</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
-          or let <code>Expressive.AutoInit()</code> start every <code>.datepicker</code>.
+          or let <code>Expressive.AutoInit()</code> start every <code>.date-picker</code>.
           AutoInit uses the defaults, so the calendar stays hidden until you pass
           <code>openByDefault</code> (or a working <code>displayPlugin</code> pair, below).
         </p>
 <Code code={`
 document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.datepicker');
+  const elems = document.querySelectorAll('.date-picker');
   const instances = Expressive.Datepicker.init(elems, {
     openByDefault: true
   });

@@ -16,11 +16,6 @@ code {
   padding: 0.1em 0.35em;
 }
 
-section :is(button, a.button):not(nav :is(button, a.button)) {
-  margin-right: 0.5rem;
-  margin-bottom: 0.35rem;
-}
-
 /* Embed a navigation rail without 100dvh of empty column. */
 .rail-demo {
   display: flex;
@@ -200,7 +195,8 @@ section :is(button, a.button):not(nav :is(button, a.button)) {
   text-underline-offset: 0.18em;
 }
 
-.docs-page-content .docs-section > table {
+.docs-page-content .docs-section > table,
+.docs-page-content .docs-section > .docs-table-scroll > table {
   margin-block: 1.5rem 2rem;
   font-family: var(--md-sys-typescale-body-medium-font-family-name);
   font-size: var(--md-sys-typescale-body-medium-font-size);
@@ -209,7 +205,8 @@ section :is(button, a.button):not(nav :is(button, a.button)) {
   letter-spacing: var(--md-sys-typescale-body-medium-letter-spacing);
 }
 
-.docs-page-content .docs-section > table th {
+.docs-page-content .docs-section > table th,
+.docs-page-content .docs-section > .docs-table-scroll > table th {
   font-family: var(--md-sys-typescale-label-large-font-family-name);
   font-size: var(--md-sys-typescale-label-large-font-size);
   font-weight: var(--md-sys-typescale-label-large-font-weight);
@@ -574,13 +571,6 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   text-align: center;
 }
 
-/* FAB page: inline demos must not all pin to the viewport corner. */
-.fab-demo {
-  position: relative;
-  height: 70px;
-}
-
-
 /* A reference table wider than a compact window scrolls in place, rather
    than pushing the whole page sideways. */
 .docs-table-scroll {
@@ -633,7 +623,7 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   z-index: auto;
 }
 
-/* Tabs page: swipeable panels become a carousel (default 400px). */
+/* Tabs page: swipeable panels become a carousel; keep the demo short. */
 .tabs-swipe-demo {
   --carousel-height: 8rem;
 }
@@ -650,10 +640,6 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   max-width: 42rem;
 }
 
-.panes-page .toc-wrapper {
-  margin-top: 0.5rem;
-}
-
 /* Embed a pane layout without 100% of the viewport. */
 .panes-demo {
   --md-comp-pane-list-width: min(360px, 42%);
@@ -665,8 +651,7 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   margin: 0 0 1rem;
 }
 
-.panes-demo.separated,
-.panes-demo.floating {
+.panes-demo.separated {
   background-color: var(--md-sys-color-surface-container);
 }
 

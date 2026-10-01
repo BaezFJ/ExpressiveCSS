@@ -33,7 +33,7 @@ component. `<article>` is a card, `<footer>` with `<nav>` columns is a footer,
 | Type scale | `display-large` … `label-small` (15 roles: display/headline/title/body/label × large/medium/small) |
 | Grid | `container` (`wide`, `max`), `row`, and `s1`–`s12`, `m*`, `l*`, `xl*`, `xxl*` |
 | Spacing | `p-0`–`p-6`, `m-0`–`m-6` with `t`/`b`/`l`/`r`/`x`/`y` infixes (`py-3`, `mt-5`) |
-| Helpers | `hide`, `hide-on-small-only`, `center-align`, `flow-text`, `truncate`, `z-depth-0`–`5` |
+| Helpers | `hide`, `hide-on-compact-only`, `center-align`, `flow-text`, `truncate`, `z-depth-0`–`5` |
 | Structure | `list`, `panes` / `list-detail`, `tabs`, `navigation-bar`, `navigation-rail`, `breadcrumb`, `pagination`, `badge`, `chip`, `snackbar`, `preloader`, `progress` |
 | Icons | `<i class="material-symbols">icon_name</i>` (`material-icons` is a compat alias) |
 

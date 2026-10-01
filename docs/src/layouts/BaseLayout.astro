@@ -10,10 +10,10 @@ import Footer from "../components/Footer.astro";
  */
 interface Props {
   /** The page's own name. The `<title>` and the app bar heading are built from it. */
-  pageName?: string;
-  bodyClass?: string;
+  pageName: string;
+  bodyClass: string;
   /** The page-equivalent Markdown route agents can fetch instead of this HTML. */
-  markdownPath?: string;
+  markdownPath: string;
 }
 
 const { pageName, bodyClass, markdownPath } = Astro.props;
@@ -35,8 +35,8 @@ const cssUrl = `/dist/css/expressive${suffix}.css`;
 const jsUrl = `/dist/js/expressive${suffix}.js`;
 const buildMissing = !existsSync(join(__REPO_ROOT__, "dist/css"));
 
-// Self-referential, on every page. Each documentation page has exactly one
-// URL, so this is a formality for 58 of them -- but the landing page does not:
+// Self-referential, on every page. Every page except the landing page has
+// exactly one URL, so for them this is a formality. The landing page has two:
 // a static host serves the root document at both `/` and `/index.html`, and
 // making the root canonical in the *links* does nothing about the second URL,
 // which stays reachable and independently indexable. Declaring it here is what
@@ -53,10 +53,10 @@ const canonical = new URL(path, Astro.site).href;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{pageName ? `${pageName} - ExpressiveCSS` : "ExpressiveCSS"}</title>
+    <title>{`${pageName} - ExpressiveCSS`}</title>
     <link rel="canonical" href={canonical}>
     <link rel="describedby" href="/llms.txt">
-    {markdownPath && <link rel="alternate" type="text/markdown" href={markdownPath}>}
+    <link rel="alternate" type="text/markdown" href={markdownPath}>
     <link rel="stylesheet" href={cssUrl}>
     <link rel="stylesheet" href={`/static/docs.css?v=${version}`}>
     {/* Apply a stored --md-source before first paint so the page does not flash the default seed. */}

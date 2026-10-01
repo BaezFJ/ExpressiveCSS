@@ -80,7 +80,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
                 await expect(page.locator('#date')).toHaveValue(/13/);
               }
               await page.evaluate(() => window.dispose());
-              assert.equal(await page.locator('.indicator, .datepicker-container, .select-wrapper').count(), 0);
+              assert.equal(await page.locator('.indicator, .datepicker-container').count(), 0);
               await page.evaluate(({ markup, css }) => {
                 document.querySelector('link').remove();
                 document.body.innerHTML = '<div id="host"></div>';

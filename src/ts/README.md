@@ -119,10 +119,10 @@ read-it-off-the-element access that key provides.
   cover the card. Do not write `transform` / `display` / `overflow`.
   `inDuration` / `outDuration` are accepted and ignored.
 - **FormSelect is a text field + menu.** The native `<select>` stays
-  the form value. JS reuses an existing `.field` / `.input-field` or
-  creates `.select-wrapper.field`. The caret is a CSS-masked `.caret`,
-  not an SVG. `refresh()` rebuilds the option list from the native
-  control; it does not tear down the Menu. `.browser-default`
+  the form value. JS reuses a parent `.field` or creates one. The
+  caret is a CSS-masked `.caret`, not an SVG. `refresh()` rebuilds
+  the option list from the native control; it does not tear down
+  the Menu. `.browser-default`
   skips JS; `@supports (appearance: base-select)` only paints that
   native path. Do not give menu checkboxes the 56dp field chrome.
 - There is no linter config, though some files still carry `@typescript-eslint`

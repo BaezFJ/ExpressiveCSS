@@ -14,6 +14,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { AUTO_INIT_FIXTURES } from './fixtures.js';
 
 const root = new URL('../', import.meta.url);
 const read = (p) => readFileSync(new URL(p, root), 'utf8');
@@ -117,7 +118,7 @@ describe('the Astro chrome', () => {
   test('gives a section the hooks and heading roles docs.css styles it by', () => {
     // Class hooks, not appearance: docs.css and the scrollspy both key on
     // these, and a rename would leave the page looking plausible and behaving
-    // wrongly. The three heading levels each carry their own type-scale role.
+    // wrongly. The two heading levels each carry their own type-scale role.
     assert.match(section, /class="section scrollspy docs-section"/);
     assert.match(section, /docs-section-title \$\{role\}/);
     assert.match(read('docs/src/components/PageBody.astro'), /docs-page-content/);
@@ -125,20 +126,21 @@ describe('the Astro chrome', () => {
     const roles = Object.fromEntries(
       [...section.matchAll(/(h[234]):\s*"([\w-]+)"/g)].map((m) => [m[1], m[2]]),
     );
-    assert.deepEqual(roles, { h2: 'headline-large', h3: 'headline-medium', h4: 'title-large' });
+    assert.deepEqual(roles, { h2: 'headline-large', h3: 'headline-medium' });
   });
 
   test('the one hand-rolled scaffold keeps the table-of-contents hooks PageBody states', () => {
     // floating-action-button.astro writes its own scaffold rather than going
     // through <PageBody> because its content column intentionally omits
-    // `docs-page-content` (see CLAUDE.md). That leaves a second copy of
-    // the table-of-contents markup with nothing holding the two together:
-    // renaming `toc-wrapper` or dropping the landmark name in PageBody would
-    // leave this page silently the odd one out, and it looks like nothing.
+    // `docs-page-content` (see docs/development-notes.md). That leaves a
+    // second copy of the table-of-contents markup with nothing holding the two
+    // together: renaming `toc-wrapper` or dropping the landmark name in
+    // PageBody would leave this page silently the odd one out, and it looks
+    // like nothing.
     const pageBody = read('docs/src/components/PageBody.astro');
     const fab = read('docs/src/pages/floating-action-button.astro');
     for (const token of [
-      'hide-on-small-only',
+      'hide-on-compact-only',
       'toc-wrapper mt-5',
       'aria-label="On this page"',
       'section table-of-contents',
@@ -408,5 +410,22 @@ describe('the LLM documents Astro publishes', () => {
       /\| Icon button \| `button\.circle` \|/,
       'button.circle is a round common button with the common-button size and token ladder',
     );
+  });
+});
+
+// auto-init.astro and llm.md copy the registry by hand. AUTO_INIT_FIXTURES
+// names every registered component, so a new entry fails here until both
+// tables list it.
+describe('the Auto Init reference', () => {
+  test('lists every registered component on the page and in llm.md', () => {
+    const page = read('docs/src/pages/auto-init.astro');
+    const llm = read('llm.md');
+    const start = llm.indexOf('\n## Auto Init\n');
+    assert.notEqual(start, -1, 'llm.md has no Auto Init section');
+    const section = llm.slice(start, llm.indexOf('\n## ', start + 1));
+    for (const { name } of AUTO_INIT_FIXTURES) {
+      assert.ok(page.includes(`<code>${name}</code>`), `auto-init.astro is missing ${name}`);
+      assert.ok(section.includes(`| \`${name}\` |`), `llm.md Auto Init is missing ${name}`);
+    }
   });
 });

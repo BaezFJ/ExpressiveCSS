@@ -2,7 +2,7 @@
  * The documentation page catalogue: every canonical page, its navigation group,
  * its titles, its published route and its legacy aliases.
  *
- * The only page inventory (ADR 0003): the Astro pages, the drawer, the footer,
+ * The only page inventory (ADR 0003): the Astro pages, the navigation, the footer,
  * the compatibility redirects and `llms.txt` all read it, and
  * `scripts/verify-site.mjs` checks the built site against it.
  */
@@ -11,12 +11,10 @@
 export interface DocsPage {
   /** Stable page identity, normally the Astro page basename. */
   id: string;
-  /** Link text in the drawer, the footer and `llms.txt`. */
+  /** Link text in the navigation, the footer and `llms.txt`. */
   label: string;
   /** Heading and `<title>`, when the page calls itself something other than its `label`. */
   title?: string;
-  /** Leading icon, on the flat top-level entries that carry one. */
-  icon?: string;
   /** The published path. Root-absolute, always `.html` -- these URLs are in search results. */
   route: string;
   /** The one-line description in the page banner and in `llms.txt`. */
@@ -28,7 +26,7 @@ export interface DocsPage {
   aliases?: string[];
 }
 
-/** One drawer/footer group. A group with no `icon` renders flat. */
+/** One navigation/footer group. */
 export interface DocsGroup {
   label: string;
   icon: string;
@@ -44,16 +42,8 @@ export const NAV: DocsGroup[] = [
       "If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.",
     pages: [
       {
-        id: "banners",
-        label: "Banner migration",
-        route: "/banners.html",
-        description:
-          "Replace removed banners with inline messages, snackbars or dialogs.",
-      },
-      {
         id: "index",
         label: "Getting started",
-        icon: "home",
         route: "/getting-started.html",
         description:
           "Learn how to start using Expressive and integrate it into your project.",
@@ -62,7 +52,6 @@ export const NAV: DocsGroup[] = [
       {
         id: "layouts",
         label: "Layout templates",
-        icon: "dashboard",
         route: "/layouts.html",
         description:
           "Preview and copy complete app layouts with navigation, panes, and responsive grids.",
@@ -70,10 +59,16 @@ export const NAV: DocsGroup[] = [
       {
         id: "auto_init",
         label: "Auto Init",
-        icon: "bolt",
         route: "/auto-init.html",
         description:
           "Initialize every registered component with one function call.",
+      },
+      {
+        id: "banners",
+        label: "Banner migration",
+        route: "/banners.html",
+        description:
+          "Replace removed banners with inline messages, snackbars or dialogs.",
       },
     ],
   },

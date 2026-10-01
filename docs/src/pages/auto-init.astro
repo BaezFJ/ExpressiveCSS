@@ -23,7 +23,8 @@ const S = defineSections([
         </p>
         <p>
           Importing the JavaScript installs a few document-level behaviors
-          (Forms, Chips, Slider, Cards, and ExpandingCard), but it does
+          (Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets,
+          and SideSheets), but it does
           <strong>not</strong> call <code>AutoInit()</code> for you. Call it after the DOM is ready.
           This documentation site does that in <code>docs.js</code> on <code>DOMContentLoaded</code>.
         </p>
@@ -82,6 +83,7 @@ Tooltip.init(element, { position: 'top' });
           These are the components <code>AutoInit()</code> starts, and the selector each one claims.
           Elements that also have <code>no-autoinit</code> are skipped.
         </p>
+        <div class="docs-table-scroll">
         <table class="striped">
           <thead>
             <tr>
@@ -90,28 +92,31 @@ Tooltip.init(element, { position: 'top' });
             </tr>
           </thead>
           <tbody>
+            <tr><td><code>AppBar</code></td><td><code>header.medium, header.large, header:has(&gt; :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) &gt; :is(.search-bar, .searchbar))</code></td></tr>
             <tr><td><code>Autocomplete</code></td><td><code>.autocomplete</code></td></tr>
             <tr><td><code>ButtonGroup</code></td><td><code>.button-group</code></td></tr>
-            <tr><td><code>Cards</code></td><td><code>.cards</code></td></tr>
+            <tr><td><code>Cards</code></td><td><code>article:has(&gt; aside[id]:not([id=""])):not(:has(&gt; aside ~ aside)):has(&gt; button.card-reveal-trigger[type="button"], &gt; :not(aside) button.card-reveal-trigger[type="button"])</code></td></tr>
+            <tr><td><code>ExpandingCard</code></td><td><code>article.expanding-card:has(&gt; dialog.expanding-card-dialog)</code></td></tr>
             <tr><td><code>Carousel</code></td><td><code>.carousel</code></td></tr>
             <tr><td><code>Chips</code></td><td><code>.chips</code></td></tr>
-            <tr><td><code>Datepicker</code></td><td><code>.datepicker</code></td></tr>
+            <tr><td><code>Datepicker</code></td><td><code>.datepicker, .date-picker</code></td></tr>
             <tr><td><code>Menu</code></td><td><code>.menu-trigger</code></td></tr>
             <tr><td><code>Lightbox</code></td><td><code>.lightboxed</code></td></tr>
             <tr><td><code>NavigationRail</code></td><td><code>.navigation-rail</code></td></tr>
             <tr><td><code>ScrollSpy</code></td><td><code>.scrollspy</code></td></tr>
             <tr><td><code>FormSelect</code></td><td><code>select</code></td></tr>
             <tr><td><code>Tabs</code></td><td><code>.tabs</code></td></tr>
-            <tr><td><code>Timepicker</code></td><td><code>.timepicker</code></td></tr>
+            <tr><td><code>Timepicker</code></td><td><code>.timepicker, .time-picker</code></td></tr>
             <tr><td><code>Tooltip</code></td><td><code>.tooltipped</code></td></tr>
             <tr><td><code>FloatingActionButton</code></td><td><code>.fab-menu</code></td></tr>
           </tbody>
         </table>
+        </div>
         <p>
-          Snackbar, CharacterCounter, and Range stay out of this table. Range still starts itself when the
-          bundle loads. Forms, Chips, Cards, and ExpandingCard also run an import-time <code>Init()</code>;
-          Chips and Cards appear in the table as well so a later <code>AutoInit()</code> can pick up
-          elements added after load.
+          Snackbar, CharacterCounter, and Slider stay out of this table. Slider still starts itself when the
+          bundle loads. Forms, Chips, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets also run an
+          import-time <code>Init()</code>. Chips, Cards, and ExpandingCard appear in the table as well so a
+          later <code>AutoInit()</code> can pick up elements added after load.
         </p>
   </Section>
   <Section {...S.ignoring}>

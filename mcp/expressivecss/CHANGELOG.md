@@ -10,6 +10,10 @@
   `.icon-button`.
 - The Lightbox guide includes its options and methods. The app-bar guide's
   Search icon is a button.
+- The Cards guide uses a plain `<p>` for supporting copy. The Date picker and
+  Time picker guides use `.date-picker` and `.time-picker`, the Select guide
+  describes the `.field` wrapper instead of `.select-wrapper`, and the
+  Scrollspy example uses `hide-on-compact-only`.
 
 ## 0.2.1 - 2026-09-30
 

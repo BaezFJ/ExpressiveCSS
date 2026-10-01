@@ -1,5 +1,6 @@
-// Docs-site glue. The framework bundle only self-initializes Forms/Chips/
-// Slider/Cards/ExpandingCard; everything else needs an explicit AutoInit pass.
+// Docs-site glue. The framework bundle only self-initializes Forms, Chips,
+// Slider, Cards, ExpandingCard, Dialogs, BottomSheets and SideSheets; everything
+// else needs an explicit AutoInit pass.
 document.addEventListener("DOMContentLoaded", () => {
   Expressive.AutoInit();
 
@@ -249,12 +250,6 @@ document.addEventListener("DOMContentLoaded", () => {
     Expressive.Menu.init(menuVibrant, { constrainWidth: false });
   }
 
-  const sliders = document.querySelectorAll(".slider");
-  if (sliders.length && Expressive.Slider) {
-    Expressive.Slider.init(sliders);
-  }
-
-  const carouselContent = document.getElementById("carousel-content");
   const carouselMotion = document.getElementById("carousel-motion");
   if (carouselMotion) {
     const carousel = Expressive.Carousel.init(carouselMotion, { interval: 4000, height: 200 });
@@ -267,19 +262,6 @@ document.addEventListener("DOMContentLoaded", () => {
       toggle.textContent = paused ? "Resume automatic movement" : "Pause automatic movement";
     });
   }
-  if (carouselContent) {
-    Expressive.Carousel.init(carouselContent, { indicators: true });
-  }
-  document.getElementById("carousel-prev")?.addEventListener("click", () => {
-    Expressive.Carousel.getInstance(
-      document.getElementById("carousel-intro"),
-    )?.prev();
-  });
-  document.getElementById("carousel-next")?.addEventListener("click", () => {
-    Expressive.Carousel.getInstance(
-      document.getElementById("carousel-intro"),
-    )?.next();
-  });
 
   const swipeTabs = document.getElementById("tabs-swipe");
   if (swipeTabs) {

@@ -179,6 +179,12 @@ const COMPONENT_GROUPS = new Set(['Structure', 'Components', 'Forms']);
 const cataloguePages = NAV
   .filter((group) => COMPONENT_GROUPS.has(group.label))
   .flatMap((group) => group.pages.map((page) => page.id));
+const decisionPages = decisionData.components.map((component) => component.guideSource.pageId);
+if (JSON.stringify(decisionPages) !== JSON.stringify(cataloguePages)) {
+  throw new Error(
+    'The skill component map must match the Structure, Components, and Forms documentation catalogue in order.',
+  );
+}
 const decisionComponentsByPage = new Map(
   decisionData.components.map((component) => [component.guideSource.pageId, component]),
 );
@@ -196,16 +202,6 @@ const components = cataloguePages.map((pageId) => decisionComponentsByPage.get(p
   runtime: component.runtime,
   materialGuidance: component.materialGuidance,
 }));
-
-async function validateComponentInventory() {
-  const mappedPages = components.map((component) => component.page);
-  if (JSON.stringify(mappedPages) !== JSON.stringify(cataloguePages)) {
-    throw new Error(
-      'The skill component map must match the Structure, Components, and Forms documentation catalogue in order.',
-    );
-  }
-
-}
 
 function sectionFor(markdown, title, level = 2) {
   const heading = `${'#'.repeat(level)} ${title}`;
@@ -291,7 +287,7 @@ function sourcePagePath(page) {
 }
 
 function renderGuide(component, page, section, rules, provenance) {
-  const title = component.title ?? page.title ?? page.label;
+  const title = component.title;
   const officialMarkdown = `https://www.expressivecss.com${page.route}.md`;
   const syntaxLanguage = component.syntaxLanguage ?? 'html';
   const example = firstCodeExample(section, component.slug, syntaxLanguage);
@@ -340,7 +336,7 @@ function renderGuide(component, page, section, rules, provenance) {
   const selectionExample = component.selectionExample
     ? `Example: ${component.selectionExample}\n\n`
     : '';
-  const apiParts = apiSummary(section, component.level ?? 2);
+  const apiParts = apiSummary(section, component.level);
   const api = apiParts.map((part) => `${part}\n\n`).join('');
   // contractSummary keeps only the prose before the first example, so name the llm.md subsections
   // it leaves out. Headings that repeat an example's own heading are demo content, not sections.
@@ -348,12 +344,12 @@ function renderGuide(component, page, section, rules, provenance) {
   const examples = [...section.matchAll(/```[\s\S]*?```/gu)].map(([code]) => code).join('\n');
   const demoHeadings = new Set([...examples.matchAll(/<h[1-6][^>]*>([^<]+)<\/h[1-6]>/gu)].map(([, text]) => text.trim()));
   const subsections = [...new Set([...section.replace(/```[\s\S]*?```/gu, '')
-    .matchAll(new RegExp(`^#{${(component.level ?? 2) + 1}} (.+)$`, 'gmu'))]
+    .matchAll(new RegExp(`^#{${component.level + 1}} (.+)$`, 'gmu'))]
     .map(([, heading]) => heading.trim()))]
     .filter((heading) => !shown.has(heading) && !demoHeadings.has(heading) && !heading.startsWith('.')
       // A subsection that another component's guide covers is not part of this page.
       && !components.some((other) => other.page !== component.page && other.heading === heading
-        && (other.level ?? 2) === (component.level ?? 2) + 1));
+        && other.level === component.level + 1));
   const alsoDocumented = subsections.length
     ? `#### Also documented\n\nThe ${component.heading} section of the [API reference](https://www.expressivecss.com/llm.md) also covers ${subsections.join(', ')}.\n\n`
     : '';
@@ -375,7 +371,7 @@ async function generatedGuides() {
   return new Map(components.map((component) => {
     const page = pages.get(component.page);
     if (!page) throw new Error(`Unknown docs page ${component.page}`);
-    const section = sectionFor(llm, component.heading, component.level ?? 2);
+    const section = sectionFor(llm, component.heading, component.level);
     const rules = semanticRules(rows, component.semantics, component.excludeRules);
     return [`${component.slug}.md`, renderGuide(component, page, section, rules, provenance)];
   }));
@@ -422,7 +418,6 @@ async function write(guides) {
   console.log(`Wrote ${guides.size} ExpressiveCSS component guides.`);
 }
 
-await validateComponentInventory();
 const guides = await generatedGuides();
 const checkOnly = process.argv.includes('--check');
 await syncResolver(checkOnly);

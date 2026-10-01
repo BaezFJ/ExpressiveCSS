@@ -11,7 +11,7 @@ const { id, label, heading, tag = "h3" } = Astro.props;
 if (!id) throw new Error("Section: no id -- check the key against defineSections()");
 
 const Heading = tag;
-const role = { h2: "headline-large", h3: "headline-medium", h4: "title-large" }[tag];
+const role = { h2: "headline-large", h3: "headline-medium" }[tag];
 const text = heading === undefined ? label : heading;
 ---
 <div id={id} class="section scrollspy docs-section">

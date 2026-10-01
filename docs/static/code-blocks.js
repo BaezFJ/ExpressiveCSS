@@ -9,13 +9,6 @@
     scss: 'SCSS',
   };
 
-  const explicitLanguage = (code) => {
-    for (const className of code.classList) {
-      if (className.startsWith('language-')) return className.slice('language-'.length);
-    }
-    return null;
-  };
-
   const detectLanguage = (source) => {
     const text = source.trim();
     if (/^<[!/a-z]/i.test(text)) return 'html';
@@ -110,7 +103,7 @@
     if (!pre || pre.parentElement?.classList.contains('code-block')) return;
 
     const source = code.textContent;
-    const language = explicitLanguage(code) ?? detectLanguage(source);
+    const language = detectLanguage(source);
     code.classList.add(`language-${language}`);
     window.hljs?.highlightElement(code);
 
@@ -118,7 +111,7 @@
     const languageLabel = document.createElement('span');
     wrapper.className = 'code-block';
     languageLabel.className = 'code-language';
-    languageLabel.textContent = LANGUAGE_LABELS[language] ?? language;
+    languageLabel.textContent = LANGUAGE_LABELS[language];
     languageLabel.setAttribute('aria-hidden', 'true');
 
     pre.before(wrapper);
