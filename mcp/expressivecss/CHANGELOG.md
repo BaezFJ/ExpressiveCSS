@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.2 - 2026-10-01
 
 - Semantics findings from `rules_enforcer`, `quality_inspector`, and
   `expressivecss-lint` report the element's line and column instead of 1:1.
