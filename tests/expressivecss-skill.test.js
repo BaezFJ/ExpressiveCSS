@@ -370,7 +370,7 @@ describe('the ExpressiveCSS agent skill', () => {
     const helpers = readFileSync(helpersReferenceUrl, 'utf8');
     assert.match(helpers, /`\{m\|p\}\{side\?\}-\{value\}`/);
     assert.match(helpers, /`0`, `1`, `2`, `3`, `4`, `5`, `6`, `auto`/);
-    assert.match(helpers, /`auto` is meaningful for margin only/i);
+    assert.match(helpers, /`auto`[^\n]*(?:margin[^\n]*only|only[^\n]*margin)/i);
     assert.match(helpers, /combine a base `\.hide` with one `\.show-on-\*` class/i);
     for (const className of [
       'valign-wrapper', 'left-align', 'right-align', 'center-align', 'center-on-small-only',
@@ -391,12 +391,18 @@ describe('the ExpressiveCSS agent skill', () => {
 
     const spacingClasses = [];
     for (const prefix of ['m', 'p']) {
-      for (const side of ['', 't', 'r', 'b', 'l', 'x', 'y']) {
-        for (const value of ['0', '1', '2', '3', '4', '5', '6', 'auto']) spacingClasses.push(`${prefix}${side}-${value}`);
+      for (const side of ['', 't', 'r', 'b', 'l', 'x', 'y', 's', 'e']) {
+        for (const value of ['0', '1', '2', '3', '4', '5', '6']) spacingClasses.push(`${prefix}${side}-${value}`);
+        if (prefix === 'm') spacingClasses.push(`${prefix}${side}-auto`);
       }
     }
     for (const className of spacingClasses) {
       assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    assert.doesNotMatch(compiledCss, /\.p[trblxyse]?-auto(?![\w-])/);
+    assert.doesNotMatch(compiledCss, /padding(?:-[\w-]+)?:\s*auto\b/);
+    for (const [prefix, property] of [['ms', 'margin-inline-start'], ['me', 'margin-inline-end'], ['ps', 'padding-inline-start'], ['pe', 'padding-inline-end']]) {
+      assert.match(compiledCss, new RegExp(`\\.${prefix}-3\\s*\\{\\s*${property}:\\s*0\\.75rem\\s*!important;?\\s*\\}`));
     }
     for (const [name, value] of [['0', '0'], ['1', '0.25rem'], ['2', '0.5rem'], ['3', '0.75rem'], ['4', '1rem'], ['5', '1.5rem'], ['6', '3rem'], ['auto', 'auto']]) {
       assert.match(spacingSass, new RegExp(`"${name}"\\s*:\\s*${value.replace('.', '\\.')}`));
@@ -412,6 +418,11 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(compiledCss, /\.justify-between\s*\{\s*justify-content:\s*space-between;?\s*\}/);
     assert.match(compiledCss, /\.gap-3\s*\{\s*gap:\s*0\.75rem\s*!important;?\s*\}/);
     assert.doesNotMatch(compiledCss, /\.gap-auto/);
+    for (const className of ['min-w-0', 'min-h-0', 'overflow-x-auto', 'overflow-y-auto', 'overflow-hidden', 'start-align', 'end-align', 'break-words', 'text-nowrap', 'text-wrap', 'visually-hidden-focusable']) {
+      assert.ok(helpers.includes(`\`.${className}\``), `helpers reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    assert.match(compiledCss, /\.visually-hidden-focusable:not\(:focus-within\)/);
     for (const className of [...new Set([...visibilitySass.matchAll(/\.([a-z][\w-]+)/g)].map((match) => match[1]))]) {
       assert.ok(helpers.includes(`\`.${className}\``), `helpers reference omits .${className}`);
       assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);

@@ -25,10 +25,21 @@
 .flex-1 { flex: 1 1 0; }
 .flex-none { flex: none; }
 
+// Allow flex and grid children to shrink around their content.
+.min-w-0 { min-width: 0; }
+.min-h-0 { min-height: 0; }
+
+// Scrolling and clipping without changing the element's display or size.
+.overflow-x-auto { overflow-x: auto; }
+.overflow-y-auto { overflow-y: auto; }
+.overflow-hidden { overflow: hidden; }
+
 // Text alignment
 .left-align { text-align: left; }
 .right-align { text-align: right }
 .center-align { text-align: center; }
+.start-align { text-align: start; }
+.end-align { text-align: end; }
 
 // Dividers
 .divider {
@@ -45,6 +56,9 @@
 // live here: no selector in `components` can outrank this one.
 .circle:not(.extra, .large) { border-radius: 50%; }
 .center-block { display: block; margin-left: auto; margin-right: auto; }
+.break-words { overflow-wrap: anywhere; }
+.text-nowrap { white-space: nowrap; }
+.text-wrap { white-space: normal; }
 .truncate { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .no-padding { padding: 0 !important; }
 
