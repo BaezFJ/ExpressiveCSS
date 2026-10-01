@@ -23,6 +23,53 @@ describe('Snackbar', () => {
     assert.match(css, /#snackbar-container\s*\{[^}]*pointer-events:\s*none/s);
   });
 
+  for (const [label, distance, pause, dismissed] of [
+    ['a paused short drag snaps back', 50, 2000, false],
+    ['an immediate flick dismisses', 50, 0, true],
+    ['a paused long drag dismisses by distance', 250, 2000, true],
+    ['a 99ms-old flick still dismisses', 50, 99, true],
+    ['a 100ms-old flick has expired', 50, 100, false],
+  ]) {
+    test(`release: ${label}`, t => {
+      resetBody();
+      t.mock.timers.enable({ apis: ['setTimeout'] });
+      let now = 1000;
+      t.mock.method(Date, 'now', () => now);
+      let snackbar;
+      const pointer = (type, clientX) => (type === 'pointerdown' ? snackbar.el : document).dispatchEvent(
+        new window.PointerEvent(type, {
+          bubbles: true, cancelable: true, isPrimary: true, pointerId: 1,
+          pointerType: 'touch', button: 0, clientX
+        })
+      );
+      try {
+        snackbar = new Expressive.Snackbar({ text: 'Saved', displayLength: Infinity, outDuration: 0 });
+        Object.defineProperty(snackbar.el, 'offsetWidth', { value: 300 });
+        t.mock.timers.tick(1);
+        pointer('pointerdown', 0);
+        now += 10;
+        pointer('pointermove', distance);
+        now += pause;
+        pointer('pointerup', distance);
+        t.mock.timers.tick(1);
+        assert.equal(snackbar.el.isConnected, !dismissed);
+        assert.equal(!!snackbar.wasSwiped, dismissed);
+        assert.equal(snackbar.panning, false);
+        assert.equal(Expressive.Snackbar._draggedSnackbar, null);
+        assert.equal(Expressive.Snackbar._dragPointerId, null);
+        if (!dismissed) {
+          assert.equal(snackbar.el.style.transform, '');
+          assert.equal(snackbar.el.style.opacity, '');
+        }
+      } finally {
+        snackbar?.dismiss();
+        t.mock.timers.runAll();
+        t.mock.timers.reset();
+        resetBody();
+      }
+    });
+  }
+
   test('a cancelled flick does not turn the next stationary tap into a dismissal', t => {
     resetBody();
     t.mock.timers.enable({ apis: ['setTimeout'] });

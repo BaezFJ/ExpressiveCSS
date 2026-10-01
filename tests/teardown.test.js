@@ -143,6 +143,31 @@ describe('Timepicker pending submission', () => {
   }
 });
 
+describe('Timepicker pending clock reset', () => {
+  beforeEach(resetBody);
+
+  for (const action of ['destroy', 'reinitialize']) {
+    test(`${action} cancels the pending clock reset`, t => {
+      t.mock.timers.enable({ apis: ['setTimeout'] });
+      document.body.innerHTML = '<input value="09:30 AM">';
+      const input = document.querySelector('input');
+      try {
+        const picker = Expressive.Timepicker.init(input, { duration: 100, vibrate: false });
+        picker.showView('minutes', 50);
+        const setHand = t.mock.method(picker, 'setHand');
+        if (action === 'destroy') picker.destroy();
+        else Expressive.Timepicker.init(input, { duration: 0, vibrate: false });
+        t.mock.timers.tick(100);
+        assert.equal(setHand.mock.callCount(), 0, 'a destroyed picker updated its clock');
+        assert.equal(input.value, '09:30 AM');
+      } finally {
+        Expressive.Timepicker.getInstance(input)?.destroy();
+        t.mock.timers.reset();
+      }
+    });
+  }
+});
+
 describe('destroy() releases shared listeners', () => {
   let watch;
 

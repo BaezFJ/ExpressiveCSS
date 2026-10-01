@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `02fa2c21f2aef98f60bef89072eb9dcb39c8ca304baac680d0dc5fb113e931d0`
+Contract SHA-256: `5316b0974a9436159930a76aaa848d8c075b3a6034f1a2cf431ecde3763d2818`
 
 #### Selection and adaptation
 
@@ -65,7 +65,7 @@ The calendar is inline, not a modal. `open()` and `close()` are not provided. Wi
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `format` | String or Function | `'mmm dd, yyyy'` | Output written to the input, or a function that takes a `Date` and returns a string. |
-| `parse` | Function | `null` | Turn the current input string back into a `Date`. Receives `(value, format)`. |
+| `parse` | Function | `null` | Turn the current input string back into a `Date`. Receives `(value, format)`, where `format` is the configured string or an empty string for a function formatter. Blank inputs skip parsing. |
 | `isDateRange` | Boolean | `false` | Select a start date and an end date. |
 | `dateRangeEndEl` | String | `null` | Selector for an existing end-date input. If omitted, a second input is created. |
 | `isMultipleSelection` | Boolean | `false` | Toggle several dates. Extra inputs are created as dates are added. |

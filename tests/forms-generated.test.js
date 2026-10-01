@@ -57,6 +57,41 @@ describe('FormSelect generated listbox', () => {
     return Expressive.FormSelect.init(document.getElementById('s'));
   };
 
+  test('multiple options sharing a value select and deselect independently', () => {
+    document.body.innerHTML = '<form><div class="field"><select name="choice" multiple>' +
+      '<option value="same" selected>One</option><option value="same">Two</option>' +
+      '</select></div></form>';
+    const form = document.querySelector('form');
+    const select = form.querySelector('select');
+    const inst = Expressive.FormSelect.init(select);
+    let changes = 0;
+    const onChange = () => changes++;
+    form.addEventListener('change', onChange);
+    try {
+      const rows = [...inst.menuEl.querySelectorAll('[role="option"]')];
+      const assertSelected = expected => {
+        assert.deepEqual([...select.options].map(option => option.selected), expected);
+        assert.deepEqual(rows.map(row => row.querySelector('input').checked), expected);
+        assert.deepEqual(rows.map(row => row.getAttribute('aria-selected')), expected.map(String));
+        assert.deepEqual(new window.FormData(form).getAll('choice'), expected.filter(Boolean).map(() => 'same'));
+        assert.equal(inst.input.value, [...select.selectedOptions].map(option => option.textContent).join(', '));
+      };
+      assertSelected([true, false]);
+      rows[1].click();
+      assertSelected([true, true]);
+      rows[0].click();
+      assertSelected([false, true]);
+      rows[1].click();
+      assertSelected([false, false]);
+      rows[0].click();
+      assertSelected([true, false]);
+      assert.equal(changes, 4);
+    } finally {
+      form.removeEventListener('change', onChange);
+      inst.destroy();
+    }
+  });
+
   test('the trigger is a combobox pointing at a listbox', () => {
     const inst = mount();
     try {
@@ -160,16 +195,218 @@ describe('FormSelect generated listbox', () => {
 describe('Autocomplete generated combobox', () => {
   beforeEach(resetBody);
 
-  const mount = () => {
+  const mount = (options = {}) => {
     document.body.innerHTML =
       '<div class="field"><input class="autocomplete" type="text" id="ac"><label for="ac">A</label></div>';
     return Expressive.Autocomplete.init(document.getElementById('ac'), {
       data: [
         { id: 'a', text: 'Apple' },
         { id: 'b', text: 'Banana' }
-      ]
+      ],
+      ...options
     });
   };
+
+  test('missing preselected entries retain their IDs until later data is supplied', () => {
+    let inst;
+    try {
+      inst = mount({ data: [], selected: [42] });
+      assert.equal(inst.el.value, '42');
+      assert.deepEqual(inst.selectedValues, [{ id: 42 }]);
+      const calls = [];
+      inst.options.onAutocomplete = function(entries) { calls.push([this, entries]); };
+      const loaded = { id: 42, text: 'Answer' };
+      inst.setMenuItems([loaded], null, false);
+      assert.deepEqual(inst.selectedValues.map(entry => entry.id), [42], 'results alone retain the selection');
+      inst.setMenuItems([loaded], [42], false);
+      assert.equal(inst.el.value, 'Answer');
+      assert.deepEqual(inst.selectedValues, [loaded]);
+      assert.equal(calls.length, 2);
+      assert.equal(calls[1][0], inst, 'the callback retains the Autocomplete receiver');
+      assert.equal(calls[1][1], inst.selectedValues);
+      inst.setMenuItems([], null, false);
+      assert.deepEqual(inst.selectedValues, [loaded], 'an empty result page does not erase selected IDs');
+    } finally {
+      if (inst) inst.destroy();
+      // The unfixed constructor fails after creating its Menu, before returning an instance.
+      else Expressive.Menu.getInstance(document.getElementById('ac'))?.destroy();
+    }
+  });
+
+  test('preselected entries without text display their IDs, including numeric zero', () => {
+    for (const id of [42, 0, 'apple']) {
+      const inst = mount({ data: [{ id }], selected: [id] });
+      try {
+        assert.equal(inst.el.value, String(id));
+        assert.deepEqual(inst.selectedValues, [{ id }]);
+      } finally {
+        inst.destroy();
+      }
+    }
+  });
+
+  for (const isMultiSelect of [false, true]) {
+    test(`${isMultiSelect ? 'multi' : 'single'} selection emits one change to the input and its form`, () => {
+      const inst = mount({ isMultiSelect });
+      const form = document.createElement('form');
+      const field = inst.el.parentElement;
+      field.before(form);
+      form.append(field);
+      const direct = [];
+      const delegated = [];
+      const callbacks = [];
+      const onInputChange = event => direct.push(event);
+      const onFormChange = event => delegated.push(event);
+      try {
+        inst.el.focus();
+        inst.el.addEventListener('change', onInputChange);
+        form.addEventListener('change', onFormChange);
+        inst.options.onAutocomplete = function(entries) { callbacks.push([this, entries]); };
+        inst.selectOption('a');
+        assert.equal(direct.length, 1);
+        assert.equal(delegated.length, 1);
+        assert.equal(direct[0], delegated[0]);
+        assert.equal(delegated[0].target, inst.el);
+        assert.equal(delegated[0].composed, true);
+        assert.equal(callbacks.length, 1);
+        assert.equal(callbacks[0][0], inst);
+        assert.equal(callbacks[0][1], inst.selectedValues);
+        assert.deepEqual(callbacks[0][1].map(entry => entry.id), ['a']);
+      } finally {
+        inst.el.removeEventListener('change', onInputChange);
+        form.removeEventListener('change', onFormChange);
+        inst.destroy();
+      }
+    });
+  }
+
+  test('open state follows rendering, selection, dismissal, and teardown', t => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    const calls = [];
+    const inst = mount({
+      menuOptions: {
+        inDuration: 0,
+        outDuration: 0,
+        onOpenStart(el) { calls.push(['open', this, el, Expressive.Autocomplete.getInstance(el).isOpen]); },
+        onCloseStart(el) { calls.push(['close', this, el, Expressive.Autocomplete.getInstance(el).isOpen]); },
+      },
+    });
+    try {
+      assert.equal(inst.isOpen, false);
+      type(inst.el, 'a');
+      // Flush both the deferred open and Menu's deferred event listeners.
+      t.mock.timers.tick(1);
+      assert.equal(inst.menu.isOpen, true);
+      assert.equal(inst.isOpen, true);
+      inst.open();
+      assert.equal(inst.isOpen, true, 'rerendering preserves the open state');
+      inst.selectOption('a');
+      assert.equal(inst.menu.isOpen, false);
+      assert.equal(inst.isOpen, false);
+
+      inst.open();
+      t.mock.timers.tick(1);
+      key(inst.container, 'Escape');
+      assert.equal(inst.menu.isOpen, false);
+      assert.equal(inst.isOpen, false, 'Menu-driven Escape also updates Autocomplete');
+      inst.open();
+      t.mock.timers.tick(1);
+      document.body.click();
+      t.mock.timers.tick(1);
+      assert.equal(inst.menu.isOpen, false);
+      assert.equal(inst.isOpen, false, 'outside dismissal also updates Autocomplete');
+
+      inst.open();
+      inst.close();
+      t.mock.timers.tick(1);
+      assert.equal(inst.menu.isOpen, false, 'closing cancels a pending open');
+      assert.equal(inst.isOpen, false);
+      assert.deepEqual(calls.map(([action, , , state]) => [action, state]), [
+        ['open', true], ['close', false], ['open', true], ['close', false], ['open', true], ['close', false],
+      ]);
+      for (const [, menu, el] of calls) {
+        assert.equal(menu, inst.menu, 'callbacks retain the Menu receiver');
+        assert.equal(el, inst.el, 'callbacks retain the trigger argument');
+      }
+      inst.open();
+      t.mock.timers.tick(1);
+    } finally {
+      inst.destroy();
+      t.mock.timers.reset();
+    }
+    assert.equal(inst.isOpen, false);
+  });
+
+  test('multi-select rendering preserves the current open state', async () => {
+    const inst = mount({ isMultiSelect: true });
+    try {
+      inst.setMenuItems([{ id: 'a', text: 'Apple' }], null, false);
+      assert.equal(inst.isOpen, false, 'rendering alone does not open the menu');
+      type(inst.el, 'a');
+      await new Promise(resolve => setTimeout(resolve, 10));
+      inst.selectOption('a');
+      assert.equal(inst.menu.isOpen, true);
+      assert.equal(inst.isOpen, true, 'selecting a checkbox keeps the menu open');
+      inst.setMenuItems([{ id: 'a', text: 'Apple' }, { id: 'b', text: 'Apricot' }], null, false);
+      assert.equal(inst.isOpen, true, 'updating visible results keeps the menu open');
+      inst.close();
+      assert.equal(inst.isOpen, false);
+    } finally {
+      inst.destroy();
+    }
+  });
+
+  test('Chips gives Enter to open suggestions before an option is highlighted', async () => {
+    document.body.innerHTML = '<div class="chips"></div>';
+    const chips = Expressive.Chips.init(document.querySelector('.chips'), {
+      allowUserInput: true,
+      autocompleteOptions: { data: [{ id: 'apple', text: 'Apple' }] },
+    });
+    try {
+      const input = chips.el.querySelector('input');
+      input.focus();
+      type(input, 'app');
+      await new Promise(resolve => setTimeout(resolve, 10));
+      key(input, 'Enter');
+      assert.deepEqual(chips.chipsData, [], 'Enter must not insert the query as a custom chip');
+      assert.equal(input.value, 'app');
+      key(input, 'ArrowDown');
+      key(input, 'Enter');
+      assert.deepEqual(chips.chipsData.map(item => item.id), ['apple']);
+      type(input, 'pear');
+      await new Promise(resolve => setTimeout(resolve, 10));
+      assert.equal(chips.autocomplete.container.querySelector('[role="option"]'), null);
+      key(input, 'Enter');
+      assert.deepEqual(chips.chipsData.map(item => item.id), ['apple', 'pear']);
+    } finally {
+      chips.destroy();
+    }
+  });
+
+  for (const [query, minLength] of [['pear', 1], ['ap', 3]]) {
+    test(`Chips accepts the custom query "${query}" when its open menu has no rendered suggestions`, async () => {
+      document.body.innerHTML = '<div class="chips"></div>';
+      const chips = Expressive.Chips.init(document.querySelector('.chips'), {
+        allowUserInput: true,
+        autocompleteOnly: false,
+        autocompleteOptions: { data: [{ id: 'apple', text: 'Apple' }], minLength },
+      });
+      try {
+        const input = chips.el.querySelector('input');
+        input.focus();
+        type(input, query);
+        await new Promise(resolve => setTimeout(resolve, 10));
+        assert.equal(chips.autocomplete.isOpen, true);
+        assert.equal(chips.autocomplete.container.querySelector('[role="option"]'), null);
+        if (query.length < minLength) assert.equal(chips.autocomplete.menuItems.length, 1);
+        key(input, 'Enter');
+        assert.deepEqual(chips.chipsData.map(item => item.id), [query]);
+        assert.equal(input.value, '');
+      } finally {
+        chips.destroy();
+      }
+    });
+  }
 
   test('the input is a combobox wired to the suggestion list', () => {
     const inst = mount();

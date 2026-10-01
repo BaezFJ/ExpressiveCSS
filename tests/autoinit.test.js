@@ -218,4 +218,44 @@ describe("AutoInit", () => {
     );
     assert.equal(second.el, el);
   });
+
+  test("re-initializing a scoped date range skips its generated end input", () => {
+    document.body.innerHTML = '<div id="scope"><div><input id="start" class="datepicker"></div></div><input id="outside" class="datepicker">';
+    const scope = document.getElementById("scope");
+    const start = document.getElementById("start");
+    const options = { Datepicker: { isDateRange: true, format: "yyyy-mm-dd" } };
+    let first;
+    let oldEnd;
+    try {
+      Expressive.AutoInit(scope, options);
+      first = Expressive.Datepicker.getInstance(start);
+      oldEnd = first.endDateEl;
+      Expressive.AutoInit(scope, options);
+      const current = Expressive.Datepicker.getInstance(start);
+      assert.notEqual(current, first);
+      assert.equal(oldEnd.isConnected, false);
+      assert.equal(Expressive.Datepicker.getInstance(oldEnd), undefined);
+      assert.equal(Expressive.Datepicker.getInstance(current.endDateEl), undefined);
+      assert.equal(Expressive.Datepicker.getInstance(document.getElementById("outside")), undefined);
+      assert.equal(scope.querySelectorAll("input.datepicker").length, 2);
+      assert.equal(scope.querySelectorAll(".datepicker-container").length, 1);
+      assert.ok(current.endDateEl.classList.contains("no-autoinit"));
+
+      start.value = "2026-09-20";
+      start.dispatchEvent(new window.Event("change", { bubbles: true }));
+      current.endDateEl.value = "2026-09-25";
+      current.endDateEl.dispatchEvent(new window.Event("change", { bubbles: true }));
+      assert.equal(current.date.getDate(), 20);
+      assert.equal(current.endDate.getDate(), 25);
+      oldEnd.value = "2026-09-30";
+      oldEnd.dispatchEvent(new window.Event("change", { bubbles: true }));
+      assert.equal(current.endDate.getDate(), 25);
+      assert.ok(!first.endDate, "destroyed input listeners must be removed");
+    } finally {
+      Expressive.Datepicker.getInstance(start)?.destroy();
+    }
+    assert.equal(scope.querySelectorAll("input").length, 1);
+    assert.equal(scope.querySelectorAll(".datepicker-container").length, 0);
+    assert.equal(Expressive.Datepicker.getInstance(start), undefined);
+  });
 });

@@ -236,9 +236,8 @@ export class Tooltip extends Component<TooltipOptions> {
   /**
    * Show tooltip.
    */
-  open = (isManual: boolean) => {
+  open = (isManual: boolean = true) => {
     if (this.isOpen) return;
-    isManual = isManual === undefined ? true : undefined; // Default value true
     clearTimeout(this._exitDelayTimeout);
     clearTimeout(this._animationTimeout);
     this.isOpen = true;

@@ -46,6 +46,90 @@ function splitSelectors(list) {
   return out.filter((s) => s.trim());
 }
 
+describe('Timepicker host input', () => {
+  beforeEach(resetBody);
+
+  for (const opener of ['click', 'Enter']) {
+    for (const twelveHour of [true, false]) {
+      test(`${opener} refreshes an edited ${twelveHour ? '12' : '24'}-hour time before confirmation`, () => {
+        document.body.innerHTML = '<input type="text">';
+        const input = document.querySelector('input');
+        input.value = twelveHour ? '09:30 AM' : '09:30';
+        const picker = Expressive.Timepicker.init(input, {
+          twelveHour,
+          displayPlugin: 'docked',
+          autoSubmit: false,
+          duration: 0,
+          vibrate: false
+        });
+        try {
+          const edited = twelveHour ? '11:45 PM' : '23:45';
+          input.value = edited;
+          if (opener === 'click') fire(input, 'click');
+          else input.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+          assert.equal(picker.inputHours.value, twelveHour ? '11' : '23');
+          assert.equal(picker.inputMinutes.value, '45');
+          if (twelveHour) assert.equal(picker.amOrPm, 'PM');
+          picker.confirm();
+          assert.equal(input.value, edited);
+        } finally {
+          picker.destroy();
+        }
+      });
+    }
+  }
+
+  test('opening an empty input still uses the configured default time', () => {
+    document.body.innerHTML = '<input type="text">';
+    const input = document.querySelector('input');
+    const picker = Expressive.Timepicker.init(input, {
+      defaultTime: '14:15',
+      duration: 0,
+      vibrate: false
+    });
+    try {
+      fire(input, 'click');
+      assert.equal(picker.inputHours.value, '02');
+      assert.equal(picker.inputMinutes.value, '15');
+      assert.equal(picker.amOrPm, 'PM');
+      picker.confirm();
+      assert.equal(input.value, '02:15 PM');
+    } finally {
+      picker.destroy();
+    }
+  });
+});
+
+describe('Timepicker delayed clock reset', () => {
+  beforeEach(resetBody);
+
+  for (const edit of ['hours', 'minutes']) {
+    test(`a delayed minute reset does not overwrite a newer ${edit} edit`, t => {
+      t.mock.timers.enable({ apis: ['setTimeout'] });
+      document.body.innerHTML = '<input value="09:30 AM">';
+      const picker = Expressive.Timepicker.init(document.querySelector('input'), {
+        duration: 100,
+        vibrate: false
+      });
+      try {
+        picker.inputMinutes.focus();
+        picker.showView('minutes', 50);
+        const field = edit === 'hours' ? picker.inputHours : picker.inputMinutes;
+        field.focus();
+        field.value = edit === 'hours' ? '04' : '25';
+        fire(field, 'input', window.Event);
+        t.mock.timers.tick(100);
+        picker.confirm();
+        assert.equal(picker.el.value, edit === 'hours' ? '04:30 AM' : '09:25 AM');
+        assert.equal(picker._canvas.classList.contains('timepicker-canvas-out'), false);
+      } finally {
+        picker.destroy();
+        t.mock.timers.reset();
+      }
+    });
+  }
+});
+
 describe('Lightbox dimensions', () => {
   beforeEach(resetBody);
 
@@ -201,6 +285,159 @@ describe('Datepicker month arrows', () => {
       instance.destroy();
     }
   });
+});
+
+describe('Datepicker custom parsing', () => {
+  beforeEach(resetBody);
+
+  for (const value of ['', '   ']) {
+    test(`does not parse or format blank initialization ${JSON.stringify(value)}`, () => {
+      document.body.innerHTML = '<div><input></div>';
+      const input = document.querySelector('input');
+      input.value = value;
+      try {
+        const picker = Expressive.Datepicker.init(input, {
+          format: date => date.toISOString(),
+          parse: () => assert.fail('blank input must not reach the custom parser')
+        });
+        assert.ok(!picker.date);
+        picker._confirm();
+        assert.equal(input.value, '');
+      } finally {
+        Expressive.Datepicker.getInstance(input)?.destroy();
+      }
+    });
+  }
+
+  test('parses custom text before using a functional output formatter', () => {
+    document.body.innerHTML = '<div><input value="25/10/2026"></div>';
+    const input = document.querySelector('input');
+    const calls = [];
+    try {
+      const picker = Expressive.Datepicker.init(input, {
+        setDefaultDate: true,
+        format: date => date.toISOString(),
+        parse(value, format) {
+          calls.push({ context: this, value, format });
+          const [day, month, year] = value.split('/').map(Number);
+          return new Date(year, month - 1, day);
+        }
+      });
+      assert.equal(picker.date.getTime(), new Date(2026, 9, 25).getTime());
+      assert.equal(calls.length, 1);
+      assert.equal(calls[0].context, picker.options);
+      assert.equal(calls[0].value, '25/10/2026');
+      assert.equal(calls[0].format, '', 'a formatter function has no format-string pattern');
+      assert.equal(input.value, picker.date.toISOString());
+    } finally {
+      Expressive.Datepicker.getInstance(input)?.destroy();
+    }
+  });
+
+  test('parses an end date with a functional formatter while the start is empty', () => {
+    document.body.innerHTML = '<div><input id="start"><input id="end"></div>';
+    const start = document.getElementById('start');
+    const end = document.getElementById('end');
+    const calls = [];
+    const picker = Expressive.Datepicker.init(start, {
+      isDateRange: true, dateRangeEndEl: '#end', defaultDate: new Date(2026, 9, 1),
+      format: date => date.toISOString(),
+      parse(value, format) {
+        calls.push({ context: this, value, format });
+        const [day, month, year] = value.split('/').map(Number);
+        return new Date(year, month - 1, day);
+      }
+    });
+    const errors = [];
+    const onError = event => { errors.push(event.error); event.preventDefault(); };
+    window.addEventListener('error', onError);
+    try {
+      end.value = '25/10/2026';
+      end.dispatchEvent(new window.Event('change', { bubbles: true }));
+      assert.deepEqual(errors, []);
+      assert.equal(picker.endDate.getTime(), new Date(2026, 9, 25).getTime());
+      assert.equal(calls.length, 1);
+      assert.equal(calls[0].context, picker.options);
+      assert.equal(calls[0].value, '25/10/2026');
+      assert.equal(calls[0].format, '');
+      picker._confirm();
+      assert.equal(start.value, '');
+      assert.equal(end.value, picker.endDate.toISOString());
+    } finally {
+      picker.destroy();
+      window.removeEventListener('error', onError);
+    }
+  });
+
+  for (const interaction of ['initialization', 'change', 'click', 'Enter']) {
+    test(`honors the custom parser on ${interaction}`, () => {
+      document.body.innerHTML = '<div><input value="05/10/2026"></div>';
+      const input = document.querySelector('input');
+      const calls = [];
+      const picker = Expressive.Datepicker.init(input, {
+        format: 'dd/mm/yyyy',
+        setDefaultDate: interaction === 'initialization',
+        defaultDate: interaction === 'initialization' ? null : new Date(2026, 0, 1),
+        autoSubmit: false,
+        parse(value, format) {
+          calls.push({ context: this, value, format });
+          const [day, month, year] = value.split('/').map(Number);
+          return new Date(year, month - 1, day);
+        }
+      });
+      try {
+        if (interaction === 'Enter') {
+          input.dispatchEvent(new window.KeyboardEvent('keydown', {
+            key: 'Enter', bubbles: true, cancelable: true
+          }));
+        } else if (interaction !== 'initialization') {
+          fire(input, interaction);
+        }
+        assert.equal(picker.date?.getTime(), new Date(2026, 9, 5).getTime());
+        assert.equal(calls.length, 1);
+        assert.equal(calls[0].context, picker.options);
+        assert.equal(calls[0].value, '05/10/2026');
+        assert.equal(calls[0].format, 'dd/mm/yyyy');
+        picker._confirm();
+        assert.equal(input.value, '05/10/2026');
+      } finally {
+        picker.destroy();
+      }
+    });
+  }
+});
+
+describe('Datepicker cleared input', () => {
+  beforeEach(resetBody);
+
+  for (const interaction of ['change', 'click', 'Enter']) {
+    test(`clears a single selection on ${interaction} and keeps it empty after confirmation`, () => {
+      document.body.innerHTML = '<div><input></div>';
+      const input = document.querySelector('input');
+      const selected = new Date(2026, 8, 20);
+      const picker = Expressive.Datepicker.init(input, {
+        defaultDate: selected, setDefaultDate: true, autoSubmit: false
+      });
+      const apply = () => input.dispatchEvent(interaction === 'Enter'
+        ? new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })
+        : new window.Event(interaction, { bubbles: true }));
+      try {
+        input.value = 'not a date';
+        apply();
+        assert.equal(picker.date.getTime(), selected.getTime(), 'malformed nonempty input preserves selection');
+        input.value = '';
+        apply();
+        assert.equal(picker.date, null);
+        assert.equal(picker.calendarEl.querySelectorAll('.is-selected').length, 0);
+        fire(input, 'click');
+        picker._confirm();
+        assert.equal(input.value, '');
+        assert.equal(picker.date, null);
+      } finally {
+        picker.destroy();
+      }
+    });
+  }
 });
 
 describe('optional markup does not crash a component', () => {

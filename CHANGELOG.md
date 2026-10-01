@@ -7,6 +7,32 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Carousel preserves an active mouse drag when delayed resize work completes.
+- Snackbar ignores flick velocity after a pause of 100ms or more before release;
+  dragging past the distance threshold still dismisses it.
+- Tooltip supports `open()` in its public TypeScript declarations and honors
+  `open(true)` without requiring hover or focus.
+- NavigationRail leaves Escape to a nested component that already handled it.
+  Its own Escape collapse restores focus to the rail toggle while preserving
+  outside focus and focus moved by close callbacks.
+- Menu respects `closeOnClick` inside open and closed shadow roots, preserving
+  submenu navigation, outside dismissal, and touch scrolling.
+- Multiple FormSelect options with the same value can be selected and
+  deselected independently, matching their native option state.
+- Chips supports programmatic addition without an editable input and accepts
+  numeric ID `0` during initialization and addition. An empty autocomplete menu
+  does not prevent adding a custom chip.
+- Autocomplete keeps its open state synchronized with its Menu, accepts
+  preselected IDs before data loads, and bubbles selection changes to form
+  listeners. Chips lets an open suggestion menu handle Enter.
+- Timepicker reloads edited host values when opened and cancels obsolete clock
+  updates, so delayed transitions cannot overwrite newer edits or update a
+  destroyed instance.
+- Datepicker honors custom parsers during initialization and reopening, rejects
+  reversed range edits through every input path, and preserves an empty
+  single-date selection after clearing.
+- Each Datepicker range input emits its own change event. Generated date inputs
+  opt out of AutoInit so repeated initialization cannot create duplicate pickers.
 - Component `init()` methods return an empty array for empty element collections,
   matching their TypeScript return types.
 - Datepicker can reopen a range when only its end date is set. Clearing

@@ -23,6 +23,8 @@ export interface DatepickerOptions extends BaseOptions {
   format: string | ((d: Date) => string);
   /**
    * Used to create date object from current input string.
+   * Receives the format string, or an empty string when format is a function.
+   * Not called for blank input.
    * @default null
    */
   parse: ((value: string, format: string) => Date) | null;
@@ -359,7 +361,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     this._setupEventHandlers();
 
     if (!this.options.defaultDate) {
-      this.options.defaultDate = Datepicker._parseDate(this.el.value);
+      this.options.defaultDate = this._parseInput(this.el.value);
     }
 
     const defDate = this.options.defaultDate;
@@ -447,6 +449,14 @@ export class Datepicker extends Component<DatepickerOptions> {
     // An ISO time without an offset is local. Reject days that roll into the next month.
     const date = new Date(value + 'T00:00:00');
     return date.getDate() === Number(value.slice(-2)) ? date : new Date(NaN);
+  }
+
+  private _parseInput(value: string): Date {
+    if (!value.trim() || !this.options.parse) return Datepicker._parseDate(value);
+    return this.options.parse(
+      value,
+      typeof this.options.format === 'string' ? this.options.format : ''
+    );
   }
 
   static _isWeekend(date) {
@@ -602,14 +612,25 @@ export class Datepicker extends Component<DatepickerOptions> {
    * Sets date from input field.
    */
   setDateFromInput(el: HTMLInputElement) {
-    if (this.options.isDateRange && !el.value.trim()) {
+    // The native input's overlay follows edits, including cleared or partial values.
+    if (el.type === 'date') this.setDataDate(el, Datepicker._parseDate(el.value));
+    if ((this.options.isDateRange || !this.options.isMultipleSelection) && !el.value.trim()) {
       this.setSingleDate(null, el === this.endDateEl);
-      if (el.type === 'date') el.setAttribute('data-date', '');
       this.draw();
       return;
     }
-    const date = Datepicker._parseDate(el.value);
-    this.setDate(date, false, el == this.endDateEl, true);
+    const parsedDate = this._parseInput(el.value);
+    if (!Datepicker._isDate(parsedDate)) return;
+    const date = new Date(parsedDate.getTime());
+    Datepicker._setToStartOfDay(date);
+    const isEndDate = el === this.endDateEl;
+    if (this.options.isDateRange && (isEndDate
+      ? this.date && date < this.date
+      : this.endDate && date > this.endDate)) {
+      this.setInputValue(el, isEndDate ? this.endDate : this.date);
+      return;
+    }
+    this.setDate(date, false, isEndDate, true);
   }
 
   /**
@@ -729,7 +750,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     } else {
       el.value = this.toString(date);
     }
-    this.el.dispatchEvent(
+    el.dispatchEvent(
       new CustomEvent('change', {
         bubbles: true,
         cancelable: true,
@@ -1560,30 +1581,9 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   _handleInputChange = (e: Event) => {
-    let date;
-    const el = e.target as HTMLInputElement;
     // Prevent change event from being fired when triggered by the plugin
     if (e['detail']?.firedBy === this) return;
-    // The ::after overlay paints data-date over a native date input, so it
-    // follows every edit, including a cleared or partial one.
-    if (el.type == 'date') this.setDataDate(el, Datepicker._parseDate(el.value));
-    if (this.options.isDateRange && !el.value.trim()) return this.setDateFromInput(el);
-    // Prevent change event from being fired if an end date is set without a start date
-    if (el == this.endDateEl && !this.date) return;
-    if (this.options.parse) {
-      date = this.options.parse(
-        el.value,
-        typeof this.options.format === 'function'
-          ? this.options.format(new Date(this.el.value))
-          : this.options.format
-      );
-    } else {
-      date = Datepicker._parseDate(el.value);
-    }
-    if (Datepicker._isDate(date)) {
-      if (el == this.endDateEl && date < this.date) return this.setInputValue(el, this.endDate);
-      this.setDate(date, false, el == this.endDateEl, true);
-    }
+    this.setDateFromInput(e.target as HTMLInputElement);
   };
 
   renderDayName(opts, day, abbr: boolean = false) {
@@ -1599,6 +1599,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     // cloneNode copies the id too, and two elements sharing one id break every
     // lookup that goes through it.
     dateInput.removeAttribute('id');
+    dateInput.classList.add('no-autoinit');
     dateInput.addEventListener('click', this._handleInputClick);
     dateInput.addEventListener('keydown', this._handleInputKeydown);
     dateInput.addEventListener('change', this._handleInputChange);

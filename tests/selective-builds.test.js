@@ -69,8 +69,7 @@ test('default custom Sass matches the complete stylesheet and preserves configur
 test('complete minified artifacts stay within the reviewed gzip budgets', () => {
   const js = readFileSync(`${root}/dist/js/expressive.min.js`, 'utf8').replace(/^\/\/# sourceMappingURL=.*\n?/m, '');
   const css = readFileSync(`${root}/dist/css/expressive.min.css`, 'utf8').replace(/\/\*# sourceMappingURL=.*?\*\//, '').trimEnd();
-  // Reviewed incomplete ranges, gesture fixes, slider style restore and app bar
-  // collapse direction: 44,848 gzip bytes (+206).
-  assert.ok(sizes(js).gzip <= 44848, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed TypeScript roadmap and cross-browser fixes: 45,117 gzip bytes (+475).
+  assert.ok(sizes(js).gzip <= 45119, `JavaScript gzip: ${sizes(js).gzip}`);
   assert.ok(sizes(css).gzip <= 49675, `CSS gzip: ${sizes(css).gzip}`);
 });

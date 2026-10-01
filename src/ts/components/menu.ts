@@ -121,6 +121,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
   private _pendingTimers = new Set<ReturnType<typeof setTimeout>>();
   private _transition = 0;
   private _originalInert: string | null;
+  private _menuClickTargets = new WeakMap<Event, HTMLElement>();
 
   constructor(el: HTMLElement, options: Partial<MenuOptions>) {
     super(el, options, Menu);
@@ -239,6 +240,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
   _setupTemporaryEventHandlers() {
     document.body.addEventListener('click', this._handleDocumentClick);
+    this.menuEl?.addEventListener('touchmove', this._handleDocumentTouchmove, { passive: true });
     document.body.addEventListener('touchmove', this._handleDocumentTouchmove, {
       passive: true
     });
@@ -248,6 +250,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
   _removeTemporaryEventHandlers() {
     document.body.removeEventListener('click', this._handleDocumentClick);
+    this.menuEl?.removeEventListener('touchmove', this._handleDocumentTouchmove);
     document.body.removeEventListener('touchmove', this._handleDocumentTouchmove);
     this.menuEl?.removeEventListener('keydown', this._handleMenuKeydown);
     window.removeEventListener('resize', this._handleWindowResize);
@@ -292,12 +295,16 @@ export class Menu extends Component<MenuOptions> implements Openable {
   };
 
   _handleDocumentClick = (e: MouseEvent) => {
-    const target = <HTMLElement>e.target;
+    const path = e.composedPath();
+    const menuTarget = this._menuClickTargets.get(e);
+    this._menuClickTargets.delete(e);
+    const target = menuTarget ?? <HTMLElement>(path[0] || e.target);
+    const inside = !!menuTarget || path.includes(this.menuEl) || this.menuEl?.contains(target);
     if (this._isSubmenuTriggerClick(target)) return;
-    if (this.options.closeOnClick && this.menuEl?.contains(target) && !this.isTouchMoving) {
+    if (this.options.closeOnClick && inside && !this.isTouchMoving) {
       // isTouchMoving to check if scrolling on mobile.
       this.close();
-    } else if (!this.menuEl?.contains(target)) {
+    } else if (!inside) {
       // Do this one frame later so that if the element clicked also triggers _handleClick
       // For example, if a label for a select was clicked, that we don't close/open the menu
       this._schedule(() => {
@@ -324,13 +331,15 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
   _handleDocumentTouchmove = (e: TouchEvent) => {
     const target = <HTMLElement>e.target;
-    if (this.menuEl?.contains(target)) {
+    if (e.composedPath().includes(this.menuEl) || this.menuEl?.contains(target)) {
       this.isTouchMoving = true;
     }
   };
 
   _handleMenuClick = (e: MouseEvent) => {
     const target = <HTMLElement>e.target;
+    // Closed shadow roots hide the original target from document listeners.
+    this._menuClickTargets.set(e, target);
     const li = target.closest('li');
     if (li?.matches('.disabled, [aria-disabled="true"]')) {
       e.preventDefault();

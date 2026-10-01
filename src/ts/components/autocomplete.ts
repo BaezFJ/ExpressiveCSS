@@ -243,6 +243,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
     this._removeEventHandlers();
     this.menu.destroy();
+    this.isOpen = false;
     this._removeMenu();
     this._statusInfo.remove();
     this._announcer.remove();
@@ -306,6 +307,16 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       ...Autocomplete.defaults.menuOptions,
       ...this.options.menuOptions
     };
+    const userOnOpenStart = menuOptions.onOpenStart;
+    const userOnCloseStart = menuOptions.onCloseStart;
+    menuOptions.onOpenStart = (el) => {
+      this.isOpen = true;
+      if (typeof userOnOpenStart === 'function') userOnOpenStart.call(this.menu, el);
+    };
+    menuOptions.onCloseStart = (el) => {
+      this.isOpen = false;
+      if (typeof userOnCloseStart === 'function') userOnCloseStart.call(this.menu, el);
+    };
     // The wrapper is installed unconditionally: selecting the clicked entry is
     // how the autocomplete works, not an optional extra. Only the forwarding to
     // a user-supplied handler is conditional, and it hands over exactly what
@@ -327,10 +338,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
     // Sketchy removal of menu click handler
     this.el.removeEventListener('click', this.menu._handleClick);
-    if(!this.options.isMultiSelect && !(this.options.selected.length === 0)) {
-      const selectedValue = this.menuItems.filter((value) => value.id === this.selectedValues[0].id);
-      this.el.value = selectedValue[0].text;
-    }
+    if (!this.options.isMultiSelect) this._refreshInputText();
     // Set Value if already set in HTML
     if (this.el.value) this.selectOption(this.el.value);
     // Add StatusInfo
@@ -464,7 +472,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.container.replaceChildren();
     this._resetCurrentElementPosition();
     this.oldVal = null;
-    this.isOpen = false;
     this._pointerDown = false;
   }
 
@@ -606,7 +613,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   _triggerChanged() {
-    this.el.dispatchEvent(new Event('change'));
+    this.el.dispatchEvent(new Event('change', { bubbles: true, cancelable: true, composed: true }));
     // Trigger Autocomplete Event
     if (typeof this.options.onAutocomplete === 'function')
       this.options.onAutocomplete.call(this, this.selectedValues);
@@ -619,7 +626,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     const inputText = this.el.value.toLocaleLowerCase();
     this._resetAutocomplete();
     if (inputText.length >= this.options.minLength) {
-      this.isOpen = true;
       this._renderMenu();
       this._announce(this.menuItems.length ? this.options.i18n.results(this.menuItems.length) : this.options.i18n.noResults);
     }

@@ -242,7 +242,8 @@ export class Snackbar {
 
       const totalDeltaX = snackbar.xPos - snackbar.startingXPos;
       const activationDistance = snackbar.el.offsetWidth * snackbar.options.activationPercent;
-      const shouldBeDismissed = Math.abs(totalDeltaX) > activationDistance || snackbar.velocityX > 1;
+      const velocity = Date.now() - snackbar.time < 100 ? snackbar.velocityX : 0;
+      const shouldBeDismissed = Math.abs(totalDeltaX) > activationDistance || velocity > 1;
 
       // Remove snackbar
       if (shouldBeDismissed) {

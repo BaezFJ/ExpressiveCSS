@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.11.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `02fa2c21f2aef98f60bef89072eb9dcb39c8ca304baac680d0dc5fb113e931d0`
+Contract SHA-256: `5316b0974a9436159930a76aaa848d8c075b3a6034f1a2cf431ecde3763d2818`
 
 #### Selection and adaptation
 
@@ -41,6 +41,8 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 Switch between UI views on mid-sized devices. A `nav.navigation-rail` holds 3–7 destinations plus an optional FAB. Put it in the same place on every screen.
 
 Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp, icon and label on one row, and an extended FAB. The menu button toggles that class (`AutoInit()` starts it). On compact windows an expanded rail is modal — a scrim, and Escape or a scrim tap collapses it. Add `modal` to keep that overlay at every breakpoint.
+
+Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the rail toggle, unless a close callback moves focus elsewhere.
 
 #### Syntax
 

@@ -2,7 +2,7 @@ import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { Expressive, resetBody, fire } from './setup.js';
+import { Expressive, resetBody, fire, window } from './setup.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 
@@ -31,6 +31,117 @@ describe('Navigation rail CSS', () => {
 
 describe('NavigationRail', () => {
   beforeEach(resetBody);
+
+  test('Escape closes a nested menu before its modal rail and restores each trigger', t => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    document.body.innerHTML = `<nav class="navigation-rail modal">
+      <button id="toggle">Menu</button>
+      <div><button id="actions-trigger" data-target="actions">Actions</button>
+      <menu id="actions"><li>Copy</li></menu></div>
+    </nav>`;
+    const rail = Expressive.NavigationRail.init(document.querySelector('nav'));
+    const menu = Expressive.Menu.init(document.querySelector('#actions-trigger'), {
+      inDuration: 0, outDuration: 0
+    });
+    const escape = () => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', {
+      key: 'Escape', bubbles: true, cancelable: true
+    }));
+    try {
+      rail.expand();
+      menu.open();
+      t.mock.timers.tick(0);
+      assert.equal(document.activeElement, menu.menuEl.firstElementChild);
+      escape();
+      assert.equal(menu.isOpen, false);
+      assert.equal(rail.isExpanded, true);
+      assert.equal(document.activeElement, menu.el);
+      escape();
+      assert.equal(rail.isExpanded, false);
+      assert.equal(document.activeElement, document.querySelector('#toggle'));
+    } finally {
+      menu.destroy();
+      rail.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  for (const focus of ['outside', 'callback']) {
+    test(`Escape preserves ${focus} focus when collapsing a modal rail`, () => {
+      document.body.innerHTML = railHtml.replace('class="navigation-rail"', 'class="navigation-rail modal"') + '<input id="outside">';
+      const outside = document.querySelector('#outside');
+      const rail = Expressive.NavigationRail.init(document.querySelector('nav'), {
+        onCloseStart: focus === 'callback' ? () => outside.focus() : null
+      });
+      try {
+        rail.expand();
+        (focus === 'outside' ? outside : rail.el.querySelector('a')).focus();
+        document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', {
+          key: 'Escape', bubbles: true, cancelable: true
+        }));
+        assert.equal(rail.isExpanded, false);
+        assert.equal(document.activeElement, outside);
+      } finally {
+        rail.destroy();
+      }
+    });
+  }
+
+  for (const callback of ['onCloseStart', 'onCloseEnd']) {
+    test(`Escape preserves focus moved inside a child shadow root by ${callback}`, () => {
+      document.body.innerHTML = '<nav class="navigation-rail modal"><button>Menu</button><div id="host"></div></nav>';
+      const shadow = document.querySelector('#host').attachShadow({ mode: 'open' });
+      shadow.innerHTML = '<input id="first"><input id="second">';
+      const first = shadow.querySelector('#first');
+      const second = shadow.querySelector('#second');
+      const rail = Expressive.NavigationRail.init(document.querySelector('nav'), {
+        [callback]: () => second.focus()
+      });
+      try {
+        rail.expand();
+        first.focus();
+        first.dispatchEvent(new window.KeyboardEvent('keydown', {
+          key: 'Escape', bubbles: true, composed: true, cancelable: true
+        }));
+        assert.equal(rail.isExpanded, false);
+        assert.equal(shadow.activeElement, second);
+      } finally {
+        rail.destroy();
+      }
+    });
+  }
+
+  test('a collapse callback can reopen the rail without losing focus', () => {
+    document.body.innerHTML = railHtml.replace('class="navigation-rail"', 'class="navigation-rail modal"');
+    const rail = Expressive.NavigationRail.init(document.querySelector('nav'), {
+      onCloseEnd: () => rail.expand()
+    });
+    const target = rail.el.querySelector('a');
+    try {
+      rail.expand();
+      target.focus();
+      target.dispatchEvent(new window.KeyboardEvent('keydown', {
+        key: 'Escape', bubbles: true, cancelable: true
+      }));
+      assert.equal(rail.isExpanded, true);
+      assert.equal(document.activeElement, target);
+    } finally {
+      rail.destroy();
+    }
+  });
+
+  test('programmatic collapse leaves focus where the caller put it', () => {
+    document.body.innerHTML = railHtml;
+    const rail = Expressive.NavigationRail.init(document.querySelector('nav'));
+    const target = rail.el.querySelector('a');
+    try {
+      rail.expand();
+      target.focus();
+      rail.collapse();
+      assert.equal(document.activeElement, target);
+    } finally {
+      rail.destroy();
+    }
+  });
 
   test('the menu button toggles .expanded', () => {
     document.body.innerHTML = railHtml;

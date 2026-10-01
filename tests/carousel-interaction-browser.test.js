@@ -61,6 +61,14 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
             assert.equal(await page.evaluate(() => carousel.dragged), true);
             const scrollLeft = await page.locator('.carousel-track').evaluate(el => el.scrollLeft);
             assert.ok(scrollLeft > 100, `${layout} ${selector}: scrollLeft=${scrollLeft}, pointer x=${startX - 140}`);
+            // Finish the resize observer's delayed alignment while the pointer is still held.
+            await page.locator('.carousel').evaluate((el, width) => {
+              el.style.width = width;
+            }, selector === '#link-label' ? '460px' : '480px');
+            await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+            await expect.poll(() => page.evaluate(() => carousel._resizeTimeout)).toBeNull();
+            assert.equal(await page.locator('.carousel-track').evaluate(el => el.scrollLeft), scrollLeft,
+              `${layout} ${selector}: resizing preserves the held drag`);
             await page.mouse.up();
             assert.equal(await page.evaluate(() => carousel.pressed), false);
             await expect(page.locator('.carousel')).not.toHaveClass(/dragging/);

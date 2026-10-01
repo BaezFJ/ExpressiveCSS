@@ -43,6 +43,118 @@ const mount = (opts = {}) => {
 describe('Chips rendered markup', () => {
   beforeEach(resetBody);
 
+  test('a nested input can add its initial autocomplete value before being moved', () => {
+    document.body.innerHTML = '<div class="chips"><span><input value="apple"></span></div>';
+    const el = document.querySelector('.chips');
+    const input = el.querySelector('input');
+    const wrapper = input.parentElement;
+    const added = [];
+    let chips;
+    try {
+      chips = Expressive.Chips.init(el, {
+        allowUserInput: true,
+        autocompleteOptions: { data: [{ id: 'apple', text: 'Apple' }] },
+        onChipAdd: (element, chip) => added.push([element, chip]),
+      });
+      const rendered = [...el.querySelectorAll('.chip')];
+      assert.deepEqual(chips.getData().map(chip => chip.id), ['apple']);
+      assert.equal(rendered.length, 1);
+      assert.deepEqual(chips._chips, rendered);
+      assert.deepEqual(added, [[el, rendered[0]]]);
+      assert.equal(rendered[0].firstChild.textContent, 'Apple');
+      assert.equal(wrapper.parentElement, el);
+      assert.equal(input.parentElement, el);
+      assert.equal(input.value, '');
+    } finally {
+      (chips ?? Expressive.Chips.getInstance(el))?.destroy();
+      // A failed constructor can leave the nested Autocomplete's Menu initialized.
+      Expressive.Menu.getInstance(input)?.destroy();
+    }
+  });
+
+  for (const editable of [false, true]) {
+    test(`addChip preserves data, author nodes, and callbacks with ${editable ? 'an editable input' : 'default noneditable options'}`, () => {
+      document.body.innerHTML = '<div class="chips"><label>Tags</label><small>Choose a tag.</small></div>';
+      const el = document.querySelector('.chips');
+      const authorNodes = [...el.children];
+      const added = [];
+      const chips = Expressive.Chips.init(el, {
+        ...(editable ? { allowUserInput: true } : {}),
+        data: [{ id: 'Apple' }],
+        limit: 2,
+        placeholder: 'First tag',
+        secondaryPlaceholder: 'Another tag',
+        onChipAdd: (element, chip) => added.push([element, chip]),
+      });
+      try {
+        chips.addChip({ id: 'Pear' });
+        const rendered = [...el.querySelectorAll('.chip')];
+        assert.equal(rendered.length, 2);
+        assert.deepEqual(chips._chips, rendered);
+        assert.deepEqual(chips.getData().map(chip => chip.id), ['Apple', 'Pear']);
+        assert.deepEqual(added, [[el, rendered[1]]]);
+        assert.equal(authorNodes.every(node => node.parentElement === el), true);
+        const input = el.querySelector('input');
+        if (editable) {
+          assert.equal(rendered[1].nextElementSibling, input);
+          assert.equal(input.placeholder, 'Another tag');
+        } else {
+          assert.equal(input, null);
+          assert.equal(el.lastElementChild, rendered[1]);
+          assert.equal(el.querySelector('.close'), null);
+        }
+        chips.addChip({ id: 'Pear' });
+        chips.addChip({ id: 'Orange' });
+        assert.deepEqual(chips.getData().map(chip => chip.id), ['Apple', 'Pear']);
+        assert.equal(added.length, 1, 'duplicates and the limit do not emit add callbacks');
+        chips.deleteChip(1);
+        chips.deleteChip(0);
+        assert.deepEqual(chips.getData(), []);
+        assert.deepEqual(chips._chips, []);
+        assert.equal(el.querySelector('.chip'), null);
+        if (input) assert.equal(input.placeholder, 'First tag');
+      } finally {
+        chips.destroy();
+      }
+    });
+
+    test(`numeric zero initializes a chip with allowUserInput=${editable}`, () => {
+      let chips;
+      try {
+        const [el, instance] = mount({ allowUserInput: editable, data: [{ id: 0 }] });
+        chips = instance;
+        assert.deepEqual(chips.getData(), [{ id: 0 }]);
+        assert.equal(el.querySelector('.chip').firstChild.textContent, '0');
+        assert.equal(chips._chips.length, 1);
+        if (editable) assert.equal(el.querySelector('.close').getAttribute('aria-label'), 'Remove 0');
+      } finally {
+        chips?.destroy();
+      }
+    });
+
+    test(`addChip accepts zero once and still rejects invalid IDs with allowUserInput=${editable}`, () => {
+      const added = [];
+      const [el, chips] = mount({ allowUserInput: editable, onChipAdd: (element, chip) => added.push([element, chip]) });
+      try {
+        for (const id of ['', NaN, null, undefined, false]) chips.addChip({ id });
+        assert.deepEqual(chips.getData(), []);
+        chips.addChip({ id: 0, text: 'Zero' });
+        assert.deepEqual(chips.getData(), [{ id: 0, text: 'Zero' }]);
+        chips.addChip({ id: 0 });
+        chips.addChip({ id: '0' });
+        assert.equal(chips.getData().length, 1, 'numeric and string duplicates retain their existing equality rules');
+        assert.equal(el.querySelectorAll('.chip').length, 1);
+        assert.deepEqual(added, [[el, chips._chips[0]]]);
+        assert.equal(chips._chips[0].firstChild.textContent, 'Zero');
+        chips.deleteChip(0);
+        assert.deepEqual(chips.getData(), []);
+        assert.equal(el.querySelector('.chip'), null);
+      } finally {
+        chips.destroy();
+      }
+    });
+  }
+
   test('a rendered chip satisfies every enforced chips rule', () => {
     const [el, chips] = mount({ data: [{ id: 'Apple' }, { id: 'Pear', image: '/p.jpg' }] });
     try {

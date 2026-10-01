@@ -336,7 +336,8 @@ new Expressive.Snackbar({
         <p>
           To remove a specific snackbar, get the instance from the snackbar
           element and call <code>dismiss()</code>. Swipe also dismisses when you
-          drag past 80% of the width or flick. Cancelling a swipe leaves the snackbar
+          drag past 80% of the width or flick. After a short drag, pausing for at
+          least 100ms before release lets the snackbar snap back. Cancelling a swipe leaves the snackbar
           open and does not affect the next gesture. The action and close
           buttons are not swipe handles.
         </p>

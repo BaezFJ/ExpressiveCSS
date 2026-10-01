@@ -315,7 +315,8 @@ export class Chips extends Component<ChipsOptions> {
     Chips._keydown = true;
     if (e.key === Utils.keys.ENTER) {
       // Override enter if autocompleting.
-      if (this.hasAutocomplete && this.autocomplete && this.autocomplete.isOpen) {
+      if (this.hasAutocomplete && this.autocomplete?.isOpen &&
+        this.autocomplete.container.querySelector('[role="option"]')) {
         return;
       }
       e.preventDefault();
@@ -334,7 +335,7 @@ export class Chips extends Component<ChipsOptions> {
   };
 
   _renderChip(chip: ChipData): HTMLElement {
-    if (!chip.id) return;
+    if (!chip.id && chip.id !== 0) return;
     const label = chip.text || <string>chip.id;
     // <span>, not <div>: a chip is inline, and the container itself is not a
     // control. It used to be a <div tabindex="0"> with no role - focusable,
@@ -415,6 +416,7 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   _setPlaceholder() {
+    if (!this._input) return;
     if (this.chipsData !== undefined && !this.chipsData.length && this.options.placeholder) {
       this._input.placeholder = this.options.placeholder;
     } else if (
@@ -426,7 +428,7 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   _isValidAndNotExist(chip: ChipData) {
-    const isValid = !!chip.id;
+    const isValid = !!chip.id || chip.id === 0;
     const doesNotExist = !this.chipsData.some((item) => item.id == chip.id);
     return isValid && doesNotExist;
   }
@@ -440,7 +442,8 @@ export class Chips extends Component<ChipsOptions> {
     const renderedChip = this._renderChip(chip);
     this._chips.push(renderedChip);
     this.chipsData.push(chip);
-    this._input.before(renderedChip);
+    if (this._input) this._input.before(renderedChip);
+    else this.el.append(renderedChip);
     this._setPlaceholder();
     // fire chipAdd callback
     if (typeof this.options.onChipAdd === 'function') {

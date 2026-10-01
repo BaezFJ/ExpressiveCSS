@@ -2925,6 +2925,8 @@ Switch between UI views on mid-sized devices. A `nav.navigation-rail` holds 3–
 
 Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp, icon and label on one row, and an extended FAB. The menu button toggles that class (`AutoInit()` starts it). On compact windows an expanded rail is modal — a scrim, and Escape or a scrim tap collapses it. Add `modal` to keep that overlay at every breakpoint.
 
+Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the rail toggle, unless a close callback moves focus elsewhere.
+
 ```html
 <nav class="navigation-rail" aria-label="Main">
   <button type="button" aria-label="Menu">
@@ -3476,6 +3478,8 @@ Expressive.Tooltip.init(
 Material Design 3 menus, from the HTML.
 
 Closing menus are excluded from keyboard focus, and close callbacks preserve focus they move. Submenu entry/return keys mirror in RTL; typeahead stays in the active list and skips headings and disabled items. Escape closes the innermost submenu first. Fine-pointer hover opens flyouts; keyboard activation uses Enter, Space, or the submenu entry arrow.
+
+Inside open or closed shadow roots, `closeOnClick` controls item clicks just as it does in the document. Submenu triggers keep the parent menu open; outside clicks dismiss it.
 
 A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by default; add `.suffix` to send it to the trailing edge, since a lone icon is indistinguishable from a leading one in CSS. A `<kbd>` or a `.badge` is always trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid (it still renders); a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
 
@@ -4300,7 +4304,7 @@ new Expressive.Snackbar({
 
 ### Dismiss a Snackbar Programmatically
 
-To remove a specific snackbar, get the instance from the snackbar element and call `dismiss()`. Swipe also dismisses when you drag past 80% of the width or flick. Cancelling a swipe leaves the snackbar open and does not affect the next gesture. The action and close buttons are not swipe handles.
+To remove a specific snackbar, get the instance from the snackbar element and call `dismiss()`. Swipe also dismisses when you drag past 80% of the width or flick. After a short drag, pausing for at least 100ms before release lets the snackbar snap back. Cancelling a swipe leaves the snackbar open and does not affect the next gesture. The action and close buttons are not swipe handles.
 
 ```js
 const snackbarElement = document.querySelector('.snackbar');
@@ -4428,7 +4432,7 @@ const instance = Expressive.Tooltip.getInstance(elem);
 
 #### .open();
 
-Show the tooltip.
+`open()` and `open(true)` show the tooltip after its enter delay without requiring hover or focus. `open(false)` uses the automatic behavior and requires hover or focus when the delay ends.
 
 ```text
 instance.open();
@@ -4644,7 +4648,7 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `format` | String or Function | `'mmm dd, yyyy'` | Output written to the input, or a function that takes a `Date` and returns a string. |
-| `parse` | Function | `null` | Turn the current input string back into a `Date`. Receives `(value, format)`. |
+| `parse` | Function | `null` | Turn the current input string back into a `Date`. Receives `(value, format)`, where `format` is the configured string or an empty string for a function formatter. Blank inputs skip parsing. |
 | `isDateRange` | Boolean | `false` | Select a start date and an end date. |
 | `dateRangeEndEl` | String | `null` | Selector for an existing end-date input. If omitted, a second input is created. |
 | `isMultipleSelection` | Boolean | `false` | Toggle several dates. Extra inputs are created as dates are added. |
@@ -4681,6 +4685,10 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 Without a custom `parse` callback, `YYYY-MM-DD` input is a local calendar date.
 Impossible dates such as `2023-02-29` do not change the selection. Other strings
 use the browser's date parser. Supply `parse` for other input formats.
+
+The custom parser also applies when initializing or reopening the picker by click
+or Enter. Clearing a single-date input clears its selection, so confirming does
+not restore the deleted date.
 
 Use these tokens in the `format` string.
 
@@ -4723,6 +4731,11 @@ The inline and docked calendars support keyboard navigation. Enter on a date inp
 Set `isDateRange: true`. Click a start day, then an end day that is on or after it. Point `dateRangeEndEl` at a second input, or omit it and a second input is created next to the first.
 
 A range with only an end date can be reopened safely. Clearing either input preserves the other date and removes the range shading until both dates are set.
+
+An edit that would reverse the range restores that field's previous value. Each
+input emits its own bubbling change event when the picker writes its value.
+Generated inputs opt out of AutoInit, so repeated initialization does not create
+another picker for them.
 
 An authored end input supports typing and Enter-to-calendar navigation. Destroy
 preserves authored inputs and removes generated inputs and their listeners.
@@ -4838,6 +4851,10 @@ Digital edits use native input events, including paste. Invalid edits restore
 the last valid value on blur. Empty fields use the current hour or minute without
 changing the selected AM/PM period. Twelve-hour initialization converts 24-hour
 strings and accepts either case for AM/PM. No modal or dial-keyboard API is added.
+
+Clicking the host input or pressing Enter reloads its current value into the
+clock. Changing the active clock field or editing its value cancels an older
+delayed clock update.
 
 ### Initialization
 
@@ -4959,7 +4976,7 @@ instance.clear();
 
 #### .destroy();
 
-Destroy the plugin instance, remove the clock, and tear down its event handlers. Pending automatic submission is cancelled, so the destroyed instance cannot write to the input.
+Destroy the plugin instance, remove the clock, and tear down its event handlers. Pending automatic submission and clock updates are cancelled, so the destroyed instance cannot write to the input.
 
 ```text
 instance.destroy();
@@ -5242,6 +5259,7 @@ Filled enhanced selects reserve a label row that grows with wrapping and enlarge
 Select turns a native `<select>` into a menu. Wrap it in a `.field` and give the label a matching `for`. `AutoInit()` starts every `select` except those marked `no-autoinit`. Add `browser-default` to keep the native control.
 
 Add `multiple` to select several options. Chosen values appear as a comma-separated list.
+Distinct options with the same value can be selected and deselected independently.
 
 Native `<optgroup>` elements become group headings in the menu.
 
@@ -5754,7 +5772,8 @@ const instance = Expressive.Chips.getInstance(elem);
 
 #### .addChip();
 
-Add a chip. Ignored if `id` is missing, already present, or the limit is reached.
+Add a chip, including when `allowUserInput` is false. Numeric id `0` is valid.
+Ignored if `id` is missing, already present, or the limit is reached.
 
 ```text
 instance.addChip({
@@ -5880,6 +5899,10 @@ Add `aria-invalid="true"` or `class="invalid"` on the input. The box uses `error
 
 Autocomplete preserves the original suggestion dataset and selected display label while editing. Escape and Tab close from the input, cancel pending opening, and keep listbox options outside sequential Tab order.
 
+`isOpen` follows the suggestion menu through rerenders and dismissal. Selection
+changes emit a bubbling, composed `change` event from the input, so delegated
+form listeners can observe them.
+
 Suggest values under a text field as the user types.
 
 Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every `.autocomplete` except `no-autoinit`, but the default `data` list is empty — pass options (or call `init`) to give it something to suggest.
@@ -5960,7 +5983,7 @@ onSearch: function(text, autocomplete) {
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
-| `selected` | Array | `[]` | Initial selected ids (strings or numbers). |
+| `selected` | Array | `[]` | Initial selected ids, strings or numbers. An id without loaded data displays the id. Pass the selected ids to `setMenuItems` with the loaded data to resolve their labels. |
 
 Autocomplete provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
 

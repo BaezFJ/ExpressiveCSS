@@ -68,6 +68,22 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
         await expect(page.locator('#save')).toBeFocused();
       }
       const runtime = page.locator('body > .tooltip');
+      await page.mouse.move(1, 1);
+      assert.equal(await page.locator('#runtime').evaluate(el => el.matches(':focus, :hover')), false);
+      await page.evaluate(() => window.tip.open(false));
+      await page.waitForTimeout(20);
+      await expect(runtime).toBeHidden();
+      await page.evaluate(() => window.tip.close());
+      for (const manual of ['default', true]) {
+        await page.evaluate(manual => {
+          if (manual === 'default') window.tip.open();
+          else window.tip.open(true);
+        }, manual);
+        await expect(runtime).toBeVisible();
+        await expect(runtime).toHaveCSS('opacity', '1');
+        await page.evaluate(() => window.tip.close());
+        await expect(runtime).toBeHidden();
+      }
       for (const position of ['top', 'bottom', 'left', 'right']) {
         await page.evaluate(position => { window.tip.close(); window.tip.options.position = position; }, position);
         await page.mouse.move(1, 1);
