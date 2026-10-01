@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.2 - 2026-10-01
 
 - Semantics findings from `rules_enforcer`, `quality_inspector`, and
   `expressivecss-lint` report the element's line and column instead of 1:1.
@@ -14,6 +14,7 @@
   Time picker guides use `.date-picker` and `.time-picker`, the Select guide
   describes the `.field` wrapper instead of `.select-wrapper`, and the
   Scrollspy example uses `hide-on-compact-only`.
+- Bundled framework guidance: ExpressiveCSS 0.12.0.
 
 ## 0.2.1 - 2026-09-30
 

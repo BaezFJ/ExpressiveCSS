@@ -1,7 +1,7 @@
 {
   "name": "expressivecss-mcp",
   "displayName": "ExpressiveCSS MCP",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "ExpressiveCSS workflow server with Setup Expert, Rules Enforcer, Creative Director, Page Arcjitect, Component Syntax Expert, and Quality Inspector.",
   "author": {
     "name": "BaezFJ",

@@ -5,13 +5,13 @@ A shape that morphs while it spins, for waits under five seconds.
 
 Component ID: `loading-indicator`
 
-[Component documentation](https://www.expressivecss.com/loading-indicator.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/loading-indicator.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.11.0)
+[Component documentation](https://www.expressivecss.com/loading-indicator.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/loading-indicator.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.12.0)
 
-Contract: ExpressiveCSS 0.11.0
+Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e02ad277796b3820b4370ceee16a28d04e5f2e28acb800fd129b9765112c4014`
+Contract SHA-256: `270b7d8fd0ec2f1174cba3f2793c061d3b4f494903520e2eaaa7fa640a680859`
 
 #### Selection and adaptation
 
