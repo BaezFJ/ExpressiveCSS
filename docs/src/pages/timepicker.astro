@@ -23,8 +23,8 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
-          Add <code>timepicker</code> to a text input. <code>AutoInit()</code> starts every
-          <code>.timepicker</code> except those marked <code>no-autoinit</code>.
+          Add <code>time-picker</code> to a text input. <code>AutoInit()</code> starts every
+          <code>.time-picker</code> except those marked <code>no-autoinit</code>.
         </p>
         <p>
           The clock is inline, not a modal. It is appended to the input’s parent and stays
@@ -60,12 +60,12 @@ const S = defineSections([
         <p>
           The IIFE bundle exposes <code>Expressive.Timepicker</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
-          or let <code>Expressive.AutoInit()</code> start every <code>.timepicker</code>.
+          or let <code>Expressive.AutoInit()</code> start every <code>.time-picker</code>.
           Unlike Datepicker, the default options already show the clock.
         </p>
 <Code code={`
 document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.timepicker');
+  const elems = document.querySelectorAll('.time-picker');
   const instances = Expressive.Timepicker.init(elems, {
     // specify options here
   });

@@ -6,7 +6,8 @@
 // semantics.json rather than restated, so the two cannot disagree.
 //
 // Every case tears down in a finally: an assertion that skips destroy() leaves
-// listeners behind, and per CLAUDE.md a wedged run prints nothing at all.
+// listeners behind, and per docs/development-notes.md a wedged run prints
+// nothing at all.
 
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';

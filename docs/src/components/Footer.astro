@@ -3,16 +3,16 @@ import { NAV } from "../data/nav";
 import { route } from "../lib/catalogue";
 
 /**
- * The footer, rendered from the same catalogue as the drawer -- documenting a
- * page relinks both.
+ * The footer, rendered from the same catalogue as the navigation, so documenting
+ * a page links it in both.
  */
 interface Props {
   version: string;
   /** A prerelease publishes to the `next` dist-tag, so say so rather than advertising a version `npm install` does not hand out. */
-  prerelease?: boolean;
+  prerelease: boolean;
 }
 
-const { version, prerelease = false } = Astro.props;
+const { version, prerelease } = Astro.props;
 ---
 <footer>
   <div class="container">

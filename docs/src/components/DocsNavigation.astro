@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { current } = Astro.props;
-const currentGroup = NAV.find((group) => group.pages.some((page) => page.id === current)) ?? NAV[0];
+const currentGroup = NAV.find((group) => group.pages.some((page) => page.id === current));
 ---
 <div class="docs-navigation-wide">
   <nav class="navigation-rail no-autoinit docs-category-rail" aria-label="Documentation categories, wide layout">

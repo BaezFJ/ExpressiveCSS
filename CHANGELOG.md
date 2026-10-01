@@ -131,6 +131,31 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `:has()` selector was invalid, so browsers had always dropped them. The
   Footer page now gives the two rules to add yourself, as the API reference
   already did.
+- The Auto Init page and the API reference list every component `AutoInit()`
+  starts. They add AppBar and ExpandingCard, give Cards its real selector, and
+  list both picker spellings, `.datepicker, .date-picker` and
+  `.timepicker, .time-picker`. Both name all eight
+  behaviors the bundle starts on import, including Dialogs, BottomSheets and
+  SideSheets, and call the range control Slider instead of Range.
+- Documentation code samples match their demos and the current framework. The
+  Date picker and Time picker samples select `.date-picker` and `.time-picker`,
+  the Slider samples and the M3 guidelines use `Expressive.Slider`, and card
+  samples drop the unstyled `supporting-text` class. The Grid, circular image,
+  character counter, snackbar dismiss and full-screen dialog samples now match
+  the demos next to them. The Scrollspy sample uses the canonical
+  `hide-on-compact-only` instead of the legacy `hide-on-small-only` alias.
+- Documentation no longer describes removed classes or markup. Typography
+  names `body-large`, `body-medium` and `body-small`, and Select describes the
+  `.field` wrapper the plugin reuses or creates instead of `.select-wrapper`.
+  Tabs no longer mentions `tabs-horizontal`, and Tooltips no longer says the
+  plugin adds `.material-tooltip`. Grid offsets use the Compact through
+  Extra-large breakpoint names.
+- Getting started lists `fonts/` and `modular.mjs` in the `dist/` tree and
+  the minified files in the project tree. Its README link opens the "Reduce
+  page downloads" section.
+- On the docs site, the Start navigation item opens the landing page again.
+  Slider demos keep their stop dots, and carousel demo links no longer point
+  at anchors that do not exist.
 
 ## [0.11.0] - 2026-09-30
 

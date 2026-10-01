@@ -9,8 +9,8 @@
 // Rules are read out of semantics.json rather than restated, so the generated
 // DOM and the documented markup are held to one standard.
 //
-// Every case tears down in a finally: per CLAUDE.md a test that leaves a live
-// timer wedges the whole run with no output.
+// Every case tears down in a finally: per docs/development-notes.md a test that
+// leaves a live timer wedges the whole run with no output.
 
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';

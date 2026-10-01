@@ -260,23 +260,25 @@ Opt an element out when it needs manual options:
 
 | Component | Selector |
 | --- | --- |
+| `AppBar` | `header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > :is(.search-bar, .searchbar))` |
 | `Autocomplete` | `.autocomplete` |
 | `ButtonGroup` | `.button-group` |
 | `Cards` | `article:has(> aside[id]:not([id=""])):not(:has(> aside ~ aside)):has(> button.card-reveal-trigger[type="button"], > :not(aside) button.card-reveal-trigger[type="button"])` |
+| `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
-| `Datepicker` | `.datepicker` |
+| `Datepicker` | `.datepicker, .date-picker` |
 | `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
 | `Tabs` | `.tabs` |
-| `Timepicker` | `.timepicker` |
+| `Timepicker` | `.timepicker, .time-picker` |
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab-menu` |
 
-`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, and ExpandingCard behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets behaviors.
 
 ## Component lifecycle
 
@@ -339,11 +341,13 @@ dist/
 ├── css/
 │   ├── expressive.css
 │   └── expressive.min.css
+├── fonts/
 ├── js/
 │   ├── expressive.cjs
 │   ├── expressive.js
 │   ├── expressive.min.js
-│   └── expressive.mjs
+│   ├── expressive.mjs
+│   └── modular.mjs
 └── types/
 ```
 
@@ -375,12 +379,14 @@ You'll notice that there are two sets of the files. The `min` means that the fil
 MyWebsite/
   |--css/
   |  |--expressive.css
+  |  |--expressive.min.css
   |
   |--fonts/
   |  |--material-symbols-outlined.woff2
   |
   |--js/
   |  |--expressive.js
+  |  |--expressive.min.js
   |
   |--index.html
 ```
@@ -830,10 +836,9 @@ There is a default gap between the columns (g-3). You can easily change the gap 
 
 ```html
 <div class="row g-4">
-  <div class="s3">1</div>
-  <div class="s3">2</div>
-  <div class="s3">3</div>
-  <div class="s3">4</div>
+  <div class="s4">1</div>
+  <div class="s4">2</div>
+  <div class="s4">3</div>
 </div>
 ```
 
@@ -966,8 +971,6 @@ In this example below, we take the same layout from above, but we make it respon
   <div class="s12 m4 l2">s12 m4 l2</div>
   <div class="s12 m4 l8">s12 m4 l8</div>
   <div class="s12 m4 l2">s12 m4 l2</div>
-</div>
-<div class="row">
   <div class="s12 m6 l3">s12 m6 l3</div>
   <div class="s12 m6 l3">s12 m6 l3</div>
   <div class="s12 m6 l3">s12 m6 l3</div>
@@ -1291,19 +1294,21 @@ To make images resize responsively to page width, you can add the class `respons
 To make images appear circular, simply add `class="circle"` to them.
 
 ```html
-<div class="s12 m8 offset-m2 l6 offset-l3">
-  <article>
-    <div class="row valign-wrapper">
-      <div class="s2">
-        <img src="portrait.jpg" alt="" class="circle responsive-img">
+<div class="row">
+  <div class="s12">
+    <article>
+      <div class="row align-center">
+        <div class="s3">
+          <img src="portrait.jpg" alt="" class="circle responsive-img">
+        </div>
+        <div class="s9">
+          <span>
+            This is a square image. Add the "circle" class to it to make it appear circular.
+          </span>
+        </div>
       </div>
-      <div class="s10">
-        <span>
-          This is a square image. Add the "circle" class to it to make it appear circular.
-        </span>
-      </div>
-    </div>
-  </article>
+    </article>
+  </div>
 </div>
 ```
 
@@ -1374,7 +1379,7 @@ The class list is generated from the same map as the mixin, so they cannot drift
 }
 ```
 
-There is also `z-depth-1-half`, used by some components for an in-between hover elevation.
+There is also `z-depth-1-half`, an in-between level from the same elevation map.
 
 ---
 
@@ -1558,7 +1563,7 @@ When the tag cannot say the role, use the class. Display-large and display-mediu
 <span class="upper">upper</span>
 ```
 
-`large-text`, `medium-text`, and `small-text` apply the three body roles to an element that is not a `<p>` or `<small>`.
+`body-large`, `body-medium`, and `body-small` apply the three body roles to an element that is not a `<p>` or `<small>`.
 
 ### Blockquotes
 
@@ -2062,7 +2067,7 @@ Height, the leading half's outer inset, the outline width and every colour come 
 
 Material Design 3 cards, from the HTML.
 
-An `<article>` is an elevated card. Any heading is the headline, `<p class="subhead">` is the optional subhead, `<p class="supporting-text">` is supporting copy, direct `<img>`, `<picture>`, or `<figure>` is media, and direct `<div class="actions">` is the action row. Include only the slots the content needs. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class—the element is the component, and the action row is not a `<nav>`. Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs): all variants use 12dp corners; elevated rests at level 1, filled and outlined at level 0. A directly actionable card wraps its primary content in one direct `a.primary-action[href]` and has no second link or control. Horizontal cards preserve that source order, use content height with a 240px minimum unless a size helper fixes the expanded height, and stack below 600px with fixed heights reset to content. During reordering, `.dragged` or `.picked-up` preserves the 16% state layer and dragged elevation while the primary action remains hovered or pressed.
+An `<article>` is an elevated card. Any heading is the headline, `<p class="subhead">` is the optional subhead, a `<p>` is supporting copy, direct `<img>`, `<picture>`, or `<figure>` is media, and direct `<div class="actions">` is the action row. Include only the slots the content needs. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class—the element is the component, and the action row is not a `<nav>`. Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs): all variants use 12dp corners; elevated rests at level 1, filled and outlined at level 0. A directly actionable card wraps its primary content in one direct `a.primary-action[href]` and has no second link or control. Horizontal cards preserve that source order, use content height with a 240px minimum unless a size helper fixes the expanded height, and stack below 600px with fixed heights reset to content. During reordering, `.dragged` or `.picked-up` preserves the 16% state layer and dragged elevation while the primary action remains hovered or pressed.
 
 A Card reveal is a disclosure with exactly one identified direct `<aside>` and an enabled, accessibly named `button.card-reveal-trigger[type="button"]` outside that panel. Its `aria-controls` must resolve to the panel, and its closest `<article>` owns it—even when a complete nested card sits inside an outer reveal panel. After accepting the contract, Cards writes `aria-expanded`, marks the closed panel `inert`, closes it with Escape, and returns focus from the panel to the trigger. Rejected, disabled-only, unidentified, and multi-panel disclosures remain visible and unmanaged.
 
@@ -2072,7 +2077,7 @@ A Card reveal is a disclosure with exactly one identified direct `<aside>` and a
     <h3>Weekend in the mountains</h3>
     <p class="subhead">Three-day itinerary</p>
   </header>
-  <p class="supporting-text">Explore trails and overlooks.</p>
+  <p>Explore trails and overlooks.</p>
   <img src="images/mountains.jpg" alt="Mountain valley beneath a cloudy sky">
   <div class="actions">
     <button type="button" class="text">Share</button>
@@ -2882,7 +2887,7 @@ Point a `menu-trigger` at a `<menu>` whose `id` matches `data-target`. `AutoInit
     <menu>
       <li>
         <a class="menu-trigger" href="#menu1" data-target="menu1">
-          Menu<span class="material-symbols right" aria-hidden="true">arrow_drop_down</span>
+          Menu<span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
         </a>
       </li>
     </menu>
@@ -3466,7 +3471,7 @@ Initialize every registered component with one function call.
 
 Auto Init starts all of the registered Expressive components with a single call. The IIFE bundle exposes it as `Expressive.AutoInit`.
 
-Importing the JavaScript installs a few document-level behaviors (Forms, Chips, Slider, Cards, and ExpandingCard), but it does **not** call `AutoInit()` for you. Call it after the DOM is ready. This documentation site does that in `docs.js` on `DOMContentLoaded`.
+Importing the JavaScript installs a few document-level behaviors (Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets), but it does **not** call `AutoInit()` for you. Call it after the DOM is ready. This documentation site does that in `docs.js` on `DOMContentLoaded`.
 
 ### Initialization
 
@@ -3517,23 +3522,25 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 
 | Name | Selector |
 | --- | --- |
+| `AppBar` | `header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > :is(.search-bar, .searchbar))` |
 | `Autocomplete` | `.autocomplete` |
 | `ButtonGroup` | `.button-group` |
 | `Cards` | `article:has(> aside[id]:not([id=""])):not(:has(> aside ~ aside)):has(> button.card-reveal-trigger[type="button"], > :not(aside) button.card-reveal-trigger[type="button"])` |
+| `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
-| `Datepicker` | `.datepicker` |
+| `Datepicker` | `.datepicker, .date-picker` |
 | `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
 | `Tabs` | `.tabs` |
-| `Timepicker` | `.timepicker` |
+| `Timepicker` | `.timepicker, .time-picker` |
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab-menu` |
 
-Snackbar, CharacterCounter, and Range stay out of this table. Range still starts itself when the bundle loads. Forms, Chips, Cards, and ExpandingCard also run an import-time `Init()`; Chips and Cards appear in the table as well so a later `AutoInit()` can pick up elements added after load.
+Snackbar, CharacterCounter, and Slider stay out of this table. Slider still starts itself when the bundle loads. Forms, Chips, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets also run an import-time `Init()`. Chips, Cards, and ExpandingCard appear in the table as well so a later `AutoInit()` can pick up elements added after load.
 
 ### Ignoring Elements
 
@@ -3941,7 +3948,7 @@ Put `scrollspy` and an `id` on each section. The table of contents is a set of d
       <p>Content</p>
     </div>
   </div>
-  <div class="hide-on-small-only m3">
+  <div class="hide-on-compact-only m3">
     <nav aria-label="On this page">
       <ul class="section table-of-contents">
         <li><a href="#introduction">Introduction</a></li>
@@ -4192,7 +4199,7 @@ Add `max` (or `tabs-fixed-width`) so every tab grows equally. On compact viewpor
 
 ### Inline icons
 
-Primary tabs stack the icon above the label (64dp). Add `horizontal` (or `tabs-horizontal`) to put them on one line, like secondary tabs.
+Primary tabs stack the icon above the label (64dp). Add `horizontal` to put them on one line, like secondary tabs.
 
 ```html
 <nav class="tabs max horizontal" aria-label="Sections">
@@ -4386,9 +4393,8 @@ new Expressive.Snackbar({
 To remove a specific snackbar, get the instance from the snackbar element and call `dismiss()`. Swipe also dismisses when you drag past 80% of the width or flick. After a short drag, pausing for at least 100ms before release lets the snackbar snap back. Cancelling a swipe leaves the snackbar open and does not affect the next gesture. The action and close buttons are not swipe handles.
 
 ```js
-const snackbarElement = document.querySelector('.snackbar');
-const snackbarInstance = Expressive.Snackbar.getInstance(snackbarElement);
-snackbarInstance.dismiss();
+const snackbarElement = document.querySelector('#snackbar-container .snackbar');
+Expressive.Snackbar.getInstance(snackbarElement)?.dismiss();
 ```
 
 #### Dismiss all snackbars
@@ -4442,7 +4448,7 @@ A rich tooltip with an action cannot live inside a `<button>` — that would nes
 
 ### JavaScript
 
-The CSS path does not need AutoInit. The JS plugin is still there for `data-tooltip`, delayed show/hide, and keeping the bubble inside the viewport. Add `tooltipped` to the activator. `data-tooltip` is the text; `data-position` is `top`, `right`, `bottom`, or `left`. `AutoInit()` starts every `.tooltipped` except those marked `no-autoinit`. The generated element gets both `.tooltip` and `.material-tooltip`.
+The CSS path does not need AutoInit. The JS plugin is still there for `data-tooltip`, delayed show/hide, and keeping the bubble inside the viewport. Add `tooltipped` to the activator. `data-tooltip` is the text; `data-position` is `top`, `right`, `bottom`, or `left`. `AutoInit()` starts every `.tooltipped` except those marked `no-autoinit`. The generated element gets `.tooltip` (plus `.rich` when `tooltipId` is set).
 
 ```html
 <button type="button" class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip">
@@ -4657,7 +4663,7 @@ A floating bar can sit beside a companion FAB. Wrap both in `.toolbar-group`; th
 
 Select a date, a range, or several dates from a calendar.
 
-Add `datepicker` to a text input. `AutoInit()` starts every `.datepicker` except those marked `no-autoinit`.
+Add `date-picker` to a text input. `AutoInit()` starts every `.date-picker` except those marked `no-autoinit`.
 
 The calendar is inline, not a modal. `open()` and `close()` are not provided. With the default options the calendar is hidden (`openByDefault: false`) and clicking the input does not reveal it. Pass `openByDefault: true` to show the calendar under the field.
 
@@ -4669,7 +4675,7 @@ The calendar is inline, not a modal. `open()` and `close()` are not provided. Wi
 ```
 
 ```js
-Expressive.Datepicker.init(document.querySelectorAll('.datepicker'), {
+Expressive.Datepicker.init(document.querySelectorAll('.date-picker'), {
   openByDefault: true
 });
 ```
@@ -4678,11 +4684,11 @@ Wrap the input in its own small parent — a `.field`, or a bare `<div>`. The ca
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.Datepicker`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.datepicker`. AutoInit uses the defaults, so the calendar stays hidden until you pass `openByDefault` (or a working `displayPlugin` pair, below).
+The IIFE bundle exposes `Expressive.Datepicker`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.date-picker`. AutoInit uses the defaults, so the calendar stays hidden until you pass `openByDefault` (or a working `displayPlugin` pair, below).
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.datepicker');
+  const elems = document.querySelectorAll('.date-picker');
   const instances = Expressive.Datepicker.init(elems, {
     openByDefault: true
   });
@@ -4911,7 +4917,7 @@ These methods are not provided. The calendar defaults to inline presentation; `d
 
 Pick a time from a clock face, in 12-hour or 24-hour form.
 
-Add `timepicker` to a text input. `AutoInit()` starts every `.timepicker` except those marked `no-autoinit`.
+Add `time-picker` to a text input. `AutoInit()` starts every `.time-picker` except those marked `no-autoinit`.
 
 The clock is inline, not a modal. It is appended to the input’s parent and stays visible. There is no `openByDefault` flag. `open()` and `close()` are not provided.
 
@@ -4937,11 +4943,11 @@ delayed clock update.
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.Timepicker`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.timepicker`. Unlike Datepicker, the default options already show the clock.
+The IIFE bundle exposes `Expressive.Timepicker`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.time-picker`. Unlike Datepicker, the default options already show the clock.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.timepicker');
+  const elems = document.querySelectorAll('.time-picker');
   const instances = Expressive.Timepicker.init(elems, {
     // specify options here
   });
@@ -5186,7 +5192,7 @@ Character Counter is not in `AutoInit()`. It reads `maxlength` (not `data-length
 
 ```js
 Expressive.CharacterCounter.init(
-  document.querySelectorAll('#input_text, #textarea2')
+  document.querySelectorAll('#input_text_counter, #textarea_counter')
 );
 ```
 
@@ -5424,7 +5430,7 @@ Expressive.AutoInit(document.body, {
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `classes` | String | `''` | Space-separated classes added to the generated `.select-wrapper`. |
+| `classes` | String | `''` | Space-separated classes added to the `.field` wrapper, either the parent `.field` or one the plugin creates. |
 | `menuOptions` | Object | `{}` | Options passed to `Menu`. See Menu. `coverTrigger` is forced to `false` and `closeOnClick` is forced to `false`. |
 
 There is no `selected` option. Mark options with the HTML `selected` attribute instead.
@@ -5468,7 +5474,7 @@ instance.destroy();
 | `el` | Element | The native `<select>` the plugin was initialized with. |
 | `options` | Object | The options the instance was initialized with. |
 | `isMultiple` | Boolean | Whether this is a multiple select. |
-| `wrapper` | Element | The generated `.select-wrapper`. |
+| `wrapper` | Element | The `.field` wrapper, either the parent `.field` or one the plugin creates. |
 | `menuEl` | Element | The generated `<menu>`. |
 | `labelEl` | Element | The associated label, or `null` if none was found. |
 | `input` | Element | The text input that shows the current selection. |

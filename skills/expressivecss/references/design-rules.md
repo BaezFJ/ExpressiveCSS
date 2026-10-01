@@ -2,7 +2,7 @@
 
 # ExpressiveCSS design rules
 
-Copied from `m3-guidelines.md` (SHA-256 `a1d3fb3d3d9d78ba3e74d1656ca64398a5095ef619fd1ddc94e76eac3f414522`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
+Copied from `m3-guidelines.md` (SHA-256 `7230a1b3dae7aa33c415136e1e84ee8b0fba3606c1d1376152edc086e974f886`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
 
 ## Hard rules
 
@@ -193,7 +193,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Switch | `label.switch > input` | Label text | `checked` |
 | Chip | `.chip` | Label | — |
 | Slider | `.range > input[type=range]` | Label | — |
-| Date / time | `input.datepicker` / `.timepicker` | Label in `.field` | AutoInit |
+| Date / time | `input.date-picker` / `.time-picker` | Label in `.field` | AutoInit |
 | Progress | `progress.progress` or circular markup | `value` if determinate | — |
 | Loading indicator | `span.loading-indicator` | `role="status"` + name | `contained` |
 | Carousel | `.carousel` | Item children | AutoInit |

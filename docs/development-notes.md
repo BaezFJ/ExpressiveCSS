@@ -621,10 +621,10 @@ built for development and renders a "run npm run build" banner when `dist/` is
 absent altogether. `docs/static/` holds only docs-site chrome (`docs.css`,
 `docs.js`), never framework styles.
 
-The bundle only self-initializes Forms/Chips/Slider/Cards —
-`docs/static/docs.js` calls `Expressive.AutoInit()` on `DOMContentLoaded` for
-everything else, and toggles `<html theme="light|dark">` to exercise the token
-layer.
+The bundle only self-initializes Forms, Chips, Slider, Cards, ExpandingCard,
+Dialogs, BottomSheets, and SideSheets. `docs/static/docs.js` calls
+`Expressive.AutoInit()` on `DOMContentLoaded` for everything else, and toggles
+`<html theme="light|dark">` to exercise the token layer.
 
 `llms.txt` is generated at build time by `docs/src/lib/llms.ts` from the shared
 catalogue and `package.json`. Astro publishes `/llms-full.txt`, `/llm.md`,
@@ -828,7 +828,7 @@ losing its name or two sharing one — moves no pixel. The two are complementary
 
 **`docs/src/data/nav.ts` is the only page inventory** (`adr/0003`): every
 canonical page's id, group, label, title, description, published route and
-legacy aliases, in one file. The pages, the drawer, the footer, the redirects,
+legacy aliases, in one file. The pages, the navigation, the footer, the redirects,
 `llms.txt` and the verifier all read it, so adding a page is one edit plus one
 `.astro` file.
 

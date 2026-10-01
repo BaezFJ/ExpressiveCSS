@@ -179,7 +179,7 @@ const S = defineSections([
 <Code code={`
 <dialog class="max" aria-labelledby="full-screen-dialog-title-title">
   <header>
-    <button type="button" aria-label="Close">
+    <button type="button" aria-label="Close" onclick="this.closest('dialog').close()">
       <span class="material-symbols" aria-hidden="true">close</span>
     </button>
     <h2 id="full-screen-dialog-title-title">Full-screen dialog title</h2>

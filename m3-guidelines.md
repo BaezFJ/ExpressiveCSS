@@ -1011,7 +1011,7 @@ Three **selection controls**. They are not interchangeable.
 
 ## 8.6 Sliders
 
-**M3:** Sliders (M3 Expressive sizes and stops). **ExpressiveCSS:** `<input type="range">` in `.range` (or a `<label>`). Plugin: `Expressive.Range` (**not** `Slider` — that name is the carousel). **Not** in `AutoInit()`; `Range.Init()` runs at import.
+**M3:** Sliders (M3 Expressive sizes and stops). **ExpressiveCSS:** `<input type="range">` in `.range` (or a `<label>`). Plugin: `Expressive.Slider` (`Expressive.Range` is a retired alias). **Not** in `AutoInit()`; `Slider.Init()` runs at import.
 
 **Use when** the user picks a value along a continuum (volume, brightness, price) and the result can update live.
 
@@ -1027,7 +1027,7 @@ Three **selection controls**. They are not interchangeable.
 
 ## 8.7 Date picker
 
-**M3:** Docked (medium+) or modal / full-screen (compact). **ExpressiveCSS:** `.datepicker` on a text input. `AutoInit()`. **The calendar is inline**, not a modal. Default `openByDefault: false` hides it until you pass `true` or open it from the API.
+**M3:** Docked (medium+) or modal / full-screen (compact). **ExpressiveCSS:** `.date-picker` on a text input. `AutoInit()`. **The calendar is inline**, not a modal. Default `openByDefault: false` hides it until you pass `true` or open it from the API.
 
 **Use when** the user must pick a date or a range and a typed ISO string is not enough.
 
@@ -1043,7 +1043,7 @@ Three **selection controls**. They are not interchangeable.
 
 ## 8.8 Time picker
 
-**M3:** Dial (compact) or input (medium+). **ExpressiveCSS:** `.timepicker` on a text input. `AutoInit()`. **Inline clock**, always visible, appended to the input’s parent. No `openByDefault`.
+**M3:** Dial (compact) or input (medium+). **ExpressiveCSS:** `.time-picker` on a text input. `AutoInit()`. **Inline clock**, always visible, appended to the input’s parent. No `openByDefault`.
 
 **Use when** the user picks a time of day.
 
@@ -1248,7 +1248,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Switch | `label.switch > input` | Label text | `checked` |
 | Chip | `.chip` | Label | — |
 | Slider | `.range > input[type=range]` | Label | — |
-| Date / time | `input.datepicker` / `.timepicker` | Label in `.field` | AutoInit |
+| Date / time | `input.date-picker` / `.time-picker` | Label in `.field` | AutoInit |
 | Progress | `progress.progress` or circular markup | `value` if determinate | — |
 | Loading indicator | `span.loading-indicator` | `role="status"` + name | `contained` |
 | Carousel | `.carousel` | Item children | AutoInit |

@@ -85,22 +85,20 @@ const S = defineSections([
           viewport edge when fixed. Horizontal or <code>vertical</code>. It
           can hold many controls, and it can sit next to a FAB.
         </p>
-        <p>
-          <div class="toolbar">
-            <button type="button" aria-label="Stop camera">
-              <span class="material-symbols" aria-hidden="true">videocam_off</span>
-            </button>
-            <button type="button" aria-label="Microphone">
-              <span class="material-symbols" aria-hidden="true">mic</span>
-            </button>
-            <button type="button" class="active" aria-label="Hand">
-              <span class="material-symbols" aria-hidden="true">back_hand</span>
-            </button>
-            <button type="button" aria-label="More">
-              <span class="material-symbols" aria-hidden="true">more_vert</span>
-            </button>
-          </div>
-        </p>
+        <div class="toolbar">
+          <button type="button" aria-label="Stop camera">
+            <span class="material-symbols" aria-hidden="true">videocam_off</span>
+          </button>
+          <button type="button" aria-label="Microphone">
+            <span class="material-symbols" aria-hidden="true">mic</span>
+          </button>
+          <button type="button" class="active" aria-label="Hand">
+            <span class="material-symbols" aria-hidden="true">back_hand</span>
+          </button>
+          <button type="button" aria-label="More">
+            <span class="material-symbols" aria-hidden="true">more_vert</span>
+          </button>
+        </div>
 <Code code={`
 <div class="toolbar">
   <button type="button" aria-label="Stop camera">
@@ -122,25 +120,23 @@ const S = defineSections([
           <code>.filled</code> on an action is the emphasized control
           (16dp corners, primary).
         </p>
-        <p>
-          <div class="toolbar">
-            <button type="button" aria-label="Undo">
-              <span class="material-symbols" aria-hidden="true">undo</span>
-            </button>
-            <button type="button" aria-label="Redo">
-              <span class="material-symbols" aria-hidden="true">redo</span>
-            </button>
-            <button type="button" class="filled" aria-label="Add">
-              <span class="material-symbols" aria-hidden="true">add</span>
-            </button>
-            <button type="button" aria-label="Save">
-              <span class="material-symbols" aria-hidden="true">save</span>
-            </button>
-            <button type="button" aria-label="More">
-              <span class="material-symbols" aria-hidden="true">more_vert</span>
-            </button>
-          </div>
-        </p>
+        <div class="toolbar">
+          <button type="button" aria-label="Undo">
+            <span class="material-symbols" aria-hidden="true">undo</span>
+          </button>
+          <button type="button" aria-label="Redo">
+            <span class="material-symbols" aria-hidden="true">redo</span>
+          </button>
+          <button type="button" class="filled" aria-label="Add">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" aria-label="Save">
+            <span class="material-symbols" aria-hidden="true">save</span>
+          </button>
+          <button type="button" aria-label="More">
+            <span class="material-symbols" aria-hidden="true">more_vert</span>
+          </button>
+        </div>
 <Code code={`
 <div class="toolbar">
   <button type="button" aria-label="Undo">
@@ -177,25 +173,23 @@ const S = defineSections([
           <code>--md-sys-color-*</code> role. Nothing collides: selection is
           <code>secondary-container</code>, which the foundation leaves alone.
         </p>
-        <p>
-          <div class="toolbar vibrant">
-            <button type="button" class="active" aria-label="Bold">
-              <span class="material-symbols" aria-hidden="true">format_bold</span>
-            </button>
-            <button type="button" aria-label="Italic">
-              <span class="material-symbols" aria-hidden="true">format_italic</span>
-            </button>
-            <button type="button" aria-label="Underline">
-              <span class="material-symbols" aria-hidden="true">format_underlined</span>
-            </button>
-            <button type="button" aria-label="Color">
-              <span class="material-symbols" aria-hidden="true">format_color_fill</span>
-            </button>
-            <button type="button" aria-label="More">
-              <span class="material-symbols" aria-hidden="true">more_vert</span>
-            </button>
-          </div>
-        </p>
+        <div class="toolbar vibrant">
+          <button type="button" class="active" aria-label="Bold">
+            <span class="material-symbols" aria-hidden="true">format_bold</span>
+          </button>
+          <button type="button" aria-label="Italic">
+            <span class="material-symbols" aria-hidden="true">format_italic</span>
+          </button>
+          <button type="button" aria-label="Underline">
+            <span class="material-symbols" aria-hidden="true">format_underlined</span>
+          </button>
+          <button type="button" aria-label="Color">
+            <span class="material-symbols" aria-hidden="true">format_color_fill</span>
+          </button>
+          <button type="button" aria-label="More">
+            <span class="material-symbols" aria-hidden="true">more_vert</span>
+          </button>
+        </div>
 <Code code={`
 <div class="toolbar vibrant">…</div>
 `} />
@@ -205,25 +199,23 @@ const S = defineSections([
           <code>vertical</code> stacks the actions. Only floating bars
           go vertical — a docked bar stays a horizontal strip.
         </p>
-        <p>
-          <div class="toolbar vertical">
-            <button type="button" aria-label="Undo">
-              <span class="material-symbols" aria-hidden="true">undo</span>
-            </button>
-            <button type="button" aria-label="Redo">
-              <span class="material-symbols" aria-hidden="true">redo</span>
-            </button>
-            <button type="button" aria-label="Add">
-              <span class="material-symbols" aria-hidden="true">add</span>
-            </button>
-            <button type="button" class="active" aria-label="Format">
-              <span class="material-symbols" aria-hidden="true">format_size</span>
-            </button>
-            <button type="button" aria-label="More">
-              <span class="material-symbols" aria-hidden="true">more_vert</span>
-            </button>
-          </div>
-        </p>
+        <div class="toolbar vertical">
+          <button type="button" aria-label="Undo">
+            <span class="material-symbols" aria-hidden="true">undo</span>
+          </button>
+          <button type="button" aria-label="Redo">
+            <span class="material-symbols" aria-hidden="true">redo</span>
+          </button>
+          <button type="button" aria-label="Add">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="active" aria-label="Format">
+            <span class="material-symbols" aria-hidden="true">format_size</span>
+          </button>
+          <button type="button" aria-label="More">
+            <span class="material-symbols" aria-hidden="true">more_vert</span>
+          </button>
+        </div>
 <Code code={`
 <div class="toolbar vertical">…</div>
 `} />
@@ -256,25 +248,23 @@ const S = defineSections([
             <span class="material-symbols" aria-hidden="true">star</span>
           </button>
         </div>
-        <p class="mt-3">
-          <div class="toolbar docked vibrant">
-            <button type="button" aria-label="Back">
-              <span class="material-symbols" aria-hidden="true">arrow_back</span>
-            </button>
-            <button type="button" aria-label="Forward">
-              <span class="material-symbols" aria-hidden="true">arrow_forward</span>
-            </button>
-            <button type="button" class="filled" aria-label="Add">
-              <span class="material-symbols" aria-hidden="true">add</span>
-            </button>
-            <button type="button" aria-label="Save">
-              <span class="material-symbols" aria-hidden="true">save</span>
-            </button>
-            <button type="button" aria-label="More">
-              <span class="material-symbols" aria-hidden="true">more_vert</span>
-            </button>
-          </div>
-        </p>
+        <div class="toolbar docked vibrant mb-4">
+          <button type="button" aria-label="Back">
+            <span class="material-symbols" aria-hidden="true">arrow_back</span>
+          </button>
+          <button type="button" aria-label="Forward">
+            <span class="material-symbols" aria-hidden="true">arrow_forward</span>
+          </button>
+          <button type="button" class="filled" aria-label="Add">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" aria-label="Save">
+            <span class="material-symbols" aria-hidden="true">save</span>
+          </button>
+          <button type="button" aria-label="More">
+            <span class="material-symbols" aria-hidden="true">more_vert</span>
+          </button>
+        </div>
         <p>
           Text actions and a spacer:
         </p>

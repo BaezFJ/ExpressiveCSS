@@ -347,9 +347,8 @@ new Expressive.Snackbar({
           <button type="button" class="tonal mb-3" id="snackbar-dismiss-all">Dismiss all</button>
         </p>
 <Code code={`
-const snackbarElement = document.querySelector('.snackbar');
-const snackbarInstance = Expressive.Snackbar.getInstance(snackbarElement);
-snackbarInstance.dismiss();
+const snackbarElement = document.querySelector('#snackbar-container .snackbar');
+Expressive.Snackbar.getInstance(snackbarElement)?.dismiss();
 `} />
         <h5 class="light">Dismiss all snackbars</h5>
 <Code code={`

@@ -47,8 +47,8 @@ const S = defineSections([
           <code>inverse-surface</code> bubble.
         </p>
         <p>
-          Range is not in <code>AutoInit()</code>. Importing the IIFE
-          bundle calls <code>Expressive.Range.Init()</code>, which
+          Slider is not in <code>AutoInit()</code>. Importing the IIFE
+          bundle calls <code>Expressive.Slider.Init()</code>, which
           starts every <code>input[type=range]</code> already in the
           document and keeps the active track in sync.
         </p>
@@ -198,16 +198,16 @@ const S = defineSections([
 <Code code={`
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('input[type=range]');
-  Expressive.Range.init(elems);
+  Expressive.Slider.init(elems);
 });
 
-Expressive.Range.init(document.querySelector('#volume'));
+Expressive.Slider.init(document.querySelector('#volume'));
 `} />
   </Section>
 
   <Section {...S.methods}>
 <Code code={`
-const instance = Expressive.Range.getInstance(elem);
+const instance = Expressive.Slider.getInstance(elem);
 instance.destroy();
 `} />
         <p>Destroy the plugin instance, remove the value label, tear down its event handlers, and restore the inline custom properties it changed.</p>

@@ -57,11 +57,13 @@ dist/
 ├── css/
 │   ├── expressive.css
 │   └── expressive.min.css
+├── fonts/
 ├── js/
 │   ├── expressive.cjs
 │   ├── expressive.js
 │   ├── expressive.min.js
-│   └── expressive.mjs
+│   ├── expressive.mjs
+│   └── modular.mjs
 └── types/
 `} />
 
@@ -95,12 +97,14 @@ yarn add @expressivecss/expressive
 MyWebsite/
   |--css/
   |  |--expressive.css
+  |  |--expressive.min.css
   |
   |--fonts/
   |  |--material-symbols-outlined.woff2
   |
   |--js/
   |  |--expressive.js
+  |  |--expressive.min.js
   |
   |--index.html
 `} />
@@ -264,7 +268,7 @@ const tabs = Tabs.init(document.querySelector('.tabs'));`} />
     <p>To supply smaller icon fonts, set <code>$expressive-include-fonts: false</code>
       and provide your own font faces, including text fonts. Include icons from
       dynamic content and generated controls. Keep full fonts for unrestricted icon names.</p>
-    <p>The <a href="https://github.com/BaezFJ/ExpressiveCSS#smaller-page-downloads">README</a>
+    <p>The <a href="https://github.com/BaezFJ/ExpressiveCSS#reduce-page-downloads">README</a>
       contains the initialization table, complete Sass recipes, and font declarations.</p>
   </Section>
   <Section {...S.sass}>

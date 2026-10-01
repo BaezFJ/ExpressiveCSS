@@ -14,9 +14,9 @@
 // test below makes a component impossible to add without a row, so anything
 // new is checked from its first commit.
 //
-// This file parses markup and never initializes a component: per CLAUDE.md a
-// test that leaves a live timer wedges the whole `node --test` run with no
-// output at all, and nine components schedule timers.
+// This file parses markup and never initializes a component: per
+// docs/development-notes.md a test that leaves a live timer wedges the whole
+// `node --test` run with no output at all, and nine components schedule timers.
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
