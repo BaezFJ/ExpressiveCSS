@@ -1290,7 +1290,7 @@ function summarizeGuide(guide) {
       language: guide.syntax.language,
       example: clampText(guide.syntax.code, 3_000),
     },
-    rules: guide.rules.slice(0, 8),
+    rules: guide.rules,
   };
 }
 

@@ -6,7 +6,7 @@ Implement the five improvements in the interview's confirmed order: complete rul
 
 The reviewed checkout is `7d3d238`. The MCP package is 0.2.2 and serves framework contract 0.12.0. Seven tools, bundled catalogue loading, version/provenance checks, heuristic semantics inspection, command restrictions and an independent package release process are implemented. Live protocol smoke tests passed during the review.
 
-All phases below are planned and unstarted. The existing tests do not establish that the missing rules or API sections have been fixed. The first usable milestone is Phase 1.
+Phase 1 is implemented and locally verified on 2026-10-04; required CI and review remain pending. Its [validation record](2026-10-04-mcp-complete-component-rules/validation.md#execution-evidence-on-2026-10-04) covers all 41 guides, contributor checks and isolated packages. Phases 2 through 10 remain planned and unstarted. The first usable milestone is complete rule delivery in Phase 1.
 
 | Improvement | Phases |
 | --- | --- |

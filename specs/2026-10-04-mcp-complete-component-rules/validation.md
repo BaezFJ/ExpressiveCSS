@@ -4,7 +4,7 @@ Feature: complete MCP component rules
 Date: 2026-10-04
 Branch: `fix/mcp-complete-component-rules`
 Base: `origin/master` at `7d3d238b02cffdd4bb50bbfe517f44054451aef6`
-Status: every feature check and manual result is pending
+Status: V1 through V5 and local manual review passed; required CI and review pending
 
 Validate [requirements R1 through R5](requirements.md#requirements) for [roadmap Phase 1](../roadmap.md#phase-1-complete-component-rules). Existing passing smoke results from the earlier review are baseline evidence only; they do not prove the correction works.
 
@@ -12,7 +12,7 @@ Validate [requirements R1 through R5](requirements.md#requirements) for [roadmap
 
 ### V1: complete rules across the bundled catalogue
 
-Requirements: R1, R3, R5. Result: pending.
+Requirements: R1, R3, R5. Result: passed locally.
 
 Setup: extend the existing `smoke.mjs` test using its bundled `component-guides.json` data, live stdio client and matching-version project fixture. Derive expected bullets and normative rule IDs from each guide's Rules section without calling the production summary. Do not read framework source to obtain the test's expected guidance.
 
@@ -22,7 +22,7 @@ Expected: every normative rule is present, with unchanged text and order. At the
 
 ### V2: generic fallback advice remains unchanged
 
-Requirements: R2, R3. Result: pending.
+Requirements: R2, R3. Result: passed locally.
 
 Setup: identify shipped guides with no Rules-section bullets from bundled data. Use the same matching-version fixture and live client.
 
@@ -32,7 +32,7 @@ Expected: fallback strings and order are unchanged and neither string is counted
 
 ### V3: existing protocol inputs and outputs remain compatible
 
-Requirement: R3. Result: pending.
+Requirement: R3. Result: passed locally.
 
 Setup: use the existing smoke-suite tool-discovery assertions, matching-version fixture and an input using only currently supported arguments.
 
@@ -42,7 +42,7 @@ Expected: valid existing requests still work and no tool or alias disappears. No
 
 ### V4: blocked results and guidance authority are preserved
 
-Requirements: R4, R5. Result: pending.
+Requirements: R4, R5. Result: passed locally.
 
 Setup: reuse existing fixtures for mismatched or unresolved versions, stale or invalid provenance, tampered local guides, unknown component names and skip flags in `smoke.mjs`.
 
@@ -52,7 +52,7 @@ Expected: existing blocked or skipped statuses, compatibility fields and capabil
 
 ### V5: contributor and isolated package verification
 
-Requirements: R1 through R5. Result: pending.
+Requirements: R1 through R5. Result: passed locally.
 
 Setup: use the supported contributor runtime and installed dependencies. The following commands are established repository commands, but no run in this specification task proves the future feature passes them.
 
@@ -83,11 +83,30 @@ Always close clients, transports and temporary fixtures in `finally` blocks. Rep
 
 ## Manual review
 
-Result: pending.
+Result: passed locally; repository CI and review remain pending.
 
-- [ ] Inspect the final diff to confirm the correction stays in the shared summary, keeps the current stack, and leaves static enforcement, permissions and later roadmap features unchanged.
-- [ ] Verify MCP documentation and changelog describe complete guidance without claiming browser behavior or accessibility approval. Preserve generated-data ownership and license notices.
-- [ ] Confirm the existing constitution files and roadmap completion state were preserved during specification. Record implementation evidence separately before any later completion update.
+- [x] Inspect the final diff to confirm the correction stays in the shared summary, keeps the current stack, and leaves static enforcement, permissions and later roadmap features unchanged.
+- [x] Verify MCP documentation and changelog describe complete guidance without claiming browser behavior or accessibility approval. Preserve generated-data ownership and license notices.
+- [x] Confirm the existing constitution files and roadmap completion state were preserved during specification. Record implementation evidence separately before any later completion update.
+
+## Execution evidence on 2026-10-04
+
+The implementation removes one slice in the shared summary. No generated data, public schema, tool registration or dependency changed. The mission and tech-stack files match specification commit `9420d0c7`.
+
+The catalogue regression failed before the fix because Autocomplete returned eight rules and omitted `field-supporting-text-linked`. After the fix, live requests compare all 136 rule bullets across 41 guides in batches of at most 12. Cards returns all 16 rules. App bar, date picker, snackbar and time picker retain the exact two generic fallback strings, with no normative IDs.
+
+Blocked syntax requests cover unresolved and mismatched versions plus stale, missing and invalid provenance. They retain complete bundled Cards rules and blocked capability evidence. Unknown component names remain explicit; tampered consumer prose does not replace bundled Buttons rules. The existing tool discovery, skip, command-denial and cleanup checks pass. Text and structured content agree.
+
+| Command | Result | Log |
+| --- | --- | --- |
+| `npm ci --prefix mcp/expressivecss` | Passed on Node 24.21.0 / npm 11.19.0 | `/tmp/expressivecss-mcp-phase1-install.log` |
+| `npm test --prefix mcp/expressivecss` before the fix | Expected regression failure: omitted Autocomplete rule | `/tmp/expressivecss-mcp-phase1-red.log` |
+| `npm test --prefix mcp/expressivecss` after the fix | Passed, seven tools and all-guide regression | `/tmp/expressivecss-mcp-phase1-green.log` |
+| `npm ci` | Passed, root contributor dependencies installed | `/tmp/expressivecss-mcp-phase1-root-install.log` |
+| `npm run verify` | Passed: build, typecheck, 1,448 tests, zero failures/skips, generated checks and docs verification | `/tmp/expressivecss-mcp-phase1-verify.log` |
+| `npm run verify:packages` | Passed: both isolated consumers, including the installed MCP tarball's expanded smoke suite | `/tmp/expressivecss-mcp-phase1-packages.log` |
+
+Contributor verification ran browser checks in Chromium, Firefox and WebKit, including both critical-flow profiles. No separate visual regression comparison ran; this change introduces no visual behavior. Generated checks confirmed the committed data is current, so no regeneration was needed. `git diff --check` passed. These local results do not establish a required CI pass or repository approval.
 
 ## Merge conditions
 

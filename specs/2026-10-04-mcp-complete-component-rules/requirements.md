@@ -4,13 +4,13 @@ Date: 2026-10-04
 Roadmap phase: Phase 1, complete component rules
 Branch: `fix/mcp-complete-component-rules`
 Base: `origin/master` at `7d3d238b02cffdd4bb50bbfe517f44054451aef6`
-Status: specified; implementation not started
+Status: implemented and locally verified; required CI and review pending
 
 This feature delivers the first usable milestone in [roadmap Phase 1](../roadmap.md#phase-1-complete-component-rules). It follows the [mission's agreed scope](../mission.md#agreed-scope) and [technical compatibility and trust boundaries](../tech-stack.md#compatibility-and-trust-boundaries).
 
 ## Current behavior and need
 
-`mcp/expressivecss/server.js` loads generated bundled guides and parses the bullets in each guide's Rules section. `summarizeGuide()` then returns `guide.rules.slice(0, 8)`. Source inspection and caller tracing identify `componentSyntaxExpertHandler()` as the consumer of that summary.
+At the reviewed base, `mcp/expressivecss/server.js` loads generated bundled guides and parses the bullets in each guide's Rules section. `summarizeGuide()` then returns `guide.rules.slice(0, 8)`. Source inspection and caller tracing identify `componentSyntaxExpertHandler()` as the consumer of that summary. The implemented correction returns `guide.rules` in full.
 
 At the reviewed base, Cards has 16 normative rules, button groups 13, split button and text fields 11 each, and autocomplete and select nine each. A matching-version syntax request returns at most eight rules without omission metadata. Autocomplete loses `field-supporting-text-linked`, which requires supporting text to be connected through `aria-describedby`.
 
@@ -20,7 +20,7 @@ If a guide has no Rules bullets, `parseGuide()` supplies two generic advice stri
 
 The interview confirmed Phase 1 and three ordered task groups: regression checks, the shared fix, then package verification. Preserve the existing string-array response shape and fix rule completeness only. Compare normative rule IDs for every bundled guide, retain compatibility and blocked-result checks, and require contributor verification, MCP smoke tests and isolated package verification before merge.
 
-The feature branch starts from the confirmed base. The existing uncommitted constitution files remain intact. No implementation, commit, push, pull request or release is authorized by creating this specification.
+The feature branch starts from the confirmed base. The existing constitution files were preserved during specification and committed in `9420d0c7`. The user separately authorized implementation on 2026-10-04. Commit, push, pull request creation, merge and release remain separate actions.
 
 ## Requirements
 
