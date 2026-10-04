@@ -138,8 +138,17 @@ jobs:
       - run: npm run build
       - run: npm run check:generated
 
+  # One leg per engine: each test launches its own browser and node:test runs a
+  # file's tests in sequence, so a single job spent ~8 minutes on the two
+  # largest files. Files that ignore EXPRESSIVECSS_TEST_BROWSER run in every leg.
   browser:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, firefox, webkit]
+    env:
+      EXPRESSIVECSS_TEST_BROWSER: ${{ matrix.engine }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -155,7 +164,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: browser-critical-flows
+          name: browser-critical-flows-${{ matrix.engine }}
           path: .cache/container-tests/
           retention-days: 7
           include-hidden-files: true

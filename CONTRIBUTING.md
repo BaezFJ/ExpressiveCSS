@@ -130,7 +130,7 @@ gh run view <run-id> --log-failed
 gh run download <run-id> --name container-validation --dir .cache/downloaded-container-reports
 ```
 
-For a PR run, download the `browser-critical-flows` artifact instead. Check the
+For a PR run, download the `browser-critical-flows-<engine>` artifacts instead. Check the
 browser `result.json` files and failure traces; the weekly artifact also includes
 visual HTML reports. A local Podman pass does not establish a Docker Actions pass.
 

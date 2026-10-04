@@ -10,9 +10,10 @@ for (const file of reports) {
   assert.equal(report.status, 'passed', file);
   passed.add(`${report.engine}:${report.profile.name}`);
 }
-for (const engine of ['chromium', 'firefox', 'webkit']) {
+const engines = process.env.EXPRESSIVECSS_TEST_BROWSER ? [process.env.EXPRESSIVECSS_TEST_BROWSER] : ['chromium', 'firefox', 'webkit'];
+for (const engine of engines) {
   for (const profile of ['keyboard', 'arabic-touch-reflow']) {
     assert.ok(passed.has(`${engine}:${profile}`), `Missing passing report: ${engine}:${profile}`);
   }
 }
-console.log('Passing Chromium, Firefox and WebKit reports verified for both profiles.');
+console.log(`Passing ${engines.join(', ')} reports verified for both profiles.`);

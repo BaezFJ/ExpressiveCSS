@@ -80,6 +80,7 @@ try {
     container = name;
     await run(runtime, ['create', '--name', name, '--init', '--ipc=host',
       ...(process.env.CI ? ['-e', 'CI=1'] : []),
+      ...(process.env.EXPRESSIVECSS_TEST_BROWSER ? ['-e', `EXPRESSIVECSS_TEST_BROWSER=${process.env.EXPRESSIVECSS_TEST_BROWSER}`] : []),
       ...(mode === '--visual' && process.env.VISUAL_BASE ? ['-e', `VISUAL_BASE=${process.env.VISUAL_BASE}`] : []),
       image, ...command]);
     created = true;
