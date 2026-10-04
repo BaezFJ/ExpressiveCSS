@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `component_syntax_expert` accepts `sections: ["methods"]` or both `"options"`
+  and `"methods"` once each. Requested Methods return complete bundled Markdown
+  or an explicit absent-section record. Defaults and compatibility/provenance
+  evidence remain unchanged.
 - `component_syntax_expert` accepts `sections: ["options"]` to return complete
   bundled Options Markdown or an explicit absent-section record. Existing
   requests omit these records; compatibility and provenance evidence are unchanged.

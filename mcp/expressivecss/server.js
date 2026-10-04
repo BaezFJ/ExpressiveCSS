@@ -170,7 +170,7 @@ const TOOL_DESCRIPTIONS = {
   },
   component_syntax_expert: {
     stage: 'Component Syntax Expert',
-    description: 'Return component syntax and constraints, plus scoped Material capability evidence. Request typography, shape, or motion through foundations.',
+    description: 'Return component syntax and constraints, plus scoped Material capability evidence. Request documented options and methods through sections, or typography, shape, or motion through foundations.',
   },
   quality_inspector: {
     stage: 'Quality Inspector',
@@ -214,7 +214,7 @@ const syntaxSchema = {
   projectRoot: z.string().max(MAX_PROJECT_ROOT_CHARS).optional(),
   components: z.array(z.string().max(MAX_COMPONENT_NAME_CHARS)).max(12).default([]),
   foundations: z.array(z.enum(['typography', 'shape', 'motion'])).max(3).default([]),
-  sections: z.array(z.enum(['options'])).max(1).default([]),
+  sections: z.array(z.enum(['options', 'methods'])).max(2).refine((sections) => new Set(sections).size === sections.length, 'Request each section at most once').default([]),
   workflowId: z.string().max(MAX_WORKFLOW_ID_CHARS).optional(),
 };
 
@@ -419,6 +419,7 @@ function parseGuide(file, content) {
   const syntax = extractSection(content, 'Syntax');
   const rules = extractRules(extractSection(content, 'Rules'));
   const options = extractSection(content, 'Options');
+  const methods = extractSection(content, 'Methods');
   const syntaxCode = extractFirstCodeBlock(syntax);
   const syntaxLangMatch = syntax.match(/```\s*([a-z0-9+.-]+)/i);
   const syntaxLanguage = syntaxLangMatch ? syntaxLangMatch[1].toLowerCase() : 'html';
@@ -439,6 +440,7 @@ function parseGuide(file, content) {
       'Keep runtime-owned state in framework initialization, not in static markup values.',
     ],
     options: options || null,
+    methods: methods || null,
     sourceUrl: docsMatch ? docsMatch[1] : null,
     astroSource: repoMatch ? `https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/${repoMatch[1]}.astro` : null,
     text: `${title}\n${contract}\n${rules.join('\n')}`.toLowerCase(),
@@ -1309,6 +1311,7 @@ function summarizeGuide(guide, sections) {
     },
     rules: guide.rules,
     ...(sections.includes('options') ? { options: { status: guide.options ? 'documented' : 'absent', markdown: guide.options } } : {}),
+    ...(sections.includes('methods') ? { methods: { status: guide.methods ? 'documented' : 'absent', markdown: guide.methods } } : {}),
   };
 }
 

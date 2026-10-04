@@ -30,13 +30,32 @@ and docked-display options. A missing or empty section returns
 documented Options section, not that the component has no configuration.
 Cards is one such guide.
 
-Existing requests such as `{ "components": ["date-picker"] }` retain their fields.
-Omitting `sections` or using `sections: []` omits the `options` record. The selector
-accepts only one `"options"` entry; Methods retrieval is not supported. Component
-and foundation request limits remain unchanged. Unknown component names keep
-their existing `missing` result.
+To request documented runtime Methods, use `sections: ["methods"]`. Select both
+sections with `sections: ["options", "methods"]`:
 
-Requested Options remain bundled reference data when target-version or
+```json
+{
+  "components": ["autocomplete", "cards"],
+  "sections": ["options", "methods"]
+}
+```
+
+Each found component adds a `methods` record when selected. Documented Methods
+return their complete bundled Markdown in the same `{ "status": "documented",
+"markdown": "..." }` shape. Autocomplete includes `.destroy()` and its cleanup
+guidance. A missing or empty Methods section returns `{ "status": "absent",
+"markdown": null }`. This describes the guide's documentation; it does not
+establish that the runtime has no methods. Cards reports absence.
+
+Existing requests such as `{ "components": ["date-picker"] }` retain their fields.
+Omitting `sections` or using `sections: []` omits both optional records. Options-only
+selection omits `methods`; Methods-only selection omits `options`. The selector
+accepts either supported name once, or both in either order with the same result.
+Unknown names, duplicate entries and arrays over two entries are rejected.
+Component and foundation request limits remain unchanged. Unknown component names
+keep their existing `missing` result.
+
+Requested Options and Methods remain bundled reference data when target-version or
 provenance checks block a result. They do not change compatibility, capability
 evidence or availability, and do not verify runtime or accessibility behavior.
 
@@ -88,7 +107,7 @@ npm test
 | `creative_director` | Suggests components from the generated decision catalogue, with uncertain fuzzy matches labelled as fallback |
 | `page_arcjitect` | Workflow stage returning page sections, landmarks, and a semantic skeleton |
 | `page_architect` | Conventional spelling for the same page architecture tool; component names must resolve exactly |
-| `component_syntax_expert` | Returns authoritative syntax/contract/rules and requested documented Options for components |
+| `component_syntax_expert` | Returns authoritative syntax/contract/rules and requested documented Options and Methods for components |
 | `quality_inspector` | Runs scoped static checks and optional commands (`npm run typecheck`, `npm run test`), then names every uninspected review area |
 
 Static findings are heuristic and require source or runtime confirmation before remediation. A clean static check is reported as `staticStatus: "heuristic_pass"`; any overall MCP `pass` applies only to `checksPerformed`. Neither proves visual hierarchy, responsive rendering, focus behavior, motion, contrast, screen-reader announcements, or component-rule conformance unless separate evidence covers those areas. Read `uncheckedAreas`, `blockedChecks`, `coverageStatus`, `contractCompatibility`, and `contractProvenance` before using a result in a finish review.
