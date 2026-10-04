@@ -13,6 +13,33 @@ The server bundles generated component guides, selection data, contract metadata
 
 `component_syntax_expert` returns every rule from each found component's bundled Rules section, in source order. Guides without rule bullets retain generic authoring advice. Looking up rules does not establish component-rule conformance.
 
+To request documented runtime Options, add `sections: ["options"]`:
+
+```json
+{
+  "components": ["date-picker", "cards"],
+  "sections": ["options"]
+}
+```
+
+Each found component adds an `options` record. A documented section returns
+`{ "status": "documented", "markdown": "..." }` with its complete bundled Markdown
+body, including tables and nested guidance. Datepicker includes its visibility
+and docked-display options. A missing or empty section returns
+`{ "status": "absent", "markdown": null }`; this means the bundled guide has no
+documented Options section, not that the component has no configuration.
+Cards is one such guide.
+
+Existing requests such as `{ "components": ["date-picker"] }` retain their fields.
+Omitting `sections` or using `sections: []` omits the `options` record. The selector
+accepts only one `"options"` entry; Methods retrieval is not supported. Component
+and foundation request limits remain unchanged. Unknown component names keep
+their existing `missing` result.
+
+Requested Options remain bundled reference data when target-version or
+provenance checks block a result. They do not change compatibility, capability
+evidence or availability, and do not verify runtime or accessibility behavior.
+
 A resolved version matching the bundled contract reports `documentationMode: "bundled"` and `bundledContractSafe: true`. `documentationSources.bundled` identifies the contract version and source hash. This resolver does not verify the public website, so `currentDocsSafe` and `documentationSources.current.available` remain false even on a match. Use matching bundled guidance, installed sources, or a proven release tag for version-specific claims.
 
 ## Material capability evidence
@@ -61,7 +88,7 @@ npm test
 | `creative_director` | Suggests components from the generated decision catalogue, with uncertain fuzzy matches labelled as fallback |
 | `page_arcjitect` | Workflow stage returning page sections, landmarks, and a semantic skeleton |
 | `page_architect` | Conventional spelling for the same page architecture tool; component names must resolve exactly |
-| `component_syntax_expert` | Returns authoritative syntax/contract/rules for components |
+| `component_syntax_expert` | Returns authoritative syntax/contract/rules and requested documented Options for components |
 | `quality_inspector` | Runs scoped static checks and optional commands (`npm run typecheck`, `npm run test`), then names every uninspected review area |
 
 Static findings are heuristic and require source or runtime confirmation before remediation. A clean static check is reported as `staticStatus: "heuristic_pass"`; any overall MCP `pass` applies only to `checksPerformed`. Neither proves visual hierarchy, responsive rendering, focus behavior, motion, contrast, screen-reader announcements, or component-rule conformance unless separate evidence covers those areas. Read `uncheckedAreas`, `blockedChecks`, `coverageStatus`, `contractCompatibility`, and `contractProvenance` before using a result in a finish review.

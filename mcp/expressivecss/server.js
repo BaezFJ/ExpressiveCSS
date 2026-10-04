@@ -214,6 +214,7 @@ const syntaxSchema = {
   projectRoot: z.string().max(MAX_PROJECT_ROOT_CHARS).optional(),
   components: z.array(z.string().max(MAX_COMPONENT_NAME_CHARS)).max(12).default([]),
   foundations: z.array(z.enum(['typography', 'shape', 'motion'])).max(3).default([]),
+  sections: z.array(z.enum(['options'])).max(1).default([]),
   workflowId: z.string().max(MAX_WORKFLOW_ID_CHARS).optional(),
 };
 
@@ -288,13 +289,27 @@ function normalizeForMatch(value) {
 
 function extractSection(text, heading) {
   const marker = `#### ${heading}`;
-  const start = text.indexOf(marker);
-  if (start === -1) {
-    return '';
+  const lines = text.split('\n');
+  let start = -1;
+  let fence = null;
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const delimiter = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/u);
+    if (fence) {
+      if (delimiter && delimiter[1][0] === fence[0] && delimiter[1].length >= fence.length && !delimiter[2].trim()) fence = null;
+      continue;
+    }
+    if (delimiter) {
+      fence = delimiter[1];
+      continue;
+    }
+    if (start === -1) {
+      if (line.trim() === marker) start = index + 1;
+    } else if (/^ {0,3}#{1,4}(?:\s|$)/u.test(line)) {
+      return lines.slice(start, index).join('\n').trim();
+    }
   }
-  const body = text.slice(start + marker.length);
-  const next = body.indexOf('\n#### ');
-  return (next === -1 ? body : body.slice(0, next)).trim();
+  return start === -1 ? '' : lines.slice(start).join('\n').trim();
 }
 
 function extractTitle(text) {
@@ -403,6 +418,7 @@ function parseGuide(file, content) {
   const contract = extractSection(content, 'Contract');
   const syntax = extractSection(content, 'Syntax');
   const rules = extractRules(extractSection(content, 'Rules'));
+  const options = extractSection(content, 'Options');
   const syntaxCode = extractFirstCodeBlock(syntax);
   const syntaxLangMatch = syntax.match(/```\s*([a-z0-9+.-]+)/i);
   const syntaxLanguage = syntaxLangMatch ? syntaxLangMatch[1].toLowerCase() : 'html';
@@ -422,6 +438,7 @@ function parseGuide(file, content) {
       'Follow the component contract in the full documentation before adding optional attributes.',
       'Keep runtime-owned state in framework initialization, not in static markup values.',
     ],
+    options: options || null,
     sourceUrl: docsMatch ? docsMatch[1] : null,
     astroSource: repoMatch ? `https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/${repoMatch[1]}.astro` : null,
     text: `${title}\n${contract}\n${rules.join('\n')}`.toLowerCase(),
@@ -1278,7 +1295,7 @@ function buildPageArchitecture(catalog, pageGoal, components = [], viewportTarge
   };
 }
 
-function summarizeGuide(guide) {
+function summarizeGuide(guide, sections) {
   return {
     file: guide.file,
     slug: guide.slug,
@@ -1291,6 +1308,7 @@ function summarizeGuide(guide) {
       example: clampText(guide.syntax.code, 3_000),
     },
     rules: guide.rules,
+    ...(sections.includes('options') ? { options: { status: guide.options ? 'documented' : 'absent', markdown: guide.options } } : {}),
   };
 }
 
@@ -2101,7 +2119,7 @@ async function componentSyntaxExpertHandler(args) {
         nearest: nearestMatches(catalog, component, skipLimit).map((row) => row.slug),
       });
     } else {
-      found.push({ ...summarizeGuide(guide), capability: capabilitySafe ? CAPABILITIES_BY_SLUG.get(guide.slug) ?? null : null });
+      found.push({ ...summarizeGuide(guide, parsed.sections), capability: capabilitySafe ? CAPABILITIES_BY_SLUG.get(guide.slug) ?? null : null });
     }
   }
 
