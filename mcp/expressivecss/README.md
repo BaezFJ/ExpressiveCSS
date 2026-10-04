@@ -11,6 +11,8 @@ This folder contains a self-hosted MCP server for the ExpressiveCSS design-to-QA
 
 The server bundles generated component guides, selection data, contract metadata, and the normative semantics data. All component guidance comes from this synchronized package data. A framework source checkout contributes only target-version and contract-provenance evidence, so local prose cannot replace the packaged guidance.
 
+`component_syntax_expert` returns every rule from each found component's bundled Rules section, in source order. Guides without rule bullets retain generic authoring advice. Looking up rules does not establish component-rule conformance.
+
 A resolved version matching the bundled contract reports `documentationMode: "bundled"` and `bundledContractSafe: true`. `documentationSources.bundled` identifies the contract version and source hash. This resolver does not verify the public website, so `currentDocsSafe` and `documentationSources.current.available` remain false even on a match. Use matching bundled guidance, installed sources, or a proven release tag for version-specific claims.
 
 ## Material capability evidence

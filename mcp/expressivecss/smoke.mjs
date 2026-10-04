@@ -841,6 +841,80 @@ try {
   assert.equal(buttonCapability.lastReviewedSupport, 'partial');
   assert.equal(buttonCapability.support, buttonCapability.sourceReview === 'source-reviewed' ? 'partial' : 'unassessed');
   assert.match(matchingSyntax.structuredContent.capabilityEvidence.basis, /not proof of published package/);
+
+  const fallbackRules = [
+    'Follow the component contract in the full documentation before adding optional attributes.',
+    'Keep runtime-owned state in framework initialization, not in static markup values.',
+  ];
+  const normativeRuleIds = (rules) => rules.flatMap((rule) => {
+    const match = rule.match(/^`([^`]+)`:/u);
+    return match ? [match[1]] : [];
+  });
+  const catalogueRules = new Map();
+  let fallbackGuideCount = 0;
+  for (let offset = 0; offset < guideData.guides.length; offset += 12) {
+    const guides = guideData.guides.slice(offset, offset + 12);
+    const result = await client.callTool({
+      name: 'component_syntax_expert',
+      arguments: { projectRoot: matchingDir, components: guides.map((guide) => guide.file.replace(/\.md$/u, '')) },
+    });
+    assertScopedResult(result, 'catalogue component_syntax_expert');
+    assert.equal(result.structuredContent.status, 'available');
+    assert.equal(result.structuredContent.foundCount, guides.length);
+    assert.deepEqual(result.structuredContent.missing, []);
+    assert.deepEqual(JSON.parse(result.content[0].text), result.structuredContent);
+    for (const guide of guides) {
+      // Read expectations from bundled Markdown, independently of the server parser.
+      const section = guide.content.split(/^#### Rules\r?$/mu)[1]?.split(/^#{1,4} /mu)[0] ?? '';
+      const expectedRules = [...section.matchAll(/^-\s+(.+)$/gmu)].map((match) => match[1]);
+      const found = result.structuredContent.found.find((entry) => entry.file === guide.file);
+      assert.ok(found, `${guide.file} missing from catalogue lookup`);
+      if (expectedRules.length) {
+        assert.deepEqual(found.rules, expectedRules, `${guide.file} must return every rule in source order`);
+        assert.deepEqual(normativeRuleIds(found.rules), normativeRuleIds(expectedRules), `${guide.file} normative rule IDs`);
+      } else {
+        fallbackGuideCount += 1;
+        assert.deepEqual(found.rules, fallbackRules, `${guide.file} fallback advice changed`);
+        assert.deepEqual(normativeRuleIds(found.rules), [], `${guide.file} fallback advice is not normative`);
+      }
+      catalogueRules.set(guide.file, found.rules);
+    }
+  }
+  assert.ok(fallbackGuideCount > 0, 'catalogue must exercise generic fallback advice');
+  assert.ok(catalogueRules.get('cards.md').length >= 16, 'Cards must include all 16 baseline rules');
+  assert.ok(normativeRuleIds(catalogueRules.get('cards.md')).includes('expanding-card-close-is-button'));
+  assert.ok(normativeRuleIds(catalogueRules.get('autocomplete.md')).includes('field-supporting-text-linked'));
+  assert.deepEqual(tamperedGuideSyntax.structuredContent.found[0].rules, catalogueRules.get('buttons.md'));
+
+  for (const [projectRoot, compatibility, provenance] of [
+    [outsideDir, 'unresolved', 'bundled-verified'],
+    [versionedDir, 'mismatch', 'bundled-verified'],
+    [staleSourceDir, 'match', 'stale'],
+    [unprovenSourceDir, 'match', 'missing'],
+    [noncanonicalSourceDir, 'match', 'invalid'],
+  ]) {
+    const result = await client.callTool({
+      name: 'component_syntax_expert',
+      arguments: { projectRoot, components: ['cards'] },
+    });
+    assertScopedResult(result, 'blocked component_syntax_expert');
+    assert.equal(result.structuredContent.status, 'blocked');
+    assert.equal(result.structuredContent.contractCompatibility, compatibility);
+    assert.equal(result.structuredContent.contractProvenance, provenance);
+    assert.equal(result.structuredContent.found[0].capability, null);
+    assert.equal(result.structuredContent.capabilityEvidence.status, 'blocked');
+    assert.deepEqual(result.structuredContent.found[0].rules, catalogueRules.get('cards.md'));
+    assert.deepEqual(JSON.parse(result.content[0].text), result.structuredContent);
+  }
+  const missingSyntax = await client.callTool({
+    name: 'component_syntax_expert',
+    arguments: { projectRoot: matchingDir, components: ['cards', 'unknown-component'] },
+  });
+  assert.equal(missingSyntax.structuredContent.status, 'blocked');
+  assert.equal(missingSyntax.structuredContent.coverageStatus, 'partial-named-component-contracts');
+  assert.deepEqual(missingSyntax.structuredContent.missing.map((entry) => entry.requested), ['unknown-component']);
+  assert.deepEqual(missingSyntax.structuredContent.found[0].rules, catalogueRules.get('cards.md'));
+
   const foundations = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, foundations: ['typography', 'shape', 'motion'] } });
   assert.equal(foundations.structuredContent.foundCount, 0);
   assert.deepEqual(foundations.structuredContent.foundations.map((entry) => entry.slug), ['typography', 'shape', 'motion']);

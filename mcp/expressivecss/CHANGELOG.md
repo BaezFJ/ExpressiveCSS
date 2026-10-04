@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- `component_syntax_expert` returns complete component rules in source order,
+  including rules previously omitted by the eight-rule cap. Generic fallback
+  advice remains unchanged.
+
 ## 0.2.2 - 2026-10-01
 
 - Semantics findings from `rules_enforcer`, `quality_inspector`, and
