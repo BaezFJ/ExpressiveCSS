@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- `component_syntax_expert` accepts `sections: ["options"]` to return complete
+  bundled Options Markdown or an explicit absent-section record. Existing
+  requests omit these records; compatibility and provenance evidence are unchanged.
 - `component_syntax_expert` returns complete component rules in source order,
   including rules previously omitted by the eight-rule cap. Generic fallback
   advice remains unchanged.
