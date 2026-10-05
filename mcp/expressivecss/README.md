@@ -114,8 +114,58 @@ remain available with the same bundled version and hash.
 
 `coverageStatus: "complete-bundled-catalogue"` describes delivery of all entries.
 It does not establish consumer compatibility, browser behavior or accessibility
-approval. Calls are read-only and execute no project scripts. Search, selectable
-detail, aggregate response budgets and resources are outside this listing API.
+approval. Calls are read-only and execute no project scripts.
+
+### Search the catalogue
+
+Supply `query` to search canonical slugs, titles, aliases and compact descriptions:
+
+```json
+{ "query": "navbar", "limit": 1 }
+```
+
+This discovers `app-bar` with `matchType: "exact-alias"`. Pass the returned
+canonical slug to `component_syntax_expert`; search does not expand that tool's
+alias lookup. Search also accepts exact names such as `app-bar` and descriptive
+queries such as `screen-level actions`.
+
+`query` accepts at most 256 characters before trimming and rejects empty or
+whitespace-only strings. `limit` must be an integer from 1 through 50 and defaults
+to 10 for search. Without `query`, the tool still returns the entire catalogue;
+a valid supplied limit has no effect on listing.
+
+Names use the existing case-insensitive normalization: runs of characters other
+than ASCII letters and digits become hyphens, with leading/trailing hyphens removed.
+Search sorts exact slug/title matches first, exact aliases second, then heuristic
+matches. Within each group, entries are sorted by canonical slug. A heuristic
+match contains every normalized query token somewhere in the searchable fields,
+including one- and two-character tokens. Tokens can match partial words or span
+fields. These suggestions do not establish which component a design requires.
+Queries that normalize to no tokens return no matches. Full guide bodies,
+capability records and extra decision descriptions are not searched.
+
+Search entries retain the listing metadata and add `matchType`, which is
+`exact-name`, `exact-alias` or `heuristic`. Each component appears once with its
+strongest match type. Search results also include:
+
+| Field | Meaning |
+| --- | --- |
+| `query`, `limit` | Trimmed query and effective search limit. |
+| `count`, `totalMatches` | Number delivered and total matches before limiting. |
+| `omittedCount`, `truncated` | Total minus delivered, and whether any matches were omitted. |
+| `coverageStatus` | `complete-search-results` for all matches, or `partial-search-results` when the limit omitted matches. |
+
+For example, `{"query":"no-catalogue-match-zzzz"}` returns `entries: []`,
+zero counts, `truncated: false` and complete search coverage. If a query returns
+more than its limit, increase `limit` up to 50 or narrow the query to retrieve
+omitted entries. Search coverage concerns matching entries, not the whole
+catalogue. There is no pagination or aggregate serialized-response byte guarantee.
+
+Search retains the listing's bundled version/hash and optional-target evidence.
+An omitted target leaves compatibility unknown; an incompatible explicit target
+remains blocked while reference matches stay available. Empty results and
+truncation do not change compatibility outcomes. Selectable detail, aggregate
+response budgets and resources remain later roadmap phases.
 
 ## Run it locally
 
@@ -148,7 +198,7 @@ npm test
 | `page_arcjitect` | Workflow stage returning page sections, landmarks, and a semantic skeleton |
 | `page_architect` | Conventional spelling for the same page architecture tool; component names must resolve exactly |
 | `component_syntax_expert` | Returns authoritative syntax/contract/rules and requested documented Options and Methods for components |
-| `component_catalog` | Lists compact bundled component metadata and snapshot identity, with optional target compatibility checks |
+| `component_catalog` | Lists or searches compact bundled component metadata with labelled matches, result limits, snapshot identity and optional target compatibility checks |
 | `quality_inspector` | Runs scoped static checks and optional commands (`npm run typecheck`, `npm run test`), then names every uninspected review area |
 
 Static findings are heuristic and require source or runtime confirmation before remediation. A clean static check is reported as `staticStatus: "heuristic_pass"`; any overall MCP `pass` applies only to `checksPerformed`. Neither proves visual hierarchy, responsive rendering, focus behavior, motion, contrast, screen-reader announcements, or component-rule conformance unless separate evidence covers those areas. Read `uncheckedAreas`, `blockedChecks`, `coverageStatus`, `contractCompatibility`, and `contractProvenance` before using a result in a finish review.
