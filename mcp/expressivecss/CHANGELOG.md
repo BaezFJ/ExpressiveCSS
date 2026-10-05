@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add read-only `component_catalog` for complete compact component listings,
+  existing aliases and runtime ownership, documentation links and bundled
+  version/source hash. Optional explicit targets receive compatibility and
+  provenance checks; omitted targets remain unchecked.
+
 - `component_syntax_expert` accepts `sections: ["methods"]` or both `"options"`
   and `"methods"` once each. Requested Methods return complete bundled Markdown
   or an explicit absent-section record. Defaults and compatibility/provenance

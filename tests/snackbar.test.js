@@ -112,8 +112,9 @@ describe('Snackbar', () => {
     }
   });
 
-  test('reuses an authored body after dismissal and during replacement without stale state', async () => {
+  test('reuses an authored body after dismissal and during replacement without stale state', t => {
     resetBody();
+    t.mock.timers.enable({ apis: ['setTimeout'] });
     document.body.innerHTML = '<section><div id="notice" class="authored" style="display:none"><p>Saved</p><button type="button">Details</button></div><span>After</span></section>';
     const source = document.getElementById('notice');
     const parent = source.parentElement;
@@ -127,14 +128,14 @@ describe('Snackbar', () => {
       const first = new Expressive.Snackbar(options);
       assert.equal(first.el, source);
       first.dismiss();
-      await new Promise(resolve => setTimeout(resolve, 30));
+      t.mock.timers.tick(30);
       const second = new Expressive.Snackbar(options);
       assert.equal(second.el, source);
       assert.equal(source.querySelectorAll('button').length, 3);
       assert.equal(source.style.marginTop, '');
       second.dismiss();
       const third = new Expressive.Snackbar(options);
-      await new Promise(resolve => setTimeout(resolve, 30));
+      t.mock.timers.tick(30);
       assert.equal(source.style.opacity, '1');
       assert.equal(source.inert, false);
       assert.equal(Expressive.Snackbar.getInstance(source), third);
@@ -142,7 +143,7 @@ describe('Snackbar', () => {
       authoredButton.click();
       assert.equal(authoredClicks, 1);
       [...source.querySelectorAll('button')].find(button => button.textContent === 'Undo').click();
-      await new Promise(resolve => setTimeout(resolve, 30));
+      t.mock.timers.tick(30);
       assert.equal(actions, 1);
       assert.equal(completions, 2);
       assert.equal(source.parentElement, parent);
@@ -160,14 +161,17 @@ describe('Snackbar', () => {
       const fourth = new Expressive.Snackbar({ ...options, text: 'Updated', outDuration: 0,
         completeCallback: () => { replacement = new Expressive.Snackbar(options); } });
       fourth.dismiss();
-      await new Promise(resolve => setTimeout(resolve, 10));
+      t.mock.timers.tick(1);
       assert.equal(replacement.el, source, 'completion can reopen the same authored body');
       assert.equal(Expressive.Snackbar.getInstance(source), replacement);
       assert.equal(source.querySelector('p').textContent, 'Saved');
+      // The completion callback creates a new animation timer on the next tick.
+      t.mock.timers.tick(1);
       assert.equal(source.style.opacity, '1');
     } finally {
       for (const snackbar of [...Expressive.Snackbar._snackbars]) if (snackbar.el) snackbar.dismiss();
-      await new Promise(resolve => setTimeout(resolve, 30));
+      t.mock.timers.runAll();
+      t.mock.timers.reset();
       // An incomplete constructor in the original bundle leaves a registry entry.
       Expressive.Snackbar._snackbars.length = 0;
       if (Expressive.Snackbar._container) Expressive.Snackbar._removeContainer();

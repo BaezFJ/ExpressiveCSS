@@ -172,6 +172,10 @@ const TOOL_DESCRIPTIONS = {
     stage: 'Component Syntax Expert',
     description: 'Return component syntax and constraints, plus scoped Material capability evidence. Request documented options and methods through sections, or typography, shape, or motion through foundations.',
   },
+  component_catalog: {
+    stage: 'Component Catalogue',
+    description: 'List every bundled component with canonical names, compact metadata and snapshot identity. Optionally check target-project compatibility.',
+  },
   quality_inspector: {
     stage: 'Quality Inspector',
     description: 'Inspect selected files and optionally execute configured project scripts. Scripts may write files or access services; results are scoped evidence, not design approval.',
@@ -215,6 +219,11 @@ const syntaxSchema = {
   components: z.array(z.string().max(MAX_COMPONENT_NAME_CHARS)).max(12).default([]),
   foundations: z.array(z.enum(['typography', 'shape', 'motion'])).max(3).default([]),
   sections: z.array(z.enum(['options', 'methods'])).max(2).refine((sections) => new Set(sections).size === sections.length, 'Request each section at most once').default([]),
+  workflowId: z.string().max(MAX_WORKFLOW_ID_CHARS).optional(),
+};
+
+const catalogSchema = {
+  projectRoot: z.string().max(MAX_PROJECT_ROOT_CHARS).optional(),
   workflowId: z.string().max(MAX_WORKFLOW_ID_CHARS).optional(),
 };
 
@@ -616,13 +625,13 @@ async function loadGuideCatalog(projectRoot) {
 
   let provenance;
 
-  const guideDir = await resolveGuideDirectory(projectRoot);
+  const guideDir = projectRoot === undefined ? null : await resolveGuideDirectory(projectRoot);
   const dirStat = guideDir ? await stat(guideDir).catch(() => null) : null;
-  const projectResolution = await resolveExpressiveVersion({
+  const projectResolution = projectRoot === undefined ? null : await resolveExpressiveVersion({
     projectRoot,
     contractVersion: bundledGuideCache.frameworkVersion,
   });
-  const isFrameworkSource = projectResolution.resolutionSource === 'framework-source';
+  const isFrameworkSource = projectResolution?.resolutionSource === 'framework-source';
   if (dirStat?.isDirectory()) {
     const localContractPath = path.join(projectRoot, 'skills', 'expressivecss', 'references', 'contract.json');
     const localContractRead = await readInspectionFile(
@@ -669,7 +678,7 @@ async function loadGuideCatalog(projectRoot) {
 
   return {
     generatedAt: new Date().toISOString(),
-    projectRoot: path.resolve(projectRoot),
+    projectRoot: projectRoot === undefined ? null : path.resolve(projectRoot),
     frameworkVersion: bundledGuideCache.frameworkVersion,
     sourceHash: bundledGuideCache.sourceHash,
     provenance,
@@ -1716,6 +1725,7 @@ const rulesSchemaParsed = z.object(rulesSchema);
 const creativeSchemaParsed = z.object(creativeSchema);
 const architectSchemaParsed = z.object(pageArchitectSchema);
 const syntaxSchemaParsed = z.object(syntaxSchema).refine((value) => value.components.length + value.foundations.length > 0, 'Request at least one component or foundation');
+const catalogSchemaParsed = z.object(catalogSchema);
 const qualitySchemaParsed = z.object(inspectSchema);
 
 async function setupExpertHandler(args) {
@@ -2167,6 +2177,48 @@ async function componentSyntaxExpertHandler(args) {
   return toToolResult(payload);
 }
 
+async function componentCatalogHandler(args) {
+  const parsed = catalogSchemaParsed.parse(args);
+  const projectRoot = parsed.projectRoot === undefined ? undefined : path.resolve(parsed.projectRoot);
+  const catalog = await loadGuideCatalog(projectRoot);
+  const version = projectRoot === undefined ? null : await resolveAgainstContract(projectRoot, catalog.frameworkVersion);
+  const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
+  const entries = [...catalog.components.values()].map((guide) => {
+    const decision = COMPONENT_DECISIONS_BY_SLUG.get(guide.slug);
+    return {
+      slug: guide.slug,
+      title: guide.title,
+      description: [...(decision?.useWhen ?? []), ...(decision?.jobs ?? [])].find((value) => typeof value === 'string' && value.trim()) ?? null,
+      aliases: decision?.aliases ?? [],
+      runtime: decision?.runtime ?? null,
+      docs: guide.sourceUrl,
+    };
+  }).sort((a, b) => a.slug.localeCompare(b.slug));
+
+  return toToolResult(buildStagePayload('component_catalog', {
+    entries,
+    count: entries.length,
+    contractVersion: catalog.frameworkVersion,
+    sourceHash: catalog.sourceHash,
+    guideSource: catalog.guideSource,
+    status: (!version || version.status === 'match') && !provenanceBlock ? 'available' : 'blocked',
+    checksPerformed: ['bundled component catalogue listing', ...(version ? ['target contract resolution', 'contract provenance validation'] : [])],
+    evidenceSources: ['bundled:component-guides.json', 'bundled:component-decisions.json', 'bundled:contract.json', ...(version ? [version.resolutionSource] : [])],
+    uncheckedAreas: [
+      ...(!version ? ['target-project compatibility', 'target-project provenance'] : []),
+      'rendered component behavior', 'visual hierarchy', 'responsive composition', 'keyboard and assistive-technology behavior',
+    ],
+    contractCompatibility: version?.status ?? 'unknown',
+    contractProvenance: catalog.provenance.status,
+    contractProvenanceDetails: catalog.provenance,
+    coverageStatus: 'complete-bundled-catalogue',
+    blockedChecks: [
+      ...(version && version.status !== 'match' ? ['target-version contract checks'] : []),
+      ...(provenanceBlock ? [provenanceBlock] : []),
+    ],
+  }, parsed.workflowId));
+}
+
 async function qualityInspectorHandler(args) {
   if (skipTool('qualityInspector')) {
     return skippedStage('quality_inspector', 'SKIP_QUALITY_INSPECTOR', args?.workflowId);
@@ -2390,6 +2442,13 @@ async function startServer() {
     outputSchema: stageOutputSchema,
     annotations: readAnnotations,
   }, componentSyntaxExpertHandler);
+
+  server.registerTool('component_catalog', {
+    description: TOOL_DESCRIPTIONS.component_catalog.description,
+    inputSchema: catalogSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
+  }, componentCatalogHandler);
 
   server.registerTool('quality_inspector', {
     description: TOOL_DESCRIPTIONS.quality_inspector.description,
