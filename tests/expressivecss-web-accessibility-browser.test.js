@@ -1575,11 +1575,14 @@ for (const action of ['offsets', 'groups', 'teardown', 'anchors']) scenario(`Scr
   } else {
     for (const direction of ['ltr', 'rtl']) for (const motion of ['reduce', 'no-preference']) {
       await page.emulateMedia({ reducedMotion: motion });
-      await page.evaluate(direction => { document.documentElement.dir = direction; document.querySelector('#spy-b').style.top = '1600px'; scrollTo(0, 0); }, direction);
-      await page.locator('#toc-a a').nth(1).focus();
+      await page.evaluate(direction => { document.documentElement.dir = direction; document.querySelector('#spy-b').style.top = '1600px'; scrollTo({ top: 0, left: 0, behavior: 'instant' }); }, direction);
+      await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
+      await page.locator('#toc-a a').nth(1).evaluate(el => el.focus({ preventScroll: true }));
       await page.keyboard.press('Enter');
       await expect.poll(() => page.evaluate(() => location.hash)).toBe('#spy-b');
       await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(1000);
+      // Finish the native smooth scroll before resetting the next case.
+      await expect.poll(() => page.locator('#spy-b').evaluate(el => Math.abs(el.getBoundingClientRect().top))).toBeLessThan(1);
       await expect(page.locator('#toc-a a[aria-current]')).toHaveText('Second');
     }
   }
