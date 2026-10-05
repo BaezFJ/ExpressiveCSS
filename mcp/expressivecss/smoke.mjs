@@ -290,6 +290,7 @@ try {
 
   const listed = await client.listTools();
   const expectedTools = [
+    'component_catalog',
     'setup_expert',
     'rules_enforcer',
     'creative_director',
@@ -306,6 +307,100 @@ try {
     assert.deepEqual(tool.annotations, tool.name === 'quality_inspector'
       ? { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true }
       : { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false });
+  }
+
+  const expectedCatalog = guideData.guides.map(({ file, content }) => {
+    const slug = file.replace(/\.md$/u, '');
+    const decision = decisionsData.components.find((entry) => entry.slug === slug);
+    return {
+      slug,
+      title: content.match(/^###\s*(.+)$/mu)[1].trim(),
+      description: [...(decision?.useWhen ?? []), ...(decision?.jobs ?? [])].find((value) => typeof value === 'string' && value.trim()) ?? null,
+      aliases: decision?.aliases ?? [],
+      runtime: decision?.runtime ?? null,
+      docs: content.match(/\[Component documentation\]\(([^)]+)\)/u)?.[1] ?? null,
+    };
+  }).sort((a, b) => a.slug.localeCompare(b.slug));
+  const catalog = await client.callTool({ name: 'component_catalog', arguments: { workflowId: 'catalogue-smoke' } });
+  assertScopedResult(catalog, 'component_catalog');
+  assert.equal(catalog.structuredContent.stage, 'component_catalog');
+  assert.equal(catalog.structuredContent.workflowId, 'catalogue-smoke');
+  assert.equal(catalog.structuredContent.count, guideData.guides.length);
+  assert.equal(new Set(catalog.structuredContent.entries.map((entry) => entry.slug)).size, guideData.guides.length);
+  assert.deepEqual(catalog.structuredContent.entries, expectedCatalog);
+  assert.equal(catalog.structuredContent.contractVersion, contractData.frameworkVersion);
+  assert.equal(catalog.structuredContent.sourceHash, contractData.sourceHash);
+  assert.equal(catalog.structuredContent.guideSource, 'bundled');
+  assert.equal(catalog.structuredContent.status, 'available');
+  assert.equal(catalog.structuredContent.contractCompatibility, 'unknown');
+  assert.equal(catalog.structuredContent.contractProvenance, 'bundled-verified');
+  assert.equal(catalog.structuredContent.coverageStatus, 'complete-bundled-catalogue');
+  assert.ok(catalog.structuredContent.uncheckedAreas.includes('target-project compatibility'));
+  assert.deepEqual(catalog.structuredContent.blockedChecks, []);
+  assert.deepEqual(JSON.parse(catalog.content[0].text), catalog.structuredContent);
+  for (const arguments_ of [{ projectRoot: 1 }, { projectRoot: 'x'.repeat(4_097) }, { workflowId: false }, { workflowId: 'x'.repeat(257) }]) {
+    assert.equal((await client.callTool({ name: 'component_catalog', arguments: arguments_ })).isError, true);
+  }
+  for (const cwd of [matchingDir, staleSourceDir]) {
+    const cwdClient = new Client({ name: 'expressivecss-catalogue-cwd', version: '0.1.0' });
+    try {
+      await cwdClient.connect(new StdioClientTransport({ command: process.execPath, args: [path.join(packageDir, 'server.js'), `--project-root=${staleSourceDir}`], cwd, stderr: 'pipe' }));
+      const result = await cwdClient.callTool({ name: 'component_catalog', arguments: {} });
+      assert.deepEqual(result.structuredContent.entries, expectedCatalog);
+      assert.equal(result.structuredContent.contractCompatibility, 'unknown');
+      assert.equal(result.structuredContent.contractProvenance, 'bundled-verified');
+      assert.equal(result.structuredContent.status, 'available');
+      assert.deepEqual(result.structuredContent.checksPerformed, catalog.structuredContent.checksPerformed);
+    } finally {
+      await cwdClient.close();
+    }
+  }
+  const unchangedFiles = ['package.json', 'package-lock.json', 'node_modules/@expressivecss/expressive/package.json'];
+  const beforeCatalogue = await Promise.all(unchangedFiles.map((file) => readFile(path.join(deniedCommandDir, file))));
+  const matchingManifest = await readFile(path.join(matchingDir, 'package.json'));
+  await writeFile(path.join(matchingDir, 'package.json'), JSON.stringify({
+    ...JSON.parse(matchingManifest),
+    scripts: Object.fromEntries(['typecheck', 'test', 'verify:expressivecss'].map((name) => [name, "node -e \"require('node:fs').writeFileSync('catalogue-ran.txt', 'yes')\""])),
+  }));
+  const matchingFiles = ['package.json', 'clean.html', 'node_modules/@expressivecss/expressive/package.json'];
+  const beforeMatchingCatalogue = await Promise.all(matchingFiles.map((file) => readFile(path.join(matchingDir, file))));
+  for (const [projectRoot, compatibility, provenance] of [
+    [matchingDir, 'match', 'bundled-verified'],
+    [deniedCommandDir, 'match', 'bundled-verified'],
+    [outsideDir, 'unresolved', 'bundled-verified'],
+    [versionedDir, 'mismatch', 'bundled-verified'],
+    [staleSourceDir, 'match', 'stale'],
+    [unprovenSourceDir, 'match', 'missing'],
+    [noncanonicalSourceDir, 'match', 'invalid'],
+    [tamperedGuideDir, 'match', 'divergent'],
+    [symlinkSourceDir, 'unresolved', 'invalid'],
+    [oversizedSourceDir, 'unresolved', 'invalid'],
+    [path.join(outsideDir, 'nonexistent-project'), 'unresolved', 'bundled-verified'],
+  ]) {
+    const result = await client.callTool({ name: 'component_catalog', arguments: { projectRoot } });
+    assertScopedResult(result, 'target component_catalog');
+    assert.deepEqual(result.structuredContent.entries, expectedCatalog);
+    assert.equal(result.structuredContent.contractVersion, contractData.frameworkVersion);
+    assert.equal(result.structuredContent.sourceHash, contractData.sourceHash);
+    assert.equal(result.structuredContent.contractCompatibility, compatibility, projectRoot);
+    assert.equal(result.structuredContent.contractProvenance, provenance);
+    const available = compatibility === 'match' && provenance === 'bundled-verified';
+    assert.equal(result.structuredContent.status, available ? 'available' : 'blocked');
+    assert.equal(result.structuredContent.coverageStatus, 'complete-bundled-catalogue');
+    assert.equal(result.structuredContent.blockedChecks.includes('target-version contract checks'), compatibility !== 'match');
+    if (provenance !== 'bundled-verified') assert.ok(result.structuredContent.blockedChecks.includes(`local contract provenance is ${provenance}`));
+    assert.deepEqual(JSON.parse(result.content[0].text), result.structuredContent);
+  }
+  assert.deepEqual(await Promise.all(unchangedFiles.map((file) => readFile(path.join(deniedCommandDir, file)))), beforeCatalogue);
+  await assert.rejects(access(path.join(deniedCommandDir, 'ran.txt')));
+  assert.deepEqual(await Promise.all(matchingFiles.map((file) => readFile(path.join(matchingDir, file)))), beforeMatchingCatalogue);
+  await assert.rejects(access(path.join(matchingDir, 'catalogue-ran.txt')));
+  await writeFile(path.join(matchingDir, 'package.json'), matchingManifest);
+  for (let offset = 0; offset < expectedCatalog.length; offset += 12) {
+    const slugs = expectedCatalog.slice(offset, offset + 12).map((entry) => entry.slug);
+    const result = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, components: slugs } });
+    assert.deepEqual(result.structuredContent.found.map((entry) => entry.slug), slugs);
+    assert.deepEqual(result.structuredContent.missing, []);
   }
 
   const oversizedRulesInput = await client.callTool({
@@ -973,8 +1068,24 @@ try {
       ],
     };
     await writeFile(path.join(optionsFixtureDir, 'component-guides.json'), JSON.stringify(fixtureGuides));
+    await writeFile(path.join(optionsFixtureDir, 'component-decisions.json'), JSON.stringify({
+      ...decisionsData,
+      components: [
+        { slug: 'last', useWhen: ['', 'Preferred description', 'Extra description'], jobs: ['Unused job'], aliases: ['final'], runtime: 'css-only' },
+        { slug: 'empty', useWhen: [''], jobs: ['', 'Job fallback'], aliases: [], runtime: 'native' },
+        { slug: 'same-level', useWhen: [], jobs: [], aliases: [] },
+      ],
+    }));
     const fixtureTransport = new StdioClientTransport({ command: process.execPath, args: [path.join(optionsFixtureDir, 'server.js')], cwd: optionsFixtureDir, stderr: 'pipe' });
     await optionsFixtureClient.connect(fixtureTransport);
+    const fixtureCatalog = await optionsFixtureClient.callTool({ name: 'component_catalog', arguments: {} });
+    assert.equal(fixtureCatalog.structuredContent.count, fixtureGuides.guides.length);
+    const fixtureEntries = new Map(fixtureCatalog.structuredContent.entries.map((entry) => [entry.slug, entry]));
+    assert.deepEqual(fixtureEntries.get('nested'), { slug: 'nested', title: 'Nested', description: null, aliases: [], runtime: null, docs: null });
+    assert.deepEqual(fixtureEntries.get('last'), { slug: 'last', title: 'Last', description: 'Preferred description', aliases: ['final'], runtime: 'css-only', docs: null });
+    assert.deepEqual(fixtureEntries.get('empty'), { slug: 'empty', title: 'Empty', description: 'Job fallback', aliases: [], runtime: 'native', docs: null });
+    assert.deepEqual(fixtureEntries.get('same-level'), { slug: 'same-level', title: 'Same level', description: null, aliases: [], runtime: null, docs: null });
+    assert.deepEqual(JSON.parse(fixtureCatalog.content[0].text), fixtureCatalog.structuredContent);
     const fixtureResult = await optionsFixtureClient.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, components: ['nested', 'empty', 'last', 'same-level', 'crlf'], sections: ['options'] } });
     assert.deepEqual(fixtureResult.structuredContent.found.map((entry) => entry.options), [
       { status: 'documented', markdown },
