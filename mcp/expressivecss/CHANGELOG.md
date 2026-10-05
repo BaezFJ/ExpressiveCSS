@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- `component_catalog` accepts optional `query` and `limit` to search existing
+  names, aliases and compact descriptions. Exact matches precede labelled
+  heuristic matches. Search defaults to 10 results, permits at most 50 and
+  reports total/omitted counts, truncation and explicit empty results. Full
+  listings and compatibility/provenance evidence remain unchanged.
+
 - Add read-only `component_catalog` for complete compact component listings,
   existing aliases and runtime ownership, documentation links and bundled
   version/source hash. Optional explicit targets receive compatibility and

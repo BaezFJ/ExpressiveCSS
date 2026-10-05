@@ -174,7 +174,7 @@ const TOOL_DESCRIPTIONS = {
   },
   component_catalog: {
     stage: 'Component Catalogue',
-    description: 'List every bundled component with canonical names, compact metadata and snapshot identity. Optionally check target-project compatibility.',
+    description: 'List or search bundled components by name, alias or compact description. Search returns bounded, labelled matches; results identify the bundled snapshot and optionally check target-project compatibility.',
   },
   quality_inspector: {
     stage: 'Quality Inspector',
@@ -225,6 +225,8 @@ const syntaxSchema = {
 const catalogSchema = {
   projectRoot: z.string().max(MAX_PROJECT_ROOT_CHARS).optional(),
   workflowId: z.string().max(MAX_WORKFLOW_ID_CHARS).optional(),
+  query: z.string().max(256).trim().min(1).optional(),
+  limit: z.number().int().min(1).max(50).optional(),
 };
 
 const digestSchema = z.string().regex(/^[a-f0-9]{64}$/u);
@@ -2183,7 +2185,7 @@ async function componentCatalogHandler(args) {
   const catalog = await loadGuideCatalog(projectRoot);
   const version = projectRoot === undefined ? null : await resolveAgainstContract(projectRoot, catalog.frameworkVersion);
   const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
-  const entries = [...catalog.components.values()].map((guide) => {
+  let entries = [...catalog.components.values()].map((guide) => {
     const decision = COMPONENT_DECISIONS_BY_SLUG.get(guide.slug);
     return {
       slug: guide.slug,
@@ -2195,14 +2197,36 @@ async function componentCatalogHandler(args) {
     };
   }).sort((a, b) => a.slug.localeCompare(b.slug));
 
+  let search = {};
+  if (parsed.query !== undefined) {
+    const query = normalizeForMatch(parsed.query);
+    const tokens = query.split('-').filter(Boolean);
+    const matchOrder = ['exact-name', 'exact-alias', 'heuristic'];
+    entries = entries.flatMap((entry) => {
+      const names = [entry.slug, entry.title].map(normalizeForMatch);
+      const aliases = entry.aliases.map(normalizeForMatch);
+      const fields = [...names, ...aliases, normalizeForMatch(entry.description)];
+      const matchType = query && names.includes(query) ? 'exact-name'
+        : query && aliases.includes(query) ? 'exact-alias'
+          : tokens.length && tokens.every((token) => fields.some((field) => field.includes(token))) ? 'heuristic' : null;
+      return matchType ? [{ ...entry, matchType }] : [];
+    }).sort((a, b) => matchOrder.indexOf(a.matchType) - matchOrder.indexOf(b.matchType) || a.slug.localeCompare(b.slug));
+    const totalMatches = entries.length;
+    const limit = parsed.limit ?? 10;
+    entries = entries.slice(0, limit);
+    const omittedCount = totalMatches - entries.length;
+    search = { query: parsed.query, limit, totalMatches, omittedCount, truncated: omittedCount > 0 };
+  }
+
   return toToolResult(buildStagePayload('component_catalog', {
     entries,
     count: entries.length,
+    ...search,
     contractVersion: catalog.frameworkVersion,
     sourceHash: catalog.sourceHash,
     guideSource: catalog.guideSource,
     status: (!version || version.status === 'match') && !provenanceBlock ? 'available' : 'blocked',
-    checksPerformed: ['bundled component catalogue listing', ...(version ? ['target contract resolution', 'contract provenance validation'] : [])],
+    checksPerformed: [parsed.query === undefined ? 'bundled component catalogue listing' : 'bundled component catalogue search', ...(version ? ['target contract resolution', 'contract provenance validation'] : [])],
     evidenceSources: ['bundled:component-guides.json', 'bundled:component-decisions.json', 'bundled:contract.json', ...(version ? [version.resolutionSource] : [])],
     uncheckedAreas: [
       ...(!version ? ['target-project compatibility', 'target-project provenance'] : []),
@@ -2211,7 +2235,7 @@ async function componentCatalogHandler(args) {
     contractCompatibility: version?.status ?? 'unknown',
     contractProvenance: catalog.provenance.status,
     contractProvenanceDetails: catalog.provenance,
-    coverageStatus: 'complete-bundled-catalogue',
+    coverageStatus: parsed.query === undefined ? 'complete-bundled-catalogue' : search.truncated ? 'partial-search-results' : 'complete-search-results',
     blockedChecks: [
       ...(version && version.status !== 'match' ? ['target-version contract checks'] : []),
       ...(provenanceBlock ? [provenanceBlock] : []),

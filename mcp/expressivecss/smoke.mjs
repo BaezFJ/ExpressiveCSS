@@ -76,6 +76,23 @@ function assertScopedResult(result, label) {
   assert.equal(Object.hasOwn(payload, 'nextTool'), false, `${label} still requires a next tool`);
 }
 
+function assertCatalogSearch(result, { query, limit = 10, entries, totalMatches = entries.length }) {
+  assertScopedResult(result, 'catalogue search');
+  const payload = result.structuredContent;
+  assert.deepEqual(payload.entries, entries);
+  assert.equal(payload.query, query.trim());
+  assert.equal(payload.limit, limit);
+  assert.equal(payload.count, entries.length);
+  assert.equal(payload.totalMatches, totalMatches);
+  assert.equal(payload.omittedCount, totalMatches - entries.length);
+  assert.equal(payload.truncated, totalMatches > entries.length);
+  assert.equal(payload.coverageStatus, totalMatches > entries.length ? 'partial-search-results' : 'complete-search-results');
+  assert.equal(payload.contractVersion, contractData.frameworkVersion);
+  assert.equal(payload.sourceHash, contractData.sourceHash);
+  assert.equal(payload.guideSource, 'bundled');
+  assert.deepEqual(JSON.parse(result.content[0].text), payload);
+}
+
 const outsideDir = await mkdtemp(path.join(os.tmpdir(), 'expressivecss-mcp-smoke-'));
 const deniedCommandDir = await mkdtemp(path.join(os.tmpdir(), 'expressivecss-mcp-denied-'));
 const outsideFile = path.join(outsideDir, 'outside.txt');
@@ -338,6 +355,43 @@ try {
   assert.ok(catalog.structuredContent.uncheckedAreas.includes('target-project compatibility'));
   assert.deepEqual(catalog.structuredContent.blockedChecks, []);
   assert.deepEqual(JSON.parse(catalog.content[0].text), catalog.structuredContent);
+  const appBarEntry = expectedCatalog.find((entry) => entry.slug === 'app-bar');
+  for (const query of ['app-bar', '  APP BAR  ', 'navbar', 'screen-level actions']) {
+    const result = await client.callTool({ name: 'component_catalog', arguments: { query, limit: 1 } });
+    const matchType = query.includes('actions') ? 'heuristic' : query === 'navbar' ? 'exact-alias' : 'exact-name';
+    assertCatalogSearch(result, { query, limit: 1, entries: [{ ...appBarEntry, matchType }], totalMatches: matchType === 'exact-name' ? 2 : 1 });
+  }
+  const recoveredSlugs = new Set();
+  for (const entry of expectedCatalog) {
+    for (const query of [entry.slug, entry.title, ...entry.aliases]) {
+      const result = await client.callTool({ name: 'component_catalog', arguments: { query, limit: 50 } });
+      const found = result.structuredContent.entries.find((match) => match.slug === entry.slug);
+      assert.ok(found, `${query} did not discover ${entry.slug}`);
+      const normalize = (value) => value.toLowerCase().split(/[^a-z0-9]+/u).filter(Boolean).join('-');
+      assert.equal(found.matchType, [entry.slug, entry.title].some((name) => normalize(name) === normalize(query)) ? 'exact-name' : 'exact-alias');
+      const { matchType, ...metadata } = found;
+      assert.deepEqual(metadata, entry);
+      for (const match of result.structuredContent.entries) recoveredSlugs.add(match.slug);
+      assert.deepEqual(JSON.parse(result.content[0].text), result.structuredContent);
+    }
+  }
+  assert.deepEqual([...recoveredSlugs].sort(), expectedCatalog.map((entry) => entry.slug).sort());
+  const aliasSyntax = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, components: ['navbar'] } });
+  assert.deepEqual(aliasSyntax.structuredContent.found, []);
+  assert.deepEqual(aliasSyntax.structuredContent.missing.map((entry) => entry.requested), ['navbar']);
+  for (const query of ['no-catalogue-match-zzzz', '!!!', '日本語', 'x'.repeat(256)]) {
+    assertCatalogSearch(await client.callTool({ name: 'component_catalog', arguments: { query } }), { query, entries: [] });
+  }
+  const limitedListing = await client.callTool({ name: 'component_catalog', arguments: { limit: 1 } });
+  assert.deepEqual(limitedListing.structuredContent.entries, expectedCatalog);
+  assert.equal(limitedListing.structuredContent.coverageStatus, 'complete-bundled-catalogue');
+  for (const field of ['query', 'limit', 'totalMatches', 'omittedCount', 'truncated']) assert.equal(Object.hasOwn(limitedListing.structuredContent, field), false);
+  for (const arguments_ of [
+    ...['', '  ', 1, null, 'x'.repeat(257)].map((query) => ({ query })),
+    ...[0, 51, 1.5, '10', null].map((limit) => ({ query: 'app-bar', limit })),
+  ]) {
+    assert.equal((await client.callTool({ name: 'component_catalog', arguments: arguments_ })).isError, true, JSON.stringify(arguments_));
+  }
   for (const arguments_ of [{ projectRoot: 1 }, { projectRoot: 'x'.repeat(4_097) }, { workflowId: false }, { workflowId: 'x'.repeat(257) }]) {
     assert.equal((await client.callTool({ name: 'component_catalog', arguments: arguments_ })).isError, true);
   }
@@ -351,6 +405,10 @@ try {
       assert.equal(result.structuredContent.contractProvenance, 'bundled-verified');
       assert.equal(result.structuredContent.status, 'available');
       assert.deepEqual(result.structuredContent.checksPerformed, catalog.structuredContent.checksPerformed);
+      const search = await cwdClient.callTool({ name: 'component_catalog', arguments: { query: 'navbar' } });
+      assertCatalogSearch(search, { query: 'navbar', entries: [{ ...appBarEntry, matchType: 'exact-alias' }] });
+      assert.equal(search.structuredContent.contractCompatibility, 'unknown');
+      assert.equal(search.structuredContent.status, 'available');
     } finally {
       await cwdClient.close();
     }
@@ -390,6 +448,13 @@ try {
     assert.equal(result.structuredContent.blockedChecks.includes('target-version contract checks'), compatibility !== 'match');
     if (provenance !== 'bundled-verified') assert.ok(result.structuredContent.blockedChecks.includes(`local contract provenance is ${provenance}`));
     assert.deepEqual(JSON.parse(result.content[0].text), result.structuredContent);
+    for (const query of ['navbar', 'no-catalogue-match-zzzz']) {
+      const search = await client.callTool({ name: 'component_catalog', arguments: { projectRoot, query } });
+      assertCatalogSearch(search, { query, entries: query === 'navbar' ? [{ ...appBarEntry, matchType: 'exact-alias' }] : [] });
+      for (const field of ['status', 'contractCompatibility', 'contractProvenance', 'contractProvenanceDetails', 'blockedChecks', 'uncheckedAreas']) {
+        assert.deepEqual(search.structuredContent[field], result.structuredContent[field]);
+      }
+    }
   }
   assert.deepEqual(await Promise.all(unchangedFiles.map((file) => readFile(path.join(deniedCommandDir, file)))), beforeCatalogue);
   await assert.rejects(access(path.join(deniedCommandDir, 'ran.txt')));
@@ -1051,6 +1116,15 @@ try {
       '~~~markdown', '### Another literal code heading', '~~~~',
       'Long option description. '.repeat(1_200),
     ].join('\n').trim();
+    const searchFixtures = [
+      { slug: 'fixture', title: 'Fixture', useWhen: ['Discoverable'], aliases: ['fixture'] },
+      { slug: 'a-fixture', title: 'A fixture', useWhen: ['UI'], aliases: ['fixture'] },
+      { slug: 'b-fixture', title: 'B fixture', useWhen: [], aliases: ['fixture'] },
+      ...Array.from({ length: 52 }, (_, index) => ({
+        slug: `fixture-${String(index).padStart(2, '0')}`, title: `Fixture ${index}`,
+        useWhen: ['UI discovery'], aliases: index === 0 ? ['q'] : index < 3 ? ['edge'] : [],
+      })),
+    ];
     const fixtureGuides = {
       ...guideData,
       guides: [
@@ -1065,6 +1139,7 @@ try {
         { file: 'same-level-methods.md', content: '### Same level Methods\n\n#### Methods\nKept method\n#### Options\nEXCLUDED_OPTIONS\n' },
         { file: 'crlf-methods.md', content: '### CRLF Methods\r\n\r\n#### Methods\r\nFirst line\r\n##### Nested heading\r\nLast line\r\n#### Options\r\nEXCLUDED_OPTIONS\r\n' },
         { file: 'missing-methods.md', content: '### Missing Methods\n\n#### Options\nOnly options' },
+        ...searchFixtures.map(({ slug, title }) => ({ file: `${slug}.md`, content: `### ${title}\n\n#### Rules\nFull-body-only marker ZZZBODYONLY\n` })),
       ],
     };
     await writeFile(path.join(optionsFixtureDir, 'component-guides.json'), JSON.stringify(fixtureGuides));
@@ -1074,6 +1149,7 @@ try {
         { slug: 'last', useWhen: ['', 'Preferred description', 'Extra description'], jobs: ['Unused job'], aliases: ['final'], runtime: 'css-only' },
         { slug: 'empty', useWhen: [''], jobs: ['', 'Job fallback'], aliases: [], runtime: 'native' },
         { slug: 'same-level', useWhen: [], jobs: [], aliases: [] },
+        ...searchFixtures,
       ],
     }));
     const fixtureTransport = new StdioClientTransport({ command: process.execPath, args: [path.join(optionsFixtureDir, 'server.js')], cwd: optionsFixtureDir, stderr: 'pipe' });
@@ -1086,6 +1162,48 @@ try {
     assert.deepEqual(fixtureEntries.get('empty'), { slug: 'empty', title: 'Empty', description: 'Job fallback', aliases: [], runtime: 'native', docs: null });
     assert.deepEqual(fixtureEntries.get('same-level'), { slug: 'same-level', title: 'Same level', description: null, aliases: [], runtime: null, docs: null });
     assert.deepEqual(JSON.parse(fixtureCatalog.content[0].text), fixtureCatalog.structuredContent);
+    const rankedFixtures = searchFixtures.map(({ slug }, index) => ({
+      ...fixtureEntries.get(slug), matchType: index === 0 ? 'exact-name' : index < 3 ? 'exact-alias' : 'heuristic',
+    }));
+    for (const limit of [undefined, 1, 50]) {
+      const query = 'fixture';
+      const result = await optionsFixtureClient.callTool({ name: 'component_catalog', arguments: { query, ...(limit === undefined ? {} : { limit }) } });
+      assertCatalogSearch(result, { query, limit: limit ?? 10, entries: rankedFixtures.slice(0, limit ?? 10), totalMatches: 55 });
+      const repeated = await optionsFixtureClient.callTool({ name: 'component_catalog', arguments: { query, ...(limit === undefined ? {} : { limit }) } });
+      assert.deepEqual(repeated.structuredContent.entries, result.structuredContent.entries);
+      const blocked = await optionsFixtureClient.callTool({ name: 'component_catalog', arguments: { query, projectRoot: versionedDir, ...(limit === undefined ? {} : { limit }) } });
+      assertCatalogSearch(blocked, { query, limit: limit ?? 10, entries: rankedFixtures.slice(0, limit ?? 10), totalMatches: 55 });
+      assert.equal(blocked.structuredContent.status, 'blocked');
+      assert.equal(blocked.structuredContent.contractCompatibility, 'mismatch');
+    }
+    for (const limit of [1, 2]) {
+      const query = 'edge';
+      const result = await optionsFixtureClient.callTool({ name: 'component_catalog', arguments: { query, limit } });
+      const entries = rankedFixtures.slice(4, 4 + limit).map((entry) => ({ ...entry, matchType: 'exact-alias' }));
+      assertCatalogSearch(result, { query, limit, entries, totalMatches: 2 });
+    }
+    for (const query of ['q', 'ui q']) {
+      const matchType = query === 'q' ? 'exact-alias' : 'heuristic';
+      assertCatalogSearch(await optionsFixtureClient.callTool({ name: 'component_catalog', arguments: { query } }), {
+        query, entries: [{ ...fixtureEntries.get('fixture-00'), matchType }],
+      });
+    }
+    const recoveryQuery = 'fixture-51';
+    assertCatalogSearch(await optionsFixtureClient.callTool({ name: 'component_catalog', arguments: { query: recoveryQuery } }), {
+      query: recoveryQuery, entries: [{ ...fixtureEntries.get('fixture-51'), matchType: 'exact-name' }],
+    });
+    for (const limit of [1, 2]) {
+      const query = 'a-fixture';
+      assertCatalogSearch(await optionsFixtureClient.callTool({ name: 'component_catalog', arguments: { query, limit } }), {
+        query, limit, entries: [
+          { ...fixtureEntries.get('a-fixture'), matchType: 'exact-name' },
+          { ...fixtureEntries.get('fixture'), matchType: 'heuristic' },
+        ].slice(0, limit), totalMatches: 2,
+      });
+    }
+    for (const query of ['ZZZBODYONLY', 'unused job', 'extra description']) {
+      assertCatalogSearch(await optionsFixtureClient.callTool({ name: 'component_catalog', arguments: { query } }), { query, entries: [] });
+    }
     const fixtureResult = await optionsFixtureClient.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, components: ['nested', 'empty', 'last', 'same-level', 'crlf'], sections: ['options'] } });
     assert.deepEqual(fixtureResult.structuredContent.found.map((entry) => entry.options), [
       { status: 'documented', markdown },
