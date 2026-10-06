@@ -110,6 +110,7 @@ browserTest('enlarged text grows a button instead of overflowing it', async () =
 });
 
 for (const engine of [chromium, firefox, webkit]) {
+if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine.name()) continue;
 const fileTest = existsSync(engine.executablePath()) ? test : test.skip;
 fileTest(`file triggers center legacy labels and reserve space for selected filenames (${engine.name()})`, async () => {
   const browser = await engine.launch({ headless: true });

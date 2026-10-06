@@ -8,6 +8,7 @@ import { pathToFileURL } from 'node:url';
 import { chromium, firefox, webkit, expect } from '@playwright/test';
 
 for (const [name, engine] of Object.entries({ chromium, firefox, webkit })) {
+  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== name) continue;
   test(`${name}: copied layout templates adapt and preserve list-detail focus`, async t => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const directory = await mkdtemp(join(tmpdir(), 'expressivecss-layouts-'));
