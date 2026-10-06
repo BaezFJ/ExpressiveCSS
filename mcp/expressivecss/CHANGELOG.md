@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Add argument completion to the component resource templates. Both templates
+  complete canonical slugs by case-insensitive prefix, and
+  `component_guide_section` also completes section names. Aliases are not
+  matched. Results use the SDK limit of 100 values with `total` and `hasMore`.
+  Unknown template references return `-32602`. Completion reads only the
+  bundled catalogue and stays outside the response byte budget. Tool arguments
+  are not completed.
+
 - Add versioned component guide resources for the current bundled snapshot.
   The `component_guide` template returns a whole guide with its complete
   contract, syntax, rules, Options and Methods. `component_guide_section`

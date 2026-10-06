@@ -445,7 +445,8 @@ Reads accept only the exact URIs the templates describe. Catalogue aliases such
 as `datepicker`, case variants, unknown slugs or sections, other versions or
 hashes, extra or empty segments, trailing slashes, percent-encoded variants and
 query or fragment selectors return `-32002`. Use `component_catalog` to resolve
-an alias to its canonical slug. Argument completion is not offered.
+an alias to its canonical slug, or [complete](#complete-resource-arguments) a
+slug prefix.
 
 ### Component read budget and recovery
 
@@ -464,6 +465,43 @@ The error data has `uri`, `maxBytes`, `requiredBytes`, `setting`,
 Restart with `EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES` of at least `requiredBytes`
 to read a URI that cannot fit. The largest bundled guide fits the default
 budget, so section recovery matters only under a smaller operator budget.
+
+### Complete resource arguments
+
+The server advertises the `completions` capability. `completion/complete`
+completes `slug` on both component templates and `section` on
+`component_guide_section`. Pass the exact `uriTemplate` string from
+`resources/templates/list` as `ref.uri`:
+
+```js
+const { resourceTemplates } = await client.listResourceTemplates();
+const guide = resourceTemplates.find((template) => template.name === 'component_guide');
+await client.complete({ ref: { type: 'ref/resource', uri: guide.uriTemplate }, argument: { name: 'slug', value: 'ca' } });
+// { completion: { values: ['cards', 'carousel'], total: 2, hasMore: false } }
+```
+
+A value matches names that start with it, ignoring case. Slugs come back in
+`resources/list` order, and an empty value returns all of them. Sections come
+back in the order `contract`, `syntax`, `rules`, `options`, `methods`, whatever
+slug `context.arguments` holds. Only canonical slugs match, so `datepicker`
+returns no values while `date` returns `date-picker`. The SDK returns at most
+100 values, with `total` matches and `hasMore` set when more matched. Every
+current result fits.
+
+- A value with no matches returns `values: []`, `total: 0` and
+  `hasMore: false`.
+- Other argument names, such as `version`, and the fixed catalogue URI return
+  `values: []` and `hasMore: false` without `total`.
+- A `ref.uri` that is not one of the two current template strings, such as
+  another version or hash, returns `-32602`. So does a `ref/prompt` reference,
+  because the server has no prompts.
+
+Completion uses the bundled catalogue loaded at startup. It reads no project
+files and runs no commands, and it stays outside the
+[content budget](#resource-read-budget-and-recovery) like resource listing.
+Completion covers resource template arguments only. MCP does not complete tool
+arguments, so `component_syntax_expert` and other tools still need canonical
+names or aliases, which `component_catalog` lists.
 
 ## Run it locally
 
