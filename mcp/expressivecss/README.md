@@ -87,6 +87,9 @@ The budget applies to `setup_expert`, `creative_director`, `page_architect`,
 `page_arcjitect`, `component_syntax_expert` and `component_catalog`, including
 disabled-tool and SDK validation-error results. `rules_enforcer` and
 `quality_inspector` retain their existing QA limits and evidence behavior.
+The [catalogue resource](#versioned-catalogue-resource) uses the same setting
+to bound successful resource-read results, with complete delivery or a protocol
+error. Discovery lists are outside the content budget.
 
 The exact measurement is `Buffer.byteLength(JSON.stringify(result), 'utf8')`.
 It counts the entire wire tool-result object, including JSON escapes, text,
@@ -144,7 +147,8 @@ For `delivery: "partial"`, execute a referenced recovery request:
 Catalogue recovery uses an exact slug query with `limit: 1`, preserving any
 explicit target. It omits the optional workflow correlation ID because
 catalogue retrieval has no workflow state. Search-limit omissions and byte
-omissions have separate accounting. No pagination or resources are added.
+omissions have separate accounting. Catalogue tool recovery adds no pagination
+and does not require resource support in the client.
 
 Creative recovery reranks a concise goal naming the omitted component with
 `maxSuggestions: 1`, preserving target and workflow context. Ranking scores and
@@ -317,8 +321,81 @@ or `response-budget-error` when necessary.
 Search retains the listing's bundled version/hash and optional-target evidence.
 An omitted target leaves compatibility unknown; an incompatible explicit target
 remains blocked while reference matches stay available. Empty results and
-truncation do not change compatibility outcomes. Resources remain later roadmap
-phases.
+truncation do not change compatibility outcomes.
+
+## Versioned catalogue resource
+
+Clients with resource support can discover and read the current bundled snapshot
+over the same stdio connection. The resource is named `component_catalog` and
+has MIME type `application/json`. Use the advertised URI:
+
+```js
+const { resources } = await client.listResources();
+const catalogue = resources.find((resource) => resource.name === 'component_catalog');
+const result = await client.readResource({ uri: catalogue.uri });
+const snapshot = JSON.parse(result.contents[0].text);
+console.log(snapshot.contractVersion, snapshot.sourceHash, snapshot.entries);
+```
+
+The URI format is
+`expressivecss://catalogue/<framework-version>/<source-hash>`. The framework
+version is a URI-encoded path segment and the complete hash comes from the
+shipped contract. It identifies those contract sources; it is not a digest of
+the serialized resource text. Only the current shipped bundle is available.
+The URI's version and hash agree with `contractVersion` and `sourceHash` in JSON.
+There is no unversioned `latest` alias, historical lookup, search selector or
+component resource template. Resource reads require the exact advertised URI.
+Unknown versions/hashes, query/fragment selectors and unrelated URIs return
+resource-not-found error `-32002`. Invalid request parameters fail through the
+SDK's request validation. The installed SDK 1.31.0 reports request-schema
+failures with protocol error `-32603`.
+
+Successful reads return one text item with that URI and JSON MIME type. The
+JSON has `schemaVersion: 1`, `entries`, `count`, `contractVersion`, `sourceHash`
+and `guideSource: "bundled"`. Entries contain the same compact fields and slug
+ordering as a complete unfiltered catalogue tool result. They contain no full
+component guide or capability dump. Tool-only stage/workflow and search fields
+are absent. Resource operations do not depend on tool skip flags.
+
+The JSON retains catalogue evidence fields: `status`, `checksPerformed`,
+`evidenceSources`, `uncheckedAreas`, `contractCompatibility`,
+`contractProvenance`, `contractProvenanceDetails`, `coverageStatus` and
+`blockedChecks`. Compatibility is always `unknown`; `bundled-verified`
+provenance concerns the packaged snapshot. Reads inspect no consumer files,
+ignore the working directory and CLI project-root default, and execute no
+project scripts or components. Complete catalogue coverage does not establish
+consumer compatibility, browser behavior or accessibility approval.
+
+### Resource-read budget and recovery
+
+Successful resource reads share `EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES`, default
+65,536 UTF-8 bytes. Measure the entire final `resources/read` result with
+`Buffer.byteLength(JSON.stringify(result), 'utf8')`. This includes the contents
+array, URI, MIME type, escaped JSON text, metadata and any SDK-added result
+fields. The outer JSON-RPC envelope and stdio framing are excluded. Resource
+JSON includes `responseBudget` with the effective `maxBytes`,
+`delivery: "complete"` and empty `omissions`/`recoveries` arrays.
+
+Every successful read delivers every entry whole. If that cannot fit, the
+server returns JSON-RPC error `-32001` without a successful resource result.
+Error data has `uri`, `maxBytes`, `requiredBytes` and
+`setting: "EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES"`. The required size includes
+the retry budget field's own bytes. Set the operator setting to at least
+`requiredBytes`, restart the server and read the same advertised URI to
+retrieve the complete catalogue. For example, in a contributor checkout:
+
+```sh
+# Replace 100000 with the requiredBytes from the error.
+EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES=100000 node mcp/expressivecss/server.js
+```
+
+In an MCP client configuration, update that server's environment and reconnect
+instead. A narrower catalogue tool query remains an option when only one entry
+is needed, but it does not recover the whole resource at the same small budget.
+Protocol errors are outside the successful-result budget, including budget 1.
+`resources/list`, `resources/templates/list` and `tools/list` are discovery
+operations outside this content budget; resource discovery remains available
+when a read cannot fit. Subscription support is not advertised.
 
 ## Run it locally
 
