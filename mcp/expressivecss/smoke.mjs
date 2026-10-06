@@ -387,13 +387,13 @@ async function verifyCatalogueResources(expectedEntries, toolPayload, consumerRo
     assert.ok(peer.getServerCapabilities().resources);
     assert.notEqual(peer.getServerCapabilities().resources.subscribe, true);
     const listed = await peer.listResources();
-    assert.equal(listed.resources.length, 1);
+    assert.equal(listed.resources.filter((resource) => resource.name === 'component_catalog').length, 1);
     assert.equal(listed.resources[0].uri, uri);
     assert.equal(listed.resources[0].name, 'component_catalog');
     assert.equal(listed.resources[0].mimeType, 'application/json');
     assert.ok(listed.resources[0].title);
     assert.match(listed.resources[0].description, /current bundled snapshot/u);
-    assert.deepEqual((await peer.listResourceTemplates()).resourceTemplates, []);
+    assert.deepEqual((await peer.listResourceTemplates()).resourceTemplates.map((template) => template.name), ['component_guide', 'component_guide_section']);
     baseline = await read();
     assertSnapshot(baseline);
     assert.deepEqual(await read(), baseline, 'resource contents are deterministic');
@@ -481,6 +481,238 @@ async function verifyCatalogueResources(expectedEntries, toolPayload, consumerRo
       assert.deepEqual(payload.entries.slice(1), expectedEntries.slice(1));
     }, { dir: fixtureDir });
   } finally { await rm(fixtureDir, { recursive: true, force: true }); }
+}
+
+async function verifyComponentResources(catalogueToolPayload, consumerRoots) {
+  const setting = 'EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES';
+  const snapshot = `${encodeURIComponent(contractData.frameworkVersion)}/${contractData.sourceHash}`;
+  const base = `expressivecss://components/${snapshot}`;
+  const catalogueUri = `expressivecss://catalogue/${snapshot}`;
+  const sectionNames = ['contract', 'syntax', 'rules', 'options', 'methods'];
+  const bytes = (result) => Buffer.byteLength(JSON.stringify(result), 'utf8');
+  const guides = guideData.guides.map((guide) => ({ ...guide, slug: guide.file.replace(/\.md$/u, '') })).sort((a, b) => a.slug.localeCompare(b.slug));
+  // Read expectations from bundled Markdown, independently of the server parser.
+  const section = (content, heading) => content.split(new RegExp(`^#### ${heading}\\r?$`, 'mu'))[1]?.split(/^ {0,3}#{1,4}(?:\s|$)/mu)[0].trim() ?? '';
+  const apiSection = (content, heading) => {
+    const markdown = section(content, heading) || null;
+    return { status: markdown ? 'documented' : 'absent', markdown };
+  };
+  // A result's budget field is part of its size, so search for the self-consistent exact fit.
+  const exactFit = (result) => {
+    const copy = structuredClone(result);
+    const payload = JSON.parse(copy.contents[0].text);
+    let exact = bytes(copy);
+    for (;;) {
+      payload.responseBudget.maxBytes = exact;
+      copy.contents[0].text = JSON.stringify(payload);
+      const measured = bytes(copy);
+      if (measured === exact) return exact;
+      exact = measured;
+    }
+  };
+  async function withServer(budget, action, { cwd = packageDir, env = {}, args = [] } = {}) {
+    const environment = { ...process.env, ...env };
+    if (budget === undefined) delete environment[setting];
+    else environment[setting] = String(budget);
+    const connection = new StdioClientTransport({ command: process.execPath, args: [path.join(packageDir, 'server.js'), ...args], cwd, stderr: 'pipe', env: environment });
+    const peer = new Client({ name: 'component-resource-check', version: '1' });
+    let wire;
+    const start = connection.start.bind(connection);
+    connection.start = async () => {
+      const receive = connection.onmessage;
+      connection.onmessage = (message, extra) => { if (message.result || message.error) wire = message; receive(message, extra); };
+      await start();
+    };
+    try {
+      await peer.connect(connection);
+      const read = async (uri) => {
+        const result = await peer.readResource({ uri });
+        assert.deepEqual(result, wire.result, 'measure the final wire resource result');
+        assert.ok(bytes(wire.result) <= (budget ?? 65_536), `${uri} exceeds the response budget`);
+        assert.equal(result.contents.length, 1);
+        assert.equal(result.contents[0].uri, uri);
+        assert.equal(result.contents[0].mimeType, 'application/json');
+        const payload = JSON.parse(result.contents[0].text);
+        assert.deepEqual(payload.responseBudget, { maxBytes: budget ?? 65_536, delivery: 'complete', omissions: [], recoveries: [] });
+        return { result, payload };
+      };
+      const budgetError = async (uri) => {
+        let data;
+        await assert.rejects(peer.readResource({ uri }), (error) => {
+          assert.equal(error.code, -32001, `${uri} must fail with the budget error`);
+          data = error.data;
+          return true;
+        });
+        assert.equal(Object.hasOwn(wire, 'result'), false);
+        assert.equal(data.uri, uri);
+        assert.equal(data.maxBytes, budget ?? 65_536);
+        assert.equal(data.setting, setting);
+        return data;
+      };
+      await action({ peer, read, budgetError, wire: () => wire });
+    } finally { try { await peer.close(); } finally { await connection.close(); } }
+  }
+
+  const evidence = (guide, coverageStatus) => ({
+    status: 'available',
+    checksPerformed: ['bundled component guide lookup'],
+    evidenceSources: [`bundled:${guide.file}`, 'bundled:contract.json'],
+    uncheckedAreas: catalogueToolPayload.uncheckedAreas,
+    contractCompatibility: 'unknown',
+    contractProvenance: 'bundled-verified',
+    contractProvenanceDetails: catalogueToolPayload.contractProvenanceDetails,
+    coverageStatus,
+    blockedChecks: [],
+  });
+  const wholeGuides = new Map();
+  let longContracts = 0;
+  await withServer(undefined, async ({ peer, read, wire }) => {
+    const templates = (await peer.listResourceTemplates()).resourceTemplates;
+    assert.deepEqual(templates.map(({ name, uriTemplate, mimeType }) => ({ name, uriTemplate, mimeType })), [
+      { name: 'component_guide', uriTemplate: `${base}/{slug}`, mimeType: 'application/json' },
+      { name: 'component_guide_section', uriTemplate: `${base}/{slug}/{section}`, mimeType: 'application/json' },
+    ]);
+    for (const template of templates) {
+      assert.ok(template.title);
+      assert.match(template.description, /current bundled snapshot/u);
+    }
+    const listed = (await peer.listResources()).resources;
+    assert.deepEqual(listed.map((resource) => resource.uri), [catalogueUri, ...guides.map((guide) => `${base}/${guide.slug}`)]);
+    for (const [index, guide] of guides.entries()) {
+      assert.equal(listed[index + 1].name, guide.slug);
+      assert.equal(listed[index + 1].mimeType, 'application/json');
+      assert.ok(listed[index + 1].title);
+    }
+    assert.equal(peer.getServerCapabilities().completions, undefined, 'completion belongs to Phase 10');
+
+    const catalogue = await read(catalogueUri);
+    for (const guide of guides) {
+      const tool = await peer.callTool({ name: 'component_syntax_expert', arguments: { components: [guide.slug], sections: ['options', 'methods'], detail: 'detailed' } });
+      const found = tool.structuredContent.found[0];
+      const catalogueEntry = catalogue.payload.entries.find((entry) => entry.slug === guide.slug);
+      const contract = section(guide.content, 'Contract');
+      assert.ok(contract, `${guide.file} has no Contract section`);
+      if (found.contract.endsWith('…(truncated)')) {
+        longContracts += 1;
+        assert.ok(contract.startsWith(found.contract.slice(0, -'…(truncated)'.length)), `${guide.file} contract must extend the clamped tool text`);
+      } else {
+        assert.equal(found.contract, contract);
+      }
+      const options = apiSection(guide.content, 'Options');
+      const methods = apiSection(guide.content, 'Methods');
+      assert.deepEqual(found.options, options);
+      assert.deepEqual(found.methods, methods);
+      const identity = {
+        schemaVersion: 1,
+        slug: guide.slug,
+        title: found.title,
+        docs: catalogueEntry.docs,
+        repositorySource: found.docs,
+        contractVersion: catalogue.payload.contractVersion,
+        sourceHash: catalogue.payload.sourceHash,
+        guideSource: 'bundled',
+      };
+      const fields = { contract, syntax: found.syntax, rules: found.rules, options, methods };
+      const uri = `${base}/${guide.slug}`;
+      const whole = await read(uri);
+      assert.deepEqual(whole.payload, { ...identity, ...fields, ...evidence(guide, 'complete-bundled-guide'), responseBudget: whole.payload.responseBudget }, `${guide.file} whole-guide resource`);
+      wholeGuides.set(guide.slug, whole);
+      for (const name of sectionNames) {
+        const part = await read(`${uri}/${name}`);
+        assert.deepEqual(part.payload, { ...identity, section: name, [name]: fields[name], ...evidence(guide, 'complete-bundled-guide-section'), responseBudget: part.payload.responseBudget }, `${guide.file} ${name} section resource`);
+      }
+    }
+    assert.equal(catalogue.payload.contractVersion, contractData.frameworkVersion);
+    assert.equal(catalogue.payload.sourceHash, contractData.sourceHash);
+    assert.equal(longContracts, guides.filter((guide) => section(guide.content, 'Contract').length > 900).length);
+    assert.ok(longContracts > 0, 'some resource contracts must exceed the tool clamp');
+    const cardsRules = wholeGuides.get('cards').payload.rules;
+    assert.equal(cardsRules.length, 16);
+    assert.ok(cardsRules.some((rule) => rule.startsWith('`expanding-card-close-is-button`:')));
+    const datepicker = (await read(`${base}/date-picker/options`)).payload.options;
+    assert.equal(datepicker.status, 'documented');
+    for (const option of ['openByDefault', 'container', 'displayPlugin', 'displayPluginOptions']) assert.ok(datepicker.markdown.includes(`\`${option}\``), option);
+    assert.deepEqual((await read(`${base}/cards/options`)).payload.options, { status: 'absent', markdown: null });
+    assert.deepEqual((await read(`${base}/cards`)).result, wholeGuides.get('cards').result, 'component resources are deterministic');
+
+    const wrongVersion = base.replace(`/${encodeURIComponent(contractData.frameworkVersion)}/`, '/99.0.0/');
+    for (const unknown of [
+      `${base}/datepicker`, `${base}/Cards`, `${base}/unknown-component`, `${wrongVersion}/cards`,
+      `${base.replace(contractData.sourceHash, '0'.repeat(64))}/cards`, `${base.replace(contractData.sourceHash, contractData.sourceHash.slice(0, 12))}/cards`,
+      `${base}/cards/unknown`, `${base}/cards/rules/extra`, `${base}//cards`, `${base}/cards/`, `${base}/cards//rules`, `${base}/%63ards`,
+      `${base}/cards?section=rules`, `${base}/cards#rules`, `${base}/../cards`, `${base}/..%2Fcards`, `${base}/cards/%72ules`,
+      base, `${base}/`, 'expressivecss://components/latest/cards', `file://${path.join(consumerRoots[0], 'package.json')}`, 'https://www.expressivecss.com/components/cards',
+    ]) {
+      await assert.rejects(peer.readResource({ uri: unknown }), (error) => error.code === -32002, unknown);
+      assert.equal(Object.hasOwn(wire(), 'result'), false);
+    }
+    await assert.rejects(peer.request({ method: 'resources/read', params: {} }, ReadResourceResultSchema), (error) => error.code === -32603);
+    assert.deepEqual((await read(`${base}/cards`)).result, wholeGuides.get('cards').result, 'failed reads do not affect later reads');
+  });
+
+  for (const cwd of consumerRoots) {
+    await withServer(undefined, async ({ read }) => {
+      assert.deepEqual((await read(`${base}/cards`)).result, wholeGuides.get('cards').result);
+      assert.deepEqual((await read(`${base}/date-picker/options`)).payload.options, wholeGuides.get('date-picker').payload.options);
+    }, { cwd, args: [`--project-root=${cwd}`] });
+  }
+  await withServer(undefined, async ({ peer, read }) => {
+    assert.deepEqual((await read(`${base}/cards`)).result, wholeGuides.get('cards').result);
+    assert.equal((await peer.callTool({ name: 'component_syntax_expert', arguments: { components: ['cards'] } })).structuredContent.skipped, true);
+    assert.equal((await read(`${base}/cards/rules`)).payload.rules.length, 16);
+  }, { env: { SKIP_SETUP_EXPERT: 'true', SKIP_CREATIVE_DIRECTOR: 'true', SKIP_PAGE_ARCHITECT: 'true', SKIP_COMPONENT_SYNTAX_EXPERT: 'true', SKIP_RULES_ENFORCER: 'true', SKIP_QUALITY_INSPECTOR: 'true' } });
+
+  // Whole-guide boundary: exact fit succeeds, one byte less lists every section that still fits.
+  const cardsUri = `${base}/cards`;
+  const cardsExact = exactFit(wholeGuides.get('cards').result);
+  await withServer(cardsExact, async ({ read }) => assert.equal(bytes((await read(cardsUri)).result), cardsExact));
+  await withServer(cardsExact - 1, async ({ read, budgetError }) => {
+    const data = await budgetError(cardsUri);
+    assert.equal(data.requiredBytes, cardsExact);
+    assert.deepEqual(data.recoveries, sectionNames.map((name) => `${cardsUri}/${name}`));
+    assert.deepEqual(data.unrecoverableSections, []);
+    for (const uri of data.recoveries) await read(uri);
+  });
+
+  // A budget between section sizes recovers the small sections and names the rest.
+  const sectionFits = new Map();
+  await withServer(undefined, async ({ read }) => {
+    for (const name of sectionNames) sectionFits.set(name, exactFit((await read(`${cardsUri}/${name}`)).result));
+  });
+  const middle = [...sectionFits.values()].sort((a, b) => a - b)[2];
+  const fitting = sectionNames.filter((name) => sectionFits.get(name) <= middle);
+  const unfitting = sectionNames.filter((name) => sectionFits.get(name) > middle);
+  assert.ok(fitting.length && unfitting.length, 'the Cards sections must straddle the chosen budget');
+  await withServer(middle, async ({ peer, read, budgetError }) => {
+    const data = await budgetError(cardsUri);
+    assert.equal(data.requiredBytes, cardsExact);
+    assert.deepEqual(data.recoveries, fitting.map((name) => `${cardsUri}/${name}`));
+    assert.deepEqual(data.unrecoverableSections, unfitting);
+    for (const uri of data.recoveries) await read(uri);
+    for (const name of unfitting) {
+      const sectionError = await budgetError(`${cardsUri}/${name}`);
+      assert.equal(sectionError.requiredBytes, sectionFits.get(name));
+      assert.deepEqual(sectionError.recoveries, []);
+      assert.deepEqual(sectionError.unrecoverableSections, [name]);
+    }
+    assertScopedResult(await peer.callTool({ name: 'rules_enforcer', arguments: { snippet: '<main></main>' } }), 'QA after failed component reads');
+    await read(data.recoveries[0]);
+  });
+  for (const name of unfitting) {
+    await withServer(sectionFits.get(name), async ({ read }) => assert.deepEqual((await read(`${cardsUri}/${name}`)).payload[name], wholeGuides.get('cards').payload[name]));
+  }
+
+  await withServer(1, async ({ peer, budgetError }) => {
+    assert.equal((await peer.listResources()).resources.length, guides.length + 1);
+    assert.equal((await peer.listResourceTemplates()).resourceTemplates.length, 2);
+    const whole = await budgetError(cardsUri);
+    assert.deepEqual(whole.recoveries, []);
+    assert.deepEqual(whole.unrecoverableSections, sectionNames);
+    const part = await budgetError(`${cardsUri}/rules`);
+    assert.deepEqual(part.recoveries, []);
+    const catalogue = await budgetError(catalogueUri);
+    assert.deepEqual(Object.keys(catalogue).sort(), ['maxBytes', 'requiredBytes', 'setting', 'uri'], 'catalogue budget errors keep their Phase 8 shape');
+  });
 }
 
 const outsideDir = await mkdtemp(path.join(os.tmpdir(), 'expressivecss-mcp-smoke-'));
@@ -832,6 +1064,7 @@ try {
   const matchingFiles = ['package.json', 'clean.html', 'node_modules/@expressivecss/expressive/package.json'];
   const beforeMatchingCatalogue = await Promise.all(matchingFiles.map((file) => readFile(path.join(matchingDir, file))));
   await verifyCatalogueResources(expectedCatalog, catalog.structuredContent, [matchingDir, versionedDir, staleSourceDir, unprovenSourceDir, tamperedGuideDir]);
+  await verifyComponentResources(catalog.structuredContent, [matchingDir, versionedDir, staleSourceDir, unprovenSourceDir, tamperedGuideDir]);
   for (const [projectRoot, compatibility, provenance] of [
     [matchingDir, 'match', 'bundled-verified'],
     [deniedCommandDir, 'match', 'bundled-verified'],
@@ -2178,7 +2411,7 @@ spawn(process.execPath, ['-e', "setTimeout(() => require('node:fs').writeFileSyn
     await skippedClient.close();
   }
 
-  console.log(`ExpressiveCSS MCP smoke test passed (${expectedTools.length} tools, catalogue resources, aggregate response budgets and recovery).`);
+  console.log(`ExpressiveCSS MCP smoke test passed (${expectedTools.length} tools, catalogue and component resources, aggregate response budgets and recovery).`);
 } finally {
   await client.close();
   await rm(outsideDir, { recursive: true, force: true });

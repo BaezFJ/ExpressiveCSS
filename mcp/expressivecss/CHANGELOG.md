@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Add versioned component guide resources for the current bundled snapshot.
+  The `component_guide` template returns a whole guide with its complete
+  contract, syntax, rules, Options and Methods. `component_guide_section`
+  returns one of those sections. `resources/list` lists every whole-guide URI.
+  Reads share the operator byte budget and deliver sections whole. A read that
+  cannot fit returns `-32001` with the section URIs that fit and the sections
+  that need a larger budget. Aliases, unknown names and unavailable snapshot
+  identities return `-32002`. Budget errors now name the URI that was read.
+
 - Add a read-only `component_catalog` resource for the current bundled snapshot,
   identified by framework version and contract source hash. JSON contents reuse
   the complete compact catalogue and retain unknown consumer compatibility.

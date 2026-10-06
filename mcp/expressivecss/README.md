@@ -87,8 +87,9 @@ The budget applies to `setup_expert`, `creative_director`, `page_architect`,
 `page_arcjitect`, `component_syntax_expert` and `component_catalog`, including
 disabled-tool and SDK validation-error results. `rules_enforcer` and
 `quality_inspector` retain their existing QA limits and evidence behavior.
-The [catalogue resource](#versioned-catalogue-resource) uses the same setting
-to bound successful resource-read results, with complete delivery or a protocol
+The [catalogue resource](#versioned-catalogue-resource) and
+[component resources](#versioned-component-resources) use the same setting to
+bound successful resource-read results, with complete delivery or a protocol
 error. Discovery lists are outside the content budget.
 
 The exact measurement is `Buffer.byteLength(JSON.stringify(result), 'utf8')`.
@@ -343,8 +344,8 @@ version is a URI-encoded path segment and the complete hash comes from the
 shipped contract. It identifies those contract sources; it is not a digest of
 the serialized resource text. Only the current shipped bundle is available.
 The URI's version and hash agree with `contractVersion` and `sourceHash` in JSON.
-There is no unversioned `latest` alias, historical lookup, search selector or
-component resource template. Resource reads require the exact advertised URI.
+There is no unversioned `latest` alias, historical lookup or search selector.
+Resource reads require the exact advertised URI.
 Unknown versions/hashes, query/fragment selectors and unrelated URIs return
 resource-not-found error `-32002`. Invalid request parameters fail through the
 SDK's request validation. The installed SDK 1.31.0 reports request-schema
@@ -396,6 +397,73 @@ Protocol errors are outside the successful-result budget, including budget 1.
 `resources/list`, `resources/templates/list` and `tools/list` are discovery
 operations outside this content budget; resource discovery remains available
 when a read cannot fit. Subscription support is not advertised.
+
+## Versioned component resources
+
+Component guides are available as resources of the same bundled snapshot. Two
+templates appear in `resources/templates/list`, both with MIME type
+`application/json`:
+
+| Template | URI |
+| --- | --- |
+| `component_guide` | `expressivecss://components/<framework-version>/<source-hash>/{slug}` |
+| `component_guide_section` | `expressivecss://components/<framework-version>/<source-hash>/{slug}/{section}` |
+
+The version and hash are fixed to the shipped contract, as in the catalogue
+URI. `resources/list` lists one whole-guide URI per bundled component, sorted by
+slug, after the catalogue. Section URIs are not listed. Build them from the
+template with a canonical slug and one of `contract`, `syntax`, `rules`,
+`options` or `methods`:
+
+```js
+const { resourceTemplates } = await client.listResourceTemplates();
+const section = resourceTemplates.find((template) => template.name === 'component_guide_section');
+const uri = section.uriTemplate.replace('{slug}', 'date-picker').replace('{section}', 'options');
+const options = JSON.parse((await client.readResource({ uri })).contents[0].text).options;
+```
+
+Every read returns one text item with JSON containing `schemaVersion: 1`,
+`slug`, `title`, `docs` (the documentation page, as in catalogue entries),
+`repositorySource` (the page source in the repository), `contractVersion`,
+`sourceHash` and `guideSource: "bundled"`. A whole-guide read adds all five
+sections. A section read adds `section` and only that section's field:
+
+- `contract` is the complete Contract text. The syntax tool shortens long
+  contracts to 900 characters; resources do not.
+- `syntax` is `{ language, example }`, the same as detailed syntax tool output.
+- `rules` is the complete ordered rule list returned by the syntax tool.
+- `options` and `methods` are `{ status, markdown }`. A guide without that
+  section returns `status: "absent"` and `markdown: null`.
+
+The JSON carries the same evidence fields as the catalogue resource.
+Compatibility is always `unknown`, and `coverageStatus` is
+`complete-bundled-guide` or `complete-bundled-guide-section`. Reads inspect no
+consumer files, ignore the working directory, CLI project-root default and tool
+skip flags, and execute no project scripts or components.
+
+Reads accept only the exact URIs the templates describe. Catalogue aliases such
+as `datepicker`, case variants, unknown slugs or sections, other versions or
+hashes, extra or empty segments, trailing slashes, percent-encoded variants and
+query or fragment selectors return `-32002`. Use `component_catalog` to resolve
+an alias to its canonical slug. Argument completion is not offered.
+
+### Component read budget and recovery
+
+Component reads use the [resource-read budget](#resource-read-budget-and-recovery)
+and its measurement. A successful read always delivers every requested section
+whole. If a read does not fit, the server returns `-32001` with no contents.
+The error data has `uri`, `maxBytes`, `requiredBytes`, `setting`,
+`recoveries` and `unrecoverableSections`:
+
+- For a whole-guide URI, `recoveries` lists the section URIs whose complete
+  reads fit the current budget, in section order. Read those on the same
+  connection. `unrecoverableSections` names the sections that do not fit.
+- For a section URI, `recoveries` is empty and `unrecoverableSections` names
+  that section. Its `requiredBytes` is the budget that section needs.
+
+Restart with `EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES` of at least `requiredBytes`
+to read a URI that cannot fit. The largest bundled guide fits the default
+budget, so section recovery matters only under a smaller operator budget.
 
 ## Run it locally
 

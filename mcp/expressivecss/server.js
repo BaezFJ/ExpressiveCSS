@@ -7,7 +7,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { JSDOM } from 'jsdom';
 import * as z from 'zod/v4';
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { McpError, ReadResourceRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { resolveExpressiveVersion } from './scripts/resolve-version.mjs';
@@ -2581,7 +2581,9 @@ async function qualityInspectorHandler(args) {
   return toToolResult(payload);
 }
 
-function resourceBudgetError(uri, result) {
+const COMPONENT_SECTIONS = ['contract', 'syntax', 'rules', 'options', 'methods'];
+
+function resourceRequiredBytes(result) {
   // A retry's budget field can need more decimal digits. Include those bytes too.
   const retry = structuredClone(result);
   const payload = JSON.parse(retry.contents[0].text);
@@ -2590,14 +2592,92 @@ function resourceBudgetError(uri, result) {
     payload.responseBudget.maxBytes = requiredBytes;
     retry.contents[0].text = JSON.stringify(payload);
     const measured = Buffer.byteLength(JSON.stringify(retry), 'utf8');
-    if (measured <= requiredBytes) break;
+    if (measured <= requiredBytes) return requiredBytes;
     requiredBytes = measured;
   }
+}
+
+function resourceBudgetError(uri, result, resources) {
+  const requiredBytes = resourceRequiredBytes(result);
+  const data = { uri, maxBytes: SETTINGS.maxResponseBytes, requiredBytes, setting: RESPONSE_BUDGET_SETTING };
+  if (!resources.sections.has(uri)) {
+    return {
+      code: -32001,
+      message: `Response budget cannot fit the complete catalogue resource. Increase ${RESPONSE_BUDGET_SETTING} to at least ${requiredBytes} and restart.`,
+      data,
+    };
+  }
+  // Recover a whole guide through the section URIs whose complete reads fit this budget.
+  const fits = (sectionUri) => Buffer.byteLength(JSON.stringify(resources.readers.get(sectionUri)()), 'utf8') <= SETTINGS.maxResponseBytes;
+  const sections = resources.sections.get(uri);
+  const recoveries = sections.length > 1 ? sections.filter(fits) : [];
   return {
     code: -32001,
-    message: `Response budget cannot fit the complete catalogue resource. Increase ${RESPONSE_BUDGET_SETTING} to at least ${requiredBytes} and restart.`,
-    data: { uri, maxBytes: SETTINGS.maxResponseBytes, requiredBytes, setting: RESPONSE_BUDGET_SETTING },
+    message: `Response budget cannot fit the complete component resource. Read the listed section URIs or increase ${RESPONSE_BUDGET_SETTING} to at least ${requiredBytes} and restart.`,
+    data: {
+      ...data,
+      recoveries,
+      unrecoverableSections: sections.filter((sectionUri) => !recoveries.includes(sectionUri)).map((sectionUri) => sectionUri.slice(sectionUri.lastIndexOf('/') + 1)),
+    },
   };
+}
+
+function bundledResources(catalog, catalogUri, catalogSnapshot) {
+  const base = catalogUri.replace('expressivecss://catalogue/', 'expressivecss://components/');
+  const jsonResource = (uri, payload) => () => ({
+    contents: [{
+      uri,
+      mimeType: 'application/json',
+      text: JSON.stringify({
+        ...payload,
+        responseBudget: { maxBytes: SETTINGS.maxResponseBytes, delivery: 'complete', omissions: [], recoveries: [] },
+      }),
+    }],
+  });
+  const readers = new Map([[catalogUri, jsonResource(catalogUri, { schemaVersion: 1, ...catalogSnapshot })]]);
+  // Whole-guide and section URIs map to the section URIs that can recover them.
+  const sections = new Map();
+  const guides = [];
+  const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
+  for (const guide of [...catalog.components.values()].sort((a, b) => a.slug.localeCompare(b.slug))) {
+    const uri = `${base}/${guide.slug}`;
+    const identity = {
+      schemaVersion: 1,
+      slug: guide.slug,
+      title: guide.title,
+      docs: guide.sourceUrl,
+      repositorySource: guide.astroSource,
+      contractVersion: catalog.frameworkVersion,
+      sourceHash: catalog.sourceHash,
+      guideSource: catalog.guideSource,
+    };
+    const fields = {
+      contract: guide.contract,
+      syntax: { language: guide.syntax.language, example: guide.syntax.code },
+      rules: guide.rules,
+      options: { status: guide.options ? 'documented' : 'absent', markdown: guide.options },
+      methods: { status: guide.methods ? 'documented' : 'absent', markdown: guide.methods },
+    };
+    const evidence = (coverageStatus) => ({
+      status: provenanceBlock ? 'blocked' : 'available',
+      checksPerformed: ['bundled component guide lookup'],
+      evidenceSources: [`${catalog.guideSource}:${guide.file}`, 'bundled:contract.json'],
+      uncheckedAreas: catalogSnapshot.uncheckedAreas,
+      contractCompatibility: 'unknown',
+      contractProvenance: catalog.provenance.status,
+      contractProvenanceDetails: catalog.provenance,
+      coverageStatus,
+      blockedChecks: provenanceBlock ? [provenanceBlock] : [],
+    });
+    readers.set(uri, jsonResource(uri, { ...identity, ...fields, ...evidence('complete-bundled-guide') }));
+    guides.push(guide);
+    sections.set(uri, COMPONENT_SECTIONS.map((name) => `${uri}/${name}`));
+    for (const name of COMPONENT_SECTIONS) {
+      readers.set(`${uri}/${name}`, jsonResource(`${uri}/${name}`, { ...identity, section: name, [name]: fields[name], ...evidence('complete-bundled-guide-section') }));
+      sections.set(`${uri}/${name}`, [`${uri}/${name}`]);
+    }
+  }
+  return { base, readers, sections, guides };
 }
 
 async function startServer() {
@@ -2672,28 +2752,34 @@ async function startServer() {
   const catalog = await loadGuideCatalog(undefined);
   const catalogUri = `expressivecss://catalogue/${encodeURIComponent(catalog.frameworkVersion)}/${catalog.sourceHash}`;
   const { stage, workflowId, ...snapshot } = buildCatalogPayload(catalog, null, { workflowId: 'catalogue-resource' });
-  const readCatalogResource = async () => ({
-    contents: [{
-      uri: catalogUri,
-      mimeType: 'application/json',
-      text: JSON.stringify({
-        schemaVersion: 1,
-        ...snapshot,
-        responseBudget: { maxBytes: SETTINGS.maxResponseBytes, delivery: 'complete', omissions: [], recoveries: [] },
-      }),
-    }],
-  });
+  const resources = bundledResources(catalog, catalogUri, snapshot);
+  const readResource = async (uri) => {
+    const reader = resources.readers.get(uri);
+    if (!reader) throw new McpError(-32002, 'Resource not found. Use resources/list or resources/templates/list to discover the current bundled snapshot.');
+    return reader();
+  };
   server.registerResource('component_catalog', catalogUri, {
     title: 'ExpressiveCSS component catalogue',
     description: 'Compact component metadata for the current bundled snapshot only. Consumer compatibility remains unchecked.',
     mimeType: 'application/json',
-  }, readCatalogResource);
-  // SDK v1 normalizes URLs and uses -32602 for missing resources. Require the
+  }, () => readResource(catalogUri));
+  server.registerResource('component_guide', new ResourceTemplate(`${resources.base}/{slug}`, {
+    list: async () => ({
+      resources: resources.guides.map((guide) => ({ uri: `${resources.base}/${guide.slug}`, name: guide.slug, title: `ExpressiveCSS ${guide.title} guide` })),
+    }),
+  }), {
+    title: 'ExpressiveCSS component guide',
+    description: 'Complete contract, syntax, rules, Options and Methods for one component in the current bundled snapshot only. Use a canonical slug; consumer compatibility remains unchecked.',
+    mimeType: 'application/json',
+  }, (uri) => readResource(uri.href));
+  server.registerResource('component_guide_section', new ResourceTemplate(`${resources.base}/{slug}/{section}`, { list: undefined }), {
+    title: 'ExpressiveCSS component guide section',
+    description: `One complete section of a component guide in the current bundled snapshot only. Sections: ${COMPONENT_SECTIONS.join(', ')}. Use a canonical slug; consumer compatibility remains unchecked.`,
+    mimeType: 'application/json',
+  }, (uri) => readResource(uri.href));
+  // SDK v1 normalizes URLs and uses -32602 for missing resources. Require an
   // advertised identity verbatim and return the resource-not-found protocol code.
-  server.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-    if (request.params.uri !== catalogUri) throw new McpError(-32002, 'Resource not found. Use resources/list to discover the current bundled snapshot.');
-    return readCatalogResource();
-  });
+  server.server.setRequestHandler(ReadResourceRequestSchema, async (request) => readResource(request.params.uri));
 
   const transport = new StdioServerTransport();
   // Check the wire result after SDK error handling too. SDK exceptions otherwise become
@@ -2706,7 +2792,7 @@ async function startServer() {
     transport.onmessage = (message, extra) => {
       if (Object.hasOwn(message, 'id')) {
         if (message.method === 'tools/call' && GUIDANCE_TOOLS.has(message.params?.name)) scopedRequests.set(message.id, 'tool');
-        if (message.method === 'resources/read') scopedRequests.set(message.id, 'resource');
+        if (message.method === 'resources/read') scopedRequests.set(message.id, { uri: message.params?.uri });
       }
       receive(message, extra);
     };
@@ -2717,7 +2803,7 @@ async function startServer() {
     scopedRequests.delete(message.id);
     if (kind && Object.hasOwn(message, 'result')
       && Buffer.byteLength(JSON.stringify(message.result), 'utf8') > SETTINGS.maxResponseBytes) {
-      const error = kind === 'resource' ? resourceBudgetError(catalogUri, message.result)
+      const error = kind.uri ? resourceBudgetError(kind.uri, message.result, resources)
         : { code: -32001, message: `Response budget cannot fit a truthful tool result. Increase ${RESPONSE_BUDGET_SETTING}.` };
       message = { jsonrpc: '2.0', id: message.id, error };
     }
