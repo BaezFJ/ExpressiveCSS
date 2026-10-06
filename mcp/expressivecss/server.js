@@ -18,6 +18,14 @@ const SERVER_VERSION = JSON.parse(readFileSync(path.join(SERVER_DIR, 'package.js
 const CAPABILITIES_BY_SLUG = new Map(CAPABILITY_ROADMAP.entries.map((entry) => [entry.slug, entry]));
 const COMPONENT_DECISIONS_BY_SLUG = new Map(COMPONENT_DECISIONS.components.map((entry) => [entry.slug, entry]));
 const DEFAULT_MAX_COMPONENT_RESPONSE_CHARS = 24_000;
+const GUIDANCE_TOOLS = new Set(['setup_expert', 'creative_director', 'page_architect', 'page_arcjitect', 'component_syntax_expert', 'component_catalog']);
+const RESPONSE_BUDGET_SETTING = 'EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES';
+function configuredResponseBudget(value = '65536') {
+  if (!/^\d+$/u.test(value) || !Number.isSafeInteger(Number(value)) || Number(value) < 1) {
+    throw new Error(`${RESPONSE_BUDGET_SETTING} must be a positive safe integer in decimal bytes.`);
+  }
+  return Number(value);
+}
 const DEFAULT_QA_MAX_FILES = 300;
 const DEFAULT_QA_MAX_MB = 2;
 const DEFAULT_QA_MAX_TOTAL_MB = 16;
@@ -64,6 +72,7 @@ function configuredScripts(value) {
 }
 
 const SETTINGS = {
+  maxResponseBytes: configuredResponseBudget(process.env[RESPONSE_BUDGET_SETTING]),
   maxComponentResponseChars: Number(process.env.EXPRESSIVECSS_MCP_MAX_COMPONENT_RESPONSE_CHARS || DEFAULT_MAX_COMPONENT_RESPONSE_CHARS),
   maxComponentSkips: Number(process.env.EXPRESSIVECSS_MCP_MAX_COMPONENT_SKIPS || 7),
   qaMaxFiles: Number(process.env.EXPRESSIVECSS_MCP_QA_MAX_FILES || DEFAULT_QA_MAX_FILES),
@@ -251,14 +260,37 @@ const qualityOutputSchema = stageOutputSchema.extend({
   status: z.enum(['pass', 'warn', 'blocked', 'needs_fix']),
   inspectionEvidence: inspectionEvidenceSchema.optional(), // Disabled tools return the shared blocked envelope.
 });
-const syntaxOutputSchema = stageOutputSchema.extend({
+const retryRequestSchema = z.discriminatedUnion('name', [
+  ['setup_expert', setupSchema], ['creative_director', creativeSchema],
+  ['page_architect', pageArchitectSchema], ['page_arcjitect', pageArchitectSchema],
+  ['component_syntax_expert', syntaxSchema], ['component_catalog', catalogSchema],
+].map(([name, schema]) => z.object({ name: z.literal(name), arguments: z.object(schema).strict() })));
+const responseBudgetSchema = z.object({
+  maxBytes: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+  delivery: z.enum(['complete', 'partial', 'error']),
+  omissions: z.array(z.object({
+    unit: z.enum(['field', 'component', 'foundation', 'entry', 'suggestion', 'architecture', 'request']),
+    index: z.number().int().nonnegative().optional(),
+    requested: z.string().optional(), slug: z.string().optional(),
+    field: z.enum(['contract', 'syntax', 'capability', 'options', 'methods']).optional(),
+    reason: z.literal('byte-budget'),
+    recovery: z.number().int().nonnegative(),
+  })),
+  recoveries: z.array(z.discriminatedUnion('action', [
+    z.object({ action: z.literal('retry'), request: retryRequestSchema }),
+    z.object({ action: z.literal('increase-budget'), configuration: z.literal(RESPONSE_BUDGET_SETTING) }),
+  ])),
+});
+const guidanceOutputSchema = stageOutputSchema.extend({ responseBudget: responseBudgetSchema });
+const syntaxOutputSchema = guidanceOutputSchema.extend({
   // Disabled tools return only the shared blocked envelope.
   detail: z.enum(['compact', 'detailed']).optional(),
   includeCapabilities: z.boolean().optional(),
   found: z.array(z.looseObject({
+    requestIndex: z.number().int().nonnegative(),
     omittedFields: z.array(z.object({
       field: z.enum(['contract', 'syntax', 'options', 'methods', 'capability']),
-      reason: z.enum(['compact-detail', 'not-requested']),
+      reason: z.enum(['compact-detail', 'not-requested', 'length-limit', 'byte-budget']),
     })),
   })).optional(),
 });
@@ -370,14 +402,114 @@ function clampText(input, maxChars) {
   return `${text.slice(0, Math.max(0, maxChars - 40))}…(truncated)`;
 }
 
-function toToolResult(payload) {
+function serializeToolResult(payload) {
   return {
     content: [{
       type: 'text',
-      text: JSON.stringify(payload, null, 2),
+      text: JSON.stringify(payload, null, GUIDANCE_TOOLS.has(payload.stage) ? undefined : 2),
     }],
     structuredContent: payload,
+    ...(payload.responseBudget?.delivery === 'error' ? { isError: true } : {}),
   };
+}
+
+function toToolResult(payload, args = {}, guidanceContext) {
+  const result = () => serializeToolResult(payload);
+  if (!GUIDANCE_TOOLS.has(payload.stage)) return result();
+  payload.responseBudget = { maxBytes: SETTINGS.maxResponseBytes, delivery: 'complete', omissions: [], recoveries: [] };
+  const fits = () => Buffer.byteLength(JSON.stringify(result()), 'utf8') <= SETTINGS.maxResponseBytes;
+  if (fits()) return result();
+
+  const original = structuredClone(payload);
+  const context = { workflowId: payload.workflowId, ...(args.projectRoot === undefined ? {} : { projectRoot: args.projectRoot }) };
+  const increase = { action: 'increase-budget', configuration: RESPONSE_BUDGET_SETTING };
+  const omit = (identity, recovery) => {
+    const budget = payload.responseBudget;
+    // Share recovery records, especially operator-increase advice, to bound their overhead.
+    const key = JSON.stringify(recovery);
+    let index = budget.recoveries.findIndex((entry) => JSON.stringify(entry) === key);
+    if (index < 0) index = budget.recoveries.push(recovery) - 1;
+    budget.omissions.push({ ...identity, reason: 'byte-budget', recovery: index });
+    budget.delivery = recovery.action === 'increase-budget' ? 'error' : budget.delivery === 'error' ? 'error' : 'partial';
+    payload.status = original.status === 'blocked' || budget.delivery === 'error' ? 'blocked' : 'partial';
+    payload.coverageStatus = budget.delivery === 'error' ? 'response-budget-error' : 'partial-response-budget';
+  };
+  const retry = (arguments_) => ({ action: 'retry', request: retryRequestSchema.parse({ name: payload.stage, arguments: {
+    // Catalogue retrieval has no workflow state. Preserve its explicit target without
+    // repeating an optional correlation ID for every individually recoverable entry.
+    ...(payload.stage === 'component_catalog' ? args.projectRoot === undefined ? {} : { projectRoot: args.projectRoot } : context),
+    ...arguments_,
+  } }) });
+  const recoveryResultFits = (candidate) => {
+    candidate.responseBudget = { maxBytes: SETTINGS.maxResponseBytes, delivery: 'complete', omissions: [], recoveries: [] };
+    return Buffer.byteLength(JSON.stringify(serializeToolResult(candidate)), 'utf8') <= SETTINGS.maxResponseBytes;
+  };
+
+  if (payload.stage === 'component_syntax_expert' && payload.found) {
+    const components = payload.found.map((entry, index) => ({ entry, index: entry.requestIndex ?? index }));
+    const syntaxRecovery = (entry, field) => {
+      const arguments_ = { components: [entry.slug], detail: field === 'contract' || field === 'syntax' ? 'detailed' : 'compact', includeCapabilities: field === 'capability', sections: ['options', 'methods'].includes(field) ? [field] : [] };
+      const recovery = retry(arguments_);
+      const candidate = buildSyntaxPayload(guidanceContext.catalog, guidanceContext.version, recovery.request.arguments);
+      return recoveryResultFits(candidate) ? recovery : increase;
+    };
+    for (const field of ['capability', 'contract', 'syntax', 'options', 'methods']) {
+      for (const { entry, index } of [...components].reverse()) {
+        if (!Object.hasOwn(entry, field)) continue;
+        const recovery = syntaxRecovery(original.found.find((row) => row.requestIndex === index) ?? entry, field);
+        delete entry[field];
+        entry.omittedFields = entry.omittedFields.filter((row) => row.field !== field);
+        entry.omittedFields.push({ field, reason: 'byte-budget' });
+        entry.omittedFields.sort((a, b) => ['contract', 'syntax', 'options', 'methods', 'capability'].indexOf(a.field) - ['contract', 'syntax', 'options', 'methods', 'capability'].indexOf(b.field));
+        omit({ unit: 'field', index, requested: args.components?.[index] ?? entry.slug, slug: entry.slug, field }, recovery);
+        if (fits()) return result();
+      }
+    }
+    while (payload.found.length) {
+      const entry = payload.found.pop();
+      const index = entry.requestIndex;
+      omit({ unit: 'component', index, requested: args.components?.[index] ?? entry.slug, slug: entry.slug }, syntaxRecovery(original.found.find((row) => row.requestIndex === index), undefined));
+      payload.foundCount = payload.found.length;
+      if (fits()) return result();
+    }
+    while (payload.foundations.length) {
+      const index = payload.foundations.length - 1;
+      const entry = payload.foundations.pop();
+      let recovery = retry({ components: [], foundations: [args.foundations[index]], detail: 'compact', includeCapabilities: false });
+      const candidate = buildSyntaxPayload(guidanceContext.catalog, guidanceContext.version, recovery.request.arguments);
+      if (!recoveryResultFits(candidate)) recovery = increase;
+      omit({ unit: 'foundation', index, requested: args.foundations[index], slug: entry.slug }, recovery);
+      if (fits()) return result();
+    }
+  } else if (payload.stage === 'component_catalog' || payload.stage === 'creative_director') {
+    const field = payload.stage === 'component_catalog' ? 'entries' : 'suggestions';
+    while (payload[field].length) {
+      const index = payload[field].length - 1;
+      const entry = payload[field].pop();
+      const goal = entry.selectionSource === 'native-pattern' ? 'Choose persistent nonblocking inline feedback.' : `Choose ${entry.slug} for this interface.`;
+      let recovery = field === 'entries' ? retry({ query: entry.slug, limit: 1 }) : retry({ goal, maxSuggestions: 1 });
+      const candidate = (field === 'entries' ? buildCatalogPayload : buildCreativePayload)(guidanceContext.catalog, guidanceContext.version, recovery.request.arguments);
+      if (candidate[field][0]?.slug !== entry.slug || !recoveryResultFits(candidate)) recovery = increase;
+      omit({ unit: field === 'entries' ? 'entry' : 'suggestion', ...(field === 'entries' ? {} : { index }), slug: entry.slug }, recovery);
+      payload.count = payload[field].length;
+      if (field === 'suggestions') { payload.omittedCount += 1; payload.truncated = true; }
+      if (fits()) return result();
+    }
+  } else if (payload.architecture) {
+    payload.architecture = null;
+    omit({ unit: 'architecture' }, increase);
+    if (fits()) return result();
+  }
+
+  // No guidance is delivered by this error. Preserve actual checks and compatibility evidence.
+  const essential = ['workflowId', 'stage', 'checksPerformed', 'evidenceSources', 'uncheckedAreas', 'blockedChecks', 'contractCompatibility', 'contractProvenance', 'contractProvenanceDetails', 'contractVersion', 'sourceHash', 'guideSource', 'capabilityEvidence', 'skipped'];
+  payload = Object.fromEntries(essential.filter((key) => Object.hasOwn(original, key)).map((key) => [key, original[key]]));
+  payload.status = 'blocked';
+  payload.coverageStatus = 'response-budget-error';
+  payload.message = 'No requested guidance was delivered. Increase the operator response budget and repeat the request.';
+  payload.responseBudget = { maxBytes: SETTINGS.maxResponseBytes, delivery: 'error', omissions: [{ unit: 'request', reason: 'byte-budget', recovery: 0 }], recoveries: [increase] };
+  // The final transport check converts this into a protocol error if even evidence cannot fit.
+  return result();
 }
 
 function buildStagePayload(tool, result, workflowId) {
@@ -454,10 +586,10 @@ function parseGuide(file, content) {
     file,
     slug,
     title,
-    contract: clampText(contract, 1_000),
+    contract,
     syntax: {
       language: syntaxLanguage,
-      code: clampText(syntaxCode, Math.max(1_200, Math.floor(SETTINGS.maxComponentResponseChars / 2))),
+      code: syntaxCode,
     },
     rules: rules.length ? rules : [
       'Follow the component contract in the full documentation before adding optional attributes.',
@@ -1332,7 +1464,7 @@ function summarizeGuide(guide, { sections, detail, includeCapabilities }) {
       contract: clampText(guide.contract, 900),
       syntax: {
         language: guide.syntax.language,
-        example: clampText(guide.syntax.code, 3_000),
+        example: guide.syntax.code,
       },
     } : {}),
     rules: guide.rules,
@@ -1342,7 +1474,8 @@ function summarizeGuide(guide, { sections, detail, includeCapabilities }) {
       ...(detail === 'compact' ? [{ field: 'contract', reason: 'compact-detail' }, { field: 'syntax', reason: 'compact-detail' }] : []),
       ...['options', 'methods'].filter((field) => !sections.includes(field)).map((field) => ({ field, reason: 'not-requested' })),
       ...(!includeCapabilities ? [{ field: 'capability', reason: 'not-requested' }] : []),
-    ],
+      ...(detail === 'detailed' && guide.contract.length > 900 ? [{ field: 'contract', reason: 'length-limit' }] : []),
+    ].sort((a, b) => ['contract', 'syntax', 'options', 'methods', 'capability'].indexOf(a.field) - ['contract', 'syntax', 'options', 'methods', 'capability'].indexOf(b.field)),
   };
 }
 
@@ -1867,7 +2000,7 @@ async function setupExpertHandler(args) {
     workflowId,
   );
 
-  return toToolResult(payload);
+  return toToolResult(payload, { ...parsed, projectRoot });
 }
 
 async function rulesEnforcerHandler(args) {
@@ -1999,10 +2132,14 @@ async function creativeDirectorHandler(args) {
   }
 
   const parsed = creativeSchemaParsed.parse(args);
-  const workflowId = parsed.workflowId || randomUUID();
   const projectRoot = resolveProjectRoot(parsed.projectRoot);
   const catalog = await loadGuideCatalog(projectRoot);
   const version = await resolveAgainstContract(projectRoot, catalog.frameworkVersion);
+  return toToolResult(buildCreativePayload(catalog, version, parsed), { ...parsed, projectRoot }, { catalog, version });
+}
+
+function buildCreativePayload(catalog, version, parsed) {
+  const workflowId = parsed.workflowId || randomUUID();
   const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
   const contractSafe = version.status === 'match' && !provenanceBlock;
 
@@ -2012,7 +2149,7 @@ async function creativeDirectorHandler(args) {
     : { suggestions: [], truncated: false, omittedCount: 0 };
   const { suggestions, truncated, omittedCount } = candidateResult;
 
-  const payload = buildStagePayload(
+  return buildStagePayload(
     'creative_director',
     {
       goal: parsed.goal,
@@ -2050,8 +2187,6 @@ async function creativeDirectorHandler(args) {
     },
     workflowId,
   );
-
-  return toToolResult(payload);
 }
 
 async function pageArchitectHandler(args, stage = 'page_architect') {
@@ -2125,7 +2260,7 @@ async function pageArchitectHandler(args, stage = 'page_architect') {
     workflowId,
   );
 
-  return toToolResult(payload);
+  return toToolResult(payload, { ...parsed, projectRoot });
 }
 
 async function componentSyntaxExpertHandler(args) {
@@ -2134,11 +2269,15 @@ async function componentSyntaxExpertHandler(args) {
   }
 
   const parsed = syntaxSchemaParsed.parse(args);
-  const includeCapabilities = parsed.includeCapabilities ?? parsed.detail === 'detailed';
-  const workflowId = parsed.workflowId || randomUUID();
   const projectRoot = resolveProjectRoot(parsed.projectRoot);
   const catalog = await loadGuideCatalog(projectRoot);
   const version = await resolveAgainstContract(projectRoot, catalog.frameworkVersion);
+  return toToolResult(buildSyntaxPayload(catalog, version, parsed), { ...parsed, projectRoot }, { catalog, version });
+}
+
+function buildSyntaxPayload(catalog, version, parsed) {
+  const includeCapabilities = parsed.includeCapabilities ?? parsed.detail === 'detailed';
+  const workflowId = parsed.workflowId || randomUUID();
   const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
 
   const capabilitySafe = version.status === 'match' && !provenanceBlock && CAPABILITY_ROADMAP.frameworkVersion === catalog.frameworkVersion;
@@ -2146,7 +2285,7 @@ async function componentSyntaxExpertHandler(args) {
   const found = [];
   const missing = [];
 
-  for (const component of requested) {
+  for (const [requestIndex, component] of requested.entries()) {
     const guide = findGuideByName(catalog, component, false);
     if (!guide) {
       const skipLimit = Math.min(Math.max(SETTINGS.maxComponentSkips, 1), 20);
@@ -2156,13 +2295,14 @@ async function componentSyntaxExpertHandler(args) {
       });
     } else {
       found.push({
+        requestIndex,
         ...summarizeGuide(guide, { ...parsed, includeCapabilities }),
         ...(includeCapabilities ? { capability: capabilitySafe ? CAPABILITIES_BY_SLUG.get(guide.slug) ?? null : null } : {}),
       });
     }
   }
 
-  const payload = buildStagePayload(
+  return buildStagePayload(
     'component_syntax_expert',
     {
       detail: parsed.detail,
@@ -2201,8 +2341,6 @@ async function componentSyntaxExpertHandler(args) {
     },
     workflowId,
   );
-
-  return toToolResult(payload);
 }
 
 async function componentCatalogHandler(args) {
@@ -2210,6 +2348,10 @@ async function componentCatalogHandler(args) {
   const projectRoot = parsed.projectRoot === undefined ? undefined : path.resolve(parsed.projectRoot);
   const catalog = await loadGuideCatalog(projectRoot);
   const version = projectRoot === undefined ? null : await resolveAgainstContract(projectRoot, catalog.frameworkVersion);
+  return toToolResult(buildCatalogPayload(catalog, version, parsed), parsed, { catalog, version });
+}
+
+function buildCatalogPayload(catalog, version, parsed) {
   const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
   let entries = [...catalog.components.values()].map((guide) => {
     const decision = COMPONENT_DECISIONS_BY_SLUG.get(guide.slug);
@@ -2244,7 +2386,7 @@ async function componentCatalogHandler(args) {
     search = { query: parsed.query, limit, totalMatches, omittedCount, truncated: omittedCount > 0 };
   }
 
-  return toToolResult(buildStagePayload('component_catalog', {
+  return buildStagePayload('component_catalog', {
     entries,
     count: entries.length,
     ...search,
@@ -2266,7 +2408,7 @@ async function componentCatalogHandler(args) {
       ...(version && version.status !== 'match' ? ['target-version contract checks'] : []),
       ...(provenanceBlock ? [provenanceBlock] : []),
     ],
-  }, parsed.workflowId));
+  }, parsed.workflowId);
 }
 
 async function qualityInspectorHandler(args) {
@@ -2452,9 +2594,9 @@ async function startServer() {
   );
 
   server.registerTool('setup_expert', {
-    description: TOOL_DESCRIPTIONS.setup_expert.description,
+    description: TOOL_DESCRIPTIONS.setup_expert.description + " Responses share the operator byte budget with explicit whole-unit omissions and recovery.",
     inputSchema: setupSchema,
-    outputSchema: stageOutputSchema,
+    outputSchema: guidanceOutputSchema,
     annotations: readAnnotations,
   }, setupExpertHandler);
 
@@ -2466,37 +2608,37 @@ async function startServer() {
   }, rulesEnforcerHandler);
 
   server.registerTool('creative_director', {
-    description: TOOL_DESCRIPTIONS.creative_director.description,
+    description: TOOL_DESCRIPTIONS.creative_director.description + " Responses share the operator byte budget with explicit whole-unit omissions and recovery.",
     inputSchema: creativeSchema,
-    outputSchema: stageOutputSchema,
+    outputSchema: guidanceOutputSchema,
     annotations: readAnnotations,
   }, creativeDirectorHandler);
 
   server.registerTool('page_architect', {
-    description: TOOL_DESCRIPTIONS.page_architect.description,
+    description: TOOL_DESCRIPTIONS.page_architect.description + " Responses share the operator byte budget with explicit whole-unit omissions and recovery.",
     inputSchema: pageArchitectSchema,
-    outputSchema: stageOutputSchema,
+    outputSchema: guidanceOutputSchema,
     annotations: readAnnotations,
   }, (args) => pageArchitectHandler(args, 'page_architect'));
 
   server.registerTool('page_arcjitect', {
-    description: TOOL_DESCRIPTIONS.page_arcjitect.description,
+    description: TOOL_DESCRIPTIONS.page_arcjitect.description + " Responses share the operator byte budget with explicit whole-unit omissions and recovery.",
     inputSchema: pageArchitectSchema,
-    outputSchema: stageOutputSchema,
+    outputSchema: guidanceOutputSchema,
     annotations: readAnnotations,
   }, (args) => pageArchitectHandler(args, 'page_arcjitect'));
 
   server.registerTool('component_syntax_expert', {
-    description: TOOL_DESCRIPTIONS.component_syntax_expert.description,
+    description: TOOL_DESCRIPTIONS.component_syntax_expert.description + " Responses share the operator byte budget with explicit whole-unit omissions and recovery.",
     inputSchema: syntaxSchema,
     outputSchema: syntaxOutputSchema,
     annotations: readAnnotations,
   }, componentSyntaxExpertHandler);
 
   server.registerTool('component_catalog', {
-    description: TOOL_DESCRIPTIONS.component_catalog.description,
+    description: TOOL_DESCRIPTIONS.component_catalog.description + " Responses share the operator byte budget with explicit whole-unit omissions and recovery.",
     inputSchema: catalogSchema,
-    outputSchema: stageOutputSchema,
+    outputSchema: guidanceOutputSchema,
     annotations: readAnnotations,
   }, componentCatalogHandler);
 
@@ -2508,6 +2650,28 @@ async function startServer() {
   }, qualityInspectorHandler);
 
   const transport = new StdioServerTransport();
+  // Check the wire result after SDK error handling too. SDK exceptions otherwise become
+  // unbounded isError results, including validation errors before our handlers run.
+  const scopedRequests = new Set();
+  const start = transport.start.bind(transport);
+  const send = transport.send.bind(transport);
+  transport.start = async () => {
+    const receive = transport.onmessage;
+    transport.onmessage = (message, extra) => {
+      if (message.method === 'tools/call' && Object.hasOwn(message, 'id') && GUIDANCE_TOOLS.has(message.params?.name)) scopedRequests.add(message.id);
+      receive(message, extra);
+    };
+    await start();
+  };
+  transport.send = async (message, options) => {
+    if (scopedRequests.delete(message.id) && Object.hasOwn(message, 'result')
+      && Buffer.byteLength(JSON.stringify(message.result), 'utf8') > SETTINGS.maxResponseBytes) {
+      message = { jsonrpc: '2.0', id: message.id, error: { code: -32001, message: `Response budget cannot fit a truthful tool result. Increase ${RESPONSE_BUDGET_SETTING}.` } };
+    }
+    await send(message, options);
+  };
+  const close = transport.close.bind(transport);
+  transport.close = async () => { try { await close(); } finally { scopedRequests.clear(); } };
   await server.connect(transport);
   console.error('ExpressiveCSS MCP server running on stdio transport.');
 }

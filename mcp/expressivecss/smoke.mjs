@@ -118,8 +118,223 @@ function assertSyntaxSelection(result, { detail = 'detailed', includeCapabilitie
       assert.equal(Object.hasOwn(entry, field), included, `${entry.slug}.${field}`);
       if (!included) expected.push({ field, reason: field === 'contract' || field === 'syntax' ? 'compact-detail' : 'not-requested' });
     }
+    const bundled = guideData.guides.find((guide) => guide.file === entry.file);
+    const contract = bundled?.content.split(/^#### Contract\r?$/mu)[1]?.split(/^#{1,4} /mu)[0].trim() ?? '';
+    if (detail === 'detailed' && contract.length > 900) expected.push({ field: 'contract', reason: 'length-limit' });
+    expected.sort((a, b) => ['contract', 'syntax', 'options', 'methods', 'capability'].indexOf(a.field) - ['contract', 'syntax', 'options', 'methods', 'capability'].indexOf(b.field));
     assert.deepEqual(entry.omittedFields, expected);
   }
+}
+
+async function verifyResponseBudgets(matchingDir, versionedDir) {
+  const setting = 'EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES';
+  const scoped = ['setup_expert', 'creative_director', 'page_architect', 'page_arcjitect', 'component_syntax_expert', 'component_catalog'];
+  const bytes = (result) => Buffer.byteLength(JSON.stringify(result), 'utf8');
+  const request = (name, arguments_ = {}) => ({ name, arguments: { workflowId: 'budget-test', ...arguments_ } });
+  async function withServer(budget, action, { dir = packageDir, env = {} } = {}) {
+    const environment = { ...process.env, ...env };
+    if (budget === undefined) delete environment[setting];
+    else environment[setting] = String(budget);
+    const connection = new StdioClientTransport({ command: process.execPath, args: [path.join(dir, 'server.js')], cwd: dir, stderr: 'pipe', env: environment });
+    const peer = new Client({ name: 'response-budget-check', version: '1' });
+    let wire;
+    const start = connection.start.bind(connection);
+    connection.start = async () => {
+      const receive = connection.onmessage;
+      connection.onmessage = (message, extra) => { if (message.result || message.error) wire = message; receive(message, extra); };
+      await start();
+    };
+    try {
+      await peer.connect(connection);
+      const listed = await peer.listTools();
+      const validators = new Map(listed.tools.map((tool) => [tool.name, new AjvJsonSchemaValidator().getValidator(tool.outputSchema)]));
+      const call = async (input) => {
+        const result = await peer.callTool(input);
+        assert.deepEqual(wire.result, result, 'measure the actual wire tool result');
+        if (scoped.includes(input.name)) {
+          assert.ok(bytes(wire.result) <= (budget ?? 65_536), `${input.name}: ${bytes(wire.result)} bytes exceed ${budget ?? 65_536}`);
+          if (result.structuredContent) {
+            assert.equal(validators.get(input.name)(result.structuredContent).valid, true, `${input.name} output schema`);
+            assert.deepEqual(JSON.parse(result.content[0].text), result.structuredContent);
+            const record = result.structuredContent.responseBudget;
+            assert.equal(record.maxBytes, budget ?? 65_536);
+            for (const omitted of record.omissions) assert.ok(record.recoveries[omitted.recovery]);
+          }
+        }
+        return result;
+      };
+      await action({ peer, call, validators, wire: () => wire });
+    } finally { try { await peer.close(); } finally { await connection.close(); } }
+  }
+  const knownRules = new Map(guideData.guides.map((guide) => [guide.file.replace(/\.md$/u, ''), [...(guide.content.split(/^#### Rules\r?$/mu)[1]?.split(/^#{1,4} /mu)[0] ?? '').matchAll(/^-\s+(.+)$/gmu)].map((match) => match[1])]));
+  const allRequests = [
+    request('setup_expert', { projectRoot: matchingDir }),
+    request('creative_director', { projectRoot: matchingDir, goal: 'Choose a button for the primary action.' }),
+    ...['page_architect', 'page_arcjitect'].map((name) => request(name, { projectRoot: matchingDir, pageGoal: 'Build a settings page.', components: ['app-bar', 'cards'] })),
+    request('component_syntax_expert', { projectRoot: matchingDir, components: ['cards'], sections: ['options', 'methods'] }),
+    request('component_catalog'),
+  ];
+  await withServer(undefined, async ({ call, validators }) => {
+    for (const input of allRequests) {
+      const result = await call(input);
+      assert.equal(result.structuredContent.responseBudget.delivery, 'complete');
+    }
+    const arguments_ = { projectRoot: matchingDir, components: guideData.guides.slice(0, 12).map((guide) => guide.file.replace(/\.md$/u, '')), sections: ['options', 'methods'], includeCapabilities: true };
+    const result = await call(request('component_syntax_expert', arguments_));
+    for (const entry of result.structuredContent.found ?? []) if (knownRules.get(entry.slug).length) assert.deepEqual(entry.rules, knownRules.get(entry.slug));
+    assert.notEqual(result.structuredContent.responseBudget.delivery, 'complete');
+    assert.deepEqual(await call(request('component_syntax_expert', arguments_)), result, 'budget reduction is deterministic');
+    for (const recovery of result.structuredContent.responseBudget.recoveries.filter((row) => row.action === 'retry')) {
+      const recovered = await call(recovery.request);
+      assert.notEqual(recovered.isError, true, JSON.stringify(recovery));
+      assert.equal(recovered.structuredContent.responseBudget.delivery, 'complete', JSON.stringify(recovery));
+    }
+    const validator = validators.get('component_syntax_expert');
+    for (const change of [
+      { maxBytes: -1 }, { delivery: 'success' },
+      { omissions: [{ unit: 'rule-fragment', reason: 'byte-budget', recovery: 0 }] },
+      { omissions: [{ unit: 'component', reason: 'byte-budget', index: -1, recovery: 0 }] },
+      { recoveries: [{ action: 'retry', request: { name: 'component_catalog', arguments: { query: 'cards', limit: 51 } } }] },
+      { recoveries: [{ action: 'retry', request: { name: 'quality_inspector', arguments: {} } }] },
+    ]) assert.equal(validator({ ...result.structuredContent, responseBudget: { ...result.structuredContent.responseBudget, ...change } }).valid, false);
+  });
+
+  const catalogRequest = request('component_catalog', { query: 'cards', limit: 1 });
+  let exact;
+  await withServer(1_048_576, async ({ call }) => {
+    const result = await call(catalogRequest);
+    exact = bytes(result);
+    for (let iteration = 0; iteration < 4; iteration += 1) {
+      result.structuredContent.responseBudget.maxBytes = exact;
+      result.content[0].text = JSON.stringify(result.structuredContent);
+      exact = bytes(result);
+    }
+  });
+  await withServer(exact, async ({ call }) => {
+    const result = await call(catalogRequest);
+    assert.equal(bytes(result), exact);
+    assert.equal(result.structuredContent.responseBudget.delivery, 'complete');
+  });
+  await withServer(exact - 1, async ({ call }) => {
+    const result = await call(catalogRequest);
+    assert.notEqual(result.structuredContent.responseBudget.delivery, 'complete');
+  });
+  await withServer(20_000, async ({ call }) => {
+    const listing = await call(request('component_catalog'));
+    assert.equal(listing.structuredContent.responseBudget.delivery, 'partial');
+    assert.equal(listing.structuredContent.count + listing.structuredContent.responseBudget.omissions.length, guideData.guides.length);
+    for (const recovery of listing.structuredContent.responseBudget.recoveries) {
+      assert.equal(recovery.action, 'retry');
+      const recovered = await call(recovery.request);
+      assert.equal(recovered.structuredContent.entries[0].slug, recovery.request.arguments.query);
+      assert.equal(recovered.structuredContent.responseBudget.delivery, 'complete');
+    }
+    const duplicate = await call(request('component_syntax_expert', { projectRoot: matchingDir, components: ['cards', 'cards', 'unknown-name', 'autocomplete'], sections: ['options', 'methods'] }));
+    assert.equal(duplicate.structuredContent.missing[0].requested, 'unknown-name');
+    for (const omitted of duplicate.structuredContent.responseBudget.omissions.filter((row) => row.slug === 'cards')) assert.ok([0, 1].includes(omitted.index));
+    const blocked = await call(request('component_syntax_expert', { projectRoot: versionedDir, components: ['cards', 'autocomplete'], sections: ['options', 'methods'] }));
+    assert.equal(blocked.structuredContent.contractCompatibility, 'mismatch');
+    assert.equal(blocked.structuredContent.status, 'blocked');
+    const foundations = await call(request('component_syntax_expert', { projectRoot: matchingDir, foundations: ['typography', 'shape', 'motion'] }));
+    for (const recovery of foundations.structuredContent.responseBudget.recoveries.filter((row) => row.action === 'retry')) await call(recovery.request);
+    for (const input of allRequests) await call(input);
+    for (const name of ['page_architect', 'page_arcjitect']) {
+      const result = await call(request(name, { projectRoot: matchingDir, pageGoal: '界🌍\\"'.repeat(2_000), components: ['app-bar', 'cards'] }));
+      assert.equal(result.isError, true);
+      assert.equal(result.structuredContent.responseBudget.delivery, 'error');
+      assert.equal(result.structuredContent.architecture ?? null, null);
+    }
+  });
+  await withServer(1, async ({ call, peer, wire }) => {
+    for (const input of [...allRequests, request('component_syntax_expert', { detail: 'bad' })]) {
+      await assert.rejects(peer.callTool(input), (error) => error.code === -32001 && error.message.includes(setting));
+      assert.equal(Object.hasOwn(wire(), 'result'), false);
+      assert.equal(wire().error.code, -32001);
+    }
+    const qa = await call(request('rules_enforcer', { projectRoot: matchingDir, snippet: '<main></main>' }));
+    assert.ok(bytes(qa) > 1);
+    assert.equal(Object.hasOwn(qa.structuredContent, 'responseBudget'), false);
+  });
+  await withServer(12_000, async ({ call }) => {
+    const components = Array(8).fill('cards');
+    const result = await call(request('component_syntax_expert', { projectRoot: matchingDir, components, detail: 'compact' }));
+    assert.equal(result.structuredContent.responseBudget.delivery, 'partial');
+    const omissions = result.structuredContent.responseBudget.omissions;
+    assert.ok(omissions.every((row) => row.unit === 'component' && row.requested === 'cards'));
+    assert.equal(new Set([...result.structuredContent.found.map((row) => row.requestIndex), ...omissions.map((row) => row.index)]).size, components.length);
+    for (const recovery of result.structuredContent.responseBudget.recoveries) {
+      assert.equal(recovery.action, 'retry');
+      const recovered = await call(recovery.request);
+      assert.deepEqual(recovered.structuredContent.found[0].rules, knownRules.get('cards'));
+      assert.equal(recovered.structuredContent.responseBudget.delivery, 'complete');
+    }
+  });
+  await withServer(12_000, async ({ call }) => {
+    const creative = await call(request('creative_director', { projectRoot: matchingDir, goal: 'Choose navigation, buttons, cards, and text fields for a form page.', maxSuggestions: 12 }));
+    assert.equal(creative.structuredContent.responseBudget.delivery, 'partial');
+    for (const omitted of creative.structuredContent.responseBudget.omissions) {
+      const recovery = creative.structuredContent.responseBudget.recoveries[omitted.recovery];
+      assert.equal(recovery.action, 'retry');
+      const recovered = await call(recovery.request);
+      assert.equal(recovered.structuredContent.suggestions[0].slug, omitted.slug);
+      assert.equal(recovered.structuredContent.responseBudget.delivery, 'complete');
+    }
+  });
+  await withServer(2_000, async ({ call, peer }) => {
+    for (const input of allRequests.slice(0, -1)) {
+      const result = await call({ ...input, arguments: { ...input.arguments, workflowId: 'x'.repeat(256) } });
+      assert.equal(result.structuredContent.responseBudget.delivery, 'complete');
+      assert.equal(result.structuredContent.skipped, true);
+      assert.equal(result.structuredContent.contractCompatibility, 'unknown');
+    }
+    await assert.rejects(peer.callTool(request('component_syntax_expert', { components: Array(400).fill(1) })), (error) => error.code === -32001);
+  }, { env: { SKIP_SETUP_EXPERT: 'true', SKIP_CREATIVE_DIRECTOR: 'true', SKIP_PAGE_ARCHITECT: 'true', SKIP_COMPONENT_SYNTAX_EXPERT: 'true' } });
+  await withServer(1, async ({ peer }) => {
+    await assert.rejects(peer.callTool(request('component_syntax_expert', { components: ['cards'] })), (error) => error.code === -32001);
+  }, { env: { SKIP_COMPONENT_SYNTAX_EXPERT: 'true' } });
+  for (const invalid of ['', '0', '-1', '+1', '1.5', 'NaN', 'Infinity', '1e4', ' 64', '9007199254740992']) {
+    const child = spawnSync(process.execPath, [path.join(packageDir, 'server.js')], { env: { ...process.env, [setting]: invalid }, encoding: 'utf8', timeout: 10_000 });
+    assert.notEqual(child.status, 0, `invalid budget ${JSON.stringify(invalid)}`);
+    assert.match(child.stderr, /must be a positive safe integer/u);
+  }
+
+  const fixtureDir = await mkdtemp(path.join(packageDir, '.budget-fixture-'));
+  try {
+    for (const file of ['server.js', 'package.json', 'component-decisions.json', 'capability-roadmap.json', 'contract.json', 'semantics-data.json']) await copyFile(path.join(packageDir, file), path.join(fixtureDir, file));
+    await mkdir(path.join(fixtureDir, 'scripts'));
+    await copyFile(path.join(packageDir, 'scripts', 'resolve-version.mjs'), path.join(fixtureDir, 'scripts', 'resolve-version.mjs'));
+    const code = 'const text = "界🌍\\\\\\\"";\n'.repeat(500).trim();
+    const markdown = '完整 Options 🌍 with an escaped \\" value.\n'.repeat(5_000).trim();
+    const rules = ['`whole-first`: Preserve this full record.', '`huge-rule`: ' + '界🌍'.repeat(20_000)];
+    await writeFile(path.join(fixtureDir, 'component-guides.json'), JSON.stringify({ ...guideData, guides: [
+      { file: 'code.md', content: '### Code\n#### Contract\n' + 'Summary. '.repeat(200) + '\n#### Rules\n- `whole`: Full rule.\n#### Syntax\n```js\n' + code + '\n```\n#### Options\n' + markdown },
+      { file: 'rules.md', content: '### Rules\n#### Rules\n' + rules.map((rule) => '- ' + rule).join('\n') },
+    ] }));
+    await withServer(65_536, async ({ call }) => {
+      const result = await call(request('component_syntax_expert', { projectRoot: matchingDir, components: ['code'], includeCapabilities: false }));
+      assert.equal(result.structuredContent.found[0].syntax.example, code, 'long Unicode code is whole');
+      assert.ok(result.structuredContent.found[0].omittedFields.some((row) => row.field === 'contract' && row.reason === 'length-limit'));
+      const giant = await call(request('component_syntax_expert', { projectRoot: matchingDir, components: ['code'], detail: 'compact', sections: ['options'] }));
+      assert.equal(giant.isError, true);
+      assert.ok(giant.structuredContent.responseBudget.omissions.some((row) => row.field === 'options'));
+      assert.ok(giant.structuredContent.responseBudget.recoveries.some((row) => row.action === 'increase-budget'));
+      const oversizedRules = await call(request('component_syntax_expert', { projectRoot: matchingDir, components: ['rules'], detail: 'compact' }));
+      assert.equal(oversizedRules.isError, true);
+      assert.equal(oversizedRules.structuredContent.found?.length ?? 0, 0);
+    }, { dir: fixtureDir });
+    await withServer(1_048_576, async ({ call }) => {
+      const recovered = await call(request('component_syntax_expert', { projectRoot: matchingDir, components: ['code'], detail: 'compact', sections: ['options'] }));
+      assert.equal(recovered.structuredContent.found[0].options.markdown, markdown);
+      const recoveredRules = await call(request('component_syntax_expert', { projectRoot: matchingDir, components: ['rules'], detail: 'compact' }));
+      assert.deepEqual(recoveredRules.structuredContent.found[0].rules, rules);
+    }, { dir: fixtureDir });
+    await withServer(15_000, async ({ call }) => {
+      const result = await call(request('component_syntax_expert', { projectRoot: matchingDir, components: ['code'], includeCapabilities: false }));
+      assert.equal(result.isError, true);
+      assert.equal(Object.hasOwn(result.structuredContent.found[0], 'syntax'), false);
+      assert.ok(result.structuredContent.responseBudget.omissions.some((row) => row.field === 'syntax'));
+    }, { dir: fixtureDir });
+  } finally { await rm(fixtureDir, { recursive: true, force: true }); }
 }
 
 const outsideDir = await mkdtemp(path.join(os.tmpdir(), 'expressivecss-mcp-smoke-'));
@@ -284,6 +499,9 @@ const transport = new StdioClientTransport({
     ...process.env,
     EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS: outsideDir,
     EXPRESSIVECSS_MCP_QA_MAX_TOTAL_MB: '1',
+    // Legacy completeness checks run with room for every requested section. Dedicated
+    // budget regressions below exercise the default and constrained responses.
+    EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES: '1048576',
     EXPRESSIVECSS_TEST_SECRET: 'must-not-reach-child',
   },
 });
@@ -335,6 +553,9 @@ try {
   assert.equal(client.getServerVersion()?.version, JSON.parse(await readFile(path.join(packageDir, 'package.json'), 'utf8')).version);
 
   const listed = await client.listTools();
+  for (const tool of listed.tools.filter((tool) => !['rules_enforcer', 'quality_inspector'].includes(tool.name))) {
+    assert.ok(tool.outputSchema.properties.responseBudget, `${tool.name} must advertise the aggregate response budget`);
+  }
   const expectedTools = [
     'component_catalog',
     'setup_expert',
@@ -364,7 +585,8 @@ try {
   assert.equal(syntaxTool.outputSchema.properties.includeCapabilities.type, 'boolean');
   const omissionSchema = syntaxTool.outputSchema.properties.found.items.properties.omittedFields.items;
   assert.deepEqual(omissionSchema.properties.field.enum, ['contract', 'syntax', 'options', 'methods', 'capability']);
-  assert.deepEqual(omissionSchema.properties.reason.enum, ['compact-detail', 'not-requested']);
+  assert.deepEqual(omissionSchema.properties.reason.enum, ['compact-detail', 'not-requested', 'length-limit', 'byte-budget']);
+  await verifyResponseBudgets(matchingDir, versionedDir);
 
   const expectedCatalog = guideData.guides.map(({ file, content }) => {
     const slug = file.replace(/\.md$/u, '');
@@ -1222,7 +1444,7 @@ try {
         ...searchFixtures,
       ],
     }));
-    const fixtureTransport = new StdioClientTransport({ command: process.execPath, args: [path.join(optionsFixtureDir, 'server.js')], cwd: optionsFixtureDir, stderr: 'pipe' });
+    const fixtureTransport = new StdioClientTransport({ command: process.execPath, args: [path.join(optionsFixtureDir, 'server.js')], cwd: optionsFixtureDir, stderr: 'pipe', env: { ...process.env, EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES: '1048576' } });
     await optionsFixtureClient.connect(fixtureTransport);
     const fixtureCatalog = await optionsFixtureClient.callTool({ name: 'component_catalog', arguments: {} });
     assert.equal(fixtureCatalog.structuredContent.count, fixtureGuides.guides.length);
@@ -1808,7 +2030,7 @@ spawn(process.execPath, ['-e', "setTimeout(() => require('node:fs').writeFileSyn
     await skippedClient.close();
   }
 
-  console.log(`ExpressiveCSS MCP smoke test passed (${expectedTools.length} tools).`);
+  console.log(`ExpressiveCSS MCP smoke test passed (${expectedTools.length} tools, aggregate response budgets and recovery).`);
 } finally {
   await client.close();
   await rm(outsideDir, { recursive: true, force: true });
