@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Fix `npx @expressivecss/mcp-server`, which failed with "could not determine
+  executable to run" from 0.2.0 onward because the package has two bins. A
+  `mcp-server` bin now starts the server, so the documented client config works.
+  The `expressivecss-mcp` bin is unchanged.
+
 ## 0.3.0 - 2026-10-06
 
 - Breaking: guidance tools now cap each result at 64 KiB of UTF-8 by
