@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
       applyTheme(item.getAttribute("data-theme"));
     });
 
-  const DEFAULT_SOURCE = "#006a79";
+  const DEFAULT_SOURCE = "#c6a0f6";
   const HEX = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;
 
   const normalizeHex = (value) => {
