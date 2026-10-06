@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**49 of 49 rows enforced; 0 remaining.**
+**50 of 50 rows enforced; 0 remaining.**
 
-45 of those rows are components - a part of the framework an author writes markup for.
+46 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 45 components declare conformance debt.**
+**3 of 46 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -482,6 +482,16 @@ Swept 0.8.0.
 | `menu-children-are-list-items` | forbid | `menu > :not(li):not(script):not(template)` | must not match |
 
 - **menu-children-are-list-items** - <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
+
+### message
+
+Added with the message component. The parts are divs on a CSS grid. A <header> or <footer> outside sectioning content is a banner or contentinfo landmark, so writing the parts as those elements would add two landmarks per message. Icon-only footer actions are already covered by icon-only-control-is-named.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `message-parts-are-not-landmarks` | forbid | `:is(header.message-header, footer.message-footer)` | must not match |
+
+- **message-parts-are-not-landmarks** - Write .message-header and .message-footer as <div>. Outside sectioning content a <header> is a banner landmark and a <footer> is contentinfo, so a conversation would fill the landmark menu with one of each per message.
 
 ### navbar
 

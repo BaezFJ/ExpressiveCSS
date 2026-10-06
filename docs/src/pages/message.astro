@@ -1,0 +1,290 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "avatar", label: "Avatar" },
+  { id: "group", label: "Group" },
+  { id: "header-footer", label: "Header and footer" },
+  { id: "actions", label: "Actions" },
+  { id: "attachments", label: "Attachments" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="message">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.message</code> lays out one message in a conversation. It
+          places an optional avatar, header and footer around a single
+          surface, usually a <code>.message-bubble</code>. Messages sit on the
+          start side; add <code>end</code> for the sender's own messages.
+        </p>
+        <p>
+          Every child that is not the avatar, header or footer is the surface,
+          so a message has one. To keep a bubble and an attachment together,
+          wrap them in a <code>&lt;div&gt;</code>, or use a
+          <a href="#group">group</a>. The parts are <code>&lt;div&gt;</code>
+          elements: a <code>&lt;header&gt;</code> or <code>&lt;footer&gt;</code>
+          outside sectioning content becomes a page landmark.
+        </p>
+        <div class="flex flex-column gap-4 mb-3" role="log" aria-label="Conversation with Oliver" style="max-width: 32rem;">
+          <div class="message end">
+            <p class="message-bubble">Deploying to prod real quick.</p>
+          </div>
+          <div class="message">
+            <p class="message-bubble">It's 4:55 PM. On a Friday.</p>
+          </div>
+        </div>
+<Code code={`
+<div role="log" aria-label="Conversation with Oliver">
+  <div class="message end">
+    <p class="message-bubble">Deploying to prod real quick.</p>
+  </div>
+  <div class="message">
+    <p class="message-bubble">It's 4:55 PM. On a Friday.</p>
+  </div>
+</div>
+`} />
+        <p>
+          <code>role="log"</code> on the conversation makes screen readers
+          announce messages appended to it. Leave it off a transcript that
+          does not change.
+        </p>
+  </Section>
+  <Section {...S.avatar}>
+        <p>
+          Put a <code>.message-avatar</code> first in the message. It anchors
+          to the bottom of the surface and stays clear of the footer. On an
+          <code>end</code> message it moves to the end. The avatar is an
+          <code>&lt;img&gt;</code>, or a <code>&lt;span&gt;</code> holding
+          initials or an icon. Give the image an empty <code>alt</code> when a
+          header already names the sender.
+        </p>
+        <div class="flex flex-column gap-4 mb-3" style="max-width: 32rem;">
+          <div class="message end">
+            <img class="message-avatar" src="https://picsum.photos/id/64/64/64" alt="You">
+            <p class="message-bubble">It's a one-line change.</p>
+          </div>
+          <div class="message">
+            <span class="message-avatar" role="img" aria-label="Oliver">OL</span>
+            <p class="message-bubble">Alright, let me take a look.</p>
+          </div>
+        </div>
+<Code code={`
+<div class="message end">
+  <img class="message-avatar" src="me.jpg" alt="You">
+  <p class="message-bubble">It's a one-line change.</p>
+</div>
+<div class="message">
+  <span class="message-avatar" role="img" aria-label="Oliver">OL</span>
+  <p class="message-bubble">Alright, let me take a look.</p>
+</div>
+`} />
+  </Section>
+  <Section {...S.group}>
+        <p>
+          A <code>.message-group</code> stacks consecutive messages from one
+          sender and joins their bubbles on the sender's side. Give the earlier
+          messages an empty <code>.message-avatar</code> so they line up with
+          the avatar on the last one.
+        </p>
+        <div class="message-group mb-3" style="max-width: 32rem;">
+          <div class="message">
+            <span class="message-avatar"></span>
+            <p class="message-bubble">I checked the registry addresses.</p>
+          </div>
+          <div class="message">
+            <span class="message-avatar" role="img" aria-label="Oliver">OL</span>
+            <p class="message-bubble">The component and example JSON now live under the UI registry.</p>
+          </div>
+        </div>
+<Code code={`
+<div class="message-group">
+  <div class="message">
+    <span class="message-avatar"></span>
+    <p class="message-bubble">I checked the registry addresses.</p>
+  </div>
+  <div class="message">
+    <span class="message-avatar" role="img" aria-label="Oliver">OL</span>
+    <p class="message-bubble">The component and example JSON now live under the UI registry.</p>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S["header-footer"]}>
+        <p>
+          A <code>.message-header</code> above the surface holds the sender's
+          name. A <code>.message-footer</code> below it holds metadata such as
+          delivery or read status. Both follow the message to its side.
+        </p>
+        <div class="flex flex-column gap-4 mb-3" style="max-width: 32rem;">
+          <div class="message">
+            <div class="message-header">Olivia</div>
+            <p class="message-bubble">I already checked the logs.</p>
+          </div>
+          <div class="message end">
+            <p class="message-bubble">Send the report to the team. Ping @shadcn if you need help.</p>
+            <div class="message-footer"><strong>Read</strong> Yesterday</div>
+          </div>
+        </div>
+<Code code={`
+<div class="message">
+  <div class="message-header">Olivia</div>
+  <p class="message-bubble">I already checked the logs.</p>
+</div>
+<div class="message end">
+  <p class="message-bubble">Send the report to the team. Ping @shadcn if you need help.</p>
+  <div class="message-footer"><strong>Read</strong> Yesterday</div>
+</div>
+`} />
+  </Section>
+  <Section {...S.actions}>
+        <p>
+          Message actions such as copy, feedback or retry go in the footer as
+          <a href={route('icon_buttons')}>icon buttons</a>. Each needs an
+          <code>aria-label</code>. On an <code>end</code> message the actions
+          stay on the end side.
+        </p>
+        <div class="flex flex-column gap-4 mb-3" style="max-width: 32rem;">
+          <div class="message">
+            <p class="message-bubble">The install failure is coming from the workspace package.</p>
+            <div class="message-footer">
+              <button class="icon-button xsmall" aria-label="Copy"><span class="material-symbols" aria-hidden="true">content_copy</span></button>
+              <button class="icon-button xsmall" aria-label="Good response"><span class="material-symbols" aria-hidden="true">thumb_up</span></button>
+              <button class="icon-button xsmall" aria-label="Bad response"><span class="material-symbols" aria-hidden="true">thumb_down</span></button>
+            </div>
+          </div>
+          <div class="message end">
+            <p class="message-bubble">Okay drop me a link. Taking a look…</p>
+            <div class="message-footer">
+              <span class="error-text">Failed to send</span>
+              <button class="icon-button xsmall" aria-label="Retry"><span class="material-symbols" aria-hidden="true">refresh</span></button>
+            </div>
+          </div>
+        </div>
+<Code code={`
+<div class="message">
+  <p class="message-bubble">The install failure is coming from the workspace package.</p>
+  <div class="message-footer">
+    <button class="icon-button xsmall" aria-label="Copy">
+      <span class="material-symbols" aria-hidden="true">content_copy</span>
+    </button>
+    <button class="icon-button xsmall" aria-label="Good response">
+      <span class="material-symbols" aria-hidden="true">thumb_up</span>
+    </button>
+  </div>
+</div>
+<div class="message end">
+  <p class="message-bubble">Okay drop me a link. Taking a look…</p>
+  <div class="message-footer">
+    <span class="error-text">Failed to send</span>
+    <button class="icon-button xsmall" aria-label="Retry">
+      <span class="material-symbols" aria-hidden="true">refresh</span>
+    </button>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S.attachments}>
+        <p>
+          An <code>outlined</code> bubble has no fill, for attachments and
+          other rich content. A bubble whose only child is an image or video
+          frames it with a thin inset. Send several items as a group.
+        </p>
+        <div class="flex flex-column gap-4 mb-3" style="max-width: 32rem;">
+          <div class="message-group">
+            <div class="message end">
+              <div class="message-bubble outlined">
+                <img src="https://picsum.photos/id/1048/160/160" alt="Office corridor with glass walls" width="80" height="80">
+              </div>
+            </div>
+            <div class="message end">
+              <p class="message-bubble">Here's the image. Can you add it to the PDF? Use it for the cover page.</p>
+            </div>
+          </div>
+          <div class="message-group">
+            <div class="message">
+              <p class="message-bubble">Done. Here's the PDF with the image added as the cover page.</p>
+            </div>
+            <div class="message">
+              <div class="message-bubble outlined flex align-center gap-3">
+                <span class="material-symbols" aria-hidden="true">description</span>
+                <div class="min-w-0">
+                  <div class="title-small truncate">sales-dashboard.pdf</div>
+                  <div class="body-small">PDF · 2.4 MB</div>
+                </div>
+                <a class="icon-button" href="#!" download aria-label="Download sales-dashboard.pdf"><span class="material-symbols" aria-hidden="true">download</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+<Code code={`
+<div class="message end">
+  <div class="message-bubble outlined">
+    <img src="office.jpg" alt="Office corridor with glass walls" width="80" height="80">
+  </div>
+</div>
+
+<div class="message">
+  <div class="message-bubble outlined flex align-center gap-3">
+    <span class="material-symbols" aria-hidden="true">description</span>
+    <div class="min-w-0">
+      <div class="title-small truncate">sales-dashboard.pdf</div>
+      <div class="body-small">PDF · 2.4 MB</div>
+    </div>
+    <a class="icon-button" href="sales-dashboard.pdf" download aria-label="Download sales-dashboard.pdf">
+      <span class="material-symbols" aria-hidden="true">download</span>
+    </a>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>
+          Override these on the <code>.message</code>, or on
+          <code>.message-group</code> for the group gap.
+        </p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-message-avatar-size</code></td>
+            <td>32px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-message-gap</code></td>
+            <td>8px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-message-surface-max-width</code></td>
+            <td>80%</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-message-bubble-shape</code></td>
+            <td>20px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-message-bubble-grouped-shape</code></td>
+            <td>4px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-message-bubble-container-color</code></td>
+            <td><code>--md-sys-color-surface-container-high</code>; <code>end</code>: <code>--md-sys-color-primary-container</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-message-bubble-color</code></td>
+            <td><code>--md-sys-color-on-surface</code>; <code>end</code>: <code>--md-sys-color-on-primary-container</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-message-group-gap</code></td>
+            <td>2px</td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

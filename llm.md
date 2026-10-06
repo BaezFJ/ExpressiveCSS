@@ -2532,6 +2532,95 @@ Wrap the row in an `<a>` or `<label>` to make the whole item the target. `aria-c
 
 ---
 
+## Message
+
+One message in a conversation, with an optional avatar, header and footer.
+
+A `.message` lays out one message. It places an optional `.message-avatar`, `.message-header` and `.message-footer` around a single surface, usually a `.message-bubble`. Every other child is the surface, so wrap several elements in one `<div>` to keep them together. Messages sit on the start side; add `end` for the sender's own messages, which also turns the bubble to `primary-container`. Write the parts as `<div>`: outside sectioning content a `<header>` is a banner landmark and a `<footer>` is contentinfo.
+
+The avatar is an `<img>`, or a `<span>` holding initials or an icon. It lines up with the bottom of the surface and stays clear of the footer. Give the image an empty `alt` when a header already names the sender. Put `role="log"` on a conversation that receives new messages so screen readers announce them. CSS only; there is no JavaScript.
+
+```html
+<div role="log" aria-label="Conversation with Oliver">
+  <div class="message end">
+    <p class="message-bubble">Deploying to prod real quick.</p>
+    <div class="message-footer">Delivered</div>
+  </div>
+  <div class="message">
+    <img class="message-avatar" src="oliver.jpg" alt="">
+    <div class="message-header">Oliver</div>
+    <p class="message-bubble">It's 4:55 PM. On a Friday.</p>
+  </div>
+</div>
+```
+
+### Groups
+
+`.message-group` stacks consecutive messages from one sender and joins their bubbles on the sender's side. Give the earlier messages an empty `.message-avatar` so they line up with the avatar on the last one.
+
+```html
+<div class="message-group">
+  <div class="message">
+    <span class="message-avatar"></span>
+    <p class="message-bubble">I checked the registry addresses.</p>
+  </div>
+  <div class="message">
+    <span class="message-avatar" role="img" aria-label="Oliver">OL</span>
+    <p class="message-bubble">The component and example JSON now live under the UI registry.</p>
+  </div>
+</div>
+```
+
+### Footer actions
+
+Copy, feedback and retry actions go in the footer as named icon buttons. On an `end` message they stay on the end side.
+
+```html
+<div class="message end">
+  <p class="message-bubble">Okay drop me a link.</p>
+  <div class="message-footer">
+    <span class="error-text">Failed to send</span>
+    <button class="icon-button xsmall" aria-label="Retry">
+      <span class="material-symbols" aria-hidden="true">refresh</span>
+    </button>
+  </div>
+</div>
+```
+
+### Attachments
+
+`.message-bubble.outlined` has no fill and an `outline-variant` border. A bubble whose only child is an image or video frames it with a 4px inset.
+
+```html
+<div class="message">
+  <div class="message-bubble outlined flex align-center gap-3">
+    <span class="material-symbols" aria-hidden="true">description</span>
+    <div class="min-w-0">
+      <div class="title-small truncate">sales-dashboard.pdf</div>
+      <div class="body-small">PDF · 2.4 MB</div>
+    </div>
+    <a class="icon-button" href="sales-dashboard.pdf" download aria-label="Download sales-dashboard.pdf">
+      <span class="material-symbols" aria-hidden="true">download</span>
+    </a>
+  </div>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-message-avatar-size` | 32px |
+| `--md-comp-message-gap` | 8px |
+| `--md-comp-message-surface-max-width` | 80% |
+| `--md-comp-message-bubble-shape` | 20px |
+| `--md-comp-message-bubble-grouped-shape` | 4px |
+| `--md-comp-message-bubble-container-color` | `surface-container-high`; `end`: `primary-container` |
+| `--md-comp-message-bubble-color` | `on-surface`; `end`: `on-primary-container` |
+| `--md-comp-message-group-gap` | 2px (on `.message-group`) |
+
+---
+
 ## Floating Action Button
 
 Use a standalone FAB for the primary action or a FAB menu for related labelled actions.

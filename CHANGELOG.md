@@ -5,6 +5,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Message component: `.message` lays out one message in a conversation with an
+  optional `.message-avatar`, `.message-header` and `.message-footer` around a
+  `.message-bubble`. `end` moves a message to the sender's side,
+  `.message-group` stacks consecutive messages and joins their corners, and
+  `.message-bubble.outlined` holds attachments. CSS only.
+
 ## [0.12.0] - 2026-10-01
 
 ### Added

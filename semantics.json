@@ -847,6 +847,19 @@
         }
       ]
     },
+    "message": {
+      "status": "enforced",
+      "note": "Added with the message component. The parts are divs on a CSS grid. A <header> or <footer> outside sectioning content is a banner or contentinfo landmark, so writing the parts as those elements would add two landmarks per message. Icon-only footer actions are already covered by icon-only-control-is-named.",
+      "rules": [
+        {
+          "id": "message-parts-are-not-landmarks",
+          "kind": "forbid",
+          "selector": ":is(header.message-header, footer.message-footer)",
+          "fragmentSafe": true,
+          "message": "Write .message-header and .message-footer as <div>. Outside sectioning content a <header> is a banner landmark and a <footer> is contentinfo, so a conversation would fill the landmark menu with one of each per message."
+        }
+      ]
+    },
     "navbar": {
       "status": "enforced",
       "note": "Swept 0.8.0. The bar is <header> whose child is <nav>; the landmark rules carry it.",

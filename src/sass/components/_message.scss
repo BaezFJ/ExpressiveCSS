@@ -1,0 +1,202 @@
+@use "../abstracts" as *;
+
+// Message. One message in a conversation: an optional avatar, header and
+// footer around a single surface. The surface is every other child, normally
+// one .message-bubble; wrap several elements in a <div> to keep them on one
+// surface. `.end` moves the row to the sender's side.
+//
+// The parts are divs, not <header>/<footer>: outside sectioning content those
+// elements become banner and contentinfo landmarks, one per message.
+//
+// The grid puts the avatar in the surface row, so it lines up with the bottom
+// of the bubble and a footer below never pushes it down.
+//
+// Tokens:
+//   --md-comp-message-avatar-size              32px
+//   --md-comp-message-gap                      8px (avatar to surface)
+//   --md-comp-message-surface-max-width        80%
+//   --md-comp-message-bubble-shape             20px
+//   --md-comp-message-bubble-grouped-shape     4px (joined corners in a group)
+//   --md-comp-message-bubble-container-color   surface-container-high / end: primary-container
+//   --md-comp-message-bubble-color             on-surface / end: on-primary-container
+//   --md-comp-message-group-gap                2px
+
+.message {
+  --md-comp-message-avatar-size: 32px;
+  --md-comp-message-gap: 8px;
+  --md-comp-message-surface-max-width: 80%;
+  --md-comp-message-bubble-shape: 20px;
+  --md-comp-message-bubble-grouped-shape: 4px;
+  --md-comp-message-bubble-container-color: var(--md-sys-color-surface-container-high);
+  --md-comp-message-bubble-color: var(--md-sys-color-on-surface);
+
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    ". header"
+    "avatar surface"
+    ". footer";
+  align-items: end;
+  justify-items: start;
+  color: var(--md-sys-color-on-surface);
+
+  > .message-avatar {
+    grid-area: avatar;
+    margin-inline-end: var(--md-comp-message-gap);
+  }
+
+  > .message-header {
+    grid-area: header;
+  }
+
+  > .message-footer {
+    grid-area: footer;
+  }
+
+  > :not(.message-avatar, .message-header, .message-footer) {
+    grid-area: surface;
+    min-width: 0;
+    max-width: var(--md-comp-message-surface-max-width);
+  }
+
+  &.end {
+    --md-comp-message-bubble-container-color: var(--md-sys-color-primary-container);
+    --md-comp-message-bubble-color: var(--md-sys-color-on-primary-container);
+
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "header ."
+      "surface avatar"
+      "footer .";
+    justify-items: end;
+
+    > .message-avatar {
+      margin-inline: var(--md-comp-message-gap) 0;
+    }
+  }
+}
+
+// An <img>, or a box holding initials, an icon or an <img>. An empty one is a
+// spacer that keeps earlier messages in a group in line with the last.
+.message-avatar {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--md-comp-message-avatar-size);
+  height: var(--md-comp-message-avatar-size);
+  border-radius: 50%;
+  overflow: hidden;
+  object-fit: cover;
+  @include typescale("label-medium");
+
+  &:not(img):not(:empty) {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+
+  > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  > #{$icon} {
+    font-size: 20px;
+  }
+}
+
+.message-header,
+.message-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding-inline: 12px;
+  color: var(--md-sys-color-on-surface-variant);
+  @include typescale("label-medium");
+}
+
+.message-header {
+  margin-block-end: 4px;
+}
+
+.message-footer {
+  margin-block-start: 4px;
+
+  // Icon buttons carry their own inset; drop the text inset so the first
+  // icon sits under the bubble edge rather than past it.
+  &:has(> .icon-button:first-child) {
+    padding-inline: 0;
+  }
+}
+
+.message-bubble {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: var(--md-comp-message-bubble-shape);
+  background-color: var(--md-comp-message-bubble-container-color);
+  color: var(--md-comp-message-bubble-color);
+  overflow-wrap: anywhere;
+  @include typescale("body-large");
+
+  > * {
+    margin-block: 0;
+  }
+
+  > * + * {
+    margin-block-start: 8px;
+  }
+
+  // Attachments and rich content: no fill, an outline-variant border.
+  &.outlined {
+    --md-comp-message-bubble-container-color: transparent;
+    --md-comp-message-bubble-color: var(--md-sys-color-on-surface);
+
+    border: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  // A bubble holding only an image or video frames it with a thin inset.
+  &:has(> :is(img, video, picture):only-child) {
+    padding: 4px;
+  }
+
+  > :is(img, video),
+  > picture > img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: calc(var(--md-comp-message-bubble-shape) - 4px);
+  }
+}
+
+// Consecutive messages from one sender. The bubbles join on the sender's
+// side: inner corners shrink to the grouped shape.
+.message-group {
+  --md-comp-message-group-gap: 2px;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--md-comp-message-group-gap);
+
+  > .message:not(.end) {
+    &:not(:first-child) .message-bubble {
+      border-start-start-radius: var(--md-comp-message-bubble-grouped-shape);
+    }
+
+    &:not(:last-child) .message-bubble {
+      border-end-start-radius: var(--md-comp-message-bubble-grouped-shape);
+    }
+  }
+
+  > .message.end {
+    &:not(:first-child) .message-bubble {
+      border-start-end-radius: var(--md-comp-message-bubble-grouped-shape);
+    }
+
+    &:not(:last-child) .message-bubble {
+      border-end-end-radius: var(--md-comp-message-bubble-grouped-shape);
+    }
+  }
+}

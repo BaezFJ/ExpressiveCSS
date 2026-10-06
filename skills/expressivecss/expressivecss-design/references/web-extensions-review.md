@@ -59,3 +59,17 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: A scoped TOC current link is checked; shared observer behavior with different offsets and multiple independent TOCs remains unverified. Next check: Use getActiveElement to select the correct TOC; test independent offsets and teardown before claiming multi-TOC support.
 
 Mapped browser scope: Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+
+## [Message](../../components/message.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Identify each sender, keep reading order equal to conversation order, name icon-only message actions and announce appended messages through a log region.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework lays out the parts; the page owns the log region, sender names and message actions.
+
+Verification gap: Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified. Next check: Append messages to a role="log" conversation and inspect assistive-technology output; test enlarged text and RTL.
+
+Mapped browser scope: Avatar level with the bubble bottom and above the footer, start/end edges in LTR and RTL, no gap without an avatar, grouped corner radii and no message landmarks. No spoken-output assertion.
