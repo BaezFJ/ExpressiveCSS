@@ -1,0 +1,91 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "usage", label: "Usage" },
+  { id: "horizontal", label: "Horizontal scrolling" },
+  { id: "styling", label: "Custom styling" },
+]);
+const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}`);
+---
+<DocsLayout page="scroll-area">
+<PageBody sections={S}>
+  <Section {...S.usage}>
+    <p>Add <code>.scroll-area</code> to a container with a bounded height or width.
+      It applies <code>overflow: auto</code>, a thin scrollbar, and theme-aware colors.
+      Wheel, touch, keyboard, and scrollbar dragging remain native. No JavaScript initialization is needed.</p>
+    <div class="tags-demo scroll-area p-4" tabindex="0" role="region" aria-labelledby="tags-title">
+      <h2 id="tags-title" class="title-small mt-0 mb-2">Tags</h2>
+      <ul class="tag-list">
+        {tags.map(tag => <li class="py-2">{tag}</li>)}
+      </ul>
+    </div>
+    <Code code={`<div class="scroll-area p-4" style="width: 12rem; height: 18rem"
+  tabindex="0" role="region" aria-labelledby="release-tags-title">
+  <h2 id="release-tags-title" class="title-small mt-0">Tags</h2>
+  <ul>
+    <li>v1.2.0-beta.50</li>
+    <li>v1.2.0-beta.49</li>
+    <!-- More tags -->
+  </ul>
+</div>`} />
+    <p>Give a generic scroll region <code>tabindex="0"</code> and an accessible name
+      so keyboard users can focus and scroll it. Keep padding for child focus rings.
+      In a flex or grid layout, add <code>min-h-0</code> or <code>min-w-0</code>
+      when the scroll container needs to shrink.</p>
+  </Section>
+  <Section {...S.horizontal}>
+    <p>The same class scrolls horizontally when content exceeds the container's width.</p>
+    <div class="scroll-area p-2" style="max-width: 24rem" tabindex="0" role="region" aria-label="Release channels">
+      <div class="inline-flex gap-3 text-nowrap">
+        {['Stable releases', 'Beta releases', 'Nightly builds', 'Archived releases'].map(label => <span class="surface-container p-4">{label}</span>)}
+      </div>
+    </div>
+    <Code code={`<div class="scroll-area p-2" style="max-width: 24rem"
+  tabindex="0" role="region" aria-label="Release channels">
+  <div class="inline-flex gap-3 text-nowrap">
+    <span class="surface-container p-4">Stable releases</span>
+    <span class="surface-container p-4">Beta releases</span>
+    <span class="surface-container p-4">Nightly builds</span>
+    <span class="surface-container p-4">Archived releases</span>
+  </div>
+</div>`} />
+  </Section>
+  <Section {...S.styling}>
+    <p>Set these properties on the scroll container or an ancestor.</p>
+    <table>
+      <thead><tr><th>Property</th><th>Default</th></tr></thead>
+      <tbody>
+        <tr><td><code>--scroll-area-thumb-color</code></td><td><code>var(--md-sys-color-on-surface-variant)</code></td></tr>
+        <tr><td><code>--scroll-area-track-color</code></td><td><code>transparent</code></td></tr>
+      </tbody>
+    </table>
+    <Code code={`.release-tags {
+  --scroll-area-thumb-color: var(--md-sys-color-primary);
+  --scroll-area-track-color: var(--md-sys-color-surface-container);
+}`} />
+    <p>Use colors with enough contrast against the track and container.
+      <a href="https://www.w3.org/TR/css-scrollbars-1/">Native scrollbar styling</a>
+      follows the browser and operating system, so shape, exact width, and automatic
+      hiding can differ. Older WebKit engines use rounded 8px scrollbars.
+      Forced-colors mode restores system colors and the default width.</p>
+    <p>For a selective Sass build, include <code>"scroll-area"</code> in <code>$utilities</code>.</p>
+  </Section>
+</PageBody>
+</DocsLayout>
+
+<style>
+  .tags-demo {
+    width: 12rem;
+    max-width: 100%;
+    height: 18rem;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 8px;
+  }
+  .tag-list { list-style: none; margin: 0; padding: 0; }
+  .tag-list > li + li { border-top: 1px solid var(--md-sys-color-outline-variant); }
+</style>
