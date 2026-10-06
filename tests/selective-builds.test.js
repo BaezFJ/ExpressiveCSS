@@ -68,6 +68,14 @@ test('default custom Sass matches the complete stylesheet and preserves configur
   const fonts = compileString('@use "custom" with ($components: (), $utilities: (), $expressive-font-path: "/assets/fonts");', options).css;
   assert.match(fonts, /url\("?\/assets\/fonts\/material-symbols-outlined.woff2/);
   assert.throws(() => compileString('@use "custom" with ($components: ("missing-component",));', options), /Can't find stylesheet/);
+  assert.match(full, /@container style\(--expressive-glass: ?true\)/);
+  assert.doesNotMatch(full, /not style\(--expressive-glass/);
+  const glass = compileString('@use "custom" with ($components: ("menu"), $utilities: (), $expressive-include-fonts: false, $expressive-glass: true, $expressive-glass-blur: 24px);', options).css;
+  assert.match(glass, /@container not style\(--expressive-glass: ?false\)/);
+  assert.match(glass, /backdrop-filter:blur\(var\(--expressive-glass-blur, ?24px\)\)/);
+  assert.match(glass, /color-mix\(in oklab, ?var\(--md-comp-menu-container-color\) var\(--expressive-glass-opacity, ?72%\), ?transparent\)/);
+  assert.match(glass, /@media ?\(prefers-reduced-transparency: ?reduce\), ?\(prefers-contrast: ?more\)/);
+  assert.throws(() => compileString('@use "custom" with ($components: ("menu"), $utilities: (), $expressive-glass: true, $expressive-glass-opacity: 0.7);', options), /must be a percentage/);
 });
 
 test('complete minified artifacts stay within the reviewed gzip budgets', () => {

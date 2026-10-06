@@ -41,6 +41,7 @@
   overflow-wrap: anywhere;
   pointer-events: auto;
   z-index: 2000;
+  @include glass(var(--md-comp-plain-tooltip-container-color));
 }
 
 // CSS-only: a child of the activator. Default sits above (M3 preferred).
@@ -137,6 +138,7 @@ body > .tooltip {
   white-space: normal;
   pointer-events: auto;
   @include z-depth("2");
+  @include glass(var(--md-comp-rich-tooltip-container-color));
 
   > :is(h1, h2, h3, h4, h5, h6) {
     margin: 0;

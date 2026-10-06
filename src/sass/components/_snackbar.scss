@@ -99,6 +99,7 @@ $_bar: ".snackbar";
   @include typescale("body-medium");
   @include z-depth("3");
   cursor: default;
+  @include glass(var(--md-comp-snackbar-container-color));
 
   @include bp-up("medium") {
     width: max-content;

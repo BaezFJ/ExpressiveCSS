@@ -194,6 +194,7 @@ $_bar: ":is(.search-bar, .searchbar)";
   background-color: var(--md-comp-search-view-container-color);
   color: var(--md-sys-color-on-surface);
   @include z-depth("3");
+  @include glass(var(--md-comp-search-view-container-color));
 
   // Two ways this surface is closed, and an author `display` beats both of the
   // UA rules that do the hiding - `[hidden] { display: none }` for the docked

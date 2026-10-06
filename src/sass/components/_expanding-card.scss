@@ -43,6 +43,9 @@ dialog.expanding-card-dialog {
   overflow-y: auto;
   overscroll-behavior: contain;
   background-color: var(--md-comp-expanding-card-container-color);
+  // Opaque, so the frost inherited from `dialog` would only cost a blur on
+  // every frame of the morph.
+  backdrop-filter: none;
   color: var(--md-sys-color-on-surface);
   border: 0;
   border-radius: var(--md-comp-expanding-card-expanded-shape);

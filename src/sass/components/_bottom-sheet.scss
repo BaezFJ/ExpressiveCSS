@@ -53,6 +53,7 @@ dialog.bottom-sheet {
   @include z-depth("1");
   translate: 0 var(--md-comp-bottom-sheet-shift);
   transition: translate 280ms ease;
+  @include glass(var(--md-comp-bottom-sheet-container-color));
 
   // Non-modal `show()` is not in the top layer — sit above page content
   // and below snackbars (z-index 10000).

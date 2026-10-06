@@ -72,6 +72,17 @@ $font-stack: var(--md-ref-typeface-plain), var(--md-ref-typeface-fallback) !defa
 // loads these families from elsewhere).
 $expressive-font-path: "../fonts" !default;
 $expressive-include-fonts: true !default;
+
+// Frosted glass for floating surfaces (menus, tooltips, dialogs, sheets, the
+// snackbar, navigation bar and rail, toolbars, the search view). Off by default.
+// `--expressive-glass: true | false` on :root or a wrapper overrides this at
+// runtime. The blur is the frost thickness; the opacity is the share of the
+// surface color kept, so 100% is solid. Both are read through
+// --expressive-glass-blur and --expressive-glass-opacity fallbacks, so a page
+// or subtree can retune them too.
+$expressive-glass: false !default;
+$expressive-glass-blur: 16px !default;
+$expressive-glass-opacity: 72% !default;
 $text-color: var(--md-sys-color-on-background) !default;
 
 // Modern browsers default to 16px. M3's web conversion is SP_SIZE / 16 = rem;

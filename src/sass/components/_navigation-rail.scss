@@ -57,6 +57,7 @@
   transition: width var(--md-comp-nav-rail-duration) ease,
     min-width var(--md-comp-nav-rail-duration) ease,
     padding var(--md-comp-nav-rail-duration) ease;
+  @include glass(var(--md-sys-color-surface-container));
 
   // Menu toggle.
   > button:not(.button, .icon-button):first-child {
@@ -282,6 +283,11 @@
     z-index: 998;
     @include z-depth("1");
 
+    // A blurred rail would become the containing block of the fixed scrim
+    // below and clip it to the rail, so a modal rail stays solid.
+    background-color: var(--md-sys-color-surface-container);
+    backdrop-filter: none;
+
     &::before {
       content: "";
       position: fixed;
@@ -297,6 +303,9 @@
       inset: 0 auto 0 0;
       z-index: 998;
       @include z-depth("1");
+
+      background-color: var(--md-sys-color-surface-container);
+      backdrop-filter: none;
 
       &::before {
         content: "";

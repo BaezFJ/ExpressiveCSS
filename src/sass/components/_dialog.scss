@@ -38,6 +38,7 @@ dialog {
   outline: none;
   overflow-wrap: anywhere;
   @include z-depth("3");
+  @include glass(var(--md-comp-basic-dialog-container-color));
 
   &::backdrop {
     background-color: var(--md-comp-scrim-color);
