@@ -583,7 +583,7 @@ async function verifyComponentResources(catalogueToolPayload, consumerRoots) {
       assert.equal(listed[index + 1].mimeType, 'application/json');
       assert.ok(listed[index + 1].title);
     }
-    assert.equal(peer.getServerCapabilities().completions, undefined, 'completion belongs to Phase 10');
+    assert.deepEqual(peer.getServerCapabilities().completions, {}, 'component templates complete their arguments');
 
     const catalogue = await read(catalogueUri);
     for (const guide of guides) {
@@ -713,6 +713,61 @@ async function verifyComponentResources(catalogueToolPayload, consumerRoots) {
     const catalogue = await budgetError(catalogueUri);
     assert.deepEqual(Object.keys(catalogue).sort(), ['maxBytes', 'requiredBytes', 'setting', 'uri'], 'catalogue budget errors keep their Phase 8 shape');
   });
+
+  // Completion offers canonical slugs on both templates and section names on the section template.
+  const slugs = guides.map((guide) => guide.slug);
+  const guideTemplate = `${base}/{slug}`;
+  const sectionTemplate = `${base}/{slug}/{section}`;
+  const complete = (peer, uri, name, value, context) => peer.complete({ ref: { type: 'ref/resource', uri }, argument: { name, value }, ...(context ? { context } : {}) });
+  const completed = (values) => ({ completion: { values, total: values.length, hasMore: false } });
+  const noArgument = { completion: { values: [], hasMore: false } };
+  const assertCompletion = async (peer) => {
+    for (const template of [guideTemplate, sectionTemplate]) {
+      assert.deepEqual(await complete(peer, template, 'slug', ''), completed(slugs), `${template} lists every canonical slug`);
+      assert.deepEqual(await complete(peer, template, 'slug', 'ca'), completed(['cards', 'carousel']));
+      assert.deepEqual(await complete(peer, template, 'slug', 'CA'), completed(['cards', 'carousel']), 'slug prefixes ignore case');
+      assert.deepEqual(await complete(peer, template, 'slug', 's'), completed(slugs.filter((slug) => slug.startsWith('s'))));
+      assert.deepEqual(await complete(peer, template, 'slug', 'date'), completed(['date-picker']));
+      for (const slug of slugs) assert.deepEqual((await complete(peer, template, 'slug', slug)).completion.values[0], slug);
+      assert.deepEqual(await complete(peer, template, 'slug', 'zz'), completed([]));
+      assert.deepEqual(await complete(peer, template, 'slug', 'datepicker'), completed([]), 'aliases do not complete');
+      for (const name of ['version', 'hash', 'unknown']) assert.deepEqual(await complete(peer, template, name, ''), noArgument, `${template} ${name}`);
+    }
+    assert.deepEqual(await complete(peer, guideTemplate, 'section', ''), noArgument, 'whole guides have no section argument');
+    assert.deepEqual(await complete(peer, sectionTemplate, 'section', ''), completed(sectionNames));
+    assert.deepEqual(await complete(peer, sectionTemplate, 'section', 'o'), completed(['options']));
+    assert.deepEqual(await complete(peer, sectionTemplate, 'section', 'M'), completed(['methods']));
+    assert.deepEqual(await complete(peer, sectionTemplate, 'section', 'zz'), completed([]));
+    for (const name of sectionNames) assert.deepEqual(await complete(peer, sectionTemplate, 'section', name), completed([name]));
+    for (const slug of ['cards', 'unknown-component', '']) {
+      assert.deepEqual(await complete(peer, sectionTemplate, 'section', '', { arguments: { slug } }), completed(sectionNames), `section completion ignores slug ${slug}`);
+    }
+  };
+  await withServer(undefined, async ({ peer, read }) => {
+    await assertCompletion(peer);
+    const wrongVersion = guideTemplate.replace(`/${encodeURIComponent(contractData.frameworkVersion)}/`, '/99.0.0/');
+    for (const uri of [wrongVersion, guideTemplate.replace(contractData.sourceHash, '0'.repeat(64)), `${base}/{slugs}`, `${base}/{slug}/{sections}`, `${base}/cards`, 'expressivecss://components/latest/{slug}']) {
+      await assert.rejects(complete(peer, uri, 'slug', ''), (error) => error.code === -32602, uri);
+    }
+    assert.deepEqual(await complete(peer, catalogueUri, 'slug', ''), noArgument, 'fixed catalogue URI has no arguments');
+    await assert.rejects(peer.complete({ ref: { type: 'ref/prompt', name: 'component_guide' }, argument: { name: 'slug', value: '' } }), (error) => error.code === -32602);
+    assert.deepEqual(await complete(peer, guideTemplate, 'slug', 'ca'), completed(['cards', 'carousel']), 'failed completions do not affect later requests');
+    // Every completed name reads; completion never makes aliases or case variants readable.
+    for (const slug of (await complete(peer, guideTemplate, 'slug', '')).completion.values) {
+      await read(`${base}/${slug}`);
+      for (const name of (await complete(peer, sectionTemplate, 'section', '')).completion.values) await read(`${base}/${slug}/${name}`);
+    }
+    for (const unknown of [`${base}/datepicker`, `${base}/Cards`]) await assert.rejects(peer.readResource({ uri: unknown }), (error) => error.code === -32002, unknown);
+  });
+  await withServer(1, async ({ peer }) => assertCompletion(peer));
+  for (const cwd of [...consumerRoots, trapDir]) {
+    await withServer(undefined, async ({ peer }) => assertCompletion(peer), { cwd, args: [`--project-root=${cwd}`] });
+  }
+  await assert.rejects(access(path.join(trapDir, 'survived.txt')), { code: 'ENOENT' }, 'completion runs no project scripts');
+  await withServer(undefined, async ({ peer }) => {
+    await assertCompletion(peer);
+    assert.equal((await peer.callTool({ name: 'component_syntax_expert', arguments: { components: ['cards'] } })).structuredContent.skipped, true);
+  }, { env: { SKIP_SETUP_EXPERT: 'true', SKIP_CREATIVE_DIRECTOR: 'true', SKIP_PAGE_ARCHITECT: 'true', SKIP_COMPONENT_SYNTAX_EXPERT: 'true', SKIP_RULES_ENFORCER: 'true', SKIP_QUALITY_INSPECTOR: 'true' } });
 }
 
 const outsideDir = await mkdtemp(path.join(os.tmpdir(), 'expressivecss-mcp-smoke-'));
@@ -2411,7 +2466,7 @@ spawn(process.execPath, ['-e', "setTimeout(() => require('node:fs').writeFileSyn
     await skippedClient.close();
   }
 
-  console.log(`ExpressiveCSS MCP smoke test passed (${expectedTools.length} tools, catalogue and component resources, aggregate response budgets and recovery).`);
+  console.log(`ExpressiveCSS MCP smoke test passed (${expectedTools.length} tools, catalogue and component resources, resource completion, aggregate response budgets and recovery).`);
 } finally {
   await client.close();
   await rm(outsideDir, { recursive: true, force: true });

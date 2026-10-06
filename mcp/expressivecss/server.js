@@ -2763,16 +2763,23 @@ async function startServer() {
     description: 'Compact component metadata for the current bundled snapshot only. Consumer compatibility remains unchecked.',
     mimeType: 'application/json',
   }, () => readResource(catalogUri));
+  // Case-insensitive prefix completion over canonical names only; the SDK caps values at 100.
+  const startingWith = (names) => (value) => names.filter((name) => name.startsWith(value.toLowerCase()));
+  const slug = startingWith(resources.guides.map((guide) => guide.slug));
   server.registerResource('component_guide', new ResourceTemplate(`${resources.base}/{slug}`, {
     list: async () => ({
       resources: resources.guides.map((guide) => ({ uri: `${resources.base}/${guide.slug}`, name: guide.slug, title: `ExpressiveCSS ${guide.title} guide` })),
     }),
+    complete: { slug },
   }), {
     title: 'ExpressiveCSS component guide',
     description: 'Complete contract, syntax, rules, Options and Methods for one component in the current bundled snapshot only. Use a canonical slug; consumer compatibility remains unchecked.',
     mimeType: 'application/json',
   }, (uri) => readResource(uri.href));
-  server.registerResource('component_guide_section', new ResourceTemplate(`${resources.base}/{slug}/{section}`, { list: undefined }), {
+  server.registerResource('component_guide_section', new ResourceTemplate(`${resources.base}/{slug}/{section}`, {
+    list: undefined,
+    complete: { slug, section: startingWith(COMPONENT_SECTIONS) },
+  }), {
     title: 'ExpressiveCSS component guide section',
     description: `One complete section of a component guide in the current bundled snapshot only. Sections: ${COMPONENT_SECTIONS.join(', ')}. Use a canonical slug; consumer compatibility remains unchecked.`,
     mimeType: 'application/json',
