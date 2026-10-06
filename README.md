@@ -326,6 +326,42 @@ After building, run `node --test tests/selective-builds.test.js`. It records raw
 gzip, and Brotli sizes in `.cache/selective-builds/sizes.json`. The browser suite
 records font requests and full/selective screenshots separately in that directory.
 
+### Frosted glass
+
+Floating surfaces can blur the page behind them. The effect is off by default.
+Turn it on in CSS for the whole page or for one region:
+
+```css
+:root {
+  --expressive-glass: true;
+  --expressive-glass-blur: 16px;    /* frost thickness */
+  --expressive-glass-opacity: 72%;  /* share of the surface color kept; 100% is solid */
+}
+```
+
+The blur and opacity lines are optional and show the defaults. Set
+`--expressive-glass` on `:root` or on an element that contains the surfaces. The
+browser reads the value from a surface's parent, so setting it on the surface
+itself has no effect. `--expressive-glass: false` turns the effect off again inside
+a region.
+
+Sass builds can turn glass on by default and change the default values. The CSS
+properties still override these settings:
+
+```scss
+@use "@expressivecss/expressive/src/sass/expressive" with (
+  $expressive-glass: true,
+  $expressive-glass-blur: 16px,
+  $expressive-glass-opacity: 72%
+);
+```
+
+The effect applies to menus, tooltips, dialogs, bottom and side sheets, the
+snackbar, the navigation bar and rail, toolbars, and the search view. Grouped menus
+and a modal navigation rail keep a solid surface. The rail would otherwise clip its
+own scrim. Users who request reduced transparency or more contrast in their system
+settings see solid surfaces. The switch uses CSS style queries.
+
 ### Themes
 
 ExpressiveCSS uses the `theme` attribute on the root element:

@@ -87,6 +87,7 @@ $_vibrant: "#{$_toolbar}:is(.vibrant, .filled)";
   border-radius: var(--md-comp-toolbar-container-shape);
   background-color: var(--md-comp-toolbar-container-color);
   color: var(--md-comp-toolbar-color);
+  @include glass(var(--md-comp-toolbar-container-color));
 
   & + & {
     margin-block-start: 16px;

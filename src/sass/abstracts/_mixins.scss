@@ -1,5 +1,6 @@
 @use "sass:list";
 @use "sass:map";
+@use "sass:math";
 @use "./elevation" as *;
 @use "./variables" as *;
 
@@ -309,5 +310,38 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   &:active {
     background-color: color-mix(in oklab, var(--md-comp-card-state-layer-color) calc(var(--md-comp-card-pressed-state-layer-opacity) * 100%), transparent);
     box-shadow: none;
+  }
+}
+
+// Frosted glass for a floating surface's container. `$color` is the color the
+// rule just set as its `background-color`.
+//
+// The rules always ship, behind a style query on `--expressive-glass`, so a
+// page using the compiled CSS can turn the effect on with
+// `:root { --expressive-glass: true; }`. `$expressive-glass` only picks the
+// default: when it is on, the query flips to "anything but false". A style
+// query reads the parent's value, so the switch belongs on `:root` or a
+// wrapper, not on the surface itself.
+//
+// A user who asks for less transparency or more contrast gets the solid
+// surface back. `backdrop-filter` also makes the element the containing block
+// for its `position: fixed` descendants, so a surface that hangs a fixed scrim
+// off itself has to opt back out (see the modal navigation rail).
+@mixin glass($color) {
+  @if math.unit($expressive-glass-opacity) != "%" {
+    @error "$expressive-glass-opacity must be a percentage, got #{$expressive-glass-opacity}.";
+  }
+
+  $query: "style(--expressive-glass: true)";
+  @if $expressive-glass { $query: "not style(--expressive-glass: false)"; }
+
+  @container #{$query} {
+    background-color: color-mix(in oklab, #{$color} var(--expressive-glass-opacity, #{$expressive-glass-opacity}), transparent);
+    backdrop-filter: blur(var(--expressive-glass-blur, #{$expressive-glass-blur}));
+
+    @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+      background-color: #{$color};
+      backdrop-filter: none;
+    }
   }
 }

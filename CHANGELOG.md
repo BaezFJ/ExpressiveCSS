@@ -14,6 +14,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `.message-bubble.outlined` holds attachments. CSS only.
 - `.scroll-area` styles native scrollbars with theme-aware colors and thin
   sizing, with a WebKit fallback and system scrollbars in forced-colors mode.
+- Frosted glass for floating surfaces. `--expressive-glass: true` on `:root` or
+  a wrapper turns it on. `--expressive-glass-blur` (default `16px`) sets the
+  frost thickness, and `--expressive-glass-opacity` (default `72%`) sets how
+  much of the surface color is kept. Sass `$expressive-glass`,
+  `$expressive-glass-blur`, and `$expressive-glass-opacity` change the defaults,
+  and `--expressive-glass: false` turns the effect off within a region. Surfaces
+  turn solid when the user prefers reduced transparency or more contrast.
 
 ### Changed
 

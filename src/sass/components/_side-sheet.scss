@@ -49,6 +49,7 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
   outline: none;
   translate: var(--md-comp-side-sheet-shift) 0;
   transition: translate 280ms ease, border-radius 200ms ease;
+  @include glass(var(--md-comp-side-sheet-container-color));
 
   &:not(:modal) {
     z-index: 1100;

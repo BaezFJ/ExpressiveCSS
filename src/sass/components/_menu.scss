@@ -78,6 +78,7 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
   color: var(--md-comp-menu-item-label-text-color);
   @include z-depth("2");
   transition: border-radius 200ms ease;
+  @include glass(var(--md-comp-menu-container-color));
 
   // The [vibrant] arms are not a second mapping - they are the statement that
   // a menu on a vibrant surface IS a vibrant menu. Without them the foundation
@@ -359,6 +360,10 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     box-shadow: none;
     filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.14))
       drop-shadow(0 1px 4px rgba(0, 0, 0, 0.12));
+
+    // The drop-shadow filter is the items' backdrop root, so they could only
+    // blur the menu itself. Grouped menus stay solid.
+    backdrop-filter: none;
 
     > li:not(.divider, .optgroup, .gap, .label) {
       padding-inline: var(--md-comp-menu-group-padding);

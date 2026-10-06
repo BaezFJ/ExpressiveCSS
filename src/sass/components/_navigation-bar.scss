@@ -47,6 +47,7 @@
   padding-bottom: max(6px, env(safe-area-inset-bottom, 0px));
   background-color: var(--md-comp-nav-bar-container-color);
   color: var(--md-sys-color-on-surface);
+  @include glass(var(--md-comp-nav-bar-container-color));
 
   > :is(a, button) {
     position: relative;
