@@ -127,6 +127,13 @@ export const NAV: DocsGroup[] = [
           "An overview of the helper classes for alignment, visibility, spacing, and common CSS properties.",
       },
       {
+        id: "scroll-area",
+        label: "Scroll area",
+        route: "/scroll-area.html",
+        description:
+          "Style native scrollbars across browsers without replacing native scrolling.",
+      },
+      {
         id: "media_css",
         label: "Media styles",
         title: "Media Styles",

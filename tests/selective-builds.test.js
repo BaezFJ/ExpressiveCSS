@@ -61,6 +61,10 @@ test('default custom Sass matches the complete stylesheet and preserves configur
   assert.match(empty, /:host/);
   assert.match(empty, /--md-sys-color-primary:/);
   assert.doesNotMatch(empty, /@font-face|\.datepicker|\.tabs/);
+  assert.doesNotMatch(empty, /\.scroll-area/);
+  const scrollArea = compileString('@use "custom" with ($components: (), $utilities: ("scroll-area"), $expressive-include-fonts: false);', options).css;
+  assert.match(scrollArea, /\.scroll-area\{overflow:auto;scrollbar-width:thin/);
+  assert.doesNotMatch(scrollArea, /\.datepicker|\.tabs|\.overflow-x-auto/);
   const fonts = compileString('@use "custom" with ($components: (), $utilities: (), $expressive-font-path: "/assets/fonts");', options).css;
   assert.match(fonts, /url\("?\/assets\/fonts\/material-symbols-outlined.woff2/);
   assert.throws(() => compileString('@use "custom" with ($components: ("missing-component",));', options), /Can't find stylesheet/);

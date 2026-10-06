@@ -1,0 +1,35 @@
+@use "../abstracts" as *;
+
+// Keep scrolling native; use the current theme for scrollbar colors.
+.scroll-area {
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-area-thumb-color, var(--md-sys-color-on-surface-variant)) var(--scroll-area-track-color, transparent);
+}
+
+// Older WebKit engines do not implement the standard scrollbar properties.
+@supports not (scrollbar-color: red blue) {
+  @media (forced-colors: none) {
+    .scroll-area::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .scroll-area::-webkit-scrollbar-thumb {
+      background-color: var(--scroll-area-thumb-color, var(--md-sys-color-on-surface-variant));
+      border-radius: 999px;
+    }
+
+    .scroll-area::-webkit-scrollbar-track,
+    .scroll-area::-webkit-scrollbar-corner {
+      background-color: var(--scroll-area-track-color, transparent);
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .scroll-area {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+}

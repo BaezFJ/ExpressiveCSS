@@ -1077,6 +1077,26 @@ Flex and grid children can retain a minimum size based on their content. Clear t
 
 Scrolling needs a bounded size. Use `.overflow-x-auto` for wide tables or action rows. Give a generic scroll region `tabindex="0"` and an accessible name when keyboard users cannot otherwise focus and scroll it. Leave padding for child focus rings, such as `.p-2`. `.overflow-hidden` clips content and focus rings, so use it only when the clipped content is intentionally unavailable visually.
 
+### Scroll area
+
+Add `.scroll-area` to a bounded container for native scrolling with thin, theme-aware scrollbars. It sets `overflow: auto` for both axes. Wheel, touch, keyboard, and scrollbar dragging remain native; no JavaScript initialization is needed.
+
+```html
+<div class="scroll-area p-4" style="width: 12rem; height: 18rem"
+  tabindex="0" role="region" aria-labelledby="release-tags-title">
+  <h2 id="release-tags-title" class="title-small mt-0">Tags</h2>
+  <ul>
+    <li>v1.2.0-beta.50</li>
+    <li>v1.2.0-beta.49</li>
+    <!-- More tags -->
+  </ul>
+</div>
+```
+
+Give a generic scroll region `tabindex="0"` and an accessible name so keyboard users can focus and scroll it. Leave padding for child focus rings. Use `.min-h-0` or `.min-w-0` when a flex or grid child needs to shrink. The class supplies no dimensions, border, padding, or layout.
+
+Override `--scroll-area-thumb-color` and `--scroll-area-track-color` on the container or an ancestor. Defaults are `var(--md-sys-color-on-surface-variant)` and `transparent`. Choose colors with enough contrast against the track and container. Native scrollbar shape, exact width, and automatic hiding depend on the browser and operating system. Older WebKit engines use rounded 8px scrollbars. Forced-colors mode restores system colors and the default width. Selective Sass builds can load `"scroll-area"` through `$utilities`.
+
 ### Hiding/Showing Content
 
 We provide easy to use classes to hide/show content on specific screen sizes.

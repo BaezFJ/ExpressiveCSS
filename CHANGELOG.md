@@ -12,6 +12,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `.message-bubble`. `end` moves a message to the sender's side,
   `.message-group` stacks consecutive messages and joins their corners, and
   `.message-bubble.outlined` holds attachments. CSS only.
+- `.scroll-area` styles native scrollbars with theme-aware colors and thin
+  sizing, with a WebKit fallback and system scrollbars in forced-colors mode.
 
 ## [0.12.0] - 2026-10-01
 
