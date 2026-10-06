@@ -170,7 +170,7 @@ const TOOL_DESCRIPTIONS = {
   },
   component_syntax_expert: {
     stage: 'Component Syntax Expert',
-    description: 'Return component syntax and constraints, plus scoped Material capability evidence. Request documented options and methods through sections, or typography, shape, or motion through foundations.',
+    description: 'Return complete component rules with detailed syntax by default. Select compact detail to omit prose/examples, includeCapabilities to override component capability detail, sections for documented options/methods, or foundations for typography, shape, or motion. Intentional omissions are disclosed.',
   },
   component_catalog: {
     stage: 'Component Catalogue',
@@ -216,6 +216,8 @@ const pageArchitectSchema = {
 
 const syntaxSchema = {
   projectRoot: z.string().max(MAX_PROJECT_ROOT_CHARS).optional(),
+  detail: z.enum(['compact', 'detailed']).default('detailed'),
+  includeCapabilities: z.boolean().optional(),
   components: z.array(z.string().max(MAX_COMPONENT_NAME_CHARS)).max(12).default([]),
   foundations: z.array(z.enum(['typography', 'shape', 'motion'])).max(3).default([]),
   sections: z.array(z.enum(['options', 'methods'])).max(2).refine((sections) => new Set(sections).size === sections.length, 'Request each section at most once').default([]),
@@ -248,6 +250,17 @@ const stageOutputSchema = z.looseObject({
 const qualityOutputSchema = stageOutputSchema.extend({
   status: z.enum(['pass', 'warn', 'blocked', 'needs_fix']),
   inspectionEvidence: inspectionEvidenceSchema.optional(), // Disabled tools return the shared blocked envelope.
+});
+const syntaxOutputSchema = stageOutputSchema.extend({
+  // Disabled tools return only the shared blocked envelope.
+  detail: z.enum(['compact', 'detailed']).optional(),
+  includeCapabilities: z.boolean().optional(),
+  found: z.array(z.looseObject({
+    omittedFields: z.array(z.object({
+      field: z.enum(['contract', 'syntax', 'options', 'methods', 'capability']),
+      reason: z.enum(['compact-detail', 'not-requested']),
+    })),
+  })).optional(),
 });
 const readAnnotations = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
 
@@ -1308,21 +1321,28 @@ function buildPageArchitecture(catalog, pageGoal, components = [], viewportTarge
   };
 }
 
-function summarizeGuide(guide, sections) {
+function summarizeGuide(guide, { sections, detail, includeCapabilities }) {
   return {
     file: guide.file,
     slug: guide.slug,
     title: guide.title,
     source: guide.sourceUrl,
     docs: guide.astroSource,
-    contract: clampText(guide.contract, 900),
-    syntax: {
-      language: guide.syntax.language,
-      example: clampText(guide.syntax.code, 3_000),
-    },
+    ...(detail === 'detailed' ? {
+      contract: clampText(guide.contract, 900),
+      syntax: {
+        language: guide.syntax.language,
+        example: clampText(guide.syntax.code, 3_000),
+      },
+    } : {}),
     rules: guide.rules,
     ...(sections.includes('options') ? { options: { status: guide.options ? 'documented' : 'absent', markdown: guide.options } } : {}),
     ...(sections.includes('methods') ? { methods: { status: guide.methods ? 'documented' : 'absent', markdown: guide.methods } } : {}),
+    omittedFields: [
+      ...(detail === 'compact' ? [{ field: 'contract', reason: 'compact-detail' }, { field: 'syntax', reason: 'compact-detail' }] : []),
+      ...['options', 'methods'].filter((field) => !sections.includes(field)).map((field) => ({ field, reason: 'not-requested' })),
+      ...(!includeCapabilities ? [{ field: 'capability', reason: 'not-requested' }] : []),
+    ],
   };
 }
 
@@ -2114,6 +2134,7 @@ async function componentSyntaxExpertHandler(args) {
   }
 
   const parsed = syntaxSchemaParsed.parse(args);
+  const includeCapabilities = parsed.includeCapabilities ?? parsed.detail === 'detailed';
   const workflowId = parsed.workflowId || randomUUID();
   const projectRoot = resolveProjectRoot(parsed.projectRoot);
   const catalog = await loadGuideCatalog(projectRoot);
@@ -2134,13 +2155,18 @@ async function componentSyntaxExpertHandler(args) {
         nearest: nearestMatches(catalog, component, skipLimit).map((row) => row.slug),
       });
     } else {
-      found.push({ ...summarizeGuide(guide, parsed.sections), capability: capabilitySafe ? CAPABILITIES_BY_SLUG.get(guide.slug) ?? null : null });
+      found.push({
+        ...summarizeGuide(guide, { ...parsed, includeCapabilities }),
+        ...(includeCapabilities ? { capability: capabilitySafe ? CAPABILITIES_BY_SLUG.get(guide.slug) ?? null : null } : {}),
+      });
     }
   }
 
   const payload = buildStagePayload(
     'component_syntax_expert',
     {
+      detail: parsed.detail,
+      includeCapabilities,
       foundCount: found.length,
       foundations: capabilitySafe ? parsed.foundations.map((slug) => CAPABILITIES_BY_SLUG.get(slug)) : [],
       capabilityEvidence: { status: capabilitySafe ? 'bundled-review-snapshot' : 'blocked', basis: CAPABILITY_ROADMAP.basis, browserRun: capabilitySafe ? CAPABILITY_ROADMAP.browserRun : null },
@@ -2463,7 +2489,7 @@ async function startServer() {
   server.registerTool('component_syntax_expert', {
     description: TOOL_DESCRIPTIONS.component_syntax_expert.description,
     inputSchema: syntaxSchema,
-    outputSchema: stageOutputSchema,
+    outputSchema: syntaxOutputSchema,
     annotations: readAnnotations,
   }, componentSyntaxExpertHandler);
 

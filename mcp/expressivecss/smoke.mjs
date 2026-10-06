@@ -8,6 +8,7 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import { AjvJsonSchemaValidator } from '@modelcontextprotocol/sdk/validation/ajv-provider.js';
 
 const packageDir = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
@@ -91,6 +92,34 @@ function assertCatalogSearch(result, { query, limit = 10, entries, totalMatches 
   assert.equal(payload.sourceHash, contractData.sourceHash);
   assert.equal(payload.guideSource, 'bundled');
   assert.deepEqual(JSON.parse(result.content[0].text), payload);
+}
+
+function withoutSyntaxSelection(payload) {
+  const { detail, includeCapabilities, ...rest } = payload;
+  return { ...rest, found: rest.found.map(({ contract, syntax, capability, options, methods, omittedFields, ...entry }) => entry) };
+}
+
+function withoutApiSelection(payload) {
+  return { ...payload, found: payload.found.map(({ options, methods, omittedFields, ...entry }) => entry) };
+}
+
+function assertSyntaxSelection(result, { detail = 'detailed', includeCapabilities = detail === 'detailed', sections = [] } = {}) {
+  assert.notEqual(result.isError, true, result.content[0].text);
+  const payload = result.structuredContent;
+  assertScopedResult(result, 'syntax detail');
+  assert.deepEqual(JSON.parse(result.content[0].text), payload);
+  assert.equal(payload.detail, detail);
+  assert.equal(payload.includeCapabilities, includeCapabilities);
+  for (const entry of payload.found) {
+    const expected = [];
+    for (const field of ['contract', 'syntax', 'options', 'methods', 'capability']) {
+      const included = field === 'contract' || field === 'syntax' ? detail === 'detailed'
+        : field === 'capability' ? includeCapabilities : sections.includes(field);
+      assert.equal(Object.hasOwn(entry, field), included, `${entry.slug}.${field}`);
+      if (!included) expected.push({ field, reason: field === 'contract' || field === 'syntax' ? 'compact-detail' : 'not-requested' });
+    }
+    assert.deepEqual(entry.omittedFields, expected);
+  }
 }
 
 const outsideDir = await mkdtemp(path.join(os.tmpdir(), 'expressivecss-mcp-smoke-'));
@@ -325,6 +354,17 @@ try {
       ? { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true }
       : { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false });
   }
+
+  const syntaxTool = listed.tools.find((tool) => tool.name === 'component_syntax_expert');
+  assert.deepEqual(syntaxTool.inputSchema.properties.detail.enum, ['compact', 'detailed']);
+  assert.equal(syntaxTool.inputSchema.properties.detail.default, 'detailed');
+  assert.equal(syntaxTool.inputSchema.properties.includeCapabilities.type, 'boolean');
+  const validateSyntaxOutput = new AjvJsonSchemaValidator().getValidator(syntaxTool.outputSchema);
+  assert.deepEqual(syntaxTool.outputSchema.properties.detail.enum, ['compact', 'detailed']);
+  assert.equal(syntaxTool.outputSchema.properties.includeCapabilities.type, 'boolean');
+  const omissionSchema = syntaxTool.outputSchema.properties.found.items.properties.omittedFields.items;
+  assert.deepEqual(omissionSchema.properties.field.enum, ['contract', 'syntax', 'options', 'methods', 'capability']);
+  assert.deepEqual(omissionSchema.properties.reason.enum, ['compact-detail', 'not-requested']);
 
   const expectedCatalog = guideData.guides.map(({ file, content }) => {
     const slug = file.replace(/\.md$/u, '');
@@ -1027,6 +1067,10 @@ try {
     assert.deepEqual(JSON.parse(result.content[0].text), result.structuredContent);
     assert.ok(result.structuredContent.found.every((entry) => !Object.hasOwn(entry, 'options')));
     assert.ok(result.structuredContent.found.every((entry) => !Object.hasOwn(entry, 'methods')));
+    assertSyntaxSelection(result);
+    assert.equal(validateSyntaxOutput(result.structuredContent).valid, true);
+    const explicitDetailed = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, components: guides.map((guide) => guide.file.replace(/\.md$/u, '')), workflowId, detail: 'detailed' } });
+    assert.deepEqual(explicitDetailed.structuredContent, result.structuredContent);
     let combined;
     for (const sections of [[], ['options'], ['methods'], ['options', 'methods'], ['methods', 'options']]) {
       const selected = await client.callTool({
@@ -1049,8 +1093,21 @@ try {
           }
         }
       }
-      const withoutSections = { ...selected.structuredContent, found: selected.structuredContent.found.map(({ options, methods, ...entry }) => entry) };
-      assert.deepEqual(withoutSections, result.structuredContent, 'section selection changes only requested component API records');
+      assertSyntaxSelection(selected, { sections });
+      assert.deepEqual(withoutApiSelection(selected.structuredContent), withoutApiSelection(result.structuredContent), 'section selection changes only API records and omission metadata');
+      for (const [detail, includeCapabilities] of [['compact', undefined], ['compact', true], ['compact', false], ['detailed', false], ['detailed', true]]) {
+        const args = { projectRoot: matchingDir, components: guides.map((guide) => guide.file.replace(/\.md$/u, '')), workflowId, sections, detail, ...(includeCapabilities === undefined ? {} : { includeCapabilities }) };
+        const projected = await client.callTool({ name: 'component_syntax_expert', arguments: args });
+        assertSyntaxSelection(projected, { detail, includeCapabilities, sections });
+        assert.equal(validateSyntaxOutput(projected.structuredContent).valid, true);
+        assert.deepEqual(withoutSyntaxSelection(projected.structuredContent), withoutSyntaxSelection(selected.structuredContent));
+        for (const [index, entry] of projected.structuredContent.found.entries()) {
+          const original = selected.structuredContent.found[index];
+          for (const field of ['contract', 'syntax', 'options', 'methods', 'capability']) {
+            if (Object.hasOwn(entry, field)) assert.deepEqual(entry[field], original[field]);
+          }
+        }
+      }
       if (sections.length === 2) {
         if (combined) assert.deepEqual(selected.structuredContent, combined, 'selector order must not change the result');
         combined = selected.structuredContent;
@@ -1089,6 +1146,19 @@ try {
     assert.ok(catalogueMethods.get('autocomplete.md').markdown.includes(`\`.${method}()\``), `${method} missing from Autocomplete Methods`);
   }
   assert.deepEqual(catalogueMethods.get('cards.md'), { status: 'absent', markdown: null });
+  for (const selectors of [
+    { detail: 'unknown' }, { detail: null }, { detail: 1 },
+    { includeCapabilities: 'true' }, { includeCapabilities: null }, { includeCapabilities: 1 },
+  ]) {
+    const invalid = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, components: ['cards'], ...selectors } });
+    assert.equal(invalid.isError, true, `invalid selectors accepted: ${JSON.stringify(selectors)}`);
+  }
+  for (const mutation of [
+    { detail: 'unknown' }, { includeCapabilities: 'true' },
+    { found: [{ omittedFields: [{ field: 'rules', reason: 'not-requested' }] }] },
+    { found: [{ omittedFields: [{ field: 'syntax', reason: 'budget' }] }] },
+    { found: [{}] },
+  ]) assert.equal(validateSyntaxOutput({ ...matchingSyntax.structuredContent, ...mutation }).valid, false);
   for (const sections of ['options', null, ['unknown'], [1], ['options', 'unknown'], ['options', 'options'], ['methods', 'methods'], ['options', 'methods', 'options']]) {
     const invalid = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, components: ['cards'], sections } });
     assert.equal(invalid.isError, true, `invalid sections accepted: ${JSON.stringify(sections)}`);
@@ -1224,6 +1294,13 @@ try {
     ]);
     assert.ok(methodsFixtureResult.structuredContent.found.every((entry) => !Object.hasOwn(entry, 'options')));
     assert.deepEqual(JSON.parse(methodsFixtureResult.content[0].text), methodsFixtureResult.structuredContent);
+    for (const original of [fixtureResult, methodsFixtureResult]) {
+      const sections = original === fixtureResult ? ['options'] : ['methods'];
+      const compact = await optionsFixtureClient.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, components: original.structuredContent.found.map((entry) => entry.slug), workflowId: original.structuredContent.workflowId, detail: 'compact', sections } });
+      assertSyntaxSelection(compact, { detail: 'compact', sections });
+      assert.deepEqual(withoutSyntaxSelection(compact.structuredContent), withoutSyntaxSelection(original.structuredContent));
+      for (const [index, entry] of compact.structuredContent.found.entries()) assert.deepEqual(entry[sections[0]], original.structuredContent.found[index][sections[0]]);
+    }
   } finally {
     try { await optionsFixtureClient.close(); } finally { await rm(optionsFixtureDir, { recursive: true, force: true }); }
   }
@@ -1276,7 +1353,7 @@ try {
     const missingSections = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, components: ['cards', 'unknown-component'], sections, workflowId: missingSyntax.structuredContent.workflowId } });
     assert.equal(missingSections.structuredContent.found.length, 1);
     for (const section of sections) assert.deepEqual(missingSections.structuredContent.found[0][section], { status: 'absent', markdown: null });
-    assert.deepEqual({ ...missingSections.structuredContent, found: missingSections.structuredContent.found.map(({ options, methods, ...entry }) => entry) }, missingSyntax.structuredContent);
+    assert.deepEqual(withoutApiSelection(missingSections.structuredContent), withoutApiSelection(missingSyntax.structuredContent));
     assert.deepEqual(JSON.parse(missingSections.content[0].text), missingSections.structuredContent);
   }
 
@@ -1292,6 +1369,35 @@ try {
   const blockedFoundations = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: versionedDir, foundations: ['shape'] } });
   assert.equal(blockedFoundations.structuredContent.capabilityEvidence.status, 'blocked');
   assert.deepEqual(blockedFoundations.structuredContent.foundations, []);
+
+  for (const projectRoot of [matchingDir, outsideDir, versionedDir, staleSourceDir, unprovenSourceDir, noncanonicalSourceDir, tamperedGuideDir]) {
+    for (const request of [
+      { components: ['cards', 'date-picker', 'unknown-component'], sections: ['options', 'methods'], foundations: ['shape'] },
+      { foundations: ['typography', 'shape', 'motion'] },
+      { components: ['unknown-component'] },
+      { components: ['cards', 'cards'] },
+    ]) {
+      const arguments_ = { projectRoot, workflowId, ...request };
+      const baseline = await client.callTool({ name: 'component_syntax_expert', arguments: arguments_ });
+      for (const detail of ['compact', 'detailed']) {
+        for (const includeCapabilities of [undefined, false, true]) {
+          const projected = await client.callTool({ name: 'component_syntax_expert', arguments: { ...arguments_, detail, ...(includeCapabilities === undefined ? {} : { includeCapabilities }) } });
+          assertSyntaxSelection(projected, { detail, includeCapabilities, sections: request.sections });
+          assert.equal(validateSyntaxOutput(projected.structuredContent).valid, true);
+          assert.deepEqual(withoutSyntaxSelection(projected.structuredContent), withoutSyntaxSelection(baseline.structuredContent));
+          for (const [index, entry] of projected.structuredContent.found.entries()) {
+            for (const field of ['contract', 'syntax', 'options', 'methods', 'capability']) {
+              if (Object.hasOwn(entry, field)) assert.deepEqual(entry[field], baseline.structuredContent.found[index][field]);
+            }
+          }
+        }
+      }
+    }
+    for (const detail of ['compact', 'detailed']) {
+      const empty = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot, detail, components: [], foundations: [] } });
+      assert.equal(empty.isError, true, 'empty syntax requests remain invalid');
+    }
+  }
 
   const quality = await client.callTool({
     name: 'quality_inspector',
@@ -1683,6 +1789,8 @@ spawn(process.execPath, ['-e', "setTimeout(() => require('node:fs').writeFileSyn
       ['component_syntax_expert', { projectRoot: matchingDir, components: ['buttons'], sections: ['options'] }],
       ['component_syntax_expert', { projectRoot: matchingDir, components: ['buttons'], sections: ['methods'] }],
       ['component_syntax_expert', { projectRoot: matchingDir, components: ['buttons'], sections: ['options', 'methods'] }],
+      ['component_syntax_expert', { projectRoot: matchingDir, components: ['buttons'], detail: 'compact', includeCapabilities: true }],
+      ['component_syntax_expert', { projectRoot: matchingDir, foundations: ['shape'], detail: 'detailed', includeCapabilities: false }],
       ['quality_inspector', { projectRoot: matchingDir, files: ['README.md'] }],
     ]) {
       const skipped = await skippedClient.callTool({ name, arguments: arguments_ });
@@ -1690,6 +1798,11 @@ spawn(process.execPath, ['-e', "setTimeout(() => require('node:fs').writeFileSyn
       assert.equal(skipped.structuredContent.status, 'blocked');
       assert.equal(skipped.structuredContent.coverageStatus, 'skipped');
       assert.ok(skipped.structuredContent.blockedChecks.includes(`${name} disabled`));
+      if (name === 'component_syntax_expert') {
+        assert.equal(validateSyntaxOutput(skipped.structuredContent).valid, true);
+        for (const field of ['detail', 'includeCapabilities', 'found']) assert.equal(Object.hasOwn(skipped.structuredContent, field), false);
+        assert.deepEqual(JSON.parse(skipped.content[0].text), skipped.structuredContent);
+      }
     }
   } finally {
     await skippedClient.close();

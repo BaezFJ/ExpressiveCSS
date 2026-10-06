@@ -13,6 +13,68 @@ The server bundles generated component guides, selection data, contract metadata
 
 `component_syntax_expert` returns every rule from each found component's bundled Rules section, in source order. Guides without rule bullets retain generic authoring advice. Looking up rules does not establish component-rule conformance.
 
+## Selectable syntax detail
+
+`detail` accepts `"compact"` or `"detailed"` and defaults to `"detailed"`.
+Existing requests retain their fields and values, with additive selector and
+omission metadata. Both modes return complete rules, component identity and
+sources, lookup results, and shared compatibility/provenance evidence.
+
+| Component field | Compact | Detailed |
+| --- | --- | --- |
+| `file`, `slug`, `title`, `source`, `docs`, `rules` | Included | Included |
+| `contract`, `syntax` | Omitted | Existing prose/example limits retained |
+| `options`, `methods` | Included only when requested through `sections` | Same |
+| `capability` | Omitted by default | Included by default |
+
+The optional boolean `includeCapabilities` overrides the component capability
+default in either mode. Explicit `sections` requests work in both modes and
+retain complete documented Markdown or explicit absence. Explicit `foundations`
+requests remain effective even with `includeCapabilities: false`; that selector
+controls only component capability records.
+
+```json
+{
+  "components": ["date-picker", "autocomplete"],
+  "detail": "compact",
+  "sections": ["options", "methods"],
+  "includeCapabilities": true
+}
+```
+
+Ordinary results report effective `detail` and `includeCapabilities`. Each found
+component adds `omittedFields`, with one record per intentionally omitted field:
+
+```json
+{
+  "field": "syntax",
+  "reason": "compact-detail"
+}
+```
+
+Fields are reported in `contract`, `syntax`, `options`, `methods`, `capability`
+order. Compact prose/example omissions use `compact-detail`. Unrequested API
+sections and disabled component capability detail use `not-requested`. Requested
+API records with `status: "absent"` and included null capability records are
+delivered results, so they have no omission record. The syntax output schema
+validates selector values and omission fields/reasons. A disabled syntax tool
+retains its shared blocked envelope without retrieval metadata.
+
+Recover omitted prose/examples with `detail: "detailed"`, API sections with
+`sections`, and component capability records with `includeCapabilities: true`.
+Version/provenance checks still block unsafe capability data. Detail selection
+does not change compatibility, availability, rule coverage or missing-name
+suggestions. Text and structured content describe the same result.
+
+Detailed output retains the existing contract limit of 900 characters and syntax
+example limit of 3,000 characters, after the guide loader's existing limits.
+`omittedFields` describes selector omissions only. Detail selection does not
+provide an aggregate byte budget or retrieve an unbounded full guide. Generic
+fallback advice remains nonnormative, and retrieval does not verify consumer
+interaction, visual or accessibility behavior.
+
+## Requested runtime API sections
+
 To request documented runtime Options, add `sections: ["options"]`:
 
 ```json
@@ -63,7 +125,9 @@ A resolved version matching the bundled contract reports `documentationMode: "bu
 
 ## Material capability evidence
 
-`component_syntax_expert` adds a scoped `capability` record to each found component.
+`component_syntax_expert` adds a scoped `capability` record to each found component
+when component capability detail is enabled. Detailed mode enables it by default;
+compact mode omits it by default. `includeCapabilities` overrides either default.
 For foundations, pass `foundations: ["typography", "shape", "motion"]`; component
 names are optional for this request. Results distinguish documented scope,
 pinned source review, feature/integration gaps, mapped checks and recorded results.
@@ -197,7 +261,7 @@ npm test
 | `creative_director` | Suggests components from the generated decision catalogue, with uncertain fuzzy matches labelled as fallback |
 | `page_arcjitect` | Workflow stage returning page sections, landmarks, and a semantic skeleton |
 | `page_architect` | Conventional spelling for the same page architecture tool; component names must resolve exactly |
-| `component_syntax_expert` | Returns authoritative syntax/contract/rules and requested documented Options and Methods for components |
+| `component_syntax_expert` | Returns complete rules, selectable syntax/capability detail and requested documented Options and Methods for components |
 | `component_catalog` | Lists or searches compact bundled component metadata with labelled matches, result limits, snapshot identity and optional target compatibility checks |
 | `quality_inspector` | Runs scoped static checks and optional commands (`npm run typecheck`, `npm run test`), then names every uninspected review area |
 
