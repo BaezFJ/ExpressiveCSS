@@ -37,6 +37,18 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
 
+      # A squash merge can leave the roadmap's recorded revision outside all
+      # branch histories. Fetch it explicitly for the source-link assertions.
+      - name: Fetch the recorded capability source revision
+        if: matrix.node != 20
+        run: |
+          capability_revision="$(node -e '
+            const { sourceRevision } = require("./docs/src/data/component-decisions.json");
+            require("node:assert/strict").match(sourceRevision, /^[a-f0-9]{40}$/u);
+            process.stdout.write(sourceRevision);
+          ')"
+          git fetch --no-tags origin "$capability_revision"
+
       - run: npm ci
 
       - run: npm run typecheck
