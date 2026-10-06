@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { AjvJsonSchemaValidator } from '@modelcontextprotocol/sdk/validation/ajv-provider.js';
+import { ReadResourceResultSchema } from '@modelcontextprotocol/sdk/types.js';
 
 const packageDir = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
@@ -337,6 +338,151 @@ async function verifyResponseBudgets(matchingDir, versionedDir) {
   } finally { await rm(fixtureDir, { recursive: true, force: true }); }
 }
 
+async function verifyCatalogueResources(expectedEntries, toolPayload, consumerRoots) {
+  const setting = 'EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES';
+  const uri = `expressivecss://catalogue/${encodeURIComponent(contractData.frameworkVersion)}/${contractData.sourceHash}`;
+  const bytes = (result) => Buffer.byteLength(JSON.stringify(result), 'utf8');
+  async function withServer(budget, action, { dir = packageDir, cwd = dir, env = {}, args = [] } = {}) {
+    const environment = { ...process.env, ...env };
+    if (budget === undefined) delete environment[setting];
+    else environment[setting] = String(budget);
+    const connection = new StdioClientTransport({ command: process.execPath, args: [path.join(dir, 'server.js'), ...args], cwd, stderr: 'pipe', env: environment });
+    const peer = new Client({ name: 'catalogue-resource-check', version: '1' });
+    let wire;
+    const start = connection.start.bind(connection);
+    connection.start = async () => {
+      const receive = connection.onmessage;
+      connection.onmessage = (message, extra) => { if (message.result || message.error) wire = message; receive(message, extra); };
+      await start();
+    };
+    try {
+      await peer.connect(connection);
+      const read = async () => {
+        const result = await peer.readResource({ uri });
+        assert.deepEqual(result, wire.result, 'measure the final wire resource result');
+        assert.ok(bytes(wire.result) <= (budget ?? 65_536));
+        assert.equal(result.contents.length, 1);
+        assert.equal(result.contents[0].uri, uri);
+        assert.equal(result.contents[0].mimeType, 'application/json');
+        const payload = JSON.parse(result.contents[0].text);
+        assert.deepEqual(payload.responseBudget, { maxBytes: budget ?? 65_536, delivery: 'complete', omissions: [], recoveries: [] });
+        return result;
+      };
+      await action({ peer, read, wire: () => wire });
+    } finally { try { await peer.close(); } finally { await connection.close(); } }
+  }
+  const assertSnapshot = (result) => {
+    const payload = JSON.parse(result.contents[0].text);
+    assert.equal(payload.schemaVersion, 1);
+    assert.deepEqual(payload.entries, expectedEntries);
+    assert.equal(payload.count, guideData.guides.length);
+    for (const field of ['contractVersion', 'sourceHash', 'guideSource', 'status', 'checksPerformed', 'evidenceSources', 'uncheckedAreas', 'contractCompatibility', 'contractProvenance', 'contractProvenanceDetails', 'coverageStatus', 'blockedChecks']) {
+      assert.deepEqual(payload[field], toolPayload[field], field);
+    }
+    for (const field of ['workflowId', 'stage', 'query', 'limit', 'totalMatches', 'omittedCount', 'truncated']) assert.equal(Object.hasOwn(payload, field), false, field);
+    return payload;
+  };
+  let baseline;
+  await withServer(undefined, async ({ peer, read, wire }) => {
+    assert.ok(peer.getServerCapabilities().resources);
+    assert.notEqual(peer.getServerCapabilities().resources.subscribe, true);
+    const listed = await peer.listResources();
+    assert.equal(listed.resources.length, 1);
+    assert.equal(listed.resources[0].uri, uri);
+    assert.equal(listed.resources[0].name, 'component_catalog');
+    assert.equal(listed.resources[0].mimeType, 'application/json');
+    assert.ok(listed.resources[0].title);
+    assert.match(listed.resources[0].description, /current bundled snapshot/u);
+    assert.deepEqual((await peer.listResourceTemplates()).resourceTemplates, []);
+    baseline = await read();
+    assertSnapshot(baseline);
+    assert.deepEqual(await read(), baseline, 'resource contents are deterministic');
+    for (const unknown of [
+      uri.replace(`/${encodeURIComponent(contractData.frameworkVersion)}/`, '/99.0.0/'), uri.replace(contractData.sourceHash, '0'.repeat(64)),
+      `${uri}/extra`, `${uri}?query=cards`, `${uri}#cards`, 'expressivecss://catalogue/latest',
+      `expressivecss://catalogue/ignored/../${encodeURIComponent(contractData.frameworkVersion)}/${contractData.sourceHash}`,
+      `file://${path.join(consumerRoots[0], 'package.json')}`, 'https://www.expressivecss.com',
+    ]) {
+      await assert.rejects(peer.readResource({ uri: unknown }), (error) => error.code === -32002);
+      assert.equal(Object.hasOwn(wire(), 'result'), false);
+    }
+    // SDK 1.31.0 wraps request-schema failures as internal protocol errors.
+    await assert.rejects(peer.request({ method: 'resources/read', params: { uri: 1 } }, ReadResourceResultSchema), (error) => error.code === -32603 && /expected string/u.test(error.message));
+    assert.equal(wire().error.code, -32603);
+    const tool = await peer.callTool({ name: 'component_catalog', arguments: { query: 'cards', limit: 1 } });
+    assert.equal(tool.structuredContent.entries[0].slug, 'cards');
+    assert.deepEqual(await read(), baseline, 'failed reads do not affect later resource/tool calls');
+  });
+  for (const cwd of consumerRoots) {
+    await withServer(undefined, async ({ read }) => assert.deepEqual(await read(), baseline), { cwd, args: [`--project-root=${cwd}`] });
+  }
+  await withServer(undefined, async ({ peer, read }) => {
+    assertSnapshot(await read());
+    const skipped = await peer.callTool({ name: 'component_syntax_expert', arguments: { components: ['cards'] } });
+    assert.equal(skipped.structuredContent.skipped, true);
+    assertSnapshot(await read());
+  }, { env: { SKIP_SETUP_EXPERT: 'true', SKIP_CREATIVE_DIRECTOR: 'true', SKIP_PAGE_ARCHITECT: 'true', SKIP_COMPONENT_SYNTAX_EXPERT: 'true', SKIP_RULES_ENFORCER: 'true', SKIP_QUALITY_INSPECTOR: 'true' } });
+
+  // The budget field's own decimal width is part of the boundary measurement.
+  const boundaryResult = structuredClone(baseline);
+  const boundaryPayload = JSON.parse(boundaryResult.contents[0].text);
+  let exact = bytes(boundaryResult);
+  for (;;) {
+    boundaryPayload.responseBudget.maxBytes = exact;
+    boundaryResult.contents[0].text = JSON.stringify(boundaryPayload);
+    const measured = bytes(boundaryResult);
+    if (measured === exact) break;
+    exact = measured;
+  }
+  await withServer(exact, async ({ read }) => assert.equal(bytes(await read()), exact));
+  for (const budget of [exact - 1, 1]) {
+    let increase;
+    await withServer(budget, async ({ peer, wire }) => {
+      assert.equal((await peer.listResources()).resources[0].uri, uri);
+      await assert.rejects(peer.readResource({ uri }), (error) => {
+        assert.equal(error.code, -32001);
+        assert.equal(error.data.uri, uri);
+        assert.equal(error.data.maxBytes, budget);
+        assert.equal(error.data.setting, setting);
+        assert.equal(error.data.requiredBytes, exact);
+        increase = error.data.requiredBytes;
+        return true;
+      });
+      assert.equal(Object.hasOwn(wire(), 'result'), false);
+      const tool = await peer.callTool({ name: 'rules_enforcer', arguments: { snippet: '<main></main>' } });
+      assertScopedResult(tool, 'QA after a failed resource read');
+    });
+    await withServer(increase, async ({ read }) => assertSnapshot(await read()));
+  }
+  const fixtureDir = await mkdtemp(path.join(packageDir, '.resource-fixture-'));
+  try {
+    for (const file of ['server.js', 'package.json', 'component-guides.json', 'component-decisions.json', 'capability-roadmap.json', 'contract.json', 'semantics-data.json']) await copyFile(path.join(packageDir, file), path.join(fixtureDir, file));
+    await mkdir(path.join(fixtureDir, 'scripts'));
+    await copyFile(path.join(packageDir, 'scripts', 'resolve-version.mjs'), path.join(fixtureDir, 'scripts', 'resolve-version.mjs'));
+    const decisions = structuredClone(decisionsData);
+    const unicode = '界🌍 "escaped" \\ value\n'.repeat(2_000);
+    decisions.components.find((row) => row.slug === expectedEntries[0].slug).useWhen = [unicode];
+    await writeFile(path.join(fixtureDir, 'component-decisions.json'), JSON.stringify(decisions));
+    let increasedBudget;
+    await withServer(undefined, async ({ peer }) => {
+      await assert.rejects(peer.readResource({ uri }), (error) => {
+        assert.equal(error.code, -32001);
+        increasedBudget = error.data.requiredBytes;
+        assert.ok(increasedBudget > 65_536);
+        return true;
+      });
+    }, { dir: fixtureDir });
+    await withServer(increasedBudget, async ({ read }) => {
+      const result = await read();
+      assert.equal(bytes(result), increasedBudget);
+      const payload = JSON.parse(result.contents[0].text);
+      assert.equal(payload.entries[0].description, unicode);
+      assert.equal(payload.count, guideData.guides.length);
+      assert.deepEqual(payload.entries.slice(1), expectedEntries.slice(1));
+    }, { dir: fixtureDir });
+  } finally { await rm(fixtureDir, { recursive: true, force: true }); }
+}
+
 const outsideDir = await mkdtemp(path.join(os.tmpdir(), 'expressivecss-mcp-smoke-'));
 const deniedCommandDir = await mkdtemp(path.join(os.tmpdir(), 'expressivecss-mcp-denied-'));
 const outsideFile = path.join(outsideDir, 'outside.txt');
@@ -551,6 +697,7 @@ const client = new Client({ name: 'expressivecss-mcp-smoke', version: '0.1.0' })
 try {
   await client.connect(transport);
   assert.equal(client.getServerVersion()?.version, JSON.parse(await readFile(path.join(packageDir, 'package.json'), 'utf8')).version);
+  assert.ok(client.getServerCapabilities()?.resources, 'server must advertise catalogue resources');
 
   const listed = await client.listTools();
   for (const tool of listed.tools.filter((tool) => !['rules_enforcer', 'quality_inspector'].includes(tool.name))) {
@@ -684,6 +831,7 @@ try {
   }));
   const matchingFiles = ['package.json', 'clean.html', 'node_modules/@expressivecss/expressive/package.json'];
   const beforeMatchingCatalogue = await Promise.all(matchingFiles.map((file) => readFile(path.join(matchingDir, file))));
+  await verifyCatalogueResources(expectedCatalog, catalog.structuredContent, [matchingDir, versionedDir, staleSourceDir, unprovenSourceDir, tamperedGuideDir]);
   for (const [projectRoot, compatibility, provenance] of [
     [matchingDir, 'match', 'bundled-verified'],
     [deniedCommandDir, 'match', 'bundled-verified'],
@@ -2030,7 +2178,7 @@ spawn(process.execPath, ['-e', "setTimeout(() => require('node:fs').writeFileSyn
     await skippedClient.close();
   }
 
-  console.log(`ExpressiveCSS MCP smoke test passed (${expectedTools.length} tools, aggregate response budgets and recovery).`);
+  console.log(`ExpressiveCSS MCP smoke test passed (${expectedTools.length} tools, catalogue resources, aggregate response budgets and recovery).`);
 } finally {
   await client.close();
   await rm(outsideDir, { recursive: true, force: true });

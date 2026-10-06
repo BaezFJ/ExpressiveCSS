@@ -9,6 +9,7 @@ import { JSDOM } from 'jsdom';
 import * as z from 'zod/v4';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { McpError, ReadResourceRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { resolveExpressiveVersion } from './scripts/resolve-version.mjs';
 
 const SERVER_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -2580,6 +2581,25 @@ async function qualityInspectorHandler(args) {
   return toToolResult(payload);
 }
 
+function resourceBudgetError(uri, result) {
+  // A retry's budget field can need more decimal digits. Include those bytes too.
+  const retry = structuredClone(result);
+  const payload = JSON.parse(retry.contents[0].text);
+  let requiredBytes = Buffer.byteLength(JSON.stringify(retry), 'utf8');
+  for (;;) {
+    payload.responseBudget.maxBytes = requiredBytes;
+    retry.contents[0].text = JSON.stringify(payload);
+    const measured = Buffer.byteLength(JSON.stringify(retry), 'utf8');
+    if (measured <= requiredBytes) break;
+    requiredBytes = measured;
+  }
+  return {
+    code: -32001,
+    message: `Response budget cannot fit the complete catalogue resource. Increase ${RESPONSE_BUDGET_SETTING} to at least ${requiredBytes} and restart.`,
+    data: { uri, maxBytes: SETTINGS.maxResponseBytes, requiredBytes, setting: RESPONSE_BUDGET_SETTING },
+  };
+}
+
 async function startServer() {
   const server = new McpServer(
     {
@@ -2649,24 +2669,57 @@ async function startServer() {
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
   }, qualityInspectorHandler);
 
+  const catalog = await loadGuideCatalog(undefined);
+  const catalogUri = `expressivecss://catalogue/${encodeURIComponent(catalog.frameworkVersion)}/${catalog.sourceHash}`;
+  const { stage, workflowId, ...snapshot } = buildCatalogPayload(catalog, null, { workflowId: 'catalogue-resource' });
+  const readCatalogResource = async () => ({
+    contents: [{
+      uri: catalogUri,
+      mimeType: 'application/json',
+      text: JSON.stringify({
+        schemaVersion: 1,
+        ...snapshot,
+        responseBudget: { maxBytes: SETTINGS.maxResponseBytes, delivery: 'complete', omissions: [], recoveries: [] },
+      }),
+    }],
+  });
+  server.registerResource('component_catalog', catalogUri, {
+    title: 'ExpressiveCSS component catalogue',
+    description: 'Compact component metadata for the current bundled snapshot only. Consumer compatibility remains unchecked.',
+    mimeType: 'application/json',
+  }, readCatalogResource);
+  // SDK v1 normalizes URLs and uses -32602 for missing resources. Require the
+  // advertised identity verbatim and return the resource-not-found protocol code.
+  server.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+    if (request.params.uri !== catalogUri) throw new McpError(-32002, 'Resource not found. Use resources/list to discover the current bundled snapshot.');
+    return readCatalogResource();
+  });
+
   const transport = new StdioServerTransport();
   // Check the wire result after SDK error handling too. SDK exceptions otherwise become
   // unbounded isError results, including validation errors before our handlers run.
-  const scopedRequests = new Set();
+  const scopedRequests = new Map();
   const start = transport.start.bind(transport);
   const send = transport.send.bind(transport);
   transport.start = async () => {
     const receive = transport.onmessage;
     transport.onmessage = (message, extra) => {
-      if (message.method === 'tools/call' && Object.hasOwn(message, 'id') && GUIDANCE_TOOLS.has(message.params?.name)) scopedRequests.add(message.id);
+      if (Object.hasOwn(message, 'id')) {
+        if (message.method === 'tools/call' && GUIDANCE_TOOLS.has(message.params?.name)) scopedRequests.set(message.id, 'tool');
+        if (message.method === 'resources/read') scopedRequests.set(message.id, 'resource');
+      }
       receive(message, extra);
     };
     await start();
   };
   transport.send = async (message, options) => {
-    if (scopedRequests.delete(message.id) && Object.hasOwn(message, 'result')
+    const kind = scopedRequests.get(message.id);
+    scopedRequests.delete(message.id);
+    if (kind && Object.hasOwn(message, 'result')
       && Buffer.byteLength(JSON.stringify(message.result), 'utf8') > SETTINGS.maxResponseBytes) {
-      message = { jsonrpc: '2.0', id: message.id, error: { code: -32001, message: `Response budget cannot fit a truthful tool result. Increase ${RESPONSE_BUDGET_SETTING}.` } };
+      const error = kind === 'resource' ? resourceBudgetError(catalogUri, message.result)
+        : { code: -32001, message: `Response budget cannot fit a truthful tool result. Increase ${RESPONSE_BUDGET_SETTING}.` };
+      message = { jsonrpc: '2.0', id: message.id, error };
     }
     await send(message, options);
   };

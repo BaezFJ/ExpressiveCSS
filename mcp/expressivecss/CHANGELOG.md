@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Add a read-only `component_catalog` resource for the current bundled snapshot,
+  identified by framework version and contract source hash. JSON contents reuse
+  the complete compact catalogue and retain unknown consumer compatibility.
+  Reads use the existing operator byte budget and deliver every entry whole or
+  return protocol error `-32001` with a sufficient restart budget. Discovery
+  remains available under small budgets; unknown resource identities return
+  `-32002`. Existing tools, QA policy and package versions remain unchanged.
+
 - Guidance tools enforce a configurable 64 KiB UTF-8 limit on the complete
   serialized tool result, including text and structured content. Typed
   `responseBudget` metadata accounts for whole-unit omissions and narrower
