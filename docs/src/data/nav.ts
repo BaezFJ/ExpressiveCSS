@@ -293,6 +293,13 @@ export const NAV: DocsGroup[] = [
         aliases: ["/collections.html"],
       },
       {
+        id: "message",
+        label: "Message",
+        route: "/message.html",
+        description:
+          "One message in a conversation, with an optional avatar, header and footer.",
+      },
+      {
         id: "dialogs",
         label: "Dialogs",
         route: "/dialogs.html",

@@ -179,7 +179,7 @@ describe('ExpressiveCSS component decisions', () => {
   test('accounts for the remaining Material and web component reviews without claiming full parity', async () => {
     const prior = new Set(['buttons','navigation-bar','navigation-rail','toolbars','text-fields','dialogs','tooltips']);
     const remaining = data.components.filter(entry => !prior.has(entry.slug));
-    assert.equal(remaining.length, 34);
+    assert.equal(remaining.length, 35);
     const names = ['inputs-material-review','layout-material-review','feedback-material-review','web-extensions-review'];
     const references = (await Promise.all(names.map(name => readFile(new URL(`../skills/expressivecss/expressivecss-design/references/${name}.md`, import.meta.url), 'utf8')))).join('\n');
     for (const entry of remaining) {

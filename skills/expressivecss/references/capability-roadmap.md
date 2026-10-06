@@ -31,6 +31,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Floating action button](#fab) | unassessed | needs-review | needs-rerun | 0 |
 | [Cards](#cards) | unassessed | needs-review | needs-rerun | 0 |
 | [Lists](#lists) | unassessed | needs-review | needs-rerun | 1 |
+| [Message](#message) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
 | [Side sheet](#side-sheet) | unassessed | needs-review | needs-rerun | 0 |
@@ -362,6 +363,22 @@ Web adaptation: Native list semantics; visual selection alone does not justify a
 
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+
+<a id="message"></a>
+
+## Message
+
+**implemented within the stated scope.** Start and end alignment, avatar, header, footer actions, message groups and outlined attachment bubbles.
+
+Source review: source-reviewed, 2026-10-06. [src/sass/components/_message.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_message.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: Plain div parts on a CSS grid; the page owns role="log" on a live conversation.
+
+- verification: Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified. Next: Append messages to a role="log" conversation and inspect assistive-technology output; test enlarged text and RTL.
+
+- not-recorded: [tests/message-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/message-browser.test.js): `chromium: message layout anchors the avatar, follows its side and joins grouped corners`. Avatar level with the bubble bottom and above the footer, start/end edges in LTR and RTL, no gap without an avatar, grouped corner radii and no message landmarks. No spoken-output assertion.
 
 <a id="dialogs"></a>
 
