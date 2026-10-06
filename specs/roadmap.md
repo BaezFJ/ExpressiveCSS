@@ -6,7 +6,20 @@ Implement the five improvements in the interview's confirmed order: complete rul
 
 The reviewed checkout is `7d3d238`. The MCP package is 0.2.2 and serves framework contract 0.12.0. Seven tools, bundled catalogue loading, version/provenance checks, heuristic semantics inspection, command restrictions and an independent package release process are implemented. Live protocol smoke tests passed during the review.
 
-Phase 1 is implemented and locally verified on 2026-10-04; required CI and review remain pending. Its [validation record](2026-10-04-mcp-complete-component-rules/validation.md#execution-evidence-on-2026-10-04) covers all 41 guides, contributor checks and isolated packages. Phase 2 is implemented and locally verified on 2026-10-04; required CI and review remain pending. Its [validation record](2026-10-04-mcp-runtime-options/validation.md#execution-evidence-on-2026-10-04) covers requested Options or explicit absence across all 41 guides, compatibility regressions, contributor checks and isolated packages. Phase 3 is implemented and locally verified on 2026-10-04; required CI and review remain pending. Its [validation record](2026-10-04-mcp-runtime-methods/validation.md#execution-evidence-on-2026-10-04) covers requested Methods or explicit absence across all 41 guides, selector isolation, compatibility regressions, contributor checks and isolated packages. Phase 4 is implemented and locally verified on 2026-10-05; required CI and review remain pending. Its [validation record](2026-10-05-mcp-compact-catalogue/validation.md#execution-evidence-on-2026-10-05) covers all 41 compact entries, optional target evidence, original-tool regressions, contributor checks and isolated packages. Phase 5 is implemented and locally verified on 2026-10-05; required CI and review remain pending. Its [validation record](2026-10-05-mcp-catalogue-search/validation.md#execution-evidence-on-2026-10-05) covers all 41 searchable entries, exact and heuristic match labels, result limits and recovery, unchanged evidence and old-tool behavior, contributor checks and isolated packages. Phases 6 through 10 remain planned and unstarted. The first usable milestone is complete rule delivery in Phase 1.
+All ten phases are implemented and merged into `master`. Phase 1 was the first usable milestone. Each validation record holds the local verification evidence for its phase:
+
+1. [Complete component rules](2026-10-04-mcp-complete-component-rules/validation.md#execution-evidence-on-2026-10-04), #213
+2. [Requested runtime options](2026-10-04-mcp-runtime-options/validation.md#execution-evidence-on-2026-10-04), #215
+3. [Requested runtime methods](2026-10-04-mcp-runtime-methods/validation.md#execution-evidence-on-2026-10-04), #216
+4. [Compact catalogue listing](2026-10-05-mcp-compact-catalogue/validation.md#execution-evidence-on-2026-10-05), #219
+5. [Catalogue search](2026-10-05-mcp-catalogue-search/validation.md#execution-evidence-on-2026-10-05), #220
+6. [Selectable response detail](2026-10-05-mcp-selectable-response-detail/validation.md#execution-evidence-on-2026-10-05), #221
+7. [Aggregate response limits and recovery](2026-10-05-mcp-aggregate-response-limits/validation.md#execution-evidence-on-2026-10-05), #222
+8. [Versioned catalogue resource](2026-10-06-mcp-versioned-catalogue-resource/validation.md#execution-evidence-on-2026-10-06), #223
+9. [Versioned component resources](2026-10-06-mcp-component-resources/validation.md#execution-evidence-on-2026-10-06), #224
+10. [Resource argument completion](2026-10-06-mcp-resource-completion/validation.md#execution-evidence-on-2026-10-06), #225
+
+No release includes this work yet. The MCP changelog lists it under Unreleased, and the package version is still 0.2.2.
 
 | Improvement | Phases |
 | --- | --- |
