@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Guidance tools enforce a configurable 64 KiB UTF-8 limit on the complete
+  serialized tool result, including text and structured content. Typed
+  `responseBudget` metadata accounts for whole-unit omissions and narrower
+  recovery requests. Indivisible guidance or accounting that cannot fit produces
+  an explicit budget error; impossible minimal results use JSON-RPC error
+  `-32001`. Setup, creative, both page aliases, syntax and catalogue share the
+  limit; QA limits and evidence behavior remain unchanged. Syntax code is whole
+  or omitted, and retained contract-prose limits have explicit disclosure.
+
 - `component_syntax_expert` accepts `detail: "compact"` or `"detailed"`, with
   detailed as the backward-compatible default. Compact retains complete rules,
   identity and shared evidence while omitting contract prose and syntax examples.
@@ -10,7 +19,8 @@
   off in compact and on in detailed. Effective selectors and schema-validated
   `omittedFields` identify intentional omissions and their reasons. Retrieve
   omitted detail through the supported selectors. Existing version/provenance
-  safety checks and prose/example limits remain; no aggregate byte budget is added.
+  safety checks remain. Contract summaries retain their disclosed prose limit;
+  examples now use whole delivery or explicit budget omission.
 
 - `component_catalog` accepts optional `query` and `limit` to search existing
   names, aliases and compact descriptions. Exact matches precede labelled

@@ -16,14 +16,15 @@ The server bundles generated component guides, selection data, contract metadata
 ## Selectable syntax detail
 
 `detail` accepts `"compact"` or `"detailed"` and defaults to `"detailed"`.
-Existing requests retain their fields and values, with additive selector and
-omission metadata. Both modes return complete rules, component identity and
-sources, lookup results, and shared compatibility/provenance evidence.
+Existing request forms and defaults remain valid. Both modes retain complete
+rules for delivered components, identity, sources, lookup results and shared
+compatibility/provenance evidence. The aggregate budget below can omit whole
+fields or components with explicit accounting.
 
 | Component field | Compact | Detailed |
 | --- | --- | --- |
 | `file`, `slug`, `title`, `source`, `docs`, `rules` | Included | Included |
-| `contract`, `syntax` | Omitted | Existing prose/example limits retained |
+| `contract`, `syntax` | Omitted | Contract summary and whole syntax example, subject to budget |
 | `options`, `methods` | Included only when requested through `sections` | Same |
 | `capability` | Omitted by default | Included by default |
 
@@ -57,21 +58,107 @@ order. Compact prose/example omissions use `compact-detail`. Unrequested API
 sections and disabled component capability detail use `not-requested`. Requested
 API records with `status: "absent"` and included null capability records are
 delivered results, so they have no omission record. The syntax output schema
-validates selector values and omission fields/reasons. A disabled syntax tool
-retains its shared blocked envelope without retrieval metadata.
+validates selector values and omission fields/reasons. Byte omissions use
+`byte-budget`. A contract summary longer than 900 characters reports
+`length-limit`, with its shortened prose still present. A disabled syntax tool
+retains its shared blocked envelope and budget metadata without retrieval fields.
 
 Recover omitted prose/examples with `detail: "detailed"`, API sections with
 `sections`, and component capability records with `includeCapabilities: true`.
 Version/provenance checks still block unsafe capability data. Detail selection
-does not change compatibility, availability, rule coverage or missing-name
-suggestions. Text and structured content describe the same result.
+does not change compatibility or missing-name lookup. Budget omissions make
+delivery partial or erroneous. Text and structured content describe the same result.
 
-Detailed output retains the existing contract limit of 900 characters and syntax
-example limit of 3,000 characters, after the guide loader's existing limits.
-`omittedFields` describes selector omissions only. Detail selection does not
-provide an aggregate byte budget or retrieve an unbounded full guide. Generic
-fallback advice remains nonnormative, and retrieval does not verify consumer
-interaction, visual or accessibility behavior.
+Detailed output retains the contract summary limit of 900 characters with
+explicit disclosure. Read the linked component documentation for full contract
+prose; increasing the byte budget does not remove this summary limit. Syntax
+examples, rules and requested API sections are whole or explicitly omitted.
+Generic fallback advice remains nonnormative, and retrieval does not verify
+consumer interaction, visual or accessibility behavior.
+
+## Aggregate response budget and recovery
+
+`EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES` defaults to 65,536 bytes, or 64 KiB.
+Set it in the server's environment to a positive safe integer in decimal digits.
+Empty values, zero, signed numbers, fractions, whitespace, exponents and unsafe
+integers fail startup. Clients cannot override this operator setting.
+
+The budget applies to `setup_expert`, `creative_director`, `page_architect`,
+`page_arcjitect`, `component_syntax_expert` and `component_catalog`, including
+disabled-tool and SDK validation-error results. `rules_enforcer` and
+`quality_inspector` retain their existing QA limits and evidence behavior.
+
+The exact measurement is `Buffer.byteLength(JSON.stringify(result), 'utf8')`.
+It counts the entire wire tool-result object, including JSON escapes, text,
+structured content, metadata and `isError`. These tools use compact JSON text
+and duplicate the same payload in structured content. The outer JSON-RPC
+envelope and stdio framing are excluded. A final transport check covers errors
+the SDK creates before or after a handler runs.
+
+Affected structured results add `responseBudget`:
+
+| Field | Meaning |
+| --- | --- |
+| `maxBytes` | Effective operator budget. |
+| `delivery` | `complete`, `partial` or `error` for the requested projection. |
+| `omissions` | Every byte-omitted unit, with its identity, `reason: "byte-budget"` and recovery index. |
+| `recoveries` | Typed retry requests or advice to increase the operator budget. |
+
+Syntax omission identities include original request position and name, canonical
+slug when known and field when applicable. Delivered components have
+`requestIndex` for repeated or mixed known/unknown requests. Selector omissions
+remain in `found[].omittedFields`; budget omissions also identify fields there.
+Unknown components, absent API sections and blocked capabilities retain their
+existing distinct meanings. `foundCount` and catalogue `count` count only
+delivered records.
+
+Reduction is deterministic. Syntax drops whole optional capability records,
+contract summaries and examples before whole requested Options/Methods, then
+whole components and foundations. It works backwards through each collection
+so retained records preserve their original order. A delivered component always
+retains all its rules in source order. Catalogue and creative reductions remove
+whole trailing entries while preserving ranking. Page architecture and its
+skeleton are indivisible. Setup checks can fail explicitly when they cannot fit.
+Compatibility, provenance, performed checks and evidence limits remain truthful.
+Budget omissions never imply complete coverage or browser approval.
+
+For `delivery: "partial"`, execute a referenced recovery request:
+
+```json
+{
+  "action": "retry",
+  "request": {
+    "name": "component_syntax_expert",
+    "arguments": {
+      "projectRoot": "/absolute/path/to/project",
+      "workflowId": "example-workflow",
+      "components": ["autocomplete"],
+      "detail": "compact",
+      "includeCapabilities": false,
+      "sections": ["methods"]
+    }
+  }
+}
+```
+
+Catalogue recovery uses an exact slug query with `limit: 1`, preserving any
+explicit target. It omits the optional workflow correlation ID because
+catalogue retrieval has no workflow state. Search-limit omissions and byte
+omissions have separate accounting. No pagination or resources are added.
+
+Creative recovery reranks a concise goal naming the omitted component with
+`maxSuggestions: 1`, preserving target and workflow context. Ranking scores and
+explanations can change with the narrower goal. The server offers this request
+only when it returns the named suggestion whole within the same budget.
+
+If an indivisible unit or the complete omission accounting cannot fit,
+`delivery: "error"` and `isError: true` advise an operator budget increase.
+Error results can retain whole reference records but make no successful-delivery
+claim. If even a minimal truthful result with essential evidence cannot fit,
+the server returns JSON-RPC error `-32001` with no tool-result object. The
+protocol error envelope is outside the tool-result budget. Do not retry that
+failure expecting same-budget success. Increase the server setting and restart,
+then repeat the request. A budget of 1 is valid and exercises this failure path.
 
 ## Requested runtime API sections
 
@@ -216,20 +303,22 @@ strongest match type. Search results also include:
 | --- | --- |
 | `query`, `limit` | Trimmed query and effective search limit. |
 | `count`, `totalMatches` | Number delivered and total matches before limiting. |
-| `omittedCount`, `truncated` | Total minus delivered, and whether any matches were omitted. |
+| `omittedCount`, `truncated` | Matches omitted by the search result-count limit, separately from the byte budget. |
 | `coverageStatus` | `complete-search-results` for all matches, or `partial-search-results` when the limit omitted matches. |
 
 For example, `{"query":"no-catalogue-match-zzzz"}` returns `entries: []`,
 zero counts, `truncated: false` and complete search coverage. If a query returns
 more than its limit, increase `limit` up to 50 or narrow the query to retrieve
 omitted entries. Search coverage concerns matching entries, not the whole
-catalogue. There is no pagination or aggregate serialized-response byte guarantee.
+catalogue. Further byte omissions appear in `responseBudget`; `count` reflects
+the records actually delivered and coverage becomes `partial-response-budget`
+or `response-budget-error` when necessary.
 
 Search retains the listing's bundled version/hash and optional-target evidence.
 An omitted target leaves compatibility unknown; an incompatible explicit target
 remains blocked while reference matches stay available. Empty results and
-truncation do not change compatibility outcomes. Selectable detail, aggregate
-response budgets and resources remain later roadmap phases.
+truncation do not change compatibility outcomes. Resources remain later roadmap
+phases.
 
 ## Run it locally
 
@@ -339,6 +428,7 @@ network limits, evidence handling, and bounded repair workflow.
 
 ## Environment variables
 
+- `EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES`, default `65536`.
 - `EXPRESSIVECSS_MCP_MAX_COMPONENT_RESPONSE_CHARS`
 - `EXPRESSIVECSS_MCP_MAX_COMPONENT_SKIPS`
 - `EXPRESSIVECSS_MCP_QA_MAX_FILES`
@@ -354,6 +444,11 @@ network limits, evidence handling, and bounded repair workflow.
 - `SKIP_QUALITY_INSPECTOR`
 
 Set any skip flag to `true` to disable that stage from doing work.
+
+`EXPRESSIVECSS_MCP_MAX_COMPONENT_RESPONSE_CHARS` is retained for configuration
+compatibility and the legacy `maxCharactersPerComponent` metadata. It no longer
+clips syntax examples and does not bound tool results. Use the byte setting for
+aggregate guidance limits. QA command-output limits remain separate.
 
 Command execution is denied by default. To let `quality_inspector` honor `runCommands: true`, the MCP operator must set `EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS` when launching the server. Use platform path separators for multiple roots, or a JSON array of absolute roots:
 
@@ -375,6 +470,7 @@ The real `projectRoot` must equal or be contained by one of those roots. A tool 
       "command": "npx",
       "args": ["-y", "@expressivecss/mcp-server@latest"],
       "env": {
+        "EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES": "65536",
         "EXPRESSIVECSS_MCP_MAX_COMPONENT_RESPONSE_CHARS": "24000",
         "EXPRESSIVECSS_MCP_MAX_COMPONENT_SKIPS": "7",
         "EXPRESSIVECSS_MCP_QA_MAX_FILES": "300",
