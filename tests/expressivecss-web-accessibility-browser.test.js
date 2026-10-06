@@ -1239,7 +1239,9 @@ scenario('actionable snackbar persists and restores focus on keyboard dismissal'
     await expect(page.locator('#next')).toBeFocused();
     assert.equal(await page.evaluate(() => window.snack.el.inert), true);
     await page.keyboard.press('Tab');
-    await expect(page.getByRole('button', { name: 'Dismiss', exact: true })).not.toBeFocused();
+    // The exiting snackbar may already be removed on a slow runner, so assert
+    // that focus is not inside one rather than locating its Dismiss button.
+    await expect(page.locator('.snackbar :focus')).toHaveCount(0);
     await expect(page.getByRole('status')).toHaveCount(0);
 
     await page.locator('#outside').focus();
