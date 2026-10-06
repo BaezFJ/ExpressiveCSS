@@ -24,21 +24,9 @@
 // against #006495, the one source there is ground truth for - $md-source below
 // is a branding choice and is free to change without failing it.
 
-// The seed every generated ramp derives from. Chosen for a restaurant POS: the
-// error ramp is pinned at hue 27.7deg and both primary and tertiary (source
-// +62deg) derive from this, so the seed has to keep both clear of red. Warm
-// "appetising" hues (0-60deg) are disqualified outright - they put primary on
-// top of error, dEok 0.07-0.12 against ~0.28 here.
-//
-// Teal wins on *worst case* across both schemes rather than on either one
-// alone, which is the metric that matters: evening service runs dark mode in a
-// dim room, and that is where a confirm/void mix-up actually happens.
-//   light  primary40 vs error40  dEok 0.278
-//   dark   primary80 vs error80  dEok 0.212   <- best of the candidates
-//   light  tertiary40 vs error40 dEok 0.224
-// It also leaves green free for the "settled/paid" role a POS will want and
-// Material does not supply.
-$md-source: #006A79 !default;
+// Mist Iris is the default seed for the generated ramps. Primary, secondary,
+// tertiary and neutral colors derive from it; the error ramp stays fixed.
+$md-source: #c6a0f6 !default;
 
 // tone -> OKLCH lightness. Fitted against the reference ramps; see the test.
 $tones: (

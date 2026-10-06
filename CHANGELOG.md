@@ -15,6 +15,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `.scroll-area` styles native scrollbars with theme-aware colors and thin
   sizing, with a WebKit fallback and system scrollbars in forced-colors mode.
 
+### Changed
+
+- The default theme seed is Mist Iris (`#c6a0f6`). The docs picker uses the
+  same default for its initial value and Reset action. Set `--md-source` or
+  Sass `$md-source` to retain an application's existing brand color.
+
 ## [0.12.0] - 2026-10-01
 
 ### Added

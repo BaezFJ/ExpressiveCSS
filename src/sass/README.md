@@ -102,12 +102,9 @@ comparators, so each boundary is written once without fractional max-widths.
 each pair onto the live `--md-sys-color-<role>` name with `light-dark()`, in one
 `@each` over `$sys-color-roles`.
 
-The shipped seed is `#006A79`, a teal. It is chosen, not arbitrary: the error
-ramp is pinned at hue 27.7°, and both primary and tertiary (source + 62°) derive
-from the seed, so the seed has to keep both clear of red. Warm "appetising" hues
-(0–60°) put primary on top of error — ΔEok 0.07–0.12 against ~0.28 for teal.
-Green is avoided so it stays available for a "settled/paid" role, which Material
-does not supply. See the comment above `$md-source`.
+The shipped seed is `#c6a0f6`, named Mist Iris in the docs picker. The ramps
+derive their hues from this seed, with fixed chroma and tone values. The error
+ramp stays fixed when the seed changes.
 
 Setting `--md-source` re-themes the whole system at runtime, with no rebuild:
 

@@ -18,6 +18,13 @@ const { page: id } = Astro.props;
 
 const entry = page(id);
 const pageName = entry.title ?? entry.label;
+const sourceColorNames = ["Lagoon", "Harbor", "Breeze", "Cobalt", "Iris"];
+const sourceColorPalettes = [
+  { name: "Bold", colors: ["#179299", "#209fb5", "#04a5e5", "#1e66f5", "#8839ef"] },
+  { name: "Soft", colors: ["#81c8be", "#85c1dc", "#99d1db", "#8caaee", "#ca9ee6"] },
+  { name: "Mist", colors: ["#8bd5ca", "#7dc4e4", "#91d7e3", "#8aadf4", "#c6a0f6"] },
+  { name: "Glow", colors: ["#94e2d5", "#74c7ec", "#89dceb", "#89b4fa", "#cba6f7"] },
+];
 ---
 <BaseLayout pageName={pageName} bodyClass="docs" markdownPath={markdownRoute(id)}>
     {/* A page that needs its own <head> content -- an extra font, say -- fills this. */}
@@ -75,22 +82,24 @@ const pageName = entry.title ?? entry.label;
                 the docs &mdash; the whole theme follows. Error does not: it is
                 a fixed hue.
             </p>
-            <div class="source-color-swatches" role="radiogroup" aria-label="Preset source colors">
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006A79" title="Teal (default)" aria-label="Teal, default" style="background:#006A79"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006495" title="Blue" aria-label="Blue" style="background:#006495"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#0B57D0" title="Azure" aria-label="Azure" style="background:#0B57D0"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#6750A4" title="Purple" aria-label="Purple" style="background:#6750A4"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B4585" title="Orchid" aria-label="Orchid" style="background:#8B4585"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#9C4048" title="Rose" aria-label="Rose" style="background:#9C4048"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B5000" title="Amber" aria-label="Amber" style="background:#8B5000"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#3B6D11" title="Green" aria-label="Green" style="background:#3B6D11"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006D3B" title="Forest" aria-label="Forest" style="background:#006D3B"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#4A4458" title="Slate" aria-label="Slate" style="background:#4A4458"></button>
+            <div role="radiogroup" aria-label="Preset source colors">
+              <p>Default source: Mist Iris.</p>
+              <p>ExpressiveCSS presets: Lagoon, Harbor, Breeze, Cobalt, Iris.</p>
+              {sourceColorPalettes.map(({ name, colors }) => (
+                <div>
+                  <p>{name}</p>
+                  <div class="source-color-swatches">
+                    {colors.map((color, index) => (
+                      <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source={color} title={`${name} ${sourceColorNames[index]} (${color})`} aria-label={`${name} ${sourceColorNames[index]}`} style={`background:${color}`}></button>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
             <div class="source-color-custom">
-                <input id="source-color-input" type="color" value="#006A79" aria-label="Custom source color">
+                <input id="source-color-input" type="color" value="#c6a0f6" aria-label="Custom source color">
                 <div class="field outlined">
-                    <input id="source-color-hex" type="text" spellcheck="false" maxlength="7" value="#006A79" placeholder=" " autocomplete="off">
+                    <input id="source-color-hex" type="text" spellcheck="false" maxlength="7" value="#c6a0f6" placeholder=" " autocomplete="off">
                     <label for="source-color-hex">Hex</label>
                 </div>
             </div>

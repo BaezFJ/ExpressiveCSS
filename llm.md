@@ -631,7 +631,7 @@ In Sass, consume the live token. The values are hex, so `rgba(var(--md-sys-color
 }
 ```
 
-`--md-source` is the seed the ramps are generated from, and it is live: set it and every generated ramp — and every system color that resolves to one — recolors at runtime, with no rebuild. Expressive ships `#006A79`.
+`--md-source` is the seed the ramps are generated from, and it is live: set it and every generated ramp — and every system color that resolves to one — recolors at runtime, with no rebuild. Expressive ships `#c6a0f6`, Mist Iris.
 
 ```css
 :root {
@@ -643,23 +643,23 @@ Five of the six ramps are derived this way with `oklch(from var(--md-source) …
 
 Overriding an individual `-light`/`-dark` pair still works and still wins — that is the more surgical tool. `--md-source` is the blunt one.
 
-Where the shipped seed `#006A79` lands, for the roles you will most often replace. These are *resolved* values: the stylesheet ships the `oklch()` expression, and the browser computes the color — including gamut-mapping the entries whose target chroma sRGB cannot reach — so treat them as accurate to about a rounding step rather than as literals to paste back in.
+Where the shipped seed `#c6a0f6` lands, for the roles you will most often replace. These are *resolved* values: the stylesheet ships the `oklch()` expression, and the browser computes the color — including gamut-mapping the entries whose target chroma sRGB cannot reach — so treat them as accurate to about a rounding step rather than as literals to paste back in.
 
 | Token | Light | Dark |
 | --- | --- | --- |
-| `primary` | #006a7a | #4fdbf5 |
-| `on-primary` | #ffffff | #003740 |
-| `primary-container` | #aaf0ff | #00505c |
-| `on-primary-container` | #002026 | #aaf0ff |
-| `secondary` | #4b6369 | #b1cbd3 |
-| `secondary-container` | #cde8ef | #344b51 |
-| `tertiary` | #535c7f | #bac4ed |
+| `primary` | #6e4995 | #d8b2ff |
+| `on-primary` | #ffffff | #3f1861 |
+| `primary-container` | #f5ceff | #56307a |
+| `on-primary-container` | #2a0048 | #f5ceff |
+| `secondary` | #635a6b | #ccc1d5 |
+| `secondary-container` | #e8ddf2 | #4b4253 |
+| `tertiary` | #7a5059 | #e8b7c0 |
 | `error` | #ba1a1a | #ffb4ab |
-| `background` | #fafdff | #1a1c1d |
-| `surface` | #fafdff | #1a1c1d |
-| `on-surface` | #1a1c1d | #e0e3e4 |
-| `surface-variant` | #d9e5e8 | #3f484b |
-| `outline` | #6f797c | #889296 |
+| `background` | #faf8fb | #090809 |
+| `surface` | #faf8fb | #090809 |
+| `on-surface` | #1c1b1d | #e3e1e4 |
+| `surface-variant` | #e5e0e9 | #49444b |
+| `outline` | #7a757c | #938e96 |
 
 `error` is the one row that does not move when you change the seed — it is the ramp that is not generated.
 
