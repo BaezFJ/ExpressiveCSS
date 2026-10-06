@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- `component_syntax_expert` accepts `detail: "compact"` or `"detailed"`, with
+  detailed as the backward-compatible default. Compact retains complete rules,
+  identity and shared evidence while omitting contract prose and syntax examples.
+  Requested Options/Methods and explicit foundations work in both modes.
+  `includeCapabilities` overrides component capability detail, which defaults
+  off in compact and on in detailed. Effective selectors and schema-validated
+  `omittedFields` identify intentional omissions and their reasons. Retrieve
+  omitted detail through the supported selectors. Existing version/provenance
+  safety checks and prose/example limits remain; no aggregate byte budget is added.
+
 - `component_catalog` accepts optional `query` and `limit` to search existing
   names, aliases and compact descriptions. Exact matches precede labelled
   heuristic matches. Search defaults to 10 results, permits at most 50 and
