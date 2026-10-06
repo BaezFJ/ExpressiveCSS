@@ -32,6 +32,8 @@ try {
     const installed = join(target, 'node_modules', manifest.name);
     assert.ok(readFileSync(join(installed, 'LICENSE'), 'utf8').includes('Permission is hereby granted'));
     if (name === 'mcp') {
+      // With several bins, `npx <package>` runs only the one named after the unscoped package.
+      assert.equal(manifest.bin[manifest.name.split('/').pop()], 'server.js', 'npx cannot pick the server bin');
       for (const file of ['component-guides.json', 'semantics-data.json', 'component-decisions.json', 'contract.json']) {
         assert.ok(existsSync(join(installed, file)), `Missing ${file}`);
       }
