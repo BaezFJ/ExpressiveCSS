@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 - 2026-10-06
+
+- Breaking: guidance tools now cap each result at 64 KiB of UTF-8 by
+  default. A response that used to arrive whole can now omit whole
+  units and list them in `responseBudget`. To return larger responses, set
+  `EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES` in the server's environment. The
+  limit is described in its own entry below.
 
 - Add argument completion to the component resource templates. Both templates
   complete canonical slugs by case-insensitive prefix, and
@@ -68,6 +74,7 @@
 - `component_syntax_expert` returns complete component rules in source order,
   including rules previously omitted by the eight-rule cap. Generic fallback
   advice remains unchanged.
+- Bundled framework guidance: ExpressiveCSS 0.12.0.
 
 ## 0.2.2 - 2026-10-01
 
