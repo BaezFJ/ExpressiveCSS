@@ -10,6 +10,7 @@ import { startFixtureServer } from '../scripts/expressivecss-eval-browser.mjs';
 import { consumerBuild, fixtures, root } from './fixtures/selective-builds.mjs';
 
 for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })) {
+  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engineName) continue;
   test(`${engineName}: selective builds preserve rendering and interaction`, { timeout: 120000 }, async t => {
     if (!existsSync(engine.executablePath())) { t.skip(`${engineName} is not installed`); return; }
     const directory = await mkdtemp(join(tmpdir(), 'expressive-selective-'));
