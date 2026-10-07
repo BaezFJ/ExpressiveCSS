@@ -4052,7 +4052,7 @@ A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The firs
 </figure>
 ```
 
-- `area` fills under each line with a gradient; `fade` fades the line ends; `sparkline` is a 48px chart with no grid, labels, legend or tooltip, and is not focusable.
+- `area` fills under each line with a gradient; `stacked` draws each series on the total of the ones before it and fills the band between, with the y axis from zero (keep values positive; an empty cell leaves the total unknown, so that series and the ones above it break at that row, and the tooltip still shows each cell); `fade` fades the line ends; `sparkline` is a 48px chart with no grid, labels, legend or tooltip, and is not focusable.
 - A series header cell's classes reach its line. `<th class="dashed">` draws a dotted line for a target or forecast.
 - Series take `primary`, `tertiary`, `secondary` and `on-surface-variant` in turn.
 - A cell's number is its text without currency signs, percent signs or grouping commas. Text that is not a single number (`4.4k`, `(1,200)`) is a gap, as is an empty cell. Put the number in `data-value` for those, and for `4.400 €`, which would read as 4.4. The tooltip shows the cell text as written.

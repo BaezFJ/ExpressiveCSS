@@ -1492,11 +1492,11 @@
       "slug": "line-chart",
       "title": "Line chart",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-10-06",
-      "scope": "Smooth monotone lines drawn from a figure's data table, with area, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.",
+      "scope": "Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.",
       "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.",
       "upstream": {
         "source": "https://m3.material.io/components",
@@ -1548,7 +1548,7 @@
         {
           "file": "tests/line-chart-browser.test.js",
           "name": "chromium: line chart handles cards, headerless tables, RTL, strict values and forced colors",
-          "scope": "A chart in a sized card and in a primary action keeps its own layout and caption, a header row without <thead> is not data, the RTL axis matches its labels and arrow keys, ambiguous cell text is a gap, show() is safe without data and skips a repeated row, and swatches keep their series colors in forced colors.",
+          "scope": "A chart in a sized card and in a primary action keeps its own layout and caption, a header row without <thead> is not data, the RTL axis matches its labels and arrow keys, ambiguous cell text is a gap, show() is safe without data and skips a repeated row, stacked bands fill down to the series below or the plot bottom with cursor points on the totals and each cell in the tooltip, a stacked gap breaks the series above it, the stacked range keeps 10% headroom above zero, and swatches keep their series colors in forced colors.",
           "state": "not-recorded"
         }
       ],

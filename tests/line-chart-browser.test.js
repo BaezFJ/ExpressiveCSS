@@ -151,6 +151,8 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
             ['A', '(1,200)'], ['B', '3–5'], ['C', '5 of 10'], ['D', '4.4k'], ['E', '−$1,200.5'], ['F', '12%'], ['G', '1,2,3']])}
           ${chart('class="line-chart" id="empty"', 'Empty', '<th>V</th>', [['A', 'n/a']])}
           ${chart('class="line-chart" id="pair"', 'Pair', '<th>A</th><th>B</th>', [['Jan', '1', '2'], ['Feb', '3', '4']])}
+          ${chart('class="line-chart stacked" id="stacked" data-max="10"', 'Stacked', '<th>A</th><th>B</th>', [['Jan', '1', '2'], ['Feb', '3', '4']])}
+          ${chart('class="line-chart stacked" id="stacked-gap"', 'Stacked gap', '<th>A</th><th>B</th>', [['Jan', '1', '2'], ['Feb', '', '2'], ['Mar', '3', '2']])}
         </div>
         <script>${js}</script>`);
       await page.evaluate(() => Expressive.AutoInit());
@@ -205,6 +207,42 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         chart.show(1);
         return new Promise((resolve) => setTimeout(() => resolve(mutations)));
       }), 0);
+
+      // Each stacked series sits on the total below it and fills down to it.
+      const stacked = await page.locator('#stacked').evaluate((el) => {
+        const chart = Expressive.LineChart.getInstance(el);
+        chart.show(1);
+        return {
+          areas: [...el.querySelectorAll('.line-chart-area')].map((area) => [getComputedStyle(area).display, area.getAttribute('d')]),
+          line: el.querySelectorAll('.line-chart-line')[1].getAttribute('d'),
+          dots: [...el.querySelectorAll('.line-chart-cursor > span')].map((dot) => dot.style.top),
+          tooltip: el.querySelector('.line-chart-tooltip').textContent,
+        };
+      });
+      assert.deepEqual(stacked.areas.map(([display]) => display), ['inline', 'inline']);
+      assert.match(stacked.areas[0][1], /^M25,90C.*,70L75,100C.*25,100Z$/, 'the bottom series fills to zero');
+      assert.match(stacked.areas[1][1], /^M25,70C.*,30L75,70C.*25,90Z$/, 'the next series fills to the one below');
+      assert.match(stacked.line, /^M25,70C.*75,30$/);
+      assert.deepEqual(stacked.dots, ['70%', '30%']);
+      assert.equal(stacked.tooltip, 'FebA3B4', 'the tooltip keeps each cell, not the total');
+
+      const gap = await page.locator('#stacked-gap').evaluate((el) => {
+        const chart = Expressive.LineChart.getInstance(el);
+        chart.show(1);
+        const atGap = [el.querySelectorAll('.line-chart-cursor > span').length, el.querySelector('.line-chart-tooltip').textContent];
+        chart.show(2);
+        const dots = [...el.querySelectorAll('.line-chart-cursor > span')].map((dot) => parseFloat(dot.style.top));
+        const runs = el.querySelectorAll('.line-chart-line')[1].getAttribute('d').match(/M/g).length;
+        // A y axis above zero clips the bottom band's base to the plot.
+        const ys = [...Expressive.LineChart.init(el, { min: 1 }).el.querySelectorAll('.line-chart-area')]
+          .flatMap((area) => [...area.getAttribute('d').matchAll(/,(-?[\d.]+)/g)].map((match) => Number(match[1])));
+        return { atGap, dots, runs, lowest: Math.max(...ys) };
+      });
+      assert.deepEqual(gap.atGap, [0, 'FebB2'], 'a gap leaves the total above it unknown');
+      assert.equal(gap.runs, 2, 'the series above a gap breaks there too');
+      // Totals run 0 to 5, with 10% of that span above.
+      assert.ok(Math.abs(gap.dots[0] - (100 - 300 / 5.5)) < 0.01 && Math.abs(gap.dots[1] - (100 - 500 / 5.5)) < 0.01, `${gap.dots}`);
+      assert.ok(gap.lowest <= 100, `area below the plot: ${gap.lowest}`);
 
       // WebKit does not emulate forced colors.
       if (engine !== 'webkit') {

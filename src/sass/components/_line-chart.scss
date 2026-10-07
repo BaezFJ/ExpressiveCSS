@@ -10,7 +10,8 @@
 // stay a constant width, so resizing needs no script. Points, the cursor
 // and the tooltip are HTML positioned in percentages for the same reason.
 //
-// Modifiers: .area fills under each line, .fade fades the line ends,
+// Modifiers: .area fills under each line, .stacked stacks each series on
+// the ones before it and fills between them, .fade fades the line ends,
 // .sparkline is a small chart with no axis, grid, legend or tooltip.
 // A series header cell's classes reach its line: <th class="dashed">.
 //
@@ -93,7 +94,7 @@
 .line-chart-area {
   display: none;
 
-  .line-chart.area & {
+  .line-chart:is(.area, .stacked) & {
     display: inline;
   }
 }

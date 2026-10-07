@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Line chart: `stacked` draws each series on the total of the ones before it
+  and fills the band between them, from a zero baseline. The tooltip still
+  shows each cell, and an empty cell breaks the series above it. The docs add chart card layouts with a period switch, a
+  compact chart and a side sparkline.
+
 - Message component: `.message` lays out one message in a conversation with an
   optional `.message-avatar`, `.message-header` and `.message-footer` around a
   `.message-bubble`. `end` moves a message to the sender's side,

@@ -29,6 +29,13 @@ interface Series {
   /** Cell text, shown in the tooltip as the author formatted it. */
   text: string[];
   values: (number | null)[];
+  /**
+   * Where each value is drawn: the value, or in a stacked chart the running
+   * total, which is unknown (null) above a gap.
+   */
+  tops: (number | null)[];
+  /** In a stacked chart, the total of the series below, which this area fills down to. */
+  base?: (number | null)[];
 }
 
 /**
@@ -166,8 +173,11 @@ export class LineChart extends Component<LineChartOptions> {
       if (value === null) return;
       const dot = document.createElement('span');
       dot.dataset.series = String((i % COLORS) + 1);
-      dot.style.top = `${this._y(value)}%`;
-      this._cursor.append(dot);
+      const top = series.tops[index];
+      if (top !== null) {
+        dot.style.top = `${this._y(top)}%`;
+        this._cursor.append(dot);
+      }
       const name = document.createElement('span');
       name.dataset.series = dot.dataset.series;
       name.textContent = series.name;
@@ -187,16 +197,31 @@ export class LineChart extends Component<LineChartOptions> {
       .flatMap((body) => Array.from(body.rows))
       .filter((row) => row !== headerRow);
     this.labels = rows.map((row) => row.cells[0]?.textContent.trim() ?? '');
-    this.series = header.slice(1).map((cell, i) => ({
-      name: cell.textContent.trim(),
-      className: cell.className,
-      text: rows.map((row) => row.cells[i + 1]?.textContent.trim() ?? ''),
-      values: rows.map((row) => cellValue(row.cells[i + 1]))
-    }));
+    this.series = header.slice(1).map((cell, i) => {
+      const values = rows.map((row) => cellValue(row.cells[i + 1]));
+      return {
+        name: cell.textContent.trim(),
+        className: cell.className,
+        text: rows.map((row) => row.cells[i + 1]?.textContent.trim() ?? ''),
+        values,
+        tops: values
+      };
+    });
+    const stacked = this.el.classList.contains('stacked');
+    if (stacked) {
+      // A gap leaves the total unknown, so the series above break there too.
+      // ponytail: negative values overlap the band below; diverging stacks if needed.
+      const totals: (number | null)[] = this.labels.map(() => 0);
+      for (const series of this.series) {
+        series.base = [...totals];
+        series.tops = series.values.map((value, i) =>
+          (totals[i] = value === null || totals[i] === null ? null : totals[i] + value));
+      }
+    }
 
     let [low, high] = [Infinity, -Infinity];
     for (const series of this.series) {
-      for (const value of series.values) {
+      for (const value of series.tops) {
         if (value === null) continue;
         low = Math.min(low, value);
         high = Math.max(high, value);
@@ -208,8 +233,9 @@ export class LineChart extends Component<LineChartOptions> {
       return Number.isFinite(value) ? value : this.options[name];
     };
     const pad = (high - low) * 0.1 || 1;
-    const min = option('min') ?? low - pad;
-    const max = option('max') ?? high + pad;
+    // Stacked areas are read against zero, with the headroom of that span.
+    const min = option('min') ?? (stacked ? Math.min(0, low) : low - pad);
+    const max = option('max') ?? high + (stacked ? (high - min) * 0.1 || 1 : pad);
     this._y = (value) => 100 - ((value - min) / (max - min || 1)) * 100;
   }
 
@@ -238,13 +264,16 @@ export class LineChart extends Component<LineChartOptions> {
       group.setAttribute('class', `line-chart-series ${series.className}`.trim());
       group.dataset.series = String((i % COLORS) + 1);
 
-      // A gap in the data breaks the line into runs.
-      const runs: [number, number][][] = [[]];
-      series.values.forEach((value, index) => {
+      // A gap in the data breaks the line into runs of row indexes.
+      const runs: number[][] = [[]];
+      series.tops.forEach((value, index) => {
         if (value === null) runs.push([]);
-        else runs[runs.length - 1].push([this._x(index), this._y(value)]);
+        else runs[runs.length - 1].push(index);
       });
       const filled = runs.filter((run) => run.length);
+      const points = (run: number[], values: (number | null)[]) =>
+        run.map((index): [number, number] => [this._x(index), this._y(values[index]!)]);
+      const tops = filled.map((run) => monotonePath(points(run, series.tops)));
 
       const id = `line-chart-gradient-${++_gradientId}`;
       const gradient = document.createElementNS(SVG, 'linearGradient');
@@ -257,13 +286,20 @@ export class LineChart extends Component<LineChartOptions> {
       const area = document.createElementNS(SVG, 'path');
       area.setAttribute('class', 'line-chart-area');
       area.setAttribute('fill', `url(#${id})`);
+      // A stacked area runs back along the series below; the reversed curve
+      // is the same curve. Its base stops at the plot bottom when the y axis
+      // starts above zero.
       area.setAttribute('d', filled
-        .map((run) => `${monotonePath(run)}V100H${run[0][0]}Z`)
+        .map((run, r) => {
+          if (!series.base) return `${tops[r]}V100H${this._x(run[0])}Z`;
+          const base = points(run, series.base).map(([x, y]): [number, number] => [x, Math.min(100, y)]);
+          return `${tops[r]}L${monotonePath(base.reverse()).slice(1)}Z`;
+        })
         .join(''));
 
       const line = document.createElementNS(SVG, 'path');
       line.setAttribute('class', 'line-chart-line');
-      line.setAttribute('d', filled.map(monotonePath).join(''));
+      line.setAttribute('d', tops.join(''));
 
       group.append(gradient, area, line);
       svg.append(group);
