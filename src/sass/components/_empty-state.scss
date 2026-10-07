@@ -1,0 +1,78 @@
+@use "../abstracts" as *;
+
+// Empty state. What a view shows when it has nothing to list yet, no search
+// results, or no access: an optional icon or image, a heading, supporting
+// text and actions, centered in the space the content would fill.
+//
+// Anatomy is the HTML, in order:
+//   icon or <img>    a leading icon sits in a tonal circle; an image keeps its ratio
+//   h1–h6            the headline; pick the level the page outline needs
+//   <p>              supporting text
+//   .empty-state-actions   buttons or links
+//
+// Tokens:
+//   --md-comp-empty-state-padding               48px 24px
+//   --md-comp-empty-state-max-width             40ch (text)
+//   --md-comp-empty-state-icon-size             48px
+//   --md-comp-empty-state-icon-container-size   96px
+//   --md-comp-empty-state-icon-container-color  surface-container-high
+//   --md-comp-empty-state-image-max-width       240px
+
+.empty-state {
+  --md-comp-empty-state-padding: 48px 24px;
+  --md-comp-empty-state-max-width: 40ch;
+  --md-comp-empty-state-icon-size: 48px;
+  --md-comp-empty-state-icon-container-size: 96px;
+  --md-comp-empty-state-icon-container-color: var(--md-sys-color-surface-container-high);
+  --md-comp-empty-state-image-max-width: 240px;
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: var(--md-comp-empty-state-padding);
+  text-align: center;
+  color: var(--md-sys-color-on-surface);
+
+  > #{$icon}:first-child {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--md-comp-empty-state-icon-container-size);
+    height: var(--md-comp-empty-state-icon-container-size);
+    margin-block-end: 16px;
+    border-radius: 50%;
+    background-color: var(--md-comp-empty-state-icon-container-color);
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-comp-empty-state-icon-size);
+    --md-icon-optical-size: 48;
+  }
+
+  > img:first-child {
+    max-width: min(100%, var(--md-comp-empty-state-image-max-width));
+    height: auto;
+    margin-block-end: 16px;
+  }
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    max-width: var(--md-comp-empty-state-max-width);
+    margin: 0;
+    @include typescale("headline-small");
+  }
+
+  > p {
+    max-width: var(--md-comp-empty-state-max-width);
+    margin: 0;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-medium");
+  }
+
+  > .empty-state-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-block-start: 16px;
+  }
+}

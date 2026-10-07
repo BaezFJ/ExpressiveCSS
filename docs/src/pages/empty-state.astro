@@ -1,0 +1,131 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "no-results", label: "No results" },
+  { id: "illustration", label: "Illustration" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="empty_state">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          An <code>.empty-state</code> fills the space of a view that has
+          nothing to show yet. It says what is missing and what the user can do
+          about it.
+        </p>
+        <p>
+          In order, it holds an optional leading icon, which sits in a tonal
+          circle; a heading at the level the page outline needs; a
+          <code>&lt;p&gt;</code> of supporting text; and an
+          <code>.empty-state-actions</code> row of buttons. Everything is
+          centered.
+        </p>
+        <div class="empty-state mb-3">
+          <span class="material-symbols" aria-hidden="true">inbox</span>
+          <h4>No messages yet</h4>
+          <p>Messages from your team show up here.</p>
+          <div class="empty-state-actions">
+            <button class="filled">New message</button>
+          </div>
+        </div>
+<Code code={`
+<div class="empty-state">
+  <span class="material-symbols" aria-hidden="true">inbox</span>
+  <h2>No messages yet</h2>
+  <p>Messages from your team show up here.</p>
+  <div class="empty-state-actions">
+    <button class="filled">New message</button>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S["no-results"]}>
+        <p>
+          When a search or filter empties a list, name the query and offer the
+          way back as the action.
+        </p>
+        <div class="empty-state mb-3">
+          <span class="material-symbols" aria-hidden="true">search_off</span>
+          <h4>No results for "invoices 2019"</h4>
+          <p>Check the spelling or search all folders.</p>
+          <div class="empty-state-actions">
+            <button class="outlined">Clear search</button>
+            <button class="text">Search all folders</button>
+          </div>
+        </div>
+<Code code={`
+<div class="empty-state">
+  <span class="material-symbols" aria-hidden="true">search_off</span>
+  <h3>No results for "invoices 2019"</h3>
+  <p>Check the spelling or search all folders.</p>
+  <div class="empty-state-actions">
+    <button class="outlined">Clear search</button>
+    <button class="text">Search all folders</button>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S.illustration}>
+        <p>
+          An <code>&lt;img&gt;</code> can lead instead of the icon. It keeps
+          its ratio up to 240px wide. Give it <code>alt=""</code> when the
+          heading already says what it shows.
+        </p>
+        <div class="empty-state mb-3">
+          <img src="https://picsum.photos/id/1015/480/320" alt="" width="240" height="160">
+          <h4>Start your first trip</h4>
+          <p>Plan a route and it appears here, ready to share.</p>
+          <div class="empty-state-actions">
+            <button class="filled">Plan a route</button>
+          </div>
+        </div>
+<Code code={`
+<div class="empty-state">
+  <img src="trip.svg" alt="" width="240" height="160">
+  <h2>Start your first trip</h2>
+  <p>Plan a route and it appears here, ready to share.</p>
+  <div class="empty-state-actions">
+    <button class="filled">Plan a route</button>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.empty-state</code>.</p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-empty-state-padding</code></td>
+            <td>48px 24px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-empty-state-max-width</code></td>
+            <td>40ch (heading and text)</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-empty-state-icon-size</code></td>
+            <td>48px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-empty-state-icon-container-size</code></td>
+            <td>96px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-empty-state-icon-container-color</code></td>
+            <td><code>--md-sys-color-surface-container-high</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-empty-state-image-max-width</code></td>
+            <td>240px</td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

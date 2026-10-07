@@ -1,0 +1,165 @@
+@use "../../abstracts" as *;
+
+// Rating. Two forms share the star.
+//
+// Input: a <fieldset class="rating"> with a <legend> and one radio per star,
+// each in a <label> whose visually hidden text ("3 stars") comes before the
+// radio: a span after it is the older input + span radio, which hides the
+// input. The radio itself is drawn as the star, so arrow keys, form
+// submission and the group's name stay native. A star fills when it or a
+// later star is checked; hovering previews.
+//
+// Display: <span class="rating" role="img" aria-label="Rated 4.5 out of 5">
+// with --md-comp-rating-value. The stars fill to that value, halves included.
+//
+// Loaded after radio-buttons: the input rules match the radio rules' weight
+// and win on order.
+//
+// Tokens:
+//   --md-comp-rating-size         24px (display 20px)
+//   --md-comp-rating-color        tertiary
+//   --md-comp-rating-empty-color  outline-variant
+//   --md-comp-rating-value        0 (display)
+//   --md-comp-rating-max          5 (display)
+
+$_rating-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m12 17.27 6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E");
+
+.rating {
+  --md-comp-rating-size: 24px;
+  --md-comp-rating-color: var(--md-sys-color-tertiary);
+  --md-comp-rating-empty-color: var(--md-sys-color-outline-variant);
+}
+
+fieldset.rating {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  > legend {
+    margin-block-end: 4px;
+    padding: 0;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-medium");
+  }
+
+  > label {
+    display: inline-flex;
+    gap: 0;
+    min-height: 0;
+    padding: 4px;
+    border-radius: 50%;
+    cursor: pointer;
+
+    &:has(> input:focus-visible) {
+      @include focus-ring;
+    }
+
+    &:has(> input:disabled) {
+      opacity: 0.38;
+      cursor: default;
+    }
+  }
+
+  > label > [type="radio"] {
+    flex: none;
+    width: var(--md-comp-rating-size);
+    height: var(--md-comp-rating-size);
+    border: 0;
+    border-radius: 0;
+    background-color: var(--md-comp-rating-empty-color);
+    background-image: none;
+    box-shadow: none;
+    mask: $_rating-star center / 100% no-repeat;
+    outline: 0;
+    transition: background-color 0.15s ease-out;
+
+    // The base radio draws its dot in :checked, :hover and the disabled
+    // states, some at a higher weight; the star mask would show it.
+    &:checked,
+    &:hover,
+    &:disabled,
+    &:disabled:checked {
+      border: 0;
+      background-image: none;
+      box-shadow: none;
+    }
+  }
+
+  // Filled: the checked star and every star before it.
+  > label:has(> :checked) > [type="radio"],
+  > label:has(~ label > :checked) > [type="radio"] {
+    background-color: var(--md-comp-rating-color);
+  }
+
+  // Hovering previews the rating under the pointer. Both rules sit under the
+  // same :has() so the preview outranks the reset.
+  &:has(> label:hover) {
+    > label > [type="radio"] {
+      background-color: var(--md-comp-rating-empty-color);
+    }
+
+    > label:hover > [type="radio"],
+    > label:has(~ label:hover) > [type="radio"] {
+      background-color: color-mix(in oklab, var(--md-comp-rating-color) 70%, transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    > label > [type="radio"] {
+      transition: none;
+    }
+  }
+}
+
+.rating:not(fieldset) {
+  --md-comp-rating-size: 20px;
+  --md-comp-rating-value: 0;
+  --md-comp-rating-max: 5;
+
+  display: inline-block;
+  width: calc(var(--md-comp-rating-size) * var(--md-comp-rating-max));
+  height: var(--md-comp-rating-size);
+  vertical-align: middle;
+  background: linear-gradient(
+    to right,
+    var(--md-comp-rating-color) calc(var(--md-comp-rating-value) / var(--md-comp-rating-max) * 100%),
+    var(--md-comp-rating-empty-color) 0
+  );
+  mask: $_rating-star left center / var(--md-comp-rating-size) repeat-x;
+
+  &:dir(rtl) {
+    background: linear-gradient(
+      to left,
+      var(--md-comp-rating-color) calc(var(--md-comp-rating-value) / var(--md-comp-rating-max) * 100%),
+      var(--md-comp-rating-empty-color) 0
+    );
+    mask-position: right center;
+  }
+}
+
+@media (forced-colors: active) {
+  fieldset.rating > label > [type="radio"],
+  .rating:not(fieldset) {
+    forced-color-adjust: none;
+  }
+
+  fieldset.rating > label > [type="radio"] {
+    background-color: GrayText;
+  }
+
+  fieldset.rating > label:has(> :checked) > [type="radio"],
+  fieldset.rating > label:has(~ label > :checked) > [type="radio"] {
+    background-color: Highlight;
+  }
+
+  .rating:not(fieldset) {
+    background: linear-gradient(
+      to right,
+      Highlight calc(var(--md-comp-rating-value) / var(--md-comp-rating-max) * 100%),
+      GrayText 0
+    );
+  }
+}

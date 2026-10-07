@@ -1,0 +1,167 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "exclusive", label: "One open at a time" },
+  { id: "icon", label: "Leading icon" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="accordion">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          An <code>.accordion</code> stacks native <code>&lt;details&gt;</code>
+          items as joined tiles. Each item's <code>&lt;summary&gt;</code> is its
+          header, and everything after the summary is its panel.
+        </p>
+        <p>
+          The browser does the work: the summary is a button that reports
+          whether the item is open, Enter and Space toggle it, and the
+          <code>open</code> attribute sets the starting state. There is no
+          JavaScript. Opening animates where the engine can transition to
+          <code>auto</code> height, and opens at once elsewhere or under
+          reduced motion.
+        </p>
+        <div class="accordion" style="max-width: 36rem;">
+          <details open>
+            <summary>Can I change my plan later?</summary>
+            <p>Yes. The new plan starts with your next billing period.</p>
+          </details>
+          <details>
+            <summary>How do I export my data?</summary>
+            <p>Open Settings, then Export. The download includes every project you own.</p>
+          </details>
+          <details>
+            <summary>Who can see my projects?</summary>
+            <p>Only the people you invite. Public links are off until you turn them on.</p>
+          </details>
+        </div>
+<Code code={`
+<div class="accordion">
+  <details open>
+    <summary>Can I change my plan later?</summary>
+    <p>Yes. The new plan starts with your next billing period.</p>
+  </details>
+  <details>
+    <summary>How do I export my data?</summary>
+    <p>Open Settings, then Export. The download includes every project you own.</p>
+  </details>
+</div>
+`} />
+  </Section>
+  <Section {...S.exclusive}>
+        <p>
+          Give the items one shared <code>name</code> and the browser keeps at
+          most one of them open: opening an item closes the one that was open.
+        </p>
+        <div class="accordion" style="max-width: 36rem;">
+          <details name="shipping" open>
+            <summary>Standard delivery</summary>
+            <p>Three to five working days. Free on orders over $50.</p>
+          </details>
+          <details name="shipping">
+            <summary>Express delivery</summary>
+            <p>Next working day when you order before 2 PM.</p>
+          </details>
+          <details name="shipping">
+            <summary>Collect in store</summary>
+            <p>Ready in two hours. We send a code when it is.</p>
+          </details>
+        </div>
+<Code code={`
+<div class="accordion">
+  <details name="shipping" open>
+    <summary>Standard delivery</summary>
+    <p>Three to five working days. Free on orders over $50.</p>
+  </details>
+  <details name="shipping">
+    <summary>Express delivery</summary>
+    <p>Next working day when you order before 2 PM.</p>
+  </details>
+</div>
+`} />
+  </Section>
+  <Section {...S.icon}>
+        <p>
+          A leading icon goes first in the summary. Hide it from assistive
+          technology; the summary text names the item.
+        </p>
+        <div class="accordion" style="max-width: 36rem;">
+          <details>
+            <summary>
+              <span class="material-symbols" aria-hidden="true">lock</span>
+              Privacy
+            </summary>
+            <p>Choose who can see your profile and activity.</p>
+          </details>
+          <details>
+            <summary>
+              <span class="material-symbols" aria-hidden="true">notifications</span>
+              Notifications
+            </summary>
+            <p>Pick which updates reach you by email and which stay in the app.</p>
+          </details>
+        </div>
+<Code code={`
+<div class="accordion">
+  <details>
+    <summary>
+      <span class="material-symbols" aria-hidden="true">lock</span>
+      Privacy
+    </summary>
+    <p>Choose who can see your profile and activity.</p>
+  </details>
+</div>
+`} />
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          Leave the summary's role and expanded state to the browser. An
+          authored <code>role</code> or <code>aria-expanded</code> overrides
+          them and goes stale the first time the item toggles.
+        </p>
+        <p>
+          Keep links and buttons out of the summary. It is already a button,
+          so a control inside it is a control nested in a control: pressing it
+          also toggles the item. Put actions in the panel.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.accordion</code>.</p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-accordion-container-color</code></td>
+            <td><code>--md-sys-color-surface-container</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-accordion-shape</code></td>
+            <td>20px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-accordion-grouped-shape</code></td>
+            <td>4px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-accordion-gap</code></td>
+            <td>2px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-accordion-header-height</code></td>
+            <td>56px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-accordion-padding</code></td>
+            <td>16px</td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

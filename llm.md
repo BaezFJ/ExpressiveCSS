@@ -40,6 +40,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 ### CSS components
 
 - Badges
+- Avatar
 - Banner migration
 - Breadcrumbs
 - Buttons
@@ -47,6 +48,8 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Carousel
 - Drag handle
 - Lists
+- Accordion
+- Data table
 - Floating Action Button
 - Footer
 - Icon buttons
@@ -58,6 +61,13 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Panes
 - Preloader
 - Loading indicator
+- Skeleton
+- Empty state
+- Popover
+- Stepper
+- Timeline
+- Stat
+- Tree
 - Search
 - Button groups
 - Split button
@@ -76,13 +86,16 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Snackbar
 - Tooltips
 - Toolbars
+- Command palette
 
 ### Forms
 
 - Date Picker
 - Time Picker
 - Text Inputs
+- Drop zone
 - Fieldsets
+- Rating
 - Switches
 - Select
 - Sliders
@@ -275,6 +288,7 @@ Opt an element out when it needs manual options:
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
+| `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
 | `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
@@ -1603,6 +1617,14 @@ Blockquotes emphasize a quote or citation. The left bar uses `--md-sys-color-pri
 </blockquote>
 ```
 
+### Keyboard keys
+
+`<kbd>` is drawn as a keycap. Wrap a combination in an outer `<kbd>`, which stays plain around the keys inside it. A trailing `<kbd>` in a menu or list item is quiet shortcut text instead.
+
+```html
+<p>Press <kbd><kbd>Ctrl</kbd>+<kbd>K</kbd></kbd> to open the command palette.</p>
+```
+
 ### Flow Text
 
 `flow-text` scales font size with the viewport so line length stays readable. Resize the window and watch the sample change, or use the button to compare with unscaled body text.
@@ -1721,6 +1743,44 @@ Default is `error` / `on-error`. Override with a fill + `on-*` pair when the bad
 <span class="badge">3</span>
 <span class="badge primary on-primary-text">1</span>
 ```
+
+---
+
+## Avatar
+
+A person or account as a circular image, initials or icon, alone or in an overlapping group.
+
+A `.avatar` is an `<img>`, or a `<span>` holding initials or an icon. It is 40px by default; `small` is 32px and `large` is 56px, and the initials and icon scale with it. Give an image alt text naming the person, or `alt=""` when the name is already beside it. Initials read as separate letters, so give a `<span>` avatar `role="img"` and an `aria-label`, or `aria-hidden="true"` when the name is visible next to it. CSS only; there is no JavaScript.
+
+```html
+<img class="avatar" src="ada.jpg" alt="Ada Lovelace">
+<span class="avatar" role="img" aria-label="Grace Hopper">GH</span>
+<span class="avatar large" role="img" aria-label="Guest">
+  <span class="material-symbols" aria-hidden="true">person</span>
+</span>
+```
+
+### Avatar group
+
+`.avatar-group` overlaps its avatars by 8px and rings each one in the surface color. End with a count avatar for the people not shown, and say what the group is in the surrounding text.
+
+```html
+<div class="avatar-group">
+  <img class="avatar small" src="ada.jpg" alt="Ada Lovelace">
+  <span class="avatar small" role="img" aria-label="Grace Hopper">GH</span>
+  <span class="avatar small" role="img" aria-label="3 more people">+3</span>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-avatar-size` | 40px; `small`: 32px; `large`: 56px |
+| `--md-comp-avatar-container-color` | `secondary-container` |
+| `--md-comp-avatar-color` | `on-secondary-container` |
+| `--md-comp-avatar-group-overlap` | 8px (on `.avatar-group`) |
+| `--md-comp-avatar-group-ring-color` | `surface` (on `.avatar-group`) |
 
 ---
 
@@ -2646,6 +2706,148 @@ Copy, feedback and retry actions go in the footer as named icon buttons. On an `
 | `--md-comp-message-bubble-container-color` | `surface-container-high`; `end`: `primary-container` |
 | `--md-comp-message-bubble-color` | `on-surface`; `end`: `on-primary-container` |
 | `--md-comp-message-group-gap` | 2px (on `.message-group`) |
+
+---
+
+## Accordion
+
+Stacked disclosures that open one section of content at a time, on native details.
+
+A `.accordion` holds `<details>` items. An item's `<summary>` is its header, and everything after the summary is its panel. The browser owns the behavior: the summary is a button that reports its expanded state, Enter and Space toggle it, and `open` sets the initial state. Give the items one shared `name` to make them exclusive, so opening one closes the others. CSS only; there is no JavaScript.
+
+The items join as tiles. Outer corners take the full shape and inner corners the grouped shape, and an open item rounds every corner. Opening animates in engines that can transition to `auto` height, and opens at once elsewhere or under reduced motion. Keep links and buttons out of the summary, which is already a button; put actions in the panel.
+
+```html
+<div class="accordion">
+  <details name="faq" open>
+    <summary>Can I change my plan later?</summary>
+    <p>Yes. The new plan starts with your next billing period.</p>
+  </details>
+  <details name="faq">
+    <summary>How do I export my data?</summary>
+    <p>Open Settings, then Export. The download includes every project you own.</p>
+  </details>
+</div>
+```
+
+### Leading icon
+
+A leading icon goes first in the summary, hidden from assistive technology. The summary text names the item.
+
+```html
+<div class="accordion">
+  <details>
+    <summary>
+      <span class="material-symbols" aria-hidden="true">lock</span>
+      Privacy
+    </summary>
+    <p>Choose who can see your profile and activity.</p>
+  </details>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-accordion-container-color` | `surface-container` |
+| `--md-comp-accordion-shape` | 20px |
+| `--md-comp-accordion-grouped-shape` | 4px |
+| `--md-comp-accordion-gap` | 2px |
+| `--md-comp-accordion-header-height` | 56px |
+| `--md-comp-accordion-padding` | 16px |
+
+---
+
+## Data table
+
+Rows of records in a scrolling table with a sticky header, sort state and row selection.
+
+A `.data-table` is a `<div>` around one native `<table>`. The wrapper scrolls and draws the outline, so the table keeps its table semantics. The header row sticks to the top of the wrapper once the wrapper scrolls vertically, so give the wrapper a `max-block-size` for long tables. Add `numeric` to the header and body cells of a number column to align them on the end edge with tabular figures, and `dense` to the wrapper for shorter rows. CSS only; there is no JavaScript.
+
+Sorting is page state. Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"descending"` on the header of the sorted column. The framework draws the arrow; the page reorders the rows and moves `aria-sort`.
+
+```html
+<div class="data-table">
+  <table>
+    <caption>Orders</caption>
+    <thead>
+      <tr>
+        <th scope="col" aria-sort="ascending"><button type="button">Customer</button></th>
+        <th scope="col">Status</th>
+        <th scope="col" class="numeric"><button type="button">Total</button></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Alvin</th>
+        <td>Shipped</td>
+        <td class="numeric">$87.00</td>
+      </tr>
+      <tr>
+        <th scope="row">Shannon</th>
+        <td>Pending</td>
+        <td class="numeric">$9.99</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+### Row selection
+
+A checked checkbox in a row's first cell selects the row and fills it with `secondary-container`. Name each checkbox after its row. `aria-selected` is not valid on the rows of a plain table, so the checkbox carries the state. A select-all box in the header is the page's to wire.
+
+```html
+<div class="data-table">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col"><label><input type="checkbox" aria-label="Select all orders"></label></th>
+        <th scope="col">Customer</th>
+        <th scope="col" class="numeric">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><label><input type="checkbox" checked aria-label="Select Alvin"></label></td>
+        <th scope="row">Alvin</th>
+        <td class="numeric">$87.00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+### Scrolling
+
+A wrapper that scrolls must be reachable from the keyboard. Give it `tabindex="0"`, `role="region"` and a name, usually the caption.
+
+```html
+<div class="data-table" tabindex="0" role="region" aria-labelledby="orders-caption" style="max-block-size: 320px">
+  <table>
+    <caption id="orders-caption">Orders</caption>
+    <thead>
+      <tr><th scope="col">Customer</th><th scope="col" class="numeric">Total</th></tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Alvin</th><td class="numeric">$87.00</td></tr>
+    </tbody>
+  </table>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-data-table-container-color` | `surface` |
+| `--md-comp-data-table-shape` | 12px |
+| `--md-comp-data-table-outline-color` | `outline-variant` |
+| `--md-comp-data-table-header-height` | 56px; `dense`: 48px |
+| `--md-comp-data-table-row-height` | 52px; `dense`: 40px |
+| `--md-comp-data-table-cell-padding` | 16px |
+| `--md-comp-data-table-selected-container-color` | `secondary-container` |
 
 ---
 
@@ -3582,6 +3784,293 @@ the plain indicator would be lost.
 
 # JavaScript components
 
+## Skeleton
+
+Placeholder shapes that hold the layout while content loads.
+
+A `.skeleton` is an empty block in the shape of the content it stands in for, with a shimmer passing across it. Size the default box with `width` and `height`. `text` is one line of body text, and the last of several lines runs shorter. `circle` is a 40px circle for an avatar. Reduced motion stops the shimmer and keeps the shapes. CSS only; there is no JavaScript.
+
+Skeletons say nothing to assistive technology. Mark the region being filled with `aria-busy="true"` and report the wait in a status, such as a loading indicator or visually hidden `role="status"` text. Swap in the content and remove `aria-busy` in the same update.
+
+```html
+<p class="visually-hidden" role="status">Loading messages</p>
+<div class="flex gap-4" aria-busy="true">
+  <div class="skeleton circle"></div>
+  <div class="flex-1">
+    <div class="skeleton text"></div>
+    <div class="skeleton text"></div>
+  </div>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-skeleton-color` | `surface-container-highest` |
+| `--md-comp-skeleton-shimmer-color` | `surface` at 50% |
+| `--md-comp-skeleton-shape` | 8px; `text`: 4px |
+| `--md-comp-skeleton-circle-size` | 40px |
+
+---
+
+## Empty state
+
+What a view shows when it has nothing to list: an icon, a heading, text and actions.
+
+A `.empty-state` centers its content in the space the missing items would fill. In order, it holds an optional leading icon, which sits in a 96px tonal circle, or an `<img>` illustration; a heading at the level the page outline needs; a `<p>` of supporting text; and a `.empty-state-actions` row of buttons. CSS only; there is no JavaScript.
+
+Say what is empty and what the user can do about it. Use it for a first run, a search with no results, or content the user cannot see yet. Hide the icon from assistive technology, and give an illustration `alt=""` when the heading already says what it shows.
+
+```html
+<div class="empty-state">
+  <span class="material-symbols" aria-hidden="true">inbox</span>
+  <h2>No messages yet</h2>
+  <p>Messages from your team show up here.</p>
+  <div class="empty-state-actions">
+    <button class="filled">New message</button>
+  </div>
+</div>
+```
+
+### Search with no results
+
+When a filter or search empties a list, offer the way back as the action.
+
+```html
+<div class="empty-state">
+  <span class="material-symbols" aria-hidden="true">search_off</span>
+  <h3>No results for "invoices 2019"</h3>
+  <p>Check the spelling or search all folders.</p>
+  <div class="empty-state-actions">
+    <button class="outlined">Clear search</button>
+  </div>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-empty-state-padding` | 48px 24px |
+| `--md-comp-empty-state-max-width` | 40ch (heading and text) |
+| `--md-comp-empty-state-icon-size` | 48px |
+| `--md-comp-empty-state-icon-container-size` | 96px |
+| `--md-comp-empty-state-icon-container-color` | `surface-container-high` |
+| `--md-comp-empty-state-image-max-width` | 240px |
+
+---
+
+## Popover
+
+A panel that opens from a button and stays until dismissed, on the native popover attribute.
+
+A `.popover` is a `[popover]` element, and the button that opens it names it with `popovertarget` (or `commandfor` with `command="toggle-popover"`). The browser owns the behavior: pressing the button toggles the panel, Escape or a click outside closes it, focus returns to the button, and the button reports the panel as expanded. CSS anchor positioning places the panel 4px below the button with their start edges aligned, and flips it to the other side when it would not fit. CSS only; there is no JavaScript.
+
+It looks like a rich tooltip but behaves as a disclosure: it opens on press, stays open while the user reads or acts, and can hold links and buttons. A small one behind an info icon button is a toggletip. Add `top` to open above, or `start` or `end` to open beside the button, centered on it.
+
+```html
+<button class="icon-button" type="button" popovertarget="storage-help" aria-label="About storage">
+  <span class="material-symbols" aria-hidden="true">info</span>
+</button>
+<div id="storage-help" class="popover" popover>
+  <h3>Storage</h3>
+  <p>Files in the trash count toward your quota until you empty it.</p>
+  <div class="popover-actions">
+    <button type="button" class="text">Empty trash</button>
+  </div>
+</div>
+```
+
+### Accessibility
+
+Name an icon-only button for what it explains, not "Info". The panel follows the button in the reading order, so a screen reader reaches it next; the browser does not move focus into it. Keep the panel short. A form or anything the user must finish belongs in a dialog.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-popover-container-color` | `surface-container` |
+| `--md-comp-popover-shape` | 12px |
+| `--md-comp-popover-padding` | 12px 16px |
+| `--md-comp-popover-max-width` | 320px |
+| `--md-comp-popover-gap` | 4px |
+
+---
+
+## Stepper
+
+Progress through a fixed sequence of steps, such as a checkout, with each step's state.
+
+A `.stepper` is an `<ol>`, and each `<li>` is a step whose text is its label. The list numbers the steps. Mark the step the user is on with `aria-current="step"`, finished steps with `complete`, and a step that needs attention with `invalid`; the page keeps these current as the user moves. A complete step shows a check and an invalid one shows "!", and both states are spoken before the label through the indicator's alt text. CSS only; there is no JavaScript.
+
+A `<small>` after the label is supporting text, such as "Optional". A finished step can link back with an `<a>`. Steps never shrink below their label: a row too narrow for all of them wraps. Add `vertical` to stack the steps, which suits compact windows, and put a `.stepper-content` block in a vertical step to show its form or summary under the label.
+
+```html
+<ol class="stepper">
+  <li class="complete"><a href="/checkout/cart">Cart</a></li>
+  <li aria-current="step">Shipping<small>Address and speed</small></li>
+  <li>Payment</li>
+  <li>Review</li>
+</ol>
+```
+
+### Vertical
+
+```html
+<ol class="stepper vertical">
+  <li class="complete">Account</li>
+  <li aria-current="step">
+    Profile<small>Optional</small>
+    <div class="stepper-content">Add a photo and a short bio.</div>
+  </li>
+  <li>Done</li>
+</ol>
+```
+
+### Translation
+
+The spoken states are tokens. Set them in the page's language on the stepper or any ancestor.
+
+```css
+:root:lang(es) {
+  --md-comp-stepper-complete-label: "Completado";
+  --md-comp-stepper-error-label: "Error";
+}
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-stepper-indicator-size` | 24px |
+| `--md-comp-stepper-connector-color` | `outline-variant`; after a complete step: `primary` |
+| `--md-comp-stepper-active-color` | `primary` |
+| `--md-comp-stepper-complete-label` | `"Completed"` |
+| `--md-comp-stepper-error-label` | `"Error"` |
+
+---
+
+## Timeline
+
+Events in order, each with a time, a title and details, joined by a line.
+
+An `<ol class="timeline">` lists events in the order the page chooses, newest or oldest first. Each `<li>` is an event: an optional `<time>` with a `datetime`, a heading and supporting `<p>` text. A dot marks each event and a line joins it to the next. A leading icon as the first child replaces the dot with a tonal circle; hide it from assistive technology. CSS only; there is no JavaScript.
+
+```html
+<ol class="timeline">
+  <li>
+    <time datetime="2026-10-06T09:12">9:12 AM</time>
+    <h3>Order placed</h3>
+    <p>Two items, paid by card.</p>
+  </li>
+  <li>
+    <time datetime="2026-10-06T11:40">11:40 AM</time>
+    <h3>Shipped</h3>
+    <p>Tracking number sent by email.</p>
+  </li>
+</ol>
+```
+
+### Leading icon
+
+```html
+<ol class="timeline">
+  <li>
+    <span class="material-symbols" aria-hidden="true">chat</span>
+    <time datetime="2026-10-06">Today</time>
+    <h3>Ada commented</h3>
+    <p>Looks good to me.</p>
+  </li>
+</ol>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-timeline-marker-color` | `primary` |
+| `--md-comp-timeline-connector-color` | `outline-variant` |
+| `--md-comp-timeline-gap` | 24px |
+
+---
+
+## Stat
+
+Key figures in tiles, each with a label, a value and an optional change.
+
+A `<dl class="stats">` holds one `<div>` tile per figure: a `<dt>` label, a `<dd>` value and an optional `<dd class="stat-change">` comparison. The description list keeps each value paired with its label for assistive technology. Tiles share a row and wrap below 160px each. CSS only; there is no JavaScript.
+
+Add `up` or `down` to `.stat-change` for an arrow, and `negative` when the change is bad news, which turns it to the error color. The arrow is decoration, so say the direction in the text.
+
+```html
+<dl class="stats">
+  <div>
+    <dt>Revenue</dt>
+    <dd>$48.2k</dd>
+    <dd class="stat-change up">+12% from last month</dd>
+  </div>
+  <div>
+    <dt>Churn</dt>
+    <dd>3.1%</dd>
+    <dd class="stat-change up negative">+0.4 points from last month</dd>
+  </div>
+</dl>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-stat-container-color` | `surface-container-low` |
+| `--md-comp-stat-shape` | 16px |
+| `--md-comp-stat-min-width` | 160px |
+
+---
+
+## Tree
+
+Nested lists of folders and links that open in place, for file browsers and deep navigation.
+
+A `<ul class="tree">` nests lists. A branch is an `<li>` holding a `<details>`: its `<summary>` is the row and its nested `<ul>` the children. A leaf is an `<li>` holding a link, or a `<span>` when it is not one. Mark the current row with `aria-current`. Each level draws a guide line from its parent's chevron. Wrap a tree of links in a named `<nav>`. CSS only; there is no JavaScript.
+
+It is lists of disclosures and links rather than `role="tree"`: every row is a Tab stop and the browser opens a branch with Enter or Space. A tree role would promise arrow-key navigation that native disclosures do not provide.
+
+```html
+<nav aria-label="Files">
+  <ul class="tree">
+    <li>
+      <details open>
+        <summary>src</summary>
+        <ul>
+          <li><a href="/src/index.ts" aria-current="page">index.ts</a></li>
+          <li>
+            <details>
+              <summary>components</summary>
+              <ul>
+                <li><a href="/src/components/menu.ts">menu.ts</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </details>
+    </li>
+    <li><a href="/README.md">README.md</a></li>
+  </ul>
+</nav>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-tree-row-height` | 40px |
+| `--md-comp-tree-row-shape` | 100px |
+| `--md-comp-tree-guide-color` | `outline-variant` |
+| `--md-comp-tree-selected-container-color` | `secondary-container` |
+
+---
+
 ## Auto Init
 
 Initialize every registered component with one function call.
@@ -3646,6 +4135,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
+| `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
 | `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
@@ -3708,6 +4198,24 @@ This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https:
 
 For a menu inside a top app bar, see Navbar menu.
 
+### Context menu
+
+Add `data-context-menu` to a `.menu-trigger` that is a region of content, such as a file list or a card, and its menu replaces the browser's context menu there. Right-click opens it at the pointer, and it flips to stay on screen. The menu key and Shift+F10 open it at the region's start corner, so give the region `tabindex="0"` when it holds nothing focusable. Enter and Space stay with the region's own content. Closing the menu returns focus to whatever had it before the menu opened. In nested regions only the innermost menu opens, and a right-click on an open menu keeps it open. The menu stays inside the window and any scrolling container it sits in, and scrolls when it is taller than either; `open()` without a right-click places it at the region's start corner.
+
+The region gets no `aria-expanded` or `aria-haspopup`, which belong to buttons. Every action in a context menu also needs another way in, such as a toolbar or an item's own menu button. Touch browsers that do not fire `contextmenu` on long-press, such as iOS Safari, never show it.
+
+```html
+<div class="menu-trigger" data-context-menu data-target="file-actions" tabindex="0">
+  …
+</div>
+<menu id="file-actions">
+  <li><button type="button">Rename</button></li>
+  <li><button type="button">Duplicate</button></li>
+  <li class="divider" role="separator"></li>
+  <li><button type="button">Delete</button></li>
+</menu>
+```
+
 ### Initialization
 
 The IIFE bundle exposes `Expressive.Menu`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.menu-trigger`.
@@ -3739,6 +4247,7 @@ Expressive.AutoInit(document.body, {
 | `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |
 | `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. |
 | `hover` | Boolean | `false` | If true, the menu opens on hover instead of click. |
+| `contextMenu` | Boolean | `false`; `true` with `data-context-menu` | If true, the trigger is a region and the menu opens at the pointer on right-click, long-press, the menu key or Shift+F10, instead of on click. |
 | `inDuration` | Number | `150` | Enter transition duration, in milliseconds. |
 | `outDuration` | Number | `250` | Exit transition duration, in milliseconds. |
 | `onOpenStart` | Function | `null` | Called when the menu starts opening. |
@@ -4776,6 +5285,71 @@ A floating bar can sit beside a companion FAB. Wrap both in `.toolbar-group`; th
 
 # Forms
 
+## Command palette
+
+A searchable list of commands in a dialog, opened from anywhere with a shortcut.
+
+A `<dialog class="command-palette">` holds a search `<input>`, a `<ul>` of commands and an optional `.command-palette-empty` message. Each command is an `<li>` holding a link or button: an optional leading icon, the label and an optional trailing `<kbd>` shortcut. An `<li class="label">` heads a group. Running a command clicks its link or button, so commands are ordinary links and click handlers. Commands added to the list later are picked up. A command the page hides with `hidden` stays hidden, and one whose button is `disabled` is shown dimmed, marked `aria-disabled` and skipped by the arrow keys. `AutoInit()` starts every `dialog.command-palette`.
+
+Ctrl+K, or Command+K on Apple platforms, opens and closes it from anywhere on the page unless the page has already handled the key, as an editor's own Ctrl+K does; a `commandfor` button with `command="show-modal"` opens it too. Typing filters the commands by their text and any `data-keywords`, ignoring case and accents, and hides a group heading whose commands are all filtered out. Focus stays in the input: the arrow keys move the active command and Enter runs it. The dialog closes on Escape and returns focus. Each opening starts with an empty search.
+
+The component makes the input a combobox and the list a listbox of options, and reports the active option with `aria-activedescendant`. Name the dialog and the input with `aria-label`. Give the empty message `role="status"` so a search with no results is announced.
+
+```html
+<button type="button" commandfor="commands" command="show-modal">
+  Commands <kbd><kbd>Ctrl</kbd>+<kbd>K</kbd></kbd>
+</button>
+<dialog id="commands" class="command-palette" aria-label="Commands">
+  <input type="search" placeholder="Type a command" aria-label="Search commands">
+  <ul>
+    <li class="label">Files</li>
+    <li>
+      <button type="button" data-keywords="create add">
+        <span class="material-symbols" aria-hidden="true">note_add</span>
+        New file
+        <kbd>Ctrl N</kbd>
+      </button>
+    </li>
+    <li><a href="/settings">
+      <span class="material-symbols" aria-hidden="true">settings</span>
+      Settings
+    </a></li>
+  </ul>
+  <p class="command-palette-empty" role="status">No matching commands</p>
+</dialog>
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `shortcut` | String | `'k'` | Letter that toggles the palette with Command on Apple platforms or Ctrl elsewhere. A key event the page already handled is left alone. `null` turns it off. `data-shortcut` on the dialog sets it, and an empty `data-shortcut` turns it off. |
+| `closeOnRun` | Boolean | `true` | If true, the palette closes after a command runs. |
+
+### Methods
+
+#### .open()
+
+Opens the palette as a modal dialog with the search input focused.
+
+#### .close()
+
+Closes the palette.
+
+#### .destroy()
+
+Removes the shortcut, listeners, roles and ids the component added.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-command-palette-max-width` | 640px |
+| `--md-comp-command-palette-item-height` | 48px |
+| `--md-comp-command-palette-active-container-color` | `secondary-container` |
+
+---
+
 ## Date Picker
 
 Select a date, a range, or several dates from a calendar.
@@ -5283,6 +5857,43 @@ Expressive.Forms.InitTextarea(document.querySelector('#textarea1'));
 
 Setting `.value` in script does not resize the field. Call `textareaAutoResize` afterwards.
 
+### Trailing button
+
+A `.icon-button` with `suffix` sits at the end of the field as a control: it keeps its 40dp target and takes clicks, where a trailing icon lets them through to the input. Name it with `aria-label`.
+
+### Password visibility
+
+Add `password-toggle` to a trailing icon button with two icons and `aria-pressed="false"`. Pressing it shows the password as text and sets `aria-pressed="true"`; the first icon shows while the password is hidden and the second once it is shown. The name stays "Show password", and the pressed state tells a screen reader which way it is. The Forms behavior does the switch, and hides the password again when its form is submitted or reset.
+
+```html
+<div class="field">
+  <input id="password" type="password" placeholder=" " autocomplete="current-password">
+  <label for="password">Password</label>
+  <button type="button" class="icon-button suffix password-toggle" aria-label="Show password" aria-pressed="false">
+    <span class="material-symbols" aria-hidden="true">visibility</span>
+    <span class="material-symbols" aria-hidden="true">visibility_off</span>
+  </button>
+</div>
+```
+
+### One-time code
+
+`input.otp` draws one native input as a row of six cells, so paste, autofill and undo keep working and a screen reader hears one field. Use `type="text"` with `inputmode="numeric"`, `autocomplete="one-time-code"` and a `maxlength` equal to the cell count, and label it outside any `.field`. Set `--md-comp-otp-length` for another length. Digits read left to right in every language.
+
+```html
+<label for="code">Verification code</label>
+<input id="code" class="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}">
+```
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-otp-length` | 6 |
+| `--md-comp-otp-cell-width` | 48px |
+| `--md-comp-otp-cell-height` | 56px |
+| `--md-comp-otp-gap` | 8px |
+| `--md-comp-otp-cell-color` | `surface-container-highest` |
+| `--md-comp-otp-indicator-color` | `on-surface-variant`; focus: `primary`; `invalid`: `error` |
+
 ### File input
 
 A `.file-field.field` pairs a button with a path field. `Forms.Init()` copies the chosen file name into `input.file-path`.
@@ -5312,6 +5923,37 @@ Expressive.CharacterCounter.init(
   document.querySelectorAll('#input_text_counter, #textarea_counter')
 );
 ```
+
+---
+
+## Drop zone
+
+A large target for choosing or dropping files, with a list of what was chosen.
+
+A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input is stretched invisibly over the whole label, so the browser takes a click, Enter, Space or a dropped file exactly as it does on a plain file input, and the label text names it. The Forms behavior adds `dragover` to the zone while files are dragged over it and lists each chosen file's name and size, formatted for the page's locale, in `.drop-zone-files`. The root bundle installs it on load, and the modular entry with `Forms.Init()`. It listens on the document, so zones added later work too. Resetting the form empties the list.
+
+The browser does not apply `accept` to dropped files, so check type and size where the files are used. A dropped file replaces the selection, as it does on any file input; add `multiple` to take several at once.
+
+```html
+<div class="drop-zone">
+  <label>
+    <span class="material-symbols" aria-hidden="true">upload_file</span>
+    Drop files here or browse
+    <small>PDF or PNG, up to 10 MB</small>
+    <input type="file" multiple accept=".pdf,.png">
+  </label>
+  <ul class="drop-zone-files" aria-live="polite"></ul>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-drop-zone-shape` | 16px |
+| `--md-comp-drop-zone-outline-color` | `outline` |
+| `--md-comp-drop-zone-dragover-container-color` | `primary-container` |
+| `--md-comp-drop-zone-dragover-color` | `on-primary-container` |
 
 ---
 
@@ -5409,6 +6051,43 @@ The HTML `disabled` attribute on a fieldset disables every control inside it. Th
   <div class="field">…</div>
 </fieldset>
 ```
+
+---
+
+## Rating
+
+Stars for choosing or showing a score, on native radio buttons.
+
+For input, a `<fieldset class="rating">` holds a `<legend>` and one radio per star, each in a `<label>` whose visually hidden text ("3 stars") comes before the radio. The radio is drawn as the star, so Tab, the arrow keys, `required` and form submission stay native. A star fills when it or a later star is checked, and hovering previews a choice. Put the text before the radio: a span after it is the older `input + span` radio, which hides the input. CSS only; there is no JavaScript.
+
+```html
+<fieldset class="rating">
+  <legend>Rate this recipe</legend>
+  <label><span class="visually-hidden">1 star</span><input type="radio" name="score" value="1"></label>
+  <label><span class="visually-hidden">2 stars</span><input type="radio" name="score" value="2"></label>
+  <label><span class="visually-hidden">3 stars</span><input type="radio" name="score" value="3" checked></label>
+  <label><span class="visually-hidden">4 stars</span><input type="radio" name="score" value="4"></label>
+  <label><span class="visually-hidden">5 stars</span><input type="radio" name="score" value="5"></label>
+</fieldset>
+```
+
+### Display
+
+To show a score, give an element `class="rating"`, `role="img"`, a name with the value and `--md-comp-rating-value`. The stars fill to that value, halves included, from the start edge.
+
+```html
+<span class="rating" role="img" aria-label="Rated 4.5 out of 5" style="--md-comp-rating-value: 4.5"></span>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-rating-size` | 24px; display: 20px |
+| `--md-comp-rating-color` | `tertiary` |
+| `--md-comp-rating-empty-color` | `outline-variant` |
+| `--md-comp-rating-value` | 0 (display) |
+| `--md-comp-rating-max` | 5 (display) |
 
 ---
 

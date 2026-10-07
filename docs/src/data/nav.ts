@@ -227,6 +227,13 @@ export const NAV: DocsGroup[] = [
           "A list of pages. The HTML is the component.",
       },
       {
+        id: "stepper",
+        label: "Stepper",
+        route: "/stepper.html",
+        description:
+          "Progress through a fixed sequence of steps, such as a checkout, with each step's state.",
+      },
+      {
         id: "menu",
         label: "Menu",
         route: "/menu.html",
@@ -240,6 +247,13 @@ export const NAV: DocsGroup[] = [
         route: "/scrollspy.html",
         description:
           "Highlight the table of contents as the page scrolls.",
+      },
+      {
+        id: "tree",
+        label: "Tree",
+        route: "/tree.html",
+        description:
+          "Nested lists of folders and links that open in place, for file browsers and deep navigation.",
       },
     ],
   },
@@ -307,6 +321,34 @@ export const NAV: DocsGroup[] = [
           "One message in a conversation, with an optional avatar, header and footer.",
       },
       {
+        id: "accordion",
+        label: "Accordion",
+        route: "/accordion.html",
+        description:
+          "Stacked disclosures that open one section of content at a time, on native details.",
+      },
+      {
+        id: "data_table",
+        label: "Data table",
+        route: "/data-table.html",
+        description:
+          "Rows of records in a scrolling table with a sticky header, sort state and row selection.",
+      },
+      {
+        id: "stat",
+        label: "Stat",
+        route: "/stat.html",
+        description:
+          "Key figures in tiles, each with a label, a value and an optional change.",
+      },
+      {
+        id: "timeline",
+        label: "Timeline",
+        route: "/timeline.html",
+        description:
+          "Events in order, each with a time, a title and details, joined by a line.",
+      },
+      {
         id: "dialogs",
         label: "Dialogs",
         route: "/dialogs.html",
@@ -343,11 +385,25 @@ export const NAV: DocsGroup[] = [
           "Notifications, counts, or status on navigation items and icons.",
       },
       {
+        id: "avatar",
+        label: "Avatar",
+        route: "/avatar.html",
+        description:
+          "A person or account as a circular image, initials or icon, alone or in an overlapping group.",
+      },
+      {
         id: "tooltips",
         label: "Tooltips",
         route: "/tooltips.html",
         description:
           "Material Design 3 tooltips, from the HTML.",
+      },
+      {
+        id: "popover",
+        label: "Popover",
+        route: "/popover.html",
+        description:
+          "A panel that opens from a button and stays until dismissed, on the native popover attribute.",
       },
       {
         id: "snackbar",
@@ -370,6 +426,20 @@ export const NAV: DocsGroup[] = [
         route: "/loading-indicator.html",
         description:
           "A shape that morphs while it spins, for waits under five seconds.",
+      },
+      {
+        id: "skeleton",
+        label: "Skeleton",
+        route: "/skeleton.html",
+        description:
+          "Placeholder shapes that hold the layout while content loads.",
+      },
+      {
+        id: "empty_state",
+        label: "Empty state",
+        route: "/empty-state.html",
+        description:
+          "What a view shows when it has nothing to list: an icon, a heading, text and actions.",
       },
       {
         id: "carousel",
@@ -401,6 +471,13 @@ export const NAV: DocsGroup[] = [
         description:
           "A search bar, and the view it expands into.",
       },
+      {
+        id: "command_palette",
+        label: "Command palette",
+        route: "/command-palette.html",
+        description:
+          "A searchable list of commands in a dialog, opened from anywhere with a shortcut.",
+      },
     ],
   },
   {
@@ -423,6 +500,13 @@ export const NAV: DocsGroup[] = [
           "Material Design 3 text fields, from the HTML.",
       },
       {
+        id: "drop_zone",
+        label: "Drop zone",
+        route: "/drop-zone.html",
+        description:
+          "A large target for choosing or dropping files, with a list of what was chosen.",
+      },
+      {
         id: "select",
         label: "Select",
         route: "/select.html",
@@ -443,6 +527,13 @@ export const NAV: DocsGroup[] = [
         route: "/radio-buttons.html",
         description:
           "Material Design 3 radios, from the HTML.",
+      },
+      {
+        id: "rating",
+        label: "Rating",
+        route: "/rating.html",
+        description:
+          "Stars for choosing or showing a score, on native radio buttons.",
       },
       {
         id: "switches",

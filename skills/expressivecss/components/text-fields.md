@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `ef5e180327f632184b6f28ddfc050dcc8fc21599a517a6725fb7c5a31bf5d343`
+Contract SHA-256: `bdb699ab91a6c5cef7e40583e30994ae6f4869fd66f529d1d7d38db01ec4f465`
 
 #### Selection and adaptation
 
@@ -29,7 +29,7 @@ Rendered prose reviewed; collapsed token tables, image-only measurements, runtim
 
 [Specification link](https://m3.material.io/components/text-fields/specs); full specs unreviewed.
 
-Support (2026-09-07, `llm.md#text-inputs`): Filled and outlined fields, supporting text, and error states.
+Support (2026-10-06, `llm.md#text-inputs`): Filled and outlined fields, supporting text, error states, trailing icon buttons, a password visibility toggle and one-time code cells.
 
 Web adaptation: Native input/textarea with explicit label and description relationships.
 
@@ -67,7 +67,7 @@ A `.field` is the container. The `<label>` after the control is the floating lab
 
 #### Also documented
 
-The Text Inputs section of the [API reference](https://www.expressivecss.com/llm.md) also covers Input types, Inline, Textarea, File input, Character counter.
+The Text Inputs section of the [API reference](https://www.expressivecss.com/llm.md) also covers Input types, Inline, Textarea, Trailing button, Password visibility, One-time code, File input, Character counter.
 
 #### Rules
 
@@ -81,6 +81,9 @@ The following are end-state semantic invariants. The rule IDs come directly from
 - `field-control-id`: Without an id the label has nothing to point at.
 - `field-supporting-text-id`: Supporting and error text has to be referenceable to be announced with the control.
 - `field-supporting-text-linked`: A field with supporting text must point at it with aria-describedby, or the text is never read out with the control.
+- `password-toggle-reports-its-state`: Give a .password-toggle aria-pressed="false". The behavior flips it, and its name stays "Show password", so the pressed state is how a screen reader user hears that the password is visible.
+- `otp-autocompletes`: Set autocomplete="one-time-code" on a one-time code input so the browser can offer the code from a message.
+- `otp-is-not-a-number`: A code is not a quantity: type="number" drops leading zeros and adds a spinner. Use type="text" with inputmode="numeric".
 - `file-input-not-nested`: A control inside a control is not valid HTML and gives two overlapping hit targets. Use a <label> styled as a button.
 - `file-path-readonly`: The path field only ever displays what the file input holds; leaving it writable offers an edit that is discarded.
 - `counter-is-announced`: The count changes as the user types, so it has to be a live region or the remaining characters are never announced.

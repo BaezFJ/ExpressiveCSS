@@ -1,0 +1,188 @@
+@use "../abstracts" as *;
+
+// Data table. A .data-table wraps one native <table> and is its scroll
+// container, so the table keeps its element semantics: a <table> set to
+// display:block can lose its table role in some engines.
+//
+// The header row sticks to the top of the wrapper. That only shows once the
+// wrapper scrolls vertically, so give it a max-block-size. Cells use the
+// separate border model because collapsed borders do not travel with a
+// sticky header.
+//
+// Sorting and selection are page state written into the markup:
+//   th[aria-sort]      a <button> in the header cell shows the sort arrow
+//   row checkbox       a checked box in the first cell selects the row
+// The framework only draws them; the page reorders rows.
+//
+// Tokens:
+//   --md-comp-data-table-container-color           surface
+//   --md-comp-data-table-shape                     12px
+//   --md-comp-data-table-outline-color             outline-variant
+//   --md-comp-data-table-header-height             56px / dense 48px
+//   --md-comp-data-table-row-height                52px / dense 40px
+//   --md-comp-data-table-cell-padding              16px
+//   --md-comp-data-table-selected-container-color  secondary-container
+
+$_data-table-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 20V7.8l-5.6 5.6L4 12l8-8 8 8-1.4 1.4L13 7.8V20z'/%3E%3C/svg%3E");
+
+.data-table {
+  --md-comp-data-table-container-color: var(--md-sys-color-surface);
+  --md-comp-data-table-shape: 12px;
+  --md-comp-data-table-outline-color: var(--md-sys-color-outline-variant);
+  --md-comp-data-table-header-height: 56px;
+  --md-comp-data-table-row-height: 52px;
+  --md-comp-data-table-cell-padding: 16px;
+  --md-comp-data-table-selected-container-color: var(--md-sys-color-secondary-container);
+
+  box-sizing: border-box;
+  max-width: 100%;
+  margin: $element-top-margin 0 $element-bottom-margin;
+  overflow: auto;
+  border: 1px solid var(--md-comp-data-table-outline-color);
+  border-radius: var(--md-comp-data-table-shape);
+  background-color: var(--md-comp-data-table-container-color);
+  color: var(--md-sys-color-on-surface);
+  @include focus-visible;
+
+  &.dense {
+    --md-comp-data-table-header-height: 48px;
+    --md-comp-data-table-row-height: 40px;
+  }
+
+  > table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  > table > caption {
+    padding: 16px var(--md-comp-data-table-cell-padding) 8px;
+    text-align: start;
+    color: var(--md-sys-color-on-surface);
+    @include typescale("title-medium");
+  }
+
+  tr {
+    border: 0;
+  }
+
+  :is(th, td) {
+    box-sizing: border-box;
+    height: var(--md-comp-data-table-row-height);
+    padding: 0 var(--md-comp-data-table-cell-padding);
+    border-bottom: 1px solid var(--md-comp-data-table-outline-color);
+    text-align: start;
+    vertical-align: middle;
+  }
+
+  td {
+    @include typescale("body-medium");
+  }
+
+  tbody th {
+    @include typescale("body-medium");
+    font-weight: 500;
+  }
+
+  > table > :is(tbody, tfoot):last-child > tr:last-child > :is(th, td) {
+    border-bottom: 0;
+  }
+
+  > table > thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    height: var(--md-comp-data-table-header-height);
+    background-color: var(--md-comp-data-table-container-color);
+    color: var(--md-sys-color-on-surface-variant);
+    white-space: nowrap;
+    @include typescale("title-small");
+  }
+
+  .numeric {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  > table > tbody > tr {
+    transition: background-color 0.2s ease-out;
+
+    &:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--md-sys-color-on-surface) state-opacity("hover"),
+        transparent
+      );
+    }
+
+    &:has(> :first-child input[type="checkbox"]:checked) {
+      background-color: var(--md-comp-data-table-selected-container-color);
+      color: var(--md-sys-color-on-secondary-container);
+    }
+  }
+
+  // A checkbox cell hugs its box rather than taking a text column's width.
+  :is(th, td):has(> label > input[type="checkbox"]:only-child) {
+    width: 1px;
+    padding-inline-end: 0;
+  }
+
+  // The sort control fills the header text and carries a trailing arrow.
+  th > button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 40px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: none;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-align: inherit;
+    cursor: pointer;
+    appearance: none;
+    @include focus-visible;
+
+    &::after {
+      content: "";
+      flex: none;
+      width: 18px;
+      height: 18px;
+      background-color: currentColor;
+      mask: $_data-table-arrow center / 18px no-repeat;
+      opacity: 0;
+      transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    }
+
+    &:hover::after {
+      opacity: 0.38;
+    }
+  }
+
+  // Numbers line up on their end edge, so the arrow leads their label.
+  th.numeric > button {
+    flex-direction: row-reverse;
+  }
+
+  th:is([aria-sort="ascending"], [aria-sort="descending"]) {
+    color: var(--md-sys-color-on-surface);
+
+    > button::after {
+      opacity: 1;
+    }
+  }
+
+  th[aria-sort="descending"] > button::after {
+    transform: rotate(180deg);
+  }
+}
+
+@media (forced-colors: active) {
+  .data-table th > button::after {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+}

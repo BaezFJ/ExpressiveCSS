@@ -1,0 +1,111 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "shapes", label: "Shapes" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="skeleton">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.skeleton</code> is an empty block in the shape of the
+          content it stands in for, with a shimmer passing across it. It holds
+          the layout steady until the content arrives.
+        </p>
+        <p>
+          Use skeletons when you know the shape of what is coming, such as a
+          list of messages or a profile header. For a short wait with no known
+          layout, use a <a href={route('loading_indicator')}>loading
+          indicator</a>. Reduced motion stops the shimmer and keeps the shapes.
+        </p>
+        <div class="flex flex-column gap-4 mb-3" style="max-width: 32rem;">
+          <div class="flex gap-4">
+            <div class="skeleton circle"></div>
+            <div class="flex-1">
+              <div class="skeleton text"></div>
+              <div class="skeleton text"></div>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="skeleton circle"></div>
+            <div class="flex-1">
+              <div class="skeleton text"></div>
+              <div class="skeleton text"></div>
+            </div>
+          </div>
+        </div>
+<Code code={`
+<p class="visually-hidden" role="status">Loading messages</p>
+<div class="flex gap-4" aria-busy="true">
+  <div class="skeleton circle"></div>
+  <div class="flex-1">
+    <div class="skeleton text"></div>
+    <div class="skeleton text"></div>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S.shapes}>
+        <p>
+          The default box takes its size from <code>width</code> and
+          <code>height</code>. <code>text</code> is one line of body text, and
+          the last of several lines runs shorter. <code>circle</code> is a 40px
+          circle for an avatar; change it with
+          <code>--md-comp-skeleton-circle-size</code>.
+        </p>
+        <div class="mb-3" style="max-width: 20rem;">
+          <div class="skeleton" style="height: 160px;"></div>
+          <div class="skeleton text mt-3"></div>
+          <div class="skeleton text"></div>
+          <div class="skeleton text"></div>
+        </div>
+<Code code={`
+<div class="skeleton" style="height: 160px"></div>
+<div class="skeleton text"></div>
+<div class="skeleton text"></div>
+<div class="skeleton text"></div>
+`} />
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          Skeletons say nothing to assistive technology, so keep them empty.
+          Mark the region being filled with <code>aria-busy="true"</code> and
+          report the wait in a status: a loading indicator, or visually hidden
+          <code>role="status"</code> text placed in the page before it is
+          needed. Swap in the content and remove <code>aria-busy</code> in the
+          same update.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.skeleton</code>, or on a parent to change a group.</p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-skeleton-color</code></td>
+            <td><code>--md-sys-color-surface-container-highest</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-skeleton-shimmer-color</code></td>
+            <td><code>--md-sys-color-surface</code> at 50%</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-skeleton-shape</code></td>
+            <td>8px; <code>text</code>: 4px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-skeleton-circle-size</code></td>
+            <td>40px</td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

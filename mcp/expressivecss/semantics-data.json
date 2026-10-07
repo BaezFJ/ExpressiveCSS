@@ -564,6 +564,26 @@
           }
         ]
       },
+      "forms/drop-zone": {
+        "status": "enforced",
+        "note": "Added with the drop zone component. A <label> wraps the native file input, which covers it, so the label text names the input and the browser handles clicks, keys and dropped files.",
+        "rules": [
+          {
+            "id": "drop-zone-input-is-in-the-label",
+            "kind": "forbid",
+            "selector": ".drop-zone > input[type=\"file\"]",
+            "fragmentSafe": true,
+            "message": "Put the file input inside the .drop-zone <label>. The label names the input and the input covers the label; a loose input is neither named nor a drop target."
+          },
+          {
+            "id": "drop-zone-files-are-a-list",
+            "kind": "forbid",
+            "selector": ".drop-zone-files:not(ul, ol)",
+            "fragmentSafe": true,
+            "message": "Write .drop-zone-files as a <ul>. The behavior fills it with one <li> per file, and a list tells assistive technology how many files were chosen."
+          }
+        ]
+      },
       "forms/fieldset": {
         "status": "enforced",
         "note": "Swept 0.8.0.",
@@ -597,7 +617,7 @@
       },
       "forms/input-fields": {
         "status": "enforced",
-        "note": "Swept 0.8.0. .field is the container; icons name their side and are hidden; supporting text is linked to the control it describes.",
+        "note": "Swept 0.8.0. .field is the container; icons name their side and are hidden; supporting text is linked to the control it describes. A .password-toggle reports its state with aria-pressed; input.otp is one native input drawn as cells.",
         "rules": [
           {
             "id": "field-container-class",
@@ -653,6 +673,28 @@
             "kind": "forbid",
             "selector": ".field:has(> small) > :is(input, textarea, select):not([aria-describedby])",
             "message": "A field with supporting text must point at it with aria-describedby, or the text is never read out with the control."
+          },
+          {
+            "id": "password-toggle-reports-its-state",
+            "kind": "require-attr",
+            "selector": ".password-toggle",
+            "attr": "aria-pressed",
+            "message": "Give a .password-toggle aria-pressed=\"false\". The behavior flips it, and its name stays \"Show password\", so the pressed state is how a screen reader user hears that the password is visible."
+          },
+          {
+            "id": "otp-autocompletes",
+            "kind": "require-attr",
+            "selector": "input.otp",
+            "attr": "autocomplete",
+            "equals": "one-time-code",
+            "message": "Set autocomplete=\"one-time-code\" on a one-time code input so the browser can offer the code from a message."
+          },
+          {
+            "id": "otp-is-not-a-number",
+            "kind": "forbid",
+            "selector": "input.otp[type=\"number\"]",
+            "fragmentSafe": true,
+            "message": "A code is not a quantity: type=\"number\" drops leading zeros and adds a spinner. Use type=\"text\" with inputmode=\"numeric\"."
           }
         ]
       },
@@ -671,6 +713,32 @@
             "kind": "forbid",
             "selector": "input[type=\"radio\"]:not([id]):not(label *)",
             "message": "A radio must be inside its <label> or carry an id a label points at."
+          }
+        ]
+      },
+      "forms/rating": {
+        "status": "enforced",
+        "note": "Added with the rating component. The input is a fieldset of native radios drawn as stars; the display is a named image.",
+        "rules": [
+          {
+            "id": "rating-is-a-fieldset-or-an-image",
+            "kind": "forbid",
+            "selector": ".rating:not(fieldset):not([role=\"img\"])",
+            "fragmentSafe": true,
+            "message": "A .rating is either a <fieldset> of radios, for input, or an element with role=\"img\" and a name, for display. Anything else draws stars that say nothing."
+          },
+          {
+            "id": "rating-display-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".rating[role=\"img\"]",
+            "message": "Name a rating display with the value, such as aria-label=\"Rated 4.5 out of 5\"."
+          },
+          {
+            "id": "rating-label-text-precedes-the-radio",
+            "kind": "forbid",
+            "selector": "fieldset.rating [type=\"radio\"] + span",
+            "fragmentSafe": true,
+            "message": "Put a star's visually hidden text before its radio. A span after the radio is the older input + span pattern, which hides the radio and with it the star."
           }
         ]
       },
@@ -840,7 +908,7 @@
       },
       "menu": {
         "status": "enforced",
-        "note": "Swept 0.8.0.",
+        "note": "Swept 0.8.0. A [data-context-menu] trigger is a region: the menu opens at the pointer and the region carries no expanded state.",
         "rules": [
           {
             "id": "menu-children-are-list-items",
@@ -848,6 +916,13 @@
             "selector": "menu > :not(li):not(script):not(template)",
             "fragmentSafe": true,
             "message": "<menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there."
+          },
+          {
+            "id": "context-menu-region-is-not-a-control",
+            "kind": "forbid",
+            "selector": "[data-context-menu]:is(button, a[href], input, select, textarea)",
+            "fragmentSafe": true,
+            "message": "data-context-menu goes on a region of content. A button or link already has an action for Enter and click; give it its own menu trigger instead."
           }
         ]
       },
@@ -861,6 +936,270 @@
             "selector": ":is(header.message-header, footer.message-footer)",
             "fragmentSafe": true,
             "message": "Write .message-header and .message-footer as <div>. Outside sectioning content a <header> is a banner landmark and a <footer> is contentinfo, so a conversation would fill the landmark menu with one of each per message."
+          }
+        ]
+      },
+      "accordion": {
+        "status": "enforced",
+        "note": "Added with the accordion component. Each item is a native <details>, so the browser exposes <summary> as a button with its expanded state and handles the keyboard. The rules keep authors from re-stating that state or nesting controls in the toggle.",
+        "rules": [
+          {
+            "id": "accordion-items-are-details",
+            "kind": "forbid",
+            "selector": ".accordion > :not(details)",
+            "fragmentSafe": true,
+            "message": "Write every accordion item as <details> with a <summary>. The element is the disclosure: a div with a click handler has no expanded state and no keyboard support."
+          },
+          {
+            "id": "accordion-summary-holds-no-controls",
+            "kind": "forbid",
+            "selector": ".accordion summary :is(a[href], button, input, select, textarea, [tabindex])",
+            "fragmentSafe": true,
+            "message": "A <summary> is already the toggle button. A link or control inside it is a control nested in a control: pressing it also opens or closes the item, and screen readers flatten it into the summary name. Put actions in the panel."
+          },
+          {
+            "id": "accordion-summary-state-is-native",
+            "kind": "forbid",
+            "selector": ".accordion summary:is([role=\"button\"], [aria-expanded])",
+            "fragmentSafe": true,
+            "message": "The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role=\"button\" repeats it, and an authored aria-expanded goes stale the first time the item toggles."
+          }
+        ]
+      },
+      "data-table": {
+        "status": "enforced",
+        "note": "Added with the data table component. The wrapper is the scroll container so the <table> keeps its table semantics. Sorting and selection are page state: aria-sort on the header cell and a checkbox in the first cell.",
+        "rules": [
+          {
+            "id": "data-table-wraps-the-table",
+            "kind": "forbid",
+            "selector": "table.data-table",
+            "fragmentSafe": true,
+            "message": "Put .data-table on a <div> around the <table>. The wrapper scrolls; a table made to scroll itself needs display:block, which drops its table role in some engines."
+          },
+          {
+            "id": "data-table-sort-is-on-a-header",
+            "kind": "forbid",
+            "selector": ".data-table [aria-sort]:not(th)",
+            "fragmentSafe": true,
+            "message": "aria-sort belongs on the column header cell (<th>), not on the button inside it or on a data cell. Assistive technology reads the sort state from the header."
+          },
+          {
+            "id": "data-table-row-is-not-selected",
+            "kind": "forbid",
+            "selector": ".data-table tr[aria-selected]",
+            "fragmentSafe": true,
+            "message": "aria-selected is not valid on a row of a plain table. It belongs to role=\"grid\" and its keyboard contract. Select a row with a labelled checkbox in its first cell."
+          },
+          {
+            "id": "data-table-scroll-region-is-a-region",
+            "kind": "require-attr",
+            "selector": ".data-table[tabindex]",
+            "attr": "role",
+            "equals": "region",
+            "message": "A focusable scroll wrapper needs role=\"region\" so its name is announced. aria-label is not allowed on a plain div."
+          },
+          {
+            "id": "data-table-scroll-region-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".data-table[tabindex]",
+            "message": "Name a focusable scroll wrapper with aria-label, or aria-labelledby pointing at the table caption, so keyboard users know what they are scrolling."
+          }
+        ]
+      },
+      "avatar": {
+        "status": "enforced",
+        "note": "Added with the avatar component. Initials and icon ligatures read as letters, so a non-image avatar is either a named role=\"img\" or hidden beside a visible name.",
+        "rules": [
+          {
+            "id": "avatar-image-has-alt",
+            "kind": "forbid",
+            "selector": "img.avatar:not([alt])",
+            "message": "Give an avatar image alt text naming the person, or alt=\"\" when their name is already beside it."
+          },
+          {
+            "id": "avatar-is-an-image-or-hidden",
+            "kind": "forbid",
+            "selector": ".avatar:not(img):not([role=\"img\"]):not([aria-hidden=\"true\"])",
+            "fragmentSafe": true,
+            "message": "Initials read as separate letters and an icon reads as its ligature name. Give a non-image avatar role=\"img\" and a name, or aria-hidden=\"true\" when the person is named next to it."
+          },
+          {
+            "id": "avatar-image-role-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".avatar[role=\"img\"]",
+            "message": "An avatar with role=\"img\" needs aria-label or aria-labelledby. Its initials are hidden from the name computation of an image."
+          }
+        ]
+      },
+      "empty-state": {
+        "status": "enforced",
+        "note": "Added with the empty state component. Layout around authored content: the heading, text and buttons carry their own semantics, and the icon rules cover a leading icon.",
+        "rules": [
+          {
+            "id": "empty-state-image-has-alt",
+            "kind": "forbid",
+            "selector": ".empty-state > img:not([alt])",
+            "message": "Give an empty-state illustration alt=\"\" when the heading already says what it shows, or alt text when the image adds information."
+          }
+        ]
+      },
+      "popover": {
+        "status": "enforced",
+        "note": "Added with the popover component. The panel is a native [popover] and its button names it with popovertarget or commandfor, so the browser owns opening, light dismiss, Escape and the button's expanded state.",
+        "rules": [
+          {
+            "id": "popover-is-native",
+            "kind": "forbid",
+            "selector": ".popover:not([popover])",
+            "fragmentSafe": true,
+            "message": "Give a .popover the popover attribute. Without it the panel is never in the top layer, never light-dismisses and its button reports no expanded state."
+          },
+          {
+            "id": "popover-target-exists",
+            "kind": "require-idref",
+            "selector": "[popovertarget]",
+            "attr": "popovertarget",
+            "container": "body",
+            "targetSelector": "[popover]",
+            "message": "popovertarget must name the id of a [popover] element in the page. A dangling id leaves a button that does nothing."
+          },
+          {
+            "id": "popover-is-not-a-tooltip",
+            "kind": "forbid",
+            "selector": ".popover[role=\"tooltip\"]",
+            "fragmentSafe": true,
+            "message": "A popover opens on press and can hold links and buttons, which a tooltip never can. Leave the role off; the browser relates the panel to its button."
+          }
+        ]
+      },
+      "stepper": {
+        "status": "enforced",
+        "note": "Added with the stepper component. The ordered list carries the step count and position; aria-current=\"step\" marks the current step, and CSS alt text speaks the complete and invalid states.",
+        "rules": [
+          {
+            "id": "stepper-is-an-ordered-list",
+            "kind": "forbid",
+            "selector": ".stepper:not(ol)",
+            "fragmentSafe": true,
+            "message": "Write a stepper as <ol class=\"stepper\">. The order is the content: an ordered list announces how many steps there are and which one each is."
+          },
+          {
+            "id": "stepper-current-is-a-step",
+            "kind": "forbid",
+            "selector": ".stepper > li[aria-current]:not([aria-current=\"step\"])",
+            "fragmentSafe": true,
+            "message": "Mark the current step with aria-current=\"step\". \"page\" or \"true\" tells assistive technology something else."
+          },
+          {
+            "id": "stepper-has-one-current-step",
+            "kind": "forbid",
+            "selector": ".stepper > li[aria-current=\"step\"] ~ li[aria-current=\"step\"]",
+            "fragmentSafe": true,
+            "message": "Only one step is current. Mark finished steps with .complete instead."
+          },
+          {
+            "id": "stepper-step-is-not-error-colored",
+            "kind": "forbid",
+            "selector": ".stepper > li.error",
+            "fragmentSafe": true,
+            "message": "Mark a step that needs attention with .invalid. .error is the error color utility: it paints the whole step red and is not spoken."
+          }
+        ]
+      },
+      "timeline": {
+        "status": "enforced",
+        "note": "Added with the timeline component. An ordered list of events; the order is the content.",
+        "rules": [
+          {
+            "id": "timeline-is-an-ordered-list",
+            "kind": "forbid",
+            "selector": ".timeline:not(ol)",
+            "fragmentSafe": true,
+            "message": "Write a timeline as <ol class=\"timeline\">. The events have an order, and an ordered list says so to assistive technology."
+          },
+          {
+            "id": "timeline-time-is-machine-readable",
+            "kind": "require-attr",
+            "selector": ".timeline time",
+            "attr": "datetime",
+            "message": "Give each <time> a datetime value. \"9:12 AM\" or \"Yesterday\" has no date a script, a translation tool or a reader in another time zone can use."
+          }
+        ]
+      },
+      "stat": {
+        "status": "enforced",
+        "note": "Added with the stat component. A description list pairs each value with its label; the change arrow is decoration and the text says the direction.",
+        "rules": [
+          {
+            "id": "stats-are-a-description-list",
+            "kind": "forbid",
+            "selector": ".stats:not(dl)",
+            "fragmentSafe": true,
+            "message": "Write .stats as a <dl> with a <dt> label and <dd> value per tile. Without the pairing a screen reader reads a run of numbers with nothing to say what each one is."
+          }
+        ]
+      },
+      "tree": {
+        "status": "enforced",
+        "note": "Added with the tree component. Nested lists of native disclosures and links: every row is a Tab stop and the browser opens a branch, so no tree role is promised.",
+        "rejects": {
+          "rejected_role": "tree",
+          "because": "its rows are native disclosures and links reached with Tab - a tree role promises arrow-key navigation, type-ahead and expanded states on treeitems that the markup does not have and that native details would fight",
+          "rule": "tree-is-not-a-tree-widget"
+        },
+        "rules": [
+          {
+            "id": "tree-is-not-a-tree-widget",
+            "kind": "forbid",
+            "selector": ".tree[role], .tree [role=\"treeitem\"], .tree [role=\"group\"]",
+            "fragmentSafe": true,
+            "message": "A .tree takes no ARIA tree roles. It is lists of disclosures and links, which keep their own roles and keyboard behavior."
+          },
+          {
+            "id": "tree-marks-current-not-selected",
+            "kind": "forbid",
+            "selector": ".tree [aria-selected]",
+            "fragmentSafe": true,
+            "message": "Mark the open file or page with aria-current. aria-selected is not valid on a link or a list item."
+          }
+        ]
+      },
+      "command-palette": {
+        "status": "enforced",
+        "note": "Added with the command palette component. A native modal dialog; the component makes the input a combobox and the list a listbox of options at runtime and owns the active option.",
+        "rules": [
+          {
+            "id": "command-palette-is-a-dialog",
+            "kind": "forbid",
+            "selector": ".command-palette:not(dialog)",
+            "fragmentSafe": true,
+            "message": "Write the palette as <dialog class=\"command-palette\">. The dialog makes it modal, closes it on Escape and returns focus."
+          },
+          {
+            "id": "command-palette-is-named",
+            "kind": "require-accessible-name",
+            "selector": "dialog.command-palette",
+            "message": "Name the palette with aria-label so it is announced when it opens."
+          },
+          {
+            "id": "command-palette-input-is-named",
+            "kind": "require-accessible-name",
+            "selector": "dialog.command-palette > input",
+            "message": "Name the search input with aria-label. A placeholder disappears as the user types and is not a reliable name."
+          }
+        ]
+      },
+      "skeleton": {
+        "status": "enforced",
+        "note": "Added with the skeleton component. A skeleton is an empty placeholder shape. The region it fills carries aria-busy, and a loading indicator or status reports the wait.",
+        "rules": [
+          {
+            "id": "skeleton-is-empty",
+            "kind": "forbid",
+            "selector": ".skeleton:not(:empty)",
+            "fragmentSafe": true,
+            "message": "Keep a .skeleton empty. Text inside it is read out as if it were content; report the wait through a status such as a loading indicator, and mark the loading region aria-busy=\"true\"."
           }
         ]
       },

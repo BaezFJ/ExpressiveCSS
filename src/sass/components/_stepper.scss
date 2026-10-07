@@ -1,0 +1,190 @@
+@use "../abstracts" as *;
+
+// Stepper. An <ol class="stepper"> shows where the user is in a fixed
+// sequence of steps, such as a checkout. Each <li> is a step; its text, or a
+// link back to a finished step, is the label. The list numbers the steps.
+//
+// State is markup the page keeps current:
+//   aria-current="step"  the step the user is on
+//   .complete            a finished step: the number becomes a check
+//   .invalid             a step that needs attention: the number becomes "!"
+// The check and "!" are also spoken, through the alt text of the indicator;
+// the two labels are tokens so a page can translate them.
+//
+// Each step is a small grid: indicator, label and connector on the first row,
+// an optional <small> supporting line under the label, and in .vertical an
+// optional .stepper-content panel under that.
+//
+// Tokens:
+//   --md-comp-stepper-indicator-size        24px
+//   --md-comp-stepper-connector-color       outline-variant / complete: primary
+//   --md-comp-stepper-active-color          primary
+//   --md-comp-stepper-complete-label        "Completed"
+//   --md-comp-stepper-error-label           "Error"
+
+$_stepper-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.55 18 3.85 12.3l1.43-1.43 4.27 4.28 9.17-9.18 1.43 1.43z'/%3E%3C/svg%3E");
+$_stepper-alert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 14V6h2v8zm0 4v-2h2v2z'/%3E%3C/svg%3E");
+
+.stepper {
+  --md-comp-stepper-indicator-size: 24px;
+  --md-comp-stepper-connector-color: var(--md-sys-color-outline-variant);
+  --md-comp-stepper-active-color: var(--md-sys-color-primary);
+  --md-comp-stepper-complete-label: "Completed";
+  --md-comp-stepper-error-label: "Error";
+
+  // Steps never squeeze below their label; a row too narrow for all of them
+  // wraps rather than overlapping. Use .vertical where that is the norm.
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: $element-top-margin 0 $element-bottom-margin;
+  padding: 0;
+  list-style: none;
+  counter-reset: stepper;
+
+  > li {
+    display: grid;
+    flex: 1 1 auto;
+    grid-template-columns: auto auto minmax(16px, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 8px;
+    align-items: center;
+    margin: 0;
+    counter-increment: stepper;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("title-small");
+
+    // The number is already the list position, so it is not spoken again.
+    &::before {
+      content: counter(stepper) / "";
+      grid-column: 1;
+      grid-row: 1;
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--md-comp-stepper-indicator-size);
+      height: var(--md-comp-stepper-indicator-size);
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: 50%;
+      @include typescale("label-medium");
+    }
+
+    &::after {
+      content: "";
+      grid-column: 3;
+      grid-row: 1;
+      height: 1px;
+      min-width: 16px;
+      background-color: var(--md-comp-stepper-connector-color);
+    }
+
+    &:last-child {
+      flex: none;
+
+      &::after {
+        content: none;
+      }
+    }
+
+    // Supporting text may run under the connector rather than wrap word by word.
+    > small {
+      grid-column: 2 / -1;
+      grid-row: 2;
+      color: var(--md-sys-color-on-surface-variant);
+      @include typescale("body-small");
+    }
+
+    > a {
+      color: inherit;
+      border-radius: 4px;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      @include focus-visible;
+    }
+  }
+
+  > li[aria-current="step"] {
+    color: var(--md-sys-color-on-surface);
+
+    &::before {
+      border-color: var(--md-comp-stepper-active-color);
+      background-color: var(--md-comp-stepper-active-color);
+      color: var(--md-sys-color-on-primary);
+    }
+  }
+
+  // The glyph is knocked out of the filled circle, so it takes the color of
+  // whatever surface the stepper sits on.
+  > li:is(.complete, .invalid)::before {
+    border: 0;
+  }
+
+  > li.complete {
+    --md-comp-stepper-connector-color: var(--md-comp-stepper-active-color);
+
+    color: var(--md-sys-color-on-surface);
+
+    &::before {
+      content: "" / var(--md-comp-stepper-complete-label);
+      background-color: var(--md-comp-stepper-active-color);
+      mask: $_stepper-check center / 18px no-repeat exclude, linear-gradient(#000 0 0);
+    }
+  }
+
+  > li.invalid {
+    color: var(--md-sys-color-error);
+
+    &::before {
+      content: "" / var(--md-comp-stepper-error-label);
+      background-color: var(--md-sys-color-error);
+      mask: $_stepper-alert center / 18px no-repeat exclude, linear-gradient(#000 0 0);
+    }
+  }
+
+  &.vertical {
+    flex-direction: column;
+    gap: 0;
+
+    > li {
+      flex: none;
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-rows: auto auto 1fr;
+
+      > small {
+        grid-column: 2;
+      }
+
+      &::after {
+        grid-column: 1;
+        grid-row: 2 / -1;
+        justify-self: center;
+        width: 1px;
+        height: auto;
+        min-width: 0;
+        min-height: 16px;
+        margin-block: 4px;
+      }
+
+      &:last-child::after {
+        content: none;
+      }
+
+      > .stepper-content {
+        grid-column: 2;
+        grid-row: 3;
+        padding-block: 8px 16px;
+        color: var(--md-sys-color-on-surface-variant);
+        @include typescale("body-medium");
+      }
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .stepper > li:is([aria-current="step"], .complete, .invalid)::before {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}

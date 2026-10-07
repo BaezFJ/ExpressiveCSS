@@ -1,0 +1,100 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "keyboard", label: "Keyboard" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="tree">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;ul class="tree"&gt;</code> nests lists for file browsers
+          and deep navigation. A branch is a <code>&lt;details&gt;</code> whose
+          <code>&lt;summary&gt;</code> is the row; a leaf is a link.
+        </p>
+        <p>
+          Mark the current row with <code>aria-current</code>. Each level draws
+          a guide line down from its parent's chevron. Wrap a tree of links in
+          a named <code>&lt;nav&gt;</code>.
+        </p>
+        <nav aria-label="Example files" style="max-width: 20rem;">
+          <ul class="tree">
+            <li>
+              <details open>
+                <summary><span class="material-symbols" aria-hidden="true">folder</span>src</summary>
+                <ul>
+                  <li><a href="#anatomy" aria-current="page"><span class="material-symbols" aria-hidden="true">description</span>index.ts</a></li>
+                  <li>
+                    <details open>
+                      <summary><span class="material-symbols" aria-hidden="true">folder</span>components</summary>
+                      <ul>
+                        <li><a href="#anatomy"><span class="material-symbols" aria-hidden="true">description</span>menu.ts</a></li>
+                        <li><a href="#anatomy"><span class="material-symbols" aria-hidden="true">description</span>tabs.ts</a></li>
+                      </ul>
+                    </details>
+                  </li>
+                  <li>
+                    <details>
+                      <summary><span class="material-symbols" aria-hidden="true">folder</span>core</summary>
+                      <ul>
+                        <li><a href="#anatomy"><span class="material-symbols" aria-hidden="true">description</span>utils.ts</a></li>
+                      </ul>
+                    </details>
+                  </li>
+                </ul>
+              </details>
+            </li>
+            <li><a href="#anatomy"><span class="material-symbols" aria-hidden="true">description</span>README.md</a></li>
+          </ul>
+        </nav>
+<Code code={`
+<nav aria-label="Files">
+  <ul class="tree">
+    <li>
+      <details open>
+        <summary>src</summary>
+        <ul>
+          <li><a href="/src/index.ts" aria-current="page">index.ts</a></li>
+          <li>
+            <details>
+              <summary>components</summary>
+              <ul>
+                <li><a href="/src/components/menu.ts">menu.ts</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </details>
+    </li>
+    <li><a href="/README.md">README.md</a></li>
+  </ul>
+</nav>
+`} />
+  </Section>
+  <Section {...S.keyboard}>
+        <p>
+          Every row is a Tab stop, and Enter or Space opens a branch, because
+          the rows are native disclosures and links. The tree takes no
+          <code>role="tree"</code>: that role promises arrow-key navigation
+          between rows, which native disclosures do not provide.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.tree</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-tree-row-height</code></td><td>40px</td></tr>
+          <tr><td><code>--md-comp-tree-row-shape</code></td><td>100px</td></tr>
+          <tr><td><code>--md-comp-tree-guide-color</code></td><td><code>--md-sys-color-outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-tree-selected-container-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

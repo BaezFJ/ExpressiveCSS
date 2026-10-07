@@ -1,0 +1,97 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "icons", label: "Leading icon" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="timeline">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          An <code>&lt;ol class="timeline"&gt;</code> lists events in order.
+          Each <code>&lt;li&gt;</code> is an event: a <code>&lt;time&gt;</code>,
+          a heading and supporting text. A dot marks each event and a line
+          joins it to the next.
+        </p>
+        <p>
+          The page picks the order, newest or oldest first. Give every
+          <code>&lt;time&gt;</code> a <code>datetime</code>, so "Yesterday"
+          still has a date behind it.
+        </p>
+        <ol class="timeline" style="max-width: 28rem;">
+          <li>
+            <time datetime="2026-10-06T09:12">9:12 AM</time>
+            <h4>Order placed</h4>
+            <p>Two items, paid by card.</p>
+          </li>
+          <li>
+            <time datetime="2026-10-06T11:40">11:40 AM</time>
+            <h4>Shipped</h4>
+            <p>Tracking number sent by email.</p>
+          </li>
+          <li>
+            <time datetime="2026-10-07">Tomorrow</time>
+            <h4>Arrives</h4>
+          </li>
+        </ol>
+<Code code={`
+<ol class="timeline">
+  <li>
+    <time datetime="2026-10-06T09:12">9:12 AM</time>
+    <h3>Order placed</h3>
+    <p>Two items, paid by card.</p>
+  </li>
+  <li>
+    <time datetime="2026-10-06T11:40">11:40 AM</time>
+    <h3>Shipped</h3>
+    <p>Tracking number sent by email.</p>
+  </li>
+</ol>
+`} />
+  </Section>
+  <Section {...S.icons}>
+        <p>
+          A leading icon as the first child replaces the dot with a tonal
+          circle, for an activity feed that mixes kinds of event. Hide it from
+          assistive technology; the heading says what happened.
+        </p>
+        <ol class="timeline" style="max-width: 28rem;">
+          <li>
+            <span class="material-symbols" aria-hidden="true">chat</span>
+            <time datetime="2026-10-06">Today</time>
+            <h4>Ada commented</h4>
+            <p>Looks good to me.</p>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">commit</span>
+            <time datetime="2026-10-05">Yesterday</time>
+            <h4>Grace pushed 3 commits</h4>
+          </li>
+        </ol>
+<Code code={`
+<li>
+  <span class="material-symbols" aria-hidden="true">chat</span>
+  <time datetime="2026-10-06">Today</time>
+  <h3>Ada commented</h3>
+  <p>Looks good to me.</p>
+</li>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.timeline</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-timeline-marker-color</code></td><td><code>--md-sys-color-primary</code></td></tr>
+          <tr><td><code>--md-comp-timeline-connector-color</code></td><td><code>--md-sys-color-outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-timeline-gap</code></td><td>24px</td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

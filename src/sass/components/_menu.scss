@@ -610,6 +610,11 @@ menu[id].grouped
 .menu-trigger {
   cursor: pointer;
 
+  // A context menu's trigger is a region of content, not a control.
+  &[data-context-menu] {
+    cursor: auto;
+  }
+
   // The trigger stays in its pressed state for as long as its menu is open.
   &[aria-expanded="true"] {
     background-image: linear-gradient(

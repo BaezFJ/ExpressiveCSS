@@ -1,0 +1,81 @@
+@use "../abstracts" as *;
+
+// Skeleton. An empty block that holds the place of content still loading,
+// with a shimmer passing across it. The block has no text and nothing to
+// announce: mark the region being filled with aria-busy="true", and report
+// the wait through a status such as a loading indicator.
+//
+// Shapes:
+//   (default)  a box; size it with width and height
+//   .text      one line of body text; the last of several runs shorter
+//   .circle    an avatar-sized circle
+//
+// Reduced motion stops the shimmer and leaves the shapes.
+//
+// Tokens:
+//   --md-comp-skeleton-color          surface-container-highest
+//   --md-comp-skeleton-shimmer-color  surface at 50%
+//   --md-comp-skeleton-shape          8px (text 4px)
+//   --md-comp-skeleton-circle-size    40px
+
+.skeleton {
+  --md-comp-skeleton-color: var(--md-sys-color-surface-container-highest);
+  --md-comp-skeleton-shimmer-color: color-mix(
+    in oklab,
+    var(--md-sys-color-surface) 50%,
+    transparent
+  );
+  --md-comp-skeleton-shape: 8px;
+  --md-comp-skeleton-circle-size: 40px;
+
+  display: block;
+  box-sizing: border-box;
+  border-radius: var(--md-comp-skeleton-shape);
+  background-color: var(--md-comp-skeleton-color);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--md-comp-skeleton-shimmer-color) 50%,
+    transparent 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 50% 100%;
+  animation: skeleton-shimmer 1.5s linear infinite;
+
+  &:dir(rtl) {
+    animation-direction: reverse;
+  }
+
+  &.text {
+    --md-comp-skeleton-shape: 4px;
+
+    width: 100%;
+    height: 1em;
+    margin-block: 0.25em;
+
+    &:last-child:not(:first-child) {
+      width: 60%;
+    }
+  }
+
+  &.circle {
+    width: var(--md-comp-skeleton-circle-size);
+    height: var(--md-comp-skeleton-circle-size);
+    flex: none;
+    border-radius: 50%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    background-image: none;
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid GrayText;
+  }
+}
+
+@keyframes skeleton-shimmer {
+  from { background-position: -100% 0; }
+  to { background-position: 200% 0; }
+}

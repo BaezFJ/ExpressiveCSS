@@ -1,0 +1,161 @@
+@use "../abstracts" as *;
+
+// Accordion. A .accordion stacks native <details> disclosures as tiles. The
+// browser owns the toggle: <summary> is the button, `open` is the state, and
+// a shared `name` makes the items exclusive. There is no JavaScript.
+//
+// The tiles join like a segmented list: outer corners take the full shape,
+// inner corners the grouped shape, and an open item rounds every corner.
+//
+// Opening animates where the engine can transition to `auto` height
+// (interpolate-size and ::details-content). Elsewhere it opens at once.
+//
+// Tokens:
+//   --md-comp-accordion-container-color  surface-container
+//   --md-comp-accordion-shape            20px
+//   --md-comp-accordion-grouped-shape    4px (inner corners)
+//   --md-comp-accordion-gap              2px
+//   --md-comp-accordion-header-height    56px
+//   --md-comp-accordion-padding          16px
+
+$_accordion-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 15.4 6 9.4 7.4 8l4.6 4.6L16.6 8 18 9.4z'/%3E%3C/svg%3E");
+
+.accordion {
+  --md-comp-accordion-container-color: var(--md-sys-color-surface-container);
+  --md-comp-accordion-shape: 20px;
+  --md-comp-accordion-grouped-shape: 4px;
+  --md-comp-accordion-gap: 2px;
+  --md-comp-accordion-header-height: 56px;
+  --md-comp-accordion-padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--md-comp-accordion-gap);
+  margin: $element-top-margin 0 $element-bottom-margin;
+
+  > details {
+    border-radius: var(--md-comp-accordion-grouped-shape);
+    background-color: var(--md-comp-accordion-container-color);
+    color: var(--md-sys-color-on-surface);
+    // Invisible until forced colors paint it, so the tiles stay apart there.
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    transition: border-radius 200ms ease-out;
+
+    &:first-child {
+      border-start-start-radius: var(--md-comp-accordion-shape);
+      border-start-end-radius: var(--md-comp-accordion-shape);
+    }
+
+    &:last-child {
+      border-end-start-radius: var(--md-comp-accordion-shape);
+      border-end-end-radius: var(--md-comp-accordion-shape);
+    }
+
+    &[open] {
+      border-radius: var(--md-comp-accordion-shape);
+    }
+  }
+
+  > details > summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-sizing: border-box;
+    min-height: var(--md-comp-accordion-header-height);
+    padding: 8px var(--md-comp-accordion-padding);
+    border-radius: inherit;
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    @include typescale("title-medium");
+    @include focus-visible;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    // The chevron trails the label and turns over when the item opens.
+    &::after {
+      content: "";
+      flex: none;
+      width: 24px;
+      height: 24px;
+      margin-inline-start: auto;
+      background-color: var(--md-sys-color-on-surface-variant);
+      mask: $_accordion-chevron center / 24px no-repeat;
+      transition: transform 200ms ease-out;
+    }
+
+    &:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--md-sys-color-on-surface) state-opacity("hover"),
+        transparent
+      );
+    }
+
+    > #{$icon} {
+      flex: none;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+  }
+
+  > details[open] > summary::after {
+    transform: rotate(180deg);
+  }
+
+  // Everything after the summary is the panel.
+  > details > :not(summary) {
+    margin: 0 var(--md-comp-accordion-padding);
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-medium");
+  }
+
+  > details > :not(summary) + :not(summary) {
+    margin-block-start: 8px;
+  }
+
+  > details > :not(summary):last-child {
+    margin-block-end: var(--md-comp-accordion-padding);
+  }
+}
+
+@supports (interpolate-size: allow-keywords) and selector(::details-content) {
+  .accordion > details {
+    interpolate-size: allow-keywords;
+
+    &::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition:
+        block-size 250ms cubic-bezier(0.2, 0, 0, 1),
+        content-visibility 250ms allow-discrete;
+    }
+
+    &[open]::details-content {
+      block-size: auto;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &::details-content {
+        transition: none;
+      }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accordion > details,
+  .accordion > details > summary::after {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .accordion > details > summary::after {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+}

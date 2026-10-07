@@ -1,0 +1,68 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "change", label: "Change" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="stat">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;dl class="stats"&gt;</code> shows key figures as tiles,
+          such as a dashboard summary. Each <code>&lt;div&gt;</code> tile holds
+          a <code>&lt;dt&gt;</code> label and a <code>&lt;dd&gt;</code> value.
+        </p>
+        <p>
+          The description list keeps each value paired with its label for a
+          screen reader. Tiles share a row and wrap once each would be
+          narrower than 160px.
+        </p>
+        <dl class="stats">
+          <div><dt>Revenue</dt><dd>$48.2k</dd><dd class="stat-change up">+12% from last month</dd></div>
+          <div><dt>Churn</dt><dd>3.1%</dd><dd class="stat-change up negative">+0.4 points from last month</dd></div>
+          <div><dt>Active users</dt><dd>1,204</dd><dd class="stat-change down">−2% from last month</dd></div>
+        </dl>
+<Code code={`
+<dl class="stats">
+  <div>
+    <dt>Revenue</dt>
+    <dd>$48.2k</dd>
+    <dd class="stat-change up">+12% from last month</dd>
+  </div>
+  <div>
+    <dt>Active users</dt>
+    <dd>1,204</dd>
+  </div>
+</dl>
+`} />
+  </Section>
+  <Section {...S.change}>
+        <p>
+          A <code>&lt;dd class="stat-change"&gt;</code> compares the value with
+          an earlier one. <code>up</code> and <code>down</code> add an arrow;
+          <code>negative</code> marks bad news in the error color, whichever
+          way the number moved. The arrow is decoration, so say the direction
+          and the comparison in the text.
+        </p>
+<Code code={`
+<dd class="stat-change up negative">+0.4 points from last month</dd>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.stats</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-stat-container-color</code></td><td><code>--md-sys-color-surface-container-low</code></td></tr>
+          <tr><td><code>--md-comp-stat-shape</code></td><td>16px</td></tr>
+          <tr><td><code>--md-comp-stat-min-width</code></td><td>160px</td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

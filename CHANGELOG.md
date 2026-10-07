@@ -12,6 +12,55 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `.message-bubble`. `end` moves a message to the sender's side,
   `.message-group` stacks consecutive messages and joins their corners, and
   `.message-bubble.outlined` holds attachments. CSS only.
+- Accordion component: `.accordion` stacks native `<details>` items as joined
+  tiles with a turning chevron. A shared `name` keeps one item open, and
+  opening animates where the engine can transition to `auto` height. CSS only.
+- Data table component: `.data-table` wraps a native `<table>` in a scrolling,
+  outlined container with a sticky header row. `numeric` aligns number columns,
+  `dense` shortens rows, `aria-sort` on a header draws its sort arrow, and a
+  checked checkbox in the first cell selects the row. The page owns sorting.
+  CSS only.
+- Avatar component: `.avatar` shows a person as a circular image, initials or
+  icon in `small`, default and `large` sizes. `.avatar-group` overlaps avatars
+  with a surface ring. CSS only.
+- Skeleton component: `.skeleton` draws placeholder boxes, `text` lines and
+  `circle` shapes with a shimmer that stops under reduced motion. CSS only.
+- Empty state component: `.empty-state` centers an icon or illustration, a
+  heading, supporting text and an `.empty-state-actions` row. CSS only.
+- Popover component: `.popover` styles a native `[popover]` panel opened by a
+  `popovertarget` button and places it with CSS anchor positioning, below the
+  button by default or with `top`, `start` and `end`, flipping to stay on
+  screen. Use it for toggletips and small action panels. CSS only.
+- Stepper component: `ol.stepper` numbers a fixed sequence of steps.
+  `aria-current="step"`, `complete` and `invalid` mark each step's state, and
+  the complete and invalid states are spoken through translatable tokens.
+  `vertical` stacks the steps and takes a `.stepper-content` panel. CSS only.
+- Drop zone component: `.drop-zone` stretches a native file input over a large
+  labelled target. The Forms behavior marks a drag with `dragover` and lists
+  each chosen file's name and size in `.drop-zone-files`.
+- Text fields take a trailing `.icon-button.suffix` as a clickable control.
+  `password-toggle` on that button shows and hides the password and reports
+  its state with `aria-pressed`. `input.otp` draws one native input as a row of
+  one-time code cells.
+- Menu `contextMenu` option, also set by `data-context-menu` on the trigger:
+  the trigger is a region, and its menu opens at the pointer on right-click,
+  long-press, the menu key or Shift+F10, flipping to stay on screen.
+- Timeline component: `ol.timeline` marks each event with a dot joined to the
+  next by a line, or with a leading icon in a tonal circle. CSS only.
+- Stat component: `dl.stats` lays out key figures as wrapping tiles, with a
+  `.stat-change` line that takes `up`, `down` and `negative`. CSS only.
+- Tree component: `ul.tree` nests lists of native disclosures and links with
+  guide lines, turning chevrons and an `aria-current` row. It takes no tree
+  role. CSS only.
+- Rating component: `fieldset.rating` draws native radios as stars that fill
+  up to the choice and preview on hover; `.rating[role="img"]` with
+  `--md-comp-rating-value` shows a score, halves included. CSS only.
+- Command palette component: `dialog.command-palette` with a search input and
+  a list of link or button commands. `CommandPalette` filters by text and
+  `data-keywords`, moves the active command with the arrow keys, runs it with
+  Enter and opens on Ctrl+K or Command+K. `AutoInit()` starts it.
+- `<kbd>` is drawn as a keycap; an outer `<kbd>` around a combination stays
+  plain.
 - `.scroll-area` styles native scrollbars with theme-aware colors and thin
   sizing, with a WebKit fallback and system scrollbars in forced-colors mode.
 - Frosted glass for floating surfaces. `--expressive-glass: true` on `:root` or

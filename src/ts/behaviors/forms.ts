@@ -73,6 +73,10 @@ export class Forms {
     Utils.onDocumentReady(() => {
       document.addEventListener('change', (e: KeyboardEvent) => {
         const target = <HTMLInputElement>e.target;
+        if (target instanceof HTMLInputElement && target.type === 'file') {
+          const zone = target.closest('.drop-zone');
+          if (zone) Forms.listDropZoneFiles(zone, target);
+        }
         if (target instanceof HTMLInputElement) {
           // The sibling-label loop that used to live here compared
           // `tagName == 'label'` (tagName is uppercase) so it never matched,
@@ -96,6 +100,15 @@ export class Forms {
         }
       });
 
+      document.addEventListener('click', Forms.togglePassword);
+      // Capture, so the password is hidden again before any submit handler
+      // reads the form or the browser offers to save it.
+      document.addEventListener('submit', Forms.resetFormExtras, true);
+      document.addEventListener('reset', Forms.resetFormExtras, true);
+      for (const type of ['dragenter', 'dragover', 'dragleave', 'drop']) {
+        document.addEventListener(type, Forms.markDropZone);
+      }
+
       document.querySelectorAll('.expressive-textarea').forEach((textArea: HTMLTextAreaElement) => {
         Forms.InitTextarea(textArea);
       });
@@ -107,6 +120,81 @@ export class Forms {
           Forms.InitFileInputPath(fileInput);
         });
     });
+  }
+
+  /**
+   * A .password-toggle button shows or hides the password in its field. The
+   * button's own name stays put ("Show password"); aria-pressed carries the
+   * state, so there is no generated text to translate.
+   */
+  static togglePassword(e: MouseEvent) {
+    const button = (<Element>e.target).closest?.('.password-toggle');
+    const input = button?.closest('.field')?.querySelector<HTMLInputElement>(
+      'input[type="password"], input[data-password]'
+    );
+    if (!input) return;
+    const show = input.type === 'password';
+    // Marked so the input is still found once it has become type="text".
+    input.toggleAttribute('data-password', show);
+    input.type = show ? 'text' : 'password';
+    button.setAttribute('aria-pressed', String(show));
+  }
+
+  /**
+   * A revealed password goes back to type="password" when its form is
+   * submitted or reset, so it is never sent or autofilled as plain text and
+   * a reset field does not stay revealed. A reset form also drops the file
+   * lists it would otherwise leave showing: reset fires no change event.
+   */
+  static resetFormExtras(e: Event) {
+    const form = e.target;
+    if (!(form instanceof HTMLFormElement)) return;
+    form.querySelectorAll<HTMLInputElement>('input[data-password]').forEach((input) => {
+      input.removeAttribute('data-password');
+      input.type = 'password';
+      input.closest('.field')?.querySelector('.password-toggle')?.setAttribute('aria-pressed', 'false');
+    });
+    if (e.type === 'reset') {
+      form.querySelectorAll('.drop-zone-files').forEach((list) => list.replaceChildren());
+      form.querySelectorAll('.drop-zone.dragover').forEach((zone) => zone.classList.remove('dragover'));
+    }
+  }
+
+  /**
+   * The native file input covers its .drop-zone, so the browser already takes
+   * a dropped file. This only shows the drag: the input is the topmost
+   * element, so every drag event over the zone targets it and leaving it is
+   * leaving the zone.
+   */
+  static markDropZone(e: DragEvent) {
+    const input = <Element>e.target;
+    if (!(input instanceof HTMLInputElement) || input.type !== 'file') return;
+    const zone = input.closest('.drop-zone');
+    if (!zone) return;
+    const over = e.type === 'dragenter' || e.type === 'dragover';
+    zone.classList.toggle('dragover', over && !input.disabled);
+  }
+
+  /** Lists the chosen files, name and size, in the zone's .drop-zone-files. */
+  static listDropZoneFiles(zone: Element, input: HTMLInputElement) {
+    const list = zone.querySelector('.drop-zone-files');
+    if (!list) return;
+    const size = (bytes: number) => {
+      const [value, unit] =
+        bytes >= 1e6 ? [bytes / 1e6, 'megabyte'] : bytes >= 1e3 ? [bytes / 1e3, 'kilobyte'] : [bytes, 'byte'];
+      return new Intl.NumberFormat(undefined, { style: 'unit', unit, maximumFractionDigits: 1 }).format(value);
+    };
+    list.replaceChildren(
+      ...Array.from(input.files ?? [], (file) => {
+        const item = document.createElement('li');
+        const name = document.createElement('span');
+        const meta = document.createElement('span');
+        name.textContent = file.name;
+        meta.textContent = size(file.size);
+        item.append(name, meta);
+        return item;
+      })
+    );
   }
 
   static InitTextarea(textarea: HTMLTextAreaElement) {

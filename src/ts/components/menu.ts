@@ -43,6 +43,13 @@ export interface MenuOptions extends BaseOptions {
    */
   hover: boolean;
   /**
+   * If true, the trigger is a region and the menu is its context menu: it
+   * opens at the pointer on right-click, long-press or the keyboard context
+   * menu key instead of on click. `data-context-menu` on the trigger sets it.
+   * @default false
+   */
+  contextMenu: boolean;
+  /**
    * The duration of the transition enter in milliseconds.
    * @default 150
    */
@@ -92,6 +99,7 @@ const _defaults: MenuOptions = {
   coverTrigger: false,
   closeOnClick: true,
   hover: false,
+  contextMenu: false,
   inDuration: 150,
   outDuration: 250,
   onOpenStart: null,
@@ -122,6 +130,14 @@ export class Menu extends Component<MenuOptions> implements Openable {
   private _transition = 0;
   private _originalInert: string | null;
   private _menuClickTargets = new WeakMap<Event, HTMLElement>();
+  /**
+   * Viewport point the open context menu belongs to. Null outside a
+   * right-click, so a keyboard or programmatic open uses the region's corner
+   * rather than an old pointer position.
+   */
+  private _contextPoint: { x: number; y: number } | null = null;
+  /** What had focus when a context menu opened; focus goes back there. */
+  private _contextReturn: HTMLElement | null = null;
 
   constructor(el: HTMLElement, options: Partial<MenuOptions>) {
     super(el, options, Menu);
@@ -134,6 +150,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
     this.options = {
       ...Menu.defaults,
+      contextMenu: el.hasAttribute('data-context-menu'),
       ...options
     };
 
@@ -142,10 +159,14 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.isTouchMoving = false;
     this.focusedIndex = -1;
     this.filterQuery = [];
-    this.el.ariaExpanded = 'false';
-    if (!this.el.hasAttribute('aria-haspopup')) this.el.setAttribute('aria-haspopup', 'menu');
-    if (this.id && !this.el.hasAttribute('aria-controls'))
-      this.el.setAttribute('aria-controls', this.id);
+    // A context region is content, not a button: expanded, haspopup and
+    // controls are not valid on it, and the menu key is how it is discovered.
+    if (!this.options.contextMenu) {
+      this.el.ariaExpanded = 'false';
+      if (!this.el.hasAttribute('aria-haspopup')) this.el.setAttribute('aria-haspopup', 'menu');
+      if (this.id && !this.el.hasAttribute('aria-controls'))
+        this.el.setAttribute('aria-controls', this.id);
+    }
 
     // Keep the menu next to the trigger so positioning stays local.
     this._moveMenuToElement();
@@ -190,7 +211,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
   destroy() {
     this._clearPendingTimers();
     this.isOpen = false;
-    this.el.ariaExpanded = 'false';
+    this._setExpanded(false);
     clearTimeout(this.filterTimeout);
     this._resetMenuStyles();
     this._restoreInert();
@@ -211,8 +232,10 @@ export class Menu extends Component<MenuOptions> implements Openable {
     if (this.menuEl?.querySelector(':scope > li > menu')) {
       this.menuEl.addEventListener('mouseover', this._handleSubmenuAlign);
     }
-    // Hover event handlers
-    if (this.options.hover) {
+    if (this.options.contextMenu) {
+      this.el.addEventListener('contextmenu', this._handleContextMenu);
+    } else if (this.options.hover) {
+      // Hover event handlers
       this.el.addEventListener('mouseenter', this._handleMouseEnter);
       this.el.addEventListener('mouseleave', this._handleMouseLeave);
       this.menuEl.addEventListener('mouseleave', this._handleMouseLeave);
@@ -229,7 +252,9 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.el.removeEventListener('keydown', this._handleTriggerKeydown);
     this.menuEl?.removeEventListener('click', this._handleMenuClick);
     this.menuEl?.removeEventListener('mouseover', this._handleSubmenuAlign);
-    if (this.options.hover) {
+    if (this.options.contextMenu) {
+      this.el.removeEventListener('contextmenu', this._handleContextMenu);
+    } else if (this.options.hover) {
       this.el.removeEventListener('mouseenter', this._handleMouseEnter);
       this.el.removeEventListener('mouseleave', this._handleMouseLeave);
       this.menuEl?.removeEventListener('mouseleave', this._handleMouseLeave);
@@ -246,6 +271,8 @@ export class Menu extends Component<MenuOptions> implements Openable {
     });
     this.menuEl?.addEventListener('keydown', this._handleMenuKeydown);
     window.addEventListener('resize', this._handleWindowResize);
+    // A right-click elsewhere fires no click, so it would leave the menu open.
+    if (this.options.contextMenu) document.addEventListener('contextmenu', this._handleDocumentContextMenu);
   }
 
   _removeTemporaryEventHandlers() {
@@ -254,7 +281,48 @@ export class Menu extends Component<MenuOptions> implements Openable {
     document.body.removeEventListener('touchmove', this._handleDocumentTouchmove);
     this.menuEl?.removeEventListener('keydown', this._handleMenuKeydown);
     window.removeEventListener('resize', this._handleWindowResize);
+    document.removeEventListener('contextmenu', this._handleDocumentContextMenu);
   }
+
+  _handleContextMenu = (e: MouseEvent) => {
+    // A nested region already answered this right-click; this one closes so
+    // two menus never stack.
+    if (e.defaultPrevented) {
+      this.close();
+      return;
+    }
+    // A right-click on another open menu inside this region belongs to that
+    // menu, which keeps itself open.
+    const path = e.composedPath();
+    if (Menu._menus.some((menu) => menu !== this && menu.isOpen && path.includes(menu.menuEl))) return;
+    e.preventDefault();
+    if (!this.isOpen) {
+      const root = this.el.getRootNode() as Document | ShadowRoot;
+      this._contextReturn = root.activeElement instanceof HTMLElement ? root.activeElement : null;
+    }
+    // The menu key and Shift+F10 fire this too, with a point that may sit
+    // outside the region (0, 0 in some engines). Those leave the point unset
+    // and open at the region's start corner.
+    const rect = this.el.getBoundingClientRect();
+    const fromPointer =
+      (e.clientX !== 0 || e.clientY !== 0) &&
+      e.clientX >= rect.left && e.clientX <= rect.right &&
+      e.clientY >= rect.top && e.clientY <= rect.bottom;
+    this._contextPoint = fromPointer ? { x: e.clientX, y: e.clientY } : null;
+    if (this.isOpen) this.recalculateDimensions();
+    else this.open();
+  };
+
+  _handleDocumentContextMenu = (e: MouseEvent) => {
+    const path = e.composedPath();
+    // A right-click on the menu itself keeps it open and the browser's own
+    // menu shut.
+    if (path.includes(this.menuEl)) {
+      e.preventDefault();
+      return;
+    }
+    if (!path.includes(this.el)) this.close();
+  };
 
   _handleClick = (e: MouseEvent) => {
     e.preventDefault();
@@ -317,6 +385,9 @@ export class Menu extends Component<MenuOptions> implements Openable {
   };
 
   _handleTriggerKeydown = (e: KeyboardEvent) => {
+    // A context region keeps its keys for its own content; the browser turns
+    // the menu key and Shift+F10 into a contextmenu event.
+    if (this.options.contextMenu) return;
     // M3: Space, Enter, Arrow Down, and Arrow Up open a closed menu.
     const opensMenu =
       e.key === SPACE ||
@@ -863,10 +934,15 @@ export class Menu extends Component<MenuOptions> implements Openable {
     // that case - 40dp and 48dp against a 112dp floor.
     const triggerWidth = this.el.getBoundingClientRect().width;
     const idealWidth =
-      this.options.constrainWidth && triggerWidth >= MIN_SURFACE_WIDTH
+      this.options.constrainWidth && !this.options.contextMenu && triggerWidth >= MIN_SURFACE_WIDTH
         ? triggerWidth
         : Math.min(MAX_SURFACE_WIDTH, Math.max(MIN_SURFACE_WIDTH, natural));
     this.menuEl.style.width = idealWidth + 'px';
+
+    if (this.options.contextMenu) {
+      this._placeMenuAtPoint(this._contextPoint ?? this._regionCorner(), closestOverflowParent);
+      return;
+    }
 
     const positionInfo = this._getMenuPosition(closestOverflowParent);
     this.menuEl.style.left = positionInfo.x + 'px';
@@ -876,6 +952,66 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.menuEl.style.transformOrigin = `${
       positionInfo.horizontalAlignment === 'left' ? '0' : '100%'
     } ${positionInfo.verticalAlignment === 'top' ? '0' : '100%'}`;
+  }
+
+  /** Where a context menu opens without a pointer: the region's start corner. */
+  private _regionCorner() {
+    const rect = this.el.getBoundingClientRect();
+    const rtl = getComputedStyle(this.el).direction === 'rtl';
+    return { x: rtl ? rect.right : rect.left, y: rect.bottom };
+  }
+
+  /**
+   * Places a context menu with its start corner on the point, flipping to
+   * the other side of the point where it would not fit. The bounds are the
+   * viewport, narrowed to a scrolling or clipping ancestor the menu sits in;
+   * a menu taller than them gets their height and scrolls.
+   *
+   * The menu rests at left/top 0 of its containing block, so its rect is the
+   * offset to subtract - the same trick _getMenuPosition uses. It is measured
+   * without the entry animation's scale, which a second right-click can catch.
+   */
+  private _placeMenuAtPoint({ x, y }: { x: number; y: number }, container: HTMLElement) {
+    // A running transition would still report the interpolated scale, so it
+    // is suspended for the read; the target transform is unchanged after.
+    const { transform, transition } = this.menuEl.style;
+    this.menuEl.style.transition = 'none';
+    this.menuEl.style.transform = 'none';
+    const menu = this.menuEl.getBoundingClientRect();
+    this.menuEl.style.transform = transform;
+    this.menuEl.style.transition = transition;
+
+    let bounds = { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight };
+    if (container && getComputedStyle(container).overflow !== 'visible') {
+      const clip = container.getBoundingClientRect();
+      bounds = {
+        left: Math.max(bounds.left, clip.left),
+        top: Math.max(bounds.top, clip.top),
+        right: Math.min(bounds.right, clip.right),
+        bottom: Math.min(bounds.bottom, clip.bottom)
+      };
+    }
+
+    const width = menu.width;
+    const height = Math.min(menu.height, bounds.bottom - bounds.top);
+    this.isScrollable = height < menu.height;
+    if (this.isScrollable) this.menuEl.style.height = height + 'px';
+
+    const rtl = getComputedStyle(this.el).direction === 'rtl';
+    const fitsRight = x + width <= bounds.right;
+    const fitsLeft = x - width >= bounds.left;
+    const leftward = rtl ? fitsLeft || !fitsRight : !fitsRight && fitsLeft;
+    const upward = y + height > bounds.bottom && y - height >= bounds.top;
+    const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(value, max));
+    const left = clamp(leftward ? x - width : x, bounds.left, bounds.right - width);
+    const top = clamp(upward ? y - height : y, bounds.top, bounds.bottom - height);
+    this.menuEl.style.left = left - menu.left + 'px';
+    this.menuEl.style.top = top - menu.top + 'px';
+    this.menuEl.style.transformOrigin = `${leftward ? '100%' : '0'} ${upward ? '100%' : '0'}`;
+  }
+
+  private _setExpanded(expanded: boolean) {
+    if (!this.options.contextMenu) this.el.ariaExpanded = String(expanded);
   }
 
   /**
@@ -900,7 +1036,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this._schedule(() => this._setupTemporaryEventHandlers(), 0);
     // Queue handlers before initial focus, including zero-duration entry.
     this._animateIn();
-    this.el.ariaExpanded = 'true';
+    this._setExpanded(true);
   };
 
   /**
@@ -924,11 +1060,15 @@ export class Menu extends Component<MenuOptions> implements Openable {
     if (transition !== this._transition) return;
     this._animateOut();
     this._removeTemporaryEventHandlers();
-    this.el.ariaExpanded = 'false';
+    this._setExpanded(false);
     if (this.options.autoFocus && this.menuEl.contains(focused) &&
       (root.activeElement === focused || this.el.ownerDocument.activeElement === this.el.ownerDocument.body)) {
-      this.el.focus();
+      // A context region may not take focus itself; return to what had it.
+      const back = this._contextReturn;
+      (back?.isConnected && back !== this.el.ownerDocument.body ? back : this.el).focus();
     }
+    this._contextReturn = null;
+    this._contextPoint = null;
   };
 
   /**

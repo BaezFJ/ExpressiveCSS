@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**50 of 50 rows enforced; 0 remaining.**
+**63 of 63 rows enforced; 0 remaining.**
 
-46 of those rows are components - a part of the framework an author writes markup for.
+59 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,13 +45,27 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 46 components declare conformance debt.**
+**3 of 59 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
 role withheld by convention, with no rule behind it, is invisible to it.
 
 ## Enforced
+
+### accordion
+
+Added with the accordion component. Each item is a native <details>, so the browser exposes <summary> as a button with its expanded state and handles the keyboard. The rules keep authors from re-stating that state or nesting controls in the toggle.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `accordion-items-are-details` | forbid | `.accordion > :not(details)` | must not match |
+| `accordion-summary-holds-no-controls` | forbid | `.accordion summary :is(a[href], button, input, select, textarea, [tabindex])` | must not match |
+| `accordion-summary-state-is-native` | forbid | `.accordion summary:is([role="button"], [aria-expanded])` | must not match |
+
+- **accordion-items-are-details** - Write every accordion item as <details> with a <summary>. The element is the disclosure: a div with a click handler has no expanded state and no keyboard support.
+- **accordion-summary-holds-no-controls** - A <summary> is already the toggle button. A link or control inside it is a control nested in a control: pressing it also opens or closes the item, and screen readers flatten it into the summary name. Put actions in the panel.
+- **accordion-summary-state-is-native** - The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role="button" repeats it, and an authored aria-expanded goes stale the first time the item toggles.
 
 ### autocomplete
 
@@ -62,6 +76,20 @@ Swept 0.8.0. The combobox it builds is checked at runtime in tests/autocomplete.
 | `autocomplete-options-are-options` | forbid | `.autocomplete-content li:not([role="option"])` | must not match |
 
 - **autocomplete-options-are-options** - The suggestion list is a listbox; every entry in it is an option.
+
+### avatar
+
+Added with the avatar component. Initials and icon ligatures read as letters, so a non-image avatar is either a named role="img" or hidden beside a visible name.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `avatar-image-has-alt` | forbid | `img.avatar:not([alt])` | must not match |
+| `avatar-is-an-image-or-hidden` | forbid | `.avatar:not(img):not([role="img"]):not([aria-hidden="true"])` | must not match |
+| `avatar-image-role-is-named` | require-accessible-name | `.avatar[role="img"]` | must end up with an accessible name |
+
+- **avatar-image-has-alt** - Give an avatar image alt text naming the person, or alt="" when their name is already beside it.
+- **avatar-is-an-image-or-hidden** - Initials read as separate letters and an icon reads as its ligature name. Give a non-image avatar role="img" and a name, or aria-hidden="true" when the person is named next to it.
+- **avatar-image-role-is-named** - An avatar with role="img" needs aria-label or aria-labelledby. Its initials are hidden from the name computation of an image.
 
 ### badges
 
@@ -233,6 +261,38 @@ Swept 0.8.0. The four Material 3 chip types plus a non-interactive display chip,
 - **chip-icon-hidden** - A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden.
 - **filter-chip-label-for** - A filter chip is <input type="checkbox"> + <label class="chip">; the label must point at its input.
 
+### command-palette
+
+Added with the command palette component. A native modal dialog; the component makes the input a combobox and the list a listbox of options at runtime and owns the active option.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `command-palette-is-a-dialog` | forbid | `.command-palette:not(dialog)` | must not match |
+| `command-palette-is-named` | require-accessible-name | `dialog.command-palette` | must end up with an accessible name |
+| `command-palette-input-is-named` | require-accessible-name | `dialog.command-palette > input` | must end up with an accessible name |
+
+- **command-palette-is-a-dialog** - Write the palette as <dialog class="command-palette">. The dialog makes it modal, closes it on Escape and returns focus.
+- **command-palette-is-named** - Name the palette with aria-label so it is announced when it opens.
+- **command-palette-input-is-named** - Name the search input with aria-label. A placeholder disappears as the user types and is not a reliable name.
+
+### data-table
+
+Added with the data table component. The wrapper is the scroll container so the <table> keeps its table semantics. Sorting and selection are page state: aria-sort on the header cell and a checkbox in the first cell.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `data-table-wraps-the-table` | forbid | `table.data-table` | must not match |
+| `data-table-sort-is-on-a-header` | forbid | `.data-table [aria-sort]:not(th)` | must not match |
+| `data-table-row-is-not-selected` | forbid | `.data-table tr[aria-selected]` | must not match |
+| `data-table-scroll-region-is-a-region` | require-attr | `.data-table[tabindex]` | must have `role` = `region` |
+| `data-table-scroll-region-is-named` | require-accessible-name | `.data-table[tabindex]` | must end up with an accessible name |
+
+- **data-table-wraps-the-table** - Put .data-table on a <div> around the <table>. The wrapper scrolls; a table made to scroll itself needs display:block, which drops its table role in some engines.
+- **data-table-sort-is-on-a-header** - aria-sort belongs on the column header cell (<th>), not on the button inside it or on a data cell. Assistive technology reads the sort state from the header.
+- **data-table-row-is-not-selected** - aria-selected is not valid on a row of a plain table. It belongs to role="grid" and its keyboard contract. Select a row with a labelled checkbox in its first cell.
+- **data-table-scroll-region-is-a-region** - A focusable scroll wrapper needs role="region" so its name is announced. aria-label is not allowed on a plain div.
+- **data-table-scroll-region-is-named** - Name a focusable scroll wrapper with aria-label, or aria-labelledby pointing at the table caption, so keyboard users know what they are scrolling.
+
 ### datepicker
 
 Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the container.
@@ -275,6 +335,16 @@ The affordance that says a thing can be dragged, added with the drag handle comp
 - **drag-handle-button-is-not-hidden** - aria-hidden on a <button> hides it from assistive technology without taking it out of the tab order, so keyboard focus lands on something that is not there. Decoration is a <span>; a control stays exposed.
 - **drag-handle-button-is-named** - The handle is a bar drawn in CSS - there is no text inside it to be named by. A handle worth making a control is worth an aria-label saying what it moves.
 
+### empty-state
+
+Added with the empty state component. Layout around authored content: the heading, text and buttons carry their own semantics, and the icon rules cover a leading icon.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `empty-state-image-has-alt` | forbid | `.empty-state > img:not([alt])` | must not match |
+
+- **empty-state-image-has-alt** - Give an empty-state illustration alt="" when the heading already says what it shows, or alt text when the image adds information.
+
 ### expanding-card
 
 Added 0.8.0. The compact article opens a named native dialog; its media and back actions are buttons.
@@ -311,6 +381,18 @@ Swept 0.8.0.
 
 - **checkbox-labelled** - A checkbox must be inside its <label> or carry an id a label points at.
 
+### forms/drop-zone
+
+Added with the drop zone component. A <label> wraps the native file input, which covers it, so the label text names the input and the browser handles clicks, keys and dropped files.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `drop-zone-input-is-in-the-label` | forbid | `.drop-zone > input[type="file"]` | must not match |
+| `drop-zone-files-are-a-list` | forbid | `.drop-zone-files:not(ul, ol)` | must not match |
+
+- **drop-zone-input-is-in-the-label** - Put the file input inside the .drop-zone <label>. The label names the input and the input covers the label; a loose input is neither named nor a drop target.
+- **drop-zone-files-are-a-list** - Write .drop-zone-files as a <ul>. The behavior fills it with one <li> per file, and a list tells assistive technology how many files were chosen.
+
 ### forms/fieldset
 
 Swept 0.8.0.
@@ -335,7 +417,7 @@ Swept 0.8.0.
 
 ### forms/input-fields
 
-Swept 0.8.0. .field is the container; icons name their side and are hidden; supporting text is linked to the control it describes.
+Swept 0.8.0. .field is the container; icons name their side and are hidden; supporting text is linked to the control it describes. A .password-toggle reports its state with aria-pressed; input.otp is one native input drawn as cells.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
@@ -347,6 +429,9 @@ Swept 0.8.0. .field is the container; icons name their side and are hidden; supp
 | `field-control-id` | require-attr | `.field > :is(input, textarea, select)` | must have `id` |
 | `field-supporting-text-id` | require-attr | `.field > small` | must have `id` |
 | `field-supporting-text-linked` | forbid | `.field:has(> small) > :is(input, textarea, select):not([aria-describedby])` | must not match |
+| `password-toggle-reports-its-state` | require-attr | `.password-toggle` | must have `aria-pressed` |
+| `otp-autocompletes` | require-attr | `input.otp` | must have `autocomplete` = `one-time-code` |
+| `otp-is-not-a-number` | forbid | `input.otp[type="number"]` | must not match |
 
 - **field-container-class** - The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.
 - **field-icon-not-i** - <i> means idiomatic text, not icon. Use <span class="material-symbols">.
@@ -356,6 +441,9 @@ Swept 0.8.0. .field is the container; icons name their side and are hidden; supp
 - **field-control-id** - Without an id the label has nothing to point at.
 - **field-supporting-text-id** - Supporting and error text has to be referenceable to be announced with the control.
 - **field-supporting-text-linked** - A field with supporting text must point at it with aria-describedby, or the text is never read out with the control.
+- **password-toggle-reports-its-state** - Give a .password-toggle aria-pressed="false". The behavior flips it, and its name stays "Show password", so the pressed state is how a screen reader user hears that the password is visible.
+- **otp-autocompletes** - Set autocomplete="one-time-code" on a one-time code input so the browser can offer the code from a message.
+- **otp-is-not-a-number** - A code is not a quantity: type="number" drops leading zeros and adds a spinner. Use type="text" with inputmode="numeric".
 
 ### forms/radio-buttons
 
@@ -368,6 +456,20 @@ Swept 0.8.0. A radio is one of a set, and the set needs a name.
 
 - **radio-in-fieldset** - A radio only means something as one of a group, and the group needs a <fieldset> with a <legend> to name the question being answered.
 - **radio-labelled** - A radio must be inside its <label> or carry an id a label points at.
+
+### forms/rating
+
+Added with the rating component. The input is a fieldset of native radios drawn as stars; the display is a named image.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `rating-is-a-fieldset-or-an-image` | forbid | `.rating:not(fieldset):not([role="img"])` | must not match |
+| `rating-display-is-named` | require-accessible-name | `.rating[role="img"]` | must end up with an accessible name |
+| `rating-label-text-precedes-the-radio` | forbid | `fieldset.rating [type="radio"] + span` | must not match |
+
+- **rating-is-a-fieldset-or-an-image** - A .rating is either a <fieldset> of radios, for input, or an element with role="img" and a name, for display. Anything else draws stars that say nothing.
+- **rating-display-is-named** - Name a rating display with the value, such as aria-label="Rated 4.5 out of 5".
+- **rating-label-text-precedes-the-radio** - Put a star's visually hidden text before its radio. A span after the radio is the older input + span pattern, which hides the radio and with it the star.
 
 ### forms/select
 
@@ -475,13 +577,15 @@ Short waits with unknown duration. The current framework contract uses a named s
 
 ### menu
 
-Swept 0.8.0.
+Swept 0.8.0. A [data-context-menu] trigger is a region: the menu opens at the pointer and the region carries no expanded state.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `menu-children-are-list-items` | forbid | `menu > :not(li):not(script):not(template)` | must not match |
+| `context-menu-region-is-not-a-control` | forbid | `[data-context-menu]:is(button, a[href], input, select, textarea)` | must not match |
 
 - **menu-children-are-list-items** - <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
+- **context-menu-region-is-not-a-control** - data-context-menu goes on a region of content. A button or link already has an action for Enter and click; give it its own menu trigger instead.
 
 ### message
 
@@ -555,6 +659,20 @@ Swept 0.8.0.
 
 - **pane-is-not-main** - A document has one <main>, and a pane is a region inside it, not another one. Use <section>.
 
+### popover
+
+Added with the popover component. The panel is a native [popover] and its button names it with popovertarget or commandfor, so the browser owns opening, light dismiss, Escape and the button's expanded state.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `popover-is-native` | forbid | `.popover:not([popover])` | must not match |
+| `popover-target-exists` | require-idref | `[popovertarget]` | `popovertarget` must reference `[popover]` inside `body` |
+| `popover-is-not-a-tooltip` | forbid | `.popover[role="tooltip"]` | must not match |
+
+- **popover-is-native** - Give a .popover the popover attribute. Without it the panel is never in the top layer, never light-dismisses and its button reports no expanded state.
+- **popover-target-exists** - popovertarget must name the id of a [popover] element in the page. A dangling id leaves a button that does nothing.
+- **popover-is-not-a-tooltip** - A popover opens on press and can hold links and buttons, which a tooltip never can. Leave the role off; the browser relates the panel to its button.
+
 ### progress
 
 Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.
@@ -609,6 +727,16 @@ Swept 0.8.0. A <dialog>, so the dialog rules carry it.
 | --- | --- | --- | --- |
 
 
+### skeleton
+
+Added with the skeleton component. A skeleton is an empty placeholder shape. The region it fills carries aria-busy, and a loading indicator or status reports the wait.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `skeleton-is-empty` | forbid | `.skeleton:not(:empty)` | must not match |
+
+- **skeleton-is-empty** - Keep a .skeleton empty. Text inside it is read out as if it were content; report the wait through a status such as a loading indicator, and mark the loading region aria-busy="true".
+
 ### snackbar
 
 Swept 0.8.0. Generated markup: role="status" and the labelled dismiss button are checked at runtime in tests/forms-generated.test.js and teardown.test.js.
@@ -647,6 +775,32 @@ Added with the split button component (#42). A lead action and a trailing half t
 - **split-button-trailing-icon-hidden** - The ligature is real text and is read out verbatim, so an unhidden chevron names the trailing half "arrow_drop_down". It is decoration - the control carries the name - so it is aria-hidden="true", and `icon-only-control-is-named` then requires the aria-label.
 - **split-button-expanded-is-not-authored** - Expanded is dynamic state, so the framework owns it. Menu's constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten - and the expanded shape is drawn from that attribute, so an authored "true" draws an open split button over a closed menu.
 
+### stat
+
+Added with the stat component. A description list pairs each value with its label; the change arrow is decoration and the text says the direction.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `stats-are-a-description-list` | forbid | `.stats:not(dl)` | must not match |
+
+- **stats-are-a-description-list** - Write .stats as a <dl> with a <dt> label and <dd> value per tile. Without the pairing a screen reader reads a run of numbers with nothing to say what each one is.
+
+### stepper
+
+Added with the stepper component. The ordered list carries the step count and position; aria-current="step" marks the current step, and CSS alt text speaks the complete and invalid states.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `stepper-is-an-ordered-list` | forbid | `.stepper:not(ol)` | must not match |
+| `stepper-current-is-a-step` | forbid | `.stepper > li[aria-current]:not([aria-current="step"])` | must not match |
+| `stepper-has-one-current-step` | forbid | `.stepper > li[aria-current="step"] ~ li[aria-current="step"]` | must not match |
+| `stepper-step-is-not-error-colored` | forbid | `.stepper > li.error` | must not match |
+
+- **stepper-is-an-ordered-list** - Write a stepper as <ol class="stepper">. The order is the content: an ordered list announces how many steps there are and which one each is.
+- **stepper-current-is-a-step** - Mark the current step with aria-current="step". "page" or "true" tells assistive technology something else.
+- **stepper-has-one-current-step** - Only one step is current. Mark finished steps with .complete instead.
+- **stepper-step-is-not-error-colored** - Mark a step that needs attention with .invalid. .error is the error color utility: it paints the whole step red and is not spoken.
+
 ### tabs
 
 Swept 0.8.0. Anchor navigation, not a tablist - see rule 2.
@@ -660,6 +814,18 @@ Swept 0.8.0. Anchor navigation, not a tablist - see rule 2.
 
 - **tabs-not-a-tablist** - A tab strip takes no ARIA role here; these are links to in-page sections.
 - **tabs-marks-current** - The active tab is the section you are on; aria-current says so where a class cannot.
+
+### timeline
+
+Added with the timeline component. An ordered list of events; the order is the content.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `timeline-is-an-ordered-list` | forbid | `.timeline:not(ol)` | must not match |
+| `timeline-time-is-machine-readable` | require-attr | `.timeline time` | must have `datetime` |
+
+- **timeline-is-an-ordered-list** - Write a timeline as <ol class="timeline">. The events have an order, and an ordered list says so to assistive technology.
+- **timeline-time-is-machine-readable** - Give each <time> a datetime value. "9:12 AM" or "Yesterday" has no date a script, a translation tool or a reader in another time zone can use.
 
 ### timepicker
 
@@ -702,6 +868,20 @@ Swept 0.8.0. A foundation, not a component: motion applied through classes to wh
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 
+
+### tree
+
+Added with the tree component. Nested lists of native disclosures and links: every row is a Tab stop and the browser opens a branch, so no tree role is promised.
+
+**Rejected role:** `tree` is not withheld but declined - its rows are native disclosures and links reached with Tab - a tree role promises arrow-key navigation, type-ahead and expanded states on treeitems that the markup does not have and that native details would fight. `tree-is-not-a-tree-widget` enforces that.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `tree-is-not-a-tree-widget` | forbid | `.tree[role], .tree [role="treeitem"], .tree [role="group"]` | must not match |
+| `tree-marks-current-not-selected` | forbid | `.tree [aria-selected]` | must not match |
+
+- **tree-is-not-a-tree-widget** - A .tree takes no ARIA tree roles. It is lists of disclosures and links, which keep their own roles and keyboard behavior.
+- **tree-marks-current-not-selected** - Mark the open file or page with aria-current. aria-selected is not valid on a link or a list item.
 
 ## Exempt
 

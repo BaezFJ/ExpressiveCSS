@@ -755,10 +755,99 @@
       }
     },
     {
+      "slug": "stepper",
+      "title": "Stepper",
+      "aliases": [
+        "steps",
+        "wizard",
+        "progress steps",
+        "checkout steps"
+      ],
+      "guideSource": {
+        "pageId": "stepper",
+        "heading": "Stepper",
+        "headingLevel": 2,
+        "semantics": [
+          "stepper"
+        ]
+      },
+      "jobs": [
+        "Progress through a fixed sequence of steps, such as a checkout, with each step's state."
+      ],
+      "useWhen": [
+        "Show progress through a fixed order of steps the user completes one after another."
+      ],
+      "avoidWhen": [
+        "Views people switch between freely need tabs; one task with a percentage needs a progress indicator."
+      ],
+      "alternatives": [
+        "tabs",
+        "progress",
+        "breadcrumbs",
+        "timeline"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/stepper.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#stepper",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Horizontal and vertical ordered lists with current, complete and invalid steps, supporting text, links back to finished steps and a content panel in vertical steps.",
+          "webAdaptation": "An <ol> with aria-current=\"step\"; CSS alt text speaks the complete and invalid states from translatable tokens.",
+          "limitations": [
+            "Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the steps in an ordered list, mark exactly one current step, convey complete and error states in text as well as color, and keep labels translatable."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Account, Notifications and Privacy settings that people open in any order are tabs. A stepper would number them as if they had to be done in sequence.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_stepper.scss",
+            "sha256": "0efd332c2e84cd20bdf98ab9b1645aecb174cc6042f55abeb7b78383db32be12"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified.",
+            "nextStep": "Move through a checkout with a screen reader in each engine and confirm the step count, the current step and the completed state are announced once."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/stepper-browser.test.js",
+            "name": "chromium: stepper lays out its steps, marks their state and speaks it",
+            "scope": "Row and stack layout in LTR and RTL, supporting text and content placement, current, complete and invalid indicator fills and glyphs, no trailing connector, spoken state text and its token override. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "menu",
       "title": "Menu",
       "aliases": [
-        "dropdown menu"
+        "dropdown menu",
+        "context menu",
+        "right-click menu"
       ],
       "guideSource": {
         "pageId": "menu",
@@ -790,8 +879,8 @@
         "href": "https://m3.material.io/components/menus/overview",
         "implementation": {
           "source": "llm.md#menu",
-          "reviewedOn": "2026-09-13",
-          "documentedSupport": "Vertical menus, nested flyouts, grouping, and standard/vibrant styles.",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Vertical menus, nested flyouts, grouping, standard/vibrant styles, and context menus opened at the pointer.",
           "webAdaptation": "Native menu/li structure; Menu owns opening and keyboard behavior.",
           "limitations": [
             "Closing focus exclusion, scoped nested keys, RTL flyout placement and representative item targets have browser checks. Spoken output and full visual parity remain unverified."
@@ -984,6 +1073,92 @@
           }
         ],
         "inventorySha256": "c04a890acc518f0e6c2c339b320e0eb1e90e734d0d897c367bd6c15d655858fa"
+      }
+    },
+    {
+      "slug": "tree",
+      "title": "Tree",
+      "aliases": [
+        "tree view",
+        "file tree",
+        "folder tree",
+        "nested navigation"
+      ],
+      "guideSource": {
+        "pageId": "tree",
+        "heading": "Tree",
+        "headingLevel": 2,
+        "semantics": [
+          "tree"
+        ]
+      },
+      "jobs": [
+        "Nested lists of folders and links that open in place, for file browsers and deep navigation."
+      ],
+      "useWhen": [
+        "Browse a hierarchy several levels deep, such as files or nested sections, with branches that open in place."
+      ],
+      "avoidWhen": [
+        "One or two levels of navigation need a navigation rail or a list; peer sections need tabs."
+      ],
+      "alternatives": [
+        "lists",
+        "navigation-rail",
+        "accordion"
+      ],
+      "adaptive": [],
+      "runtime": "native",
+      "guide": "../components/tree.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#tree",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Nested lists of native disclosures and links with guide lines, turning chevrons in LTR and RTL, leading icons and an aria-current row.",
+          "webAdaptation": "Native <details> branches and links; every row is a Tab stop and no tree role is promised.",
+          "limitations": [
+            "Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Expose each branch's expanded state, mark the current item, keep every row reachable by keyboard and avoid a tree role without its arrow-key contract."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Three settings pages under one heading are a list or a navigation rail. A tree would add chevrons and indentation for a hierarchy one level deep.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_tree.scss",
+            "sha256": "3d290dec16e25b71a3e06cbd5fafd3340253659fbf9d95953193dab29b10aa21"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified.",
+            "nextStep": "Navigate a deep tree with a keyboard and a screen reader in each engine; measure how many Tab stops a long tree costs and whether arrow-key navigation is needed."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/tree-browser.test.js",
+            "name": "chromium: tree indents its levels, turns its chevrons and marks the current row",
+            "scope": "Level indent, leaf and branch text alignment, open and closed chevrons in LTR and RTL, opening a branch, the current row fill, guide lines and no tree role. No spoken-output assertion."
+          }
+        ]
       }
     },
     {
@@ -1852,6 +2027,350 @@
       }
     },
     {
+      "slug": "accordion",
+      "title": "Accordion",
+      "aliases": [
+        "expansion panel",
+        "disclosure",
+        "collapsible",
+        "details",
+        "faq"
+      ],
+      "guideSource": {
+        "pageId": "accordion",
+        "heading": "Accordion",
+        "headingLevel": 2,
+        "semantics": [
+          "accordion"
+        ]
+      },
+      "jobs": [
+        "Stacked disclosures that open one section of content at a time, on native details."
+      ],
+      "useWhen": [
+        "Let people open one of several labelled sections on demand, such as FAQs or grouped settings."
+      ],
+      "avoidWhen": [
+        "Peer views of equal weight need tabs; content everyone must read should stay visible."
+      ],
+      "alternatives": [
+        "tabs",
+        "lists",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/accordion.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#accordion",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Joined tiles on native details and summary, exclusive groups through the name attribute, a leading icon, a turning chevron and an animated open where the engine supports it.",
+          "webAdaptation": "Native <details> and <summary>; the browser owns the toggle, its keyboard support and its expanded state.",
+          "limitations": [
+            "Tile corners, the chevron turn, exclusive groups and the expanded state Chromium reports are checked in a browser; the open animation, enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Expose each header as a button with its expanded state, keep controls out of the header, keep the reading order equal to the visual order and respect reduced motion."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Account, Billing and Security as three peer views of a settings page are tabs. An accordion would hide two of them behind headers when people switch between them.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_accordion.scss",
+            "sha256": "cd9c2657f1f840f721575335ffd05d8cd176b2f94c37637341121485901833ee"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Tile corners, the chevron turn, exclusive groups and the expanded state Chromium reports are checked in a browser; the open animation, enlarged text and spoken output remain unverified.",
+            "nextStep": "Toggle items with a screen reader in each engine and confirm the expanded state is announced; test enlarged text and reduced motion."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/accordion-browser.test.js",
+            "name": "chromium: accordion joins its tiles, turns the chevron and keeps one item open per name",
+            "scope": "Outer, inner and open corner radii, chevron rotation, hidden native marker, exclusive name groups, Enter on a focused summary and the expanded state Chromium reports for each summary. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "data-table",
+      "title": "Data table",
+      "aliases": [
+        "table",
+        "data grid",
+        "grid view",
+        "sortable table"
+      ],
+      "guideSource": {
+        "pageId": "data_table",
+        "heading": "Data table",
+        "headingLevel": 2,
+        "semantics": [
+          "data-table"
+        ]
+      },
+      "jobs": [
+        "Rows of records in a scrolling table with a sticky header, sort state and row selection."
+      ],
+      "useWhen": [
+        "Compare many records across the same columns, with sorting or selecting rows."
+      ],
+      "avoidWhen": [
+        "A few rows of reference data need only the table styles; items people scan by title need a list."
+      ],
+      "alternatives": [
+        "lists",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/data-table.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#data-table",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Scrolling wrapper with an outline, sticky header row, numeric columns, dense rows, a sort arrow drawn from aria-sort and checkbox row selection.",
+          "webAdaptation": "A plain div wraps a native <table>, so the table keeps its role; the page owns sorting, select-all and the scroll region name.",
+          "limitations": [
+            "Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep native table semantics with column and row headers, expose sort state on the header cell, name selection checkboxes after their rows and make a scrolling region reachable and named."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A contacts screen where people tap a name to open a profile is a list. A data table would add column headers and sorting nobody uses on a phone.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_data-table.scss",
+            "sha256": "dbce2d8f374bb0f5bc7008725c0e8ed680df39d9bb111fea4219b8d120558e9c"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified.",
+            "nextStep": "Sort and select rows with a screen reader in each engine and confirm the sort state and selection are announced; test enlarged text and RTL."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/data-table-browser.test.js",
+            "name": "chromium: data table keeps table semantics, sticks its header and draws sort and selection",
+            "scope": "Table, column header and row counts through the wrapper, sticky header offset after scrolling, end-aligned numeric cells in LTR and RTL, sort arrow opacity and rotation, selected row fill and the named scroll region. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "stat",
+      "title": "Stat",
+      "aliases": [
+        "stat tile",
+        "kpi",
+        "metric",
+        "key figure",
+        "scorecard"
+      ],
+      "guideSource": {
+        "pageId": "stat",
+        "heading": "Stat",
+        "headingLevel": 2,
+        "semantics": [
+          "stat"
+        ]
+      },
+      "jobs": [
+        "Key figures in tiles, each with a label, a value and an optional change."
+      ],
+      "useWhen": [
+        "Summarize a few key figures, each with a label and an optional change, at the top of a dashboard."
+      ],
+      "avoidWhen": [
+        "Many rows of comparable records need a data table; a trend over time needs a chart."
+      ],
+      "alternatives": [
+        "data-table",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/stat.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#stat",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Wrapping tiles in a description list with headline values, and a change line with up, down and negative states.",
+          "webAdaptation": "A <dl> pairs each value with its label; the arrow is decoration and the text carries the direction.",
+          "limitations": [
+            "Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Pair every value with its label, state the direction and comparison of a change in text and keep long values from overflowing their tile."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Monthly revenue for every region and product is a data table. Stat tiles would turn a comparison into a wall of numbers without columns.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_stat.scss",
+            "sha256": "50a15a771c7e73f72b2813e2b68b1a946911974c6ac7d482b0a35db4b774d4aa"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.",
+            "nextStep": "Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/stat-browser.test.js",
+            "name": "chromium: stats tile their figures, wrap when narrow and mark the change",
+            "scope": "One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "timeline",
+      "title": "Timeline",
+      "aliases": [
+        "activity feed",
+        "history",
+        "event log",
+        "changelog"
+      ],
+      "guideSource": {
+        "pageId": "timeline",
+        "heading": "Timeline",
+        "headingLevel": 2,
+        "semantics": [
+          "timeline"
+        ]
+      },
+      "jobs": [
+        "Events in order, each with a time, a title and details, joined by a line."
+      ],
+      "useWhen": [
+        "Show what happened and when, in order, such as order tracking or an activity feed."
+      ],
+      "avoidWhen": [
+        "Steps the user still has to complete need a stepper; a live conversation needs messages."
+      ],
+      "alternatives": [
+        "stepper",
+        "lists",
+        "message"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/timeline.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#timeline",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Ordered events with times, headings and text, dots joined by a line and a leading icon variant.",
+          "webAdaptation": "An <ol> of events with <time datetime>; the dots and line are decoration.",
+          "limitations": [
+            "Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep events in an ordered list in the order shown, give each a machine-readable time and hide decorative markers and icons."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Cart, Shipping and Payment in a checkout are steps the user still has to finish, so they belong in a stepper. A timeline would present them as things that already happened.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_timeline.scss",
+            "sha256": "75d0c9d03e48ca32661b641bdab7890e2e50b3f6d17338bdfc4cb1977c7fc817"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified.",
+            "nextStep": "Read a timeline with a screen reader in each engine and confirm the order and times are announced; test enlarged text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/timeline-browser.test.js",
+            "name": "chromium: timeline marks each event, joins it to the next and swaps the dot for an icon",
+            "scope": "Marker column, dot size, connecting line and its absence on the last event, the icon circle and its column in LTR and RTL. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "dialogs",
       "title": "Dialogs",
       "aliases": [
@@ -2365,6 +2884,93 @@
       }
     },
     {
+      "slug": "avatar",
+      "title": "Avatar",
+      "aliases": [
+        "profile picture",
+        "user image",
+        "initials",
+        "avatar stack",
+        "facepile"
+      ],
+      "guideSource": {
+        "pageId": "avatar",
+        "heading": "Avatar",
+        "headingLevel": 2,
+        "semantics": [
+          "avatar"
+        ]
+      },
+      "jobs": [
+        "A person or account as a circular image, initials or icon, alone or in an overlapping group."
+      ],
+      "useWhen": [
+        "Identify a person or account by picture, initials or icon, alone or as a group of people."
+      ],
+      "avoidWhen": [
+        "A count or status on an icon needs a badge; an image that is the content needs media styles or a lightbox."
+      ],
+      "alternatives": [
+        "badges",
+        "chips",
+        "lists"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/avatar.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#avatar",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Image, initials and icon avatars in three sizes, and overlapping groups with a surface ring and a count avatar.",
+          "webAdaptation": "An <img> or a <span> with role=\"img\" and a name; initials scale with the size token.",
+          "limitations": [
+            "Sizes, the circle, the group overlap and named initials are checked in a browser; image loading failures, enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Name each person once through alt text or role=\"img\" with a label, hide avatars beside a visible name and keep group counts understandable without the picture."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A red dot for unread messages on the inbox icon is a badge. An avatar would suggest a person rather than a count.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_avatar.scss",
+            "sha256": "07b6f8fef3f3a65943f319bc034520b11eae4bd6b41feade183f51fcd2e5cf47"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Sizes, the circle, the group overlap and named initials are checked in a browser; image loading failures, enlarged text and spoken output remain unverified.",
+            "nextStep": "Read a group of avatars with a screen reader and confirm each name and the count are announced once; test enlarged text and RTL."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/avatar-browser.test.js",
+            "name": "chromium: avatar sizes its circle, names its initials and overlaps a group",
+            "scope": "Default, small and large sizes, circle radius, image and initials names in the accessibility tree, and the group overlap in LTR and RTL. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "tooltips",
       "title": "Tooltips",
       "aliases": [
@@ -2389,7 +2995,8 @@
         "The icon already has visible text, or the tooltip would be the control’s only accessible name."
       ],
       "alternatives": [
-        "icon-buttons"
+        "icon-buttons",
+        "popover"
       ],
       "adaptive": [],
       "runtime": "auto-init",
@@ -2452,6 +3059,92 @@
           }
         ],
         "inventorySha256": "e5c204f237fac5230a627d290306cb010616d7413f369b5e10ff18708179a0bd"
+      }
+    },
+    {
+      "slug": "popover",
+      "title": "Popover",
+      "aliases": [
+        "toggletip",
+        "popup",
+        "info popover",
+        "flyout"
+      ],
+      "guideSource": {
+        "pageId": "popover",
+        "heading": "Popover",
+        "headingLevel": 2,
+        "semantics": [
+          "popover"
+        ]
+      },
+      "jobs": [
+        "A panel that opens from a button and stays until dismissed, on the native popover attribute."
+      ],
+      "useWhen": [
+        "Show a short note or a few actions on press, next to the button, until the user dismisses it."
+      ],
+      "avoidWhen": [
+        "A hint on hover or focus needs a tooltip; a choice of commands needs a menu; a task to finish needs a dialog."
+      ],
+      "alternatives": [
+        "tooltips",
+        "menu",
+        "dialogs"
+      ],
+      "adaptive": [],
+      "runtime": "native",
+      "guide": "../components/popover.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#popover",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Native popover panels anchored below, above or beside their button with automatic flipping, rich-tooltip styling, an actions row and frosted glass.",
+          "webAdaptation": "The browser owns opening, light dismiss, Escape, focus return and the button's expanded state; CSS anchor positioning places the panel.",
+          "limitations": [
+            "Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Open on press rather than hover, report the expanded state on the button, return focus on dismissal, keep the panel next in reading order and keep it within the viewport."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A label for an icon button that shows on hover is a tooltip. A popover would make the user press the button just to learn what it does.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_popover.scss",
+            "sha256": "62b149ae34e4e786a1a02a4a12e2208eaff63c08e54fe0a090397b6dd24e4437"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified.",
+            "nextStep": "Open a toggletip with a screen reader in each engine and confirm the expanded state and the panel content are reachable; check an engine without anchor positioning."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/popover-browser.test.js",
+            "name": "chromium: popover anchors to its button, flips at the edge and stays open while used",
+            "scope": "Default, top and end placement against the button in LTR and RTL, both-axis flip at the viewport corner, Escape with focus return, outside click, staying open for an inner button, one auto popover at a time and the Chromium expanded state. No spoken-output assertion."
+          }
+        ]
       }
     },
     {
@@ -2753,6 +3446,178 @@
           }
         ],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
+      }
+    },
+    {
+      "slug": "skeleton",
+      "title": "Skeleton",
+      "aliases": [
+        "skeleton screen",
+        "placeholder",
+        "shimmer",
+        "ghost content",
+        "content loader"
+      ],
+      "guideSource": {
+        "pageId": "skeleton",
+        "heading": "Skeleton",
+        "headingLevel": 2,
+        "semantics": [
+          "skeleton"
+        ]
+      },
+      "jobs": [
+        "Placeholder shapes that hold the layout while content loads."
+      ],
+      "useWhen": [
+        "Hold the layout of content whose shape is known while it loads."
+      ],
+      "avoidWhen": [
+        "A short wait with no known layout needs a loading indicator; measurable progress needs a progress indicator."
+      ],
+      "alternatives": [
+        "loading-indicator",
+        "progress"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/skeleton.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#skeleton",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Box, text line and circle shapes with a shimmer that reverses in RTL, stops under reduced motion and keeps an outline in forced colors.",
+          "webAdaptation": "Empty decorative blocks; the page marks the loading region aria-busy and reports the wait through a status.",
+          "limitations": [
+            "The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep placeholders out of the accessibility tree, report the wait through a status, clear aria-busy when content arrives and stop motion when reduced motion is requested."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A one-second spinner while a form saves is a loading indicator. Skeletons there would draw content shapes for something that is not content.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_skeleton.scss",
+            "sha256": "f22efd82847af981cf225a0991a471e5fd25f7cdb07c1e0ec80195e937b13818"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified.",
+            "nextStep": "Load content into an aria-busy region with a screen reader and confirm the status is announced once and the skeletons are not; test forced colors."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/skeleton-browser.test.js",
+            "name": "chromium: skeleton shimmers, stops under reduced motion and stays out of the accessibility tree",
+            "scope": "Running shimmer animation, its removal under reduced motion, reversed direction in RTL, text and circle geometry and no skeleton nodes in the accessibility tree. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "empty-state",
+      "title": "Empty state",
+      "aliases": [
+        "blank slate",
+        "zero state",
+        "no results",
+        "no data"
+      ],
+      "guideSource": {
+        "pageId": "empty_state",
+        "heading": "Empty state",
+        "headingLevel": 2,
+        "semantics": [
+          "empty-state"
+        ]
+      },
+      "jobs": [
+        "What a view shows when it has nothing to list: an icon, a heading, text and actions."
+      ],
+      "useWhen": [
+        "Explain why a list, search or view has nothing to show and offer the next step."
+      ],
+      "avoidWhen": [
+        "An error after an action needs inline feedback or a snackbar; a loading view needs a skeleton or loading indicator."
+      ],
+      "alternatives": [
+        "snackbar",
+        "skeleton",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/empty-state.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#empty-state",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Centered icon in a tonal circle or an illustration, a heading, supporting text and a wrapping row of actions.",
+          "webAdaptation": "A plain div around authored heading, text and buttons; the page picks the heading level.",
+          "limitations": [
+            "Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "State what is empty and what to do next in text, keep the heading in the page outline, hide decorative icons and images and announce results that change after a search."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A failed save after pressing Save is feedback for a snackbar or the form. An empty state would replace the user's content with a placeholder.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_empty-state.scss",
+            "sha256": "5740d50963b3e2cb7a62330f0260d4b1a0c89ff2bc051c9bb83f82e23dbdcabe"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified.",
+            "nextStep": "Empty a filtered list with a screen reader and confirm the change is announced; test enlarged text and narrow widths."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/empty-state-browser.test.js",
+            "name": "chromium: empty state centers its content and rings the leading icon",
+            "scope": "Centered column, icon circle size and fill, text width cap, centered wrapping actions and an empty alt image left out of the accessibility tree. No spoken-output assertion."
+          }
+        ]
       }
     },
     {
@@ -3089,7 +3954,8 @@
       ],
       "alternatives": [
         "text-fields",
-        "autocomplete"
+        "autocomplete",
+        "command-palette"
       ],
       "adaptive": [],
       "runtime": "css-only",
@@ -3153,6 +4019,98 @@
           }
         ],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
+      }
+    },
+    {
+      "slug": "command-palette",
+      "title": "Command palette",
+      "aliases": [
+        "command menu",
+        "cmd+k",
+        "ctrl+k",
+        "quick open",
+        "launcher",
+        "spotlight"
+      ],
+      "guideSource": {
+        "pageId": "command_palette",
+        "heading": "Command palette",
+        "headingLevel": 2,
+        "semantics": [
+          "command-palette"
+        ]
+      },
+      "jobs": [
+        "A searchable list of commands in a dialog, opened from anywhere with a shortcut."
+      ],
+      "useWhen": [
+        "Let people find and run any of many commands or destinations by typing, from anywhere in the app."
+      ],
+      "avoidWhen": [
+        "Searching content needs search; a few actions for one item need a menu."
+      ],
+      "alternatives": [
+        "search",
+        "menu",
+        "dialogs"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/command-palette.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#command-palette",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "A modal dialog with a filtering combobox and listbox, group headings, keywords, an empty message, a Ctrl or Command shortcut and native commandfor opening.",
+          "webAdaptation": "A native modal <dialog>; commands are links and buttons, and the component adds the combobox and listbox roles and the active option.",
+          "limitations": [
+            "The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep focus in the input while the active option moves, report it with aria-activedescendant, announce when nothing matches, return focus on close and let users turn the shortcut off."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Finding an order by customer name is search over content. A command palette is for running actions and opening places in the app.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_command-palette.scss",
+            "sha256": "d9d4dd1fe2b3bc60aa29203a7526139e8e75e6d7b2a76bbe2dd59e671f62ed0d"
+          },
+          {
+            "path": "src/ts/components/commandPalette.ts",
+            "sha256": "55fb823a7e70d5cc7d22cd10a84054badac5a7d5df7274d3b67aa044349a642e"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified.",
+            "nextStep": "Run commands with a screen reader in each engine and confirm the active option and the empty message are announced; check that Ctrl+K does not clash with the screen reader or browser."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/command-palette-browser.test.js",
+            "name": "chromium: command palette opens on its shortcut, filters, moves with the arrows and runs a command",
+            "scope": "Combobox and listbox roles, Ctrl+K toggle, input focus, top placement, wrapping arrows, accent-insensitive and keyword filtering, hidden empty groups, the empty message, Enter and click running a command, closing with focus return, the commandfor opener, a fresh search on reopening, Escape, destroy and the keycap style. No spoken-output assertion."
+          }
+        ]
       }
     },
     {
@@ -3255,7 +4213,10 @@
       "aliases": [
         "text inputs",
         "text input",
-        "input field"
+        "input field",
+        "password field",
+        "one-time code",
+        "verification code"
       ],
       "guideSource": {
         "pageId": "text_inputs",
@@ -3289,8 +4250,8 @@
         "href": "https://m3.material.io/components/text-fields/overview",
         "implementation": {
           "source": "llm.md#text-inputs",
-          "reviewedOn": "2026-09-07",
-          "documentedSupport": "Filled and outlined fields, supporting text, and error states.",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Filled and outlined fields, supporting text, error states, trailing icon buttons, a password visibility toggle and one-time code cells.",
           "webAdaptation": "Native input/textarea with explicit label and description relationships.",
           "limitations": []
         },
@@ -3333,6 +4294,95 @@
           }
         ],
         "inventorySha256": "e5c204f237fac5230a627d290306cb010616d7413f369b5e10ff18708179a0bd"
+      }
+    },
+    {
+      "slug": "drop-zone",
+      "title": "Drop zone",
+      "aliases": [
+        "file upload",
+        "dropzone",
+        "file drop",
+        "upload area"
+      ],
+      "guideSource": {
+        "pageId": "drop_zone",
+        "heading": "Drop zone",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/drop-zone"
+        ]
+      },
+      "jobs": [
+        "A large target for choosing or dropping files, with a list of what was chosen."
+      ],
+      "useWhen": [
+        "Let people choose or drag in files where uploading is the main task of the view."
+      ],
+      "avoidWhen": [
+        "A form field that takes one optional file needs the compact file input."
+      ],
+      "alternatives": [
+        "text-fields",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "shared-runtime",
+      "guide": "../components/drop-zone.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#drop-zone",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "A label-sized native file input with a dragover state and a list of chosen file names and locale-formatted sizes.",
+          "webAdaptation": "The native input covers the label, so clicks, keys and drops are the browser's; the shared Forms behavior marks the drag and fills the list.",
+          "limitations": [
+            "Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep a native, labelled file input reachable by keyboard, show drag feedback that is not color alone, list chosen files in text and validate type and size where the files are used."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "An optional attachment on a support form is a file input in the form. A drop zone would give one small field the weight of the whole page.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_drop-zone.scss",
+            "sha256": "dcc9dc0e721c0057266092591634249620143d8b7350ff867651806c59ad10b1"
+          },
+          {
+            "path": "src/ts/behaviors/forms.ts",
+            "sha256": "57733061183d4f3adbedd53803d19f26c4d31ca2459cd1707a5266b8bff46d9a"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified.",
+            "nextStep": "Drag files from the operating system onto the zone in each engine and confirm the selection and list update; check the list announcement with a screen reader."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/drop-zone-browser.test.js",
+            "name": "chromium: drop zone covers its label with the file input, marks a drag and lists chosen files",
+            "scope": "Input covering the label, label naming the input, dragover set and cleared by dragenter, dragleave and drop, listed names and sizes, list cleared on an empty selection and keyboard focus ring. No spoken-output assertion."
+          }
+        ]
       }
     },
     {
@@ -3661,6 +4711,90 @@
           }
         ],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
+      }
+    },
+    {
+      "slug": "rating",
+      "title": "Rating",
+      "aliases": [
+        "stars",
+        "star rating",
+        "review score"
+      ],
+      "guideSource": {
+        "pageId": "rating",
+        "heading": "Rating",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/rating"
+        ]
+      },
+      "jobs": [
+        "Stars for choosing or showing a score, on native radio buttons."
+      ],
+      "useWhen": [
+        "Ask for or show a score on a short fixed scale, such as one to five stars."
+      ],
+      "avoidWhen": [
+        "A continuous value needs a slider; a yes or no answer needs a switch or checkbox."
+      ],
+      "alternatives": [
+        "radio-buttons",
+        "slider"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/rating.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#rating",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "A fieldset of radios drawn as stars with fill, hover preview and focus ring, and a read-only display that fills to a fractional value in LTR and RTL.",
+          "webAdaptation": "Native radios keep keyboard, form and naming behavior; the display is a named role=\"img\".",
+          "limitations": [
+            "Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep a native radio group with a legend and a name for every star, show focus, fill by more than color where possible and name a read-only display with its value."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Choosing a volume from 0 to 100 is a slider. Stars suit a short fixed scale where each step has a meaning.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_rating.scss",
+            "sha256": "8b0c0e77791f4e88681a12ff2c78758be20d5ece7129c914e4cf6881a6b61300"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified.",
+            "nextStep": "Rate with a keyboard and a screen reader in each engine, including Safari, and confirm the focus ring follows the arrows and each star is announced."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/rating-browser.test.js",
+            "name": "chromium: rating fills stars up to the choice, previews on hover and keeps native radios",
+            "scope": "Visible 24px masked radios, fill up to the checked star, Tab entry and arrow keys, focus ring on entry, hover preview, form value, display width and fill direction in LTR and RTL, and the group, radio and image names. No spoken-output assertion."
+          }
+        ]
       }
     },
     {
@@ -7031,5 +8165,5 @@
     "inputsUnchanged": true,
     "reportSha256": "5777e67403861540605d77c5a5055086a49e8fe086297abd8a4bb6cf399c1666"
   },
-  "sourceRevision": "80111633eac02fcc2f8dff3b9b57db82514b5c7c"
+  "sourceRevision": "670d098c9c3888e0cb071ba87d8b8bcf6151ddbc"
 }

@@ -74,3 +74,32 @@ $_flow-intercept: math.div($_flow-min-px - ($_flow-slope * $flow-text-from), $ro
 .flow-text {
   font-size: clamp(#{$flow-text-min}, #{$_flow-intercept} + #{$_flow-slope * 100}vw, #{$flow-text-max});
 }
+
+// Keyboard keys. <kbd> is drawn as a keycap; a <kbd> holding other <kbd>
+// elements is the whole combination ("Ctrl + K") and stays plain around
+// them. Menus and lists restyle a trailing <kbd> as quiet shortcut text.
+kbd {
+  display: inline-block;
+  box-sizing: border-box;
+  min-width: 1.6em;
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.85em;
+  line-height: 1.4;
+  text-align: center;
+  white-space: nowrap;
+
+  &:has(> kbd) {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    font-size: inherit;
+  }
+}

@@ -1,0 +1,137 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "states", label: "States" },
+  { id: "vertical", label: "Vertical" },
+  { id: "translation", label: "Translation" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="stepper">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.stepper</code> shows where the user is in a fixed sequence
+          of steps, such as a checkout. It is an <code>&lt;ol&gt;</code>, and
+          each <code>&lt;li&gt;</code> is a step whose text is its label.
+        </p>
+        <p>
+          The list numbers the steps and tells assistive technology how many
+          there are. A <code>&lt;small&gt;</code> after the label is supporting
+          text. Use <a href={route('tabs')}>tabs</a> for views people move
+          between freely; a stepper is for an order they move through.
+        </p>
+        <ol class="stepper">
+          <li class="complete"><a href="#states">Cart</a></li>
+          <li aria-current="step">Shipping<small>Address and speed</small></li>
+          <li>Payment</li>
+          <li>Review</li>
+        </ol>
+<Code code={`
+<ol class="stepper">
+  <li class="complete"><a href="/checkout/cart">Cart</a></li>
+  <li aria-current="step">Shipping<small>Address and speed</small></li>
+  <li>Payment</li>
+  <li>Review</li>
+</ol>
+`} />
+  </Section>
+  <Section {...S.states}>
+        <p>
+          The page keeps the state current as the user moves.
+          <code>aria-current="step"</code> marks the step the user is on, and
+          only one step has it. <code>complete</code> turns the number into a
+          check; <code>invalid</code> turns it into "!" for a step that needs
+          attention. Both states are spoken before the label. A finished step
+          can link back with an <code>&lt;a&gt;</code>.
+        </p>
+        <ol class="stepper">
+          <li class="complete">Cart</li>
+          <li class="complete">Shipping</li>
+          <li class="invalid" aria-current="step">Payment<small>Card declined</small></li>
+          <li>Review</li>
+        </ol>
+<Code code={`
+<ol class="stepper">
+  <li class="complete">Cart</li>
+  <li class="complete">Shipping</li>
+  <li class="invalid" aria-current="step">Payment<small>Card declined</small></li>
+  <li>Review</li>
+</ol>
+`} />
+  </Section>
+  <Section {...S.vertical}>
+        <p>
+          A horizontal stepper wraps when its row is too narrow for every
+          label. <code>vertical</code> stacks the steps instead, which suits
+          compact windows and long labels. A <code>.stepper-content</code> block in a step shows its
+          form or summary under the label.
+        </p>
+        <ol class="stepper vertical" style="max-width: 24rem;">
+          <li class="complete">Account</li>
+          <li aria-current="step">
+            Profile<small>Optional</small>
+            <div class="stepper-content">Add a photo and a short bio so teammates recognize you.</div>
+          </li>
+          <li>Done</li>
+        </ol>
+<Code code={`
+<ol class="stepper vertical">
+  <li class="complete">Account</li>
+  <li aria-current="step">
+    Profile<small>Optional</small>
+    <div class="stepper-content">Add a photo and a short bio.</div>
+  </li>
+  <li>Done</li>
+</ol>
+`} />
+  </Section>
+  <Section {...S.translation}>
+        <p>
+          The spoken "Completed" and "Error" are tokens, so a page can say them
+          in its own language. Set them on the stepper or any ancestor.
+        </p>
+<Code code={`
+<style>
+  :root:lang(es) {
+    --md-comp-stepper-complete-label: "Completado";
+    --md-comp-stepper-error-label: "Error";
+  }
+</style>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.stepper</code>.</p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-stepper-indicator-size</code></td>
+            <td>24px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-stepper-connector-color</code></td>
+            <td><code>--md-sys-color-outline-variant</code>; after a complete step: <code>--md-sys-color-primary</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-stepper-active-color</code></td>
+            <td><code>--md-sys-color-primary</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-stepper-complete-label</code></td>
+            <td><code>"Completed"</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-stepper-error-label</code></td>
+            <td><code>"Error"</code></td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

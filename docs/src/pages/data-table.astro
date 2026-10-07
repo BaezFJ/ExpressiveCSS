@@ -1,0 +1,273 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "sorting", label: "Sorting" },
+  { id: "selection", label: "Row selection" },
+  { id: "scrolling", label: "Scrolling" },
+  { id: "dense", label: "Dense" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="data_table">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.data-table</code> is a <code>&lt;div&gt;</code> around one
+          native <code>&lt;table&gt;</code>. The wrapper scrolls and draws the
+          outline, so the table keeps its table semantics.
+        </p>
+        <p>
+          Add <code>numeric</code> to the header and body cells of a number
+          column to align them on the end edge with tabular figures. For a
+          plain table of a few rows, the <a href={route('table')}>table
+          styles</a> are enough.
+        </p>
+        <div class="data-table">
+          <table>
+            <caption>Orders</caption>
+            <thead>
+              <tr>
+                <th scope="col">Customer</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="numeric">Items</th>
+                <th scope="col" class="numeric">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Alvin</th><td>Shipped</td><td class="numeric">3</td><td class="numeric">$87.00</td></tr>
+              <tr><th scope="row">Alan</th><td>Delivered</td><td class="numeric">1</td><td class="numeric">$3.76</td></tr>
+              <tr><th scope="row">Jonathan</th><td>Pending</td><td class="numeric">12</td><td class="numeric">$142.50</td></tr>
+              <tr><th scope="row">Shannon</th><td>Shipped</td><td class="numeric">2</td><td class="numeric">$9.99</td></tr>
+            </tbody>
+          </table>
+        </div>
+<Code code={`
+<div class="data-table">
+  <table>
+    <caption>Orders</caption>
+    <thead>
+      <tr>
+        <th scope="col">Customer</th>
+        <th scope="col">Status</th>
+        <th scope="col" class="numeric">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Alvin</th>
+        <td>Shipped</td>
+        <td class="numeric">$87.00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`} />
+  </Section>
+  <Section {...S.sorting}>
+        <p>
+          Put a <code>&lt;button&gt;</code> in each sortable header cell. Set
+          <code>aria-sort="ascending"</code> or <code>"descending"</code> on the
+          header of the sorted column and the framework draws its arrow; other
+          sortable headers show a faint arrow on hover. The page reorders the
+          rows and moves <code>aria-sort</code> when a header is pressed.
+        </p>
+        <div class="data-table" data-sortable>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col" aria-sort="ascending"><button type="button">Customer</button></th>
+                <th scope="col"><button type="button">Status</button></th>
+                <th scope="col" class="numeric"><button type="button">Total</button></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Alan</th><td>Delivered</td><td class="numeric">$3.76</td></tr>
+              <tr><th scope="row">Alvin</th><td>Shipped</td><td class="numeric">$87.00</td></tr>
+              <tr><th scope="row">Jonathan</th><td>Pending</td><td class="numeric">$142.50</td></tr>
+            </tbody>
+          </table>
+        </div>
+<Code code={`
+<thead>
+  <tr>
+    <th scope="col" aria-sort="ascending"><button type="button">Customer</button></th>
+    <th scope="col"><button type="button">Status</button></th>
+    <th scope="col" class="numeric"><button type="button">Total</button></th>
+  </tr>
+</thead>
+`} />
+        <p>
+          The demo above sorts with a few lines of page script. Sorting a
+          server-paged table belongs on the server instead.
+        </p>
+<Code code={`
+<script>
+document.querySelectorAll('[data-sortable] th > button').forEach((button) => {
+  button.addEventListener('click', () => {
+    const header = button.parentElement;
+    const table = header.closest('table');
+    const body = table.tBodies[0];
+    const column = header.cellIndex;
+    const direction = header.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
+    table.querySelectorAll('th[aria-sort]').forEach((cell) => cell.removeAttribute('aria-sort'));
+    header.setAttribute('aria-sort', direction);
+    const collator = new Intl.Collator(undefined, { numeric: true });
+    const rows = [...body.rows].sort((a, b) =>
+      collator.compare(a.cells[column].textContent, b.cells[column].textContent));
+    if (direction === 'descending') rows.reverse();
+    body.append(...rows);
+  });
+});
+</script>
+`} />
+  </Section>
+  <Section {...S.selection}>
+        <p>
+          A checked checkbox in a row's first cell selects the row and fills
+          it with <code>secondary-container</code>. Name each checkbox after
+          its row. <code>aria-selected</code> is not valid on the rows of a
+          plain table, so the checkbox carries the state. A select-all box in
+          the header is the page's to wire.
+        </p>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col"><label><input type="checkbox" aria-label="Select all orders"></label></th>
+                <th scope="col">Customer</th>
+                <th scope="col" class="numeric">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><label><input type="checkbox" checked aria-label="Select Alvin"></label></td><th scope="row">Alvin</th><td class="numeric">$87.00</td></tr>
+              <tr><td><label><input type="checkbox" aria-label="Select Alan"></label></td><th scope="row">Alan</th><td class="numeric">$3.76</td></tr>
+              <tr><td><label><input type="checkbox" aria-label="Select Jonathan"></label></td><th scope="row">Jonathan</th><td class="numeric">$142.50</td></tr>
+            </tbody>
+          </table>
+        </div>
+<Code code={`
+<tr>
+  <td><label><input type="checkbox" checked aria-label="Select Alvin"></label></td>
+  <th scope="row">Alvin</th>
+  <td class="numeric">$87.00</td>
+</tr>
+`} />
+  </Section>
+  <Section {...S.scrolling}>
+        <p>
+          The header row sticks to the top of the wrapper once the wrapper
+          scrolls, so give a long table a <code>max-block-size</code>. A wrapper
+          that scrolls must be reachable from the keyboard: give it
+          <code>tabindex="0"</code>, <code>role="region"</code> and a name,
+          usually the caption.
+        </p>
+        <div class="data-table" tabindex="0" role="region" aria-labelledby="scroll-caption" style="max-block-size: 240px;">
+          <table>
+            <caption id="scroll-caption">Monthly visitors</caption>
+            <thead>
+              <tr><th scope="col">Month</th><th scope="col" class="numeric">Visitors</th><th scope="col" class="numeric">Change</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">January</th><td class="numeric">12,480</td><td class="numeric">+4%</td></tr>
+              <tr><th scope="row">February</th><td class="numeric">11,902</td><td class="numeric">−5%</td></tr>
+              <tr><th scope="row">March</th><td class="numeric">13,377</td><td class="numeric">+12%</td></tr>
+              <tr><th scope="row">April</th><td class="numeric">13,015</td><td class="numeric">−3%</td></tr>
+              <tr><th scope="row">May</th><td class="numeric">14,260</td><td class="numeric">+10%</td></tr>
+              <tr><th scope="row">June</th><td class="numeric">15,104</td><td class="numeric">+6%</td></tr>
+            </tbody>
+          </table>
+        </div>
+<Code code={`
+<div class="data-table" tabindex="0" role="region" aria-labelledby="visitors-caption"
+     style="max-block-size: 240px">
+  <table>
+    <caption id="visitors-caption">Monthly visitors</caption>
+    …
+  </table>
+</div>
+`} />
+  </Section>
+  <Section {...S.dense}>
+        <p>
+          <code>dense</code> on the wrapper shortens rows to 40px and the
+          header to 48px, for tables people scan rather than read.
+        </p>
+        <div class="data-table dense">
+          <table>
+            <thead>
+              <tr><th scope="col">Service</th><th scope="col">Region</th><th scope="col" class="numeric">Latency</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">api</th><td>eu-west</td><td class="numeric">42 ms</td></tr>
+              <tr><th scope="row">auth</th><td>us-east</td><td class="numeric">18 ms</td></tr>
+              <tr><th scope="row">search</th><td>ap-south</td><td class="numeric">97 ms</td></tr>
+            </tbody>
+          </table>
+        </div>
+<Code code={`
+<div class="data-table dense">
+  <table>…</table>
+</div>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.data-table</code>.</p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-data-table-container-color</code></td>
+            <td><code>--md-sys-color-surface</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-data-table-shape</code></td>
+            <td>12px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-data-table-outline-color</code></td>
+            <td><code>--md-sys-color-outline-variant</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-data-table-header-height</code></td>
+            <td>56px; <code>dense</code>: 48px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-data-table-row-height</code></td>
+            <td>52px; <code>dense</code>: 40px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-data-table-cell-padding</code></td>
+            <td>16px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-data-table-selected-container-color</code></td>
+            <td><code>--md-sys-color-secondary-container</code></td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+<script is:inline>
+document.querySelectorAll('[data-sortable] th > button').forEach((button) => {
+  button.addEventListener('click', () => {
+    const header = button.parentElement;
+    const table = header.closest('table');
+    const body = table.tBodies[0];
+    const column = header.cellIndex;
+    const direction = header.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
+    table.querySelectorAll('th[aria-sort]').forEach((cell) => cell.removeAttribute('aria-sort'));
+    header.setAttribute('aria-sort', direction);
+    const collator = new Intl.Collator(undefined, { numeric: true });
+    const rows = [...body.rows].sort((a, b) =>
+      collator.compare(a.cells[column].textContent, b.cells[column].textContent));
+    if (direction === 'descending') rows.reverse();
+    body.append(...rows);
+  });
+});
+</script>
+</DocsLayout>

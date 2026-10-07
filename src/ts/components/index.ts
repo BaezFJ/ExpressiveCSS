@@ -13,6 +13,7 @@ export { ExpandingCard } from "./expandingCard";
 export { Carousel } from "./carousel";
 export { CharacterCounter } from "./characterCounter";
 export { Chips } from "./chips";
+export { CommandPalette } from "./commandPalette";
 export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";
 export { Lightbox } from "./lightbox";
