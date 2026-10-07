@@ -1,0 +1,128 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "sizes", label: "Sizes" },
+  { id: "group", label: "Group" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="avatar">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.avatar</code> shows a person or account as a circle. It is
+          an <code>&lt;img&gt;</code>, or a <code>&lt;span&gt;</code> holding
+          initials or an icon on a <code>secondary-container</code> fill.
+        </p>
+        <div class="flex align-center gap-6 mb-3">
+          <img class="avatar" src="https://picsum.photos/id/64/80/80" alt="Ada Lovelace">
+          <span class="avatar" role="img" aria-label="Grace Hopper">GH</span>
+          <span class="avatar" role="img" aria-label="Guest">
+            <span class="material-symbols" aria-hidden="true">person</span>
+          </span>
+        </div>
+<Code code={`
+<img class="avatar" src="ada.jpg" alt="Ada Lovelace">
+<span class="avatar" role="img" aria-label="Grace Hopper">GH</span>
+<span class="avatar" role="img" aria-label="Guest">
+  <span class="material-symbols" aria-hidden="true">person</span>
+</span>
+`} />
+  </Section>
+  <Section {...S.sizes}>
+        <p>
+          The default is 40px. <code>small</code> is 32px and
+          <code>large</code> is 56px; initials and icons scale with the circle.
+        </p>
+        <div class="flex align-center gap-6 mb-3">
+          <span class="avatar small" role="img" aria-label="Grace Hopper">GH</span>
+          <span class="avatar" role="img" aria-label="Grace Hopper">GH</span>
+          <span class="avatar large" role="img" aria-label="Grace Hopper">GH</span>
+        </div>
+<Code code={`
+<span class="avatar small" role="img" aria-label="Grace Hopper">GH</span>
+<span class="avatar" role="img" aria-label="Grace Hopper">GH</span>
+<span class="avatar large" role="img" aria-label="Grace Hopper">GH</span>
+`} />
+  </Section>
+  <Section {...S.group}>
+        <p>
+          An <code>.avatar-group</code> overlaps its avatars by 8px and rings
+          each one in the surface color. End with a count avatar for the people
+          not shown, and say what the group is in the text around it.
+        </p>
+        <div class="flex align-center gap-2 mb-3">
+          <div class="avatar-group">
+            <img class="avatar small" src="https://picsum.photos/id/64/64/64" alt="Ada Lovelace">
+            <span class="avatar small" role="img" aria-label="Grace Hopper">GH</span>
+            <img class="avatar small" src="https://picsum.photos/id/91/64/64" alt="Alan Turing">
+            <span class="avatar small" role="img" aria-label="3 more people">+3</span>
+          </div>
+          <span class="body-medium">6 people are editing</span>
+        </div>
+<Code code={`
+<div class="avatar-group">
+  <img class="avatar small" src="ada.jpg" alt="Ada Lovelace">
+  <span class="avatar small" role="img" aria-label="Grace Hopper">GH</span>
+  <img class="avatar small" src="alan.jpg" alt="Alan Turing">
+  <span class="avatar small" role="img" aria-label="3 more people">+3</span>
+</div>
+<span>6 people are editing</span>
+`} />
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          An image avatar needs <code>alt</code> text naming the person, or
+          <code>alt=""</code> when the name is already next to it. Initials
+          read as separate letters and an icon reads as its ligature name, so
+          give a <code>&lt;span&gt;</code> avatar <code>role="img"</code> and an
+          <code>aria-label</code>, or <code>aria-hidden="true"</code> when the
+          person is named beside it.
+        </p>
+        <div class="flex align-center gap-4 mb-3">
+          <span class="avatar" aria-hidden="true">GH</span>
+          <span class="body-large">Grace Hopper</span>
+        </div>
+<Code code={`
+<span class="avatar" aria-hidden="true">GH</span>
+<span>Grace Hopper</span>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>
+          Override these on the <code>.avatar</code>, or on
+          <code>.avatar-group</code> for the overlap and ring.
+        </p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-avatar-size</code></td>
+            <td>40px; <code>small</code>: 32px; <code>large</code>: 56px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-avatar-container-color</code></td>
+            <td><code>--md-sys-color-secondary-container</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-avatar-color</code></td>
+            <td><code>--md-sys-color-on-secondary-container</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-avatar-group-overlap</code></td>
+            <td>8px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-avatar-group-ring-color</code></td>
+            <td><code>--md-sys-color-surface</code></td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

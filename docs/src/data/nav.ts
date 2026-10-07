@@ -307,6 +307,20 @@ export const NAV: DocsGroup[] = [
           "One message in a conversation, with an optional avatar, header and footer.",
       },
       {
+        id: "accordion",
+        label: "Accordion",
+        route: "/accordion.html",
+        description:
+          "Stacked disclosures that open one section of content at a time, on native details.",
+      },
+      {
+        id: "data_table",
+        label: "Data table",
+        route: "/data-table.html",
+        description:
+          "Rows of records in a scrolling table with a sticky header, sort state and row selection.",
+      },
+      {
         id: "dialogs",
         label: "Dialogs",
         route: "/dialogs.html",
@@ -343,6 +357,13 @@ export const NAV: DocsGroup[] = [
           "Notifications, counts, or status on navigation items and icons.",
       },
       {
+        id: "avatar",
+        label: "Avatar",
+        route: "/avatar.html",
+        description:
+          "A person or account as a circular image, initials or icon, alone or in an overlapping group.",
+      },
+      {
         id: "tooltips",
         label: "Tooltips",
         route: "/tooltips.html",
@@ -370,6 +391,20 @@ export const NAV: DocsGroup[] = [
         route: "/loading-indicator.html",
         description:
           "A shape that morphs while it spins, for waits under five seconds.",
+      },
+      {
+        id: "skeleton",
+        label: "Skeleton",
+        route: "/skeleton.html",
+        description:
+          "Placeholder shapes that hold the layout while content loads.",
+      },
+      {
+        id: "empty_state",
+        label: "Empty state",
+        route: "/empty-state.html",
+        description:
+          "What a view shows when it has nothing to list: an icon, a heading, text and actions.",
       },
       {
         id: "carousel",

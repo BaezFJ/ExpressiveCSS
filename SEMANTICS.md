@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**50 of 50 rows enforced; 0 remaining.**
+**55 of 55 rows enforced; 0 remaining.**
 
-46 of those rows are components - a part of the framework an author writes markup for.
+51 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,13 +45,27 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 46 components declare conformance debt.**
+**3 of 51 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
 role withheld by convention, with no rule behind it, is invisible to it.
 
 ## Enforced
+
+### accordion
+
+Added with the accordion component. Each item is a native <details>, so the browser exposes <summary> as a button with its expanded state and handles the keyboard. The rules keep authors from re-stating that state or nesting controls in the toggle.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `accordion-items-are-details` | forbid | `.accordion > :not(details)` | must not match |
+| `accordion-summary-holds-no-controls` | forbid | `.accordion summary :is(a[href], button, input, select, textarea, [tabindex])` | must not match |
+| `accordion-summary-state-is-native` | forbid | `.accordion summary:is([role], [aria-expanded])` | must not match |
+
+- **accordion-items-are-details** - Write every accordion item as <details> with a <summary>. The element is the disclosure: a div with a click handler has no expanded state and no keyboard support.
+- **accordion-summary-holds-no-controls** - A <summary> is already the toggle button. A link or control inside it is a control nested in a control: pressing it also opens or closes the item, and screen readers flatten it into the summary name. Put actions in the panel.
+- **accordion-summary-state-is-native** - The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role or aria-expanded overrides that and goes stale the first time the item toggles.
 
 ### autocomplete
 
@@ -62,6 +76,20 @@ Swept 0.8.0. The combobox it builds is checked at runtime in tests/autocomplete.
 | `autocomplete-options-are-options` | forbid | `.autocomplete-content li:not([role="option"])` | must not match |
 
 - **autocomplete-options-are-options** - The suggestion list is a listbox; every entry in it is an option.
+
+### avatar
+
+Added with the avatar component. Initials and icon ligatures read as letters, so a non-image avatar is either a named role="img" or hidden beside a visible name.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `avatar-image-has-alt` | require-attr | `img.avatar` | must have `alt` |
+| `avatar-is-an-image-or-hidden` | forbid | `.avatar:not(img):not([role="img"]):not([aria-hidden="true"])` | must not match |
+| `avatar-image-role-is-named` | require-accessible-name | `.avatar[role="img"]` | must end up with an accessible name |
+
+- **avatar-image-has-alt** - Give an avatar image alt text naming the person, or alt="" when their name is already beside it.
+- **avatar-is-an-image-or-hidden** - Initials read as separate letters and an icon reads as its ligature name. Give a non-image avatar role="img" and a name, or aria-hidden="true" when the person is named next to it.
+- **avatar-image-role-is-named** - An avatar with role="img" needs aria-label or aria-labelledby. Its initials are hidden from the name computation of an image.
 
 ### badges
 
@@ -233,6 +261,24 @@ Swept 0.8.0. The four Material 3 chip types plus a non-interactive display chip,
 - **chip-icon-hidden** - A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden.
 - **filter-chip-label-for** - A filter chip is <input type="checkbox"> + <label class="chip">; the label must point at its input.
 
+### data-table
+
+Added with the data table component. The wrapper is the scroll container so the <table> keeps its table semantics. Sorting and selection are page state: aria-sort on the header cell and a checkbox in the first cell.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `data-table-wraps-the-table` | forbid | `table.data-table` | must not match |
+| `data-table-sort-is-on-a-header` | forbid | `.data-table [aria-sort]:not(th)` | must not match |
+| `data-table-row-is-not-selected` | forbid | `.data-table tr[aria-selected]` | must not match |
+| `data-table-scroll-region-is-a-region` | require-attr | `.data-table[tabindex]` | must have `role` = `region` |
+| `data-table-scroll-region-is-named` | require-accessible-name | `.data-table[tabindex]` | must end up with an accessible name |
+
+- **data-table-wraps-the-table** - Put .data-table on a <div> around the <table>. The wrapper scrolls; a table made to scroll itself needs display:block, which drops its table role in some engines.
+- **data-table-sort-is-on-a-header** - aria-sort belongs on the column header cell (<th>), not on the button inside it or on a data cell. Assistive technology reads the sort state from the header.
+- **data-table-row-is-not-selected** - aria-selected is not valid on a row of a plain table. It belongs to role="grid" and its keyboard contract. Select a row with a labelled checkbox in its first cell.
+- **data-table-scroll-region-is-a-region** - A focusable scroll wrapper needs role="region" so its name is announced. aria-label is not allowed on a plain div.
+- **data-table-scroll-region-is-named** - Name a focusable scroll wrapper with aria-label, or aria-labelledby pointing at the table caption, so keyboard users know what they are scrolling.
+
 ### datepicker
 
 Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the container.
@@ -274,6 +320,16 @@ The affordance that says a thing can be dragged, added with the drag handle comp
 - **drag-handle-is-hidden-or-a-control** - A drag handle has no text and reports nothing, so on any element but a <button> it is decoration and needs aria-hidden="true". Left exposed it arrives as an unlabelled blank in the reading order. Make it a <button> with a name if it is meant to be operated.
 - **drag-handle-button-is-not-hidden** - aria-hidden on a <button> hides it from assistive technology without taking it out of the tab order, so keyboard focus lands on something that is not there. Decoration is a <span>; a control stays exposed.
 - **drag-handle-button-is-named** - The handle is a bar drawn in CSS - there is no text inside it to be named by. A handle worth making a control is worth an aria-label saying what it moves.
+
+### empty-state
+
+Added with the empty state component. Layout around authored content: the heading, text and buttons carry their own semantics, and the icon rules cover a leading icon.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `empty-state-image-has-alt` | require-attr | `.empty-state > img` | must have `alt` |
+
+- **empty-state-image-has-alt** - Give an empty-state illustration alt="" when the heading already says what it shows, or alt text when the image adds information.
 
 ### expanding-card
 
@@ -608,6 +664,16 @@ Swept 0.8.0. A <dialog>, so the dialog rules carry it.
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 
+
+### skeleton
+
+Added with the skeleton component. A skeleton is an empty placeholder shape. The region it fills carries aria-busy, and a loading indicator or status reports the wait.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `skeleton-is-empty` | forbid | `.skeleton:not(:empty)` | must not match |
+
+- **skeleton-is-empty** - Keep a .skeleton empty. Text inside it is read out as if it were content; report the wait through a status such as a loading indicator, and mark the loading region aria-busy="true".
 
 ### snackbar
 

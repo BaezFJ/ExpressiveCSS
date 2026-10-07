@@ -1239,6 +1239,106 @@
       ]
     },
     {
+      "slug": "accordion",
+      "title": "Accordion",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-06",
+      "scope": "Joined tiles on native details and summary, exclusive groups through the name attribute, a leading icon, a turning chevron and an animated open where the engine supports it.",
+      "adaptation": "Native <details> and <summary>; the browser owns the toggle, its keyboard support and its expanded state.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-06",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Expose each header as a button with its expanded state, keep controls out of the header, keep the reading order equal to the visual order and respect reduced motion."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_accordion.scss",
+          "sha256": "3a3a72385c217265dbf90b85277bb381fce2346796dbdc4a4f6e16010dbc6711"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Tile corners, the chevron turn, exclusive groups and the expanded state Chromium reports are checked in a browser; the open animation, enlarged text and spoken output remain unverified.",
+          "nextStep": "Toggle items with a screen reader in each engine and confirm the expanded state is announced; test enlarged text and reduced motion."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/accordion-browser.test.js",
+          "name": "chromium: accordion joins its tiles, turns the chevron and keeps one item open per name",
+          "scope": "Outer, inner and open corner radii, chevron rotation, hidden native marker, exclusive name groups, Enter on a focused summary and the expanded state Chromium reports for each summary. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "data-table",
+      "title": "Data table",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-06",
+      "scope": "Scrolling wrapper with an outline, sticky header row, numeric columns, dense rows, a sort arrow drawn from aria-sort and checkbox row selection.",
+      "adaptation": "A plain div wraps a native <table>, so the table keeps its role; the page owns sorting, select-all and the scroll region name.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-06",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep native table semantics with column and row headers, expose sort state on the header cell, name selection checkboxes after their rows and make a scrolling region reachable and named."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_data-table.scss",
+          "sha256": "dbce2d8f374bb0f5bc7008725c0e8ed680df39d9bb111fea4219b8d120558e9c"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified.",
+          "nextStep": "Sort and select rows with a screen reader in each engine and confirm the sort state and selection are announced; test enlarged text and RTL."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/data-table-browser.test.js",
+          "name": "chromium: data table keeps table semantics, sticks its header and draws sort and selection",
+          "scope": "Table, column header and row counts through the wrapper, sticky header offset after scrolling, end-aligned numeric cells in LTR and RTL, sort arrow opacity and rotation, selected row fill and the named scroll region. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
       "slug": "dialogs",
       "title": "Dialogs",
       "kind": "component",
@@ -1558,6 +1658,56 @@
       ]
     },
     {
+      "slug": "avatar",
+      "title": "Avatar",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-06",
+      "scope": "Image, initials and icon avatars in three sizes, and overlapping groups with a surface ring and a count avatar.",
+      "adaptation": "An <img> or a <span> with role=\"img\" and a name; initials scale with the size token.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-06",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Name each person once through alt text or role=\"img\" with a label, hide avatars beside a visible name and keep group counts understandable without the picture."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_avatar.scss",
+          "sha256": "07b6f8fef3f3a65943f319bc034520b11eae4bd6b41feade183f51fcd2e5cf47"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Sizes, the circle, the group overlap and named initials are checked in a browser; image loading failures, enlarged text and spoken output remain unverified.",
+          "nextStep": "Read a group of avatars with a screen reader and confirm each name and the count are announced once; test enlarged text and RTL."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/avatar-browser.test.js",
+          "name": "chromium: avatar sizes its circle, names its initials and overlaps a group",
+          "scope": "Default, small and large sizes, circle radius, image and initials names in the accessibility tree, and the group overlap in LTR and RTL. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
       "slug": "tooltips",
       "title": "Tooltips",
       "kind": "component",
@@ -1812,6 +1962,106 @@
         }
       ],
       "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "skeleton",
+      "title": "Skeleton",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-06",
+      "scope": "Box, text line and circle shapes with a shimmer that reverses in RTL, stops under reduced motion and keeps an outline in forced colors.",
+      "adaptation": "Empty decorative blocks; the page marks the loading region aria-busy and reports the wait through a status.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-06",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep placeholders out of the accessibility tree, report the wait through a status, clear aria-busy when content arrives and stop motion when reduced motion is requested."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_skeleton.scss",
+          "sha256": "6bd759a77d0c53af809ebfdbec53eae24ec6eb2d6c6fe183d4d36d3ca8e2c0fb"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified.",
+          "nextStep": "Load content into an aria-busy region with a screen reader and confirm the status is announced once and the skeletons are not; test forced colors."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/skeleton-browser.test.js",
+          "name": "chromium: skeleton shimmers, stops under reduced motion and stays out of the accessibility tree",
+          "scope": "Running shimmer animation, its removal under reduced motion, reversed direction in RTL, text and circle geometry and no skeleton nodes in the accessibility tree. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "empty-state",
+      "title": "Empty state",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-06",
+      "scope": "Centered icon in a tonal circle or an illustration, a heading, supporting text and a wrapping row of actions.",
+      "adaptation": "A plain div around authored heading, text and buttons; the page picks the heading level.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-06",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "State what is empty and what to do next in text, keep the heading in the page outline, hide decorative icons and images and announce results that change after a search."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_empty-state.scss",
+          "sha256": "5740d50963b3e2cb7a62330f0260d4b1a0c89ff2bc051c9bb83f82e23dbdcabe"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified.",
+          "nextStep": "Empty a filtered list with a screen reader and confirm the change is announced; test enlarged text and narrow widths."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/empty-state-browser.test.js",
+          "name": "chromium: empty state centers its content and rings the leading icon",
+          "scope": "Centered column, icon circle size and fill, text width cap, centered wrapping actions and an empty alt image left out of the accessibility tree. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

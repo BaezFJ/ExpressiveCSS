@@ -40,6 +40,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 ### CSS components
 
 - Badges
+- Avatar
 - Banner migration
 - Breadcrumbs
 - Buttons
@@ -47,6 +48,8 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Carousel
 - Drag handle
 - Lists
+- Accordion
+- Data table
 - Floating Action Button
 - Footer
 - Icon buttons
@@ -58,6 +61,8 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Panes
 - Preloader
 - Loading indicator
+- Skeleton
+- Empty state
 - Search
 - Button groups
 - Split button
@@ -1724,6 +1729,44 @@ Default is `error` / `on-error`. Override with a fill + `on-*` pair when the bad
 
 ---
 
+## Avatar
+
+A person or account as a circular image, initials or icon, alone or in an overlapping group.
+
+A `.avatar` is an `<img>`, or a `<span>` holding initials or an icon. It is 40px by default; `small` is 32px and `large` is 56px, and the initials and icon scale with it. Give an image alt text naming the person, or `alt=""` when the name is already beside it. Initials read as separate letters, so give a `<span>` avatar `role="img"` and an `aria-label`, or `aria-hidden="true"` when the name is visible next to it. CSS only; there is no JavaScript.
+
+```html
+<img class="avatar" src="ada.jpg" alt="Ada Lovelace">
+<span class="avatar" role="img" aria-label="Grace Hopper">GH</span>
+<span class="avatar large" role="img" aria-label="Guest">
+  <span class="material-symbols" aria-hidden="true">person</span>
+</span>
+```
+
+### Avatar group
+
+`.avatar-group` overlaps its avatars by 8px and rings each one in the surface color. End with a count avatar for the people not shown, and say what the group is in the surrounding text.
+
+```html
+<div class="avatar-group">
+  <img class="avatar small" src="ada.jpg" alt="Ada Lovelace">
+  <span class="avatar small" role="img" aria-label="Grace Hopper">GH</span>
+  <span class="avatar small" role="img" aria-label="3 more people">+3</span>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-avatar-size` | 40px; `small`: 32px; `large`: 56px |
+| `--md-comp-avatar-container-color` | `secondary-container` |
+| `--md-comp-avatar-color` | `on-secondary-container` |
+| `--md-comp-avatar-group-overlap` | 8px (on `.avatar-group`) |
+| `--md-comp-avatar-group-ring-color` | `surface` (on `.avatar-group`) |
+
+---
+
 ## Banner migration
 
 The banner component has been removed. Remove `.banner`, its `rich`, `vibrant` and `square` modifiers, and `--md-comp-banners-*` overrides from former banner markup. These modifiers may still serve other components.
@@ -2646,6 +2689,148 @@ Copy, feedback and retry actions go in the footer as named icon buttons. On an `
 | `--md-comp-message-bubble-container-color` | `surface-container-high`; `end`: `primary-container` |
 | `--md-comp-message-bubble-color` | `on-surface`; `end`: `on-primary-container` |
 | `--md-comp-message-group-gap` | 2px (on `.message-group`) |
+
+---
+
+## Accordion
+
+Stacked disclosures that open one section of content at a time, on native details.
+
+A `.accordion` holds `<details>` items. An item's `<summary>` is its header, and everything after the summary is its panel. The browser owns the behavior: the summary is a button that reports its expanded state, Enter and Space toggle it, and `open` sets the initial state. Give the items one shared `name` to make them exclusive, so opening one closes the others. CSS only; there is no JavaScript.
+
+The items join as tiles. Outer corners take the full shape and inner corners the grouped shape, and an open item rounds every corner. Opening animates in engines that can transition to `auto` height, and opens at once elsewhere or under reduced motion. Keep links and buttons out of the summary, which is already a button; put actions in the panel.
+
+```html
+<div class="accordion">
+  <details name="faq" open>
+    <summary>Can I change my plan later?</summary>
+    <p>Yes. The new plan starts with your next billing period.</p>
+  </details>
+  <details name="faq">
+    <summary>How do I export my data?</summary>
+    <p>Open Settings, then Export. The download includes every project you own.</p>
+  </details>
+</div>
+```
+
+### Leading icon
+
+A leading icon goes first in the summary, hidden from assistive technology. The summary text names the item.
+
+```html
+<div class="accordion">
+  <details>
+    <summary>
+      <span class="material-symbols" aria-hidden="true">lock</span>
+      Privacy
+    </summary>
+    <p>Choose who can see your profile and activity.</p>
+  </details>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-accordion-container-color` | `on-surface` at 8% over `surface` |
+| `--md-comp-accordion-shape` | 20px |
+| `--md-comp-accordion-grouped-shape` | 4px |
+| `--md-comp-accordion-gap` | 2px |
+| `--md-comp-accordion-header-height` | 56px |
+| `--md-comp-accordion-padding` | 16px |
+
+---
+
+## Data table
+
+Rows of records in a scrolling table with a sticky header, sort state and row selection.
+
+A `.data-table` is a `<div>` around one native `<table>`. The wrapper scrolls and draws the outline, so the table keeps its table semantics. The header row sticks to the top of the wrapper once the wrapper scrolls vertically, so give the wrapper a `max-block-size` for long tables. Add `numeric` to the header and body cells of a number column to align them on the end edge with tabular figures, and `dense` to the wrapper for shorter rows. CSS only; there is no JavaScript.
+
+Sorting is page state. Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"descending"` on the header of the sorted column. The framework draws the arrow; the page reorders the rows and moves `aria-sort`.
+
+```html
+<div class="data-table">
+  <table>
+    <caption>Orders</caption>
+    <thead>
+      <tr>
+        <th scope="col" aria-sort="ascending"><button type="button">Customer</button></th>
+        <th scope="col">Status</th>
+        <th scope="col" class="numeric"><button type="button">Total</button></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Alvin</th>
+        <td>Shipped</td>
+        <td class="numeric">$87.00</td>
+      </tr>
+      <tr>
+        <th scope="row">Shannon</th>
+        <td>Pending</td>
+        <td class="numeric">$9.99</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+### Row selection
+
+A checked checkbox in a row's first cell selects the row and fills it with `secondary-container`. Name each checkbox after its row. `aria-selected` is not valid on the rows of a plain table, so the checkbox carries the state. A select-all box in the header is the page's to wire.
+
+```html
+<div class="data-table">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col"><label><input type="checkbox" aria-label="Select all orders"></label></th>
+        <th scope="col">Customer</th>
+        <th scope="col" class="numeric">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><label><input type="checkbox" checked aria-label="Select Alvin"></label></td>
+        <th scope="row">Alvin</th>
+        <td class="numeric">$87.00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+### Scrolling
+
+A wrapper that scrolls must be reachable from the keyboard. Give it `tabindex="0"`, `role="region"` and a name, usually the caption.
+
+```html
+<div class="data-table" tabindex="0" role="region" aria-labelledby="orders-caption" style="max-block-size: 320px">
+  <table>
+    <caption id="orders-caption">Orders</caption>
+    <thead>
+      <tr><th scope="col">Customer</th><th scope="col" class="numeric">Total</th></tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Alvin</th><td class="numeric">$87.00</td></tr>
+    </tbody>
+  </table>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-data-table-container-color` | `surface` |
+| `--md-comp-data-table-shape` | 12px |
+| `--md-comp-data-table-outline-color` | `outline-variant` |
+| `--md-comp-data-table-header-height` | 56px; `dense`: 48px |
+| `--md-comp-data-table-row-height` | 52px; `dense`: 40px |
+| `--md-comp-data-table-cell-padding` | 16px |
+| `--md-comp-data-table-selected-container-color` | `secondary-container` |
 
 ---
 
@@ -3581,6 +3766,83 @@ the plain indicator would be lost.
 ---
 
 # JavaScript components
+
+## Skeleton
+
+Placeholder shapes that hold the layout while content loads.
+
+A `.skeleton` is an empty block in the shape of the content it stands in for, with a shimmer passing across it. Size the default box with `width` and `height`. `text` is one line of body text, and the last of several lines runs shorter. `circle` is a 40px circle for an avatar. Reduced motion stops the shimmer and keeps the shapes. CSS only; there is no JavaScript.
+
+Skeletons say nothing to assistive technology. Mark the region being filled with `aria-busy="true"` and report the wait in a status, such as a loading indicator or visually hidden `role="status"` text. Swap in the content and remove `aria-busy` in the same update.
+
+```html
+<p class="visually-hidden" role="status">Loading messages</p>
+<div class="flex gap-4" aria-busy="true">
+  <div class="skeleton circle"></div>
+  <div class="flex-1">
+    <div class="skeleton text"></div>
+    <div class="skeleton text"></div>
+  </div>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-skeleton-color` | `surface-container-highest` |
+| `--md-comp-skeleton-shimmer-color` | `on-surface` at 8% |
+| `--md-comp-skeleton-shape` | 8px; `text`: 4px |
+| `--md-comp-skeleton-circle-size` | 40px |
+
+---
+
+## Empty state
+
+What a view shows when it has nothing to list: an icon, a heading, text and actions.
+
+A `.empty-state` centers its content in the space the missing items would fill. In order, it holds an optional leading icon, which sits in a 96px tonal circle, or an `<img>` illustration; a heading at the level the page outline needs; a `<p>` of supporting text; and a `.empty-state-actions` row of buttons. CSS only; there is no JavaScript.
+
+Say what is empty and what the user can do about it. Use it for a first run, a search with no results, or content the user cannot see yet. Hide the icon from assistive technology, and give an illustration `alt=""` when the heading already says what it shows.
+
+```html
+<div class="empty-state">
+  <span class="material-symbols" aria-hidden="true">inbox</span>
+  <h2>No messages yet</h2>
+  <p>Messages from your team show up here.</p>
+  <div class="empty-state-actions">
+    <button class="filled">New message</button>
+  </div>
+</div>
+```
+
+### Search with no results
+
+When a filter or search empties a list, offer the way back as the action.
+
+```html
+<div class="empty-state">
+  <span class="material-symbols" aria-hidden="true">search_off</span>
+  <h3>No results for "invoices 2019"</h3>
+  <p>Check the spelling or search all folders.</p>
+  <div class="empty-state-actions">
+    <button class="outlined">Clear search</button>
+  </div>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-empty-state-padding` | 48px 24px |
+| `--md-comp-empty-state-max-width` | 40ch (heading and text) |
+| `--md-comp-empty-state-icon-size` | 48px |
+| `--md-comp-empty-state-icon-container-size` | 96px |
+| `--md-comp-empty-state-icon-container-color` | `surface-container-high` |
+| `--md-comp-empty-state-image-max-width` | 240px |
+
+---
 
 ## Auto Init
 

@@ -12,6 +12,21 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `.message-bubble`. `end` moves a message to the sender's side,
   `.message-group` stacks consecutive messages and joins their corners, and
   `.message-bubble.outlined` holds attachments. CSS only.
+- Accordion component: `.accordion` stacks native `<details>` items as joined
+  tiles with a turning chevron. A shared `name` keeps one item open, and
+  opening animates where the engine can transition to `auto` height. CSS only.
+- Data table component: `.data-table` wraps a native `<table>` in a scrolling,
+  outlined container with a sticky header row. `numeric` aligns number columns,
+  `dense` shortens rows, `aria-sort` on a header draws its sort arrow, and a
+  checked checkbox in the first cell selects the row. The page owns sorting.
+  CSS only.
+- Avatar component: `.avatar` shows a person as a circular image, initials or
+  icon in `small`, default and `large` sizes. `.avatar-group` overlaps avatars
+  with a surface ring. CSS only.
+- Skeleton component: `.skeleton` draws placeholder boxes, `text` lines and
+  `circle` shapes with a shimmer that stops under reduced motion. CSS only.
+- Empty state component: `.empty-state` centers an icon or illustration, a
+  heading, supporting text and an `.empty-state-actions` row. CSS only.
 - `.scroll-area` styles native scrollbars with theme-aware colors and thin
   sizing, with a WebKit fallback and system scrollbars in forced-colors mode.
 - Frosted glass for floating surfaces. `--expressive-glass: true` on `:root` or

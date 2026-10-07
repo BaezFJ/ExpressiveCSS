@@ -1,0 +1,86 @@
+@use "../abstracts" as *;
+
+// Avatar. A person or account as a circle: an <img>, or a <span> holding
+// initials or an icon. `small` and `large` move the size; the type and icon
+// scale with it.
+//
+// A .avatar-group overlaps its avatars and rings each one in the surface
+// color, so the edges stay readable over the neighbour underneath.
+//
+// Tokens:
+//   --md-comp-avatar-size              40px / small 32px / large 56px
+//   --md-comp-avatar-container-color   secondary-container
+//   --md-comp-avatar-color             on-secondary-container
+//   --md-comp-avatar-group-overlap     8px
+//   --md-comp-avatar-group-ring-color  surface
+
+.avatar {
+  --md-comp-avatar-size: 40px;
+  --md-comp-avatar-container-color: var(--md-sys-color-secondary-container);
+  --md-comp-avatar-color: var(--md-sys-color-on-secondary-container);
+
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--md-comp-avatar-size);
+  height: var(--md-comp-avatar-size);
+  border-radius: 50%;
+  overflow: hidden;
+  object-fit: cover;
+  vertical-align: middle;
+  background-color: var(--md-comp-avatar-container-color);
+  color: var(--md-comp-avatar-color);
+  font-family: var(--md-sys-typescale-title-medium-font-family-name);
+  font-size: calc(var(--md-comp-avatar-size) * 0.4);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+
+  &.small {
+    --md-comp-avatar-size: 32px;
+  }
+
+  &.large {
+    --md-comp-avatar-size: 56px;
+  }
+
+  > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  > #{$icon} {
+    font-size: calc(var(--md-comp-avatar-size) * 0.6);
+  }
+}
+
+// Forced colors drop the fill, so an outline keeps the circle.
+@media (forced-colors: active) {
+  .avatar:not(img) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+}
+
+.avatar-group {
+  --md-comp-avatar-group-overlap: 8px;
+  --md-comp-avatar-group-ring-color: var(--md-sys-color-surface);
+
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+
+  > .avatar {
+    box-shadow: 0 0 0 2px var(--md-comp-avatar-group-ring-color);
+  }
+
+  > .avatar + .avatar {
+    margin-inline-start: calc(var(--md-comp-avatar-group-overlap) * -1);
+  }
+}

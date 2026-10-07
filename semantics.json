@@ -860,6 +860,126 @@
         }
       ]
     },
+    "accordion": {
+      "status": "enforced",
+      "note": "Added with the accordion component. Each item is a native <details>, so the browser exposes <summary> as a button with its expanded state and handles the keyboard. The rules keep authors from re-stating that state or nesting controls in the toggle.",
+      "rules": [
+        {
+          "id": "accordion-items-are-details",
+          "kind": "forbid",
+          "selector": ".accordion > :not(details)",
+          "fragmentSafe": true,
+          "message": "Write every accordion item as <details> with a <summary>. The element is the disclosure: a div with a click handler has no expanded state and no keyboard support."
+        },
+        {
+          "id": "accordion-summary-holds-no-controls",
+          "kind": "forbid",
+          "selector": ".accordion summary :is(a[href], button, input, select, textarea, [tabindex])",
+          "fragmentSafe": true,
+          "message": "A <summary> is already the toggle button. A link or control inside it is a control nested in a control: pressing it also opens or closes the item, and screen readers flatten it into the summary name. Put actions in the panel."
+        },
+        {
+          "id": "accordion-summary-state-is-native",
+          "kind": "forbid",
+          "selector": ".accordion summary:is([role], [aria-expanded])",
+          "fragmentSafe": true,
+          "message": "The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role or aria-expanded overrides that and goes stale the first time the item toggles."
+        }
+      ]
+    },
+    "data-table": {
+      "status": "enforced",
+      "note": "Added with the data table component. The wrapper is the scroll container so the <table> keeps its table semantics. Sorting and selection are page state: aria-sort on the header cell and a checkbox in the first cell.",
+      "rules": [
+        {
+          "id": "data-table-wraps-the-table",
+          "kind": "forbid",
+          "selector": "table.data-table",
+          "fragmentSafe": true,
+          "message": "Put .data-table on a <div> around the <table>. The wrapper scrolls; a table made to scroll itself needs display:block, which drops its table role in some engines."
+        },
+        {
+          "id": "data-table-sort-is-on-a-header",
+          "kind": "forbid",
+          "selector": ".data-table [aria-sort]:not(th)",
+          "fragmentSafe": true,
+          "message": "aria-sort belongs on the column header cell (<th>), not on the button inside it or on a data cell. Assistive technology reads the sort state from the header."
+        },
+        {
+          "id": "data-table-row-is-not-selected",
+          "kind": "forbid",
+          "selector": ".data-table tr[aria-selected]",
+          "fragmentSafe": true,
+          "message": "aria-selected is not valid on a row of a plain table. It belongs to role=\"grid\" and its keyboard contract. Select a row with a labelled checkbox in its first cell."
+        },
+        {
+          "id": "data-table-scroll-region-is-a-region",
+          "kind": "require-attr",
+          "selector": ".data-table[tabindex]",
+          "attr": "role",
+          "equals": "region",
+          "message": "A focusable scroll wrapper needs role=\"region\" so its name is announced. aria-label is not allowed on a plain div."
+        },
+        {
+          "id": "data-table-scroll-region-is-named",
+          "kind": "require-accessible-name",
+          "selector": ".data-table[tabindex]",
+          "message": "Name a focusable scroll wrapper with aria-label, or aria-labelledby pointing at the table caption, so keyboard users know what they are scrolling."
+        }
+      ]
+    },
+    "avatar": {
+      "status": "enforced",
+      "note": "Added with the avatar component. Initials and icon ligatures read as letters, so a non-image avatar is either a named role=\"img\" or hidden beside a visible name.",
+      "rules": [
+        {
+          "id": "avatar-image-has-alt",
+          "kind": "require-attr",
+          "selector": "img.avatar",
+          "attr": "alt",
+          "message": "Give an avatar image alt text naming the person, or alt=\"\" when their name is already beside it."
+        },
+        {
+          "id": "avatar-is-an-image-or-hidden",
+          "kind": "forbid",
+          "selector": ".avatar:not(img):not([role=\"img\"]):not([aria-hidden=\"true\"])",
+          "fragmentSafe": true,
+          "message": "Initials read as separate letters and an icon reads as its ligature name. Give a non-image avatar role=\"img\" and a name, or aria-hidden=\"true\" when the person is named next to it."
+        },
+        {
+          "id": "avatar-image-role-is-named",
+          "kind": "require-accessible-name",
+          "selector": ".avatar[role=\"img\"]",
+          "message": "An avatar with role=\"img\" needs aria-label or aria-labelledby. Its initials are hidden from the name computation of an image."
+        }
+      ]
+    },
+    "empty-state": {
+      "status": "enforced",
+      "note": "Added with the empty state component. Layout around authored content: the heading, text and buttons carry their own semantics, and the icon rules cover a leading icon.",
+      "rules": [
+        {
+          "id": "empty-state-image-has-alt",
+          "kind": "require-attr",
+          "selector": ".empty-state > img",
+          "attr": "alt",
+          "message": "Give an empty-state illustration alt=\"\" when the heading already says what it shows, or alt text when the image adds information."
+        }
+      ]
+    },
+    "skeleton": {
+      "status": "enforced",
+      "note": "Added with the skeleton component. A skeleton is an empty placeholder shape. The region it fills carries aria-busy, and a loading indicator or status reports the wait.",
+      "rules": [
+        {
+          "id": "skeleton-is-empty",
+          "kind": "forbid",
+          "selector": ".skeleton:not(:empty)",
+          "fragmentSafe": true,
+          "message": "Keep a .skeleton empty. Text inside it is read out as if it were content; report the wait through a status such as a loading indicator, and mark the loading region aria-busy=\"true\"."
+        }
+      ]
+    },
     "navbar": {
       "status": "enforced",
       "note": "Swept 0.8.0. The bar is <header> whose child is <nav>; the landmark rules carry it.",

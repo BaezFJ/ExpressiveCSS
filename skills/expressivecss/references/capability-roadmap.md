@@ -32,15 +32,20 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Cards](#cards) | unassessed | needs-review | needs-rerun | 0 |
 | [Lists](#lists) | unassessed | needs-review | needs-rerun | 1 |
 | [Message](#message) | implemented | source-reviewed | incomplete | 0 |
+| [Accordion](#accordion) | implemented | source-reviewed | incomplete | 0 |
+| [Data table](#data-table) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
 | [Side sheet](#side-sheet) | unassessed | needs-review | needs-rerun | 0 |
 | [Drag handle](#drag-handle) | unassessed | needs-review | no-mapped-checks | 1 |
 | [Badges](#badges) | unassessed | needs-review | needs-rerun | 0 |
+| [Avatar](#avatar) | implemented | source-reviewed | incomplete | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | needs-rerun | 0 |
 | [Snackbar](#snackbar) | unassessed | needs-review | needs-rerun | 0 |
 | [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 1 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | needs-rerun | 1 |
+| [Skeleton](#skeleton) | implemented | source-reviewed | incomplete | 0 |
+| [Empty state](#empty-state) | implemented | source-reviewed | incomplete | 0 |
 | [Carousel](#carousel) | unassessed | needs-review | needs-rerun | 0 |
 | [Lightbox](#lightbox) | unassessed | needs-review | needs-rerun | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
@@ -380,6 +385,38 @@ Web adaptation: Plain div parts on a CSS grid; the page owns role="log" on a liv
 
 - not-recorded: [tests/message-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/tests/message-browser.test.js): `chromium: message layout anchors the avatar, follows its side and joins grouped corners`. Avatar level with the bubble bottom and above the footer, start/end edges in LTR and RTL, no gap without an avatar, grouped corner radii and no message landmarks. No spoken-output assertion.
 
+<a id="accordion"></a>
+
+## Accordion
+
+**implemented within the stated scope.** Joined tiles on native details and summary, exclusive groups through the name attribute, a leading icon, a turning chevron and an animated open where the engine supports it.
+
+Source review: source-reviewed, 2026-10-06. [src/sass/components/_accordion.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/src/sass/components/_accordion.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: Native <details> and <summary>; the browser owns the toggle, its keyboard support and its expanded state.
+
+- verification: Tile corners, the chevron turn, exclusive groups and the expanded state Chromium reports are checked in a browser; the open animation, enlarged text and spoken output remain unverified. Next: Toggle items with a screen reader in each engine and confirm the expanded state is announced; test enlarged text and reduced motion.
+
+- not-recorded: [tests/accordion-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/tests/accordion-browser.test.js): `chromium: accordion joins its tiles, turns the chevron and keeps one item open per name`. Outer, inner and open corner radii, chevron rotation, hidden native marker, exclusive name groups, Enter on a focused summary and the expanded state Chromium reports for each summary. No spoken-output assertion.
+
+<a id="data-table"></a>
+
+## Data table
+
+**implemented within the stated scope.** Scrolling wrapper with an outline, sticky header row, numeric columns, dense rows, a sort arrow drawn from aria-sort and checkbox row selection.
+
+Source review: source-reviewed, 2026-10-06. [src/sass/components/_data-table.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/src/sass/components/_data-table.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: A plain div wraps a native <table>, so the table keeps its role; the page owns sorting, select-all and the scroll region name.
+
+- verification: Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified. Next: Sort and select rows with a screen reader in each engine and confirm the sort state and selection are announced; test enlarged text and RTL.
+
+- not-recorded: [tests/data-table-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/tests/data-table-browser.test.js): `chromium: data table keeps table semantics, sticks its header and draws sort and selection`. Table, column header and row counts through the wrapper, sticky header offset after scrolling, end-aligned numeric cells in LTR and RTL, sort arrow opacity and rotation, selected row fill and the named scroll region. No spoken-output assertion.
+
 <a id="dialogs"></a>
 
 ## Dialogs
@@ -465,6 +502,22 @@ Web adaptation: Expose counts through the enclosing control name when its icon i
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 
+<a id="avatar"></a>
+
+## Avatar
+
+**implemented within the stated scope.** Image, initials and icon avatars in three sizes, and overlapping groups with a surface ring and a count avatar.
+
+Source review: source-reviewed, 2026-10-06. [src/sass/components/_avatar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/src/sass/components/_avatar.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: An <img> or a <span> with role="img" and a name; initials scale with the size token.
+
+- verification: Sizes, the circle, the group overlap and named initials are checked in a browser; image loading failures, enlarged text and spoken output remain unverified. Next: Read a group of avatars with a screen reader and confirm each name and the count are announced once; test enlarged text and RTL.
+
+- not-recorded: [tests/avatar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/tests/avatar-browser.test.js): `chromium: avatar sizes its circle, names its initials and overlaps a group`. Default, small and large sizes, circle radius, image and initials names in the accessibility tree, and the group overlap in LTR and RTL. No spoken-output assertion.
+
 <a id="tooltips"></a>
 
 ## Tooltips
@@ -535,6 +588,38 @@ Web adaptation: CSS-only; the author supplies an accessible waiting message.
 - integration: The framework requires a named status while Google recommends progressbar; an indeterminate progressbar validly omits aria-valuenow. Next: Record this current contract difference; test meaningful waiting text and spoken delivery. Choose a progress indicator initially when a transition to determinate progress is expected.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining progress and loading variants stop spatial motion`. Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
+
+<a id="skeleton"></a>
+
+## Skeleton
+
+**implemented within the stated scope.** Box, text line and circle shapes with a shimmer that reverses in RTL, stops under reduced motion and keeps an outline in forced colors.
+
+Source review: source-reviewed, 2026-10-06. [src/sass/components/_skeleton.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/src/sass/components/_skeleton.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: Empty decorative blocks; the page marks the loading region aria-busy and reports the wait through a status.
+
+- verification: The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified. Next: Load content into an aria-busy region with a screen reader and confirm the status is announced once and the skeletons are not; test forced colors.
+
+- not-recorded: [tests/skeleton-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/tests/skeleton-browser.test.js): `chromium: skeleton shimmers, stops under reduced motion and stays out of the accessibility tree`. Running shimmer animation, its removal under reduced motion, reversed direction in RTL, text and circle geometry and no skeleton nodes in the accessibility tree. No spoken-output assertion.
+
+<a id="empty-state"></a>
+
+## Empty state
+
+**implemented within the stated scope.** Centered icon in a tonal circle or an illustration, a heading, supporting text and a wrapping row of actions.
+
+Source review: source-reviewed, 2026-10-06. [src/sass/components/_empty-state.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/src/sass/components/_empty-state.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: A plain div around authored heading, text and buttons; the page picks the heading level.
+
+- verification: Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified. Next: Empty a filtered list with a screen reader and confirm the change is announced; test enlarged text and narrow widths.
+
+- not-recorded: [tests/empty-state-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/80111633eac02fcc2f8dff3b9b57db82514b5c7c/tests/empty-state-browser.test.js): `chromium: empty state centers its content and rings the leading icon`. Centered column, icon circle size and fill, text width cap, centered wrapping actions and an empty alt image left out of the accessibility tree. No spoken-output assertion.
 
 <a id="carousel"></a>
 
