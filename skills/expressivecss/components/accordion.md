@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `e9512407b7715e32b96e27fbb6839130649860e7919a7fef1ecda4266fa58101`
+Contract SHA-256: `77049dd02d80b2517b41efda78166b7eea58d65a5f2ead006001a766e41ace3a`
 
 #### Selection and adaptation
 
@@ -70,7 +70,7 @@ The following are end-state semantic invariants. The rule IDs come directly from
 
 - `accordion-items-are-details`: Write every accordion item as <details> with a <summary>. The element is the disclosure: a div with a click handler has no expanded state and no keyboard support.
 - `accordion-summary-holds-no-controls`: A <summary> is already the toggle button. A link or control inside it is a control nested in a control: pressing it also opens or closes the item, and screen readers flatten it into the summary name. Put actions in the panel.
-- `accordion-summary-state-is-native`: The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role or aria-expanded overrides that and goes stale the first time the item toggles.
+- `accordion-summary-state-is-native`: The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role="button" repeats it, and an authored aria-expanded goes stale the first time the item toggles.
 
 #### Guide checks
 

@@ -14,7 +14,7 @@
 //
 // Tokens:
 //   --md-comp-skeleton-color          surface-container-highest
-//   --md-comp-skeleton-shimmer-color  on-surface 8%
+//   --md-comp-skeleton-shimmer-color  surface at 50%
 //   --md-comp-skeleton-shape          8px (text 4px)
 //   --md-comp-skeleton-circle-size    40px
 
@@ -22,7 +22,7 @@
   --md-comp-skeleton-color: var(--md-sys-color-surface-container-highest);
   --md-comp-skeleton-shimmer-color: color-mix(
     in oklab,
-    var(--md-sys-color-on-surface) 8%,
+    var(--md-sys-color-surface) 50%,
     transparent
   );
   --md-comp-skeleton-shape: 8px;

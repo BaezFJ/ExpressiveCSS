@@ -83,5 +83,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   const css = readFileSync(`${root}/dist/css/expressive.min.css`, 'utf8').replace(/\/\*# sourceMappingURL=.*?\*\//, '').trimEnd();
   // Reviewed TypeScript roadmap and cross-browser fixes: 45,117 gzip bytes (+475).
   assert.ok(sizes(js).gzip <= 45119, `JavaScript gzip: ${sizes(js).gzip}`);
-  assert.ok(sizes(css).gzip <= 49675, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
+  assert.ok(sizes(css).gzip <= 50062, `CSS gzip: ${sizes(css).gzip}`);
 });

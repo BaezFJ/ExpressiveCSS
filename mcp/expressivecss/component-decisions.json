@@ -1919,7 +1919,7 @@
         "sources": [
           {
             "path": "src/sass/components/_accordion.scss",
-            "sha256": "3a3a72385c217265dbf90b85277bb381fce2346796dbdc4a4f6e16010dbc6711"
+            "sha256": "cd9c2657f1f840f721575335ffd05d8cd176b2f94c37637341121485901833ee"
           }
         ],
         "gaps": [
@@ -3081,7 +3081,7 @@
         "sources": [
           {
             "path": "src/sass/components/_skeleton.scss",
-            "sha256": "6bd759a77d0c53af809ebfdbec53eae24ec6eb2d6c6fe183d4d36d3ca8e2c0fb"
+            "sha256": "f22efd82847af981cf225a0991a471e5fd25f7cdb07c1e0ec80195e937b13818"
           }
         ],
         "gaps": [
@@ -7462,5 +7462,5 @@
     "inputsUnchanged": true,
     "reportSha256": "5777e67403861540605d77c5a5055086a49e8fe086297abd8a4bb6cf399c1666"
   },
-  "sourceRevision": "80111633eac02fcc2f8dff3b9b57db82514b5c7c"
+  "sourceRevision": "a1bb4a01bec52072d5eb939c680ff1c4214c27a4"
 }

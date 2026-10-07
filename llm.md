@@ -2733,7 +2733,7 @@ A leading icon goes first in the summary, hidden from assistive technology. The 
 
 | Token | Default |
 | --- | --- |
-| `--md-comp-accordion-container-color` | `on-surface` at 8% over `surface` |
+| `--md-comp-accordion-container-color` | `surface-container` |
 | `--md-comp-accordion-shape` | 20px |
 | `--md-comp-accordion-grouped-shape` | 4px |
 | `--md-comp-accordion-gap` | 2px |
@@ -3791,7 +3791,7 @@ Skeletons say nothing to assistive technology. Mark the region being filled with
 | Token | Default |
 | --- | --- |
 | `--md-comp-skeleton-color` | `surface-container-highest` |
-| `--md-comp-skeleton-shimmer-color` | `on-surface` at 8% |
+| `--md-comp-skeleton-shimmer-color` | `surface` at 50% |
 | `--md-comp-skeleton-shape` | 8px; `text`: 4px |
 | `--md-comp-skeleton-circle-size` | 40px |
 

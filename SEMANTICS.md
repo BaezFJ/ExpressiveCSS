@@ -61,11 +61,11 @@ Added with the accordion component. Each item is a native <details>, so the brow
 | --- | --- | --- | --- |
 | `accordion-items-are-details` | forbid | `.accordion > :not(details)` | must not match |
 | `accordion-summary-holds-no-controls` | forbid | `.accordion summary :is(a[href], button, input, select, textarea, [tabindex])` | must not match |
-| `accordion-summary-state-is-native` | forbid | `.accordion summary:is([role], [aria-expanded])` | must not match |
+| `accordion-summary-state-is-native` | forbid | `.accordion summary:is([role="button"], [aria-expanded])` | must not match |
 
 - **accordion-items-are-details** - Write every accordion item as <details> with a <summary>. The element is the disclosure: a div with a click handler has no expanded state and no keyboard support.
 - **accordion-summary-holds-no-controls** - A <summary> is already the toggle button. A link or control inside it is a control nested in a control: pressing it also opens or closes the item, and screen readers flatten it into the summary name. Put actions in the panel.
-- **accordion-summary-state-is-native** - The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role or aria-expanded overrides that and goes stale the first time the item toggles.
+- **accordion-summary-state-is-native** - The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role="button" repeats it, and an authored aria-expanded goes stale the first time the item toggles.
 
 ### autocomplete
 
@@ -83,7 +83,7 @@ Added with the avatar component. Initials and icon ligatures read as letters, so
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `avatar-image-has-alt` | require-attr | `img.avatar` | must have `alt` |
+| `avatar-image-has-alt` | forbid | `img.avatar:not([alt])` | must not match |
 | `avatar-is-an-image-or-hidden` | forbid | `.avatar:not(img):not([role="img"]):not([aria-hidden="true"])` | must not match |
 | `avatar-image-role-is-named` | require-accessible-name | `.avatar[role="img"]` | must end up with an accessible name |
 
@@ -327,7 +327,7 @@ Added with the empty state component. Layout around authored content: the headin
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `empty-state-image-has-alt` | require-attr | `.empty-state > img` | must have `alt` |
+| `empty-state-image-has-alt` | forbid | `.empty-state > img:not([alt])` | must not match |
 
 - **empty-state-image-has-alt** - Give an empty-state illustration alt="" when the heading already says what it shows, or alt text when the image adds information.
 

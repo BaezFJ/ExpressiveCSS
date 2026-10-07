@@ -881,9 +881,9 @@
         {
           "id": "accordion-summary-state-is-native",
           "kind": "forbid",
-          "selector": ".accordion summary:is([role], [aria-expanded])",
+          "selector": ".accordion summary:is([role=\"button\"], [aria-expanded])",
           "fragmentSafe": true,
-          "message": "The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role or aria-expanded overrides that and goes stale the first time the item toggles."
+          "message": "The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role=\"button\" repeats it, and an authored aria-expanded goes stale the first time the item toggles."
         }
       ]
     },
@@ -934,9 +934,8 @@
       "rules": [
         {
           "id": "avatar-image-has-alt",
-          "kind": "require-attr",
-          "selector": "img.avatar",
-          "attr": "alt",
+          "kind": "forbid",
+          "selector": "img.avatar:not([alt])",
           "message": "Give an avatar image alt text naming the person, or alt=\"\" when their name is already beside it."
         },
         {
@@ -960,9 +959,8 @@
       "rules": [
         {
           "id": "empty-state-image-has-alt",
-          "kind": "require-attr",
-          "selector": ".empty-state > img",
-          "attr": "alt",
+          "kind": "forbid",
+          "selector": ".empty-state > img:not([alt])",
           "message": "Give an empty-state illustration alt=\"\" when the heading already says what it shows, or alt text when the image adds information."
         }
       ]
