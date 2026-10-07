@@ -89,7 +89,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the line chart: 49,845 gzip bytes (+1,949).
   // Reviewed stacked line charts: 50,042 gzip bytes (+197).
   // Reviewed the column chart: 50,458 gzip bytes (+416).
-  assert.ok(sizes(js).gzip <= 50458, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the bar chart: 50,589 gzip bytes (+131).
+  // Reviewed bar chart values past short bars and chart taps: 50,714 gzip bytes (+125).
+  assert.ok(sizes(js).gzip <= 50714, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -98,5 +100,7 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the line chart: 54,625 gzip bytes (+880).
   // Reviewed stacked line charts: 54,635 gzip bytes (+10).
   // Reviewed the column chart: 55,374 gzip bytes (+739).
-  assert.ok(sizes(css).gzip <= 55374, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the bar chart: 56,396 gzip bytes (+1,022).
+  // Reviewed bar chart values past short bars and forced colors: 56,532 gzip bytes (+136).
+  assert.ok(sizes(css).gzip <= 56532, `CSS gzip: ${sizes(css).gzip}`);
 });

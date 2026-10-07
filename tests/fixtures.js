@@ -46,6 +46,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<input type="text" class="date-picker">`,
   },
   {
+    name: "BarChart",
+    selector: ".bar-chart",
+    html: `<figure class="bar-chart"><figcaption>Revenue</figcaption><table><thead><tr><th>Month</th><th>Revenue</th></tr></thead><tbody><tr><th>Jan</th><td>1</td></tr><tr><th>Feb</th><td>2</td></tr></tbody></table></figure>`,
+  },
+  {
     name: "ColumnChart",
     selector: ".column-chart",
     html: `<figure class="column-chart"><figcaption>Revenue</figcaption><table><thead><tr><th>Month</th><th>Revenue</th></tr></thead><tbody><tr><th>Jan</th><td>1</td></tr><tr><th>Feb</th><td>2</td></tr></tbody></table></figure>`,

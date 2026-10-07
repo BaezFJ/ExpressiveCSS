@@ -89,6 +89,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Command palette
 - Line chart
 - Column chart
+- Bar chart
 
 ### Forms
 
@@ -290,6 +291,7 @@ Opt an element out when it needs manual options:
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
+| `BarChart` | `.bar-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
@@ -4117,6 +4119,49 @@ A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as
 
 ---
 
+## Bar chart
+
+Ranked or long-labelled categories drawn as horizontal bars from a data table, grouped, stacked or as a meter.
+
+A `<figure class="bar-chart">` takes the same `<figcaption>` and `<table>` as a column chart. `AutoInit()` draws each row as a band of bars growing from zero along the inline axis, one bar per series, with the row's label at the inline start, a legend when there is more than one series, and a highlight band and tooltip that follow the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="bar-chart track values">
+  <figcaption>Visitors by source</figcaption>
+  <table>
+    <thead>
+      <tr><th>Source</th><th>Visitors</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Search</th><td data-value="900000">900K</td></tr>
+      <tr><th>Social</th><td data-value="650000">650K</td></tr>
+      <tr><th>Email</th><td data-value="420000">420K</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- The plot is as tall as its rows: `--md-comp-bar-chart-row-height` sets each row, so a longer table makes a taller chart. Labels take up to 40% of the width and end in an ellipsis past it.
+- `stacked` draws one bar per row with each series after the total of the ones before it; only the last segment rounds its end. `split` separates stacked segments with a gap and rounds them at each joint. With `track` and `data-max` set to a budget, one stacked row is a meter of what is spent and what is left.
+- `track` draws a full-width track behind each row and rounds both ends of its bars. `values` writes each cell's text from its bar's base, in the series' on-color over the bar; a value longer than a short bar runs on past its end in the label color, and a stacked segment cuts what does not fit. `sparkline` drops the labels, grid, legend and tooltip and is not focusable.
+- Cells, series colors, `data-min`, `data-max`, negative values and gaps work as in the column chart; negative bars grow toward the inline start.
+- The plot is one Tab stop named by the caption. Up and down arrows move between rows, Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped row. In a right-to-left page, set by `dir` or CSS `direction`, the bars grow leftwards and the labels sit on the right; rows keep their order.
+- After changing the table, call `Expressive.BarChart.init(el)` again to redraw. It takes the column chart's options and methods.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-bar-chart-row-height` | 40px (sparkline 24px) |
+| `--md-comp-bar-chart-bar-height` | 60% of each row's height |
+| `--md-comp-bar-chart-shape` | 4px |
+| `--md-comp-bar-chart-track-color` | `surface-container-highest` |
+| `--md-comp-bar-chart-grid-color` | `outline-variant` |
+| `--md-comp-bar-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
+| `--md-comp-bar-chart-on-color-1` … `-4` | `on-primary`, `on-tertiary`, `on-secondary`, `surface` |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -4224,6 +4269,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
+| `BarChart` | `.bar-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |

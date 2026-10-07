@@ -1,0 +1,339 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "series", label: "Several series" },
+  { id: "stacked", label: "Stacked" },
+  { id: "values", label: "Track and values" },
+  { id: "meter", label: "Meter" },
+  { id: "cards", label: "Chart cards" },
+  { id: "scale", label: "Values and scale" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+const revenue = [4400, 5500, 4100, 3700, 2200, 4300];
+const basic = [5500, 2200, 5200, 3500, 2500, 6200];
+const premium = [4900, 2800, 1800, 3200, 4000, 5800];
+const net = [1200, -400, 800, 1500, -900, 600];
+const sources: [string, number][] = [["Search", 900000], ["Instagram", 650000], ["Facebook", 420000], ["YouTube", 260000], ["Newsletter", 27000]];
+const spending: [string, number][] = [["Ads", 1450], ["Software", 1120], ["Payroll tools", 890], ["Team events", 740]];
+const countries: [string, number][] = [["United States", 4400], ["India", 5500], ["France", 4100], ["Canada", 3700], ["United Kingdom", 2200], ["Turkey", 4300]];
+const money = (value: number) => `${value < 0 ? "−" : ""}$${Math.abs(value).toLocaleString("en-US")}`;
+const short = (value: number) => value >= 1000 ? `${Math.round(value / 1000)}K` : String(value);
+const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
+const spent = sum(spending.map(([, value]) => value));
+---
+<DocsLayout page="bar-chart">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;figure class="bar-chart"&gt;</code> draws a
+          <code>&lt;table&gt;</code> of values as horizontal bars that grow
+          from zero. The first column of the table labels each row; each
+          further column is a series named by its header cell.
+        </p>
+        <p>
+          It takes the same markup as a <a href="column-chart.html">column
+          chart</a>. Use bars when the labels are long, when the rows are a
+          ranking, or when there are more rows than fit across the page. The
+          labels sit at the inline start of each row and the plot grows with
+          the number of rows. A band and a tooltip follow the pointer, and the
+          up and down arrows move them when the chart has focus.
+        </p>
+        <figure class="bar-chart" data-markdown-ignore>
+          <figcaption>Monthly revenue, first half</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th>Revenue</th></tr></thead>
+            <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="bar-chart">
+  <figcaption>Monthly revenue, first half</figcaption>
+  <table>
+    <thead>
+      <tr><th>Month</th><th>Revenue</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>$4,400</td></tr>
+      <tr><th>Feb</th><td>$5,500</td></tr>
+      <tr><th>Mar</th><td>$4,100</td></tr>
+      <!-- One row per month -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.series}>
+        <p>
+          Each value column after the first adds a bar to every row, and a
+          legend appears. Series take <code>primary</code>,
+          <code>tertiary</code>, <code>secondary</code> and
+          <code>on-surface-variant</code> in turn. Two or three series per row
+          stay readable.
+        </p>
+        <figure class="bar-chart" data-markdown-ignore>
+          <figcaption>Subscriptions by plan</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th>Basic</th><th>Premium</th></tr></thead>
+            <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{basic[i].toLocaleString("en-US")}</td><td>{premium[i].toLocaleString("en-US")}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="bar-chart">
+  <figcaption>Subscriptions by plan</figcaption>
+  <table>
+    <thead>
+      <tr><th>Month</th><th>Basic</th><th>Premium</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>5,500</td><td>4,900</td></tr>
+      <!-- One row per month -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.stacked}>
+        <p>
+          <code>stacked</code> draws one bar per row with each series after
+          the ones before it, so the bar's length is the total. Only the last
+          segment rounds its end. Stack values that add up and keep them
+          positive; an empty cell leaves the total unknown, so the segments
+          after it are left out.
+        </p>
+        <figure class="bar-chart stacked" data-markdown-ignore>
+          <figcaption>Subscriptions by plan, stacked</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th>Basic</th><th>Premium</th></tr></thead>
+            <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{basic[i].toLocaleString("en-US")}</td><td>{premium[i].toLocaleString("en-US")}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="bar-chart stacked">
+  <figcaption>Subscriptions by plan, stacked</figcaption>
+  <table><!-- … --></table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.values}>
+        <p>
+          <code>track</code> draws a full-width track behind each row and
+          rounds both ends of its bars. <code>values</code> writes each cell's
+          text from its bar's base, so a ranking reads without the tooltip.
+          Over the bar the text takes the series' on-color; a value longer
+          than a short bar runs on past its end in the label color. Put the
+          number in <code>data-value</code> when the text is abbreviated.
+        </p>
+        <figure class="bar-chart track values" style="--md-comp-bar-chart-row-height: 48px; --md-comp-bar-chart-shape: 12px; --md-comp-bar-chart-grid-color: transparent" data-markdown-ignore>
+          <figcaption>Visitors by source</figcaption>
+          <table>
+            <thead><tr><th>Source</th><th>Visitors</th></tr></thead>
+            <tbody>{sources.map(([source, value]) => <tr><th>{source}</th><td data-value={value}>{short(value)}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="bar-chart track values" style="
+    --md-comp-bar-chart-row-height: 48px;
+    --md-comp-bar-chart-shape: 12px;
+    --md-comp-bar-chart-grid-color: transparent">
+  <figcaption>Visitors by source</figcaption>
+  <table>
+    <thead>
+      <tr><th>Source</th><th>Visitors</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Search</th><td data-value="900000">900K</td></tr>
+      <tr><th>Instagram</th><td data-value="650000">650K</td></tr>
+      <!-- One row per source -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.meter}>
+        <p>
+          One stacked row with a <code>track</code> and a
+          <code>data-max</code> is a meter: the segments are what is used and
+          the track is what is left. <code>split</code> separates the segments
+          with a gap and rounds them at each joint. The legend names them and
+          the tooltip lists every cell. In a stacked bar, <code>values</code>
+          keeps each segment's text inside it and cuts what does not fit.
+        </p>
+        <article class="outlined" data-markdown-ignore>
+          <dl class="stats my-0">
+            <div><dt>Spending limit</dt><dd>{money(spent)}</dd><dd class="stat-change">of $10,000 this month</dd></div>
+          </dl>
+          <figure class="bar-chart stacked split track" data-max="10000" style="--md-comp-bar-chart-bar-height: 100%; --md-comp-bar-chart-shape: 8px; --md-comp-bar-chart-grid-color: transparent">
+            <figcaption class="visually-hidden">Spending by category, April</figcaption>
+            <table>
+              <thead><tr><th>Month</th>{spending.map(([name]) => <th>{name}</th>)}</tr></thead>
+              <tbody><tr><th>Apr</th>{spending.map(([, value]) => <td>{money(value)}</td>)}</tr></tbody>
+            </table>
+          </figure>
+        </article>
+<Code code={`
+<article class="outlined">
+  <dl class="stats my-0">
+    <div>
+      <dt>Spending limit</dt>
+      <dd>${money(spent)}</dd>
+      <dd class="stat-change">of $10,000 this month</dd>
+    </div>
+  </dl>
+  <figure class="bar-chart stacked split track" data-max="10000" style="
+      --md-comp-bar-chart-bar-height: 100%;
+      --md-comp-bar-chart-shape: 8px;
+      --md-comp-bar-chart-grid-color: transparent">
+    <figcaption class="visually-hidden">Spending by category, April</figcaption>
+    <table>
+      <thead>
+        <tr><th>Month</th><th>Ads</th><th>Software</th><th>Payroll tools</th><th>Team events</th></tr>
+      </thead>
+      <tbody>
+        <tr><th>Apr</th><td>$1,450</td><td>$1,120</td><td>$890</td><td>$740</td></tr>
+      </tbody>
+    </table>
+  </figure>
+</article>
+`} />
+        <p>
+          <code>sparkline</code> drops the label, grid, legend and tooltip,
+          for a bar beside a figure that already explains it.
+        </p>
+  </Section>
+  <Section {...S.cards}>
+        <p>
+          A chart goes in a card with the figures it explains. Labels take up
+          to 40% of the width and end in an ellipsis past it. The card adds no
+          chart styles; size a chart with its tokens.
+        </p>
+        <article class="outlined" data-markdown-ignore>
+          <dl class="stats my-0">
+            <div><dt>Total revenue</dt><dd>{money(sum(countries.map(([, value]) => value)))}</dd><dd class="stat-change up">+14.5% from last year</dd></div>
+          </dl>
+          <figure class="bar-chart values" style="--md-comp-bar-chart-grid-color: transparent">
+            <figcaption class="visually-hidden">Revenue by country</figcaption>
+            <table>
+              <thead><tr><th>Country</th><th>Revenue</th></tr></thead>
+              <tbody>{countries.map(([country, value]) => <tr><th>{country}</th><td>{money(value)}</td></tr>)}</tbody>
+            </table>
+          </figure>
+        </article>
+<Code code={`
+<article class="outlined">
+  <dl class="stats my-0">…</dl>
+  <figure class="bar-chart values"
+          style="--md-comp-bar-chart-grid-color: transparent">
+    <figcaption class="visually-hidden">Revenue by country</figcaption>
+    <table><!-- … --></table>
+  </figure>
+</article>
+`} />
+  </Section>
+  <Section {...S.scale}>
+        <p>
+          Cells read as in a column chart: a cell's number is its text without
+          currency signs, percent signs or grouping commas, and text that is
+          not a single number is a gap. In a grouped chart a gap leaves an
+          empty slot, so the other series stay in place.
+        </p>
+        <p>
+          The value axis always includes zero, with 10% of the span to spare
+          past the longest bar and, when there are negative values, before the
+          shortest. Negative bars grow toward the inline start and round that
+          end. Set <code>data-min</code> or <code>data-max</code> on the
+          figure to fix either end.
+        </p>
+        <figure class="bar-chart values" data-markdown-ignore>
+          <figcaption>Net cash flow, first half</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th>Net</th></tr></thead>
+            <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{money(net[i])}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="bar-chart values">
+  <figcaption>Net cash flow, first half</figcaption>
+  <table>
+    <thead><tr><th>Month</th><th>Net</th></tr></thead>
+    <tbody>
+      <tr><th>Jan</th><td>$1,200</td></tr>
+      <tr><th>Feb</th><td>−$400</td></tr>
+      <!-- One row per month -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The table is the chart's text alternative. Give it a header row and
+          a header cell per row, and name the chart with a
+          <code>&lt;figcaption&gt;</code>. The drawn bars, values, labels and
+          legend are hidden from assistive technology.
+        </p>
+        <p>
+          The plot is one Tab stop named by the caption. Up and down arrows
+          move between rows, Home and End jump to the ends and Escape hides
+          the tooltip. On a touch screen, tap a row to show it. In a
+          right-to-left page the labels sit on the right and
+          the bars grow leftwards; the rows keep their order. The tooltip is a
+          polite live region, so a screen reader hears each row's values as it
+          moves. A sparkline is not focusable. In forced colors the bars keep
+          their series colors so the legend still keys them.
+        </p>
+  </Section>
+  <Section {...S.javascript}>
+        <p>
+          <code>AutoInit()</code> starts every <code>.bar-chart</code>. To
+          start one yourself, or to redraw a chart after changing its table,
+          call <code>BarChart.init</code> again. It takes the column chart's
+          options and methods.
+        </p>
+<Code code={`
+const chart = Expressive.BarChart.init(document.querySelector('.bar-chart'), {
+  max: 10000
+});
+chart.show(2);   // highlight the third row; -1 hides the tooltip
+chart.destroy(); // remove the drawing and show the table again
+`} />
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>min</code></td><td><code>null</code></td><td>Lowest value. <code>data-min</code> overrides it.</td></tr>
+            <tr><td><code>max</code></td><td><code>null</code></td><td>Highest value. <code>data-max</code> overrides it.</td></tr>
+          </tbody>
+        </table>
+  </Section>
+  <Section {...S.tokens}>
+        <p>
+          Override these on the <code>.bar-chart</code>. The plot is as tall
+          as its rows, so the shared <code>--md-comp-bar-chart-height</code>
+          has no effect.
+        </p>
+        <TokenTable>
+          <tr><td><code>--md-comp-bar-chart-row-height</code></td><td>40px, 24px for a sparkline</td></tr>
+          <tr><td><code>--md-comp-bar-chart-bar-height</code></td><td>60% of each row's height</td></tr>
+          <tr><td><code>--md-comp-bar-chart-shape</code></td><td>4px</td></tr>
+          <tr><td><code>--md-comp-bar-chart-track-color</code></td><td><code>--md-sys-color-surface-container-highest</code></td></tr>
+          <tr><td><code>--md-comp-bar-chart-grid-color</code></td><td><code>--md-sys-color-outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-bar-chart-color-1</code></td><td><code>--md-sys-color-primary</code></td></tr>
+          <tr><td><code>--md-comp-bar-chart-color-2</code></td><td><code>--md-sys-color-tertiary</code></td></tr>
+          <tr><td><code>--md-comp-bar-chart-color-3</code></td><td><code>--md-sys-color-secondary</code></td></tr>
+          <tr><td><code>--md-comp-bar-chart-color-4</code></td><td><code>--md-sys-color-on-surface-variant</code></td></tr>
+          <tr><td><code>--md-comp-bar-chart-on-color-1</code> … <code>-4</code></td><td><code>on-primary</code>, <code>on-tertiary</code>, <code>on-secondary</code>, <code>surface</code>; text from <code>values</code></td></tr>
+        </TokenTable>
+        <p>For a selective Sass build, include <code>"bar-chart"</code> in <code>$components</code>.</p>
+  </Section>
+</PageBody>
+</DocsLayout>

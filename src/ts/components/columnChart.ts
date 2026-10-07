@@ -66,6 +66,8 @@ export class ColumnChart extends LineChart {
           column.classList.toggle('negative', !series.base && to < from);
           column.style.setProperty('--top', `${clamp(Math.max(from, to))}%`);
           column.style.setProperty('--bottom', `${100 - clamp(Math.min(from, to))}%`);
+          // The cell text, which a bar chart with .values writes along its bar.
+          if (this._horizontal) column.dataset.text = series.text[index];
         }
         row.append(column);
       });

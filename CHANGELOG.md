@@ -7,6 +7,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.bar-chart` draws a `<figure>`'s data table as horizontal bars from zero,
+  with each row's label beside it, a legend, and a highlight band and tooltip
+  that follow the pointer or the up and down arrows. The plot grows with its
+  rows. `stacked`, `split`, `track`, `values` and `sparkline` vary it: `values`
+  writes each cell from its bar's base, running past a short bar, and a
+  stacked, split row on a track with `data-max` is a meter. It shares the column chart's runtime and markup, and
+  the bars grow leftwards in a right-to-left page.
+- Line, column and bar charts: a tap on a touch screen shows the tapped row
+  instead of the first, keeps it when the finger lifts, and hides it when the
+  page scrolls.
 - `.column-chart` draws a `<figure>`'s data table as columns from zero, one
   group per row, with x labels, a legend, and a highlight band and tooltip that
   follow the pointer or the arrow keys. `stacked`, `fade`, `track` and
