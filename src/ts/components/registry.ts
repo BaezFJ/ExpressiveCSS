@@ -39,6 +39,7 @@ export const AUTO_INIT_COMPONENTS = {
   },
   Carousel: { component: Components.Carousel, selector: ".carousel" },
   Chips: { component: Components.Chips, selector: ".chips" },
+  ColumnChart: { component: Components.ColumnChart, selector: ".column-chart" },
   CommandPalette: {
     component: Components.CommandPalette,
     selector: "dialog.command-palette",

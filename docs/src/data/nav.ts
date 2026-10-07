@@ -349,6 +349,13 @@ export const NAV: DocsGroup[] = [
           "Trends over time drawn from a data table, with a tooltip, a legend and a sparkline size.",
       },
       {
+        id: "column-chart",
+        label: "Column chart",
+        route: "/column-chart.html",
+        description:
+          "Values compared across categories or periods, drawn as columns from a data table, grouped or stacked.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",

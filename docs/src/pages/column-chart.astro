@@ -1,0 +1,433 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "series", label: "Several series" },
+  { id: "stacked", label: "Stacked" },
+  { id: "styles", label: "Fade and track" },
+  { id: "sparkline", label: "Sparkline" },
+  { id: "cards", label: "Chart cards" },
+  { id: "scale", label: "Values and scale" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const revenue = [4400, 3400, 3700, 4900, 4600, 5000, 5500, 4000, 4500, 5000, 4000, 5500];
+const basic = [5500, 6400, 7600, 5900, 5800, 7600];
+const premium = [3500, 3200, 3400, 4000, 4300, 4300];
+const enterprise = [3200, 3700, 2700, 3100, 4500, 4100];
+const expenses = [2500, 2200, 2500, 1900, 2300, 2500, 2300, 2100, 2400, 2500, 2200, 2600];
+const profit = [1500, 1200, 1600, 1300, 1400, 1500, 1200, 1100, 2000, 2100, 1800, 2300];
+const net = [1200, -400, 800, 1500, -900, 600];
+const signups = [42, 38, 51, 47, 56, 61, 58];
+const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const money = (value: number) => `${value < 0 ? "−" : ""}$${Math.abs(value).toLocaleString("en-US")}`;
+const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
+// The card's stat for the last 12 and 6 months: total revenue and its profit margin.
+const [year, half] = [12, 6].map((count) => {
+  const income = sum(revenue.slice(-count));
+  return { total: money(income), change: `${((sum(profit.slice(-count)) / income) * 100).toFixed(1)}% profit margin` };
+});
+const cardScript = `const card = document.getElementById('profit-card');
+const figure = card.querySelector('.column-chart');
+const body = figure.querySelector('tbody');
+const rows = [...body.rows];
+card.querySelectorAll('[data-period]').forEach((button) => {
+  button.addEventListener('click', () => {
+    body.replaceChildren(...rows.slice(-Number(button.dataset.period)));
+    card.querySelector('.stats dd').textContent = button.dataset.total;
+    card.querySelector('.stat-change').textContent = button.dataset.change;
+    Expressive.ColumnChart.init(figure);
+  });
+});`;
+---
+<DocsLayout page="column-chart">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;figure class="column-chart"&gt;</code> draws a
+          <code>&lt;table&gt;</code> of values as columns that grow from zero.
+          The first column of the table labels each group; each further column
+          is a series named by its header cell.
+        </p>
+        <p>
+          It takes the same markup as a <a href="line-chart.html">line chart</a>.
+          JavaScript draws the chart from the table and hides the table
+          visually, so a screen reader still reads the data as a table. Without
+          JavaScript the table shows. A band and a tooltip follow the pointer,
+          and the arrow keys move them when the chart has focus.
+        </p>
+        <figure class="column-chart" data-markdown-ignore>
+          <figcaption>Monthly revenue, 2026</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th>Revenue</th></tr></thead>
+            <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="column-chart">
+  <figcaption>Monthly revenue, 2026</figcaption>
+  <table>
+    <thead>
+      <tr><th>Month</th><th>Revenue</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>$4,400</td></tr>
+      <tr><th>Feb</th><td>$3,400</td></tr>
+      <tr><th>Mar</th><td>$3,700</td></tr>
+      <!-- One row per month -->
+    </tbody>
+  </table>
+</figure>
+`} />
+        <p>
+          The tooltip shows each cell's text as written, so format values in
+          the table.
+        </p>
+  </Section>
+  <Section {...S.series}>
+        <p>
+          Each value column after the first adds a column to every group, and
+          a legend appears. Series take <code>primary</code>,
+          <code>tertiary</code>, <code>secondary</code> and
+          <code>on-surface-variant</code> in turn. Keep a grouped chart to two
+          or three series; past that, the columns get too thin to compare.
+        </p>
+        <figure class="column-chart" data-markdown-ignore>
+          <figcaption>Subscriptions by plan, first half</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th>Basic</th><th>Premium</th><th>Enterprise</th></tr></thead>
+            <tbody>{months.slice(0, 6).map((month, i) => <tr><th>{month}</th><td>{basic[i].toLocaleString("en-US")}</td><td>{premium[i].toLocaleString("en-US")}</td><td>{enterprise[i].toLocaleString("en-US")}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="column-chart">
+  <figcaption>Subscriptions by plan, first half</figcaption>
+  <table>
+    <thead>
+      <tr><th>Month</th><th>Basic</th><th>Premium</th><th>Enterprise</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>5,500</td><td>3,500</td><td>3,200</td></tr>
+      <!-- One row per month -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.stacked}>
+        <p>
+          <code>stacked</code> draws one column per group, with each series on
+          top of the ones before it, so the column's height is the total. Only
+          the top segment rounds its end. The tooltip still shows each cell.
+          Stack values that add up and keep them positive; an empty cell leaves
+          the total unknown, so the segments above it are left out.
+        </p>
+        <figure class="column-chart stacked" data-markdown-ignore>
+          <figcaption>Subscriptions by plan, stacked</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th>Basic</th><th>Premium</th><th>Enterprise</th></tr></thead>
+            <tbody>{months.slice(0, 6).map((month, i) => <tr><th>{month}</th><td>{basic[i].toLocaleString("en-US")}</td><td>{premium[i].toLocaleString("en-US")}</td><td>{enterprise[i].toLocaleString("en-US")}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="column-chart stacked">
+  <figcaption>Subscriptions by plan, stacked</figcaption>
+  <table><!-- … --></table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.styles}>
+        <p>
+          <code>fade</code> fades each column toward its base.
+          <code>track</code> draws a full-height track behind each group and
+          rounds both ends of its columns; narrow the columns with
+          <code>--md-comp-column-chart-column-width</code> to make them bars on
+          a rail.
+        </p>
+        <div class="row" data-markdown-ignore>
+          <div class="s12 m6">
+          <figure class="column-chart fade">
+            <figcaption>Revenue, first half</figcaption>
+            <table>
+              <thead><tr><th>Month</th><th>Revenue</th></tr></thead>
+              <tbody>{months.slice(0, 6).map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td></tr>)}</tbody>
+            </table>
+          </figure>
+          </div>
+          <div class="s12 m6">
+          <figure class="column-chart track" style="--md-comp-column-chart-column-width: 24%; --md-comp-column-chart-shape: 8px; --md-comp-column-chart-grid-color: transparent">
+            <figcaption>Revenue, second half</figcaption>
+            <table>
+              <thead><tr><th>Month</th><th>Revenue</th></tr></thead>
+              <tbody>{months.slice(6).map((month, i) => <tr><th>{month}</th><td>{money(revenue[i + 6])}</td></tr>)}</tbody>
+            </table>
+          </figure>
+          </div>
+        </div>
+<Code code={`
+<figure class="column-chart fade">
+  <figcaption>Revenue, first half</figcaption>
+  <table><!-- … --></table>
+</figure>
+
+<figure class="column-chart track" style="
+    --md-comp-column-chart-column-width: 24%;
+    --md-comp-column-chart-shape: 8px;
+    --md-comp-column-chart-grid-color: transparent">
+  <figcaption>Revenue, second half</figcaption>
+  <table><!-- … --></table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.sparkline}>
+        <p>
+          <code>sparkline</code> is a 48px chart with no grid, labels, legend or
+          tooltip, for a count beside a figure. Hide its caption with
+          <code>visually-hidden</code> when the tile already names it.
+        </p>
+        <dl class="stats" data-markdown-ignore>
+          <div>
+            <dt>Signups this week</dt><dd>{sum(signups)}</dd><dd class="stat-change up">+12% from last week</dd>
+            <dd>
+              <figure class="column-chart sparkline my-0">
+                <figcaption class="visually-hidden">Signups per day this week</figcaption>
+                <table>
+                  <thead><tr><th>Day</th><th>Signups</th></tr></thead>
+                  <tbody>{days.map((day, i) => <tr><th>{day}</th><td>{signups[i]}</td></tr>)}</tbody>
+                </table>
+              </figure>
+            </dd>
+          </div>
+        </dl>
+<Code code={`
+<dl class="stats">
+  <div>
+    <dt>Signups this week</dt>
+    <dd>${sum(signups)}</dd>
+    <dd class="stat-change up">+12% from last week</dd>
+    <dd>
+      <figure class="column-chart sparkline my-0">
+        <figcaption class="visually-hidden">Signups per day this week</figcaption>
+        <table><!-- … --></table>
+      </figure>
+    </dd>
+  </div>
+</dl>
+`} />
+  </Section>
+  <Section {...S.cards}>
+        <p>
+          A chart goes in a card with the figures it explains. Put the period
+          switch beside the stat; on a change, update the stat, swap the table
+          rows and call <code>ColumnChart.init</code> to redraw. The card adds
+          no chart styles; size a chart with its tokens.
+        </p>
+        <article class="outlined" id="profit-card" data-markdown-ignore>
+          <div class="flex flex-wrap justify-between align-start gap-3">
+            <dl class="stats my-0">
+              <div><dt>Revenue</dt><dd>{year.total}</dd><dd class="stat-change">{year.change}</dd></div>
+            </dl>
+            <div class="button-group connected xsmall" data-selection="single" data-selection-required role="group" aria-label="Period">
+              <button type="button" class="button tonal" aria-pressed="true" data-period="12" data-total={year.total} data-change={year.change}>Year</button>
+              <button type="button" class="button tonal" aria-pressed="false" data-period="6" data-total={half.total} data-change={half.change}>6 months</button>
+            </div>
+          </div>
+          <figure class="column-chart stacked">
+            <figcaption class="visually-hidden">Expenses and profit per month</figcaption>
+            <table>
+              <thead><tr><th>Month</th><th>Expenses</th><th>Profit</th></tr></thead>
+              <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{money(expenses[i])}</td><td>{money(profit[i])}</td></tr>)}</tbody>
+            </table>
+          </figure>
+        </article>
+<script is:inline set:html={`{\n${cardScript}\n}`}></script>
+<Code code={`
+<article class="outlined" id="profit-card">
+  <div class="flex flex-wrap justify-between align-start gap-3">
+    <dl class="stats my-0">
+      <div>
+        <dt>Revenue</dt>
+        <dd>${year.total}</dd>
+        <dd class="stat-change">${year.change}</dd>
+      </div>
+    </dl>
+    <div class="button-group connected xsmall" data-selection="single"
+         data-selection-required role="group" aria-label="Period">
+      <button type="button" class="button tonal" aria-pressed="true"
+              data-period="12" data-total="${year.total}"
+              data-change="${year.change}">Year</button>
+      <button type="button" class="button tonal" aria-pressed="false"
+              data-period="6" data-total="${half.total}"
+              data-change="${half.change}">6 months</button>
+    </div>
+  </div>
+  <figure class="column-chart stacked">
+    <figcaption class="visually-hidden">Expenses and profit per month</figcaption>
+    <table><!-- … --></table>
+  </figure>
+</article>
+
+<script>
+${cardScript.replace(/^/gm, "  ")}
+</script>
+`} />
+        <p>
+          For a compact card, set the height, widen the columns and clear the
+          grid. A sparkline with <code>flex-1</code> beside the figures fills
+          the rest of a short tile.
+        </p>
+        <div class="flex flex-column gap-3" data-markdown-ignore>
+            <article class="outlined">
+              <dl class="stats my-0">
+                <div><dt>Signups this week</dt><dd>{sum(signups)}</dd><dd class="stat-change up">+12% from last week</dd></div>
+              </dl>
+              <figure class="column-chart" style="--md-comp-column-chart-height: 120px; --md-comp-column-chart-column-width: 80%; --md-comp-column-chart-grid-color: transparent">
+                <figcaption class="visually-hidden">Signups per day this week</figcaption>
+                <table>
+                  <thead><tr><th>Day</th><th>Signups</th></tr></thead>
+                  <tbody>{days.map((day, i) => <tr><th>{day}</th><td>{signups[i]}</td></tr>)}</tbody>
+                </table>
+              </figure>
+            </article>
+            <article class="outlined">
+              <div class="flex align-center justify-between gap-3">
+                <dl class="stats my-0">
+                  <div><dt>Revenue</dt><dd>{money(sum(revenue))}</dd><dd class="stat-change up">+6.2% from last year</dd></div>
+                </dl>
+                <figure class="column-chart sparkline flex-1 my-0" style="--md-comp-column-chart-height: 72px">
+                  <figcaption class="visually-hidden">Monthly revenue, 2026</figcaption>
+                  <table>
+                    <thead><tr><th>Month</th><th>Revenue</th></tr></thead>
+                    <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td></tr>)}</tbody>
+                  </table>
+                </figure>
+              </div>
+            </article>
+        </div>
+<Code code={`
+<article class="outlined">
+  <dl class="stats my-0">…</dl>
+  <figure class="column-chart" style="
+      --md-comp-column-chart-height: 120px;
+      --md-comp-column-chart-column-width: 80%;
+      --md-comp-column-chart-grid-color: transparent">
+    <figcaption class="visually-hidden">Signups per day this week</figcaption>
+    <table><!-- … --></table>
+  </figure>
+</article>
+
+<article class="outlined">
+  <div class="flex align-center justify-between gap-3">
+    <dl class="stats my-0">…</dl>
+    <figure class="column-chart sparkline flex-1 my-0"
+            style="--md-comp-column-chart-height: 72px">
+      <figcaption class="visually-hidden">Monthly revenue, 2026</figcaption>
+      <table><!-- … --></table>
+    </figure>
+  </div>
+</article>
+`} />
+  </Section>
+  <Section {...S.scale}>
+        <p>
+          Cells read as in a line chart: a cell's number is its text without
+          currency signs, percent signs or grouping commas, and text that is
+          not a single number is a gap. Put the number in
+          <code>data-value</code> for <code>4.4k</code> or
+          <code>4.400 €</code>. In a grouped chart a gap leaves an empty slot,
+          so the other series stay in place.
+        </p>
+        <p>
+          The y axis always includes zero, with 10% of the span to spare above
+          and, when there are negative values, below. Negative columns hang
+          below zero and round their lower end. Set <code>data-min</code> or
+          <code>data-max</code> on the figure to fix either end; when zero is
+          off the scale, columns start at the bottom of the plot.
+        </p>
+        <figure class="column-chart" data-markdown-ignore>
+          <figcaption>Net cash flow, first half</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th>Net</th></tr></thead>
+            <tbody>{months.slice(0, 6).map((month, i) => <tr><th>{month}</th><td>{money(net[i])}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="column-chart">
+  <figcaption>Net cash flow, first half</figcaption>
+  <table>
+    <thead><tr><th>Month</th><th>Net</th></tr></thead>
+    <tbody>
+      <tr><th>Jan</th><td>$1,200</td></tr>
+      <tr><th>Feb</th><td>−$400</td></tr>
+      <!-- One row per month -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The table is the chart's text alternative. Give it a header row and
+          a header cell per row, and name the chart with a
+          <code>&lt;figcaption&gt;</code>. The drawn columns, labels and legend
+          are hidden from assistive technology.
+        </p>
+        <p>
+          The plot is one Tab stop named by the caption. Left and right arrows
+          move between groups, Home and End jump to the ends and Escape hides
+          the tooltip. In a right-to-left page the groups run from right to
+          left, and the arrows still move the band the way they point. The
+          tooltip is a polite live region, so a screen reader hears each
+          group's values as it moves. A sparkline is not focusable. In forced
+          colors the columns keep their series colors so the legend still keys
+          them.
+        </p>
+  </Section>
+  <Section {...S.javascript}>
+        <p>
+          <code>AutoInit()</code> starts every <code>.column-chart</code>. To
+          start one yourself, or to redraw a chart after changing its table,
+          call <code>ColumnChart.init</code> again. It takes the line chart's
+          options and methods.
+        </p>
+<Code code={`
+const chart = Expressive.ColumnChart.init(document.querySelector('.column-chart'), {
+  max: 10000
+});
+chart.show(2);   // highlight the third group; -1 hides the tooltip
+chart.destroy(); // remove the drawing and show the table again
+`} />
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>min</code></td><td><code>null</code></td><td>Lowest y value. <code>data-min</code> overrides it.</td></tr>
+            <tr><td><code>max</code></td><td><code>null</code></td><td>Highest y value. <code>data-max</code> overrides it.</td></tr>
+          </tbody>
+        </table>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.column-chart</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-column-chart-height</code></td><td>240px, 48px for a sparkline</td></tr>
+          <tr><td><code>--md-comp-column-chart-column-width</code></td><td>60% of each group's width</td></tr>
+          <tr><td><code>--md-comp-column-chart-shape</code></td><td>4px</td></tr>
+          <tr><td><code>--md-comp-column-chart-track-color</code></td><td><code>--md-sys-color-surface-container-highest</code></td></tr>
+          <tr><td><code>--md-comp-column-chart-grid-color</code></td><td><code>--md-sys-color-outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-column-chart-color-1</code></td><td><code>--md-sys-color-primary</code></td></tr>
+          <tr><td><code>--md-comp-column-chart-color-2</code></td><td><code>--md-sys-color-tertiary</code></td></tr>
+          <tr><td><code>--md-comp-column-chart-color-3</code></td><td><code>--md-sys-color-secondary</code></td></tr>
+          <tr><td><code>--md-comp-column-chart-color-4</code></td><td><code>--md-sys-color-on-surface-variant</code></td></tr>
+        </TokenTable>
+        <p>For a selective Sass build, include <code>"column-chart"</code> in <code>$components</code>.</p>
+  </Section>
+</PageBody>
+</DocsLayout>

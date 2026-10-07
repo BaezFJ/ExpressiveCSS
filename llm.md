@@ -88,6 +88,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Toolbars
 - Command palette
 - Line chart
+- Column chart
 
 ### Forms
 
@@ -289,6 +290,7 @@ Opt an element out when it needs manual options:
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
+| `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
 | `LineChart` | `.line-chart` |
@@ -4072,6 +4074,49 @@ A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The firs
 
 ---
 
+## Column chart
+
+Values compared across categories or periods, drawn as columns from a data table, grouped or stacked.
+
+A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as a line chart. The first column labels each group; each further column is a series named by its header cell. `AutoInit()` draws each row as a group of columns growing from zero, one per series, with x labels, a legend when there is more than one series, and a highlight band and tooltip that follow the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="column-chart">
+  <figcaption>Subscriptions by plan</figcaption>
+  <table>
+    <thead>
+      <tr><th>Month</th><th>Basic</th><th>Premium</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>5,500</td><td>3,500</td></tr>
+      <tr><th>Feb</th><td>6,400</td><td>3,200</td></tr>
+      <tr><th>Mar</th><td>7,600</td><td>3,400</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- `stacked` draws one column per row with each series on the total of the ones before it; only the top segment rounds its end. Keep stacked values positive; an empty cell leaves the total unknown, so the segments above it are left out. The tooltip still shows each cell.
+- `fade` fades each column toward its base; `track` draws a full-height track behind each group and rounds both ends of its columns; `sparkline` is a 48px chart with no grid, labels, legend or tooltip, and is not focusable.
+- Series take `primary`, `tertiary`, `secondary` and `on-surface-variant` in turn. A series header cell's classes reach its columns as hooks for your own styles; `dashed` has no column style.
+- Cells read as in a line chart: currency signs, percent signs and grouping commas are ignored, other text is a gap, and `data-value` gives the number. In a grouped chart a gap leaves an empty slot.
+- The y axis always includes zero, with 10% of the span to spare above and, with negative values, below. Negative columns hang from zero and round their lower end. `data-min` and `data-max` on the figure, or the `min` and `max` options, fix either end; when zero is off the scale, columns start at the plot's bottom.
+- Keyboard, RTL, the live tooltip and cards behave as for the line chart: the plot is one Tab stop named by the caption, and a `.column-chart` in a card keeps its own layout.
+- After changing the table, call `Expressive.ColumnChart.init(el)` again to redraw. `show(index)` highlights a group (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-column-chart-height` | 240px (sparkline 48px) |
+| `--md-comp-column-chart-column-width` | 60% of each group's width |
+| `--md-comp-column-chart-shape` | 4px |
+| `--md-comp-column-chart-track-color` | `surface-container-highest` |
+| `--md-comp-column-chart-grid-color` | `outline-variant` |
+| `--md-comp-column-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -4179,6 +4224,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
+| `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
 | `LineChart` | `.line-chart` |

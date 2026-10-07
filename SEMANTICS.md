@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**64 of 64 rows enforced; 0 remaining.**
+**65 of 65 rows enforced; 0 remaining.**
 
-60 of those rows are components - a part of the framework an author writes markup for.
+61 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 60 components declare conformance debt.**
+**3 of 61 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -260,6 +260,18 @@ Swept 0.8.0. The four Material 3 chip types plus a non-interactive display chip,
 - **chip-no-i-element** - <i> means idiomatic text, not icon. Use <span class="material-symbols" aria-hidden="true">.
 - **chip-icon-hidden** - A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden.
 - **filter-chip-label-for** - A filter chip is <input type="checkbox"> + <label class="chip">; the label must point at its input.
+
+### column-chart
+
+Added with the column chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn columns, labels and legend are aria-hidden.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `column-chart-is-a-figure-with-a-table` | forbid | `.column-chart:not(figure:has(> table))` | must not match |
+| `column-chart-has-a-caption` | forbid | `.column-chart:not(:has(> figcaption))` | must not match |
+
+- **column-chart-is-a-figure-with-a-table** - Write .column-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
+- **column-chart-has-a-caption** - Name a .column-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
 ### command-palette
 

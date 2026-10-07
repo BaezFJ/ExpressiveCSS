@@ -1,0 +1,134 @@
+@use "../abstracts" as *;
+
+// Column chart. The same <figure>, <figcaption> and <table> as a line
+// chart; ColumnChart draws each row as a group of columns, one per series,
+// growing from zero. The plot, tooltip, labels and legend come from chart().
+//
+// Each column is a full-height span clipped to its value with clip-path
+// inset(), using the --top and --bottom percentages ColumnChart sets, so
+// the rounded ends keep their radius at any size and resizing needs no
+// script. --zero on the columns is the baseline the columns grow from.
+//
+// Modifiers: .stacked draws one column per row with each series on the
+// ones before it, .fade fades each column toward its base, .track draws a
+// full-height track behind each row's columns, .sparkline is a small chart
+// with no axis, grid, legend or tooltip.
+//
+// Tokens:
+//   --md-comp-column-chart-height         240px (sparkline 48px)
+//   --md-comp-column-chart-column-width   60% of each row's width
+//   --md-comp-column-chart-shape          4px, the column's end radius
+//   --md-comp-column-chart-track-color    surface-container-highest
+//   --md-comp-column-chart-grid-color     outline-variant
+//   --md-comp-column-chart-color-1..4     primary, tertiary, secondary,
+//                                         on-surface-variant
+
+@include chart("column-chart");
+
+.column-chart {
+  --md-comp-column-chart-column-width: 60%;
+  --md-comp-column-chart-shape: 4px;
+  --md-comp-column-chart-track-color: var(--md-sys-color-surface-container-highest);
+}
+
+.column-chart-columns {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+
+  // A row: its columns side by side, or overlapping when stacked.
+  > div {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: 2px;
+    justify-self: center;
+    width: var(--md-comp-column-chart-column-width);
+    border-radius: var(--md-comp-column-chart-shape);
+  }
+
+  // --column-chart-tip rounds the end away from zero, --column-chart-base
+  // the end on zero.
+  > div > span {
+    --column-chart-tip: var(--md-comp-column-chart-shape);
+    --column-chart-base: 0px;
+    --column-chart-ends: var(--column-chart-tip) var(--column-chart-tip) var(--column-chart-base) var(--column-chart-base);
+
+    background-color: var(--column-chart-color);
+    clip-path: inset(var(--top, 100%) 0 var(--bottom, 0%) round var(--column-chart-ends));
+
+    // A column below zero has its tip at the bottom.
+    &.negative {
+      --column-chart-ends: var(--column-chart-base) var(--column-chart-base) var(--column-chart-tip) var(--column-chart-tip);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    > div > span {
+      transition: clip-path 400ms cubic-bezier(0.2, 0, 0, 1);
+
+      @starting-style {
+        clip-path: inset(var(--zero, 100%) 0 calc(100% - var(--zero, 100%)) round var(--column-chart-ends));
+      }
+    }
+  }
+}
+
+// One column per row, rounded only at the ends of the whole stack.
+.column-chart.stacked .column-chart-columns > div {
+  gap: 0;
+
+  > span {
+    grid-area: 1 / 1;
+
+    &:not(:last-child) {
+      --column-chart-tip: 0px;
+    }
+
+    &:not(:first-child) {
+      --column-chart-base: 0px;
+    }
+  }
+}
+
+// Each column fades from its tip toward zero.
+.column-chart.fade .column-chart-columns > div > span {
+  background: linear-gradient(var(--column-chart-color) var(--top, 100%), transparent calc(100% - var(--bottom, 0%)));
+
+  &.negative {
+    background: linear-gradient(to top, var(--column-chart-color) var(--bottom, 0%), transparent calc(100% - var(--top, 100%)));
+  }
+}
+
+.column-chart.track .column-chart-columns > div {
+  background-color: var(--md-comp-column-chart-track-color);
+
+  > span {
+    --column-chart-base: var(--md-comp-column-chart-shape);
+  }
+}
+
+// A band behind the highlighted row's columns.
+.column-chart-plot {
+  isolation: isolate;
+}
+
+.column-chart-cursor {
+  z-index: -1;
+  width: calc(100% / var(--rows, 1));
+  border-radius: var(--md-comp-column-chart-shape);
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+  translate: -50% 0;
+}
+
+@media (forced-colors: active) {
+  .column-chart-columns > div > span {
+    forced-color-adjust: none;
+  }
+
+  .column-chart-cursor {
+    outline: 1px solid CanvasText;
+  }
+}

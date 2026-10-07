@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.column-chart` draws a `<figure>`'s data table as columns from zero, one
+  group per row, with x labels, a legend, and a highlight band and tooltip that
+  follow the pointer or the arrow keys. `stacked`, `fade`, `track` and
+  `sparkline` vary it, and negative values hang below zero. It shares the line
+  chart's runtime, markup and accessibility; the table stays as the text
+  alternative and the no-JavaScript fallback.
 - Line chart: `stacked` draws each series on the total of the ones before it
   and fills the band between them, from a zero baseline. The tooltip still
   shows each cell, and an empty cell breaks the series above it. The docs add chart card layouts with a period switch, a
