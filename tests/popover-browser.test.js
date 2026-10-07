@@ -45,6 +45,13 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
         if (dir === 'ltr') near(panel.left, button.left, 'start edges align');
         else near(panel.right, button.right, 'start edges align');
 
+        const row = await page.locator('#p > .popover-actions').evaluate((el) => {
+          const r = el.getBoundingClientRect();
+          return { left: r.left, right: r.right };
+        });
+        if (dir === 'ltr') near(row.left, panel.left + 4, 'actions pull 12px into the start padding');
+        else near(row.right, panel.right - 4, 'actions pull 12px into the start padding');
+
         await page.click('#act');
         assert.equal(await open('p'), true, `${dir}: pressing a button inside keeps it open`);
         await page.keyboard.press('Escape');

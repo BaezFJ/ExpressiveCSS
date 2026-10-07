@@ -137,3 +137,70 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     }
   });
 }
+
+const items = (n) => Array.from({ length: n }, (_, i) => `<li><button type="button">Item ${i}</button></li>`).join('');
+const bounded = `<!doctype html><html lang="en"><head><style>${css} body { margin: 0 }</style></head><body>
+<main>
+  <div id="box" style="position:absolute; left:50px; top:50px; width:300px; height:300px; overflow:auto">
+    <div id="files" class="menu-trigger" data-context-menu data-target="box-menu" tabindex="0" style="height:600px">Files</div>
+    <menu id="box-menu">${items(4)}</menu>
+  </div>
+  <div id="tall" class="menu-trigger" data-context-menu data-target="tall-menu" tabindex="0"
+       style="position:absolute; left:400px; top:0; width:380px; height:590px">Tall</div>
+  <menu id="tall-menu">${items(20)}</menu>
+</main></body></html>`;
+
+for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+  test(`${name}: context menus stay inside their container and the window, scroll when tall and open at the corner without a pointer`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
+      await page.setContent(bounded);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => window.Expressive.AutoInit());
+      const box = (id) => page.locator(`#${id}`).evaluate((el) => {
+        const r = el.getBoundingClientRect();
+        return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
+      });
+      const settle = () => page.waitForTimeout(400);
+      const instance = (id) => `window.Expressive.Menu.getInstance(document.getElementById('${id}'))`;
+
+      await page.mouse.click(330, 300, { button: 'right' });
+      await settle();
+      const container = await box('box');
+      let menu = await box('box-menu');
+      assert.ok(menu.right <= container.right + 0.5 && menu.bottom <= container.bottom + 0.5, 'the menu flips to stay inside its scrolling container');
+      assert.ok(Math.abs(menu.right - 330) < 1 && Math.abs(menu.bottom - 300) < 1, 'and ends at the pointer');
+      await page.keyboard.press('Escape');
+      await settle();
+
+      await page.mouse.click(450, 100, { button: 'right' });
+      await settle();
+      menu = await box('tall-menu');
+      assert.ok(menu.top >= 0 && menu.bottom <= 600.5, `a tall menu stays inside the window, got ${menu.top}-${menu.bottom}`);
+      assert.equal(await page.locator('#tall-menu').evaluate((el) => el.scrollHeight > el.clientHeight), true, 'and scrolls');
+
+      // A second right-click lands while the entry animation still scales the menu.
+      await page.keyboard.press('Escape');
+      await settle();
+      await page.mouse.click(450, 100, { button: 'right' });
+      await page.waitForTimeout(30);
+      await page.mouse.click(700, 120, { button: 'right' });
+      await settle();
+      menu = await box('tall-menu');
+      assert.ok(Math.abs(menu.right - 700) < 1, `a quick second right-click measures the unscaled menu, got right ${menu.right}`);
+      await page.keyboard.press('Escape');
+      await settle();
+
+      await page.evaluate(`${instance('files')}.open()`);
+      await settle();
+      menu = await box('box-menu');
+      const files = await box('files');
+      assert.ok(Math.abs(menu.left - files.left) < 1, 'open() without a right-click starts at the region corner');
+      assert.ok(menu.width < files.width, 'and sizes the menu to its items, not the region');
+    } finally {
+      await browser.close();
+    }
+  });
+}

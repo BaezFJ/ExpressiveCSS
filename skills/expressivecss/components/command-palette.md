@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `bb45caa4f9d0080c31fdbaa45f354045d149666439f6392fc0b726831ad9d7bd`
+Contract SHA-256: `bdb699ab91a6c5cef7e40583e30994ae6f4869fd66f529d1d7d38db01ec4f465`
 
 #### Selection and adaptation
 
@@ -41,7 +41,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 A searchable list of commands in a dialog, opened from anywhere with a shortcut.
 
-A `<dialog class="command-palette">` holds a search `<input>`, a `<ul>` of commands and an optional `.command-palette-empty` message. Each command is an `<li>` holding a link or button: an optional leading icon, the label and an optional trailing `<kbd>` shortcut. An `<li class="label">` heads a group. Running a command clicks its link or button, so commands are ordinary links and click handlers. Commands added to the list later are picked up. `AutoInit()` starts every `dialog.command-palette`.
+A `<dialog class="command-palette">` holds a search `<input>`, a `<ul>` of commands and an optional `.command-palette-empty` message. Each command is an `<li>` holding a link or button: an optional leading icon, the label and an optional trailing `<kbd>` shortcut. An `<li class="label">` heads a group. Running a command clicks its link or button, so commands are ordinary links and click handlers. Commands added to the list later are picked up. A command the page hides with `hidden` stays hidden, and one whose button is `disabled` is shown dimmed, marked `aria-disabled` and skipped by the arrow keys. `AutoInit()` starts every `dialog.command-palette`.
 
 Ctrl+K, or Command+K on Apple platforms, opens and closes it from anywhere on the page unless the page has already handled the key, as an editor's own Ctrl+K does; a `commandfor` button with `command="show-modal"` opens it too. Typing filters the commands by their text and any `data-keywords`, ignoring case and accents, and hides a group heading whose commands are all filtered out. Focus stays in the input: the arrow keys move the active command and Enter runs it. The dialog closes on Escape and returns focus. Each opening starts with an empty search.
 

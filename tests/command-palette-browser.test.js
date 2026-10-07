@@ -19,6 +19,8 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
       <li class="label">Settings</li>
       <li><button type="button" id="theme">Café theme</button></li>
       <li><button type="button" id="keys">Keyboard shortcuts</button></li>
+      <li hidden><button type="button" id="admin">Admin tools</button></li>
+      <li><button type="button" id="publish" disabled>Publish</button></li>
     </ul>
     <p class="command-palette-empty" role="status">No matching commands</p>
   </dialog>
@@ -39,7 +41,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       });
       const isOpen = () => page.locator('#palette').evaluate((el) => el.open);
       const input = page.locator('#palette > input');
-      const visible = () => page.locator('#palette li[role="option"]:not([hidden])').evaluateAll((els) => els.map((el) => el.textContent.trim()));
+      const visible = () => page.locator('#palette li[role="option"]:not([hidden]):not([data-filtered])').evaluateAll((els) => els.map((el) => el.textContent.trim()));
       const active = () => page.evaluate(() => {
         const id = document.querySelector('#palette > input').getAttribute('aria-activedescendant');
         return id && document.getElementById(id).textContent.trim();
@@ -47,7 +49,9 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
 
       assert.equal(await input.getAttribute('role'), 'combobox');
       assert.equal(await page.locator('#palette > ul').getAttribute('role'), 'listbox');
-      assert.equal(await page.getByRole('option', { includeHidden: true }).count(), 4, 'each command is an option; headings are not');
+      assert.equal(await page.getByRole('option', { includeHidden: true }).count(), 6, 'each command is an option; headings are not');
+      assert.equal(await page.locator('#admin').evaluate((el) => el.parentElement.hidden), true, 'a command the page hid stays hidden');
+      assert.equal(await page.locator('#publish').evaluate((el) => el.parentElement.getAttribute('aria-disabled')), 'true', 'a disabled command says so');
       assert.equal(await page.locator('#new').getAttribute('tabindex'), '-1', 'commands are not Tab stops');
 
       await page.locator('#opener').focus();
@@ -61,11 +65,26 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       assert.equal(await active(), 'Open file');
       await page.keyboard.press('ArrowUp');
       await page.keyboard.press('ArrowUp');
-      assert.equal(await active(), 'Keyboard shortcuts', 'the arrows wrap');
+      assert.equal(await active(), 'Keyboard shortcuts', 'the arrows wrap, skipping disabled and hidden commands');
+
+      await page.evaluate(() => {
+        const li = document.createElement('li');
+        li.innerHTML = '<button type="button">Appended</button>';
+        document.querySelector('#palette > ul').append(li);
+      });
+      await page.waitForTimeout(50);
+      assert.equal(await active(), 'Keyboard shortcuts', 'a command the page appends keeps the active row');
+
+      await input.fill('admin');
+      assert.equal(await page.locator('.command-palette-empty').isVisible(), true, 'a hidden command is not found');
+      await input.fill('publish');
+      assert.equal(await active(), null, 'a disabled command is never active');
+      await page.keyboard.press('Enter');
+      assert.equal(await isOpen(), true, 'so Enter runs nothing');
 
       await input.fill('cafe');
       assert.deepEqual(await visible(), ['Café theme'], 'matching ignores case and accents');
-      assert.equal(await page.locator('#palette li.label:not([hidden])').count(), 1, 'an emptied group hides its heading');
+      assert.equal(await page.locator('#palette li.label:not([data-filtered])').count(), 1, 'an emptied group hides its heading');
       assert.equal(await page.locator('.command-palette-empty').isVisible(), false);
 
       await input.fill('create');
@@ -78,7 +97,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await page.locator('#opener').click();
       assert.equal(await isOpen(), true, 'a commandfor button opens it natively');
       assert.equal(await input.inputValue(), '', 'each opening starts empty');
-      assert.equal((await visible()).length, 4, 'and with every command');
+      assert.equal((await visible()).length, 6, 'and with every shown command');
 
       await input.fill('zzz');
       assert.equal(await page.locator('.command-palette-empty').isVisible(), true, 'no match shows the empty message');
@@ -126,6 +145,12 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await page.locator('#editor').focus();
       await page.keyboard.press('Control+k');
       assert.equal(await isOpen(), false, 'a shortcut the page already handled is left alone');
+
+      await page.evaluate(() => document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'л', code: 'KeyK', ctrlKey: true, bubbles: true, cancelable: true })));
+      assert.equal(await isOpen(), true, 'a non-Latin layout opens it from the physical K key');
+      // Chromium may ignore Escape on a dialog a synthetic event opened, as
+      // it has no user activation; close it directly.
+      await page.evaluate(() => window.Expressive.CommandPalette.getInstance(document.getElementById('palette')).close());
 
       await page.evaluate(() => window.Expressive.CommandPalette.getInstance(document.getElementById('palette')).destroy());
       assert.equal(await input.getAttribute('role'), null, 'destroy removes the roles it added');

@@ -3128,7 +3128,7 @@
         "sources": [
           {
             "path": "src/sass/components/_popover.scss",
-            "sha256": "f4c4040e3e8f054b9b0c4cd5405fb6415c392a773011fb2100677adf2e3d0415"
+            "sha256": "62b149ae34e4e786a1a02a4a12e2208eaff63c08e54fe0a090397b6dd24e4437"
           }
         ],
         "gaps": [
@@ -4090,11 +4090,11 @@
         "sources": [
           {
             "path": "src/sass/components/_command-palette.scss",
-            "sha256": "ebd133b222693e0d2fde8e7e00fb868072d3f92ec3d5160048e2f3f2d7458291"
+            "sha256": "d9d4dd1fe2b3bc60aa29203a7526139e8e75e6d7b2a76bbe2dd59e671f62ed0d"
           },
           {
             "path": "src/ts/components/commandPalette.ts",
-            "sha256": "20ab01f1ca5afc3eba35a3db3be2043a148787659e73522f6214efc345c05b9e"
+            "sha256": "55fb823a7e70d5cc7d22cd10a84054badac5a7d5df7274d3b67aa044349a642e"
           }
         ],
         "gaps": [

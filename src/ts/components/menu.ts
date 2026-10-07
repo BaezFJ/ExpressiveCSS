@@ -130,7 +130,11 @@ export class Menu extends Component<MenuOptions> implements Openable {
   private _transition = 0;
   private _originalInert: string | null;
   private _menuClickTargets = new WeakMap<Event, HTMLElement>();
-  /** Viewport point a context menu opens at; null for a trigger menu. */
+  /**
+   * Viewport point the open context menu belongs to. Null outside a
+   * right-click, so a keyboard or programmatic open uses the region's corner
+   * rather than an old pointer position.
+   */
   private _contextPoint: { x: number; y: number } | null = null;
   /** What had focus when a context menu opened; focus goes back there. */
   private _contextReturn: HTMLElement | null = null;
@@ -297,17 +301,14 @@ export class Menu extends Component<MenuOptions> implements Openable {
       this._contextReturn = root.activeElement instanceof HTMLElement ? root.activeElement : null;
     }
     // The menu key and Shift+F10 fire this too, with a point that may sit
-    // outside the region (0, 0 in some engines). Open those at the region's
-    // start corner instead.
+    // outside the region (0, 0 in some engines). Those leave the point unset
+    // and open at the region's start corner.
     const rect = this.el.getBoundingClientRect();
     const fromPointer =
       (e.clientX !== 0 || e.clientY !== 0) &&
       e.clientX >= rect.left && e.clientX <= rect.right &&
       e.clientY >= rect.top && e.clientY <= rect.bottom;
-    const rtl = getComputedStyle(this.el).direction === 'rtl';
-    this._contextPoint = fromPointer
-      ? { x: e.clientX, y: e.clientY }
-      : { x: rtl ? rect.right : rect.left, y: rect.bottom };
+    this._contextPoint = fromPointer ? { x: e.clientX, y: e.clientY } : null;
     if (this.isOpen) this.recalculateDimensions();
     else this.open();
   };
@@ -933,13 +934,13 @@ export class Menu extends Component<MenuOptions> implements Openable {
     // that case - 40dp and 48dp against a 112dp floor.
     const triggerWidth = this.el.getBoundingClientRect().width;
     const idealWidth =
-      this.options.constrainWidth && !this._contextPoint && triggerWidth >= MIN_SURFACE_WIDTH
+      this.options.constrainWidth && !this.options.contextMenu && triggerWidth >= MIN_SURFACE_WIDTH
         ? triggerWidth
         : Math.min(MAX_SURFACE_WIDTH, Math.max(MIN_SURFACE_WIDTH, natural));
     this.menuEl.style.width = idealWidth + 'px';
 
-    if (this._contextPoint) {
-      this._placeMenuAtPoint(this._contextPoint);
+    if (this.options.contextMenu) {
+      this._placeMenuAtPoint(this._contextPoint ?? this._regionCorner(), closestOverflowParent);
       return;
     }
 
@@ -953,22 +954,57 @@ export class Menu extends Component<MenuOptions> implements Openable {
     } ${positionInfo.verticalAlignment === 'top' ? '0' : '100%'}`;
   }
 
+  /** Where a context menu opens without a pointer: the region's start corner. */
+  private _regionCorner() {
+    const rect = this.el.getBoundingClientRect();
+    const rtl = getComputedStyle(this.el).direction === 'rtl';
+    return { x: rtl ? rect.right : rect.left, y: rect.bottom };
+  }
+
   /**
    * Places a context menu with its start corner on the point, flipping to
-   * the other side of the point where the viewport is too small. The menu
-   * rests at left/top 0 of its containing block, so its current rect is the
-   * offset to subtract - the same trick _getMenuPosition uses.
+   * the other side of the point where it would not fit. The bounds are the
+   * viewport, narrowed to a scrolling or clipping ancestor the menu sits in;
+   * a menu taller than them gets their height and scrolls.
+   *
+   * The menu rests at left/top 0 of its containing block, so its rect is the
+   * offset to subtract - the same trick _getMenuPosition uses. It is measured
+   * without the entry animation's scale, which a second right-click can catch.
    */
-  private _placeMenuAtPoint({ x, y }: { x: number; y: number }) {
+  private _placeMenuAtPoint({ x, y }: { x: number; y: number }, container: HTMLElement) {
+    // A running transition would still report the interpolated scale, so it
+    // is suspended for the read; the target transform is unchanged after.
+    const { transform, transition } = this.menuEl.style;
+    this.menuEl.style.transition = 'none';
+    this.menuEl.style.transform = 'none';
     const menu = this.menuEl.getBoundingClientRect();
+    this.menuEl.style.transform = transform;
+    this.menuEl.style.transition = transition;
+
+    let bounds = { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight };
+    if (container && getComputedStyle(container).overflow !== 'visible') {
+      const clip = container.getBoundingClientRect();
+      bounds = {
+        left: Math.max(bounds.left, clip.left),
+        top: Math.max(bounds.top, clip.top),
+        right: Math.min(bounds.right, clip.right),
+        bottom: Math.min(bounds.bottom, clip.bottom)
+      };
+    }
+
+    const width = menu.width;
+    const height = Math.min(menu.height, bounds.bottom - bounds.top);
+    this.isScrollable = height < menu.height;
+    if (this.isScrollable) this.menuEl.style.height = height + 'px';
+
     const rtl = getComputedStyle(this.el).direction === 'rtl';
-    const fitsRight = x + menu.width <= window.innerWidth;
-    const fitsLeft = x - menu.width >= 0;
+    const fitsRight = x + width <= bounds.right;
+    const fitsLeft = x - width >= bounds.left;
     const leftward = rtl ? fitsLeft || !fitsRight : !fitsRight && fitsLeft;
-    const upward = y + menu.height > window.innerHeight && y - menu.height >= 0;
-    const clamp = (value: number, max: number) => Math.max(0, Math.min(value, max));
-    const left = clamp(leftward ? x - menu.width : x, window.innerWidth - menu.width);
-    const top = clamp(upward ? y - menu.height : y, window.innerHeight - menu.height);
+    const upward = y + height > bounds.bottom && y - height >= bounds.top;
+    const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(value, max));
+    const left = clamp(leftward ? x - width : x, bounds.left, bounds.right - width);
+    const top = clamp(upward ? y - height : y, bounds.top, bounds.bottom - height);
     this.menuEl.style.left = left - menu.left + 'px';
     this.menuEl.style.top = top - menu.top + 'px';
     this.menuEl.style.transformOrigin = `${leftward ? '100%' : '0'} ${upward ? '100%' : '0'}`;
@@ -1032,6 +1068,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       (back?.isConnected && back !== this.el.ownerDocument.body ? back : this.el).focus();
     }
     this._contextReturn = null;
+    this._contextPoint = null;
   };
 
   /**

@@ -106,8 +106,16 @@ dialog.command-palette {
       @include typescale("title-small");
     }
 
-    > li[hidden] {
+    > li:is([hidden], [data-filtered]) {
       display: none;
+    }
+
+    > li[aria-disabled="true"] {
+      opacity: 0.38;
+
+      > :is(a, button) {
+        cursor: default;
+      }
     }
   }
 

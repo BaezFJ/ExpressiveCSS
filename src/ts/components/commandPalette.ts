@@ -69,8 +69,17 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
     }
     this._setupAccessibility();
     this._filter();
-    this._observer = new MutationObserver(() => this._filter());
-    this._observer.observe(this.list, { childList: true });
+    // A page adding commands while the user arrows through the list keeps
+    // their place.
+    this._observer = new MutationObserver(() => this._filter(true));
+    // Also refilter when the page hides, shows, disables or enables a command.
+    // Not aria-disabled: _filter writes that itself, which would loop.
+    this._observer.observe(this.list, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['hidden', 'disabled']
+    });
     this.input.addEventListener('input', this._handleInput);
     this.input.addEventListener('keydown', this._handleKeydown);
     this.list.addEventListener('click', this._handleListClick);
@@ -144,15 +153,13 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
       }
       this.list.removeAttribute('role');
       for (const item of this._items()) {
-        item.removeAttribute('role');
-        item.removeAttribute('aria-selected');
+        for (const name of ['role', 'aria-selected', 'aria-disabled', 'data-filtered']) item.removeAttribute(name);
         item.classList.remove('active');
-        item.hidden = false;
         this._action(item)?.removeAttribute('tabindex');
       }
       for (const label of this._labels()) {
         label.removeAttribute('role');
-        label.hidden = false;
+        label.removeAttribute('data-filtered');
       }
       for (const el of this._generatedIds) el.removeAttribute('id');
       const empty = this._empty();
@@ -208,8 +215,20 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
     for (const label of this._labels()) label.setAttribute('role', 'none');
   }
 
+  /** Commands on screen: neither hidden by the page nor filtered out. */
+  private _shown() {
+    return this._items().filter((item) => !item.hidden && !item.hasAttribute('data-filtered'));
+  }
+
+  /** Shown commands the arrows and Enter can reach: disabled ones are skipped. */
   private _visible() {
-    return this._items().filter((item) => !item.hidden);
+    return this._shown().filter((item) => item.getAttribute('aria-disabled') !== 'true');
+  }
+
+  /** A disabled link or button cannot run, so its option says so. */
+  private _isDisabled(item: HTMLElement) {
+    const action = this._action(item);
+    return !!action && (action.matches(':disabled') || action.getAttribute('aria-disabled') === 'true');
   }
 
   private _setActive(item: HTMLElement | null) {
@@ -227,29 +246,37 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
     }
   }
 
-  private _filter() {
+  /**
+   * Shows the commands matching the query. Filtering marks rows with
+   * data-filtered rather than hidden, so a command the page hides stays
+   * hidden. `keepActive` holds the active command while it is still
+   * reachable, for list changes the user did not make.
+   */
+  private _filter(keepActive = false) {
     this._wireItems();
     const terms = fold(this.input.value).split(/\s+/).filter(Boolean);
     for (const item of this._items()) {
       // data-keywords may sit on the row or on its link or button.
       const keywords = item.dataset.keywords ?? this._action(item)?.dataset.keywords ?? '';
       const text = fold(`${item.textContent} ${keywords}`);
-      item.hidden = !terms.every((term) => text.includes(term));
+      item.toggleAttribute('data-filtered', !terms.every((term) => text.includes(term)));
+      if (this._isDisabled(item)) item.setAttribute('aria-disabled', 'true');
+      else item.removeAttribute('aria-disabled');
     }
     // A heading stays only while one of the commands under it does.
     for (const label of this._labels()) {
       let next = label.nextElementSibling as HTMLElement | null;
       let any = false;
       while (next && !next.classList.contains('label')) {
-        if (!next.hidden) any = true;
+        if (!next.hidden && !next.hasAttribute('data-filtered')) any = true;
         next = next.nextElementSibling as HTMLElement | null;
       }
-      label.hidden = !any;
+      label.toggleAttribute('data-filtered', !any);
     }
     const visible = this._visible();
     const empty = this._empty();
-    if (empty) empty.hidden = visible.length > 0;
-    this._setActive(visible[0] ?? null);
+    if (empty) empty.hidden = this._shown().length > 0;
+    this._setActive(keepActive && visible.includes(this._active) ? this._active : visible[0] ?? null);
   }
 
   private _move(step: number) {
@@ -280,7 +307,7 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
 
   _handleListClick = (e: MouseEvent) => {
     const item = (<Element>e.target).closest<HTMLElement>('[role="option"]');
-    if (!item || !this.list.contains(item)) return;
+    if (!item || !this.list.contains(item) || item.getAttribute('aria-disabled') === 'true') return;
     const action = this._action(item);
     // A click on the row's padding runs its command; that click comes back
     // through here and closes the palette.
@@ -293,11 +320,16 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
 
   _handlePointerMove = (e: PointerEvent) => {
     const item = (<Element>e.target).closest<HTMLElement>('[role="option"]');
-    if (item && this.list.contains(item)) this._setActive(item);
+    if (item && this.list.contains(item) && item.getAttribute('aria-disabled') !== 'true') this._setActive(item);
   };
 
-  /** Each opening starts from the full list. */
+  /**
+   * Each opening starts from the full list. The close event is queued, so a
+   * palette reopened straight away may already be open again; its new search
+   * is left alone.
+   */
   _handleClose = () => {
+    if (this.el.open) return;
     this.input.value = '';
     this._filter();
   };
@@ -306,7 +338,13 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
     const { shortcut } = this.options;
     if (!shortcut || e.defaultPrevented || e.altKey || e.shiftKey) return;
     if (!(APPLE ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey)) return;
-    if (e.key.toLowerCase() !== shortcut.toLowerCase()) return;
+    // A non-Latin layout reports its own letter in e.key, so fall back to the
+    // physical key there. A Latin layout matches on the letter it types.
+    const letter = shortcut.toLowerCase();
+    const latin = /^[a-z]$/i.test(e.key);
+    const hit = e.key.toLowerCase() === letter ||
+      (!latin && /^[a-z]$/.test(letter) && e.code === `Key${letter.toUpperCase()}`);
+    if (!hit) return;
     e.preventDefault();
     if (this.el.open) this.close();
     else this.open();
