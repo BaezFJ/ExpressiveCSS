@@ -220,9 +220,18 @@ async function verifyResponseBudgets(matchingDir, versionedDir) {
     const result = await call(catalogRequest);
     assert.notEqual(result.structuredContent.responseBudget.delivery, 'complete');
   });
-  await withServer(20_000, async ({ call }) => {
+  // A partial listing needs room for one recovery record per omitted entry, and
+  // that accounting grows with the catalogue. Derive the budget from the
+  // complete listing so it stays below it while the accounting still fits; a
+  // fixed figure turns into the documented error once enough components exist.
+  let listingBytes;
+  await withServer(1_048_576, async ({ call }) => {
+    listingBytes = bytes(await call(request('component_catalog')));
+  });
+  await withServer(listingBytes - 3_000, async ({ call }) => {
     const listing = await call(request('component_catalog'));
     assert.equal(listing.structuredContent.responseBudget.delivery, 'partial');
+    assert.ok(listing.structuredContent.responseBudget.omissions.length > 1, 'the listing omits several entries');
     assert.equal(listing.structuredContent.count + listing.structuredContent.responseBudget.omissions.length, guideData.guides.length);
     for (const recovery of listing.structuredContent.responseBudget.recoveries) {
       assert.equal(recovery.action, 'retry');
@@ -230,6 +239,8 @@ async function verifyResponseBudgets(matchingDir, versionedDir) {
       assert.equal(recovered.structuredContent.entries[0].slug, recovery.request.arguments.query);
       assert.equal(recovered.structuredContent.responseBudget.delivery, 'complete');
     }
+  });
+  await withServer(20_000, async ({ call }) => {
     const duplicate = await call(request('component_syntax_expert', { projectRoot: matchingDir, components: ['cards', 'cards', 'unknown-name', 'autocomplete'], sections: ['options', 'methods'] }));
     assert.equal(duplicate.structuredContent.missing[0].requested, 'unknown-name');
     for (const omitted of duplicate.structuredContent.responseBudget.omissions.filter((row) => row.slug === 'cards')) assert.ok([0, 1].includes(omitted.index));
