@@ -83,8 +83,10 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   const css = readFileSync(`${root}/dist/css/expressive.min.css`, 'utf8').replace(/\/\*# sourceMappingURL=.*?\*\//, '').trimEnd();
   // Reviewed TypeScript roadmap and cross-browser fixes: 45,117 gzip bytes (+475).
   // Reviewed context menus, the password toggle and drop zone behavior: 45,923 gzip bytes (+804).
-  assert.ok(sizes(js).gzip <= 45923, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the command palette: 47,077 gzip bytes (+1,154).
+  assert.ok(sizes(js).gzip <= 47077, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
-  assert.ok(sizes(css).gzip <= 51878, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
+  assert.ok(sizes(css).gzip <= 53687, `CSS gzip: ${sizes(css).gzip}`);
 });

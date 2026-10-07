@@ -1,0 +1,132 @@
+@use "../abstracts" as *;
+
+// Command palette. A modal <dialog class="command-palette"> holding a search
+// <input>, a <ul> of commands and an optional .command-palette-empty message.
+// Each command is an <li> holding a link or button: an optional leading
+// icon, the label and an optional trailing <kbd> shortcut. An <li class=
+// "label"> heads a group. The CommandPalette component filters the list and
+// moves the active row; the active row carries .active.
+//
+// It opens near the top of the window, where the eye already is after the
+// shortcut, and keeps the base dialog's surface, scrim and glass.
+//
+// Tokens:
+//   --md-comp-command-palette-max-width                 640px
+//   --md-comp-command-palette-item-height               48px
+//   --md-comp-command-palette-active-container-color    secondary-container
+
+dialog.command-palette {
+  --md-comp-command-palette-max-width: 640px;
+  --md-comp-command-palette-item-height: 48px;
+  --md-comp-command-palette-active-container-color: var(--md-sys-color-secondary-container);
+
+  width: min(var(--md-comp-command-palette-max-width), calc(100% - 32px));
+  max-height: min(480px, calc(100% - 96px));
+  margin-block: 12vh auto;
+
+  // Outranks the shared text-input rule, which sets a field's height and
+  // padding at the same weight.
+  > input:not(.browser-default) {
+    flex: none;
+    box-sizing: border-box;
+    width: 100%;
+    height: 64px;
+    margin: 0;
+    padding: 0 24px;
+    border: 0;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 0;
+    background: transparent;
+    color: var(--md-sys-color-on-surface);
+    outline: 0;
+    box-shadow: none;
+    @include typescale("body-large");
+  }
+
+  > :is(ul, ol) {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0;
+    padding: 8px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    list-style: none;
+
+    > li {
+      margin: 0;
+      border-radius: 12px;
+      color: var(--md-sys-color-on-surface);
+    }
+
+    > li.active {
+      background-color: var(--md-comp-command-palette-active-container-color);
+      color: var(--md-sys-color-on-secondary-container);
+    }
+
+    > li:not(.label) > :is(a, button) {
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 16px;
+      width: 100%;
+      height: auto;
+      min-height: var(--md-comp-command-palette-item-height);
+      margin: 0;
+      padding: 8px 16px;
+      border: 0;
+      border-radius: inherit;
+      background: none;
+      box-shadow: none;
+      color: inherit;
+      text-align: start;
+      text-decoration: none;
+      white-space: normal;
+      cursor: pointer;
+      @include typescale("body-large");
+
+      > #{$icon}:first-child {
+        flex: none;
+        font-size: 20px;
+        color: var(--md-sys-color-on-surface-variant);
+      }
+
+      > kbd:last-child {
+        margin-inline-start: auto;
+      }
+    }
+
+    > li.active > :is(a, button) > #{$icon}:first-child {
+      color: inherit;
+    }
+
+    > li.label {
+      padding: 12px 16px 4px;
+      color: var(--md-sys-color-on-surface-variant);
+      @include typescale("title-small");
+    }
+
+    > li[hidden] {
+      display: none;
+    }
+  }
+
+  > .command-palette-empty {
+    margin: 0;
+    padding: 32px 24px;
+    text-align: center;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-large");
+
+    &[hidden] {
+      display: none;
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  dialog.command-palette > :is(ul, ol) > li.active {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}

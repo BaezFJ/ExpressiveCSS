@@ -248,6 +248,13 @@ export const NAV: DocsGroup[] = [
         description:
           "Highlight the table of contents as the page scrolls.",
       },
+      {
+        id: "tree",
+        label: "Tree",
+        route: "/tree.html",
+        description:
+          "Nested lists of folders and links that open in place, for file browsers and deep navigation.",
+      },
     ],
   },
   {
@@ -326,6 +333,20 @@ export const NAV: DocsGroup[] = [
         route: "/data-table.html",
         description:
           "Rows of records in a scrolling table with a sticky header, sort state and row selection.",
+      },
+      {
+        id: "stat",
+        label: "Stat",
+        route: "/stat.html",
+        description:
+          "Key figures in tiles, each with a label, a value and an optional change.",
+      },
+      {
+        id: "timeline",
+        label: "Timeline",
+        route: "/timeline.html",
+        description:
+          "Events in order, each with a time, a title and details, joined by a line.",
       },
       {
         id: "dialogs",
@@ -450,6 +471,13 @@ export const NAV: DocsGroup[] = [
         description:
           "A search bar, and the view it expands into.",
       },
+      {
+        id: "command_palette",
+        label: "Command palette",
+        route: "/command-palette.html",
+        description:
+          "A searchable list of commands in a dialog, opened from anywhere with a shortcut.",
+      },
     ],
   },
   {
@@ -499,6 +527,13 @@ export const NAV: DocsGroup[] = [
         route: "/radio-buttons.html",
         description:
           "Material Design 3 radios, from the HTML.",
+      },
+      {
+        id: "rating",
+        label: "Rating",
+        route: "/rating.html",
+        description:
+          "Stars for choosing or showing a score, on native radio buttons.",
       },
       {
         id: "switches",

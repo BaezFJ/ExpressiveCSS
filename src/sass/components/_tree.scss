@@ -1,0 +1,139 @@
+@use "../abstracts" as *;
+
+// Tree. A <ul class="tree"> of nested lists, for file browsers and deep
+// navigation. A branch is an <li> holding a <details>: its <summary> is the
+// row and its nested <ul> the children. A leaf is an <li> holding a link or
+// a span. aria-current marks the selected row.
+//
+// It is a set of disclosures and links, not role="tree": every row is a Tab
+// stop and the browser owns opening a branch. A tree role would promise
+// arrow-key navigation that native disclosures do not provide.
+//
+// Tokens:
+//   --md-comp-tree-row-height                 40px
+//   --md-comp-tree-row-shape                  100px (pill)
+//   --md-comp-tree-guide-color                outline-variant
+//   --md-comp-tree-selected-container-color   secondary-container
+
+$_tree-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 15.4 6 9.4 7.4 8l4.6 4.6L16.6 8 18 9.4z'/%3E%3C/svg%3E");
+
+.tree {
+  --md-comp-tree-row-height: 40px;
+  --md-comp-tree-row-shape: 100px;
+  --md-comp-tree-guide-color: var(--md-sys-color-outline-variant);
+  --md-comp-tree-selected-container-color: var(--md-sys-color-secondary-container);
+
+  margin: $element-top-margin 0 $element-bottom-margin;
+  padding: 0;
+  list-style: none;
+  color: var(--md-sys-color-on-surface-variant);
+
+  // Each level hangs a guide line from the centre of its parent's chevron
+  // (12px inset + half the 20px chevron) and indents past it.
+  ul {
+    margin: 0;
+    margin-inline-start: 22px;
+    padding: 0;
+    padding-inline-start: 6px;
+    border-inline-start: 1px solid var(--md-comp-tree-guide-color);
+    list-style: none;
+  }
+
+  li {
+    margin: 0;
+  }
+
+  li > :is(a, span),
+  li > details > summary {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: var(--md-comp-tree-row-height);
+    padding-inline: 12px 16px;
+    border-radius: var(--md-comp-tree-row-shape);
+    color: inherit;
+    text-decoration: none;
+    @include typescale("label-large");
+
+    > #{$icon} {
+      flex: none;
+      font-size: 20px;
+    }
+  }
+
+  // A leaf lines its text up with a branch's text, after the chevron.
+  li > :is(a, span) {
+    padding-inline-start: calc(12px + 20px + 8px);
+  }
+
+  li > a,
+  li > details > summary {
+    cursor: pointer;
+    @include focus-visible;
+
+    &:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--md-sys-color-on-surface) state-opacity("hover"),
+        transparent
+      );
+    }
+  }
+
+  li > details > summary {
+    list-style: none;
+    user-select: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    // Points to the end edge while closed and down once open.
+    &::before {
+      content: "";
+      flex: none;
+      width: 20px;
+      height: 20px;
+      background-color: currentColor;
+      mask: $_tree-chevron center / 20px no-repeat;
+      transform: rotate(-90deg);
+      transition: transform 150ms ease-out;
+    }
+
+    &:dir(rtl)::before {
+      transform: rotate(90deg);
+    }
+  }
+
+  li > details[open] > summary::before {
+    transform: none;
+  }
+
+  :is(li > a, li > span, li > details > summary)[aria-current]:not([aria-current="false"]) {
+    background-color: var(--md-comp-tree-selected-container-color);
+    color: var(--md-sys-color-on-secondary-container);
+
+    > #{$icon} {
+      --md-icon-fill: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    li > details > summary::before {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    li > details > summary::before {
+      forced-color-adjust: none;
+      background-color: CanvasText;
+    }
+
+    [aria-current]:not([aria-current="false"]) {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+  }
+}

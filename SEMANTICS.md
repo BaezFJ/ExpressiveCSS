@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**58 of 58 rows enforced; 0 remaining.**
+**63 of 63 rows enforced; 0 remaining.**
 
-54 of those rows are components - a part of the framework an author writes markup for.
+59 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 54 components declare conformance debt.**
+**3 of 59 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -261,6 +261,20 @@ Swept 0.8.0. The four Material 3 chip types plus a non-interactive display chip,
 - **chip-icon-hidden** - A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden.
 - **filter-chip-label-for** - A filter chip is <input type="checkbox"> + <label class="chip">; the label must point at its input.
 
+### command-palette
+
+Added with the command palette component. A native modal dialog; the component makes the input a combobox and the list a listbox of options at runtime and owns the active option.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `command-palette-is-a-dialog` | forbid | `.command-palette:not(dialog)` | must not match |
+| `command-palette-is-named` | require-accessible-name | `dialog.command-palette` | must end up with an accessible name |
+| `command-palette-input-is-named` | require-accessible-name | `dialog.command-palette > input` | must end up with an accessible name |
+
+- **command-palette-is-a-dialog** - Write the palette as <dialog class="command-palette">. The dialog makes it modal, closes it on Escape and returns focus.
+- **command-palette-is-named** - Name the palette with aria-label so it is announced when it opens.
+- **command-palette-input-is-named** - Name the search input with aria-label. A placeholder disappears as the user types and is not a reliable name.
+
 ### data-table
 
 Added with the data table component. The wrapper is the scroll container so the <table> keeps its table semantics. Sorting and selection are page state: aria-sort on the header cell and a checkbox in the first cell.
@@ -442,6 +456,20 @@ Swept 0.8.0. A radio is one of a set, and the set needs a name.
 
 - **radio-in-fieldset** - A radio only means something as one of a group, and the group needs a <fieldset> with a <legend> to name the question being answered.
 - **radio-labelled** - A radio must be inside its <label> or carry an id a label points at.
+
+### forms/rating
+
+Added with the rating component. The input is a fieldset of native radios drawn as stars; the display is a named image.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `rating-is-a-fieldset-or-an-image` | forbid | `.rating:not(fieldset):not([role="img"])` | must not match |
+| `rating-display-is-named` | require-accessible-name | `.rating[role="img"]` | must end up with an accessible name |
+| `rating-label-text-precedes-the-radio` | forbid | `fieldset.rating [type="radio"] + span` | must not match |
+
+- **rating-is-a-fieldset-or-an-image** - A .rating is either a <fieldset> of radios, for input, or an element with role="img" and a name, for display. Anything else draws stars that say nothing.
+- **rating-display-is-named** - Name a rating display with the value, such as aria-label="Rated 4.5 out of 5".
+- **rating-label-text-precedes-the-radio** - Put a star's visually hidden text before its radio. A span after the radio is the older input + span pattern, which hides the radio and with it the star.
 
 ### forms/select
 
@@ -747,6 +775,16 @@ Added with the split button component (#42). A lead action and a trailing half t
 - **split-button-trailing-icon-hidden** - The ligature is real text and is read out verbatim, so an unhidden chevron names the trailing half "arrow_drop_down". It is decoration - the control carries the name - so it is aria-hidden="true", and `icon-only-control-is-named` then requires the aria-label.
 - **split-button-expanded-is-not-authored** - Expanded is dynamic state, so the framework owns it. Menu's constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten - and the expanded shape is drawn from that attribute, so an authored "true" draws an open split button over a closed menu.
 
+### stat
+
+Added with the stat component. A description list pairs each value with its label; the change arrow is decoration and the text says the direction.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `stats-are-a-description-list` | forbid | `.stats:not(dl)` | must not match |
+
+- **stats-are-a-description-list** - Write .stats as a <dl> with a <dt> label and <dd> value per tile. Without the pairing a screen reader reads a run of numbers with nothing to say what each one is.
+
 ### stepper
 
 Added with the stepper component. The ordered list carries the step count and position; aria-current="step" marks the current step, and CSS alt text speaks the complete and invalid states.
@@ -776,6 +814,18 @@ Swept 0.8.0. Anchor navigation, not a tablist - see rule 2.
 
 - **tabs-not-a-tablist** - A tab strip takes no ARIA role here; these are links to in-page sections.
 - **tabs-marks-current** - The active tab is the section you are on; aria-current says so where a class cannot.
+
+### timeline
+
+Added with the timeline component. An ordered list of events; the order is the content.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `timeline-is-an-ordered-list` | forbid | `.timeline:not(ol)` | must not match |
+| `timeline-time-is-machine-readable` | require-attr | `.timeline time` | must have `datetime` |
+
+- **timeline-is-an-ordered-list** - Write a timeline as <ol class="timeline">. The events have an order, and an ordered list says so to assistive technology.
+- **timeline-time-is-machine-readable** - Give each <time> a datetime value. "9:12 AM" or "Yesterday" has no date a script, a translation tool or a reader in another time zone can use.
 
 ### timepicker
 
@@ -818,6 +868,20 @@ Swept 0.8.0. A foundation, not a component: motion applied through classes to wh
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 
+
+### tree
+
+Added with the tree component. Nested lists of native disclosures and links: every row is a Tab stop and the browser opens a branch, so no tree role is promised.
+
+**Rejected role:** `tree` is not withheld but declined - its rows are native disclosures and links reached with Tab - a tree role promises arrow-key navigation, type-ahead and expanded states on treeitems that the markup does not have and that native details would fight. `tree-is-not-a-tree-widget` enforces that.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `tree-is-not-a-tree-widget` | forbid | `.tree[role], .tree [role="treeitem"], .tree [role="group"]` | must not match |
+| `tree-marks-current-not-selected` | forbid | `.tree [aria-selected]` | must not match |
+
+- **tree-is-not-a-tree-widget** - A .tree takes no ARIA tree roles. It is lists of disclosures and links, which keep their own roles and keyboard behavior.
+- **tree-marks-current-not-selected** - Mark the open file or page with aria-current. aria-selected is not valid on a link or a list item.
 
 ## Exempt
 

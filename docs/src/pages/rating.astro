@@ -1,0 +1,74 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "display", label: "Display" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="rating">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;fieldset class="rating"&gt;</code> holds one radio per
+          star. The radio is drawn as the star, so Tab, the arrow keys and
+          form submission stay native.
+        </p>
+        <p>
+          Give each star a <code>&lt;label&gt;</code> with visually hidden text
+          before the radio, such as "3 stars". A star fills when it or a later
+          star is checked, and hovering previews a choice.
+        </p>
+        <fieldset class="rating mb-3">
+          <legend>Rate this recipe</legend>
+          <label><span class="visually-hidden">1 star</span><input type="radio" name="demo-score" value="1"></label>
+          <label><span class="visually-hidden">2 stars</span><input type="radio" name="demo-score" value="2"></label>
+          <label><span class="visually-hidden">3 stars</span><input type="radio" name="demo-score" value="3" checked></label>
+          <label><span class="visually-hidden">4 stars</span><input type="radio" name="demo-score" value="4"></label>
+          <label><span class="visually-hidden">5 stars</span><input type="radio" name="demo-score" value="5"></label>
+        </fieldset>
+<Code code={`
+<fieldset class="rating">
+  <legend>Rate this recipe</legend>
+  <label><span class="visually-hidden">1 star</span><input type="radio" name="score" value="1"></label>
+  <label><span class="visually-hidden">2 stars</span><input type="radio" name="score" value="2"></label>
+  <label><span class="visually-hidden">3 stars</span><input type="radio" name="score" value="3"></label>
+  <label><span class="visually-hidden">4 stars</span><input type="radio" name="score" value="4"></label>
+  <label><span class="visually-hidden">5 stars</span><input type="radio" name="score" value="5"></label>
+</fieldset>
+`} />
+  </Section>
+  <Section {...S.display}>
+        <p>
+          To show a score, give an element <code>class="rating"</code>,
+          <code>role="img"</code>, a name with the value and
+          <code>--md-comp-rating-value</code>. The stars fill to that value,
+          halves included, from the start edge.
+        </p>
+        <p class="flex align-center gap-2">
+          <span class="rating" role="img" aria-label="Rated 4.5 out of 5" style="--md-comp-rating-value: 4.5"></span>
+          <span class="body-medium">4.5 (212 reviews)</span>
+        </p>
+<Code code={`
+<span class="rating" role="img" aria-label="Rated 4.5 out of 5"
+      style="--md-comp-rating-value: 4.5"></span>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.rating</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-rating-size</code></td><td>24px; display: 20px</td></tr>
+          <tr><td><code>--md-comp-rating-color</code></td><td><code>--md-sys-color-tertiary</code></td></tr>
+          <tr><td><code>--md-comp-rating-empty-color</code></td><td><code>--md-sys-color-outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-rating-value</code></td><td>0 (display)</td></tr>
+          <tr><td><code>--md-comp-rating-max</code></td><td>5 (display)</td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

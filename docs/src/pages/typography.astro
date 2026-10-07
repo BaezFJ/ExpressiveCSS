@@ -10,6 +10,7 @@ const S = defineSections([
   { id: "typescale", label: "Type scale", heading: "The fifteen roles" },
   { id: "emphasis", label: "Emphasis" },
   { id: "blockquote", label: "Blockquotes" },
+  { id: "keyboard-keys", label: "Keyboard keys" },
   { id: "flow", label: "Flow Text" },
   { id: "fontstack", label: "Typeface tokens" },
 ]);
@@ -176,6 +177,18 @@ const S = defineSections([
 <blockquote>
   This is an example quotation that uses the blockquote tag.
 </blockquote>
+`} />
+  </Section>
+  <Section {...S["keyboard-keys"]}>
+        <p>
+          <code>&lt;kbd&gt;</code> is drawn as a keycap. Wrap a combination in
+          an outer <code>&lt;kbd&gt;</code>, which stays plain around the keys
+          inside it. A trailing <code>&lt;kbd&gt;</code> in a menu or list item
+          is quiet shortcut text instead.
+        </p>
+        <p>Press <kbd><kbd>Ctrl</kbd>+<kbd>K</kbd></kbd> to open the command palette, or <kbd>?</kbd> for help.</p>
+<Code code={`
+<p>Press <kbd><kbd>Ctrl</kbd>+<kbd>K</kbd></kbd> to open the command palette.</p>
 `} />
   </Section>
   <Section {...S.flow}>

@@ -65,6 +65,9 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Empty state
 - Popover
 - Stepper
+- Timeline
+- Stat
+- Tree
 - Search
 - Button groups
 - Split button
@@ -83,6 +86,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Snackbar
 - Tooltips
 - Toolbars
+- Command palette
 
 ### Forms
 
@@ -91,6 +95,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Text Inputs
 - Drop zone
 - Fieldsets
+- Rating
 - Switches
 - Select
 - Sliders
@@ -283,6 +288,7 @@ Opt an element out when it needs manual options:
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
+| `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
 | `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
@@ -1609,6 +1615,14 @@ Blockquotes emphasize a quote or citation. The left bar uses `--md-sys-color-pri
 <blockquote>
   This is an example quotation that uses the blockquote tag.
 </blockquote>
+```
+
+### Keyboard keys
+
+`<kbd>` is drawn as a keycap. Wrap a combination in an outer `<kbd>`, which stays plain around the keys inside it. A trailing `<kbd>` in a menu or list item is quiet shortcut text instead.
+
+```html
+<p>Press <kbd><kbd>Ctrl</kbd>+<kbd>K</kbd></kbd> to open the command palette.</p>
 ```
 
 ### Flow Text
@@ -3937,6 +3951,126 @@ The spoken states are tokens. Set them in the page's language on the stepper or 
 
 ---
 
+## Timeline
+
+Events in order, each with a time, a title and details, joined by a line.
+
+An `<ol class="timeline">` lists events in the order the page chooses, newest or oldest first. Each `<li>` is an event: an optional `<time>` with a `datetime`, a heading and supporting `<p>` text. A dot marks each event and a line joins it to the next. A leading icon as the first child replaces the dot with a tonal circle; hide it from assistive technology. CSS only; there is no JavaScript.
+
+```html
+<ol class="timeline">
+  <li>
+    <time datetime="2026-10-06T09:12">9:12 AM</time>
+    <h3>Order placed</h3>
+    <p>Two items, paid by card.</p>
+  </li>
+  <li>
+    <time datetime="2026-10-06T11:40">11:40 AM</time>
+    <h3>Shipped</h3>
+    <p>Tracking number sent by email.</p>
+  </li>
+</ol>
+```
+
+### Leading icon
+
+```html
+<ol class="timeline">
+  <li>
+    <span class="material-symbols" aria-hidden="true">chat</span>
+    <time datetime="2026-10-06">Today</time>
+    <h3>Ada commented</h3>
+    <p>Looks good to me.</p>
+  </li>
+</ol>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-timeline-marker-color` | `primary` |
+| `--md-comp-timeline-connector-color` | `outline-variant` |
+| `--md-comp-timeline-gap` | 24px |
+
+---
+
+## Stat
+
+Key figures in tiles, each with a label, a value and an optional change.
+
+A `<dl class="stats">` holds one `<div>` tile per figure: a `<dt>` label, a `<dd>` value and an optional `<dd class="stat-change">` comparison. The description list keeps each value paired with its label for assistive technology. Tiles share a row and wrap below 160px each. CSS only; there is no JavaScript.
+
+Add `up` or `down` to `.stat-change` for an arrow, and `negative` when the change is bad news, which turns it to the error color. The arrow is decoration, so say the direction in the text.
+
+```html
+<dl class="stats">
+  <div>
+    <dt>Revenue</dt>
+    <dd>$48.2k</dd>
+    <dd class="stat-change up">+12% from last month</dd>
+  </div>
+  <div>
+    <dt>Churn</dt>
+    <dd>3.1%</dd>
+    <dd class="stat-change up negative">+0.4 points from last month</dd>
+  </div>
+</dl>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-stat-container-color` | `surface-container-low` |
+| `--md-comp-stat-shape` | 16px |
+| `--md-comp-stat-min-width` | 160px |
+
+---
+
+## Tree
+
+Nested lists of folders and links that open in place, for file browsers and deep navigation.
+
+A `<ul class="tree">` nests lists. A branch is an `<li>` holding a `<details>`: its `<summary>` is the row and its nested `<ul>` the children. A leaf is an `<li>` holding a link, or a `<span>` when it is not one. Mark the current row with `aria-current`. Each level draws a guide line from its parent's chevron. Wrap a tree of links in a named `<nav>`. CSS only; there is no JavaScript.
+
+It is lists of disclosures and links rather than `role="tree"`: every row is a Tab stop and the browser opens a branch with Enter or Space. A tree role would promise arrow-key navigation that native disclosures do not provide.
+
+```html
+<nav aria-label="Files">
+  <ul class="tree">
+    <li>
+      <details open>
+        <summary>src</summary>
+        <ul>
+          <li><a href="/src/index.ts" aria-current="page">index.ts</a></li>
+          <li>
+            <details>
+              <summary>components</summary>
+              <ul>
+                <li><a href="/src/components/menu.ts">menu.ts</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </details>
+    </li>
+    <li><a href="/README.md">README.md</a></li>
+  </ul>
+</nav>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-tree-row-height` | 40px |
+| `--md-comp-tree-row-shape` | 100px |
+| `--md-comp-tree-guide-color` | `outline-variant` |
+| `--md-comp-tree-selected-container-color` | `secondary-container` |
+
+---
+
 ## Auto Init
 
 Initialize every registered component with one function call.
@@ -4001,6 +4135,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
+| `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
 | `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
@@ -5150,6 +5285,71 @@ A floating bar can sit beside a companion FAB. Wrap both in `.toolbar-group`; th
 
 # Forms
 
+## Command palette
+
+A searchable list of commands in a dialog, opened from anywhere with a shortcut.
+
+A `<dialog class="command-palette">` holds a search `<input>`, a `<ul>` of commands and an optional `.command-palette-empty` message. Each command is an `<li>` holding a link or button: an optional leading icon, the label and an optional trailing `<kbd>` shortcut. An `<li class="label">` heads a group. Running a command clicks its link or button, so commands are ordinary links and click handlers. `AutoInit()` starts every `dialog.command-palette`.
+
+Ctrl+K, or Command+K on Apple platforms, opens and closes it from anywhere on the page; a `commandfor` button with `command="show-modal"` opens it too. Typing filters the commands by their text and any `data-keywords`, ignoring case and accents, and hides a group heading whose commands are all filtered out. Focus stays in the input: the arrow keys move the active command and Enter runs it. The dialog closes on Escape and returns focus. Each opening starts with an empty search.
+
+The component makes the input a combobox and the list a listbox of options, and reports the active option with `aria-activedescendant`. Name the dialog and the input with `aria-label`. Give the empty message `role="status"` so a search with no results is announced.
+
+```html
+<button type="button" commandfor="commands" command="show-modal">
+  Commands <kbd><kbd>Ctrl</kbd>+<kbd>K</kbd></kbd>
+</button>
+<dialog id="commands" class="command-palette" aria-label="Commands">
+  <input type="search" placeholder="Type a command" aria-label="Search commands">
+  <ul>
+    <li class="label">Files</li>
+    <li>
+      <button type="button" data-keywords="create add">
+        <span class="material-symbols" aria-hidden="true">note_add</span>
+        New file
+        <kbd>Ctrl N</kbd>
+      </button>
+    </li>
+    <li><a href="/settings">
+      <span class="material-symbols" aria-hidden="true">settings</span>
+      Settings
+    </a></li>
+  </ul>
+  <p class="command-palette-empty" role="status">No matching commands</p>
+</dialog>
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `shortcut` | String | `'k'` | Letter that toggles the palette with Ctrl or Command. `null` turns it off. `data-shortcut` on the dialog sets it, and an empty `data-shortcut` turns it off. |
+| `closeOnRun` | Boolean | `true` | If true, the palette closes after a command runs. |
+
+### Methods
+
+#### .open()
+
+Opens the palette as a modal dialog with the search input focused.
+
+#### .close()
+
+Closes the palette.
+
+#### .destroy()
+
+Removes the shortcut, listeners, roles and ids the component added.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-command-palette-max-width` | 640px |
+| `--md-comp-command-palette-item-height` | 48px |
+| `--md-comp-command-palette-active-container-color` | `secondary-container` |
+
+---
+
 ## Date Picker
 
 Select a date, a range, or several dates from a calendar.
@@ -5851,6 +6051,43 @@ The HTML `disabled` attribute on a fieldset disables every control inside it. Th
   <div class="field">…</div>
 </fieldset>
 ```
+
+---
+
+## Rating
+
+Stars for choosing or showing a score, on native radio buttons.
+
+For input, a `<fieldset class="rating">` holds a `<legend>` and one radio per star, each in a `<label>` whose visually hidden text ("3 stars") comes before the radio. The radio is drawn as the star, so Tab, the arrow keys, `required` and form submission stay native. A star fills when it or a later star is checked, and hovering previews a choice. Put the text before the radio: a span after it is the older `input + span` radio, which hides the input. CSS only; there is no JavaScript.
+
+```html
+<fieldset class="rating">
+  <legend>Rate this recipe</legend>
+  <label><span class="visually-hidden">1 star</span><input type="radio" name="score" value="1"></label>
+  <label><span class="visually-hidden">2 stars</span><input type="radio" name="score" value="2"></label>
+  <label><span class="visually-hidden">3 stars</span><input type="radio" name="score" value="3" checked></label>
+  <label><span class="visually-hidden">4 stars</span><input type="radio" name="score" value="4"></label>
+  <label><span class="visually-hidden">5 stars</span><input type="radio" name="score" value="5"></label>
+</fieldset>
+```
+
+### Display
+
+To show a score, give an element `class="rating"`, `role="img"`, a name with the value and `--md-comp-rating-value`. The stars fill to that value, halves included, from the start edge.
+
+```html
+<span class="rating" role="img" aria-label="Rated 4.5 out of 5" style="--md-comp-rating-value: 4.5"></span>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-rating-size` | 24px; display: 20px |
+| `--md-comp-rating-color` | `tertiary` |
+| `--md-comp-rating-empty-color` | `outline-variant` |
+| `--md-comp-rating-value` | 0 (display) |
+| `--md-comp-rating-max` | 5 (display) |
 
 ---
 

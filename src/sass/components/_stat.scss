@@ -1,0 +1,88 @@
+@use "../abstracts" as *;
+
+// Stat. A <dl class="stats"> of key figures, such as a dashboard summary.
+// Each figure is a <div> tile holding a <dt> label, a <dd> value and an
+// optional <dd class="stat-change"> comparison. A description list keeps
+// each value paired with its label for assistive technology.
+//
+// .stat-change takes .up or .down for the arrow and .negative when the
+// change is bad news. The arrow is decoration: say the direction in the
+// text, as in "+12% from last month".
+//
+// Tokens:
+//   --md-comp-stat-container-color  surface-container-low
+//   --md-comp-stat-shape            16px
+//   --md-comp-stat-min-width        160px (tiles wrap below this)
+
+$_stat-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 20V7.8l-5.6 5.6L4 12l8-8 8 8-1.4 1.4L13 7.8V20z'/%3E%3C/svg%3E");
+
+.stats {
+  --md-comp-stat-container-color: var(--md-sys-color-surface-container-low);
+  --md-comp-stat-shape: 16px;
+  --md-comp-stat-min-width: 160px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--md-comp-stat-min-width)), 1fr));
+  gap: 12px;
+  margin: $element-top-margin 0 $element-bottom-margin;
+  padding: 0;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    padding: 16px;
+    border-radius: var(--md-comp-stat-shape);
+    background-color: var(--md-comp-stat-container-color);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  dt {
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("title-small");
+  }
+
+  dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+    @include typescale("headline-large");
+  }
+
+  dd.stat-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("label-large");
+
+    &:is(.up, .down)::before {
+      content: "";
+      flex: none;
+      width: 18px;
+      height: 18px;
+      background-color: currentColor;
+      mask: $_stat-arrow center / 18px no-repeat;
+    }
+
+    &.down::before {
+      transform: rotate(180deg);
+    }
+
+    &.negative {
+      color: var(--md-sys-color-error);
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .stats > div {
+    outline: 1px solid CanvasText;
+  }
+
+  .stats dd.stat-change::before {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+}

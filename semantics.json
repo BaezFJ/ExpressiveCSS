@@ -712,6 +712,32 @@
         }
       ]
     },
+    "forms/rating": {
+      "status": "enforced",
+      "note": "Added with the rating component. The input is a fieldset of native radios drawn as stars; the display is a named image.",
+      "rules": [
+        {
+          "id": "rating-is-a-fieldset-or-an-image",
+          "kind": "forbid",
+          "selector": ".rating:not(fieldset):not([role=\"img\"])",
+          "fragmentSafe": true,
+          "message": "A .rating is either a <fieldset> of radios, for input, or an element with role=\"img\" and a name, for display. Anything else draws stars that say nothing."
+        },
+        {
+          "id": "rating-display-is-named",
+          "kind": "require-accessible-name",
+          "selector": ".rating[role=\"img\"]",
+          "message": "Name a rating display with the value, such as aria-label=\"Rated 4.5 out of 5\"."
+        },
+        {
+          "id": "rating-label-text-precedes-the-radio",
+          "kind": "forbid",
+          "selector": "fieldset.rating [type=\"radio\"] + span",
+          "fragmentSafe": true,
+          "message": "Put a star's visually hidden text before its radio. A span after the radio is the older input + span pattern, which hides the radio and with it the star."
+        }
+      ]
+    },
     "forms/select": {
       "status": "enforced",
       "note": "Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select.test.js.",
@@ -1074,6 +1100,89 @@
           "selector": ".stepper > li.error",
           "fragmentSafe": true,
           "message": "Mark a step that needs attention with .invalid. .error is the error color utility: it paints the whole step red and is not spoken."
+        }
+      ]
+    },
+    "timeline": {
+      "status": "enforced",
+      "note": "Added with the timeline component. An ordered list of events; the order is the content.",
+      "rules": [
+        {
+          "id": "timeline-is-an-ordered-list",
+          "kind": "forbid",
+          "selector": ".timeline:not(ol)",
+          "fragmentSafe": true,
+          "message": "Write a timeline as <ol class=\"timeline\">. The events have an order, and an ordered list says so to assistive technology."
+        },
+        {
+          "id": "timeline-time-is-machine-readable",
+          "kind": "require-attr",
+          "selector": ".timeline time",
+          "attr": "datetime",
+          "message": "Give each <time> a datetime value. \"9:12 AM\" or \"Yesterday\" has no date a script, a translation tool or a reader in another time zone can use."
+        }
+      ]
+    },
+    "stat": {
+      "status": "enforced",
+      "note": "Added with the stat component. A description list pairs each value with its label; the change arrow is decoration and the text says the direction.",
+      "rules": [
+        {
+          "id": "stats-are-a-description-list",
+          "kind": "forbid",
+          "selector": ".stats:not(dl)",
+          "fragmentSafe": true,
+          "message": "Write .stats as a <dl> with a <dt> label and <dd> value per tile. Without the pairing a screen reader reads a run of numbers with nothing to say what each one is."
+        }
+      ]
+    },
+    "tree": {
+      "status": "enforced",
+      "note": "Added with the tree component. Nested lists of native disclosures and links: every row is a Tab stop and the browser opens a branch, so no tree role is promised.",
+      "rejects": {
+        "rejected_role": "tree",
+        "because": "its rows are native disclosures and links reached with Tab - a tree role promises arrow-key navigation, type-ahead and expanded states on treeitems that the markup does not have and that native details would fight",
+        "rule": "tree-is-not-a-tree-widget"
+      },
+      "rules": [
+        {
+          "id": "tree-is-not-a-tree-widget",
+          "kind": "forbid",
+          "selector": ".tree[role], .tree [role=\"treeitem\"], .tree [role=\"group\"]",
+          "fragmentSafe": true,
+          "message": "A .tree takes no ARIA tree roles. It is lists of disclosures and links, which keep their own roles and keyboard behavior."
+        },
+        {
+          "id": "tree-marks-current-not-selected",
+          "kind": "forbid",
+          "selector": ".tree [aria-selected]",
+          "fragmentSafe": true,
+          "message": "Mark the open file or page with aria-current. aria-selected is not valid on a link or a list item."
+        }
+      ]
+    },
+    "command-palette": {
+      "status": "enforced",
+      "note": "Added with the command palette component. A native modal dialog; the component makes the input a combobox and the list a listbox of options at runtime and owns the active option.",
+      "rules": [
+        {
+          "id": "command-palette-is-a-dialog",
+          "kind": "forbid",
+          "selector": ".command-palette:not(dialog)",
+          "fragmentSafe": true,
+          "message": "Write the palette as <dialog class=\"command-palette\">. The dialog makes it modal, closes it on Escape and returns focus."
+        },
+        {
+          "id": "command-palette-is-named",
+          "kind": "require-accessible-name",
+          "selector": "dialog.command-palette",
+          "message": "Name the palette with aria-label so it is announced when it opens."
+        },
+        {
+          "id": "command-palette-input-is-named",
+          "kind": "require-accessible-name",
+          "selector": "dialog.command-palette > input",
+          "message": "Name the search input with aria-label. A placeholder disappears as the user types and is not a reliable name."
         }
       ]
     },

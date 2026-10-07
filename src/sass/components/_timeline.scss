@@ -1,0 +1,114 @@
+@use "../abstracts" as *;
+
+// Timeline. An <ol class="timeline"> lists events in order, newest first or
+// oldest first as the page decides. Each <li> is an event: an optional
+// <time>, a heading and supporting text. A dot marks each event and a line
+// joins it to the next.
+//
+// A leading icon as the first child replaces the dot with a tonal circle.
+//
+// Tokens:
+//   --md-comp-timeline-marker-color     primary
+//   --md-comp-timeline-connector-color  outline-variant
+//   --md-comp-timeline-gap              24px (between events)
+
+.timeline {
+  --md-comp-timeline-marker-color: var(--md-sys-color-primary);
+  --md-comp-timeline-connector-color: var(--md-sys-color-outline-variant);
+  --md-comp-timeline-gap: 24px;
+
+  margin: $element-top-margin 0 $element-bottom-margin;
+  padding: 0;
+  list-style: none;
+
+  > li {
+    position: relative;
+    margin: 0;
+    padding-block-end: var(--md-comp-timeline-gap);
+    padding-inline-start: 32px;
+    color: var(--md-sys-color-on-surface);
+
+    // The dot sits level with the first line of text.
+    &::before {
+      content: "";
+      position: absolute;
+      inset-block-start: 4px;
+      inset-inline-start: 4px;
+      box-sizing: border-box;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--md-comp-timeline-marker-color);
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset-block: 20px 0;
+      inset-inline-start: 9.5px;
+      width: 1px;
+      background-color: var(--md-comp-timeline-connector-color);
+    }
+
+    &:last-child {
+      padding-block-end: 0;
+
+      &::after {
+        content: none;
+      }
+    }
+
+    > time {
+      display: block;
+      color: var(--md-sys-color-on-surface-variant);
+      @include typescale("label-medium");
+    }
+
+    > :is(h1, h2, h3, h4, h5, h6) {
+      margin: 0;
+      @include typescale("title-small");
+    }
+
+    > p {
+      margin: 4px 0 0;
+      color: var(--md-sys-color-on-surface-variant);
+      @include typescale("body-medium");
+    }
+  }
+
+  // A leading icon takes the dot's place in a 32px tonal circle.
+  > li:has(> #{$icon}:first-child) {
+    padding-inline-start: 48px;
+
+    &::before {
+      content: none;
+    }
+
+    &::after {
+      inset-block-start: 36px;
+      inset-inline-start: 15.5px;
+    }
+
+    > #{$icon}:first-child {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-on-secondary-container);
+      font-size: 18px;
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .timeline > li::before {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+}

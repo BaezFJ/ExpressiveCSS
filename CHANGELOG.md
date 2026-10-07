@@ -45,6 +45,22 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Menu `contextMenu` option, also set by `data-context-menu` on the trigger:
   the trigger is a region, and its menu opens at the pointer on right-click,
   long-press, the menu key or Shift+F10, flipping to stay on screen.
+- Timeline component: `ol.timeline` marks each event with a dot joined to the
+  next by a line, or with a leading icon in a tonal circle. CSS only.
+- Stat component: `dl.stats` lays out key figures as wrapping tiles, with a
+  `.stat-change` line that takes `up`, `down` and `negative`. CSS only.
+- Tree component: `ul.tree` nests lists of native disclosures and links with
+  guide lines, turning chevrons and an `aria-current` row. It takes no tree
+  role. CSS only.
+- Rating component: `fieldset.rating` draws native radios as stars that fill
+  up to the choice and preview on hover; `.rating[role="img"]` with
+  `--md-comp-rating-value` shows a score, halves included. CSS only.
+- Command palette component: `dialog.command-palette` with a search input and
+  a list of link or button commands. `CommandPalette` filters by text and
+  `data-keywords`, moves the active command with the arrow keys, runs it with
+  Enter and opens on Ctrl+K or Command+K. `AutoInit()` starts it.
+- `<kbd>` is drawn as a keycap; an outer `<kbd>` around a combination stays
+  plain.
 - `.scroll-area` styles native scrollbars with theme-aware colors and thin
   sizing, with a WebKit fallback and system scrollbars in forced-colors mode.
 - Frosted glass for floating surfaces. `--expressive-glass: true` on `:root` or

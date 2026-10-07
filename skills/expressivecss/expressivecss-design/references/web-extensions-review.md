@@ -185,3 +185,73 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified. Next check: Drag files from the operating system onto the zone in each engine and confirm the selection and list update; check the list announcement with a screen reader.
 
 Mapped browser scope: Input covering the label, label naming the input, dragover set and cleared by dragenter, dragleave and drop, listed names and sizes, list cleared on an empty selection and keyboard focus ring. No spoken-output assertion.
+
+## [Tree](../../components/tree.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Expose each branch's expanded state, mark the current item, keep every row reachable by keyboard and avoid a tree role without its arrow-key contract.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The browser owns the disclosures and links; the framework draws the rows, guides and chevrons and withholds the tree role.
+
+Verification gap: Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified. Next check: Navigate a deep tree with a keyboard and a screen reader in each engine; measure how many Tab stops a long tree costs and whether arrow-key navigation is needed.
+
+Mapped browser scope: Level indent, leaf and branch text alignment, open and closed chevrons in LTR and RTL, opening a branch, the current row fill, guide lines and no tree role. No spoken-output assertion.
+
+## [Stat](../../components/stat.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Pair every value with its label, state the direction and comparison of a change in text and keep long values from overflowing their tile.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework lays out the tiles; the page owns the figures and the wording of each change.
+
+Verification gap: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next check: Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths.
+
+Mapped browser scope: One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion.
+
+## [Timeline](../../components/timeline.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep events in an ordered list in the order shown, give each a machine-readable time and hide decorative markers and icons.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the markers and line; the page owns the order, times and wording.
+
+Verification gap: Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified. Next check: Read a timeline with a screen reader in each engine and confirm the order and times are announced; test enlarged text.
+
+Mapped browser scope: Marker column, dot size, connecting line and its absence on the last event, the icon circle and its column in LTR and RTL. No spoken-output assertion.
+
+## [Command palette](../../components/command-palette.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep focus in the input while the active option moves, report it with aria-activedescendant, announce when nothing matches, return focus on close and let users turn the shortcut off.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The native dialog owns modality and focus return; the framework adds filtering, the combobox and listbox roles and the shortcut.
+
+Verification gap: The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified. Next check: Run commands with a screen reader in each engine and confirm the active option and the empty message are announced; check that Ctrl+K does not clash with the screen reader or browser.
+
+Mapped browser scope: Combobox and listbox roles, Ctrl+K toggle, input focus, top placement, wrapping arrows, accent-insensitive and keyword filtering, hidden empty groups, the empty message, Enter and click running a command, closing with focus return, the commandfor opener, a fresh search on reopening, Escape, destroy and the keycap style. No spoken-output assertion.
+
+## [Rating](../../components/rating.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep a native radio group with a legend and a name for every star, show focus, fill by more than color where possible and name a read-only display with its value.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. Native radios own the keyboard and the form value; the framework draws them as stars.
+
+Verification gap: Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified. Next check: Rate with a keyboard and a screen reader in each engine, including Safari, and confirm the focus ring follows the arrows and each star is announced.
+
+Mapped browser scope: Visible 24px masked radios, fill up to the checked star, Tab entry and arrow keys, focus ring on entry, hover preview, form value, display width and fill direction in LTR and RTL, and the group, radio and image names. No spoken-output assertion.

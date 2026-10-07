@@ -1,0 +1,124 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "keyboard", label: "Keyboard" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="command_palette">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;dialog class="command-palette"&gt;</code> holds a search
+          input and a list of commands. Each command is a link or button, so
+          running one is an ordinary click.
+        </p>
+        <p>
+          An <code>&lt;li class="label"&gt;</code> heads a group, and an
+          optional <code>.command-palette-empty</code> message shows when
+          nothing matches. <code>AutoInit()</code> starts every
+          <code>dialog.command-palette</code>. For searching content rather than
+          running commands, use <a href={route('search')}>search</a>.
+        </p>
+        <p class="mb-3">
+          <button type="button" class="tonal" commandfor="demo-commands" command="show-modal">
+            Open commands <kbd><kbd>Ctrl</kbd>+<kbd>K</kbd></kbd>
+          </button>
+        </p>
+        <dialog id="demo-commands" class="command-palette" aria-label="Commands">
+          <input type="search" placeholder="Type a command" aria-label="Search commands">
+          <ul>
+            <li class="label">Pages</li>
+            <li><a href={route('buttons')}><span class="material-symbols" aria-hidden="true">smart_button</span>Buttons</a></li>
+            <li><a href={route('menu')}><span class="material-symbols" aria-hidden="true">menu</span>Menu</a></li>
+            <li><a href={route('dialogs')} data-keywords="modal"><span class="material-symbols" aria-hidden="true">web_asset</span>Dialogs</a></li>
+            <li class="label">Theme</li>
+            <li><button type="button" data-keywords="theme mode" onclick="document.documentElement.setAttribute('theme', 'dark')"><span class="material-symbols" aria-hidden="true">dark_mode</span>Dark theme</button></li>
+            <li><button type="button" data-keywords="theme mode" onclick="document.documentElement.setAttribute('theme', 'light')"><span class="material-symbols" aria-hidden="true">light_mode</span>Light theme</button></li>
+          </ul>
+          <p class="command-palette-empty" role="status">No matching commands</p>
+        </dialog>
+<Code code={`
+<button type="button" commandfor="commands" command="show-modal">
+  Commands <kbd><kbd>Ctrl</kbd>+<kbd>K</kbd></kbd>
+</button>
+<dialog id="commands" class="command-palette" aria-label="Commands">
+  <input type="search" placeholder="Type a command" aria-label="Search commands">
+  <ul>
+    <li class="label">Files</li>
+    <li>
+      <button type="button" data-keywords="create add">
+        <span class="material-symbols" aria-hidden="true">note_add</span>
+        New file
+        <kbd>Ctrl N</kbd>
+      </button>
+    </li>
+    <li><a href="/settings">
+      <span class="material-symbols" aria-hidden="true">settings</span>
+      Settings
+    </a></li>
+  </ul>
+  <p class="command-palette-empty" role="status">No matching commands</p>
+</dialog>
+`} />
+  </Section>
+  <Section {...S.keyboard}>
+        <p>
+          Ctrl+K, or Command+K on Apple platforms, opens and closes the palette
+          from anywhere on the page. Typing filters the commands by their text
+          and any <code>data-keywords</code>, ignoring case and accents. Focus
+          stays in the input: the arrow keys move the active command and Enter
+          runs it. Escape closes the dialog and returns focus. Each opening
+          starts with an empty search.
+        </p>
+        <p>
+          The component makes the input a combobox and the list a listbox, and
+          reports the active command with <code>aria-activedescendant</code>.
+          Name the dialog and the input with <code>aria-label</code>.
+        </p>
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+          <tr>
+            <td><code>shortcut</code></td>
+            <td>String</td>
+            <td><code>'k'</code></td>
+            <td>Letter that toggles the palette with Ctrl or Command. <code>null</code> turns it off. <code>data-shortcut</code> on the dialog sets it, and an empty <code>data-shortcut</code> turns it off.</td>
+          </tr>
+          <tr>
+            <td><code>closeOnRun</code></td>
+            <td>Boolean</td>
+            <td><code>true</code></td>
+            <td>If true, the palette closes after a command runs.</td>
+          </tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+const palette = Expressive.CommandPalette.getInstance(document.getElementById('commands'));
+palette.open();     // modal, with the input focused
+palette.close();
+palette.destroy();  // removes the shortcut, listeners, roles and ids it added
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.command-palette</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-command-palette-max-width</code></td><td>640px</td></tr>
+          <tr><td><code>--md-comp-command-palette-item-height</code></td><td>48px</td></tr>
+          <tr><td><code>--md-comp-command-palette-active-container-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

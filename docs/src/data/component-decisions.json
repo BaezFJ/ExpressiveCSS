@@ -782,7 +782,8 @@
       "alternatives": [
         "tabs",
         "progress",
-        "breadcrumbs"
+        "breadcrumbs",
+        "timeline"
       ],
       "adaptive": [],
       "runtime": "css-only",
@@ -1071,6 +1072,92 @@
           }
         ],
         "inventorySha256": "c04a890acc518f0e6c2c339b320e0eb1e90e734d0d897c367bd6c15d655858fa"
+      }
+    },
+    {
+      "slug": "tree",
+      "title": "Tree",
+      "aliases": [
+        "tree view",
+        "file tree",
+        "folder tree",
+        "nested navigation"
+      ],
+      "guideSource": {
+        "pageId": "tree",
+        "heading": "Tree",
+        "headingLevel": 2,
+        "semantics": [
+          "tree"
+        ]
+      },
+      "jobs": [
+        "Nested lists of folders and links that open in place, for file browsers and deep navigation."
+      ],
+      "useWhen": [
+        "Browse a hierarchy several levels deep, such as files or nested sections, with branches that open in place."
+      ],
+      "avoidWhen": [
+        "One or two levels of navigation need a navigation rail or a list; peer sections need tabs."
+      ],
+      "alternatives": [
+        "lists",
+        "navigation-rail",
+        "accordion"
+      ],
+      "adaptive": [],
+      "runtime": "native",
+      "guide": "../components/tree.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#tree",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Nested lists of native disclosures and links with guide lines, turning chevrons in LTR and RTL, leading icons and an aria-current row.",
+          "webAdaptation": "Native <details> branches and links; every row is a Tab stop and no tree role is promised.",
+          "limitations": [
+            "Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Expose each branch's expanded state, mark the current item, keep every row reachable by keyboard and avoid a tree role without its arrow-key contract."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Three settings pages under one heading are a list or a navigation rail. A tree would add chevrons and indentation for a hierarchy one level deep.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_tree.scss",
+            "sha256": "3d290dec16e25b71a3e06cbd5fafd3340253659fbf9d95953193dab29b10aa21"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified.",
+            "nextStep": "Navigate a deep tree with a keyboard and a screen reader in each engine; measure how many Tab stops a long tree costs and whether arrow-key navigation is needed."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/tree-browser.test.js",
+            "name": "chromium: tree indents its levels, turns its chevrons and marks the current row",
+            "scope": "Level indent, leaf and branch text alignment, open and closed chevrons in LTR and RTL, opening a branch, the current row fill, guide lines and no tree role. No spoken-output assertion."
+          }
+        ]
       }
     },
     {
@@ -2106,6 +2193,178 @@
             "file": "tests/data-table-browser.test.js",
             "name": "chromium: data table keeps table semantics, sticks its header and draws sort and selection",
             "scope": "Table, column header and row counts through the wrapper, sticky header offset after scrolling, end-aligned numeric cells in LTR and RTL, sort arrow opacity and rotation, selected row fill and the named scroll region. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "stat",
+      "title": "Stat",
+      "aliases": [
+        "stat tile",
+        "kpi",
+        "metric",
+        "key figure",
+        "scorecard"
+      ],
+      "guideSource": {
+        "pageId": "stat",
+        "heading": "Stat",
+        "headingLevel": 2,
+        "semantics": [
+          "stat"
+        ]
+      },
+      "jobs": [
+        "Key figures in tiles, each with a label, a value and an optional change."
+      ],
+      "useWhen": [
+        "Summarize a few key figures, each with a label and an optional change, at the top of a dashboard."
+      ],
+      "avoidWhen": [
+        "Many rows of comparable records need a data table; a trend over time needs a chart."
+      ],
+      "alternatives": [
+        "data-table",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/stat.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#stat",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Wrapping tiles in a description list with headline values, and a change line with up, down and negative states.",
+          "webAdaptation": "A <dl> pairs each value with its label; the arrow is decoration and the text carries the direction.",
+          "limitations": [
+            "Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Pair every value with its label, state the direction and comparison of a change in text and keep long values from overflowing their tile."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Monthly revenue for every region and product is a data table. Stat tiles would turn a comparison into a wall of numbers without columns.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_stat.scss",
+            "sha256": "50a15a771c7e73f72b2813e2b68b1a946911974c6ac7d482b0a35db4b774d4aa"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.",
+            "nextStep": "Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/stat-browser.test.js",
+            "name": "chromium: stats tile their figures, wrap when narrow and mark the change",
+            "scope": "One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "timeline",
+      "title": "Timeline",
+      "aliases": [
+        "activity feed",
+        "history",
+        "event log",
+        "changelog"
+      ],
+      "guideSource": {
+        "pageId": "timeline",
+        "heading": "Timeline",
+        "headingLevel": 2,
+        "semantics": [
+          "timeline"
+        ]
+      },
+      "jobs": [
+        "Events in order, each with a time, a title and details, joined by a line."
+      ],
+      "useWhen": [
+        "Show what happened and when, in order, such as order tracking or an activity feed."
+      ],
+      "avoidWhen": [
+        "Steps the user still has to complete need a stepper; a live conversation needs messages."
+      ],
+      "alternatives": [
+        "stepper",
+        "lists",
+        "message"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/timeline.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#timeline",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Ordered events with times, headings and text, dots joined by a line and a leading icon variant.",
+          "webAdaptation": "An <ol> of events with <time datetime>; the dots and line are decoration.",
+          "limitations": [
+            "Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep events in an ordered list in the order shown, give each a machine-readable time and hide decorative markers and icons."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Cart, Shipping and Payment in a checkout are steps the user still has to finish, so they belong in a stepper. A timeline would present them as things that already happened.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_timeline.scss",
+            "sha256": "75d0c9d03e48ca32661b641bdab7890e2e50b3f6d17338bdfc4cb1977c7fc817"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified.",
+            "nextStep": "Read a timeline with a screen reader in each engine and confirm the order and times are announced; test enlarged text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/timeline-browser.test.js",
+            "name": "chromium: timeline marks each event, joins it to the next and swaps the dot for an icon",
+            "scope": "Marker column, dot size, connecting line and its absence on the last event, the icon circle and its column in LTR and RTL. No spoken-output assertion."
           }
         ]
       }
@@ -3694,7 +3953,8 @@
       ],
       "alternatives": [
         "text-fields",
-        "autocomplete"
+        "autocomplete",
+        "command-palette"
       ],
       "adaptive": [],
       "runtime": "css-only",
@@ -3758,6 +4018,98 @@
           }
         ],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
+      }
+    },
+    {
+      "slug": "command-palette",
+      "title": "Command palette",
+      "aliases": [
+        "command menu",
+        "cmd+k",
+        "ctrl+k",
+        "quick open",
+        "launcher",
+        "spotlight"
+      ],
+      "guideSource": {
+        "pageId": "command_palette",
+        "heading": "Command palette",
+        "headingLevel": 2,
+        "semantics": [
+          "command-palette"
+        ]
+      },
+      "jobs": [
+        "A searchable list of commands in a dialog, opened from anywhere with a shortcut."
+      ],
+      "useWhen": [
+        "Let people find and run any of many commands or destinations by typing, from anywhere in the app."
+      ],
+      "avoidWhen": [
+        "Searching content needs search; a few actions for one item need a menu."
+      ],
+      "alternatives": [
+        "search",
+        "menu",
+        "dialogs"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/command-palette.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#command-palette",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "A modal dialog with a filtering combobox and listbox, group headings, keywords, an empty message, a Ctrl or Command shortcut and native commandfor opening.",
+          "webAdaptation": "A native modal <dialog>; commands are links and buttons, and the component adds the combobox and listbox roles and the active option.",
+          "limitations": [
+            "The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep focus in the input while the active option moves, report it with aria-activedescendant, announce when nothing matches, return focus on close and let users turn the shortcut off."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Finding an order by customer name is search over content. A command palette is for running actions and opening places in the app.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_command-palette.scss",
+            "sha256": "ebd133b222693e0d2fde8e7e00fb868072d3f92ec3d5160048e2f3f2d7458291"
+          },
+          {
+            "path": "src/ts/components/commandPalette.ts",
+            "sha256": "b384f504227ccbd0d47f924adecad4cc4137c837561f77874664b72e6db33ee6"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified.",
+            "nextStep": "Run commands with a screen reader in each engine and confirm the active option and the empty message are announced; check that Ctrl+K does not clash with the screen reader or browser."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/command-palette-browser.test.js",
+            "name": "chromium: command palette opens on its shortcut, filters, moves with the arrows and runs a command",
+            "scope": "Combobox and listbox roles, Ctrl+K toggle, input focus, top placement, wrapping arrows, accent-insensitive and keyword filtering, hidden empty groups, the empty message, Enter and click running a command, closing with focus return, the commandfor opener, a fresh search on reopening, Escape, destroy and the keycap style. No spoken-output assertion."
+          }
+        ]
       }
     },
     {
@@ -4358,6 +4710,90 @@
           }
         ],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
+      }
+    },
+    {
+      "slug": "rating",
+      "title": "Rating",
+      "aliases": [
+        "stars",
+        "star rating",
+        "review score"
+      ],
+      "guideSource": {
+        "pageId": "rating",
+        "heading": "Rating",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/rating"
+        ]
+      },
+      "jobs": [
+        "Stars for choosing or showing a score, on native radio buttons."
+      ],
+      "useWhen": [
+        "Ask for or show a score on a short fixed scale, such as one to five stars."
+      ],
+      "avoidWhen": [
+        "A continuous value needs a slider; a yes or no answer needs a switch or checkbox."
+      ],
+      "alternatives": [
+        "radio-buttons",
+        "slider"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/rating.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#rating",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "A fieldset of radios drawn as stars with fill, hover preview and focus ring, and a read-only display that fills to a fractional value in LTR and RTL.",
+          "webAdaptation": "Native radios keep keyboard, form and naming behavior; the display is a named role=\"img\".",
+          "limitations": [
+            "Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep a native radio group with a legend and a name for every star, show focus, fill by more than color where possible and name a read-only display with its value."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Choosing a volume from 0 to 100 is a slider. Stars suit a short fixed scale where each step has a meaning.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_rating.scss",
+            "sha256": "17d48f333e0c722e47c1a4452fc8e5b7da8128a6f87e74a76fbbd0196160ae60"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified.",
+            "nextStep": "Rate with a keyboard and a screen reader in each engine, including Safari, and confirm the focus ring follows the arrows and each star is announced."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/rating-browser.test.js",
+            "name": "chromium: rating fills stars up to the choice, previews on hover and keeps native radios",
+            "scope": "Visible 24px masked radios, fill up to the checked star, Tab entry and arrow keys, focus ring on entry, hover preview, form value, display width and fill direction in LTR and RTL, and the group, radio and image names. No spoken-output assertion."
+          }
+        ]
       }
     },
     {
@@ -7728,5 +8164,5 @@
     "inputsUnchanged": true,
     "reportSha256": "5777e67403861540605d77c5a5055086a49e8fe086297abd8a4bb6cf399c1666"
   },
-  "sourceRevision": "a1bb4a01bec52072d5eb939c680ff1c4214c27a4"
+  "sourceRevision": "27827edfd01862ec3a24955014e2899d081490e0"
 }

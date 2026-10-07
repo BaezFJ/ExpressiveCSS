@@ -51,6 +51,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<a class="button menu-trigger" data-target="menu1">Drop</a><menu id="menu1"><li><a href="#!">one</a></li></menu>`,
   },
   {
+    name: "CommandPalette",
+    selector: "dialog.command-palette",
+    html: `<dialog class="command-palette" aria-label="Commands"><input type="search" aria-label="Search commands"><ul><li><button type="button">New file</button></li></ul></dialog>`,
+  },
+  {
     name: "Lightbox",
     selector: ".lightboxed",
     html: `<img class="lightboxed" tabindex="0" role="button" width="100" src="http://localhost/1.jpg" alt="Sample">`,
