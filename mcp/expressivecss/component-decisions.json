@@ -2324,7 +2324,7 @@
         "implementation": {
           "source": "llm.md#line-chart",
           "reviewedOn": "2026-10-06",
-          "documentedSupport": "Smooth monotone lines drawn from a figure's data table, with area, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.",
+          "documentedSupport": "Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
             "Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. There is no y axis labelling."
@@ -2384,7 +2384,7 @@
           {
             "file": "tests/line-chart-browser.test.js",
             "name": "chromium: line chart handles cards, headerless tables, RTL, strict values and forced colors",
-            "scope": "A chart in a sized card and in a primary action keeps its own layout and caption, a header row without <thead> is not data, the RTL axis matches its labels and arrow keys, ambiguous cell text is a gap, show() is safe without data and skips a repeated row, and swatches keep their series colors in forced colors."
+            "scope": "A chart in a sized card and in a primary action keeps its own layout and caption, a header row without <thead> is not data, the RTL axis matches its labels and arrow keys, ambiguous cell text is a gap, show() is safe without data and skips a repeated row, stacked bands fill down to the series below or the plot bottom with cursor points on the totals and each cell in the tooltip, a stacked gap breaks the series above it, the stacked range keeps 10% headroom above zero, and swatches keep their series colors in forced colors."
           }
         ]
       }

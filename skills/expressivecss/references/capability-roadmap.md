@@ -37,7 +37,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Accordion](#accordion) | implemented | source-reviewed | incomplete | 0 |
 | [Data table](#data-table) | implemented | source-reviewed | incomplete | 0 |
 | [Stat](#stat) | implemented | source-reviewed | incomplete | 0 |
-| [Line chart](#line-chart) | implemented | source-reviewed | incomplete | 1 |
+| [Line chart](#line-chart) | unassessed | needs-review | incomplete | 1 |
 | [Timeline](#timeline) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
@@ -478,9 +478,9 @@ Web adaptation: A <dl> pairs each value with its label; the arrow is decoration 
 
 ## Line chart
 
-**implemented within the stated scope.** Smooth monotone lines drawn from a figure's data table, with area, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.
+**unassessed within the stated scope.** Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.
 
-Source review: source-reviewed, 2026-10-06. [src/sass/components/_line-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/sass/components/_line-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/ts/components/lineChart.ts).
+Source review: needs-review, 2026-10-06. [src/sass/components/_line-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/sass/components/_line-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/ts/components/lineChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
 
@@ -491,7 +491,7 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 - not-recorded: [tests/line-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/tests/line-chart-browser.test.js): `chromium: line chart draws its table, keeps it readable and restores it on destroy`. Hidden table in the accessibility tree, aria-hidden SVG, series classes and colors, labels, legend, the dashed series, no curve overshoot, gaps, data-min, data-max, data-value, a typographic minus, the area modifier, the sparkline size and focus, and destroy restoring the table.
 - not-recorded: [tests/line-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/tests/line-chart-browser.test.js): `chromium: line chart tooltip follows the pointer and the arrow keys`. Pointer position to row, tooltip text and live region, cursor points, flipping right of centre, hiding on leave, focus, arrows, Home, End and Escape. No spoken-output assertion.
-- not-recorded: [tests/line-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/tests/line-chart-browser.test.js): `chromium: line chart handles cards, headerless tables, RTL, strict values and forced colors`. A chart in a sized card and in a primary action keeps its own layout and caption, a header row without <thead> is not data, the RTL axis matches its labels and arrow keys, ambiguous cell text is a gap, show() is safe without data and skips a repeated row, and swatches keep their series colors in forced colors.
+- not-recorded: [tests/line-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/tests/line-chart-browser.test.js): `chromium: line chart handles cards, headerless tables, RTL, strict values and forced colors`. A chart in a sized card and in a primary action keeps its own layout and caption, a header row without <thead> is not data, the RTL axis matches its labels and arrow keys, ambiguous cell text is a gap, show() is safe without data and skips a repeated row, stacked bands fill down to the series below or the plot bottom with cursor points on the totals and each cell in the tooltip, a stacked gap breaks the series above it, the stacked range keeps 10% headroom above zero, and swatches keep their series colors in forced colors.
 
 <a id="timeline"></a>
 

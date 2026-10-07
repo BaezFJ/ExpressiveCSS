@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `6ca0d01e1f64593d1a54b90f50c6ad2197d30f804f5b55fc5efafbf0be6e936e`
+Contract SHA-256: `847738b9d3e634743357db143ccba5936c1c3af878c81da6de0843c20d76ef9d`
 
 #### Selection and adaptation
 
@@ -29,7 +29,7 @@ Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-06, `llm.md#line-chart`): Smooth monotone lines drawn from a figure's data table, with area, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.
+Support (2026-10-06, `llm.md#line-chart`): Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
