@@ -46,6 +46,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<input type="text" class="date-picker">`,
   },
   {
+    name: "LineChart",
+    selector: ".line-chart",
+    html: `<figure class="line-chart"><figcaption>Revenue</figcaption><table><thead><tr><th>Month</th><th>Revenue</th></tr></thead><tbody><tr><th>Jan</th><td>1</td></tr><tr><th>Feb</th><td>2</td></tr></tbody></table></figure>`,
+  },
+  {
     name: "Menu",
     selector: ".menu-trigger",
     html: `<a class="button menu-trigger" data-target="menu1">Drop</a><menu id="menu1"><li><a href="#!">one</a></li></menu>`,

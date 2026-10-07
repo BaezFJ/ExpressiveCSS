@@ -2285,6 +2285,111 @@
       }
     },
     {
+      "slug": "line-chart",
+      "title": "Line chart",
+      "aliases": [
+        "line graph",
+        "chart",
+        "trend chart",
+        "time series",
+        "sparkline"
+      ],
+      "guideSource": {
+        "pageId": "line-chart",
+        "heading": "Line chart",
+        "headingLevel": 2,
+        "semantics": [
+          "line-chart"
+        ]
+      },
+      "jobs": [
+        "Trends over time drawn from a data table, with a tooltip, a legend and a sparkline size."
+      ],
+      "useWhen": [
+        "Show how one or a few measures change over an ordered axis such as months or days, with exact values a hover or a key press away."
+      ],
+      "avoidWhen": [
+        "Readers need to compare exact values across many rows or sort them; use a data table. A single headline figure needs a stat tile, optionally with a sparkline."
+      ],
+      "alternatives": [
+        "data-table",
+        "stat"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/line-chart.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#line-chart",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Smooth monotone lines drawn from a figure's data table, with area, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.",
+          "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+          "limitations": [
+            "Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. There is no y axis labelling."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the data available as text, name the chart, keep series distinguishable and let a keyboard reach every value the pointer can."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Monthly revenue against last year and a target is a line chart with three series. The same figures for twenty regions are a data table.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_line-chart.scss",
+            "sha256": "3b48d97a3b5e564a6663b9014587eacfd4c437d3f62e89ca2b558d87cfb10b51"
+          },
+          {
+            "path": "src/ts/components/lineChart.ts",
+            "sha256": "fb56e5e514057027a41d6b8e756d94435de02e4ad64407e284944aaa032730f3"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified.",
+            "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; test enlarged text."
+          },
+          {
+            "kind": "feature",
+            "description": "There are no y axis value labels; the grid lines carry no numbers.",
+            "nextStep": "Add optional y labels if charts need values readable without the tooltip."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/line-chart-browser.test.js",
+            "name": "chromium: line chart draws its table, keeps it readable and restores it on destroy",
+            "scope": "Hidden table in the accessibility tree, aria-hidden SVG, series classes and colors, labels, legend, the dashed series, no curve overshoot, gaps, data-min, data-max, data-value, a typographic minus, the area modifier, the sparkline size and focus, and destroy restoring the table."
+          },
+          {
+            "file": "tests/line-chart-browser.test.js",
+            "name": "chromium: line chart tooltip follows the pointer and the arrow keys",
+            "scope": "Pointer position to row, tooltip text and live region, cursor points, flipping right of centre, hiding on leave, focus, arrows, Home, End and Escape. No spoken-output assertion."
+          },
+          {
+            "file": "tests/line-chart-browser.test.js",
+            "name": "chromium: line chart handles cards, headerless tables, RTL, strict values and forced colors",
+            "scope": "A chart in a sized card and in a primary action keeps its own layout and caption, a header row without <thead> is not data, the RTL axis matches its labels and arrow keys, ambiguous cell text is a gap, show() is safe without data and skips a repeated row, and swatches keep their series colors in forced colors."
+          }
+        ]
+      }
+    },
+    {
       "slug": "timeline",
       "title": "Timeline",
       "aliases": [

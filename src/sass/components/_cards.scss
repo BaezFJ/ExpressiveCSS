@@ -18,6 +18,9 @@
 //   padding    16dp
 
 $_card: "article";
+// A direct <figure> is media, unless it is a chart. :where() keeps the
+// selectors at their old specificity.
+$_media-figure: "figure:where(:not(.line-chart))";
 
 :where(#{$_card}) {
   --md-comp-elevated-card-container-color: var(--md-sys-color-surface-container-low);
@@ -278,10 +281,10 @@ article > .actions {
 
 article > img,
 article > picture,
-article > figure,
+article > #{$_media-figure},
 article > .primary-action > img,
 article > .primary-action > picture,
-article > .primary-action > figure {
+article > .primary-action > #{$_media-figure} {
   display: block;
   width: 100%;
   margin: 0;
@@ -301,16 +304,16 @@ article > .primary-action > figure img {
   border-radius: var(--md-comp-card-media-shape);
 }
 
-article > figure {
+article > #{$_media-figure} {
   position: relative;
 }
 
-article > .primary-action > figure {
+article > .primary-action > #{$_media-figure} {
   position: relative;
 }
 
-article > figure > figcaption,
-article > .primary-action > figure > figcaption {
+article > #{$_media-figure} > figcaption,
+article > .primary-action > #{$_media-figure} > figcaption {
   position: absolute;
   inset-inline-start: var(--md-comp-card-content-padding);
   inset-inline-end: auto;
@@ -334,16 +337,16 @@ article > .primary-action > figure > figcaption {
 
 // Keep meaningful icons on the same opaque role pair as caption text. The
 // surface/on-surface pairing isolates both from unpredictable image colors.
-article > figure > figcaption > :is(.material-symbols, .card-icon, svg),
-article > .primary-action > figure > figcaption > :is(.material-symbols, .card-icon, svg) {
+article > #{$_media-figure} > figcaption > :is(.material-symbols, .card-icon, svg),
+article > .primary-action > #{$_media-figure} > figcaption > :is(.material-symbols, .card-icon, svg) {
   flex: 0 0 auto;
   color: inherit;
   font-size: var(--md-comp-card-icon-size);
   line-height: 1;
 }
 
-article > figure > figcaption > svg,
-article > .primary-action > figure > figcaption > svg {
+article > #{$_media-figure} > figcaption > svg,
+article > .primary-action > #{$_media-figure} > figcaption > svg {
   fill: currentColor;
 }
 
@@ -442,7 +445,7 @@ article > .primary-action > figure > figcaption > svg {
 
   > img,
   > picture,
-  > figure {
+  > #{$_media-figure} {
     grid-column: 1;
     grid-row: 1 / -1;
     width: 100%;
@@ -507,7 +510,7 @@ article.small, article.medium, article.large {
   display: flex;
   flex-direction: column;
 
-  > img, > picture, > figure {
+  > img, > picture, > #{$_media-figure} {
     flex: 0 1 60%;
     min-height: 0;
     overflow: hidden;
@@ -533,7 +536,7 @@ article.horizontal.medium,
 article.horizontal.large {
   display: grid;
 
-  > img, > picture, > figure {
+  > img, > picture, > #{$_media-figure} {
     max-height: none;
   }
 }

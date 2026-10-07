@@ -214,6 +214,22 @@ Verification gap: Tiling, wrapping, the value type role, arrow direction, the ne
 
 Mapped browser scope: One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion.
 
+## [Line chart](../../components/line-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, keep series distinguishable and let a keyboard reach every value the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the lines, labels, legend and tooltip from the page's table; the page owns the data, its formatting and the caption.
+
+Verification gap: Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; test enlarged text.
+
+Feature gap: There are no y axis value labels; the grid lines carry no numbers. Next check: Add optional y labels if charts need values readable without the tooltip.
+
+Mapped browser scope: Hidden table in the accessibility tree, aria-hidden SVG, series classes and colors, labels, legend, the dashed series, no curve overshoot, gaps, data-min, data-max, data-value, a typographic minus, the area modifier, the sparkline size and focus, destroy restoring the table, pointer and keyboard tooltip movement, the live region, charts inside sized cards and primary actions, headerless tables, the RTL axis and arrows, ambiguous cell text as gaps and forced-color swatches. No spoken-output assertion.
+
 ## [Timeline](../../components/timeline.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
