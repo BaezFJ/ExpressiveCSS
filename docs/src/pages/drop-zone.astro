@@ -1,0 +1,89 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "behavior", label: "Behavior" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="drop_zone">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.drop-zone</code> is a large target for choosing files. A
+          <code>&lt;label&gt;</code> holds an icon, a prompt and a native
+          <code>&lt;input type="file"&gt;</code>, and an optional
+          <code>.drop-zone-files</code> list shows what was chosen.
+        </p>
+        <p>
+          The input is stretched invisibly over the whole label, so a click,
+          Enter, Space or a dropped file reaches it exactly as it would a
+          plain file input, and the label text names it. For a compact
+          button and path field, use the
+          <a href={route('text_inputs') + '#file'}>file input</a>.
+        </p>
+        <div class="drop-zone" style="max-width: 32rem;">
+          <label>
+            <span class="material-symbols" aria-hidden="true">upload_file</span>
+            Drop files here or browse
+            <small>PDF or PNG, up to 10 MB</small>
+            <input type="file" multiple accept=".pdf,.png">
+          </label>
+          <ul class="drop-zone-files" aria-live="polite"></ul>
+        </div>
+<Code code={`
+<div class="drop-zone">
+  <label>
+    <span class="material-symbols" aria-hidden="true">upload_file</span>
+    Drop files here or browse
+    <small>PDF or PNG, up to 10 MB</small>
+    <input type="file" multiple accept=".pdf,.png">
+  </label>
+  <ul class="drop-zone-files" aria-live="polite"></ul>
+</div>
+`} />
+  </Section>
+  <Section {...S.behavior}>
+        <p>
+          The Forms behavior adds <code>dragover</code> to the zone while files
+          are over it and fills <code>.drop-zone-files</code> with each file's
+          name and size, formatted for the page's locale. It listens on the
+          document, so zones added later work too. A dropped file replaces the
+          selection, as it does on any file input; add <code>multiple</code>
+          to take several at once.
+        </p>
+        <p>
+          The browser does not apply <code>accept</code> to dropped files, so
+          check type and size where the files are used.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.drop-zone</code>.</p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-drop-zone-shape</code></td>
+            <td>16px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-drop-zone-outline-color</code></td>
+            <td><code>--md-sys-color-outline</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-drop-zone-dragover-container-color</code></td>
+            <td><code>--md-sys-color-primary-container</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-drop-zone-dragover-color</code></td>
+            <td><code>--md-sys-color-on-primary-container</code></td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

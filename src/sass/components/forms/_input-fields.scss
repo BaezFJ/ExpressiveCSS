@@ -177,7 +177,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   // .character-counter, .file-path). So the documented markup names the side
   // explicitly with .prefix / .suffix, and those rules key on nothing else.
   > i:is(.prefix, .suffix, :first-of-type, :last-of-type, :last-child),
-  > :is(.prefix, .suffix) {
+  > :is(.prefix, .suffix):not(.icon-button) {
     position: absolute;
     top: 16px;
     display: flex;
@@ -200,12 +200,21 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   > i.suffix,
   > i:last-of-type:not(:first-of-type),
   > i:last-child:not(:first-child):not(.prefix),
-  > .suffix {
+  > .suffix:not(.icon-button) {
     right: 12px;
     // Both icons inherited this from the floating-label rule until they were
     // excluded from it. .prefix restates it below; .suffix has to as well, or
     // the trailing icon swallows the click that should focus the input.
     pointer-events: none;
+  }
+
+  // A trailing icon button is a control, so it keeps its 40dp target and its
+  // clicks. It centres on the same point as a 24dp trailing icon.
+  > .icon-button.suffix {
+    position: absolute;
+    top: 8px;
+    right: 4px;
+    z-index: 1;
   }
 
   &:has(> i:first-of-type:not(.suffix):not(:last-child), > i.prefix, > .prefix) {
@@ -348,6 +357,128 @@ textarea {
 
     &:focus-visible:after {
       text-indent: -9999px;
+    }
+  }
+}
+
+// Password visibility toggle. A trailing .icon-button.password-toggle with
+// aria-pressed holds two icons: the first shows while the password is hidden,
+// the second once it is shown. The Forms behavior flips the input's type.
+.password-toggle {
+  > #{$icon}:last-child:not(:first-child) {
+    display: none;
+  }
+
+  &[aria-pressed="true"] {
+    > #{$icon}:first-child:not(:last-child) {
+      display: none;
+    }
+
+    > #{$icon}:last-child:not(:first-child) {
+      display: inline-block;
+    }
+  }
+}
+
+// One-time code. A single native input drawn as a row of cells, so paste,
+// autofill from autocomplete="one-time-code", undo and the caret all stay the
+// browser's. A monospace face makes every digit 1ch wide; letter-spacing
+// moves each one to the next cell, and the input is clipped after the last.
+//
+// Tokens:
+//   --md-comp-otp-length          6
+//   --md-comp-otp-cell-width      48px
+//   --md-comp-otp-cell-height     56px
+//   --md-comp-otp-gap             8px
+//   --md-comp-otp-cell-color      surface-container-highest
+//   --md-comp-otp-indicator-color on-surface-variant / focus: primary
+//
+// :not(.browser-default) matches the weight of the shared text-input rule
+// above, which would otherwise win on width, height and letter-spacing.
+input.otp:not(.browser-default) {
+  --md-comp-otp-length: 6;
+  --md-comp-otp-cell-width: 48px;
+  --md-comp-otp-cell-height: 56px;
+  --md-comp-otp-gap: 8px;
+  --md-comp-otp-cell-color: var(--md-sys-color-surface-container-highest);
+  --md-comp-otp-indicator-color: var(--md-sys-color-on-surface-variant);
+  // Derived, not for overriding: the distance between cell starts, the
+  // inset that centres a digit in its cell, and the box past the last cell
+  // that the caret needs and the clip hides.
+  --md-comp-otp-pitch: calc(var(--md-comp-otp-cell-width) + var(--md-comp-otp-gap));
+  --md-comp-otp-inset: calc((var(--md-comp-otp-cell-width) - 1ch) / 2);
+  --md-comp-otp-overhang: calc(var(--md-comp-otp-gap) + var(--md-comp-otp-inset) + 2px);
+
+  box-sizing: border-box;
+  display: block;
+  // Room for the caret after the last digit, clipped back to the cells; the
+  // negative margin gives the overhang back to the layout.
+  width: calc(var(--md-comp-otp-length) * var(--md-comp-otp-pitch) + var(--md-comp-otp-inset) + 2px);
+  height: var(--md-comp-otp-cell-height);
+  margin: 0 calc(var(--md-comp-otp-overhang) * -1) 0 0;
+  padding: 0 0 0 var(--md-comp-otp-inset);
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  box-shadow: none;
+  clip-path: inset(0 var(--md-comp-otp-overhang) 0 0);
+  // Digits read left to right in every script.
+  direction: ltr;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: calc(var(--md-comp-otp-pitch) - 1ch);
+  color: var(--md-sys-color-on-surface);
+  caret-color: var(--md-sys-color-primary);
+  background-color: transparent;
+  background-image:
+    linear-gradient(
+      to right,
+      var(--md-comp-otp-indicator-color) var(--md-comp-otp-cell-width),
+      transparent 0
+    ),
+    linear-gradient(
+      to right,
+      var(--md-comp-otp-cell-color) var(--md-comp-otp-cell-width),
+      transparent 0
+    );
+  background-size:
+    var(--md-comp-otp-pitch) 1px,
+    var(--md-comp-otp-pitch) 100%;
+  background-position: left bottom, left top;
+  background-repeat: repeat-x;
+
+  &::placeholder {
+    color: var(--md-sys-color-on-surface-variant);
+    opacity: 1;
+  }
+
+  // Every cell's indicator turns primary and thickens while the code has
+  // focus; the clip would cut an outline, so this is the focus ring.
+  &:focus,
+  &:focus-visible {
+    --md-comp-otp-indicator-color: var(--md-sys-color-primary);
+
+    outline: 0;
+    background-size:
+      var(--md-comp-otp-pitch) 2px,
+      var(--md-comp-otp-pitch) 100%;
+  }
+
+  &.invalid,
+  &[aria-invalid="true"] {
+    --md-comp-otp-indicator-color: var(--md-sys-color-error);
+  }
+
+  &:disabled {
+    opacity: 0.38;
+  }
+
+  @media (forced-colors: active) {
+    --md-comp-otp-indicator-color: CanvasText;
+
+    &:focus {
+      --md-comp-otp-indicator-color: Highlight;
     }
   }
 }

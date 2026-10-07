@@ -1,0 +1,139 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "toggletip", label: "Toggletip" },
+  { id: "placement", label: "Placement" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="popover">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.popover</code> is a native <code>[popover]</code> panel. The
+          button that opens it names it with <code>popovertarget</code>, and
+          the panel opens against that button.
+        </p>
+        <p>
+          The browser does the work: pressing the button toggles the panel,
+          Escape or a click outside closes it, focus returns to the button,
+          and the button reports the panel as expanded. CSS anchor
+          positioning places it and flips it when it would not fit. There is
+          no JavaScript. It looks like a
+          <a href={route('tooltips')}>rich tooltip</a>, but it opens on press,
+          stays open while the user reads or acts, and can hold buttons.
+        </p>
+        <p class="mb-3">
+          <button type="button" class="tonal" popovertarget="demo-storage">Storage details</button>
+        </p>
+        <div id="demo-storage" class="popover" popover>
+          <h3>Storage</h3>
+          <p>Files in the trash count toward your quota until you empty it.</p>
+          <div class="popover-actions">
+            <button type="button" class="text">Empty trash</button>
+            <button type="button" class="text" popovertarget="demo-storage" popovertargetaction="hide">Close</button>
+          </div>
+        </div>
+<Code code={`
+<button type="button" class="tonal" popovertarget="storage">Storage details</button>
+<div id="storage" class="popover" popover>
+  <h3>Storage</h3>
+  <p>Files in the trash count toward your quota until you empty it.</p>
+  <div class="popover-actions">
+    <button type="button" class="text">Empty trash</button>
+    <button type="button" class="text" popovertarget="storage" popovertargetaction="hide">Close</button>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S.toggletip}>
+        <p>
+          A short popover behind an info <a href={route('icon_buttons')}>icon
+          button</a> is a toggletip: a note the user asks for, which stays
+          until they dismiss it. Name the button for what it explains.
+        </p>
+        <p class="flex align-center gap-2 mb-3">
+          <span class="body-large">Two-step verification</span>
+          <button type="button" class="icon-button" popovertarget="demo-2sv" aria-label="About two-step verification">
+            <span class="material-symbols" aria-hidden="true">info</span>
+          </button>
+        </p>
+        <div id="demo-2sv" class="popover" popover>
+          <p>After your password, we ask for a code from your phone.</p>
+        </div>
+<Code code={`
+<button type="button" class="icon-button" popovertarget="tip-2sv"
+        aria-label="About two-step verification">
+  <span class="material-symbols" aria-hidden="true">info</span>
+</button>
+<div id="tip-2sv" class="popover" popover>
+  <p>After your password, we ask for a code from your phone.</p>
+</div>
+`} />
+  </Section>
+  <Section {...S.placement}>
+        <p>
+          By default the panel opens below the button with their start edges
+          aligned. Add <code>top</code> to open above, or <code>start</code>
+          or <code>end</code> to open beside the button, centered on it. In
+          every case the panel flips to the other side when it would leave
+          the viewport.
+        </p>
+        <p class="flex flex-wrap gap-2 mb-3">
+          <button type="button" class="outlined" popovertarget="demo-top">Top</button>
+          <button type="button" class="outlined" popovertarget="demo-start">Start</button>
+          <button type="button" class="outlined" popovertarget="demo-end">End</button>
+        </p>
+        <div id="demo-top" class="popover top" popover><p>Above the button.</p></div>
+        <div id="demo-start" class="popover start" popover><p>Before the button.</p></div>
+        <div id="demo-end" class="popover end" popover><p>After the button.</p></div>
+<Code code={`
+<div id="above" class="popover top" popover>…</div>
+<div id="before" class="popover start" popover>…</div>
+<div id="after" class="popover end" popover>…</div>
+`} />
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The panel follows its button in the reading order, so a screen
+          reader reaches it next; the browser does not move focus into it.
+          Keep it short and leave the role off. A form, or anything the user
+          has to finish, belongs in a <a href={route('dialogs')}>dialog</a>.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.popover</code>.</p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-popover-container-color</code></td>
+            <td><code>--md-sys-color-surface-container</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-popover-shape</code></td>
+            <td>12px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-popover-padding</code></td>
+            <td>12px 16px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-popover-max-width</code></td>
+            <td>320px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-popover-gap</code></td>
+            <td>4px</td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

@@ -564,6 +564,26 @@
           }
         ]
       },
+      "forms/drop-zone": {
+        "status": "enforced",
+        "note": "Added with the drop zone component. A <label> wraps the native file input, which covers it, so the label text names the input and the browser handles clicks, keys and dropped files.",
+        "rules": [
+          {
+            "id": "drop-zone-input-is-in-the-label",
+            "kind": "forbid",
+            "selector": ".drop-zone > input[type=\"file\"]",
+            "fragmentSafe": true,
+            "message": "Put the file input inside the .drop-zone <label>. The label names the input and the input covers the label; a loose input is neither named nor a drop target."
+          },
+          {
+            "id": "drop-zone-files-are-a-list",
+            "kind": "forbid",
+            "selector": ".drop-zone-files:not(ul, ol)",
+            "fragmentSafe": true,
+            "message": "Write .drop-zone-files as a <ul>. The behavior fills it with one <li> per file, and a list tells assistive technology how many files were chosen."
+          }
+        ]
+      },
       "forms/fieldset": {
         "status": "enforced",
         "note": "Swept 0.8.0.",
@@ -597,7 +617,7 @@
       },
       "forms/input-fields": {
         "status": "enforced",
-        "note": "Swept 0.8.0. .field is the container; icons name their side and are hidden; supporting text is linked to the control it describes.",
+        "note": "Swept 0.8.0. .field is the container; icons name their side and are hidden; supporting text is linked to the control it describes. A .password-toggle reports its state with aria-pressed; input.otp is one native input drawn as cells.",
         "rules": [
           {
             "id": "field-container-class",
@@ -653,6 +673,28 @@
             "kind": "forbid",
             "selector": ".field:has(> small) > :is(input, textarea, select):not([aria-describedby])",
             "message": "A field with supporting text must point at it with aria-describedby, or the text is never read out with the control."
+          },
+          {
+            "id": "password-toggle-reports-its-state",
+            "kind": "require-attr",
+            "selector": ".password-toggle",
+            "attr": "aria-pressed",
+            "message": "Give a .password-toggle aria-pressed=\"false\". The behavior flips it, and its name stays \"Show password\", so the pressed state is how a screen reader user hears that the password is visible."
+          },
+          {
+            "id": "otp-autocompletes",
+            "kind": "require-attr",
+            "selector": "input.otp",
+            "attr": "autocomplete",
+            "equals": "one-time-code",
+            "message": "Set autocomplete=\"one-time-code\" on a one-time code input so the browser can offer the code from a message."
+          },
+          {
+            "id": "otp-is-not-a-number",
+            "kind": "forbid",
+            "selector": "input.otp[type=\"number\"]",
+            "fragmentSafe": true,
+            "message": "A code is not a quantity: type=\"number\" drops leading zeros and adds a spinner. Use type=\"text\" with inputmode=\"numeric\"."
           }
         ]
       },
@@ -840,7 +882,7 @@
       },
       "menu": {
         "status": "enforced",
-        "note": "Swept 0.8.0.",
+        "note": "Swept 0.8.0. A [data-context-menu] trigger is a region: the menu opens at the pointer and the region carries no expanded state.",
         "rules": [
           {
             "id": "menu-children-are-list-items",
@@ -848,6 +890,13 @@
             "selector": "menu > :not(li):not(script):not(template)",
             "fragmentSafe": true,
             "message": "<menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there."
+          },
+          {
+            "id": "context-menu-region-is-not-a-control",
+            "kind": "forbid",
+            "selector": "[data-context-menu]:is(button, a[href], input, select, textarea)",
+            "fragmentSafe": true,
+            "message": "data-context-menu goes on a region of content. A button or link already has an action for Enter and click; give it its own menu trigger instead."
           }
         ]
       },
@@ -966,6 +1015,69 @@
             "kind": "forbid",
             "selector": ".empty-state > img:not([alt])",
             "message": "Give an empty-state illustration alt=\"\" when the heading already says what it shows, or alt text when the image adds information."
+          }
+        ]
+      },
+      "popover": {
+        "status": "enforced",
+        "note": "Added with the popover component. The panel is a native [popover] and its button names it with popovertarget or commandfor, so the browser owns opening, light dismiss, Escape and the button's expanded state.",
+        "rules": [
+          {
+            "id": "popover-is-native",
+            "kind": "forbid",
+            "selector": ".popover:not([popover])",
+            "fragmentSafe": true,
+            "message": "Give a .popover the popover attribute. Without it the panel is never in the top layer, never light-dismisses and its button reports no expanded state."
+          },
+          {
+            "id": "popover-target-exists",
+            "kind": "require-idref",
+            "selector": "[popovertarget]",
+            "attr": "popovertarget",
+            "container": "body",
+            "targetSelector": "[popover]",
+            "message": "popovertarget must name the id of a [popover] element in the page. A dangling id leaves a button that does nothing."
+          },
+          {
+            "id": "popover-is-not-a-tooltip",
+            "kind": "forbid",
+            "selector": ".popover[role=\"tooltip\"]",
+            "fragmentSafe": true,
+            "message": "A popover opens on press and can hold links and buttons, which a tooltip never can. Leave the role off; the browser relates the panel to its button."
+          }
+        ]
+      },
+      "stepper": {
+        "status": "enforced",
+        "note": "Added with the stepper component. The ordered list carries the step count and position; aria-current=\"step\" marks the current step, and CSS alt text speaks the complete and invalid states.",
+        "rules": [
+          {
+            "id": "stepper-is-an-ordered-list",
+            "kind": "forbid",
+            "selector": ".stepper:not(ol)",
+            "fragmentSafe": true,
+            "message": "Write a stepper as <ol class=\"stepper\">. The order is the content: an ordered list announces how many steps there are and which one each is."
+          },
+          {
+            "id": "stepper-current-is-a-step",
+            "kind": "forbid",
+            "selector": ".stepper > li[aria-current]:not([aria-current=\"step\"])",
+            "fragmentSafe": true,
+            "message": "Mark the current step with aria-current=\"step\". \"page\" or \"true\" tells assistive technology something else."
+          },
+          {
+            "id": "stepper-has-one-current-step",
+            "kind": "forbid",
+            "selector": ".stepper > li[aria-current=\"step\"] ~ li[aria-current=\"step\"]",
+            "fragmentSafe": true,
+            "message": "Only one step is current. Mark finished steps with .complete instead."
+          },
+          {
+            "id": "stepper-step-is-not-error-colored",
+            "kind": "forbid",
+            "selector": ".stepper > li.error",
+            "fragmentSafe": true,
+            "message": "Mark a step that needs attention with .invalid. .error is the error color utility: it paints the whole step red and is not spoken."
           }
         ]
       },

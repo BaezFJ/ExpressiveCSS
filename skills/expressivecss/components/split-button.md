@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `77049dd02d80b2517b41efda78166b7eea58d65a5f2ead006001a766e41ace3a`
+Contract SHA-256: `00c45e6908b89f296988437451efa32440ed78c6b3c4fee1d732f6997b9bd131`
 
 #### Selection and adaptation
 
@@ -77,6 +77,7 @@ The following are end-state semantic invariants. The rule IDs come directly from
 - `split-button-trailing-icon-hidden`: The ligature is real text and is read out verbatim, so an unhidden chevron names the trailing half "arrow_drop_down". It is decoration - the control carries the name - so it is aria-hidden="true", and `icon-only-control-is-named` then requires the aria-label.
 - `split-button-expanded-is-not-authored`: Expanded is dynamic state, so the framework owns it. Menu's constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten - and the expanded shape is drawn from that attribute, so an authored "true" draws an open split button over a closed menu.
 - `menu-children-are-list-items`: <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
+- `context-menu-region-is-not-a-control`: data-context-menu goes on a region of content. A button or link already has an action for Enter and click; give it its own menu trigger instead.
 
 #### Guide checks
 

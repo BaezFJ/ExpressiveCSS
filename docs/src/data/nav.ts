@@ -227,6 +227,13 @@ export const NAV: DocsGroup[] = [
           "A list of pages. The HTML is the component.",
       },
       {
+        id: "stepper",
+        label: "Stepper",
+        route: "/stepper.html",
+        description:
+          "Progress through a fixed sequence of steps, such as a checkout, with each step's state.",
+      },
+      {
         id: "menu",
         label: "Menu",
         route: "/menu.html",
@@ -371,6 +378,13 @@ export const NAV: DocsGroup[] = [
           "Material Design 3 tooltips, from the HTML.",
       },
       {
+        id: "popover",
+        label: "Popover",
+        route: "/popover.html",
+        description:
+          "A panel that opens from a button and stays until dismissed, on the native popover attribute.",
+      },
+      {
         id: "snackbar",
         label: "Snackbar",
         route: "/snackbar.html",
@@ -456,6 +470,13 @@ export const NAV: DocsGroup[] = [
         route: "/text-inputs.html",
         description:
           "Material Design 3 text fields, from the HTML.",
+      },
+      {
+        id: "drop_zone",
+        label: "Drop zone",
+        route: "/drop-zone.html",
+        description:
+          "A large target for choosing or dropping files, with a list of what was chosen.",
       },
       {
         id: "select",

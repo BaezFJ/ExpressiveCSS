@@ -27,6 +27,24 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `circle` shapes with a shimmer that stops under reduced motion. CSS only.
 - Empty state component: `.empty-state` centers an icon or illustration, a
   heading, supporting text and an `.empty-state-actions` row. CSS only.
+- Popover component: `.popover` styles a native `[popover]` panel opened by a
+  `popovertarget` button and places it with CSS anchor positioning, below the
+  button by default or with `top`, `start` and `end`, flipping to stay on
+  screen. Use it for toggletips and small action panels. CSS only.
+- Stepper component: `ol.stepper` numbers a fixed sequence of steps.
+  `aria-current="step"`, `complete` and `invalid` mark each step's state, and
+  the complete and invalid states are spoken through translatable tokens.
+  `vertical` stacks the steps and takes a `.stepper-content` panel. CSS only.
+- Drop zone component: `.drop-zone` stretches a native file input over a large
+  labelled target. The Forms behavior marks a drag with `dragover` and lists
+  each chosen file's name and size in `.drop-zone-files`.
+- Text fields take a trailing `.icon-button.suffix` as a clickable control.
+  `password-toggle` on that button shows and hides the password and reports
+  its state with `aria-pressed`. `input.otp` draws one native input as a row of
+  one-time code cells.
+- Menu `contextMenu` option, also set by `data-context-menu` on the trigger:
+  the trigger is a region, and its menu opens at the pointer on right-click,
+  long-press, the menu key or Shift+F10, flipping to stay on screen.
 - `.scroll-area` styles native scrollbars with theme-aware colors and thin
   sizing, with a WebKit fallback and system scrollbars in forced-colors mode.
 - Frosted glass for floating surfaces. `--expressive-glass: true` on `:root` or

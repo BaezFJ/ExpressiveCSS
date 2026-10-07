@@ -63,6 +63,8 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Loading indicator
 - Skeleton
 - Empty state
+- Popover
+- Stepper
 - Search
 - Button groups
 - Split button
@@ -87,6 +89,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Date Picker
 - Time Picker
 - Text Inputs
+- Drop zone
 - Fieldsets
 - Switches
 - Select
@@ -3844,6 +3847,96 @@ When a filter or search empties a list, offer the way back as the action.
 
 ---
 
+## Popover
+
+A panel that opens from a button and stays until dismissed, on the native popover attribute.
+
+A `.popover` is a `[popover]` element, and the button that opens it names it with `popovertarget` (or `commandfor` with `command="toggle-popover"`). The browser owns the behavior: pressing the button toggles the panel, Escape or a click outside closes it, focus returns to the button, and the button reports the panel as expanded. CSS anchor positioning places the panel 4px below the button with their start edges aligned, and flips it to the other side when it would not fit. CSS only; there is no JavaScript.
+
+It looks like a rich tooltip but behaves as a disclosure: it opens on press, stays open while the user reads or acts, and can hold links and buttons. A small one behind an info icon button is a toggletip. Add `top` to open above, or `start` or `end` to open beside the button, centered on it.
+
+```html
+<button class="icon-button" type="button" popovertarget="storage-help" aria-label="About storage">
+  <span class="material-symbols" aria-hidden="true">info</span>
+</button>
+<div id="storage-help" class="popover" popover>
+  <h3>Storage</h3>
+  <p>Files in the trash count toward your quota until you empty it.</p>
+  <div class="popover-actions">
+    <button type="button" class="text">Empty trash</button>
+  </div>
+</div>
+```
+
+### Accessibility
+
+Name an icon-only button for what it explains, not "Info". The panel follows the button in the reading order, so a screen reader reaches it next; the browser does not move focus into it. Keep the panel short. A form or anything the user must finish belongs in a dialog.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-popover-container-color` | `surface-container` |
+| `--md-comp-popover-shape` | 12px |
+| `--md-comp-popover-padding` | 12px 16px |
+| `--md-comp-popover-max-width` | 320px |
+| `--md-comp-popover-gap` | 4px |
+
+---
+
+## Stepper
+
+Progress through a fixed sequence of steps, such as a checkout, with each step's state.
+
+A `.stepper` is an `<ol>`, and each `<li>` is a step whose text is its label. The list numbers the steps. Mark the step the user is on with `aria-current="step"`, finished steps with `complete`, and a step that needs attention with `invalid`; the page keeps these current as the user moves. A complete step shows a check and an invalid one shows "!", and both states are spoken before the label through the indicator's alt text. CSS only; there is no JavaScript.
+
+A `<small>` after the label is supporting text, such as "Optional". A finished step can link back with an `<a>`. Steps never shrink below their label: a row too narrow for all of them wraps. Add `vertical` to stack the steps, which suits compact windows, and put a `.stepper-content` block in a vertical step to show its form or summary under the label.
+
+```html
+<ol class="stepper">
+  <li class="complete"><a href="/checkout/cart">Cart</a></li>
+  <li aria-current="step">Shipping<small>Address and speed</small></li>
+  <li>Payment</li>
+  <li>Review</li>
+</ol>
+```
+
+### Vertical
+
+```html
+<ol class="stepper vertical">
+  <li class="complete">Account</li>
+  <li aria-current="step">
+    Profile<small>Optional</small>
+    <div class="stepper-content">Add a photo and a short bio.</div>
+  </li>
+  <li>Done</li>
+</ol>
+```
+
+### Translation
+
+The spoken states are tokens. Set them in the page's language on the stepper or any ancestor.
+
+```css
+:root:lang(es) {
+  --md-comp-stepper-complete-label: "Completado";
+  --md-comp-stepper-error-label: "Error";
+}
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-stepper-indicator-size` | 24px |
+| `--md-comp-stepper-connector-color` | `outline-variant`; after a complete step: `primary` |
+| `--md-comp-stepper-active-color` | `primary` |
+| `--md-comp-stepper-complete-label` | `"Completed"` |
+| `--md-comp-stepper-error-label` | `"Error"` |
+
+---
+
 ## Auto Init
 
 Initialize every registered component with one function call.
@@ -3970,6 +4063,24 @@ This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https:
 
 For a menu inside a top app bar, see Navbar menu.
 
+### Context menu
+
+Add `data-context-menu` to a `.menu-trigger` that is a region of content, such as a file list or a card, and its menu replaces the browser's context menu there. Right-click opens it at the pointer, and it flips to stay on screen. The menu key and Shift+F10 open it at the region's start corner, so give the region `tabindex="0"` when it holds nothing focusable. Enter and Space stay with the region's own content.
+
+The region gets no `aria-expanded` or `aria-haspopup`, which belong to buttons. Every action in a context menu also needs another way in, such as a toolbar or an item's own menu button. Touch browsers that do not fire `contextmenu` on long-press, such as iOS Safari, never show it.
+
+```html
+<div class="menu-trigger" data-context-menu data-target="file-actions" tabindex="0">
+  …
+</div>
+<menu id="file-actions">
+  <li><button type="button">Rename</button></li>
+  <li><button type="button">Duplicate</button></li>
+  <li class="divider" role="separator"></li>
+  <li><button type="button">Delete</button></li>
+</menu>
+```
+
 ### Initialization
 
 The IIFE bundle exposes `Expressive.Menu`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.menu-trigger`.
@@ -4001,6 +4112,7 @@ Expressive.AutoInit(document.body, {
 | `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |
 | `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. |
 | `hover` | Boolean | `false` | If true, the menu opens on hover instead of click. |
+| `contextMenu` | Boolean | `false`; `true` with `data-context-menu` | If true, the trigger is a region and the menu opens at the pointer on right-click, long-press, the menu key or Shift+F10, instead of on click. |
 | `inDuration` | Number | `150` | Enter transition duration, in milliseconds. |
 | `outDuration` | Number | `250` | Exit transition duration, in milliseconds. |
 | `onOpenStart` | Function | `null` | Called when the menu starts opening. |
@@ -5545,6 +5657,43 @@ Expressive.Forms.InitTextarea(document.querySelector('#textarea1'));
 
 Setting `.value` in script does not resize the field. Call `textareaAutoResize` afterwards.
 
+### Trailing button
+
+A `.icon-button` with `suffix` sits at the end of the field as a control: it keeps its 40dp target and takes clicks, where a trailing icon lets them through to the input. Name it with `aria-label`.
+
+### Password visibility
+
+Add `password-toggle` to a trailing icon button with two icons and `aria-pressed="false"`. Pressing it shows the password as text and sets `aria-pressed="true"`; the first icon shows while the password is hidden and the second once it is shown. The name stays "Show password", and the pressed state tells a screen reader which way it is. The Forms behavior does the switch.
+
+```html
+<div class="field">
+  <input id="password" type="password" placeholder=" " autocomplete="current-password">
+  <label for="password">Password</label>
+  <button type="button" class="icon-button suffix password-toggle" aria-label="Show password" aria-pressed="false">
+    <span class="material-symbols" aria-hidden="true">visibility</span>
+    <span class="material-symbols" aria-hidden="true">visibility_off</span>
+  </button>
+</div>
+```
+
+### One-time code
+
+`input.otp` draws one native input as a row of six cells, so paste, autofill and undo keep working and a screen reader hears one field. Use `type="text"` with `inputmode="numeric"`, `autocomplete="one-time-code"` and a `maxlength` equal to the cell count, and label it outside any `.field`. Set `--md-comp-otp-length` for another length. Digits read left to right in every language.
+
+```html
+<label for="code">Verification code</label>
+<input id="code" class="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}">
+```
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-otp-length` | 6 |
+| `--md-comp-otp-cell-width` | 48px |
+| `--md-comp-otp-cell-height` | 56px |
+| `--md-comp-otp-gap` | 8px |
+| `--md-comp-otp-cell-color` | `surface-container-highest` |
+| `--md-comp-otp-indicator-color` | `on-surface-variant`; focus: `primary`; `invalid`: `error` |
+
 ### File input
 
 A `.file-field.field` pairs a button with a path field. `Forms.Init()` copies the chosen file name into `input.file-path`.
@@ -5574,6 +5723,37 @@ Expressive.CharacterCounter.init(
   document.querySelectorAll('#input_text_counter, #textarea_counter')
 );
 ```
+
+---
+
+## Drop zone
+
+A large target for choosing or dropping files, with a list of what was chosen.
+
+A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input is stretched invisibly over the whole label, so the browser takes a click, Enter, Space or a dropped file exactly as it does on a plain file input, and the label text names it. The Forms behavior adds `dragover` to the zone while files are dragged over it and lists each chosen file's name and size, formatted for the page's locale, in `.drop-zone-files`. The root bundle installs it on load, and the modular entry with `Forms.Init()`. It listens on the document, so zones added later work too.
+
+The browser does not apply `accept` to dropped files, so check type and size where the files are used. A dropped file replaces the selection, as it does on any file input; add `multiple` to take several at once.
+
+```html
+<div class="drop-zone">
+  <label>
+    <span class="material-symbols" aria-hidden="true">upload_file</span>
+    Drop files here or browse
+    <small>PDF or PNG, up to 10 MB</small>
+    <input type="file" multiple accept=".pdf,.png">
+  </label>
+  <ul class="drop-zone-files" aria-live="polite"></ul>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-drop-zone-shape` | 16px |
+| `--md-comp-drop-zone-outline-color` | `outline` |
+| `--md-comp-drop-zone-dragover-container-color` | `primary-container` |
+| `--md-comp-drop-zone-dragover-color` | `on-primary-container` |
 
 ---
 

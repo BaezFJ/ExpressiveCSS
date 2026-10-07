@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `77049dd02d80b2517b41efda78166b7eea58d65a5f2ead006001a766e41ace3a`
+Contract SHA-256: `00c45e6908b89f296988437451efa32440ed78c6b3c4fee1d732f6997b9bd131`
 
 #### Selection and adaptation
 
@@ -31,7 +31,7 @@ Requirements and boundaries: design reference inputs-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/menus/guidelines).
 
-Support (2026-09-13, `llm.md#menu`): Vertical menus, nested flyouts, grouping, and standard/vibrant styles.
+Support (2026-10-06, `llm.md#menu`): Vertical menus, nested flyouts, grouping, standard/vibrant styles, and context menus opened at the pointer.
 
 Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavior.
 
@@ -76,6 +76,7 @@ Inside open or closed shadow roots, `closeOnClick` controls item clicks just as 
 | `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |
 | `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. |
 | `hover` | Boolean | `false` | If true, the menu opens on hover instead of click. |
+| `contextMenu` | Boolean | `false`; `true` with `data-context-menu` | If true, the trigger is a region and the menu opens at the pointer on right-click, long-press, the menu key or Shift+F10, instead of on click. |
 | `inDuration` | Number | `150` | Enter transition duration, in milliseconds. |
 | `outDuration` | Number | `250` | Exit transition duration, in milliseconds. |
 | `onOpenStart` | Function | `null` | Called when the menu starts opening. |
@@ -93,13 +94,14 @@ Inside open or closed shadow roots, `closeOnClick` controls item clicks just as 
 
 #### Also documented
 
-The Menu section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Properties.
+The Menu section of the [API reference](https://www.expressivecss.com/llm.md) also covers Context menu, Initialization, Properties.
 
 #### Rules
 
 The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
 - `menu-children-are-list-items`: <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
+- `context-menu-region-is-not-a-control`: data-context-menu goes on a region of content. A button or link already has an action for Enter and click; give it its own menu trigger instead.
 
 #### Guide checks
 

@@ -143,3 +143,45 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified. Next check: Empty a filtered list with a screen reader and confirm the change is announced; test enlarged text and narrow widths.
 
 Mapped browser scope: Centered column, icon circle size and fill, text width cap, centered wrapping actions and an empty alt image left out of the accessibility tree. No spoken-output assertion.
+
+## [Stepper](../../components/stepper.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the steps in an ordered list, mark exactly one current step, convey complete and error states in text as well as color, and keep labels translatable.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the steps and speaks their state; the page keeps aria-current and the state classes current.
+
+Verification gap: Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified. Next check: Move through a checkout with a screen reader in each engine and confirm the step count, the current step and the completed state are announced once.
+
+Mapped browser scope: Row and stack layout in LTR and RTL, supporting text and content placement, current, complete and invalid indicator fills and glyphs, no trailing connector, spoken state text and its token override. No spoken-output assertion.
+
+## [Popover](../../components/popover.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Open on press rather than hover, report the expanded state on the button, return focus on dismissal, keep the panel next in reading order and keep it within the viewport.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory; the closest is the rich tooltip, which opens on hover. The browser owns the popover behavior; the framework places and styles the panel.
+
+Verification gap: Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified. Next check: Open a toggletip with a screen reader in each engine and confirm the expanded state and the panel content are reachable; check an engine without anchor positioning.
+
+Mapped browser scope: Default, top and end placement against the button in LTR and RTL, both-axis flip at the viewport corner, Escape with focus return, outside click, staying open for an inner button, one auto popover at a time and the Chromium expanded state. No spoken-output assertion.
+
+## [Drop zone](../../components/drop-zone.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep a native, labelled file input reachable by keyboard, show drag feedback that is not color alone, list chosen files in text and validate type and size where the files are used.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The browser owns choosing and dropping files; the framework draws the target, marks a drag and lists the files.
+
+Verification gap: Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified. Next check: Drag files from the operating system onto the zone in each engine and confirm the selection and list update; check the list announcement with a screen reader.
+
+Mapped browser scope: Input covering the label, label naming the input, dragover set and cleared by dragenter, dragleave and drop, listed names and sizes, list cleared on an empty selection and keyboard focus ring. No spoken-output assertion.

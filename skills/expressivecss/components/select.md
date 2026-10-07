@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `77049dd02d80b2517b41efda78166b7eea58d65a5f2ead006001a766e41ace3a`
+Contract SHA-256: `00c45e6908b89f296988437451efa32440ed78c6b3c4fee1d732f6997b9bd131`
 
 #### Selection and adaptation
 
@@ -130,6 +130,9 @@ The following are end-state semantic invariants. The rule IDs come directly from
 - `field-control-id`: Without an id the label has nothing to point at.
 - `field-supporting-text-id`: Supporting and error text has to be referenceable to be announced with the control.
 - `field-supporting-text-linked`: A field with supporting text must point at it with aria-describedby, or the text is never read out with the control.
+- `password-toggle-reports-its-state`: Give a .password-toggle aria-pressed="false". The behavior flips it, and its name stays "Show password", so the pressed state is how a screen reader user hears that the password is visible.
+- `otp-autocompletes`: Set autocomplete="one-time-code" on a one-time code input so the browser can offer the code from a message.
+- `otp-is-not-a-number`: A code is not a quantity: type="number" drops leading zeros and adds a spinner. Use type="text" with inputmode="numeric".
 
 #### Guide checks
 

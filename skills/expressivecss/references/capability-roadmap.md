@@ -22,6 +22,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Tabs](#tabs) | unassessed | needs-review | needs-rerun | 1 |
 | [Breadcrumbs](#breadcrumbs) | unassessed | needs-review | needs-rerun | 0 |
 | [Pagination](#pagination) | unassessed | needs-review | needs-rerun | 1 |
+| [Stepper](#stepper) | implemented | source-reviewed | incomplete | 0 |
 | [Menu](#menu) | unassessed | needs-review | needs-rerun | 0 |
 | [Scrollspy](#scrollspy) | unassessed | needs-review | needs-rerun | 0 |
 | [Buttons](#buttons) | unassessed | needs-review | needs-rerun | 1 |
@@ -41,6 +42,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Badges](#badges) | unassessed | needs-review | needs-rerun | 0 |
 | [Avatar](#avatar) | implemented | source-reviewed | incomplete | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | needs-rerun | 0 |
+| [Popover](#popover) | implemented | source-reviewed | incomplete | 0 |
 | [Snackbar](#snackbar) | unassessed | needs-review | needs-rerun | 0 |
 | [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 1 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | needs-rerun | 1 |
@@ -52,6 +54,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Search](#search) | unassessed | needs-review | needs-rerun | 1 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | needs-rerun | 0 |
 | [Text fields](#text-fields) | unassessed | needs-review | needs-rerun | 0 |
+| [Drop zone](#drop-zone) | implemented | source-reviewed | incomplete | 0 |
 | [Select](#select) | unassessed | needs-review | needs-rerun | 0 |
 | [Checkboxes](#checkboxes) | unassessed | needs-review | needs-rerun | 0 |
 | [Radio buttons](#radio-buttons) | unassessed | needs-review | needs-rerun | 0 |
@@ -202,11 +205,27 @@ Web adaptation: CSS-only navigation; the application supplies destinations.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 
+<a id="stepper"></a>
+
+## Stepper
+
+**implemented within the stated scope.** Horizontal and vertical ordered lists with current, complete and invalid steps, supporting text, links back to finished steps and a content panel in vertical steps.
+
+Source review: source-reviewed, 2026-10-06. [src/sass/components/_stepper.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/src/sass/components/_stepper.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: An <ol> with aria-current="step"; CSS alt text speaks the complete and invalid states from translatable tokens.
+
+- verification: Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified. Next: Move through a checkout with a screen reader in each engine and confirm the step count, the current step and the completed state are announced once.
+
+- not-recorded: [tests/stepper-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/tests/stepper-browser.test.js): `chromium: stepper lays out its steps, marks their state and speaks it`. Row and stack layout in LTR and RTL, supporting text and content placement, current, complete and invalid indicator fills and glyphs, no trailing connector, spoken state text and its token override. No spoken-output assertion.
+
 <a id="menu"></a>
 
 ## Menu
 
-**unassessed within the stated scope.** Vertical menus, nested flyouts, grouping, and standard/vibrant styles.
+**unassessed within the stated scope.** Vertical menus, nested flyouts, grouping, standard/vibrant styles, and context menus opened at the pointer.
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/src/sass/components/_menu.scss), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/src/ts/components/menu.ts).
 
@@ -537,6 +556,22 @@ No gap identified within the stated scope; broader upstream parity remains unass
 - stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/tests/expressivecss-lifecycle-browser.test.js): `Tooltip destroy cancels pending delay and animation callbacks`. Runtime timer cancellation for enter, exit and animation scheduling.
 - stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/tests/expressivecss-lifecycle-browser.test.js): `Tooltip positioning preserves margins and viewport edges after scrolling`. Coordinate clamping at each viewport edge with custom margin/movement and document scrolling; no visual parity assertion.
 
+<a id="popover"></a>
+
+## Popover
+
+**implemented within the stated scope.** Native popover panels anchored below, above or beside their button with automatic flipping, rich-tooltip styling, an actions row and frosted glass.
+
+Source review: source-reviewed, 2026-10-06. [src/sass/components/_popover.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/src/sass/components/_popover.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The browser owns opening, light dismiss, Escape, focus return and the button's expanded state; CSS anchor positioning places the panel.
+
+- verification: Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified. Next: Open a toggletip with a screen reader in each engine and confirm the expanded state and the panel content are reachable; check an engine without anchor positioning.
+
+- not-recorded: [tests/popover-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/tests/popover-browser.test.js): `chromium: popover anchors to its button, flips at the edge and stays open while used`. Default, top and end placement against the button in LTR and RTL, both-axis flip at the viewport corner, Escape with focus return, outside click, staying open for an inner button, one auto popover at a time and the Chromium expanded state. No spoken-output assertion.
+
 <a id="snackbar"></a>
 
 ## Snackbar
@@ -718,7 +753,7 @@ Web adaptation: Native fieldset/legend; related text-field tokens do not make th
 
 ## Text fields
 
-**unassessed within the stated scope.** Filled and outlined fields, supporting text, and error states.
+**unassessed within the stated scope.** Filled and outlined fields, supporting text, error states, trailing icon buttons, a password visibility toggle and one-time code cells.
 
 Source review: needs-review, 2026-09-12. [src/sass/components/forms/_input-fields.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/src/sass/components/forms/_input-fields.scss), [src/sass/components/forms/_file-input.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/src/sass/components/forms/_file-input.scss), [src/ts/behaviors/forms.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/src/ts/behaviors/forms.ts), [src/ts/components/characterCounter.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/src/ts/components/characterCounter.ts).
 
@@ -729,6 +764,22 @@ Web adaptation: Native input/textarea with explicit label and description relati
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
+
+<a id="drop-zone"></a>
+
+## Drop zone
+
+**implemented within the stated scope.** A label-sized native file input with a dragover state and a list of chosen file names and locale-formatted sizes.
+
+Source review: source-reviewed, 2026-10-06. [src/sass/components/forms/_drop-zone.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/src/sass/components/forms/_drop-zone.scss), [src/ts/behaviors/forms.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/src/ts/behaviors/forms.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The native input covers the label, so clicks, keys and drops are the browser's; the shared Forms behavior marks the drag and fills the list.
+
+- verification: Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified. Next: Drag files from the operating system onto the zone in each engine and confirm the selection and list update; check the list announcement with a screen reader.
+
+- not-recorded: [tests/drop-zone-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/a1bb4a01bec52072d5eb939c680ff1c4214c27a4/tests/drop-zone-browser.test.js): `chromium: drop zone covers its label with the file input, marks a drag and lists chosen files`. Input covering the label, label naming the input, dragover set and cleared by dragenter, dragleave and drop, listed names and sizes, list cleared on an empty selection and keyboard focus ring. No spoken-output assertion.
 
 <a id="select"></a>
 

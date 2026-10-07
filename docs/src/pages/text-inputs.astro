@@ -9,6 +9,8 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "types", label: "Input types" },
   { id: "inline", label: "Inline" },
+  { id: "password-visibility", label: "Password visibility" },
+  { id: "otp", label: "One-time code" },
   { id: "textarea", label: "Textarea" },
   { id: "file", label: "File input" },
   { id: "character-counter", label: "Character counter" },
@@ -154,6 +156,52 @@ This is an inline input field:
   <input id="email_inline" type="email" class="validate" placeholder=" ">
   <label for="email_inline">Email</label>
 </span>
+`} />
+  </Section>
+  <Section {...S["password-visibility"]}>
+        <p>
+          A trailing <code>.icon-button</code> with <code>suffix</code> is a
+          control in the field: it keeps its 40dp target and takes clicks.
+          Add <code>password-toggle</code>, two icons and
+          <code>aria-pressed="false"</code>, and pressing it shows the
+          password as text. The name stays "Show password" and
+          <code>aria-pressed</code> says which way it is.
+        </p>
+        <div class="field" style="max-width: 20rem;">
+          <input id="demo-password" type="password" placeholder=" " value="correct horse" autocomplete="off">
+          <label for="demo-password">Password</label>
+          <button type="button" class="icon-button suffix password-toggle" aria-label="Show password" aria-pressed="false">
+            <span class="material-symbols" aria-hidden="true">visibility</span>
+            <span class="material-symbols" aria-hidden="true">visibility_off</span>
+          </button>
+        </div>
+<Code code={`
+<div class="field">
+  <input id="password" type="password" placeholder=" " autocomplete="current-password">
+  <label for="password">Password</label>
+  <button type="button" class="icon-button suffix password-toggle"
+          aria-label="Show password" aria-pressed="false">
+    <span class="material-symbols" aria-hidden="true">visibility</span>
+    <span class="material-symbols" aria-hidden="true">visibility_off</span>
+  </button>
+</div>
+`} />
+  </Section>
+  <Section {...S.otp}>
+        <p>
+          <code>input.otp</code> draws one native input as a row of cells, so
+          paste, autofill from <code>autocomplete="one-time-code"</code> and
+          undo keep working and a screen reader hears one field. Give it
+          <code>inputmode="numeric"</code> and a <code>maxlength</code> equal
+          to <code>--md-comp-otp-length</code> (6 by default), and label it
+          outside any <code>.field</code>.
+        </p>
+        <label for="demo-code" class="body-medium">Verification code</label>
+        <input id="demo-code" class="otp mb-3" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}">
+<Code code={`
+<label for="code">Verification code</label>
+<input id="code" class="otp" type="text" inputmode="numeric"
+       autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}">
 `} />
   </Section>
   <Section {...S.textarea}>

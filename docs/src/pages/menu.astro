@@ -18,6 +18,7 @@ const S = defineSections([
   { id: "selection", label: "Selection and groups", heading: "Selection, shortcuts, and groups" },
   { id: "color", label: "Color" },
   { id: "nested", label: "Nested menus" },
+  { id: "context", label: "Context menu" },
   { id: "methods", label: "Methods" },
   { id: "properties", label: "Properties" },
 ]);
@@ -239,6 +240,12 @@ Expressive.AutoInit(document.body, {
               <td>Boolean</td>
               <td><code>false</code></td>
               <td>If true, the menu opens on hover instead of click.</td>
+            </tr>
+            <tr>
+              <td><code>contextMenu</code></td>
+              <td>Boolean</td>
+              <td><code>false</code>, or <code>true</code> with <code>data-context-menu</code></td>
+              <td>If true, the trigger is a region and the menu opens at the pointer on right-click, long-press, the menu key or Shift+F10, instead of on click.</td>
             </tr>
             <tr>
               <td><code>inDuration</code></td>
@@ -509,6 +516,45 @@ Expressive.Menu.init(document.querySelector('#hover'), {
       <li><button type="button">Nested two</button></li>
     </menu>
   </li>
+</menu>
+`} />
+  </Section>
+  <Section {...S.context}>
+        <p>
+          Add <code>data-context-menu</code> to a <code>.menu-trigger</code>
+          that is a region of content, such as a file list or a card, and
+          its menu replaces the browser's context menu there. Right-click
+          opens it at the pointer, and it flips to stay on screen. The menu
+          key and Shift+F10 open it at the region's start corner, so give the
+          region <code>tabindex="0"</code> when it holds nothing focusable.
+          Enter and Space stay with the region's own content.
+        </p>
+        <p>
+          The region gets no <code>aria-expanded</code> or
+          <code>aria-haspopup</code>: those belong to buttons. Every action in
+          a context menu also needs another way in, such as a toolbar or an
+          item's own menu button. Touch browsers that do not fire
+          <code>contextmenu</code> on long-press, such as iOS Safari, never
+          show it.
+        </p>
+        <div class="menu-trigger mb-3" data-context-menu data-target="menu-context" tabindex="0" style="min-height: 8rem; padding: 16px; border: 1px solid var(--md-sys-color-outline-variant); border-radius: 12px;">
+          <p class="body-large m-0">Right-click anywhere in this card, or focus it and press Shift+F10.</p>
+        </div>
+        <menu id="menu-context">
+          <li><button type="button"><span class="material-symbols" aria-hidden="true">edit</span><span>Rename</span></button></li>
+          <li><button type="button"><span class="material-symbols" aria-hidden="true">content_copy</span><span>Duplicate</span></button></li>
+          <li class="divider" role="separator"></li>
+          <li><button type="button"><span class="material-symbols" aria-hidden="true">delete</span><span>Delete</span></button></li>
+        </menu>
+<Code code={`
+<div class="menu-trigger" data-context-menu data-target="file-actions" tabindex="0">
+  …
+</div>
+<menu id="file-actions">
+  <li><button type="button">Rename</button></li>
+  <li><button type="button">Duplicate</button></li>
+  <li class="divider" role="separator"></li>
+  <li><button type="button">Delete</button></li>
 </menu>
 `} />
   </Section>

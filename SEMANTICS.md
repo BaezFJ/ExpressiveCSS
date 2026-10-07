@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**55 of 55 rows enforced; 0 remaining.**
+**58 of 58 rows enforced; 0 remaining.**
 
-51 of those rows are components - a part of the framework an author writes markup for.
+54 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 51 components declare conformance debt.**
+**3 of 54 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -367,6 +367,18 @@ Swept 0.8.0.
 
 - **checkbox-labelled** - A checkbox must be inside its <label> or carry an id a label points at.
 
+### forms/drop-zone
+
+Added with the drop zone component. A <label> wraps the native file input, which covers it, so the label text names the input and the browser handles clicks, keys and dropped files.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `drop-zone-input-is-in-the-label` | forbid | `.drop-zone > input[type="file"]` | must not match |
+| `drop-zone-files-are-a-list` | forbid | `.drop-zone-files:not(ul, ol)` | must not match |
+
+- **drop-zone-input-is-in-the-label** - Put the file input inside the .drop-zone <label>. The label names the input and the input covers the label; a loose input is neither named nor a drop target.
+- **drop-zone-files-are-a-list** - Write .drop-zone-files as a <ul>. The behavior fills it with one <li> per file, and a list tells assistive technology how many files were chosen.
+
 ### forms/fieldset
 
 Swept 0.8.0.
@@ -391,7 +403,7 @@ Swept 0.8.0.
 
 ### forms/input-fields
 
-Swept 0.8.0. .field is the container; icons name their side and are hidden; supporting text is linked to the control it describes.
+Swept 0.8.0. .field is the container; icons name their side and are hidden; supporting text is linked to the control it describes. A .password-toggle reports its state with aria-pressed; input.otp is one native input drawn as cells.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
@@ -403,6 +415,9 @@ Swept 0.8.0. .field is the container; icons name their side and are hidden; supp
 | `field-control-id` | require-attr | `.field > :is(input, textarea, select)` | must have `id` |
 | `field-supporting-text-id` | require-attr | `.field > small` | must have `id` |
 | `field-supporting-text-linked` | forbid | `.field:has(> small) > :is(input, textarea, select):not([aria-describedby])` | must not match |
+| `password-toggle-reports-its-state` | require-attr | `.password-toggle` | must have `aria-pressed` |
+| `otp-autocompletes` | require-attr | `input.otp` | must have `autocomplete` = `one-time-code` |
+| `otp-is-not-a-number` | forbid | `input.otp[type="number"]` | must not match |
 
 - **field-container-class** - The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.
 - **field-icon-not-i** - <i> means idiomatic text, not icon. Use <span class="material-symbols">.
@@ -412,6 +427,9 @@ Swept 0.8.0. .field is the container; icons name their side and are hidden; supp
 - **field-control-id** - Without an id the label has nothing to point at.
 - **field-supporting-text-id** - Supporting and error text has to be referenceable to be announced with the control.
 - **field-supporting-text-linked** - A field with supporting text must point at it with aria-describedby, or the text is never read out with the control.
+- **password-toggle-reports-its-state** - Give a .password-toggle aria-pressed="false". The behavior flips it, and its name stays "Show password", so the pressed state is how a screen reader user hears that the password is visible.
+- **otp-autocompletes** - Set autocomplete="one-time-code" on a one-time code input so the browser can offer the code from a message.
+- **otp-is-not-a-number** - A code is not a quantity: type="number" drops leading zeros and adds a spinner. Use type="text" with inputmode="numeric".
 
 ### forms/radio-buttons
 
@@ -531,13 +549,15 @@ Short waits with unknown duration. The current framework contract uses a named s
 
 ### menu
 
-Swept 0.8.0.
+Swept 0.8.0. A [data-context-menu] trigger is a region: the menu opens at the pointer and the region carries no expanded state.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `menu-children-are-list-items` | forbid | `menu > :not(li):not(script):not(template)` | must not match |
+| `context-menu-region-is-not-a-control` | forbid | `[data-context-menu]:is(button, a[href], input, select, textarea)` | must not match |
 
 - **menu-children-are-list-items** - <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
+- **context-menu-region-is-not-a-control** - data-context-menu goes on a region of content. A button or link already has an action for Enter and click; give it its own menu trigger instead.
 
 ### message
 
@@ -610,6 +630,20 @@ Swept 0.8.0.
 | `pane-is-not-main` | forbid | `:is(.panes, .pane-layout, .list-detail, .supporting-pane-layout) main` | must not match |
 
 - **pane-is-not-main** - A document has one <main>, and a pane is a region inside it, not another one. Use <section>.
+
+### popover
+
+Added with the popover component. The panel is a native [popover] and its button names it with popovertarget or commandfor, so the browser owns opening, light dismiss, Escape and the button's expanded state.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `popover-is-native` | forbid | `.popover:not([popover])` | must not match |
+| `popover-target-exists` | require-idref | `[popovertarget]` | `popovertarget` must reference `[popover]` inside `body` |
+| `popover-is-not-a-tooltip` | forbid | `.popover[role="tooltip"]` | must not match |
+
+- **popover-is-native** - Give a .popover the popover attribute. Without it the panel is never in the top layer, never light-dismisses and its button reports no expanded state.
+- **popover-target-exists** - popovertarget must name the id of a [popover] element in the page. A dangling id leaves a button that does nothing.
+- **popover-is-not-a-tooltip** - A popover opens on press and can hold links and buttons, which a tooltip never can. Leave the role off; the browser relates the panel to its button.
 
 ### progress
 
@@ -712,6 +746,22 @@ Added with the split button component (#42). A lead action and a trailing half t
 - **split-button-trigger-names-its-menu** - Menu finds its surface through `data-target` on the trigger, falling back to an `href` fragment. A `.menu-trigger` with neither initializes against no element: it gets aria-haspopup and aria-expanded it will never change, which is a promise of a menu that does not exist.
 - **split-button-trailing-icon-hidden** - The ligature is real text and is read out verbatim, so an unhidden chevron names the trailing half "arrow_drop_down". It is decoration - the control carries the name - so it is aria-hidden="true", and `icon-only-control-is-named` then requires the aria-label.
 - **split-button-expanded-is-not-authored** - Expanded is dynamic state, so the framework owns it. Menu's constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten - and the expanded shape is drawn from that attribute, so an authored "true" draws an open split button over a closed menu.
+
+### stepper
+
+Added with the stepper component. The ordered list carries the step count and position; aria-current="step" marks the current step, and CSS alt text speaks the complete and invalid states.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `stepper-is-an-ordered-list` | forbid | `.stepper:not(ol)` | must not match |
+| `stepper-current-is-a-step` | forbid | `.stepper > li[aria-current]:not([aria-current="step"])` | must not match |
+| `stepper-has-one-current-step` | forbid | `.stepper > li[aria-current="step"] ~ li[aria-current="step"]` | must not match |
+| `stepper-step-is-not-error-colored` | forbid | `.stepper > li.error` | must not match |
+
+- **stepper-is-an-ordered-list** - Write a stepper as <ol class="stepper">. The order is the content: an ordered list announces how many steps there are and which one each is.
+- **stepper-current-is-a-step** - Mark the current step with aria-current="step". "page" or "true" tells assistive technology something else.
+- **stepper-has-one-current-step** - Only one step is current. Mark finished steps with .complete instead.
+- **stepper-step-is-not-error-colored** - Mark a step that needs attention with .invalid. .error is the error color utility: it paints the whole step red and is not spoken.
 
 ### tabs
 

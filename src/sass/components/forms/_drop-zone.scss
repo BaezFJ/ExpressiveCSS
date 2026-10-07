@@ -1,0 +1,128 @@
+@use "../../abstracts" as *;
+
+// Drop zone. A .drop-zone is a large target for choosing files: a <label>
+// holding an icon, a prompt and a native <input type="file">, with an
+// optional .drop-zone-files list after it.
+//
+// The input is stretched invisibly over the whole label, so the browser
+// takes a click, a keypress or a dropped file exactly as it does on a plain
+// file input. The Forms behavior adds .dragover while files are dragged over
+// it and fills .drop-zone-files with each chosen file's name and size.
+//
+// Tokens:
+//   --md-comp-drop-zone-shape                      16px
+//   --md-comp-drop-zone-outline-color              outline
+//   --md-comp-drop-zone-dragover-container-color   primary-container
+//   --md-comp-drop-zone-dragover-color             on-primary-container
+
+.drop-zone {
+  --md-comp-drop-zone-shape: 16px;
+  --md-comp-drop-zone-outline-color: var(--md-sys-color-outline);
+  --md-comp-drop-zone-dragover-container-color: var(--md-sys-color-primary-container);
+  --md-comp-drop-zone-dragover-color: var(--md-sys-color-on-primary-container);
+
+  margin: $element-top-margin 0 $element-bottom-margin;
+
+  > label {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 32px 24px;
+    border: 1px dashed var(--md-comp-drop-zone-outline-color);
+    border-radius: var(--md-comp-drop-zone-shape);
+    text-align: center;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    transition: background-color 0.2s ease-out, border-color 0.2s ease-out;
+    @include typescale("body-large");
+
+    > #{$icon} {
+      margin-block-end: 8px;
+      font-size: 32px;
+      color: var(--md-sys-color-primary);
+    }
+
+    > small {
+      @include typescale("body-small");
+    }
+
+    > input[type="file"] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    &:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--md-sys-color-on-surface) state-opacity("hover"),
+        transparent
+      );
+    }
+
+    &:has(> input:focus-visible) {
+      @include focus-ring;
+    }
+
+    &:has(> input:disabled) {
+      opacity: 0.38;
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+
+  &.dragover > label {
+    border-style: solid;
+    border-color: var(--md-sys-color-primary);
+    background-color: var(--md-comp-drop-zone-dragover-container-color);
+    color: var(--md-comp-drop-zone-dragover-color);
+  }
+
+  > .drop-zone-files {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+
+    > li {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background-color: var(--md-sys-color-surface-container);
+      color: var(--md-sys-color-on-surface);
+      @include typescale("body-medium");
+
+      > :first-child {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      > :last-child:not(:first-child) {
+        flex: none;
+        color: var(--md-sys-color-on-surface-variant);
+      }
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop-zone > label {
+    transition: none;
+  }
+}

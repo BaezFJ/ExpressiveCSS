@@ -1,0 +1,111 @@
+@use "../abstracts" as *;
+
+// Popover. A .popover is a native [popover] panel opened by the button that
+// names it with popovertarget (or commandfor). The browser owns opening,
+// light dismiss, Escape, the top layer and the button's expanded state; CSS
+// anchor positioning places the panel against that button, so there is no
+// JavaScript.
+//
+// It looks like an M3 rich tooltip, but it is a disclosure: it opens on
+// press, stays open while the user reads or acts, and can hold links and
+// buttons. A small one behind an info button is a toggletip.
+//
+// Placement (the panel flips to the other side when it would not fit):
+//   (default)  below, start edges aligned
+//   .top       above, start edges aligned
+//   .start     before the button, centered on it
+//   .end       after the button, centered on it
+//
+// Tokens:
+//   --md-comp-popover-container-color  surface-container
+//   --md-comp-popover-shape            12px
+//   --md-comp-popover-padding          12px 16px
+//   --md-comp-popover-max-width        320px
+//   --md-comp-popover-gap              4px (from the button)
+
+.popover {
+  --md-comp-popover-container-color: var(--md-sys-color-surface-container);
+  --md-comp-popover-shape: 12px;
+  --md-comp-popover-padding: 12px 16px;
+  --md-comp-popover-max-width: 320px;
+  --md-comp-popover-gap: 4px;
+
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(var(--md-comp-popover-max-width), calc(100vw - 16px));
+  inset: auto;
+  margin: var(--md-comp-popover-gap) 0;
+  padding: var(--md-comp-popover-padding);
+  overflow: visible;
+  border: 0;
+  border-radius: var(--md-comp-popover-shape);
+  background-color: var(--md-comp-popover-container-color);
+  color: var(--md-sys-color-on-surface-variant);
+  @include z-depth("2");
+  @include typescale("body-medium");
+
+  position-area: block-end span-inline-end;
+  position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+
+  opacity: 0;
+  transition:
+    opacity 150ms ease-out,
+    display 150ms allow-discrete,
+    overlay 150ms allow-discrete;
+  @include glass(var(--md-comp-popover-container-color));
+
+  &:popover-open {
+    opacity: 1;
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+
+  &.top {
+    position-area: block-start span-inline-end;
+  }
+
+  &.start,
+  &.end {
+    margin: 0 var(--md-comp-popover-gap);
+  }
+
+  &.start {
+    position-area: center inline-start;
+  }
+
+  &.end {
+    position-area: center inline-end;
+  }
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    margin: 0 0 4px;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("title-small");
+  }
+
+  > p {
+    margin: 0;
+  }
+
+  > p + p {
+    margin-block-start: 8px;
+  }
+
+  // Text buttons carry their own inset, so the row starts under the text.
+  > .popover-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0 -4px -12px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+}
