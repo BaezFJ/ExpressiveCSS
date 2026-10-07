@@ -4200,7 +4200,7 @@ For a menu inside a top app bar, see Navbar menu.
 
 ### Context menu
 
-Add `data-context-menu` to a `.menu-trigger` that is a region of content, such as a file list or a card, and its menu replaces the browser's context menu there. Right-click opens it at the pointer, and it flips to stay on screen. The menu key and Shift+F10 open it at the region's start corner, so give the region `tabindex="0"` when it holds nothing focusable. Enter and Space stay with the region's own content.
+Add `data-context-menu` to a `.menu-trigger` that is a region of content, such as a file list or a card, and its menu replaces the browser's context menu there. Right-click opens it at the pointer, and it flips to stay on screen. The menu key and Shift+F10 open it at the region's start corner, so give the region `tabindex="0"` when it holds nothing focusable. Enter and Space stay with the region's own content. Closing the menu returns focus to whatever had it before the menu opened. In nested regions only the innermost menu opens, and a right-click on an open menu keeps it open.
 
 The region gets no `aria-expanded` or `aria-haspopup`, which belong to buttons. Every action in a context menu also needs another way in, such as a toolbar or an item's own menu button. Touch browsers that do not fire `contextmenu` on long-press, such as iOS Safari, never show it.
 
@@ -5289,9 +5289,9 @@ A floating bar can sit beside a companion FAB. Wrap both in `.toolbar-group`; th
 
 A searchable list of commands in a dialog, opened from anywhere with a shortcut.
 
-A `<dialog class="command-palette">` holds a search `<input>`, a `<ul>` of commands and an optional `.command-palette-empty` message. Each command is an `<li>` holding a link or button: an optional leading icon, the label and an optional trailing `<kbd>` shortcut. An `<li class="label">` heads a group. Running a command clicks its link or button, so commands are ordinary links and click handlers. `AutoInit()` starts every `dialog.command-palette`.
+A `<dialog class="command-palette">` holds a search `<input>`, a `<ul>` of commands and an optional `.command-palette-empty` message. Each command is an `<li>` holding a link or button: an optional leading icon, the label and an optional trailing `<kbd>` shortcut. An `<li class="label">` heads a group. Running a command clicks its link or button, so commands are ordinary links and click handlers. Commands added to the list later are picked up. `AutoInit()` starts every `dialog.command-palette`.
 
-Ctrl+K, or Command+K on Apple platforms, opens and closes it from anywhere on the page; a `commandfor` button with `command="show-modal"` opens it too. Typing filters the commands by their text and any `data-keywords`, ignoring case and accents, and hides a group heading whose commands are all filtered out. Focus stays in the input: the arrow keys move the active command and Enter runs it. The dialog closes on Escape and returns focus. Each opening starts with an empty search.
+Ctrl+K, or Command+K on Apple platforms, opens and closes it from anywhere on the page unless the page has already handled the key, as an editor's own Ctrl+K does; a `commandfor` button with `command="show-modal"` opens it too. Typing filters the commands by their text and any `data-keywords`, ignoring case and accents, and hides a group heading whose commands are all filtered out. Focus stays in the input: the arrow keys move the active command and Enter runs it. The dialog closes on Escape and returns focus. Each opening starts with an empty search.
 
 The component makes the input a combobox and the list a listbox of options, and reports the active option with `aria-activedescendant`. Name the dialog and the input with `aria-label`. Give the empty message `role="status"` so a search with no results is announced.
 
@@ -5323,7 +5323,7 @@ The component makes the input a combobox and the list a listbox of options, and 
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `shortcut` | String | `'k'` | Letter that toggles the palette with Ctrl or Command. `null` turns it off. `data-shortcut` on the dialog sets it, and an empty `data-shortcut` turns it off. |
+| `shortcut` | String | `'k'` | Letter that toggles the palette with Command on Apple platforms or Ctrl elsewhere. A key event the page already handled is left alone. `null` turns it off. `data-shortcut` on the dialog sets it, and an empty `data-shortcut` turns it off. |
 | `closeOnRun` | Boolean | `true` | If true, the palette closes after a command runs. |
 
 ### Methods
@@ -5863,7 +5863,7 @@ A `.icon-button` with `suffix` sits at the end of the field as a control: it kee
 
 ### Password visibility
 
-Add `password-toggle` to a trailing icon button with two icons and `aria-pressed="false"`. Pressing it shows the password as text and sets `aria-pressed="true"`; the first icon shows while the password is hidden and the second once it is shown. The name stays "Show password", and the pressed state tells a screen reader which way it is. The Forms behavior does the switch.
+Add `password-toggle` to a trailing icon button with two icons and `aria-pressed="false"`. Pressing it shows the password as text and sets `aria-pressed="true"`; the first icon shows while the password is hidden and the second once it is shown. The name stays "Show password", and the pressed state tells a screen reader which way it is. The Forms behavior does the switch, and hides the password again when its form is submitted or reset.
 
 ```html
 <div class="field">
@@ -5930,7 +5930,7 @@ Expressive.CharacterCounter.init(
 
 A large target for choosing or dropping files, with a list of what was chosen.
 
-A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input is stretched invisibly over the whole label, so the browser takes a click, Enter, Space or a dropped file exactly as it does on a plain file input, and the label text names it. The Forms behavior adds `dragover` to the zone while files are dragged over it and lists each chosen file's name and size, formatted for the page's locale, in `.drop-zone-files`. The root bundle installs it on load, and the modular entry with `Forms.Init()`. It listens on the document, so zones added later work too.
+A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input is stretched invisibly over the whole label, so the browser takes a click, Enter, Space or a dropped file exactly as it does on a plain file input, and the label text names it. The Forms behavior adds `dragover` to the zone while files are dragged over it and lists each chosen file's name and size, formatted for the page's locale, in `.drop-zone-files`. The root bundle installs it on load, and the modular entry with `Forms.Init()`. It listens on the document, so zones added later work too. Resetting the form empties the list.
 
 The browser does not apply `accept` to dropped files, so check type and size where the files are used. A dropped file replaces the selection, as it does on any file input; add `multiple` to take several at once.
 

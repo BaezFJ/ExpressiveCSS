@@ -4094,7 +4094,7 @@
           },
           {
             "path": "src/ts/components/commandPalette.ts",
-            "sha256": "b384f504227ccbd0d47f924adecad4cc4137c837561f77874664b72e6db33ee6"
+            "sha256": "20ab01f1ca5afc3eba35a3db3be2043a148787659e73522f6214efc345c05b9e"
           }
         ],
         "gaps": [
@@ -4366,7 +4366,7 @@
           },
           {
             "path": "src/ts/behaviors/forms.ts",
-            "sha256": "b9be5521bcfcb9485610c5abf7bf4ca15e2fec39cc02aca9f6978af6911551eb"
+            "sha256": "57733061183d4f3adbedd53803d19f26c4d31ca2459cd1707a5266b8bff46d9a"
           }
         ],
         "gaps": [
@@ -4778,7 +4778,7 @@
         "sources": [
           {
             "path": "src/sass/components/forms/_rating.scss",
-            "sha256": "17d48f333e0c722e47c1a4452fc8e5b7da8128a6f87e74a76fbbd0196160ae60"
+            "sha256": "8b0c0e77791f4e88681a12ff2c78758be20d5ece7129c914e4cf6881a6b61300"
           }
         ],
         "gaps": [

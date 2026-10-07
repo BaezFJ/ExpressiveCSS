@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `7ed8b07270d8bbb9a0a62da95b63583484e44ff2f05384692a5218fe58c59d58`
+Contract SHA-256: `bb45caa4f9d0080c31fdbaa45f354045d149666439f6392fc0b726831ad9d7bd`
 
 #### Selection and adaptation
 
@@ -41,9 +41,9 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 A searchable list of commands in a dialog, opened from anywhere with a shortcut.
 
-A `<dialog class="command-palette">` holds a search `<input>`, a `<ul>` of commands and an optional `.command-palette-empty` message. Each command is an `<li>` holding a link or button: an optional leading icon, the label and an optional trailing `<kbd>` shortcut. An `<li class="label">` heads a group. Running a command clicks its link or button, so commands are ordinary links and click handlers. `AutoInit()` starts every `dialog.command-palette`.
+A `<dialog class="command-palette">` holds a search `<input>`, a `<ul>` of commands and an optional `.command-palette-empty` message. Each command is an `<li>` holding a link or button: an optional leading icon, the label and an optional trailing `<kbd>` shortcut. An `<li class="label">` heads a group. Running a command clicks its link or button, so commands are ordinary links and click handlers. Commands added to the list later are picked up. `AutoInit()` starts every `dialog.command-palette`.
 
-Ctrl+K, or Command+K on Apple platforms, opens and closes it from anywhere on the page; a `commandfor` button with `command="show-modal"` opens it too. Typing filters the commands by their text and any `data-keywords`, ignoring case and accents, and hides a group heading whose commands are all filtered out. Focus stays in the input: the arrow keys move the active command and Enter runs it. The dialog closes on Escape and returns focus. Each opening starts with an empty search.
+Ctrl+K, or Command+K on Apple platforms, opens and closes it from anywhere on the page unless the page has already handled the key, as an editor's own Ctrl+K does; a `commandfor` button with `command="show-modal"` opens it too. Typing filters the commands by their text and any `data-keywords`, ignoring case and accents, and hides a group heading whose commands are all filtered out. Focus stays in the input: the arrow keys move the active command and Enter runs it. The dialog closes on Escape and returns focus. Each opening starts with an empty search.
 
 #### Syntax
 
@@ -75,7 +75,7 @@ Ctrl+K, or Command+K on Apple platforms, opens and closes it from anywhere on th
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `shortcut` | String | `'k'` | Letter that toggles the palette with Ctrl or Command. `null` turns it off. `data-shortcut` on the dialog sets it, and an empty `data-shortcut` turns it off. |
+| `shortcut` | String | `'k'` | Letter that toggles the palette with Command on Apple platforms or Ctrl elsewhere. A key event the page already handled is left alone. `null` turns it off. `data-shortcut` on the dialog sets it, and an empty `data-shortcut` turns it off. |
 | `closeOnRun` | Boolean | `true` | If true, the palette closes after a command runs. |
 
 #### Methods

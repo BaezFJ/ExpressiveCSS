@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `7ed8b07270d8bbb9a0a62da95b63583484e44ff2f05384692a5218fe58c59d58`
+Contract SHA-256: `bb45caa4f9d0080c31fdbaa45f354045d149666439f6392fc0b726831ad9d7bd`
 
 #### Selection and adaptation
 
@@ -41,7 +41,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 A large target for choosing or dropping files, with a list of what was chosen.
 
-A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input is stretched invisibly over the whole label, so the browser takes a click, Enter, Space or a dropped file exactly as it does on a plain file input, and the label text names it. The Forms behavior adds `dragover` to the zone while files are dragged over it and lists each chosen file's name and size, formatted for the page's locale, in `.drop-zone-files`. The root bundle installs it on load, and the modular entry with `Forms.Init()`. It listens on the document, so zones added later work too.
+A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input is stretched invisibly over the whole label, so the browser takes a click, Enter, Space or a dropped file exactly as it does on a plain file input, and the label text names it. The Forms behavior adds `dragover` to the zone while files are dragged over it and lists each chosen file's name and size, formatted for the page's locale, in `.drop-zone-files`. The root bundle installs it on load, and the modular entry with `Forms.Init()`. It listens on the document, so zones added later work too. Resetting the form empties the list.
 
 The browser does not apply `accept` to dropped files, so check type and size where the files are used. A dropped file replaces the selection, as it does on any file input; add `multiple` to take several at once.
 

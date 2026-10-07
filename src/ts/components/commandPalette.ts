@@ -3,9 +3,10 @@ import { Component, BaseOptions, InitElements, InitElement, Openable } from '../
 
 export interface CommandPaletteOptions extends BaseOptions {
   /**
-   * Letter that toggles the palette together with Ctrl, or Command on Apple
-   * platforms. `null` turns the shortcut off. `data-shortcut` on the dialog
-   * sets it; an empty `data-shortcut` turns it off.
+   * Letter that toggles the palette together with Command on Apple platforms
+   * or Ctrl elsewhere. A key event the page has already handled is left
+   * alone. `null` turns the shortcut off. `data-shortcut` on the dialog sets
+   * it; an empty `data-shortcut` turns it off.
    * @default 'k'
    */
   shortcut: string | null;
@@ -21,7 +22,9 @@ const _defaults: CommandPaletteOptions = {
   closeOnRun: true
 };
 
-let _uid = 0;
+// On Apple platforms Ctrl+letter is text editing (Ctrl+K deletes to the end
+// of the line), so only Command opens the palette there.
+const APPLE = typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.platform);
 
 /** Case- and accent-insensitive text for matching. */
 const fold = (text: string) =>
@@ -46,6 +49,8 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
   list: HTMLElement;
   private _active: HTMLElement | null = null;
   private _generatedIds: HTMLElement[] = [];
+  /** Wires and refilters commands the page adds or removes later. */
+  private _observer: MutationObserver | null = null;
 
   constructor(el: HTMLDialogElement, options: Partial<CommandPaletteOptions>) {
     super(el, options, CommandPalette);
@@ -64,6 +69,8 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
     }
     this._setupAccessibility();
     this._filter();
+    this._observer = new MutationObserver(() => this._filter());
+    this._observer.observe(this.list, { childList: true });
     this.input.addEventListener('input', this._handleInput);
     this.input.addEventListener('keydown', this._handleKeydown);
     this.list.addEventListener('click', this._handleListClick);
@@ -124,6 +131,7 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
   };
 
   destroy() {
+    this._observer?.disconnect();
     document.removeEventListener('keydown', this._handleShortcut);
     this.el.removeEventListener('close', this._handleClose);
     if (this.input && this.list) {
@@ -173,7 +181,7 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
 
   private _ensureId(el: HTMLElement, prefix: string) {
     if (!el.id) {
-      el.id = `${prefix}-${++_uid}`;
+      el.id = `${prefix}-${Utils.guid()}`;
       this._generatedIds.push(el);
     }
     return el.id;
@@ -185,7 +193,12 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
     this.input.setAttribute('aria-controls', this._ensureId(this.list, 'command-palette-list'));
     this.input.setAttribute('aria-expanded', 'true');
     this.input.setAttribute('aria-autocomplete', 'list');
+  }
+
+  /** Every command, including ones added since the last pass, is an option. */
+  private _wireItems() {
     for (const item of this._items()) {
+      if (item.getAttribute('role') === 'option') continue;
       item.setAttribute('role', 'option');
       this._ensureId(item, 'command-palette-option');
       // Focus stays in the input; the commands are reached with the arrows.
@@ -215,6 +228,7 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
   }
 
   private _filter() {
+    this._wireItems();
     const terms = fold(this.input.value).split(/\s+/).filter(Boolean);
     for (const item of this._items()) {
       // data-keywords may sit on the row or on its link or button.
@@ -256,7 +270,9 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
     if (e.key === Utils.keys.ARROW_DOWN || e.key === Utils.keys.ARROW_UP) {
       e.preventDefault();
       this._move(e.key === Utils.keys.ARROW_DOWN ? 1 : -1);
-    } else if (e.key === Utils.keys.ENTER && !e.isComposing && this._active) {
+    } else if (e.key === Utils.keys.ENTER && !e.isComposing && e.keyCode !== 229 && this._active) {
+      // keyCode 229 is the Enter that confirms an IME composition in Safari,
+      // which reports isComposing false for it.
       e.preventDefault();
       this._run(this._active);
     }
@@ -288,7 +304,8 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
 
   _handleShortcut = (e: KeyboardEvent) => {
     const { shortcut } = this.options;
-    if (!shortcut || e.altKey || e.shiftKey || !(e.ctrlKey || e.metaKey)) return;
+    if (!shortcut || e.defaultPrevented || e.altKey || e.shiftKey) return;
+    if (!(APPLE ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey)) return;
     if (e.key.toLowerCase() !== shortcut.toLowerCase()) return;
     e.preventDefault();
     if (this.el.open) this.close();

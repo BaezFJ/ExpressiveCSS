@@ -95,6 +95,38 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await page.keyboard.press('Escape');
       assert.equal(await isOpen(), false, 'Escape closes it');
 
+      await page.evaluate(() => {
+        const li = document.createElement('li');
+        li.innerHTML = '<button type="button" id="late">Recent: report</button>';
+        document.querySelector('#palette > ul').append(li);
+        document.getElementById('late').addEventListener('click', () => window.ran.push('late'));
+      });
+      await page.keyboard.press('Control+k');
+      await input.fill('recent');
+      assert.equal(await active(), 'Recent: report', 'a command added later is wired and found');
+      assert.equal(await page.locator('#late').getAttribute('tabindex'), '-1', 'and is not a Tab stop');
+      const imeEnter = await input.evaluate((el) => {
+        const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+        Object.defineProperty(event, 'keyCode', { value: 229 });
+        el.dispatchEvent(event);
+        return event.defaultPrevented;
+      });
+      assert.equal(imeEnter, false, 'the Enter that confirms an IME composition runs nothing');
+      assert.equal(await isOpen(), true);
+      await page.locator('#late').click();
+      assert.deepEqual(await page.evaluate(() => window.ran), ['new', 'keys', 'late']);
+      assert.equal(await isOpen(), false, 'and running it closes the palette');
+
+      await page.evaluate(() => {
+        const editor = document.createElement('textarea');
+        editor.id = 'editor';
+        editor.addEventListener('keydown', (e) => { if (e.ctrlKey && e.key === 'k') e.preventDefault(); });
+        document.querySelector('main').append(editor);
+      });
+      await page.locator('#editor').focus();
+      await page.keyboard.press('Control+k');
+      assert.equal(await isOpen(), false, 'a shortcut the page already handled is left alone');
+
       await page.evaluate(() => window.Expressive.CommandPalette.getInstance(document.getElementById('palette')).destroy());
       assert.equal(await input.getAttribute('role'), null, 'destroy removes the roles it added');
       await page.keyboard.press('Control+k');

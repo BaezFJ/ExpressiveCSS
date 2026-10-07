@@ -527,7 +527,9 @@ Expressive.Menu.init(document.querySelector('#hover'), {
           opens it at the pointer, and it flips to stay on screen. The menu
           key and Shift+F10 open it at the region's start corner, so give the
           region <code>tabindex="0"</code> when it holds nothing focusable.
-          Enter and Space stay with the region's own content.
+          Enter and Space stay with the region's own content. Closing the menu
+          returns focus to whatever had it before the menu opened. In nested
+          regions only the innermost menu opens.
         </p>
         <p>
           The region gets no <code>aria-expanded</code> or

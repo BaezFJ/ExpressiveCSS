@@ -9,7 +9,7 @@ const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head><body>
 <main style="width:480px">
-  <div id="zone" class="drop-zone">
+  <form id="upload"><div id="zone" class="drop-zone">
     <label id="target">
       <span class="material-symbols" aria-hidden="true">upload_file</span>
       Drop files here or browse
@@ -17,7 +17,7 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
       <input id="files" type="file" multiple>
     </label>
     <ul id="list" class="drop-zone-files" aria-live="polite"></ul>
-  </div>
+  </div></form>
 </main></body></html>`;
 
 for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
@@ -59,6 +59,10 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
 
       await page.setInputFiles('#files', []);
       assert.equal(await page.locator('#list > li').count(), 0, 'clearing the input empties the list');
+
+      await page.setInputFiles('#files', [{ name: 'report.pdf', mimeType: 'application/pdf', buffer: Buffer.alloc(10) }]);
+      await page.evaluate(() => document.getElementById('upload').reset());
+      assert.equal(await page.locator('#list > li').count(), 0, 'resetting the form empties the list');
 
       await page.keyboard.press('Tab');
       assert.equal(await page.evaluate(() => document.activeElement.id), 'files', 'the input takes keyboard focus');

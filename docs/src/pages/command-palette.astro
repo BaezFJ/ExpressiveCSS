@@ -22,7 +22,8 @@ const S = defineSections([
         <p class="flow-text">
           A <code>&lt;dialog class="command-palette"&gt;</code> holds a search
           input and a list of commands. Each command is a link or button, so
-          running one is an ordinary click.
+          running one is an ordinary click. Commands added to the list later
+          are picked up.
         </p>
         <p>
           An <code>&lt;li class="label"&gt;</code> heads a group, and an
@@ -76,7 +77,8 @@ const S = defineSections([
   <Section {...S.keyboard}>
         <p>
           Ctrl+K, or Command+K on Apple platforms, opens and closes the palette
-          from anywhere on the page. Typing filters the commands by their text
+          from anywhere on the page, unless the page has already handled the
+          key, as an editor's own Ctrl+K does. Typing filters the commands by their text
           and any <code>data-keywords</code>, ignoring case and accents. Focus
           stays in the input: the arrow keys move the active command and Enter
           runs it. Escape closes the dialog and returns focus. Each opening
@@ -94,7 +96,7 @@ const S = defineSections([
             <td><code>shortcut</code></td>
             <td>String</td>
             <td><code>'k'</code></td>
-            <td>Letter that toggles the palette with Ctrl or Command. <code>null</code> turns it off. <code>data-shortcut</code> on the dialog sets it, and an empty <code>data-shortcut</code> turns it off.</td>
+            <td>Letter that toggles the palette with Command on Apple platforms or Ctrl elsewhere. A key event the page already handled is left alone. <code>null</code> turns it off. <code>data-shortcut</code> on the dialog sets it, and an empty <code>data-shortcut</code> turns it off.</td>
           </tr>
           <tr>
             <td><code>closeOnRun</code></td>

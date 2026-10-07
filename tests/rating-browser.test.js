@@ -11,6 +11,7 @@ const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><styl
 <main style="width:480px">
   <button id="before" type="button">Before</button>
   <form id="form"><fieldset class="rating"><legend>Rate this recipe</legend>${stars}</fieldset></form>
+  <fieldset class="rating" disabled><legend>Locked</legend><label><span class="visually-hidden">1 star</span><input id="locked" type="radio" name="locked" value="1" checked></label></fieldset>
   <span id="display" class="rating" role="img" aria-label="Rated 4.5 out of 5" style="--md-comp-rating-value: 4.5"></span>
   <span id="on" style="background-color:var(--md-sys-color-tertiary)"></span>
   <span id="off" style="background-color:var(--md-sys-color-outline-variant)"></span>
@@ -36,6 +37,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
         assert.match(star.mask, /url\(/);
         assert.deepEqual(await filled(), [true, true, true, false, false], `${dir}: the checked star and those before it fill`);
         assert.equal(await fill('s5'), off);
+        assert.equal(await page.locator('#locked').evaluate((el) => getComputedStyle(el).backgroundImage), 'none', `${dir}: a disabled checked star draws no radio dot`);
 
         await page.locator('#before').focus();
         await page.keyboard.press('Tab');

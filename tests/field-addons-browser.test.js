@@ -9,6 +9,7 @@ const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><style>${css}</style></head><body>
 <main style="width:480px">
+  <form id="login">
   <div id="field" class="field" style="width:320px">
     <input id="pw" type="password" placeholder=" " value="hunter22" autocomplete="current-password">
     <label for="pw">Password</label>
@@ -17,6 +18,7 @@ const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><styl
       <span id="eye-off" class="material-symbols" aria-hidden="true">visibility_off</span>
     </button>
   </div>
+  </form>
   <label for="code">Verification code</label>
   <div id="row" style="display:flex">
     <input id="code" class="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}">
@@ -54,6 +56,21 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
         assert.deepEqual([await shown('eye'), await shown('eye-off')], [false, true], `${dir}: the icons swap`);
         await page.click('#toggle');
         assert.equal(await page.locator('#pw').getAttribute('type'), 'password', `${dir}: pressing again hides it`);
+        assert.equal(await page.locator('#toggle').getAttribute('aria-pressed'), 'false');
+
+        await page.click('#toggle');
+        const typeAtSubmit = await page.evaluate(() => {
+          const form = document.getElementById('login');
+          let seen = null;
+          form.addEventListener('submit', (e) => { e.preventDefault(); seen = document.getElementById('pw').type; }, { once: true });
+          form.requestSubmit();
+          return seen;
+        });
+        assert.equal(typeAtSubmit, 'password', `${dir}: a revealed password is hidden again before submit`);
+        assert.equal(await page.locator('#toggle').getAttribute('aria-pressed'), 'false');
+        await page.click('#toggle');
+        await page.evaluate(() => document.getElementById('login').reset());
+        assert.equal(await page.locator('#pw').getAttribute('type'), 'password', `${dir}: reset hides it too`);
         assert.equal(await page.locator('#toggle').getAttribute('aria-pressed'), 'false');
 
         await page.click('#code');

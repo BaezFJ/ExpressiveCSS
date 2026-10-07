@@ -132,6 +132,8 @@ export class Menu extends Component<MenuOptions> implements Openable {
   private _menuClickTargets = new WeakMap<Event, HTMLElement>();
   /** Viewport point a context menu opens at; null for a trigger menu. */
   private _contextPoint: { x: number; y: number } | null = null;
+  /** What had focus when a context menu opened; focus goes back there. */
+  private _contextReturn: HTMLElement | null = null;
 
   constructor(el: HTMLElement, options: Partial<MenuOptions>) {
     super(el, options, Menu);
@@ -279,7 +281,21 @@ export class Menu extends Component<MenuOptions> implements Openable {
   }
 
   _handleContextMenu = (e: MouseEvent) => {
+    // A nested region already answered this right-click; this one closes so
+    // two menus never stack.
+    if (e.defaultPrevented) {
+      this.close();
+      return;
+    }
+    // A right-click on another open menu inside this region belongs to that
+    // menu, which keeps itself open.
+    const path = e.composedPath();
+    if (Menu._menus.some((menu) => menu !== this && menu.isOpen && path.includes(menu.menuEl))) return;
     e.preventDefault();
+    if (!this.isOpen) {
+      const root = this.el.getRootNode() as Document | ShadowRoot;
+      this._contextReturn = root.activeElement instanceof HTMLElement ? root.activeElement : null;
+    }
     // The menu key and Shift+F10 fire this too, with a point that may sit
     // outside the region (0, 0 in some engines). Open those at the region's
     // start corner instead.
@@ -297,7 +313,14 @@ export class Menu extends Component<MenuOptions> implements Openable {
   };
 
   _handleDocumentContextMenu = (e: MouseEvent) => {
-    if (!e.composedPath().includes(this.el)) this.close();
+    const path = e.composedPath();
+    // A right-click on the menu itself keeps it open and the browser's own
+    // menu shut.
+    if (path.includes(this.menuEl)) {
+      e.preventDefault();
+      return;
+    }
+    if (!path.includes(this.el)) this.close();
   };
 
   _handleClick = (e: MouseEvent) => {
@@ -1004,8 +1027,11 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this._setExpanded(false);
     if (this.options.autoFocus && this.menuEl.contains(focused) &&
       (root.activeElement === focused || this.el.ownerDocument.activeElement === this.el.ownerDocument.body)) {
-      this.el.focus();
+      // A context region may not take focus itself; return to what had it.
+      const back = this._contextReturn;
+      (back?.isConnected && back !== this.el.ownerDocument.body ? back : this.el).focus();
     }
+    this._contextReturn = null;
   };
 
   /**

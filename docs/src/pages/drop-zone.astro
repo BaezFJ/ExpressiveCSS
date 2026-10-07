@@ -55,7 +55,8 @@ const S = defineSections([
           The Forms behavior adds <code>dragover</code> to the zone while files
           are over it and fills <code>.drop-zone-files</code> with each file's
           name and size, formatted for the page's locale. It listens on the
-          document, so zones added later work too. A dropped file replaces the
+          document, so zones added later work too, and resetting the form
+          empties the list. A dropped file replaces the
           selection, as it does on any file input; add <code>multiple</code>
           to take several at once.
         </p>

@@ -84,9 +84,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed TypeScript roadmap and cross-browser fixes: 45,117 gzip bytes (+475).
   // Reviewed context menus, the password toggle and drop zone behavior: 45,923 gzip bytes (+804).
   // Reviewed the command palette: 47,077 gzip bytes (+1,154).
-  assert.ok(sizes(js).gzip <= 47077, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed fixes to context menus, the palette, the password toggle and drop zone reset: 47,483 gzip bytes (+406).
+  assert.ok(sizes(js).gzip <= 47483, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
-  assert.ok(sizes(css).gzip <= 53687, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the disabled star fix: 53,701 gzip bytes (+14).
+  assert.ok(sizes(css).gzip <= 53701, `CSS gzip: ${sizes(css).gzip}`);
 });

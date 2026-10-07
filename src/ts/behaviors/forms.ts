@@ -101,6 +101,10 @@ export class Forms {
       });
 
       document.addEventListener('click', Forms.togglePassword);
+      // Capture, so the password is hidden again before any submit handler
+      // reads the form or the browser offers to save it.
+      document.addEventListener('submit', Forms.resetFormExtras, true);
+      document.addEventListener('reset', Forms.resetFormExtras, true);
       for (const type of ['dragenter', 'dragover', 'dragleave', 'drop']) {
         document.addEventListener(type, Forms.markDropZone);
       }
@@ -134,6 +138,26 @@ export class Forms {
     input.toggleAttribute('data-password', show);
     input.type = show ? 'text' : 'password';
     button.setAttribute('aria-pressed', String(show));
+  }
+
+  /**
+   * A revealed password goes back to type="password" when its form is
+   * submitted or reset, so it is never sent or autofilled as plain text and
+   * a reset field does not stay revealed. A reset form also drops the file
+   * lists it would otherwise leave showing: reset fires no change event.
+   */
+  static resetFormExtras(e: Event) {
+    const form = e.target;
+    if (!(form instanceof HTMLFormElement)) return;
+    form.querySelectorAll<HTMLInputElement>('input[data-password]').forEach((input) => {
+      input.removeAttribute('data-password');
+      input.type = 'password';
+      input.closest('.field')?.querySelector('.password-toggle')?.setAttribute('aria-pressed', 'false');
+    });
+    if (e.type === 'reset') {
+      form.querySelectorAll('.drop-zone-files').forEach((list) => list.replaceChildren());
+      form.querySelectorAll('.drop-zone.dragover').forEach((zone) => zone.classList.remove('dragover'));
+    }
   }
 
   /**

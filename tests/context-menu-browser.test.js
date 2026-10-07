@@ -86,3 +86,54 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     }
   });
 }
+
+const regions = `<!doctype html><html lang="en"><head><style>${css} body { margin: 0 }</style></head><body>
+<main>
+  <div id="outer" class="menu-trigger" data-context-menu data-target="outer-menu"
+       style="position:absolute; left:20px; top:20px; width:700px; height:500px">
+    <button id="row" type="button">A row with its own focus</button>
+    <div id="inner" class="menu-trigger" data-context-menu data-target="inner-menu"
+         style="position:absolute; left:100px; top:100px; width:300px; height:200px">Inner</div>
+    <menu id="inner-menu"><li><button type="button" id="inner-item">Inner action</button></li></menu>
+  </div>
+  <menu id="outer-menu"><li><button type="button" id="outer-item">Outer action</button></li></menu>
+</main></body></html>`;
+
+for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+  test(`${name}: context menus return focus to its owner, keep nested regions apart and stay open for their own right-click`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
+      await page.setContent(regions);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => window.Expressive.AutoInit());
+      const shown = (id) => page.locator(`#${id}`).evaluate((el) => getComputedStyle(el).display !== 'none');
+      const settle = () => page.waitForTimeout(400);
+      const keyboardMenu = (id) => page.locator(`#${id}`).evaluate((el) => el.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 0, clientY: 0 })));
+
+      await page.locator('#row').focus();
+      await keyboardMenu('row');
+      await settle();
+      assert.equal(await page.evaluate(() => document.activeElement.closest('menu')?.id), 'outer-menu', 'the menu takes focus');
+      await page.keyboard.press('Escape');
+      await settle();
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'row', 'focus returns to what had it, not to an unfocusable region');
+
+      await page.mouse.click(250, 250, { button: 'right' });
+      await settle();
+      assert.deepEqual([await shown('inner-menu'), await shown('outer-menu')], [true, false], 'a nested region opens only its own menu');
+
+      const prevented = await page.locator('#inner-item').evaluate((el) => !el.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 260, clientY: 260 })));
+      await settle();
+      assert.equal(prevented, true, 'a right-click on the open menu keeps the browser menu shut');
+      assert.deepEqual([await shown('inner-menu'), await shown('outer-menu')], [true, false], 'and keeps the menu open without opening the outer one');
+
+      await page.mouse.click(60, 450, { button: 'right' });
+      await settle();
+      assert.deepEqual([await shown('inner-menu'), await shown('outer-menu')], [false, true], 'a right-click in the outer region swaps menus');
+    } finally {
+      await browser.close();
+    }
+  });
+}
