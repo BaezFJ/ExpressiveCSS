@@ -37,7 +37,8 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Accordion](#accordion) | implemented | source-reviewed | incomplete | 0 |
 | [Data table](#data-table) | implemented | source-reviewed | incomplete | 0 |
 | [Stat](#stat) | implemented | source-reviewed | incomplete | 0 |
-| [Line chart](#line-chart) | unassessed | needs-review | incomplete | 1 |
+| [Line chart](#line-chart) | implemented | source-reviewed | incomplete | 1 |
+| [Column chart](#column-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Timeline](#timeline) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
@@ -478,9 +479,9 @@ Web adaptation: A <dl> pairs each value with its label; the arrow is decoration 
 
 ## Line chart
 
-**unassessed within the stated scope.** Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.
+**implemented within the stated scope.** Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.
 
-Source review: needs-review, 2026-10-06. [src/sass/components/_line-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/sass/components/_line-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/ts/components/lineChart.ts).
+Source review: source-reviewed, 2026-10-06. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/sass/abstracts/_mixins.scss), [src/sass/components/_line-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/sass/components/_line-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/ts/components/lineChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
 
@@ -492,6 +493,24 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 - not-recorded: [tests/line-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/tests/line-chart-browser.test.js): `chromium: line chart draws its table, keeps it readable and restores it on destroy`. Hidden table in the accessibility tree, aria-hidden SVG, series classes and colors, labels, legend, the dashed series, no curve overshoot, gaps, data-min, data-max, data-value, a typographic minus, the area modifier, the sparkline size and focus, and destroy restoring the table.
 - not-recorded: [tests/line-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/tests/line-chart-browser.test.js): `chromium: line chart tooltip follows the pointer and the arrow keys`. Pointer position to row, tooltip text and live region, cursor points, flipping right of centre, hiding on leave, focus, arrows, Home, End and Escape. No spoken-output assertion.
 - not-recorded: [tests/line-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/tests/line-chart-browser.test.js): `chromium: line chart handles cards, headerless tables, RTL, strict values and forced colors`. A chart in a sized card and in a primary action keeps its own layout and caption, a header row without <thead> is not data, the RTL axis matches its labels and arrow keys, ambiguous cell text is a gap, show() is safe without data and skips a repeated row, stacked bands fill down to the series below or the plot bottom with cursor points on the totals and each cell in the tooltip, a stacked gap breaks the series above it, the stacked range keeps 10% headroom above zero, and swatches keep their series colors in forced colors.
+
+<a id="column-chart"></a>
+
+## Column chart
+
+**implemented within the stated scope.** Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip with a highlight band.
+
+Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/sass/abstracts/_mixins.scss), [src/sass/components/_column-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/sass/components/_column-chart.scss), [src/ts/components/columnChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/ts/components/columnChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/src/ts/components/lineChart.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+
+- verification: Drawing, the hidden table, grouped and stacked geometry, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+- feature: There are no y axis value labels, horizontal bars or range columns. Next: Add optional y labels if charts need values readable without the tooltip; add horizontal bars or ranges when a page needs them.
+
+- not-recorded: [tests/column-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/tests/column-chart-browser.test.js): `chromium: column chart draws grouped, stacked and negative columns from its table`. Hidden table in the accessibility tree, the named plot and its role description, labels, legend, series classes, separate instances from line charts, grouped column geometry with an empty slot for a gap, stacked segments on the total below with only the top segment rounded, a gap leaving the segments above out, negative columns from a centred zero, data-min above zero, the sparkline size and focus, and destroy restoring the table.
+- not-recorded: [tests/column-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4965d9f34075eaae8fd6ab0846ae985b2eee12c5/tests/column-chart-browser.test.js): `chromium: column chart tooltip and band follow the pointer and the arrow keys`. Pointer position to row, tooltip text without empty cells, no cursor points, the band's width and position, hiding on leave, focus, End and Escape, and the first row on the right in RTL. No spoken-output assertion.
 
 <a id="timeline"></a>
 

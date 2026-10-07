@@ -4,7 +4,8 @@
 // <table> of data: the first column labels the x axis, each further column
 // is a series named by its header cell. Without JavaScript the table shows.
 // LineChart draws an SVG from the table and hides the table visually, so a
-// screen reader still reads the data as a table.
+// screen reader still reads the data as a table. The plot, tooltip, labels
+// and legend are shared with the column chart through chart().
 //
 // The SVG stretches to the plot (preserveAspectRatio="none") and strokes
 // stay a constant width, so resizing needs no script. Points, the cursor
@@ -22,60 +23,22 @@
 //   --md-comp-line-chart-color-1..4   primary, tertiary, secondary,
 //                                     on-surface-variant
 
+@include chart("line-chart");
+
 .line-chart {
-  --md-comp-line-chart-height: 240px;
   --md-comp-line-chart-line-width: 3px;
-  --md-comp-line-chart-grid-color: var(--md-sys-color-outline-variant);
-  --md-comp-line-chart-color-1: var(--md-sys-color-primary);
-  --md-comp-line-chart-color-2: var(--md-sys-color-tertiary);
-  --md-comp-line-chart-color-3: var(--md-sys-color-secondary);
-  --md-comp-line-chart-color-4: var(--md-sys-color-on-surface-variant);
 
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-  margin: $element-top-margin 0 $element-bottom-margin;
-  color: var(--md-sys-color-on-surface);
-
-  > figcaption {
-    color: var(--md-sys-color-on-surface-variant);
-    @include typescale("title-small");
-  }
-
-  // A table keeps its content size under visually-hidden, so anchor it
-  // here rather than at some distant positioned ancestor.
-  position: relative;
-
-  &:has(> .line-chart-plot) > table {
-    @include visually-hidden;
-    inset: 0 auto auto 0;
+  &.sparkline {
+    --md-comp-line-chart-line-width: 2px;
   }
 }
 
-@for $i from 1 through 4 {
-  .line-chart [data-series="#{$i}"] {
-    --line-chart-color: var(--md-comp-line-chart-color-#{$i});
-  }
-}
-
-.line-chart-plot {
-  position: relative;
-  height: var(--md-comp-line-chart-height);
-  border-block-end: 1px solid var(--md-comp-line-chart-grid-color);
-  border-radius: 2px;
-  // Four grid lines; the border is the fifth.
-  background: linear-gradient(var(--md-comp-line-chart-grid-color) 1px, transparent 0) 0 0 / 100% 25%;
-  touch-action: pan-y;
-  @include focus-visible;
-
-  > svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
+.line-chart-plot > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
 
 .line-chart-line {
@@ -113,11 +76,8 @@
 }
 
 .line-chart-cursor {
-  position: absolute;
-  inset-block: 0;
   width: 1px;
   background-color: var(--md-sys-color-outline);
-  pointer-events: none;
 
   > span {
     position: absolute;
@@ -131,137 +91,11 @@
   }
 }
 
-// Rich tooltip surface, as in _tooltip.scss.
-.line-chart-tooltip {
-  --md-comp-line-chart-tooltip-color: var(--md-sys-color-surface-container);
-
-  position: absolute;
-  top: 0;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: auto auto;
-  gap: 4px 16px;
-  min-width: 120px;
-  margin: 0;
-  padding: 12px 16px;
-  border-radius: 12px;
-  background-color: var(--md-comp-line-chart-tooltip-color);
-  color: var(--md-sys-color-on-surface-variant);
-  @include typescale("body-small");
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-  pointer-events: none;
-  translate: 12px 0;
-  @include z-depth("2");
-  @include glass(var(--md-comp-line-chart-tooltip-color));
-
-  &[hidden] {
-    display: none;
-  }
-
-  &.end {
-    translate: calc(-100% - 12px) 0;
-  }
-
-  > strong {
-    grid-column: 1 / -1;
-    color: var(--md-sys-color-on-surface);
-    @include typescale("title-small");
-  }
-
-  > span {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  > span:nth-of-type(even) {
-    justify-content: end;
-    color: var(--md-sys-color-on-surface);
-    font-weight: 500;
-  }
-}
-
-.line-chart-labels,
-.line-chart-legend {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  color: var(--md-sys-color-on-surface-variant);
-  @include typescale("body-small");
-}
-
-.line-chart-labels {
-  display: grid;
-  grid-auto-columns: minmax(0, 1fr);
-  grid-auto-flow: column;
-  text-align: center;
-
-  > li {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-
-.line-chart-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
-
-  > li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-}
-
-// Series swatches.
-.line-chart-legend > li::before,
-.line-chart-tooltip > span:nth-of-type(odd)::before {
-  content: "";
-  flex: none;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--line-chart-color);
-}
-
-.line-chart.sparkline {
-  --md-comp-line-chart-height: 48px;
-  --md-comp-line-chart-line-width: 2px;
-  // Keep the taller hidden table from adding scrollable overflow. A
-  // sparkline has no tooltip or focus ring to clip.
-  overflow: clip;
-
-  .line-chart-plot {
-    border: 0;
-    background: none;
-  }
-
-  .line-chart-labels,
-  .line-chart-legend {
-    display: none;
-  }
-}
-
 @media (forced-colors: active) {
-  .line-chart-plot {
-    background: none;
-  }
-
   .line-chart-cursor {
     background-color: CanvasText;
   }
 
-  .line-chart-tooltip {
-    outline: 1px solid CanvasText;
-  }
-
-  // The lines keep their colors, so the swatches that key them must too.
-  .line-chart-legend > li::before,
-  .line-chart-tooltip > span:nth-of-type(odd)::before,
   .line-chart-cursor > span {
     forced-color-adjust: none;
   }

@@ -3,7 +3,8 @@ import { Component, BaseOptions, InitElements, InitElement } from '../core/compo
 export interface LineChartOptions extends BaseOptions {
   /**
    * Lowest value on the y axis. Defaults to the data minimum less 10% of
-   * the range. Overridden by `data-min` on the chart.
+   * the range; a stacked chart starts at zero or its lowest total, and a
+   * column chart always includes zero. Overridden by `data-min` on the chart.
    */
   min: number | null;
   /**
@@ -19,7 +20,7 @@ const _defaults: LineChartOptions = {
 };
 
 const SVG = 'http://www.w3.org/2000/svg';
-const COLORS = 4;
+export const COLORS = 4;
 let _gradientId = 0;
 
 interface Series {
@@ -94,19 +95,38 @@ export class LineChart extends Component<LineChartOptions> {
   /** The highlighted row, or -1. */
   activeIndex = -1;
   private _generated: Element[] = [];
-  private _plot: HTMLElement;
+  protected _plot: HTMLElement;
   private _cursor: HTMLElement;
   private _tooltip: HTMLElement;
-  private _y: (value: number) => number;
+  protected _y: (value: number) => number;
   /** The x axis runs right to left in a right-to-left context, like the labels. */
   private _rtl = false;
 
+  /** The class prefix of the generated parts; ColumnChart reuses this class. */
+  protected get _type() {
+    return 'line-chart';
+  }
+
+  /** Whether the y axis always includes zero, as columns grow from it. */
+  protected get _fromZero() {
+    return false;
+  }
+
+  /** Whether the cursor marks each series with a point. */
+  protected get _points() {
+    return true;
+  }
+
+  protected get _key() {
+    return 'Expressive_LineChart';
+  }
+
   constructor(el: HTMLElement, options: Partial<LineChartOptions>) {
-    super(el, options, LineChart);
-    this.el['Expressive_LineChart'] = this;
+    super(el, options, new.target);
+    this.el[this._key] = this;
 
     this.options = {
-      ...LineChart.defaults,
+      ...new.target.defaults,
       ...options
     };
 
@@ -134,7 +154,7 @@ export class LineChart extends Component<LineChartOptions> {
     els: HTMLElement | InitElements<InitElement>,
     options: Partial<LineChartOptions> = {}
   ): LineChart | LineChart[] {
-    return super.init(els, options, LineChart);
+    return super.init(els, options, this);
   }
 
   static getInstance(el: HTMLElement): LineChart {
@@ -145,7 +165,7 @@ export class LineChart extends Component<LineChartOptions> {
     // The listeners live on the plot, which goes with the generated nodes.
     this._generated.forEach((node) => node.remove());
     this._generated = [];
-    this.el['Expressive_LineChart'] = undefined;
+    this.el[this._key] = undefined;
   }
 
   /**
@@ -171,15 +191,16 @@ export class LineChart extends Component<LineChartOptions> {
     this.series.forEach((series, i) => {
       const value = series.values[index];
       if (value === null) return;
-      const dot = document.createElement('span');
-      dot.dataset.series = String((i % COLORS) + 1);
+      const color = String((i % COLORS) + 1);
       const top = series.tops[index];
-      if (top !== null) {
+      if (top !== null && this._points) {
+        const dot = document.createElement('span');
+        dot.dataset.series = color;
         dot.style.top = `${this._y(top)}%`;
         this._cursor.append(dot);
       }
       const name = document.createElement('span');
-      name.dataset.series = dot.dataset.series;
+      name.dataset.series = color;
       name.textContent = series.name;
       const text = document.createElement('span');
       text.textContent = series.text[index];
@@ -232,10 +253,20 @@ export class LineChart extends Component<LineChartOptions> {
       const value = parseFloat(this.el.dataset[name] ?? '');
       return Number.isFinite(value) ? value : this.options[name];
     };
-    const pad = (high - low) * 0.1 || 1;
-    // Stacked areas are read against zero, with the headroom of that span.
-    const min = option('min') ?? (stacked ? Math.min(0, low) : low - pad);
-    const max = option('max') ?? high + (stacked ? (high - min) * 0.1 || 1 : pad);
+    let [min, max] = [option('min'), option('max')];
+    if (this._fromZero) {
+      // Zero is on the scale, with 10% of the span to spare on each side
+      // that has data.
+      const [bottom, top] = [Math.min(0, low), Math.max(0, high)];
+      const room = (top - (min ?? bottom)) * 0.1 || 1;
+      min ??= bottom < 0 ? bottom - room : 0;
+      max ??= top + room;
+    } else {
+      const pad = (high - low) * 0.1 || 1;
+      // Stacked areas are read against zero, with the headroom of that span.
+      min ??= stacked ? Math.min(0, low) : low - pad;
+      max ??= high + (stacked ? (high - min) * 0.1 || 1 : pad);
+    }
     this._y = (value) => 100 - ((value - min) / (max - min || 1)) * 100;
   }
 
@@ -246,13 +277,51 @@ export class LineChart extends Component<LineChartOptions> {
   }
 
   private _render() {
+    const type = this._type;
     this._plot = document.createElement('div');
-    this._plot.className = 'line-chart-plot';
+    this._plot.className = `${type}-plot`;
     const caption = this.el.querySelector(':scope > figcaption')?.textContent.trim();
     this._plot.setAttribute('role', 'group');
-    this._plot.setAttribute('aria-roledescription', 'line chart');
+    this._plot.setAttribute('aria-roledescription', type.replace(/-/g, ' '));
     if (caption) this._plot.setAttribute('aria-label', caption);
 
+    this._cursor = document.createElement('div');
+    this._cursor.className = `${type}-cursor`;
+    this._cursor.hidden = true;
+    this._tooltip = document.createElement('div');
+    this._tooltip.className = `${type}-tooltip`;
+    this._tooltip.hidden = true;
+    this._tooltip.setAttribute('aria-live', 'polite');
+    this._plot.append(this._draw(), this._cursor, this._tooltip);
+
+    const labels = document.createElement('ol');
+    labels.className = `${type}-labels`;
+    labels.setAttribute('aria-hidden', 'true');
+    // A loop rather than a spread: a spread of every row overflows the stack.
+    for (const text of this.labels) {
+      const li = document.createElement('li');
+      li.textContent = text;
+      labels.append(li);
+    }
+    this._generated = [this._plot, labels];
+
+    if (this.series.length > 1) {
+      const legend = document.createElement('ul');
+      legend.className = `${type}-legend`;
+      legend.setAttribute('aria-hidden', 'true');
+      legend.append(...this.series.map((series, i) => {
+        const li = document.createElement('li');
+        li.dataset.series = String((i % COLORS) + 1);
+        li.textContent = series.name;
+        return li;
+      }));
+      this._generated.push(legend);
+    }
+    this.el.append(...this._generated);
+  }
+
+  /** Draws the series, which fill the plot. */
+  protected _draw(): Element {
     const svg = document.createElementNS(SVG, 'svg');
     svg.setAttribute('viewBox', '0 0 100 100');
     svg.setAttribute('preserveAspectRatio', 'none');
@@ -304,40 +373,7 @@ export class LineChart extends Component<LineChartOptions> {
       group.append(gradient, area, line);
       svg.append(group);
     });
-
-    this._cursor = document.createElement('div');
-    this._cursor.className = 'line-chart-cursor';
-    this._cursor.hidden = true;
-    this._tooltip = document.createElement('div');
-    this._tooltip.className = 'line-chart-tooltip';
-    this._tooltip.hidden = true;
-    this._tooltip.setAttribute('aria-live', 'polite');
-    this._plot.append(svg, this._cursor, this._tooltip);
-
-    const labels = document.createElement('ol');
-    labels.className = 'line-chart-labels';
-    labels.setAttribute('aria-hidden', 'true');
-    // A loop rather than a spread: a spread of every row overflows the stack.
-    for (const text of this.labels) {
-      const li = document.createElement('li');
-      li.textContent = text;
-      labels.append(li);
-    }
-    this._generated = [this._plot, labels];
-
-    if (this.series.length > 1) {
-      const legend = document.createElement('ul');
-      legend.className = 'line-chart-legend';
-      legend.setAttribute('aria-hidden', 'true');
-      legend.append(...this.series.map((series, i) => {
-        const li = document.createElement('li');
-        li.dataset.series = String((i % COLORS) + 1);
-        li.textContent = series.name;
-        return li;
-      }));
-      this._generated.push(legend);
-    }
-    this.el.append(...this._generated);
+    return svg;
   }
 
   private _onPointerMove = (e: PointerEvent) => {

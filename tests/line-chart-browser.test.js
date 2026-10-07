@@ -152,6 +152,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
           ${chart('class="line-chart" id="empty"', 'Empty', '<th>V</th>', [['A', 'n/a']])}
           ${chart('class="line-chart" id="pair"', 'Pair', '<th>A</th><th>B</th>', [['Jan', '1', '2'], ['Feb', '3', '4']])}
           ${chart('class="line-chart stacked" id="stacked" data-max="10"', 'Stacked', '<th>A</th><th>B</th>', [['Jan', '1', '2'], ['Feb', '3', '4']])}
+          ${chart('class="line-chart stacked" id="stacked-min" data-min="50"', 'Stacked min', '<th>A</th>', [['Jan', '60'], ['Feb', '100']])}
           ${chart('class="line-chart stacked" id="stacked-gap"', 'Stacked gap', '<th>A</th><th>B</th>', [['Jan', '1', '2'], ['Feb', '', '2'], ['Mar', '3', '2']])}
         </div>
         <script>${js}</script>`);
@@ -243,6 +244,8 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       // Totals run 0 to 5, with 10% of that span above.
       assert.ok(Math.abs(gap.dots[0] - (100 - 300 / 5.5)) < 0.01 && Math.abs(gap.dots[1] - (100 - 500 / 5.5)) < 0.01, `${gap.dots}`);
       assert.ok(gap.lowest <= 100, `area below the plot: ${gap.lowest}`);
+      // With data-min, the headroom is 10% of the span from it: 50 to 105.
+      assert.match(await page.locator('#stacked-min .line-chart-line').getAttribute('d'), /,9\.09\d*$/);
 
       // WebKit does not emulate forced colors.
       if (engine !== 'webkit') {
