@@ -1,0 +1,203 @@
+@use "../abstracts" as *;
+
+// Pie chart. The same <figure>, <figcaption> and <table> as a line chart;
+// PieChart draws the first value column as slices of the whole, clockwise
+// from the top, with a legend of every row, its cell and its share. The
+// plot, tooltip and legend swatches come from chart(); the plot is a square
+// as wide as --md-comp-pie-chart-height.
+//
+// The slices are SVG in a -50 to 50 box with a radius of 46, under a mask
+// whose lines cut the gaps and whose circle, scaled here, cuts the donut's
+// hole. The value labels and the tooltip sit on a slice's middle from the
+// --turn PieChart sets, a fraction of a turn clockwise from the top.
+//
+// Modifiers: .donut cuts a hole and shows a <tfoot> total in it, .values
+// writes each slice's share on it, .sparkline is a small pie with no
+// legend or tooltip.
+//
+// Tokens:
+//   --md-comp-pie-chart-height       240px, the pie's diameter (sparkline 48px)
+//   --md-comp-pie-chart-hole         0.6, the donut hole's share of the diameter
+//   --md-comp-pie-chart-gap          1.5, the gap between slices in hundredths
+//                                    of the plot's width
+//   --md-comp-pie-chart-color-1..6   primary, tertiary, secondary,
+//                                    on-surface-variant, primary-container,
+//                                    tertiary-container
+//   --md-comp-pie-chart-on-color-1..6  on-primary, on-tertiary, on-secondary,
+//                                      surface, on-primary-container,
+//                                      on-tertiary-container; .values text
+
+@include chart("pie-chart");
+
+.pie-chart {
+  --md-comp-pie-chart-hole: 0.6;
+  --md-comp-pie-chart-gap: 1.5;
+  --md-comp-pie-chart-color-5: var(--md-sys-color-primary-container);
+  --md-comp-pie-chart-color-6: var(--md-sys-color-tertiary-container);
+  --md-comp-pie-chart-on-color-1: var(--md-sys-color-on-primary);
+  --md-comp-pie-chart-on-color-2: var(--md-sys-color-on-tertiary);
+  --md-comp-pie-chart-on-color-3: var(--md-sys-color-on-secondary);
+  --md-comp-pie-chart-on-color-4: var(--md-sys-color-surface);
+  --md-comp-pie-chart-on-color-5: var(--md-sys-color-on-primary-container);
+  --md-comp-pie-chart-on-color-6: var(--md-sys-color-on-tertiary-container);
+  // Where labels and the tooltip sit, as a share of the radius.
+  --pie-chart-label-at: 0.62;
+
+  gap: 16px;
+
+  &.donut {
+    // The middle of the ring.
+    --pie-chart-label-at: calc((1 + var(--md-comp-pie-chart-hole)) / 2);
+  }
+}
+
+@for $i from 1 through 6 {
+  .pie-chart [data-series="#{$i}"] {
+    --pie-chart-color: var(--md-comp-pie-chart-color-#{$i});
+    --pie-chart-on-color: var(--md-comp-pie-chart-on-color-#{$i});
+  }
+}
+
+.pie-chart-plot {
+  width: min(100%, var(--md-comp-pie-chart-height));
+  height: auto;
+  aspect-ratio: 1;
+  margin-inline: auto;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+}
+
+.pie-chart-pie {
+  position: absolute;
+  inset: 0;
+
+  > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// The origin of an SVG transform is the box's middle, (0, 0).
+.pie-chart-hole {
+  transform: scale(0);
+}
+
+.pie-chart.donut .pie-chart-hole {
+  transform: scale(var(--md-comp-pie-chart-hole));
+}
+
+.pie-chart-gaps {
+  stroke-width: var(--md-comp-pie-chart-gap);
+}
+
+.pie-chart-slice {
+  fill: var(--pie-chart-color);
+
+  // GROWN in pieChart.ts.
+  &.active {
+    transform: scale(1.06);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform 200ms cubic-bezier(0.2, 0, 0, 1), opacity 400ms cubic-bezier(0.2, 0, 0, 1);
+
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+}
+
+.pie-chart-values > span,
+.pie-chart-tooltip {
+  --pie-chart-angle: calc(var(--turn, 0) * 1turn);
+
+  position: absolute;
+  left: calc(50% + sin(var(--pie-chart-angle)) * var(--pie-chart-label-at) * 46%);
+  top: calc(50% - cos(var(--pie-chart-angle)) * var(--pie-chart-label-at) * 46%);
+}
+
+.pie-chart-values > span {
+  translate: -50% -50%;
+  color: var(--pie-chart-on-color);
+  @include typescale("label-medium");
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pie-chart-tooltip {
+  translate: 12px -50%;
+
+  &.end {
+    translate: calc(-100% - 12px) -50%;
+  }
+}
+
+.pie-chart-total {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  > * {
+    max-width: calc(80% * var(--md-comp-pie-chart-hole));
+    overflow-wrap: anywhere;
+  }
+
+  > strong {
+    color: var(--md-sys-color-on-surface);
+    @include typescale("headline-small");
+  }
+
+  > span {
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-small");
+  }
+}
+
+.pie-chart.donut .pie-chart-total {
+  display: flex;
+}
+
+// One row per slice: swatch, name, cell and share in aligned columns.
+.pie-chart-legend {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 8px;
+
+  > li {
+    display: contents;
+  }
+
+  > li > span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  > li > span:not(:first-child) {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  > li > span:nth-child(2) {
+    color: var(--md-sys-color-on-surface);
+    font-weight: 500;
+  }
+}
+
+.pie-chart.sparkline .pie-chart-plot {
+  margin-inline: 0;
+}
+
+@media (forced-colors: active) {
+  .pie-chart-pie {
+    forced-color-adjust: none;
+  }
+}

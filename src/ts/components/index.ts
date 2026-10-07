@@ -17,6 +17,7 @@ export { CommandPalette } from "./commandPalette";
 export { LineChart } from "./lineChart";
 export { ColumnChart } from "./columnChart";
 export { BarChart } from "./barChart";
+export { PieChart } from "./pieChart";
 export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";
 export { Lightbox } from "./lightbox";

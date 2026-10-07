@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.pie-chart` draws a `<figure>`'s data table as slices of a whole,
+  clockwise from the top, with a legend of each row's cell and share and a
+  tooltip that follows the pointer round the pie or the arrow keys. `donut`
+  cuts a hole and shows a `<tfoot>` total in it, `values` writes each share
+  on its slice, and `sparkline` is a small pie. Further value columns show in
+  the tooltip.
 - `.bar-chart` draws a `<figure>`'s data table as horizontal bars from zero,
   with each row's label beside it, a legend, and a highlight band and tooltip
   that follow the pointer or the up and down arrows. The plot grows with its

@@ -1,0 +1,270 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "donut", label: "Donut" },
+  { id: "values", label: "Values" },
+  { id: "columns", label: "More columns" },
+  { id: "cards", label: "Chart cards" },
+  { id: "data", label: "Values and colors" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const plans: [string, number, string][] = [["Basic plan", 25864, "+10%"], ["Premium plan", 14258, "+4%"], ["Enterprise plan", 5258, "−2%"]];
+const leads: [string, number][] = [["Referrals", 558], ["Organic search", 434], ["Paid campaigns", 248]];
+const sources: [string, number][] = [["Enterprise clients", 38], ["Referral partners", 10.9], ["Retainer contracts", 7.4], ["Project-based work", 4.1], ["Strategic partnerships", 2.7]];
+const money = (value: number) => `$${value.toLocaleString("en-US")}`;
+const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
+const revenue = money(sum(plans.map(([, value]) => value)));
+---
+<DocsLayout page="pie-chart">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;figure class="pie-chart"&gt;</code> draws a
+          <code>&lt;table&gt;</code> of parts as slices of a whole. The first
+          column of the table names each part and the second holds its value.
+        </p>
+        <p>
+          It takes the same markup as a <a href="column-chart.html">column
+          chart</a>. Slices run clockwise from the top in table order, so put
+          the largest part first. A legend lists every row with its cell and
+          its share of the total. A tooltip follows the pointer round the pie,
+          and the arrow keys move it when the chart has focus. Keep a pie to
+          about five parts; for more, or to compare parts that are close in
+          size, use a <a href="bar-chart.html">bar chart</a>.
+        </p>
+        <figure class="pie-chart" data-markdown-ignore>
+          <figcaption>Revenue by plan, 2026</figcaption>
+          <table>
+            <thead><tr><th>Plan</th><th>Revenue</th></tr></thead>
+            <tbody>{plans.map(([plan, value]) => <tr><th>{plan}</th><td>{money(value)}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="pie-chart">
+  <figcaption>Revenue by plan, 2026</figcaption>
+  <table>
+    <thead>
+      <tr><th>Plan</th><th>Revenue</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Basic plan</th><td>$25,864</td></tr>
+      <tr><th>Premium plan</th><td>$14,258</td></tr>
+      <tr><th>Enterprise plan</th><td>$5,258</td></tr>
+    </tbody>
+  </table>
+</figure>
+`} />
+        <p>
+          The legend and tooltip show each cell's text as written, so format
+          values in the table. The shares are worked out from the numbers.
+        </p>
+  </Section>
+  <Section {...S.donut}>
+        <p>
+          <code>donut</code> cuts a hole in the middle. A
+          <code>&lt;tfoot&gt;</code> row is the total: its value and label
+          show in the hole, and it is not drawn as a slice. Write the total
+          yourself, formatted as you want it read.
+        </p>
+        <figure class="pie-chart donut" data-markdown-ignore>
+          <figcaption>Lead sources, last six months</figcaption>
+          <table>
+            <thead><tr><th>Source</th><th>Leads</th></tr></thead>
+            <tbody>{leads.map(([source, value]) => <tr><th>{source}</th><td>{value}</td></tr>)}</tbody>
+            <tfoot><tr><th>Total leads</th><td>{sum(leads.map(([, value]) => value)).toLocaleString("en-US")}</td></tr></tfoot>
+          </table>
+        </figure>
+<Code code={`
+<figure class="pie-chart donut">
+  <figcaption>Lead sources, last six months</figcaption>
+  <table>
+    <thead>
+      <tr><th>Source</th><th>Leads</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Referrals</th><td>558</td></tr>
+      <tr><th>Organic search</th><td>434</td></tr>
+      <tr><th>Paid campaigns</th><td>248</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><th>Total leads</th><td>1,240</td></tr>
+    </tfoot>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.values}>
+        <p>
+          <code>values</code> writes each slice's share on it, in the slice
+          color's on-color. Slices under 5% are too thin for a label; the
+          legend still shows their share.
+        </p>
+        <figure class="pie-chart donut values" data-markdown-ignore>
+          <figcaption>Top revenue sources</figcaption>
+          <table>
+            <thead><tr><th>Source</th><th>Revenue</th></tr></thead>
+            <tbody>{sources.map(([source, value]) => <tr><th>{source}</th><td data-value={value * 1e6}>${value}M</td></tr>)}</tbody>
+            <tfoot><tr><th>Total client revenue</th><td>$63.1M</td></tr></tfoot>
+          </table>
+        </figure>
+<Code code={`
+<figure class="pie-chart donut values">
+  <figcaption>Top revenue sources</figcaption>
+  <table>
+    <thead>
+      <tr><th>Source</th><th>Revenue</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Enterprise clients</th><td data-value="38000000">$38M</td></tr>
+      <tr><th>Referral partners</th><td data-value="10900000">$10.9M</td></tr>
+      <!-- One row per source -->
+    </tbody>
+    <tfoot>
+      <tr><th>Total client revenue</th><td>$63.1M</td></tr>
+    </tfoot>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.columns}>
+        <p>
+          The slices come from the first value column. Further columns add
+          lines to the tooltip, such as a change from last year, and stay in
+          the table for screen readers.
+        </p>
+        <figure class="pie-chart" data-markdown-ignore>
+          <figcaption>Revenue by plan, with change</figcaption>
+          <table>
+            <thead><tr><th>Plan</th><th>Revenue</th><th>Change</th></tr></thead>
+            <tbody>{plans.map(([plan, value, change]) => <tr><th>{plan}</th><td>{money(value)}</td><td>{change}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="pie-chart">
+  <figcaption>Revenue by plan, with change</figcaption>
+  <table>
+    <thead>
+      <tr><th>Plan</th><th>Revenue</th><th>Change</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Basic plan</th><td>$25,864</td><td>+10%</td></tr>
+      <!-- One row per plan -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.cards}>
+        <p>
+          A chart goes in a card with the figures it explains. The card adds
+          no chart styles; size the pie with
+          <code>--md-comp-pie-chart-height</code>, its diameter.
+        </p>
+        <article class="outlined" data-markdown-ignore>
+          <dl class="stats my-0">
+            <div><dt>Total revenue</dt><dd>{revenue}</dd><dd class="stat-change up">+10% from last year</dd></div>
+          </dl>
+          <figure class="pie-chart donut" style="--md-comp-pie-chart-height: 200px">
+            <figcaption class="visually-hidden">Revenue by plan</figcaption>
+            <table>
+              <thead><tr><th>Plan</th><th>Revenue</th></tr></thead>
+              <tbody>{plans.map(([plan, value]) => <tr><th>{plan}</th><td>{money(value)}</td></tr>)}</tbody>
+            </table>
+          </figure>
+        </article>
+<Code code={`
+<article class="outlined">
+  <dl class="stats my-0">
+    <div>
+      <dt>Total revenue</dt>
+      <dd>${revenue}</dd>
+      <dd class="stat-change up">+10% from last year</dd>
+    </div>
+  </dl>
+  <figure class="pie-chart donut" style="--md-comp-pie-chart-height: 200px">
+    <figcaption class="visually-hidden">Revenue by plan</figcaption>
+    <table><!-- … --></table>
+  </figure>
+</article>
+`} />
+        <p>
+          <code>sparkline</code> is a 48px pie with no legend or tooltip, for
+          a small pie beside a figure that already explains it.
+        </p>
+  </Section>
+  <Section {...S.data}>
+        <p>
+          Cells read as in a column chart: a cell's number is its
+          <code>data-value</code>, or its text without currency signs, percent
+          signs or grouping commas. Text that is not a single number, such as
+          "$38M" without a <code>data-value</code>, counts as nothing. So do
+          zero and negative values: their rows stay in the legend and the
+          tooltip with no slice and no share. A chart whose cells are all
+          gaps shows its table.
+        </p>
+        <p>
+          Slices take <code>primary</code>, <code>tertiary</code>,
+          <code>secondary</code>, <code>on-surface-variant</code>,
+          <code>primary-container</code> and <code>tertiary-container</code>
+          in turn. A seventh row would take the first row's color beside it,
+          so it takes the second; past that the colors repeat. Group small
+          parts into one "Other" row instead.
+        </p>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The table is the chart's text alternative. Give it a header row and
+          a header cell per row, and name the chart with a
+          <code>&lt;figcaption&gt;</code>. The drawn pie, values, total and
+          legend are hidden from assistive technology.
+        </p>
+        <p>
+          The plot is one Tab stop named by the caption. The arrow keys move
+          round the pie, right and down to the next row and left and up to the
+          one before; Home and End jump to the ends and Escape hides the
+          tooltip. On a touch screen, tap a slice to show it. In a
+          right-to-left page the slices still run clockwise, and left and
+          right swap. The tooltip is a polite live region, so a screen reader
+          hears each row's values and share as it moves. A sparkline is not
+          focusable. In forced colors the slices keep their colors so the
+          legend still keys them.
+        </p>
+  </Section>
+  <Section {...S.javascript}>
+        <p>
+          <code>AutoInit()</code> starts every <code>.pie-chart</code>. To
+          start one yourself, or to redraw a chart after changing its table,
+          call <code>PieChart.init</code> again. It has the line chart's
+          methods; the <code>min</code> and <code>max</code> options do not
+          apply.
+        </p>
+<Code code={`
+const chart = Expressive.PieChart.init(document.querySelector('.pie-chart'));
+chart.show(2);   // highlight the third row; -1 hides the tooltip
+chart.destroy(); // remove the drawing and show the table again
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.pie-chart</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-pie-chart-height</code></td><td>240px, the pie's diameter; 48px for a sparkline</td></tr>
+          <tr><td><code>--md-comp-pie-chart-hole</code></td><td>0.6, the donut hole's share of the diameter</td></tr>
+          <tr><td><code>--md-comp-pie-chart-gap</code></td><td>1.5, the gap between slices in hundredths of the plot's width</td></tr>
+          <tr><td><code>--md-comp-pie-chart-color-1</code> … <code>-4</code></td><td><code>primary</code>, <code>tertiary</code>, <code>secondary</code>, <code>on-surface-variant</code></td></tr>
+          <tr><td><code>--md-comp-pie-chart-color-5</code>, <code>-6</code></td><td><code>primary-container</code>, <code>tertiary-container</code></td></tr>
+          <tr><td><code>--md-comp-pie-chart-on-color-1</code> … <code>-6</code></td><td><code>on-primary</code>, <code>on-tertiary</code>, <code>on-secondary</code>, <code>surface</code>, <code>on-primary-container</code>, <code>on-tertiary-container</code>; text from <code>values</code></td></tr>
+        </TokenTable>
+        <p>For a selective Sass build, include <code>"pie-chart"</code> in <code>$components</code>.</p>
+  </Section>
+</PageBody>
+</DocsLayout>

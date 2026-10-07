@@ -2360,7 +2360,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "aeed3f6deb7f5e58ff68ea744f2111189565819c5f6d35fae5f4e734b0783528"
+            "sha256": "c19ea68093ac117cd6c7ee6da49b958cdb7b8a6fec9c0ab6991481148a793a58"
           }
         ],
         "gaps": [
@@ -2475,7 +2475,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "aeed3f6deb7f5e58ff68ea744f2111189565819c5f6d35fae5f4e734b0783528"
+            "sha256": "c19ea68093ac117cd6c7ee6da49b958cdb7b8a6fec9c0ab6991481148a793a58"
           }
         ],
         "gaps": [
@@ -2536,7 +2536,8 @@
         "column-chart",
         "line-chart",
         "data-table",
-        "stat"
+        "stat",
+        "pie-chart"
       ],
       "adaptive": [],
       "runtime": "auto-init",
@@ -2590,7 +2591,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "aeed3f6deb7f5e58ff68ea744f2111189565819c5f6d35fae5f4e734b0783528"
+            "sha256": "c19ea68093ac117cd6c7ee6da49b958cdb7b8a6fec9c0ab6991481148a793a58"
           }
         ],
         "gaps": [
@@ -2615,6 +2616,116 @@
             "file": "tests/bar-chart-browser.test.js",
             "name": "chromium: bar chart tooltip and band follow the pointer and the up and down arrows",
             "scope": "Pointer height to row, tooltip text, the band's height and position, flipping above the row in the lower half, hiding on leave, focus, arrows, End and Escape, the first row at the top in RTL, and a touch tap showing the tapped row in bar and column charts, kept on lift and hidden on pointer cancel. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "pie-chart",
+      "title": "Pie chart",
+      "aliases": [
+        "donut chart",
+        "doughnut chart",
+        "ring chart",
+        "part-to-whole chart",
+        "share chart"
+      ],
+      "guideSource": {
+        "pageId": "pie-chart",
+        "heading": "Pie chart",
+        "headingLevel": 2,
+        "semantics": [
+          "pie-chart"
+        ]
+      },
+      "jobs": [
+        "Parts of a whole drawn as slices from a data table, as a pie or a donut with its total."
+      ],
+      "useWhen": [
+        "Show how one total splits into a few parts, such as revenue by plan or leads by source, when the shares matter more than exact differences."
+      ],
+      "avoidWhen": [
+        "There are more than about five parts or the parts are close in size; use a bar chart. The values do not add up to a meaningful whole, or change over time; use a column or line chart."
+      ],
+      "alternatives": [
+        "bar-chart",
+        "column-chart",
+        "data-table",
+        "stat"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/pie-chart.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#pie-chart",
+          "reviewedOn": "2026-10-07",
+          "documentedSupport": "Slices drawn clockwise from the top from a figure's data table, with a legend of each row's cell and share, donut, values and sparkline modifiers, a <tfoot> total in the donut hole, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the slice.",
+          "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the slices, values, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+          "limitations": [
+            "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values have no slice; there are no slice labels outside the pie."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-07",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the data available as text, name the chart, keep slices distinguishable and their shares readable, and let a keyboard reach every slice the pointer can."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Revenue split across three plans, with the total in the middle, is a donut pie chart. Revenue from twelve sources is a bar chart.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/abstracts/_mixins.scss",
+            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+          },
+          {
+            "path": "src/sass/components/_pie-chart.scss",
+            "sha256": "ea811ee29aff2b8e8407ed419d13491b6b1eb639e28669cdd8c5de512b1dd87e"
+          },
+          {
+            "path": "src/ts/components/lineChart.ts",
+            "sha256": "c19ea68093ac117cd6c7ee6da49b958cdb7b8a6fec9c0ab6991481148a793a58"
+          },
+          {
+            "path": "src/ts/components/pieChart.ts",
+            "sha256": "c6b975cf5c2eceb4c5b9ba2b50db40770a7f32525fb5d6a934c7a887d70bbf02"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+            "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+          },
+          {
+            "kind": "feature",
+            "description": "There are no labels outside the pie, and rows past six reuse the colors.",
+            "nextStep": "Add outside labels with leader lines if charts need names on the pie; group small parts into an Other row meanwhile."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/pie-chart-browser.test.js",
+            "name": "chromium: pie chart draws slices, a legend and a donut total from its table",
+            "scope": "Hidden table in the accessibility tree, the named plot and its role description, the square plot, slice paths and colors, a seventh color avoiding the first, gap lines, a whole-circle slice, zero rows kept in the legend without a slice, legend cells and shares, separate instances from line charts, the donut hole and <tfoot> total, values only on slices of 5% or more, the sparkline size and focus, and destroy restoring the table."
+          },
+          {
+            "file": "tests/pie-chart-browser.test.js",
+            "name": "chromium: pie chart tooltip follows the pointer round the pie and the arrow keys",
+            "scope": "Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, End and Escape, and clockwise slices with swapped arrows in RTL. No spoken-output assertion."
           }
         ]
       }
@@ -8500,5 +8611,5 @@
     "inputsUnchanged": true,
     "reportSha256": "5777e67403861540605d77c5a5055086a49e8fe086297abd8a4bb6cf399c1666"
   },
-  "sourceRevision": "0ebf8883fee5532bac74cff3b120823b7985e180"
+  "sourceRevision": "b44e58c88f1ad73a448d921f0d09b8b005d89df8"
 }
