@@ -571,7 +571,7 @@ describe('ExpressiveCSS version resolution', () => {
   test('generated component guides carry deterministic contract provenance', async () => {
     const directory = new URL('../skills/expressivecss/components/', import.meta.url);
     const names = (await readdir(directory)).filter((name) => name.endsWith('.md'));
-    assert.equal(names.length, 58);
+    assert.equal(names.length, 59);
     const hashes = new Set();
     for (const name of names) {
       const guide = await readFile(new URL(name, directory), 'utf8');

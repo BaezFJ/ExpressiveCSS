@@ -363,6 +363,13 @@ export const NAV: DocsGroup[] = [
           "Ranked or long-labelled categories drawn as horizontal bars from a data table, grouped, stacked or as a meter.",
       },
       {
+        id: "pie-chart",
+        label: "Pie chart",
+        route: "/pie-chart.html",
+        description:
+          "Parts of a whole drawn as slices from a data table, as a pie or a donut with its total.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",

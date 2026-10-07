@@ -20,6 +20,7 @@ export type * from './components/chips';
 export type * from './components/lineChart';
 export type * from './components/columnChart';
 export type * from './components/barChart';
+export type * from './components/pieChart';
 export type * from './components/datepicker';
 export type * from './components/menu';
 export type * from './components/lightbox';

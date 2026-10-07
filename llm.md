@@ -90,6 +90,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Line chart
 - Column chart
 - Bar chart
+- Pie chart
 
 ### Forms
 
@@ -292,6 +293,7 @@ Opt an element out when it needs manual options:
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
 | `BarChart` | `.bar-chart` |
+| `PieChart` | `.pie-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
@@ -4162,6 +4164,49 @@ A `<figure class="bar-chart">` takes the same `<figcaption>` and `<table>` as a 
 
 ---
 
+## Pie chart
+
+Parts of a whole drawn as slices from a data table, as a pie or a donut with its total.
+
+A `<figure class="pie-chart">` takes the same `<figcaption>` and `<table>` as a column chart. `AutoInit()` draws the first value column as slices of the total, clockwise from the top in table order, with a legend of every row, its cell and its share, and a tooltip that follows the pointer round the pie. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="pie-chart donut">
+  <figcaption>Lead sources, last six months</figcaption>
+  <table>
+    <thead>
+      <tr><th>Source</th><th>Leads</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Referrals</th><td>558</td></tr>
+      <tr><th>Organic search</th><td>434</td></tr>
+      <tr><th>Paid campaigns</th><td>248</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><th>Total leads</th><td>1,240</td></tr>
+    </tfoot>
+  </table>
+</figure>
+```
+
+- The plot is a square as wide as `--md-comp-pie-chart-height`, centered in the figure; the legend lists the rows below it. Shares are whole percentages, with a tenth below 10%, in the page's `lang`.
+- `donut` cuts a hole sized by `--md-comp-pie-chart-hole`. A `<tfoot>` row is the total: its value and label show in the hole, and it is not a slice. `values` writes each share on its slice in the slice's on-color; slices under 5% get no label. `sparkline` is a 48px pie with no legend or tooltip and is not focusable.
+- Cells read as in the column chart. Zero, negative and non-numeric cells draw no slice and have no share; their rows stay in the legend and tooltip. Further value columns add lines to the tooltip. Slices take six colors; a seventh row takes the second color so it does not match the first beside it.
+- The plot is one Tab stop named by the caption. Right and down arrows move to the next row, left and up to the one before, Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped slice. In a right-to-left page, set by `dir` or CSS `direction`, the slices still run clockwise and left and right swap.
+- After changing the table, call `Expressive.PieChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options do not apply.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-pie-chart-height` | 240px, the diameter (sparkline 48px) |
+| `--md-comp-pie-chart-hole` | 0.6 of the diameter |
+| `--md-comp-pie-chart-gap` | 1.5, in hundredths of the plot's width |
+| `--md-comp-pie-chart-color-1` … `-6` | `primary`, `tertiary`, `secondary`, `on-surface-variant`, `primary-container`, `tertiary-container` |
+| `--md-comp-pie-chart-on-color-1` … `-6` | `on-primary`, `on-tertiary`, `on-secondary`, `surface`, `on-primary-container`, `on-tertiary-container` |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -4270,6 +4315,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
 | `BarChart` | `.bar-chart` |
+| `PieChart` | `.pie-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |

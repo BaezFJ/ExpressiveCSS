@@ -1186,6 +1186,24 @@
         }
       ]
     },
+    "pie-chart": {
+      "status": "enforced",
+      "note": "Added with the pie chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn pie, values, total and legend are aria-hidden.",
+      "rules": [
+        {
+          "id": "pie-chart-is-a-figure-with-a-table",
+          "kind": "forbid",
+          "selector": ".pie-chart:not(figure:has(> table))",
+          "message": "Write .pie-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript."
+        },
+        {
+          "id": "pie-chart-has-a-caption",
+          "kind": "forbid",
+          "selector": ".pie-chart:not(:has(> figcaption))",
+          "message": "Name a .pie-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart."
+        }
+      ]
+    },
     "bar-chart": {
       "status": "enforced",
       "note": "Added with the bar chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn bars, values, labels and legend are aria-hidden.",

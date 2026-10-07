@@ -262,6 +262,22 @@ Feature gap: There are no value axis labels. Next check: Add optional value labe
 
 Mapped browser scope: Hidden table in the accessibility tree, the named plot, row labels, legend, separate instances from column charts, the plot height from its rows, grouped, stacked and split bar geometry, values, negative bars, RTL bars, the sparkline layout and focus, destroy restoring the table, pointer and keyboard tooltip movement and the highlight band. No spoken-output assertion.
 
+## [Pie chart](../../components/pie-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, keep slices distinguishable and their shares readable, and let a keyboard reach every slice the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the slices, legend, shares, values, donut total and tooltip from the page's table with the line chart's runtime; the page owns the data, its formatting, the total and the caption.
+
+Verification gap: Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+Feature gap: There are no labels outside the pie, and rows past six reuse the colors. Next check: Add outside labels with leader lines if charts need names on the pie; group small parts into an Other row meanwhile.
+
+Mapped browser scope: Hidden table in the accessibility tree, the named plot, the square plot, slice geometry and colors, gap lines, legend cells and shares, separate instances from line charts, the donut hole and total, values, the sparkline size and focus, destroy restoring the table, pointer angle and keyboard tooltip movement, the active slice and RTL. No spoken-output assertion.
+
 ## [Timeline](../../components/timeline.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

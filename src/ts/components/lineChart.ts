@@ -97,13 +97,13 @@ export class LineChart extends Component<LineChartOptions> {
   private _generated: Element[] = [];
   protected _plot: HTMLElement;
   private _cursor: HTMLElement;
-  private _tooltip: HTMLElement;
+  protected _tooltip: HTMLElement;
   protected _y: (value: number) => number;
   /**
    * Whether the rows run right to left: a horizontal row axis in a
    * right-to-left context, like the labels. Bar chart rows keep their order.
    */
-  private _reversed = false;
+  protected _reversed = false;
 
   /** The class prefix of the generated parts; ColumnChart reuses this class. */
   protected get _type() {
@@ -309,6 +309,13 @@ export class LineChart extends Component<LineChartOptions> {
     this._tooltip.setAttribute('aria-live', 'polite');
     this._plot.append(this._draw(), this._cursor, this._tooltip);
 
+    this._generated = [this._plot, ...this._guides()];
+    this.el.append(...this._generated);
+  }
+
+  /** The row labels and, for more than one series, the legend. */
+  protected _guides(): Element[] {
+    const type = this._type;
     const labels = document.createElement('ol');
     labels.className = `${type}-labels`;
     labels.setAttribute('aria-hidden', 'true');
@@ -318,21 +325,18 @@ export class LineChart extends Component<LineChartOptions> {
       li.textContent = text;
       labels.append(li);
     }
-    this._generated = [this._plot, labels];
+    if (this.series.length < 2) return [labels];
 
-    if (this.series.length > 1) {
-      const legend = document.createElement('ul');
-      legend.className = `${type}-legend`;
-      legend.setAttribute('aria-hidden', 'true');
-      legend.append(...this.series.map((series, i) => {
-        const li = document.createElement('li');
-        li.dataset.series = String((i % COLORS) + 1);
-        li.textContent = series.name;
-        return li;
-      }));
-      this._generated.push(legend);
-    }
-    this.el.append(...this._generated);
+    const legend = document.createElement('ul');
+    legend.className = `${type}-legend`;
+    legend.setAttribute('aria-hidden', 'true');
+    legend.append(...this.series.map((series, i) => {
+      const li = document.createElement('li');
+      li.dataset.series = String((i % COLORS) + 1);
+      li.textContent = series.name;
+      return li;
+    }));
+    return [labels, legend];
   }
 
   /** Draws the series, which fill the plot. */
@@ -392,13 +396,25 @@ export class LineChart extends Component<LineChartOptions> {
   }
 
   private _onPointerMove = (e: PointerEvent) => {
+    this.show(this._indexAt(e));
+  };
+
+  /** The row under the pointer, or -1. */
+  protected _indexAt(e: PointerEvent) {
     const box = this._plot.getBoundingClientRect();
     const fraction = this._horizontal
       ? (e.clientY - box.top) / box.height
       : (e.clientX - box.left) / box.width;
     const index = Math.floor((this._reversed ? 1 - fraction : fraction) * this.labels.length);
-    this.show(Math.min(this.labels.length - 1, Math.max(0, index)));
-  };
+    return Math.min(this.labels.length - 1, Math.max(0, index));
+  }
+
+  /** The keys that move to the next row and to the one before. */
+  protected get _arrows(): [string[], string[]] {
+    // Arrows move the cursor the way they point, so they swap in RTL.
+    if (this._horizontal) return [['ArrowDown'], ['ArrowUp']];
+    return this._reversed ? [['ArrowLeft'], ['ArrowRight']] : [['ArrowRight'], ['ArrowLeft']];
+  }
 
   private _onFocus = () => {
     if (this.activeIndex < 0) this.show(0);
@@ -417,18 +433,11 @@ export class LineChart extends Component<LineChartOptions> {
 
   private _onKeyDown = (e: KeyboardEvent) => {
     const last = this.labels.length - 1;
-    // Arrows move the cursor the way they point, so they swap in RTL.
-    const [forward, back] = this._horizontal
-      ? ['ArrowDown', 'ArrowUp']
-      : this._reversed ? ['ArrowLeft', 'ArrowRight'] : ['ArrowRight', 'ArrowLeft'];
+    const [forward, back] = this._arrows;
     const step = (by: number) => Math.min(last, Math.max(0, this.activeIndex + by));
-    const next = {
-      [forward]: step(1),
-      [back]: step(-1),
-      Home: 0,
-      End: last,
-      Escape: -1
-    }[e.key];
+    const next = forward.includes(e.key) ? step(1)
+      : back.includes(e.key) ? step(-1)
+      : { Home: 0, End: last, Escape: -1 }[e.key];
     if (next === undefined) return;
     e.preventDefault();
     this.show(next);

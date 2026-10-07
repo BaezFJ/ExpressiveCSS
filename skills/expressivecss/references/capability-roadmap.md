@@ -40,6 +40,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Line chart](#line-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Column chart](#column-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Bar chart](#bar-chart) | implemented | source-reviewed | incomplete | 1 |
+| [Pie chart](#pie-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Timeline](#timeline) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
@@ -530,6 +531,24 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 - not-recorded: [tests/bar-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/0ebf8883fee5532bac74cff3b120823b7985e180/tests/bar-chart-browser.test.js): `chromium: bar chart draws grouped, stacked and negative bars from its table`. Hidden table in the accessibility tree, the named plot and its role description, row labels beside the plot, legend, separate instances from column charts, plot height from the rows, grouped and stacked bar geometry read across the plot, split segments, values text inside and past short bars and clipped to stacked segments, split gaps only at joints, the grid cleared in forced colors, negative bars from a centred zero, RTL bars growing leftwards from a dir attribute or CSS direction, the sparkline layout and focus, and destroy restoring the table.
 - not-recorded: [tests/bar-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/0ebf8883fee5532bac74cff3b120823b7985e180/tests/bar-chart-browser.test.js): `chromium: bar chart tooltip and band follow the pointer and the up and down arrows`. Pointer height to row, tooltip text, the band's height and position, flipping above the row in the lower half, hiding on leave, focus, arrows, End and Escape, the first row at the top in RTL, and a touch tap showing the tapped row in bar and column charts, kept on lift and hidden on pointer cancel. No spoken-output assertion.
+
+<a id="pie-chart"></a>
+
+## Pie chart
+
+**implemented within the stated scope.** Slices drawn clockwise from the top from a figure's data table, with a legend of each row's cell and share, donut, values and sparkline modifiers, a <tfoot> total in the donut hole, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the slice.
+
+Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/0ebf8883fee5532bac74cff3b120823b7985e180/src/sass/abstracts/_mixins.scss), [src/sass/components/_pie-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/0ebf8883fee5532bac74cff3b120823b7985e180/src/sass/components/_pie-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/0ebf8883fee5532bac74cff3b120823b7985e180/src/ts/components/lineChart.ts), [src/ts/components/pieChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/0ebf8883fee5532bac74cff3b120823b7985e180/src/ts/components/pieChart.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the slices, values, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+
+- verification: Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+- feature: There are no labels outside the pie, and rows past six reuse the colors. Next: Add outside labels with leader lines if charts need names on the pie; group small parts into an Other row meanwhile.
+
+- not-recorded: [tests/pie-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/0ebf8883fee5532bac74cff3b120823b7985e180/tests/pie-chart-browser.test.js): `chromium: pie chart draws slices, a legend and a donut total from its table`. Hidden table in the accessibility tree, the named plot and its role description, the square plot, slice paths and colors, a seventh color avoiding the first, gap lines, a whole-circle slice, zero rows kept in the legend without a slice, legend cells and shares, separate instances from line charts, the donut hole and <tfoot> total, values only on slices of 5% or more, the sparkline size and focus, and destroy restoring the table.
+- not-recorded: [tests/pie-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/0ebf8883fee5532bac74cff3b120823b7985e180/tests/pie-chart-browser.test.js): `chromium: pie chart tooltip follows the pointer round the pie and the arrow keys`. Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, End and Escape, and clockwise slices with swapped arrows in RTL. No spoken-output assertion.
 
 <a id="timeline"></a>
 
