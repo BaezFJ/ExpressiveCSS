@@ -95,6 +95,9 @@ export class LineChart extends Component<LineChartOptions> {
   /** The highlighted row, or -1. */
   activeIndex = -1;
   private _generated: Element[] = [];
+  /** The table's header cells and body rows, as read. */
+  protected _header: HTMLTableCellElement[] = [];
+  protected _rows: HTMLTableRowElement[] = [];
   protected _plot: HTMLElement;
   private _cursor: HTMLElement;
   protected _tooltip: HTMLElement;
@@ -232,6 +235,7 @@ export class LineChart extends Component<LineChartOptions> {
     const rows = Array.from(table.tBodies)
       .flatMap((body) => Array.from(body.rows))
       .filter((row) => row !== headerRow);
+    [this._header, this._rows] = [header, rows];
     this.labels = rows.map((row) => row.cells[0]?.textContent.trim() ?? '');
     this.series = header.slice(1).map((cell, i) => {
       const values = rows.map((row) => cellValue(row.cells[i + 1]));
@@ -431,13 +435,18 @@ export class LineChart extends Component<LineChartOptions> {
     this.show(-1);
   };
 
-  private _onKeyDown = (e: KeyboardEvent) => {
+  /** The index a key moves to, or undefined for a key the chart ignores. */
+  protected _keyTarget(key: string): number | undefined {
     const last = this.labels.length - 1;
     const [forward, back] = this._arrows;
     const step = (by: number) => Math.min(last, Math.max(0, this.activeIndex + by));
-    const next = forward.includes(e.key) ? step(1)
-      : back.includes(e.key) ? step(-1)
-      : { Home: 0, End: last, Escape: -1 }[e.key];
+    return forward.includes(key) ? step(1)
+      : back.includes(key) ? step(-1)
+      : { Home: 0, End: last, Escape: -1 }[key];
+  }
+
+  private _onKeyDown = (e: KeyboardEvent) => {
+    const next = this._keyTarget(e.key);
     if (next === undefined) return;
     e.preventDefault();
     this.show(next);

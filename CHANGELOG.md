@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.heatmap-chart` draws a `<figure>`'s data table as a grid of cells shaded
+  from the lowest value to the highest, with the row headers beside it, the
+  column headers below and a scale naming the lowest and highest cells. A
+  tooltip follows the pointer or the arrow keys from cell to cell. `values`
+  writes each cell's text on it in black or white, whichever reads on the
+  shade; `data-label` shortens or hides a header on the grid; `data-min` and
+  `data-max` fix the scale.
 - `.pie-chart` draws a `<figure>`'s data table as slices of a whole,
   clockwise from the top, with a legend of each row's cell and share and a
   tooltip that follows the pointer round the pie or the arrow keys. `donut`

@@ -2359,7 +2359,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "c19ea68093ac117cd6c7ee6da49b958cdb7b8a6fec9c0ab6991481148a793a58"
+            "sha256": "9920e0865327fd1f719f6c98f89dbdb5a394eea5ac6d49517f1065ead3fb574b"
           }
         ],
         "gaps": [
@@ -2474,7 +2474,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "c19ea68093ac117cd6c7ee6da49b958cdb7b8a6fec9c0ab6991481148a793a58"
+            "sha256": "9920e0865327fd1f719f6c98f89dbdb5a394eea5ac6d49517f1065ead3fb574b"
           }
         ],
         "gaps": [
@@ -2590,7 +2590,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "c19ea68093ac117cd6c7ee6da49b958cdb7b8a6fec9c0ab6991481148a793a58"
+            "sha256": "9920e0865327fd1f719f6c98f89dbdb5a394eea5ac6d49517f1065ead3fb574b"
           }
         ],
         "gaps": [
@@ -2696,7 +2696,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "c19ea68093ac117cd6c7ee6da49b958cdb7b8a6fec9c0ab6991481148a793a58"
+            "sha256": "9920e0865327fd1f719f6c98f89dbdb5a394eea5ac6d49517f1065ead3fb574b"
           },
           {
             "path": "src/ts/components/pieChart.ts",
@@ -2725,6 +2725,117 @@
             "file": "tests/pie-chart-browser.test.js",
             "name": "chromium: pie chart tooltip follows the pointer round the pie and the arrow keys",
             "scope": "Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, End and Escape, and clockwise slices with swapped arrows in RTL. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "heatmap-chart",
+      "title": "Heatmap chart",
+      "aliases": [
+        "heat map",
+        "heatmap",
+        "calendar heatmap",
+        "contribution graph",
+        "activity grid",
+        "matrix chart"
+      ],
+      "guideSource": {
+        "pageId": "heatmap-chart",
+        "heading": "Heatmap chart",
+        "headingLevel": 2,
+        "semantics": [
+          "heatmap-chart"
+        ]
+      },
+      "jobs": [
+        "A data table drawn as a grid of cells shaded by value, for patterns across two categories such as days and hours."
+      ],
+      "useWhen": [
+        "Show where values run high or low across two categories, such as visits by day and hour or activity by week, when the pattern matters more than exact values."
+      ],
+      "avoidWhen": [
+        "Readers need to compare exact values, or one category has a single row; use a data table or a bar chart. Values change over a continuous time series; use a line chart."
+      ],
+      "alternatives": [
+        "data-table",
+        "bar-chart",
+        "column-chart",
+        "line-chart"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/heatmap-chart.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#heatmap-chart",
+          "reviewedOn": "2026-10-07",
+          "documentedSupport": "Every body cell of a figure's data table drawn as a shaded grid cell, with row headers beside the grid, column headers below, a scale naming the lowest and highest cells, values, data-label short or hidden labels, data-min and data-max, gaps, and a pointer and keyboard tooltip that moves cell by cell.",
+          "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, labels and scale are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+          "limitations": [
+            "Drawing, the hidden table, cell shades and gaps, the fixed scale, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified. A wide grid narrows its cells rather than scrolling."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-07",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the data available as text, name the chart, keep values readable without telling shades apart, and let a keyboard reach every cell the pointer can."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Visits by day of the week and time of day is a heatmap chart. Visits per day over a month is a line or column chart.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/abstracts/_mixins.scss",
+            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+          },
+          {
+            "path": "src/sass/components/_heatmap-chart.scss",
+            "sha256": "587fdad122e91cedd03fd2d5fcdbdd261aa8d4d2b5273ef0326fb67d495f21c5"
+          },
+          {
+            "path": "src/ts/components/heatmapChart.ts",
+            "sha256": "984730f5333df9947222793d600f031305dc43a185f761634974521c3df00812"
+          },
+          {
+            "path": "src/ts/components/lineChart.ts",
+            "sha256": "9920e0865327fd1f719f6c98f89dbdb5a394eea5ac6d49517f1065ead3fb574b"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Drawing, the hidden table, cell shades and gaps, the fixed scale, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified.",
+            "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+          },
+          {
+            "kind": "feature",
+            "description": "A wide grid narrows its cells to fit instead of scrolling, and the scale is one color with no diverging or stepped option.",
+            "nextStep": "Add a scrolling layout that keeps the tooltip visible if year-long grids must work on phones, and a diverging scale if charts need a midpoint."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/heatmap-chart-browser.test.js",
+            "name": "chromium: heatmap chart draws a shaded grid and a scale from its table",
+            "scope": "Hidden table in the accessibility tree, the named plot and its role description, aria-hidden grid and scale, cell levels and fills, gaps, the row height, row and column labels, empty and running data-labels, the scale ends, data-min and data-max clamping, values, text that takes the higher-contrast of black and white on saturated and near-threshold colors, the legend over a fixed scale, no page overflow from a wide table, a table of gaps left undrawn, separate instances from line charts, and destroy restoring the table."
+          },
+          {
+            "file": "tests/heatmap-chart-browser.test.js",
+            "name": "chromium: heatmap chart tooltip follows the pointer and the arrow keys round the grid",
+            "scope": "Pointer to cell, the active cell, tooltip text for cells and gaps, the swatch shade, opening leftwards on the right half, hiding off the cells, focus, all four arrows stopping at the edges, Home, End and Escape, and right-to-left columns with swapped arrows and scale. No spoken-output assertion."
           }
         ]
       }

@@ -41,6 +41,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Column chart](#column-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Bar chart](#bar-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Pie chart](#pie-chart) | implemented | source-reviewed | incomplete | 1 |
+| [Heatmap chart](#heatmap-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Timeline](#timeline) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
@@ -549,6 +550,24 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 - not-recorded: [tests/pie-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/tests/pie-chart-browser.test.js): `chromium: pie chart draws slices, a legend and a donut total from its table`. Hidden table in the accessibility tree, the named plot and its role description, the square plot, slice paths and colors, a seventh color avoiding the first, gap lines, a whole-circle slice, zero rows kept in the legend without a slice, legend cells and shares, separate instances from line charts, the donut hole and <tfoot> total, values only on slices of 5% or more, the sparkline size and focus, and destroy restoring the table.
 - not-recorded: [tests/pie-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/tests/pie-chart-browser.test.js): `chromium: pie chart tooltip follows the pointer round the pie and the arrow keys`. Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, End and Escape, and clockwise slices with swapped arrows in RTL. No spoken-output assertion.
+
+<a id="heatmap-chart"></a>
+
+## Heatmap chart
+
+**implemented within the stated scope.** Every body cell of a figure's data table drawn as a shaded grid cell, with row headers beside the grid, column headers below, a scale naming the lowest and highest cells, values, data-label short or hidden labels, data-min and data-max, gaps, and a pointer and keyboard tooltip that moves cell by cell.
+
+Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/src/sass/abstracts/_mixins.scss), [src/sass/components/_heatmap-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/src/sass/components/_heatmap-chart.scss), [src/ts/components/heatmapChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/src/ts/components/heatmapChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/src/ts/components/lineChart.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, labels and scale are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+
+- verification: Drawing, the hidden table, cell shades and gaps, the fixed scale, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+- feature: A wide grid narrows its cells to fit instead of scrolling, and the scale is one color with no diverging or stepped option. Next: Add a scrolling layout that keeps the tooltip visible if year-long grids must work on phones, and a diverging scale if charts need a midpoint.
+
+- not-recorded: [tests/heatmap-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/tests/heatmap-chart-browser.test.js): `chromium: heatmap chart draws a shaded grid and a scale from its table`. Hidden table in the accessibility tree, the named plot and its role description, aria-hidden grid and scale, cell levels and fills, gaps, the row height, row and column labels, empty and running data-labels, the scale ends, data-min and data-max clamping, values, text that takes the higher-contrast of black and white on saturated and near-threshold colors, the legend over a fixed scale, no page overflow from a wide table, a table of gaps left undrawn, separate instances from line charts, and destroy restoring the table.
+- not-recorded: [tests/heatmap-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/tests/heatmap-chart-browser.test.js): `chromium: heatmap chart tooltip follows the pointer and the arrow keys round the grid`. Pointer to cell, the active cell, tooltip text for cells and gaps, the swatch shade, opening leftwards on the right half, hiding off the cells, focus, all four arrows stopping at the edges, Home, End and Escape, and right-to-left columns with swapped arrows and scale. No spoken-output assertion.
 
 <a id="timeline"></a>
 

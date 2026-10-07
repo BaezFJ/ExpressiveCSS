@@ -1,0 +1,300 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "values", label: "Values" },
+  { id: "labels", label: "Short labels" },
+  { id: "scale", label: "Scale" },
+  { id: "cards", label: "Chart cards" },
+  { id: "data", label: "Values and colors" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const tasks = [
+  [2, 5, 3, 7, 4, 6, 8, 3, 5, 9, 4, 6], [4, 3, 6, 2, 8, 5, 3, 7, 6, 4, 8, 5], [6, 7, 4, 8, 3, 9, 5, 6, 2, 7, 5, 9],
+  [3, 4, 8, 5, 6, 2, 7, 4, 8, 3, 6, 7], [7, 8, 5, 9, 4, 7, 6, 9, 5, 8, 7, 4], [1, 2, 0, 3, 1, 2, 0, 1, 3, 2, 1, 0],
+  [0, 1, 2, 0, 1, 0, 2, 0, 1, 0, 2, 1],
+];
+const weeks = Array.from({ length: 12 }, (_, i) => `Week ${i + 1}`);
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+const sales: [string, number[]][] = [
+  ["Priya", [45, 58, 85, 41, 47, 58]], ["Daniel", [88, 34, 45, 91, 52, 40]], ["Amara", [60, 48, 65, 58, 62, 70]],
+  ["Leo", [85, 72, 78, 80, 50, 98]], ["Wei", [35, 71, 30, 44, 88, 90]],
+];
+const slots = ["Morning", "Afternoon", "Evening", "Night"];
+const traffic = [[12, 45, 38, 8], [15, 50, 42, 10], [18, 55, 48, 12], [20, 60, 52, 14], [22, 58, 65, 20], [30, 40, 70, 35], [28, 35, 68, 32]];
+const channels: [string, number[]][] = [["Paid", [81, 47, 58]], ["Organic", [68, 55, 90]]];
+
+// A year of activity, the same every build.
+let seed = 42;
+const random = () => (seed = (9301 * seed + 49297) % 233280) / 233280;
+const sunday = ["Sun", ...days.slice(0, 6)];
+const typical = [1, 6, 7, 8, 7, 6, 1];
+const year = sunday.map((_, day) =>
+  Array.from({ length: 52 }, () => Math.max(0, Math.min(12, typical[day] + Math.round(6 * random()) - 3))));
+const starts: Record<number, string> = { 0: "Jan", 4: "Feb", 9: "Mar", 13: "Apr", 17: "May", 22: "Jun", 26: "Jul", 30: "Aug", 35: "Sep", 39: "Oct", 43: "Nov", 48: "Dec" };
+const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + value, 0);
+---
+<DocsLayout page="heatmap-chart">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;figure class="heatmap-chart"&gt;</code> draws a
+          <code>&lt;table&gt;</code> as a grid of shaded cells. Each body row
+          is a row of the grid and each value column is a column, so the grid
+          has the table's shape.
+        </p>
+        <p>
+          It takes the same markup as a <a href="column-chart.html">column
+          chart</a>. The row headers sit beside the grid and the column headers
+          below it. Cells shade from the lowest value to the highest, and a
+          scale under the grid names both ends. A tooltip shows the cell under
+          the pointer, and the arrow keys move it round the grid when the
+          chart has focus. Use a heatmap to find patterns across two
+          categories, such as busy days and hours; to compare exact values,
+          use a <a href="data-table.html">data table</a>.
+        </p>
+        <figure class="heatmap-chart" data-markdown-ignore>
+          <figcaption>Tasks completed per day, last 12 weeks</figcaption>
+          <table>
+            <thead><tr><th>Day</th>{weeks.map((week) => <th data-label="">{week}</th>)}</tr></thead>
+            <tbody>{days.map((day, row) => <tr><th>{day}</th>{tasks[row].map((value) => <td>{value}</td>)}</tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="heatmap-chart">
+  <figcaption>Tasks completed per day, last 12 weeks</figcaption>
+  <table>
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th data-label="">Week 1</th>
+        <th data-label="">Week 2</th>
+        <!-- One header per week -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr><th>Mon</th><td>2</td><td>5</td><!-- … --></tr>
+      <tr><th>Tue</th><td>4</td><td>3</td><!-- … --></tr>
+      <!-- One row per day -->
+    </tbody>
+  </table>
+</figure>
+`} />
+        <p>
+          An empty <code>data-label</code> hides a header on the grid, as the
+          week numbers are here. The table keeps the full header for screen
+          readers and the tooltip.
+        </p>
+  </Section>
+  <Section {...S.values}>
+        <p>
+          <code>values</code> writes each cell's text on it. The text is
+          black or white, whichever reads better on the cell's shade. Give a
+          formatted cell its number in <code>data-value</code>.
+        </p>
+        <figure class="heatmap-chart values" data-markdown-ignore>
+          <figcaption>Revenue by rep, per month</figcaption>
+          <table>
+            <thead><tr><th>Rep</th>{months.map((month) => <th>{month}</th>)}</tr></thead>
+            <tbody>{sales.map(([rep, values]) => <tr><th>{rep}</th>{values.map((value) => <td data-value={value * 1000}>${value}K</td>)}</tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="heatmap-chart values">
+  <figcaption>Revenue by rep, per month</figcaption>
+  <table>
+    <thead>
+      <tr><th>Rep</th><th>Jan</th><th>Feb</th><!-- … --></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Priya</th>
+        <td data-value="45000">$45K</td>
+        <td data-value="58000">$58K</td>
+        <!-- … -->
+      </tr>
+      <!-- One row per rep -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.labels}>
+        <p>
+          A <code>data-label</code> on a header cell replaces its text on the
+          grid. A column label runs on over the empty labels after it, so a
+          year of weeks can name each month once. Set
+          <code>--md-comp-heatmap-chart-row-height</code> and
+          <code>--md-comp-heatmap-chart-gap</code> lower for small cells. A
+          wide grid narrows its cells to fit, so on a phone show fewer
+          columns.
+        </p>
+        <figure class="heatmap-chart" style="--md-comp-heatmap-chart-row-height: 12px; --md-comp-heatmap-chart-gap: 2px; --md-comp-heatmap-chart-shape: 2px" data-markdown-ignore>
+          <figcaption>Tasks completed, last 52 weeks</figcaption>
+          <table>
+            <thead><tr><th>Day</th>{year[0].map((_, week) => <th data-label={starts[week] ?? ""}>Week {week + 1}</th>)}</tr></thead>
+            <tbody>{sunday.map((day, row) => <tr><th data-label={["Mon", "Wed", "Fri"].includes(day) ? undefined : ""}>{day}</th>{year[row].map((value) => <td>{value}</td>)}</tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="heatmap-chart" style="
+    --md-comp-heatmap-chart-row-height: 12px;
+    --md-comp-heatmap-chart-gap: 2px;
+    --md-comp-heatmap-chart-shape: 2px">
+  <figcaption>Tasks completed, last 52 weeks</figcaption>
+  <table>
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th data-label="Jan">Week 1</th>
+        <th data-label="">Week 2</th>
+        <!-- One header per week -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr><th data-label="">Sun</th><td>0</td><!-- … --></tr>
+      <tr><th>Mon</th><td>4</td><!-- … --></tr>
+      <!-- One row per day -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.scale}>
+        <p>
+          The scale runs from the lowest value to the highest. Set
+          <code>data-min</code> and <code>data-max</code> on the chart to fix
+          it, such as 0 to 100 for scores; values past either end take the
+          end's shade. The scale under the grid still runs from the lowest
+          cell to the highest, over only the shades they use.
+        </p>
+        <figure class="heatmap-chart values" data-min="0" data-max="100" style="--md-comp-heatmap-chart-row-height: 56px; --md-comp-heatmap-chart-gap: 4px; --md-comp-heatmap-chart-shape: 12px" data-markdown-ignore>
+          <figcaption>Channel score, paid and organic</figcaption>
+          <table>
+            <thead><tr><th>Type</th><th>Search</th><th>Social</th><th>Referral</th></tr></thead>
+            <tbody>{channels.map(([type, values]) => <tr><th>{type}</th>{values.map((value) => <td>{value}</td>)}</tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="heatmap-chart values" data-min="0" data-max="100" style="
+    --md-comp-heatmap-chart-row-height: 56px;
+    --md-comp-heatmap-chart-gap: 4px;
+    --md-comp-heatmap-chart-shape: 12px">
+  <figcaption>Channel score, paid and organic</figcaption>
+  <table>
+    <thead>
+      <tr><th>Type</th><th>Search</th><th>Social</th><th>Referral</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Paid</th><td>81</td><td>47</td><td>58</td></tr>
+      <tr><th>Organic</th><td>68</td><td>55</td><td>90</td></tr>
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.cards}>
+        <p>
+          A chart goes in a card with the figures it explains. The card adds
+          no chart styles; size a chart with its tokens.
+        </p>
+        <article class="outlined" data-markdown-ignore>
+          <dl class="stats my-0">
+            <div><dt>Weekly visits</dt><dd>{total(traffic).toLocaleString("en-US")}</dd><dd class="stat-change">Busiest on Saturday evening</dd></div>
+          </dl>
+          <figure class="heatmap-chart">
+            <figcaption class="visually-hidden">Visits by day and time, last 7 days</figcaption>
+            <table>
+              <thead><tr><th>Day</th>{slots.map((slot) => <th>{slot}</th>)}</tr></thead>
+              <tbody>{days.map((day, row) => <tr><th>{day}</th>{traffic[row].map((value) => <td>{value}</td>)}</tr>)}</tbody>
+            </table>
+          </figure>
+        </article>
+<Code code={`
+<article class="outlined">
+  <dl class="stats my-0">
+    <div>
+      <dt>Weekly visits</dt>
+      <dd>${total(traffic).toLocaleString("en-US")}</dd>
+      <dd class="stat-change">Busiest on Saturday evening</dd>
+    </div>
+  </dl>
+  <figure class="heatmap-chart">
+    <figcaption class="visually-hidden">Visits by day and time, last 7 days</figcaption>
+    <table><!-- … --></table>
+  </figure>
+</article>
+`} />
+  </Section>
+  <Section {...S.data}>
+        <p>
+          Cells read as in a column chart: a cell's number is its
+          <code>data-value</code>, or its text without currency signs, percent
+          signs or grouping commas. Text that is not a single number, such as
+          "n/a" or "$45K" without a <code>data-value</code>, is a gap: an
+          outlined cell with no shade. The tooltip still shows its text. A
+          chart whose cells are all gaps shows its table.
+        </p>
+        <p>
+          Cells mix <code>primary</code> into
+          <code>surface-container-highest</code> by their place on the scale.
+          The tooltip swatch takes the cell's shade.
+        </p>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The table is the chart's text alternative. Give it a header row and
+          a header cell per row, and name the chart with a
+          <code>&lt;figcaption&gt;</code>. The drawn grid, labels and scale
+          are hidden from assistive technology, and a <code>data-label</code>
+          changes only the drawn label.
+        </p>
+        <p>
+          The plot is one Tab stop named by the caption. The arrow keys move
+          one cell the way they point, Home and End jump to the ends of the
+          row and Escape hides the tooltip. On a touch screen, tap a cell to
+          show it. In a right-to-left page the columns run right to left. The
+          tooltip is a polite live region, so a screen reader hears each
+          cell's row, column and value as it moves. Shade alone is hard to
+          tell apart, so use <code>values</code> when exact numbers matter. In
+          forced colors the cells keep their shades.
+        </p>
+  </Section>
+  <Section {...S.javascript}>
+        <p>
+          <code>AutoInit()</code> starts every <code>.heatmap-chart</code>. To
+          start one yourself, or to redraw a chart after changing its table,
+          call <code>HeatmapChart.init</code> again. It has the line chart's
+          options and methods; <code>show()</code> takes a cell, counted row
+          by row from 0.
+        </p>
+<Code code={`
+const chart = Expressive.HeatmapChart.init(document.querySelector('.heatmap-chart'), { min: 0, max: 100 });
+chart.show(13);  // highlight the second row's second cell in a 12-column grid; -1 hides the tooltip
+chart.destroy(); // remove the drawing and show the table again
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.heatmap-chart</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-heatmap-chart-row-height</code></td><td>32px</td></tr>
+          <tr><td><code>--md-comp-heatmap-chart-gap</code></td><td>3px between cells</td></tr>
+          <tr><td><code>--md-comp-heatmap-chart-shape</code></td><td>4px, the cell's corner radius</td></tr>
+          <tr><td><code>--md-comp-heatmap-chart-color</code></td><td><code>primary</code>, the highest value's shade</td></tr>
+          <tr><td><code>--md-comp-heatmap-chart-empty-color</code></td><td><code>surface-container-highest</code>, the lowest value's shade</td></tr>
+          <tr><td><code>--md-comp-heatmap-chart-grid-color</code></td><td><code>outline-variant</code>, a gap's outline</td></tr>
+        </TokenTable>
+        <p>For a selective Sass build, include <code>"heatmap-chart"</code> in <code>$components</code>.</p>
+  </Section>
+</PageBody>
+</DocsLayout>

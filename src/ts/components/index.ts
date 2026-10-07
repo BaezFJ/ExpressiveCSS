@@ -18,6 +18,7 @@ export { LineChart } from "./lineChart";
 export { ColumnChart } from "./columnChart";
 export { BarChart } from "./barChart";
 export { PieChart } from "./pieChart";
+export { HeatmapChart } from "./heatmapChart";
 export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";
 export { Lightbox } from "./lightbox";

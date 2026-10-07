@@ -46,6 +46,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<input type="text" class="date-picker">`,
   },
   {
+    name: "HeatmapChart",
+    selector: ".heatmap-chart",
+    html: `<figure class="heatmap-chart"><figcaption>Visits</figcaption><table><thead><tr><th>Day</th><th>Morning</th><th>Evening</th></tr></thead><tbody><tr><th>Mon</th><td>1</td><td>2</td></tr><tr><th>Tue</th><td>3</td><td>4</td></tr></tbody></table></figure>`,
+  },
+  {
     name: "PieChart",
     selector: ".pie-chart",
     html: `<figure class="pie-chart"><figcaption>Revenue</figcaption><table><thead><tr><th>Plan</th><th>Revenue</th></tr></thead><tbody><tr><th>Basic</th><td>1</td></tr><tr><th>Premium</th><td>2</td></tr></tbody></table></figure>`,

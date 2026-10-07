@@ -91,6 +91,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Column chart
 - Bar chart
 - Pie chart
+- Heatmap chart
 
 ### Forms
 
@@ -294,6 +295,7 @@ Opt an element out when it needs manual options:
 | `Chips` | `.chips` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
+| `HeatmapChart` | `.heatmap-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
@@ -4207,6 +4209,47 @@ A `<figure class="pie-chart">` takes the same `<figcaption>` and `<table>` as a 
 
 ---
 
+## Heatmap chart
+
+A data table drawn as a grid of cells shaded by value, for patterns across two categories such as days and hours.
+
+A `<figure class="heatmap-chart">` takes the same `<figcaption>` and `<table>` as a column chart. `AutoInit()` draws every body cell as a cell of a grid, one grid row per table row and one grid column per value column, shaded from the lowest value to the highest. The row headers sit at the inline start, the column headers below, and a scale under the grid names the lowest and highest cells. A tooltip shows the cell under the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="heatmap-chart values">
+  <figcaption>Revenue by rep, per month</figcaption>
+  <table>
+    <thead>
+      <tr><th>Rep</th><th>Jan</th><th>Feb</th><th>Mar</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Priya</th><td data-value="45000">$45K</td><td data-value="58000">$58K</td><td data-value="85000">$85K</td></tr>
+      <tr><th>Daniel</th><td data-value="88000">$88K</td><td data-value="34000">$34K</td><td data-value="45000">$45K</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- Each row is `--md-comp-heatmap-chart-row-height` tall and the columns share the width, so a wide grid narrows its cells. Cells mix `--md-comp-heatmap-chart-color` into `--md-comp-heatmap-chart-empty-color` by their place on the scale.
+- `values` writes each cell's text on it, in black or white, whichever has more WCAG contrast with the shade. `data-label` on a header cell replaces its text on the grid; an empty one hides it, and a column label runs on over the empty labels after it. The table and the tooltip keep the full header.
+- The scale runs from the lowest value to the highest; `data-min` and `data-max` on the chart, or the `min` and `max` options, fix it, and values past either end take the end's shade. The scale under the grid runs from the lowest cell's shade to the highest's, labelled with their text, so a fixed scale wider than the data shows only the part it uses.
+- Cells read as in the column chart. A non-numeric cell is a gap: outlined, with no shade, and its text still shows in the tooltip.
+- The plot is one Tab stop named by the caption. The arrow keys move one cell the way they point, Home and End jump to the ends of the row and Escape hides the tooltip; a tap shows the tapped cell. In a right-to-left page, set by `dir` or CSS `direction`, the columns run right to left and left and right swap. In forced colors the cells keep their shades.
+- After changing the table, call `Expressive.HeatmapChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; `show()` takes a cell, counted row by row from 0.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-heatmap-chart-row-height` | 32px |
+| `--md-comp-heatmap-chart-gap` | 3px between cells |
+| `--md-comp-heatmap-chart-shape` | 4px, the cell's corner radius |
+| `--md-comp-heatmap-chart-color` | `primary`, the highest value's shade |
+| `--md-comp-heatmap-chart-empty-color` | `surface-container-highest`, the lowest value's shade |
+| `--md-comp-heatmap-chart-grid-color` | `outline-variant`, a gap's outline |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -4316,6 +4359,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Chips` | `.chips` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
+| `HeatmapChart` | `.heatmap-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
