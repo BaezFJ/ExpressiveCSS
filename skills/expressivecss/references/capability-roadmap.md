@@ -39,6 +39,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Stat](#stat) | implemented | source-reviewed | incomplete | 0 |
 | [Line chart](#line-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Column chart](#column-chart) | implemented | source-reviewed | incomplete | 1 |
+| [Bar chart](#bar-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Timeline](#timeline) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
@@ -507,10 +508,28 @@ Google relationship: none. Upstream review: web-extension-inventory-reviewed (20
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
 - verification: Drawing, the hidden table, grouped and stacked geometry, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
-- feature: There are no y axis value labels, horizontal bars or range columns. Next: Add optional y labels if charts need values readable without the tooltip; add horizontal bars or ranges when a page needs them.
+- feature: There are no y axis value labels or range columns. Next: Add optional y labels if charts need values readable without the tooltip; add range columns when a page needs them.
 
 - not-recorded: [tests/column-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fcb4346e633b090189a481b2f00279e9eb241455/tests/column-chart-browser.test.js): `chromium: column chart draws grouped, stacked and negative columns from its table`. Hidden table in the accessibility tree, the named plot and its role description, labels, legend, series classes, separate instances from line charts, grouped column geometry with an empty slot for a gap, stacked segments on the total below with only the top segment rounded, a gap leaving the segments above out, negative columns from a centred zero, data-min above zero, the sparkline size and focus, and destroy restoring the table.
 - not-recorded: [tests/column-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fcb4346e633b090189a481b2f00279e9eb241455/tests/column-chart-browser.test.js): `chromium: column chart tooltip and band follow the pointer and the arrow keys`. Pointer position to row, tooltip text without empty cells, no cursor points, the band's width and position, hiding on leave, focus, End and Escape, and the first row on the right in RTL. No spoken-output assertion.
+
+<a id="bar-chart"></a>
+
+## Bar chart
+
+**implemented within the stated scope.** Horizontal bars drawn from zero from a figure's data table, grouped by row or stacked, with split, track, values and sparkline modifiers, negative values, gaps, a fixed value range, row labels, a legend, and a pointer and keyboard tooltip with a highlight band.
+
+Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fcb4346e633b090189a481b2f00279e9eb241455/src/sass/abstracts/_mixins.scss), [src/sass/components/_bar-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fcb4346e633b090189a481b2f00279e9eb241455/src/sass/components/_bar-chart.scss), [src/ts/components/barChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fcb4346e633b090189a481b2f00279e9eb241455/src/ts/components/barChart.ts), [src/ts/components/columnChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fcb4346e633b090189a481b2f00279e9eb241455/src/ts/components/columnChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fcb4346e633b090189a481b2f00279e9eb241455/src/ts/components/lineChart.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the bars and their values are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+
+- verification: Drawing, the hidden table, grouped, stacked and split geometry, values, gaps, negative values, the value range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+- feature: There are no value axis labels. Next: Add optional value labels if charts need numbers readable without the tooltip.
+
+- not-recorded: [tests/bar-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fcb4346e633b090189a481b2f00279e9eb241455/tests/bar-chart-browser.test.js): `chromium: bar chart draws grouped, stacked and negative bars from its table`. Hidden table in the accessibility tree, the named plot and its role description, row labels beside the plot, legend, separate instances from column charts, plot height from the rows, grouped and stacked bar geometry read across the plot, split segments, values text inside and past short bars and clipped to stacked segments, split gaps only at joints, the grid cleared in forced colors, negative bars from a centred zero, RTL bars growing leftwards from a dir attribute or CSS direction, the sparkline layout and focus, and destroy restoring the table.
+- not-recorded: [tests/bar-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fcb4346e633b090189a481b2f00279e9eb241455/tests/bar-chart-browser.test.js): `chromium: bar chart tooltip and band follow the pointer and the up and down arrows`. Pointer height to row, tooltip text, the band's height and position, flipping above the row in the lower half, hiding on leave, focus, arrows, End and Escape, the first row at the top in RTL, and a touch tap showing the tapped row in bar and column charts, kept on lift and hidden on pointer cancel. No spoken-output assertion.
 
 <a id="timeline"></a>
 

@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `cc75fdeb2ab1016ed4bcfee568b28036c8b97dd2ec58144d0330e3d5f64046a5`
+Contract SHA-256: `fd9a56cd40e7a6697cbe3097fd97ce065813d1752f4eabb66e198ca02a555449`
 
 #### Selection and adaptation
 
@@ -33,7 +33,7 @@ Support (2026-10-07, `llm.md#column-chart`): Columns drawn from zero from a figu
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, grouped and stacked geometry, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There is no y axis labelling, no horizontal bar variant and no range (low to high) column.
+Known boundary: Drawing, the hidden table, grouped and stacked geometry, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There is no y axis labelling and no range (low to high) column; horizontal bars are the bar chart.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#column-chart).
 

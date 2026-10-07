@@ -1521,7 +1521,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "5c65ceade8cddb0431f5efe0684caf9637fc5bb2bc576cd0dfe3b7f1e1149240"
+          "sha256": "aeed3f6deb7f5e58ff68ea744f2111189565819c5f6d35fae5f4e734b0783528"
         }
       ],
       "gaps": [
@@ -1596,11 +1596,11 @@
         },
         {
           "path": "src/ts/components/columnChart.ts",
-          "sha256": "9d4bd4dea2144348d3e8bfc79e53612d28b730edc0823df41b1d181938dc8a4f"
+          "sha256": "d07c20899f80f337196507903841234b2f97dbb30b823d0acd76ef4aaec620ee"
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "5c65ceade8cddb0431f5efe0684caf9637fc5bb2bc576cd0dfe3b7f1e1149240"
+          "sha256": "aeed3f6deb7f5e58ff68ea744f2111189565819c5f6d35fae5f4e734b0783528"
         }
       ],
       "gaps": [
@@ -1611,8 +1611,8 @@
         },
         {
           "kind": "feature",
-          "description": "There are no y axis value labels, horizontal bars or range columns.",
-          "nextStep": "Add optional y labels if charts need values readable without the tooltip; add horizontal bars or ranges when a page needs them."
+          "description": "There are no y axis value labels or range columns.",
+          "nextStep": "Add optional y labels if charts need values readable without the tooltip; add range columns when a page needs them."
         }
       ],
       "browserChecks": [
@@ -1626,6 +1626,83 @@
           "file": "tests/column-chart-browser.test.js",
           "name": "chromium: column chart tooltip and band follow the pointer and the arrow keys",
           "scope": "Pointer position to row, tooltip text without empty cells, no cursor points, the band's width and position, hiding on leave, focus, End and Escape, and the first row on the right in RTL. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "bar-chart",
+      "title": "Bar chart",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-07",
+      "scope": "Horizontal bars drawn from zero from a figure's data table, grouped by row or stacked, with split, track, values and sparkline modifiers, negative values, gaps, a fixed value range, row labels, a legend, and a pointer and keyboard tooltip with a highlight band.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the bars and their values are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-07",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, start bars at zero, keep series distinguishable and let a keyboard reach every value the pointer can."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+        },
+        {
+          "path": "src/sass/components/_bar-chart.scss",
+          "sha256": "f819b1e6a9106a7999cc0248e92accdf22e7790d4ea7d66bc1131a4d9602712a"
+        },
+        {
+          "path": "src/ts/components/barChart.ts",
+          "sha256": "0830bb0f5cb198ceff231e622f4ad296efc379ef75c47e8ad826dd336f2e922a"
+        },
+        {
+          "path": "src/ts/components/columnChart.ts",
+          "sha256": "d07c20899f80f337196507903841234b2f97dbb30b823d0acd76ef4aaec620ee"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "aeed3f6deb7f5e58ff68ea744f2111189565819c5f6d35fae5f4e734b0783528"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Drawing, the hidden table, grouped, stacked and split geometry, values, gaps, negative values, the value range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        },
+        {
+          "kind": "feature",
+          "description": "There are no value axis labels.",
+          "nextStep": "Add optional value labels if charts need numbers readable without the tooltip."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/bar-chart-browser.test.js",
+          "name": "chromium: bar chart draws grouped, stacked and negative bars from its table",
+          "scope": "Hidden table in the accessibility tree, the named plot and its role description, row labels beside the plot, legend, separate instances from column charts, plot height from the rows, grouped and stacked bar geometry read across the plot, split segments, values text inside and past short bars and clipped to stacked segments, split gaps only at joints, the grid cleared in forced colors, negative bars from a centred zero, RTL bars growing leftwards from a dir attribute or CSS direction, the sparkline layout and focus, and destroy restoring the table.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/bar-chart-browser.test.js",
+          "name": "chromium: bar chart tooltip and band follow the pointer and the up and down arrows",
+          "scope": "Pointer height to row, tooltip text, the band's height and position, flipping above the row in the lower half, hiding on leave, focus, arrows, End and Escape, the first row at the top in RTL, and a touch tap showing the tapped row in bar and column charts, kept on lift and hidden on pointer cancel. No spoken-output assertion.",
           "state": "not-recorded"
         }
       ],

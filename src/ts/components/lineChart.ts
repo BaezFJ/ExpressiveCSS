@@ -99,8 +99,11 @@ export class LineChart extends Component<LineChartOptions> {
   private _cursor: HTMLElement;
   private _tooltip: HTMLElement;
   protected _y: (value: number) => number;
-  /** The x axis runs right to left in a right-to-left context, like the labels. */
-  private _rtl = false;
+  /**
+   * Whether the rows run right to left: a horizontal row axis in a
+   * right-to-left context, like the labels. Bar chart rows keep their order.
+   */
+  private _reversed = false;
 
   /** The class prefix of the generated parts; ColumnChart reuses this class. */
   protected get _type() {
@@ -109,6 +112,14 @@ export class LineChart extends Component<LineChartOptions> {
 
   /** Whether the y axis always includes zero, as columns grow from it. */
   protected get _fromZero() {
+    return false;
+  }
+
+  /**
+   * Whether the rows run down the plot and the values across it, as in a
+   * bar chart. The rows then keep their order in a right-to-left context.
+   */
+  protected get _horizontal() {
     return false;
   }
 
@@ -132,12 +143,15 @@ export class LineChart extends Component<LineChartOptions> {
 
     this._read();
     if (!this.labels.length || !this.series.length) return;
-    this._rtl = getComputedStyle(this.el).direction === 'rtl';
+    this._reversed = !this._horizontal && getComputedStyle(this.el).direction === 'rtl';
     this._render();
     if (!this.el.classList.contains('sparkline')) {
       this._plot.tabIndex = 0;
+      // A tap has no move before it, so the press picks the row too.
+      this._plot.addEventListener('pointerdown', this._onPointerMove);
       this._plot.addEventListener('pointermove', this._onPointerMove);
       this._plot.addEventListener('pointerleave', this._onLeave);
+      this._plot.addEventListener('pointercancel', this._onCancel);
       this._plot.addEventListener('keydown', this._onKeyDown);
       this._plot.addEventListener('focus', this._onFocus);
       this._plot.addEventListener('blur', this._onLeave);
@@ -181,7 +195,8 @@ export class LineChart extends Component<LineChartOptions> {
     if (hidden) return;
 
     const x = this._x(index);
-    this._cursor.style.left = this._tooltip.style.left = `${x}%`;
+    const side = this._horizontal ? 'top' : 'left';
+    this._cursor.style[side] = this._tooltip.style[side] = `${x}%`;
     this._tooltip.classList.toggle('end', x > 50);
     this._cursor.replaceChildren();
     const title = document.createElement('strong');
@@ -270,10 +285,10 @@ export class LineChart extends Component<LineChartOptions> {
     this._y = (value) => 100 - ((value - min) / (max - min || 1)) * 100;
   }
 
-  /** Each row sits in the middle of an equal band, under its x label. */
+  /** Each row sits in the middle of an equal band, beside its label. */
   private _x(index: number) {
     const x = ((index + 0.5) / this.labels.length) * 100;
-    return this._rtl ? 100 - x : x;
+    return this._reversed ? 100 - x : x;
   }
 
   private _render() {
@@ -378,8 +393,10 @@ export class LineChart extends Component<LineChartOptions> {
 
   private _onPointerMove = (e: PointerEvent) => {
     const box = this._plot.getBoundingClientRect();
-    const fraction = (e.clientX - box.left) / box.width;
-    const index = Math.floor((this._rtl ? 1 - fraction : fraction) * this.labels.length);
+    const fraction = this._horizontal
+      ? (e.clientY - box.top) / box.height
+      : (e.clientX - box.left) / box.width;
+    const index = Math.floor((this._reversed ? 1 - fraction : fraction) * this.labels.length);
     this.show(Math.min(this.labels.length - 1, Math.max(0, index)));
   };
 
@@ -387,19 +404,27 @@ export class LineChart extends Component<LineChartOptions> {
     if (this.activeIndex < 0) this.show(0);
   };
 
-  private _onLeave = () => {
-    if (this._plot.matches(':focus-visible')) return;
+  private _onLeave = (e: Event) => {
+    // A touch leaves as it lifts; the tapped row stays until the plot blurs.
+    if ((e as PointerEvent).pointerType === 'touch' || this._plot.matches(':focus-visible')) return;
+    this.show(-1);
+  };
+
+  /** The browser took the touch to scroll the page. */
+  private _onCancel = () => {
     this.show(-1);
   };
 
   private _onKeyDown = (e: KeyboardEvent) => {
     const last = this.labels.length - 1;
     // Arrows move the cursor the way they point, so they swap in RTL.
-    const forward = this._rtl ? 'ArrowLeft' : 'ArrowRight';
+    const [forward, back] = this._horizontal
+      ? ['ArrowDown', 'ArrowUp']
+      : this._reversed ? ['ArrowLeft', 'ArrowRight'] : ['ArrowRight', 'ArrowLeft'];
     const step = (by: number) => Math.min(last, Math.max(0, this.activeIndex + by));
     const next = {
       [forward]: step(1),
-      [forward === 'ArrowRight' ? 'ArrowLeft' : 'ArrowRight']: step(-1),
+      [back]: step(-1),
       Home: 0,
       End: last,
       Escape: -1

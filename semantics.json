@@ -1186,6 +1186,24 @@
         }
       ]
     },
+    "bar-chart": {
+      "status": "enforced",
+      "note": "Added with the bar chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn bars, values, labels and legend are aria-hidden.",
+      "rules": [
+        {
+          "id": "bar-chart-is-a-figure-with-a-table",
+          "kind": "forbid",
+          "selector": ".bar-chart:not(figure:has(> table))",
+          "message": "Write .bar-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript."
+        },
+        {
+          "id": "bar-chart-has-a-caption",
+          "kind": "forbid",
+          "selector": ".bar-chart:not(:has(> figcaption))",
+          "message": "Name a .bar-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart."
+        }
+      ]
+    },
     "column-chart": {
       "status": "enforced",
       "note": "Added with the column chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn columns, labels and legend are aria-hidden.",

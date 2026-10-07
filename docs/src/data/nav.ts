@@ -356,6 +356,13 @@ export const NAV: DocsGroup[] = [
           "Values compared across categories or periods, drawn as columns from a data table, grouped or stacked.",
       },
       {
+        id: "bar-chart",
+        label: "Bar chart",
+        route: "/bar-chart.html",
+        description:
+          "Ranked or long-labelled categories drawn as horizontal bars from a data table, grouped, stacked or as a meter.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",

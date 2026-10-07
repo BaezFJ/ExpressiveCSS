@@ -242,9 +242,25 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 
 Verification gap: Drawing, the hidden table, grouped and stacked geometry, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 
-Feature gap: There are no y axis value labels, horizontal bars or range columns. Next check: Add optional y labels if charts need values readable without the tooltip; add horizontal bars or ranges when a page needs them.
+Feature gap: There are no y axis value labels or range columns. Next check: Add optional y labels if charts need values readable without the tooltip; add range columns when a page needs them.
 
 Mapped browser scope: Hidden table in the accessibility tree, the named plot, labels, legend, series classes, separate instances from line charts, grouped and stacked column geometry, gaps, negative columns, data-min above zero, the sparkline size and focus, destroy restoring the table, pointer and keyboard tooltip movement, the highlight band and the RTL row order. No spoken-output assertion.
+
+## [Bar chart](../../components/bar-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, start bars at zero, keep series distinguishable and let a keyboard reach every value the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the bars, row labels, values, legend, band and tooltip from the page's table with the column chart's runtime turned on its side; the page owns the data, its formatting and the caption.
+
+Verification gap: Drawing, the hidden table, grouped, stacked and split geometry, values, gaps, negative values, the value range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+Feature gap: There are no value axis labels. Next check: Add optional value labels if charts need numbers readable without the tooltip.
+
+Mapped browser scope: Hidden table in the accessibility tree, the named plot, row labels, legend, separate instances from column charts, the plot height from its rows, grouped, stacked and split bar geometry, values, negative bars, RTL bars, the sparkline layout and focus, destroy restoring the table, pointer and keyboard tooltip movement and the highlight band. No spoken-output assertion.
 
 ## [Timeline](../../components/timeline.md)
 
