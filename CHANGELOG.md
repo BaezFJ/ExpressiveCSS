@@ -61,6 +61,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Enter and opens on Ctrl+K or Command+K. `AutoInit()` starts it.
 - `<kbd>` is drawn as a keycap; an outer `<kbd>` around a combination stays
   plain.
+- `.line-chart` draws a `<figure>`'s data table as smooth SVG lines with x
+  labels, a legend, and a cursor and tooltip that follow the pointer or the
+  arrow keys. `area`, `fade`, `sparkline` and `<th class="dashed">` vary it.
+  The table stays as the text alternative and the no-JavaScript fallback.
 - `.scroll-area` styles native scrollbars with theme-aware colors and thin
   sizing, with a WebKit fallback and system scrollbars in forced-colors mode.
 - Frosted glass for floating surfaces. `--expressive-glass: true` on `:root` or

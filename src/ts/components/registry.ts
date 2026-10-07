@@ -47,6 +47,7 @@ export const AUTO_INIT_COMPONENTS = {
     component: Components.Datepicker,
     selector: ".datepicker, .date-picker",
   },
+  LineChart: { component: Components.LineChart, selector: ".line-chart" },
   Menu: { component: Components.Menu, selector: ".menu-trigger" },
   Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
   ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },

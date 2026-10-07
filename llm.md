@@ -87,6 +87,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Tooltips
 - Toolbars
 - Command palette
+- Line chart
 
 ### Forms
 
@@ -290,6 +291,7 @@ Opt an element out when it needs manual options:
 | `Chips` | `.chips` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
+| `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
@@ -4028,6 +4030,48 @@ Add `up` or `down` to `.stat-change` for an arrow, and `negative` when the chang
 
 ---
 
+## Line chart
+
+Trends over time drawn from a data table, with a tooltip, a legend and a sparkline size.
+
+A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The first column labels the x axis; each further column is a series named by its header cell. `AutoInit()` draws the table as smooth SVG lines with x labels, a legend when there is more than one series, and a cursor and tooltip that follow the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="line-chart fade">
+  <figcaption>Monthly revenue, 2026</figcaption>
+  <table>
+    <thead>
+      <tr><th>Month</th><th>Revenue</th><th class="dashed">Target</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>$4,400</td><td>$5,200</td></tr>
+      <tr><th>Feb</th><td>$3,400</td><td>$5,400</td></tr>
+      <tr><th>Mar</th><td>$3,700</td><td>$5,100</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- `area` fills under each line with a gradient; `fade` fades the line ends; `sparkline` is a 48px chart with no grid, labels, legend or tooltip, and is not focusable.
+- A series header cell's classes reach its line. `<th class="dashed">` draws a dotted line for a target or forecast.
+- Series take `primary`, `tertiary`, `secondary` and `on-surface-variant` in turn.
+- A cell's number is its text without currency signs, percent signs or grouping commas. Text that is not a single number (`4.4k`, `(1,200)`) is a gap, as is an empty cell. Put the number in `data-value` for those, and for `4.400 €`, which would read as 4.4. The tooltip shows the cell text as written.
+- The y axis spans the data with 10% to spare. `data-min` and `data-max` on the figure, or the `min` and `max` options, fix either end.
+- The plot is one Tab stop named by the caption. Left and Right move between rows, Home and End jump to the ends, Escape hides the tooltip. In a right-to-left context the x axis runs right to left and the arrows follow it. The tooltip is a polite live region. Hide a redundant caption with `.visually-hidden` rather than removing it.
+- A direct `<figure>` in a card is normally media with an overlaid caption; a `.line-chart` keeps its own layout there.
+- After changing the table, call `Expressive.LineChart.init(el)` again to redraw. `show(index)` highlights a row (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-line-chart-height` | 240px (sparkline 48px) |
+| `--md-comp-line-chart-line-width` | 3px (sparkline 2px) |
+| `--md-comp-line-chart-grid-color` | `outline-variant` |
+| `--md-comp-line-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -4137,6 +4181,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Chips` | `.chips` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
+| `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |

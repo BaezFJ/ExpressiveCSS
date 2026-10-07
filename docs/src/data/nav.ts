@@ -342,6 +342,13 @@ export const NAV: DocsGroup[] = [
           "Key figures in tiles, each with a label, a value and an optional change.",
       },
       {
+        id: "line-chart",
+        label: "Line chart",
+        route: "/line-chart.html",
+        description:
+          "Trends over time drawn from a data table, with a tooltip, a legend and a sparkline size.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",

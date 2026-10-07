@@ -1,0 +1,339 @@
+import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+
+export interface LineChartOptions extends BaseOptions {
+  /**
+   * Lowest value on the y axis. Defaults to the data minimum less 10% of
+   * the range. Overridden by `data-min` on the chart.
+   */
+  min: number | null;
+  /**
+   * Highest value on the y axis. Defaults to the data maximum plus 10% of
+   * the range. Overridden by `data-max` on the chart.
+   */
+  max: number | null;
+}
+
+const _defaults: LineChartOptions = {
+  min: null,
+  max: null
+};
+
+const SVG = 'http://www.w3.org/2000/svg';
+const COLORS = 4;
+let _gradientId = 0;
+
+interface Series {
+  name: string;
+  /** Header cell classes, such as `dashed`. */
+  className: string;
+  /** Cell text, shown in the tooltip as the author formatted it. */
+  text: string[];
+  values: (number | null)[];
+}
+
+/**
+ * Reads a cell as a number. `data-value` wins over the text, which may carry
+ * currency or percent signs, grouping commas and a typographic minus around
+ * one number. Anything else, such as "(1,200)" or "3–5", is a gap rather
+ * than a guess.
+ */
+function cellValue(cell: Element | undefined): number | null {
+  if (!cell) return null;
+  const raw = (cell as HTMLElement).dataset.value ?? cell.textContent;
+  const text = raw.replace(/\u2212/g, '-').replace(/[\s%\p{Sc}]/gu, '');
+  if (!/^[+-]?(\d{1,3}(,\d{3})+|\d+)?(\.\d+)?(e[+-]?\d+)?$/i.test(text) || !/\d/.test(text)) return null;
+  return parseFloat(text.replace(/,/g, ''));
+}
+
+/**
+ * A monotone cubic through the points (Fritsch-Butland tangents), so the
+ * curve never overshoots a data point. Bezier curves keep their shape under
+ * the plot's non-uniform scaling, so this can be drawn in a 0-100 box.
+ */
+function monotonePath(points: [number, number][]): string {
+  const n = points.length;
+  if (n === 0) return '';
+  if (n === 1) return `M${points[0][0]},${points[0][1]}h0`;
+  const slopes: number[] = [];
+  for (let i = 0; i < n - 1; i++) {
+    slopes.push((points[i + 1][1] - points[i][1]) / (points[i + 1][0] - points[i][0]));
+  }
+  const tangents = points.map((_, i) => {
+    if (i === 0) return slopes[0];
+    if (i === n - 1) return slopes[n - 2];
+    const [a, b] = [slopes[i - 1], slopes[i]];
+    return a * b <= 0 ? 0 : 2 / (1 / a + 1 / b);
+  });
+  let d = `M${points[0][0]},${points[0][1]}`;
+  for (let i = 0; i < n - 1; i++) {
+    const [[x0, y0], [x1, y1]] = [points[i], points[i + 1]];
+    const h = (x1 - x0) / 3;
+    d += `C${x0 + h},${y0 + tangents[i] * h} ${x1 - h},${y1 - tangents[i + 1] * h} ${x1},${y1}`;
+  }
+  return d;
+}
+
+/**
+ * Line chart. The data is the chart's <table>; this class draws it as an SVG
+ * with x labels, a legend for more than one series, and a cursor and tooltip
+ * that follow the pointer or the arrow keys. Styling is CSS.
+ *
+ * Re-run `LineChart.init(el)` after changing the table.
+ */
+export class LineChart extends Component<LineChartOptions> {
+  /** The values' x positions and series, read from the table. */
+  labels: string[] = [];
+  series: Series[] = [];
+  /** The highlighted row, or -1. */
+  activeIndex = -1;
+  private _generated: Element[] = [];
+  private _plot: HTMLElement;
+  private _cursor: HTMLElement;
+  private _tooltip: HTMLElement;
+  private _y: (value: number) => number;
+  /** The x axis runs right to left in a right-to-left context, like the labels. */
+  private _rtl = false;
+
+  constructor(el: HTMLElement, options: Partial<LineChartOptions>) {
+    super(el, options, LineChart);
+    this.el['Expressive_LineChart'] = this;
+
+    this.options = {
+      ...LineChart.defaults,
+      ...options
+    };
+
+    this._read();
+    if (!this.labels.length || !this.series.length) return;
+    this._rtl = getComputedStyle(this.el).direction === 'rtl';
+    this._render();
+    if (!this.el.classList.contains('sparkline')) {
+      this._plot.tabIndex = 0;
+      this._plot.addEventListener('pointermove', this._onPointerMove);
+      this._plot.addEventListener('pointerleave', this._onLeave);
+      this._plot.addEventListener('keydown', this._onKeyDown);
+      this._plot.addEventListener('focus', this._onFocus);
+      this._plot.addEventListener('blur', this._onLeave);
+    }
+  }
+
+  static get defaults(): LineChartOptions {
+    return _defaults;
+  }
+
+  static init(el: HTMLElement, options?: Partial<LineChartOptions>): LineChart;
+  static init(els: InitElements<InitElement>, options?: Partial<LineChartOptions>): LineChart[];
+  static init(
+    els: HTMLElement | InitElements<InitElement>,
+    options: Partial<LineChartOptions> = {}
+  ): LineChart | LineChart[] {
+    return super.init(els, options, LineChart);
+  }
+
+  static getInstance(el: HTMLElement): LineChart {
+    return el['Expressive_LineChart'];
+  }
+
+  destroy() {
+    // The listeners live on the plot, which goes with the generated nodes.
+    this._generated.forEach((node) => node.remove());
+    this._generated = [];
+    this.el['Expressive_LineChart'] = undefined;
+  }
+
+  /**
+   * Highlights one row: moves the cursor and fills the tooltip.
+   * Pass -1 to hide them. Does nothing for a chart without data.
+   */
+  show(index: number) {
+    // Skipping a repeat also keeps the live tooltip from re-announcing.
+    if (!this._tooltip || index === this.activeIndex) return;
+    this.activeIndex = index;
+    const hidden = index < 0 || index >= this.labels.length;
+    this._cursor.hidden = this._tooltip.hidden = hidden;
+    if (hidden) return;
+
+    const x = this._x(index);
+    this._cursor.style.left = this._tooltip.style.left = `${x}%`;
+    this._tooltip.classList.toggle('end', x > 50);
+    this._cursor.replaceChildren();
+    const title = document.createElement('strong');
+    title.textContent = this.labels[index];
+    this._tooltip.replaceChildren(title);
+
+    this.series.forEach((series, i) => {
+      const value = series.values[index];
+      if (value === null) return;
+      const dot = document.createElement('span');
+      dot.dataset.series = String((i % COLORS) + 1);
+      dot.style.top = `${this._y(value)}%`;
+      this._cursor.append(dot);
+      const name = document.createElement('span');
+      name.dataset.series = dot.dataset.series;
+      name.textContent = series.name;
+      const text = document.createElement('span');
+      text.textContent = series.text[index];
+      this._tooltip.append(name, text);
+    });
+  }
+
+  private _read() {
+    const table = this.el.querySelector<HTMLTableElement>(':scope > table');
+    if (!table) return;
+    // Without a <thead> the parser puts the header row in the first <tbody>.
+    const headerRow = table.tHead?.rows[0] ?? table.rows[0];
+    const header = Array.from(headerRow?.cells ?? []);
+    const rows = Array.from(table.tBodies)
+      .flatMap((body) => Array.from(body.rows))
+      .filter((row) => row !== headerRow);
+    this.labels = rows.map((row) => row.cells[0]?.textContent.trim() ?? '');
+    this.series = header.slice(1).map((cell, i) => ({
+      name: cell.textContent.trim(),
+      className: cell.className,
+      text: rows.map((row) => row.cells[i + 1]?.textContent.trim() ?? ''),
+      values: rows.map((row) => cellValue(row.cells[i + 1]))
+    }));
+
+    let [low, high] = [Infinity, -Infinity];
+    for (const series of this.series) {
+      for (const value of series.values) {
+        if (value === null) continue;
+        low = Math.min(low, value);
+        high = Math.max(high, value);
+      }
+    }
+    if (low > high) this.series = [];
+    const option = (name: 'min' | 'max') => {
+      const value = parseFloat(this.el.dataset[name] ?? '');
+      return Number.isFinite(value) ? value : this.options[name];
+    };
+    const pad = (high - low) * 0.1 || 1;
+    const min = option('min') ?? low - pad;
+    const max = option('max') ?? high + pad;
+    this._y = (value) => 100 - ((value - min) / (max - min || 1)) * 100;
+  }
+
+  /** Each row sits in the middle of an equal band, under its x label. */
+  private _x(index: number) {
+    const x = ((index + 0.5) / this.labels.length) * 100;
+    return this._rtl ? 100 - x : x;
+  }
+
+  private _render() {
+    this._plot = document.createElement('div');
+    this._plot.className = 'line-chart-plot';
+    const caption = this.el.querySelector(':scope > figcaption')?.textContent.trim();
+    this._plot.setAttribute('role', 'group');
+    this._plot.setAttribute('aria-roledescription', 'line chart');
+    if (caption) this._plot.setAttribute('aria-label', caption);
+
+    const svg = document.createElementNS(SVG, 'svg');
+    svg.setAttribute('viewBox', '0 0 100 100');
+    svg.setAttribute('preserveAspectRatio', 'none');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+
+    this.series.forEach((series, i) => {
+      const group = document.createElementNS(SVG, 'g');
+      group.setAttribute('class', `line-chart-series ${series.className}`.trim());
+      group.dataset.series = String((i % COLORS) + 1);
+
+      // A gap in the data breaks the line into runs.
+      const runs: [number, number][][] = [[]];
+      series.values.forEach((value, index) => {
+        if (value === null) runs.push([]);
+        else runs[runs.length - 1].push([this._x(index), this._y(value)]);
+      });
+      const filled = runs.filter((run) => run.length);
+
+      const id = `line-chart-gradient-${++_gradientId}`;
+      const gradient = document.createElementNS(SVG, 'linearGradient');
+      gradient.id = id;
+      gradient.setAttribute('x2', '0');
+      gradient.setAttribute('y2', '1');
+      gradient.append(document.createElementNS(SVG, 'stop'), document.createElementNS(SVG, 'stop'));
+      gradient.lastElementChild.setAttribute('offset', '1');
+
+      const area = document.createElementNS(SVG, 'path');
+      area.setAttribute('class', 'line-chart-area');
+      area.setAttribute('fill', `url(#${id})`);
+      area.setAttribute('d', filled
+        .map((run) => `${monotonePath(run)}V100H${run[0][0]}Z`)
+        .join(''));
+
+      const line = document.createElementNS(SVG, 'path');
+      line.setAttribute('class', 'line-chart-line');
+      line.setAttribute('d', filled.map(monotonePath).join(''));
+
+      group.append(gradient, area, line);
+      svg.append(group);
+    });
+
+    this._cursor = document.createElement('div');
+    this._cursor.className = 'line-chart-cursor';
+    this._cursor.hidden = true;
+    this._tooltip = document.createElement('div');
+    this._tooltip.className = 'line-chart-tooltip';
+    this._tooltip.hidden = true;
+    this._tooltip.setAttribute('aria-live', 'polite');
+    this._plot.append(svg, this._cursor, this._tooltip);
+
+    const labels = document.createElement('ol');
+    labels.className = 'line-chart-labels';
+    labels.setAttribute('aria-hidden', 'true');
+    // A loop rather than a spread: a spread of every row overflows the stack.
+    for (const text of this.labels) {
+      const li = document.createElement('li');
+      li.textContent = text;
+      labels.append(li);
+    }
+    this._generated = [this._plot, labels];
+
+    if (this.series.length > 1) {
+      const legend = document.createElement('ul');
+      legend.className = 'line-chart-legend';
+      legend.setAttribute('aria-hidden', 'true');
+      legend.append(...this.series.map((series, i) => {
+        const li = document.createElement('li');
+        li.dataset.series = String((i % COLORS) + 1);
+        li.textContent = series.name;
+        return li;
+      }));
+      this._generated.push(legend);
+    }
+    this.el.append(...this._generated);
+  }
+
+  private _onPointerMove = (e: PointerEvent) => {
+    const box = this._plot.getBoundingClientRect();
+    const fraction = (e.clientX - box.left) / box.width;
+    const index = Math.floor((this._rtl ? 1 - fraction : fraction) * this.labels.length);
+    this.show(Math.min(this.labels.length - 1, Math.max(0, index)));
+  };
+
+  private _onFocus = () => {
+    if (this.activeIndex < 0) this.show(0);
+  };
+
+  private _onLeave = () => {
+    if (this._plot.matches(':focus-visible')) return;
+    this.show(-1);
+  };
+
+  private _onKeyDown = (e: KeyboardEvent) => {
+    const last = this.labels.length - 1;
+    // Arrows move the cursor the way they point, so they swap in RTL.
+    const forward = this._rtl ? 'ArrowLeft' : 'ArrowRight';
+    const step = (by: number) => Math.min(last, Math.max(0, this.activeIndex + by));
+    const next = {
+      [forward]: step(1),
+      [forward === 'ArrowRight' ? 'ArrowLeft' : 'ArrowRight']: step(-1),
+      Home: 0,
+      End: last,
+      Escape: -1
+    }[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    this.show(next);
+  };
+}

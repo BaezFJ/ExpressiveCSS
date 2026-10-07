@@ -1,0 +1,250 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "area", label: "Area" },
+  { id: "series", label: "Several series" },
+  { id: "sparkline", label: "Sparkline" },
+  { id: "scale", label: "Values and scale" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const revenue = [4400, 3400, 3700, 4900, 4600, 5000, 5500, 4000, 4500, 5000, 4000, 5500];
+const lastYear = [4000, 4400, 3100, 4500, 4900, 4000, 4000, 4400, 3100, 4500, 4900, 5500];
+const target = [5200, 5400, 5100, 5000, 5700, 5500, 6200, 6400, 6100, 5000, 6700, 6500];
+const balance = [4000, 4500, 4300, 4400, 4900, 4600, 5000, 4900, 4500, 4300, 4400, 4900, 4600, 5000];
+const orders = [310, 290, 335, 320, 360, 340, 380, 372, 395, 410, 398, 430, 425, 452];
+const money = (value: number) => `$${value.toLocaleString("en-US")}`;
+---
+<DocsLayout page="line-chart">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;figure class="line-chart"&gt;</code> draws a
+          <code>&lt;table&gt;</code> of values as smooth lines. The first column
+          labels the x axis; each further column is a series named by its
+          header cell.
+        </p>
+        <p>
+          JavaScript draws the chart from the table and hides the table
+          visually, so a screen reader still reads the data as a table. Without
+          JavaScript the table shows. Points, a cursor and a tooltip follow the
+          pointer, and the arrow keys move them when the chart has focus.
+        </p>
+        <article class="outlined" data-markdown-ignore>
+          <dl class="stats mt-0">
+            <div><dt>Total revenue</dt><dd>$54,500</dd><dd class="stat-change up">+10% from last year</dd></div>
+          </dl>
+          <figure class="line-chart fade">
+            <figcaption>Monthly revenue, 2026</figcaption>
+            <table>
+              <thead><tr><th>Month</th><th>Revenue</th></tr></thead>
+              <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td></tr>)}</tbody>
+            </table>
+          </figure>
+        </article>
+<Code code={`
+<figure class="line-chart fade">
+  <figcaption>Monthly revenue, 2026</figcaption>
+  <table>
+    <thead>
+      <tr><th>Month</th><th>Revenue</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>$4,400</td></tr>
+      <tr><th>Feb</th><td>$3,400</td></tr>
+      <tr><th>Mar</th><td>$3,700</td></tr>
+      <!-- One row per month -->
+    </tbody>
+  </table>
+</figure>
+`} />
+        <p>
+          <code>fade</code> fades the ends of each line. The tooltip shows each
+          cell's text as written, so format values in the table.
+        </p>
+  </Section>
+  <Section {...S.area}>
+        <p><code>area</code> fills under each line with a gradient in the series color.</p>
+        <figure class="line-chart area" data-markdown-ignore>
+          <figcaption>Monthly revenue, first half</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th>Revenue</th></tr></thead>
+            <tbody>{months.slice(0, 6).map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="line-chart area">
+  <figcaption>Monthly revenue, first half</figcaption>
+  <table><!-- … --></table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.series}>
+        <p>
+          Each value column after the first is another series. A legend appears
+          when there is more than one. Series take <code>primary</code>,
+          <code>tertiary</code>, <code>secondary</code> and
+          <code>on-surface-variant</code> in turn. A series header cell's
+          classes reach its line: <code>&lt;th class="dashed"&gt;</code> draws
+          a target or forecast as a dotted line.
+        </p>
+        <figure class="line-chart" data-markdown-ignore>
+          <figcaption>Revenue against last year and target</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th>This year</th><th>Last year</th><th class="dashed">Target</th></tr></thead>
+            <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td><td>{money(lastYear[i])}</td><td>{money(target[i])}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="line-chart">
+  <figcaption>Revenue against last year and target</figcaption>
+  <table>
+    <thead>
+      <tr><th>Month</th><th>This year</th><th>Last year</th><th class="dashed">Target</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>$4,400</td><td>$4,000</td><td>$5,200</td></tr>
+      <!-- One row per month -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.sparkline}>
+        <p>
+          <code>sparkline</code> is a 48px chart with no grid, labels, legend or
+          tooltip, for a trend beside a figure. Hide its caption with
+          <code>visually-hidden</code> when the tile already names it.
+        </p>
+        <dl class="stats" data-markdown-ignore>
+          <div>
+            <dt>Balance</dt><dd>$5,000</dd><dd class="stat-change up">+25% over 14 days</dd>
+            <dd>
+              <figure class="line-chart sparkline area my-0">
+                <figcaption class="visually-hidden">Balance over 14 days</figcaption>
+                <table>
+                  <thead><tr><th>Day</th><th>Balance</th></tr></thead>
+                  <tbody>{balance.map((value, i) => <tr><th>Day {i + 1}</th><td>{money(value)}</td></tr>)}</tbody>
+                </table>
+              </figure>
+            </dd>
+          </div>
+          <div>
+            <dt>Orders</dt><dd>452</dd><dd class="stat-change up">+46% over 14 days</dd>
+            <dd>
+              <figure class="line-chart sparkline my-0">
+                <figcaption class="visually-hidden">Orders over 14 days</figcaption>
+                <table>
+                  <thead><tr><th>Day</th><th>Orders</th></tr></thead>
+                  <tbody>{orders.map((value, i) => <tr><th>Day {i + 1}</th><td>{value}</td></tr>)}</tbody>
+                </table>
+              </figure>
+            </dd>
+          </div>
+        </dl>
+<Code code={`
+<dl class="stats">
+  <div>
+    <dt>Balance</dt>
+    <dd>$5,000</dd>
+    <dd class="stat-change up">+25% over 14 days</dd>
+    <dd>
+      <figure class="line-chart sparkline area my-0">
+        <figcaption class="visually-hidden">Balance over 14 days</figcaption>
+        <table><!-- … --></table>
+      </figure>
+    </dd>
+  </div>
+</dl>
+`} />
+  </Section>
+  <Section {...S.scale}>
+        <p>
+          A cell's number is its text without currency signs, percent signs
+          or grouping commas, so <code>$4,400</code> reads as 4400. Text that
+          is not a single number, such as <code>4.4k</code> or
+          <code>(1,200)</code>, is a gap in the line, as is an empty cell. Put
+          the number in <code>data-value</code> for those, and for
+          <code>4.400 €</code>, which would read as 4.4.
+        </p>
+        <p>
+          The y axis spans the data with 10% to spare above and below. Set
+          <code>data-min</code> or <code>data-max</code> on the figure to fix
+          either end, such as <code>data-min="0"</code> when the change should
+          be read against zero.
+        </p>
+<Code code={`
+<figure class="line-chart" data-min="0">
+  <figcaption>Signups</figcaption>
+  <table>
+    <thead><tr><th>Week</th><th>Signups</th></tr></thead>
+    <tbody>
+      <tr><th>Week 1</th><td data-value="4400">4.4k</td></tr>
+      <tr><th>Week 2</th><td></td></tr>
+      <tr><th>Week 3</th><td data-value="5100">5.1k</td></tr>
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The table is the chart's text alternative. Give it a header row and
+          a header cell per row, and name the chart with a
+          <code>&lt;figcaption&gt;</code>. The drawn chart, its labels and its
+          legend are hidden from assistive technology.
+        </p>
+        <p>
+          The plot is one Tab stop named by the caption. Left and right arrows
+          move between rows, Home and End jump to the ends and Escape hides the
+          tooltip. In a right-to-left page the x axis runs from right to left,
+          and the arrows still move the cursor the way they point. The tooltip is a polite live region, so a screen reader
+          hears each row's values as it moves. A sparkline is not focusable.
+        </p>
+  </Section>
+  <Section {...S.javascript}>
+        <p>
+          <code>AutoInit()</code> starts every <code>.line-chart</code>. To
+          start one yourself, or to redraw a chart after changing its table,
+          call <code>LineChart.init</code> again.
+        </p>
+<Code code={`
+const chart = Expressive.LineChart.init(document.querySelector('.line-chart'), {
+  min: 0
+});
+chart.show(2);   // highlight the third row; -1 hides the tooltip
+chart.destroy(); // remove the drawing and show the table again
+`} />
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>min</code></td><td><code>null</code></td><td>Lowest y value. <code>data-min</code> overrides it.</td></tr>
+            <tr><td><code>max</code></td><td><code>null</code></td><td>Highest y value. <code>data-max</code> overrides it.</td></tr>
+          </tbody>
+        </table>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.line-chart</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-line-chart-height</code></td><td>240px, 48px for a sparkline</td></tr>
+          <tr><td><code>--md-comp-line-chart-line-width</code></td><td>3px, 2px for a sparkline</td></tr>
+          <tr><td><code>--md-comp-line-chart-grid-color</code></td><td><code>--md-sys-color-outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-line-chart-color-1</code></td><td><code>--md-sys-color-primary</code></td></tr>
+          <tr><td><code>--md-comp-line-chart-color-2</code></td><td><code>--md-sys-color-tertiary</code></td></tr>
+          <tr><td><code>--md-comp-line-chart-color-3</code></td><td><code>--md-sys-color-secondary</code></td></tr>
+          <tr><td><code>--md-comp-line-chart-color-4</code></td><td><code>--md-sys-color-on-surface-variant</code></td></tr>
+        </TokenTable>
+        <p>For a selective Sass build, include <code>"line-chart"</code> in <code>$components</code>.</p>
+  </Section>
+</PageBody>
+</DocsLayout>
