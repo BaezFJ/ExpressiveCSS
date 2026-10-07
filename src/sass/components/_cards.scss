@@ -20,7 +20,7 @@
 $_card: "article";
 // A direct <figure> is media, unless it is a chart. :where() keeps the
 // selectors at their old specificity.
-$_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-chart))";
+$_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-chart, .radar-chart))";
 
 :where(#{$_card}) {
   --md-comp-elevated-card-container-color: var(--md-sys-color-surface-container-low);

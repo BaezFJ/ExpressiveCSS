@@ -96,7 +96,7 @@ export class LineChart extends Component<LineChartOptions> {
   activeIndex = -1;
   private _generated: Element[] = [];
   protected _plot: HTMLElement;
-  private _cursor: HTMLElement;
+  protected _cursor: HTMLElement;
   protected _tooltip: HTMLElement;
   protected _y: (value: number) => number;
   /**

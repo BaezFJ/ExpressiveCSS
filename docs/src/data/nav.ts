@@ -370,6 +370,13 @@ export const NAV: DocsGroup[] = [
           "Parts of a whole drawn as slices from a data table, as a pie or a donut with its total.",
       },
       {
+        id: "radar-chart",
+        label: "Radar chart",
+        route: "/radar-chart.html",
+        description:
+          "Several measures on one scale drawn as shapes on spokes from a data table, one shape per series.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",

@@ -41,6 +41,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Column chart](#column-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Bar chart](#bar-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Pie chart](#pie-chart) | implemented | source-reviewed | incomplete | 1 |
+| [Radar chart](#radar-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Timeline](#timeline) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
@@ -549,6 +550,24 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 - not-recorded: [tests/pie-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/tests/pie-chart-browser.test.js): `chromium: pie chart draws slices, a legend and a donut total from its table`. Hidden table in the accessibility tree, the named plot and its role description, the square plot, slice paths and colors, a seventh color avoiding the first, gap lines, a whole-circle slice, zero rows kept in the legend without a slice, legend cells and shares, separate instances from line charts, the donut hole and <tfoot> total, values only on slices of 5% or more, the sparkline size and focus, and destroy restoring the table.
 - not-recorded: [tests/pie-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/tests/pie-chart-browser.test.js): `chromium: pie chart tooltip follows the pointer round the pie and the arrow keys`. Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, End and Escape, and clockwise slices with swapped arrows in RTL. No spoken-output assertion.
+
+<a id="radar-chart"></a>
+
+## Radar chart
+
+**implemented within the stated scope.** Spokes drawn clockwise from the top from a figure's data table, one shape per series from zero in the middle to the scale's top at the rim, row labels past each spoke, a legend for several series, area, points, dashed and sparkline modifiers, data-min and data-max, and a pointer and keyboard tooltip with a cursor spoke.
+
+Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/src/sass/abstracts/_mixins.scss), [src/sass/components/_radar-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/src/sass/components/_radar-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/src/ts/components/lineChart.ts), [src/ts/components/radarChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/src/ts/components/radarChart.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, shapes, labels and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+
+- verification: Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+- feature: A gap joins the spokes either side of it rather than breaking the shape, the rings have no value labels, and series past four reuse the colors. Next: Mark gaps and label the rings if charts need them; keep to three series meanwhile.
+
+- not-recorded: [tests/radar-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/tests/radar-chart-browser.test.js): `chromium: radar chart draws a grid, shapes, labels and a legend from its table`. Hidden table in the accessibility tree, the named plot and its role description, the square plot, four rings and spokes, shape geometry from zero to data-max with a joined gap and a clamped value, series colors and the dashed class, points, the area fill, labels on their spokes, the legend, separate instances from line charts, no fill, points or legend by default, the sparkline size, focus and hidden labels, and destroy restoring the table.
+- not-recorded: [tests/radar-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b44e58c88f1ad73a448d921f0d09b8b005d89df8/tests/radar-chart-browser.test.js): `chromium: radar chart tooltip follows the pointer round the spokes and the arrow keys`. Nearest spoke by pointer angle inside and past the rim, tooltip text without gaps, opening leftwards on the right half, the cursor spoke and its points, focus, all four arrows, End and Escape, and clockwise spokes with swapped arrows in RTL. No spoken-output assertion.
 
 <a id="timeline"></a>
 

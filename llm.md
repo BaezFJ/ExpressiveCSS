@@ -91,6 +91,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Column chart
 - Bar chart
 - Pie chart
+- Radar chart
 
 ### Forms
 
@@ -294,6 +295,7 @@ Opt an element out when it needs manual options:
 | `Chips` | `.chips` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
+| `RadarChart` | `.radar-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
@@ -4207,6 +4209,48 @@ A `<figure class="pie-chart">` takes the same `<figcaption>` and `<table>` as a 
 
 ---
 
+## Radar chart
+
+Several measures on one scale drawn as shapes on spokes from a data table, one shape per series.
+
+A `<figure class="radar-chart">` takes the same `<figcaption>` and `<table>` as a line chart. `AutoInit()` draws each row as a spoke, clockwise from the top in table order, with its label past the tip, and each value column as a shape joining its values, from zero in the middle to the scale's top at the rim. A legend names the series when there is more than one, and a tooltip follows the pointer round the chart. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="radar-chart area" data-max="100">
+  <figcaption>Client satisfaction</figcaption>
+  <table>
+    <thead>
+      <tr><th>Measure</th><th>This quarter</th><th class="dashed">Last quarter</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Communication</th><td>92</td><td>80</td></tr>
+      <tr><th>Quality</th><td>85</td><td>76</td></tr>
+      <tr><th>Timeliness</th><td>78</td><td>82</td></tr>
+      <tr><th>Value</th><td>88</td><td>74</td></tr>
+      <tr><th>Support</th><td>81</td><td>70</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- The plot is a square as wide as `--md-comp-radar-chart-height`, centered with `--md-comp-radar-chart-label-room` on each side for the labels. Four grid rings split the scale evenly.
+- `area` fills each shape, `points` marks each value, and `class="dashed"` on a header cell dashes that series' outline. `sparkline` is a 48px chart with no labels, legend or tooltip and is not focusable.
+- Cells read as in the line chart. A non-numeric cell is a gap: the shape joins the spokes either side and the tooltip leaves it out. The middle is zero, or below the lowest value if one is negative; the rim is the highest value plus a tenth of the range. `data-min` and `data-max`, or the `min` and `max` options, fix the scale; values past the rim stop at it. Series take four colors.
+- The plot is one Tab stop named by the caption. Right and down arrows move to the next row, left and up to the one before, Home and End jump to the ends and Escape hides the tooltip; the pointer or a tap shows the nearest spoke. In a right-to-left page the spokes still run clockwise and left and right swap.
+- After changing the table, call `Expressive.RadarChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-radar-chart-height` | 240px, the rim's diameter (sparkline 48px) |
+| `--md-comp-radar-chart-line-width` | 2px (sparkline 1.5px) |
+| `--md-comp-radar-chart-label-room` | 80px beside the rim |
+| `--md-comp-radar-chart-grid-color` | `outline-variant` |
+| `--md-comp-radar-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -4316,6 +4360,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Chips` | `.chips` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
+| `RadarChart` | `.radar-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |

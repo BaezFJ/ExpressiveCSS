@@ -278,6 +278,22 @@ Feature gap: There are no labels outside the pie, and rows past six reuse the co
 
 Mapped browser scope: Hidden table in the accessibility tree, the named plot, the square plot, slice geometry and colors, gap lines, legend cells and shares, separate instances from line charts, the donut hole and total, values, the sparkline size and focus, destroy restoring the table, pointer angle and keyboard tooltip movement, the active slice and RTL. No spoken-output assertion.
 
+## [Radar chart](../../components/radar-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, keep series distinguishable and every spoke labelled, and let a keyboard reach every row the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the grid, shapes, labels, legend, points and tooltip from the page's table with the line chart's runtime; the page owns the data, its formatting, the scale and the caption.
+
+Verification gap: Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+Feature gap: A gap joins the spokes either side of it rather than breaking the shape, the rings have no value labels, and series past four reuse the colors. Next check: Mark gaps and label the rings if charts need them; keep to three series meanwhile.
+
+Mapped browser scope: Hidden table in the accessibility tree, the named plot, the square plot, rings and spokes, shape geometry from zero to data-max, a joined gap and a clamped value, series colors and the dashed class, points and area, labels on their spokes, the legend, separate instances from line charts, the sparkline size and focus, destroy restoring the table, nearest-spoke pointer and keyboard tooltip movement, the cursor spoke and RTL. No spoken-output assertion.
+
 ## [Timeline](../../components/timeline.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

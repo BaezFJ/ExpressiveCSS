@@ -46,6 +46,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<input type="text" class="date-picker">`,
   },
   {
+    name: "RadarChart",
+    selector: ".radar-chart",
+    html: `<figure class="radar-chart"><figcaption>Skills</figcaption><table><thead><tr><th>Skill</th><th>Score</th></tr></thead><tbody><tr><th>Design</th><td>80</td></tr><tr><th>Code</th><td>70</td></tr><tr><th>Support</th><td>90</td></tr></tbody></table></figure>`,
+  },
+  {
     name: "PieChart",
     selector: ".pie-chart",
     html: `<figure class="pie-chart"><figcaption>Revenue</figcaption><table><thead><tr><th>Plan</th><th>Revenue</th></tr></thead><tbody><tr><th>Basic</th><td>1</td></tr><tr><th>Premium</th><td>2</td></tr></tbody></table></figure>`,
