@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- The agent skill gains an `expressivecss-charts` guide for building charts
+  and chart dashboards. It covers choosing a chart for the question asked,
+  table cells the charts can read, chart cards with stats, tokens,
+  sparklines and redrawing. Its recipes cover a period switch, a KPI row,
+  a donut with its total, a budget meter, a gauge, a heatmap and a
+  dashboard section. The root skill routes chart work to it.
 - `.mixed-chart` draws a `<figure>`'s data table as columns, lines and
   areas on one plot, chosen by each series header's class: `column`,
   `area`, or a line by default, with `dashed` lines. A series with `end`

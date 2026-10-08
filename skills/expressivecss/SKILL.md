@@ -20,7 +20,7 @@ ExpressiveCSS implements Material Design 3 Expressive with semantic HTML. Metada
 
 Classify the task and runtime ownership first. Record actual guide reads, not links.
 
-Guide names map to [Install](./expressivecss-install/SKILL.md), [Design](./expressivecss-design/SKILL.md), [Usage](./expressivecss-usage/SKILL.md), [Theming](./expressivecss-theming/SKILL.md), [Runtime](./expressivecss-runtime/SKILL.md), [Accessibility](./expressivecss-accessibility/SKILL.md), and [component guides](./components/).
+Guide names map to [Install](./expressivecss-install/SKILL.md), [Design](./expressivecss-design/SKILL.md), [Usage](./expressivecss-usage/SKILL.md), [Theming](./expressivecss-theming/SKILL.md), [Runtime](./expressivecss-runtime/SKILL.md), [Accessibility](./expressivecss-accessibility/SKILL.md), [Charts](./expressivecss-charts/SKILL.md), and [component guides](./components/).
 
 | Task classification | Must read | Must not read by default |
 | --- | --- | --- |
@@ -33,6 +33,7 @@ Guide names map to [Install](./expressivecss-install/SKILL.md), [Design](./expre
 | Manual initialization with markup changes | Usage, Runtime, Accessibility, selected component guides | Install, Design, Theming |
 | Narrow runtime lifecycle repair | Runtime, selected component guides | Install, Design, Usage, Theming, Accessibility |
 | New surface, Refine, or Redesign | Design, Usage, Theming, Accessibility, selected component guides | Install |
+| Charts, sparklines, or KPI dashboards | Charts, Usage, Accessibility, selected chart guides | Install, Runtime |
 
 Combine overlapping routes. Interface implementation and review require Usage and Accessibility; add them to narrow lifecycle work when markup or accessibility behavior changes. Add Theming for visual/token work and Install for setup/version uncertainty. Inspect runtime ownership in the decision index: JavaScript, Auto Init, shared-runtime, and manual ownership require Runtime; CSS-only and native ownership do not. Critiques need Runtime when interaction evidence is in scope. For contrast or forced-colors investigations, including token-only changes, add Accessibility. Other token work uses Theming's focused checks. Record why a route widens.
 
