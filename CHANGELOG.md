@@ -115,6 +115,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   same default for its initial value and Reset action. Set `--md-source` or
   Sass `$md-source` to retain an application's existing brand color.
 
+### Fixed
+
+- A focused line, column, bar or pie chart no longer cancels Escape when its
+  tooltip is already hidden, so a dialog or sheet around the chart can close.
+  Pressing a chart's plot away from its marks focuses it without showing the
+  first row's tooltip; keyboard focus still shows it.
+
 ## [0.12.0] - 2026-10-01
 
 ### Added

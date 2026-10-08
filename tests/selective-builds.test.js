@@ -94,7 +94,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the pie chart and its review fixes: 52,188 gzip bytes (+1,474).
   // Reviewed the heatmap chart: 53,108 gzip bytes (+920).
   // Reviewed the heatmap legend range fix: 53,190 gzip bytes (+82).
-  assert.ok(sizes(js).gzip <= 53190, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed heatmap hit testing by position, Escape and pointer focus fixes: 53,329 gzip bytes (+139).
+  assert.ok(sizes(js).gzip <= 53329, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -108,5 +109,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the pie chart: 57,343 gzip bytes (+811).
   // Reviewed the heatmap chart: 58,042 gzip bytes (+699).
   // Reviewed heatmap text contrast and the legend range: 58,097 gzip bytes (+55).
-  assert.ok(sizes(css).gzip <= 58097, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed heatmap row label width and gap swatches: 58,103 gzip bytes (+6).
+  assert.ok(sizes(css).gzip <= 58103, `CSS gzip: ${sizes(css).gzip}`);
 });

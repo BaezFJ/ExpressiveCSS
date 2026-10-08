@@ -4230,11 +4230,11 @@ A `<figure class="heatmap-chart">` takes the same `<figcaption>` and `<table>` a
 </figure>
 ```
 
-- Each row is `--md-comp-heatmap-chart-row-height` tall and the columns share the width, so a wide grid narrows its cells. Cells mix `--md-comp-heatmap-chart-color` into `--md-comp-heatmap-chart-empty-color` by their place on the scale.
+- Each row is `--md-comp-heatmap-chart-row-height` tall and the columns share the width, so a wide grid narrows its cells. Row labels take up to 40% of the width and end in an ellipsis past it. Cells mix `--md-comp-heatmap-chart-color` into `--md-comp-heatmap-chart-empty-color` by their place on the scale.
 - `values` writes each cell's text on it, in black or white, whichever has more WCAG contrast with the shade. `data-label` on a header cell replaces its text on the grid; an empty one hides it, and a column label runs on over the empty labels after it. The table and the tooltip keep the full header.
 - The scale runs from the lowest value to the highest; `data-min` and `data-max` on the chart, or the `min` and `max` options, fix it, and values past either end take the end's shade. The scale under the grid runs from the lowest cell's shade to the highest's, labelled with their text, so a fixed scale wider than the data shows only the part it uses.
 - Cells read as in the column chart. A non-numeric cell is a gap: outlined, with no shade, and its text still shows in the tooltip.
-- The plot is one Tab stop named by the caption. The arrow keys move one cell the way they point, Home and End jump to the ends of the row and Escape hides the tooltip; a tap shows the tapped cell. In a right-to-left page, set by `dir` or CSS `direction`, the columns run right to left and left and right swap. In forced colors the cells keep their shades.
+- The plot is one Tab stop named by the caption. The arrow keys move one cell the way they point, Home and End jump to the ends of the row and Escape hides the tooltip; with the tooltip hidden, Escape is left to a surrounding dialog. A tap or a drag shows the cell under the finger, and the space between cells counts as the nearer cell. In a right-to-left page, set by `dir` or CSS `direction`, the columns run right to left and left and right swap. In forced colors the cells keep their shades.
 - After changing the table, call `Expressive.HeatmapChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; `show()` takes a cell, counted row by row from 0.
 
 ### Tokens

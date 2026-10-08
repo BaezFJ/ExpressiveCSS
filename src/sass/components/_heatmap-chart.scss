@@ -54,7 +54,8 @@
 
 .heatmap-chart-grid {
   display: grid;
-  grid-template-columns: max-content repeat(var(--columns, 1), minmax(0, 1fr));
+  // Row labels take up to 40% of the width and end in an ellipsis past it.
+  grid-template-columns: fit-content(40%) repeat(var(--columns, 1), minmax(0, 1fr));
   grid-template-rows: repeat(var(--rows, 1), var(--md-comp-heatmap-chart-row-height));
   gap: var(--md-comp-heatmap-chart-gap);
   color: var(--md-sys-color-on-surface-variant);
@@ -117,6 +118,12 @@
 }
 
 .heatmap-chart-tooltip {
+  // A gap's swatch, outlined like its cell.
+  > span.gap::before {
+    background: none;
+    box-shadow: inset 0 0 0 1px var(--md-comp-heatmap-chart-grid-color);
+  }
+
   translate: 8px 0;
 
   &.end {

@@ -1521,7 +1521,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "9920e0865327fd1f719f6c98f89dbdb5a394eea5ac6d49517f1065ead3fb574b"
+          "sha256": "5a2780f9c9381b03a4bb71f6b4e47b3ea049dcab3e8b8077c0e6b09354936648"
         }
       ],
       "gaps": [
@@ -1600,7 +1600,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "9920e0865327fd1f719f6c98f89dbdb5a394eea5ac6d49517f1065ead3fb574b"
+          "sha256": "5a2780f9c9381b03a4bb71f6b4e47b3ea049dcab3e8b8077c0e6b09354936648"
         }
       ],
       "gaps": [
@@ -1677,7 +1677,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "9920e0865327fd1f719f6c98f89dbdb5a394eea5ac6d49517f1065ead3fb574b"
+          "sha256": "5a2780f9c9381b03a4bb71f6b4e47b3ea049dcab3e8b8077c0e6b09354936648"
         }
       ],
       "gaps": [
@@ -1746,7 +1746,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "9920e0865327fd1f719f6c98f89dbdb5a394eea5ac6d49517f1065ead3fb574b"
+          "sha256": "5a2780f9c9381b03a4bb71f6b4e47b3ea049dcab3e8b8077c0e6b09354936648"
         },
         {
           "path": "src/ts/components/pieChart.ts",
@@ -1815,15 +1815,15 @@
         },
         {
           "path": "src/sass/components/_heatmap-chart.scss",
-          "sha256": "587fdad122e91cedd03fd2d5fcdbdd261aa8d4d2b5273ef0326fb67d495f21c5"
+          "sha256": "8a7d129f52bb3984e2b05f1f4ab55840a6860daf5efd63fe46a01b578b14fb73"
         },
         {
           "path": "src/ts/components/heatmapChart.ts",
-          "sha256": "984730f5333df9947222793d600f031305dc43a185f761634974521c3df00812"
+          "sha256": "c645df4cbb79baaacbe139fff85610cc033b2cec5091c465160294a634c4b997"
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "9920e0865327fd1f719f6c98f89dbdb5a394eea5ac6d49517f1065ead3fb574b"
+          "sha256": "5a2780f9c9381b03a4bb71f6b4e47b3ea049dcab3e8b8077c0e6b09354936648"
         }
       ],
       "gaps": [
@@ -1842,13 +1842,13 @@
         {
           "file": "tests/heatmap-chart-browser.test.js",
           "name": "chromium: heatmap chart draws a shaded grid and a scale from its table",
-          "scope": "Hidden table in the accessibility tree, the named plot and its role description, aria-hidden grid and scale, cell levels and fills, gaps, the row height, row and column labels, empty and running data-labels, the scale ends, data-min and data-max clamping, values, text that takes the higher-contrast of black and white on saturated and near-threshold colors, the legend over a fixed scale, no page overflow from a wide table, a table of gaps left undrawn, separate instances from line charts, and destroy restoring the table.",
+          "scope": "Hidden table in the accessibility tree, the named plot and its role description, aria-hidden grid and scale, cell levels and fills, gaps, the row height, row and column labels, empty and running data-labels, the scale ends, data-min and data-max clamping, values, text that takes the higher-contrast of black and white on saturated and near-threshold colors, the legend over a fixed scale, long row labels capped at 40% of the width, no page overflow from a wide table, a table of gaps left undrawn, separate instances from line charts, and destroy restoring the table.",
           "state": "not-recorded"
         },
         {
           "file": "tests/heatmap-chart-browser.test.js",
           "name": "chromium: heatmap chart tooltip follows the pointer and the arrow keys round the grid",
-          "scope": "Pointer to cell, the active cell, tooltip text for cells and gaps, the swatch shade, opening leftwards on the right half, hiding off the cells, focus, all four arrows stopping at the edges, Home, End and Escape, and right-to-left columns with swapped arrows and scale. No spoken-output assertion.",
+          "scope": "Pointer to cell by position, the space between cells, a touch drag that keeps its first target, the active cell, tooltip text for cells and gaps, the swatch shade and the outlined gap swatch, a press on a label focusing without a tooltip, opening leftwards on the right half, hiding off the cells, focus, all four arrows stopping at the edges, Home, End and Escape, Escape left uncancelled once the tooltip is hidden, and right-to-left columns with swapped arrows and scale. No spoken-output assertion.",
           "state": "not-recorded"
         }
       ],

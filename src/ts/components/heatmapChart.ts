@@ -60,7 +60,9 @@ export class HeatmapChart extends LineChart {
     title.textContent = this.labels[row];
     const [name, text] = [document.createElement('span'), document.createElement('span')];
     name.textContent = series.name;
-    if (this._levels[index] !== null) name.style.setProperty('--level', String(this._levels[index]));
+    // A gap's swatch is outlined like its cell.
+    if (this._levels[index] === null) name.className = 'gap';
+    else name.style.setProperty('--level', String(this._levels[index]));
     text.textContent = series.text[row];
     this._tooltip.replaceChildren(title, name, text);
 
@@ -73,7 +75,8 @@ export class HeatmapChart extends LineChart {
 
   /** Arrows move the way they point, so left and right swap in RTL. */
   protected _keyTarget(key: string): number | undefined {
-    if (key === 'Escape') return -1;
+    // With nothing shown, Escape is left to a dialog or sheet around the chart.
+    if (key === 'Escape') return this.activeIndex < 0 ? undefined : -1;
     const [columns, last] = [this.series.length, this.labels.length - 1];
     const index = Math.max(0, this.activeIndex);
     const [row, column] = [Math.floor(index / columns), index % columns];
@@ -93,10 +96,23 @@ export class HeatmapChart extends LineChart {
     return clamp(to[0], last) * columns + clamp(to[1], columns - 1);
   }
 
-  /** The cell under the pointer, or -1. */
+  /**
+   * The cell under the pointer by its position, or -1 off the grid. A touch
+   * keeps its first target while it drags, so the target cannot be used. The
+   * cells and gaps are even, so each band's edge falls in a gap and a gap
+   * counts as the nearer cell.
+   */
   protected _indexAt(e: PointerEvent) {
-    const cell = (e.target as Element).closest?.('.heatmap-chart-cell');
-    return this._cells.indexOf(cell as HTMLElement);
+    const [columns, rows] = [this.series.length, this.labels.length];
+    const first = this._cells[0].getBoundingClientRect();
+    const last = this._cells[this._cells.length - 1].getBoundingClientRect();
+    const [left, right] = [Math.min(first.left, last.left), Math.max(first.right, last.right)];
+    const [x, y] = [e.clientX, e.clientY];
+    if (x < left || x > right || y < first.top || y > last.bottom) return -1;
+    const band = (offset: number, size: number, count: number) =>
+      Math.min(count - 1, Math.floor((offset / (size || 1)) * count));
+    const column = band(x - left, right - left, columns);
+    return band(y - first.top, last.bottom - first.top, rows) * columns + (this._reversed ? columns - 1 - column : column);
   }
 
   /**

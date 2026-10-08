@@ -26,6 +26,10 @@ const html = `<style>${css}</style>
     ${chart('class="heatmap-chart" id="fixed" data-min="0" data-max="100"', 'Fixed', '<th>A</th><th>B</th>', [['<th>Row</th>', '20', '80']])}
     ${chart('class="heatmap-chart" id="empty"', 'Empty', '<th>A</th>', [['<th>Row</th>', 'none']])}
   </div>
+  <div style="width: 320px">
+    ${chart('class="heatmap-chart" id="long"', 'Long', '<th>A</th><th>B</th><th>C</th>', [
+      ['<th>Organic search from partner sites and newsletters</th>', '1', '2', '3']])}
+  </div>
   <script>${js}</script>`;
 
 for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit })) {
@@ -152,6 +156,13 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
 
       assert.equal(await page.locator('#empty .heatmap-chart-plot').count(), 0, 'a table with no numbers stays a table');
 
+      // A long row label takes at most 40% of the width and is cut, so the cells keep the rest.
+      const long = await page.locator('#long').evaluate((el) => {
+        const [label, cell] = [el.querySelector('.heatmap-chart-row'), el.querySelector('.heatmap-chart-cell')];
+        return [label.offsetWidth <= el.offsetWidth * 0.4, label.scrollWidth > label.clientWidth, cell.offsetWidth > 40];
+      });
+      assert.deepEqual(long, [true, true, true]);
+
       await page.evaluate(() => Expressive.HeatmapChart.getInstance(document.querySelector('#sales')).destroy());
       assert.deepEqual(await page.locator('#sales').evaluate((el) => [
         el.querySelectorAll('.heatmap-chart-plot, .heatmap-chart-legend').length,
@@ -189,10 +200,40 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       assert.equal(await tooltip.evaluate((el) => el.classList.contains('end')), true);
       await cells.nth(4).hover();
       assert.equal(await text(), 'Leo Feb n/a', 'a gap still shows its cell');
+      assert.deepEqual(await tooltip.evaluate((el) => {
+        const swatch = getComputedStyle(el.children[1], '::before');
+        return [el.children[1].className, swatch.backgroundColor];
+      }), ['gap', 'rgba(0, 0, 0, 0)'], 'a gap\'s swatch is outlined, not the lowest shade');
+
+      // Between two cells the tooltip stays, on the nearer one.
+      const [a, b] = [await cells.nth(0).boundingBox(), await cells.nth(1).boundingBox()];
+      await page.mouse.move((a.x + a.width + b.x) / 2, a.y + a.height / 2);
+      assert.equal(await tooltip.isVisible(), true, 'the gap between cells keeps the tooltip');
+      assert.ok([0, 1].includes(await active()));
+
+      // A touch keeps its first target as it drags, so the cell comes from the position.
+      const dragged = await page.evaluate(() => {
+        const el = document.querySelector('#sales');
+        const cells = el.querySelectorAll('.heatmap-chart-cell');
+        const to = cells[2].getBoundingClientRect();
+        cells[0].dispatchEvent(new PointerEvent('pointermove', {
+          bubbles: true, pointerType: 'touch', clientX: to.x + to.width / 2, clientY: to.y + to.height / 2 }));
+        return Expressive.HeatmapChart.getInstance(el).activeIndex;
+      });
+      assert.equal(dragged, 2);
 
       await page.locator('#sales .heatmap-chart-row').first().hover();
       assert.equal(await tooltip.isVisible(), false, 'off the cells hides the tooltip');
       assert.equal(await active(), -1);
+
+      // A press on a label focuses the plot without showing the first cell.
+      await page.mouse.move(0, 0);
+      await page.locator('#sales .heatmap-chart-row').nth(1).click();
+      assert.equal(await plot.evaluate((el) => el === document.activeElement), true);
+      assert.equal(await tooltip.isVisible(), false, 'a press off the cells shows no cell');
+      await page.keyboard.press('ArrowDown');
+      assert.equal(await text(), 'Priya Jan $10');
+      await page.keyboard.press('Escape');
 
       await plot.focus();
       await page.keyboard.press('Tab');
@@ -213,6 +254,12 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       assert.equal(await text(), 'Priya Jan $10');
       await page.keyboard.press('Escape');
       assert.equal(await tooltip.isVisible(), false);
+      // With nothing shown, Escape is left for a dialog around the chart.
+      assert.equal(await plot.evaluate((el) => {
+        const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+        el.dispatchEvent(event);
+        return event.defaultPrevented;
+      }), false);
       await page.keyboard.press('ArrowDown');
       assert.equal(await text(), 'Priya Jan $10', 'the first key after Escape shows the first cell');
 

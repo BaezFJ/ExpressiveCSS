@@ -421,7 +421,9 @@ export class LineChart extends Component<LineChartOptions> {
   }
 
   private _onFocus = () => {
-    if (this.activeIndex < 0) this.show(0);
+    // Only keyboard focus picks the first row; a press off the marks, which
+    // focuses the plot too, leaves the tooltip hidden.
+    if (this.activeIndex < 0 && this._plot.matches(':focus-visible')) this.show(0);
   };
 
   private _onLeave = (e: Event) => {
@@ -440,9 +442,11 @@ export class LineChart extends Component<LineChartOptions> {
     const last = this.labels.length - 1;
     const [forward, back] = this._arrows;
     const step = (by: number) => Math.min(last, Math.max(0, this.activeIndex + by));
+    // With nothing shown, Escape is left to a dialog or sheet around the chart.
+    if (key === 'Escape') return this.activeIndex < 0 ? undefined : -1;
     return forward.includes(key) ? step(1)
       : back.includes(key) ? step(-1)
-      : { Home: 0, End: last, Escape: -1 }[key];
+      : { Home: 0, End: last }[key];
   }
 
   private _onKeyDown = (e: KeyboardEvent) => {

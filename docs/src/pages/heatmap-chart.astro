@@ -137,7 +137,8 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
           <code>--md-comp-heatmap-chart-row-height</code> and
           <code>--md-comp-heatmap-chart-gap</code> lower for small cells. A
           wide grid narrows its cells to fit, so on a phone show fewer
-          columns.
+          columns. Row labels take up to 40% of the width and end in an
+          ellipsis past it.
         </p>
         <figure class="heatmap-chart" style="--md-comp-heatmap-chart-row-height: 12px; --md-comp-heatmap-chart-gap: 2px; --md-comp-heatmap-chart-shape: 2px" data-markdown-ignore>
           <figcaption>Tasks completed, last 52 weeks</figcaption>
@@ -262,8 +263,9 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
         <p>
           The plot is one Tab stop named by the caption. The arrow keys move
           one cell the way they point, Home and End jump to the ends of the
-          row and Escape hides the tooltip. On a touch screen, tap a cell to
-          show it. In a right-to-left page the columns run right to left. The
+          row and Escape hides the tooltip; once it is hidden, Escape is left
+          to a dialog around the chart. On a touch screen, tap a cell or drag
+          across the grid to show a cell. In a right-to-left page the columns run right to left. The
           tooltip is a polite live region, so a screen reader hears each
           cell's row, column and value as it moves. Shade alone is hard to
           tell apart, so use <code>values</code> when exact numbers matter. In
