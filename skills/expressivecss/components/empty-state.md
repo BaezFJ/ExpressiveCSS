@@ -5,11 +5,11 @@ What a view shows when it has nothing to list: an icon, a heading, text and acti
 
 Component ID: `empty-state`
 
-[Component documentation](https://www.expressivecss.com/empty-state.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/empty-state.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.13.0)
+[Component documentation](https://www.expressivecss.com/empty-state.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/empty-state.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.13.1)
 
-Contract: ExpressiveCSS 0.13.0
+Contract: ExpressiveCSS 0.13.1
 
-Contract SHA-256: `adaf46c90336bf278b865e4efe91d358e21071f6bc46c5db5e28c431565649b3`
+Contract SHA-256: `18ec4146d300280bbcb74eb3b23f16d1015a0a3db86a8c59fc8348dbdf9d96c2`
 
 #### Selection and adaptation
 
