@@ -24,6 +24,7 @@ const supportGuides = [
   'expressivecss-theming/SKILL.md',
   'expressivecss-runtime/SKILL.md',
   'expressivecss-accessibility/SKILL.md',
+  'expressivecss-charts/SKILL.md',
 ];
 
 const decisionIndex = readFileSync(new URL('references/component-decisions.md', skillDirectory), 'utf8');
@@ -986,8 +987,8 @@ describe('the ExpressiveCSS agent skill', () => {
     // the bar chart row at 35,073 bytes (+426); the pie chart row at 35,521 bytes (+448);
     // the heatmap chart row at 35,973 bytes (+452); the radar chart row at
     // 36,418 bytes (+445); the radial chart row at 36,829 bytes (+411); the mixed
-    // chart row at 37,266 bytes (+437).
-    assert.ok(bytes <= 37266, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // chart row at 37,266 bytes (+437); the charts guide route at 37,424 bytes (+158).
+    assert.ok(bytes <= 37424, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 
