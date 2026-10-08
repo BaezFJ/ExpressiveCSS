@@ -326,6 +326,22 @@ Feature gap: There are no labels on the rings, no gradient or segmented fills, a
 
 Mapped browser scope: Hidden table in the accessibility tree, the named plot, the square plot, ring geometry, colors and dash shares, tracks, legend cells, separate instances from line charts, the gauge box and total, thinner crowded rings, the sparkline size and focus, destroy restoring the table, pointer distance and keyboard tooltip movement, the active ring and RTL. No spoken-output assertion.
 
+## [Mixed chart](../../components/mixed-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, keep series distinguishable without color alone, state each scale's units, and let a keyboard reach every row the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the columns, lines, areas, labels, legend and tooltip from the page's table with the line chart's runtime; the page owns the data, its formatting, which series use the second scale, the ranges and the caption.
+
+Verification gap: Drawing, the hidden table, both scales, gaps, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+Feature gap: There are no y axis labels for either scale, no always-on line markers, no stacked columns and no straight-line option. Next check: Add y axis labels to the shared chart parts if charts need them; name the units in the caption meanwhile.
+
+Mapped browser scope: Hidden table, the named plot, column positions on the start scale with an empty slot for a gap, area and dashed line classes and colors, a fixed and a fitted end scale, legend order, separate instances from column charts, a chart of gaps showing its table, and the tooltip and cursor points from the keyboard. No spoken-output assertion.
+
 ## [Timeline](../../components/timeline.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

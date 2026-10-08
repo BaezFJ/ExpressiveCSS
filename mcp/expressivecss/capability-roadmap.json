@@ -48,11 +48,11 @@
       "sources": [
         {
           "path": "src/sass/components/_navbar.scss",
-          "sha256": "2d3a2accd4d0dfeb524f628f9eb2be81bad5a50ab7feea40c0c0ddd58016da96"
+          "sha256": "6cb45a812a9c14572d9a4261e0d36b7a89321adc5647bc8e39ce3410b75b57d5"
         },
         {
           "path": "src/ts/components/appBar.ts",
-          "sha256": "91ddc61000a36923995b3633743dd83452d43671c40ae923318dedfeff38893e"
+          "sha256": "6fe4e6f9d55d1820530b731914259dfb677d4e06fcf37137eb930a707cc41fc6"
         }
       ],
       "gaps": [
@@ -115,7 +115,7 @@
       "sources": [
         {
           "path": "src/sass/components/_navigation-bar.scss",
-          "sha256": "e42c5c395c9f2cdc1dc9c8c4cfdff1a06cb12183cae1d17bcea915536f0aa9c2"
+          "sha256": "cfc192f6284aeeffd5ba0cbaba968d68108bf60343c7278752ae7424e777db5d"
         }
       ],
       "gaps": [],
@@ -153,11 +153,11 @@
       "sources": [
         {
           "path": "src/sass/components/_navigation-rail.scss",
-          "sha256": "7dcc854d90a48a541ae9ed2380d28063e8217e567f697e27a21fe1ab84e055bb"
+          "sha256": "1928870f453b486f8ee86a0f1e386b7fba24dc4a1acd06292ac210d701f809bd"
         },
         {
           "path": "src/ts/components/navigationRail.ts",
-          "sha256": "f7b4e682a87ea664dc8b8927ea86a784fd61ab1d538a9996f97d5c2e95db4406"
+          "sha256": "3e6c8f71742235994c3533a56033903765eecbfa1d3ae4d10e7e6dd565800940"
         }
       ],
       "gaps": [],
@@ -273,7 +273,7 @@
       "sources": [
         {
           "path": "src/sass/components/_page-footer.scss",
-          "sha256": "71f385db254eb07874be949d5bcb0cdd0ec8835342c1d5a89ba0def76d3668ab"
+          "sha256": "68f4f28773946707239b84419a512acc18b507763893bccaed26d1ae41543f8c"
         }
       ],
       "gaps": [
@@ -334,7 +334,7 @@
         },
         {
           "path": "src/ts/components/tabs.ts",
-          "sha256": "72657d5e40d49a8d84357753eb81d488a8756827f83bb5102b9f6269854516cf"
+          "sha256": "42bb556083a39c6fe194a02c489e1844f00579604a8eb9bbc76f97c196550c52"
         }
       ],
       "gaps": [
@@ -566,11 +566,11 @@
       "sources": [
         {
           "path": "src/sass/components/_menu.scss",
-          "sha256": "8ad4eab498fa24199203070cf2b5792f6d61aa52e18b75770549ffcc7e0c64dc"
+          "sha256": "fc7456249caec5118a379c9d56c7a7bfb211c147f5fd318bbcf8de6ea1d33654"
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
+          "sha256": "0ca7f4c0d80012adad3babdfc23005792dbaa2655c3fe5595bc9bcc7e2c35ce8"
         }
       ],
       "gaps": [
@@ -783,7 +783,7 @@
       "sources": [
         {
           "path": "src/sass/components/_buttons.scss",
-          "sha256": "cc0b3dd320002682c9b2cbe9e2192dd0af124047fd7ced7811456fecfc9b689a"
+          "sha256": "be8b53a9969e443b7f98d106f1d14db694a58728844c920fadf2e0ae37ca62c4"
         },
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -791,7 +791,7 @@
         },
         {
           "path": "src/sass/abstracts/_variables.scss",
-          "sha256": "e8a5dfd7355cefde5a87775455cb95ac41c735f0d407a7b23ef94b2ec1ed8fd8"
+          "sha256": "0687f4a8247a180fc51793aee67d6ab0a0ad348e9d40e6f392f3b4811e7e1cb2"
         }
       ],
       "gaps": [
@@ -862,7 +862,7 @@
       "sources": [
         {
           "path": "src/sass/components/_icon-buttons.scss",
-          "sha256": "c77a969e392a03be07f10aa6021758d5fa7ddccd999440755c93942a9dbb38e8"
+          "sha256": "6dbdd8e36e4dfbe3b406595b4536adb810753fb5136edb951f1f087af4d00ef9"
         },
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -870,7 +870,7 @@
         },
         {
           "path": "src/sass/abstracts/_variables.scss",
-          "sha256": "e8a5dfd7355cefde5a87775455cb95ac41c735f0d407a7b23ef94b2ec1ed8fd8"
+          "sha256": "0687f4a8247a180fc51793aee67d6ab0a0ad348e9d40e6f392f3b4811e7e1cb2"
         }
       ],
       "gaps": [
@@ -1031,7 +1031,7 @@
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "e0fb0c0f6492652fdea2c7bf4189eabad261d5506ec93a22fac508da67d89660"
+          "sha256": "0ca7f4c0d80012adad3babdfc23005792dbaa2655c3fe5595bc9bcc7e2c35ce8"
         }
       ],
       "gaps": [
@@ -1098,15 +1098,15 @@
       "sources": [
         {
           "path": "src/sass/components/_buttons.scss",
-          "sha256": "cc0b3dd320002682c9b2cbe9e2192dd0af124047fd7ced7811456fecfc9b689a"
+          "sha256": "be8b53a9969e443b7f98d106f1d14db694a58728844c920fadf2e0ae37ca62c4"
         },
         {
           "path": "src/sass/components/_fab-menu.scss",
-          "sha256": "f1d7b579ea34271824a0fdc75d209d00830a1beb352ddbbd670d31bebf5548d0"
+          "sha256": "e40c4871f38141ec874e1acf48db87727e433b3ec9c7cae6b51712306c9ec2b3"
         },
         {
           "path": "src/ts/components/buttons.ts",
-          "sha256": "8f693be33245b1984742a4f51272c4f39927f4a75c735583583f530ace701940"
+          "sha256": "7d5a616bc561813687f1453b61da19304cec0266c2dd355219fcd367ce14ada0"
         }
       ],
       "gaps": [
@@ -1169,11 +1169,11 @@
       "sources": [
         {
           "path": "src/sass/components/_cards.scss",
-          "sha256": "506c13fe1a87f9397037ead0aaefdfb79f9e201523d9b39fd00b66cbd17a6bfb"
+          "sha256": "d79eefdc47aae6fd30b9346d2e86e5d8772e64994569f68d1541ced58f552509"
         },
         {
           "path": "src/sass/components/_expanding-card.scss",
-          "sha256": "199e0dfaddb39af5acb823e8dbc7933a459b765efad19cc28d0403ebe3942f5f"
+          "sha256": "a9db28346c8b6d9c0bf198e07ded62b63b34e6eac7d0221396322efd29045056"
         },
         {
           "path": "src/ts/components/cards.ts",
@@ -1521,7 +1521,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
         }
       ],
       "gaps": [
@@ -1596,11 +1596,11 @@
         },
         {
           "path": "src/ts/components/columnChart.ts",
-          "sha256": "d07c20899f80f337196507903841234b2f97dbb30b823d0acd76ef4aaec620ee"
+          "sha256": "3c8ad721e3abc034c763870081d87a2df0aaf2470d212f03c51086e0ee5deb7d"
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
         }
       ],
       "gaps": [
@@ -1673,11 +1673,11 @@
         },
         {
           "path": "src/ts/components/columnChart.ts",
-          "sha256": "d07c20899f80f337196507903841234b2f97dbb30b823d0acd76ef4aaec620ee"
+          "sha256": "3c8ad721e3abc034c763870081d87a2df0aaf2470d212f03c51086e0ee5deb7d"
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
         }
       ],
       "gaps": [
@@ -1746,7 +1746,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
         },
         {
           "path": "src/ts/components/pieChart.ts",
@@ -1823,7 +1823,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
         }
       ],
       "gaps": [
@@ -1892,7 +1892,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
         },
         {
           "path": "src/ts/components/radarChart.ts",
@@ -1965,7 +1965,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
         },
         {
           "path": "src/ts/components/radialChart.ts",
@@ -1995,6 +1995,77 @@
           "file": "tests/radial-chart-browser.test.js",
           "name": "chromium: radial chart tooltip follows the pointer across the rings and the arrow keys",
           "scope": "Pointer distance to ring, gaps split between rings, the active ring, tooltip text with further columns, swatches in the ring color, opening direction, hiding in the middle, off the rings and below a gauge's base line, focus, all four arrows, End and Escape, and clockwise rings with swapped arrows in RTL. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "mixed-chart",
+      "title": "Mixed chart",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-07",
+      "scope": "Columns, smooth lines and areas drawn per series from a figure's data table by header class, with dashed lines, a second scale for end series with its own fixed range, x labels, a legend, a sparkline modifier, and a pointer and keyboard tooltip with points on the lines.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns and SVG are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-07",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, keep series distinguishable without color alone, state each scale's units, and let a keyboard reach every row the pointer can."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+        },
+        {
+          "path": "src/sass/components/_mixed-chart.scss",
+          "sha256": "4195fbf13249ef7bf4da8560f5b0ccbc715367f2b5771c3b96a255af4b9e39bb"
+        },
+        {
+          "path": "src/ts/components/columnChart.ts",
+          "sha256": "3c8ad721e3abc034c763870081d87a2df0aaf2470d212f03c51086e0ee5deb7d"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
+        },
+        {
+          "path": "src/ts/components/mixedChart.ts",
+          "sha256": "3c4bc2efee52a5ec53e9318467e9802efbe17b016b4d977c0b3a95ba0f4b52ba"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Drawing, the hidden table, both scales, gaps, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        },
+        {
+          "kind": "feature",
+          "description": "There are no y axis labels for either scale, no always-on line markers, no stacked columns and no straight-line option.",
+          "nextStep": "Add y axis labels to the shared chart parts if charts need them; name the units in the caption meanwhile."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/mixed-chart-browser.test.js",
+          "name": "chromium: mixed chart draws columns, areas and lines on two scales",
+          "scope": "Hidden table, the named plot and its role description, column positions on the start scale with an empty slot for a gap, area and dashed line classes and colors, an area fill only on area series, a fixed end scale, a fitted end scale shared by two series, legend order, separate instances from column charts, a chart of gaps showing its table, and the tooltip and cursor points from the keyboard. No spoken-output assertion.",
           "state": "not-recorded"
         }
       ],
@@ -2075,7 +2146,7 @@
       "sources": [
         {
           "path": "src/sass/components/_dialog.scss",
-          "sha256": "f4bb79a9f217ab1dfc7cd33325438d502065abec0474b6fd1c66a15d62f8ed30"
+          "sha256": "f1278118f971cae292378b5496954fe38d9a4577717b733ff554b1dffa4747fd"
         },
         {
           "path": "src/ts/behaviors/dialogs.ts",
@@ -2124,11 +2195,11 @@
       "sources": [
         {
           "path": "src/sass/components/_bottom-sheet.scss",
-          "sha256": "0f6edc494bfafba25fd34dbddee8d405f8d9b5e4567be6ca99bd0b19cb41f54c"
+          "sha256": "3769e3b98da7466d2fcb0503c0d47e28788d65bbf436a904c43b6e6eb59c208e"
         },
         {
           "path": "src/sass/components/_dialog.scss",
-          "sha256": "f4bb79a9f217ab1dfc7cd33325438d502065abec0474b6fd1c66a15d62f8ed30"
+          "sha256": "f1278118f971cae292378b5496954fe38d9a4577717b733ff554b1dffa4747fd"
         },
         {
           "path": "src/ts/behaviors/dialogs.ts",
@@ -2140,7 +2211,7 @@
         },
         {
           "path": "src/ts/behaviors/sheetDrag.ts",
-          "sha256": "0f5714a2a1fbb5c20a45f0c6a8cc617959e7b8572128ee8860db909f0d96f3bd"
+          "sha256": "a859bc0cfc2ae1522d387b50aab56e82be7071eeef243f6f00410a5fe48f9c8b"
         }
       ],
       "gaps": [
@@ -2210,11 +2281,11 @@
       "sources": [
         {
           "path": "src/sass/components/_side-sheet.scss",
-          "sha256": "6b1110f3fb68032d603d2b6e05832ad4020cd285d76bf940f993fb941accb067"
+          "sha256": "1fa872f766de3e3cae5144da9df5d3ec70bcd6db74b85351d1f718285145beba"
         },
         {
           "path": "src/sass/components/_dialog.scss",
-          "sha256": "f4bb79a9f217ab1dfc7cd33325438d502065abec0474b6fd1c66a15d62f8ed30"
+          "sha256": "f1278118f971cae292378b5496954fe38d9a4577717b733ff554b1dffa4747fd"
         },
         {
           "path": "src/ts/behaviors/dialogs.ts",
@@ -2226,7 +2297,7 @@
         },
         {
           "path": "src/ts/behaviors/sheetDrag.ts",
-          "sha256": "0f5714a2a1fbb5c20a45f0c6a8cc617959e7b8572128ee8860db909f0d96f3bd"
+          "sha256": "a859bc0cfc2ae1522d387b50aab56e82be7071eeef243f6f00410a5fe48f9c8b"
         }
       ],
       "gaps": [
@@ -2349,7 +2420,7 @@
       "sources": [
         {
           "path": "src/sass/components/_badges.scss",
-          "sha256": "1d9ade7617c30f8584cfee9b3f2fe5d3c5d39f5ed7fa2fd362a9f8205fa15693"
+          "sha256": "f249dc305b207a60c642863fb652282310e956049ec3e7eff51782c962b4bd26"
         }
       ],
       "gaps": [
@@ -2444,11 +2515,11 @@
       "sources": [
         {
           "path": "src/sass/components/_tooltip.scss",
-          "sha256": "cfd11ea9b5934690458973587b8fa76cd0253badbe1c78e345e29f7a477cc35b"
+          "sha256": "47e378ebf6b884e740d4e204e1b98ae83b7d7ed1174d3a09b223b68390004496"
         },
         {
           "path": "src/ts/components/tooltip.ts",
-          "sha256": "2f9fced2c2d0887cfe3db4bc131507ee3cb871a1198a02b7e2f3fa7fdcaab4d3"
+          "sha256": "1fb60d8396973881ea030378fb3d3110e5a8686e586726dfb310f7ef79bcfb7f"
         }
       ],
       "gaps": [],
@@ -2566,11 +2637,11 @@
       "sources": [
         {
           "path": "src/sass/components/_snackbar.scss",
-          "sha256": "538018b8fc0728c1d2933507cb6dd1c24ea6db1e8924449fb9b4e132c3c53d4e"
+          "sha256": "2558492a9f9650e5872a15632d3c90b5a02bedd9e675fa33767377685714d4f0"
         },
         {
           "path": "src/ts/components/snackbar.ts",
-          "sha256": "a041948479ad04cf3e32cfaafa9aebfaa0816f32bbb2f99b2e7c42bf8c23083c"
+          "sha256": "0fa8bf5e3c774b76c846b1e8c6e35e8d0f6b05bb18e1c486f9a387d9a8e179dd"
         }
       ],
       "gaps": [
@@ -2635,7 +2706,7 @@
       "sources": [
         {
           "path": "src/sass/components/_progress.scss",
-          "sha256": "3ef3fc4af36bed45813e0533b93ca1242b4169298c8d9e5eb899ffa6fb9e6266"
+          "sha256": "2d83fa4f8072f6944b9069c397b366d2318823ed8c5c040229b59e504ccba0e2"
         }
       ],
       "gaps": [
@@ -2868,11 +2939,11 @@
       "sources": [
         {
           "path": "src/sass/components/_carousel.scss",
-          "sha256": "5a9a8e459c61e84fa4d205fd25e9fd7520f0c80489ad816ba6198fe3ebd71f3f"
+          "sha256": "b6d452e406fa9f34759bd55256c1a2303a6909b2ee3ec6714a67091e8d7c6638"
         },
         {
           "path": "src/ts/components/carousel.ts",
-          "sha256": "9559aa36e59e4f15b5fbfbc7ff6acd0ff85ce2498972ae7a42b2510825c22224"
+          "sha256": "f4b3099fd11a3333d0f915ea3253375823c1fdd607116b4de884ded7ae35f15e"
         }
       ],
       "gaps": [
@@ -3043,7 +3114,7 @@
       "sources": [
         {
           "path": "src/sass/components/_toolbar.scss",
-          "sha256": "8fb21bf9336332897e0b4290b80b7ea31a523410a7db893ab7b49cd8abee005b"
+          "sha256": "0bfd3014f3a8cd2f6ec04ea0af2b892ab89ede8f6252381b2643357d81fe76b7"
         }
       ],
       "gaps": [],
@@ -3088,7 +3159,7 @@
       "sources": [
         {
           "path": "src/sass/components/_search.scss",
-          "sha256": "827fd893f6c3ac380a95ed3f5febd3a4fff4fee29cac5b1fb230df5e6f051c76"
+          "sha256": "a23203e638f6ad66660f3e786b26460302702890883b5ebd4a6d1a6108196f9a"
         }
       ],
       "gaps": [
@@ -3197,7 +3268,7 @@
       "sources": [
         {
           "path": "src/sass/components/forms/_fieldset.scss",
-          "sha256": "0de91ee778fb360cd8a5451c920df81dd2b1cd5fb9d26993729afe1f745d7e65"
+          "sha256": "5d2a174d889bc97608b200cff7299fb082dd9fb256ad7cc8821ef5ed313921fe"
         }
       ],
       "gaps": [
@@ -3248,15 +3319,15 @@
       "sources": [
         {
           "path": "src/sass/components/forms/_input-fields.scss",
-          "sha256": "b3cd9aceac937a183ff554fe75efb5d72e4317e522c702a89cf7a24614e7f088"
+          "sha256": "a57917019881ef5f633cef6ed9ac7e53fa009138a7657ea3d1a728fe666b0227"
         },
         {
           "path": "src/sass/components/forms/_file-input.scss",
-          "sha256": "cc856d49ae84dcae4970c75dd587194b69219a4f707ad95d4598d974eb491221"
+          "sha256": "ccc130c28cd0109ccef7e28eab6cbbe306d2a380405a1cf7091524a7868a258f"
         },
         {
           "path": "src/ts/behaviors/forms.ts",
-          "sha256": "c90046cd163d73d9046b0bfc2b4888ba87626704782f295054d9da63b3395d57"
+          "sha256": "57733061183d4f3adbedd53803d19f26c4d31ca2459cd1707a5266b8bff46d9a"
         },
         {
           "path": "src/ts/components/characterCounter.ts",
@@ -3368,19 +3439,19 @@
       "sources": [
         {
           "path": "src/sass/components/forms/_select.scss",
-          "sha256": "2e651be3951b59c99f827b190df52d302ffe5f548300767e653b9d09e7b18609"
+          "sha256": "d360405d6a315e4ff8be9936ac1bc0e7ec0c01ad300d177a87de54a096937bec"
         },
         {
           "path": "src/sass/components/_menu.scss",
-          "sha256": "64ef33e268c01dd8f24a9f28198b4ae982bcd2d9a4d7f59f7fc334e0d2916774"
+          "sha256": "fc7456249caec5118a379c9d56c7a7bfb211c147f5fd318bbcf8de6ea1d33654"
         },
         {
           "path": "src/ts/components/select.ts",
-          "sha256": "42977975bb11210ec87701131c3536809b3109e173ccffd724e89817d9561af7"
+          "sha256": "b375715a62baae95a7ba2c97d85d60ee2c619d5d261ee0abf9aea7ab28c3ae74"
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "e0fb0c0f6492652fdea2c7bf4189eabad261d5506ec93a22fac508da67d89660"
+          "sha256": "0ca7f4c0d80012adad3babdfc23005792dbaa2655c3fe5595bc9bcc7e2c35ce8"
         }
       ],
       "gaps": [
@@ -3474,7 +3545,7 @@
       "sources": [
         {
           "path": "src/sass/components/forms/_checkboxes.scss",
-          "sha256": "3fd662bcbca486e3b05413ce9b1ff9a10a8002e3e3ea6e853bd179e8fcfe2f09"
+          "sha256": "14bbdc5bf3c4db17635ff3f4b96848bbdbcaa005cfd8ba43c96525e1f503d536"
         }
       ],
       "gaps": [
@@ -3538,7 +3609,7 @@
       "sources": [
         {
           "path": "src/sass/components/forms/_radio-buttons.scss",
-          "sha256": "a8054892643f184463052ad5e566ee0d8c96d2f125f9dea433915eba5f3b7cf1"
+          "sha256": "ce6d4cf6fe3ea48faac681825a292744498d28ab87a23acc065ca90eabd42854"
         }
       ],
       "gaps": [
@@ -3646,7 +3717,7 @@
       "sources": [
         {
           "path": "src/sass/components/forms/_switches.scss",
-          "sha256": "3700fa309d0524fce4eff27c1f337d1ab03f592c567423a275cc9332144b2e8a"
+          "sha256": "3d9e047a1ecb7c987cc5645fbfc7d0a918a0ab73abc0ffdac99764c9f4656d70"
         }
       ],
       "gaps": [
@@ -3704,11 +3775,11 @@
       "sources": [
         {
           "path": "src/sass/components/forms/_slider.scss",
-          "sha256": "355a280e40d21326ee57cd1ff66dcdbc2f02fad5f9abde2fac50623b61d3b488"
+          "sha256": "1f5a04bd71c371d12b3beb016625e26a9e1e87aa194b3a9c90ca3b8863b22e8e"
         },
         {
           "path": "src/ts/components/slider.ts",
-          "sha256": "9d42da6e411ceb7604d851e9df2c56738de6ab5dd5e7b18343797c76af8526e3"
+          "sha256": "d6591284f074bb8774ca890c9e5d4f61b7cc1ca23f1d47b2e10a14c0d4cf6498"
         }
       ],
       "gaps": [
@@ -3790,11 +3861,11 @@
       "sources": [
         {
           "path": "src/sass/components/_chips.scss",
-          "sha256": "a906b31175533e454803c06bd6b47f141764792d2edd8f2add58c26c5308230f"
+          "sha256": "7edd85c5caada8feda941eb08894592aba439760eb38bb8cd49ff4a73c748958"
         },
         {
           "path": "src/ts/components/chips.ts",
-          "sha256": "6cb6af3f1b41f5634de1e1bf3a821ad080b006a922d7238466915c87f775f47d"
+          "sha256": "ef36c69c467151dc8f9bea2efc56c5c32523dd9d90f63d4431e913bb9557fb89"
         }
       ],
       "gaps": [
@@ -3873,19 +3944,19 @@
       "sources": [
         {
           "path": "src/sass/components/forms/_input-fields.scss",
-          "sha256": "b3cd9aceac937a183ff554fe75efb5d72e4317e522c702a89cf7a24614e7f088"
+          "sha256": "a57917019881ef5f633cef6ed9ac7e53fa009138a7657ea3d1a728fe666b0227"
         },
         {
           "path": "src/sass/components/_menu.scss",
-          "sha256": "8ad4eab498fa24199203070cf2b5792f6d61aa52e18b75770549ffcc7e0c64dc"
+          "sha256": "fc7456249caec5118a379c9d56c7a7bfb211c147f5fd318bbcf8de6ea1d33654"
         },
         {
           "path": "src/ts/components/autocomplete.ts",
-          "sha256": "355c7c33a06c563dfb48d3278b3cb21029652f59428e3894bc09a78b8455a813"
+          "sha256": "903c7add38e73c4e57ef936d48cf9306682e91da5afbd0635a3a063b482b58d0"
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
+          "sha256": "0ca7f4c0d80012adad3babdfc23005792dbaa2655c3fe5595bc9bcc7e2c35ce8"
         }
       ],
       "gaps": [
@@ -3960,15 +4031,15 @@
         },
         {
           "path": "src/ts/components/datepicker.ts",
-          "sha256": "44f9df3b5058be3a31d31fe318c2582a8839282438d17e04db08df17c51a185c"
+          "sha256": "12ae366428fc6629864055647a83f3e12905ab80dd5a6316db91cfd09c843c2b"
         },
         {
           "path": "src/ts/components/select.ts",
-          "sha256": "33d9285e89d231522070ada3a4cc8e917a620cee245d86c09a2f3e4161fec49e"
+          "sha256": "b375715a62baae95a7ba2c97d85d60ee2c619d5d261ee0abf9aea7ab28c3ae74"
         },
         {
           "path": "src/ts/plugins/dockedDisplayPlugin.ts",
-          "sha256": "8411242a17cbbb95fa9863270f471e03dc487474224994b952f67bc555e2eda7"
+          "sha256": "e1e47f2934eca4d71036b5a2ce9b42999aee7f3ab9da43a05e0a03ff443cef28"
         }
       ],
       "gaps": [
@@ -4055,7 +4126,7 @@
       "sources": [
         {
           "path": "src/sass/components/_timepicker.scss",
-          "sha256": "87330125fa818b3463a1c4e4f80535e7551d39bdd83795462ac8ec0cc092c439"
+          "sha256": "bcd6a37362d85914a6470b8076c2eec1ab46733c6b0b9f1ff673f255643de7e0"
         },
         {
           "path": "src/sass/components/_docked-display.scss",
@@ -4063,11 +4134,11 @@
         },
         {
           "path": "src/ts/components/timepicker.ts",
-          "sha256": "1f74375f4917dce48e955b25f482af13a06bdc9bd7e16f967b661c3168a3bf15"
+          "sha256": "f3b81df00b3a3146670f29350dbc154ef053c21800add11d2c109a99cfe182a6"
         },
         {
           "path": "src/ts/plugins/dockedDisplayPlugin.ts",
-          "sha256": "8411242a17cbbb95fa9863270f471e03dc487474224994b952f67bc555e2eda7"
+          "sha256": "e1e47f2934eca4d71036b5a2ce9b42999aee7f3ab9da43a05e0a03ff443cef28"
         }
       ],
       "gaps": [

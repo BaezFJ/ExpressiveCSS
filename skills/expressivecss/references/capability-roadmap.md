@@ -44,6 +44,7 @@ Last operator collection: 2026-09-18, Chromium 153.0.8010.12, passed; inputs cha
 | [Heatmap chart](#heatmap-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Radar chart](#radar-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Radial chart](#radial-chart) | implemented | source-reviewed | incomplete | 1 |
+| [Mixed chart](#mixed-chart) | implemented | source-reviewed | incomplete | 1 |
 | [Timeline](#timeline) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
@@ -606,6 +607,23 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 - not-recorded: [tests/radial-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/7b4ef7a970e34012cc13d4c39ec94d2c29007808/tests/radial-chart-browser.test.js): `chromium: radial chart draws rings, a legend and a total from its table`. Hidden table in the accessibility tree, the named plot and its role description, the square plot, ring radii, widths, colors and dash shares, tracks, an empty ring for a missing value, legend cells, separate instances from line charts, the gauge's box, half-circle dash, round track caps and <tfoot> total, no legend for one ring, thinner crowded rings, a value past the maximum, the sparkline size and focus in a flex row, and destroy restoring the table.
 - not-recorded: [tests/radial-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/7b4ef7a970e34012cc13d4c39ec94d2c29007808/tests/radial-chart-browser.test.js): `chromium: radial chart tooltip follows the pointer across the rings and the arrow keys`. Pointer distance to ring, gaps split between rings, the active ring, tooltip text with further columns, swatches in the ring color, opening direction, hiding in the middle, off the rings and below a gauge's base line, focus, all four arrows, End and Escape, and clockwise rings with swapped arrows in RTL. No spoken-output assertion.
+
+<a id="mixed-chart"></a>
+
+## Mixed chart
+
+**implemented within the stated scope.** Columns, smooth lines and areas drawn per series from a figure's data table by header class, with dashed lines, a second scale for end series with its own fixed range, x labels, a legend, a sparkline modifier, and a pointer and keyboard tooltip with points on the lines.
+
+Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/7b4ef7a970e34012cc13d4c39ec94d2c29007808/src/sass/abstracts/_mixins.scss), [src/sass/components/_mixed-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/7b4ef7a970e34012cc13d4c39ec94d2c29007808/src/sass/components/_mixed-chart.scss), [src/ts/components/columnChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/7b4ef7a970e34012cc13d4c39ec94d2c29007808/src/ts/components/columnChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/7b4ef7a970e34012cc13d4c39ec94d2c29007808/src/ts/components/lineChart.ts), [src/ts/components/mixedChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/7b4ef7a970e34012cc13d4c39ec94d2c29007808/src/ts/components/mixedChart.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns and SVG are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+
+- verification: Drawing, the hidden table, both scales, gaps, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+- feature: There are no y axis labels for either scale, no always-on line markers, no stacked columns and no straight-line option. Next: Add y axis labels to the shared chart parts if charts need them; name the units in the caption meanwhile.
+
+- not-recorded: [tests/mixed-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/7b4ef7a970e34012cc13d4c39ec94d2c29007808/tests/mixed-chart-browser.test.js): `chromium: mixed chart draws columns, areas and lines on two scales`. Hidden table, the named plot and its role description, column positions on the start scale with an empty slot for a gap, area and dashed line classes and colors, an area fill only on area series, a fixed end scale, a fitted end scale shared by two series, legend order, separate instances from column charts, a chart of gaps showing its table, and the tooltip and cursor points from the keyboard. No spoken-output assertion.
 
 <a id="timeline"></a>
 

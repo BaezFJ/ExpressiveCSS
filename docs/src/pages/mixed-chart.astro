@@ -1,0 +1,266 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "scales", label: "Second scale" },
+  { id: "areas", label: "Areas" },
+  { id: "cards", label: "Chart cards" },
+  { id: "data", label: "Values and colors" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const half = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+const months = [...half, "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const revenue = [62, 71, 68, 80, 76, 89];
+const target = [65, 65, 70, 70, 75, 75];
+const spend = [12, 15, 14, 18, 20, 22];
+const conversions = [340, 410, 390, 480, 520, 610];
+const traffic = [8.2, 9.4, 10.1, 9.8, 11.6, 12.4];
+const bounce = [58, 55, 52, 54, 49, 46];
+const tickets = [142, 158, 130, 175, 160, 190];
+const hours = [5.2, 4.8, 5.5, 4.3, 4.6, 3.9];
+const yearRevenue = [420, 460, 510, 480, 560, 610, 590, 640, 700, 680, 750, 820];
+const margin = [18, 19, 21, 20, 22, 24, 23, 25, 27, 26, 28, 30];
+const growth = [4, 5, 6, 5, 7, 8, 7, 9, 10, 9, 11, 13];
+---
+<DocsLayout page="mixed-chart">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;figure class="mixed-chart"&gt;</code> draws a
+          <code>&lt;table&gt;</code> as columns, lines and areas on one plot.
+          Each series header's class picks how it is drawn.
+        </p>
+        <p>
+          It takes the same markup as a <a href="line-chart.html">line
+          chart</a>. Give a header cell <code>column</code> to draw that series
+          as columns from zero, or <code>area</code> for a line with a fading
+          fill under it. Any other series is a line, and
+          <code>dashed</code> dashes it. Columns sit behind the lines. A legend
+          names the series, and a tooltip follows the pointer or the arrow keys
+          from row to row, with a point on each line.
+        </p>
+        <figure class="mixed-chart" data-markdown-ignore>
+          <figcaption>Revenue against target, $K</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th class="column">Revenue</th><th class="dashed">Target</th></tr></thead>
+            <tbody>{half.map((month, i) => <tr><th>{month}</th><td>${revenue[i]}</td><td>${target[i]}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="mixed-chart">
+  <figcaption>Revenue against target, $K</figcaption>
+  <table>
+    <thead>
+      <tr><th>Month</th><th class="column">Revenue</th><th class="dashed">Target</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>$62</td><td>$65</td></tr>
+      <tr><th>Feb</th><td>$71</td><td>$65</td></tr>
+      <!-- … -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.scales}>
+        <p>
+          Series share one scale unless their header has <code>end</code>.
+          Those are drawn against a second scale fitted to their own values,
+          so a series in other units or of another size still fills the plot.
+          Set <code>data-end-min</code> and <code>data-end-max</code> on the
+          figure to fix that scale, as <code>data-min</code> and
+          <code>data-max</code> fix the first. The chart draws no y axis, so
+          name both units in the caption or the headers.
+        </p>
+        <figure class="mixed-chart" data-markdown-ignore>
+          <figcaption>Ad spend ($K) and conversions</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th class="column">Spend</th><th class="end">Conversions</th></tr></thead>
+            <tbody>{half.map((month, i) => <tr><th>{month}</th><td>${spend[i]}</td><td>{conversions[i]}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="mixed-chart">
+  <figcaption>Ad spend ($K) and conversions</figcaption>
+  <table>
+    <thead>
+      <tr><th>Month</th><th class="column">Spend</th><th class="end">Conversions</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>$12</td><td>340</td></tr>
+      <!-- … -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.areas}>
+        <p>
+          An <code>area</code> series fills down to the bottom of the plot.
+          Here traffic has an area and the bounce rate is a dashed line on a
+          second scale from 0% to 100%.
+        </p>
+        <figure class="mixed-chart" data-end-min="0" data-end-max="100" data-markdown-ignore>
+          <figcaption>Traffic (thousands of visits) and bounce rate</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th class="area">Traffic</th><th class="dashed end">Bounce rate</th></tr></thead>
+            <tbody>{half.map((month, i) => <tr><th>{month}</th><td>{traffic[i]}</td><td>{bounce[i]}%</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="mixed-chart" data-end-min="0" data-end-max="100">
+  <figcaption>Traffic (thousands of visits) and bounce rate</figcaption>
+  <table>
+    <thead>
+      <tr><th>Month</th><th class="area">Traffic</th><th class="dashed end">Bounce rate</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>8.2</td><td>58%</td></tr>
+      <!-- … -->
+    </tbody>
+  </table>
+</figure>
+`} />
+        <p>
+          All three kinds fit on one plot. Several series can share the second
+          scale: here the margin and the growth rate are both percentages
+          from 0 to 35, while revenue keeps the first scale.
+        </p>
+        <figure class="mixed-chart" data-end-min="0" data-end-max="35" data-markdown-ignore>
+          <figcaption>Revenue ($K), profit margin and customer growth</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th class="column">Revenue</th><th class="area end">Profit margin</th><th class="dashed end">Customer growth</th></tr></thead>
+            <tbody>{months.map((month, i) => <tr><th>{month}</th><td>${yearRevenue[i]}</td><td>{margin[i]}%</td><td>{growth[i]}%</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="mixed-chart" data-end-min="0" data-end-max="35">
+  <figcaption>Revenue ($K), profit margin and customer growth</figcaption>
+  <table>
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th class="column">Revenue</th>
+        <th class="area end">Profit margin</th>
+        <th class="dashed end">Customer growth</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>$420</td><td>18%</td><td>4%</td></tr>
+      <!-- … -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.cards}>
+        <p>
+          A chart goes in a card with the figures it explains. The card adds
+          no chart styles; set the plot's height with
+          <code>--md-comp-mixed-chart-height</code>.
+        </p>
+        <article class="outlined" data-markdown-ignore>
+          <dl class="stats my-0">
+            <div><dt>Support tickets</dt><dd>190</dd><dd class="stat-change up">Resolved in 3.9h on average</dd></div>
+          </dl>
+          <figure class="mixed-chart" style="--md-comp-mixed-chart-height: 120px">
+            <figcaption class="visually-hidden">Tickets and resolution time by month</figcaption>
+            <table>
+              <thead><tr><th>Month</th><th class="area">Tickets</th><th class="dashed end">Hours to resolve</th></tr></thead>
+              <tbody>{half.map((month, i) => <tr><th>{month}</th><td>{tickets[i]}</td><td>{hours[i]}</td></tr>)}</tbody>
+            </table>
+          </figure>
+        </article>
+<Code code={`
+<article class="outlined">
+  <dl class="stats my-0">
+    <div>
+      <dt>Support tickets</dt>
+      <dd>190</dd>
+      <dd class="stat-change up">Resolved in 3.9h on average</dd>
+    </div>
+  </dl>
+  <figure class="mixed-chart" style="--md-comp-mixed-chart-height: 120px">
+    <figcaption class="visually-hidden">Tickets and resolution time by month</figcaption>
+    <table><!-- … --></table>
+  </figure>
+</article>
+`} />
+        <p>
+          <code>sparkline</code> is a 48px chart with no grid, labels, legend
+          or tooltip, for a trend beside a figure that already explains it.
+        </p>
+  </Section>
+  <Section {...S.data}>
+        <p>
+          Cells read as in a line chart: a cell's number is its
+          <code>data-value</code>, or its text without currency signs, percent
+          signs or grouping commas. The tooltip shows each cell's text as
+          written. A scale with columns always includes zero. Otherwise it
+          spans its values with a tenth to spare at each end, unless fixed by
+          the data attributes or the <code>min</code> and <code>max</code>
+          options. A gap breaks a line and leaves a column's slot empty.
+        </p>
+        <p>
+          Series take <code>primary</code>, <code>tertiary</code>,
+          <code>secondary</code> and <code>on-surface-variant</code> in
+          column order, whatever their kind; a fifth series repeats the first
+          color.
+        </p>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The table is the chart's text alternative. Give it a header row and
+          a header cell per row, and name the chart with a
+          <code>&lt;figcaption&gt;</code>. Since there is no y axis, put the
+          units in the caption, the headers or the cells. The drawn marks,
+          labels and legend are hidden from assistive technology.
+        </p>
+        <p>
+          The plot is one Tab stop named by the caption. Left and right move
+          between rows, Home and End jump to the ends and Escape hides the
+          tooltip. In a right-to-left page the rows and the arrows run right
+          to left. On a touch screen, tap a row to show it. The tooltip is a
+          polite live region, so a screen reader hears each row's values as it
+          moves. A sparkline is not focusable. Dashed lines stay apart from
+          solid ones without color, and in forced colors the marks keep their
+          colors so the legend still keys them.
+        </p>
+  </Section>
+  <Section {...S.javascript}>
+        <p>
+          <code>AutoInit()</code> starts every <code>.mixed-chart</code>. To
+          start one yourself, or to redraw a chart after changing its table,
+          call <code>MixedChart.init</code> again. It has the line chart's
+          methods and options; <code>min</code> and <code>max</code> apply to
+          the first scale.
+        </p>
+<Code code={`
+const chart = Expressive.MixedChart.init(document.querySelector('.mixed-chart'));
+chart.show(2);   // highlight the third row; -1 hides the tooltip
+chart.destroy(); // remove the drawing and show the table again
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.mixed-chart</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-mixed-chart-height</code></td><td>240px, the plot's height; 48px for a sparkline</td></tr>
+          <tr><td><code>--md-comp-mixed-chart-column-width</code></td><td>50% of each row's width</td></tr>
+          <tr><td><code>--md-comp-mixed-chart-shape</code></td><td>4px, a column's end radius</td></tr>
+          <tr><td><code>--md-comp-mixed-chart-line-width</code></td><td>3px; 2px for a sparkline</td></tr>
+          <tr><td><code>--md-comp-mixed-chart-grid-color</code></td><td><code>outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-mixed-chart-color-1</code> … <code>-4</code></td><td><code>primary</code>, <code>tertiary</code>, <code>secondary</code>, <code>on-surface-variant</code></td></tr>
+        </TokenTable>
+        <p>For a selective Sass build, include <code>"mixed-chart"</code> in <code>$components</code>.</p>
+  </Section>
+</PageBody>
+</DocsLayout>

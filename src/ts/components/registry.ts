@@ -45,6 +45,7 @@ export const AUTO_INIT_COMPONENTS = {
   HeatmapChart: { component: Components.HeatmapChart, selector: ".heatmap-chart" },
   RadarChart: { component: Components.RadarChart, selector: ".radar-chart" },
   RadialChart: { component: Components.RadialChart, selector: ".radial-chart" },
+  MixedChart: { component: Components.MixedChart, selector: ".mixed-chart" },
   CommandPalette: {
     component: Components.CommandPalette,
     selector: "dialog.command-palette",
