@@ -1240,6 +1240,24 @@
         }
       ]
     },
+    "radial-chart": {
+      "status": "enforced",
+      "note": "Added with the radial chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn rings, total and legend are aria-hidden.",
+      "rules": [
+        {
+          "id": "radial-chart-is-a-figure-with-a-table",
+          "kind": "forbid",
+          "selector": ".radial-chart:not(figure:has(> table))",
+          "message": "Write .radial-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript."
+        },
+        {
+          "id": "radial-chart-has-a-caption",
+          "kind": "forbid",
+          "selector": ".radial-chart:not(:has(> figcaption))",
+          "message": "Name a .radial-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart."
+        }
+      ]
+    },
     "bar-chart": {
       "status": "enforced",
       "note": "Added with the bar chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn bars, values, labels and legend are aria-hidden.",

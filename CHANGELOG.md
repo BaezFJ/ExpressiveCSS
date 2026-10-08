@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.radial-chart` draws a `<figure>`'s data table as rings, one per row,
+  filled clockwise from the top as a share of `data-max` (100 by default),
+  with a legend, tracks, and a tooltip that follows the pointer across the
+  rings or the arrow keys. `gauge` draws half circles, a `<tfoot>` row shows
+  in the middle, and `sparkline` is a small chart. Ring width, gap and track
+  color are tokens.
 - `.heatmap-chart` draws a `<figure>`'s data table as a grid of cells shaded
   from the lowest value to the highest, with the row headers beside it, the
   column headers below and a scale naming the lowest and highest cells. A

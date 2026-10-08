@@ -384,6 +384,13 @@ export const NAV: DocsGroup[] = [
           "Several measures on one scale drawn as shapes on spokes from a data table, one shape per series.",
       },
       {
+        id: "radial-chart",
+        label: "Radial chart",
+        route: "/radial-chart.html",
+        description:
+          "Progress toward a goal drawn as rings from a data table, as concentric rings or a half-circle gauge.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",

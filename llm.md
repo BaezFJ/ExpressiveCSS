@@ -93,6 +93,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Pie chart
 - Heatmap chart
 - Radar chart
+- Radial chart
 
 ### Forms
 
@@ -298,6 +299,7 @@ Opt an element out when it needs manual options:
 | `PieChart` | `.pie-chart` |
 | `HeatmapChart` | `.heatmap-chart` |
 | `RadarChart` | `.radar-chart` |
+| `RadialChart` | `.radial-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
@@ -4294,6 +4296,48 @@ A `<figure class="radar-chart">` takes the same `<figcaption>` and `<table>` as 
 
 ---
 
+## Radial chart
+
+Progress toward a goal drawn as rings from a data table, as concentric rings or a half-circle gauge.
+
+A `<figure class="radial-chart">` takes the same `<figcaption>` and `<table>` as a column chart. `AutoInit()` draws each row of the first value column as a ring, outermost first, filled clockwise from the top as a share of `data-max` (100 by default), with a legend of the rows and their cells when there is more than one, and a tooltip that follows the pointer across the rings. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="radial-chart gauge" data-max="25">
+  <figcaption>Team capacity</figcaption>
+  <table>
+    <thead>
+      <tr><th>Seats</th><th>Count</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Filled</th><td>18</td></tr>
+      <tr><th>Offered</th><td>21</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><th>Total seats</th><td>25</td></tr>
+    </tfoot>
+  </table>
+</figure>
+```
+
+- The plot is a square as wide as `--md-comp-radial-chart-height`, centered in the figure; the legend lists the rows below it. Each ring has a track behind it in `--md-comp-radial-chart-track-color`; `transparent` hides the tracks.
+- A `<tfoot>` row shows in the middle, its value over its label, and is not a ring. `gauge` draws half circles over the middle, filling from the left, with the total on the base line. `sparkline` is a 48px chart with no legend or tooltip and is not focusable.
+- Cells read as in the column chart. `data-max` must be above zero; otherwise the `max` option or 100 applies. Values past it close the ring; zero, negative and non-numeric cells leave only the track, and their rows stay in the legend and tooltip. Further value columns add lines to the tooltip. Rings take four colors, then repeat. Rings and their gaps thin together when there are too many to leave a middle.
+- The plot is one Tab stop named by the caption. Down and right arrows move to the next ring inwards, up and left to the one before, wrapping between the innermost ring and the outermost; Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped ring. In a right-to-left page the rings and the arrows still run clockwise.
+- After changing the table or the ring tokens, call `Expressive.RadialChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; the `max` option is the maximum without `data-max`, and `min` does not apply.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-radial-chart-height` | 240px, the diameter (sparkline 48px) |
+| `--md-comp-radial-chart-thickness` | 8, a ring's width in hundredths of the diameter |
+| `--md-comp-radial-chart-gap` | 2, between rings, in the same units |
+| `--md-comp-radial-chart-track-color` | `surface-container-highest` |
+| `--md-comp-radial-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -4405,6 +4449,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `PieChart` | `.pie-chart` |
 | `HeatmapChart` | `.heatmap-chart` |
 | `RadarChart` | `.radar-chart` |
+| `RadialChart` | `.radial-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |

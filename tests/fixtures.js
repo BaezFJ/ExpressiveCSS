@@ -61,6 +61,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<figure class="pie-chart"><figcaption>Revenue</figcaption><table><thead><tr><th>Plan</th><th>Revenue</th></tr></thead><tbody><tr><th>Basic</th><td>1</td></tr><tr><th>Premium</th><td>2</td></tr></tbody></table></figure>`,
   },
   {
+    name: "RadialChart",
+    selector: ".radial-chart",
+    html: `<figure class="radial-chart"><figcaption>Goals</figcaption><table><thead><tr><th>Goal</th><th>Progress</th></tr></thead><tbody><tr><th>Sales</th><td>80%</td></tr><tr><th>Signups</th><td>60%</td></tr></tbody></table></figure>`,
+  },
+  {
     name: "BarChart",
     selector: ".bar-chart",
     html: `<figure class="bar-chart"><figcaption>Revenue</figcaption><table><thead><tr><th>Month</th><th>Revenue</th></tr></thead><tbody><tr><th>Jan</th><td>1</td></tr><tr><th>Feb</th><td>2</td></tr></tbody></table></figure>`,

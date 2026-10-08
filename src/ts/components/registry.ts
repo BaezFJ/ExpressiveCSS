@@ -44,6 +44,7 @@ export const AUTO_INIT_COMPONENTS = {
   PieChart: { component: Components.PieChart, selector: ".pie-chart" },
   HeatmapChart: { component: Components.HeatmapChart, selector: ".heatmap-chart" },
   RadarChart: { component: Components.RadarChart, selector: ".radar-chart" },
+  RadialChart: { component: Components.RadialChart, selector: ".radial-chart" },
   CommandPalette: {
     component: Components.CommandPalette,
     selector: "dialog.command-palette",
