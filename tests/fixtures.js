@@ -96,6 +96,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<dialog class="command-palette" aria-label="Commands"><input type="search" aria-label="Search commands"><ul><li><button type="button">New file</button></li></ul></dialog>`,
   },
   {
+    name: "Questionnaire",
+    selector: "form.questionnaire",
+    html: `<form class="questionnaire" aria-label="Survey"><fieldset><legend>Pick one</legend><label><input type="radio" name="q" value="a" required>A</label></fieldset><footer><button type="button" value="next">Next</button><button type="submit">Submit</button></footer></form>`,
+  },
+  {
     name: "Lightbox",
     selector: ".lightboxed",
     html: `<img class="lightboxed" tabindex="0" role="button" width="100" src="http://localhost/1.jpg" alt="Sample">`,

@@ -305,6 +305,7 @@ Opt an element out when it needs manual options:
 | `MixedChart` | `.mixed-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
+| `Questionnaire` | `form.questionnaire` |
 | `Datepicker` | `.datepicker, .date-picker` |
 | `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
@@ -4636,6 +4637,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `MixedChart` | `.mixed-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
+| `Questionnaire` | `form.questionnaire` |
 | `Datepicker` | `.datepicker, .date-picker` |
 | `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
@@ -6552,6 +6554,93 @@ The HTML `disabled` attribute on a fieldset disables every control inside it. Th
   <div class="field">…</div>
 </fieldset>
 ```
+
+---
+
+## Questionnaire
+
+A form that asks one question at a time, with single and multiple choice, free text and skippable questions.
+
+A `<form class="questionnaire">` holds one `<fieldset>` per question and a `<footer>` of buttons. The `<legend>` is the prompt and a `<p>` under it describes the question. Answers are ordinary radio buttons, checkboxes or text fields; a `<small>` inside a choice's label describes that choice, and choices draw as outlined rows that fill with `secondary-container` when selected. A `<p class="questionnaire-error">` in a question holds its error text. The footer buttons are marked by `value`: `previous`, `skip` and `next`, each `type="button"`, plus a submit button. `AutoInit()` starts every `form.questionnaire`.
+
+The component adds a progress row ("Question 1 of 3" and a `<progress>` named by that text), hides every question but the current one with `hidden`, and shows only the buttons that apply: Back after the first question, Skip on an optional question, Next before the last one and Submit on the last. A question is required when one of its controls is `required`; `data-required` on a fieldset of checkboxes requires at least one. Next checks the shown question with the browser's validation. When it fails, the fieldset gets `invalid`, its controls get `aria-invalid="true"`, the error shows and joins the description in the fieldset's `aria-describedby`, and focus moves to the control to fix. Answering clears it. A question without its own error shows the browser's validation message, or `requiredMessage`. Skip clears the shown answer, firing `change`, and moves on. Enter in a field moves to the next question, and on the last one submits. Submitting, with the button, Enter or `requestSubmit()`, checks every question and opens the first that still needs an answer. Only enabled checkboxes count toward `data-required`, since a disabled one is not sent. After Next, Back or Skip, focus moves to the selected answer or the first control.
+
+A disabled fieldset is skipped and left out of the count, so a page branches by enabling or disabling questions from earlier answers. The form submits normally: read the answers with `FormData`, using `getAll()` for checkboxes. Without JavaScript every question shows at once, the navigation buttons stay hidden and the submit button sends the form; a `data-required` group is not checked then. Name the form with `aria-label` or `aria-labelledby`.
+
+```html
+<form class="questionnaire" aria-label="Product survey">
+  <fieldset>
+    <legend>What should we prototype next?</legend>
+    <p>Pick the direction you want to explore first.</p>
+    <label><input type="radio" name="direction" value="search" required>Search<small>Find any page in two keystrokes</small></label>
+    <label><input type="radio" name="direction" value="sharing" required>Sharing</label>
+    <p class="questionnaire-error">Choose an answer to continue.</p>
+  </fieldset>
+  <fieldset data-required>
+    <legend>Where do you use the app?</legend>
+    <label><input type="checkbox" name="platforms" value="web">Web</label>
+    <label><input type="checkbox" name="platforms" value="mobile">Mobile</label>
+    <p class="questionnaire-error">Choose at least one platform.</p>
+  </fieldset>
+  <fieldset>
+    <legend>Anything else we should know?</legend>
+    <div class="field">
+      <textarea id="notes" name="notes" class="expressive-textarea" placeholder=" "></textarea>
+      <label for="notes">Notes</label>
+    </div>
+  </fieldset>
+  <footer>
+    <button type="button" class="text" value="previous">Back</button>
+    <button type="button" class="text" value="skip">Skip</button>
+    <button type="button" value="next">Next</button>
+    <button type="submit">Submit</button>
+  </footer>
+</form>
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `progressLabel` | String | `'Question {current} of {total}'` | Text of the progress row. `{current}` and `{total}` become the question number and count. `data-progress-label` on the form sets it. |
+| `requiredMessage` | String | `'Choose an answer to continue.'` | Error for a question with no `.questionnaire-error` when the browser has no message, as for a `data-required` group. |
+
+### Properties
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `items` | Array | The fieldsets that apply, in order. |
+| `index` | Number | Position of the shown question in `items`. |
+
+### Methods
+
+#### .next()
+
+Checks the shown question and moves to the next one if it is answered.
+
+#### .previous()
+
+Moves to the previous question.
+
+#### .skip()
+
+Clears the answer to the shown question and moves to the next one.
+
+#### .goTo(index)
+
+Shows the question at `index` without checking the current one, for example to resume a saved questionnaire.
+
+#### .destroy()
+
+Shows every question and removes the progress row, ids, states and listeners the component added.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-questionnaire-choice-shape` | 12px |
+| `--md-comp-questionnaire-choice-outline-color` | `outline-variant` |
+| `--md-comp-questionnaire-choice-selected-color` | `secondary-container` |
 
 ---
 

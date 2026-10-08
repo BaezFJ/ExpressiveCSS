@@ -25,6 +25,7 @@ export type * from './components/heatmapChart';
 export type * from './components/radarChart';
 export type * from './components/radialChart';
 export type * from './components/mixedChart';
+export type * from './components/questionnaire';
 export type * from './components/datepicker';
 export type * from './components/menu';
 export type * from './components/lightbox';

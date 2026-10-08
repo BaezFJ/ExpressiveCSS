@@ -14,6 +14,7 @@ export { Carousel } from "./carousel";
 export { CharacterCounter } from "./characterCounter";
 export { Chips } from "./chips";
 export { CommandPalette } from "./commandPalette";
+export { Questionnaire } from "./questionnaire";
 export { LineChart } from "./lineChart";
 export { ColumnChart } from "./columnChart";
 export { BarChart } from "./barChart";

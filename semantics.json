@@ -1224,6 +1224,32 @@
         }
       ]
     },
+    "questionnaire": {
+      "status": "enforced",
+      "note": "Added with the questionnaire component. A native form of fieldsets; the component shows one question at a time and owns the progress row, hidden questions, invalid state and focus.",
+      "rules": [
+        {
+          "id": "questionnaire-is-a-form",
+          "kind": "forbid",
+          "selector": ".questionnaire:not(form)",
+          "fragmentSafe": true,
+          "message": "Write the questionnaire as <form class=\"questionnaire\">. The form sends the answers, runs the browser's validation and still works without JavaScript."
+        },
+        {
+          "id": "questionnaire-is-named",
+          "kind": "require-accessible-name",
+          "selector": "form.questionnaire",
+          "message": "Name the questionnaire with aria-label or aria-labelledby so it is announced as a form."
+        },
+        {
+          "id": "questionnaire-navigation-does-not-submit",
+          "kind": "forbid",
+          "selector": ".questionnaire > footer > button:is([value=previous], [value=skip], [value=next]):not([type=button])",
+          "fragmentSafe": true,
+          "message": "Give the Back, Skip and Next buttons type=\"button\". A button without a type submits the form, so pressing one before the component starts would send it early."
+        }
+      ]
+    },
     "radar-chart": {
       "status": "enforced",
       "note": "Added with the radar chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn shapes, labels and legend are aria-hidden.",

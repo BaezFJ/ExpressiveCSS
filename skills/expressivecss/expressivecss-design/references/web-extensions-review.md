@@ -426,3 +426,17 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified. Next check: Check the Highlight ring in Windows forced colors and confirm with a screen reader that only the wrapped element is announced.
 
 Mapped browser scope: Ring padding and corners around a button and a card, a running registered angle, its reverse in RTL, the glow halo, the stop under reduced motion, a stepped turn and a 0deg resting ring in a shadow-only load, and no aura nodes in the accessibility tree. No spoken-output assertion.
+
+## [Questionnaire](../../components/questionnaire.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Name each question with a legend, show one error per question next to it and move focus to the control to fix, keep hidden questions out of the tab order, let optional questions be skipped and keep the form usable without JavaScript.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. Native fieldsets, controls and constraint validation carry the semantics and the answers; the framework shows one question at a time, adds the progress row, Skip and the error state, and moves focus.
+
+Verification gap: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Answer a questionnaire with a screen reader in each engine and confirm the question, its description, errors and the progress are announced; check forced colors and enlarged text.
+
+Mapped browser scope: One question shown, the buttons that apply, the progress text and named progressbar, aria-describedby with the description and error, required radio and data-required checkbox errors with focus and aria-invalid, errors clearing on answer, a generated requiredMessage error, a question enabled mid-way, Enter moving on instead of submitting, Back focus, Skip clearing an answer and firing change, submit opening the first unanswered question, FormData without a disabled question and destroy restoring the plain form; a checked disabled checkbox not answering a data-required group, and requestSubmit() opening an unanswered group or a hidden required field. No spoken-output assertion.

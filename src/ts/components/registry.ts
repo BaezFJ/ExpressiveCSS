@@ -50,6 +50,10 @@ export const AUTO_INIT_COMPONENTS = {
     component: Components.CommandPalette,
     selector: "dialog.command-palette",
   },
+  Questionnaire: {
+    component: Components.Questionnaire,
+    selector: "form.questionnaire",
+  },
   Datepicker: {
     component: Components.Datepicker,
     selector: ".datepicker, .date-picker",
