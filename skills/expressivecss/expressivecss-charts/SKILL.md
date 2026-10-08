@@ -11,7 +11,7 @@ That design decides most of the work. A good chart here is a good table first: c
 
 ## When to use
 
-Use this guide for any chart, graph, sparkline, gauge or KPI tile in a page that uses ExpressiveCSS, including dashboards and analytics pages. Pair it with [Usage](../expressivecss-usage/SKILL.md) for page layout and [Theming](../expressivecss-theming/SKILL.md) when changing brand colors. The per-chart guides in [components](../components/) hold the generated contract and rule IDs.
+Use this guide for any chart, graph, sparkline, gauge or KPI tile in a page that uses ExpressiveCSS, including dashboards and analytics pages. Pair it with [Usage](../expressivecss-usage/SKILL.md) for page layout and [Theming](../expressivecss-theming/SKILL.md) when changing brand colors. The per-chart guides in [components](../components/) hold the generated contract and rule IDs. For a complete dashboard or reporting page, with its shell, scope controls, card system and loading states, also read the [dashboard guide](../expressivecss-dashboard/SKILL.md).
 
 ## Do not use when
 
