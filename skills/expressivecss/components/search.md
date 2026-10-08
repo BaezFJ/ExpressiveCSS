@@ -9,9 +9,7 @@ Component ID: `search`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -61,9 +59,5 @@ The Search section of the [API reference](https://www.expressivecss.com/llm.md) 
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `search-view-not-a-composite-widget`: The search view takes no composite role. Its contents are links and buttons reached with Tab; the combobox and listbox belong to the Autocomplete on the bar's input.
 - `search-bar-holds-a-search-input`: The bar's control is a search input. `type="search"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it. The selector names `.search-bar` and deliberately not the `.searchbar` alias: pre-1.0 markup of that shape predates the requirement, and holding old markup to a rule it could not have known is how a promise of an additive rename gets broken.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

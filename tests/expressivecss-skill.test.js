@@ -84,7 +84,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(bodyStart > 4, 'frontmatter is not closed');
     assert.match(frontmatter, /^name: expressivecss$/m);
     assert.match(frontmatter, /^  author: BaezFJ$/m);
-    assert.match(frontmatter, /^  version: "0\.8\.0"$/m);
+    assert.match(frontmatter, /^  version: "0\.9\.0"$/m);
 
     const description = frontmatter.match(/^description: (.+)$/m)?.[1];
     assert.ok(description, 'description is missing');
@@ -993,7 +993,8 @@ describe('the ExpressiveCSS agent skill', () => {
     // the KPI row at 38,601 bytes (+317); the questionnaire row at 39,098 bytes (+497);
     // the message scroller row at 39,414 bytes (+316); the skill best-practices
     // pass at 38,932 bytes (-482); the marquee row at 39,310 bytes (+378);
-    // the rich text editor row at 39,600 bytes (+290).
+    // the rich text editor row at 39,600 bytes (+290); the second skill
+    // best-practices pass at 39,580 bytes (-20).
     assert.ok(bytes <= 39600, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
@@ -1006,9 +1007,11 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(readGuide('runtime'), /before and after.*retained.*after teardown/is);
     assert.match(media, /LCP image.*do not lazy-load/i);
     assert.match(media, /loading="lazy".*offscreen/i);
-    assert.match(readGuide('design'), /same route.*cache state.*network\/CPU/is);
-    assert.match(readGuide('design'), /ordinary markup work does not require a full audit/i);
-    assert.match(readGuide('design'), /not field Core Web Vitals/i);
+    const performance = readFileSync(new URL('expressivecss-design/references/performance.md', skillDirectory), 'utf8');
+    assert.match(readGuide('design'), /\]\(\.\/references\/performance\.md\)/);
+    assert.match(performance, /same route.*cache state.*network\/CPU/is);
+    assert.match(performance, /ordinary markup work does not require a full audit/i);
+    assert.match(performance, /not field Core Web Vitals/i);
     assert.doesNotMatch(research, /fonts are external assets.*not shipped/i);
   });
 

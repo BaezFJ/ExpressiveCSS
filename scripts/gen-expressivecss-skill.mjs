@@ -309,7 +309,6 @@ function renderGuide(component, page, section, rules, provenance) {
   if (provenance.matchingTag) {
     links.push(`[Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/${provenance.matchingTag})`);
   }
-  const renderedSources = CONTRACT_SOURCES.map((source) => `\`${source}\``).join(', ');
   const adaptive = component.adaptive.map((item) => {
     const target = item.component ? ` [${item.component}](./${item.component}.md)` : '';
     return `- ${item.window} ${item.basis}: ${item.kind}${target}. ${item.reason}`;
@@ -353,7 +352,7 @@ function renderGuide(component, page, section, rules, provenance) {
     ? `#### Also documented\n\nThe ${component.heading} section of the [API reference](https://www.expressivecss.com/llm.md) also covers ${subsections.join(', ')}.\n\n`
     : '';
 
-  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${selectionExample}${adaptive ? `${adaptive}\n\n` : ''}#### Material mapping\n\n${mappingLines}\n\n#### Contract\n\n${contractSummary(section, page.description)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n${api}${alsoDocumented}#### Rules\n\nEnd-state invariants from \`semantics.json\`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.\n\n${ruleLines}\n\n${guideCheckSection}Read the target-version documentation before using anything not shown here; it and the source override this summary.\n`;
+  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${selectionExample}${adaptive ? `${adaptive}\n\n` : ''}#### Material mapping\n\n${mappingLines}\n\n#### Contract\n\n${contractSummary(section, page.description)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n${api}${alsoDocumented}#### Rules\n\n${ruleLines}\n${guideCheckSection ? `\n${guideCheckSection.trimEnd()}\n` : ''}`;
 }
 
 async function generatedGuides() {

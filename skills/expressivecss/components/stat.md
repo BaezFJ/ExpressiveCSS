@@ -9,9 +9,7 @@ Component ID: `stat`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -64,8 +62,4 @@ The Stat section of the [API reference](https://www.expressivecss.com/llm.md) al
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `stats-are-a-description-list`: Write .stats as a <dl> with a <dt> label and <dd> value per tile. Without the pairing a screen reader reads a run of numbers with nothing to say what each one is.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

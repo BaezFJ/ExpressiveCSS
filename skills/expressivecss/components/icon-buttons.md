@@ -9,9 +9,7 @@ Component ID: `icon-buttons`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -65,11 +63,7 @@ The Icon buttons section of the [API reference](https://www.expressivecss.com/ll
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `icon-button-is-a-control`: An icon button is a control: <button>, or <a href> when it navigates. A <div>, or an anchor with no href, is neither focusable nor announced.
 - `icon-button-link-is-not-fake-disabled`: A link cannot be disabled by a class. `pointer-events: none` stops the pointer and nothing else, so this stays in the tab order and still navigates on Enter - it looks inert and is not. Drop the href, or the link.
 - `icon-button-icon-hidden`: The ligature is real text and is read out verbatim. The icon in an icon button is decoration - the control carries the name - so it is aria-hidden="true".
 - `icon-button-is-named`: The icon is hidden from assistive technology, so an icon button has nothing left to be named by. Give it an aria-label.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

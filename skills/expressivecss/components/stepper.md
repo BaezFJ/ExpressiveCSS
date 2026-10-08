@@ -9,9 +9,7 @@ Component ID: `stepper`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -58,11 +56,7 @@ The Stepper section of the [API reference](https://www.expressivecss.com/llm.md)
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `stepper-is-an-ordered-list`: Write a stepper as <ol class="stepper">. The order is the content: an ordered list announces how many steps there are and which one each is.
 - `stepper-current-is-a-step`: Mark the current step with aria-current="step". "page" or "true" tells assistive technology something else.
 - `stepper-has-one-current-step`: Only one step is current. Mark finished steps with .complete instead.
 - `stepper-step-is-not-error-colored`: Mark a step that needs attention with .invalid. .error is the error color utility: it paints the whole step red and is not spoken.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

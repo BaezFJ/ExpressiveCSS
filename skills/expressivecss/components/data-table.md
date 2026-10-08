@@ -9,9 +9,7 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -76,12 +74,8 @@ The Data table section of the [API reference](https://www.expressivecss.com/llm.
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `data-table-wraps-the-table`: Put .data-table on a <div> around the <table>. The wrapper scrolls; a table made to scroll itself needs display:block, which drops its table role in some engines.
 - `data-table-sort-is-on-a-header`: aria-sort belongs on the column header cell (<th>), not on the button inside it or on a data cell. Assistive technology reads the sort state from the header.
 - `data-table-row-is-not-selected`: aria-selected is not valid on a row of a plain table. It belongs to role="grid" and its keyboard contract. Select a row with a labelled checkbox in its first cell.
 - `data-table-scroll-region-is-a-region`: A focusable scroll wrapper needs role="region" so its name is announced. aria-label is not allowed on a plain div.
 - `data-table-scroll-region-is-named`: Name a focusable scroll wrapper with aria-label, or aria-labelledby pointing at the table caption, so keyboard users know what they are scrolling.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.
