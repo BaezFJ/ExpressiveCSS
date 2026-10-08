@@ -278,6 +278,22 @@ Feature gap: There are no labels outside the pie, and rows past six reuse the co
 
 Mapped browser scope: Hidden table in the accessibility tree, the named plot, the square plot, slice geometry and colors, gap lines, legend cells and shares, separate instances from line charts, the donut hole and total, values, the sparkline size and focus, destroy restoring the table, pointer angle and keyboard tooltip movement, the active slice and RTL. No spoken-output assertion.
 
+## [Heatmap chart](../../components/heatmap-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, keep values readable without telling shades apart, and let a keyboard reach every cell the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the shaded grid, row and column labels, values, scale and tooltip from the page's table with the line chart's runtime; the page owns the data, its formatting, the short labels and the caption.
+
+Verification gap: Drawing, the hidden table, cell shades and gaps, the fixed scale, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+Feature gap: A wide grid narrows its cells to fit instead of scrolling, and the scale is one color with no diverging or stepped option. Next check: Add a scrolling layout that keeps the tooltip visible if year-long grids must work on phones, and a diverging scale if charts need a midpoint.
+
+Mapped browser scope: Hidden table in the accessibility tree, the named plot, cell shades and gaps, the row height, row and column labels, short and running labels, the scale and its ends, the fixed scale, values and their text color, page overflow, destroy restoring the table, pointer and keyboard movement round the grid, the active cell and RTL. No spoken-output assertion.
+
 ## [Timeline](../../components/timeline.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

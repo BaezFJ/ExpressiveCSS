@@ -370,6 +370,13 @@ export const NAV: DocsGroup[] = [
           "Parts of a whole drawn as slices from a data table, as a pie or a donut with its total.",
       },
       {
+        id: "heatmap-chart",
+        label: "Heatmap chart",
+        route: "/heatmap-chart.html",
+        description:
+          "A data table drawn as a grid of cells shaded by value, for patterns across two categories such as days and hours.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",

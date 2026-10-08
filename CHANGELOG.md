@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.heatmap-chart` draws a `<figure>`'s data table as a grid of cells shaded
+  from the lowest value to the highest, with the row headers beside it, the
+  column headers below and a scale naming the lowest and highest cells. A
+  tooltip follows the pointer or the arrow keys from cell to cell. `values`
+  writes each cell's text on it in black or white, whichever reads on the
+  shade; `data-label` shortens or hides a header on the grid; `data-min` and
+  `data-max` fix the scale.
 - `.pie-chart` draws a `<figure>`'s data table as slices of a whole,
   clockwise from the top, with a legend of each row's cell and share and a
   tooltip that follows the pointer round the pie or the arrow keys. `donut`
@@ -107,6 +114,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The default theme seed is Mist Iris (`#c6a0f6`). The docs picker uses the
   same default for its initial value and Reset action. Set `--md-source` or
   Sass `$md-source` to retain an application's existing brand color.
+
+### Fixed
+
+- A focused line, column, bar or pie chart no longer cancels Escape when its
+  tooltip is already hidden, so a dialog or sheet around the chart can close.
+  Pressing a chart's plot away from its marks focuses it without showing the
+  first row's tooltip; keyboard focus still shows it.
 
 ## [0.12.0] - 2026-10-01
 
