@@ -4,6 +4,12 @@ Reviewed on 2026-09-13. Google evidence covers the linked rendered prose and tex
 
 Read the linked component guide for the ExpressiveCSS 0.12.0 markup and API contract. RoutePlate runtime assets may differ. The [capability roadmap](../../references/capability-roadmap.md) records source pins and scoped browser results.
 
+## Contents
+
+Menu, Tabs, Search, Select, Autocomplete, Date picker, Time picker, Checkboxes, Radio buttons, Switches, Slider, Chips, Fieldsets.
+
+Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
+
 ## [Menu](../../components/menu.md)
 
 Relationship: component. Sources: [overview](https://m3.material.io/components/menus/overview), [specs](https://m3.material.io/components/menus/specs), [guidelines](https://m3.material.io/components/menus/guidelines), [accessibility](https://m3.material.io/components/menus/accessibility).

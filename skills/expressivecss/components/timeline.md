@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Cart, Shipping and Payment in a checkout are steps the user still has to finish, so they belong in a stepper. A timeline would present them as things that already happened.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Marker and line geometry in LTR and RTL and the icon variant are
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#timeline).
 
 #### Contract
-
-Events in order, each with a time, a title and details, joined by a line.
 
 An `<ol class="timeline">` lists events in the order the page chooses, newest or oldest first. Each `<li>` is an event: an optional `<time>` with a `datetime`, a heading and supporting `<p>` text. A dot marks each event and a line joins it to the next. A leading icon as the first child replaces the dot with a tonal circle; hide it from assistive technology. CSS only; there is no JavaScript.
 
@@ -66,12 +62,9 @@ The Timeline section of the [API reference](https://www.expressivecss.com/llm.md
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `timeline-is-an-ordered-list`: Write a timeline as <ol class="timeline">. The events have an order, and an ordered list says so to assistive technology.
 - `timeline-time-is-machine-readable`: Give each <time> a datetime value. "9:12 AM" or "Yesterday" has no date a script, a translation tool or a reader in another time zone can use.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

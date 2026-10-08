@@ -4,6 +4,12 @@ Reviewed on 2026-09-13. Google evidence covers the linked rendered prose and tex
 
 Read the linked component guide for the ExpressiveCSS 0.12.0 markup and API contract. RoutePlate runtime assets may differ. The [capability roadmap](../../references/capability-roadmap.md) records source pins and scoped browser results.
 
+## Contents
+
+App bar, Icon buttons, Button groups, Split button, Floating action button, Panes, Drag handle, Bottom sheet, Side sheet.
+
+Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
+
 ## [App bar](../../components/app-bar.md)
 
 Relationship: component. Sources: [overview](https://m3.material.io/components/app-bars/overview), [specs](https://m3.material.io/components/app-bars/specs), [guidelines](https://m3.material.io/components/app-bars/guidelines), [accessibility](https://m3.material.io/components/app-bars/accessibility).

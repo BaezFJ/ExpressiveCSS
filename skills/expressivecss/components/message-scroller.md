@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
 
 Example: A support chat that streams replies needs a message scroller so the reply stays in view; a fixed list of three FAQ answers does not.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -39,11 +37,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A chat scroll container that anchors turns, follows streamed replies and keeps its place as history loads.
-
 A `.message-scroller` frame holds a `.message-scroller-viewport` and an optional `.message-scroller-button`. Every child of the viewport is one item, usually a `.message` or `.message-group`. The frame fills its parent, so the parent sets the height. `AutoInit()` starts every `.message-scroller`.
 
 While the reader is at the end, the viewport follows new content, including text streamed into the last message. Scrolling toward the start with the wheel, touch, the scrollbar or the Up, Page Up and Home keys stops following; reaching the end again, or pressing the button, resumes it. Mark the message that starts a turn with `data-scroll-anchor`, usually each of the user's messages. When an anchor is appended, the viewport scrolls it to the top with 64px of the previous message in view, and blank space below it makes room for the reply until the reply fills the viewport. Older messages inserted at the start keep the visible message in place, and anchors among them do not scroll.
+
+Name the viewport with `aria-label` and give it `tabindex="0"` so the keyboard can scroll it. On a conversation that receives messages, make the viewport the log with `role="log"` and `aria-relevant="additions"`, and set `aria-busy="true"` on it while a reply streams. The button is inert while the viewport is at the end; give it an `aria-label`.
 
 #### Syntax
 
@@ -86,11 +84,8 @@ The Message scroller section of the [API reference](https://www.expressivecss.co
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `message-scroller-viewport-is-named`: Name the viewport with aria-label. It is a focusable scroll region, and a screen reader announces the name when focus lands on it.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

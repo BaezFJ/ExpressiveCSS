@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
@@ -80,7 +80,7 @@ The Floating Action Button section of the [API reference](https://www.expressive
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `icon-only-control-is-named`: Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
 - `fab-no-small-variant`: The 40dp small FAB has been removed. Use circle extra for a 56dp FAB.
@@ -89,7 +89,4 @@ The following are end-state semantic invariants. The rule IDs come directly from
 - `fab-menu-not-a-composite-widget`: The FAB menu takes no composite role; its actions are reached with Tab, not arrow keys.
 - `fab-menu-expanded-is-not-authored`: Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires access to the target project's files or the public ExpressiveCSS documentation.
 metadata:
   author: BaezFJ
-  version: "0.7.0"
+  version: "0.8.0"
   homepage: https://www.expressivecss.com
   repository: https://github.com/BaezFJ/ExpressiveCSS
   platforms: linux, macos, windows
@@ -36,13 +36,13 @@ Guide names map to [Install](./expressivecss-install/SKILL.md), [Design](./expre
 | Charts, sparklines, or KPI dashboards | Charts, Usage, Accessibility, selected chart guides | Install, Runtime |
 | Dashboard or reporting page | Dashboard, Charts, Design, Usage, Theming, Accessibility, selected component guides | Install |
 
-Combine overlapping routes. Interface implementation and review require Usage and Accessibility; add them to narrow lifecycle work when markup or accessibility behavior changes. Add Theming for visual/token work and Install for setup/version uncertainty. Inspect runtime ownership in the decision index: JavaScript, Auto Init, shared-runtime, and manual ownership require Runtime; CSS-only and native ownership do not. Critiques need Runtime when interaction evidence is in scope. For contrast or forced-colors investigations, including token-only changes, add Accessibility. Other token work uses Theming's focused checks. Record why a route widens.
+Combine overlapping routes. Interface implementation and review require Usage and Accessibility; add them to narrow lifecycle work when markup or accessibility behavior changes. Add Theming for visual/token work and Install for setup/version uncertainty. Inspect runtime ownership in the decision index: JavaScript, Auto Init, shared-runtime, and manual ownership require Runtime; CSS-only and native ownership do not. Critiques need Runtime when interaction evidence is in scope. For contrast or forced-colors investigations, including token-only changes, add Accessibility. Other token work uses Theming's focused checks. Record why a route widens. For a review too large for one context, read [delegation](./references/delegation.md).
 
 ## Component guides
 
 The generated [component decision index](./references/component-decisions.md) owns the complete component inventory, use/avoid boundaries, alternatives, runtime ownership, and guide links. Detailed adaptive decisions and Material links live in each component guide.
 
-For support gaps, read the [capability roadmap](./references/capability-roadmap.md). For Material conformance, use the [review reference](./expressivecss-design/references/material-conformance.md). Scoped evidence never proves full parity.
+For support gaps, read only the component's `## <Title>` section of the large [capability roadmap](./references/capability-roadmap.md). For Material conformance, use the [review reference](./expressivecss-design/references/material-conformance.md). Scoped evidence never proves full parity.
 
 ## Component discovery protocol
 
@@ -60,7 +60,7 @@ Resolve the exact installed framework version once per task before contract-depe
 node "<skill-directory>/scripts/resolve-version.mjs" --project-root "<project>"
 ```
 
-The resolver reads the bundled contract manifest; `--contract-version` overrides its comparison version. Evidence precedence: framework source, installed package, lockfile, then declaration-only manifest range. A range is not an installed version. Conflicting, malformed, ambiguous, or unsupported installation evidence remains unresolved; report the candidate and blocked diagnostics.
+Execute it; do not read its source. The resolver reads the bundled contract manifest; `--contract-version` overrides its comparison version. Evidence precedence: framework source, installed package, lockfile, then declaration-only manifest range. A range is not an installed version. Conflicting, malformed, ambiguous, or unsupported installation evidence remains unresolved; report the candidate and blocked diagnostics.
 
 - On `match`, use bundled matching guidance only when `bundledContractSafe` is true. Otherwise use installed sources or a matching tag. A bundled match does not verify the public website's version; `currentDocsSafe` requires independent site provenance.
 - On `mismatch`, inspect the installed package and matching tag or commit. Mark only dependent checks `Blocked` if matching guidance is unavailable.
@@ -87,6 +87,8 @@ For repeatable local browser checks, reuse project tests or the optional
 ## Optional MCP acceleration
 
 MCP is optional; the Markdown workflow stands alone. For autonomous work, read [scope and recovery](./references/autonomy.md).
+
+Qualified names use the README's server key: `expressivecss-mcp:<tool>`.
 
 | Tool | Use |
 | --- | --- |

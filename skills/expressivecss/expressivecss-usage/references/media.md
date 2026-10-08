@@ -1,6 +1,6 @@
 # Media styles foundation
 
-Read this after the Usage guide when a task uses responsive images, native video, or embedded media. Reuse the root guide's installed-version resolution. The [target-version Media styles documentation](https://www.expressivecss.com/media-css.html.md) and [helper Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_helpers.scss) override this summary if they differ.
+Read this after the Usage guide when a task uses responsive images, native video, or embedded media. The [target-version Media styles documentation](https://www.expressivecss.com/media-css.html.md) and [helper Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_helpers.scss) override this summary if they differ.
 
 ## Choose the media treatment
 

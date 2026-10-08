@@ -11,13 +11,11 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/tooltips/overview)
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -39,11 +37,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Material Design 3 tooltips, from the HTML.
-
 A child `.tooltip` is the bubble. No `tooltipped` class is required. They are CSS only on hover and keyboard focus. Helpers are only for placement and the rich variant: `top` (the default), `bottom`, `left`, `right`, `rich` / `max`.
 
 Tokens follow the [M3 tooltip spec](https://m3.material.io/components/tooltips/specs). A plain tooltip is `inverse-surface` / `inverse-on-surface`, 4dp corners, `body-small`, 24dp minimum, 4/8dp padding, 200dp max, no elevation and no caret. It sits 4dp from the activator. M3 prefers above.
+
+Inside a `<button>` the bubble has to be a `<span>` — a `<div>` is not phrasing content and the parser will hoist it. Icon-only buttons still need `.circle` so the span is not treated as a label.
 
 #### Syntax
 
@@ -86,11 +84,8 @@ The Tooltips section of the [API reference](https://www.expressivecss.com/llm.md
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `css-tooltip-is-described-by`: A .tooltip inside its control is swallowed: with an aria-label present the label wins and the tooltip is never announced, and without one the two run together. Give the tooltip an id and point aria-describedby at it.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

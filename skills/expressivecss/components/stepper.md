@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Account, Notifications and Privacy settings that people open in any order are tabs. A stepper would number them as if they had to be done in sequence.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Layout in LTR and RTL, indicator fills and glyphs, and the spoke
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#stepper).
 
 #### Contract
-
-Progress through a fixed sequence of steps, such as a checkout, with each step's state.
 
 A `.stepper` is an `<ol>`, and each `<li>` is a step whose text is its label. The list numbers the steps. Mark the step the user is on with `aria-current="step"`, finished steps with `complete`, and a step that needs attention with `invalid`; the page keeps these current as the user moves. A complete step shows a check and an invalid one shows "!", and both states are spoken before the label through the indicator's alt text. CSS only; there is no JavaScript.
 
@@ -62,14 +58,11 @@ The Stepper section of the [API reference](https://www.expressivecss.com/llm.md)
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `stepper-is-an-ordered-list`: Write a stepper as <ol class="stepper">. The order is the content: an ordered list announces how many steps there are and which one each is.
 - `stepper-current-is-a-step`: Mark the current step with aria-current="step". "page" or "true" tells assistive technology something else.
 - `stepper-has-one-current-step`: Only one step is current. Mark finished steps with .complete instead.
 - `stepper-step-is-not-error-colored`: Mark a step that needs attention with .invalid. .error is the error color utility: it paints the whole step red and is not spoken.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

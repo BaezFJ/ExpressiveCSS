@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Account, Billing and Security as three peer views of a settings page are tabs. An accordion would hide two of them behind headers when people switch between them.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Tile corners, the chevron turn, exclusive groups and the expande
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#accordion).
 
 #### Contract
-
-Stacked disclosures that open one section of content at a time, on native details.
 
 A `.accordion` holds `<details>` items. An item's `<summary>` is its header, and everything after the summary is its panel. The browser owns the behavior: the summary is a button that reports its expanded state, Enter and Space toggle it, and `open` sets the initial state. Give the items one shared `name` to make them exclusive, so opening one closes the others. CSS only; there is no JavaScript.
 
@@ -66,13 +62,10 @@ The Accordion section of the [API reference](https://www.expressivecss.com/llm.m
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `accordion-items-are-details`: Write every accordion item as <details> with a <summary>. The element is the disclosure: a div with a click handler has no expanded state and no keyboard support.
 - `accordion-summary-holds-no-controls`: A <summary> is already the toggle button. A link or control inside it is a control nested in a control: pressing it also opens or closes the item, and screen readers flatten it into the summary name. Put actions in the panel.
 - `accordion-summary-state-is-native`: The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role="button" repeats it, and an authored aria-expanded goes stale the first time the item toggles.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

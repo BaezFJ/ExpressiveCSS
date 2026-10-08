@@ -84,7 +84,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(bodyStart > 4, 'frontmatter is not closed');
     assert.match(frontmatter, /^name: expressivecss$/m);
     assert.match(frontmatter, /^  author: BaezFJ$/m);
-    assert.match(frontmatter, /^  version: "0\.7\.0"$/m);
+    assert.match(frontmatter, /^  version: "0\.8\.0"$/m);
 
     const description = frontmatter.match(/^description: (.+)$/m)?.[1];
     assert.ok(description, 'description is missing');
@@ -888,41 +888,40 @@ describe('the ExpressiveCSS agent skill', () => {
   });
 
   test('makes all six nested guides safe to load directly', () => {
+    // A directly loaded guide carries its scope in the description; the body does not repeat it.
     const boundaries = {
       'expressivecss-design/SKILL.md': {
-        use: /new surface or flow, a redesign, a visual refinement, a responsive adaptation, or a pre-release interface review/i,
-        avoid: /setup-only, token-only, or narrow lifecycle/i,
+        use: /new surface or flow, a redesign, visual refinement, responsive adaptation/i,
+        avoid: /Not for setup-only, token-only, or narrow lifecycle/i,
       },
       'expressivecss-install/SKILL.md': {
-        use: /setup, imports, package changes, version problems, or contract-source uncertainty/i,
-        avoid: /already loads.*only.*unrelated markup/i,
+        use: /setup, package changes, version problems, or uncertainty about which contract source/i,
+        avoid: /Not for.*markup changes when the project already loads the target version/i,
       },
       'expressivecss-usage/SKILL.md': {
-        use: /classes, markup, layout, utilities, or component selection/i,
-        avoid: /only setup, visual tokens, or lifecycle code/i,
+        use: /classes, markup, layout, and component selection/i,
+        avoid: /Not for tasks that touch only setup, visual tokens, or lifecycle code/i,
       },
       'expressivecss-theming/SKILL.md': {
-        use: /color, typography, icon styling, themes, schemes, vibrant regions, state layers, or other visual tokens/i,
-        avoid: /unrelated markup repair[\s\S]*component contract/i,
+        use: /color roles.*typography.*icon styling.*state layers, vibrant regions, and light\/dark schemes/i,
+        avoid: /Not for markup repair, setup, or JavaScript lifecycle work.*component contract/i,
       },
       'expressivecss-runtime/SKILL.md': {
-        use: /interactive components, initialization, dynamic content, remounting, teardown, or a JavaScript-backed Audit/i,
-        avoid: /CSS-only Audit[\s\S]*static markup[\s\S]*visual-token/i,
+        use: /dynamic content.*remounts and teardown.*JavaScript-backed audits/i,
+        avoid: /Not for CSS-only audits, static markup without JavaScript behavior, or token changes/i,
       },
       'expressivecss-accessibility/SKILL.md': {
-        use: /interface implementation, Critique, or Audit.*visual reviews/is,
-        avoid: /setup-only work[\s\S]*accessibility behavior unchanged[\s\S]*selected component and runtime contracts/i,
+        use: /interface implementation, visual critiques, audits, and contrast or forced-colors work/i,
+        avoid: /Not for setup-only work or token and lifecycle changes that leave accessibility behavior unchanged/i,
       },
     };
 
     for (const [path, patterns] of Object.entries(boundaries)) {
       const guide = readFileSync(new URL(path, skillDirectory), 'utf8');
-      const whenStart = guide.indexOf('## When to use');
-      const avoidStart = guide.indexOf('## Do not use when');
-      assert.ok(whenStart >= 0, `${path} has no When to use section`);
-      assert.ok(avoidStart > whenStart, `${path} has no Do not use when section`);
-      assert.match(guide.slice(whenStart, avoidStart), patterns.use, `${path} use boundary is incomplete`);
-      assert.match(guide.slice(avoidStart), patterns.avoid, `${path} counter-trigger is incomplete`);
+      const description = guide.match(/^description: (.+)$/m)?.[1] ?? '';
+      assert.match(description, patterns.use, `${path} use boundary is incomplete`);
+      assert.match(description, patterns.avoid, `${path} counter-trigger is incomplete`);
+      assert.doesNotMatch(guide, /^## (?:When to use|Do not use when)$/m, `${path} repeats its description in the body`);
     }
   });
 
@@ -992,8 +991,9 @@ describe('the ExpressiveCSS agent skill', () => {
     // route at 37,601 bytes (+177); the aura row at 37,921 bytes (+320);
     // the countdown row at 38,284 bytes (+363);
     // the KPI row at 38,601 bytes (+317); the questionnaire row at 39,098 bytes (+497);
-    // the message scroller row at 39,414 bytes (+316).
-    assert.ok(bytes <= 39414, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // the message scroller row at 39,414 bytes (+316); the skill best-practices
+    // pass at 38,932 bytes (-482).
+    assert.ok(bytes <= 38932, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 

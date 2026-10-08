@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: A "Saved" confirmation after an edit is app feedback, not a conversation. Use a snackbar for it, not a message bubble.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Avatar anchoring, start and end sides in LTR and RTL, and groupe
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#message).
 
 #### Contract
-
-One message in a conversation, with an optional avatar, header and footer.
 
 A `.message` lays out one message. It places an optional `.message-avatar`, `.message-header` and `.message-footer` around a single surface, usually a `.message-bubble`. Every other child is the surface, so wrap several elements in one `<div>` to keep them together. Messages sit on the start side; add `end` for the sender's own messages, which also turns the bubble to `primary-container`. Write the parts as `<div>`: outside sectioning content a `<header>` is a banner landmark and a `<footer>` is contentinfo.
 
@@ -67,11 +63,8 @@ The Message section of the [API reference](https://www.expressivecss.com/llm.md)
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `message-parts-are-not-landmarks`: Write .message-header and .message-footer as <div>. Outside sectioning content a <header> is a banner landmark and a <footer> is contentinfo, so a conversation would fill the landmark menu with one of each per message.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

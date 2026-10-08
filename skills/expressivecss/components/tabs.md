@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/tabs/overview)
 
 Example: Home/Search/Profile are app destinations, so use a navigation bar or rail. Overview/Activity panels within one account page can use tabs; Day/Week/Month as a form value can use native radio inputs.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -42,8 +40,6 @@ Known boundary: Native links use Tab and aria-current; runtime does not implemen
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#tabs).
 
 #### Contract
-
-Material Design 3 tabs, from the HTML.
 
 A `<nav class="tabs" aria-label="Sections">` of `<a href="#panel">` is the bar. A `<span>` (or the link text) is the label; a leading `<span class="material-symbols">` is the icon. Nest a `<span class="badge">` in the icon for a count, and put that count in the tab's `aria-label` so a hidden icon does not swallow it. `.active` is the selected tab. There is no `li.tab` required — `ul.tabs > li.tab > a` stays as an alias. `AutoInit()` starts every `.tabs` except those marked `no-autoinit`.
 
@@ -92,7 +88,7 @@ The Tabs section of the [API reference](https://www.expressivecss.com/llm.md) al
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `tabs-not-a-tablist`: A tab strip takes no ARIA role here; these are links to in-page sections.
 - `tabs-marks-current`: The active tab is the section you are on; aria-current says so where a class cannot.
@@ -100,5 +96,5 @@ The following are end-state semantic invariants. The rule IDs come directly from
 #### Guide checks
 
 - Label every <nav> landmark with aria-label or aria-labelledby.
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

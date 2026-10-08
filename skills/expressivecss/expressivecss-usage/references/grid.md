@@ -1,6 +1,15 @@
 # ExpressiveCSS grid reference
 
-Read this after the Usage guide when a task uses containers, rows, columns, offsets, or responsive layout. Reuse the root guide's installed-version resolution. The [target-version Grid documentation](https://www.expressivecss.com/grid.html.md) and [grid Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/base/_grid.scss) override this summary if they differ.
+Read this after the Usage guide when a task uses containers, rows, columns, offsets, or responsive layout. The [target-version Grid documentation](https://www.expressivecss.com/grid.html.md) and [grid Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/base/_grid.scss) override this summary if they differ.
+
+## Contents
+
+- Agent procedure
+- Core classes and window prefixes
+- Offsets
+- Gaps
+- Copyable patterns: stack then split, card collection, nested grid
+- Review checklist
 
 ## Agent procedure
 
@@ -12,7 +21,7 @@ Read this after the Usage guide when a task uses containers, rows, columns, offs
 6. Add a row gap or an offset only after the column widths are correct.
 7. Test immediately below and above every used breakpoint. Check content fit, zoom/reflow, and RTL without changing meaningful source order.
 
-## Core classes
+## Core classes and window prefixes
 
 | Purpose | Classes | Rule |
 | --- | --- | --- |
@@ -29,17 +38,7 @@ Read this after the Usage guide when a task uses containers, rows, columns, offs
 
 Column classes do not contain a hyphen: use `.m6`, not `.m-6`. A wider span class applies at and above its breakpoint. Because each span class sets the `grid-column` shorthand, the wider span class resets an earlier offset inherited from a narrower prefix.
 
-## Window prefixes
-
-| Window class | Width | Prefix | Example |
-| --- | --- | --- | --- |
-| Compact | below 600px | `.s` | `.s12` |
-| Medium | 600–839px | `.m` | `.m6` |
-| Expanded | 840–1199px | `.l` | `.l4` |
-| Large | 1200–1599px | `.xl` | `.xl3` |
-| Extra-large | 1600px and above | `.xxl` | `.xxl2` |
-
-Do not use device labels such as phone or tablet as breakpoint logic. Reason from the available window or container width and the content's needs.
+Prefixes map to window classes: `.s` Compact (below 600px), `.m` Medium, `.l` Expanded, `.xl` Large, and `.xxl` Extra-large. Do not use device labels such as phone or tablet as breakpoint logic. Reason from the available window or container width and the content's needs.
 
 ## Offsets
 

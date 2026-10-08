@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/carousel/overview)
 
 Example: A transaction history must support scanning rows and values. Use a list instead of hiding records across carousel slides.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -92,13 +90,10 @@ The Carousel section of the [API reference](https://www.expressivecss.com/llm.md
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `hidden-subtree-holds-nothing-focusable`: Hidden from assistive technology but still in the tab order: focus lands on a control the user has no way to perceive. Take away the tab stop (tabindex="-1"), or mark the subtree inert when it is genuinely not displayed - inert also removes it from hit-testing, which is wrong for anything still visible.
 - `carousel-not-a-composite-widget`: A carousel takes no composite role; it is a group of slides with independent controls.
 - `carousel-indicators-are-not-tabs`: Carousel indicators are independent controls, not tabs.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

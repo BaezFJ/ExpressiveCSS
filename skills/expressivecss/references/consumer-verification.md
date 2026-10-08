@@ -5,6 +5,12 @@ benefits from repeatable browser checks. Reuse an existing project test first.
 This runner exercises declared actions and completion assertions, captures the
 page, and reports errors. It does not grade Material design or certify accessibility.
 
+## Contents
+
+- Run a scenario
+- Read the evidence and repair
+- Optional MCP invocation
+
 ## Run a scenario
 
 The consumer needs its existing `@playwright/test` installation and Chromium.

@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Related Google guidance](https://m3.material.io/components/text-fields/overview)
 
 Example: A promotional feature block needs a section or card. Use a fieldset when a shared legend explains related inputs, such as delivery preferences.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -42,8 +40,6 @@ Known boundary: Named native groups and disabled descendants are checked; long l
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#fieldsets).
 
 #### Contract
-
-Grouped form sections, from the HTML.
 
 A `<fieldset>` is the group. A `<legend>` is the headline. Everything else is a field — `.field`, radios, switches, a `.inline` row of radios, a trailing `<small>` as supporting text. There is no wrapper class. They are CSS only. There is no JavaScript component and nothing to AutoInit.
 
@@ -71,11 +67,8 @@ The Fieldsets section of the [API reference](https://www.expressivecss.com/llm.m
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `fieldset-has-legend`: A fieldset without a legend groups controls visually but names nothing.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Monthly revenue for every region and product is a data table. Stat tiles would turn a comparison into a wall of numbers without columns.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Tiling, wrapping, the value type role, arrow direction, the nega
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#stat).
 
 #### Contract
-
-Key figures in tiles, each with a label, a value and an optional change.
 
 A `<dl class="stats">` holds one `<div>` tile per figure: a `<dt>` label, a `<dd>` value and an optional `<dd class="stat-change">` comparison. The description list keeps each value paired with its label for assistive technology. Tiles share a row and wrap below 160px each. CSS only; there is no JavaScript.
 
@@ -68,11 +64,8 @@ The Stat section of the [API reference](https://www.expressivecss.com/llm.md) al
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `stats-are-a-description-list`: Write .stats as a <dl> with a <dt> label and <dd> value per tile. Without the pairing a screen reader reads a run of numbers with nothing to say what each one is.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

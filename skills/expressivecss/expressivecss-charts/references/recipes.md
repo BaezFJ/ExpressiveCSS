@@ -94,7 +94,7 @@ The stat answers the question, the chart shows the evidence, and the switch narr
 </script>
 ```
 
-The `p-4` wrapper gives the stat and chart the card's 16px padding; cards pad only headings and paragraphs themselves. The button group manages `aria-pressed` itself. Compute the stat totals from the same numbers as the table so they agree.
+The `p-4` wrapper gives the stat and chart the card's 16px padding; cards pad only headings and paragraphs themselves. The button group manages `aria-pressed` itself. Compute `data-total` and `data-change` from the same rows the button shows.
 
 ## 3. KPI row with sparklines
 
@@ -130,7 +130,7 @@ A row of short tiles, each a stat with a sparkline filling the rest of the width
 </div>
 ```
 
-For a taller tile with the chart under the stat, drop `sparkline` and shrink the plot: `--md-comp-line-chart-height: 120px; --md-comp-line-chart-line-width: 2px; --md-comp-line-chart-grid-color: transparent`.
+For a taller tile with the chart under the stat, drop `sparkline` and use the compact tile tokens from the charts guide.
 
 ## 4. Donut with its total
 
@@ -267,4 +267,4 @@ KPI tiles on top, the main trend at two thirds width beside a breakdown, then a 
 </section>
 ```
 
-Charts that compare the same measure side by side should share `data-min` and `data-max`, or a reader will compare bar lengths that are on different scales.
+Give side-by-side charts of the same measure one `data-min` and `data-max`.

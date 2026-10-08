@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Revenue, orders and churn across the top of a sales dashboard, each with its last 10 days, are KPIs. Twelve figures with no trend are a stats row.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Part placement, the value type role, arrow direction, the negati
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#kpi).
 
 #### Contract
-
-One key figure in a card, with a trend chip, a sparkline and details.
 
 An `<article class="kpi">` holds a `<dl>` with a `<dt>` label, a `<dd class="kpi-value">` and an optional `<dd class="kpi-trend">` chip. The description list keeps the value paired with its label for assistive technology. The article is a card, so `filled` and `outlined` apply, and KPIs in a grid row stretch to one height with their footers aligned. CSS only; a chart inside is drawn by its own script.
 
@@ -72,11 +68,8 @@ The KPI section of the [API reference](https://www.expressivecss.com/llm.md) als
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `kpi-is-a-card-with-a-labelled-value`: Write .kpi as an <article> holding a <dl> whose <dt> label comes right before the <dd class="kpi-value">. The article makes it a card, and without the pairing a screen reader reads a bare number with nothing to say what it is. Not fragmentSafe: what it detects is an omission.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

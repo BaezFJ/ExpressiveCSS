@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
 
 Example: A five-question product survey with an optional comment at the end is a questionnaire. A shipping, payment and review checkout is a stepper.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -39,11 +37,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A form that asks one question at a time, with single and multiple choice, free text and skippable questions.
-
 A `<form class="questionnaire">` holds one `<fieldset>` per question and a `<footer>` of buttons. The `<legend>` is the prompt and a `<p>` under it describes the question. Answers are ordinary radio buttons, checkboxes or text fields; a `<small>` inside a choice's label describes that choice, and choices draw as outlined rows that fill with `secondary-container` when selected. A `<p class="questionnaire-error">` in a question holds its error text. The footer buttons are marked by `value`: `previous`, `skip` and `next`, each `type="button"`, plus a submit button. `AutoInit()` starts every `form.questionnaire`.
 
 The component adds a progress row ("Question 1 of 3" and a `<progress>` named by that text), hides every question but the current one with `hidden`, and shows only the buttons that apply: Back after the first question, Skip on an optional question, Next before the last one and Submit on the last. A question is required when one of its controls is `required`; `data-required` on a fieldset of checkboxes requires at least one. Next checks the shown question with the browser's validation. When it fails, the fieldset gets `invalid`, its controls get `aria-invalid="true"`, the error shows and joins the description in the fieldset's `aria-describedby`, and focus moves to the control to fix. Answering clears it. A question without its own error shows the browser's validation message, or `requiredMessage`. Skip clears the shown answer, firing `change`, and moves on. Enter in a field moves to the next question, and on the last one submits. Submitting, with the button, Enter or `requestSubmit()`, checks every question and opens the first that still needs an answer. Only enabled checkboxes count toward `data-required`, since a disabled one is not sent. After Next, Back or Skip, focus moves to the selected answer or the first control.
+
+A disabled fieldset is skipped and left out of the count, so a page branches by enabling or disabling questions from earlier answers. The form submits normally: read the answers with `FormData`, using `getAll()` for checkboxes. Without JavaScript every question shows at once, the navigation buttons stay hidden and the submit button sends the form; a `data-required` group is not checked then. Name the form with `aria-label` or `aria-labelledby`.
 
 #### Syntax
 
@@ -99,13 +97,10 @@ The Questionnaire section of the [API reference](https://www.expressivecss.com/l
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `questionnaire-is-a-form`: Write the questionnaire as <form class="questionnaire">. The form sends the answers, runs the browser's validation and still works without JavaScript.
 - `questionnaire-is-named`: Name the questionnaire with aria-label or aria-labelledby so it is announced as a form.
 - `questionnaire-navigation-does-not-submit`: Give the Back, Skip and Next buttons type="button". A button without a type submits the form, so pressing one before the component starts would send it early.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

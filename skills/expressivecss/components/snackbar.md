@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `shared-runtime`. [Google guidance](https://m3.material.io/components/snackbar/overview)
 
 Example: A successful save can use a snackbar. Offline status that still allows editing needs a persistent inline message; a required irreversible-delete confirmation needs a dialog before the action.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -45,9 +43,9 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Snackbars with an action are persistent and dismissible by default. Escape dismisses a focused snackbar; closing restores focus only when it remains inside the bar. Explicit finite timers still pause during focus or hover.
 
-Material Design 3 snackbars, from the HTML.
-
 Snackbars show short updates about app processes at the bottom of the screen. They should not interrupt browsing. A `.snackbar` is the bar. A `<p>` is the supporting text. A trailing `<button>` is the optional action; a `.circle` button is the optional close.
+
+Tokens follow the [M3 snackbar spec](https://m3.material.io/components/snackbar/specs). The container is `inverse-surface`, 4dp corners, elevation 3, 48dp minimum. Supporting text is `body-medium` / `inverse-on-surface`, two lines max. The action is a `label-large` / `inverse-primary` text button. Close is a 24dp `inverse-on-surface` icon. On Compact viewports the bar is inset 8dp from the edges; from the Medium breakpoint up it hugs content (344–672dp) and sits centered 24dp from the bottom.
 
 #### Syntax
 
@@ -95,11 +93,8 @@ The Snackbar section of the [API reference](https://www.expressivecss.com/llm.md
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 No component-specific `semantics.json` rules apply to this guide.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

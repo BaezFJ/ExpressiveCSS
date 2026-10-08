@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Two quarters of client satisfaction scored out of 100 on five measures is a radar chart with area. Monthly revenue for a year is a line chart.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Drawing, the hidden table, the grid, shape geometry and colors, 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#radar-chart).
 
 #### Contract
-
-Several measures on one scale drawn as shapes on spokes from a data table, one shape per series.
 
 A `<figure class="radar-chart">` takes the same `<figcaption>` and `<table>` as a line chart. `AutoInit()` draws each row as a spoke, clockwise from the top in table order, with its label past the tip, and each value column as a shape joining its values, from zero in the middle to the scale's top at the rim. A legend names the series when there is more than one, and a tooltip follows the pointer round the chart. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
 
@@ -69,12 +65,9 @@ The Radar chart section of the [API reference](https://www.expressivecss.com/llm
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `radar-chart-is-a-figure-with-a-table`: Write .radar-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
 - `radar-chart-has-a-caption`: Name a .radar-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

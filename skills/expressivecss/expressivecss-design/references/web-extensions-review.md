@@ -4,6 +4,12 @@ Reviewed on 2026-09-13. Google evidence covers the linked rendered prose and tex
 
 Read the linked component guide for the ExpressiveCSS 0.12.0 markup and API contract. RoutePlate runtime assets may differ. The [capability roadmap](../../references/capability-roadmap.md) records source pins and scoped browser results.
 
+## Contents
+
+Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Data table, Avatar, Skeleton, Empty state, Stepper, Popover, Drop zone, Tree, Stat, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire.
+
+Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
+
 ## [Footer](../../components/footer.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: A red dot for unread messages on the inbox icon is a badge. An avatar would suggest a person rather than a count.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -39,8 +37,6 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A person or account as a circular image, initials or icon, alone or in an overlapping group.
-
 A `.avatar` is an `<img>`, or a `<span>` holding initials or an icon. It is 40px by default; `small` is 32px and `large` is 56px, and the initials and icon scale with it. Give an image alt text naming the person, or `alt=""` when the name is already beside it. Initials read as separate letters, so give a `<span>` avatar `role="img"` and an `aria-label`, or `aria-hidden="true"` when the name is visible next to it. CSS only; there is no JavaScript.
 
 #### Syntax
@@ -59,13 +55,10 @@ The Avatar section of the [API reference](https://www.expressivecss.com/llm.md) 
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `avatar-image-has-alt`: Give an avatar image alt text naming the person, or alt="" when their name is already beside it.
 - `avatar-is-an-image-or-hidden`: Initials read as separate letters and an icon reads as its ligature name. Give a non-image avatar role="img" and a name, or aria-hidden="true" when the person is named next to it.
 - `avatar-image-role-is-named`: An avatar with role="img" needs aria-label or aria-labelledby. Its initials are hidden from the name computation of an image.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Finding an order by customer name is search over content. A command palette is for running actions and opening places in the app.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -39,11 +37,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A searchable list of commands in a dialog, opened from anywhere with a shortcut.
-
 A `<dialog class="command-palette">` holds a search `<input>`, a `<ul>` of commands and an optional `.command-palette-empty` message. Each command is an `<li>` holding a link or button: an optional leading icon, the label and an optional trailing `<kbd>` shortcut. An `<li class="label">` heads a group. Running a command clicks its link or button, so commands are ordinary links and click handlers. Commands added to the list later are picked up. A command the page hides with `hidden` stays hidden, and one whose button is `disabled` is shown dimmed, marked `aria-disabled` and skipped by the arrow keys. `AutoInit()` starts every `dialog.command-palette`.
 
 Ctrl+K, or Command+K on Apple platforms, opens and closes it from anywhere on the page unless the page has already handled the key, as an editor's own Ctrl+K does; a `commandfor` button with `command="show-modal"` opens it too. Typing filters the commands by their text and any `data-keywords`, ignoring case and accents, and hides a group heading whose commands are all filtered out. Focus stays in the input: the arrow keys move the active command and Enter runs it. The dialog closes on Escape and returns focus. Each opening starts with an empty search.
+
+The component makes the input a combobox and the list a listbox of options, and reports the active option with `aria-activedescendant`. Name the dialog and the input with `aria-label`. Give the empty message `role="status"` so a search with no results is announced.
 
 #### Syntax
 
@@ -90,13 +88,10 @@ The Command palette section of the [API reference](https://www.expressivecss.com
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `command-palette-is-a-dialog`: Write the palette as <dialog class="command-palette">. The dialog makes it modal, closes it on Escape and returns focus.
 - `command-palette-is-named`: Name the palette with aria-label so it is announced when it opens.
 - `command-palette-input-is-named`: Name the search input with aria-label. A placeholder disappears as the user types and is not a reliable name.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

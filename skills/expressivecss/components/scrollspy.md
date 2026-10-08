@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
 
 Example: A settings screen with mutually exclusive panels needs tabs. Scrollspy only tracks sections already present in the scrolling document.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Independent TOCs must reuse one getActiveElement function per gr
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#scrollspy).
 
 #### Contract
-
-Highlight the table of contents as the page scrolls.
 
 Scrollspy watches a set of sections and which one is currently in view. The table of contents on the right of every documentation page is the live demo: the matching link gets `active`, and clicking a link scrolls to that section.
 
@@ -91,12 +87,12 @@ The Scrollspy section of the [API reference](https://www.expressivecss.com/llm.m
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `toc-in-nav`: A table of contents is a set of destinations within the page. It belongs in a labelled <nav>.
 
 #### Guide checks
 
 - Label every <nav> landmark with aria-label or aria-labelledby.
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

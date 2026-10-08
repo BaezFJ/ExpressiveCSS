@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Choosing a volume from 0 to 100 is a slider. Stars suit a short fixed scale where each step has a meaning.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Star fill, hover preview, native arrow keys, form value, the dis
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#rating).
 
 #### Contract
-
-Stars for choosing or showing a score, on native radio buttons.
 
 For input, a `<fieldset class="rating">` holds a `<legend>` and one radio per star, each in a `<label>` whose visually hidden text ("3 stars") comes before the radio. The radio is drawn as the star, so Tab, the arrow keys, `required` and form submission stay native. A star fills when it or a later star is checked, and hovering previews a choice. Put the text before the radio: a span after it is the older `input + span` radio, which hides the input. CSS only; there is no JavaScript.
 
@@ -62,13 +58,10 @@ The Rating section of the [API reference](https://www.expressivecss.com/llm.md) 
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `rating-is-a-fieldset-or-an-image`: A .rating is either a <fieldset> of radios, for input, or an element with role="img" and a name, for display. Anything else draws stars that say nothing.
 - `rating-display-is-named`: Name a rating display with the value, such as aria-label="Rated 4.5 out of 5".
 - `rating-label-text-precedes-the-radio`: Put a star's visually hidden text before its radio. A span after the radio is the older input + span pattern, which hides the radio and with it the star.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

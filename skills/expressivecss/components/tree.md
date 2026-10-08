@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `native`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Three settings pages under one heading are a list or a navigation rail. A tree would add chevrons and indentation for a hierarchy one level deep.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Indentation, chevrons in LTR and RTL, opening a branch and the c
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#tree).
 
 #### Contract
-
-Nested lists of folders and links that open in place, for file browsers and deep navigation.
 
 A `<ul class="tree">` nests lists. A branch is an `<li>` holding a `<details>`: its `<summary>` is the row and its nested `<ul>` the children. A leaf is an `<li>` holding a link, or a `<span>` when it is not one. Mark the current row with `aria-current`. Each level draws a guide line from its parent's chevron. Wrap a tree of links in a named `<nav>`. CSS only; there is no JavaScript.
 
@@ -77,7 +73,7 @@ The Tree section of the [API reference](https://www.expressivecss.com/llm.md) al
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `tree-is-not-a-tree-widget`: A .tree takes no ARIA tree roles. It is lists of disclosures and links, which keep their own roles and keyboard behavior.
 - `tree-marks-current-not-selected`: Mark the open file or page with aria-current. aria-selected is not valid on a link or a list item.
@@ -85,5 +81,5 @@ The following are end-state semantic invariants. The rule IDs come directly from
 #### Guide checks
 
 - Label every <nav> landmark with aria-label or aria-labelledby.
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

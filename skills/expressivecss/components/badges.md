@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/badges/overview)
 
 Example: An unread count belongs on the inbox icon as a badge. A selectable Unread filter needs a chip or selection control with its own name and state.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -43,11 +41,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Notifications, counts, or status on navigation items and icons.
-
 A `<span class="badge">` is the badge. Empty is the **small** 6dp dot; text is the **large** 16dp stadium. Nest it in the icon so it sits on the upper trailing edge of the 24dp glyph. Limit the label to four characters, including `+`. The default mapping is `error` / `on-error`.
 
 Nesting has a consequence worth stating: **a badge inside a hidden icon is hidden with it.** `aria-hidden="true"` covers the whole subtree, and `aria-hidden="false"` on a descendant does not undo that — so a count that only exists inside a decorative icon is a count nobody hears. Two ways out, depending on what surrounds it:
+
+- Inside a control, put the count in the control's name — `<a aria-label="Inbox, 3 unread">` — and leave the icon decorative. - Standing alone, make the icon the image: `role="img"` with a label that includes the count.
 
 #### Syntax
 
@@ -63,11 +61,8 @@ The Badges section of the [API reference](https://www.expressivecss.com/llm.md) 
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `badge-count-survives-a-hidden-icon`: A badge inside a hidden icon is hidden with it - aria-hidden="false" on a descendant does not undo that. Put the count in the control name (aria-label="Inbox, 3 unread"), or move the badge out of the icon into the flow.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.
