@@ -26,6 +26,7 @@ export { MixedChart } from "./mixedChart";
 export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";
 export { MessageScroller } from "./messageScroller";
+export { RichTextEditor } from "./richTextEditor";
 export { Lightbox } from "./lightbox";
 export { Slider } from "./slider";
 export { ScrollSpy } from "./scrollspy";

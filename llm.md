@@ -6532,6 +6532,75 @@ Expressive.CharacterCounter.init(
 
 ---
 
+## Rich text editor
+
+A text field with a formatting toolbar for writing headings, lists and styled text, built on Tiptap.
+
+A `.rich-text-editor` holds a docked `.toolbar` and a `<textarea>` whose value is the starting HTML. The component hides the textarea, mounts the editor in a `.rich-text-editor-content` after it, and writes the editor's HTML back on every change, so the textarea submits with its form and fires `input`. An empty editor submits an empty value. Without JavaScript the textarea stays visible and the toolbar is hidden.
+
+ExpressiveCSS does not bundle Tiptap. Install `@tiptap/core`, `@tiptap/pm` and `@tiptap/starter-kit`, and pass the `Editor` class and extensions to `RichTextEditor.init()`. `AutoInit()` does not start the editor.
+
+A button's `data-command` names a Tiptap command and `data-attributes` holds its argument as JSON. A click runs the command and returns focus to the editor. A button is disabled while its command cannot run. Buttons for `toggle` commands set `aria-pressed` and `.active` while the selection has that format: `toggleBold` while it is bold, `toggleHeading` with `{"level":2}` while it is in a second-level heading.
+
+The editable area is a multi-line `textbox` named from the textarea's `<label for>`, `aria-label` or `aria-labelledby`; a click on the label focuses it. A `disabled` or `readonly` textarea makes the editor read-only and disables the toolbar. Sanitize the submitted HTML on the server.
+
+```html
+<label for="body">Release notes</label>
+<div class="rich-text-editor">
+  <div class="toolbar docked">
+    <button type="button" class="circle" data-command="toggleBold" aria-label="Bold">
+      <span class="material-symbols" aria-hidden="true">format_bold</span>
+    </button>
+    <button type="button" class="circle" data-command="toggleHeading"
+            data-attributes='{"level":2}' aria-label="Heading">
+      <span class="material-symbols" aria-hidden="true">format_h2</span>
+    </button>
+    <span class="max"></span>
+    <button type="button" class="circle" data-command="undo" aria-label="Undo">
+      <span class="material-symbols" aria-hidden="true">undo</span>
+    </button>
+  </div>
+  <textarea id="body" name="body"><p>Starting content</p></textarea>
+</div>
+```
+
+```js
+import { Editor } from '@tiptap/core';
+import StarterKit from '@tiptap/starter-kit';
+import { RichTextEditor } from '@expressivecss/expressive';
+
+RichTextEditor.init(document.querySelector('.rich-text-editor'), {
+  Editor,
+  extensions: [StarterKit]
+});
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Editor` | Class | `null` | Tiptap's `Editor` class. Required. |
+| `extensions` | Array | `[]` | Tiptap extensions, usually `[StarterKit]`. |
+
+### Methods
+
+#### .editor
+
+The Tiptap editor, for anything the toolbar does not cover.
+
+#### .destroy()
+
+Destroys the editor, removes its element and the button state, and shows the textarea again.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-rich-text-editor-min-height` | 160px |
+| `--md-comp-rich-text-editor-shape` | 16px |
+
+---
+
 ## Drop zone
 
 A large target for choosing or dropping files, with a list of what was chosen.
