@@ -4091,6 +4091,49 @@ Add `up` or `down` to `.stat-change` for an arrow, and `negative` when the chang
 
 ---
 
+## Countdown
+
+A number from 0 to 999 whose digits roll to each new value.
+
+A `.countdown` is a `<span>` with `--md-comp-countdown-value` set to a whole number and the same number as its text. When the value changes, each digit rolls up or down to the new one. The rolling digits are generated content hidden from assistive technology, so the text is what a screen reader reads; change the property and the text together. Values below 0 show 0 and values above 999 show 999. The box is as wide as the number; `--md-comp-countdown-digits` pads it with leading zeros to 2 or 3 digits. Size and color come from the surrounding text. With reduced motion the digits change without rolling. CSS only; the page's script sets the value.
+
+```html
+<span id="countdown" class="countdown" style="--md-comp-countdown-value: 60">60</span>
+
+<script>
+  const countdown = document.getElementById('countdown');
+  let value = 60;
+  setInterval(() => {
+    value = value === 0 ? 60 : value - 1;
+    countdown.style.setProperty('--md-comp-countdown-value', value);
+    countdown.textContent = value;
+  }, 1000);
+</script>
+```
+
+### Clock
+
+Pad each part to two digits so a clock keeps its width. A `role="timer"` container is not announced on every tick; use `aria-live="polite"` instead when each new value should be read out.
+
+```html
+<p role="timer" style="--md-comp-countdown-digits: 2">
+  <span class="countdown" style="--md-comp-countdown-value: 9">09</span>:<span
+        class="countdown" style="--md-comp-countdown-value: 41">41</span>:<span
+        class="countdown" style="--md-comp-countdown-value: 5">05</span>
+</p>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-countdown-value` | 0; the number shown, 0 to 999 |
+| `--md-comp-countdown-digits` | 1; at least this many digits, padded with zeros |
+| `--md-comp-countdown-duration` | 400ms |
+| `--md-comp-countdown-easing` | `cubic-bezier(0.2, 0, 0, 1)` |
+
+---
+
 ## Line chart
 
 Trends over time drawn from a data table, with a tooltip, a legend and a sparkline size.

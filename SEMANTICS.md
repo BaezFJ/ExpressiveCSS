@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**72 of 72 rows enforced; 0 remaining.**
+**73 of 73 rows enforced; 0 remaining.**
 
-68 of those rows are components - a part of the framework an author writes markup for.
+69 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 68 components declare conformance debt.**
+**3 of 69 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -308,6 +308,16 @@ Added with the command palette component. A native modal dialog; the component m
 - **command-palette-is-a-dialog** - Write the palette as <dialog class="command-palette">. The dialog makes it modal, closes it on Escape and returns focus.
 - **command-palette-is-named** - Name the palette with aria-label so it is announced when it opens.
 - **command-palette-input-is-named** - Name the search input with aria-label. A placeholder disappears as the user types and is not a reliable name.
+
+### countdown
+
+Added with the countdown component. The digits are generated content hidden from assistive technology, so the element's text is the value a screen reader reads.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `countdown-has-text` | forbid | `.countdown:empty` | must not match |
+
+- **countdown-has-text** - Write the number as the countdown's text, matching --md-comp-countdown-value. The rolling digits are hidden from screen readers, so an empty countdown reads as nothing.
 
 ### data-table
 

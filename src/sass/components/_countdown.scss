@@ -1,0 +1,89 @@
+@use "../abstracts" as *;
+
+// Countdown. A number from 0 to 999 whose digits roll to the new value when
+// it changes: <span class="countdown" style="--md-comp-countdown-value: 42">42</span>.
+// Set the property and the text together. The text is the accessible value;
+// it stays in the accessibility tree but text-indent pushes it past the
+// clipped edge. The visible digits are two strips in ::before (00 to 99, the
+// leading two digits) and ::after (0 to 9), moved up one line per step, with
+// empty alt text so screen readers skip them.
+//
+// inline-flex, not inline-block: WebKit puts a clipped inline-block's
+// baseline at its bottom edge, which lifted the digits off the line. A flex
+// container takes the baseline of its text in every engine.
+//
+// The box is 1, 2 or 3ch wide, as many digits as the value has, or at least
+// --md-comp-countdown-digits, which pads with leading zeros. Values clamp
+// to 0–999. Size and color come from the surrounding text.
+//
+// Tokens, read with fallbacks so a page or container can set them too:
+//   --md-comp-countdown-value      the number shown, set per element   0
+//   --md-comp-countdown-digits     minimum digits, 1 to 3              1
+//   --md-comp-countdown-duration   roll duration                       400ms
+//   --md-comp-countdown-easing     roll easing                         cubic-bezier(0.2, 0, 0, 1)
+
+$_timing: var(--md-comp-countdown-duration, 400ms) var(--md-comp-countdown-easing, cubic-bezier(0.2, 0, 0, 1));
+$_tens: "";
+$_ones: "";
+@for $i from 0 through 99 {
+  @if $i < 10 {
+    $_tens: $_tens + "0#{$i}\A ";
+    $_ones: $_ones + "#{$i}\A ";
+  } @else {
+    $_tens: $_tens + "#{$i}\A ";
+  }
+}
+
+.countdown {
+  --_value: clamp(0, var(--md-comp-countdown-value, 0), 999);
+  --_lead: round(down, var(--_value) / 10);
+  --_digits: calc(
+    1
+    + clamp(0, max(var(--md-comp-countdown-digits, 1) - 1, var(--_lead)), 1)
+    + clamp(0, max(var(--md-comp-countdown-digits, 1) - 2, round(down, var(--_value) / 100)), 1)
+  );
+
+  position: relative;
+  display: inline-flex;
+  width: calc(var(--_digits) * 1ch);
+  height: 1em;
+  overflow: clip;
+  direction: ltr;
+  font-variant-numeric: tabular-nums;
+  line-height: 1em;
+  text-indent: 3ch;
+  white-space: nowrap;
+  transition: width $_timing;
+
+  &::before,
+  &::after {
+    position: absolute;
+    top: 0;
+    text-indent: 0;
+    white-space: pre;
+    transition: translate $_timing;
+  }
+
+  // The left of this strip hangs past the box when the value is short.
+  &::before {
+    content: $_tens / "";
+    right: 1ch;
+    width: 2ch;
+    translate: 0 calc(var(--_lead) * -1em);
+  }
+
+  &::after {
+    content: $_ones / "";
+    right: 0;
+    width: 1ch;
+    translate: 0 calc(mod(var(--_value), 10) * -1em);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &,
+    &::before,
+    &::after {
+      transition: none;
+    }
+  }
+}

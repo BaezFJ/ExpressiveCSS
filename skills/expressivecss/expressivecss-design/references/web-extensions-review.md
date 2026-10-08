@@ -214,6 +214,20 @@ Verification gap: Tiling, wrapping, the value type role, arrow direction, the ne
 
 Mapped browser scope: One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion.
 
+## [Countdown](../../components/countdown.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the number in the element's text for assistive technology, avoid announcing every tick and stop the motion when the user asks for reduced motion.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws and rolls the digits; the page sets the value, the matching text and any timer or live region around it.
+
+Verification gap: Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role="timer" and aria-live regions remains unverified. Next check: Run a ticking timer and a polite live count with a screen reader in each engine and confirm the timer stays quiet and the live count announces each value once.
+
+Mapped browser scope: Box width per digit count and padding, strip positions for in-range and clamped values, baseline alignment, the translate transition on change, reduced motion and the accessibility tree text. No spoken-output assertion.
+
 ## [Line chart](../../components/line-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

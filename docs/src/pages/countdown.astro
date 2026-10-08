@@ -1,0 +1,121 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "clock", label: "Clock" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const tickScript = `const countdown = document.getElementById('countdown');
+let value = 60;
+setInterval(() => {
+  value = value === 0 ? 60 : value - 1;
+  countdown.style.setProperty('--md-comp-countdown-value', value);
+  countdown.textContent = value;
+}, 1000);`;
+
+const clockScript = `const [h, m, s] = document.querySelectorAll('#clock-timer .countdown');
+const show = (el, n) => {
+  el.style.setProperty('--md-comp-countdown-value', n);
+  el.textContent = String(n).padStart(2, '0');
+};
+const tick = () => {
+  const now = new Date();
+  show(h, now.getHours());
+  show(m, now.getMinutes());
+  show(s, now.getSeconds());
+};
+tick();
+setInterval(tick, 1000);`;
+---
+<DocsLayout page="countdown">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.countdown</code> shows a whole number from 0 to 999. When
+          the number changes, its digits roll up or down to the new value.
+        </p>
+        <p>
+          Set <code>--md-comp-countdown-value</code> to the number and write
+          the same number as the element's text. The digits you see are drawn
+          by CSS and hidden from screen readers, so the text is what assistive
+          technology reads. Change both together. Values below 0 show 0 and
+          values above 999 show 999. Size and color come from the surrounding
+          text. CSS only; your script sets the value.
+        </p>
+        <p style="font-size: 3.5rem; line-height: 1.2">
+          <span id="countdown" class="countdown" style="--md-comp-countdown-value: 60">60</span>
+        </p>
+<script is:inline set:html={`{\n${tickScript}\n}`}></script>
+<Code code={`
+<span id="countdown" class="countdown" style="--md-comp-countdown-value: 60">60</span>
+
+<script>
+${tickScript.replace(/^/gm, "  ")}
+</script>
+`} />
+  </Section>
+  <Section {...S.clock}>
+        <p>
+          The box is as wide as the number. Set
+          <code>--md-comp-countdown-digits</code> to 2 or 3 to pad with
+          leading zeros, so a clock keeps its width as it ticks.
+        </p>
+        <p>
+          A <code>role="timer"</code> container stays quiet while the numbers
+          change. A screen reader reads the time when the user reaches it,
+          not once a second. Use <code>aria-live="polite"</code> instead when
+          each new value needs to be announced, such as a count that changes
+          only after the user does something.
+        </p>
+        <p id="clock-timer" role="timer" style="font-size: 3.5rem; line-height: 1.2; --md-comp-countdown-digits: 2">
+          <span class="countdown" style="--md-comp-countdown-value: 0">00</span>:<span class="countdown" style="--md-comp-countdown-value: 0">00</span>:<span class="countdown" style="--md-comp-countdown-value: 0">00</span>
+        </p>
+<script is:inline set:html={`{\n${clockScript}\n}`}></script>
+<Code code={`
+<p id="clock-timer" role="timer" style="--md-comp-countdown-digits: 2">
+  <span class="countdown" style="--md-comp-countdown-value: 9">09</span>:<span
+        class="countdown" style="--md-comp-countdown-value: 41">41</span>:<span
+        class="countdown" style="--md-comp-countdown-value: 5">05</span>
+</p>
+
+<script>
+${clockScript.replace(/^/gm, "  ")}
+</script>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>
+          Set the value on each <code>.countdown</code>. Set the rest on the
+          countdown or on an ancestor.
+        </p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-countdown-value</code></td>
+            <td>0; the number shown, 0 to 999</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-countdown-digits</code></td>
+            <td>1; at least this many digits, padded with zeros</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-countdown-duration</code></td>
+            <td>400ms</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-countdown-easing</code></td>
+            <td><code>cubic-bezier(0.2, 0, 0, 1)</code></td>
+          </tr>
+        </TokenTable>
+        <p>
+          With reduced motion, the digits change without rolling.
+        </p>
+  </Section>
+</PageBody>
+</DocsLayout>

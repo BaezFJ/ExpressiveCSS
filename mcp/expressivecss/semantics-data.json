@@ -1057,6 +1057,19 @@
           }
         ]
       },
+      "countdown": {
+        "status": "enforced",
+        "note": "Added with the countdown component. The digits are generated content hidden from assistive technology, so the element's text is the value a screen reader reads.",
+        "rules": [
+          {
+            "id": "countdown-has-text",
+            "kind": "forbid",
+            "selector": ".countdown:empty",
+            "fragmentSafe": true,
+            "message": "Write the number as the countdown's text, matching --md-comp-countdown-value. The rolling digits are hidden from screen readers, so an empty countdown reads as nothing."
+          }
+        ]
+      },
       "popover": {
         "status": "enforced",
         "note": "Added with the popover component. The panel is a native [popover] and its button names it with popovertarget or commandfor, so the browser owns opening, light dismiss, Escape and the button's expanded state.",
