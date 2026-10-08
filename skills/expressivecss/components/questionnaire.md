@@ -9,9 +9,7 @@ Component ID: `questionnaire`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -97,10 +95,6 @@ The Questionnaire section of the [API reference](https://www.expressivecss.com/l
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `questionnaire-is-a-form`: Write the questionnaire as <form class="questionnaire">. The form sends the answers, runs the browser's validation and still works without JavaScript.
 - `questionnaire-is-named`: Name the questionnaire with aria-label or aria-labelledby so it is announced as a form.
 - `questionnaire-navigation-does-not-submit`: Give the Back, Skip and Next buttons type="button". A button without a type submits the form, so pressing one before the component starts would send it early.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

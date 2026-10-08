@@ -175,7 +175,7 @@ Render the page and look at it, following [the design guide's review steps](../e
 - Loading, empty and error states exist for each data card the feature can reach.
 - Light and dark schemes hold at 390px, 840px and 1440px, with no horizontal overflow.
 - `AutoInit()` runs once and the console has no errors.
-- The static checks pass on every markup file you touched: `quality_inspector` through MCP, or `npx --package @expressivecss/mcp-server expressivecss-lint <files>`. Linter releases older than the fix for `legacy-card-content` flag the `--md-comp-card-content-padding` token by mistake; treat that one finding as a false positive.
+- The root skill's [static checks](../SKILL.md#optional-mcp-acceleration) pass on every markup file you touched. Linter releases older than the fix for `legacy-card-content` flag the `--md-comp-card-content-padding` token by mistake; treat that one finding as a false positive.
 
 For a dashboard with many cards, the review splits well across subagents following the [delegation reference](../references/delegation.md). Useful independent scopes are the number audit (every figure, change and total checked against the source data, using section 4), the rendered review across schemes and widths, and the per-card state review. Add this guide to each brief, and have reviewers name the card in each finding's location. A small dashboard does not need subagents.
 

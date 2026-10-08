@@ -9,9 +9,7 @@ Component ID: `timeline`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -62,9 +60,5 @@ The Timeline section of the [API reference](https://www.expressivecss.com/llm.md
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `timeline-is-an-ordered-list`: Write a timeline as <ol class="timeline">. The events have an order, and an ordered list says so to assistive technology.
 - `timeline-time-is-machine-readable`: Give each <time> a datetime value. "9:12 AM" or "Yesterday" has no date a script, a translation tool or a reader in another time zone can use.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

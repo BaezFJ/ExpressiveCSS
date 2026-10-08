@@ -9,9 +9,7 @@ Component ID: `cards`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -68,8 +66,6 @@ The Cards section of the [API reference](https://www.expressivecss.com/llm.md) a
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `card-action-row-not-nav`: Cards do not contain navigation or tabs. Put navigation outside the card and use <div class="actions"> for its action buttons.
 - `card-primary-action-is-control`: A directly actionable card uses one native link as its primary action. Use the action row for commands; common button styles do not turn a button into the card container.
 - `card-disabled-link-has-no-href`: A disabled card destination must not retain href. aria-disabled does not stop a link from navigating when activated from the keyboard.
@@ -86,5 +82,3 @@ End-state invariants from `semantics.json`; keep the IDs in review criteria. Aut
 - `card-reveal-expanded-is-not-authored`: Cards writes aria-expanded on the disclosure button. Do not author a stale initial value, and do not put aria-expanded on the panel.
 - `expanding-card-trigger-is-button`: The media-sized trigger opens a dialog, so use a button for native keyboard and disabled behavior.
 - `expanding-card-close-is-button`: The back affordance closes the expanded surface, so use a button for native keyboard behavior.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

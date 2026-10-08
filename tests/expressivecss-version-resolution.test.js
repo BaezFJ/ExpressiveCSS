@@ -576,7 +576,6 @@ describe('ExpressiveCSS version resolution', () => {
     for (const name of names) {
       const guide = await readFile(new URL(name, directory), 'utf8');
       assert.ok(guide.includes(`Contract: ExpressiveCSS ${frameworkVersion}\n`));
-      assert.match(guide, /Sources: `llm\.md`, `semantics\.json`, `docs\/src\/data\/nav\.ts`, `docs\/src\/data\/component-decisions\.json`, `package\.json`, `CHANGELOG\.md`/);
       const hash = guide.match(/Contract SHA-256: `([a-f0-9]{64})`/)?.[1];
       assert.ok(hash, `${name} has no contract hash`);
       hashes.add(hash);

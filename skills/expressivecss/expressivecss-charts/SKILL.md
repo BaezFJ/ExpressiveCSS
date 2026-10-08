@@ -140,5 +140,5 @@ Check every chart you touched against this list, fix what fails, and check again
 6. The page calls `Expressive.AutoInit()` after the script loads, and code that rewrites a table calls `init` again.
 7. Colors come from tokens or `var(--md-sys-color-*)`, so dark mode still works.
 8. Stats and charts inside cards sit in a padded wrapper, not directly in the `<article>`.
-9. Run the static checks on touched markup: `quality_inspector` through MCP, or `npx --package @expressivecss/mcp-server expressivecss-lint <files>`. The linter only inspects files under the directory it runs from, so run it from the project root with relative paths.
+9. Run the root skill's [static checks](../SKILL.md#optional-mcp-acceleration) on touched markup.
 10. If you can open the page in a browser, check light and dark mode, a 390px width for sideways scrolling, and Tab to each chart. Otherwise report that the visual check was not done.

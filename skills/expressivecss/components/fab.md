@@ -9,9 +9,7 @@ Component ID: `fab`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -80,13 +78,9 @@ The Floating Action Button section of the [API reference](https://www.expressive
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `icon-only-control-is-named`: Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
 - `fab-no-small-variant`: The 40dp small FAB has been removed. Use circle extra for a 56dp FAB.
 - `extended-fab-requires-size`: The baseline extended FAB has been removed. Specify extend small, extend medium or extend large.
 - `fab-no-surface-color`: Use a primary, secondary or tertiary container color for a FAB instead of a surface color.
 - `fab-menu-not-a-composite-widget`: The FAB menu takes no composite role; its actions are reached with Tab, not arrow keys.
 - `fab-menu-expanded-is-not-authored`: Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

@@ -9,9 +9,7 @@ Component ID: `button-groups`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -64,8 +62,6 @@ Action-group items are direct controls: a `<button>`, or an `<a class="button" h
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `button-group-is-not-an-authored-composite-widget`: A button group takes no composite role; its buttons are reached with Tab, not arrow keys. `role="group"` with an aria-label is the role that fits, and it promises no keyboard model.
 - `button-group-items-are-controls`: Every item in a group is a control the user can reach, and one the sheet styles as a button: a <button>, or an <a class="button" href> when it navigates. A bare <a href> passes for a control and renders as a link - none of the group's corners, press behaviour or inherited size reach it. A wrapper element is refused too: the gap and the connected corners are written against direct children, so a nested <div> loses both.
 - `button-group-items-have-containers`: Material warns against text buttons in a group because they have no visible container for the shape interaction. Use filled, tonal, outlined, or elevated buttons.
@@ -79,5 +75,3 @@ End-state invariants from `semantics.json`; keep the IDs in review criteria. Aut
 - `button-group-selection-state-is-boolean`: A toggle button's initial aria-pressed value is true or false; mixed is not a Button Group state.
 - `button-group-selection-does-not-use-choice-state`: These are toggle buttons, not radios, checkboxes, options, or tabs. Expose their state with aria-pressed.
 - `button-group-action-does-not-claim-selection`: aria-pressed requires ButtonGroup selection behavior. Add data-selection="single|multiple" or remove the toggle state.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

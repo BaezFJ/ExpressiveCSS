@@ -9,9 +9,7 @@ Component ID: `text-fields`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -69,8 +67,6 @@ The Text Inputs section of the [API reference](https://www.expressivecss.com/llm
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `field-container-class`: The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.
 - `field-icon-not-i`: <i> means idiomatic text, not icon. Use <span class="material-symbols">.
 - `field-icon-hidden`: The ligature is read aloud. A field icon is decoration; the label names the control.
@@ -85,5 +81,3 @@ End-state invariants from `semantics.json`; keep the IDs in review criteria. Aut
 - `file-input-not-nested`: A control inside a control is not valid HTML and gives two overlapping hit targets. Use a <label> styled as a button.
 - `file-path-readonly`: The path field only ever displays what the file input holds; leaving it writable offers an edit that is discarded.
 - `counter-is-announced`: The count changes as the user types, so it has to be a live region or the remaining characters are never announced.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

@@ -9,9 +9,7 @@ Component ID: `bottom-sheet`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -59,11 +57,7 @@ A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bott
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `dialog-is-named`: A <dialog> takes no name from its heading. Point aria-labelledby at that heading, or give it an aria-label - otherwise it opens announced as just "dialog".
 - `drag-handle-is-hidden-or-a-control`: A drag handle has no text and reports nothing, so on any element but a <button> it is decoration and needs aria-hidden="true". Left exposed it arrives as an unlabelled blank in the reading order. Make it a <button> with a name if it is meant to be operated.
 - `drag-handle-button-is-not-hidden`: aria-hidden on a <button> hides it from assistive technology without taking it out of the tab order, so keyboard focus lands on something that is not there. Decoration is a <span>; a control stays exposed.
 - `drag-handle-button-is-named`: The handle is a bar drawn in CSS - there is no text inside it to be named by. A handle worth making a control is worth an aria-label saying what it moves.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

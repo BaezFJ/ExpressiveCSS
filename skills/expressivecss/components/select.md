@@ -9,9 +9,7 @@ Component ID: `select`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -117,8 +115,6 @@ The Select section of the [API reference](https://www.expressivecss.com/llm.md) 
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `option-has-selected-state`: role=option promises a selection state. Without aria-selected the listbox never says which entry is chosen.
 - `field-container-class`: The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.
 - `field-icon-not-i`: <i> means idiomatic text, not icon. Use <span class="material-symbols">.
@@ -131,5 +127,3 @@ End-state invariants from `semantics.json`; keep the IDs in review criteria. Aut
 - `password-toggle-reports-its-state`: Give a .password-toggle aria-pressed="false". The behavior flips it, and its name stays "Show password", so the pressed state is how a screen reader user hears that the password is visible.
 - `otp-autocompletes`: Set autocomplete="one-time-code" on a one-time code input so the browser can offer the code from a message.
 - `otp-is-not-a-number`: A code is not a quantity: type="number" drops leading zeros and adds a spinner. Use type="text" with inputmode="numeric".
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

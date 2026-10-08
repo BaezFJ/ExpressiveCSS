@@ -24,6 +24,7 @@ Read each reference only when its condition applies.
 | [dashboard guide](../expressivecss-dashboard/SKILL.md) | A dashboard, analytics overview, admin console, or reporting page. Start from its reference implementation, not the dashboard template. |
 | [runnable examples](../assets/examples/README.md) | A complete settings, editor, or list-detail flow, after selecting components. |
 | [review scope](./references/review-scope.md) | Any review, to choose focused or full depth. |
+| [performance](./references/performance.md) | The user reports a slowdown or asks for a performance review. |
 | [review matrix](./references/review-matrix.md) and [evidence ledger](./references/evidence-ledger.md) | The review scope reference selects a full review. |
 | [Material review](./references/material-conformance.md) | The task asks whether an interface follows Google's Material 3 Expressive specs, guidelines, or accessibility guidance. |
 | Dated component review records: [priority components](./references/priority-material-review.md), [inputs and choices](./references/inputs-material-review.md), [navigation, actions and sheets](./references/layout-material-review.md), [content and feedback](./references/feedback-material-review.md), [web extensions](./references/web-extensions-review.md) | A Material conformance claim names a selected component. The component guide names its record; read only that component's section. |
@@ -142,12 +143,6 @@ In Implement, Refine, Redesign, or a review where the user separately requested 
 For a comprehensive review or a change spanning interaction and accessibility, request one independent review after implementation when subagents are available. A small label or token edit does not require another agent. Give the reviewer the original request, working brief, changed files, screenshots, and applicable ExpressiveCSS guides. The reviewer must not edit. It returns what must be preserved, then findings ordered by user impact, each with file or component location, visible evidence, the Material, accessibility, or framework rule involved, and one concrete fix.
 
 A full review that spans many routes or component groups can be split under the shared [delegation rules](../references/delegation.md). In a combined review, collect Critique evidence yourself first, then split Audit work. Component review groups and routes split cleanly; a matched capture pair stays with whoever made the edit. Give each subagent its inventory IDs and criterion IDs, and replace the template's return row with evidence ledger rows that carry artifacts and timestamps. Merge the rows into one ledger, assign sequence numbers in timestamp order after the Critique records, then run the coverage reconciliation against the inventory. A returned row without an artifact you can open stays `Blocked`.
-
-## Performance requests
-
-Measure the requested slow path before editing and repeat the same route, data, viewport, cache state, network/CPU settings, and interaction after the change. Inspect resource loading and duplicate assets, layout shifts, interaction traces and long tasks, and resources retained after remount and teardown. Record browser/tool versions, settings, raw observations, and repeated-run variability. For the cause found, use the [Install guide](../expressivecss-install/SKILL.md), the [Runtime guide](../expressivecss-runtime/SKILL.md), or the [media reference](../expressivecss-usage/references/media.md).
-
-Run this performance pass when performance is requested or a measured regression needs investigation; ordinary markup work does not require a full audit. Laboratory results describe those runs, not field Core Web Vitals or real-user percentiles. Report unavailable measurements and avoid speed claims based only on fewer bytes or shorter code.
 
 ## Verification
 

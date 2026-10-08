@@ -9,9 +9,7 @@ Component ID: `avatar`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -55,10 +53,6 @@ The Avatar section of the [API reference](https://www.expressivecss.com/llm.md) 
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `avatar-image-has-alt`: Give an avatar image alt text naming the person, or alt="" when their name is already beside it.
 - `avatar-is-an-image-or-hidden`: Initials read as separate letters and an icon reads as its ligature name. Give a non-image avatar role="img" and a name, or aria-hidden="true" when the person is named next to it.
 - `avatar-image-role-is-named`: An avatar with role="img" needs aria-label or aria-labelledby. Its initials are hidden from the name computation of an image.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.

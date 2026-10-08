@@ -9,9 +9,7 @@ Component ID: `split-button`
 
 Contract: ExpressiveCSS 0.12.0
 
-Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
-
-Contract SHA-256: `9820351f92a37edd229d1a09222feab12a686640156657cf0a3c1aa8d757e6c2`
+Contract SHA-256: `3cee9f09911b2d1a690fd85f482d8d0c830bb37152796b0c5b451fed153525d9`
 
 #### Selection and adaptation
 
@@ -62,8 +60,6 @@ The trailing half is an ordinary Menu trigger, so everything Menu does it does h
 
 #### Rules
 
-End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
-
 - `split-button-is-not-an-authored-composite-widget`: A split button takes no composite role; its two halves are reached with Tab, not arrow keys. The <menu> the trailing half opens is the composite widget here, and it carries its own role.
 - `split-button-halves-are-controls`: A split button is exactly two controls and the menu one of them opens: a <button>, or an <a class="button" href> when it navigates. A wrapper element is refused too - the seam, the insets and the larger trailing icon are all written against direct children, so a nested <div> loses every one of them.
 - `split-button-half-is-not-an-icon-button`: An icon button is its own component: its height, insets, colours, icon sizing and transitions are all set on the element itself, so it reaches none of the split button's geometry and fights the seam it is handed. The trailing half is <button class="button menu-trigger">, which the container sizes like the leading one.
@@ -76,5 +72,3 @@ End-state invariants from `semantics.json`; keep the IDs in review criteria. Aut
 - `split-button-expanded-is-not-authored`: Expanded is dynamic state, so the framework owns it. Menu's constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten - and the expanded shape is drawn from that attribute, so an authored "true" draws an open split button over a closed menu.
 - `menu-children-are-list-items`: <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
 - `context-menu-region-is-not-a-control`: data-context-menu goes on a region of content. A button or link already has an action for Enter and click; give it its own menu trigger instead.
-
-Read the target-version documentation before using anything not shown here; it and the source override this summary.
