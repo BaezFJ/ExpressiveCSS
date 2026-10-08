@@ -131,5 +131,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the KPI card: 65,104 gzip bytes (+543).
   // Reviewed the questionnaire: 65,569 gzip bytes (+465).
   // Reviewed the message scroller: 65,721 gzip bytes (+152).
-  assert.ok(sizes(css).gzip <= 65721, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the marquee: 66,079 gzip bytes (+358).
+  assert.ok(sizes(css).gzip <= 66079, `CSS gzip: ${sizes(css).gzip}`);
 });

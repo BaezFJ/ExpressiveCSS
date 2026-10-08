@@ -64,6 +64,7 @@ Last operator collection: 2026-10-08, Chromium 153.0.8010.12, passed; inputs cha
 | [Skeleton](#skeleton) | implemented | source-reviewed | needs-rerun | 0 |
 | [Empty state](#empty-state) | implemented | source-reviewed | needs-rerun | 0 |
 | [Carousel](#carousel) | unassessed | needs-review | needs-rerun | 0 |
+| [Marquee](#marquee) | implemented | source-reviewed | incomplete | 0 |
 | [Lightbox](#lightbox) | unassessed | needs-review | needs-rerun | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Search](#search) | unassessed | needs-review | needs-rerun | 1 |
@@ -950,6 +951,22 @@ Web adaptation: Runtime owns sizing and navigation; reduced motion removes paral
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/9ba599c6bbe73c6e1dcefa1b0f662c915020df97/tests/menu-field-browser.test.js): `Carousel mounted motion changes preserve explicit pause (chromium)`. Visible application-owned pause/resume button and mounted reduced-motion changes without cancelling explicit pause; enabling reduced motion interrupts smooth scrolling and immediately realigns the active item.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/9ba599c6bbe73c6e1dcefa1b0f662c915020df97/tests/menu-field-browser.test.js): `Carousel focus and visibility suspension survive teardown (chromium)`. Hover and internal focus suspension, simulated document.hidden events, timer teardown and single advancement after remount. Actual background-device behavior pending.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/9ba599c6bbe73c6e1dcefa1b0f662c915020df97/tests/menu-field-browser.test.js): `Carousel destroys pending scroll completion work (chromium)`. Rapid navigation and queued resize followed by destruction leave no auto-advance, resize or scroll-completion timers.
+
+<a id="marquee"></a>
+
+## Marquee
+
+**implemented within the stated scope.** Two identical groups that loop horizontally or vertically, with reverse, edge fades, a paused class, hover and focus pausing, token duration and gap, a reversed direction in RTL and a hand-scrolled strip under reduced motion.
+
+Source review: source-reviewed, 2026-10-08. [src/sass/components/_marquee.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/9ba599c6bbe73c6e1dcefa1b0f662c915020df97/src/sass/components/_marquee.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: A visual copy of the item list marked aria-hidden, with its links taken out of the tab order, so assistive technology and the keyboard meet each item once.
+
+- verification: The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified. Next: Listen to a marquee with a screen reader in each engine and confirm each item is read once; watch a long strip for a visible jump at the loop point.
+
+- not-recorded: [tests/marquee-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/9ba599c6bbe73c6e1dcefa1b0f662c915020df97/tests/marquee-browser.test.js): `chromium: marquee loops its two groups, pauses, follows direction and stops under reduced motion`. A short group filling the strip, the copy one gap after it, the half-cycle position horizontally, in RTL and vertically, reverse, pausing on hover, focus and .paused, one link per item in the accessibility tree and the reduced-motion stop with the copy hidden. No spoken-output assertion.
 
 <a id="lightbox"></a>
 

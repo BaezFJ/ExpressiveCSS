@@ -2573,6 +2573,42 @@ instead of laying them over the media; markup can do the same by carrying
 
 ---
 
+## Marquee
+
+A row of logos, images or text that scrolls without end.
+
+A `.marquee` holds two identical `<ul class="marquee-content">` groups. The second is a copy that fills the gap as the first scrolls out, so mark it `aria-hidden="true"` and give each link or button in it `tabindex="-1"`. Each group is at least as wide as the strip and spreads short content out, so one copy is enough. Hovering over the strip or focusing a link inside pauses it. CSS only.
+
+```html
+<div class="marquee fade">
+  <ul class="marquee-content" aria-label="Customers">
+    <li><img src="launchpad.svg" alt="Launchpad"></li>
+    <li><a href="/customers/greenleaf"><img src="greenleaf.svg" alt="Greenleaf"></a></li>
+  </ul>
+  <ul class="marquee-content" aria-hidden="true">
+    <li><img src="launchpad.svg" alt="Launchpad"></li>
+    <li><a href="/customers/greenleaf" tabindex="-1"><img src="greenleaf.svg" alt="Greenleaf"></a></li>
+  </ul>
+</div>
+```
+
+- A strip scrolls toward the inline start: left, or right on a right-to-left page. `reverse` scrolls the other way.
+- `vertical` scrolls up, or down with `reverse`. The strip is 320px tall unless the page sets a `height`.
+- `fade` fades the items out at both edges.
+- `paused` stops the strip. When it runs beside other content for more than five seconds, add a button outside the strip that toggles `paused` and its own `aria-pressed`.
+- With reduced motion the strip stops, the copy is hidden and the strip scrolls by hand when its items overflow.
+- Do not put information people need only in a marquee.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-marquee-duration` | 20s; the time one group takes to pass |
+| `--md-comp-marquee-gap` | 32px; between items and between the two groups |
+| `--md-comp-marquee-fade-size` | 48px; each edge fade with `fade` |
+
+---
+
 ## Drag handle
 
 The bar that makes something legible as draggable: a bottom sheet's grabber, the gutter between two panes, the grip on a reorderable row.
