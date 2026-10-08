@@ -171,8 +171,15 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       assert.match(await text(), /^Design/);
       await page.keyboard.press('End');
       assert.match(await text(), /^Ops/);
+      // Round the spokes the ends meet.
+      await page.keyboard.press('ArrowRight');
+      assert.match(await text(), /^Design/, 'the next row after the last is the first');
+      await page.keyboard.press('ArrowLeft');
+      assert.match(await text(), /^Ops/, 'the row before the first is the last');
       await page.keyboard.press('Escape');
       assert.equal(await tooltip.isVisible(), false);
+      await page.keyboard.press('ArrowUp');
+      assert.match(await text(), /^Ops/, 'back from no row starts at the last');
 
       // In RTL the spokes still run clockwise, and so do the arrows: right moves to the next row.
       const rtl = await page.evaluate(() => {

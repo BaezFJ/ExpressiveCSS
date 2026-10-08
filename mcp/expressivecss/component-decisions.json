@@ -2360,7 +2360,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "8d6aa8fa8d63a955da9fc8e00438c5f1f093da2306ecee7c3ab96b3693696c0b"
+            "sha256": "ae8cea2582c2db935508ee1475c17fca349ed8974811288a323a4271c402dd6b"
           }
         ],
         "gaps": [
@@ -2475,7 +2475,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "8d6aa8fa8d63a955da9fc8e00438c5f1f093da2306ecee7c3ab96b3693696c0b"
+            "sha256": "ae8cea2582c2db935508ee1475c17fca349ed8974811288a323a4271c402dd6b"
           }
         ],
         "gaps": [
@@ -2591,7 +2591,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "8d6aa8fa8d63a955da9fc8e00438c5f1f093da2306ecee7c3ab96b3693696c0b"
+            "sha256": "ae8cea2582c2db935508ee1475c17fca349ed8974811288a323a4271c402dd6b"
           }
         ],
         "gaps": [
@@ -2697,11 +2697,11 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "8d6aa8fa8d63a955da9fc8e00438c5f1f093da2306ecee7c3ab96b3693696c0b"
+            "sha256": "ae8cea2582c2db935508ee1475c17fca349ed8974811288a323a4271c402dd6b"
           },
           {
             "path": "src/ts/components/pieChart.ts",
-            "sha256": "2ae7caa31651707cac31e99516fb0fa428424b0d205445f2e5e33c2150cb1852"
+            "sha256": "2b8e5940a604b7c4b9dbacfae6a4980b7a13f4df6e04c6c7d032a3b2c3f0bbd4"
           }
         ],
         "gaps": [
@@ -2725,7 +2725,7 @@
           {
             "file": "tests/pie-chart-browser.test.js",
             "name": "chromium: pie chart tooltip follows the pointer round the pie and the arrow keys",
-            "scope": "Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, End and Escape, and clockwise slices and arrows in RTL. No spoken-output assertion."
+            "scope": "Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, wrapping past either end, End and Escape, and clockwise slices and arrows in RTL. No spoken-output assertion."
           }
         ]
       }
@@ -2807,11 +2807,11 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "8d6aa8fa8d63a955da9fc8e00438c5f1f093da2306ecee7c3ab96b3693696c0b"
+            "sha256": "ae8cea2582c2db935508ee1475c17fca349ed8974811288a323a4271c402dd6b"
           },
           {
             "path": "src/ts/components/radarChart.ts",
-            "sha256": "e7a81554a416e2383a27e1fe274408ed066f8dec514868f09ff7589633fa11e8"
+            "sha256": "ee6c818e8bc8ad11f06d4419e3c45234c2de7cdfaf5eca103b93a1c372d7ba0d"
           }
         ],
         "gaps": [
@@ -2835,7 +2835,7 @@
           {
             "file": "tests/radar-chart-browser.test.js",
             "name": "chromium: radar chart tooltip follows the pointer round the spokes and the arrow keys",
-            "scope": "Nearest spoke by pointer angle inside and past the rim, tooltip text without gaps, opening leftwards on the right half, the cursor spoke and its points, focus, all four arrows, End and Escape, and clockwise spokes and arrows in RTL. No spoken-output assertion."
+            "scope": "Nearest spoke by pointer angle inside and past the rim, tooltip text without gaps, opening leftwards on the right half, the cursor spoke and its points, focus, all four arrows, wrapping past either end, End and Escape, and clockwise spokes and arrows in RTL. No spoken-output assertion."
           }
         ]
       }

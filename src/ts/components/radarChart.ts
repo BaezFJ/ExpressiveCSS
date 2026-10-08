@@ -1,9 +1,8 @@
 import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions, COLORS } from './lineChart';
+import { LineChart, LineChartOptions, COLORS, svgNode as node } from './lineChart';
 
 export type RadarChartOptions = LineChartOptions;
 
-const SVG = 'http://www.w3.org/2000/svg';
 /** Grid rings, evenly spaced from the middle to the rim. */
 const RINGS = 4;
 
@@ -29,12 +28,8 @@ export class RadarChart extends LineChart {
     return true;
   }
 
-  /**
-   * Arrows move round the spokes, so both pairs work. The spokes run
-   * clockwise in RTL too, so right still moves the way the top spoke turns.
-   */
-  protected get _arrows(): [string[], string[]] {
-    return [['ArrowRight', 'ArrowDown'], ['ArrowLeft', 'ArrowUp']];
+  protected get _circular() {
+    return true;
   }
 
   static init(el: HTMLElement, options?: Partial<RadarChartOptions>): RadarChart;
@@ -50,21 +45,18 @@ export class RadarChart extends LineChart {
     return el['Expressive_RadarChart'];
   }
 
-  show(index: number) {
-    if (!this._tooltip || index === this.activeIndex) return;
-    super.show(index);
-    if (this._tooltip.hidden) return;
-    // The cursor is a spoke turned by --turn; LineChart's points on it keep
-    // their top, a share of the radius, which stops at the rim and the
-    // middle like the shapes. The tooltip sits past its tip.
+  /**
+   * The cursor is a spoke turned by --turn, and the tooltip sits past its
+   * tip. LineChart's points on the spoke keep their top, a share of the
+   * radius, which stops at the rim and the middle like the shapes.
+   */
+  protected _place(index: number) {
     for (const dot of this._cursor.children as HTMLCollectionOf<HTMLElement>) {
       dot.style.top = `${Math.min(100, Math.max(0, parseFloat(dot.style.top)))}%`;
     }
     const turn = this._turn(index);
-    for (const part of [this._tooltip, this._cursor]) {
-      part.style.removeProperty('left');
-      part.style.setProperty('--turn', String(turn));
-    }
+    this._cursor.style.setProperty('--turn', String(turn));
+    this._tooltip.style.setProperty('--turn', String(turn));
     // On the right half it opens leftwards, over the chart.
     this._tooltip.classList.toggle('end', turn > 0 && turn < 0.5);
   }
@@ -74,16 +66,14 @@ export class RadarChart extends LineChart {
     return index / this.labels.length;
   }
 
-  /** The legend for more than one series; the labels go round the rim in _draw. */
+  /** Only the legend; the labels go round the rim in _draw. */
   protected _guides(): Element[] {
-    return super._guides().slice(1);
+    return this._legend();
   }
 
   /** The nearest spoke to the pointer, by its angle from the middle. */
   protected _indexAt(e: PointerEvent) {
-    const box = this._plot.getBoundingClientRect();
-    const [x, y] = [e.clientX - box.left - box.width / 2, e.clientY - box.top - box.height / 2];
-    const turn = (Math.atan2(x, -y) / (2 * Math.PI) + 1) % 1;
+    const [turn] = this._polarAt(e);
     return Math.round(turn * this.labels.length) % this.labels.length;
   }
 
@@ -99,11 +89,6 @@ export class RadarChart extends LineChart {
     };
     // The rim is the scale's top, so _y is the distance in from the rim.
     const share = (value: number) => Math.min(1, Math.max(0, 1 - this._y(value) / 100));
-    const node = (name: string, attributes: Record<string, string>) => {
-      const element = document.createElementNS(SVG, name);
-      for (const key in attributes) element.setAttribute(key, attributes[key]);
-      return element;
-    };
     const rows = this.labels.map((_, i) => i);
     const ring = (r: number) => `M${rows.map((i) => at(i, r)).join('L')}Z`;
 
