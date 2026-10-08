@@ -665,6 +665,13 @@ export const NAV: DocsGroup[] = [
         description:
           "Pick a time from a clock face, in 12-hour or 24-hour form.",
       },
+      {
+        id: "questionnaire",
+        label: "Questionnaire",
+        route: "/questionnaire.html",
+        description:
+          "A form that asks one question at a time, with single and multiple choice, free text and skippable questions.",
+      },
     ],
   },
 ];

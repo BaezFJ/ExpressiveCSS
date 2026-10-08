@@ -1,0 +1,258 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "questions", label: "Questions" },
+  { id: "validation", label: "Validation" },
+  { id: "conditional", label: "Conditional questions" },
+  { id: "submitting", label: "Submitting" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="questionnaire">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;form class="questionnaire"&gt;</code> asks one question
+          at a time. Each <code>&lt;fieldset&gt;</code> child is a question,
+          and a <code>&lt;footer&gt;</code> holds the buttons that move
+          between them.
+        </p>
+        <p>
+          The <code>&lt;legend&gt;</code> is the prompt and a
+          <code>&lt;p&gt;</code> under it describes the question. Answers are
+          ordinary <a href={route('radio_buttons')}>radio buttons</a>,
+          <a href={route('checkboxes')}>checkboxes</a> or
+          <a href={route('text_inputs')}>text fields</a>; a
+          <code>&lt;small&gt;</code> inside a choice's label describes that
+          choice. The footer buttons are marked by their <code>value</code>:
+          <code>previous</code>, <code>skip</code> and <code>next</code>,
+          plus a submit button. The component adds the progress row and
+          shows only the question and buttons that apply.
+        </p>
+        <p>
+          Use a questionnaire for a short survey, onboarding or intake form
+          where each question deserves the whole screen. For a long form people
+          need to scan and correct, keep every field on the page. The
+          <a href={route('stepper')}>stepper</a> suits a few large stages, such
+          as a checkout, each with several fields.
+        </p>
+        <article class="outlined" style="max-width: 36rem; padding: 24px;">
+          <form class="questionnaire" id="questionnaire-demo" aria-label="Product survey">
+            <fieldset>
+              <legend>What should we prototype next?</legend>
+              <p>Pick the direction you want to explore first.</p>
+              <label><input type="radio" name="direction" value="search" required>Search<small>Find any page in two keystrokes</small></label>
+              <label><input type="radio" name="direction" value="sharing" required>Sharing<small>Send a view to a teammate</small></label>
+              <label><input type="radio" name="direction" value="offline" required>Offline mode<small>Keep working without a connection</small></label>
+              <p class="questionnaire-error">Choose an answer to continue.</p>
+            </fieldset>
+            <fieldset data-required>
+              <legend>Where do you use the app?</legend>
+              <p>Choose all that apply.</p>
+              <label><input type="checkbox" name="platforms" value="web">Web</label>
+              <label><input type="checkbox" name="platforms" value="desktop">Desktop</label>
+              <label><input type="checkbox" name="platforms" value="mobile">Mobile</label>
+              <p class="questionnaire-error">Choose at least one platform.</p>
+            </fieldset>
+            <fieldset>
+              <legend>Anything else we should know?</legend>
+              <p>Optional. Skip it if nothing comes to mind.</p>
+              <div class="field">
+                <textarea id="questionnaire-demo-notes" name="notes" class="expressive-textarea" placeholder=" "></textarea>
+                <label for="questionnaire-demo-notes">Notes</label>
+              </div>
+            </fieldset>
+            <footer>
+              <button type="button" class="text" value="previous">Back</button>
+              <button type="button" class="text" value="skip">Skip</button>
+              <button type="button" value="next">Next</button>
+              <button type="submit">Submit</button>
+            </footer>
+          </form>
+          <output for="questionnaire-demo" id="questionnaire-demo-result"></output>
+        </article>
+        <script is:inline>
+          document.getElementById('questionnaire-demo').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const answers = new FormData(event.currentTarget);
+            document.getElementById('questionnaire-demo-result').textContent =
+              `Direction: ${answers.get('direction')}. Platforms: ${answers.getAll('platforms').join(', ')}.`;
+          });
+        </script>
+<Code code={`
+<form class="questionnaire" aria-label="Product survey">
+  <fieldset>
+    <legend>What should we prototype next?</legend>
+    <p>Pick the direction you want to explore first.</p>
+    <label><input type="radio" name="direction" value="search" required>Search<small>Find any page in two keystrokes</small></label>
+    <label><input type="radio" name="direction" value="sharing" required>Sharing<small>Send a view to a teammate</small></label>
+    <p class="questionnaire-error">Choose an answer to continue.</p>
+  </fieldset>
+  <fieldset data-required>
+    <legend>Where do you use the app?</legend>
+    <label><input type="checkbox" name="platforms" value="web">Web</label>
+    <label><input type="checkbox" name="platforms" value="mobile">Mobile</label>
+    <p class="questionnaire-error">Choose at least one platform.</p>
+  </fieldset>
+  <fieldset>
+    <legend>Anything else we should know?</legend>
+    <div class="field">
+      <textarea id="notes" name="notes" class="expressive-textarea" placeholder=" "></textarea>
+      <label for="notes">Notes</label>
+    </div>
+  </fieldset>
+  <footer>
+    <button type="button" class="text" value="previous">Back</button>
+    <button type="button" class="text" value="skip">Skip</button>
+    <button type="button" value="next">Next</button>
+    <button type="submit">Submit</button>
+  </footer>
+</form>
+`} />
+  </Section>
+  <Section {...S.questions}>
+        <p>
+          The answers decide the kind of question. Radio buttons with one
+          <code>name</code> make a single choice and checkboxes make a
+          multiple choice. A text field or textarea takes a free answer, and a
+          question can mix choices with a text field for "Other".
+        </p>
+        <p>
+          A question is required when one of its controls has
+          <code>required</code>. A group of checkboxes cannot say "at least
+          one" in HTML, so put <code>data-required</code> on its fieldset
+          instead. Any other question is optional: the Skip button appears
+          for it, and skipping clears whatever was answered so the form sends
+          nothing for that question. Leave out the Skip button to make people
+          press Next instead.
+        </p>
+  </Section>
+  <Section {...S.validation}>
+        <p>
+          Next checks the shown question with the browser's own validation, so
+          <code>required</code>, <code>pattern</code>, <code>minlength</code>
+          and the input types all work. When the answer is missing or wrong,
+          the fieldset gets <code>invalid</code>, its controls get
+          <code>aria-invalid="true"</code>, its
+          <code>.questionnaire-error</code> shows and focus moves to the
+          control to fix. Answering clears the error.
+        </p>
+        <p>
+          Write the error text in the question so it can be specific and in
+          the page's language. A question without one shows the browser's
+          validation message, or the <code>requiredMessage</code> option for a
+          <code>data-required</code> group. Submitting, with the button, Enter
+          or <code>requestSubmit()</code>, checks every question and opens the
+          first one that still needs an answer. Only enabled checkboxes count
+          toward <code>data-required</code>, since a disabled one is not sent.
+        </p>
+  </Section>
+  <Section {...S.conditional}>
+        <p>
+          A disabled fieldset is skipped, and the progress count leaves it out.
+          Enable or disable questions from earlier answers to branch; the
+          browser does not send the controls of a disabled fieldset.
+        </p>
+<Code code={`
+<fieldset>
+  <legend>Do you work in a team?</legend>
+  <label><input type="radio" name="team" value="yes" required>Yes</label>
+  <label><input type="radio" name="team" value="no" required>No</label>
+</fieldset>
+<fieldset id="team-size" disabled>
+  <legend>How many people are on your team?</legend>
+  …
+</fieldset>
+
+<script>
+  form.addEventListener('change', () => {
+    document.getElementById('team-size').disabled = form.elements.team.value !== 'yes';
+  });
+</script>
+`} />
+  </Section>
+  <Section {...S.submitting}>
+        <p>
+          The submit button shows on the last question. Pressing it sends the
+          form like any other: to its <code>action</code>, or to a
+          <code>submit</code> listener that reads the answers with
+          <code>FormData</code>. Use <code>getAll()</code> for checkboxes.
+          Without JavaScript every question shows at once, the navigation
+          buttons stay hidden, and the submit button still sends the form.
+          A <code>data-required</code> group is not checked in that case.
+        </p>
+<Code code={`
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const answers = new FormData(event.currentTarget);
+  answers.get('direction');    // 'search'
+  answers.getAll('platforms'); // ['web', 'mobile']
+});
+`} />
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          Each question is a native group named by its legend, and the
+          description and any error are attached with
+          <code>aria-describedby</code>. Hidden questions use
+          <code>hidden</code>, so they are out of the tab order and the
+          accessibility tree. After Next, Back or Skip, focus moves to the
+          selected answer or the first control of the new question.
+        </p>
+        <p>
+          Enter in a field moves to the next question; on the last one it
+          submits. The progress row is a <code>&lt;progress&gt;</code> named
+          by its text, "Question 2 of 3". Name the form with
+          <code>aria-label</code> or a heading.
+        </p>
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+          <tr>
+            <td><code>progressLabel</code></td>
+            <td>String</td>
+            <td><code>'Question {'{current}'} of {'{total}'}'</code></td>
+            <td>Text of the progress row. <code>{'{current}'}</code> and <code>{'{total}'}</code> become the question number and count. <code>data-progress-label</code> on the form sets it.</td>
+          </tr>
+          <tr>
+            <td><code>requiredMessage</code></td>
+            <td>String</td>
+            <td><code>'Choose an answer to continue.'</code></td>
+            <td>Error for a question with no <code>.questionnaire-error</code> when the browser has no message, as for a <code>data-required</code> group.</td>
+          </tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+const questionnaire = Expressive.Questionnaire.getInstance(document.querySelector('form.questionnaire'));
+questionnaire.items;     // the fieldsets that apply, in order
+questionnaire.index;     // position of the shown question
+questionnaire.next();    // checks the shown question, then moves on
+questionnaire.previous();
+questionnaire.skip();    // clears the shown answer, then moves on
+questionnaire.goTo(2);   // shows a question without checking, e.g. to resume
+questionnaire.destroy(); // shows every question and removes what it added
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.questionnaire</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-questionnaire-choice-shape</code></td><td>12px</td></tr>
+          <tr><td><code>--md-comp-questionnaire-choice-outline-color</code></td><td><code>--md-sys-color-outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-questionnaire-choice-selected-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

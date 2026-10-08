@@ -1,0 +1,144 @@
+@use "../abstracts" as *;
+
+// Questionnaire. A <form class="questionnaire"> asks one question at a time.
+// Each <fieldset> child is a question: its <legend> is the prompt, a <p> is
+// the description, and the answers are radio or checkbox labels (a <small>
+// in a label describes that answer) or a text field. A
+// <p class="questionnaire-error"> shows when the question needs an answer. A
+// <footer> holds the buttons: value="previous", "skip" and "next", and a
+// submit button.
+//
+// The Questionnaire component hides every question but the current one,
+// adds the progress row above them and shows only the buttons that apply.
+// Without it every question shows, the navigation buttons stay hidden and
+// the submit button sends the form.
+//
+// Choices are outlined rows; a selected one fills with secondary-container,
+// the M3 colour for a selected item in a list.
+//
+// Tokens:
+//   --md-comp-questionnaire-choice-shape            12px
+//   --md-comp-questionnaire-choice-outline-color    outline-variant
+//   --md-comp-questionnaire-choice-selected-color   secondary-container
+
+.questionnaire {
+  --md-comp-questionnaire-choice-shape: 12px;
+  --md-comp-questionnaire-choice-outline-color: var(--md-sys-color-outline-variant);
+  --md-comp-questionnaire-choice-selected-color: var(--md-sys-color-secondary-container);
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  > .questionnaire-progress {
+    display: grid;
+    gap: 8px;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("label-large");
+
+    > .progress {
+      margin: 0;
+    }
+  }
+
+  > fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    > legend {
+      max-width: 100%;
+      margin: 0 0 8px;
+      padding: 0;
+      @include typescale("title-large");
+    }
+
+    > p {
+      margin: 0;
+      color: var(--md-sys-color-on-surface-variant);
+      @include typescale("body-medium");
+    }
+
+    > .questionnaire-error {
+      margin-block-start: 8px;
+      color: var(--md-sys-color-error);
+    }
+
+    &:not(.invalid) > .questionnaire-error {
+      display: none;
+    }
+
+    > label:has(> :is([type="radio"], [type="checkbox"])) {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      column-gap: 16px;
+      box-sizing: border-box;
+      min-height: 56px;
+      margin: 8px 0 0;
+      padding: 8px 16px;
+      border: 1px solid var(--md-comp-questionnaire-choice-outline-color);
+      border-radius: var(--md-comp-questionnaire-choice-shape);
+      transition: background-color .2s ease, border-color .2s ease;
+
+      p + & {
+        margin-block-start: 16px;
+      }
+
+      // The checkbox draws its tick on the label at left: 0; follow the
+      // padding, on either side.
+      &:has(> [type="checkbox"])::before {
+        left: auto;
+        inset-inline-start: 16px;
+      }
+
+      &:has(> :checked) {
+        border-color: transparent;
+        background-color: var(--md-comp-questionnaire-choice-selected-color);
+        color: var(--md-sys-color-on-secondary-container);
+      }
+
+      &:has(> :disabled) {
+        border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 12%, transparent);
+        color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+      }
+
+      &:has(> small) > input {
+        grid-row: span 2;
+      }
+
+      > small {
+        grid-column: 2;
+        color: var(--md-sys-color-on-surface-variant);
+        @include typescale("body-medium");
+      }
+    }
+  }
+
+  // The selector matches the page footer's, which every <footer> gets.
+  > footer:not(:has(> .navigation-bar:only-child)) {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+
+    > [value="previous"] {
+      margin-inline-end: auto;
+    }
+  }
+
+  // Buttons set their own display, which would beat the [hidden] the
+  // component writes.
+  > fieldset[hidden],
+  > footer > button[hidden] {
+    display: none;
+  }
+
+  // Before the component runs, every question shows and only submit applies.
+  &:not(:has(> .questionnaire-progress)) > footer > :is([value="previous"], [value="skip"], [value="next"]) {
+    display: none;
+  }
+}

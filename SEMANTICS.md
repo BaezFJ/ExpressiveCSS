@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**74 of 74 rows enforced; 0 remaining.**
+**75 of 75 rows enforced; 0 remaining.**
 
-70 of those rows are components - a part of the framework an author writes markup for.
+71 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 70 components declare conformance debt.**
+**3 of 71 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -786,6 +786,20 @@ Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.
 
 - **div-progress-reports-progress** - <progress> reports itself. A <div class="progress"> is a bar drawn with CSS and reports nothing - it needs role="progressbar", plus aria-valuenow/min/max when it is determinate.
 - **determinate-progress-reports-its-value** - role="progressbar" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100.
+
+### questionnaire
+
+Added with the questionnaire component. A native form of fieldsets; the component shows one question at a time and owns the progress row, hidden questions, invalid state and focus.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `questionnaire-is-a-form` | forbid | `.questionnaire:not(form)` | must not match |
+| `questionnaire-is-named` | require-accessible-name | `form.questionnaire` | must end up with an accessible name |
+| `questionnaire-navigation-does-not-submit` | forbid | `.questionnaire > footer > button:is([value=previous], [value=skip], [value=next]):not([type=button])` | must not match |
+
+- **questionnaire-is-a-form** - Write the questionnaire as <form class="questionnaire">. The form sends the answers, runs the browser's validation and still works without JavaScript.
+- **questionnaire-is-named** - Name the questionnaire with aria-label or aria-labelledby so it is announced as a form.
+- **questionnaire-navigation-does-not-submit** - Give the Back, Skip and Next buttons type="button". A button without a type submits the form, so pressing one before the component starts would send it early.
 
 ### radar-chart
 

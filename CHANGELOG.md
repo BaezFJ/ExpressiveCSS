@@ -7,6 +7,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `form.questionnaire` asks one question at a time. Each `<fieldset>` is a
+  question with radio, checkbox or text answers, and footer buttons marked
+  `value="previous"`, `"skip"` and `"next"` move between them. The component
+  adds a progress row, checks each question with the browser's validation
+  (`data-required` asks for at least one checkbox), shows the question's
+  `.questionnaire-error`, offers Skip on optional questions and leaves out
+  disabled ones so pages can branch. The form submits normally, and without
+  JavaScript every question shows at once.
 - KPI component: `article.kpi` is a card for one key figure, with its
   label and value in a `<dl>`, a `.kpi-trend` chip that takes `up`, `down`
   and `negative`, an optional `.kpi-icon`, a `.kpi-actions` corner button,
