@@ -7,7 +7,8 @@ import { chromium } from 'playwright';
 import { EXAMPLE_NAMES, materializeProjectFixture } from '../scripts/eval-expressivecss-skill.mjs';
 import { startFixtureServer } from '../scripts/expressivecss-eval-browser.mjs';
 
-const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
+const chromiumRun = !process.env.EXPRESSIVECSS_TEST_BROWSER || process.env.EXPRESSIVECSS_TEST_BROWSER === 'chromium';
+const browserTest = chromiumRun && existsSync(chromium.executablePath()) ? test : test.skip;
 const screenshots = process.env.EXPRESSIVECSS_EXAMPLE_SCREENSHOTS;
 
 for (const name of EXAMPLE_NAMES) browserTest(`complete ${name} example preserves both treatments and its task path`, async () => {

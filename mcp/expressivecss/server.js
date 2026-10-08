@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
-import { JSDOM } from 'jsdom';
+import { createRequire } from 'node:module';
 import * as z from 'zod/v4';
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
@@ -1060,6 +1060,8 @@ function inspectSemanticRules(snippet, maxIssues = MAX_STATIC_ISSUES, deadline =
   if (markupStructureExceedsLimit(snippet)) return markInspectionTruncated([], 'markup structure limit reached');
   const prefix = '<!doctype html><body>';
   const includeNodeLocations = snippet.length * (snippet.split('<').length - 1) <= MAX_LOCATED_MARKUP_WORK;
+  // Loaded on first use: jsdom takes ~0.3 s to load, and most server starts never inspect markup.
+  const { JSDOM } = createRequire(import.meta.url)('jsdom');
   const dom = new JSDOM(`${prefix}${snippet}</body>`, { includeNodeLocations });
   const { document } = dom.window;
   // Elements the parser creates without a start tag have no source offset, so they report the start.
