@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.1 - 2026-10-08
 
 - Fix `npx @expressivecss/mcp-server`, which failed with "could not determine
   executable to run" from 0.2.0 onward because the package has two bins. A
@@ -8,6 +8,12 @@
   The `expressivecss-mcp` bin is unchanged.
 - The server and `expressivecss-lint` start about 0.3 s faster. jsdom now loads
   the first time a check inspects markup instead of at startup.
+- The catalogue, guides and rules cover 29 more components: accordion, aura,
+  avatar, the eight chart types, command palette, countdown, data table,
+  drop zone, empty state, KPI, marquee, message, message scroller, popover,
+  questionnaire, rating, rich text editor, skeleton, stat, stepper, timeline
+  and tree.
+- Bundled framework guidance: ExpressiveCSS 0.13.0.
 
 ## 0.3.0 - 2026-10-06
 

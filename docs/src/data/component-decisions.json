@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "frameworkVersion": "0.12.0",
+  "frameworkVersion": "0.13.0",
   "authority": "This catalogue owns component-selection metadata. Component guides own syntax and semantics.json owns authored semantics.",
   "components": [
     {
