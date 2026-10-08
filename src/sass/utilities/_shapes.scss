@@ -1,0 +1,164 @@
+@use "sass:list";
+@use "sass:math";
+@use "../abstracts" as *;
+
+// Shapes. `.shape-<name>` cuts any element to one of twenty rounded shapes:
+// an <img>, a <video>, a button, a card. The set follows M3 Expressive's
+// shape library; the names are ours.
+//
+//   <img class="shape-scallop-6" src="..." alt="...">
+//   <button class="icon-button filled shape-spark" aria-label="Favorite">
+//
+// Each shape is an SVG path in a 100-unit box, drawn as a mask. A mask scales
+// with the element and keeps the curves smooth at any size, which a
+// `clip-path: polygon()` only does with hundreds of points. The path stretches
+// to the element's box, so the shapes are drawn for a square one; images and
+// videos are made square and cropped with `object-fit: cover`.
+//
+// A mask also clips the element's outline, so a focused shape draws the ring
+// inside its own edge: the mask cuts the 2px gap and `::after` paints the 3px
+// band. `contain: paint` makes the element the band's containing block without
+// touching `position`, which a component (a halfway FAB) may already own. An
+// <img> has no `::after`, so a focusable image shows the gap alone.
+
+// Each shape is a polygon whose corners are cut by quadratic curves. The
+// corner takes `$round` of each edge next to it: 0 keeps the point, 0.5 runs
+// the curve from one edge's midpoint to the next, so a polygon rounded at 0.5
+// throughout is a smooth closed curve. `$round` is a list cycled over the
+// points, so a star can round its tips and valleys differently.
+
+// One decimal of a 100-unit box is a tenth of a percent - under half a pixel
+// on a 400px image.
+@function _n($v) {
+  @return math.div(math.round($v * 10), 10);
+}
+
+@function _xy($p) {
+  @return "#{_n(list.nth($p, 1))} #{_n(list.nth($p, 2))}";
+}
+
+@function _toward($p, $q, $t) {
+  @return (list.nth($p, 1) + (list.nth($q, 1) - list.nth($p, 1)) * $t)
+    (list.nth($p, 2) + (list.nth($q, 2) - list.nth($p, 2)) * $t);
+}
+
+// $count points on a circle round the box centre, clockwise from $start
+// (y points down, so -90deg is the top). $radii is cycled: (40 30) is a star,
+// (40 40 25) puts two points on every lobe of a clover. $sx and $sy stretch
+// the result before $turn rotates it.
+@function _polar($count, $radii, $start: -90deg, $sx: 1, $sy: 1, $turn: 0deg) {
+  $pts: ();
+  @for $i from 0 through $count - 1 {
+    $a: $start + math.div(360deg * $i, $count);
+    $r: list.nth($radii, $i % list.length($radii) + 1);
+    $x: $r * math.cos($a) * $sx;
+    $y: $r * math.sin($a) * $sy;
+    $pts: list.append(
+      $pts,
+      (50 + $x * math.cos($turn) - $y * math.sin($turn))
+        (50 + $x * math.sin($turn) + $y * math.cos($turn)),
+      comma
+    );
+  }
+  @return $pts;
+}
+
+@function _path($pts, $round) {
+  $n: list.length($pts);
+  $d: "";
+  $end: null;
+  @for $i from 1 through $n {
+    $p: list.nth($pts, $i);
+    $r: list.nth($round, ($i - 1) % list.length($round) + 1);
+    $move: "L";
+    @if $i == 1 { $move: "M"; }
+    @if $r == 0 {
+      $d: $d + $move + _xy($p);
+      $end: _xy($p);
+    } @else {
+      $prev: list.nth($pts, $n);
+      @if $i > 1 { $prev: list.nth($pts, $i - 1); }
+      $next: list.nth($pts, 1);
+      @if $i < $n { $next: list.nth($pts, $i + 1); }
+      $a: _xy(_toward($p, $prev, $r));
+      @if $a != $end { $d: $d + $move + $a; }
+      $end: _xy(_toward($p, $next, $r));
+      $d: $d + "Q" + _xy($p) + " " + $end;
+    }
+  }
+  @return $d + "Z";
+}
+
+@function _mask($pts, $round) {
+  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='#{_path($pts, $round)}'/%3E%3C/svg%3E");
+}
+
+// name: (points, rounding). The M3 shape each one follows:
+//   pebble oval, bean pill, peak triangle, dart arrow, slice fan, kite diamond,
+//   cell clamshell, crest pentagon, facet gem, spark very sunny, seal sunny,
+//   scallop-N N-sided cookie, bloom-N N-leaf clover, spike burst, flare soft burst.
+$_shapes: (
+  pebble: (_polar(8, 65.5, -90deg, 1, 0.6, -45deg), 0.5),
+  bean: (_polar(4, 74.5, -45deg, 1, 0.78, -45deg), 0.5),
+  peak: ((50 -6, 108.6 95, -8.6 95), 0.22),
+  dart: ((50 -6, 107 99, 50 80, -7 99), (0.3 0.3 0.5 0.3)),
+  slice: ((0 0, 100 0, 100 100, 0 100), (0.16 0.84 0.16 0.16)),
+  kite: ((50 -6.2, 97.2 50, 50 106.2, 2.8 50), 0.22),
+  cell: ((22 11, 78 11, 104 50, 78 89, 22 89, -4 50), 0.3),
+  crest: (_polar(5, 53, -90deg), 0.22),
+  facet: (_polar(7, 53, -90deg), 0.3),
+  spark: (_polar(16, (52 38)), (0.3 0.5)),
+  seal: (_polar(16, (52 44)), (0.42 0.5)),
+  scallop-4: (_polar(8, (68 32), -45deg), 0.5),
+  scallop-6: (_polar(12, (53.9 44.1)), 0.5),
+  scallop-7: (_polar(14, (54.2 45.4)), 0.5),
+  scallop-9: (_polar(18, (53 46.2)), 0.5),
+  scallop-12: (_polar(24, (52 45.8)), 0.5),
+  bloom-4: (_polar(16, (54 57 54 38), -67.5deg), (0.5 0.5 0.5 0.25)),
+  bloom-8: (_polar(24, (51 51 40), -97.5deg), (0.5 0.5 0.3)),
+  spike: (_polar(24, (50 34)), 0),
+  flare: (_polar(20, (51.5 36.6)), (0.18 0.3)),
+);
+
+%shape {
+  contain: paint;
+  mask: var(--shape-mask) center / 100% 100% no-repeat;
+
+  &:is(img, video, canvas) {
+    aspect-ratio: 1;
+    height: auto;
+    object-fit: cover;
+  }
+
+  // The ring: the outline's 3px band and 2px gap, drawn inside the edge.
+  &:focus-visible {
+    mask:
+      var(--shape-mask) center / calc(100% - 10px) calc(100% - 10px) no-repeat,
+      var(--shape-mask) center / 100% 100% no-repeat,
+      var(--shape-mask) center / calc(100% - 6px) calc(100% - 6px) no-repeat;
+    mask-composite: add, exclude;
+  }
+
+  &:focus-visible::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--md-sys-color-secondary);
+    pointer-events: none;
+    mask:
+      var(--shape-mask) center / 100% 100% no-repeat exclude,
+      var(--shape-mask) center / calc(100% - 6px) calc(100% - 6px) no-repeat;
+
+    @media (forced-colors: active) {
+      forced-color-adjust: none;
+      background-color: Highlight;
+    }
+  }
+}
+
+@each $name, $shape in $_shapes {
+  .shape-#{$name} {
+    @extend %shape;
+    --shape-mask: #{_mask(list.nth($shape, 1), list.nth($shape, 2))};
+  }
+}

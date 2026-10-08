@@ -134,6 +134,13 @@ export const NAV: DocsGroup[] = [
           "Style native scrollbars across browsers without replacing native scrolling.",
       },
       {
+        id: "shapes",
+        label: "Shapes",
+        route: "/shapes.html",
+        description:
+          "Cut images, videos, and buttons to rounded expressive shapes with one class.",
+      },
+      {
         id: "media_css",
         label: "Media styles",
         title: "Media Styles",

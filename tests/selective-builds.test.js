@@ -65,6 +65,12 @@ test('default custom Sass matches the complete stylesheet and preserves configur
   const scrollArea = compileString('@use "custom" with ($components: (), $utilities: ("scroll-area"), $expressive-include-fonts: false);', options).css;
   assert.match(scrollArea, /\.scroll-area\{overflow:auto;scrollbar-width:thin/);
   assert.doesNotMatch(scrollArea, /\.datepicker|\.tabs|\.overflow-x-auto/);
+  const shapes = compileString('@use "custom" with ($components: (), $utilities: ("shapes"), $expressive-include-fonts: false);', options).css;
+  const masks = [...shapes.matchAll(/\.shape-([a-z0-9-]+)\{--shape-mask: ?url\("data:image\/svg\+xml,([^"]+)"\)/g)];
+  assert.equal(masks.length, 20);
+  for (const [, name, svg] of masks) assert.match(decodeURIComponent(svg), /<path d='M[-\d. MLQ]+Z'\/><\/svg>$/, name);
+  assert.match(shapes, /:focus-visible::after\{/);
+  assert.doesNotMatch(empty, /\.shape-/);
   const fonts = compileString('@use "custom" with ($components: (), $utilities: (), $expressive-font-path: "/assets/fonts");', options).css;
   assert.match(fonts, /url\("?\/assets\/fonts\/material-symbols-outlined.woff2/);
   assert.throws(() => compileString('@use "custom" with ($components: ("missing-component",));', options), /Can't find stylesheet/);
@@ -116,5 +122,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the radar chart and its label room: 58,869 gzip bytes (+766).
   // Reviewed the radial chart and its review fixes: 59,469 gzip bytes (+600).
   // Reviewed the mixed chart: 60,187 gzip bytes (+718).
-  assert.ok(sizes(css).gzip <= 60187, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the twenty .shape-* masks: 63,077 gzip bytes (+2,890).
+  assert.ok(sizes(css).gzip <= 63077, `CSS gzip: ${sizes(css).gzip}`);
 });

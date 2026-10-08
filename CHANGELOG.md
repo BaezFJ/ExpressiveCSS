@@ -124,6 +124,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   The table stays as the text alternative and the no-JavaScript fallback.
 - `.scroll-area` styles native scrollbars with theme-aware colors and thin
   sizing, with a WebKit fallback and system scrollbars in forced-colors mode.
+- `.shape-*` cuts images, videos, buttons, and other elements to twenty
+  rounded shapes after the M3 Expressive shape library, such as
+  `.shape-scallop-6`, `.shape-spark`, and `.shape-bloom-4`. Focused shapes draw
+  their focus ring inside the edge. CSS only.
 - Frosted glass for floating surfaces. `--expressive-glass: true` on `:root` or
   a wrapper turns it on. `--expressive-glass-blur` (default `16px`) sets the
   frost thickness, and `--expressive-glass-opacity` (default `72%`) sets how

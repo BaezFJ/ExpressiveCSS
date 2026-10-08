@@ -1,0 +1,98 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "gallery", label: "Shapes" },
+  { id: "media", label: "Images and videos" },
+  { id: "buttons", label: "Buttons" },
+  { id: "notes", label: "Notes" },
+]);
+const shapes = [
+  "pebble", "bean", "peak", "dart", "slice",
+  "kite", "cell", "crest", "facet", "spark",
+  "seal", "scallop-4", "scallop-6", "scallop-7", "scallop-9",
+  "scallop-12", "bloom-4", "bloom-8", "spike", "flare",
+];
+---
+<DocsLayout page="shapes">
+<PageBody sections={S}>
+  <Section {...S.gallery}>
+    <p>Add a <code>.shape-*</code> class to cut an element to one of twenty rounded shapes.
+      The set follows the Material 3 Expressive shape library. The shape is a mask, so it
+      scales with the element and its curves stay smooth at any size. No JavaScript is needed.</p>
+    <div class="shape-gallery">
+      {shapes.map(name => (
+        <figure>
+          <div class={`shape-${name}`}></div>
+          <figcaption><code>{name}</code></figcaption>
+        </figure>
+      ))}
+    </div>
+  </Section>
+  <Section {...S.media}>
+    <p>On an <code>&lt;img&gt;</code>, <code>&lt;video&gt;</code> or <code>&lt;canvas&gt;</code>,
+      the class also sets <code>aspect-ratio: 1</code> and <code>object-fit: cover</code>,
+      so the picture is cropped to a square instead of stretching the shape. Set the width;
+      the height follows.</p>
+    <div class="flex flex-wrap gap-4 align-center">
+      <img class="shape-scallop-9" width="160" src="https://picsum.photos/id/1025/400/300" alt="A pug wrapped in a blanket">
+      <img class="shape-bloom-4" width="160" src="https://picsum.photos/id/1015/400/400" alt="A river between mountains">
+      <img class="shape-pebble" width="160" src="https://picsum.photos/id/64/400/400" alt="A portrait of a woman">
+    </div>
+    <Code code={`<img class="shape-scallop-9" width="160" src="pug.jpg" alt="A pug wrapped in a blanket">
+<video class="shape-bloom-4" width="240" src="clip.mp4" controls></video>`} />
+    <p>Native video controls sit at the edges of the box, where most shapes cut them off.
+      Use custom controls, or keep <code>controls</code> off for decorative loops.</p>
+  </Section>
+  <Section {...S.buttons}>
+    <p>The shapes are drawn for a square box, so pair them with icon buttons, FABs, or
+      a button with equal width and height. A wide button stretches the shape.</p>
+    <div class="flex flex-wrap gap-4 align-center">
+      <button class="icon-button filled large shape-spark" type="button" aria-label="Favorite">
+        <span class="material-symbols" aria-hidden="true">favorite</span>
+      </button>
+      <button class="icon-button tonal large shape-scallop-6" type="button" aria-label="Edit">
+        <span class="material-symbols" aria-hidden="true">edit</span>
+      </button>
+      <button class="icon-button filled large shape-bloom-4" type="button" aria-label="Add">
+        <span class="material-symbols" aria-hidden="true">add</span>
+      </button>
+      <button class="btn shape-flare" type="button" style="width: 96px; height: 96px">New</button>
+    </div>
+    <Code code={`<button class="icon-button filled large shape-spark" type="button" aria-label="Favorite">
+  <span class="material-symbols" aria-hidden="true">favorite</span>
+</button>
+<button class="btn shape-flare" type="button" style="width: 96px; height: 96px">New</button>`} />
+    <p>The mask would clip the usual focus outline, so a focused shape draws its ring inside
+      its own edge: a 3px band in the secondary color and a 2px gap. Press
+      <kbd>Tab</kbd> to see it. Forced-colors mode paints the band in <code>Highlight</code>.
+      Clicks and taps on the cut-away parts of the box pass through to the page behind.</p>
+  </Section>
+  <Section {...S.notes}>
+    <p>The class adds <code>contain: paint</code>, which clips overflowing content and makes
+      the element the containing block for absolutely positioned children. Shadows and
+      borders are cut with the rest of the element. Wrap the element if it needs a shadow
+      that follows the shape, and apply <code>filter: drop-shadow()</code> to the wrapper.</p>
+    <p>For a selective Sass build, include <code>"shapes"</code> in <code>$utilities</code>.</p>
+  </Section>
+</PageBody>
+</DocsLayout>
+
+<style>
+  .shape-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
+    gap: 1rem;
+  }
+  .shape-gallery figure { margin: 0; text-align: center; font-size: 0.75rem; }
+  .shape-gallery div {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 0.5rem;
+    background-color: var(--md-sys-color-primary);
+  }
+</style>

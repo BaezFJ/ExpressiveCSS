@@ -1135,6 +1135,19 @@ Give a generic scroll region `tabindex="0"` and an accessible name so keyboard u
 
 Override `--scroll-area-thumb-color` and `--scroll-area-track-color` on the container or an ancestor. Defaults are `var(--md-sys-color-on-surface-variant)` and `transparent`. Choose colors with enough contrast against the track and container. Native scrollbar shape, exact width, and automatic hiding depend on the browser and operating system. Older WebKit engines use rounded 8px scrollbars. Forced-colors mode restores system colors and the default width. Selective Sass builds can load `"scroll-area"` through `$utilities`.
 
+### Shapes
+
+Add one `.shape-*` class to cut an element to a rounded shape. The twenty shapes follow the Material 3 Expressive shape library under ExpressiveCSS names: `pebble`, `bean`, `peak`, `dart`, `slice`, `kite`, `cell`, `crest`, `facet`, `spark`, `seal`, `scallop-4`, `scallop-6`, `scallop-7`, `scallop-9`, `scallop-12`, `bloom-4`, `bloom-8`, `spike`, and `flare`. Each is an SVG mask that scales with the element; no JavaScript initialization is needed.
+
+```html
+<img class="shape-scallop-9" width="160" src="pug.jpg" alt="A pug wrapped in a blanket">
+<button class="icon-button filled large shape-spark" type="button" aria-label="Favorite">
+  <span class="material-symbols" aria-hidden="true">favorite</span>
+</button>
+```
+
+The shapes are drawn for a square box and stretch with a non-square one. On `<img>`, `<video>`, and `<canvas>` the class also sets `aspect-ratio: 1`, `height: auto`, and `object-fit: cover`. Use them on icon buttons, FABs, or buttons with equal width and height. A focused shape draws its focus ring inside its edge, a 3px secondary band and a 2px gap, because the mask clips outlines; images show the gap only. Forced-colors mode paints the band in `Highlight`. The cut-away parts of the box do not take clicks. The class adds `contain: paint`, so overflow, shadows, and borders are clipped to the shape; put `filter: drop-shadow()` on a wrapper for a shadow. Native video controls sit at the box edges and are mostly cut off. Selective Sass builds can load `"shapes"` through `$utilities`.
+
 ### Hiding/Showing Content
 
 We provide easy to use classes to hide/show content on specific screen sizes.
