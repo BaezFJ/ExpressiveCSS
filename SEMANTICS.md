@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**68 of 68 rows enforced; 0 remaining.**
+**69 of 69 rows enforced; 0 remaining.**
 
-64 of those rows are components - a part of the framework an author writes markup for.
+65 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 64 components declare conformance debt.**
+**3 of 65 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -744,6 +744,18 @@ Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.
 
 - **div-progress-reports-progress** - <progress> reports itself. A <div class="progress"> is a bar drawn with CSS and reports nothing - it needs role="progressbar", plus aria-valuenow/min/max when it is determinate.
 - **determinate-progress-reports-its-value** - role="progressbar" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100.
+
+### radar-chart
+
+Added with the radar chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn shapes, labels and legend are aria-hidden.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `radar-chart-is-a-figure-with-a-table` | forbid | `.radar-chart:not(figure:has(> table))` | must not match |
+| `radar-chart-has-a-caption` | forbid | `.radar-chart:not(:has(> figcaption))` | must not match |
+
+- **radar-chart-is-a-figure-with-a-table** - Write .radar-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
+- **radar-chart-has-a-caption** - Name a .radar-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
 ### scrim
 

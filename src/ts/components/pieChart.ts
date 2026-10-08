@@ -1,9 +1,8 @@
 import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions } from './lineChart';
+import { LineChart, LineChartOptions, svgNode as node } from './lineChart';
 
 export type PieChartOptions = LineChartOptions;
 
-const SVG = 'http://www.w3.org/2000/svg';
 // ponytail: rows past six repeat the colors; group small parts as "Other".
 const COLORS = 6;
 /** The pie's radius in a 100-unit box, leaving room for the active slice to grow. */
@@ -42,10 +41,8 @@ export class PieChart extends LineChart {
     return false;
   }
 
-  /** Arrows move round the pie, so both pairs work; left and right swap in RTL. */
-  protected get _arrows(): [string[], string[]] {
-    const [next, back] = this._reversed ? ['ArrowLeft', 'ArrowRight'] : ['ArrowRight', 'ArrowLeft'];
-    return [[next, 'ArrowDown'], [back, 'ArrowUp']];
+  protected get _circular() {
+    return true;
   }
 
   static init(el: HTMLElement, options?: Partial<PieChartOptions>): PieChart;
@@ -68,12 +65,6 @@ export class PieChart extends LineChart {
     // LineChart hides the tooltip for -1 and for an index past the last row.
     if (this._tooltip.hidden) return;
 
-    // CSS places the tooltip on the slice's middle from --turn.
-    const middle = (this._turns[index][0] + this._turns[index][1]) / 2;
-    this._tooltip.style.removeProperty('left');
-    this._tooltip.style.setProperty('--turn', String(middle));
-    // On the right half it opens leftwards, over the pie.
-    this._tooltip.classList.toggle('end', middle < 0.5);
     const color = this._colors[index];
     this._tooltip.querySelectorAll<HTMLElement>('[data-series]').forEach((span) => {
       if (color) span.dataset.series = color;
@@ -82,6 +73,14 @@ export class PieChart extends LineChart {
     const share = this._share(index);
     const value = this._tooltip.querySelector('span:nth-of-type(2)');
     if (share && value) value.textContent += ` (${share})`;
+  }
+
+  /** CSS places the tooltip on the slice's middle from --turn. */
+  protected _place(index: number) {
+    const middle = (this._turns[index][0] + this._turns[index][1]) / 2;
+    this._tooltip.style.setProperty('--turn', String(middle));
+    // On the right half it opens leftwards, over the pie.
+    this._tooltip.classList.toggle('end', middle < 0.5);
   }
 
   /** The row's share of the whole as a percentage, or '' for none. */
@@ -121,15 +120,13 @@ export class PieChart extends LineChart {
 
   /** The row under the pointer by its angle from the middle, or -1 off the slices. */
   protected _indexAt(e: PointerEvent) {
-    const box = this._plot.getBoundingClientRect();
-    const [x, y] = [e.clientX - box.left - box.width / 2, e.clientY - box.top - box.height / 2];
+    const [turn, share] = this._polarAt(e);
     // The distance in the SVG's 100-unit box.
-    const distance = (Math.hypot(x, y) / box.width) * 100;
+    const distance = share * 100;
     const hole = this.el.classList.contains('donut')
       ? parseFloat(getComputedStyle(this.el).getPropertyValue('--md-comp-pie-chart-hole')) || 0
       : 0;
     if (distance < RADIUS * hole) return -1;
-    const turn = (Math.atan2(x, -y) / (2 * Math.PI) + 1) % 1;
     const index = this._turns.findIndex(([start, end]) => start <= turn && turn < end);
     // The active slice is drawn larger, so the pointer stays on it to its edge.
     return distance > RADIUS * (index === this.activeIndex ? GROWN : 1) ? -1 : index;
@@ -161,11 +158,6 @@ export class PieChart extends LineChart {
     const pie = document.createElement('div');
     pie.className = 'pie-chart-pie';
     pie.setAttribute('aria-hidden', 'true');
-    const node = (name: string, attributes: Record<string, string>) => {
-      const element = document.createElementNS(SVG, name);
-      for (const key in attributes) element.setAttribute(key, attributes[key]);
-      return element;
-    };
     const svg = node('svg', { viewBox: '-50 -50 100 100', focusable: 'false' });
     const id = `pie-chart-mask-${++_maskId}`;
     const area = { x: '-50', y: '-50', width: '100', height: '100' };

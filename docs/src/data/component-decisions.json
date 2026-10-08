@@ -2359,7 +2359,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "5a2780f9c9381b03a4bb71f6b4e47b3ea049dcab3e8b8077c0e6b09354936648"
+            "sha256": "26af91940e99dc87c3cf02c79bf7a334c2ff2ee13ad66a15f78792082c10fe55"
           }
         ],
         "gaps": [
@@ -2474,7 +2474,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "5a2780f9c9381b03a4bb71f6b4e47b3ea049dcab3e8b8077c0e6b09354936648"
+            "sha256": "26af91940e99dc87c3cf02c79bf7a334c2ff2ee13ad66a15f78792082c10fe55"
           }
         ],
         "gaps": [
@@ -2590,7 +2590,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "5a2780f9c9381b03a4bb71f6b4e47b3ea049dcab3e8b8077c0e6b09354936648"
+            "sha256": "26af91940e99dc87c3cf02c79bf7a334c2ff2ee13ad66a15f78792082c10fe55"
           }
         ],
         "gaps": [
@@ -2696,11 +2696,11 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "5a2780f9c9381b03a4bb71f6b4e47b3ea049dcab3e8b8077c0e6b09354936648"
+            "sha256": "26af91940e99dc87c3cf02c79bf7a334c2ff2ee13ad66a15f78792082c10fe55"
           },
           {
             "path": "src/ts/components/pieChart.ts",
-            "sha256": "c6b975cf5c2eceb4c5b9ba2b50db40770a7f32525fb5d6a934c7a887d70bbf02"
+            "sha256": "2b8e5940a604b7c4b9dbacfae6a4980b7a13f4df6e04c6c7d032a3b2c3f0bbd4"
           }
         ],
         "gaps": [
@@ -2724,7 +2724,7 @@
           {
             "file": "tests/pie-chart-browser.test.js",
             "name": "chromium: pie chart tooltip follows the pointer round the pie and the arrow keys",
-            "scope": "Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, End and Escape, and clockwise slices with swapped arrows in RTL. No spoken-output assertion."
+            "scope": "Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, wrapping past either end, End and Escape, and clockwise slices and arrows in RTL. No spoken-output assertion."
           }
         ]
       }
@@ -2811,7 +2811,7 @@
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "5a2780f9c9381b03a4bb71f6b4e47b3ea049dcab3e8b8077c0e6b09354936648"
+            "sha256": "26af91940e99dc87c3cf02c79bf7a334c2ff2ee13ad66a15f78792082c10fe55"
           }
         ],
         "gaps": [
@@ -2836,6 +2836,116 @@
             "file": "tests/heatmap-chart-browser.test.js",
             "name": "chromium: heatmap chart tooltip follows the pointer and the arrow keys round the grid",
             "scope": "Pointer to cell by position, the space between cells, a touch drag that keeps its first target, the active cell, tooltip text for cells and gaps, the swatch shade and the outlined gap swatch, a press on a label focusing without a tooltip, opening leftwards on the right half, hiding off the cells, focus, all four arrows stopping at the edges, Home, End and Escape, Escape left uncancelled once the tooltip is hidden, and right-to-left columns with swapped arrows and scale. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "radar-chart",
+      "title": "Radar chart",
+      "aliases": [
+        "spider chart",
+        "web chart",
+        "star chart",
+        "polar chart",
+        "skill chart"
+      ],
+      "guideSource": {
+        "pageId": "radar-chart",
+        "heading": "Radar chart",
+        "headingLevel": 2,
+        "semantics": [
+          "radar-chart"
+        ]
+      },
+      "jobs": [
+        "Several measures on one scale drawn as shapes on spokes from a data table, one shape per series."
+      ],
+      "useWhen": [
+        "Compare a profile of five to eight measures that share one scale, such as skill or satisfaction scores, for one or a few subjects."
+      ],
+      "avoidWhen": [
+        "The measures use different units or scales, exact differences matter, or there are more than three series; use a bar or column chart. The rows are a sequence such as months; use a line chart."
+      ],
+      "alternatives": [
+        "bar-chart",
+        "column-chart",
+        "line-chart",
+        "data-table"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/radar-chart.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#radar-chart",
+          "reviewedOn": "2026-10-07",
+          "documentedSupport": "Spokes drawn clockwise from the top from a figure's data table, one shape per series from zero in the middle to the scale's top at the rim, row labels past each spoke, a legend for several series, area, points, dashed and sparkline modifiers, data-min and data-max, and a pointer and keyboard tooltip with a cursor spoke.",
+          "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, shapes, labels and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+          "limitations": [
+            "Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. A gap joins the spokes either side of it; there are no ring value labels."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-07",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the data available as text, name the chart, keep series distinguishable and every spoke labelled, and let a keyboard reach every row the pointer can."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Two quarters of client satisfaction scored out of 100 on five measures is a radar chart with area. Monthly revenue for a year is a line chart.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/abstracts/_mixins.scss",
+            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+          },
+          {
+            "path": "src/sass/components/_radar-chart.scss",
+            "sha256": "a5f8e6984dfc02b0c7fb2a23f6c1311f733de6b853e0b675c95a58d18da05006"
+          },
+          {
+            "path": "src/ts/components/lineChart.ts",
+            "sha256": "26af91940e99dc87c3cf02c79bf7a334c2ff2ee13ad66a15f78792082c10fe55"
+          },
+          {
+            "path": "src/ts/components/radarChart.ts",
+            "sha256": "ee6c818e8bc8ad11f06d4419e3c45234c2de7cdfaf5eca103b93a1c372d7ba0d"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+            "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+          },
+          {
+            "kind": "feature",
+            "description": "A gap joins the spokes either side of it rather than breaking the shape, the rings have no value labels, and series past four reuse the colors.",
+            "nextStep": "Mark gaps and label the rings if charts need them; keep to three series meanwhile."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/radar-chart-browser.test.js",
+            "name": "chromium: radar chart draws a grid, shapes, labels and a legend from its table",
+            "scope": "Hidden table in the accessibility tree, the named plot and its role description, the square plot, four rings and spokes, shape geometry from zero to data-max with a joined gap and a clamped value, series colors and the dashed class, points, the area fill, labels on their spokes, the legend, separate instances from line charts, no fill, points or legend by default, the sparkline size, focus and hidden labels, and destroy restoring the table."
+          },
+          {
+            "file": "tests/radar-chart-browser.test.js",
+            "name": "chromium: radar chart tooltip follows the pointer round the spokes and the arrow keys",
+            "scope": "Nearest spoke by pointer angle inside and past the rim, tooltip text without gaps, opening leftwards on the right half, the cursor spoke and its points, focus, all four arrows, wrapping past either end, End and Escape, and clockwise spokes and arrows in RTL. No spoken-output assertion."
           }
         ]
       }
@@ -8721,5 +8831,5 @@
     "inputsUnchanged": true,
     "reportSha256": "5777e67403861540605d77c5a5055086a49e8fe086297abd8a4bb6cf399c1666"
   },
-  "sourceRevision": "c0a3ab546a8983cd6e472610c075721f7729dd28"
+  "sourceRevision": "3f08df2f1c353458cbae7646da8ae13523da6821"
 }

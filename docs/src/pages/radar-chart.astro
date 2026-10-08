@@ -1,0 +1,253 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "area", label: "Area and points" },
+  { id: "series", label: "Several series" },
+  { id: "sparkline", label: "Sparkline" },
+  { id: "cards", label: "Chart cards" },
+  { id: "scale", label: "Values and scale" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const skills: [string, number][] = [["Design", 85], ["Development", 72], ["Marketing", 90], ["Strategy", 68], ["Support", 76], ["Delivery", 82]];
+const benchmark: [string, number][] = [["Pricing", 72], ["Quality", 90], ["Speed", 65], ["Support", 78], ["Innovation", 84], ["Reach", 58]];
+const satisfaction: [string, number, number][] = [["Communication", 92, 80], ["Quality", 85, 76], ["Timeliness", 78, 82], ["Value", 88, 74], ["Support", 81, 70]];
+const quarters: [string, number, number][] = [["Q1", 820, 700], ["Q2", 940, 780], ["Q3", 1080, 860], ["Q4", 1260, 960]];
+const average = (values: number[]) => (values.reduce((total, value) => total + value, 0) / values.length).toFixed(1);
+---
+<DocsLayout page="radar-chart">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;figure class="radar-chart"&gt;</code> draws a
+          <code>&lt;table&gt;</code> of scores on spokes from a shared middle.
+          Each row is a spoke and each value column is a shape joining its
+          values.
+        </p>
+        <p>
+          It takes the same markup as a <a href="line-chart.html">line
+          chart</a>. Spokes run clockwise from the top in table order, with
+          each row's label past its tip. The middle is zero and the rim is the
+          scale's top. A tooltip follows the pointer round the chart, and the
+          arrow keys move it when the chart has focus. Radar charts suit five
+          to eight measures on the same scale, such as skill scores. To compare
+          exact values, or measures on different scales, use a
+          <a href="bar-chart.html">bar chart</a>.
+        </p>
+        <figure class="radar-chart" data-markdown-ignore>
+          <figcaption>Competitor benchmark</figcaption>
+          <table>
+            <thead><tr><th>Measure</th><th>Score</th></tr></thead>
+            <tbody>{benchmark.map(([measure, value]) => <tr><th>{measure}</th><td>{value}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="radar-chart">
+  <figcaption>Competitor benchmark</figcaption>
+  <table>
+    <thead>
+      <tr><th>Measure</th><th>Score</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Pricing</th><td>72</td></tr>
+      <tr><th>Quality</th><td>90</td></tr>
+      <tr><th>Speed</th><td>65</td></tr>
+      <tr><th>Support</th><td>78</td></tr>
+      <tr><th>Innovation</th><td>84</td></tr>
+      <tr><th>Reach</th><td>58</td></tr>
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.area}>
+        <p>
+          <code>area</code> fills each shape and <code>points</code> marks
+          each value with a dot. They work alone or together.
+        </p>
+        <figure class="radar-chart area points" data-markdown-ignore>
+          <figcaption>Team skills</figcaption>
+          <table>
+            <thead><tr><th>Skill</th><th>Current team</th></tr></thead>
+            <tbody>{skills.map(([skill, value]) => <tr><th>{skill}</th><td>{value}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="radar-chart area points">
+  <figcaption>Team skills</figcaption>
+  <table><!-- … --></table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.series}>
+        <p>
+          Each further column is another shape, in the next color, with a
+          legend below the chart. The tooltip lists every series for the
+          spoke. <code>class="dashed"</code> on a header cell dashes that
+          series' outline, for a target or an earlier period.
+        </p>
+        <figure class="radar-chart area" data-markdown-ignore>
+          <figcaption>Client satisfaction</figcaption>
+          <table>
+            <thead><tr><th>Measure</th><th>This quarter</th><th class="dashed">Last quarter</th></tr></thead>
+            <tbody>{satisfaction.map(([measure, now, before]) => <tr><th>{measure}</th><td>{now}</td><td>{before}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="radar-chart area">
+  <figcaption>Client satisfaction</figcaption>
+  <table>
+    <thead>
+      <tr><th>Measure</th><th>This quarter</th><th class="dashed">Last quarter</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Communication</th><td>92</td><td>80</td></tr>
+      <!-- One row per measure -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.sparkline}>
+        <p>
+          <code>sparkline</code> is a 48px chart with no labels, legend or
+          tooltip, for a shape beside a figure. Hide its caption with
+          <code>visually-hidden</code> when the tile already names it.
+        </p>
+        <dl class="stats" data-markdown-ignore>
+          <div>
+            <dt>Quarterly revenue</dt><dd>$4.1M</dd><dd class="stat-change up">+18.6% from last year</dd>
+            <dd>
+              <figure class="radar-chart sparkline area my-0">
+                <figcaption class="visually-hidden">Revenue by quarter</figcaption>
+                <table>
+                  <thead><tr><th>Quarter</th><th>This year</th><th>Last year</th></tr></thead>
+                  <tbody>{quarters.map(([quarter, now, before]) => <tr><th>{quarter}</th><td data-value={now * 1000}>${now}K</td><td data-value={before * 1000}>${before}K</td></tr>)}</tbody>
+                </table>
+              </figure>
+            </dd>
+          </div>
+        </dl>
+<Code code={`
+<dl class="stats">
+  <div>
+    <dt>Quarterly revenue</dt>
+    <dd>$4.1M</dd>
+    <dd class="stat-change up">+18.6% from last year</dd>
+    <dd>
+      <figure class="radar-chart sparkline area my-0">
+        <figcaption class="visually-hidden">Revenue by quarter</figcaption>
+        <table><!-- … --></table>
+      </figure>
+    </dd>
+  </div>
+</dl>
+`} />
+  </Section>
+  <Section {...S.cards}>
+        <p>
+          A chart goes in a card with the figures it explains. The card adds
+          no chart styles; size the chart with
+          <code>--md-comp-radar-chart-height</code>, the rim's diameter.
+        </p>
+        <article class="outlined" data-markdown-ignore>
+          <dl class="stats my-0">
+            <div><dt>Team skill average</dt><dd>{average(skills.map(([, value]) => value))}</dd><dd class="stat-change up">+6.2% from last review</dd></div>
+          </dl>
+          <figure class="radar-chart area points" style="--md-comp-radar-chart-height: 200px">
+            <figcaption class="visually-hidden">Team skills across six capabilities</figcaption>
+            <table>
+              <thead><tr><th>Skill</th><th>Current team</th></tr></thead>
+              <tbody>{skills.map(([skill, value]) => <tr><th>{skill}</th><td>{value}</td></tr>)}</tbody>
+            </table>
+          </figure>
+        </article>
+<Code code={`
+<article class="outlined">
+  <dl class="stats my-0">
+    <div>
+      <dt>Team skill average</dt>
+      <dd>${average(skills.map(([, value]) => value))}</dd>
+      <dd class="stat-change up">+6.2% from last review</dd>
+    </div>
+  </dl>
+  <figure class="radar-chart area points" style="--md-comp-radar-chart-height: 200px">
+    <figcaption class="visually-hidden">Team skills across six capabilities</figcaption>
+    <table><!-- … --></table>
+  </figure>
+</article>
+`} />
+  </Section>
+  <Section {...S.scale}>
+        <p>
+          Cells read as in a line chart: a cell's number is its
+          <code>data-value</code>, or its text without currency signs, percent
+          signs or grouping commas. The tooltip shows the cell's text as
+          written. A cell that is not a number is a gap: the shape joins the
+          spokes either side of it and the tooltip leaves it out.
+        </p>
+        <p>
+          The middle is zero, or a little below the lowest value if one is
+          negative. The rim is the highest value plus a tenth of the range. Set
+          <code>data-min</code> and <code>data-max</code> on the figure for a
+          fixed scale, such as <code>data-max="100"</code> for scores out of
+          100. Values past the rim stop at it. Series take
+          <code>primary</code>, <code>tertiary</code>,
+          <code>secondary</code> and <code>on-surface-variant</code> in turn.
+        </p>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The table is the chart's text alternative. Give it a header row and
+          a header cell per row, and name the chart with a
+          <code>&lt;figcaption&gt;</code>. The drawn chart, labels and legend
+          are hidden from assistive technology.
+        </p>
+        <p>
+          The plot is one Tab stop named by the caption. The arrow keys move
+          round the spokes, right and down to the next row and left and up to
+          the one before, and past the last row they go on to the first. Home
+          and End jump to the first and last rows and Escape hides the
+          tooltip. On a touch screen, tap near a spoke to show it. In a
+          right-to-left page the spokes still run clockwise, and so do the
+          arrows. The tooltip is a polite live region, so a screen reader
+          hears each row's values as it moves. A sparkline is not focusable.
+          In forced colors the shapes keep their colors so the legend still
+          keys them.
+        </p>
+  </Section>
+  <Section {...S.javascript}>
+        <p>
+          <code>AutoInit()</code> starts every <code>.radar-chart</code>. To
+          start one yourself, or to redraw a chart after changing its table,
+          call <code>RadarChart.init</code> again. It has the line chart's
+          options and methods.
+        </p>
+<Code code={`
+const chart = Expressive.RadarChart.init(document.querySelector('.radar-chart'), { max: 100 });
+chart.show(2);   // highlight the third row; -1 hides the tooltip
+chart.destroy(); // remove the drawing and show the table again
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.radar-chart</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-radar-chart-height</code></td><td>240px, the rim's diameter; 48px for a sparkline</td></tr>
+          <tr><td><code>--md-comp-radar-chart-line-width</code></td><td>2px; 1.5px for a sparkline</td></tr>
+          <tr><td><code>--md-comp-radar-chart-label-room</code></td><td>80px, the labels' width beside the rim</td></tr>
+          <tr><td><code>--md-comp-radar-chart-grid-color</code></td><td><code>outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-radar-chart-color-1</code> … <code>-4</code></td><td><code>primary</code>, <code>tertiary</code>, <code>secondary</code>, <code>on-surface-variant</code></td></tr>
+        </TokenTable>
+        <p>For a selective Sass build, include <code>"radar-chart"</code> in <code>$components</code>.</p>
+  </Section>
+</PageBody>
+</DocsLayout>

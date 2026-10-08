@@ -21,6 +21,13 @@ const _defaults: LineChartOptions = {
 
 const SVG = 'http://www.w3.org/2000/svg';
 export const COLORS = 4;
+
+/** An SVG element with its attributes. */
+export function svgNode(name: string, attributes: Record<string, string> = {}): SVGElement {
+  const element = document.createElementNS(SVG, name);
+  for (const key in attributes) element.setAttribute(key, attributes[key]);
+  return element;
+}
 let _gradientId = 0;
 
 interface Series {
@@ -99,7 +106,7 @@ export class LineChart extends Component<LineChartOptions> {
   protected _header: HTMLTableCellElement[] = [];
   protected _rows: HTMLTableRowElement[] = [];
   protected _plot: HTMLElement;
-  private _cursor: HTMLElement;
+  protected _cursor: HTMLElement;
   protected _tooltip: HTMLElement;
   protected _y: (value: number) => number;
   /**
@@ -123,6 +130,14 @@ export class LineChart extends Component<LineChartOptions> {
    * bar chart. The rows then keep their order in a right-to-left context.
    */
   protected get _horizontal() {
+    return false;
+  }
+
+  /**
+   * Whether the rows go round a circle, as in a pie or radar chart. The
+   * arrows then step round it, wrapping from the last row to the first.
+   */
+  protected get _circular() {
     return false;
   }
 
@@ -197,10 +212,6 @@ export class LineChart extends Component<LineChartOptions> {
     this._cursor.hidden = this._tooltip.hidden = hidden;
     if (hidden) return;
 
-    const x = this._x(index);
-    const side = this._horizontal ? 'top' : 'left';
-    this._cursor.style[side] = this._tooltip.style[side] = `${x}%`;
-    this._tooltip.classList.toggle('end', x > 50);
     this._cursor.replaceChildren();
     const title = document.createElement('strong');
     title.textContent = this.labels[index];
@@ -224,6 +235,18 @@ export class LineChart extends Component<LineChartOptions> {
       text.textContent = series.text[index];
       this._tooltip.append(name, text);
     });
+    this._place(index);
+  }
+
+  /**
+   * Moves the filled cursor and tooltip to a row: beside its band, with the
+   * tooltip opening back over the plot past the middle.
+   */
+  protected _place(index: number) {
+    const x = this._x(index);
+    const side = this._horizontal ? 'top' : 'left';
+    this._cursor.style[side] = this._tooltip.style[side] = `${x}%`;
+    this._tooltip.classList.toggle('end', x > 50);
   }
 
   private _read() {
@@ -317,11 +340,10 @@ export class LineChart extends Component<LineChartOptions> {
     this.el.append(...this._generated);
   }
 
-  /** The row labels and, for more than one series, the legend. */
+  /** The parts below the plot: the row labels and the legend. */
   protected _guides(): Element[] {
-    const type = this._type;
     const labels = document.createElement('ol');
-    labels.className = `${type}-labels`;
+    labels.className = `${this._type}-labels`;
     labels.setAttribute('aria-hidden', 'true');
     // A loop rather than a spread: a spread of every row overflows the stack.
     for (const text of this.labels) {
@@ -329,10 +351,14 @@ export class LineChart extends Component<LineChartOptions> {
       li.textContent = text;
       labels.append(li);
     }
-    if (this.series.length < 2) return [labels];
+    return [labels, ...this._legend()];
+  }
 
+  /** The series legend, for more than one series. */
+  protected _legend(): Element[] {
+    if (this.series.length < 2) return [];
     const legend = document.createElement('ul');
-    legend.className = `${type}-legend`;
+    legend.className = `${this._type}-legend`;
     legend.setAttribute('aria-hidden', 'true');
     legend.append(...this.series.map((series, i) => {
       const li = document.createElement('li');
@@ -340,7 +366,7 @@ export class LineChart extends Component<LineChartOptions> {
       li.textContent = series.name;
       return li;
     }));
-    return [labels, legend];
+    return [legend];
   }
 
   /** Draws the series, which fill the plot. */
@@ -413,8 +439,22 @@ export class LineChart extends Component<LineChartOptions> {
     return Math.min(this.labels.length - 1, Math.max(0, index));
   }
 
+  /**
+   * For a circular chart, the pointer's position from the plot's middle: a
+   * fraction of a turn clockwise from the top, and its distance as a share
+   * of the plot's width.
+   */
+  protected _polarAt(e: PointerEvent): [turn: number, distance: number] {
+    const box = this._plot.getBoundingClientRect();
+    const [x, y] = [e.clientX - box.left - box.width / 2, e.clientY - box.top - box.height / 2];
+    return [(Math.atan2(x, -y) / (2 * Math.PI) + 1) % 1, Math.hypot(x, y) / box.width];
+  }
+
   /** The keys that move to the next row and to the one before. */
   protected get _arrows(): [string[], string[]] {
+    // Round a circle both pairs work. The rows run clockwise in RTL too, so
+    // right still moves the way the top row turns.
+    if (this._circular) return [['ArrowRight', 'ArrowDown'], ['ArrowLeft', 'ArrowUp']];
     // Arrows move the cursor the way they point, so they swap in RTL.
     if (this._horizontal) return [['ArrowDown'], ['ArrowUp']];
     return this._reversed ? [['ArrowLeft'], ['ArrowRight']] : [['ArrowRight'], ['ArrowLeft']];
@@ -441,7 +481,12 @@ export class LineChart extends Component<LineChartOptions> {
   protected _keyTarget(key: string): number | undefined {
     const last = this.labels.length - 1;
     const [forward, back] = this._arrows;
-    const step = (by: number) => Math.min(last, Math.max(0, this.activeIndex + by));
+    const step = (by: number) => {
+      if (!this._circular) return Math.min(last, Math.max(0, this.activeIndex + by));
+      // Round a circle the ends meet; from no row, back starts at the last.
+      if (this.activeIndex < 0) return by > 0 ? 0 : last;
+      return (this.activeIndex + by + last + 1) % (last + 1);
+    };
     // With nothing shown, Escape is left to a dialog or sheet around the chart.
     if (key === 'Escape') return this.activeIndex < 0 ? undefined : -1;
     return forward.includes(key) ? step(1)

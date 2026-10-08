@@ -14,6 +14,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   writes each cell's text on it in black or white, whichever reads on the
   shade; `data-label` shortens or hides a header on the grid; `data-min` and
   `data-max` fix the scale.
+- `.radar-chart` draws a `<figure>`'s data table as shapes on spokes from a
+  shared middle, one spoke per row clockwise from the top and one shape per
+  series, with each row's label past its spoke, a legend, and a tooltip that
+  follows the pointer round the chart or the arrow keys. `area` fills the
+  shapes, `points` marks each value, and `sparkline` is a small chart.
 - `.pie-chart` draws a `<figure>`'s data table as slices of a whole,
   clockwise from the top, with a legend of each row's cell and share and a
   tooltip that follows the pointer round the pie or the arrow keys. `donut`

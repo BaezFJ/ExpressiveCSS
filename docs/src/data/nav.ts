@@ -377,6 +377,13 @@ export const NAV: DocsGroup[] = [
           "A data table drawn as a grid of cells shaded by value, for patterns across two categories such as days and hours.",
       },
       {
+        id: "radar-chart",
+        label: "Radar chart",
+        route: "/radar-chart.html",
+        description:
+          "Several measures on one scale drawn as shapes on spokes from a data table, one shape per series.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",
