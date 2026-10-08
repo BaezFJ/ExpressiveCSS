@@ -210,6 +210,14 @@ for (const entry of PAGES) {
       // mid-flight.
       await page.clock.install({ time: FIXED_NOW });
 
+      // install() leaves the fake clock flowing in real time, so a page's
+      // own `setInterval` keeps firing while toHaveScreenshot waits for two
+      // matching frames. The countdown demos tick every second and never
+      // matched, and their digits depended on how long the page took to
+      // load. Paused, time moves only through runFor, by the same amount
+      // in both passes.
+      await page.clock.pauseAt(FIXED_NOW);
+
       await page.setViewportSize({ width: variant.width, height: variant.height });
 
       const path = url(entry);
