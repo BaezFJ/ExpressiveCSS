@@ -191,7 +191,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await page.keyboard.press('Escape');
       assert.equal(await tooltip.isVisible(), false);
 
-      // In RTL the slices still run clockwise, and left moves to the next row.
+      // In RTL the slices still run clockwise, and so do the arrows: right moves to the next row.
       const rtl = await page.evaluate(() => {
         const wrap = document.createElement('div');
         wrap.dir = 'rtl';
@@ -201,7 +201,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         el.querySelectorAll('.pie-chart-plot, .pie-chart-legend').forEach((node) => node.remove());
         const chart = Expressive.PieChart.init(el);
         chart.show(0);
-        el.querySelector('.pie-chart-plot').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+        el.querySelector('.pie-chart-plot').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
         return [el.querySelector('.pie-chart-slice').getAttribute('d'), chart.activeIndex];
       });
       assert.deepEqual(rtl, ['M0,0L0.000,-46.000A46,46 0 0 1 0.000,46.000Z', 1]);

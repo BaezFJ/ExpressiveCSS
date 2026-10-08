@@ -21,6 +21,10 @@ const html = `<style>${css}</style>
     ${chart('class="radar-chart" id="plain"', 'Plain', '<th>Score</th>', [['A', '10'], ['B', '20'], ['C', '30']])}
     ${chart('class="radar-chart sparkline" id="spark"', 'Spark', '<th>V</th>', [['A', '1'], ['B', '2'], ['C', '3']])}
   </div>
+  <div style="width: 320px">
+    ${chart('class="radar-chart" id="narrow"', 'Narrow', '<th>Now</th><th>Before</th>', [
+      ['Customer satisfaction', '1', '2'], ['Average response time', '2', '1'], ['Resolution rate', '3', '2'], ['First contact resolution', '2', '3']])}
+  </div>
   <script>${js}</script>`;
 
 for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit })) {
@@ -77,6 +81,23 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       }));
       assert.deepEqual(plain, { fill: '0', points: 0, legend: 0 }, 'one series has no legend; no fill or points without modifiers');
 
+      // Wrapped labels stay inside the figure, below the caption and above the legend.
+      const narrow = await page.locator('#narrow').evaluate((el) => {
+        const box = (node) => node.getBoundingClientRect();
+        const [figure, caption, legend] = [box(el), box(el.querySelector('figcaption')), box(el.querySelector('.radar-chart-legend'))];
+        return [...el.querySelectorAll('.radar-chart-axes li')].map((li) => {
+          const label = box(li);
+          return [li.textContent, label.height > 20, label.left >= figure.left && label.right <= figure.right,
+            label.top >= caption.bottom && label.bottom <= legend.top];
+        });
+      });
+      assert.deepEqual(narrow, [
+        ['Customer satisfaction', true, true, true],
+        ['Average response time', true, true, true],
+        ['Resolution rate', true, true, true],
+        ['First contact resolution', true, true, true],
+      ]);
+
       assert.deepEqual(await page.locator('#spark').evaluate((el) => [
         el.querySelector('.radar-chart-plot').hasAttribute('tabindex'),
         getComputedStyle(el.querySelector('.radar-chart-axes')).display,
@@ -125,9 +146,11 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await page.mouse.move(x, y + 60);
       assert.equal(await text(), 'Support Before 40');
 
-      // Past the rim still picks the nearest spoke.
+      // Past the rim still picks the nearest spoke. Before's 150 is past
+      // data-max, so its point stops at the rim like its shape.
       await page.mouse.move(box.x + 2, y);
       assert.match(await text(), /^Ops/);
+      assert.deepEqual(await cursor.evaluate((el) => [...el.children].map((dot) => dot.style.top)), ['75%', '0%']);
 
       assert.equal(await page.evaluate(() => {
         const chart = Expressive.RadarChart.getInstance(document.querySelector('#skills'));
@@ -151,7 +174,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await page.keyboard.press('Escape');
       assert.equal(await tooltip.isVisible(), false);
 
-      // In RTL the spokes still run clockwise, and left moves to the next row.
+      // In RTL the spokes still run clockwise, and so do the arrows: right moves to the next row.
       const rtl = await page.evaluate(() => {
         const wrap = document.createElement('div');
         wrap.dir = 'rtl';
@@ -161,7 +184,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         el.querySelectorAll('.radar-chart-plot').forEach((node) => node.remove());
         const chart = Expressive.RadarChart.init(el);
         chart.show(0);
-        el.querySelector('.radar-chart-plot').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+        el.querySelector('.radar-chart-plot').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
         return [el.querySelector('.radar-chart-axes li:nth-child(2)').style.getPropertyValue('--turn'), chart.activeIndex];
       });
       assert.deepEqual(rtl, ['0.3333333333333333', 1]);

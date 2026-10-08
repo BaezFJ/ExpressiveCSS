@@ -217,8 +217,8 @@ const average = (values: number[]) => (values.reduce((total, value) => total + v
           round the spokes, right and down to the next row and left and up to
           the one before; Home and End jump to the ends and Escape hides the
           tooltip. On a touch screen, tap near a spoke to show it. In a
-          right-to-left page the spokes still run clockwise, and left and
-          right swap. The tooltip is a polite live region, so a screen reader
+          right-to-left page the spokes still run clockwise, and so do the
+          arrows. The tooltip is a polite live region, so a screen reader
           hears each row's values as it moves. A sparkline is not focusable.
           In forced colors the shapes keep their colors so the legend still
           keys them.
@@ -242,7 +242,7 @@ chart.destroy(); // remove the drawing and show the table again
         <TokenTable>
           <tr><td><code>--md-comp-radar-chart-height</code></td><td>240px, the rim's diameter; 48px for a sparkline</td></tr>
           <tr><td><code>--md-comp-radar-chart-line-width</code></td><td>2px; 1.5px for a sparkline</td></tr>
-          <tr><td><code>--md-comp-radar-chart-label-room</code></td><td>80px, the space beside the rim for the labels</td></tr>
+          <tr><td><code>--md-comp-radar-chart-label-room</code></td><td>80px, the labels' width beside the rim</td></tr>
           <tr><td><code>--md-comp-radar-chart-grid-color</code></td><td><code>outline-variant</code></td></tr>
           <tr><td><code>--md-comp-radar-chart-color-1</code> … <code>-4</code></td><td><code>primary</code>, <code>tertiary</code>, <code>secondary</code>, <code>on-surface-variant</code></td></tr>
         </TokenTable>

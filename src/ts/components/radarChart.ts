@@ -29,10 +29,12 @@ export class RadarChart extends LineChart {
     return true;
   }
 
-  /** Arrows move round the spokes, so both pairs work; left and right swap in RTL. */
+  /**
+   * Arrows move round the spokes, so both pairs work. The spokes run
+   * clockwise in RTL too, so right still moves the way the top spoke turns.
+   */
   protected get _arrows(): [string[], string[]] {
-    const [next, back] = this._reversed ? ['ArrowLeft', 'ArrowRight'] : ['ArrowRight', 'ArrowLeft'];
-    return [[next, 'ArrowDown'], [back, 'ArrowUp']];
+    return [['ArrowRight', 'ArrowDown'], ['ArrowLeft', 'ArrowUp']];
   }
 
   static init(el: HTMLElement, options?: Partial<RadarChartOptions>): RadarChart;
@@ -53,7 +55,11 @@ export class RadarChart extends LineChart {
     super.show(index);
     if (this._tooltip.hidden) return;
     // The cursor is a spoke turned by --turn; LineChart's points on it keep
-    // their top, a share of the radius. The tooltip sits past its tip.
+    // their top, a share of the radius, which stops at the rim and the
+    // middle like the shapes. The tooltip sits past its tip.
+    for (const dot of this._cursor.children as HTMLCollectionOf<HTMLElement>) {
+      dot.style.top = `${Math.min(100, Math.max(0, parseFloat(dot.style.top)))}%`;
+    }
     const turn = this._turn(index);
     for (const part of [this._tooltip, this._cursor]) {
       part.style.removeProperty('left');

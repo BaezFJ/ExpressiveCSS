@@ -4194,7 +4194,7 @@ A `<figure class="pie-chart">` takes the same `<figcaption>` and `<table>` as a 
 - The plot is a square as wide as `--md-comp-pie-chart-height`, centered in the figure; the legend lists the rows below it. Shares are whole percentages, with a tenth below 10%, in the page's `lang`.
 - `donut` cuts a hole sized by `--md-comp-pie-chart-hole`. A `<tfoot>` row is the total: its value and label show in the hole, and it is not a slice. `values` writes each share on its slice in the slice's on-color; slices under 5% get no label. `sparkline` is a 48px pie with no legend or tooltip and is not focusable.
 - Cells read as in the column chart. Zero, negative and non-numeric cells draw no slice and have no share; their rows stay in the legend and tooltip. Further value columns add lines to the tooltip. Slices take six colors; a seventh row takes the second color so it does not match the first beside it.
-- The plot is one Tab stop named by the caption. Right and down arrows move to the next row, left and up to the one before, Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped slice. In a right-to-left page, set by `dir` or CSS `direction`, the slices still run clockwise and left and right swap.
+- The plot is one Tab stop named by the caption. Right and down arrows move to the next row, left and up to the one before, Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped slice. In a right-to-left page, set by `dir` or CSS `direction`, the slices and the arrows still run clockwise.
 - After changing the table, call `Expressive.PieChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options do not apply.
 
 ### Tokens
@@ -4236,7 +4236,7 @@ A `<figure class="radar-chart">` takes the same `<figcaption>` and `<table>` as 
 - The plot is a square as wide as `--md-comp-radar-chart-height`, centered with `--md-comp-radar-chart-label-room` on each side for the labels. Four grid rings split the scale evenly.
 - `area` fills each shape, `points` marks each value, and `class="dashed"` on a header cell dashes that series' outline. `sparkline` is a 48px chart with no labels, legend or tooltip and is not focusable.
 - Cells read as in the line chart. A non-numeric cell is a gap: the shape joins the spokes either side and the tooltip leaves it out. The middle is zero, or below the lowest value if one is negative; the rim is the highest value plus a tenth of the range. `data-min` and `data-max`, or the `min` and `max` options, fix the scale; values past the rim stop at it. Series take four colors.
-- The plot is one Tab stop named by the caption. Right and down arrows move to the next row, left and up to the one before, Home and End jump to the ends and Escape hides the tooltip; the pointer or a tap shows the nearest spoke. In a right-to-left page the spokes still run clockwise and left and right swap.
+- The plot is one Tab stop named by the caption. Right and down arrows move to the next row, left and up to the one before, Home and End jump to the ends and Escape hides the tooltip; the pointer or a tap shows the nearest spoke. In a right-to-left page the spokes and the arrows still run clockwise.
 - After changing the table, call `Expressive.RadarChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`.
 
 ### Tokens
@@ -4245,7 +4245,7 @@ A `<figure class="radar-chart">` takes the same `<figcaption>` and `<table>` as 
 | --- | --- |
 | `--md-comp-radar-chart-height` | 240px, the rim's diameter (sparkline 48px) |
 | `--md-comp-radar-chart-line-width` | 2px (sparkline 1.5px) |
-| `--md-comp-radar-chart-label-room` | 80px beside the rim |
+| `--md-comp-radar-chart-label-room` | 80px, the labels' width beside the rim |
 | `--md-comp-radar-chart-grid-color` | `outline-variant` |
 | `--md-comp-radar-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
 

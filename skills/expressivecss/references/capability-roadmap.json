@@ -1750,7 +1750,7 @@
         },
         {
           "path": "src/ts/components/pieChart.ts",
-          "sha256": "c6b975cf5c2eceb4c5b9ba2b50db40770a7f32525fb5d6a934c7a887d70bbf02"
+          "sha256": "2ae7caa31651707cac31e99516fb0fa428424b0d205445f2e5e33c2150cb1852"
         }
       ],
       "gaps": [
@@ -1775,7 +1775,7 @@
         {
           "file": "tests/pie-chart-browser.test.js",
           "name": "chromium: pie chart tooltip follows the pointer round the pie and the arrow keys",
-          "scope": "Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, End and Escape, and clockwise slices with swapped arrows in RTL. No spoken-output assertion.",
+          "scope": "Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, End and Escape, and clockwise slices and arrows in RTL. No spoken-output assertion.",
           "state": "not-recorded"
         }
       ],
@@ -1815,7 +1815,7 @@
         },
         {
           "path": "src/sass/components/_radar-chart.scss",
-          "sha256": "34d9c497f93852bfb5ae555696ce48dc6137fa6e0cdf6c347316bc69fdece782"
+          "sha256": "a5f8e6984dfc02b0c7fb2a23f6c1311f733de6b853e0b675c95a58d18da05006"
         },
         {
           "path": "src/ts/components/lineChart.ts",
@@ -1823,7 +1823,7 @@
         },
         {
           "path": "src/ts/components/radarChart.ts",
-          "sha256": "ac2511ccd1fd529d03c8e3835c84b91e70a5a06b08b8b2f2ca297e4fae163e44"
+          "sha256": "e7a81554a416e2383a27e1fe274408ed066f8dec514868f09ff7589633fa11e8"
         }
       ],
       "gaps": [
@@ -1848,7 +1848,7 @@
         {
           "file": "tests/radar-chart-browser.test.js",
           "name": "chromium: radar chart tooltip follows the pointer round the spokes and the arrow keys",
-          "scope": "Nearest spoke by pointer angle inside and past the rim, tooltip text without gaps, opening leftwards on the right half, the cursor spoke and its points, focus, all four arrows, End and Escape, and clockwise spokes with swapped arrows in RTL. No spoken-output assertion.",
+          "scope": "Nearest spoke by pointer angle inside and past the rim, tooltip text without gaps, opening leftwards on the right half, the cursor spoke and its points, focus, all four arrows, End and Escape, and clockwise spokes and arrows in RTL. No spoken-output assertion.",
           "state": "not-recorded"
         }
       ],

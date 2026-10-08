@@ -42,10 +42,12 @@ export class PieChart extends LineChart {
     return false;
   }
 
-  /** Arrows move round the pie, so both pairs work; left and right swap in RTL. */
+  /**
+   * Arrows move round the pie, so both pairs work. The slices run clockwise
+   * in RTL too, so right still moves the way the top slice runs.
+   */
   protected get _arrows(): [string[], string[]] {
-    const [next, back] = this._reversed ? ['ArrowLeft', 'ArrowRight'] : ['ArrowRight', 'ArrowLeft'];
-    return [[next, 'ArrowDown'], [back, 'ArrowUp']];
+    return [['ArrowRight', 'ArrowDown'], ['ArrowLeft', 'ArrowUp']];
   }
 
   static init(el: HTMLElement, options?: Partial<PieChartOptions>): PieChart;

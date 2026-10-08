@@ -19,7 +19,7 @@
 // Tokens:
 //   --md-comp-radar-chart-height        240px, the rim's diameter (sparkline 48px)
 //   --md-comp-radar-chart-line-width    2px (sparkline 1.5px)
-//   --md-comp-radar-chart-label-room    80px, beside the rim for the labels
+//   --md-comp-radar-chart-label-room    80px, the labels' width beside the rim
 //   --md-comp-radar-chart-grid-color    outline-variant
 //   --md-comp-radar-chart-color-1..4    primary, tertiary, secondary,
 //                                       on-surface-variant
@@ -29,19 +29,30 @@
 .radar-chart {
   --md-comp-radar-chart-line-width: 2px;
   --md-comp-radar-chart-label-room: 80px;
+  // How far past the rim a label starts.
+  --radar-chart-label-offset: 8px;
 
   &.sparkline {
     --md-comp-radar-chart-line-width: 1.5px;
     --md-comp-radar-chart-label-room: 0px;
+    --radar-chart-label-offset: 0px;
   }
 }
 
 .radar-chart-plot {
-  width: min(100% - 2 * var(--md-comp-radar-chart-label-room), var(--md-comp-radar-chart-height));
+  width: min(
+    100% - 2 * (var(--md-comp-radar-chart-label-room) + var(--radar-chart-label-offset)),
+    var(--md-comp-radar-chart-height)
+  );
   height: auto;
   aspect-ratio: 1;
-  // A label's line above the top spoke and below the bottom one.
-  margin: min(var(--md-comp-radar-chart-label-room), 24px) auto;
+  // Two lines of label above the top spoke and below the bottom one.
+  margin:
+    min(
+      var(--md-comp-radar-chart-label-room),
+      2 * var(--md-sys-typescale-body-small-line-height) + var(--radar-chart-label-offset)
+    )
+    auto;
   border: 0;
   border-radius: 50%;
   background: none;
@@ -115,8 +126,8 @@
     --radar-chart-angle: calc(var(--turn, 0) * 1turn);
 
     position: absolute;
-    left: calc(50% + sin(var(--radar-chart-angle)) * (50% + 8px));
-    top: calc(50% - cos(var(--radar-chart-angle)) * (50% + 8px));
+    left: calc(50% + sin(var(--radar-chart-angle)) * (50% + var(--radar-chart-label-offset)));
+    top: calc(50% - cos(var(--radar-chart-angle)) * (50% + var(--radar-chart-label-offset)));
     width: max-content;
     max-width: var(--md-comp-radar-chart-label-room);
     translate:

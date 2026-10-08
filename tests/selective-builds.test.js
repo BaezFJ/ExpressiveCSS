@@ -92,8 +92,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the bar chart: 50,589 gzip bytes (+131).
   // Reviewed bar chart values past short bars and chart taps: 50,714 gzip bytes (+125).
   // Reviewed the pie chart and its review fixes: 52,188 gzip bytes (+1,474).
-  // Reviewed the radar chart: 52,683 gzip bytes (+495).
-  assert.ok(sizes(js).gzip <= 52683, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the radar chart and its review fixes: 52,684 gzip bytes (+496).
+  assert.ok(sizes(js).gzip <= 52684, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
