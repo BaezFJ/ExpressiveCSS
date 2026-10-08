@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.mixed-chart` draws a `<figure>`'s data table as columns, lines and
+  areas on one plot, chosen by each series header's class: `column`,
+  `area`, or a line by default, with `dashed` lines. A series with `end`
+  is drawn against a second scale, set by `data-end-min` and
+  `data-end-max`, for values in other units. The tooltip, cursor points,
+  legend and `sparkline` work as in the line chart.
 - `.radial-chart` draws a `<figure>`'s data table as rings, one per row,
   filled clockwise from the top as a share of `data-max` (100 by default),
   with a legend, tracks, and a tooltip that follows the pointer across the

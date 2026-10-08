@@ -391,6 +391,13 @@ export const NAV: DocsGroup[] = [
           "Progress toward a goal drawn as rings from a data table, as concentric rings or a half-circle gauge.",
       },
       {
+        id: "mixed-chart",
+        label: "Mixed chart",
+        route: "/mixed-chart.html",
+        description:
+          "Columns, lines and areas together from one data table, with a second scale for values in other units.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",

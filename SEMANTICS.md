@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**70 of 70 rows enforced; 0 remaining.**
+**71 of 71 rows enforced; 0 remaining.**
 
-66 of those rows are components - a part of the framework an author writes markup for.
+67 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 66 components declare conformance debt.**
+**3 of 67 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -644,6 +644,18 @@ Added with the message component. The parts are divs on a CSS grid. A <header> o
 | `message-parts-are-not-landmarks` | forbid | `:is(header.message-header, footer.message-footer)` | must not match |
 
 - **message-parts-are-not-landmarks** - Write .message-header and .message-footer as <div>. Outside sectioning content a <header> is a banner landmark and a <footer> is contentinfo, so a conversation would fill the landmark menu with one of each per message.
+
+### mixed-chart
+
+Added with the mixed chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn columns, lines, labels and legend are aria-hidden.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `mixed-chart-is-a-figure-with-a-table` | forbid | `.mixed-chart:not(figure:has(> table))` | must not match |
+| `mixed-chart-has-a-caption` | forbid | `.mixed-chart:not(:has(> figcaption))` | must not match |
+
+- **mixed-chart-is-a-figure-with-a-table** - Write .mixed-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
+- **mixed-chart-has-a-caption** - Name a .mixed-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
 ### navbar
 

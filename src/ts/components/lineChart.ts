@@ -30,7 +30,7 @@ export function svgNode(name: string, attributes: Record<string, string> = {}): 
 }
 let _gradientId = 0;
 
-interface Series {
+export interface Series {
   name: string;
   /** Header cell classes, such as `dashed`. */
   className: string;
@@ -44,6 +44,8 @@ interface Series {
   tops: (number | null)[];
   /** In a stacked chart, the total of the series below, which this area fills down to. */
   base?: (number | null)[];
+  /** The series' y scale: a value's distance down the plot, in percent. */
+  y: (value: number) => number;
 }
 
 /**
@@ -224,8 +226,9 @@ export class LineChart extends Component<LineChartOptions> {
       const top = series.tops[index];
       if (top !== null && this._points) {
         const dot = document.createElement('span');
+        dot.className = series.className;
         dot.dataset.series = color;
-        dot.style.top = `${this._y(top)}%`;
+        dot.style.top = `${series.y(top)}%`;
         this._cursor.append(dot);
       }
       const name = document.createElement('span');
@@ -267,7 +270,8 @@ export class LineChart extends Component<LineChartOptions> {
         className: cell.className,
         text: rows.map((row) => row.cells[i + 1]?.textContent.trim() ?? ''),
         values,
-        tops: values
+        tops: values,
+        y: undefined
       };
     });
     const stacked = this.el.classList.contains('stacked');
@@ -282,21 +286,33 @@ export class LineChart extends Component<LineChartOptions> {
       }
     }
 
+    if (this.series.every((series) => series.tops.every((value) => value === null))) this.series = [];
+    const option = (name: 'min' | 'max') => this._number(name) ?? this.options[name];
+    this._y = this._scale(this.series, option('min'), option('max'));
+  }
+
+  /** A number from one of the chart's data attributes, or null. */
+  protected _number(name: string) {
+    const value = parseFloat(this.el.dataset[name] ?? '');
+    return Number.isFinite(value) ? value : null;
+  }
+
+  /**
+   * Fits a y scale to the series' tops, between `min` and `max` where they
+   * are set, and gives it to each series.
+   */
+  protected _scale(series: Series[], min: number | null, max: number | null, fromZero = this._fromZero) {
+    const stacked = this.el.classList.contains('stacked');
     let [low, high] = [Infinity, -Infinity];
-    for (const series of this.series) {
-      for (const value of series.tops) {
+    for (const { tops } of series) {
+      for (const value of tops) {
         if (value === null) continue;
         low = Math.min(low, value);
         high = Math.max(high, value);
       }
     }
-    if (low > high) this.series = [];
-    const option = (name: 'min' | 'max') => {
-      const value = parseFloat(this.el.dataset[name] ?? '');
-      return Number.isFinite(value) ? value : this.options[name];
-    };
-    let [min, max] = [option('min'), option('max')];
-    if (this._fromZero) {
+    if (low > high) low = high = 0;
+    if (fromZero) {
       // Zero is on the scale, with 10% of the span to spare on each side
       // that has data.
       const [bottom, top] = [Math.min(0, low), Math.max(0, high)];
@@ -309,7 +325,9 @@ export class LineChart extends Component<LineChartOptions> {
       min ??= stacked ? Math.min(0, low) : low - pad;
       max ??= high + (stacked ? (high - min) * 0.1 || 1 : pad);
     }
-    this._y = (value) => 100 - ((value - min) / (max - min || 1)) * 100;
+    const y = (value: number) => 100 - ((value - min) / (max - min || 1)) * 100;
+    for (const each of series) each.y = y;
+    return y;
   }
 
   /** Each row sits in the middle of an equal band, beside its label. */
@@ -386,17 +404,17 @@ export class LineChart extends Component<LineChartOptions> {
   }
 
   /** Draws the series, which fill the plot. */
-  protected _draw(): Element {
+  protected _draw(drawn = this.series): Element {
     const svg = document.createElementNS(SVG, 'svg');
     svg.setAttribute('viewBox', '0 0 100 100');
     svg.setAttribute('preserveAspectRatio', 'none');
     svg.setAttribute('aria-hidden', 'true');
     svg.setAttribute('focusable', 'false');
 
-    this.series.forEach((series, i) => {
+    for (const series of drawn) {
       const group = document.createElementNS(SVG, 'g');
-      group.setAttribute('class', `line-chart-series ${series.className}`.trim());
-      group.dataset.series = String((i % COLORS) + 1);
+      group.setAttribute('class', `${this._type}-series ${series.className}`.trim());
+      group.dataset.series = String((this.series.indexOf(series) % COLORS) + 1);
 
       // A gap in the data breaks the line into runs of row indexes.
       const runs: number[][] = [[]];
@@ -406,7 +424,7 @@ export class LineChart extends Component<LineChartOptions> {
       });
       const filled = runs.filter((run) => run.length);
       const points = (run: number[], values: (number | null)[]) =>
-        run.map((index): [number, number] => [this._x(index), this._y(values[index]!)]);
+        run.map((index): [number, number] => [this._x(index), series.y(values[index]!)]);
       const tops = filled.map((run) => monotonePath(points(run, series.tops)));
 
       const id = `line-chart-gradient-${++_gradientId}`;
@@ -418,7 +436,7 @@ export class LineChart extends Component<LineChartOptions> {
       gradient.lastElementChild.setAttribute('offset', '1');
 
       const area = document.createElementNS(SVG, 'path');
-      area.setAttribute('class', 'line-chart-area');
+      area.setAttribute('class', `${this._type}-area`);
       area.setAttribute('fill', `url(#${id})`);
       // A stacked area runs back along the series below; the reversed curve
       // is the same curve. Its base stops at the plot bottom when the y axis
@@ -432,12 +450,12 @@ export class LineChart extends Component<LineChartOptions> {
         .join(''));
 
       const line = document.createElementNS(SVG, 'path');
-      line.setAttribute('class', 'line-chart-line');
+      line.setAttribute('class', `${this._type}-line`);
       line.setAttribute('d', tops.join(''));
 
       group.append(gradient, area, line);
       svg.append(group);
-    });
+    }
     return svg;
   }
 

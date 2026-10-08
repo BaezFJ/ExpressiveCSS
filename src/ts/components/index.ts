@@ -21,6 +21,7 @@ export { PieChart } from "./pieChart";
 export { HeatmapChart } from "./heatmapChart";
 export { RadarChart } from "./radarChart";
 export { RadialChart } from "./radialChart";
+export { MixedChart } from "./mixedChart";
 export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";
 export { Lightbox } from "./lightbox";

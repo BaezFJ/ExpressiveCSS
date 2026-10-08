@@ -66,6 +66,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<figure class="radial-chart"><figcaption>Goals</figcaption><table><thead><tr><th>Goal</th><th>Progress</th></tr></thead><tbody><tr><th>Sales</th><td>80%</td></tr><tr><th>Signups</th><td>60%</td></tr></tbody></table></figure>`,
   },
   {
+    name: "MixedChart",
+    selector: ".mixed-chart",
+    html: `<figure class="mixed-chart"><figcaption>Revenue</figcaption><table><thead><tr><th>Month</th><th class="column">Revenue</th><th class="dashed">Target</th></tr></thead><tbody><tr><th>Jan</th><td>62</td><td>65</td></tr><tr><th>Feb</th><td>71</td><td>65</td></tr></tbody></table></figure>`,
+  },
+  {
     name: "BarChart",
     selector: ".bar-chart",
     html: `<figure class="bar-chart"><figcaption>Revenue</figcaption><table><thead><tr><th>Month</th><th>Revenue</th></tr></thead><tbody><tr><th>Jan</th><td>1</td></tr><tr><th>Feb</th><td>2</td></tr></tbody></table></figure>`,

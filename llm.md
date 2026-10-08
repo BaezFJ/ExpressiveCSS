@@ -94,6 +94,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Heatmap chart
 - Radar chart
 - Radial chart
+- Mixed chart
 
 ### Forms
 
@@ -300,6 +301,7 @@ Opt an element out when it needs manual options:
 | `HeatmapChart` | `.heatmap-chart` |
 | `RadarChart` | `.radar-chart` |
 | `RadialChart` | `.radial-chart` |
+| `MixedChart` | `.mixed-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
@@ -4338,6 +4340,50 @@ A `<figure class="radial-chart">` takes the same `<figcaption>` and `<table>` as
 
 ---
 
+## Mixed chart
+
+Columns, lines and areas together from one data table, with a second scale for values in other units.
+
+A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as a line chart. `AutoInit()` draws each series by its header cell's class: `column` as columns from zero, `area` as a line over a fading fill, and any other series as a line, with `dashed` for a dashed line. Columns sit behind the lines. A legend names the series and a tooltip follows the pointer from row to row. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="mixed-chart" data-end-min="0" data-end-max="35">
+  <figcaption>Revenue ($K), profit margin and customer growth</figcaption>
+  <table>
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th class="column">Revenue</th>
+        <th class="area end">Profit margin</th>
+        <th class="dashed end">Customer growth</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>$420</td><td>18%</td><td>4%</td></tr>
+      <tr><th>Feb</th><td>$460</td><td>19%</td><td>5%</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- Series share one scale. A series whose header has `end` is drawn against a second scale fitted to the `end` series, or fixed by `data-end-min` and `data-end-max` on the figure, as `data-min` and `data-max` fix the first. A scale with columns always includes zero. There is no y axis, so name the units in the caption or headers.
+- Cells read as in the line chart; a suffix such as `K` makes a cell a gap, so use `data-value` or put the unit in the header. A gap breaks a line and leaves a column's slot empty. Series take four colors in column order, whatever their kind, then repeat.
+- The cursor bands the highlighted row and puts a point on each line and area. The plot is one Tab stop named by the caption; left and right move between rows, Home and End jump to the ends and Escape hides the tooltip. `sparkline` is a 48px chart with no grid, labels, legend or tooltip and is not focusable.
+- After changing the table, call `Expressive.MixedChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale. `stacked` is not supported.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-mixed-chart-height` | 240px (sparkline 48px) |
+| `--md-comp-mixed-chart-column-width` | 50% of each row's width |
+| `--md-comp-mixed-chart-shape` | 4px, the column's end radius |
+| `--md-comp-mixed-chart-line-width` | 3px (sparkline 2px) |
+| `--md-comp-mixed-chart-grid-color` | `outline-variant` |
+| `--md-comp-mixed-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -4450,6 +4496,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `HeatmapChart` | `.heatmap-chart` |
 | `RadarChart` | `.radar-chart` |
 | `RadialChart` | `.radial-chart` |
+| `MixedChart` | `.mixed-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Datepicker` | `.datepicker, .date-picker` |
