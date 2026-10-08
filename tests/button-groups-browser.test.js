@@ -243,6 +243,62 @@ browserTest('keyboard press changes icon widths and rendered corners', async () 
   }
 });
 
+browserTest('a selected connected item morphs to half its height, not to a clamp', async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`
+      <style>${css}</style>
+      <div class="button-group connected" style="width: 364px">
+        <button class="button tonal" aria-pressed="false">Left</button>
+        <button id="middle" class="button tonal" aria-pressed="false">Center</button>
+        <button class="button tonal" aria-pressed="false">Right</button>
+      </div>
+      <div class="button-group connected">
+        <button class="icon-button filled" aria-label="Left" aria-pressed="false"><span class="material-symbols">format_align_left</span></button>
+        <button id="icon" class="icon-button filled" aria-label="Center" aria-pressed="true"><span class="material-symbols">format_align_center</span></button>
+        <button class="icon-button filled" aria-label="Right" aria-pressed="false"><span class="material-symbols">format_align_right</span></button>
+      </div>
+    `);
+
+    // Freeze the radius transition 60ms into its 200ms run and read it.
+    const radiusMidway = (change) => page.evaluate((change) => {
+      const middle = document.getElementById('middle');
+      getComputedStyle(middle).borderTopLeftRadius;
+      if (change === 'select') middle.setAttribute('aria-pressed', 'true');
+      else middle.classList.add('button-group-pressed');
+      const radius = middle.getAnimations()
+        .find((animation) => animation.transitionProperty === 'border-top-left-radius');
+      radius.pause();
+      radius.currentTime = 60;
+      const value = Number.parseFloat(getComputedStyle(middle).borderTopLeftRadius);
+      radius.finish();
+      return value;
+    }, change);
+    const settled = () => page.locator('#middle').evaluate((middle) => ({
+      width: middle.getBoundingClientRect().width,
+      height: middle.getBoundingClientRect().height,
+      radius: getComputedStyle(middle).borderTopLeftRadius
+    }));
+
+    const selecting = await radiusMidway('select');
+    assert.ok(selecting > 8 && selecting < 20, `selecting radius midway was ${selecting}px`);
+    const selected = await settled();
+    assert.ok(selected.width > selected.height * 2);
+    assert.equal(selected.radius, `${selected.height / 2}px`);
+
+    const pressing = await radiusMidway('press');
+    assert.ok(pressing > 4 && pressing < 20, `pressing radius midway was ${pressing}px`);
+
+    assert.equal(
+      await page.locator('#icon').evaluate((icon) => getComputedStyle(icon).borderTopLeftRadius),
+      `${await page.locator('#icon').evaluate((icon) => icon.getBoundingClientRect().height / 2)}px`
+    );
+  } finally {
+    await browser.close();
+  }
+});
+
 browserTest('selection-required skips disabled controls and preserves a selection', async () => {
   const browser = await chromium.launch({ headless: true });
   try {

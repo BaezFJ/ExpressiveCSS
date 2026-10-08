@@ -2118,7 +2118,7 @@ The group is not a composite widget. A role such as `toolbar` promises arrow-key
 | `--md-comp-button-group-container-shape` | 9999px (connected) |
 | `--md-comp-button-group-inner-corner-corner-size` | 8px (connected) |
 | `--md-comp-button-group-pressed-inner-corner-corner-size` | 4px (connected) |
-| `--md-comp-button-group-selected-inner-corner-corner-size` | 50% (connected) |
+| `--md-comp-button-group-selected-inner-corner-corner-size` | Half the item height (connected) |
 
 For selection, use `data-selection="single"` or `data-selection="multiple"`; add `data-selection-required` when at least one item must remain on. Author each item's initial `aria-pressed="true|false"`, then call `Expressive.AutoInit()`. Selection changes color, shape, and icon fill, so color is not the only cue. Toggle colors retain hover, focus, pressed, disabled, and focus-ring feedback. Reduced-motion preferences remove width and corner transitions.
 

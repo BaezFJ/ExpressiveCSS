@@ -123,5 +123,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the radial chart and its review fixes: 59,469 gzip bytes (+600).
   // Reviewed the mixed chart: 60,187 gzip bytes (+718).
   // Reviewed the twenty .shape-* masks: 63,077 gzip bytes (+2,890).
-  assert.ok(sizes(css).gzip <= 63077, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the height-derived selected button-group corner: 63,119 gzip bytes (+42).
+  assert.ok(sizes(css).gzip <= 63119, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -94,7 +94,7 @@ describe('Button group tokens', () => {
 
   test('a selected connected item uses the fully round selected corner token', () => {
     const group = ruleFor('.button-group.connected');
-    assert.match(group, /--md-comp-button-group-selected-inner-corner-corner-size:\s*50%/);
+    assert.doesNotMatch(group, /--md-comp-button-group-selected-inner-corner-corner-size:/);
 
     const selected = ruleFor(
       '.button-group.connected > :is(button, a.button)[aria-pressed=true]'
@@ -102,11 +102,11 @@ describe('Button group tokens', () => {
     assert.ok(selected, 'no selected connected-item rule');
     assert.match(
       selected,
-      /--_corner:\s*var\(--md-comp-button-group-selected-inner-corner-corner-size\)/
+      /--_corner:\s*var\(--md-comp-button-group-selected-inner-corner-corner-size,\s*var\(--_round\)\)/
     );
     assert.match(
       selected,
-      /--_outer-corner:\s*var\(--md-comp-button-group-selected-inner-corner-corner-size\)/
+      /--_outer-corner:\s*var\(--md-comp-button-group-selected-inner-corner-corner-size,\s*var\(--_round\)\)/
     );
   });
 
