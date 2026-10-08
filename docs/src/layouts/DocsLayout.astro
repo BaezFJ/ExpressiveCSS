@@ -2,7 +2,8 @@
 import BaseLayout from "./BaseLayout.astro";
 import Banner from "../components/Banner.astro";
 import DocsNavigation from "../components/DocsNavigation.astro";
-import { markdownRoute, page } from "../lib/catalogue";
+import { NAV } from "../data/nav";
+import { markdownRoute, page, route } from "../lib/catalogue";
 
 /**
  * Every documentation page. The title and the banner come from the shared
@@ -26,7 +27,7 @@ const sourceColorPalettes = [
   { name: "Glow", colors: ["#94e2d5", "#74c7ec", "#89dceb", "#89b4fa", "#cba6f7"] },
 ];
 ---
-<BaseLayout pageName={pageName} bodyClass="docs" markdownPath={markdownRoute(id)}>
+<BaseLayout pageName={pageName} description={entry.description} bodyClass="docs" markdownPath={markdownRoute(id)}>
     {/* A page that needs its own <head> content -- an extra font, say -- fills this. */}
     <slot name="head" slot="head" />
 
@@ -36,6 +37,9 @@ const sourceColorPalettes = [
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>{pageName}</h2>
+            <button type="button" commandfor="docs-search" command="show-modal" title="Search (Ctrl+K)" aria-label="Search documentation">
+                <span class="material-symbols" aria-hidden="true">search</span>
+            </button>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -48,9 +52,32 @@ const sourceColorPalettes = [
 <DocsNavigation current={id} />
 
     <main>
-        <Banner title={pageName} description={entry.description} />
+        <Banner title={pageName} description={entry.description}>
+            <slot name="banner" />
+        </Banner>
         <slot />
     </main>
+
+    {/* Ctrl+K site search over the page catalogue: titles, then descriptions as keywords. */}
+    <dialog id="docs-search" class="command-palette" aria-label="Search documentation">
+        <input type="search" placeholder="Search documentation" aria-label="Search documentation">
+        <ul>
+            {NAV.map((group) => (
+                <Fragment>
+                    <li class="label">{group.label}</li>
+                    {group.pages.map((p) => (
+                        <li>
+                            <a href={route(p.id)} data-keywords={`${p.title ?? ""} ${p.description}`}>
+                                <span class="material-symbols" aria-hidden="true">{group.icon}</span>
+                                {p.label}
+                            </a>
+                        </li>
+                    ))}
+                </Fragment>
+            ))}
+        </ul>
+        <p class="command-palette-empty" role="status">No matching pages</p>
+    </dialog>
 
     <menu id="theme-menu">
         <li data-theme="light" role="menuitemradio" aria-checked="false">

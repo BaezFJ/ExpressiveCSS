@@ -349,9 +349,9 @@ The main bundle exports:
 
 ## Getting started
 
-Learn how to start using Expressive and integrate it into your project.
+Build Material Design 3 interfaces from semantic HTML, with light and dark themes and accessible components.
 
-### Download
+### Installation
 
 Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.12.0` and is still growing, so the usual path is to build from the repository.
 

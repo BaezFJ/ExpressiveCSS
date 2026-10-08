@@ -135,6 +135,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `$expressive-glass-blur`, and `$expressive-glass-opacity` change the defaults,
   and `--expressive-glass: false` turns the effect off within a region. Surfaces
   turn solid when the user prefers reduced transparency or more contrast.
+- The docs site opens on a landing page with a features overview, a live
+  code demo and the installation guide. Ctrl+K, Command+K or the app bar's
+  search button opens a search of every documentation page. Pages now carry
+  a meta description and Open Graph tags, and the site publishes
+  `sitemap.xml` and `robots.txt`.
 
 ### Changed
 

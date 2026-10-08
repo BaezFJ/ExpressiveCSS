@@ -44,9 +44,10 @@ export const NAV: DocsGroup[] = [
       {
         id: "index",
         label: "Getting started",
+        title: "Material Design 3 for the web",
         route: "/getting-started.html",
         description:
-          "Learn how to start using Expressive and integrate it into your project.",
+          "Build Material Design 3 interfaces from semantic HTML, with light and dark themes and accessible components.",
         aliases: ["/index.html"],
       },
       {
