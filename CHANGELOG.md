@@ -7,6 +7,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.rich-text-editor` turns a `<textarea>` into a Tiptap editor with a
+  docked toolbar. The page installs Tiptap and passes its `Editor` class and
+  extensions to `RichTextEditor.init()`; ExpressiveCSS does not bundle it.
+  A toolbar button's `data-command` names a Tiptap command and
+  `data-attributes` holds its JSON argument. Buttons are disabled when their
+  command cannot run, and `toggle` commands set `aria-pressed` and `.active`.
+  The textarea keeps the editor's HTML, so it submits with its form, and
+  names the editable textbox.
 - `.marquee` scrolls a row of logos, images or text without end. Write
   the items in two `.marquee-content` groups, the second marked
   `aria-hidden="true"`. `vertical`, `reverse` and `fade` change the

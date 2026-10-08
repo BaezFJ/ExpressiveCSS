@@ -71,6 +71,7 @@ Last operator collection: 2026-10-08, Chromium 153.0.8010.12, passed; inputs cha
 | [Command palette](#command-palette) | implemented | source-reviewed | needs-rerun | 0 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | needs-rerun | 0 |
 | [Text fields](#text-fields) | unassessed | needs-review | needs-rerun | 0 |
+| [Rich text editor](#rich-text-editor) | implemented | source-reviewed | incomplete | 0 |
 | [Drop zone](#drop-zone) | implemented | source-reviewed | needs-rerun | 0 |
 | [Select](#select) | unassessed | needs-review | needs-rerun | 0 |
 | [Checkboxes](#checkboxes) | unassessed | needs-review | needs-rerun | 0 |
@@ -1073,6 +1074,23 @@ Web adaptation: Native input/textarea with explicit label and description relati
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/5910ed4ca63afa3433ffa2287b89e08c649e19d8/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
+
+<a id="rich-text-editor"></a>
+
+## Rich text editor
+
+**implemented within the stated scope.** A Tiptap editor mounted from a textarea, toolbar buttons that run Tiptap commands with JSON arguments, pressed and disabled button state, form submission through the textarea, label naming and read-only textareas.
+
+Source review: source-reviewed, 2026-10-08. [src/sass/components/_rich-text-editor.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5910ed4ca63afa3433ffa2287b89e08c649e19d8/src/sass/components/_rich-text-editor.scss), [src/ts/components/richTextEditor.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5910ed4ca63afa3433ffa2287b89e08c649e19d8/src/ts/components/richTextEditor.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The page supplies Tiptap's Editor class and extensions; the component mounts it, names the contenteditable textbox from the textarea and keeps the textarea in sync. The toolbar is the docked toolbar.
+
+- verification: Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified. Next: Use the editor with a screen reader and an IME in each engine, paste from a word processor, and select text on touch devices.
+
+- not-recorded: [tests/rich-text-editor-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/5910ed4ca63afa3433ffa2287b89e08c649e19d8/tests/rich-text-editor-browser.test.js): `chromium: rich text editor formats text, reflects state and keeps the textarea in sync`. Hidden textarea, textbox role and name from the label, starting HTML, label click focus, bold and heading commands with aria-pressed and .active, undo disabled state, textarea value and input event, empty value, and destroy. No spoken-output assertion.
+- not-recorded: [tests/rich-text-editor-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/5910ed4ca63afa3433ffa2287b89e08c649e19d8/tests/rich-text-editor-browser.test.js): `chromium: rich text editor follows a disabled textarea`. A disabled textarea makes the editor read-only and disables every toolbar button.
 
 <a id="drop-zone"></a>
 

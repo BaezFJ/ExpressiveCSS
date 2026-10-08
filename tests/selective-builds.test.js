@@ -106,7 +106,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the mixed chart and per-series chart scales: 54,982 gzip bytes (+342).
   // Reviewed the questionnaire and its requestSubmit validation: 56,500 gzip bytes (+1,518).
   // Reviewed the message scroller: 58,242 gzip bytes (+1,742).
-  assert.ok(sizes(js).gzip <= 58242, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the rich text editor, which leaves Tiptap to the page: 59,024 gzip bytes (+782).
+  assert.ok(sizes(js).gzip <= 59024, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -132,5 +133,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the questionnaire: 65,569 gzip bytes (+465).
   // Reviewed the message scroller: 65,721 gzip bytes (+152).
   // Reviewed the marquee: 66,079 gzip bytes (+358).
-  assert.ok(sizes(css).gzip <= 66079, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the rich text editor: 66,394 gzip bytes (+315).
+  assert.ok(sizes(css).gzip <= 66394, `CSS gzip: ${sizes(css).gzip}`);
 });

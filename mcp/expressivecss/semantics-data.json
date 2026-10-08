@@ -964,6 +964,19 @@
           }
         ]
       },
+      "rich-text-editor": {
+        "status": "enforced",
+        "note": "Added with the rich text editor component. The script hides the textarea and gives the editable element role=\"textbox\" with aria-multiline, copying the textarea's name to it, so the name has to be on the textarea. The toolbar follows the toolbar rules; icon-only buttons are covered by icon-only-control-is-named.",
+        "rules": [
+          {
+            "id": "rich-text-editor-textarea-is-named",
+            "kind": "forbid",
+            "selector": ".rich-text-editor > textarea:not([aria-label], [aria-labelledby], [id])",
+            "fragmentSafe": true,
+            "message": "Name the textarea with a <label for>, aria-label or aria-labelledby. The editor copies that name to its editable area, which has none of its own. Its content is the starting HTML, not a name."
+          }
+        ]
+      },
       "accordion": {
         "status": "enforced",
         "note": "Added with the accordion component. Each item is a native <details>, so the browser exposes <summary> as a button with its expanded state and handles the keyboard. The rules keep authors from re-stating that state or nesting controls in the toggle.",

@@ -599,6 +599,13 @@ export const NAV: DocsGroup[] = [
           "Material Design 3 text fields, from the HTML.",
       },
       {
+        id: "rich_text_editor",
+        label: "Rich text editor",
+        route: "/rich-text-editor.html",
+        description:
+          "A text field with a formatting toolbar for writing headings, lists and styled text, built on Tiptap.",
+      },
+      {
         id: "drop_zone",
         label: "Drop zone",
         route: "/drop-zone.html",

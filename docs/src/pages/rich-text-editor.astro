@@ -1,0 +1,178 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "setup", label: "Setup" },
+  { id: "commands", label: "Commands" },
+  { id: "forms", label: "Forms" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const actions = [
+  ["toggleBold", "", "Bold", "format_bold"],
+  ["toggleItalic", "", "Italic", "format_italic"],
+  ["toggleStrike", "", "Strikethrough", "format_strikethrough"],
+  ["toggleHeading", '{"level":2}', "Heading", "format_h2"],
+  ["toggleBulletList", "", "Bulleted list", "format_list_bulleted"],
+  ["toggleOrderedList", "", "Numbered list", "format_list_numbered"],
+  ["toggleBlockquote", "", "Quote", "format_quote"],
+];
+---
+<DocsLayout page="rich_text_editor">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.rich-text-editor</code> turns a <code>&lt;textarea&gt;</code>
+          into an editor with a formatting toolbar. It is built on
+          <a href="https://tiptap.dev/">Tiptap</a>, which the page supplies.
+        </p>
+        <p>
+          The frame holds a docked <a href={route('toolbars')}>toolbar</a> and
+          a <code>&lt;textarea&gt;</code> whose value is the starting HTML. The
+          component hides the textarea, mounts the editor in a
+          <code>.rich-text-editor-content</code> after it, and writes the
+          editor's HTML back on every change. Without JavaScript the textarea
+          stays visible and the toolbar is hidden.
+        </p>
+        <div class="mb-3" style="max-width: 40rem;">
+          <p><label for="demo-body">Release notes</label></p>
+          <div id="demo-editor" class="rich-text-editor">
+            <div class="toolbar docked">
+              {actions.map(([command, attributes, label, icon]) => (
+                <button type="button" class="circle" data-command={command} data-attributes={attributes || undefined} aria-label={label}>
+                  <span class="material-symbols" aria-hidden="true">{icon}</span>
+                </button>
+              ))}
+              <span class="max"></span>
+              <button type="button" class="circle" data-command="undo" aria-label="Undo">
+                <span class="material-symbols" aria-hidden="true">undo</span>
+              </button>
+              <button type="button" class="circle" data-command="redo" aria-label="Redo">
+                <span class="material-symbols" aria-hidden="true">redo</span>
+              </button>
+            </div>
+            <textarea id="demo-body" name="body" set:text={"<h2>Version 2.4</h2><p>This release adds <strong>offline mode</strong> and fixes two sync bugs.</p><ul><li><p>Drafts save while offline.</p></li><li><p>Edits from two devices no longer conflict.</p></li></ul>"} />
+          </div>
+        </div>
+<Code code={`
+<label for="body">Release notes</label>
+<div class="rich-text-editor">
+  <div class="toolbar docked">
+    <button type="button" class="circle" data-command="toggleBold" aria-label="Bold">
+      <span class="material-symbols" aria-hidden="true">format_bold</span>
+    </button>
+    <button type="button" class="circle" data-command="toggleHeading"
+            data-attributes='{"level":2}' aria-label="Heading">
+      <span class="material-symbols" aria-hidden="true">format_h2</span>
+    </button>
+    <span class="max"></span>
+    <button type="button" class="circle" data-command="undo" aria-label="Undo">
+      <span class="material-symbols" aria-hidden="true">undo</span>
+    </button>
+  </div>
+  <textarea id="body" name="body"><p>Starting content</p></textarea>
+</div>
+`} />
+        <p>
+          The editable area is a multi-line <code>textbox</code>. It takes its
+          name from the textarea's <code>&lt;label&gt;</code>,
+          <code>aria-label</code> or <code>aria-labelledby</code>, and a click
+          on the label focuses it. Tiptap's keyboard shortcuts work, such as
+          <kbd>Ctrl</kbd>+<kbd>B</kbd> for bold and <kbd>Ctrl</kbd>+<kbd>Z</kbd>
+          to undo. Toolbar buttons are reached with <kbd>Tab</kbd>.
+        </p>
+  </Section>
+  <Section {...S.setup}>
+        <p>
+          ExpressiveCSS does not bundle Tiptap. Install it, then pass its
+          <code>Editor</code> class and your extensions to
+          <code>RichTextEditor.init()</code>. <code>AutoInit()</code> does not
+          start the editor.
+        </p>
+<Code code={`npm install @tiptap/core @tiptap/pm @tiptap/starter-kit`} />
+<Code code={`
+import { Editor } from '@tiptap/core';
+import StarterKit from '@tiptap/starter-kit';
+import { RichTextEditor } from '@expressivecss/expressive';
+
+RichTextEditor.init(document.querySelector('.rich-text-editor'), {
+  Editor,
+  extensions: [StarterKit]
+});
+`} />
+  </Section>
+  <Section {...S.commands}>
+        <p>
+          A button's <code>data-command</code> names a Tiptap command, and
+          <code>data-attributes</code> holds its argument as JSON. A click runs
+          the command on the selection and returns focus to the editor. Any
+          command your extensions add works the same way.
+        </p>
+        <p>
+          A button is disabled while its command cannot run, for example Undo
+          with nothing to undo. Buttons for <code>toggle</code> commands also
+          show whether the selection is formatted: <code>toggleBold</code> sets
+          <code>aria-pressed</code> and <code>.active</code> while the
+          selection is bold, and <code>toggleHeading</code> with
+          <code>{`{"level":2}`}</code> while it is in a second-level heading.
+        </p>
+  </Section>
+  <Section {...S.forms}>
+        <p>
+          The textarea submits the editor's HTML with its form, and fires
+          <code>input</code> on every change. An empty editor submits an empty
+          value. Tiptap drops markup its extensions do not know, but the value
+          comes from the browser: sanitize it on the server before storing or
+          showing it. A <code>disabled</code> or <code>readonly</code>
+          textarea makes the editor read-only and disables the toolbar.
+        </p>
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+          <tr>
+            <td><code>Editor</code></td>
+            <td>Class</td>
+            <td><code>null</code></td>
+            <td>Tiptap's <code>Editor</code> class. Required.</td>
+          </tr>
+          <tr>
+            <td><code>extensions</code></td>
+            <td>Array</td>
+            <td><code>[]</code></td>
+            <td>Tiptap extensions, usually <code>[StarterKit]</code>.</td>
+          </tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+const instance = Expressive.RichTextEditor.getInstance(document.querySelector('.rich-text-editor'));
+instance.editor.commands.setContent('<p>Replaced</p>'); // the Tiptap editor
+instance.destroy(); // removes the editor and shows the textarea again
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.rich-text-editor</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-rich-text-editor-min-height</code></td><td>160px</td></tr>
+          <tr><td><code>--md-comp-rich-text-editor-shape</code></td><td>16px</td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+<script is:inline type="module">
+// ExpressiveCSS does not bundle Tiptap; the docs load a pinned copy.
+import { Editor } from 'https://esm.sh/@tiptap/core@3.31.4';
+import StarterKit from 'https://esm.sh/@tiptap/starter-kit@3.31.4?deps=@tiptap/core@3.31.4,@tiptap/pm@3.31.4';
+
+Expressive.RichTextEditor.init(document.getElementById('demo-editor'), { Editor, extensions: [StarterKit] });
+</script>
+</DocsLayout>

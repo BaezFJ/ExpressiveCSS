@@ -3617,6 +3617,66 @@
       ]
     },
     {
+      "slug": "rich-text-editor",
+      "title": "Rich text editor",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-08",
+      "scope": "A Tiptap editor mounted from a textarea, toolbar buttons that run Tiptap commands with JSON arguments, pressed and disabled button state, form submission through the textarea, label naming and read-only textareas.",
+      "adaptation": "The page supplies Tiptap's Editor class and extensions; the component mounts it, names the contenteditable textbox from the textarea and keeps the textarea in sync. The toolbar is the docked toolbar.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-08",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Name the editable area, expose formatting state on toggle buttons, keep the toolbar reachable by keyboard and submit the content with its form."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_rich-text-editor.scss",
+          "sha256": "4ff745197d37043297861b0a4166e0bda0fd3adcdb160baed5dffb6a6821dd46"
+        },
+        {
+          "path": "src/ts/components/richTextEditor.ts",
+          "sha256": "d14e0d63acb86d53a84a131dd83fc96d5aaab5914b8ba10fc1e15e069bb30d11"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified.",
+          "nextStep": "Use the editor with a screen reader and an IME in each engine, paste from a word processor, and select text on touch devices."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/rich-text-editor-browser.test.js",
+          "name": "chromium: rich text editor formats text, reflects state and keeps the textarea in sync",
+          "scope": "Hidden textarea, textbox role and name from the label, starting HTML, label click focus, bold and heading commands with aria-pressed and .active, undo disabled state, textarea value and input event, empty value, and destroy. No spoken-output assertion.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/rich-text-editor-browser.test.js",
+          "name": "chromium: rich text editor follows a disabled textarea",
+          "scope": "A disabled textarea makes the editor read-only and disables every toolbar button.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
       "slug": "drop-zone",
       "title": "Drop zone",
       "kind": "component",

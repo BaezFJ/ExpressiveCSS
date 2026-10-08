@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**77 of 77 rows enforced; 0 remaining.**
+**78 of 78 rows enforced; 0 remaining.**
 
-73 of those rows are components - a part of the framework an author writes markup for.
+74 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 73 components declare conformance debt.**
+**3 of 74 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -844,6 +844,16 @@ Added with the radial chart component. The <table> is the chart's text alternati
 
 - **radial-chart-is-a-figure-with-a-table** - Write .radial-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
 - **radial-chart-has-a-caption** - Name a .radial-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
+
+### rich-text-editor
+
+Added with the rich text editor component. The script hides the textarea and gives the editable element role="textbox" with aria-multiline, copying the textarea's name to it, so the name has to be on the textarea. The toolbar follows the toolbar rules; icon-only buttons are covered by icon-only-control-is-named.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `rich-text-editor-textarea-is-named` | forbid | `.rich-text-editor > textarea:not([aria-label], [aria-labelledby], [id])` | must not match |
+
+- **rich-text-editor-textarea-is-named** - Name the textarea with a <label for>, aria-label or aria-labelledby. The editor copies that name to its editable area, which has none of its own. Its content is the starting HTML, not a name.
 
 ### scrim
 
