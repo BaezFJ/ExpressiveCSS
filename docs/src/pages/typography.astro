@@ -11,6 +11,7 @@ const S = defineSections([
   { id: "emphasis", label: "Emphasis" },
   { id: "blockquote", label: "Blockquotes" },
   { id: "keyboard-keys", label: "Keyboard keys" },
+  { id: "highlight", label: "Highlighted text" },
   { id: "flow", label: "Flow Text" },
   { id: "fontstack", label: "Typeface tokens" },
 ]);
@@ -189,6 +190,25 @@ const S = defineSections([
         <p>Press <kbd><kbd>Ctrl</kbd>+<kbd>K</kbd></kbd> to open the command palette, or <kbd>?</kbd> for help.</p>
 <Code code={`
 <p>Press <kbd><kbd>Ctrl</kbd>+<kbd>K</kbd></kbd> to open the command palette.</p>
+`} />
+  </Section>
+  <Section {...S.highlight}>
+        <p>
+          <code>&lt;mark&gt;</code> highlights part of a text, such as the
+          letters a search matched. It adds no padding, so a match inside a
+          word does not split it. To highlight ranges from a script without
+          changing the markup, register them under the name
+          <code>mark</code> with the CSS Custom Highlight API.
+        </p>
+        <p>Results for “press”: Ex<mark>press</mark>ive buttons, <mark>Press</mark>ed states</p>
+<Code code={`
+<p>Ex<mark>press</mark>ive buttons</p>
+`} />
+<Code code={`
+const range = new Range();
+range.setStart(textNode, 2);
+range.setEnd(textNode, 7);
+CSS.highlights.set("mark", new Highlight(range));
 `} />
   </Section>
   <Section {...S.flow}>

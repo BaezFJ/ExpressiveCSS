@@ -20,6 +20,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `aria-hidden="true"`. `vertical`, `reverse` and `fade` change the
   direction and edges, `paused` stops it, and hover or focus inside pauses
   it. Reduced motion stops the scroll and hides the copy. CSS only.
+- `<mark>` highlights part of a text in the tertiary container colors,
+  with no padding so a match inside a word keeps its spacing.
+  `::highlight(mark)` paints ranges registered with the CSS Custom
+  Highlight API the same way.
 - `.message-scroller` scrolls a conversation. While the reader is at the
   end it follows streamed replies, and scrolling up releases it. A message
   appended with `data-scroll-anchor` starts a turn and is scrolled to the
