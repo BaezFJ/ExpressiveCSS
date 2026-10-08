@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/app-bars/overview)
 
 Example: A Home/Search/Profile row belongs in navigation, even if placed at the top. Keep the app bar for the title and screen actions.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -43,11 +41,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Material Design 3 top app bars, from the HTML.
-
 The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. Top app bars stay pinned to the top by default, without a helper class. The heading is the headline; wrap it in `<hgroup>` with a `<p>` for a subtitle. Icon-only links and buttons are the leading and trailing actions. A `<menu>` (or `<ul>`) holds text destinations. A `<search class="search-bar">` in the nav is the search app bar. There is no `navbar`, `nav-wrapper`, or `brand-logo` class.
 
 Small is 64dp at `title-large`. `medium` is the Expressive medium-flexible bar: 112dp / `headline-medium`, 136dp with a subtitle. `large` is large-flexible: 120dp / `display-small`, 152dp with a subtitle. `AppBar` (started by `AutoInit()`) collapses those two on scroll and opens the related search view when the search field is selected. Icons are 24dp in a 48dp target and inherit the header color so a fill + `on-*` pair stays readable.
+
+Navigation rails and tabs are separate components. Do not nest either one in the header.
 
 #### Syntax
 
@@ -70,12 +68,12 @@ The Navbar section of the [API reference](https://www.expressivecss.com/llm.md) 
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 No component-specific `semantics.json` rules apply to this guide.
 
 #### Guide checks
 
 - Label every <nav> landmark with aria-label or aria-labelledby.
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

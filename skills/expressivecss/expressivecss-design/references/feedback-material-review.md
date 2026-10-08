@@ -4,6 +4,12 @@ Reviewed on 2026-09-13. Google evidence covers the linked rendered prose and tex
 
 Read the linked component guide for the ExpressiveCSS 0.12.0 markup and API contract. RoutePlate runtime assets may differ. The [capability roadmap](../../references/capability-roadmap.md) records source pins and scoped browser results.
 
+## Contents
+
+Cards, Lists, Badges, Snackbar, Persistent inline feedback, Progress indicators, Loading indicator, Carousel, Lightbox.
+
+Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
+
 ## [Cards](../../components/cards.md)
 
 Relationship: component. Sources: [overview](https://m3.material.io/components/cards/overview), [specs](https://m3.material.io/components/cards/specs), [guidelines](https://m3.material.io/components/cards/guidelines), [accessibility](https://m3.material.io/components/cards/accessibility).

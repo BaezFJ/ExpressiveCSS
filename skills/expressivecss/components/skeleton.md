@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: A one-second spinner while a form saves is a loading indicator. Skeletons there would draw content shapes for something that is not content.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: The shimmer, its reduced-motion stop and the absence of skeleton
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#skeleton).
 
 #### Contract
-
-Placeholder shapes that hold the layout while content loads.
 
 A `.skeleton` is an empty block in the shape of the content it stands in for, with a shimmer passing across it. Size the default box with `width` and `height`. `text` is one line of body text, and the last of several lines runs shorter. `circle` is a 40px circle for an avatar. Reduced motion stops the shimmer and keeps the shapes. CSS only; there is no JavaScript.
 
@@ -64,11 +60,8 @@ The Skeleton section of the [API reference](https://www.expressivecss.com/llm.md
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `skeleton-is-empty`: Keep a .skeleton empty. Text inside it is read out as if it were content; report the wait through a status such as a loading indicator, and mark the loading region aria-busy="true".
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

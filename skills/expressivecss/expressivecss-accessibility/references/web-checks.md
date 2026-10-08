@@ -4,6 +4,17 @@ Use these checks for the affected controls and states. Material describes design
 intent; WCAG defines conformance criteria; installed sources and browser tests
 establish what this interface does. Sources reviewed September 7, 2026.
 
+## Contents
+
+- Target sizes (SC 2.5.8)
+- Dragging alternatives (SC 2.5.7)
+- Forced colors
+- Contrast after theme overrides (SC 1.4.3, 1.4.11)
+- Content on hover or focus (SC 1.4.13)
+- Text-spacing overrides (SC 1.4.12)
+- Focus not obscured (SC 2.4.11)
+- Accessible authentication (SC 3.3.8)
+
 ## Target sizes
 
 Keep Material's **48 by 48 dp** touch-target recommendation distinct from web

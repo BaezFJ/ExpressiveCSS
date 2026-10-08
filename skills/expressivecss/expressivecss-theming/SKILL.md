@@ -1,91 +1,40 @@
 ---
 name: expressivecss-theming
-description: Theme ExpressiveCSS color roles, brand seeds, typography, shape, motion, icons, elevation, state layers, and light/dark schemes. Use for visual tokens and brand changes; exclude unrelated markup and runtime lifecycle repairs.
+description: Themes ExpressiveCSS color roles, brand seeds, typography, icon styling, shape, motion, elevation, state layers, vibrant regions, and light/dark schemes. Use for visual tokens and brand changes. Not for markup repair, setup, or JavaScript lifecycle work, and never a substitute for the selected component contract.
 ---
 
 # ExpressiveCSS themes and colors
 
-## When to use
-
-Use this guide for color, typography, icon styling, themes, schemes, vibrant regions, state layers, or other visual tokens such as shape, motion, elevation, and shadows.
-
-## Do not use when
-
-Do not load this guide for unrelated markup repair, setup, or JavaScript lifecycle work. It does not replace the selected component contract or Material 3 component behavior.
-
 ## Before changing tokens
 
-Reuse the root version resolution and load only the relevant focused reference below. Consult its linked target-version documentation for missing details, conflicts, or version uncertainty.
+Reuse the root version resolution. Before changing a brand choice, check the application's existing theme notes and token owner. For conflicting decisions or a change shared across pages, read the [product context reference](../expressivecss-design/references/product-context.md); a token-only task does not need the full Design workflow.
 
-Before changing a brand choice, check the application's existing theme notes and token owner. For conflicting decisions or a change shared across pages, consult the [product context reference](../expressivecss-design/references/product-context.md) directly; a token-only task does not require the full Design workflow.
+## Core rules
+
+These rules apply to every token change. The references below hold the details and examples.
+
+- Consume live `--md-sys-color-*` tokens and their matching utilities. Pair every container with its `on-*` foreground, such as `surface` with `on-surface`.
+- Use surface roles for most of the page, primary for the most important action or emphasis in a region, and error roles only for errors.
+- Do not hard-code a color when a semantic role expresses the same intent.
+- For transparency, mix a complete token with `color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent)`. Tokens store complete colors, so `rgba(var(--md-sys-color-primary), 0.06)` is invalid.
+- Set `--md-source` to change the brand seed. Components consume the unsuffixed live role; never consume `--md-sys-color-*-light` or `-dark` backing pairs.
+- Select the scheme with the `theme` attribute on `<html>` or a shadow host (`auto`, `light`, or `dark`; absent follows the OS). There is no `Expressive.theme` JavaScript API.
+- Put `vibrant` on a focused subtree only, never the whole page by default.
+- Load application token overrides after ExpressiveCSS.
 
 ## Focused references
 
-Load only the references needed for the task:
+Read only the reference for the token family you are changing:
 
-- For semantic color tokens, utility classes, role pairings, and transparency, read the [color reference](./references/color.md).
-- For light/dark/auto selection, seed overrides, nested schemes, Shadow DOM, and vibrant regions, read the [themes reference](./references/themes.md).
-- For `z-depth-*`, Sass elevation mixins, and shadow-state rules, read the [elevation reference](./references/elevation.md).
-- For Material Symbols families, axes, sizing, font delivery, and icon accessibility, read the [icons reference](./references/icons.md).
-- For the 15 baseline type roles, expressive emphasis, font support, and semantic hierarchy, read the [typography reference](./references/typography.md).
-- For component corners, state shape changes, and shape support gaps, read the [shape reference](./references/shape.md).
-- For spatial versus effects motion, component timing ownership, and reduced motion, read the [motion reference](./references/motion.md).
-- For hover, focus, pressed, and dragged opacity tokens, overlay and ring forms, and per-component overrides, read the [state-layers reference](./references/state-layers.md).
-
-## Color and scheme rules
-
-### Select a scheme
-
-- No `theme` attribute follows the operating-system preference.
-- `theme="auto"` explicitly follows the operating-system preference.
-- `theme="light"` and `theme="dark"` lock the scheme.
-- Change the attribute at runtime; there is no `Expressive.theme` JavaScript API.
-- Add `vibrant` to a focused subtree for the Material 3 Expressive tertiary-surface emphasis axis. Do not put it on the whole page by default.
-
-### Use semantic roles
-
-Consume live `--md-sys-color-*` tokens and their matching utilities. Pair every container with its `on-*` foreground, for example `primary` with `on-primary` and `surface` with `on-surface`.
-
-Use surface roles for most of the page. Reserve primary for the most important action or emphasis in a region. Use error roles for errors, not for generic decoration.
-
-```css
-.panel {
-  color: var(--md-sys-color-on-surface);
-  background: var(--md-sys-color-surface);
-}
-```
-
-For transparency, mix a complete color token with transparent:
-
-```css
-.overlay {
-  background: color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent);
-}
-```
-
-Do not use `rgba(var(--md-sys-color-primary), 0.06)`: the token stores a complete color, not RGB channels.
-
-### Customize a theme
-
-Set `--md-source` to regenerate the primary, secondary, tertiary, neutral, and neutral-variant ramps at runtime:
-
-```css
-:root {
-  --md-source: #6750a4;
-}
-```
-
-The error ramp deliberately does not follow the seed. Override documented `-light` and `-dark` role pairs only when you need surgical control over both schemes. Components should still consume the live role without a suffix.
-
-### Rules
-
-- Do not hard-code a color when a semantic role expresses the same intent.
-- Do not consume `--md-sys-color-*-light` or `-dark` inside components; those are backing pairs, not live roles.
-- Do not restore the removed 2014 palette classes or a Sass color lookup function.
-- Use `color-mix(in oklab, ...)`, not sRGB interpolation, for state and translucent role colors.
-- Load application token overrides after ExpressiveCSS.
-- Keep shadow-root token anchors paired when modifying the framework itself.
+- Read the [color reference](./references/color.md) before choosing roles, utility classes, pairings, transparency, or the scrim.
+- Read the [themes reference](./references/themes.md) before changing scheme selection, a persisted theme choice, the seed, `-light`/`-dark` overrides, nested schemes, Shadow DOM, or vibrant regions.
+- Read the [elevation reference](./references/elevation.md) before using `z-depth-*`, the Sass elevation mixin, or shadow-state rules.
+- Read the [icons reference](./references/icons.md) before changing Material Symbols families, axes, sizing, font delivery, or icon accessibility.
+- Read the [typography reference](./references/typography.md) before changing type roles, emphasis, typefaces, or text helpers.
+- Read the [shape reference](./references/shape.md) before changing component corners or state shape.
+- Read the [motion reference](./references/motion.md) before changing component timing, spatial or effects motion, or reduced-motion behavior.
+- Read the [state-layers reference](./references/state-layers.md) before changing hover, focus, pressed, or dragged opacity tokens or per-component overrides.
 
 ## Verification
 
-Check light, dark, auto/OS-following, nested scheme overrides, and any vibrant region. Use the [focused web checks](../expressivecss-accessibility/references/web-checks.md#contrast-after-theme-overrides) for affected contrast and forced colors. Verify native-control color scheme, and the absence of a wrong-theme flash when the application persists a choice.
+Check light, dark, auto with both OS preferences, nested scheme overrides, and any vibrant region. For affected contrast and forced colors, run the [focused web checks](../expressivecss-accessibility/references/web-checks.md#contrast-after-theme-overrides). Verify native-control color scheme, and the absence of a wrong-theme flash when the application persists a choice. Fix any failure, then repeat the same checks.

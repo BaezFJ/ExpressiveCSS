@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/chips/overview)
 
 Example: A passive unread count is a badge. Turning it into a filter chip falsely suggests a selectable state unless filtering is implemented.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -42,8 +40,6 @@ Known boundary: Rendered deletion, focus recovery and wrapped action/delete cont
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#chips).
 
 #### Contract
-
-Small blocks for contacts, tags, and filters.
 
 A chip is a `.chip`, and **the element says which kind it is** — the four Material 3 chip types, plus a non-interactive display chip, across three root elements. Add `outlined` for a bordered style. Static chips are CSS. The JavaScript plugin lives on a `.chips` wrapper.
 
@@ -108,7 +104,7 @@ The Chips section of the [API reference](https://www.expressivecss.com/llm.md) a
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `chip-root-element`: A chip is <span> (display), <button> (assist/suggestion/input), or <label> (filter). Never <div>.
 - `chip-not-focusable-span`: A display chip is not a control and must not be in the tab order. Put the action on a nested <button>.
@@ -119,7 +115,4 @@ The following are end-state semantic invariants. The rule IDs come directly from
 - `chip-icon-hidden`: A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden.
 - `filter-chip-label-for`: A filter chip is <input type="checkbox"> + <label class="chip">; the label must point at its input.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

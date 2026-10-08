@@ -2,7 +2,7 @@
 
 # ExpressiveCSS component decisions
 
-Find the entry matching the requested job. Read its selected guide; compare alternatives only when the behavior is ambiguous. Adaptive decisions, Material links, syntax, and semantics live in the guides.
+Pick the row that matches the job and read its guide. Compare alternatives only when the fit is ambiguous.
 
 | Component | Use when | Avoid when | Alternatives | Runtime |
 | --- | --- | --- | --- | --- |

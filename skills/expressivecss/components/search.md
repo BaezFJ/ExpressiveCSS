@@ -11,13 +11,11 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/search/overview)
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -41,8 +39,6 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A search bar, and the view it expands into.
-
 A `<search>` with `search-bar` on it is the bar: a leading icon or icon button, an `<input type="search">`, and whatever trailing actions the query needs. The element is the landmark, so there is no `role="search"` to add. The input goes in bare — the bar is the container, so none of the text-field chrome (`.field`, the underline, the floating label) applies.
 
 Spacing follows what is at each end: a bare glyph sits 16dp from the edge, an icon button 4dp, because the button already insets its own glyph by 12dp. An `<img>` in the bar is the account avatar — 30dp and circular; put it inside the button when it is tappable, so the 48dp target comes from the button. `.searchbar`, the pre-1.0 name, reaches the same rules.
@@ -65,12 +61,9 @@ The Search section of the [API reference](https://www.expressivecss.com/llm.md) 
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `search-view-not-a-composite-widget`: The search view takes no composite role. Its contents are links and buttons reached with Tab; the combobox and listbox belong to the Autocomplete on the bar's input.
 - `search-bar-holds-a-search-input`: The bar's control is a search input. `type="search"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it. The selector names `.search-bar` and deliberately not the `.searchbar` alias: pre-1.0 markup of that shape predates the requirement, and holding old markup to a rule it could not have known is how a promise of an additive rename gets broken.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

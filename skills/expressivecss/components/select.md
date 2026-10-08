@@ -11,13 +11,11 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Related Google guidance](https://m3.material.io/components/menus/overview)
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -41,11 +39,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Choose one option, or several, from a styled menu.
-
 Filled enhanced selects reserve a label row that grows with wrapping and enlarged text. Leading icons retain their label spacing; supporting text stays outside the filled surface. Native and outlined variants retain their existing layouts.
 
 Select turns a native `<select>` into a menu. Wrap it in a `.field` and give the label a matching `for`. `AutoInit()` starts every `select` except those marked `no-autoinit`. Add `browser-default` to keep the native control.
+
+Add `multiple` to select several options. Chosen values appear as a comma-separated list. Distinct options with the same value can be selected and deselected independently.
 
 #### Syntax
 
@@ -119,7 +117,7 @@ The Select section of the [API reference](https://www.expressivecss.com/llm.md) 
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `option-has-selected-state`: role=option promises a selection state. Without aria-selected the listbox never says which entry is chosen.
 - `field-container-class`: The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.
@@ -134,7 +132,4 @@ The following are end-state semantic invariants. The rule IDs come directly from
 - `otp-autocompletes`: Set autocomplete="one-time-code" on a one-time code input so the browser can offer the code from a message.
 - `otp-is-not-a-number`: A code is not a quantity: type="number" drops leading zeros and adds a spinner. Use type="text" with inputmode="numeric".
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

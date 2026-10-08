@@ -2,6 +2,14 @@
 
 Use the installed ExpressiveCSS version as the source of truth. The role list comes from `src/sass/abstracts/_variables.scss`; the live tokens come from `src/sass/tokens/_theme.scss`; utility generation comes from `src/sass/utilities/_colors.scss`.
 
+## Contents
+
+- Decision rule
+- Recommended pairings
+- Complete utility inventory
+- Transparency and states
+- Component exclusions and pitfalls
+
 ## Decision rule
 
 1. Pick a semantic role from the element's purpose, not from the hue you want.
@@ -49,59 +57,15 @@ The utility declarations are in the utilities cascade layer, which is later than
 
 ## Complete utility inventory
 
-Every role below emits both forms. The first class sets `background-color`; the `-text` form sets `color`.
+Every role below emits two classes. The background class (for example `.primary`) sets `background-color`; the `-text` form (for example `.primary-text`) sets the foreground `color`. Background classes by family:
 
-| Role | Background class | Foreground class |
-|---|---|---|
-| Primary | `.primary` | `.primary-text` |
-| On primary | `.on-primary` | `.on-primary-text` |
-| Primary container | `.primary-container` | `.primary-container-text` |
-| On primary container | `.on-primary-container` | `.on-primary-container-text` |
-| Primary fixed | `.primary-fixed` | `.primary-fixed-text` |
-| Primary fixed dim | `.primary-fixed-dim` | `.primary-fixed-dim-text` |
-| On primary fixed | `.on-primary-fixed` | `.on-primary-fixed-text` |
-| On primary fixed variant | `.on-primary-fixed-variant` | `.on-primary-fixed-variant-text` |
-| Secondary | `.secondary` | `.secondary-text` |
-| On secondary | `.on-secondary` | `.on-secondary-text` |
-| Secondary container | `.secondary-container` | `.secondary-container-text` |
-| On secondary container | `.on-secondary-container` | `.on-secondary-container-text` |
-| Secondary fixed | `.secondary-fixed` | `.secondary-fixed-text` |
-| Secondary fixed dim | `.secondary-fixed-dim` | `.secondary-fixed-dim-text` |
-| On secondary fixed | `.on-secondary-fixed` | `.on-secondary-fixed-text` |
-| On secondary fixed variant | `.on-secondary-fixed-variant` | `.on-secondary-fixed-variant-text` |
-| Tertiary | `.tertiary` | `.tertiary-text` |
-| On tertiary | `.on-tertiary` | `.on-tertiary-text` |
-| Tertiary container | `.tertiary-container` | `.tertiary-container-text` |
-| On tertiary container | `.on-tertiary-container` | `.on-tertiary-container-text` |
-| Tertiary fixed | `.tertiary-fixed` | `.tertiary-fixed-text` |
-| Tertiary fixed dim | `.tertiary-fixed-dim` | `.tertiary-fixed-dim-text` |
-| On tertiary fixed | `.on-tertiary-fixed` | `.on-tertiary-fixed-text` |
-| On tertiary fixed variant | `.on-tertiary-fixed-variant` | `.on-tertiary-fixed-variant-text` |
-| Error | `.error` | `.error-text` |
-| On error | `.on-error` | `.on-error-text` |
-| Error container | `.error-container` | `.error-container-text` |
-| On error container | `.on-error-container` | `.on-error-container-text` |
-| Surface | `.surface` | `.surface-text` |
-| On surface | `.on-surface` | `.on-surface-text` |
-| On surface variant | `.on-surface-variant` | `.on-surface-variant-text` |
-| Surface dim | `.surface-dim` | `.surface-dim-text` |
-| Surface bright | `.surface-bright` | `.surface-bright-text` |
-| Surface container lowest | `.surface-container-lowest` | `.surface-container-lowest-text` |
-| Surface container low | `.surface-container-low` | `.surface-container-low-text` |
-| Surface container | `.surface-container` | `.surface-container-text` |
-| Surface container high | `.surface-container-high` | `.surface-container-high-text` |
-| Surface container highest | `.surface-container-highest` | `.surface-container-highest-text` |
-| Outline | `.outline` | `.outline-text` |
-| Outline variant | `.outline-variant` | `.outline-variant-text` |
-| Inverse surface | `.inverse-surface` | `.inverse-surface-text` |
-| Inverse on surface | `.inverse-on-surface` | `.inverse-on-surface-text` |
-| Inverse primary | `.inverse-primary` | `.inverse-primary-text` |
-| Scrim | `.scrim` | `.scrim-text` |
-| Shadow | `.shadow` | `.shadow-text` |
-| Background | `.background` | `.background-text` |
-| On background | `.on-background` | `.on-background-text` |
-| Surface variant | `.surface-variant` | `.surface-variant-text` |
-| Surface tint | `.surface-tint` | `.surface-tint-text` |
+- Primary: `.primary`, `.on-primary`, `.primary-container`, `.on-primary-container`, `.primary-fixed`, `.primary-fixed-dim`, `.on-primary-fixed`, `.on-primary-fixed-variant`.
+- Secondary: `.secondary`, `.on-secondary`, `.secondary-container`, `.on-secondary-container`, `.secondary-fixed`, `.secondary-fixed-dim`, `.on-secondary-fixed`, `.on-secondary-fixed-variant`.
+- Tertiary: `.tertiary`, `.on-tertiary`, `.tertiary-container`, `.on-tertiary-container`, `.tertiary-fixed`, `.tertiary-fixed-dim`, `.on-tertiary-fixed`, `.on-tertiary-fixed-variant`.
+- Error: `.error`, `.on-error`, `.error-container`, `.on-error-container`.
+- Surface and outline: `.surface`, `.on-surface`, `.on-surface-variant`, `.surface-dim`, `.surface-bright`, `.surface-container-lowest`, `.surface-container-low`, `.surface-container`, `.surface-container-high`, `.surface-container-highest`, `.outline`, `.outline-variant`, `.inverse-surface`, `.inverse-on-surface`, `.inverse-primary`, `.scrim`, `.shadow`, `.background`, `.on-background`, `.surface-variant`, `.surface-tint`.
+
+Foreground classes append `-text` to each name above: `.primary-text`, `.on-primary-text`, `.primary-container-text`, `.on-primary-container-text`, `.primary-fixed-text`, `.primary-fixed-dim-text`, `.on-primary-fixed-text`, `.on-primary-fixed-variant-text`, `.secondary-text`, `.on-secondary-text`, `.secondary-container-text`, `.on-secondary-container-text`, `.secondary-fixed-text`, `.secondary-fixed-dim-text`, `.on-secondary-fixed-text`, `.on-secondary-fixed-variant-text`, `.tertiary-text`, `.on-tertiary-text`, `.tertiary-container-text`, `.on-tertiary-container-text`, `.tertiary-fixed-text`, `.tertiary-fixed-dim-text`, `.on-tertiary-fixed-text`, `.on-tertiary-fixed-variant-text`, `.error-text`, `.on-error-text`, `.error-container-text`, `.on-error-container-text`, `.surface-text`, `.on-surface-text`, `.on-surface-variant-text`, `.surface-dim-text`, `.surface-bright-text`, `.surface-container-lowest-text`, `.surface-container-low-text`, `.surface-container-text`, `.surface-container-high-text`, `.surface-container-highest-text`, `.outline-text`, `.outline-variant-text`, `.inverse-surface-text`, `.inverse-on-surface-text`, `.inverse-primary-text`, `.scrim-text`, `.shadow-text`, `.background-text`, `.on-background-text`, `.surface-variant-text`, `.surface-tint-text`.
 
 `background`, `on-background`, `surface-variant`, and `surface-tint` are compatibility aliases. Prefer the current surface roles in new work.
 

@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `shared-runtime`. No dedicated entry in the reviewed Google component inventory.
 
 Example: An optional attachment on a support form is a file input in the form. A drop zone would give one small field the weight of the whole page.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Input coverage, the dragover state, the file list and keyboard f
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#drop-zone).
 
 #### Contract
-
-A large target for choosing or dropping files, with a list of what was chosen.
 
 A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input is stretched invisibly over the whole label, so the browser takes a click, Enter, Space or a dropped file exactly as it does on a plain file input, and the label text names it. The Forms behavior adds `dragover` to the zone while files are dragged over it and lists each chosen file's name and size, formatted for the page's locale, in `.drop-zone-files`. The root bundle installs it on load, and the modular entry with `Forms.Init()`. It listens on the document, so zones added later work too. Resetting the form empties the list.
 
@@ -65,12 +61,9 @@ The Drop zone section of the [API reference](https://www.expressivecss.com/llm.m
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `drop-zone-input-is-in-the-label`: Put the file input inside the .drop-zone <label>. The label names the input and the input covers the label; a loose input is neither named nor a drop target.
 - `drop-zone-files-are-a-list`: Write .drop-zone-files as a <ul>. The behavior fills it with one <li> per file, and a list tells assistive technology how many files were chosen.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

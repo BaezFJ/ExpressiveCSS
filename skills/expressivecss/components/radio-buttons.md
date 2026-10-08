@@ -11,13 +11,11 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/radio-button/overview)
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -41,11 +39,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Material Design 3 radios, from the HTML.
-
 A `<label>` wrapping `<input type="radio">` is the control. The label text is a sibling of the input — no extra class, no required `<span>`. They are CSS only. There is no JavaScript component and nothing to AutoInit.
 
 A radio only means anything as one of a set, so the set is a `<fieldset>` and the `<legend>` names the question the radios answer. Without it the options are announced one by one with nothing saying what is being chosen.
+
+Tokens follow the [M3 radio spec](https://m3.material.io/components/radio-button/specs). The icon is a 20dp ring with a 2dp stroke. Selected is `primary` with a 10dp inner disc (the M3 gap). The state layer is 40dp at 8% hover and 10% focus. The touch target is 48dp. The label is `body-large` / `on-surface`. Disabled is `on-surface` at 38%.
 
 #### Syntax
 
@@ -73,13 +71,10 @@ The Radio Buttons section of the [API reference](https://www.expressivecss.com/l
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `radio-in-fieldset`: A radio only means something as one of a group, and the group needs a <fieldset> with a <legend> to name the question being answered.
 - `radio-labelled`: A radio must be inside its <label> or carry an id a label points at.
 - `fieldset-has-legend`: A fieldset without a legend groups controls visually but names nothing.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

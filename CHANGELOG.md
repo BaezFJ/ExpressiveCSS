@@ -176,6 +176,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The default theme seed is Mist Iris (`#c6a0f6`). The docs picker uses the
   same default for its initial value and Reset action. Set `--md-source` or
   Sass `$md-source` to retain an application's existing brand color.
+- The agent skill workflow is version 0.8.0 and costs fewer tokens to read.
+  Sub-skill scope now lives only in each frontmatter description, without
+  repeated "When to use" sections. Generated component guides no
+  longer repeat the page description or the generic rule and documentation
+  notes, and the theming, usage, dashboard and charts guides link to the
+  reference that owns a rule instead of restating it. Each sub-skill says when
+  to read each reference, long references open with a contents list, and the
+  design guide links its dated component reviews directly. A new delegation
+  reference explains how to split a large audit across subagents and merge
+  their findings. The install and runtime guides end with checklists, and the
+  charts guide asks for honest scales and labelled sample data.
 
 ### Fixed
 

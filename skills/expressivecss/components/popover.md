@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `native`. No dedicated entry in the reviewed Google component inventory.
 
 Example: A label for an icon button that shows on hover is a tooltip. A popover would make the user press the button just to learn what it does.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Anchoring and flipping in LTR and RTL, light dismiss, Escape and
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#popover).
 
 #### Contract
-
-A panel that opens from a button and stays until dismissed, on the native popover attribute.
 
 A `.popover` is a `[popover]` element, and the button that opens it names it with `popovertarget` (or `commandfor` with `command="toggle-popover"`). The browser owns the behavior: pressing the button toggles the panel, Escape or a click outside closes it, focus returns to the button, and the button reports the panel as expanded. CSS anchor positioning places the panel 4px below the button with their start edges aligned, and flips it to the other side when it would not fit. CSS only; there is no JavaScript.
 
@@ -66,13 +62,10 @@ The Popover section of the [API reference](https://www.expressivecss.com/llm.md)
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `popover-is-native`: Give a .popover the popover attribute. Without it the panel is never in the top layer, never light-dismisses and its button reports no expanded state.
 - `popover-target-exists`: popovertarget must name the id of a [popover] element in the page. A dangling id leaves a button that does nothing.
 - `popover-is-not-a-tooltip`: A popover opens on press and can hold links and buttons, which a tooltip never can. Leave the role off; the browser relates the panel to its button.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

@@ -1,6 +1,20 @@
 # ExpressiveCSS helper-class reference
 
-Read this after the Usage guide when a task needs spacing, flex layout, alignment, visibility, formatting, responsive media, or elevation helpers. Reuse the root guide's installed-version resolution. The [target-version Helpers documentation](https://www.expressivecss.com/helpers.html.md), [Shadow documentation](https://www.expressivecss.com/shadow.html.md), [helper Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_helpers.scss), [spacing Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_spacing.scss), [visibility Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_visibility.scss), and [elevation Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/abstracts/_elevation.scss) override this summary if they differ.
+Read this after the Usage guide when a task needs spacing, flex layout, alignment, visibility, formatting, responsive media, or elevation helpers. The [target-version Helpers documentation](https://www.expressivecss.com/helpers.html.md), [Shadow documentation](https://www.expressivecss.com/shadow.html.md), [helper Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_helpers.scss), [spacing Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_spacing.scss), [visibility Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_visibility.scss), and [elevation Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/abstracts/_elevation.scss) override this summary if they differ.
+
+## Contents
+
+- Agent procedure
+- Spacing grammar
+- Visibility helpers: hide classes, show classes, screen-reader-only text, reveal on focus
+- Alignment and layout helpers
+- Flex helpers
+- Sizing and overflow
+- Shape and text helpers
+- Shadow and elevation
+- Responsive media helpers
+- Native form opt-out
+- Review checklist
 
 ## Agent procedure
 
@@ -209,41 +223,11 @@ Give a generic scroll region `tabindex="0"` and an accessible name when keyboard
 
 ## Shadow and elevation
 
-Apply one elevation class when a plain element needs a documented Material shadow. Prefer component-owned elevation when a component already defines it.
-
-| Class | Effect |
-| --- | --- |
-| `.z-depth-0` | Removes the shadow with `box-shadow: none !important`; use it to flatten a component-owned shadow deliberately. |
-| `.z-depth-1` | Elevation level 1. |
-| `.z-depth-1-half` | In-between level from the same elevation map. |
-| `.z-depth-2` | Elevation level 2. |
-| `.z-depth-3` | Elevation level 3. |
-| `.z-depth-4` | Elevation level 4. |
-| `.z-depth-5` | Elevation level 5. |
-
-```html
-<article class="z-depth-2 p-4">Raised content</article>
-```
-
-In Sass, use `@include z-depth("2")` rather than `@extend .z-depth-2`. The class list and mixin share the same elevation map. Do not stack multiple `.z-depth-*` classes; choose one level, and verify the elevation still communicates hierarchy in every state.
+Prefer component-owned elevation. For a plain element, apply exactly one of `.z-depth-0`, `.z-depth-1`, `.z-depth-1-half`, `.z-depth-2`, `.z-depth-3`, `.z-depth-4`, or `.z-depth-5`. `.z-depth-0` removes the shadow with `box-shadow: none !important`, including a component-owned shadow. In Sass, use `@include z-depth("2")` rather than `@extend .z-depth-2`. The Theming guide's elevation reference covers ordering, reset, and state rules.
 
 ## Responsive media helpers
 
-| Class | Apply to | Effect |
-| --- | --- | --- |
-| `.responsive-img` | `<img>` | `max-width: 100%; height: auto` and a 12px radius unless `.circle` is also present. |
-| `.responsive-video` | `<video>` | `max-width: 100%; height: auto` and a 12px radius. |
-| `.video-container` | Wrapper around `<iframe>`, `<object>`, or `<embed>` | Creates a clipped 16:9 box and makes the child fill it. |
-
-```html
-<img class="responsive-img" src="report.png" alt="Quarterly sales chart">
-
-<div class="video-container">
-  <iframe src="https://example.com/embed/video" title="Product walkthrough"></iframe>
-</div>
-```
-
-Use meaningful `alt` text for informative images, empty `alt` for decorative images, and a title or other accessible name for an embedded frame.
+`.responsive-img` (on `<img>`) and `.responsive-video` (on `<video>`) cap width at the container and keep the intrinsic ratio. `.video-container` wraps an `<iframe>`, `<object>`, or `<embed>` in a clipped 16:9 box. The Usage guide's media reference covers alternatives, captions, and loading.
 
 ## Native form opt-out
 

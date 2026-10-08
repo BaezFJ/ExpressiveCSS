@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/buttons/overview)
 
 Example: Use radios for saved form values; buttons run commands.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -43,11 +41,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Material Design 3 common buttons, icon buttons, and FABs — from the HTML.
-
 A `<button>` is a filled common button. An `<a class="button">` is the same thing for a link — on an anchor the class is `button`; the older `.btn` spelling only ever worked on a `<button>`, which is styled as one anyway. Put a `<span class="material-symbols" aria-hidden="true">` icon before or after the label and wrap the label in its own `<span>` — there is no `icon-left` / `icon-right` class, the order of the two spans is the placement. Add `circle` for a round common button and name it with `aria-label`, since the icon is hidden. Icon buttons are `.icon-button`.
 
 Two independent axes dress it: a style (`filled`, `tonal`, `outlined`, `elevated`, `text`) and a size (`xsmall` through `xlarge`). Any style combines with any size — nine classes, not twenty-five, because the size sets the geometry and the style sets the color.
+
+Tokens follow the [M3 button spec](https://m3.material.io/components/buttons/specs). The default is the small size: 40dp tall, label `label-large`, fully round corners, a 20dp icon on an 8dp gap, and a symmetric 16dp inset. State layers are 8% hover and 10% focus or press. Disabled is `on-surface` at 38% on a 12% container.
 
 #### Syntax
 
@@ -72,14 +70,11 @@ The Buttons section of the [API reference](https://www.expressivecss.com/llm.md)
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `icon-only-control-is-named`: Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
 - `fab-no-small-variant`: The 40dp small FAB has been removed. Use circle extra for a 56dp FAB.
 - `extended-fab-requires-size`: The baseline extended FAB has been removed. Specify extend small, extend medium or extend large.
 - `fab-no-surface-color`: Use a primary, secondary or tertiary container color for a FAB instead of a surface color.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

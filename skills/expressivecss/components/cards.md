@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/cards/overview)
 
 Example: A hundred compact activity records need a list. Giving every row a card adds separation without a separate content or action group.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -42,8 +40,6 @@ Known boundary: Existing card lifecycle and geometry evidence does not cover eve
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#cards).
 
 #### Contract
-
-Material Design 3 cards, from the HTML.
 
 An `<article>` is an elevated card. Any heading is the headline, `<p class="subhead">` is the optional subhead, a `<p>` is supporting copy, direct `<img>`, `<picture>`, or `<figure>` is media, and direct `<div class="actions">` is the action row. Include only the slots the content needs. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class—the element is the component, and the action row is not a `<nav>`. Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs): all variants use 12dp corners; elevated rests at level 1, filled and outlined at level 0. A directly actionable card wraps its primary content in one direct `a.primary-action[href]` and has no second link or control. Horizontal cards preserve that source order, use content height with a 240px minimum unless a size helper fixes the expanded height, and stack below 600px with fixed heights reset to content. During reordering, `.dragged` or `.picked-up` preserves the 16% state layer and dragged elevation while the primary action remains hovered or pressed.
 
@@ -72,7 +68,7 @@ The Cards section of the [API reference](https://www.expressivecss.com/llm.md) a
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `card-action-row-not-nav`: Cards do not contain navigation or tabs. Put navigation outside the card and use <div class="actions"> for its action buttons.
 - `card-primary-action-is-control`: A directly actionable card uses one native link as its primary action. Use the action row for commands; common button styles do not turn a button into the card container.
@@ -91,7 +87,4 @@ The following are end-state semantic invariants. The rule IDs come directly from
 - `expanding-card-trigger-is-button`: The media-sized trigger opens a dialog, so use a button for native keyboard and disabled behavior.
 - `expanding-card-close-is-button`: The back affordance closes the expanded surface, so use a button for native keyboard behavior.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

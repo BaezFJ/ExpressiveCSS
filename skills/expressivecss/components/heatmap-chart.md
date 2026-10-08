@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Visits by day of the week and time of day is a heatmap chart. Visits per day over a month is a line or column chart.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Drawing, the hidden table, cell shades and gaps, the fixed scale
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#heatmap-chart).
 
 #### Contract
-
-A data table drawn as a grid of cells shaded by value, for patterns across two categories such as days and hours.
 
 A `<figure class="heatmap-chart">` takes the same `<figcaption>` and `<table>` as a column chart. `AutoInit()` draws every body cell as a cell of a grid, one grid row per table row and one grid column per value column, shaded from the lowest value to the highest. The row headers sit at the inline start, the column headers below, and a scale under the grid names the lowest and highest cells. A tooltip shows the cell under the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
 
@@ -66,12 +62,9 @@ The Heatmap chart section of the [API reference](https://www.expressivecss.com/l
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `heatmap-chart-is-a-figure-with-a-table`: Write .heatmap-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
 - `heatmap-chart-has-a-caption`: Name a .heatmap-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

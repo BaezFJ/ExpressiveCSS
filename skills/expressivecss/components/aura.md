@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: A pricing page with one recommended plan gets one aura on that plan's card. Putting an aura on every plan, or on each new item in a list, removes the contrast the effect depends on; use a badge for those.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: The ring geometry, the turning angle, its reverse in RTL, its st
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#aura).
 
 #### Contract
-
-A light that runs around the border of the one button or card a screen most needs you to see.
 
 An `.aura` wraps one element and runs a light around a 2px ring just outside it. Use it on the button, card or panel a screen most needs the user to notice, and keep it to one per screen. `dual` sends primary and tertiary lights around opposite sides, `rainbow` turns the whole hue wheel, and `glow` draws a blurred halo behind the element in place of a ring; give a glowing element an opaque container. The ring has 12px corners to match a card and is fully rounded around a button; set `--md-comp-aura-shape` to the corner size of anything else. Reduced motion stops the turning and keeps the ring. A shadow root ignores `@property`, so with the sheet adopted only there the light turns in 7.2deg steps. CSS only; there is no JavaScript.
 
@@ -66,11 +62,8 @@ The Aura section of the [API reference](https://www.expressivecss.com/llm.md) al
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `aura-wraps-one-element`: An .aura wraps one element. Give each highlighted element its own .aura, and keep to one per screen.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

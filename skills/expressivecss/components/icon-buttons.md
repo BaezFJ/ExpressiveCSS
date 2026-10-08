@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/icon-buttons/overview)
 
 Example: A novel approval workflow should use a labeled button. A tooltip on an ambiguous icon cannot replace a clear label or the control's accessible name.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -67,14 +65,11 @@ The Icon buttons section of the [API reference](https://www.expressivecss.com/ll
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `icon-button-is-a-control`: An icon button is a control: <button>, or <a href> when it navigates. A <div>, or an anchor with no href, is neither focusable nor announced.
 - `icon-button-link-is-not-fake-disabled`: A link cannot be disabled by a class. `pointer-events: none` stops the pointer and nothing else, so this stays in the tab order and still navigates on Enter - it looks inert and is not. Drop the href, or the link.
 - `icon-button-icon-hidden`: The ligature is real text and is read out verbatim. The icon in an icon button is decoration - the control carries the name - so it is aria-hidden="true".
 - `icon-button-is-named`: The icon is hidden from assistive technology, so an icon button has nothing left to be named by. Give it an aria-label.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

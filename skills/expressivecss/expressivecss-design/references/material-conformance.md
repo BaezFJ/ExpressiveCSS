@@ -30,6 +30,9 @@ Check variant meaning in the resolved framework contract before replacing it. A 
 
 Name the reviewed components, sections, variants, states, and evidence limits. Do not claim full component parity from one screenshot or one successful task path. Update source catalogue review metadata only for material actually inspected; generation must not advance review dates or erase existing gaps. Leave unrelated components' review status unchanged.
 
-See the [priority component review](priority-material-review.md) for the seven components reviewed on 2026-09-13, scoped findings, and unresolved differences.
+## Dated review records
 
-The remaining components are reviewed in [inputs and choices](inputs-material-review.md), [navigation, actions and sheets](layout-material-review.md), [content and feedback](feedback-material-review.md), and [web navigation extensions](web-extensions-review.md). Each names a scoped check or a concrete verification gap.
+Before a conformance claim about a selected component, read that component's section in its record. Each record names a scoped check or a concrete verification gap.
+
+- [Priority components](priority-material-review.md): the seven components reviewed on 2026-09-13, scoped findings, and unresolved differences.
+- [Inputs and choices](inputs-material-review.md), [navigation, actions and sheets](layout-material-review.md), [content and feedback](feedback-material-review.md), and [web navigation extensions](web-extensions-review.md): the remaining components.

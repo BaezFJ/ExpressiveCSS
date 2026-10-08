@@ -4,6 +4,8 @@
 
 Copied from `m3-guidelines.md` (SHA-256 `7230a1b3dae7aa33c415136e1e84ee8b0fba3606c1d1376152edc086e974f886`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
 
+Contents: Hard rules · 1.2 What changes with window size · 1.4 Navigation by window size · 3. Component chooser · 12. Screen recipes · 13. Quick anatomy cheat sheet · 14. Name map (retired names → ExpressiveCSS).
+
 ## Hard rules
 
 These are the mistakes generated Material UIs make most often. Treat them as invariants.

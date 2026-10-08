@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Monthly revenue of $48,200 is a stat tile. A countdown only shows whole numbers up to 999 and has no label.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Width, digit positions, the baseline, the roll transition, reduc
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#countdown).
 
 #### Contract
-
-A number from 0 to 999 whose digits roll to each new value.
 
 A `.countdown` is a `<span>` with `--md-comp-countdown-value` set to a whole number and the same number as its text. When the value changes, each digit rolls up or down to the new one. The rolling digits are generated content hidden from assistive technology, so the text is what a screen reader reads; change the property and the text together. Values below 0 show 0 and values above 999 show 999. The box is as wide as the number; `--md-comp-countdown-digits` pads it with leading zeros to 2 or 3 digits. Size and color come from the surrounding text. With reduced motion the digits change without rolling. CSS only; the page's script sets the value.
 
@@ -65,11 +61,8 @@ The Countdown section of the [API reference](https://www.expressivecss.com/llm.m
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `countdown-has-text`: Write the number as the countdown's text, matching --md-comp-countdown-value. The rolling digits are hidden from screen readers, so an empty countdown reads as nothing.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

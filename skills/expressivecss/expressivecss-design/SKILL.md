@@ -1,25 +1,36 @@
 ---
 name: expressivecss-design
-description: Design, refine, redesign, critique, and audit ExpressiveCSS interfaces and responsive flows. Use for product hierarchy, adaptive composition, state coverage, and rendered performance review; exclude setup-only, token-only, or narrow lifecycle repairs.
+description: Designs, refines, redesigns, critiques, and audits ExpressiveCSS interfaces and responsive flows. Use for a new surface or flow, a redesign, visual refinement, responsive adaptation, Material 3 Expressive conformance, or a pre-release review. Not for setup-only, token-only, or narrow lifecycle repairs, or a narrow markup or API change that needs no surface decision.
 ---
 
 # ExpressiveCSS design and review
 
-Use this guide to shape, implement, harden, or review a complete ExpressiveCSS surface. It adds a product-design workflow around the framework contract. It does not replace the target version's component documentation, Material 3 guidance, or accessibility rules.
+This guide adds a product-design workflow around the framework contract. It does not replace the target version's component guides, Material 3 guidance, or accessibility rules.
 
-## When to use
+## Routing dependency
 
-Read this guide for a new surface or flow, a redesign, a visual refinement, a responsive adaptation, or a pre-release interface review. For a narrow markup or API change, use the relevant component guide and support guide without expanding the task into a redesign.
+Follow the root staged routing truth table. Do not recreate it here. This guide starts after the root has classified the mode, shortlisted candidates, inspected candidate runtime ownership in the decision index, and recorded this guide's actual read. Use selected component guides for the matching bundled contract and adaptive decisions. Consult Material 3 guidance or target-version documentation for missing details or conflicts.
 
-## Do not use when
+## References
 
-Do not load this guide for setup-only, token-only, or narrow lifecycle work unless the request also includes a surface design or review decision. It does not replace the selected component contract.
+Read each reference only when its condition applies.
+
+| Reference | Read when |
+| --- | --- |
+| [design rules](../references/design-rules.md) | Always, before opening a component guide: hard rules, window sizes, component chooser, and screen recipes. |
+| [product context](./references/product-context.md) | The work spans pages, continues an established product, or changes a recorded design decision. |
+| [scaffold](./references/scaffold.md) | A complete page, app shell, or adaptive pane layout. |
+| Theming [typography and emphasis](../expressivecss-theming/references/typography.md), [shape](../expressivecss-theming/references/shape.md), or [motion](../expressivecss-theming/references/motion.md) | A decision depends on one expressive foundation; read only that one. |
+| [dashboard guide](../expressivecss-dashboard/SKILL.md) | A dashboard, analytics overview, admin console, or reporting page. Start from its reference implementation, not the dashboard template. |
+| [runnable examples](../assets/examples/README.md) | A complete settings, editor, or list-detail flow, after selecting components. |
+| [review scope](./references/review-scope.md) | Any review, to choose focused or full depth. |
+| [review matrix](./references/review-matrix.md) and [evidence ledger](./references/evidence-ledger.md) | The review scope reference selects a full review. |
+| [Material review](./references/material-conformance.md) | The task asks whether an interface follows Google's Material 3 Expressive specs, guidelines, or accessibility guidance. |
+| Dated component review records: [priority components](./references/priority-material-review.md), [inputs and choices](./references/inputs-material-review.md), [navigation, actions and sheets](./references/layout-material-review.md), [content and feedback](./references/feedback-material-review.md), [web extensions](./references/web-extensions-review.md) | A Material conformance claim names a selected component. The component guide names its record; read only that component's section. |
 
 ## 1. Establish the brief
 
-Inspect the existing product, nearby surfaces, manifest, installed ExpressiveCSS version, tokens, shared components, real content, and available assets before proposing a direction. Treat an established interface as evidence even when it has no formal design document.
-
-For work that spans pages or continues an established product, use the [product context reference](./references/product-context.md) to find and reuse its existing decisions. Load only context relevant to this task; distinguish accepted decisions from observations and proposals.
+Inspect the existing product, nearby surfaces, manifest, installed ExpressiveCSS version, tokens, shared components, real content, and available assets before proposing a direction. Treat an established interface as evidence even when it has no formal design document. When product context applies, load only the decisions relevant to this task and keep accepted decisions apart from observations and proposals.
 
 Classify the task before acting. Choose one operating mode, or run Critique followed by Audit for a combined review:
 
@@ -46,51 +57,41 @@ Do not ask the user to choose raw CSS values. Translate product and brand answer
 
 ## 2. Set a Material 3 Expressive direction
 
-Material 3 Expressive governs design intent, component choice, adaptive behavior, and interaction. Start from the bundled [design rules](../references/design-rules.md): its hard rules, window-size table, component chooser, and screen recipes decide the shape of a surface before any component guide is opened. The ExpressiveCSS semantics contract governs authored semantics, while the accessibility guide supplies the WCAG checks. The consuming app's brand enters through semantic color roles, type tokens, icon style and axes, content voice, imagery, and assets. Do not replace familiar Material behavior merely to make the app look more branded.
-
-For a decision involving expressive foundations, read only the relevant Theming reference: [typography and emphasis](../expressivecss-theming/references/typography.md), [shape](../expressivecss-theming/references/shape.md), or [motion](../expressivecss-theming/references/motion.md). Each separates Google's design intent from implemented web contracts and framework gaps. Do not claim an Android capability exists in ExpressiveCSS without matching implementation evidence.
-
-## Routing dependency
-
-Follow the root staged routing truth table. Do not recreate it here. This guide starts after the root has classified the mode, shortlisted candidates, inspected candidate runtime ownership in the decision index, and recorded this guide's actual read. Use selected component guides for the matching bundled contract and adaptive decisions. Consult Material 3 guidance or target-version documentation for missing details or conflicts.
+Material 3 Expressive governs design intent, component choice, adaptive behavior, and interaction; start from the design rules. The ExpressiveCSS semantics contract governs authored semantics, while the accessibility guide supplies the WCAG checks. The consuming app's brand enters through semantic color roles, type tokens, icon style and axes, content voice, imagery, and assets. Do not replace familiar Material behavior merely to make the app look more branded, and do not claim an Android capability exists in ExpressiveCSS without matching implementation evidence.
 
 Write a short working brief before code:
 
-- **Task path:** what the user sees, decides, does, and receives as feedback.
-- **Hierarchy:** primary content, supporting content, and the one high-emphasis action per region.
-- **Adaptive plan:** Compact first, then Medium, Expanded, Large, and Extra-large where reachable. State what reflows, collapses, moves, or becomes a different documented component.
-- **Scaffold map:** bars, rails, content panes, and relevant safety regions; distinguish navigation from contextual actions. Name pane relationships, the narrower adaptation, and whether the document or individual panes own scrolling.
-- **Component map:** one documented component per job, including navigation, containment, input, feedback, and progress.
-- **Brand expression:** `--md-source`, role overrides when necessary, type tokens, Material Symbols style and axes, imagery, and content voice.
-- **State plan:** loading, empty, error, success, disabled, selected, permission, offline, and destructive-action behavior that the feature can reach.
+- Task path: what the user sees, decides, does, and receives as feedback.
+- Hierarchy: primary content, supporting content, and the one high-emphasis action per region.
+- Adaptive plan: Compact first, then Medium, Expanded, Large, and Extra-large where reachable. State what reflows, collapses, moves, or becomes a different documented component.
+- Scaffold map: bars, rails, content panes, and relevant safety regions; distinguish navigation from contextual actions. Name pane relationships, the narrower adaptation, and whether the document or individual panes own scrolling.
+- Component map: one documented component per job, including navigation, containment, input, feedback, and progress.
+- Brand expression: `--md-source`, role overrides when necessary, type tokens, Material Symbols style and axes, imagery, and content voice.
+- State plan: loading, empty, error, success, disabled, selected, permission, offline, and destructive-action behavior that the feature can reach.
 
-Keep the brief in the task unless an existing project record needs an in-scope update or the user asks to save it. Reuse that record; the product context reference explains how to preserve decision status and scope. Planning, Critique, and Audit alone do not authorize documentation edits.
+Keep the brief in the task unless an existing project record needs an in-scope update or the user asks to save it. Planning, Critique, and Audit alone do not authorize documentation edits.
 
 ## 3. Compose with Material hierarchy
 
-For a complete page, app shell, or adaptive pane layout, read the [Material 3 Expressive scaffold reference](./references/scaffold.md). Use it to assign bars, rails, panes, and safety regions, then map each region to the selected ExpressiveCSS components. For a new static page that loads the compiled browser build, copy the closest bundled template beside the framework's `dist/` directory: [starter](../assets/templates/starter.html), [compact](../assets/templates/layout-compact.html), [navigation rail](../assets/templates/layout-rail.html), [expanded rail](../assets/templates/layout-expanded.html), [list-detail](../assets/templates/layout-list-detail.html), or [dashboard](../assets/templates/layout-dashboard.html). Replace its placeholder content, then apply the scaffold decisions above. In a bundler or an existing app shell, keep the project's asset loading and initialization owner and borrow only the template's `<body>` regions.
+For a complete page or shell, assign scaffold regions first, then map each region to the selected components. For a new static page that loads the compiled browser build, copy the closest bundled template beside the framework's `dist/` directory: [starter](../assets/templates/starter.html), [compact](../assets/templates/layout-compact.html), [navigation rail](../assets/templates/layout-rail.html), [expanded rail](../assets/templates/layout-expanded.html), [list-detail](../assets/templates/layout-list-detail.html), or [dashboard](../assets/templates/layout-dashboard.html). Replace its placeholder content. In a bundler or an existing app shell, keep the project's asset loading and initialization owner and borrow only the template's `<body>` regions. When you consult a runnable example, borrow the relationships between action size, containment, type, color, and shape, and keep the consuming product's identity.
 
-For a dashboard, analytics overview, admin console, or reporting page, read the [dashboard guide](../expressivecss-dashboard/SKILL.md) and start from its reference implementation instead of the dashboard template.
-
-For a complete settings, editor, or list-detail flow, consult the matching [runnable example](../assets/examples/README.md) after selecting components. Compare its restrained and expressive treatments, including the product context in its annotations. Borrow the relationships between action size, containment, type, color, and shape; preserve the consuming product's identity and use its matching component contracts. These examples are optional references, not required reading for isolated component work.
-
-Build the task path before adding decoration.
+Build the task path before adding decoration. These points add to the design rules' hard rules:
 
 - Use window size classes, panes, and documented navigation changes. Do not shrink a wide layout into Compact or leave phone navigation unchanged at wide sizes.
 - Use proximity and spacing before wrapping every group in a card. Reserve containment for groups that need a boundary, state, interaction, or distinct surface role.
 - Keep spacing on the framework's scale. Window-edge margins are 16px on Compact and 24px from Medium, and panes sit 24px apart; the pane layout applies them through `--md-comp-pane-margin` and `--md-comp-pane-gap`, and `.container` bounds ordinary content with its own responsive widths, so do not add page margins on top of either. Inside a region, use `.p-4` (16px) or `.p-6` (48px) for section padding, the default `.row` gap (24px) between grid items, and `.mb-2` (8px) to `.mb-4` (16px) between related controls. Increase space between groups before adding dividers or cards.
 - Write control text as the action it performs. Button labels are verbs ("Delete", "Save draft"), never "OK", "Yes", or "Submit". A dialog headline states the decision ("Delete 3 photos?") and its confirming button repeats the verb. An error message says what happened and how to recover, next to the control it concerns. Snackbar text is one short sentence with at most one action.
-- Rank actions with Material containment. Use one filled or FAB-level action per region, then tonal, outlined, text, or icon actions as the hierarchy requires.
-- Use surface roles for most of the interface. Reserve `primary` for important actions and use `vibrant` for one focal subtree, not the page.
+- Below the one high-emphasis action per region, rank the rest as tonal, outlined, text, or icon actions.
+- Use surface roles and tonal containment for most of the interface instead of raw colors or arbitrary shadows. Reserve `primary` for important actions and use `vibrant` for one focal subtree, not the page.
 - Use the shared 32, 40, 56, 96, and 136 dp control scale only where the documented component supports it. Large controls must communicate hierarchy, not compensate for weak layout.
 - Keep every interactive target at least 48 by 48 dp, even when its visible control or glyph is smaller.
 - Let selected items change shape as well as color when the component contract provides that treatment.
-- Map text to the framework's Material type roles. Keep labels, body text, titles, headlines, and display text consistent across the surface. Use sentence case for controls. When the app has no brand type system, keep the default Roboto and Noto Sans stack; otherwise replace it through the framework type tokens rather than one-off font rules.
+- Map text to the framework's Material type roles and keep each role consistent across the surface. When the app has no brand type system, keep the default Roboto and Noto Sans stack; otherwise replace it through the framework type tokens rather than one-off font rules.
 - Use Material Symbols consistently. Change the font family for outlined, rounded, or sharp; use the variation axes for fill, weight, grade, and optical size.
 - Use framework state layers and motion. Motion must explain feedback, state, or spatial relationship and must keep a useful reduced-motion path.
 - Use real product language and representative content. Do not invent commercial claims, customer names, capabilities, prices, or measurements.
 
-A Google or Android product feel should come from Material structure and behavior, tonal surfaces, type roles, symbols, state layers, adaptive navigation, and disciplined emphasis. Do not draw mobile operating-system chrome or borrow another product's branding.
+A Google or Android product feel comes from Material structure and behavior, tonal surfaces, type roles, symbols, state layers, adaptive navigation, and disciplined emphasis. Do not draw mobile operating-system chrome or borrow another product's branding.
 
 ## 4. Build the whole state path
 
@@ -111,17 +112,15 @@ Keep default, hover, focus-visible, pressed, selected, and disabled states coher
 
 ## 5. Review with evidence
 
-When assessing Material conformance, read the [Material review reference](./references/material-conformance.md). Verify Google requirements separately from target-version framework contracts, using only the selected components and relevant specification sections.
+Use the real interface; source inspection alone cannot prove hierarchy, overflow, focus, motion, or responsive behavior. For a complete interface, review the primary task in the whole-page composition first, because a valid component can still sit below oversized navigation or compete with secondary actions. Name the primary task and preservation requirements, inspect the initial viewport and the full page, then follow the action through its reachable states. Keep measured behavior separate from judgments about hierarchy, typography, containment, and recovery clarity, and back those judgments with captures and concrete observations. Passing DOM checks are not a design verdict.
 
-For a complete interface, first review the primary task in the whole-page composition. A valid component can still sit below an oversized navigation region, compete with secondary actions, or lose its feedback among unrelated content. Name the primary task and preservation requirements, inspect the initial viewport and the full page, then follow the action through its reachable states. Keep measured behavior separate from judgments about hierarchy, typography, containment, and recovery clarity. Attach matched captures and concrete observations to those judgments; a collection of passing DOM checks is not an overall design verdict.
+Choose depth with the review scope reference. A full review records one evidence-backed status for every applicable matrix row in its declared scope, with one component group per distinct contract. A focused change uses the compact record from review scope. Neither path can waive a relevant failure or claim untested behavior passed. A Material conformance review verifies Google requirements separately from target-version framework contracts, using only the selected components and relevant specification sections.
 
-Budget verification by scene rather than by criterion. Collect related DOM observations together and reuse each capture for the criteria it actually demonstrates. Prefer a full-page capture over repeated scrolling screenshots when the tool supports it. Reserve capacity for the confirmation pass, and stop when a tool reports its resource limit. Check that you can open a capture before relying on visual judgments; a screenshot path or DOM summary alone does not establish that you saw the interface.
+Budget verification by scene, not by criterion. Batch related DOM observations, reuse each capture for every criterion it demonstrates, and prefer a full-page capture to repeated scrolling screenshots. Reserve capacity for the confirmation pass, and stop when a tool reports its resource limit. Open each capture before making a visual judgment from it; a screenshot path or DOM summary does not show that you saw the interface.
 
-Use the real interface. Source inspection alone cannot prove hierarchy, overflow, focus, motion, or responsive behavior. Choose review depth with the [review scope reference](./references/review-scope.md). Explicit Material conformance and comprehensive accessibility audits use the full [review matrix](./references/review-matrix.md) and [evidence ledger](./references/evidence-ledger.md) for their declared scope. Record one evidence-backed status for every applicable matrix row, with one component group per distinct contract. Focused changes use a compact record of affected criteria, observations, tests, and unavailable evidence. Neither path can waive a relevant failure or claim untested behavior passed.
+When ExpressiveCSS MCP tools such as `rules_enforcer` or `quality_inspector` contribute evidence, copy `checksPerformed`, `evidenceSources`, `uncheckedAreas`, `coverageStatus`, and `blockedChecks` into the compact record or full ledger. Mark a required unperformed check `Blocked`. MCP evidence does not replace browser interaction, rendered responsive, visual, or accessibility review.
 
-When optional MCP tools contribute evidence, copy `checksPerformed`, `evidenceSources`, `uncheckedAreas`, `coverageStatus`, and `blockedChecks` into the selected compact record or full ledger. Mark a required unperformed check `Blocked`. MCP evidence does not replace browser interaction, rendered responsive, visual, or accessibility review.
-
-Apply the following checks to affected criteria and their dependencies in the selected scope. Unrelated states or components do not expand a focused review.
+Apply these checks to affected criteria and their dependencies in the selected scope. Unrelated states or components do not expand a focused review.
 
 1. Run the consuming project's build and focused tests.
 2. Exercise the primary task with keyboard and pointer input. Use touch input when the feature targets it.
@@ -129,52 +128,39 @@ Apply the following checks to affected criteria and their dependencies in the se
 4. Include light and dark schemes, reduced motion, 200% text resizing, reflow at a 320 CSS px-equivalent viewport where WCAG reflow applies, long content, an error path, and right-to-left layout where relevant.
 5. Inspect the accessibility tree, accessible names, focus order, focus visibility, announcements, dialog behavior, and contrast under [`../expressivecss-accessibility/SKILL.md`](../expressivecss-accessibility/SKILL.md).
 
-For a comprehensive review or a change spanning interaction and accessibility, request one independent review after implementation when subagents are available. A small label or token edit does not require another agent. Give the reviewer the original request, working brief, changed files, screenshots, and applicable ExpressiveCSS guides. The reviewer must not edit. It should return:
+Rank findings by severity, and use the higher levels sparingly:
 
-- what must be preserved;
-- findings ordered by user impact;
-- file or component location and visible evidence;
-- the Material, accessibility, or framework rule involved;
-- one concrete fix for each finding.
+- P0: the task cannot be completed or data can be lost.
+- P1: a major usability problem, accessibility failure, or wrong component behavior.
+- P2: a responsive, state, consistency, or design-system defect with a workaround.
+- P3: finish that does not block use.
 
-Use severity sparingly:
+In Implement, Refine, Redesign, or a review where the user separately requested fixes, fix the first evidence batch in one grouped edit, then run one confirmation batch with the same checks. In Critique or Audit alone, stop after reporting evidence and findings. Two inspection rounds are the normal ceiling for self-directed polish, not permission to ship known P0 or P1 defects. Ask the user before widening scope or continuing subjective polish after the confirmation pass.
 
-- **P0:** the task cannot be completed or data can be lost.
-- **P1:** a major usability problem, accessibility failure, or wrong component behavior.
-- **P2:** a responsive, state, consistency, or design-system defect with a workaround.
-- **P3:** finish that does not block use.
+### Independent review and delegation
 
-In Implement, Refine, Redesign, or a review where the user separately requested fixes, fix the first evidence batch in one grouped edit, then run one confirmation batch. In Critique or Audit alone, stop after reporting evidence and findings. Two inspection rounds are the normal ceiling for self-directed polish, not permission to ship known P0 or P1 defects. Ask the user before widening scope or continuing subjective polish after the confirmation pass.
+For a comprehensive review or a change spanning interaction and accessibility, request one independent review after implementation when subagents are available. A small label or token edit does not require another agent. Give the reviewer the original request, working brief, changed files, screenshots, and applicable ExpressiveCSS guides. The reviewer must not edit. It returns what must be preserved, then findings ordered by user impact, each with file or component location, visible evidence, the Material, accessibility, or framework rule involved, and one concrete fix.
+
+A full review that spans many routes or component groups can be split under the shared [delegation rules](../references/delegation.md). In a combined review, collect Critique evidence yourself first, then split Audit work. Component review groups and routes split cleanly; a matched capture pair stays with whoever made the edit. Give each subagent its inventory IDs and criterion IDs, and replace the template's return row with evidence ledger rows that carry artifacts and timestamps. Merge the rows into one ledger, assign sequence numbers in timestamp order after the Critique records, then run the coverage reconciliation against the inventory. A returned row without an artifact you can open stays `Blocked`.
 
 ## Performance requests
 
-Measure the requested slow path before editing and repeat the same route, data, viewport, cache state, network/CPU settings, and interaction after the change. Inspect resource loading and duplicate assets, layout shifts, interaction traces and long tasks, and resources retained after remount and teardown. Record browser/tool versions, settings, raw observations, and repeated-run variability. Use the Installation, Runtime, or Media reference for the cause found.
+Measure the requested slow path before editing and repeat the same route, data, viewport, cache state, network/CPU settings, and interaction after the change. Inspect resource loading and duplicate assets, layout shifts, interaction traces and long tasks, and resources retained after remount and teardown. Record browser/tool versions, settings, raw observations, and repeated-run variability. For the cause found, use the [Install guide](../expressivecss-install/SKILL.md), the [Runtime guide](../expressivecss-runtime/SKILL.md), or the [media reference](../expressivecss-usage/references/media.md).
 
 Run this performance pass when performance is requested or a measured regression needs investigation; ordinary markup work does not require a full audit. Laboratory results describe those runs, not field Core Web Vitals or real-user percentiles. Report unavailable measurements and avoid speed claims based only on fewer bytes or shorter code.
 
-## Pitfalls
-
-- Treating Material 3 as a color palette while keeping generic component structure.
-- Replacing documented Material behavior with app-specific interaction patterns.
-- Making every section a card, every action primary, or the whole page vibrant.
-- Using raw colors, arbitrary shadows, or decorative motion where role tokens, tonal containment, or state layers carry the meaning.
-- Styling only Compact or only Expanded and calling the result responsive.
-- Reviewing a static screenshot while skipping interaction, state, content, and accessibility paths.
-- Polishing one component while loading, empty, error, or recovery states remain unfinished.
-- Changing factual copy or established brand decisions during a refinement without approval.
-
 ## Verification
 
-Before delivery, confirm:
+Before delivery, confirm each item and return to section 5 for any that fails:
 
-- the primary task is obvious and completes end to end;
-- each job uses the correct documented component and native element;
-- Compact through every reached wider window class have intentional structures;
-- navigation, feedback, and high-emphasis actions are not duplicated;
-- brand choices use semantic tokens and preserve Material behavior;
-- every reachable state exists and gives the user a next step;
-- keyboard, focus, names, announcements, contrast, zoom, reflow, reduced motion, and touch targets pass;
-- light and dark schemes, long content, and relevant right-to-left layouts hold;
-- no retired names, duplicate initialization, console errors, or stale generated guides remain.
+- [ ] The primary task is obvious and completes end to end.
+- [ ] Each job uses the correct documented component and native element.
+- [ ] Compact and every reached wider window class have intentional structures.
+- [ ] Navigation, feedback, and high-emphasis actions are not duplicated.
+- [ ] Brand choices use semantic tokens and preserve Material behavior.
+- [ ] Every reachable state exists and gives the user a next step.
+- [ ] Keyboard, focus, names, announcements, contrast, zoom, reflow, reduced motion, and touch targets pass. Report any you could not check as `Blocked` instead of passing it.
+- [ ] Light and dark schemes, long content, and relevant right-to-left layouts hold.
+- [ ] No retired names, duplicate initialization, console errors, or stale generated guides remain.
 
 For changes to ExpressiveCSS itself, also follow the framework contribution path in the root skill and run the focused tests, `npm run typecheck`, the applicable full suite, `npm run build:skill`, docs verification, and visual checks.

@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
@@ -59,14 +59,11 @@ A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bott
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `dialog-is-named`: A <dialog> takes no name from its heading. Point aria-labelledby at that heading, or give it an aria-label - otherwise it opens announced as just "dialog".
 - `drag-handle-is-hidden-or-a-control`: A drag handle has no text and reports nothing, so on any element but a <button> it is decoration and needs aria-hidden="true". Left exposed it arrives as an unlabelled blank in the reading order. Make it a <button> with a name if it is meant to be operated.
 - `drag-handle-button-is-not-hidden`: aria-hidden on a <button> hides it from assistive technology without taking it out of the tab order, so keyboard focus lands on something that is not there. Decoration is a <span>; a control stays exposed.
 - `drag-handle-button-is-named`: The handle is a bar drawn in CSS - there is no text inside it to be named by. A handle worth making a control is worth an aria-label saying what it moves.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

@@ -2,6 +2,15 @@
 
 Use `src/sass/tokens/_reference.scss`, `_theme.scss`, and `_vibrant.scss` as the implementation sources. ExpressiveCSS themes are CSS custom properties resolved through `light-dark()` and `color-scheme`.
 
+## Contents
+
+- Scheme contract and persisted choice
+- Seed and overrides
+- Scoped schemes
+- Vibrant surfaces
+- Shadow DOM
+- Verification
+
 ## Scheme contract
 
 Apply the public `theme` attribute to the document root, or to a custom-element host when the stylesheet is installed in its shadow root.

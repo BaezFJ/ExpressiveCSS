@@ -2,6 +2,16 @@
 
 Use semantic HTML first, then apply a Material 3 type-role class when visual hierarchy must differ from the element default. The type-role loop and text helpers live in `src/sass/utilities/_typescale.scss`; token values live in `src/sass/tokens/_reference.scss`; element defaults and `.flow-text` live in `src/sass/base/_typography.scss`.
 
+## Contents
+
+- Role selection
+- Exact type scale
+- Expressive emphasis and current limits
+- Typeface tokens and bundled fonts
+- Element defaults
+- Text helpers
+- Accessibility and layout
+
 ## Role selection
 
 - `display-*`: rare, short hero or campaign text.

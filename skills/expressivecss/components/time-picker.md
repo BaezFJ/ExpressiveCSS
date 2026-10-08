@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/time-pickers/overview)
 
 Example: An appointment time can use a labeled native time input when platform entry is enough. Do not choose this picker expecting a popup: its clock stays inline.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -44,8 +42,6 @@ Known boundary: Named digital inputs, AM/PM state and input-event synchronizatio
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#time-picker).
 
 #### Contract
-
-Pick a time from a clock face, in 12-hour or 24-hour form.
 
 Add `time-picker` to a text input. `AutoInit()` starts every `.time-picker` except those marked `no-autoinit`.
 
@@ -94,11 +90,8 @@ The Time Picker section of the [API reference](https://www.expressivecss.com/llm
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 No component-specific `semantics.json` rules apply to this guide.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

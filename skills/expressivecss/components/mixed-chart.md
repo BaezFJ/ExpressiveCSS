@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Monthly revenue as columns with a dashed target line, or ad spend with conversions on a second scale, is a mixed chart. Three revenue lines for three plans are a line chart.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Drawing, the hidden table, both scales, gaps, the legend, the to
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#mixed-chart).
 
 #### Contract
-
-Columns, lines and areas together from one data table, with a second scale for values in other units.
 
 A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as a line chart. `AutoInit()` draws each series by its header cell's class: `column` as columns from zero, `area` as a line over a fading fill, and any other series as a line, with `dashed` for a dashed line. Columns sit behind the lines. A legend names the series and a tooltip follows the pointer from row to row. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
 
@@ -71,12 +67,9 @@ The Mixed chart section of the [API reference](https://www.expressivecss.com/llm
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `mixed-chart-is-a-figure-with-a-table`: Write .mixed-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
 - `mixed-chart-has-a-caption`: Name a .mixed-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

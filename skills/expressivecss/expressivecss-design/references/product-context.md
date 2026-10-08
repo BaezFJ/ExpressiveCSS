@@ -20,9 +20,9 @@ Reuse links and decisions instead of transcribing token tables or duplicating sh
 
 Keep these distinctions in the brief or the project's existing format, without imposing a new schema:
 
-- **Accepted decision:** a choice explicitly authorized by the user or an identified project decision record. Retain its scope, rationale, and source. Do not invent a reviewer or approval date.
-- **Observed implementation:** what the current source or rendered interface does. Link the evidence; implementation alone does not prove that someone approved it.
-- **Assumption or proposal:** an inferred default or suggested change, with the unresolved question. Do not later rewrite it as accepted merely because the agent implemented it.
+- Accepted decision: a choice explicitly authorized by the user or an identified project decision record. Retain its scope, rationale, and source. Do not invent a reviewer or approval date.
+- Observed implementation: what the current source or rendered interface does. Link the evidence; implementation alone does not prove that someone approved it.
+- Assumption or proposal: an inferred default or suggested change, with the unresolved question. Do not later rewrite it as accepted merely because the agent implemented it.
 
 Check dated notes against current tokens, shared components, routes, and the current request. A newer file timestamp alone does not settle a conflict. Follow an explicit current instruction that replaces an older choice and identify what it supersedes. If approved intent and implementation disagree, name both: code describes current behavior, not necessarily intended behavior. Ask only when the conflict changes the result and the task does not resolve it; continue independent work while that decision is pending.
 

@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: A contacts screen where people tap a name to open a profile is a list. A data table would add column headers and sorting nobody uses on a phone.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Table semantics, the sticky header, numeric alignment, the sort 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#data-table).
 
 #### Contract
-
-Rows of records in a scrolling table with a sticky header, sort state and row selection.
 
 A `.data-table` is a `<div>` around one native `<table>`. The wrapper scrolls and draws the outline, so the table keeps its table semantics. The header row sticks to the top of the wrapper once the wrapper scrolls vertically, so give the wrapper a `max-block-size` for long tables. Add `numeric` to the header and body cells of a number column to align them on the end edge with tabular figures, and `dense` to the wrapper for shorter rows. CSS only; there is no JavaScript.
 
@@ -80,7 +76,7 @@ The Data table section of the [API reference](https://www.expressivecss.com/llm.
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `data-table-wraps-the-table`: Put .data-table on a <div> around the <table>. The wrapper scrolls; a table made to scroll itself needs display:block, which drops its table role in some engines.
 - `data-table-sort-is-on-a-header`: aria-sort belongs on the column header cell (<th>), not on the button inside it or on a data cell. Assistive technology reads the sort state from the header.
@@ -88,7 +84,4 @@ The following are end-state semantic invariants. The rule IDs come directly from
 - `data-table-scroll-region-is-a-region`: A focusable scroll wrapper needs role="region" so its name is announced. aria-label is not allowed on a plain div.
 - `data-table-scroll-region-is-named`: Name a focusable scroll wrapper with aria-label, or aria-labelledby pointing at the table caption, so keyboard users know what they are scrolling.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Home/Search/Profile should not require scrolling to a footer. Use a navigation bar or rail for those destinations.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -39,11 +37,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Site navigation and extra information at the end of a page.
-
 Footers are a good place for site navigation and extra information. This is where people look after they finish the page, or when they want more about the site.
 
 Put the page in the three HTML5 landmarks `header`, `main`, and `footer`. Anatomy is the HTML: a bare `<footer>` is the component, each `<nav>` is a column of links with an `<h2>` heading, and a trailing `<small>` is the copyright bar. There is no `page-footer` or `footer-copyright` class, and no JavaScript component.
+
+Expressive’s footer is unfilled by default. It draws a dashed top border and uses the theme tokens for paragraph and link color — not a solid primary bar.
 
 #### Syntax
 
@@ -71,12 +69,12 @@ The Footer section of the [API reference](https://www.expressivecss.com/llm.md) 
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `footer-nav-has-links`: A footer column with no links is not navigation - it is a <section> with a heading. Marking it <nav> spends a landmark on prose.
 
 #### Guide checks
 
 - Label every <nav> landmark with aria-label or aria-labelledby.
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

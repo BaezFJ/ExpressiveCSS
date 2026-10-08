@@ -11,13 +11,11 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/checkbox/overview)
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -41,11 +39,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Material Design 3 checkboxes, from the HTML.
-
 A `<label>` wrapping `<input type="checkbox">` is the control. The label text is a sibling of the input — no extra class, no required `<span>`. They are CSS only. There is no JavaScript component and nothing to AutoInit.
 
 Tokens follow the [M3 checkbox spec](https://m3.material.io/components/checkbox/specs). The container is 18dp with 2dp corners. Unselected is a 2dp `on-surface-variant` outline. Selected is a `primary` fill with an `on-primary` check. Indeterminate is the same fill with a dash. The state layer is 40dp at 8% hover and 10% focus. The touch target is 48dp. The label is `body-large` / `on-surface`. Disabled is 38%.
+
+Put the input first. Add `checked` or `disabled` on the input. Indeterminate is not an HTML attribute — set `element.indeterminate = true` in script. `filled-in` is a no-op: the selected state is always the filled box.
 
 #### Syntax
 
@@ -70,11 +68,8 @@ The Checkboxes section of the [API reference](https://www.expressivecss.com/llm.
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `checkbox-labelled`: A checkbox must be inside its <label> or carry an id a label points at.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

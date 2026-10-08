@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/progress-indicators/overview)
 
 Example: A brief unknown refresh fits a loading indicator. An upload needs accurate determinate progress, even if short. Keep circular progress when an unknown process becomes determinate or runs inside a button; indeterminate linear bars remain supported. Never invent a percentage.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -67,12 +65,9 @@ The Progress indicators section of the [API reference](https://www.expressivecss
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `div-progress-reports-progress`: <progress> reports itself. A <div class="progress"> is a bar drawn with CSS and reports nothing - it needs role="progressbar", plus aria-valuenow/min/max when it is determinate.
 - `determinate-progress-reports-its-value`: role="progressbar" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

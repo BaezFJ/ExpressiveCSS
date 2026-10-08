@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
 
 Example: Four plan targets as a share of their goals, or seats filled out of 25 as a gauge, are a radial chart. Revenue split across plans is a pie chart.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -38,8 +36,6 @@ Known boundary: Drawing, the hidden table, ring geometry and colors, tracks, the
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#radial-chart).
 
 #### Contract
-
-Progress toward a goal drawn as rings from a data table, as concentric rings or a half-circle gauge.
 
 A `<figure class="radial-chart">` takes the same `<figcaption>` and `<table>` as a column chart. `AutoInit()` draws each row of the first value column as a ring, outermost first, filled clockwise from the top as a share of `data-max` (100 by default), with a legend of the rows and their cells when there is more than one, and a tooltip that follows the pointer across the rings. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
 
@@ -69,12 +65,9 @@ The Radial chart section of the [API reference](https://www.expressivecss.com/ll
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `radial-chart-is-a-figure-with-a-table`: Write .radial-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
 - `radial-chart-has-a-caption`: Name a .radial-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

@@ -1,25 +1,25 @@
 ---
 name: expressivecss-install
-description: Install and configure @expressivecss/expressive, imports, package versions, assets, and build integration. Use for setup or version uncertainty; exclude unrelated markup and visual refinement.
+description: Installs and configures @expressivecss/expressive: package versions, imports, assets, fonts, and build integration. Use for setup, package changes, version problems, or uncertainty about which contract source applies. Not for visual refinement, or for markup changes when the project already loads the target version.
 ---
 
 # Install ExpressiveCSS
 
-## When to use
-
-Use this guide for setup, imports, package changes, version problems, or contract-source uncertainty.
-
-## Do not use when
-
-Do not load this guide when the project already loads the target version and the task changes only unrelated markup. Use the usage and selected component guides instead.
-
 ## Steps
 
-Reuse the root version resolution, or run its bundled resolver if loaded directly. This matching bundled guide covers the setup below; consult [getting-started documentation](https://www.expressivecss.com/index.html.md) for missing details. The public site's version is unverified until provenance proves it. For an older installed version, inspect `node_modules/@expressivecss/expressive` and the matching repository tag or commit before applying contract-dependent changes.
+Reuse the root version resolution, or run its bundled resolver if this guide was loaded directly. This bundled guide covers the setup below. Consult the [getting-started documentation](https://www.expressivecss.com/index.html.md) only for missing details, and treat the public site's version as unverified until provenance proves it. For an older installed version, inspect `node_modules/@expressivecss/expressive` and the matching repository tag or commit before applying contract-dependent changes.
 
-1. Inspect the project's manifest and lockfile first. Preserve its package manager and pinned ExpressiveCSS version.
-2. For a new npm installation, run `npm install @expressivecss/expressive`.
-3. Load only the surfaces the application uses.
+1. Read the project's manifest and lockfile. Keep its package manager and any pinned ExpressiveCSS version.
+2. Add the package only when the task includes setup and the project does not already depend on it. Use the command for the lockfile you found:
+
+   | Lockfile | Command |
+   | --- | --- |
+   | `package-lock.json` or none | `npm install @expressivecss/expressive` |
+   | `pnpm-lock.yaml` | `pnpm add @expressivecss/expressive` |
+   | `yarn.lock` | `yarn add @expressivecss/expressive` |
+
+   Report the command before running it. If the task forbids dependency changes, or the install fails, stop and report instead of editing the lockfile by hand.
+3. Load only the surfaces the application uses, with one of the three paths below.
 
 ### ES modules
 
@@ -68,19 +68,24 @@ Load the compiled stylesheet, then the IIFE JavaScript bundle near the end of `<
 
 The `theme` attribute only works on `<html>` (or a shadow host). Drop both `<script>` tags on a CSS-only page. For persistent navigation, start from the matching layout template: [compact](../assets/templates/layout-compact.html), [navigation rail](../assets/templates/layout-rail.html), [expanded rail](../assets/templates/layout-expanded.html), [list-detail](../assets/templates/layout-list-detail.html), or [dashboard](../assets/templates/layout-dashboard.html). The screen recipes in the [design rules](../references/design-rules.md) explain when each fits.
 
-The compiled stylesheet ships `@font-face` rules for Material Symbols (outlined, rounded, sharp), Roboto 400/500, and Noto Sans 400/500. Keep `dist/fonts/` next to `dist/css/` so the relative `url(../fonts/...)` paths resolve. Override the brand/plain tokens when the page uses different typefaces. `.material-icons` is a compat alias that uses Symbols; do not load the older Material Icons stylesheet.
+The compiled stylesheet ships `@font-face` rules for Material Symbols (outlined, rounded, sharp), Roboto 400/500, and Noto Sans 400/500. Keep `dist/fonts/` next to `dist/css/` so the relative `url(../fonts/...)` paths resolve. Override the brand and plain typeface tokens when the page uses different typefaces. `.material-icons` is a compatibility alias that uses Symbols; do not load the older Material Icons stylesheet.
 
 ## Rules
 
 - Do not import unpublished TypeScript source.
-- Do not load compiled CSS and the Sass entry point together.
-- Do not initialize a registry component before its markup exists.
-- Do not silently upgrade an existing project to a different framework release.
-
-## Loading performance
-
-Keep one CSS delivery path and one initialization owner. Use the bundled fonts or intentional replacements without duplicate external font stylesheets. Check the network panel for duplicate CSS, fonts, missing assets, and unused JavaScript before adding preloads or another dependency. A CSS-only page needs no JavaScript bundle.
+- Use one CSS delivery path: never load compiled CSS and the Sass entry point together.
+- Use one initialization owner, and initialize a registry component only after its markup exists.
+- Do not upgrade an existing project to a different framework release unless the user asks.
+- Use the bundled fonts or intentional replacements without duplicate external font stylesheets. A CSS-only page needs no JavaScript bundle.
 
 ## Verification
 
-Confirm the installed version from the lockfile, run the consuming app's build, load a real page, and verify that styles, fonts, icons, and any initialized component work without console errors.
+Copy this checklist and mark each item from observed output:
+
+- [ ] The lockfile or `node_modules/@expressivecss/expressive/package.json` shows the expected version.
+- [ ] The consuming app's build command exits 0.
+- [ ] A real page loads styles, fonts, and icons with no 404s for CSS, fonts, or scripts.
+- [ ] The network panel shows no duplicate CSS or font stylesheets.
+- [ ] Each initialized component works, and the console shows no errors.
+
+If an item fails, fix the cause and rerun the whole list. Mark items you could not observe as unverified.

@@ -111,7 +111,7 @@ function renderDecisionIndex(data) {
       : 'Compare plausible candidates';
     return `| [${cell(component.title)}](${component.guide}) | ${cell(component.useWhen.join('; '))} | ${cell(component.avoidWhen.join('; '))} | ${cell(alternatives)} | ${cell(component.runtime)} |`;
   });
-  return `${GENERATED_MARKER}\n\n# ExpressiveCSS component decisions\n\nFind the entry matching the requested job. Read its selected guide; compare alternatives only when the behavior is ambiguous. Adaptive decisions, Material links, syntax, and semantics live in the guides.\n\n| Component | Use when | Avoid when | Alternatives | Runtime |\n| --- | --- | --- | --- | --- |\n${rows.join('\n')}\n`;
+  return `${GENERATED_MARKER}\n\n# ExpressiveCSS component decisions\n\nPick the row that matches the job and read its guide. Compare alternatives only when the fit is ambiguous.\n\n| Component | Use when | Avoid when | Alternatives | Runtime |\n| --- | --- | --- | --- | --- |\n${rows.join('\n')}\n`;
 }
 
 async function syncDecisionIndex(checkOnly) {
@@ -125,7 +125,7 @@ function renderDesignRules(guidelines) {
     const body = sectionFor(guidelines, title, level).replace(/\n---\s*$/u, '').trim();
     return `## ${title}\n\n${level === 1 ? body.replace(/^## /gmu, '### ') : body}`;
   });
-  return `${GENERATED_MARKER}\n\n# ExpressiveCSS design rules\n\nCopied from \`m3-guidelines.md\` (SHA-256 \`${hash}\`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.\n\n${sections.join('\n\n')}\n`;
+  return `${GENERATED_MARKER}\n\n# ExpressiveCSS design rules\n\nCopied from \`m3-guidelines.md\` (SHA-256 \`${hash}\`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.\n\nContents: ${DESIGN_RULE_SECTIONS.map(([title]) => title).join(' · ')}.\n\n${sections.join('\n\n')}\n`;
 }
 
 async function syncDesignRules(checkOnly) {
@@ -222,12 +222,13 @@ function sectionFor(markdown, title, level = 2) {
   return lines.slice(start, end).join('\n').trim();
 }
 
-function contractSummary(section) {
+// The page description already heads the guide, so a section that opens with it skips the repeat.
+function contractSummary(section, description) {
   const beforeExample = section.split(/\n```/u, 1)[0];
   return beforeExample
     .split(/\n\s*\n/u)
     .map((paragraph) => paragraph.trim())
-    .filter((paragraph) => paragraph && !paragraph.startsWith('#') && !paragraph.startsWith('|'))
+    .filter((paragraph) => paragraph && paragraph !== description && !paragraph.startsWith('#') && !paragraph.startsWith('|'))
     .map((paragraph) => paragraph
       .replace(/\[([^\]]+)\]\((?!https?:\/\/)[^)]+\)/gu, '$1')
       .replaceAll('\n', ' '))
@@ -298,11 +299,9 @@ function renderGuide(component, page, section, rules, provenance) {
   const ruleLines = rules.length
     ? rules.map((rule) => `- \`${rule.id}\`: ${rule.message}`).join('\n')
     : 'No component-specific `semantics.json` rules apply to this guide.';
-  const guideCheckLines = guideChecks.map((message) => `- ${message}`);
-  guideCheckLines.push(
-    '- Read the full target-version component documentation before using variants, options, methods, or events not shown here.',
-    '- The target version\'s documentation and source override this generated summary if they disagree.',
-  );
+  const guideCheckSection = guideChecks.length
+    ? `#### Guide checks\n\n${guideChecks.map((message) => `- ${message}`).join('\n')}\n\n`
+    : '';
   const links = [
     `[Component documentation](${officialMarkdown})`,
     `[Repository source](${sourcePagePath(page)})`,
@@ -314,7 +313,7 @@ function renderGuide(component, page, section, rules, provenance) {
   const adaptive = component.adaptive.map((item) => {
     const target = item.component ? ` [${item.component}](./${item.component}.md)` : '';
     return `- ${item.window} ${item.basis}: ${item.kind}${target}. ${item.reason}`;
-  }).join('\n') || 'Use the documented component at each reachable width; no catalogue substitution is prescribed.';
+  }).join('\n');
   const mapping = component.materialGuidance;
   const material = mapping.href
     ? `[${mapping.relationship === 'related' ? 'Related Google guidance' : 'Google guidance'}](${mapping.href})`
@@ -354,7 +353,7 @@ function renderGuide(component, page, section, rules, provenance) {
     ? `#### Also documented\n\nThe ${component.heading} section of the [API reference](https://www.expressivecss.com/llm.md) also covers ${subsections.join(', ')}.\n\n`
     : '';
 
-  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${selectionExample}${adaptive}\n\n#### Material mapping\n\n${mappingLines}\n\n#### Contract\n\n${contractSummary(section)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n${api}${alsoDocumented}#### Rules\n\nThe following are end-state semantic invariants. The rule IDs come directly from \`semantics.json\`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.\n\n${ruleLines}\n\n#### Guide checks\n\n${guideCheckLines.join('\n')}\n`;
+  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${selectionExample}${adaptive ? `${adaptive}\n\n` : ''}#### Material mapping\n\n${mappingLines}\n\n#### Contract\n\n${contractSummary(section, page.description)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n${api}${alsoDocumented}#### Rules\n\nEnd-state invariants from \`semantics.json\`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.\n\n${ruleLines}\n\n${guideCheckSection}Read the target-version documentation before using anything not shown here; it and the source override this summary.\n`;
 }
 
 async function generatedGuides() {

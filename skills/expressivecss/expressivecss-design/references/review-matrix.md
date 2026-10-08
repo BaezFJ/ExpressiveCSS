@@ -2,6 +2,10 @@
 
 Use this matrix for full Critique, Audit, and combined reviews. Focused changes select affected criteria as described in [review scope](./review-scope.md). A criterion is a testable claim, not a topic label. Copy applicable rows into the report and bind each copy to an evidence-ledger criterion instance.
 
+## Contents
+
+Status contracts, Evidence and scope rules, Critique matrix, Audit matrix, Component review groups, Report order.
+
 ## Status contracts
 
 - **Pass:** every required evidence kind contains the expected observation and no allowed evidence contradicts it.

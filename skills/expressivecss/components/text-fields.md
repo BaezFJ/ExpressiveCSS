@@ -11,13 +11,11 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/text-fields/overview)
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -37,11 +35,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Material Design 3 text fields, from the HTML.
-
 A `.field` is the container. The `<label>` after the control is the floating label, so it must carry `for` — it sits after the control and cannot wrap it. An icon names its side with `prefix` or `suffix` and is `aria-hidden`, because the ligature is real text. `<small>` is supporting text: give it an `id` and point the control at it with `aria-describedby`, or it is never read out with the field. The default is the M3 filled field; add `outlined` (or `border`) for the outlined variant.
 
 `.input-field` is **not** the container and never was — the only rule matching it in the sheet is `.chips.input-field`.
+
+Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fields/specs). Height is 56dp. Filled is a `surface-variant` well with 4dp top corners and a 1dp / 2dp bottom indicator. Outlined is a 1dp / 2dp `outline` at 4dp. The label is `body-large` at rest and `body-small` floated. Input text is `body-large` / `on-surface`. Icons are 24dp, 12dp from the edge.
 
 #### Syntax
 
@@ -71,7 +69,7 @@ The Text Inputs section of the [API reference](https://www.expressivecss.com/llm
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `field-container-class`: The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.
 - `field-icon-not-i`: <i> means idiomatic text, not icon. Use <span class="material-symbols">.
@@ -88,7 +86,4 @@ The following are end-state semantic invariants. The rule IDs come directly from
 - `file-path-readonly`: The path field only ever displays what the file input holds; leaving it writable offers an edit that is discarded.
 - `counter-is-announced`: The count changes as the user types, so it has to be a live region or the remaining characters are never announced.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

@@ -11,15 +11,13 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/split-button)
 
 Example: PDF/CSV format selection for a later Export action belongs in a select or native inputs. A split button fits Export now plus alternate export commands.
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -64,7 +62,7 @@ The trailing half is an ordinary Menu trigger, so everything Menu does it does h
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `split-button-is-not-an-authored-composite-widget`: A split button takes no composite role; its two halves are reached with Tab, not arrow keys. The <menu> the trailing half opens is the composite widget here, and it carries its own role.
 - `split-button-halves-are-controls`: A split button is exactly two controls and the menu one of them opens: a <button>, or an <a class="button" href> when it navigates. A wrapper element is refused too - the seam, the insets and the larger trailing icon are all written against direct children, so a nested <div> loses every one of them.
@@ -79,7 +77,4 @@ The following are end-state semantic invariants. The rule IDs come directly from
 - `menu-children-are-list-items`: <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
 - `context-menu-region-is-not-a-control`: data-context-menu goes on a region of content. A button or link already has an action for Enter and click; give it its own menu trigger instead.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.

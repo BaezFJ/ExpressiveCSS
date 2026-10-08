@@ -11,13 +11,11 @@ Contract: ExpressiveCSS 0.12.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `a0bb140a45a1a57d404a732bb4beae515bffaa0d4bb5ed697776f61327416348`
+Contract SHA-256: `75da989f115d7d693f56a2a30659be8c8b1377182692783570e30b6c2cf60460`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/switch/overview)
-
-Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
@@ -40,8 +38,6 @@ Known boundary: The styled native checkbox does not perform or announce a persis
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#switches).
 
 #### Contract
-
-Material Design 3 switches, from the HTML.
 
 A `<label class="switch">` wrapping `<input type="checkbox">` is the control. The label text is a sibling of the input — no `.lever` required. They are CSS only. There is no JavaScript component and nothing to AutoInit.
 
@@ -68,12 +64,9 @@ Tokens follow the [M3 switch spec](https://m3.material.io/components/switch/spec
 
 #### Rules
 
-The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+End-state invariants from `semantics.json`; keep the IDs in review criteria. Author static requirements and verify state the runtime generates.
 
 - `switch-is-label`: A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name.
 - `switch-decorative-text-hidden`: On/off captions inside the label are folded into the accessible name, which then reads "Off On". Hide them and let the label text name the switch.
 
-#### Guide checks
-
-- Read the full target-version component documentation before using variants, options, methods, or events not shown here.
-- The target version's documentation and source override this generated summary if they disagree.
+Read the target-version documentation before using anything not shown here; it and the source override this summary.
