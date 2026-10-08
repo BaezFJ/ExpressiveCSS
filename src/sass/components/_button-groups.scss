@@ -297,7 +297,6 @@ $_connected-corners: (
     --md-comp-button-group-container-shape: 9999px;
     --md-comp-button-group-inner-corner-corner-size: 8px;
     --md-comp-button-group-pressed-inner-corner-corner-size: 4px;
-    --md-comp-button-group-selected-inner-corner-corner-size: 50%;
 
     display: grid;
     grid-auto-flow: column;
@@ -323,16 +322,27 @@ $_connected-corners: (
     // The corner goes through a variable so that pressing an item changes one
     // value rather than restating `border-radius`. A shorthand for the pressed
     // state would take the end items' round outer corners with it.
+    //
+    // md.comp.button-group.connected.selected.inner-corner.corner-size is 50%,
+    // which Compose resolves against the shorter side. A CSS percentage
+    // resolves per axis and turns a wide item into an ellipse, and 9999px
+    // would spend most of the morph above the clamp, so the default is half
+    // the item's own height. Setting the token on the group still overrides it.
     > #{$_item} {
       --_corner: var(--md-comp-button-group-inner-corner-corner-size);
       --_outer-corner: var(--md-comp-button-group-container-shape);
+      --_round: calc(var(--md-comp-filled-button-container-height, 40px) / 2);
 
       flex: 1 1 0;
       border-radius: var(--_corner);
 
+      &.icon-button {
+        --_round: calc(var(--md-comp-icon-button-container-height) / 2);
+      }
+
       &[aria-pressed=true] {
-        --_corner: var(--md-comp-button-group-selected-inner-corner-corner-size);
-        --_outer-corner: var(--md-comp-button-group-selected-inner-corner-corner-size);
+        --_corner: var(--md-comp-button-group-selected-inner-corner-corner-size, var(--_round));
+        --_outer-corner: var(--md-comp-button-group-selected-inner-corner-corner-size, var(--_round));
       }
 
       &:is(:active, .button-group-pressed) {
