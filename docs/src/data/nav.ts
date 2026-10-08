@@ -357,6 +357,13 @@ export const NAV: DocsGroup[] = [
           "Key figures in tiles, each with a label, a value and an optional change.",
       },
       {
+        id: "kpi",
+        label: "KPI",
+        route: "/kpi.html",
+        description:
+          "One key figure in a card, with a trend chip, a sparkline and details.",
+      },
+      {
         id: "countdown",
         label: "Countdown",
         route: "/countdown.html",

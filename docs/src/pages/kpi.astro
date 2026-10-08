@@ -1,0 +1,188 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "trend", label: "Trend" },
+  { id: "parts", label: "Optional parts" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const revenue = [40.1, 42.3, 41.0, 43.8, 44.6, 43.9, 45.7, 46.2, 45.8, 48.2];
+const churn = [2.4, 2.5, 2.6, 2.5, 2.8, 2.9, 2.9, 3.0, 3.1, 3.1];
+const orders = [310, 290, 335, 320, 360, 340, 380, 372, 395, 410];
+const days = revenue.map((_, i) => `Day ${i + 1}`);
+---
+<DocsLayout page="kpi">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          An <code>&lt;article class="kpi"&gt;</code> is a card for one key
+          figure: a label, the value, a trend chip, a sparkline and a line of
+          context.
+        </p>
+        <p>
+          The label and value sit in a <code>&lt;dl&gt;</code>, so a screen
+          reader reads them as a pair. The article is a card, so
+          <code>filled</code> and <code>outlined</code> work as they do on
+          cards, and KPIs in a grid row stretch to the same height with their
+          footers aligned. CSS only; the chart is drawn by its own script.
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px" data-markdown-ignore>
+          <article class="kpi outlined">
+            <dl>
+              <dt><span class="kpi-icon material-symbols-outlined" aria-hidden="true">payments</span>Revenue</dt>
+              <dd class="kpi-value">$48,200</dd>
+              <dd class="kpi-trend up">+12.5%</dd>
+            </dl>
+            <button type="button" class="icon-button kpi-actions" aria-label="Revenue options">
+              <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+            </button>
+            <figure class="line-chart sparkline area">
+              <figcaption class="visually-hidden">Revenue over 10 days, in thousands</figcaption>
+              <table>
+                <thead><tr><th>Day</th><th>Revenue</th></tr></thead>
+                <tbody>{days.map((day, i) => <tr><th>{day}</th><td>{revenue[i]}</td></tr>)}</tbody>
+              </table>
+            </figure>
+            <div class="kpi-footer">Compared with $42,800 last month</div>
+          </article>
+          <article class="kpi outlined">
+            <dl>
+              <dt><span class="kpi-icon material-symbols-outlined" aria-hidden="true">group_remove</span>Churn</dt>
+              <dd class="kpi-value">3.1%</dd>
+              <dd class="kpi-trend up negative">+0.4 pts</dd>
+            </dl>
+            <figure class="line-chart sparkline area">
+              <figcaption class="visually-hidden">Churn over 10 days, in percent</figcaption>
+              <table>
+                <thead><tr><th>Day</th><th>Churn</th></tr></thead>
+                <tbody>{days.map((day, i) => <tr><th>{day}</th><td>{churn[i]}%</td></tr>)}</tbody>
+              </table>
+            </figure>
+            <div class="kpi-footer">Up from 2.7% last month</div>
+          </article>
+          <article class="kpi outlined">
+            <dl>
+              <dt><span class="kpi-icon material-symbols-outlined" aria-hidden="true">shopping_cart</span>Orders</dt>
+              <dd class="kpi-value">410</dd>
+              <dd class="kpi-trend up">+32%</dd>
+            </dl>
+            <figure class="column-chart sparkline">
+              <figcaption class="visually-hidden">Orders over 10 days</figcaption>
+              <table>
+                <thead><tr><th>Day</th><th>Orders</th></tr></thead>
+                <tbody>{days.map((day, i) => <tr><th>{day}</th><td>{orders[i]}</td></tr>)}</tbody>
+              </table>
+            </figure>
+            <div class="kpi-footer"><a href="column-chart.html">Column chart</a></div>
+          </article>
+        </div>
+<Code code={`
+<article class="kpi outlined">
+  <dl>
+    <dt>
+      <span class="kpi-icon material-symbols-outlined" aria-hidden="true">payments</span>
+      Revenue
+    </dt>
+    <dd class="kpi-value">$48,200</dd>
+    <dd class="kpi-trend up">+12.5%</dd>
+  </dl>
+  <button type="button" class="icon-button kpi-actions" aria-label="Revenue options">
+    <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+  </button>
+  <figure class="line-chart sparkline area">
+    <figcaption class="visually-hidden">Revenue over 10 days, in thousands</figcaption>
+    <table>
+      <thead><tr><th>Day</th><th>Revenue</th></tr></thead>
+      <tbody>
+        <tr><th>Day 1</th><td>40.1</td></tr>
+        <!-- … -->
+      </tbody>
+    </table>
+  </figure>
+  <div class="kpi-footer">Compared with $42,800 last month</div>
+</article>
+`} />
+  </Section>
+  <Section {...S.trend}>
+        <p>
+          A <code>&lt;dd class="kpi-trend"&gt;</code> chip compares the value
+          with an earlier one. <code>up</code> and <code>down</code> add an
+          arrow. <code>negative</code> marks bad news in the error container
+          colors, whichever way the number moved, and turns the first series
+          of a line, column, bar or mixed chart in the same KPI to the error
+          color. The arrow is decoration, so the text has to give the
+          direction, as in <code>+0.4 pts</code>.
+        </p>
+<Code code={`
+<dd class="kpi-trend up negative">+0.4 pts</dd>
+`} />
+  </Section>
+  <Section {...S.parts}>
+        <p>
+          Everything after the <code>&lt;dl&gt;</code> is optional and stacks
+          in source order.
+        </p>
+        <ul>
+          <li><code>.kpi-icon</code> goes inside the <code>&lt;dt&gt;</code> and draws a tonal icon box. Hide the icon with <code>aria-hidden="true"</code>.</li>
+          <li><code>.kpi-actions</code> on a button or menu trigger places it in the top corner. Name it after the figure, as in <code>aria-label="Revenue options"</code>.</li>
+          <li>A sparkline chart from any <a href="line-chart.html">chart component</a>. Set its height with the chart's own token, such as <code>--md-comp-line-chart-height</code>.</li>
+          <li>A <code>&lt;progress class="progress"&gt;</code> shows progress toward a goal. Name it with <code>aria-label</code>.</li>
+          <li>A <code>&lt;p&gt;</code> adds supporting text.</li>
+          <li><code>.kpi-footer</code> closes the card under a divider, with details or a link.</li>
+        </ul>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px" data-markdown-ignore>
+          <article class="kpi filled">
+            <dl>
+              <dt>Quarterly goal</dt>
+              <dd class="kpi-value">72%</dd>
+              <dd class="kpi-trend down">−3% this week</dd>
+            </dl>
+            <progress class="progress" value="72" max="100" aria-label="Quarterly goal"></progress>
+            <p>$720k of $1M booked, with 18 days left.</p>
+          </article>
+        </div>
+<Code code={`
+<article class="kpi filled">
+  <dl>
+    <dt>Quarterly goal</dt>
+    <dd class="kpi-value">72%</dd>
+    <dd class="kpi-trend down">−3% this week</dd>
+  </dl>
+  <progress class="progress" value="72" max="100" aria-label="Quarterly goal"></progress>
+  <p>$720k of $1M booked, with 18 days left.</p>
+</article>
+`} />
+        <p>
+          For several figures without charts or actions, a row of
+          <a href="stat.html">stat tiles</a> is lighter.
+        </p>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The <code>&lt;dt&gt;</code> and <code>&lt;dd&gt;</code> pairing names
+          the value; without it a screen reader reads a bare number. A
+          sparkline is not focusable and has no tooltip, but its table stays
+          in the page, so give it a caption that names the measure and period.
+          Say the trend's direction and unit in its text, since the arrow and
+          the error colors are not announced.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.kpi</code>. Container color, shape and padding come from the card tokens.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-kpi-icon-container-color</code></td><td><code>--md-sys-color-primary-container</code></td></tr>
+          <tr><td><code>--md-comp-kpi-icon-color</code></td><td><code>--md-sys-color-on-primary-container</code></td></tr>
+          <tr><td><code>--md-comp-kpi-trend-container-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
+          <tr><td><code>--md-comp-kpi-trend-color</code></td><td><code>--md-sys-color-on-secondary-container</code></td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

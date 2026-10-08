@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**73 of 73 rows enforced; 0 remaining.**
+**74 of 74 rows enforced; 0 remaining.**
 
-69 of those rows are components - a part of the framework an author writes markup for.
+70 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 69 components declare conformance debt.**
+**3 of 70 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -586,6 +586,16 @@ Swept 0.8.0. The canonical icon is <span class="material-symbols">, and an icon 
 
 - **icon-not-i-element** - <i> means idiomatic text. The canonical icon element is <span class="material-symbols">.
 - **icon-hidden-or-labelled** - The ligature is real text and is read out verbatim. An icon is either decoration - aria-hidden="true", with the enclosing control carrying the name - or an image in its own right, role="img" with a label. It is never left as bare text.
+
+### kpi
+
+Added with the KPI component. A description list pairs the value with its label; the trend arrow is decoration and the text says the direction.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `kpi-is-a-card-with-a-labelled-value` | forbid | `.kpi:not(article:has(> dl > dt + dd.kpi-value))` | must not match |
+
+- **kpi-is-a-card-with-a-labelled-value** - Write .kpi as an <article> holding a <dl> whose <dt> label comes right before the <dd class="kpi-value">. The article makes it a card, and without the pairing a screen reader reads a bare number with nothing to say what it is. Not fragmentSafe: what it detects is an omission.
 
 ### landmarks
 

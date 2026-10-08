@@ -126,5 +126,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the height-derived selected button-group corner: 63,119 gzip bytes (+42).
   // Reviewed the aura and its stepped turn for shadow-only loads: 63,985 gzip bytes (+866).
   // Reviewed the countdown digit strips: 64,561 gzip bytes (+576).
-  assert.ok(sizes(css).gzip <= 64561, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the KPI card: 65,104 gzip bytes (+543).
+  assert.ok(sizes(css).gzip <= 65104, `CSS gzip: ${sizes(css).gzip}`);
 });

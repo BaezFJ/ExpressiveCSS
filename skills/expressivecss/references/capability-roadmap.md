@@ -38,6 +38,7 @@ Last operator collection: 2026-10-08, Chromium 153.0.8010.12, passed; inputs cha
 | [Accordion](#accordion) | implemented | source-reviewed | needs-rerun | 0 |
 | [Data table](#data-table) | implemented | source-reviewed | needs-rerun | 0 |
 | [Stat](#stat) | implemented | source-reviewed | needs-rerun | 0 |
+| [KPI](#kpi) | implemented | source-reviewed | incomplete | 0 |
 | [Countdown](#countdown) | implemented | source-reviewed | incomplete | 0 |
 | [Line chart](#line-chart) | implemented | source-reviewed | needs-rerun | 1 |
 | [Column chart](#column-chart) | implemented | source-reviewed | needs-rerun | 1 |
@@ -498,6 +499,22 @@ Web adaptation: A <dl> pairs each value with its label; the arrow is decoration 
 - verification: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths.
 
 - stale: [tests/stat-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/91dda08800a44c25bc1413fb949cc90a58cc9762/tests/stat-browser.test.js): `chromium: stats tile their figures, wrap when narrow and mark the change`. One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion.
+
+<a id="kpi"></a>
+
+## KPI
+
+**implemented within the stated scope.** A card with a labelled value in a description list, a trend chip with up, down and negative states, a tonal icon, a corner action, a sparkline, a progress bar and a footer.
+
+Source review: source-reviewed, 2026-10-08. [src/sass/components/_kpi.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/91dda08800a44c25bc1413fb949cc90a58cc9762/src/sass/components/_kpi.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: A <dl> pairs the value with its label inside a card <article>; the arrow is decoration, the text carries the direction and the sparkline's table is its text alternative.
+
+- verification: Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a KPI row with a screen reader in each engine and confirm the label, value, trend and sparkline caption are announced in order; test enlarged text at narrow widths.
+
+- not-recorded: [tests/kpi-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/91dda08800a44c25bc1413fb949cc90a58cc9762/tests/kpi-browser.test.js): `chromium: kpi lays out its label, value, trend, actions, chart and footer`. Trend beside the value, actions in the label row's end corner, chart under the value, an edge-to-edge footer closing the card, the headline value size, up and down arrows, the negative chip and chart colors and term-definition pairs in the accessibility tree. No spoken-output assertion.
 
 <a id="countdown"></a>
 

@@ -1235,7 +1235,7 @@
           },
           {
             "path": "src/sass/abstracts/_variables.scss",
-            "sha256": "0687f4a8247a180fc51793aee67d6ab0a0ad348e9d40e6f392f3b4811e7e1cb2"
+            "sha256": "2aaccb38cfd12b3829cbaa753e572ffc95f135a1f7f18d8de4f56764e94c3ec4"
           }
         ],
         "gaps": [
@@ -1348,7 +1348,7 @@
           },
           {
             "path": "src/sass/abstracts/_variables.scss",
-            "sha256": "0687f4a8247a180fc51793aee67d6ab0a0ad348e9d40e6f392f3b4811e7e1cb2"
+            "sha256": "2aaccb38cfd12b3829cbaa753e572ffc95f135a1f7f18d8de4f56764e94c3ec4"
           }
         ],
         "gaps": [
@@ -2289,7 +2289,6 @@
       "title": "Stat",
       "aliases": [
         "stat tile",
-        "kpi",
         "metric",
         "key figure",
         "scorecard"
@@ -2313,7 +2312,8 @@
       ],
       "alternatives": [
         "data-table",
-        "cards"
+        "cards",
+        "kpi"
       ],
       "adaptive": [],
       "runtime": "css-only",
@@ -2351,7 +2351,7 @@
         "sources": [
           {
             "path": "src/sass/components/_stat.scss",
-            "sha256": "50a15a771c7e73f72b2813e2b68b1a946911974c6ac7d482b0a35db4b774d4aa"
+            "sha256": "c8f50278bd01fd4ef8d38a5b26fb7b91869f30b9cfc59cef4d482651e9bae9ad"
           }
         ],
         "gaps": [
@@ -2366,6 +2366,92 @@
             "file": "tests/stat-browser.test.js",
             "name": "chromium: stats tile their figures, wrap when narrow and mark the change",
             "scope": "One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "kpi",
+      "title": "KPI",
+      "aliases": [
+        "kpi card",
+        "key performance indicator",
+        "metric card",
+        "sparkline card"
+      ],
+      "guideSource": {
+        "pageId": "kpi",
+        "heading": "KPI",
+        "headingLevel": 2,
+        "semantics": [
+          "kpi"
+        ]
+      },
+      "jobs": [
+        "One key figure in a card, with a trend chip, a sparkline and details."
+      ],
+      "useWhen": [
+        "Feature a headline figure on a dashboard with its change, a short trend and a line of context or an action."
+      ],
+      "avoidWhen": [
+        "Several figures with no chart or actions read better as a stats row; a trend the reader has to inspect needs a full chart."
+      ],
+      "alternatives": [
+        "stat",
+        "line-chart",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/kpi.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#kpi",
+          "reviewedOn": "2026-10-08",
+          "documentedSupport": "A card with a labelled value in a description list, a trend chip with up, down and negative states, a tonal icon, a corner action, a sparkline, a progress bar and a footer.",
+          "webAdaptation": "A <dl> pairs the value with its label inside a card <article>; the arrow is decoration, the text carries the direction and the sparkline's table is its text alternative.",
+          "limitations": [
+            "Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-08",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Pair the value with its label, state the direction and unit of a change in text, caption the sparkline and name the action after the figure."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Revenue, orders and churn across the top of a sales dashboard, each with its last 10 days, are KPIs. Twelve figures with no trend are a stats row.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-08",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_kpi.scss",
+            "sha256": "8b54fdf69302d605376d10091bd533054030c3ddffd0384c9c7076b9bcf2c8eb"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.",
+            "nextStep": "Read a KPI row with a screen reader in each engine and confirm the label, value, trend and sparkline caption are announced in order; test enlarged text at narrow widths."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/kpi-browser.test.js",
+            "name": "chromium: kpi lays out its label, value, trend, actions, chart and footer",
+            "scope": "Trend beside the value, actions in the label row's end corner, chart under the value, an edge-to-edge footer closing the card, the headline value size, up and down arrows, the negative chip and chart colors and term-definition pairs in the accessibility tree. No spoken-output assertion."
           }
         ]
       }

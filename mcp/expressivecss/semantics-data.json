@@ -1166,6 +1166,18 @@
           }
         ]
       },
+      "kpi": {
+        "status": "enforced",
+        "note": "Added with the KPI component. A description list pairs the value with its label; the trend arrow is decoration and the text says the direction.",
+        "rules": [
+          {
+            "id": "kpi-is-a-card-with-a-labelled-value",
+            "kind": "forbid",
+            "selector": ".kpi:not(article:has(> dl > dt + dd.kpi-value))",
+            "message": "Write .kpi as an <article> holding a <dl> whose <dt> label comes right before the <dd class=\"kpi-value\">. The article makes it a card, and without the pairing a screen reader reads a bare number with nothing to say what it is. Not fragmentSafe: what it detects is an omission."
+          }
+        ]
+      },
       "tree": {
         "status": "enforced",
         "note": "Added with the tree component. Nested lists of native disclosures and links: every row is a Tab stop and the browser opens a branch, so no tree role is promised.",
