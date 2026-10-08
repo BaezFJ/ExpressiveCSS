@@ -38,6 +38,7 @@ Last operator collection: 2026-10-08, Chromium 153.0.8010.12, passed; inputs cha
 | [Accordion](#accordion) | implemented | source-reviewed | needs-rerun | 0 |
 | [Data table](#data-table) | implemented | source-reviewed | needs-rerun | 0 |
 | [Stat](#stat) | implemented | source-reviewed | needs-rerun | 0 |
+| [Countdown](#countdown) | implemented | source-reviewed | incomplete | 0 |
 | [Line chart](#line-chart) | implemented | source-reviewed | needs-rerun | 1 |
 | [Column chart](#column-chart) | implemented | source-reviewed | needs-rerun | 1 |
 | [Bar chart](#bar-chart) | implemented | source-reviewed | needs-rerun | 1 |
@@ -497,6 +498,22 @@ Web adaptation: A <dl> pairs each value with its label; the arrow is decoration 
 - verification: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths.
 
 - stale: [tests/stat-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f884113f6cded4063e382ab3ffecb58f8b3e0fe8/tests/stat-browser.test.js): `chromium: stats tile their figures, wrap when narrow and mark the change`. One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion.
+
+<a id="countdown"></a>
+
+## Countdown
+
+**implemented within the stated scope.** Digits from 0 to 999 that roll up or down when --md-comp-countdown-value changes, with zero padding to two or three digits and a reduced-motion fallback.
+
+Source review: source-reviewed, 2026-10-08. [src/sass/components/_countdown.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/f884113f6cded4063e382ab3ffecb58f8b3e0fe8/src/sass/components/_countdown.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The element's text is the accessible value; the digit strips are generated content with empty alternative text. A page script sets the property and the text together.
+
+- verification: Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role="timer" and aria-live regions remains unverified. Next: Run a ticking timer and a polite live count with a screen reader in each engine and confirm the timer stays quiet and the live count announces each value once.
+
+- not-recorded: [tests/countdown-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f884113f6cded4063e382ab3ffecb58f8b3e0fe8/tests/countdown-browser.test.js): `chromium: countdown shows 0 to 999 as rolling digits and keeps the text for assistive technology`. Box width per digit count and padding, strip positions for in-range and clamped values, baseline alignment, the translate transition on change, reduced motion and the accessibility tree text. No spoken-output assertion.
 
 <a id="line-chart"></a>
 

@@ -357,6 +357,13 @@ export const NAV: DocsGroup[] = [
           "Key figures in tiles, each with a label, a value and an optional change.",
       },
       {
+        id: "countdown",
+        label: "Countdown",
+        route: "/countdown.html",
+        description:
+          "A number from 0 to 999 whose digits roll to each new value.",
+      },
+      {
         id: "line-chart",
         label: "Line chart",
         route: "/line-chart.html",
