@@ -2114,6 +2114,106 @@
       }
     },
     {
+      "slug": "message-scroller",
+      "title": "Message scroller",
+      "aliases": [
+        "chat scroller",
+        "conversation scroller",
+        "chat transcript",
+        "stick to bottom",
+        "scroll to latest"
+      ],
+      "guideSource": {
+        "pageId": "message_scroller",
+        "heading": "Message scroller",
+        "headingLevel": 2,
+        "semantics": [
+          "message-scroller"
+        ]
+      },
+      "jobs": [
+        "A chat scroll container that anchors turns, follows streamed replies and keeps its place as history loads."
+      ],
+      "useWhen": [
+        "Scroll a conversation that receives messages or streamed replies, or open a saved transcript at its last turn."
+      ],
+      "avoidWhen": [
+        "A short static exchange needs no scroller; a feed of unrelated items needs a list or the scroll-area utility."
+      ],
+      "alternatives": [
+        "message",
+        "lists"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/message-scroller.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#message-scroller",
+          "reviewedOn": "2026-10-08",
+          "documentedSupport": "Following streamed output, release on scrolling up, a scroll-to-latest button, turn anchors with a peek of the previous message, prepend preservation, opening at the end, start or last turn, and jumping to a message by id.",
+          "webAdaptation": "A native scroll container; the component sets scroll position, a spacer and the button's inert state. The page owns role=\"log\" and aria-busy.",
+          "limitations": [
+            "Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role=\"log\" viewport, touch and scrollbar dragging, and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-08",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the reader's place unless they are at the live edge, let them stop following at any time, name the focusable viewport and announce appended messages through a log region."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A support chat that streams replies needs a message scroller so the reply stays in view; a fixed list of three FAQ answers does not.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-08",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_message-scroller.scss",
+            "sha256": "c535f903268ac93bff12aa12dc647bdb9cc3dde34062a8a7ff850dc95ab06e6d"
+          },
+          {
+            "path": "src/ts/components/messageScroller.ts",
+            "sha256": "0ddbd41f71725cc27a318c92f12eabf329d92dc79402752c2520ce8a049fd799"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role=\"log\" viewport, touch and scrollbar dragging, and spoken output remain unverified.",
+            "nextStep": "Stream replies into a role=\"log\" viewport with a screen reader in each engine, and check touch scrolling and scrollbar dragging on real devices."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/message-scroller-browser.test.js",
+            "name": "chromium: message scroller follows output, keeps its place on prepend and anchors new turns",
+            "scope": "Opening at the end, following streamed text, release on a wheel scroll up, the inert button and resuming from it, following kept through a click on a message, scrollToMessage with a peek and with a missing id, prepend preservation, an appended anchor at the peek with a spacer that clears as the reply grows, and destroy. No spoken-output assertion."
+          },
+          {
+            "file": "tests/message-scroller-browser.test.js",
+            "name": "chromium: message scroller opens saved transcripts at the requested position",
+            "scope": "last-anchor on a long last turn, last-anchor falling back to the end, and start."
+          },
+          {
+            "file": "tests/message-scroller-browser.test.js",
+            "name": "chromium: message scroller jumps to a message inside a shadow root",
+            "scope": "scrollToMessage called right after init finds a message in a shadow root and scrolls it one peek below the top; pressing the button from the keyboard there moves focus to the viewport as the button goes inert."
+          }
+        ]
+      }
+    },
+    {
       "slug": "accordion",
       "title": "Accordion",
       "aliases": [
@@ -10400,5 +10500,5 @@
     "inputsUnchanged": true,
     "reportSha256": "b2f7a499810474b2448e87bde25fa13c969ab79a096d7281b84990803d624c47"
   },
-  "sourceRevision": "22032862c0ea956d3ce605c445316ffcf429dd1c"
+  "sourceRevision": "9ba599c6bbe73c6e1dcefa1b0f662c915020df97"
 }

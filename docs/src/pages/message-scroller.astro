@@ -1,0 +1,277 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "turns", label: "Turns" },
+  { id: "streaming", label: "Streaming" },
+  { id: "saved", label: "Saved transcripts" },
+  { id: "history", label: "Loading history" },
+  { id: "jump", label: "Jump to a message" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const intro = [
+  ["end", "Can you check why the install fails on CI?"],
+  ["", "Sure. Which package manager does the workspace use?"],
+  ["end", "pnpm, with a lockfile from last week."],
+  ["", "Then the lockfile is probably out of date. The workspace package was renamed on Monday."],
+  ["end", "That would explain it. What should I run?"],
+  ["", "Run pnpm install at the root and commit the new lockfile."],
+  ["end", "Done. CI is green again."],
+  ["", "Good. Anything else?"],
+];
+---
+<DocsLayout page="message_scroller">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.message-scroller</code> scrolls a conversation. While the
+          reader is at the end it follows new output; scrolling up stops it.
+          Messages added above keep the reader's place.
+        </p>
+        <p>
+          The frame holds a <code>.message-scroller-viewport</code> and an
+          optional <code>.message-scroller-button</code>. Every child of the
+          viewport is one item, usually a <a href={route('message')}>message</a>
+          or a message group. The frame fills its parent, so give the parent a
+          height. <code>AutoInit()</code> starts every
+          <code>.message-scroller</code>.
+        </p>
+        <div class="mb-3" style="height: 26rem; max-width: 36rem; border: 1px solid var(--md-sys-color-outline-variant); border-radius: 16px; overflow: hidden;">
+          <div id="demo-scroller" class="message-scroller">
+            <div class="message-scroller-viewport" role="log" aria-label="Conversation with the assistant" aria-relevant="additions" tabindex="0">
+              {intro.map(([side, text], i) => (
+                <div id={`demo-${i + 1}`} class:list={["message", side]} data-scroll-anchor={side ? "" : undefined}>
+                  <p class="message-bubble">{text}</p>
+                </div>
+              ))}
+            </div>
+            <button type="button" class="icon-button tonal message-scroller-button" aria-label="Scroll to latest message">
+              <span class="material-symbols" aria-hidden="true">arrow_downward</span>
+            </button>
+          </div>
+        </div>
+        <form id="demo-composer" class="flex align-center gap-3 mb-3" style="max-width: 36rem;">
+          <div class="field outlined flex-1 mb-0">
+            <input type="text" id="demo-prompt" placeholder=" " autocomplete="off" required>
+            <label for="demo-prompt">Message</label>
+          </div>
+          <button type="submit" class="filled">Send</button>
+        </form>
+<Code code={`
+<div class="message-scroller">
+  <div class="message-scroller-viewport" role="log" aria-label="Conversation"
+       aria-relevant="additions" tabindex="0">
+    <div id="m1" class="message end" data-scroll-anchor>
+      <p class="message-bubble">Can you check why the install fails on CI?</p>
+    </div>
+    <div id="m2" class="message">
+      <p class="message-bubble">Sure. Which package manager does the workspace use?</p>
+    </div>
+  </div>
+  <button type="button" class="icon-button tonal message-scroller-button"
+          aria-label="Scroll to latest message">
+    <span class="material-symbols" aria-hidden="true">arrow_downward</span>
+  </button>
+</div>
+`} />
+        <p>
+          The viewport is a named, focusable scroll region, so the arrow keys
+          scroll it. On a conversation that receives messages, make it the log:
+          <code>role="log"</code> with <code>aria-relevant="additions"</code>
+          announces new messages. The button is inert while the viewport is at
+          the end, and focus moves to the viewport if the button had it.
+        </p>
+  </Section>
+  <Section {...S.turns}>
+        <p>
+          Mark the message that starts a turn with
+          <code>data-scroll-anchor</code>, usually each of the user's
+          messages. Anchors are not tied to the sender: in a group chat, a
+          "joined the conversation" notice can start a turn too. When an anchor
+          is appended, the viewport scrolls it to the top and leaves 64px of
+          the previous message in view. Blank space below the anchor makes room
+          for the reply and shrinks as the reply grows.
+        </p>
+<Code code={`
+const viewport = document.querySelector('.message-scroller-viewport');
+viewport.insertAdjacentHTML('beforeend', \`
+  <div id="m3" class="message end" data-scroll-anchor>
+    <p class="message-bubble">pnpm, with a lockfile from last week.</p>
+  </div>\`);
+`} />
+  </Section>
+  <Section {...S.streaming}>
+        <p>
+          Append the reply and write into it as it streams. Once the reply
+          passes the bottom of the viewport, the viewport follows it. Scrolling
+          toward the start with the wheel, touch, the scrollbar or the
+          <kbd>↑</kbd>, <kbd>Page Up</kbd> and <kbd>Home</kbd> keys stops
+          following; reaching the end again, or pressing the button, resumes
+          it. Set <code>aria-busy="true"</code> on the log while a reply
+          streams, so a screen reader announces it once it is complete rather
+          than word by word.
+        </p>
+<Code code={`
+const reply = document.createElement('div');
+reply.className = 'message';
+reply.innerHTML = '<p class="message-bubble"></p>';
+viewport.setAttribute('aria-busy', 'true');
+viewport.append(reply);
+
+for await (const chunk of response) reply.firstElementChild.append(chunk);
+viewport.removeAttribute('aria-busy');
+`} />
+  </Section>
+  <Section {...S.saved}>
+        <p>
+          <code>defaultScrollPosition</code> sets where a transcript opens:
+          <code>'end'</code>, <code>'start'</code>, or
+          <code>'last-anchor'</code>. The last option opens on the start of the
+          last turn, so a long answer is read from its question. When that
+          turn fits in the viewport, it opens at the end. A viewport that is
+          hidden when it starts, for example in a closed dialog, opens when it
+          is first shown.
+        </p>
+<Code code={`
+<div class="message-scroller no-autoinit">…</div>
+
+<script>
+Expressive.MessageScroller.init(document.querySelector('.message-scroller'), {
+  defaultScrollPosition: 'last-anchor'
+});
+</script>
+`} />
+  </Section>
+  <Section {...S.history}>
+        <p>
+          Insert older messages at the start of the viewport. The message the
+          reader was looking at stays where it was, and anchors in the
+          inserted history do not scroll. Load more when the reader nears the
+          top, for example with an <code>IntersectionObserver</code> on the
+          first message or a button above the conversation.
+        </p>
+        <p class="mb-3">
+          <button type="button" class="tonal" id="demo-history">Load earlier messages</button>
+        </p>
+<Code code={`
+viewport.insertAdjacentHTML('afterbegin', olderMessagesHtml);
+`} />
+  </Section>
+  <Section {...S.jump}>
+        <p>
+          <code>scrollToMessage(id)</code> scrolls the element with that id
+          to the top of the viewport, below the peek, and stops following. It
+          returns <code>false</code> when the viewport holds no such element.
+        </p>
+        <p class="mb-3">
+          <button type="button" class="tonal" id="demo-jump">Jump to the opening question</button>
+        </p>
+<Code code={`
+const scroller = Expressive.MessageScroller.getInstance(document.querySelector('.message-scroller'));
+scroller.scrollToMessage('m1');
+`} />
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+          <tr>
+            <td><code>autoScroll</code></td>
+            <td>Boolean</td>
+            <td><code>true</code></td>
+            <td>If true, the viewport follows new content while the reader is at the end, and scrolls a newly appended anchor to the top.</td>
+          </tr>
+          <tr>
+            <td><code>defaultScrollPosition</code></td>
+            <td>String</td>
+            <td><code>'end'</code></td>
+            <td>Where the transcript opens: <code>'end'</code>, <code>'start'</code>, or <code>'last-anchor'</code>. <code>'last-anchor'</code> opens at the end when the last turn fits.</td>
+          </tr>
+          <tr>
+            <td><code>peek</code></td>
+            <td>Number</td>
+            <td><code>64</code></td>
+            <td>Pixels of the previous message left in view above an anchored turn or a message reached with <code>scrollToMessage()</code>.</td>
+          </tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+const scroller = Expressive.MessageScroller.getInstance(document.querySelector('.message-scroller'));
+scroller.scrollToEnd();          // scrolls to the latest message and follows again
+scroller.scrollToStart();
+scroller.scrollToMessage('m42'); // false when no such message is in the viewport
+scroller.destroy();              // removes listeners, observers and the spacer
+`} />
+        <p>
+          Scrolling is smooth unless the reader prefers reduced motion.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.message-scroller</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-message-scroller-padding</code></td><td>16px</td></tr>
+          <tr><td><code>--md-comp-message-scroller-gap</code></td><td>16px</td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+<script is:inline>
+(() => {
+  const root = document.getElementById('demo-scroller');
+  const viewport = root.querySelector('.message-scroller-viewport');
+  const scroller = () => Expressive.MessageScroller.getInstance(root);
+  const add = (side, text, where = 'beforeend') => {
+    const message = document.createElement('div');
+    message.className = side ? 'message end' : 'message';
+    if (side) message.dataset.scrollAnchor = '';
+    const bubble = document.createElement('p');
+    bubble.className = 'message-bubble';
+    bubble.textContent = text;
+    message.append(bubble);
+    if (where === 'afterbegin') viewport.prepend(message);
+    else viewport.append(message);
+    return bubble;
+  };
+  const answer = 'Here is a longer answer, streamed a word at a time so the viewport has something to follow. It starts below your message, fills the space under it, and once it passes the bottom the viewport keeps up with it. Scroll up while it streams and the viewport stays where you left it; the button below brings you back to the latest text and following resumes.';
+  let streaming = null;
+
+  document.getElementById('demo-composer').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const input = document.getElementById('demo-prompt');
+    add('end', input.value);
+    input.value = '';
+    clearInterval(streaming);
+    const bubble = add('', '');
+    const words = answer.split(' ');
+    let i = 0;
+    viewport.setAttribute('aria-busy', 'true');
+    streaming = setInterval(() => {
+      bubble.textContent += (i ? ' ' : '') + words[i++];
+      if (i === words.length) {
+        clearInterval(streaming);
+        viewport.removeAttribute('aria-busy');
+      }
+    }, 60);
+  });
+
+  let page = 0;
+  document.getElementById('demo-history').addEventListener('click', () => {
+    page++;
+    for (let i = 3; i >= 1; i--) add(i % 2 ? 'end' : '', `Earlier message ${page}.${i}`, 'afterbegin');
+  });
+
+  document.getElementById('demo-jump').addEventListener('click', () => {
+    scroller()?.scrollToMessage('demo-1');
+  });
+})();
+</script>
+</DocsLayout>

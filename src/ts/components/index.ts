@@ -25,6 +25,7 @@ export { RadialChart } from "./radialChart";
 export { MixedChart } from "./mixedChart";
 export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";
+export { MessageScroller } from "./messageScroller";
 export { Lightbox } from "./lightbox";
 export { Slider } from "./slider";
 export { ScrollSpy } from "./scrollspy";

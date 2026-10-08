@@ -60,6 +60,10 @@ export const AUTO_INIT_COMPONENTS = {
   },
   LineChart: { component: Components.LineChart, selector: ".line-chart" },
   Menu: { component: Components.Menu, selector: ".menu-trigger" },
+  MessageScroller: {
+    component: Components.MessageScroller,
+    selector: ".message-scroller",
+  },
   Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
   ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },
   FormSelect: { component: Components.FormSelect, selector: "select" },

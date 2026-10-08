@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.message-scroller` scrolls a conversation. While the reader is at the
+  end it follows streamed replies, and scrolling up releases it. A message
+  appended with `data-scroll-anchor` starts a turn and is scrolled to the
+  top, leaving 64px of the previous message in view. Messages added above
+  keep the reader's place. A transcript can open at its end, its start or
+  its last turn, `scrollToMessage(id)` jumps to any message, and an optional
+  `.message-scroller-button` scrolls to the latest message.
 - `form.questionnaire` asks one question at a time. Each `<fieldset>` is a
   question with radio, checkbox or text answers, and footer buttons marked
   `value="previous"`, `"skip"` and `"next"` move between them. The component

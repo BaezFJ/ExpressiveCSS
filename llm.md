@@ -309,6 +309,7 @@ Opt an element out when it needs manual options:
 | `Datepicker` | `.datepicker, .date-picker` |
 | `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
+| `MessageScroller` | `.message-scroller` |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
@@ -2773,6 +2774,71 @@ Copy, feedback and retry actions go in the footer as named icon buttons. On an `
 
 ---
 
+## Message scroller
+
+A chat scroll container that anchors turns, follows streamed replies and keeps its place as history loads.
+
+A `.message-scroller` frame holds a `.message-scroller-viewport` and an optional `.message-scroller-button`. Every child of the viewport is one item, usually a `.message` or `.message-group`. The frame fills its parent, so the parent sets the height. `AutoInit()` starts every `.message-scroller`.
+
+While the reader is at the end, the viewport follows new content, including text streamed into the last message. Scrolling toward the start with the wheel, touch, the scrollbar or the Up, Page Up and Home keys stops following; reaching the end again, or pressing the button, resumes it. Mark the message that starts a turn with `data-scroll-anchor`, usually each of the user's messages. When an anchor is appended, the viewport scrolls it to the top with 64px of the previous message in view, and blank space below it makes room for the reply until the reply fills the viewport. Older messages inserted at the start keep the visible message in place, and anchors among them do not scroll.
+
+Name the viewport with `aria-label` and give it `tabindex="0"` so the keyboard can scroll it. On a conversation that receives messages, make the viewport the log with `role="log"` and `aria-relevant="additions"`, and set `aria-busy="true"` on it while a reply streams. The button is inert while the viewport is at the end; give it an `aria-label`.
+
+```html
+<div class="message-scroller">
+  <div class="message-scroller-viewport" role="log" aria-label="Conversation"
+       aria-relevant="additions" tabindex="0">
+    <div id="m1" class="message end" data-scroll-anchor>
+      <p class="message-bubble">Can you check why the install fails on CI?</p>
+    </div>
+    <div id="m2" class="message">
+      <p class="message-bubble">Sure. Which package manager does the workspace use?</p>
+    </div>
+  </div>
+  <button type="button" class="icon-button tonal message-scroller-button"
+          aria-label="Scroll to latest message">
+    <span class="material-symbols" aria-hidden="true">arrow_downward</span>
+  </button>
+</div>
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `autoScroll` | Boolean | `true` | If true, the viewport follows new content while the reader is at the end, and scrolls a newly appended anchor to the top. |
+| `defaultScrollPosition` | String | `'end'` | Where the transcript opens: `'end'`, `'start'`, or `'last-anchor'`, the start of the last turn. `'last-anchor'` opens at the end when that turn fits. A hidden viewport opens when it is first shown. |
+| `peek` | Number | `64` | Pixels of the previous message left in view above an anchored turn or a message reached with `scrollToMessage()`. |
+
+### Methods
+
+#### .scrollToEnd()
+
+Scrolls to the latest message and resumes following.
+
+#### .scrollToStart()
+
+Scrolls to the first message.
+
+#### .scrollToMessage(id)
+
+Scrolls the element with this id to the top of the viewport, below the peek, and stops following. Returns `false` when the viewport holds no such element.
+
+#### .destroy()
+
+Removes the listeners, observers and spacer the component added.
+
+Scrolling is smooth unless the reader prefers reduced motion.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-message-scroller-padding` | 16px |
+| `--md-comp-message-scroller-gap` | 16px (between items) |
+
+---
+
 ## Accordion
 
 Stacked disclosures that open one section of content at a time, on native details.
@@ -4641,6 +4707,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Datepicker` | `.datepicker, .date-picker` |
 | `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
+| `MessageScroller` | `.message-scroller` |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |

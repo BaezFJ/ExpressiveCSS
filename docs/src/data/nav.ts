@@ -336,6 +336,13 @@ export const NAV: DocsGroup[] = [
           "One message in a conversation, with an optional avatar, header and footer.",
       },
       {
+        id: "message_scroller",
+        label: "Message scroller",
+        route: "/message-scroller.html",
+        description:
+          "A chat scroll container that anchors turns, follows streamed replies and keeps its place as history loads.",
+      },
+      {
         id: "accordion",
         label: "Accordion",
         route: "/accordion.html",

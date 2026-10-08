@@ -1,0 +1,66 @@
+@use "../abstracts" as *;
+
+// Message scroller. A chat frame around one scrolling viewport of messages
+// and a scroll-to-latest button. The frame fills its parent, so the parent
+// sets the height. The script owns scroll position; this partial only lays
+// out the parts.
+//
+// The script turns off native scroll anchoring on the viewport and keeps the
+// reader's place itself, so all engines behave the same. It writes
+// --md-comp-message-scroller-spacer (blank space after the last message) so a
+// newly anchored turn can reach the top of the viewport.
+//
+// Tokens:
+//   --md-comp-message-scroller-padding   16px (viewport inset)
+//   --md-comp-message-scroller-gap       16px (between messages)
+
+.message-scroller {
+  --md-comp-message-scroller-padding: 16px;
+  --md-comp-message-scroller-gap: 16px;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.message-scroller-viewport {
+  box-sizing: border-box;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-anchor: none;
+  overscroll-behavior: contain;
+  padding: var(--md-comp-message-scroller-padding);
+  padding-block-end: calc(var(--md-comp-message-scroller-padding) + var(--md-comp-message-scroller-spacer, 0px));
+
+  @include focus-visible;
+
+  > * + * {
+    margin-block-start: var(--md-comp-message-scroller-gap);
+  }
+}
+
+// Centered over the bottom of the viewport. Inert while there is nothing
+// below; it fades out instead of leaving a hidden tab stop.
+.message-scroller-button {
+  position: absolute;
+  inset-block-end: 16px;
+  inset-inline: 0;
+  width: fit-content;
+  margin-inline: auto;
+  @include z-depth("2");
+  transition: opacity .15s ease-out, scale .15s ease-out;
+
+  &[inert] {
+    opacity: 0;
+    scale: .8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .message-scroller-button {
+    transition: none;
+  }
+}

@@ -91,6 +91,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<a class="button menu-trigger" data-target="menu1">Drop</a><menu id="menu1"><li><a href="#!">one</a></li></menu>`,
   },
   {
+    name: "MessageScroller",
+    selector: ".message-scroller",
+    html: `<div class="message-scroller"><div class="message-scroller-viewport" role="log" aria-label="Conversation" tabindex="0"><div class="message"><p class="message-bubble">Hi</p></div></div></div>`,
+  },
+  {
     name: "CommandPalette",
     selector: "dialog.command-palette",
     html: `<dialog class="command-palette" aria-label="Commands"><input type="search" aria-label="Search commands"><ul><li><button type="button">New file</button></li></ul></dialog>`,

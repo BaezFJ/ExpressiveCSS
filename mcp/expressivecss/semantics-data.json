@@ -952,6 +952,18 @@
           }
         ]
       },
+      "message-scroller": {
+        "status": "enforced",
+        "note": "Added with the message scroller component. The viewport is a focusable scroll container, so it needs a name; on a live conversation it is also the log. The script owns scroll position and the button's inert state, and adds no roles.",
+        "rules": [
+          {
+            "id": "message-scroller-viewport-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".message-scroller-viewport",
+            "message": "Name the viewport with aria-label. It is a focusable scroll region, and a screen reader announces the name when focus lands on it."
+          }
+        ]
+      },
       "accordion": {
         "status": "enforced",
         "note": "Added with the accordion component. Each item is a native <details>, so the browser exposes <summary> as a button with its expanded state and handles the keyboard. The rules keep authors from re-stating that state or nesting controls in the toggle.",
