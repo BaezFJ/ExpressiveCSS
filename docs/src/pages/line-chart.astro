@@ -229,51 +229,57 @@ card.querySelectorAll('[data-period]').forEach((button) => {
           A chart goes in a card with the figures it explains. Put the period
           switch beside the stat; on a change, update the stat, swap the table
           rows and call <code>LineChart.init</code> to redraw. The card adds no
-          chart styles; size a chart with its tokens.
+          chart styles; size a chart with its tokens. A card pads only its
+          headings and paragraphs, so wrap the stat and chart in
+          <code>&lt;div class="p-4"&gt;</code> to keep them off the border.
         </p>
         <article class="outlined" id="revenue-card" data-markdown-ignore>
-          <div class="flex flex-wrap justify-between align-start gap-3">
-            <dl class="stats my-0">
-              <div><dt>Revenue</dt><dd>{year.total}</dd><dd class="stat-change up">{year.change}</dd></div>
-            </dl>
-            <div class="button-group connected xsmall" data-selection="single" data-selection-required role="group" aria-label="Period">
-              <button type="button" class="button tonal" aria-pressed="true" data-period="12" data-total={year.total} data-change={year.change}>Year</button>
-              <button type="button" class="button tonal" aria-pressed="false" data-period="6" data-total={half.total} data-change={half.change}>6 months</button>
+          <div class="p-4">
+            <div class="flex flex-wrap justify-between align-start gap-3">
+              <dl class="stats my-0">
+                <div><dt>Revenue</dt><dd>{year.total}</dd><dd class="stat-change up">{year.change}</dd></div>
+              </dl>
+              <div class="button-group connected xsmall" data-selection="single" data-selection-required role="group" aria-label="Period">
+                <button type="button" class="button tonal" aria-pressed="true" data-period="12" data-total={year.total} data-change={year.change}>Year</button>
+                <button type="button" class="button tonal" aria-pressed="false" data-period="6" data-total={half.total} data-change={half.change}>6 months</button>
+              </div>
             </div>
+            <figure class="line-chart area">
+              <figcaption class="visually-hidden">Revenue this year and last year</figcaption>
+              <table>
+                <thead><tr><th>Month</th><th>This year</th><th>Last year</th></tr></thead>
+                <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td><td>{money(lastYear[i])}</td></tr>)}</tbody>
+              </table>
+            </figure>
           </div>
-          <figure class="line-chart area">
-            <figcaption class="visually-hidden">Revenue this year and last year</figcaption>
-            <table>
-              <thead><tr><th>Month</th><th>This year</th><th>Last year</th></tr></thead>
-              <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td><td>{money(lastYear[i])}</td></tr>)}</tbody>
-            </table>
-          </figure>
         </article>
 <script is:inline set:html={`{\n${cardScript}\n}`}></script>
 <Code code={`
 <article class="outlined" id="revenue-card">
-  <div class="flex flex-wrap justify-between align-start gap-3">
-    <dl class="stats my-0">
-      <div>
-        <dt>Revenue</dt>
-        <dd>${year.total}</dd>
-        <dd class="stat-change up">${year.change}</dd>
+  <div class="p-4">
+    <div class="flex flex-wrap justify-between align-start gap-3">
+      <dl class="stats my-0">
+        <div>
+          <dt>Revenue</dt>
+          <dd>${year.total}</dd>
+          <dd class="stat-change up">${year.change}</dd>
+        </div>
+      </dl>
+      <div class="button-group connected xsmall" data-selection="single"
+           data-selection-required role="group" aria-label="Period">
+        <button type="button" class="button tonal" aria-pressed="true"
+                data-period="12" data-total="${year.total}"
+                data-change="${year.change}">Year</button>
+        <button type="button" class="button tonal" aria-pressed="false"
+                data-period="6" data-total="${half.total}"
+                data-change="${half.change}">6 months</button>
       </div>
-    </dl>
-    <div class="button-group connected xsmall" data-selection="single"
-         data-selection-required role="group" aria-label="Period">
-      <button type="button" class="button tonal" aria-pressed="true"
-              data-period="12" data-total="${year.total}"
-              data-change="${year.change}">Year</button>
-      <button type="button" class="button tonal" aria-pressed="false"
-              data-period="6" data-total="${half.total}"
-              data-change="${half.change}">6 months</button>
     </div>
+    <figure class="line-chart area">
+      <figcaption class="visually-hidden">Revenue this year and last year</figcaption>
+      <table><!-- … --></table>
+    </figure>
   </div>
-  <figure class="line-chart area">
-    <figcaption class="visually-hidden">Revenue this year and last year</figcaption>
-    <table><!-- … --></table>
-  </figure>
 </article>
 
 <script>
@@ -287,52 +293,60 @@ ${cardScript.replace(/^/gm, "  ")}
         </p>
         <div class="flex flex-column gap-3" data-markdown-ignore>
             <article class="outlined">
-              <dl class="stats my-0">
-                <div><dt>Visitors this week</dt><dd>{sum(visitors).toLocaleString("en-US")}</dd><dd class="stat-change up">+14.5% from last week</dd></div>
-              </dl>
-              <figure class="line-chart area" style="--md-comp-line-chart-height: 120px; --md-comp-line-chart-line-width: 2px; --md-comp-line-chart-grid-color: transparent">
-                <figcaption class="visually-hidden">Visitors per day this week</figcaption>
-                <table>
-                  <thead><tr><th>Day</th><th>Visitors</th></tr></thead>
-                  <tbody>{days.map((day, i) => <tr><th>{day}</th><td>{visitors[i].toLocaleString("en-US")}</td></tr>)}</tbody>
-                </table>
-              </figure>
-            </article>
-            <article class="outlined">
-              <div class="flex align-center justify-between gap-3">
+              <div class="p-4">
                 <dl class="stats my-0">
-                  <div><dt>Balance</dt><dd>$5,000</dd><dd class="stat-change up">+25% over 14 days</dd></div>
+                  <div><dt>Visitors this week</dt><dd>{sum(visitors).toLocaleString("en-US")}</dd><dd class="stat-change up">+14.5% from last week</dd></div>
                 </dl>
-                <figure class="line-chart sparkline area flex-1 my-0" style="--md-comp-line-chart-height: 72px">
-                  <figcaption class="visually-hidden">Balance over 14 days</figcaption>
+                <figure class="line-chart area" style="--md-comp-line-chart-height: 120px; --md-comp-line-chart-line-width: 2px; --md-comp-line-chart-grid-color: transparent">
+                  <figcaption class="visually-hidden">Visitors per day this week</figcaption>
                   <table>
-                    <thead><tr><th>Day</th><th>Balance</th></tr></thead>
-                    <tbody>{balance.map((value, i) => <tr><th>Day {i + 1}</th><td>{money(value)}</td></tr>)}</tbody>
+                    <thead><tr><th>Day</th><th>Visitors</th></tr></thead>
+                    <tbody>{days.map((day, i) => <tr><th>{day}</th><td>{visitors[i].toLocaleString("en-US")}</td></tr>)}</tbody>
                   </table>
                 </figure>
+              </div>
+            </article>
+            <article class="outlined">
+              <div class="p-4">
+                <div class="flex align-center justify-between gap-3">
+                  <dl class="stats my-0">
+                    <div><dt>Balance</dt><dd>$5,000</dd><dd class="stat-change up">+25% over 14 days</dd></div>
+                  </dl>
+                  <figure class="line-chart sparkline area flex-1 my-0" style="--md-comp-line-chart-height: 72px">
+                    <figcaption class="visually-hidden">Balance over 14 days</figcaption>
+                    <table>
+                      <thead><tr><th>Day</th><th>Balance</th></tr></thead>
+                      <tbody>{balance.map((value, i) => <tr><th>Day {i + 1}</th><td>{money(value)}</td></tr>)}</tbody>
+                    </table>
+                  </figure>
+                </div>
               </div>
             </article>
         </div>
 <Code code={`
 <article class="outlined">
-  <dl class="stats my-0">…</dl>
-  <figure class="line-chart area" style="
-      --md-comp-line-chart-height: 120px;
-      --md-comp-line-chart-line-width: 2px;
-      --md-comp-line-chart-grid-color: transparent">
-    <figcaption class="visually-hidden">Visitors per day this week</figcaption>
-    <table><!-- … --></table>
-  </figure>
+  <div class="p-4">
+    <dl class="stats my-0">…</dl>
+    <figure class="line-chart area" style="
+        --md-comp-line-chart-height: 120px;
+        --md-comp-line-chart-line-width: 2px;
+        --md-comp-line-chart-grid-color: transparent">
+      <figcaption class="visually-hidden">Visitors per day this week</figcaption>
+      <table><!-- … --></table>
+    </figure>
+  </div>
 </article>
 
 <article class="outlined">
-  <div class="flex align-center justify-between gap-3">
-    <dl class="stats my-0">…</dl>
-    <figure class="line-chart sparkline area flex-1 my-0"
-            style="--md-comp-line-chart-height: 72px">
-      <figcaption class="visually-hidden">Balance over 14 days</figcaption>
-      <table><!-- … --></table>
-    </figure>
+  <div class="p-4">
+    <div class="flex align-center justify-between gap-3">
+      <dl class="stats my-0">…</dl>
+      <figure class="line-chart sparkline area flex-1 my-0"
+              style="--md-comp-line-chart-height: 72px">
+        <figcaption class="visually-hidden">Balance over 14 days</figcaption>
+        <table><!-- … --></table>
+      </figure>
+    </div>
   </div>
 </article>
 `} />

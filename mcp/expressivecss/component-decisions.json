@@ -1232,7 +1232,7 @@
           },
           {
             "path": "src/sass/abstracts/_mixins.scss",
-            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+            "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
           },
           {
             "path": "src/sass/abstracts/_variables.scss",
@@ -1345,7 +1345,7 @@
           },
           {
             "path": "src/sass/abstracts/_mixins.scss",
-            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+            "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
           },
           {
             "path": "src/sass/abstracts/_variables.scss",
@@ -2353,7 +2353,7 @@
         "sources": [
           {
             "path": "src/sass/abstracts/_mixins.scss",
-            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+            "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
           },
           {
             "path": "src/sass/components/_line-chart.scss",
@@ -2465,7 +2465,7 @@
         "sources": [
           {
             "path": "src/sass/abstracts/_mixins.scss",
-            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+            "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
           },
           {
             "path": "src/sass/components/_column-chart.scss",
@@ -2577,7 +2577,7 @@
         "sources": [
           {
             "path": "src/sass/abstracts/_mixins.scss",
-            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+            "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
           },
           {
             "path": "src/sass/components/_bar-chart.scss",
@@ -2692,7 +2692,7 @@
         "sources": [
           {
             "path": "src/sass/abstracts/_mixins.scss",
-            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+            "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
           },
           {
             "path": "src/sass/components/_pie-chart.scss",
@@ -2803,11 +2803,11 @@
         "sources": [
           {
             "path": "src/sass/abstracts/_mixins.scss",
-            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+            "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
           },
           {
             "path": "src/sass/components/_heatmap-chart.scss",
-            "sha256": "8a7d129f52bb3984e2b05f1f4ab55840a6860daf5efd63fe46a01b578b14fb73"
+            "sha256": "e6c9b7e74463c09ce71d7406e07303ae6e78bd2f44e69f0031b83a337ed8ee11"
           },
           {
             "path": "src/ts/components/heatmapChart.ts",
@@ -2913,7 +2913,7 @@
         "sources": [
           {
             "path": "src/sass/abstracts/_mixins.scss",
-            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+            "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
           },
           {
             "path": "src/sass/components/_radar-chart.scss",
@@ -3024,7 +3024,7 @@
         "sources": [
           {
             "path": "src/sass/abstracts/_mixins.scss",
-            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+            "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
           },
           {
             "path": "src/sass/components/_radial-chart.scss",
@@ -3133,7 +3133,7 @@
         "sources": [
           {
             "path": "src/sass/abstracts/_mixins.scss",
-            "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+            "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
           },
           {
             "path": "src/sass/components/_mixed-chart.scss",
@@ -6591,21 +6591,43 @@
   ],
   "capabilityBrowserEvidence": {
     "collector": "scripts/record-capability-evidence.mjs",
-    "recordedOn": "2026-09-18",
+    "recordedOn": "2026-10-08",
     "engine": "chromium",
     "engineVersion": "153.0.8010.12",
-    "nodeVersion": "v22.23.1",
+    "nodeVersion": "v24.21.0",
     "status": "passed",
     "files": [
+      "tests/accordion-browser.test.js",
+      "tests/avatar-browser.test.js",
+      "tests/bar-chart-browser.test.js",
       "tests/button-groups-browser.test.js",
       "tests/cards-browser.test.js",
+      "tests/column-chart-browser.test.js",
+      "tests/command-palette-browser.test.js",
+      "tests/data-table-browser.test.js",
+      "tests/drop-zone-browser.test.js",
+      "tests/empty-state-browser.test.js",
       "tests/expanding-card-browser.test.js",
       "tests/expressivecss-examples-browser.test.js",
       "tests/expressivecss-lifecycle-browser.test.js",
       "tests/expressivecss-material-quality.test.js",
       "tests/expressivecss-web-accessibility-browser.test.js",
+      "tests/heatmap-chart-browser.test.js",
+      "tests/line-chart-browser.test.js",
       "tests/menu-field-browser.test.js",
-      "tests/split-button.test.js"
+      "tests/message-browser.test.js",
+      "tests/mixed-chart-browser.test.js",
+      "tests/pie-chart-browser.test.js",
+      "tests/popover-browser.test.js",
+      "tests/radar-chart-browser.test.js",
+      "tests/radial-chart-browser.test.js",
+      "tests/rating-browser.test.js",
+      "tests/skeleton-browser.test.js",
+      "tests/split-button.test.js",
+      "tests/stat-browser.test.js",
+      "tests/stepper-browser.test.js",
+      "tests/timeline-browser.test.js",
+      "tests/tree-browser.test.js"
     ],
     "inputs": [
       {
@@ -6618,15 +6640,15 @@
       },
       {
         "path": "src/sass/abstracts/_index.scss",
-        "sha256": "018019398fc34022e17fa049a2253fca9dff4c4ae9528618690df89b38d2631d"
+        "sha256": "c5f7c6d8d1191621b1dd221479efba2acfdbe6eb2fe73151275f9669877c2ea7"
       },
       {
         "path": "src/sass/abstracts/_mixins.scss",
-        "sha256": "734b13a6a1775f1f293e49c16f50697cb9f3e6b0fc20c23bd2f950a87f7dede7"
+        "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
       },
       {
         "path": "src/sass/abstracts/_variables.scss",
-        "sha256": "e8a5dfd7355cefde5a87775455cb95ac41c735f0d407a7b23ef94b2ec1ed8fd8"
+        "sha256": "0687f4a8247a180fc51793aee67d6ab0a0ad348e9d40e6f392f3b4811e7e1cb2"
       },
       {
         "path": "src/sass/base/_fonts.scss",
@@ -6650,15 +6672,27 @@
       },
       {
         "path": "src/sass/base/_typography.scss",
-        "sha256": "fc8b4d714a911e38fb3dd3e9105853ff33ce3c96fdde984c932f9748b83b9204"
+        "sha256": "05a69281877a119b6e744f2f57793721434b80bcf17a44e60e5b2779bcc753f4"
+      },
+      {
+        "path": "src/sass/components/_accordion.scss",
+        "sha256": "cd9c2657f1f840f721575335ffd05d8cd176b2f94c37637341121485901833ee"
+      },
+      {
+        "path": "src/sass/components/_avatar.scss",
+        "sha256": "07b6f8fef3f3a65943f319bc034520b11eae4bd6b41feade183f51fcd2e5cf47"
       },
       {
         "path": "src/sass/components/_badges.scss",
         "sha256": "f249dc305b207a60c642863fb652282310e956049ec3e7eff51782c962b4bd26"
       },
       {
+        "path": "src/sass/components/_bar-chart.scss",
+        "sha256": "f819b1e6a9106a7999cc0248e92accdf22e7790d4ea7d66bc1131a4d9602712a"
+      },
+      {
         "path": "src/sass/components/_bottom-sheet.scss",
-        "sha256": "0f6edc494bfafba25fd34dbddee8d405f8d9b5e4567be6ca99bd0b19cb41f54c"
+        "sha256": "3769e3b98da7466d2fcb0503c0d47e28788d65bbf436a904c43b6e6eb59c208e"
       },
       {
         "path": "src/sass/components/_breadcrumb.scss",
@@ -6670,19 +6704,31 @@
       },
       {
         "path": "src/sass/components/_buttons.scss",
-        "sha256": "88b209cbb7075e82a433bcf1167a5e6d4275db83bc9ceea01d54207966f5006a"
+        "sha256": "be8b53a9969e443b7f98d106f1d14db694a58728844c920fadf2e0ae37ca62c4"
       },
       {
         "path": "src/sass/components/_cards.scss",
-        "sha256": "506c13fe1a87f9397037ead0aaefdfb79f9e201523d9b39fd00b66cbd17a6bfb"
+        "sha256": "d79eefdc47aae6fd30b9346d2e86e5d8772e64994569f68d1541ced58f552509"
       },
       {
         "path": "src/sass/components/_carousel.scss",
-        "sha256": "5a9a8e459c61e84fa4d205fd25e9fd7520f0c80489ad816ba6198fe3ebd71f3f"
+        "sha256": "b6d452e406fa9f34759bd55256c1a2303a6909b2ee3ec6714a67091e8d7c6638"
       },
       {
         "path": "src/sass/components/_chips.scss",
-        "sha256": "66a42ca22049ef7149b9ff20798548a50b63f40922b89f3ce56d0f41dfec7299"
+        "sha256": "7edd85c5caada8feda941eb08894592aba439760eb38bb8cd49ff4a73c748958"
+      },
+      {
+        "path": "src/sass/components/_column-chart.scss",
+        "sha256": "a8434058d5f4a486061317f871d4cabc433934d8127f9dc216bb47b40b0dbee6"
+      },
+      {
+        "path": "src/sass/components/_command-palette.scss",
+        "sha256": "d9d4dd1fe2b3bc60aa29203a7526139e8e75e6d7b2a76bbe2dd59e671f62ed0d"
+      },
+      {
+        "path": "src/sass/components/_data-table.scss",
+        "sha256": "dbce2d8f374bb0f5bc7008725c0e8ed680df39d9bb111fea4219b8d120558e9c"
       },
       {
         "path": "src/sass/components/_datepicker.scss",
@@ -6690,7 +6736,7 @@
       },
       {
         "path": "src/sass/components/_dialog.scss",
-        "sha256": "835698c315ce9b7df2ad77ce0e55ec960fff289c99354bba4ef9400864f13607"
+        "sha256": "f1278118f971cae292378b5496954fe38d9a4577717b733ff554b1dffa4747fd"
       },
       {
         "path": "src/sass/components/_docked-display.scss",
@@ -6701,12 +6747,20 @@
         "sha256": "a1ba374ed080c749b0c8f4f5fe6f931bebfe5d12c8151ecfa72b484810e0e238"
       },
       {
+        "path": "src/sass/components/_empty-state.scss",
+        "sha256": "5740d50963b3e2cb7a62330f0260d4b1a0c89ff2bc051c9bb83f82e23dbdcabe"
+      },
+      {
         "path": "src/sass/components/_expanding-card.scss",
-        "sha256": "199e0dfaddb39af5acb823e8dbc7933a459b765efad19cc28d0403ebe3942f5f"
+        "sha256": "a9db28346c8b6d9c0bf198e07ded62b63b34e6eac7d0221396322efd29045056"
       },
       {
         "path": "src/sass/components/_fab-menu.scss",
         "sha256": "e40c4871f38141ec874e1acf48db87727e433b3ec9c7cae6b51712306c9ec2b3"
+      },
+      {
+        "path": "src/sass/components/_heatmap-chart.scss",
+        "sha256": "e6c9b7e74463c09ce71d7406e07303ae6e78bd2f44e69f0031b83a337ed8ee11"
       },
       {
         "path": "src/sass/components/_icon-buttons.scss",
@@ -6718,11 +6772,15 @@
       },
       {
         "path": "src/sass/components/_index.scss",
-        "sha256": "280e04b62a78b8dccc38ddf77c312a06486421b45867428b119e3a87d4e4f63b"
+        "sha256": "faa6f10dd6d590bee2c33789517969bfe4e74d9fc667ad6ad7f1e4a10b428d42"
       },
       {
         "path": "src/sass/components/_lightbox.scss",
         "sha256": "df62c6c3d359089fcb5f7fe2500464afb8f6cb7c57fbc3f7a04a0cf9fc452599"
+      },
+      {
+        "path": "src/sass/components/_line-chart.scss",
+        "sha256": "cf8029ceb68d9abb123876fbccc2f83567aaf373354edeab57add74be375c957"
       },
       {
         "path": "src/sass/components/_list.scss",
@@ -6734,23 +6792,31 @@
       },
       {
         "path": "src/sass/components/_menu.scss",
-        "sha256": "64ef33e268c01dd8f24a9f28198b4ae982bcd2d9a4d7f59f7fc334e0d2916774"
+        "sha256": "fc7456249caec5118a379c9d56c7a7bfb211c147f5fd318bbcf8de6ea1d33654"
+      },
+      {
+        "path": "src/sass/components/_message.scss",
+        "sha256": "a1b7c89089ac37ccbf2127c1c7bc4f394fd1a27253ec07208caf379a2ffa8240"
+      },
+      {
+        "path": "src/sass/components/_mixed-chart.scss",
+        "sha256": "4195fbf13249ef7bf4da8560f5b0ccbc715367f2b5771c3b96a255af4b9e39bb"
       },
       {
         "path": "src/sass/components/_navbar.scss",
-        "sha256": "2d3a2accd4d0dfeb524f628f9eb2be81bad5a50ab7feea40c0c0ddd58016da96"
+        "sha256": "6cb45a812a9c14572d9a4261e0d36b7a89321adc5647bc8e39ce3410b75b57d5"
       },
       {
         "path": "src/sass/components/_navigation-bar.scss",
-        "sha256": "e42c5c395c9f2cdc1dc9c8c4cfdff1a06cb12183cae1d17bcea915536f0aa9c2"
+        "sha256": "cfc192f6284aeeffd5ba0cbaba968d68108bf60343c7278752ae7424e777db5d"
       },
       {
         "path": "src/sass/components/_navigation-rail.scss",
-        "sha256": "a2d96e8eada8504003fa910d15565cbaeb6fdcec12b67ef166ba0cdaa86a1873"
+        "sha256": "1928870f453b486f8ee86a0f1e386b7fba24dc4a1acd06292ac210d701f809bd"
       },
       {
         "path": "src/sass/components/_page-footer.scss",
-        "sha256": "71f385db254eb07874be949d5bcb0cdd0ec8835342c1d5a89ba0def76d3668ab"
+        "sha256": "68f4f28773946707239b84419a512acc18b507763893bccaed26d1ae41543f8c"
       },
       {
         "path": "src/sass/components/_pagination.scss",
@@ -6761,8 +6827,24 @@
         "sha256": "107d45899b9a41448563215bf670c5f96f25cb9153b8ff173941d5f12b90839b"
       },
       {
+        "path": "src/sass/components/_pie-chart.scss",
+        "sha256": "ea811ee29aff2b8e8407ed419d13491b6b1eb639e28669cdd8c5de512b1dd87e"
+      },
+      {
+        "path": "src/sass/components/_popover.scss",
+        "sha256": "62b149ae34e4e786a1a02a4a12e2208eaff63c08e54fe0a090397b6dd24e4437"
+      },
+      {
         "path": "src/sass/components/_progress.scss",
-        "sha256": "4ae2e0a25ea35d6eca684c1556f961c87062481a5eed384f5e5da740d5653a2d"
+        "sha256": "2d83fa4f8072f6944b9069c397b366d2318823ed8c5c040229b59e504ccba0e2"
+      },
+      {
+        "path": "src/sass/components/_radar-chart.scss",
+        "sha256": "a5f8e6984dfc02b0c7fb2a23f6c1311f733de6b853e0b675c95a58d18da05006"
+      },
+      {
+        "path": "src/sass/components/_radial-chart.scss",
+        "sha256": "4ebff333a3820b516fac11c5be053041d0d5c8a9841b579f35ef47e6cdc247fb"
       },
       {
         "path": "src/sass/components/_scrim.scss",
@@ -6774,19 +6856,31 @@
       },
       {
         "path": "src/sass/components/_search.scss",
-        "sha256": "827fd893f6c3ac380a95ed3f5febd3a4fff4fee29cac5b1fb230df5e6f051c76"
+        "sha256": "a23203e638f6ad66660f3e786b26460302702890883b5ebd4a6d1a6108196f9a"
       },
       {
         "path": "src/sass/components/_side-sheet.scss",
-        "sha256": "6b1110f3fb68032d603d2b6e05832ad4020cd285d76bf940f993fb941accb067"
+        "sha256": "1fa872f766de3e3cae5144da9df5d3ec70bcd6db74b85351d1f718285145beba"
+      },
+      {
+        "path": "src/sass/components/_skeleton.scss",
+        "sha256": "f22efd82847af981cf225a0991a471e5fd25f7cdb07c1e0ec80195e937b13818"
       },
       {
         "path": "src/sass/components/_snackbar.scss",
-        "sha256": "538018b8fc0728c1d2933507cb6dd1c24ea6db1e8924449fb9b4e132c3c53d4e"
+        "sha256": "2558492a9f9650e5872a15632d3c90b5a02bedd9e675fa33767377685714d4f0"
       },
       {
         "path": "src/sass/components/_split-button.scss",
         "sha256": "8afbc0079bfe13d514e8680086e5b2cdd50d9b0e68e5354d378809445f78eec4"
+      },
+      {
+        "path": "src/sass/components/_stat.scss",
+        "sha256": "50a15a771c7e73f72b2813e2b68b1a946911974c6ac7d482b0a35db4b774d4aa"
+      },
+      {
+        "path": "src/sass/components/_stepper.scss",
+        "sha256": "0efd332c2e84cd20bdf98ab9b1645aecb174cc6042f55abeb7b78383db32be12"
       },
       {
         "path": "src/sass/components/_table_of_contents.scss",
@@ -6797,56 +6891,72 @@
         "sha256": "136d7b15bffd791fdaef451f98fad945bd478a25163528aac572b1f94903d9f6"
       },
       {
+        "path": "src/sass/components/_timeline.scss",
+        "sha256": "75d0c9d03e48ca32661b641bdab7890e2e50b3f6d17338bdfc4cb1977c7fc817"
+      },
+      {
         "path": "src/sass/components/_timepicker.scss",
-        "sha256": "87330125fa818b3463a1c4e4f80535e7551d39bdd83795462ac8ec0cc092c439"
+        "sha256": "bcd6a37362d85914a6470b8076c2eec1ab46733c6b0b9f1ff673f255643de7e0"
       },
       {
         "path": "src/sass/components/_toolbar.scss",
-        "sha256": "f4e91a095401ebd35ab97ecf7e8bb63c980b0a66be88b7d84e944bd17fba7d3a"
+        "sha256": "0bfd3014f3a8cd2f6ec04ea0af2b892ab89ede8f6252381b2643357d81fe76b7"
       },
       {
         "path": "src/sass/components/_tooltip.scss",
-        "sha256": "c87c53191363353be505a7a0cc4f3d2b4111929bce706ef77e9345db0a28258e"
+        "sha256": "47e378ebf6b884e740d4e204e1b98ae83b7d7ed1174d3a09b223b68390004496"
       },
       {
         "path": "src/sass/components/_transitions.scss",
         "sha256": "fe0c65c4a4de2af661aa39eae2629e5e76f73e681ef5b686694bbbee62eaff77"
       },
       {
+        "path": "src/sass/components/_tree.scss",
+        "sha256": "3d290dec16e25b71a3e06cbd5fafd3340253659fbf9d95953193dab29b10aa21"
+      },
+      {
         "path": "src/sass/components/forms/_checkboxes.scss",
-        "sha256": "3fd662bcbca486e3b05413ce9b1ff9a10a8002e3e3ea6e853bd179e8fcfe2f09"
+        "sha256": "14bbdc5bf3c4db17635ff3f4b96848bbdbcaa005cfd8ba43c96525e1f503d536"
+      },
+      {
+        "path": "src/sass/components/forms/_drop-zone.scss",
+        "sha256": "dcc9dc0e721c0057266092591634249620143d8b7350ff867651806c59ad10b1"
       },
       {
         "path": "src/sass/components/forms/_fieldset.scss",
-        "sha256": "0de91ee778fb360cd8a5451c920df81dd2b1cd5fb9d26993729afe1f745d7e65"
+        "sha256": "5d2a174d889bc97608b200cff7299fb082dd9fb256ad7cc8821ef5ed313921fe"
       },
       {
         "path": "src/sass/components/forms/_file-input.scss",
-        "sha256": "cc856d49ae84dcae4970c75dd587194b69219a4f707ad95d4598d974eb491221"
+        "sha256": "ccc130c28cd0109ccef7e28eab6cbbe306d2a380405a1cf7091524a7868a258f"
       },
       {
         "path": "src/sass/components/forms/_index.scss",
-        "sha256": "d9906468988a57568d0e703fe39b3ebae415b25aba0e064c7503ab9228fcec16"
+        "sha256": "9f8f228b1cf05c50ef413777470386f34bee87de99e33547e52fb94b55ccac57"
       },
       {
         "path": "src/sass/components/forms/_input-fields.scss",
-        "sha256": "67218e72a075d4cd71e82f96b442e1058ecbabfad56bc535d0b2cb06bc742261"
+        "sha256": "a57917019881ef5f633cef6ed9ac7e53fa009138a7657ea3d1a728fe666b0227"
       },
       {
         "path": "src/sass/components/forms/_radio-buttons.scss",
-        "sha256": "a8054892643f184463052ad5e566ee0d8c96d2f125f9dea433915eba5f3b7cf1"
+        "sha256": "ce6d4cf6fe3ea48faac681825a292744498d28ab87a23acc065ca90eabd42854"
+      },
+      {
+        "path": "src/sass/components/forms/_rating.scss",
+        "sha256": "8b0c0e77791f4e88681a12ff2c78758be20d5ece7129c914e4cf6881a6b61300"
       },
       {
         "path": "src/sass/components/forms/_select.scss",
-        "sha256": "2e651be3951b59c99f827b190df52d302ffe5f548300767e653b9d09e7b18609"
+        "sha256": "d360405d6a315e4ff8be9936ac1bc0e7ec0c01ad300d177a87de54a096937bec"
       },
       {
         "path": "src/sass/components/forms/_slider.scss",
-        "sha256": "355a280e40d21326ee57cd1ff66dcdbc2f02fad5f9abde2fac50623b61d3b488"
+        "sha256": "1f5a04bd71c371d12b3beb016625e26a9e1e87aa194b3a9c90ca3b8863b22e8e"
       },
       {
         "path": "src/sass/components/forms/_switches.scss",
-        "sha256": "3700fa309d0524fce4eff27c1f337d1ab03f592c567423a275cc9332144b2e8a"
+        "sha256": "3d9e047a1ecb7c987cc5645fbfc7d0a918a0ab73abc0ffdac99764c9f4656d70"
       },
       {
         "path": "src/sass/custom.scss",
@@ -6858,7 +6968,7 @@
       },
       {
         "path": "src/sass/README.md",
-        "sha256": "a928d86f6f9c8dbe35989ed5f28d56b1d8dea1d03c1f1b4208abf738ef185f30"
+        "sha256": "dbbeb118f324c5a4aae9080a24ad448bed3810e2e0f0bd7df6a3b40f93dc503a"
       },
       {
         "path": "src/sass/tokens/_index.scss",
@@ -6866,7 +6976,7 @@
       },
       {
         "path": "src/sass/tokens/_reference.scss",
-        "sha256": "5725dc82aedcd277d99ff8a5483866b08970647bdd2fc3c67c662d958cd15f4d"
+        "sha256": "c3763ea4853d7d3f8487dda6722cbc957aa17e31a647ac20b80f83c384c9ec76"
       },
       {
         "path": "src/sass/tokens/_state.scss",
@@ -6886,15 +6996,19 @@
       },
       {
         "path": "src/sass/utilities/_helpers.scss",
-        "sha256": "562299f417909982cfe401e0e5ad100bb51ba75c910d96434db59c2c14baacd8"
+        "sha256": "9ad36a4457b323138ff69130927feb358ba79706d92b50bc359e810e85f84c17"
       },
       {
         "path": "src/sass/utilities/_index.scss",
-        "sha256": "0405c93293cca85c9b3e8465f0d2330909417743632605ae8b108ecfb060420c"
+        "sha256": "f8fcdbc701733f2bfe72386decf1124b22d1da19d25b6527eba16bfdc54f239c"
+      },
+      {
+        "path": "src/sass/utilities/_scroll-area.scss",
+        "sha256": "1adfbcfa44cc48e5b437073fb440e7cb5d5e477cd8351e0bff014279f834e880"
       },
       {
         "path": "src/sass/utilities/_spacing.scss",
-        "sha256": "5740fa521d7f767f437a1735000466ce561e25ea2e7de4a620abf7245146e988"
+        "sha256": "802964615dfd90f72ee6024af7002968d6f1a191f711dd028a34cb139f6f0d5b"
       },
       {
         "path": "src/sass/utilities/_typescale.scss",
@@ -6902,7 +7016,7 @@
       },
       {
         "path": "src/sass/utilities/_visibility.scss",
-        "sha256": "05b198669d4826fbd876285d3f8713c87e05e3903e1f90ec26bdc8db64be2acd"
+        "sha256": "5d18cc61ead66e8113886963e5029daca7a08a17e338cda537ab844c4eda5177"
       },
       {
         "path": "src/sass/utilities/_z-depth.scss",
@@ -6918,11 +7032,11 @@
       },
       {
         "path": "src/ts/behaviors/forms.ts",
-        "sha256": "c90046cd163d73d9046b0bfc2b4888ba87626704782f295054d9da63b3395d57"
+        "sha256": "57733061183d4f3adbedd53803d19f26c4d31ca2459cd1707a5266b8bff46d9a"
       },
       {
         "path": "src/ts/behaviors/sheetDrag.ts",
-        "sha256": "0f5714a2a1fbb5c20a45f0c6a8cc617959e7b8572128ee8860db909f0d96f3bd"
+        "sha256": "a859bc0cfc2ae1522d387b50aab56e82be7071eeef243f6f00410a5fe48f9c8b"
       },
       {
         "path": "src/ts/behaviors/sideSheets.ts",
@@ -6930,11 +7044,15 @@
       },
       {
         "path": "src/ts/components/appBar.ts",
-        "sha256": "91ddc61000a36923995b3633743dd83452d43671c40ae923318dedfeff38893e"
+        "sha256": "6fe4e6f9d55d1820530b731914259dfb677d4e06fcf37137eb930a707cc41fc6"
       },
       {
         "path": "src/ts/components/autocomplete.ts",
-        "sha256": "6a8721927c2928325536846bfa648c603aafb9100efe9a9c88d25afb54492886"
+        "sha256": "903c7add38e73c4e57ef936d48cf9306682e91da5afbd0635a3a063b482b58d0"
+      },
+      {
+        "path": "src/ts/components/barChart.ts",
+        "sha256": "0830bb0f5cb198ceff231e622f4ad296efc379ef75c47e8ad826dd336f2e922a"
       },
       {
         "path": "src/ts/components/buttonGroup.ts",
@@ -6950,7 +7068,7 @@
       },
       {
         "path": "src/ts/components/carousel.ts",
-        "sha256": "9559aa36e59e4f15b5fbfbc7ff6acd0ff85ce2498972ae7a42b2510825c22224"
+        "sha256": "f4b3099fd11a3333d0f915ea3253375823c1fdd607116b4de884ded7ae35f15e"
       },
       {
         "path": "src/ts/components/characterCounter.ts",
@@ -6958,71 +7076,103 @@
       },
       {
         "path": "src/ts/components/chips.ts",
-        "sha256": "91bff7f26235119f8b807ccbb667d6a233dc092ee6ed3ad6d3d0a3c139cdf624"
+        "sha256": "ef36c69c467151dc8f9bea2efc56c5c32523dd9d90f63d4431e913bb9557fb89"
+      },
+      {
+        "path": "src/ts/components/columnChart.ts",
+        "sha256": "3c8ad721e3abc034c763870081d87a2df0aaf2470d212f03c51086e0ee5deb7d"
+      },
+      {
+        "path": "src/ts/components/commandPalette.ts",
+        "sha256": "55fb823a7e70d5cc7d22cd10a84054badac5a7d5df7274d3b67aa044349a642e"
       },
       {
         "path": "src/ts/components/datepicker.ts",
-        "sha256": "8b984fde17d52ec658fd1b338255fc664ea87b279d4a40321e22f8c841b9f228"
+        "sha256": "12ae366428fc6629864055647a83f3e12905ab80dd5a6316db91cfd09c843c2b"
       },
       {
         "path": "src/ts/components/expandingCard.ts",
         "sha256": "b776a51297bb066b41ce2c035370eac02c62fa7daa61bb1ce4cf57d2c74edff5"
       },
       {
+        "path": "src/ts/components/heatmapChart.ts",
+        "sha256": "c645df4cbb79baaacbe139fff85610cc033b2cec5091c465160294a634c4b997"
+      },
+      {
         "path": "src/ts/components/index.ts",
-        "sha256": "15e124d9d7386e4d5d23bf045bf4d716ac2624bb09617c02bdf4994d07e5640c"
+        "sha256": "0af90685bc8d0d7e583a1c69536d7c45daf2c28324a7e59602e00896a98020d5"
       },
       {
         "path": "src/ts/components/lightbox.ts",
         "sha256": "1e334f6efb12867bc2d75793f042d3b0df0488bcc8cab97236992387c696746e"
       },
       {
+        "path": "src/ts/components/lineChart.ts",
+        "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
+      },
+      {
         "path": "src/ts/components/menu.ts",
-        "sha256": "e0fb0c0f6492652fdea2c7bf4189eabad261d5506ec93a22fac508da67d89660"
+        "sha256": "0ca7f4c0d80012adad3babdfc23005792dbaa2655c3fe5595bc9bcc7e2c35ce8"
+      },
+      {
+        "path": "src/ts/components/mixedChart.ts",
+        "sha256": "3c4bc2efee52a5ec53e9318467e9802efbe17b016b4d977c0b3a95ba0f4b52ba"
       },
       {
         "path": "src/ts/components/navigationRail.ts",
-        "sha256": "f7b4e682a87ea664dc8b8927ea86a784fd61ab1d538a9996f97d5c2e95db4406"
+        "sha256": "3e6c8f71742235994c3533a56033903765eecbfa1d3ae4d10e7e6dd565800940"
+      },
+      {
+        "path": "src/ts/components/pieChart.ts",
+        "sha256": "d346e4b9b82814107f71872643a627971a249474de46cbc1f5bf4e4a5282811f"
+      },
+      {
+        "path": "src/ts/components/radarChart.ts",
+        "sha256": "ee6c818e8bc8ad11f06d4419e3c45234c2de7cdfaf5eca103b93a1c372d7ba0d"
+      },
+      {
+        "path": "src/ts/components/radialChart.ts",
+        "sha256": "2d6acf36785432d8c8ad32adc3aabe0441ad41efe7f14e78c707b1077b7e548e"
       },
       {
         "path": "src/ts/components/registry.ts",
-        "sha256": "7009af5bbf63275b5f6f90295e74178caf84b6a798096ba5ad9118025bb734c9"
+        "sha256": "e857ee3fca052b8a36db390aafffb1a93276cb2975853d2aec1addc1062b851f"
       },
       {
         "path": "src/ts/components/scrollspy.ts",
-        "sha256": "d35d756f8cabcd9bf95aafe9646630309606977fc1bc0347f3e1ded5eba5a3a6"
+        "sha256": "dd7d9babc18578824804f6c8c6b622c307712a7a93e6a40f4cbd6727f4814fd2"
       },
       {
         "path": "src/ts/components/select.ts",
-        "sha256": "42977975bb11210ec87701131c3536809b3109e173ccffd724e89817d9561af7"
+        "sha256": "b375715a62baae95a7ba2c97d85d60ee2c619d5d261ee0abf9aea7ab28c3ae74"
       },
       {
         "path": "src/ts/components/slider.ts",
-        "sha256": "9d42da6e411ceb7604d851e9df2c56738de6ab5dd5e7b18343797c76af8526e3"
+        "sha256": "d6591284f074bb8774ca890c9e5d4f61b7cc1ca23f1d47b2e10a14c0d4cf6498"
       },
       {
         "path": "src/ts/components/snackbar.ts",
-        "sha256": "bdd9102fe63359912096f1e6aa0687a61ec929f4ba50cdcdfa02c69642cb32dc"
+        "sha256": "0fa8bf5e3c774b76c846b1e8c6e35e8d0f6b05bb18e1c486f9a387d9a8e179dd"
       },
       {
         "path": "src/ts/components/tabs.ts",
-        "sha256": "72657d5e40d49a8d84357753eb81d488a8756827f83bb5102b9f6269854516cf"
+        "sha256": "42bb556083a39c6fe194a02c489e1844f00579604a8eb9bbc76f97c196550c52"
       },
       {
         "path": "src/ts/components/timepicker.ts",
-        "sha256": "1f74375f4917dce48e955b25f482af13a06bdc9bd7e16f967b661c3168a3bf15"
+        "sha256": "f3b81df00b3a3146670f29350dbc154ef053c21800add11d2c109a99cfe182a6"
       },
       {
         "path": "src/ts/components/tooltip.ts",
-        "sha256": "ac745d62a69b9d2b40239aeab42e009a46e2fcf3475660ccae6cedd662bbe047"
+        "sha256": "1fb60d8396973881ea030378fb3d3110e5a8686e586726dfb310f7ef79bcfb7f"
       },
       {
         "path": "src/ts/core/component.ts",
-        "sha256": "865a48796e96cb8ca1ad62fb7f92f8f93d19bfe84630156465eb2825f0a0b347"
+        "sha256": "6e13aed2489595430580a692a047cc76c8a4c60f6036eb44c83e0b607e3da0f5"
       },
       {
         "path": "src/ts/core/utils.ts",
-        "sha256": "16175de2b2593d32215d30b3820ae17dfb951fcb7f35c3cd22fdfa2bb672d4c2"
+        "sha256": "30fa352ed24b025c2541610b5ec2905698eac1cb2a6c7e487b49f20bf6b52ec5"
       },
       {
         "path": "src/ts/index.ts",
@@ -7030,7 +7180,7 @@
       },
       {
         "path": "src/ts/modular.ts",
-        "sha256": "3c2de45113f2e4d383fc0833f0cdc6639662ed33f70845b421f564e72bd3d395"
+        "sha256": "238d4fa40cd484698c353bfb93c578228ecd51787f0d24407857416fea3fb08e"
       },
       {
         "path": "src/ts/plugins/dockedDisplayPlugin.ts",
@@ -7038,35 +7188,47 @@
       },
       {
         "path": "src/ts/README.md",
-        "sha256": "7a9dfba9ecf9703596bacdec817d1389300e39d224a51ee20b272f205705ce77"
+        "sha256": "08253b6ead194551df05ceaf5fe7d3047423fbc662b009fcab9d8df60ea24fdc"
+      },
+      {
+        "path": "tests/accordion-browser.test.js",
+        "sha256": "a055eb24a8d15eabaa1bfc907038faed4e9f670524a49857f4e2a7727c8fd0ab"
       },
       {
         "path": "tests/app-bar-js.test.js",
-        "sha256": "92c40b66aad6966cda0c68cf3e7c12f699ec2aab3c7c4493f4137d50b268cedb"
+        "sha256": "30ac0a8c3df56664ecd3803bc421413885d56b26280dc94824aa654c59162be2"
       },
       {
         "path": "tests/app-bar.test.js",
-        "sha256": "d22e79a900e3faf0cd57e5347deef4f9452989940dc06e629bc3601a5d4a1590"
+        "sha256": "75abf25a4c43e3382ec0e553ed783d3462e56bd3bbda177cdc34c2cd38880fcf"
       },
       {
         "path": "tests/autoinit.test.js",
-        "sha256": "8ad7af9f497ce4cd720781537aad0656487de45bfb074d4aa9ab3de8a62e0c30"
+        "sha256": "1254afecd142c7b0d365b25b0332cbb6db60e9b48be1d1354bf003db42272d35"
+      },
+      {
+        "path": "tests/avatar-browser.test.js",
+        "sha256": "29d78e65ddaa7da177c1ff6726ee0833286388ec1025ab778fb075e00f4a48f9"
       },
       {
         "path": "tests/badges.test.js",
-        "sha256": "8c1df289ff6b66a4f7dee0b1700af4ef1def6160943871422dec35cdd4406fb9"
+        "sha256": "22eb04f92b2e1098c95974a192ee5d28351691787d08d3ed87355b016cc22ad8"
       },
       {
         "path": "tests/banner-removal.test.js",
         "sha256": "1b019df10bebd488612d45065fb1a35198a52998ff2ae87668e191c3d44f5156"
       },
       {
+        "path": "tests/bar-chart-browser.test.js",
+        "sha256": "b40f080d5b32b372ee5aa21b42146d2f7987803ead073adeb1717ab714f91a02"
+      },
+      {
         "path": "tests/bottom-sheet.test.js",
-        "sha256": "01c325223ec7de035f65c5dd2118e2e272cc643839803b6ba6db33cf1a3c1565"
+        "sha256": "9b1a8de7d97b6d86c4acedf1edf4bddadb90a8fcee07afbd3f6a4b0c4aa6fa15"
       },
       {
         "path": "tests/bundle.test.js",
-        "sha256": "0e7d9d19be01a6ff337339972f25e85c4a03f8b8cd5d0ff8d01fedafe11d49d5"
+        "sha256": "6b1768e554257c252d36d2b45ff6030b5c177b5121ccba914bccf7a43965cbe0"
       },
       {
         "path": "tests/button-group-js.test.js",
@@ -7074,7 +7236,7 @@
       },
       {
         "path": "tests/button-groups-browser.test.js",
-        "sha256": "3365e0bb8e1ac22b8eef9385993dd7ace1388cebe3425f1573bca9d976d0f15a"
+        "sha256": "3e86c002f7870747a15042ada9f8154373b39d0d902940e52ce1d339acc375dd"
       },
       {
         "path": "tests/button-groups.test.js",
@@ -7086,7 +7248,7 @@
       },
       {
         "path": "tests/cards-browser.test.js",
-        "sha256": "5ca33fcea6a53c7ffc6835046ac321ed10422aef309ca62bd7cd9da4e104b127"
+        "sha256": "3c5a825ccdaf544251b92bceac22a3d920aeb47a8ecf1230fa840d33fd6f88c8"
       },
       {
         "path": "tests/cards-semantics.test.js",
@@ -7094,15 +7256,19 @@
       },
       {
         "path": "tests/cards.test.js",
-        "sha256": "c45fbd791f476dfe9ce6111316be63841b20e35dffd93c3dfb5a54dae4e1150a"
+        "sha256": "8ab054cc7f3ee028d22a41844a0ee6253eb6809ab438d92d45e8e2fd56bd3fbf"
+      },
+      {
+        "path": "tests/carousel-interaction-browser.test.js",
+        "sha256": "ed1498c37e2906943a48bc166d5156335e882206cae669ee2866efa941c62cb3"
       },
       {
         "path": "tests/carousel.test.js",
-        "sha256": "5d216b9de4b0404497393d6f1f7ed0d8c771120846e6b66ff2ace0c42b5dfbc5"
+        "sha256": "6418264813a71b7b5b6643f4e0b62b649f1e011e63259c288f4ebde62c965227"
       },
       {
         "path": "tests/chips.test.js",
-        "sha256": "ae102bdda84ace5308955a3cfa5a36e0b56803a410ebe29206942ba064c79e1e"
+        "sha256": "14fb4a886fccedc2a87ceac49b2df77aa3acbe5dfa969f154ced8a83ae3d21ed"
       },
       {
         "path": "tests/color-drift.test.js",
@@ -7113,20 +7279,44 @@
         "sha256": "c28a199bcd91ecb3990f7e3fe9d7aa5b1590ba0abc0100b666eb539cfb457c2b"
       },
       {
+        "path": "tests/column-chart-browser.test.js",
+        "sha256": "2337a7de144bfa9128b3c01d89ac0e411f2cb98ac5daec150f24e1fa6b4b3979"
+      },
+      {
+        "path": "tests/command-palette-browser.test.js",
+        "sha256": "ff96b9f9fdb6fc0bbd845942b132776210a9c477a36ec89859f672712e840992"
+      },
+      {
         "path": "tests/components.test.js",
-        "sha256": "327f8fc83f5635d8873e4a4dfae6237465c706a10365d76a83a946cdde61ff93"
+        "sha256": "97ddaaa24ddf1392160360addf513a4d90590f8a8beae3f2651114b8fc01cead"
       },
       {
         "path": "tests/container-validation.test.js",
         "sha256": "a80836f09944ecc99eca11b480943b4f14483edab2f13a9897d3bda890f72cea"
       },
       {
+        "path": "tests/context-menu-browser.test.js",
+        "sha256": "16a980646e1a21cbab14a8c240de54b0f67b16b6db4852033ebaba0f23fd8798"
+      },
+      {
         "path": "tests/css.js",
         "sha256": "4e5885e4cace7c6611e6b9ff7c4c5da9099255eb95a1657f1c0b4d723dc7e607"
       },
       {
+        "path": "tests/data-table-browser.test.js",
+        "sha256": "89ebc0e18200fb91708e60af08e43ed6129531b7b7346e7b2478a814a1ebd7a5"
+      },
+      {
+        "path": "tests/datepicker-range.test.js",
+        "sha256": "7a1677427255241351c1dda51d77e85587a085054bb594ea60a195b317b8edba"
+      },
+      {
         "path": "tests/dialogs.test.js",
         "sha256": "00f25b587c278b0374505e667cb1639ce6addcd89c4e1af318d37e9298da6d24"
+      },
+      {
+        "path": "tests/docked-picker-browser.test.js",
+        "sha256": "4049bcc73c7c46422561a90f9164a1f319fd9a2445e579cd91d9c89694caed8e"
       },
       {
         "path": "tests/docker-runner.test.js",
@@ -7138,7 +7328,7 @@
       },
       {
         "path": "tests/docs-astro.test.js",
-        "sha256": "4f3ba422783ee04fd714c9deba6393824f244cc6229b80283e2c20e6dae67180"
+        "sha256": "a2c28c6e4296dbd5faac22e2173f6e8f20462c4d692415359aa69a411c1045de"
       },
       {
         "path": "tests/docs-code-blocks.test.js",
@@ -7151,6 +7341,14 @@
       {
         "path": "tests/drag-handle.test.js",
         "sha256": "f4ee594b1b15af6b5662221ce1064acf70faf58f513ec0ac751e642efb4ceec2"
+      },
+      {
+        "path": "tests/drop-zone-browser.test.js",
+        "sha256": "ceee279c7e17c3575895fa359f33f9cb0bcea87b39f050254ba1d5c51712a1ba"
+      },
+      {
+        "path": "tests/empty-state-browser.test.js",
+        "sha256": "36100d80fe99ec1ad0a9e9b490640a8406564755eda44f03d98a717621c0a04e"
       },
       {
         "path": "tests/expanding-card-browser.test.js",
@@ -7166,11 +7364,11 @@
       },
       {
         "path": "tests/expressivecss-component-decisions.test.js",
-        "sha256": "755dbfb9178ab75d7e6d05ec9234b7bd0a1eac2b901c3c37b64c188013c546ce"
+        "sha256": "6378f0d06f4000b5a0a32fc5ae6d36d794005d816a4dd61fe57bc3d028237a6f"
       },
       {
         "path": "tests/expressivecss-consumer-browser.test.js",
-        "sha256": "046027be9bcbe593b9335d95efadd3d8b1d517c902477b233f35c0ade1990b88"
+        "sha256": "b2b6e3bab74b2774608bbf4bc5dd118a6863bc5136f69a3afc9de6242b3f7474"
       },
       {
         "path": "tests/expressivecss-consumer.test.js",
@@ -7182,7 +7380,7 @@
       },
       {
         "path": "tests/expressivecss-eval-browser.test.js",
-        "sha256": "84c51c8752dff60aa6e0d9f1d2a641876ce6a726963ce8cd3b97a9d6f696ed8e"
+        "sha256": "69347ab369530a631510de6a56bf4c8d24eea699a0afc2624414706f1b06931c"
       },
       {
         "path": "tests/expressivecss-eval-provenance.test.js",
@@ -7190,7 +7388,7 @@
       },
       {
         "path": "tests/expressivecss-examples-browser.test.js",
-        "sha256": "50c52316a16c12ffb44a4a1aca3ee8e59dc39a3d99a3d268fadfe5290663d98c"
+        "sha256": "0832a9fd43f39ef58961d2c15358c3d8fec6e69019be3f2a92565f17cbf3ecd7"
       },
       {
         "path": "tests/expressivecss-interface-quality.test.js",
@@ -7198,7 +7396,7 @@
       },
       {
         "path": "tests/expressivecss-lifecycle-browser.test.js",
-        "sha256": "23f117a997e7a47f5f87ecba545f9efaa7a346854b4169969dcd7d8c47848496"
+        "sha256": "0f5ac01f529f72b3e13d663862655afe531e8edbeb50e2e1db2a46a5ef280fcb"
       },
       {
         "path": "tests/expressivecss-material-quality.test.js",
@@ -7214,23 +7412,27 @@
       },
       {
         "path": "tests/expressivecss-skill-evals.test.js",
-        "sha256": "8d6caa3b05a4b4c721cecde61f9604d0307646d4c574c14669ced064dcfcdb7f"
+        "sha256": "c678ee9844ec5f629c2edae4d84b9dad46aac2da4f56838c71650d3d4813d0c9"
       },
       {
         "path": "tests/expressivecss-skill.test.js",
-        "sha256": "3d60c79ab81ec40e2db90bef71b3e15f55681c6271db317ff3bb8eeddea8af21"
+        "sha256": "8a039a3024422c656f92f8ea3b0bc2ae7381de8d675df9fd9676a26936068c92"
       },
       {
         "path": "tests/expressivecss-version-resolution.test.js",
-        "sha256": "384da71c2514696381b14e36cadd24a6777b9bffedf6dde0f8507d69989fa102"
+        "sha256": "763e303e5005562f3754449d52a9d6fefd1be238ed03fd445e0fbc22220f732a"
       },
       {
         "path": "tests/expressivecss-web-accessibility-browser.test.js",
-        "sha256": "2eb46a7058160c2ff8de6ac946680542098211eca79c1baeb77021a6e8606490"
+        "sha256": "9551e69be5044a0dbe27a06675655dee24da57bb9df545a86554403514208b9b"
+      },
+      {
+        "path": "tests/field-addons-browser.test.js",
+        "sha256": "632e0bcf79589b467cec535861abd31a6e2e3bf7c8fcadf25cfe09f19829687e"
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/benchmark.json",
-        "sha256": "ca53174ed6d641684027ba6eba6dfd5df44fee2f50f561fe335634a47ce22202"
+        "sha256": "38cd73bc4704565b869c99c0b0e0375f40a35ed9dfd549e7662fb6cbe6642424"
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/cases.json",
@@ -7310,7 +7512,7 @@
       },
       {
         "path": "tests/fixtures/migration-consumer/app.mts",
-        "sha256": "30e9a54759f802a4320c58930f3ac3b070ddf15a9f3ec91435ddea84f6714bde"
+        "sha256": "e43bb7cb88b6a5885ce51558159f3b79e1b81b124ee34ecca441d0c748327d10"
       },
       {
         "path": "tests/fixtures/migration-consumer/app.scss",
@@ -7326,7 +7528,7 @@
       },
       {
         "path": "tests/fixtures.js",
-        "sha256": "ceaa2e4471aacef119548bb230b3d26c5e3aa4c836852b9cd68bee09cbf2ea48"
+        "sha256": "cc1ffc474155d478faf3d88e524294774be2b400e4d06621515889d570a2ae07"
       },
       {
         "path": "tests/fonts.test.js",
@@ -7334,15 +7536,27 @@
       },
       {
         "path": "tests/forms-generated.test.js",
-        "sha256": "366db648ade3fab67d36cfb235d00da949d19e36d934a283b7b1d5232a89d07a"
+        "sha256": "3f22e59cd619f9e75e1ef562b25ac006c0e65e2a6d392356cdf1a848341bfd6c"
       },
       {
         "path": "tests/generated-a11y.test.js",
         "sha256": "82c98dc02f5e58c47209033f67befa66c551dfafd8ec0e23381e841917bbfbd2"
       },
       {
+        "path": "tests/glass-browser.test.js",
+        "sha256": "29b92bfd99641d927e65c90b5d5b3ab5b89ccd261ed1f19d9ec1232820eca863"
+      },
+      {
         "path": "tests/grid.test.js",
         "sha256": "7f0431010e9dd175ff92939a269bd38214b4f285bef206cd6e39e7089efc0af9"
+      },
+      {
+        "path": "tests/heatmap-chart-browser.test.js",
+        "sha256": "8c8ab4f2204889b9795e49dd79279ded75092db9a376a34ac5d4b07da071feed"
+      },
+      {
+        "path": "tests/helpers-browser.test.js",
+        "sha256": "70a6e8c1627e3b92ca5c365a274d7cebfd691e6a046a885717b0e5e6b7c90d15"
       },
       {
         "path": "tests/hot-paths.test.js",
@@ -7355,6 +7569,14 @@
       {
         "path": "tests/injection.test.js",
         "sha256": "9c843b7c0340d82f8d473bc9d550d54e14413a8d0a8e2c37fb680f7deda89163"
+      },
+      {
+        "path": "tests/layout-templates-browser.test.js",
+        "sha256": "e787375d4a068fedd4feb0c318942ac395c1db0aed5f5988c9bb773eff85b7c5"
+      },
+      {
+        "path": "tests/line-chart-browser.test.js",
+        "sha256": "1df2240cd400d5f98e51a49a2d5eb4e61739a6bc082445b9dd57c31c526e40ff"
       },
       {
         "path": "tests/lists.test.js",
@@ -7378,91 +7600,155 @@
       },
       {
         "path": "tests/menu-field-browser.test.js",
-        "sha256": "d9a99a5eafee2ecb68edcc5c2f6ba7eea602325db34c725d4b4ae47a8fcafaeb"
+        "sha256": "d30ae869df08ff1ca533995158c24feffaa9da5febad3eb9321c7b919557f1f3"
       },
       {
         "path": "tests/menu.test.js",
         "sha256": "f87a316452ca2b6127ed31c2671ab9e6b86f287dd304069b8102dae047766bb8"
       },
       {
+        "path": "tests/message-browser.test.js",
+        "sha256": "65647068f4abdd677dd30d64ea903dc61b36f7811bd7dbce74338d3b4493fa37"
+      },
+      {
+        "path": "tests/mixed-chart-browser.test.js",
+        "sha256": "6f18dd18b770a0096d46a37a7f744eed68996f61d5485e0ea16d486f621c1d52"
+      },
+      {
         "path": "tests/navigation-bar.test.js",
-        "sha256": "be5dc107d8b6a4c28546e545478fe93f3dfb3a2f9ad4ac8b7806f1e3db81f92a"
+        "sha256": "58b4a1034c5dd56190475cbba03ee1b6e89eecc1a094e88f107d1a6a9f4dfc91"
       },
       {
         "path": "tests/navigation-rail.test.js",
-        "sha256": "e7288520467661acea82dfdf595e954bca38bc23a697bae5b0ebcbecb1bdcc4d"
+        "sha256": "fa7d2f146cee45b2a6739b53e78c358cb1d3f7a298d948e6b1ebbb2caa337098"
       },
       {
         "path": "tests/panes.test.js",
         "sha256": "de8212270821622fedce8b3b3ed57e79d60ee999897c45e723a9ed8950db7709"
       },
       {
+        "path": "tests/pie-chart-browser.test.js",
+        "sha256": "e25f945a0f41822a34d136afec08d1a3f99d822dc839c66eb5e31ccd227d5b10"
+      },
+      {
+        "path": "tests/popover-browser.test.js",
+        "sha256": "1d4e6124e92f8ddc181aa8e9291c0440058e4c1dcb7b7b6d75d9e69e9f7f74b9"
+      },
+      {
         "path": "tests/portals.test.js",
         "sha256": "a810f27ce492d4df73e35cb01cb7c3d2c14fc2311f8b8de2e36b444f33733e78"
       },
       {
+        "path": "tests/radar-chart-browser.test.js",
+        "sha256": "195c0c7dcac1284b5907f715b4422f81825c7b97523b41d2737d3be12f42cc24"
+      },
+      {
+        "path": "tests/radial-chart-browser.test.js",
+        "sha256": "29d3c6b977cdc185cc91df792ea3113434e347c04c2549c2b0676d9b0405911d"
+      },
+      {
         "path": "tests/range.test.js",
-        "sha256": "20c6acfd0fe0c2ec4fcae01b02d6f0c6fb3811430861381f998c699fb33a194f"
+        "sha256": "787c70842df9f7f992f9fc95a78c8aa549baecb9367e2ddfc4c9bfc8b003c24d"
+      },
+      {
+        "path": "tests/rating-browser.test.js",
+        "sha256": "391654043abf69aef605517d95f9b9cab125b87f3dc51a2392d55a9d1d5c2622"
+      },
+      {
+        "path": "tests/reflow-browser.test.js",
+        "sha256": "9b272a2fa5963514a773acab8d789b3dbf01e14ab7ff8239aa9723ad3ec39576"
       },
       {
         "path": "tests/regressions.test.js",
-        "sha256": "acbd49176b05c1345a33fa1c1f930f8266a3d3e7f924f6b207f45582d2adad35"
+        "sha256": "cc3ae454b901f88ef76cb0a9ec58dde6ee036c203627ca55a0e0060d56073526"
       },
       {
         "path": "tests/release.test.js",
-        "sha256": "5c10d44fac6663895a905129c4137c6032363599df98b128f422210e3d645805"
+        "sha256": "cf2b6fc1d3b7a94a1f49f3a9926ce1881a3e2dbb9dfd6cd09ad4972faa4a560e"
       },
       {
         "path": "tests/scrim.test.js",
         "sha256": "b79f3fca0a28c441f632626899ac4ae823f985114bb7baabe6e330ca13f9e483"
       },
       {
+        "path": "tests/scroll-area-browser.test.js",
+        "sha256": "30733edaa6e121b8143021c32397d8d68b4c7b6695e712a25d144384560214f0"
+      },
+      {
         "path": "tests/selective-builds-browser.test.js",
-        "sha256": "4524afa54f9320b7842071a4e198329f69dd4dacef0aa0b2c798dd9288fa9c06"
+        "sha256": "0ff8248c81f59a0752c67cfeab6c8d6f33ec0306ca89e17d68ade622742f5569"
       },
       {
         "path": "tests/selective-builds.test.js",
-        "sha256": "d17781e5d55e7bc309c55b7f8f74089c33f79f699e39d450630e50d6e15c7d9a"
+        "sha256": "9a0203ca1f1b99132c0cf6ed64977f972aeebeacf89e7832ac70c0bca63c87c2"
       },
       {
         "path": "tests/semantics.test.js",
-        "sha256": "2a7cd8fdbd759a79f1b38d60a18994425e620e9619bab1f58876d77bc7ac2e1c"
+        "sha256": "74de52ce83774df9912654c8c3e3e1863c39ca843a4078fb11f27a962f4f9353"
       },
       {
         "path": "tests/setup.js",
-        "sha256": "2389e77f5cec1db04b9f1b11151bf923a28257b43abfac5b03d9c5393b0123df"
+        "sha256": "c7f3d31b4b3ea9ae68a496e5cdc71b8171b7fed5a64989cbc48be00b078bdae3"
       },
       {
         "path": "tests/shadow-dom.test.js",
-        "sha256": "2ad55046616affe2cdf9d8b05500e9c2aab2fd4bf7b4ce31c93aa7e474fcb1e4"
+        "sha256": "ae34a9f93a282fd2c9b1900f566bcc42fdc6b7bfd594b4c7ca25e0d180bbe5fb"
+      },
+      {
+        "path": "tests/sheet-drag.test.js",
+        "sha256": "2bf14ba32e0db6121c98c541180dd4e61ede47d87c2552bd6bcb00d9f87aaa43"
       },
       {
         "path": "tests/side-sheet.test.js",
-        "sha256": "268077ea034a3a4b4c3d826ae40534301ab46ca2dab92c8e375083ef30df8aec"
+        "sha256": "8dda49399da3d91c4052319082ac2db3d5b38e1892ffb07e9eb77ae1d05dee30"
+      },
+      {
+        "path": "tests/skeleton-browser.test.js",
+        "sha256": "8df27b47aa252d40d61e099b0bafa034bfd62b1b29f132c297aac6d698ce5b6c"
       },
       {
         "path": "tests/snackbar.test.js",
-        "sha256": "eedc1da86fce3c76cfe8b7040e935df79b09ce6d3db2c8eaefd9c628cfb9a416"
+        "sha256": "f24f35c29f18704b38c1b3ace31b705fa2d8ebeb1b905d5b527183b13257e8cc"
       },
       {
         "path": "tests/split-button.test.js",
         "sha256": "3aad64af7f4f362e58b48f17b9de94d4c6961cd3ed8b2ab16ccd3687d3061cb8"
       },
       {
+        "path": "tests/stat-browser.test.js",
+        "sha256": "f8c48ef8158d68664965d84a296ff9936c1bb3cca5e52c0f577da1cc06463c43"
+      },
+      {
         "path": "tests/state-layers.test.js",
         "sha256": "06f6fb77efc123ea4dde124132e62863027517ea9182c3f8ff147b416ef4f783"
       },
       {
+        "path": "tests/stepper-browser.test.js",
+        "sha256": "e266a8c21f5c8dc8c6d5602fece3c523fd97fe37ea6d7e8b1a7ac0301ba6ada8"
+      },
+      {
         "path": "tests/teardown.test.js",
-        "sha256": "13856c2295de29534a3ff8b9149a1ee1cc835cae9e3200ae99b630d8e777bc14"
+        "sha256": "240806a2cbf369357fa799793f626d447d981d71c8564a68291ec28de7bfc155"
+      },
+      {
+        "path": "tests/timeline-browser.test.js",
+        "sha256": "50181d0271a4b621638328508a0219fc91ee486535d7956a77d47fe45e87f9a0"
       },
       {
         "path": "tests/tokens.test.js",
-        "sha256": "82f85826e184927f7b5f6d5616027ebe2b9b8864135e0c150977b74120f8db91"
+        "sha256": "d81091e38376e39f04f6661e5774b51a2ec7e6c9ea20bec016dfbb3672582b58"
       },
       {
         "path": "tests/toolbar.test.js",
         "sha256": "a637f582241363015fe8bec63247bc405fae48733775155d4d9b9fe2f9d47cb9"
+      },
+      {
+        "path": "tests/tooltip.test.js",
+        "sha256": "cf479cf9d652b11a8b5e121a515b5631da1867dd36ba131368c529c0f0b0cbff"
+      },
+      {
+        "path": "tests/tree-browser.test.js",
+        "sha256": "9cb0d63373b96c19e966f37d9f48407a209835aa12f5aacc1eea9194d86e1fb9"
       },
       {
         "path": "tests/typography.test.js",
@@ -7474,19 +7760,19 @@
       },
       {
         "path": "dist/css/expressive.css",
-        "sha256": "a7f8d6842db0bdf481c6126f6d2846d3d514335f96d2d6634876bf01904debb0"
+        "sha256": "31d9a57daf40ea9a2536006f558d45394c3104575170322dfddeb8a27e5d12ce"
       },
       {
         "path": "dist/css/expressive.css.map",
-        "sha256": "0f8e0f1c481cdf03676f6ec95073dafcb6fc56925455832124c9ce6b86c857bf"
+        "sha256": "3351b8133944e30b0cf418b31e582967667d23ea2e0089b95da990dc0d5b9f70"
       },
       {
         "path": "dist/css/expressive.min.css",
-        "sha256": "b11a9a70e31ac3b2d04571304706a2b0b1440bcd13b1e22c74f308df5e84a975"
+        "sha256": "1e3e0c7ee675b662f5ba3fca55528c9cd0eb75bb514781d9a794c7972fe82da0"
       },
       {
         "path": "dist/css/expressive.min.css.map",
-        "sha256": "743c500a649116795897177442630724e273768a889a965a830f4c89f9460c38"
+        "sha256": "36dbc5c8d6d7936daca4932c3bf57758d53f390d5dc9d84410ead1765e8f8c56"
       },
       {
         "path": "dist/fonts/LICENSE-material-symbols",
@@ -7502,15 +7788,15 @@
       },
       {
         "path": "dist/fonts/material-symbols-outlined.woff2",
-        "sha256": "167a5e473546503fdbeff71cd607455adba816e3d99f8e25b27bfafecb20fe4a"
+        "sha256": "c5c96fcb27145d17a04cb2fa68d33921ca4258c6bb2cf6fac8b1bce401595e57"
       },
       {
         "path": "dist/fonts/material-symbols-rounded.woff2",
-        "sha256": "d361bcaa25d72806dfcaedd78d77ff90e2532d598c5d02cdb083ce4e11eaee72"
+        "sha256": "0865c62d7fda358cd4cdb77792b758afa66fae2c4159fa3fb04a2c1d05700e9e"
       },
       {
         "path": "dist/fonts/material-symbols-sharp.woff2",
-        "sha256": "e916ae3a474a4ec7bafc41d2805c0ad995084967048be23a98a83bcb87b7f3f9"
+        "sha256": "2349783253d47d2d1b92ab63dd4284988f05e73459aa9c8f6e9a78ed360101c9"
       },
       {
         "path": "dist/fonts/noto-sans-latin-400.woff2",
@@ -7529,288 +7815,360 @@
         "sha256": "5bcc3aa180e7f26f643cd5b2621cd7c2de193d0661d913a94afd3d4881a7a34b"
       },
       {
-        "path": "dist/js/chunks/chunk-7MM4VJJO.mjs",
-        "sha256": "c9541fbb30e9b9cf7b0cf5f3da35664910ed08ba0d49b5aad8352e7636035bbb"
+        "path": "dist/js/chunks/chunk-3CLXLPYS.mjs",
+        "sha256": "b41cf08f01652fcb8b1bc386dd92abe67fda899df5a2f1ebdf03bf9c04738cc2"
       },
       {
-        "path": "dist/js/chunks/chunk-7MM4VJJO.mjs.map",
-        "sha256": "34bb9e646cd2e1c9737f263da457991a18d2f7e02433ea99286a61e6f31d39f4"
+        "path": "dist/js/chunks/chunk-3CLXLPYS.mjs.map",
+        "sha256": "c71b4ee666842faabcd0ab17279a9963e746031d01720587ec76b025f3165bdb"
       },
       {
-        "path": "dist/js/chunks/chunk-7UXHSYIA.mjs",
-        "sha256": "02644b4d9eac12b5d7f1a629bf29f7fb1cfffd8fa9f5dd71b0b90b11faf3f165"
+        "path": "dist/js/chunks/chunk-3DHK5CZU.mjs",
+        "sha256": "67f01c2ea63b185245a89a4972d955fbdf574f6ede4407975e37f5f18d8131e7"
       },
       {
-        "path": "dist/js/chunks/chunk-7UXHSYIA.mjs.map",
-        "sha256": "cda4907020c85e8821f40e9af53f6b0354b5beffce0033ea3f36e6804deba36c"
+        "path": "dist/js/chunks/chunk-3DHK5CZU.mjs.map",
+        "sha256": "d7195f2ff94cdbe9a048e9908afb4b0eb1f0059aa17fc695d48accf662867798"
       },
       {
-        "path": "dist/js/chunks/chunk-A3BJA7V4.mjs",
-        "sha256": "7b729d41f327b85db10398f3c5bdaf510c2ec73395d98885e6dd017544a3b409"
+        "path": "dist/js/chunks/chunk-3VOK6J7U.mjs",
+        "sha256": "96e6b5a086ec6cbee9dc48ddea34a8f2d8f925e2f595a607d437266ae79779f2"
       },
       {
-        "path": "dist/js/chunks/chunk-A3BJA7V4.mjs.map",
+        "path": "dist/js/chunks/chunk-3VOK6J7U.mjs.map",
+        "sha256": "45e39c06f6e8cadf645c3aea197138b031271465fb1983ec8136e6a0becd3076"
+      },
+      {
+        "path": "dist/js/chunks/chunk-55IA2XUC.mjs",
+        "sha256": "ae6409e00f88d76db7c5156b7925b12f7db85853a0e6efb5de188766cd206edd"
+      },
+      {
+        "path": "dist/js/chunks/chunk-55IA2XUC.mjs.map",
+        "sha256": "34544b87997e33c705cb0cde0f631ae38e77f05e12feb0cebdc722296821da06"
+      },
+      {
+        "path": "dist/js/chunks/chunk-5CKSNIRJ.mjs",
+        "sha256": "52ac6a4c7f012b7ef26a241610f6bea7e67911cac8b64435d7d4a974226f241f"
+      },
+      {
+        "path": "dist/js/chunks/chunk-5CKSNIRJ.mjs.map",
+        "sha256": "85438ca4b9c172bab10ec0ee480d7731816249f0b481e247e84e099d627e2076"
+      },
+      {
+        "path": "dist/js/chunks/chunk-6N2XAEFK.mjs",
+        "sha256": "d97dcb0a2871b208072efcc00ad5cbd233013507d1be5504548a8ef9b05bc602"
+      },
+      {
+        "path": "dist/js/chunks/chunk-6N2XAEFK.mjs.map",
+        "sha256": "6a62358174e89f71c09ce703d73053b42b63c8773e8f47168225680a262fc710"
+      },
+      {
+        "path": "dist/js/chunks/chunk-6OMRGML6.mjs",
+        "sha256": "8b183067fdf562ae893c29b9f199a2f6da1eb84cac08b2e9eb8f4473f5057611"
+      },
+      {
+        "path": "dist/js/chunks/chunk-6OMRGML6.mjs.map",
+        "sha256": "60e80888ae3497d13f7c7fd984f251ffc3e1f7fbbbcf00cfc3de806899d85adb"
+      },
+      {
+        "path": "dist/js/chunks/chunk-6WLSDZ4O.mjs",
+        "sha256": "3b7303d0703c94706f0ef7383bd3191cea6613b6cc6dbd28d705bd8114ad0d2b"
+      },
+      {
+        "path": "dist/js/chunks/chunk-6WLSDZ4O.mjs.map",
         "sha256": "2de5b2094884aa4e42ae25eb8fb2449a635ef82237b676a7ce4ec7e037c31503"
       },
       {
-        "path": "dist/js/chunks/chunk-AOGFNMXS.mjs",
-        "sha256": "5cda771b1a11420523c6e159a619fa3e8cdd86de85481420ddf4208f6cb04186"
+        "path": "dist/js/chunks/chunk-CKQP6P76.mjs",
+        "sha256": "823be0876f5f5893422e92684ec052bf45110d6a95f32bf3b6cf1e37b26f06cc"
       },
       {
-        "path": "dist/js/chunks/chunk-AOGFNMXS.mjs.map",
-        "sha256": "49081a066868eb7b2e9ead2d9519e63ddc98a75a316be2a7c6afc42bf2e86da5"
+        "path": "dist/js/chunks/chunk-CKQP6P76.mjs.map",
+        "sha256": "d8f52c6780677ebb57252e93306a498c1e4dfbbd1fa15391b62fd9db5aa3eb76"
       },
       {
-        "path": "dist/js/chunks/chunk-BPP4CIBA.mjs",
-        "sha256": "cfd27194961deb7305e0b67a250a86808c4e211834779637f40804fa2ba1f897"
+        "path": "dist/js/chunks/chunk-DLWYKFEI.mjs",
+        "sha256": "3b5166dc3f390751181c2434e6b68b8c73af4508145e4df88f1c9dcbf903d1a9"
       },
       {
-        "path": "dist/js/chunks/chunk-BPP4CIBA.mjs.map",
-        "sha256": "2b92b5312b2a12468da48b9e36a759b1ec5748a410ba05bb71d904334d1994bc"
-      },
-      {
-        "path": "dist/js/chunks/chunk-D4UZ4HFN.mjs",
-        "sha256": "98bc5a8a7ecdf7e7f85cc2e20d74cabecfe86a21265f3fb9d78e634fd3ce2096"
-      },
-      {
-        "path": "dist/js/chunks/chunk-D4UZ4HFN.mjs.map",
-        "sha256": "d408455af1133e6202a7df161602cae543e79e7f7ac1078fa4a374e808080b2e"
-      },
-      {
-        "path": "dist/js/chunks/chunk-EP3CVKB5.mjs",
-        "sha256": "ca5c7a678981ada15a357f8b2384b493eb3ddcd13ff46ea92efcd95ae47aed28"
-      },
-      {
-        "path": "dist/js/chunks/chunk-EP3CVKB5.mjs.map",
-        "sha256": "1b3e15c8a2e5a30b0e19eacc5c65437053a93e43ae52aef4373027bfa972b540"
-      },
-      {
-        "path": "dist/js/chunks/chunk-G576EP5O.mjs",
-        "sha256": "3c5474771d5a6d4106553bf5d6f915375b8627589be1e5bfc252afec7ae37387"
-      },
-      {
-        "path": "dist/js/chunks/chunk-G576EP5O.mjs.map",
-        "sha256": "350e46f8020828c368b03fdecd1edef2ab9683967252132f63cc74c195dbf30f"
-      },
-      {
-        "path": "dist/js/chunks/chunk-GY2Z5CJ2.mjs",
-        "sha256": "deac928e16d9014ab8787264da94f153f820fcfc93faa92752affb320d79e56b"
-      },
-      {
-        "path": "dist/js/chunks/chunk-GY2Z5CJ2.mjs.map",
-        "sha256": "48233f53badd7149afbba63a6d8e63f9cf615102f01c923ecd8791a805936cdf"
-      },
-      {
-        "path": "dist/js/chunks/chunk-JKNPQQWY.mjs",
-        "sha256": "2296094d48a4e8b06ffe5497759561f26621b2b7af9cb6f50e7a164f129de8d9"
-      },
-      {
-        "path": "dist/js/chunks/chunk-JKNPQQWY.mjs.map",
-        "sha256": "ccdfabb6924ef11cc133b87d8d1c2d1a3eec88d0b97af45b25ac5218a02d3d1c"
-      },
-      {
-        "path": "dist/js/chunks/chunk-JNPIWFJT.mjs",
-        "sha256": "c40068ce15bd011b000c4fb7fad172c92c418a59437c4ea38eb80cc4614fc8cb"
-      },
-      {
-        "path": "dist/js/chunks/chunk-JNPIWFJT.mjs.map",
-        "sha256": "68492925f3493679e4b9dd5a786ecdf4c54d86db6c3967b27b67190f547b0770"
-      },
-      {
-        "path": "dist/js/chunks/chunk-JODJAGFS.mjs",
-        "sha256": "7ad91c5012d0157ca02ecfcc4ffa6c7f3e9af52f4d72d24689e70ff8ad057541"
-      },
-      {
-        "path": "dist/js/chunks/chunk-JODJAGFS.mjs.map",
-        "sha256": "51f6ad9daae227fcf20015fa7aa12111df2528ee22e8f45b62d9eca360b3c1f9"
-      },
-      {
-        "path": "dist/js/chunks/chunk-JR24UB4X.mjs",
-        "sha256": "7e6e2f19af3fdc72938c101eeaeb74d6d543486efba6337ab57274c071663097"
-      },
-      {
-        "path": "dist/js/chunks/chunk-JR24UB4X.mjs.map",
-        "sha256": "d88a72d365e19b662e7d38570809484c56080b6ad51673b38333f8167e0fc7e2"
-      },
-      {
-        "path": "dist/js/chunks/chunk-KR44BSYQ.mjs",
-        "sha256": "8504faaa0e31ae710a509ca72ca23f32c6f9401340f038a95a3ed3219f69882a"
-      },
-      {
-        "path": "dist/js/chunks/chunk-KR44BSYQ.mjs.map",
+        "path": "dist/js/chunks/chunk-DLWYKFEI.mjs.map",
         "sha256": "5f605a941afe58c631b6957235f91255a964f99757d0a6fdd048385e4e272cc7"
       },
       {
-        "path": "dist/js/chunks/chunk-LZVBJ33S.mjs",
-        "sha256": "a120053ee1f9557fd0cae43c8bfd100f6013ef94a11b1073f87b24374068a249"
+        "path": "dist/js/chunks/chunk-EC63CHXU.mjs",
+        "sha256": "34590c1198f2ecc5d16ada318d9679e2ab4563b79f2231d1596dde8b124af23a"
       },
       {
-        "path": "dist/js/chunks/chunk-LZVBJ33S.mjs.map",
-        "sha256": "c2321e8b9214f5adb1b78e923503ec27dfc74add48f13ad81e64412d0e51f8cb"
-      },
-      {
-        "path": "dist/js/chunks/chunk-MISGHDUU.mjs",
-        "sha256": "7499cd15747b46681cd0cbe2b858082414570d5409b3d7f0e98024d91aeca594"
-      },
-      {
-        "path": "dist/js/chunks/chunk-MISGHDUU.mjs.map",
-        "sha256": "011b926292074d9314b0193f8d117d0e984d412cd503bf952f72139207c3c025"
-      },
-      {
-        "path": "dist/js/chunks/chunk-N3UHGN3N.mjs",
-        "sha256": "9475c378d9dd0c944d4db3c4eff23558c2c8a17fea1e47023e3b2c89f2e616e2"
-      },
-      {
-        "path": "dist/js/chunks/chunk-N3UHGN3N.mjs.map",
-        "sha256": "856f5af6c6071779ba1fe42f272664ee87a1b554228f3532518545c041ac11e1"
-      },
-      {
-        "path": "dist/js/chunks/chunk-PIIAEYAJ.mjs",
-        "sha256": "c2b5e1c6bc9934ab5d7fbdefa238a106de34c704fb565358d45cbec4d258982e"
-      },
-      {
-        "path": "dist/js/chunks/chunk-PIIAEYAJ.mjs.map",
-        "sha256": "0bc32dd7af1a8b54c41c3b14257abadd5a3a162fe10d60de3f1d8ea11797957c"
-      },
-      {
-        "path": "dist/js/chunks/chunk-QSQ24FYT.mjs",
-        "sha256": "4e874082c117bbb1f9b6b817e0d3abd6cfc6df2de7bdb2bdaa56a3062bf52e7d"
-      },
-      {
-        "path": "dist/js/chunks/chunk-QSQ24FYT.mjs.map",
-        "sha256": "d32e8c1ad573c7b829687ec8ce04a2cacd57bbb681a822ff3df451b7b3ad07a0"
-      },
-      {
-        "path": "dist/js/chunks/chunk-QYCYP443.mjs",
-        "sha256": "7d1f8e8390758450702ad7c772ed2ac1a6d2c4b40beaffa7ba1a885a010745a2"
-      },
-      {
-        "path": "dist/js/chunks/chunk-QYCYP443.mjs.map",
-        "sha256": "d2929c16e0366993ddb00a07a622d6457294002f9230550958e820191e66b411"
-      },
-      {
-        "path": "dist/js/chunks/chunk-SLFNPY5M.mjs",
-        "sha256": "1e778cbaf1b13d2c5afaeb1239872db9ccb217ad925beb2d8aeb3cf6f64ddb50"
-      },
-      {
-        "path": "dist/js/chunks/chunk-SLFNPY5M.mjs.map",
+        "path": "dist/js/chunks/chunk-EC63CHXU.mjs.map",
         "sha256": "53ee721194d51ec868fa976dd7d220b7e028942d4f96d8c34d904c441470187c"
       },
       {
-        "path": "dist/js/chunks/chunk-TK6PX2GC.mjs",
-        "sha256": "4110a1c09c14c6980073e331a0460b3e215a62668175c7975ce5faa6c9ef2087"
+        "path": "dist/js/chunks/chunk-GVGT6MIU.mjs",
+        "sha256": "63761a1d91cd305a5df7de292939ea49206bc7430e899a658063ff637ef4ede2"
       },
       {
-        "path": "dist/js/chunks/chunk-TK6PX2GC.mjs.map",
-        "sha256": "53999c4f2793a0b8b2c3a08e29f3bec2d6ff91244b35267955f92cbea0869518"
+        "path": "dist/js/chunks/chunk-GVGT6MIU.mjs.map",
+        "sha256": "8c181eaae41d27a7d85a81c13fd9503502188c764a1fd111e3550f04cc47e623"
       },
       {
-        "path": "dist/js/chunks/chunk-TYM6U5DY.mjs",
-        "sha256": "cae2910b9cdea342f451937a6fc3bb267d10106a3d5c7dc4188ead13499037ca"
+        "path": "dist/js/chunks/chunk-GZWPXXY6.mjs",
+        "sha256": "03b2f9f4ebfeedc16fdf460c5f7820a1c31047f6332eaea634c12b2b4edecf6b"
       },
       {
-        "path": "dist/js/chunks/chunk-TYM6U5DY.mjs.map",
-        "sha256": "a8ba9cd51051736cabdebe85fc5f6336b6e0f34b4e2a0aaefdcfaf84c60460d1"
+        "path": "dist/js/chunks/chunk-GZWPXXY6.mjs.map",
+        "sha256": "1a226e7ae06f27b28cd5f8081e585ff9b341838c83fbb5b71de4dd651c4b9ef7"
       },
       {
-        "path": "dist/js/chunks/chunk-TZZ24ZQS.mjs",
-        "sha256": "9664bafafe5d3c18b0460a9c676aba6d634a105e6805796541c22337158aac53"
+        "path": "dist/js/chunks/chunk-HKT2S7VM.mjs",
+        "sha256": "b136fa42337660ec033c9dc18a47cd0382b85f51348a149fb0d79370e69d2b9b"
       },
       {
-        "path": "dist/js/chunks/chunk-TZZ24ZQS.mjs.map",
-        "sha256": "926d99a359476cb70560edb1c535a0a4cf0fd14959255b62d44e5d17c7fa722c"
+        "path": "dist/js/chunks/chunk-HKT2S7VM.mjs.map",
+        "sha256": "e0cb3de50aa9aa95de8859cc3aaba92c8366a5c12be5eb7924759004f1dc92bc"
       },
       {
-        "path": "dist/js/chunks/chunk-VAS6JQ6P.mjs",
-        "sha256": "19f817b6169f008737a6938022e9c2c3ad280a6a46bb1ac550cb67d97eb223eb"
+        "path": "dist/js/chunks/chunk-IFXVDDDH.mjs",
+        "sha256": "244e9d424c5230340c55180add74f1f82dec39b06708ba5c3c51ebb36cbf89d7"
       },
       {
-        "path": "dist/js/chunks/chunk-VAS6JQ6P.mjs.map",
+        "path": "dist/js/chunks/chunk-IFXVDDDH.mjs.map",
+        "sha256": "ccbd308b18420034e16e300e7e0bfb0aa08bc06a6adac24f1ca8ecedcef716cf"
+      },
+      {
+        "path": "dist/js/chunks/chunk-K4CJCRGE.mjs",
+        "sha256": "ca6962d0503ed9359d89bc3089b50ab3738fb89624ac2ae7bd779a690ea63cb7"
+      },
+      {
+        "path": "dist/js/chunks/chunk-K4CJCRGE.mjs.map",
+        "sha256": "f61b0c1c2574be682caad6268d1f3a3999b15426ca3826e87146fb51c6d2c764"
+      },
+      {
+        "path": "dist/js/chunks/chunk-KPAIETAJ.mjs",
+        "sha256": "4199f905cd617a861438e49605e4097929140373ba6194fc276214da1b72a60d"
+      },
+      {
+        "path": "dist/js/chunks/chunk-KPAIETAJ.mjs.map",
+        "sha256": "734029f5a83499b98fd85800f39b72a37a9e4962bd56e294ab259c7278e2c066"
+      },
+      {
+        "path": "dist/js/chunks/chunk-LNCCYGPC.mjs",
+        "sha256": "507085894301915a96109e3eab69453d3d878b2a1c01bfadd89c0c1c663a153f"
+      },
+      {
+        "path": "dist/js/chunks/chunk-LNCCYGPC.mjs.map",
+        "sha256": "c73e6c026dcf85f5f16acc04fef54ed4ec10b93b4b7330dfa26bf3ee50a42c6d"
+      },
+      {
+        "path": "dist/js/chunks/chunk-LTWPGFBR.mjs",
+        "sha256": "24465645472a951bd0f4f1284908dd5b5d664c9744a3e104b5fe60eb1831a947"
+      },
+      {
+        "path": "dist/js/chunks/chunk-LTWPGFBR.mjs.map",
+        "sha256": "68af0d5ab516a4724ddd577199941fa2bf866d9b845d921664f6ab5a1217f1d6"
+      },
+      {
+        "path": "dist/js/chunks/chunk-LWBQIX5J.mjs",
+        "sha256": "89c3b0e566a2bad4d0700912e55da40a1258c0a725e9f0408d033841d794e70a"
+      },
+      {
+        "path": "dist/js/chunks/chunk-LWBQIX5J.mjs.map",
+        "sha256": "34ab170ee60cd1583445d717b09bce3c5cc8241b566f4379069342e8c70fdde7"
+      },
+      {
+        "path": "dist/js/chunks/chunk-NNYP33NB.mjs",
+        "sha256": "3ff72849ba07ea4938694983ae8504e922544c6fd4f818564aab248a4b0a951d"
+      },
+      {
+        "path": "dist/js/chunks/chunk-NNYP33NB.mjs.map",
+        "sha256": "d79f8dc58db33b8808095712790099b2dff6f908e57fdf8cb43f442d97858bad"
+      },
+      {
+        "path": "dist/js/chunks/chunk-O5XPWXIQ.mjs",
+        "sha256": "3245ab1979d719c5a2ec3b8faf17682ee67cd1547f113cc9261397e3e6495db9"
+      },
+      {
+        "path": "dist/js/chunks/chunk-O5XPWXIQ.mjs.map",
+        "sha256": "b6a298bfe85f7ed0b0ef5648b0a5d940f886cd9e51107aa984221b5d099a4b58"
+      },
+      {
+        "path": "dist/js/chunks/chunk-P3G3QHII.mjs",
+        "sha256": "f1a2db1707301444ea9a289da43eeebebfde3e0458c8a659c9417885cd6d0be1"
+      },
+      {
+        "path": "dist/js/chunks/chunk-P3G3QHII.mjs.map",
+        "sha256": "fbbdc6776de5d7ff6ffea391c5a58e6c2816008aace9e5ed49ec98a63b20f845"
+      },
+      {
+        "path": "dist/js/chunks/chunk-PIJ2TAR3.mjs",
+        "sha256": "a9a164754854c61c6a99292fbe8b22001e4f808412f079e892eaeb21b0bb831c"
+      },
+      {
+        "path": "dist/js/chunks/chunk-PIJ2TAR3.mjs.map",
         "sha256": "b7b129388c274a348e94ed525bac547cc47743d485e520177a93806a2620af93"
       },
       {
-        "path": "dist/js/chunks/chunk-WWPAPHMA.mjs",
-        "sha256": "1f6e8dba26f9dda9a34aaed46ab866154066a5cde161e80927ee1991e43a789e"
+        "path": "dist/js/chunks/chunk-PLYXLSH3.mjs",
+        "sha256": "6d032e751050c838237e9133b1db4fc7a92381d8c05d213051bb53edcd34ebbe"
       },
       {
-        "path": "dist/js/chunks/chunk-WWPAPHMA.mjs.map",
+        "path": "dist/js/chunks/chunk-PLYXLSH3.mjs.map",
+        "sha256": "91388df12724387d1409e67feaeea56844dd206272c95bb75e6ba8c3df3cb7cc"
+      },
+      {
+        "path": "dist/js/chunks/chunk-QDAL4IYN.mjs",
+        "sha256": "f5aa173b5f38694403d26aecb111572e075e9810c490f63cb490549ca9c15217"
+      },
+      {
+        "path": "dist/js/chunks/chunk-QDAL4IYN.mjs.map",
+        "sha256": "0bc32dd7af1a8b54c41c3b14257abadd5a3a162fe10d60de3f1d8ea11797957c"
+      },
+      {
+        "path": "dist/js/chunks/chunk-QKWPQK5N.mjs",
+        "sha256": "94420625c13caba8645150eb34a1b985aa79d3453c178dc1fa6ba26f5ea560fa"
+      },
+      {
+        "path": "dist/js/chunks/chunk-QKWPQK5N.mjs.map",
+        "sha256": "412e06bc8ebf474f9b0af155581906ae4d63112147769515cafebb37726dd754"
+      },
+      {
+        "path": "dist/js/chunks/chunk-QV2JAWIZ.mjs",
+        "sha256": "59be7ac5d73f4ae38bcbf742d3085b9704f5655551f5cafd7e799f3336279843"
+      },
+      {
+        "path": "dist/js/chunks/chunk-QV2JAWIZ.mjs.map",
+        "sha256": "136106681788a16e527b49c1a4845f686e0b2f131a9bf77317bd8befbe3c3074"
+      },
+      {
+        "path": "dist/js/chunks/chunk-QVVEWBOF.mjs",
+        "sha256": "4ead5036a3c35050182e853be861f994188990627d81a08b94d2b236fd4d32d8"
+      },
+      {
+        "path": "dist/js/chunks/chunk-QVVEWBOF.mjs.map",
+        "sha256": "856f5af6c6071779ba1fe42f272664ee87a1b554228f3532518545c041ac11e1"
+      },
+      {
+        "path": "dist/js/chunks/chunk-RHRQKTTX.mjs",
+        "sha256": "ec7ce0650cad9b3c851288486c9d0e0af918dbbffce67079274048683718ddd1"
+      },
+      {
+        "path": "dist/js/chunks/chunk-RHRQKTTX.mjs.map",
+        "sha256": "d89bc9767fb2c62f78c01de54bbd3575a8819c9b23dcd2dff001959b3407886d"
+      },
+      {
+        "path": "dist/js/chunks/chunk-SPETGK25.mjs",
+        "sha256": "6a937838ab30857764b6d23da689400535c18fe6b2f70ca61f711dfc5e733e16"
+      },
+      {
+        "path": "dist/js/chunks/chunk-SPETGK25.mjs.map",
+        "sha256": "a513caa6aa856bcdf3a43f41f510aa21e9980976340781a209da86d13ca0c64e"
+      },
+      {
+        "path": "dist/js/chunks/chunk-U2OTHOTI.mjs",
+        "sha256": "b58a7446c68f059cf46403c424c53dcc224d4871ac8b2b72e76d80703105264c"
+      },
+      {
+        "path": "dist/js/chunks/chunk-U2OTHOTI.mjs.map",
+        "sha256": "2ad7c65589406d795217501b845e949632f8eff85898aa792606657240fa5ac7"
+      },
+      {
+        "path": "dist/js/chunks/chunk-UAEAQBRC.mjs",
+        "sha256": "d6c8d00802e658dd163b06b562b8959d1901c9c8e2f050f0215a6d6695c80cc9"
+      },
+      {
+        "path": "dist/js/chunks/chunk-UAEAQBRC.mjs.map",
+        "sha256": "a8ba9cd51051736cabdebe85fc5f6336b6e0f34b4e2a0aaefdcfaf84c60460d1"
+      },
+      {
+        "path": "dist/js/chunks/chunk-UBLRRJ7N.mjs",
+        "sha256": "5637c8ce814ae3f372d578bddf43b8aeeb572f883a9a0e58f912b0305b288c96"
+      },
+      {
+        "path": "dist/js/chunks/chunk-UBLRRJ7N.mjs.map",
+        "sha256": "cda4907020c85e8821f40e9af53f6b0354b5beffce0033ea3f36e6804deba36c"
+      },
+      {
+        "path": "dist/js/chunks/chunk-UEZUJQ66.mjs",
+        "sha256": "60f423b8abde0caf96b2c90a62f6d6422501d72d4cc7410b616f26cf4efec292"
+      },
+      {
+        "path": "dist/js/chunks/chunk-UEZUJQ66.mjs.map",
+        "sha256": "9b4bf1c7d344c9a9aa88f0a8bf38a7d2fe75e374d4b955ad7de2b7954d223285"
+      },
+      {
+        "path": "dist/js/chunks/chunk-UNEMYWEW.mjs",
+        "sha256": "a0db91f672bf02a21303d5c37e831ab77a8d204c121caf7ddecbdcab27941366"
+      },
+      {
+        "path": "dist/js/chunks/chunk-UNEMYWEW.mjs.map",
+        "sha256": "68492925f3493679e4b9dd5a786ecdf4c54d86db6c3967b27b67190f547b0770"
+      },
+      {
+        "path": "dist/js/chunks/chunk-VX4XXOIL.mjs",
+        "sha256": "cad47dc07fd3994e88fe88448399eeea63308b92680a958e556559f0787ae753"
+      },
+      {
+        "path": "dist/js/chunks/chunk-VX4XXOIL.mjs.map",
         "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
       },
       {
-        "path": "dist/js/chunks/chunk-XDB3G6RL.mjs",
-        "sha256": "58106e285906e2ac90ecd92d6e2df0779ab70f8a567217f8088af25e87209d46"
+        "path": "dist/js/chunks/chunk-WJXDBPXQ.mjs",
+        "sha256": "f25581b26858468e206c52dd5d2b4762e334212f4cb1a01a462c68a855dfbf12"
       },
       {
-        "path": "dist/js/chunks/chunk-XDB3G6RL.mjs.map",
-        "sha256": "5a1ad2a03a1f6985be790456d15ca7fffeaef3ce3fc17ab827a6615a65e0da06"
+        "path": "dist/js/chunks/chunk-WJXDBPXQ.mjs.map",
+        "sha256": "20b353dc8a72a10d6f4ae2df3b6aa477060e0ed1dcd0a56c8b7b20a241bb6e80"
       },
       {
-        "path": "dist/js/chunks/chunk-XO5WX3TK.mjs",
-        "sha256": "0c97affde929904df4006d2e61938b9a4a24aac7735b0a88e751cd9c96a3685e"
+        "path": "dist/js/chunks/chunk-XGHORT7J.mjs",
+        "sha256": "ae5b10f2dd5e9160ae540d39ad16a9345f535cc8a32b14961a82d1515e6b6846"
       },
       {
-        "path": "dist/js/chunks/chunk-XO5WX3TK.mjs.map",
+        "path": "dist/js/chunks/chunk-XGHORT7J.mjs.map",
+        "sha256": "8e5dae899f5b9bf94da86c8bad99c744b7833f9b5efc27437624e5d919a59b55"
+      },
+      {
+        "path": "dist/js/chunks/chunk-YDCS5S3J.mjs",
+        "sha256": "3ce4550bcbd7eb567ad96ec9f223e0f6ebaa865b7bb7fbd1662cbd85656f8949"
+      },
+      {
+        "path": "dist/js/chunks/chunk-YDCS5S3J.mjs.map",
         "sha256": "214511538963d140758e41207e5aba1b87007f6dc6e62b69184cbf3fa5745484"
       },
       {
-        "path": "dist/js/chunks/chunk-YFXEJ7GR.mjs",
-        "sha256": "36ca6dd6895d84903a5a1070a3dc0710b9036ecb8f19a3bc069d1b4b1a940ef4"
-      },
-      {
-        "path": "dist/js/chunks/chunk-YFXEJ7GR.mjs.map",
-        "sha256": "4b63b9ca3c0d0982eebae01e01eb0a0d66b9dfd036e55aba9d1f9bcef1ddbd93"
-      },
-      {
-        "path": "dist/js/chunks/chunk-ZIZVUWRL.mjs",
-        "sha256": "72ecf76783c64354b85b1d1aef6e155c5e48c97474158648aab5812e58cfbb67"
-      },
-      {
-        "path": "dist/js/chunks/chunk-ZIZVUWRL.mjs.map",
-        "sha256": "c9580328d39e3bb1df53c774b4ffc123fa0632f09f3590634430ef4aacfc5c96"
-      },
-      {
-        "path": "dist/js/chunks/chunk-ZZBZI2XN.mjs",
-        "sha256": "4f9a0d5727c7731114bd5bce1cf0f419064dd3237ffd5cb5f117ab54ccb29916"
-      },
-      {
-        "path": "dist/js/chunks/chunk-ZZBZI2XN.mjs.map",
-        "sha256": "da2563b9e80a239e0dce859fb1963c11bbe929cd60dd654b45f48a50ef7d2048"
-      },
-      {
         "path": "dist/js/expressive.cjs",
-        "sha256": "54389f4b8d32cfb5b8b72d5dcc673b643656e6ae24ad9df2fe7689601ab36a12"
+        "sha256": "b2295d614fc0f0bdf12ba595349b282e0dfd54d5e853ecf5572c95f229b0617c"
       },
       {
         "path": "dist/js/expressive.cjs.map",
-        "sha256": "804c9f7b9d3f70548e9c6de4d872346a2a02c65ef872e96775d2f59e7cdf9a8c"
+        "sha256": "31f7301559cdee5f196f816255d3a4bb6da90b760ef32b70bdc6bbc076fcf57b"
       },
       {
         "path": "dist/js/expressive.js",
-        "sha256": "bad56cf9e6e09e6387e8dae176c1c2146e94b5b8ba6012932bd18771e7b5b4f8"
+        "sha256": "3798634306d825297ade934428fb9dbf9b14d1fc5fd63de48b1b4c5e3bd725d0"
       },
       {
         "path": "dist/js/expressive.js.map",
-        "sha256": "eb4970c246cc5d9c7ff8d1dfb07cd3fedc7330f5e1b990cad69c128d14e6ac7f"
+        "sha256": "1eb2fc28b67b880c7bf33b4c042cc974487715609a93edc2bf627deffe8cf4e0"
       },
       {
         "path": "dist/js/expressive.min.js",
-        "sha256": "fc6be13727b26e9729161791343011ee549b7a203403cc3416bc3bd8523442b7"
+        "sha256": "7268fb2d5c198078aaf7d4d76a619b0bb9c46520f4e50487226289dec256ae60"
       },
       {
         "path": "dist/js/expressive.min.js.map",
-        "sha256": "2977b3d0f893c4d7970d40390c5fac831f0948ac1799d1230fb31c3fe083b23c"
+        "sha256": "71522dbacfb2c98fe140d24e51ba0de91ade56072cc9d954bcc76c20086a2c17"
       },
       {
         "path": "dist/js/expressive.mjs",
-        "sha256": "7cc7ebb8d7dbaa8e0936f8bf951c2075a73df7a86e331e7ee72b9ee2901d3b90"
+        "sha256": "b2d1fb026b67ebe80e9d48cf8ee2e8dad5b7e0ffc055bc9bc128be13a90e06c2"
       },
       {
         "path": "dist/js/expressive.mjs.map",
-        "sha256": "0c8da0737961cb470478eb7458e0b1f1bf3a360d2a368abef3d2afad9a78cc5c"
+        "sha256": "dda5e7c6248249c3d127dcdf948060731ef0992bb9b17df5c16c9a409ec1937d"
       },
       {
         "path": "dist/js/internal/behaviors/bottomSheets.mjs",
-        "sha256": "5b80ce1ca46b6f316a6cc0d55b8d75e783ddef5df9ca0cd2f5656cd5f2b34cad"
+        "sha256": "cc358132dc168a29d60e6df519003c5174c7c8eafbc966e8d648ca4deddf4d45"
       },
       {
         "path": "dist/js/internal/behaviors/bottomSheets.mjs.map",
@@ -7818,7 +8176,7 @@
       },
       {
         "path": "dist/js/internal/behaviors/dialogs.mjs",
-        "sha256": "0ac0d491c2bd0c12ccc4cca453ac5f2db5ce17b5ca7adeeaff996cc41097faca"
+        "sha256": "a8cb3cc377a47e76f8a0050679499405d3cc7b6ba555f838aa9020b4d4085cf4"
       },
       {
         "path": "dist/js/internal/behaviors/dialogs.mjs.map",
@@ -7826,7 +8184,7 @@
       },
       {
         "path": "dist/js/internal/behaviors/forms.mjs",
-        "sha256": "8353a62a4fb08a45e111bb18ead7d83933e7c2d53f0bdd412ffa43ab2afd2653"
+        "sha256": "96edd7e27bedef2a1e60780e8a8261a255a151cf1bdaefe3641d2f78ac5bc87a"
       },
       {
         "path": "dist/js/internal/behaviors/forms.mjs.map",
@@ -7834,7 +8192,7 @@
       },
       {
         "path": "dist/js/internal/behaviors/sheetDrag.mjs",
-        "sha256": "516573d2e78144d168c4f3aa430ca45a6d3b525eccb2b95b2efcde8f290a9ed1"
+        "sha256": "dee097c7fb965ada8266c6119e59c7c6ba15df290f73884b661a8b492ebb400d"
       },
       {
         "path": "dist/js/internal/behaviors/sheetDrag.mjs.map",
@@ -7842,7 +8200,7 @@
       },
       {
         "path": "dist/js/internal/behaviors/sideSheets.mjs",
-        "sha256": "209c619aedffc1ba7bdf2ca97fde7b22d89bd89d22ffa405cde02e2ab7210cdd"
+        "sha256": "c5e422386c7b6b5957ae824e3cb0bca4e398f070f1ba20b6a8fc2b66cca61bf9"
       },
       {
         "path": "dist/js/internal/behaviors/sideSheets.mjs.map",
@@ -7850,7 +8208,7 @@
       },
       {
         "path": "dist/js/internal/components/appBar.mjs",
-        "sha256": "fd6ecf32501c832769ad04fc30aa6c48d35790891010ec1d53a4b5fa74f1a6da"
+        "sha256": "d11a1141b8bf7001427ccd22d8360d1db1d940573023728d95df5b27832f1cbe"
       },
       {
         "path": "dist/js/internal/components/appBar.mjs.map",
@@ -7858,15 +8216,23 @@
       },
       {
         "path": "dist/js/internal/components/autocomplete.mjs",
-        "sha256": "dbe752c52bfe52741b393987646d17a0a28180a52285dbbfe91beb476a9745d3"
+        "sha256": "70efe9733e60c0cc5fb7962bc22937aeb9de68136ae6558df9b5d7ddfe3081dd"
       },
       {
         "path": "dist/js/internal/components/autocomplete.mjs.map",
         "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
       },
       {
+        "path": "dist/js/internal/components/barChart.mjs",
+        "sha256": "858680b688752f89e6fa0d517dd769a0c35a5712ffa932fe87fc1dfa9b6a098f"
+      },
+      {
+        "path": "dist/js/internal/components/barChart.mjs.map",
+        "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
+      },
+      {
         "path": "dist/js/internal/components/buttonGroup.mjs",
-        "sha256": "a63a83f6648436e052c01d4d46d06f0030a20263dc8920be2934e954823eeafe"
+        "sha256": "32ee4be72c1d7c21e73252236d40b5f451918fe84908e78c1acf5a0ea1f6c62a"
       },
       {
         "path": "dist/js/internal/components/buttonGroup.mjs.map",
@@ -7874,7 +8240,7 @@
       },
       {
         "path": "dist/js/internal/components/buttons.mjs",
-        "sha256": "6005e1a033957381cd0f6b6af87388b6125cf543ce31da003ff74e1a7c8a356b"
+        "sha256": "c950ab3e87ba570614ef9faba05469cdfab7045cdc608304337f282925e908c5"
       },
       {
         "path": "dist/js/internal/components/buttons.mjs.map",
@@ -7882,7 +8248,7 @@
       },
       {
         "path": "dist/js/internal/components/cards.mjs",
-        "sha256": "dc0bfa83086fb20be7a7df4dab9fb731a6da1ce9407bba9759e3a73e4715827b"
+        "sha256": "c25fdafb026a7f4f20116c22fb7291710f5b506914405f7f8d234ed08f63556b"
       },
       {
         "path": "dist/js/internal/components/cards.mjs.map",
@@ -7890,7 +8256,7 @@
       },
       {
         "path": "dist/js/internal/components/carousel.mjs",
-        "sha256": "f1783d852fd155fd807573a17fcef43f939084b918946e9ce0c9986bf22beb85"
+        "sha256": "64aeace32e2346af14a3532253287f319c7156fc6ad128eba7820f0cf633b40f"
       },
       {
         "path": "dist/js/internal/components/carousel.mjs.map",
@@ -7898,7 +8264,7 @@
       },
       {
         "path": "dist/js/internal/components/characterCounter.mjs",
-        "sha256": "8f38e40e9f6f1caa756423e76e49ae6885bfe127ae6a6832757ba46a76c574e6"
+        "sha256": "6787845d9780330d74a3437153271daa7c851fccc34467545f7f380b4e370291"
       },
       {
         "path": "dist/js/internal/components/characterCounter.mjs.map",
@@ -7906,15 +8272,31 @@
       },
       {
         "path": "dist/js/internal/components/chips.mjs",
-        "sha256": "416b69f9467904d18d025455bbd7064cd31c43a858e2bc472de3dd300d0a8222"
+        "sha256": "14406e93fcdf43ce18c82846236261cd16d8cee844e2c0cc27cca26d41746789"
       },
       {
         "path": "dist/js/internal/components/chips.mjs.map",
         "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
       },
       {
+        "path": "dist/js/internal/components/columnChart.mjs",
+        "sha256": "3b306ae7a46593aff7bea5226f67505089fbcbd2960c5d2c07b8e4daea7e9008"
+      },
+      {
+        "path": "dist/js/internal/components/columnChart.mjs.map",
+        "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
+      },
+      {
+        "path": "dist/js/internal/components/commandPalette.mjs",
+        "sha256": "738c78ee06f61a4a60ade05e344a32901c69eace4741a11c2c6832b80150e3aa"
+      },
+      {
+        "path": "dist/js/internal/components/commandPalette.mjs.map",
+        "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
+      },
+      {
         "path": "dist/js/internal/components/datepicker.mjs",
-        "sha256": "0ad675e3c4c4a06b720a2bac7dd716824b81bc664408c1b610ecb1ae4aefa5be"
+        "sha256": "34b4bf321acd2e57094ee5e00ca39606949f28e70d8c138cf98e953fbf46cc19"
       },
       {
         "path": "dist/js/internal/components/datepicker.mjs.map",
@@ -7922,15 +8304,23 @@
       },
       {
         "path": "dist/js/internal/components/expandingCard.mjs",
-        "sha256": "50c7a9a64d2daa6dd13d036ded031b56581bf60fc8670fe2893403eae7369954"
+        "sha256": "e5983ab31f24c7c96246f9ea9439e515f21688c1c35601bf894f73798ec0a6e9"
       },
       {
         "path": "dist/js/internal/components/expandingCard.mjs.map",
         "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
       },
       {
+        "path": "dist/js/internal/components/heatmapChart.mjs",
+        "sha256": "a39c0d8550757686f80801c0dec6c8f180cb70f97df7ffd7d48bac06fd06d570"
+      },
+      {
+        "path": "dist/js/internal/components/heatmapChart.mjs.map",
+        "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
+      },
+      {
         "path": "dist/js/internal/components/index.mjs",
-        "sha256": "7076c8dd6ceef9c74e2e4c6e4997ecaf85ffa6b5d56b4e6c82aab1fd67a919f7"
+        "sha256": "cea9bc9de96d0862bd38ffe639fcaabaff8a956138580de8bf0527e60ab2c087"
       },
       {
         "path": "dist/js/internal/components/index.mjs.map",
@@ -7938,31 +8328,71 @@
       },
       {
         "path": "dist/js/internal/components/lightbox.mjs",
-        "sha256": "df439b6a6f7342334afac7a979c16d68f35ea07c2dcacc553565999040294dd1"
+        "sha256": "067663dfcc46c2a3579d822ee8dba00103d7c52f08fdb468add3960893f1095a"
       },
       {
         "path": "dist/js/internal/components/lightbox.mjs.map",
         "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
       },
       {
+        "path": "dist/js/internal/components/lineChart.mjs",
+        "sha256": "f752feb5889bfe3467719cff9afaba044e502e38a6dfc818274a3ad6faafc9bf"
+      },
+      {
+        "path": "dist/js/internal/components/lineChart.mjs.map",
+        "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
+      },
+      {
         "path": "dist/js/internal/components/menu.mjs",
-        "sha256": "454a57ff306dd640e757a5e5a81a1f2e6821e238425a3ebae0efca65881940b3"
+        "sha256": "addfba47076f7b1c109ccf41d8389aa59bc48816c48c6b4402eb114715e4e231"
       },
       {
         "path": "dist/js/internal/components/menu.mjs.map",
         "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
       },
       {
+        "path": "dist/js/internal/components/mixedChart.mjs",
+        "sha256": "4d8628f7e62275fa49df216aa7274f2fb816867ee922b494500c2f959b62ea7c"
+      },
+      {
+        "path": "dist/js/internal/components/mixedChart.mjs.map",
+        "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
+      },
+      {
         "path": "dist/js/internal/components/navigationRail.mjs",
-        "sha256": "db9f32f2e16cbbd94c019bd418e79841a68e74dd71126c0a90447cd5d0b3e3a1"
+        "sha256": "66736f83f48a920f510980b74e874764ad86179e1bb788ec87150d03f88058c2"
       },
       {
         "path": "dist/js/internal/components/navigationRail.mjs.map",
         "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
       },
       {
+        "path": "dist/js/internal/components/pieChart.mjs",
+        "sha256": "4349d66fe5913469b2c1bf034a2fa4fffdeac02527344674dc8ad0878b2527ac"
+      },
+      {
+        "path": "dist/js/internal/components/pieChart.mjs.map",
+        "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
+      },
+      {
+        "path": "dist/js/internal/components/radarChart.mjs",
+        "sha256": "ed35584c2f225d8af70b2e6ce25c5ca9079f2c9dfd6970881a550a8932bd5b23"
+      },
+      {
+        "path": "dist/js/internal/components/radarChart.mjs.map",
+        "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
+      },
+      {
+        "path": "dist/js/internal/components/radialChart.mjs",
+        "sha256": "442a448832a8ad4578f603cdcebcea7ac8de52f23dce4723b114eaa06d28457a"
+      },
+      {
+        "path": "dist/js/internal/components/radialChart.mjs.map",
+        "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
+      },
+      {
         "path": "dist/js/internal/components/registry.mjs",
-        "sha256": "2a25abc4658e34d7638e9a907a9d65f059427c2187494c4c85e3a3f709b44f87"
+        "sha256": "2dde89e0abf3aae91c3ac49085b07d1f2374f036ab85e5e7e3ccb82570893f1e"
       },
       {
         "path": "dist/js/internal/components/registry.mjs.map",
@@ -7970,7 +8400,7 @@
       },
       {
         "path": "dist/js/internal/components/scrollspy.mjs",
-        "sha256": "9ba42a5dc2f73dd65d3167920aec71e538d679e3ea1d0f9a641ee12846338677"
+        "sha256": "4f6d058cc812011e8263d3fe105b8282a380587feb83fc280954e2ad2c9b2d65"
       },
       {
         "path": "dist/js/internal/components/scrollspy.mjs.map",
@@ -7978,7 +8408,7 @@
       },
       {
         "path": "dist/js/internal/components/select.mjs",
-        "sha256": "d23b148a6d7945119a1b986fafcfd4875cb48b9fc6a5dd087e409163596d3341"
+        "sha256": "6d4f17c7a4c98c38783a6353580d17dad5cc3e3bf5e5f234492d523febd9d715"
       },
       {
         "path": "dist/js/internal/components/select.mjs.map",
@@ -7986,7 +8416,7 @@
       },
       {
         "path": "dist/js/internal/components/slider.mjs",
-        "sha256": "23ae8a743646ad5f328a1de835d80e6fb53636fa7675dc71452882e26fc45fdb"
+        "sha256": "56ee5369b02ac2486d1d875b1883fb4b9cfa9953b43a108ef78f6d568410eaa3"
       },
       {
         "path": "dist/js/internal/components/slider.mjs.map",
@@ -7994,7 +8424,7 @@
       },
       {
         "path": "dist/js/internal/components/snackbar.mjs",
-        "sha256": "216a0a55aa89c7005788817f708ed09c54466ef210131cf8725b91a56ef845af"
+        "sha256": "8301aa87362db9c397b9fcee7a2f2b7940a7bce7c38dbb88476e40caf3e69ea8"
       },
       {
         "path": "dist/js/internal/components/snackbar.mjs.map",
@@ -8002,7 +8432,7 @@
       },
       {
         "path": "dist/js/internal/components/tabs.mjs",
-        "sha256": "f515fccd08df56883fca5df8ee257415db2c7204852cb2af810a89ad5177b79b"
+        "sha256": "67511ea6ebfe8dc0f4a9d14ce3dc353f4c92b2f281ab6783dcc71fece673a926"
       },
       {
         "path": "dist/js/internal/components/tabs.mjs.map",
@@ -8010,7 +8440,7 @@
       },
       {
         "path": "dist/js/internal/components/timepicker.mjs",
-        "sha256": "1d9c3235d534c21e804b9535c681dcbc72b9d2b64f7e7299853684cabde386c8"
+        "sha256": "323246f5491b75b51ba5802a956975fa82f177484a234f315d158a651ad0a88b"
       },
       {
         "path": "dist/js/internal/components/timepicker.mjs.map",
@@ -8018,7 +8448,7 @@
       },
       {
         "path": "dist/js/internal/components/tooltip.mjs",
-        "sha256": "6e5f46089d91be91441c594971a537a5e08e24bee8fb4f1a42ad6ccad8d45ec2"
+        "sha256": "038b873afd2821266e637e06895f36e2bd864521b34d5cd7cf63899eb24c489e"
       },
       {
         "path": "dist/js/internal/components/tooltip.mjs.map",
@@ -8026,7 +8456,7 @@
       },
       {
         "path": "dist/js/internal/core/component.mjs",
-        "sha256": "4fc9796e0247f94aedca0632177032935f443a03c134731e20746c41b5e1d68f"
+        "sha256": "a3e5b3ef04e5a5fa13981d26f5c8f9f3ae4d922531dc11916f47413ac5b71fb5"
       },
       {
         "path": "dist/js/internal/core/component.mjs.map",
@@ -8034,7 +8464,7 @@
       },
       {
         "path": "dist/js/internal/core/utils.mjs",
-        "sha256": "8bfbe2743af24482ee98320d3561cffd5504341ba1d633a30a0e046aa9a02da3"
+        "sha256": "f32ebb65c6d4c7efba99991c581772e6dc519986024fb0ab0d03153595e0f3e1"
       },
       {
         "path": "dist/js/internal/core/utils.mjs.map",
@@ -8042,7 +8472,7 @@
       },
       {
         "path": "dist/js/internal/plugins/dockedDisplayPlugin.mjs",
-        "sha256": "e0c02efef3fa24af4144550764c22a8517831658a997956434ff34defb1fbd5e"
+        "sha256": "4db84d2c65e6dcb5ab9681f39d90806a31effc1ae3608eea237536b3996b2dca"
       },
       {
         "path": "dist/js/internal/plugins/dockedDisplayPlugin.mjs.map",
@@ -8050,7 +8480,7 @@
       },
       {
         "path": "dist/js/modular.mjs",
-        "sha256": "42ffa86de84072d53e7a47b9fbda316e5b6729e5df3e6c6e49cf36497f94f99f"
+        "sha256": "cd447c581a03d7540eca901cd126a8a51d22faffd99a7302e55c9a5fdad2042c"
       },
       {
         "path": "dist/js/modular.mjs.map",
@@ -8066,7 +8496,7 @@
       },
       {
         "path": "dist/types/behaviors/forms.d.ts",
-        "sha256": "b09c21db8720872d3d6933d78cc8854220d2ed2c8c63ea4cc4cf411b714c7365"
+        "sha256": "9ac00ec332e6eeffb9086b59c34347dffaf41464f42f09d26f16e2d82bd6c2e4"
       },
       {
         "path": "dist/types/behaviors/sheetDrag.d.ts",
@@ -8078,11 +8508,15 @@
       },
       {
         "path": "dist/types/components/appBar.d.ts",
-        "sha256": "53e0a688c6c1bf873ebafe30926385f7cc4833c3c386b5174d03f76e4ea33e69"
+        "sha256": "1b9c482593ad06df521e8c26156974c275bb3f9493798ca89ec4a833b1ad9aba"
       },
       {
         "path": "dist/types/components/autocomplete.d.ts",
-        "sha256": "874fbf674cf01f8ac783f7475410836ecd00e2c38cf734c096fa28a969ac8ddf"
+        "sha256": "af684ae917ddd7d1bb8ecc59eaf50f6e0033c93368ceb14c3ca1ee671ef0d889"
+      },
+      {
+        "path": "dist/types/components/barChart.d.ts",
+        "sha256": "39c30b806122d9997b13ba31f7beb2a8ce5e16ab6fe02895b002f8c86ca28b62"
       },
       {
         "path": "dist/types/components/buttonGroup.d.ts",
@@ -8109,48 +8543,80 @@
         "sha256": "cf40bc06b2ad4f551dc856479bd5fd6223b3d59bfd436c5f0de93abae356942e"
       },
       {
+        "path": "dist/types/components/columnChart.d.ts",
+        "sha256": "efae08ea775ba7b5b32bed234f4f63d0ebd8d850fa4a10e2e939ac1a6871e771"
+      },
+      {
+        "path": "dist/types/components/commandPalette.d.ts",
+        "sha256": "bf7dfcc76604a6e0801f7ce44004e5d9a3bfb544b4567c0ee110e0f281205b1d"
+      },
+      {
         "path": "dist/types/components/datepicker.d.ts",
-        "sha256": "c3a1c2055c44dbc55fa39784a1d3d5837abda9944345c5c5fcd6e64d277d1894"
+        "sha256": "f39e34cd918a97d53ff4a82c349487294c8d04c6ddb95c37ae0d7167deaca296"
       },
       {
         "path": "dist/types/components/expandingCard.d.ts",
         "sha256": "d892fbc8dc507fdae9fefffc93fce232c864d988072c6f33a940e3bdf175b8fd"
       },
       {
+        "path": "dist/types/components/heatmapChart.d.ts",
+        "sha256": "e88ae6d254edd6aae0172a0972e878d799e17733d3f17a9375e22e2d045e1c09"
+      },
+      {
         "path": "dist/types/components/index.d.ts",
-        "sha256": "72db932de6ad19f9957db85a253ca61fd380a00b9c1770334619763555a0752b"
+        "sha256": "bc674180e22804d1288905def79deab530089e4f00e637e752d94a26ce70b6af"
       },
       {
         "path": "dist/types/components/lightbox.d.ts",
         "sha256": "00cd2acb168308fe5152831685181e508571a9e749d7196c9af8baa0d0363922"
       },
       {
+        "path": "dist/types/components/lineChart.d.ts",
+        "sha256": "83393b8d831f3f0b6a97e861ed6b368d265d4f043220d973f32b601abd5a8c1f"
+      },
+      {
         "path": "dist/types/components/menu.d.ts",
-        "sha256": "25191d4787a5e297f54f6fc2157ac6226748c3bc283d3c711b62dbc4d76c24b4"
+        "sha256": "8b314641f2b8d09a0b4b53fc7a94a83164bdf4ecda46a38475b5513bfd4cc518"
+      },
+      {
+        "path": "dist/types/components/mixedChart.d.ts",
+        "sha256": "4787bb9b0521e6030845ff396cde89f550962ff0eb4231585707a2d291f2094a"
       },
       {
         "path": "dist/types/components/navigationRail.d.ts",
         "sha256": "689442ca84871733884a8951e98856e91088e986ffdfc1502f3866372e80df72"
       },
       {
+        "path": "dist/types/components/pieChart.d.ts",
+        "sha256": "2dfb537dd2f2d76abf7f59c2406aa8a0c2cc9b6b3425d2ce87087efa4dc33e7f"
+      },
+      {
+        "path": "dist/types/components/radarChart.d.ts",
+        "sha256": "f45af99b1e153fea0d4615a7007e8537fe8b96d2d6fb5a18c64d01012bb9f60b"
+      },
+      {
+        "path": "dist/types/components/radialChart.d.ts",
+        "sha256": "947dbc5279204cc6014e5f8ac4b2c17afca09c8f768f43897f7860e9cf51fa73"
+      },
+      {
         "path": "dist/types/components/registry.d.ts",
-        "sha256": "6b47062885aa10daf1407df8dacbfe1e5bc979d36752e22188b12ce5bc1faf2a"
+        "sha256": "1aa08bc0749ad07910539596aba15b42a30afc86e5b92d8017f64d332712bd54"
       },
       {
         "path": "dist/types/components/scrollspy.d.ts",
-        "sha256": "479f62139863e104b4c4aa3a643ac9b2bfcc87b31d9af2081af0a8592f13aa42"
+        "sha256": "bcd0310231a1470e294b50677392bd5a38b5a5a13d43c0436c9e749e588d53bb"
       },
       {
         "path": "dist/types/components/select.d.ts",
-        "sha256": "ece92fdd2a3272d295e0229e6d90113747adebfceff918726b3cb2c9c9ae2885"
+        "sha256": "9b9ce595f194f6c50b3def6cc6940bca4aad3054b10e249e9d1130e2845e9723"
       },
       {
         "path": "dist/types/components/slider.d.ts",
-        "sha256": "186fd063cc9aa33e5015c1d8ccd0d717a176daaa7212d7fe630d3477c0f80a4f"
+        "sha256": "1d1927413d7871b2dd43db77b2be0ed5fb39505bfec732137f3970c071de8e1c"
       },
       {
         "path": "dist/types/components/snackbar.d.ts",
-        "sha256": "a65098cb4dbec93fb6aee0e29eda2baa838c492f35fd4262952b7170f421c88a"
+        "sha256": "78d342fdf92d3c9e225cf39090ac86d7f54ea4cac283660881f6bce56ad30a13"
       },
       {
         "path": "dist/types/components/tabs.d.ts",
@@ -8158,11 +8624,11 @@
       },
       {
         "path": "dist/types/components/timepicker.d.ts",
-        "sha256": "f7f8830332a0e131612f571a8979cafb6069057274f06d299cfaf768bfc9d364"
+        "sha256": "23c92c86ef88f353c95ee521af51af4b02cc71e5b58247fe3d02428a275b65b7"
       },
       {
         "path": "dist/types/components/tooltip.d.ts",
-        "sha256": "9f89f66136130cbffda5bb8f1193a7f36c56d032a39d5c8e9be4b68b071b695f"
+        "sha256": "8b0cdb4af3282288810172e05df54860b45710eb5e736a2302fbce8d426e8544"
       },
       {
         "path": "dist/types/core/component.d.ts",
@@ -8178,7 +8644,7 @@
       },
       {
         "path": "dist/types/modular.d.ts",
-        "sha256": "a3d6819f7c5347e9007ec4a22066f3caa0f2df82939ed03b49361976cc9e92dd"
+        "sha256": "937bade42682a7e4602f11d1ed79c030a47faba5ee809428a510f31a15a918e5"
       },
       {
         "path": "dist/types/plugins/dockedDisplayPlugin.d.ts",
@@ -8226,7 +8692,7 @@
       },
       {
         "path": "scripts/check-container-reports.mjs",
-        "sha256": "0c4097ed273923f28c0fd9670a29623effc955455a6bd162ce495fe87f59ba7a"
+        "sha256": "e2156b95fc569218089f435f383efba77be2d2d59745a49b4827ac68787760c6"
       },
       {
         "path": "scripts/copy-fonts.mjs",
@@ -8266,7 +8732,7 @@
       },
       {
         "path": "scripts/gen-expressivecss-skill.mjs",
-        "sha256": "b3553955ded1e4f0eb41af3d06602af600eaef042e8252dbb9c0a60a72e485f0"
+        "sha256": "5543e1aebefd41eb460ece3a0436212fdfd6ae63ef7336e730a1609741489936"
       },
       {
         "path": "scripts/gen-semantics.mjs",
@@ -8278,7 +8744,7 @@
       },
       {
         "path": "scripts/lib/bounded-file.mjs",
-        "sha256": "497171fb99f58c5802fa4e7e6942fc24e91e96e3632e0bc2dc44160c9830c89b"
+        "sha256": "bfa93b80a54df949d86771a911b4dc6c138d51179d200470168949c13fa13b6d"
       },
       {
         "path": "scripts/lib/consumer-browser.mjs",
@@ -8310,7 +8776,7 @@
       },
       {
         "path": "scripts/release.mjs",
-        "sha256": "896ced09d7ef381b89e7ede3762f26f101bbad4b3a48fd17fee8190820333966"
+        "sha256": "4e2fe0a7c4da72045e7e5a6a1ee8f309ab8288c9bbd60c28b4af0f6e6a4b5001"
       },
       {
         "path": "scripts/report-expressivecss-assistance-cost.mjs",
@@ -8318,7 +8784,7 @@
       },
       {
         "path": "scripts/run-docker.mjs",
-        "sha256": "905a7df0afbdc3d7d4fc1acca450b0ee5a090552f7d4247eb82ba4ee752a29ee"
+        "sha256": "1dc40423305f0e7ce94bda766f3a00f4b79079614e058711b7d6308636e9d20c"
       },
       {
         "path": "scripts/run-node-tests.mjs",
@@ -8330,717 +8796,1131 @@
       },
       {
         "path": "scripts/verify-packages.mjs",
-        "sha256": "c54bf00bc7d974be3465cbb66e3f578a872b56a5ad0272a7f07a808812c03a81"
+        "sha256": "a9d1383b178d90cf2c63c263f4ee6926b8208903e800ffeb0ef8d2e129bd030a"
       },
       {
         "path": "scripts/verify-site.mjs",
-        "sha256": "884050db7b77ffe52a79cf0fa878cf37635dd52d46bc1d6bd9ebc82f9a400e96"
+        "sha256": "ff28923170a44a4e79a012851dc1bc2fdd93057358959a01f5ad8218aef64fcc"
       },
       {
         "path": "package.json",
-        "sha256": "88b2034817b16ad7998374df75254290754b56c96f71ebb5b90cc9c6c26e8722"
+        "sha256": "f22630f8cf8803f3bb77cc8ebb2e6ad5027590ece06a0657e5bf18b2c9a6cfa3"
       },
       {
         "path": "package-lock.json",
-        "sha256": "6a3238528050b38179d75e62120ff4c47cb1342b527fa738e58f682783b35673"
+        "sha256": "8bfedca9d4e1bdec3a5f42bd1280315e89edf8a68afbe0af4a7d1f179eec55ec"
       },
       {
         "path": "semantics.json",
-        "sha256": "6ff03a745af267761fff8fd78beff9acc31cd94bc35b5ff2fbebf6259027235e"
+        "sha256": "05946510f94592edb6fa444bf8a6050ba0a30d1ebb5c70d11c7629d079826daa"
       }
     ],
     "results": [
       {
+        "file": "tests/accordion-browser.test.js",
+        "name": "chromium: accordion joins its tiles, turns the chevron and keeps one item open per name",
+        "status": "passed",
+        "durationMs": 357.036558
+      },
+      {
+        "file": "tests/avatar-browser.test.js",
+        "name": "chromium: avatar sizes its circle, names its initials and overlaps a group",
+        "status": "passed",
+        "durationMs": 285.647594
+      },
+      {
+        "file": "tests/bar-chart-browser.test.js",
+        "name": "chromium: bar chart draws grouped, stacked and negative bars from its table",
+        "status": "passed",
+        "durationMs": 299.070473
+      },
+      {
+        "file": "tests/bar-chart-browser.test.js",
+        "name": "chromium: bar chart tooltip and band follow the pointer and the up and down arrows",
+        "status": "passed",
+        "durationMs": 554.661402
+      },
+      {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group toggle colors resolve in a browser",
         "status": "passed",
-        "durationMs": 172.270356
+        "durationMs": 187.819631
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group geometry resolves for overrides, targets, and RTL",
         "status": "passed",
-        "durationMs": 130.976501
+        "durationMs": 150.646964
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "standard press redistribution keeps its rendered width stable",
         "status": "passed",
-        "durationMs": 679.990219
+        "durationMs": 699.448845
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "keyboard press changes icon widths and rendered corners",
         "status": "passed",
-        "durationMs": 1196.859806
+        "durationMs": 1221.112092
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "selection-required skips disabled controls and preserves a selection",
         "status": "passed",
-        "durationMs": 308.773227
+        "durationMs": 320.173338
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "connected translated labels remain reachable in a constrained scroller",
         "status": "passed",
-        "durationMs": 131.222739
+        "durationMs": 143.83957
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "dragged and picked-up states override simultaneous pointer states",
         "status": "passed",
-        "durationMs": 780.075582
+        "durationMs": 780.526683
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "invalid disclosures keep their panels visible and operable",
         "status": "passed",
-        "durationMs": 176.621495
+        "durationMs": 182.162369
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
         "status": "passed",
-        "durationMs": 134.624875
+        "durationMs": 146.86255
+      },
+      {
+        "file": "tests/column-chart-browser.test.js",
+        "name": "chromium: column chart draws grouped, stacked and negative columns from its table",
+        "status": "passed",
+        "durationMs": 266.901612
+      },
+      {
+        "file": "tests/column-chart-browser.test.js",
+        "name": "chromium: column chart tooltip and band follow the pointer and the arrow keys",
+        "status": "passed",
+        "durationMs": 279.729395
+      },
+      {
+        "file": "tests/command-palette-browser.test.js",
+        "name": "chromium: command palette opens on its shortcut, filters, moves with the arrows and runs a command",
+        "status": "passed",
+        "durationMs": 503.54096
+      },
+      {
+        "file": "tests/data-table-browser.test.js",
+        "name": "chromium: data table keeps table semantics, sticks its header and draws sort and selection",
+        "status": "passed",
+        "durationMs": 305.992935
+      },
+      {
+        "file": "tests/drop-zone-browser.test.js",
+        "name": "chromium: drop zone covers its label with the file input, marks a drag and lists chosen files",
+        "status": "passed",
+        "durationMs": 358.394989
+      },
+      {
+        "file": "tests/empty-state-browser.test.js",
+        "name": "chromium: empty state centers its content and rings the leading icon",
+        "status": "passed",
+        "durationMs": 229.367048
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (chromium)",
         "status": "passed",
-        "durationMs": 1849.992767
+        "durationMs": 1840.72428
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (chromium)",
         "status": "passed",
-        "durationMs": 228.723302
+        "durationMs": 234.301414
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete settings example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10281.781771
+        "durationMs": 10132.983614
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete editor example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10526.507949
+        "durationMs": 10328.239573
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete list-detail example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10412.266949
+        "durationMs": 10278.115975
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
         "status": "passed",
-        "durationMs": 849.242656
+        "durationMs": 846.662903
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "resource observations detect omitted teardown after a partial replacement",
         "status": "passed",
-        "durationMs": 166.290619
+        "durationMs": 188.941813
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip positioning preserves margins and viewport edges after scrolling",
         "status": "passed",
-        "durationMs": 167.59558
+        "durationMs": 175.696493
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip destroy cancels pending delay and animation callbacks",
         "status": "passed",
-        "durationMs": 159.675586
+        "durationMs": 172.654804
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Node can import the ESM bundle but runtime initialization requires a document",
         "status": "passed",
-        "durationMs": 74.568926
+        "durationMs": 35.133431
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "current FAB sizes preserve geometry and explicit extended variants",
         "status": "passed",
-        "durationMs": 157.379522
+        "durationMs": 181.088327
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "speed-dial CSS and runtime options are removed",
         "status": "passed",
-        "durationMs": 0.706615
+        "durationMs": 0.783705
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "FAB menu preserves keyboard, dismissal and responsive behavior",
         "status": "passed",
-        "durationMs": 697.359184
+        "durationMs": 721.824502
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material grading rejects candidate evidence and missing or malformed operator observations",
         "status": "passed",
-        "durationMs": 13.889701
+        "durationMs": 7.707737
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
         "status": "passed",
-        "durationMs": 22705.402361
+        "durationMs": 22286.793671
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material review fixture is semantically valid despite intrusive feedback and mismatched selection intent",
         "status": "passed",
-        "durationMs": 592.161308
+        "durationMs": 599.466556
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "web accessibility fixture exposes target geometry, keyboard reorder, and forced-color defects",
         "status": "passed",
-        "durationMs": 254.521617
+        "durationMs": 238.114518
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: tooltip hover, dismissal, reduced motion and native form behavior",
         "status": "passed",
-        "durationMs": 5064.606078
+        "durationMs": 5751.996707
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: select exposes only the generated control and restores native accessibility",
+        "status": "passed",
+        "durationMs": 340.5765
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: select preserves every associated label and authored naming precedence",
+        "status": "passed",
+        "durationMs": 1433.566675
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: select validation remains usable with a hidden native control: multiple=false",
+        "status": "passed",
+        "durationMs": 441.314104
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: select validation remains usable with a hidden native control: multiple=true",
+        "status": "passed",
+        "durationMs": 416.405493
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: select validation preserves native focus scope: multiple=false",
+        "status": "passed",
+        "durationMs": 344.255665
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: select validation preserves native focus scope: multiple=true",
+        "status": "passed",
+        "durationMs": 335.018458
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining native controls preserve names, keyboard state and form values",
         "status": "passed",
-        "durationMs": 327.060007
+        "durationMs": 329.998492
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
         "status": "passed",
-        "durationMs": 251.248429
+        "durationMs": 251.474837
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: linear progress follows inherited and overridden RTL direction",
         "status": "passed",
-        "durationMs": 276.457049
+        "durationMs": 292.658056
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: progress remains visible in forced colors",
         "status": "passed",
-        "durationMs": 6063.51376
+        "durationMs": 6064.788856
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining progress and loading variants stop spatial motion",
         "status": "passed",
-        "durationMs": 197.052578
+        "durationMs": 222.547764
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining snackbar retains a focused action until focus leaves",
         "status": "passed",
-        "durationMs": 1284.839396
+        "durationMs": 1286.563376
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: autocomplete searches input-only edits without duplicate keyboard searches",
+        "status": "passed",
+        "durationMs": 274.60424
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: autocomplete announces results and selection without moving focus",
         "status": "passed",
-        "durationMs": 233.315039
+        "durationMs": 237.462763
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker supports calendar keyboard navigation and redraw focus",
         "status": "passed",
-        "durationMs": 406.369979
+        "durationMs": 414.589325
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker selection lifecycle: default",
         "status": "passed",
-        "durationMs": 184.986774
+        "durationMs": 220.898515
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker selection lifecycle: multiple",
         "status": "passed",
-        "durationMs": 508.559787
+        "durationMs": 536.453776
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker selection lifecycle: range",
         "status": "passed",
-        "durationMs": 253.501674
+        "durationMs": 273.450258
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker selection lifecycle: clear",
         "status": "passed",
-        "durationMs": 197.060228
+        "durationMs": 233.516189
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: date picker calendar-date parsing in America/Chicago",
+        "status": "passed",
+        "durationMs": 411.474617
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: date picker calendar-date parsing in UTC",
+        "status": "passed",
+        "durationMs": 435.129166
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: date picker calendar-date parsing in Asia/Tokyo",
+        "status": "passed",
+        "durationMs": 450.041225
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: time picker digital values: input",
         "status": "passed",
-        "durationMs": 512.932115
+        "durationMs": 548.99933
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: time picker digital values: empty",
         "status": "passed",
-        "durationMs": 405.851302
+        "durationMs": 434.052264
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: time picker digital values: boundaries",
         "status": "passed",
-        "durationMs": 269.122092
+        "durationMs": 299.895167
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: Datepicker footer activates once per Enter or Space",
+        "status": "passed",
+        "durationMs": 207.514856
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: Timepicker footer activates once per Enter or Space",
+        "status": "passed",
+        "durationMs": 205.124523
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: time picker exposes named keyboard controls in inline and docked modes",
         "status": "passed",
-        "durationMs": 253.122706
+        "durationMs": 262.342193
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: authored snackbar survives focus reentry during dismiss",
+        "status": "passed",
+        "durationMs": 431.842808
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: authored snackbar survives focus reentry during replace",
+        "status": "passed",
+        "durationMs": 447.203654
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: actionable snackbar persists and restores focus on keyboard dismissal",
         "status": "passed",
-        "durationMs": 612.732991
+        "durationMs": 629.027525
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining lightbox supports Space and preserves its image on teardown",
         "status": "passed",
-        "durationMs": 171.461102
+        "durationMs": 201.611707
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
         "status": "passed",
-        "durationMs": 303.203047
+        "durationMs": 347.131485
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
         "status": "passed",
-        "durationMs": 242.415423
+        "durationMs": 259.545972
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: interrupt",
         "status": "passed",
-        "durationMs": 360.613166
+        "durationMs": 390.856357
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: reopen",
         "status": "passed",
-        "durationMs": 657.376641
+        "durationMs": 692.102995
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: motion",
         "status": "passed",
-        "durationMs": 370.361537
+        "durationMs": 404.157517
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: focus",
         "status": "passed",
-        "durationMs": 355.444483
+        "durationMs": 383.12978
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: isolation",
         "status": "passed",
-        "durationMs": 636.653038
+        "durationMs": 652.749354
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: triggers",
         "status": "passed",
-        "durationMs": 3549.884808
+        "durationMs": 3518.148225
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: callbacks",
         "status": "passed",
-        "durationMs": 732.577711
+        "durationMs": 752.982581
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: destroy",
         "status": "passed",
-        "durationMs": 565.47104
+        "durationMs": 584.22602
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: ScrollSpy isolation: offsets",
+        "status": "passed",
+        "durationMs": 241.845962
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: ScrollSpy isolation: groups",
+        "status": "passed",
+        "durationMs": 235.619915
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: ScrollSpy isolation: teardown",
+        "status": "passed",
+        "durationMs": 213.709814
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: ScrollSpy isolation: anchors",
+        "status": "passed",
+        "durationMs": 1668.908472
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining lightbox teardown cancels pending work and preserves native button focus",
         "status": "passed",
-        "durationMs": 393.946387
+        "durationMs": 398.576204
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining slider accepts zero maximum and keeps value labels aligned after resize",
         "status": "passed",
-        "durationMs": 299.457475
+        "durationMs": 305.452669
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining autocomplete preserves a preselected display label on focus",
         "status": "passed",
-        "durationMs": 191.297729
+        "durationMs": 208.341501
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: carousel tracks keep default touch-action so a vertical swipe scrolls the page",
+        "status": "passed",
+        "durationMs": 487.201212
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: top app bar rests on surface and fills only once the page scrolls",
+        "status": "passed",
+        "durationMs": 448.849453
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: slider stops paint a dot on the active track at each step before the handle",
+        "status": "passed",
+        "durationMs": 536.766993
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: native indeterminate progress keeps its track and a 40% indicator",
+        "status": "passed",
+        "durationMs": 595.842711
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: remaining datepicker date input shows its date where inputs cannot render ::after",
+        "status": "passed",
+        "durationMs": 601.014685
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: carousel mouse drag scrolls every snapping layout and a drag never follows a link",
+        "status": "passed",
+        "durationMs": 1036.965726
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: datepicker date input overlay follows edits to the native value",
+        "status": "passed",
+        "durationMs": 215.254434
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: datepicker replaces the native date picker only while its calendar is shown",
+        "status": "passed",
+        "durationMs": 559.573709
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: field icons paint above a datepicker date input and under a docked search view",
+        "status": "passed",
+        "durationMs": 216.250437
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: slider stops sit at each step from min, need a usable step and clear on destroy",
+        "status": "passed",
+        "durationMs": 741.29775
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: a header that holds only tabs is not a pinned top app bar",
+        "status": "passed",
+        "durationMs": 192.124771
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: flexible app bars keep the scroll position when they collapse",
+        "status": "passed",
+        "durationMs": 1021.926048
+      },
+      {
+        "file": "tests/expressivecss-web-accessibility-browser.test.js",
+        "name": "chromium: a flexible app bar low in the viewport keeps its size",
+        "status": "passed",
+        "durationMs": 882.745067
+      },
+      {
+        "file": "tests/heatmap-chart-browser.test.js",
+        "name": "chromium: heatmap chart draws a shaded grid and a scale from its table",
+        "status": "passed",
+        "durationMs": 264.593148
+      },
+      {
+        "file": "tests/heatmap-chart-browser.test.js",
+        "name": "chromium: heatmap chart tooltip follows the pointer and the arrow keys round the grid",
+        "status": "passed",
+        "durationMs": 543.292449
+      },
+      {
+        "file": "tests/line-chart-browser.test.js",
+        "name": "chromium: line chart draws its table, keeps it readable and restores it on destroy",
+        "status": "passed",
+        "durationMs": 245.971234
+      },
+      {
+        "file": "tests/line-chart-browser.test.js",
+        "name": "chromium: line chart tooltip follows the pointer and the arrow keys",
+        "status": "passed",
+        "durationMs": 248.17618
+      },
+      {
+        "file": "tests/line-chart-browser.test.js",
+        "name": "chromium: line chart handles cards, headerless tables, RTL, strict values and forced colors",
+        "status": "passed",
+        "durationMs": 318.961387
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "AppBar documentation demos leave site controls reachable (chromium)",
+        "status": "passed",
+        "durationMs": 360.222036
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Select native form synchronization: disabled (chromium)",
         "status": "passed",
-        "durationMs": 246.805552
+        "durationMs": 297.779381
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Select native form synchronization: reset (chromium)",
         "status": "passed",
-        "durationMs": 435.239291
+        "durationMs": 509.137522
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Select native form synchronization: refresh (chromium)",
         "status": "passed",
-        "durationMs": 276.533679
+        "durationMs": 398.440886
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Select native form synchronization: interaction (chromium)",
         "status": "passed",
-        "durationMs": 674.785676
+        "durationMs": 750.078801
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Panes use the nearest available width at layout boundaries (chromium)",
         "status": "passed",
-        "durationMs": 542.276255
+        "durationMs": 899.175384
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Panes preserve footer icon-button geometry (chromium)",
         "status": "passed",
-        "durationMs": 226.534887
+        "durationMs": 298.999624
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Panes preserve compact selection and independent scrolling (chromium)",
         "status": "passed",
-        "durationMs": 635.833225
+        "durationMs": 885.817585
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "AppBar focus ownership and teardown (chromium)",
         "status": "passed",
-        "durationMs": 596.630467
+        "durationMs": 662.827595
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "AppBar collapsed actions remain reachable (chromium)",
         "status": "passed",
-        "durationMs": 3952.754223
+        "durationMs": 4296.85301
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "AppBar native search dismissal and reopening (chromium)",
         "status": "passed",
-        "durationMs": 4990.806773
+        "durationMs": 5475.045034
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Side sheet rendered docking and drag direction (chromium)",
         "status": "passed",
-        "durationMs": 21069.033384
+        "durationMs": 22029.086747
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "Sheets distinguish recent flicks from pauses and reversals (chromium)",
+        "status": "passed",
+        "durationMs": 2332.863298
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Sheets cancel only the active pointer and clean interrupted drags (chromium)",
         "status": "passed",
-        "durationMs": 1741.789802
+        "durationMs": 2128.630679
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Side sheet translated content and close actions remain reachable (chromium)",
         "status": "passed",
-        "durationMs": 4550.99229
+        "durationMs": 4934.410607
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Bottom sheets keep long content and actions reachable at compact widths (chromium)",
         "status": "passed",
-        "durationMs": 356.689485
+        "durationMs": 464.158708
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel navigation scrolls and focuses logical items (chromium)",
         "status": "passed",
-        "durationMs": 26423.61963
+        "durationMs": 26618.532693
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "Carousel ignores stale scrollend during a newer navigation (chromium)",
+        "status": "passed",
+        "durationMs": 302.488329
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel destroys pending scroll completion work (chromium)",
         "status": "passed",
-        "durationMs": 167.946037
+        "durationMs": 204.697835
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel mounted motion changes preserve explicit pause (chromium)",
         "status": "passed",
-        "durationMs": 679.95995
+        "durationMs": 690.426397
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel focus and visibility suspension survive teardown (chromium)",
         "status": "passed",
-        "durationMs": 272.12508
+        "durationMs": 283.40262
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Slider labels follow native handles through direction and resize (chromium)",
         "status": "passed",
-        "durationMs": 6612.776905
+        "durationMs": 6625.771365
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Slider input events and paired ranges retain native interaction (chromium)",
         "status": "passed",
-        "durationMs": 2608.319684
+        "durationMs": 2614.321571
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Slider forced colors preserve tracks and handles (chromium)",
         "status": "passed",
-        "durationMs": 2300.300731
+        "durationMs": 2349.499785
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "select and calendar treat external values as data (chromium)",
         "status": "passed",
-        "durationMs": 135.35859
+        "durationMs": 152.502181
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu cancels superseded callbacks and teardown work (chromium)",
         "status": "passed",
-        "durationMs": 219.306979
+        "durationMs": 246.452581
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "NavigationRail dismisses a nested menu before handling Escape (chromium)",
+        "status": "passed",
+        "durationMs": 637.07207
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "NavigationRail preserves callback focus inside child shadow roots (chromium)",
+        "status": "passed",
+        "durationMs": 293.848288
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "Menu click containment follows closeOnClick inside shadow roots (chromium)",
+        "status": "passed",
+        "durationMs": 1485.773089
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "Menu dismissal preserves outside input and callback focus (chromium)",
+        "status": "passed",
+        "durationMs": 789.595091
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu excludes closing content and preserves callback focus (chromium)",
         "status": "passed",
-        "durationMs": 237.843346
+        "durationMs": 284.193384
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu scopes nested keys and mirrors flyouts in RTL (chromium)",
         "status": "passed",
-        "durationMs": 455.376408
+        "durationMs": 576.030356
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu consumers keep values and focus through closing (chromium)",
         "status": "passed",
-        "durationMs": 217.092014
+        "durationMs": 266.426905
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
         "status": "passed",
-        "durationMs": 182.93166
+        "durationMs": 216.111469
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Chips deletion targets and focus recovery (chromium)",
         "status": "passed",
-        "durationMs": 1573.150841
+        "durationMs": 1618.183717
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Chips callbacks and instance teardown preserve focus (chromium)",
         "status": "passed",
-        "durationMs": 679.701961
+        "durationMs": 701.998159
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Chips wrapped labels keep separate actions reachable (chromium)",
         "status": "passed",
-        "durationMs": 273.678949
+        "durationMs": 280.44924
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs synchronize swipe selection and callbacks (chromium)",
         "status": "passed",
-        "durationMs": 547.593117
+        "durationMs": 605.084278
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "Tabs resolve literal panel IDs in normal and swipeable modes (chromium)",
+        "status": "passed",
+        "durationMs": 906.332627
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs restore panels on teardown and remount (chromium)",
         "status": "passed",
-        "durationMs": 229.738294
+        "durationMs": 235.667615
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs threshold keeps native links and ordinary panels (chromium)",
         "status": "passed",
-        "durationMs": 234.687759
+        "durationMs": 202.803459
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs hash selection, native dragging and overflow geometry (chromium)",
         "status": "passed",
-        "durationMs": 4056.475399
+        "durationMs": 4117.499662
+      },
+      {
+        "file": "tests/message-browser.test.js",
+        "name": "chromium: message layout anchors the avatar, follows its side and joins grouped corners",
+        "status": "passed",
+        "durationMs": 325.277444
+      },
+      {
+        "file": "tests/mixed-chart-browser.test.js",
+        "name": "chromium: mixed chart draws columns, areas and lines on two scales",
+        "status": "passed",
+        "durationMs": 236.436669
+      },
+      {
+        "file": "tests/pie-chart-browser.test.js",
+        "name": "chromium: pie chart draws slices, a legend and a donut total from its table",
+        "status": "passed",
+        "durationMs": 252.610329
+      },
+      {
+        "file": "tests/pie-chart-browser.test.js",
+        "name": "chromium: pie chart tooltip follows the pointer round the pie and the arrow keys",
+        "status": "passed",
+        "durationMs": 418.151162
+      },
+      {
+        "file": "tests/popover-browser.test.js",
+        "name": "chromium: popover anchors to its button, flips at the edge and stays open while used",
+        "status": "passed",
+        "durationMs": 598.382774
+      },
+      {
+        "file": "tests/radar-chart-browser.test.js",
+        "name": "chromium: radar chart draws a grid, shapes, labels and a legend from its table",
+        "status": "passed",
+        "durationMs": 238.312536
+      },
+      {
+        "file": "tests/radar-chart-browser.test.js",
+        "name": "chromium: radar chart tooltip follows the pointer round the spokes and the arrow keys",
+        "status": "passed",
+        "durationMs": 294.362065
+      },
+      {
+        "file": "tests/radial-chart-browser.test.js",
+        "name": "chromium: radial chart draws rings, a legend and a total from its table",
+        "status": "passed",
+        "durationMs": 258.628178
+      },
+      {
+        "file": "tests/radial-chart-browser.test.js",
+        "name": "chromium: radial chart tooltip follows the pointer across the rings and the arrow keys",
+        "status": "passed",
+        "durationMs": 388.251846
+      },
+      {
+        "file": "tests/rating-browser.test.js",
+        "name": "chromium: rating fills stars up to the choice, previews on hover and keeps native radios",
+        "status": "passed",
+        "durationMs": 442.679424
+      },
+      {
+        "file": "tests/skeleton-browser.test.js",
+        "name": "chromium: skeleton shimmers, stops under reduced motion and stays out of the accessibility tree",
+        "status": "passed",
+        "durationMs": 267.723947
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the default split button is the small family",
         "status": "passed",
-        "durationMs": 1.012203
+        "durationMs": 0.649605
       },
       {
         "file": "tests/split-button.test.js",
         "name": "xsmall is 32px tall with a 22px trailing icon",
         "status": "passed",
-        "durationMs": 0.219278
+        "durationMs": 0.182729
       },
       {
         "file": "tests/split-button.test.js",
         "name": "small is 40px tall with a 22px trailing icon",
         "status": "passed",
-        "durationMs": 0.199449
+        "durationMs": 0.103919
       },
       {
         "file": "tests/split-button.test.js",
         "name": "medium is 56px tall with a 26px trailing icon",
         "status": "passed",
-        "durationMs": 0.127909
+        "durationMs": 0.117229
       },
       {
         "file": "tests/split-button.test.js",
         "name": "large is 96px tall with a 38px trailing icon",
         "status": "passed",
-        "durationMs": 0.140799
+        "durationMs": 0.128449
       },
       {
         "file": "tests/split-button.test.js",
         "name": "xlarge is 136px tall with a 50px trailing icon",
         "status": "passed",
-        "durationMs": 0.145739
+        "durationMs": 0.127969
       },
       {
         "file": "tests/split-button.test.js",
         "name": "every size is 2dp between the halves",
         "status": "passed",
-        "durationMs": 0.169049
+        "durationMs": 0.09929
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the leading half is round on the outside and morphs on the inside",
         "status": "passed",
-        "durationMs": 0.245299
+        "durationMs": 0.170109
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the leading half narrows its trailing inset toward the seam",
         "status": "passed",
-        "durationMs": 0.232998
+        "durationMs": 0.12304
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the trailing half is round on the outside and morphs on the inside",
         "status": "passed",
-        "durationMs": 0.284498
+        "durationMs": 0.160019
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the trailing half is symmetric and takes the larger split-button icon",
         "status": "passed",
-        "durationMs": 0.148949
+        "durationMs": 0.111709
       },
       {
         "file": "tests/split-button.test.js",
         "name": "hovering or pressing a half swells its inner corner",
         "status": "passed",
-        "durationMs": 0.340558
+        "durationMs": 0.262628
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the halves are matched with :where, so expanded outranks hover",
         "status": "passed",
-        "durationMs": 0.205588
+        "durationMs": 0.214968
       },
       {
         "file": "tests/split-button.test.js",
         "name": "an icon button is not a half, in the sheet as well as the rules",
         "status": "passed",
-        "durationMs": 0.179219
+        "durationMs": 0.152599
       },
       {
         "file": "tests/split-button.test.js",
         "name": "an expanded trailing half goes fully round on the seam",
         "status": "passed",
-        "durationMs": 0.120279
+        "durationMs": 0.08272
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the expanded trailing icon is turned over",
         "status": "passed",
-        "durationMs": 0.124399
+        "durationMs": 0.08623
       },
       {
         "file": "tests/split-button.test.js",
         "name": "a half still transitions its shadow, as every other button does",
         "status": "passed",
-        "durationMs": 0.104579
+        "durationMs": 0.073149
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the morph and the spin are both transitioned, and both stop under reduce",
         "status": "passed",
-        "durationMs": 0.372917
+        "durationMs": 0.358308
       },
       {
         "file": "tests/split-button.test.js",
         "name": "Menu writes aria-expanded on the trailing half, and clears it",
         "status": "passed",
-        "durationMs": 63.041828
+        "durationMs": 44.191229
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the author never has to write it",
         "status": "passed",
-        "durationMs": 0.08034
+        "durationMs": 0.05324
       },
       {
         "file": "tests/split-button.test.js",
         "name": "split-button halves activate separately and Escape returns focus",
         "status": "passed",
-        "durationMs": 615.70045
+        "durationMs": 639.700952
+      },
+      {
+        "file": "tests/stat-browser.test.js",
+        "name": "chromium: stats tile their figures, wrap when narrow and mark the change",
+        "status": "passed",
+        "durationMs": 273.979504
+      },
+      {
+        "file": "tests/stepper-browser.test.js",
+        "name": "chromium: stepper lays out its steps, marks their state and speaks it",
+        "status": "passed",
+        "durationMs": 327.43436
+      },
+      {
+        "file": "tests/timeline-browser.test.js",
+        "name": "chromium: timeline marks each event, joins it to the next and swaps the dot for an icon",
+        "status": "passed",
+        "durationMs": 284.067214
+      },
+      {
+        "file": "tests/tree-browser.test.js",
+        "name": "chromium: tree indents its levels, turns its chevrons and marks the current row",
+        "status": "passed",
+        "durationMs": 361.331529
       }
     ],
     "directories": [
       {
         "path": "src",
-        "sha256": "a5e5657814529bf4915eba215505690775b000a5322285c05dbabf2723781008"
+        "sha256": "0582ac541404c33c50d6bb5bff7b3c92525cc3f92e267956ed6a9f49fbd3f08f"
       },
       {
         "path": "tests",
-        "sha256": "2230e5eddcc70ebdf500a60c8ce899c4c7029bf56d8b457f4e440a676f915074"
+        "sha256": "4379411b886be519e338e735ba764f87197f8b7a12c911c0ce6ed822a792cf98"
       },
       {
         "path": "dist",
-        "sha256": "6ba025473ed8a3a0b21925f1ee13bb0d0d8953984d0c9494445e572a83e6a80a"
+        "sha256": "b57019014542ba2332aabd2f0f0aa1446347fbd4d4644a66eefe031137b8838a"
       },
       {
         "path": "skills/expressivecss/assets/examples",
@@ -9048,11 +9928,11 @@
       },
       {
         "path": "scripts",
-        "sha256": "a58de00d4e0d20dc29d91076d69f740e5b25c91a1da20d4c9fd6529d2192c295"
+        "sha256": "898b1cb7baf962e3c89ce27d169f24909cb40d9dd227e6c886d1245c2a66be04"
       }
     ],
     "inputsUnchanged": true,
-    "reportSha256": "5777e67403861540605d77c5a5055086a49e8fe086297abd8a4bb6cf399c1666"
+    "reportSha256": "57806733863f02fda1164de0e1b1da5537a63895ae246e95c2d0f6e7a4c66408"
   },
   "sourceRevision": "41703891f1e247c8cb0d4256463a944a2805a77b"
 }
