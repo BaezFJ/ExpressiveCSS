@@ -1222,6 +1222,24 @@
         }
       ]
     },
+    "heatmap-chart": {
+      "status": "enforced",
+      "note": "Added with the heatmap chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn grid, labels and scale are aria-hidden.",
+      "rules": [
+        {
+          "id": "heatmap-chart-is-a-figure-with-a-table",
+          "kind": "forbid",
+          "selector": ".heatmap-chart:not(figure:has(> table))",
+          "message": "Write .heatmap-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript."
+        },
+        {
+          "id": "heatmap-chart-has-a-caption",
+          "kind": "forbid",
+          "selector": ".heatmap-chart:not(:has(> figcaption))",
+          "message": "Name a .heatmap-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart."
+        }
+      ]
+    },
     "bar-chart": {
       "status": "enforced",
       "note": "Added with the bar chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn bars, values, labels and legend are aria-hidden.",

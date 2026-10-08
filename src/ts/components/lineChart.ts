@@ -102,6 +102,9 @@ export class LineChart extends Component<LineChartOptions> {
   /** The highlighted row, or -1. */
   activeIndex = -1;
   private _generated: Element[] = [];
+  /** The table's header cells and body rows, as read. */
+  protected _header: HTMLTableCellElement[] = [];
+  protected _rows: HTMLTableRowElement[] = [];
   protected _plot: HTMLElement;
   protected _cursor: HTMLElement;
   protected _tooltip: HTMLElement;
@@ -255,6 +258,7 @@ export class LineChart extends Component<LineChartOptions> {
     const rows = Array.from(table.tBodies)
       .flatMap((body) => Array.from(body.rows))
       .filter((row) => row !== headerRow);
+    [this._header, this._rows] = [header, rows];
     this.labels = rows.map((row) => row.cells[0]?.textContent.trim() ?? '');
     this.series = header.slice(1).map((cell, i) => {
       const values = rows.map((row) => cellValue(row.cells[i + 1]));
@@ -457,7 +461,9 @@ export class LineChart extends Component<LineChartOptions> {
   }
 
   private _onFocus = () => {
-    if (this.activeIndex < 0) this.show(0);
+    // Only keyboard focus picks the first row; a press off the marks, which
+    // focuses the plot too, leaves the tooltip hidden.
+    if (this.activeIndex < 0 && this._plot.matches(':focus-visible')) this.show(0);
   };
 
   private _onLeave = (e: Event) => {
@@ -471,7 +477,8 @@ export class LineChart extends Component<LineChartOptions> {
     this.show(-1);
   };
 
-  private _onKeyDown = (e: KeyboardEvent) => {
+  /** The index a key moves to, or undefined for a key the chart ignores. */
+  protected _keyTarget(key: string): number | undefined {
     const last = this.labels.length - 1;
     const [forward, back] = this._arrows;
     const step = (by: number) => {
@@ -480,9 +487,15 @@ export class LineChart extends Component<LineChartOptions> {
       if (this.activeIndex < 0) return by > 0 ? 0 : last;
       return (this.activeIndex + by + last + 1) % (last + 1);
     };
-    const next = forward.includes(e.key) ? step(1)
-      : back.includes(e.key) ? step(-1)
-      : { Home: 0, End: last, Escape: -1 }[e.key];
+    // With nothing shown, Escape is left to a dialog or sheet around the chart.
+    if (key === 'Escape') return this.activeIndex < 0 ? undefined : -1;
+    return forward.includes(key) ? step(1)
+      : back.includes(key) ? step(-1)
+      : { Home: 0, End: last }[key];
+  }
+
+  private _onKeyDown = (e: KeyboardEvent) => {
+    const next = this._keyTarget(e.key);
     if (next === undefined) return;
     e.preventDefault();
     this.show(next);

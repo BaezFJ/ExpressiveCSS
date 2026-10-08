@@ -42,6 +42,7 @@ export const AUTO_INIT_COMPONENTS = {
   ColumnChart: { component: Components.ColumnChart, selector: ".column-chart" },
   BarChart: { component: Components.BarChart, selector: ".bar-chart" },
   PieChart: { component: Components.PieChart, selector: ".pie-chart" },
+  HeatmapChart: { component: Components.HeatmapChart, selector: ".heatmap-chart" },
   RadarChart: { component: Components.RadarChart, selector: ".radar-chart" },
   CommandPalette: {
     component: Components.CommandPalette,

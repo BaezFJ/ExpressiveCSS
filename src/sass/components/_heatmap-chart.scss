@@ -1,0 +1,162 @@
+@use "../abstracts" as *;
+
+// Heatmap chart. The same <figure>, <figcaption> and <table> as a line
+// chart; HeatmapChart draws every cell of the table as a square of a grid,
+// with the row headers at the inline start and the column headers below.
+// The plot, tooltip and legend come from chart(); the plot is as tall as
+// its rows, so --md-comp-heatmap-chart-height does not apply.
+//
+// Each cell carries --level, 0 for the lowest value and 1 for the highest,
+// and mixes the color into the empty color by that much. A .gap cell has no
+// value and draws no fill. Value text is black or white, whichever
+// contrasts more with the cell's mix, in any theme.
+//
+// Modifiers: .values writes each cell's text on it.
+//
+// Tokens:
+//   --md-comp-heatmap-chart-row-height   32px
+//   --md-comp-heatmap-chart-gap          3px between cells
+//   --md-comp-heatmap-chart-shape        4px, the cell's corner radius
+//   --md-comp-heatmap-chart-color        primary, the highest value
+//   --md-comp-heatmap-chart-empty-color  surface-container-highest, the lowest
+
+@include chart("heatmap-chart");
+
+.heatmap-chart {
+  --md-comp-heatmap-chart-row-height: 32px;
+  --md-comp-heatmap-chart-gap: 3px;
+  --md-comp-heatmap-chart-shape: 4px;
+  --md-comp-heatmap-chart-color: var(--md-sys-color-primary);
+  --md-comp-heatmap-chart-empty-color: var(--md-sys-color-surface-container-highest);
+}
+
+// The cells and the tooltip swatch share the mix.
+.heatmap-chart-cell,
+.heatmap-chart-tooltip > span {
+  --heatmap-chart-color: color-mix(
+    in oklab,
+    var(--md-comp-heatmap-chart-color) calc(var(--level, 0) * 100%),
+    var(--md-comp-heatmap-chart-empty-color)
+  );
+}
+
+// Under visually-hidden a table keeps its content width, which a wide grid
+// turns into page overflow; a fixed layout keeps it at the 1px it is given.
+.heatmap-chart:has(> .heatmap-chart-plot) > table {
+  table-layout: fixed;
+}
+
+.heatmap-chart-plot {
+  height: auto;
+  border: 0;
+  background: none;
+}
+
+.heatmap-chart-grid {
+  display: grid;
+  // Row labels take up to 40% of the width and end in an ellipsis past it.
+  grid-template-columns: fit-content(40%) repeat(var(--columns, 1), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--rows, 1), var(--md-comp-heatmap-chart-row-height));
+  gap: var(--md-comp-heatmap-chart-gap);
+  color: var(--md-sys-color-on-surface-variant);
+  @include typescale("body-small");
+}
+
+.heatmap-chart-row,
+.heatmap-chart-column {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.heatmap-chart-row {
+  align-self: center;
+  padding-inline-end: 8px;
+}
+
+.heatmap-chart-column {
+  padding-block-start: 4px;
+  text-align: center;
+
+  // A label that runs on over empty ones starts at its own column.
+  &.run {
+    text-align: start;
+  }
+}
+
+.heatmap-chart-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-width: 0;
+  border-radius: var(--md-comp-heatmap-chart-shape);
+  background-color: var(--heatmap-chart-color);
+  // White or black, whichever contrasts more. Y in XYZ D65 is the WCAG
+  // relative luminance; below 0.1791 white wins. The steep clamp leaves no
+  // gray between the two, and the white is D65 white.
+  --heatmap-chart-white: clamp(0, (0.1791 - y) * 1000000, 1);
+
+  color: color(
+    from var(--heatmap-chart-color) xyz-d65
+    calc(var(--heatmap-chart-white) * 0.9505) var(--heatmap-chart-white) calc(var(--heatmap-chart-white) * 1.089)
+  );
+  @include typescale("label-small");
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+
+  &.gap {
+    background: none;
+    box-shadow: inset 0 0 0 1px var(--md-comp-heatmap-chart-grid-color);
+  }
+
+  // Set by HeatmapChart.show().
+  &.active {
+    outline: 2px solid var(--md-sys-color-on-surface);
+    outline-offset: 1px;
+  }
+}
+
+.heatmap-chart-tooltip {
+  // A gap's swatch, outlined like its cell.
+  > span.gap::before {
+    background: none;
+    box-shadow: inset 0 0 0 1px var(--md-comp-heatmap-chart-grid-color);
+  }
+
+  translate: 8px 0;
+
+  &.end {
+    translate: calc(-100% - 8px) 0;
+  }
+}
+
+.heatmap-chart-legend {
+  align-items: center;
+  justify-content: end;
+  gap: 8px;
+}
+
+.heatmap-chart-scale {
+  width: 96px;
+  height: 8px;
+  border-radius: 4px;
+  // From the lowest cell's shade to the highest's, set by HeatmapChart.
+  background: linear-gradient(
+    in oklab to var(--heatmap-chart-to, right),
+    color-mix(in oklab, var(--md-comp-heatmap-chart-color) calc(var(--low, 0) * 100%), var(--md-comp-heatmap-chart-empty-color)),
+    color-mix(in oklab, var(--md-comp-heatmap-chart-color) calc(var(--high, 1) * 100%), var(--md-comp-heatmap-chart-empty-color))
+  );
+}
+
+@media (forced-colors: active) {
+  // The shades are the data, so they keep their colors.
+  .heatmap-chart-cell,
+  .heatmap-chart-scale {
+    forced-color-adjust: none;
+  }
+
+  .heatmap-chart-cell.active {
+    outline-color: Highlight;
+  }
+}

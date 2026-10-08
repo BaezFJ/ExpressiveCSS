@@ -21,6 +21,7 @@ export type * from './components/lineChart';
 export type * from './components/columnChart';
 export type * from './components/barChart';
 export type * from './components/pieChart';
+export type * from './components/heatmapChart';
 export type * from './components/radarChart';
 export type * from './components/datepicker';
 export type * from './components/menu';

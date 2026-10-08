@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**68 of 68 rows enforced; 0 remaining.**
+**69 of 69 rows enforced; 0 remaining.**
 
-64 of those rows are components - a part of the framework an author writes markup for.
+65 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 64 components declare conformance debt.**
+**3 of 65 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -526,6 +526,18 @@ Swept 0.8.0.
 
 - **switch-is-label** - A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name.
 - **switch-decorative-text-hidden** - On/off captions inside the label are folded into the accessible name, which then reads "Off On". Hide them and let the label text name the switch.
+
+### heatmap-chart
+
+Added with the heatmap chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn grid, labels and scale are aria-hidden.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `heatmap-chart-is-a-figure-with-a-table` | forbid | `.heatmap-chart:not(figure:has(> table))` | must not match |
+| `heatmap-chart-has-a-caption` | forbid | `.heatmap-chart:not(:has(> figcaption))` | must not match |
+
+- **heatmap-chart-is-a-figure-with-a-table** - Write .heatmap-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
+- **heatmap-chart-has-a-caption** - Name a .heatmap-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
 ### icon-buttons
 
