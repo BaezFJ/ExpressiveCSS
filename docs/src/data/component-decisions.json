@@ -4894,7 +4894,8 @@
       "alternatives": [
         "lists",
         "cards",
-        "lightbox"
+        "lightbox",
+        "marquee"
       ],
       "adaptive": [],
       "runtime": "auto-init",
@@ -4978,6 +4979,93 @@
           }
         ],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
+      }
+    },
+    {
+      "slug": "marquee",
+      "title": "Marquee",
+      "aliases": [
+        "ticker",
+        "logo cloud",
+        "logo wall",
+        "infinite scroll strip",
+        "scrolling banner"
+      ],
+      "guideSource": {
+        "pageId": "marquee",
+        "heading": "Marquee",
+        "headingLevel": 2,
+        "semantics": [
+          "marquee"
+        ]
+      },
+      "jobs": [
+        "A row of logos, images or text that scrolls without end."
+      ],
+      "useWhen": [
+        "Show a long, decorative set of logos, photos or short slogans in a small space, such as customer logos on a landing page."
+      ],
+      "avoidWhen": [
+        "People need to read, compare or act on the items; a list, grid or carousel lets them do it at their own pace. Time-sensitive alerts need a banner or snackbar."
+      ],
+      "alternatives": [
+        "carousel",
+        "lists",
+        "chips"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/marquee.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#marquee",
+          "reviewedOn": "2026-10-08",
+          "documentedSupport": "Two identical groups that loop horizontally or vertically, with reverse, edge fades, a paused class, hover and focus pausing, token duration and gap, a reversed direction in RTL and a hand-scrolled strip under reduced motion.",
+          "webAdaptation": "A visual copy of the item list marked aria-hidden, with its links taken out of the tab order, so assistive technology and the keyboard meet each item once.",
+          "limitations": [
+            "The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-08",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Hide the copy from assistive technology, keep each link reachable once, pause on hover and focus, offer a pause control for long-running motion and stop it when reduced motion is requested."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Twelve customer logos under a landing page hero are a marquee. Four featured products people should open are a carousel or a card grid.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-08",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_marquee.scss",
+            "sha256": "e76d8380b53cf788c1304e9331c632083468109f8b726c2e1eeaa3a20adb95eb"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified.",
+            "nextStep": "Listen to a marquee with a screen reader in each engine and confirm each item is read once; watch a long strip for a visible jump at the loop point."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/marquee-browser.test.js",
+            "name": "chromium: marquee loops its two groups, pauses, follows direction and stops under reduced motion",
+            "scope": "A short group filling the strip, the copy one gap after it, the half-cycle position horizontally, in RTL and vertically, reverse, pausing on hover, focus and .paused, one link per item in the accessibility tree and the reduced-motion stop with the copy hidden. No spoken-output assertion."
+          }
+        ]
       }
     },
     {
@@ -10500,5 +10588,5 @@
     "inputsUnchanged": true,
     "reportSha256": "b2f7a499810474b2448e87bde25fa13c969ab79a096d7281b84990803d624c47"
   },
-  "sourceRevision": "9ba599c6bbe73c6e1dcefa1b0f662c915020df97"
+  "sourceRevision": "5910ed4ca63afa3433ffa2287b89e08c649e19d8"
 }

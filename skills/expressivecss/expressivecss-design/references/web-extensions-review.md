@@ -460,3 +460,17 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Answer a questionnaire with a screen reader in each engine and confirm the question, its description, errors and the progress are announced; check forced colors and enlarged text.
 
 Mapped browser scope: One question shown, the buttons that apply, the progress text and named progressbar, aria-describedby with the description and error, required radio and data-required checkbox errors with focus and aria-invalid, errors clearing on answer, a generated requiredMessage error, a question enabled mid-way, Enter moving on instead of submitting, Back focus, Skip clearing an answer and firing change, submit opening the first unanswered question, FormData without a disabled question and destroy restoring the plain form; a checked disabled checkbox not answering a data-required group, and requestSubmit() opening an unanswered group or a hidden required field. No spoken-output assertion.
+
+## [Marquee](../../components/marquee.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Hide the copy from assistive technology, keep each link reachable once, pause on hover and focus, offer a pause control for long-running motion and stop it when reduced motion is requested.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page writes the items and their copy; the framework lays out the two groups, runs the loop, pauses it and stops it under reduced motion.
+
+Verification gap: The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified. Next check: Listen to a marquee with a screen reader in each engine and confirm each item is read once; watch a long strip for a visible jump at the loop point.
+
+Mapped browser scope: A short group filling the strip, the copy one gap after it, the half-cycle position horizontally, in RTL and vertically, reverse, pausing on hover, focus and .paused, one link per item in the accessibility tree and the reduced-motion stop with the copy hidden. No spoken-output assertion.

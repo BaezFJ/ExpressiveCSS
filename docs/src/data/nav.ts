@@ -541,6 +541,13 @@ export const NAV: DocsGroup[] = [
           "Material 3 adaptive carousels for visual collections.",
       },
       {
+        id: "marquee",
+        label: "Marquee",
+        route: "/marquee.html",
+        description:
+          "A row of logos, images or text that scrolls without end.",
+      },
+      {
         id: "media",
         label: "Lightbox",
         title: "Media",

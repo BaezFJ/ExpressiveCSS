@@ -1186,6 +1186,19 @@
         }
       ]
     },
+    "marquee": {
+      "status": "enforced",
+      "note": "Added with the marquee component. The second group is a visual copy for the seamless loop, so assistive technology must skip it.",
+      "rules": [
+        {
+          "id": "marquee-copy-is-hidden",
+          "kind": "forbid",
+          "selector": ".marquee > .marquee-content ~ .marquee-content:not([aria-hidden=\"true\"])",
+          "fragmentSafe": true,
+          "message": "The second .marquee-content repeats the first so the loop has no gap. Mark it aria-hidden=\"true\" and give each link or button in it tabindex=\"-1\", or a screen reader reads every item twice."
+        }
+      ]
+    },
     "tree": {
       "status": "enforced",
       "note": "Added with the tree component. Nested lists of native disclosures and links: every row is a Tab stop and the browser opens a branch, so no tree role is promised.",

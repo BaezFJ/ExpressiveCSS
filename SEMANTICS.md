@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**76 of 76 rows enforced; 0 remaining.**
+**77 of 77 rows enforced; 0 remaining.**
 
-72 of those rows are components - a part of the framework an author writes markup for.
+73 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 72 components declare conformance debt.**
+**3 of 73 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -652,6 +652,16 @@ Short waits with unknown duration. The current framework contract uses a named s
 
 - **loading-indicator-reports-itself** - The current loading-indicator contract requires role="status". Provide meaningful waiting text updates and verify announcement delivery; a role alone does not prove spoken output.
 - **loading-indicator-is-named** - Name the waiting state with aria-label or aria-labelledby. Verify meaningful status updates separately from its accessible name.
+
+### marquee
+
+Added with the marquee component. The second group is a visual copy for the seamless loop, so assistive technology must skip it.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `marquee-copy-is-hidden` | forbid | `.marquee > .marquee-content ~ .marquee-content:not([aria-hidden="true"])` | must not match |
+
+- **marquee-copy-is-hidden** - The second .marquee-content repeats the first so the loop has no gap. Mark it aria-hidden="true" and give each link or button in it tabindex="-1", or a screen reader reads every item twice.
 
 ### menu
 

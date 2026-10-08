@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.marquee` scrolls a row of logos, images or text without end. Write
+  the items in two `.marquee-content` groups, the second marked
+  `aria-hidden="true"`. `vertical`, `reverse` and `fade` change the
+  direction and edges, `paused` stops it, and hover or focus inside pauses
+  it. Reduced motion stops the scroll and hides the copy. CSS only.
 - `.message-scroller` scrolls a conversation. While the reader is at the
   end it follows streamed replies, and scrolling up releases it. A message
   appended with `data-scroll-anchor` starts a turn and is scrolled to the

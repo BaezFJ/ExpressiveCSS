@@ -1,0 +1,111 @@
+@use "../abstracts" as *;
+
+// Marquee. A strip of logos, images or text that scrolls without end:
+// <div class="marquee"> holding two identical <ul class="marquee-content">
+// groups. The second is a copy that fills the gap as the first scrolls
+// out. Mark it aria-hidden="true" and give each link or button in it
+// tabindex="-1", so screen readers and the Tab key meet each item once and
+// a click on the copy still works. Each group is at least as wide as the
+// strip and spreads short content out, so one copy is always enough.
+//
+// Both groups move one group's length plus the gap per cycle, then jump
+// back to where they started, which looks the same.
+//
+// Modifiers:
+//   .vertical  scroll up; the strip is 320px tall unless the page sets a height
+//   .reverse   scroll toward the inline end, or down
+//   .fade      fade the items out at both edges
+//   .paused    stop; toggle it from a pause button
+//
+// Hover or focus inside the strip also pauses it, so a link holds still
+// while it is read or tabbed to. Horizontal strips scroll toward the inline
+// start, so right to left pages scroll right. Reduced motion stops the
+// scroll, drops the copy and lets the strip scroll by hand.
+//
+// Tokens:
+//   --md-comp-marquee-duration   one cycle                       20s
+//   --md-comp-marquee-gap        space between items and groups  32px
+//   --md-comp-marquee-fade-size  length of each edge fade (.fade) 48px
+
+.marquee {
+  --md-comp-marquee-duration: 20s;
+  --md-comp-marquee-gap: 32px;
+  --md-comp-marquee-fade-size: 48px;
+  --_sign: 1;
+
+  display: flex;
+  gap: var(--md-comp-marquee-gap);
+  overflow: hidden;
+
+  &:dir(rtl) {
+    --_sign: -1;
+  }
+
+  &.vertical {
+    flex-direction: column;
+    height: 320px;
+  }
+
+  &.fade {
+    --_fade: transparent, #000 var(--md-comp-marquee-fade-size), #000 calc(100% - var(--md-comp-marquee-fade-size)), transparent;
+    mask-image: linear-gradient(to right, var(--_fade));
+  }
+
+  &.vertical.fade {
+    mask-image: linear-gradient(to bottom, var(--_fade));
+  }
+}
+
+.marquee-content {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-around;
+  gap: var(--md-comp-marquee-gap);
+  min-width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  animation: marquee-x var(--md-comp-marquee-duration) linear infinite;
+
+  > * {
+    flex: none;
+  }
+
+  .vertical > & {
+    flex-direction: column;
+    min-width: 0;
+    min-height: 100%;
+    animation-name: marquee-y;
+  }
+
+  .reverse > & {
+    animation-direction: reverse;
+  }
+
+  .marquee:is(:hover, :focus-within, .paused) > & {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow: auto;
+  }
+
+  .marquee-content {
+    animation: none;
+
+    &[aria-hidden="true"] {
+      display: none;
+    }
+  }
+}
+
+@keyframes marquee-x {
+  to { translate: calc((100% + var(--md-comp-marquee-gap)) * var(--_sign) * -1) 0; }
+}
+
+@keyframes marquee-y {
+  to { translate: 0 calc(-100% - var(--md-comp-marquee-gap)); }
+}
