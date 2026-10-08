@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**75 of 75 rows enforced; 0 remaining.**
+**76 of 76 rows enforced; 0 remaining.**
 
-71 of those rows are components - a part of the framework an author writes markup for.
+72 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 71 components declare conformance debt.**
+**3 of 72 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -674,6 +674,16 @@ Added with the message component. The parts are divs on a CSS grid. A <header> o
 | `message-parts-are-not-landmarks` | forbid | `:is(header.message-header, footer.message-footer)` | must not match |
 
 - **message-parts-are-not-landmarks** - Write .message-header and .message-footer as <div>. Outside sectioning content a <header> is a banner landmark and a <footer> is contentinfo, so a conversation would fill the landmark menu with one of each per message.
+
+### message-scroller
+
+Added with the message scroller component. The viewport is a focusable scroll container, so it needs a name; on a live conversation it is also the log. The script owns scroll position and the button's inert state, and adds no roles.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `message-scroller-viewport-is-named` | require-accessible-name | `.message-scroller-viewport` | must end up with an accessible name |
+
+- **message-scroller-viewport-is-named** - Name the viewport with aria-label. It is a focusable scroll region, and a screen reader announces the name when focus lands on it.
 
 ### mixed-chart
 

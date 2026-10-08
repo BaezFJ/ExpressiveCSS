@@ -105,7 +105,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the radial chart and its review fixes: 54,640 gzip bytes (+839).
   // Reviewed the mixed chart and per-series chart scales: 54,982 gzip bytes (+342).
   // Reviewed the questionnaire and its requestSubmit validation: 56,500 gzip bytes (+1,518).
-  assert.ok(sizes(js).gzip <= 56500, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the message scroller: 58,242 gzip bytes (+1,742).
+  assert.ok(sizes(js).gzip <= 58242, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -129,5 +130,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the countdown digit strips: 64,561 gzip bytes (+576).
   // Reviewed the KPI card: 65,104 gzip bytes (+543).
   // Reviewed the questionnaire: 65,569 gzip bytes (+465).
-  assert.ok(sizes(css).gzip <= 65569, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the message scroller: 65,721 gzip bytes (+152).
+  assert.ok(sizes(css).gzip <= 65721, `CSS gzip: ${sizes(css).gzip}`);
 });

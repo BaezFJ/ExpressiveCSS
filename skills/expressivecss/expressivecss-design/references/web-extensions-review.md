@@ -74,6 +74,20 @@ Verification gap: Avatar anchoring, start and end sides in LTR and RTL, and grou
 
 Mapped browser scope: Avatar level with the bubble bottom and above the footer, start/end edges in LTR and RTL, no gap without an avatar, grouped corner radii and no message landmarks. No spoken-output assertion.
 
+## [Message scroller](../../components/message-scroller.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the reader's place unless they are at the live edge, let them stop following at any time, name the focusable viewport and announce appended messages through a log region.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework owns scroll position, the turn spacer and the button's inert state; the page owns the log region, aria-busy while streaming, and loading history.
+
+Verification gap: Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role="log" viewport, touch and scrollbar dragging, and spoken output remain unverified. Next check: Stream replies into a role="log" viewport with a screen reader in each engine, and check touch scrolling and scrollbar dragging on real devices.
+
+Mapped browser scope: Opening at the end, following streamed text, release on a wheel scroll up, the inert button and resuming from it, following kept through a click on a message, scrollToMessage with a peek and with a missing id, prepend preservation, an appended anchor at the peek with a spacer that clears as the reply grows, and destroy. No spoken-output assertion.
+
 ## [Accordion](../../components/accordion.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
