@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-10-08, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `57806733863f02fda1164de0e1b1da5537a63895ae246e95c2d0f6e7a4c66408`.
+Last operator collection: 2026-10-08, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `503f4408b60e8bc2af00db149b199196766dff8458ba1965265e48124212ecce`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
