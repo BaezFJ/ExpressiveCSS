@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.aura` wraps one button, card or panel and runs a light around a ring
+  just outside it, to mark the one thing a screen most needs the user to
+  see. `dual`, `rainbow` and `glow` change the light, and tokens set its
+  color, width, corners and speed. The ring is fully rounded around a
+  button, stops turning under reduced motion and stays out of the
+  accessibility tree.
 - The agent skill gains an `expressivecss-charts` guide for building charts
   and chart dashboards. It covers choosing a chart for the question asked,
   table cells the charts can read, chart cards with stats, tokens,

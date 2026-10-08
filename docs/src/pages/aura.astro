@@ -1,0 +1,131 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "styles", label: "Styles" },
+  { id: "custom", label: "Color, width and speed" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="aura">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          An <code>.aura</code> wraps one element and runs a light around its
+          border. Use it on the button, card or panel a screen most needs the
+          user to notice, such as the plan you recommend or the action that
+          finishes a setup.
+        </p>
+        <p>
+          Keep it to one aura per screen. Two lights compete, and the effect
+          stops pointing anywhere. The ring is 2px and sits just outside the
+          wrapped element. Reduced motion stops the turning and keeps the ring.
+        </p>
+        <div class="flex flex-wrap align-center gap-6 mb-3">
+          <div class="aura"><button class="filled">Upgrade</button></div>
+          <div class="aura">
+            <article style="max-width: 18rem;">
+              <h3>Pro plan</h3>
+              <p>Unlimited projects and priority support.</p>
+            </article>
+          </div>
+        </div>
+<Code code={`
+<div class="aura">
+  <button class="filled">Upgrade</button>
+</div>
+
+<div class="aura">
+  <article>
+    <h3>Pro plan</h3>
+    <p>Unlimited projects and priority support.</p>
+  </article>
+</div>
+`} />
+  </Section>
+  <Section {...S.styles}>
+        <p>
+          <code>dual</code> sends two lights around the ring, primary and
+          tertiary, on opposite sides. <code>rainbow</code> turns the whole hue
+          wheel. <code>glow</code> draws a blurred halo behind the element in
+          place of a ring, so give the element an opaque container, such as a
+          filled button or a card.
+        </p>
+        <div class="flex flex-wrap align-center gap-6 mb-3">
+          <div class="aura dual"><button class="tonal">Dual</button></div>
+          <div class="aura rainbow"><button class="outlined">Rainbow</button></div>
+          <div class="aura glow"><button class="filled">Glow</button></div>
+        </div>
+<Code code={`
+<div class="aura dual"><button class="tonal">Dual</button></div>
+<div class="aura rainbow"><button class="outlined">Rainbow</button></div>
+<div class="aura glow"><button class="filled">Glow</button></div>
+`} />
+  </Section>
+  <Section {...S.custom}>
+        <p>
+          Set the tokens on the <code>.aura</code>. The ring takes its corners
+          from <code>--md-comp-aura-shape</code>: 12px to match a card, and
+          fully rounded when it wraps a button. Set it to the corner size of
+          anything else you wrap.
+        </p>
+        <div class="flex flex-wrap align-center gap-6 mb-3">
+          <div class="aura" style="--md-comp-aura-color: var(--md-sys-color-tertiary); --md-comp-aura-width: 4px; --md-comp-aura-duration: 2s;">
+            <article style="max-width: 18rem;">
+              <h3>Faster and wider</h3>
+              <p>A 4px tertiary ring that turns every two seconds.</p>
+            </article>
+          </div>
+        </div>
+<Code code={`
+<div class="aura" style="--md-comp-aura-color: var(--md-sys-color-tertiary);
+                         --md-comp-aura-width: 4px;
+                         --md-comp-aura-duration: 2s">
+  <article>…</article>
+</div>
+`} />
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The light is decoration. It is drawn by a pseudo-element, so the
+          wrapper adds nothing to the accessibility tree and the wrapped
+          element keeps its own name and role. Do not rely on the aura to say
+          that something is recommended; put that in the text, for example a
+          "Recommended" badge or heading. In forced colors the ring is a solid
+          <code>Highlight</code> outline.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.aura</code>, or on a parent.</p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-aura-color</code></td>
+            <td><code>--md-sys-color-primary</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-aura-color-2</code></td>
+            <td><code>--md-sys-color-tertiary</code>; used by <code>dual</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-aura-width</code></td>
+            <td>2px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-aura-shape</code></td>
+            <td>12px; 9999px around a button</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-aura-duration</code></td>
+            <td>4s</td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

@@ -45,6 +45,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Breadcrumbs
 - Buttons
 - Cards
+- Aura
 - Carousel
 - Drag handle
 - Lists
@@ -2392,6 +2393,39 @@ An expanding card performs a shared-container transition from a compact feed ite
 <article class="medium">…</article>
 <article class="large">…</article>
 ```
+
+---
+
+## Aura
+
+A light that runs around the border of the one button or card a screen most needs you to see.
+
+An `.aura` wraps one element and runs a light around a 2px ring just outside it. Use it on the button, card or panel a screen most needs the user to notice, and keep it to one per screen. `dual` sends primary and tertiary lights around opposite sides, `rainbow` turns the whole hue wheel, and `glow` draws a blurred halo behind the element in place of a ring; give a glowing element an opaque container. The ring has 12px corners to match a card and is fully rounded around a button; set `--md-comp-aura-shape` to the corner size of anything else. Reduced motion stops the turning and keeps the ring. A shadow root ignores `@property`, so with the sheet adopted only there the light turns in 7.2deg steps. CSS only; there is no JavaScript.
+
+The light is decoration drawn by a pseudo-element, so the wrapper adds nothing to the accessibility tree. Say in the text why the element matters, for example with a "Recommended" heading. In forced colors the ring is a solid `Highlight` outline.
+
+```html
+<div class="aura">
+  <button class="filled">Upgrade</button>
+</div>
+
+<div class="aura rainbow">
+  <article>
+    <h3>Pro plan</h3>
+    <p>Unlimited projects and priority support.</p>
+  </article>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-aura-color` | `primary` |
+| `--md-comp-aura-color-2` | `tertiary`; used by `dual` |
+| `--md-comp-aura-width` | 2px |
+| `--md-comp-aura-shape` | 12px; 9999px around a button |
+| `--md-comp-aura-duration` | 4s |
 
 ---
 

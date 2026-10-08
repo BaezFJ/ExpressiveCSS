@@ -1844,6 +1844,93 @@
       }
     },
     {
+      "slug": "aura",
+      "title": "Aura",
+      "aliases": [
+        "border light",
+        "glow border",
+        "animated border",
+        "highlight ring",
+        "spotlight"
+      ],
+      "guideSource": {
+        "pageId": "aura",
+        "heading": "Aura",
+        "headingLevel": 2,
+        "semantics": [
+          "aura"
+        ]
+      },
+      "jobs": [
+        "A light that runs around the border of the one button or card a screen most needs you to see."
+      ],
+      "useWhen": [
+        "Draw the eye to the single most important button, card or panel on a screen, such as a recommended plan."
+      ],
+      "avoidWhen": [
+        "Several highlighted items compete for attention; state, status or selection needs a badge, chip or the component's own selected style."
+      ],
+      "alternatives": [
+        "badges",
+        "cards",
+        "buttons"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/aura.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#aura",
+          "reviewedOn": "2026-10-08",
+          "documentedSupport": "A turning light on a ring around one wrapped element, with dual, rainbow and glow styles, token color, width, corner and speed, a reversed turn in RTL, a static ring under reduced motion and a Highlight ring in forced colors.",
+          "webAdaptation": "A wrapper whose pseudo-element draws a masked conic gradient; it adds nothing to the accessibility tree.",
+          "limitations": [
+            "The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-08",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the light decorative and out of the accessibility tree, state the element's importance in text, and stop motion when reduced motion is requested."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A pricing page with one recommended plan gets one aura on that plan's card. Putting an aura on every plan, or on each new item in a list, removes the contrast the effect depends on; use a badge for those.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-08",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_aura.scss",
+            "sha256": "e95db68ef71c6f5b3262379825dc52b4ef75968d621df6ae2aa441e2d4caf002"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified.",
+            "nextStep": "Check the Highlight ring in Windows forced colors and confirm with a screen reader that only the wrapped element is announced."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/aura-browser.test.js",
+            "name": "chromium: aura turns a ring around its element, stops under reduced motion and stays out of the accessibility tree",
+            "scope": "Ring padding and corners around a button and a card, a running registered angle, its reverse in RTL, the glow halo, the stop under reduced motion, a stepped turn and a 0deg resting ring in a shadow-only load, and no aura nodes in the accessibility tree. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "lists",
       "title": "Lists",
       "aliases": [

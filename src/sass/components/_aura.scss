@@ -1,0 +1,119 @@
+@use "../abstracts" as *;
+
+// Aura. A light that runs around the border of one element, to draw the eye
+// to the most important button or card on a screen. Wrap the element:
+// <div class="aura"><button class="filled">…</button></div>. The ring is a
+// pseudo-element, so it adds nothing to the accessibility tree.
+//
+// Styles:
+//   (default)  one light in the primary color circles a faint ring
+//   .dual      two lights, primary and tertiary, on opposite sides
+//   .rainbow   the full hue wheel turns around the ring
+//   .glow      a blurred halo behind the element instead of a ring;
+//              the wrapped element needs an opaque container
+//
+// The ring follows the wrapped element's corners through
+// --md-comp-aura-shape: 12px for cards, fully rounded around a button.
+// Reduced motion stops the rotation and leaves the ring. Forced colors draw
+// a solid Highlight ring. In a shadow root, which ignores @property, the light
+// turns in 7.2deg steps and the ring rests at 0deg.
+//
+// Tokens:
+//   --md-comp-aura-color     primary
+//   --md-comp-aura-color-2   tertiary (.dual)
+//   --md-comp-aura-width     2px
+//   --md-comp-aura-shape     12px; 9999px around a button
+//   --md-comp-aura-duration  4s
+
+@property --md-comp-aura-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.aura {
+  --md-comp-aura-color: var(--md-sys-color-primary);
+  --md-comp-aura-color-2: var(--md-sys-color-tertiary);
+  --md-comp-aura-width: 2px;
+  --md-comp-aura-shape: 12px;
+  --md-comp-aura-duration: 4s;
+
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  vertical-align: middle;
+  padding: var(--md-comp-aura-width);
+  border-radius: calc(var(--md-comp-aura-shape) + var(--md-comp-aura-width));
+
+  &:has(> :is(button, .button, [role="button"])) {
+    --md-comp-aura-shape: 9999px;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    padding: inherit;
+    border-radius: inherit;
+    background: conic-gradient(
+      from var(--md-comp-aura-angle, 0deg),
+      color-mix(in oklab, var(--md-comp-aura-color) 20%, transparent) 60%,
+      var(--md-comp-aura-color) 85%,
+      color-mix(in oklab, var(--md-comp-aura-color) 20%, transparent)
+    );
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    animation: aura-turn var(--md-comp-aura-duration) linear infinite;
+    pointer-events: none;
+  }
+
+  &.dual::before {
+    background: conic-gradient(
+      from var(--md-comp-aura-angle, 0deg),
+      transparent 10%,
+      var(--md-comp-aura-color) 35%,
+      transparent 50% 60%,
+      var(--md-comp-aura-color-2) 85%,
+      transparent
+    );
+  }
+
+  &.rainbow::before {
+    background: conic-gradient(
+      from var(--md-comp-aura-angle, 0deg),
+      #f43f5e, #f59e0b, #84cc16, #06b6d4, #8b5cf6, #f43f5e
+    );
+  }
+
+  &.glow::before {
+    mask: none;
+    filter: blur(calc(var(--md-comp-aura-width) * 6));
+    opacity: 0.8;
+  }
+
+  &:dir(rtl)::before {
+    animation-direction: reverse;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    &::before {
+      forced-color-adjust: none;
+      background: Highlight;
+    }
+  }
+}
+
+// Registered, the angle interpolates smoothly between these stops. A shadow
+// root ignores @property, and an unregistered property animates discretely,
+// so the stops are close enough to read as a turn in 7.2deg steps.
+@keyframes aura-turn {
+  @for $i from 0 through 50 {
+    #{$i * 2}% { --md-comp-aura-angle: #{$i * 7.2}deg; }
+  }
+}

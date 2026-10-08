@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**71 of 71 rows enforced; 0 remaining.**
+**72 of 72 rows enforced; 0 remaining.**
 
-67 of those rows are components - a part of the framework an author writes markup for.
+68 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 67 components declare conformance debt.**
+**3 of 68 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -66,6 +66,16 @@ Added with the accordion component. Each item is a native <details>, so the brow
 - **accordion-items-are-details** - Write every accordion item as <details> with a <summary>. The element is the disclosure: a div with a click handler has no expanded state and no keyboard support.
 - **accordion-summary-holds-no-controls** - A <summary> is already the toggle button. A link or control inside it is a control nested in a control: pressing it also opens or closes the item, and screen readers flatten it into the summary name. Put actions in the panel.
 - **accordion-summary-state-is-native** - The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role="button" repeats it, and an authored aria-expanded goes stale the first time the item toggles.
+
+### aura
+
+Added with the aura component. An aura wraps one element and draws its light with a pseudo-element.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `aura-wraps-one-element` | forbid | `.aura > * + *` | must not match |
+
+- **aura-wraps-one-element** - An .aura wraps one element. Give each highlighted element its own .aura, and keep to one per screen.
 
 ### autocomplete
 

@@ -314,6 +314,13 @@ export const NAV: DocsGroup[] = [
           "Material Design 3 cards, from the HTML.",
       },
       {
+        id: "aura",
+        label: "Aura",
+        route: "/aura.html",
+        description:
+          "A light that runs around the border of the one button or card a screen most needs you to see.",
+      },
+      {
         id: "lists",
         label: "Lists",
         route: "/lists.html",
