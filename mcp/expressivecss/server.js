@@ -104,7 +104,7 @@ const LegacyPatternList = [
     id: 'legacy-card-content',
     severity: 'high',
     description: '`.card-content` was removed; use the component’s documented child structure.',
-    pattern: /\bcard-content\b/g,
+    pattern: /(?<![-\w])card-content(?![-\w])/g,
   },
   {
     id: 'legacy-nav-wrapper',

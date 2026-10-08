@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Overview | Common Ground insights</title>
+  <!-- Reference dashboard for the ExpressiveCSS dashboard guide. Sample data for the fictional Common Ground community app.
+       Copy beside the framework's complete dist directory, or point these two URLs at your project's assets. -->
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+  <style>
+    /* App shell: rail beside a column that holds the app bar, the content and the compact navigation bar. */
+    body { margin: 0; }
+    .app-shell { display: grid; grid-template-columns: minmax(0, 1fr); min-height: 100dvh; }
+    .app-content { display: flex; flex-direction: column; min-width: 0; min-height: 100dvh; }
+    main { flex: 1; min-width: 0; }
+    .app-navigation { position: sticky; bottom: 0; z-index: 2; }
+    .navigation-rail { position: sticky; top: 0; height: 100dvh; align-self: start; overflow-y: auto; }
+    @media (width >= 600px) { .app-shell { grid-template-columns: auto minmax(0, 1fr); } }
+
+    /* Dashboard surfaces. Component tokens are declared on the component element itself,
+       so override them on a selector that matches that element, not on an ancestor. */
+    .dashboard { padding: 16px; }
+    @media (width >= 600px) { .dashboard { padding: 24px; } }
+    .dashboard :is(article, .stats) {
+      --md-comp-filled-card-container-color: var(--md-sys-color-surface-container);
+      --md-comp-card-container-shape: 24px;
+      --md-comp-card-content-padding: 24px;
+      --md-comp-card-subhead-color: var(--md-sys-color-on-surface-variant);
+      --md-comp-stat-container-color: var(--md-sys-color-surface-container);
+      --md-comp-stat-shape: 24px;
+    }
+    .dashboard article { display: flex; flex-direction: column; height: 100%; }
+    .dashboard article > :is(figure, .data-table, .card-body) { margin: 0 24px 16px; }
+    .dashboard article > .actions { margin-top: auto; padding: 0 12px 12px; }
+    /* Card header: title and subtitle on the start side, one overflow menu on the end side. */
+    .dashboard article > header { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; }
+    .dashboard article > header > :is(h2, p) { grid-column: 1; }
+    .dashboard article > header > .icon-button { grid-column: 2; grid-row: 1 / span 2; margin: 12px 12px 0 0; }
+    .dashboard .row { margin-bottom: 24px; }
+  </style>
+</head>
+<body>
+  <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+  <div class="app-shell">
+    <nav class="navigation-rail hide-on-compact-only" aria-label="Primary navigation">
+      <button type="button" aria-label="Toggle navigation"><span class="material-symbols" aria-hidden="true">menu</span></button>
+      <a href="#main" aria-current="page"><span class="material-symbols" aria-hidden="true">space_dashboard</span>Overview</a>
+      <a href="#members"><span class="material-symbols" aria-hidden="true">group</span>Members</a>
+      <a href="#events"><span class="material-symbols" aria-hidden="true">event</span>Events</a>
+      <a href="#reports"><span class="material-symbols" aria-hidden="true">bar_chart</span>Reports</a>
+      <a href="#settings"><span class="material-symbols" aria-hidden="true">settings</span>Settings</a>
+    </nav>
+
+    <div class="app-content">
+      <header>
+        <nav aria-label="Workspace">
+          <h2>Common Ground insights</h2>
+          <button type="button" aria-label="Search reports"><span class="material-symbols" aria-hidden="true">search</span></button>
+          <button type="button" aria-label="Help"><span class="material-symbols" aria-hidden="true">help</span></button>
+        </nav>
+      </header>
+
+      <main id="main" class="dashboard" tabindex="-1">
+        <!-- Page header: identity on the start side, scope controls on the end side. -->
+        <div class="flex flex-wrap align-end justify-between gap-4 mb-4">
+          <div class="min-w-0">
+            <h1 class="headline-medium my-0">Overview</h1>
+            <p class="body-medium on-surface-variant-text my-0">Sample data · Updated 9:40 AM</p>
+          </div>
+          <div class="flex flex-wrap align-center gap-3">
+            <div class="field outlined my-0">
+              <select id="date-range">
+                <option value="7">Last 7 days</option>
+                <option value="28" selected>Last 28 days</option>
+                <option value="90">Last 90 days</option>
+              </select>
+              <label for="date-range">Date range</label>
+            </div>
+            <button type="button" class="outlined"><span class="material-symbols" aria-hidden="true">download</span>Export</button>
+          </div>
+        </div>
+
+        <!-- Filters that scope every card below. -->
+        <div class="flex flex-wrap gap-2 mb-4" role="group" aria-label="Filter members">
+          <input type="checkbox" class="chip-input" id="filter-new" checked>
+          <label class="chip" for="filter-new"><span class="material-symbols" aria-hidden="true">check</span>New members</label>
+          <input type="checkbox" class="chip-input" id="filter-returning" checked>
+          <label class="chip" for="filter-returning"><span class="material-symbols" aria-hidden="true">check</span>Returning members</label>
+          <input type="checkbox" class="chip-input" id="filter-mobile">
+          <label class="chip" for="filter-mobile"><span class="material-symbols" aria-hidden="true">check</span>Mobile only</label>
+        </div>
+
+        <!-- Key figures: four answers to "how are we doing?", each with its comparison period. -->
+        <section aria-labelledby="kpi-title" class="mb-5">
+          <h2 id="kpi-title" class="visually-hidden">Key figures, last 28 days</h2>
+          <dl class="stats my-0">
+            <div>
+              <dt>Active members</dt>
+              <dd>12,480</dd>
+              <dd class="stat-change up">+8.2% vs previous 28 days</dd>
+            </div>
+            <div>
+              <dt>New sign-ups</dt>
+              <dd>1,936</dd>
+              <dd class="stat-change up">+14% vs previous 28 days</dd>
+            </div>
+            <div>
+              <dt>Event RSVPs</dt>
+              <dd>3,214</dd>
+              <dd class="stat-change down negative">−3.1% vs previous 28 days</dd>
+            </div>
+            <div>
+              <dt>Members who left</dt>
+              <dd>212</dd>
+              <dd class="stat-change down">−9% vs previous 28 days</dd>
+            </div>
+          </dl>
+        </section>
+
+        <!-- Primary story: the trend gets the widest card; live activity sits beside it. -->
+        <div class="row">
+          <div class="s12 xl8">
+            <article class="filled">
+              <header>
+                <h2 class="title-large">Active members</h2>
+                <p class="subhead">This period against the previous 28 days</p>
+                <button type="button" class="icon-button menu-trigger" data-target="trend-menu" aria-label="Active members options">
+                  <span class="material-symbols" aria-hidden="true">more_vert</span>
+                </button>
+                <menu id="trend-menu">
+                  <li><button type="button">Download CSV</button></li>
+                  <li><button type="button">Copy link to chart</button></li>
+                </menu>
+              </header>
+              <figure class="line-chart">
+                <figcaption class="visually-hidden">Active members per day, last 28 days against the previous 28 days</figcaption>
+                <table>
+                  <thead><tr><th>Day</th><th>This period</th><th class="dashed">Previous period</th></tr></thead>
+                  <tbody>
+                    <tr><th>Sep 9</th><td>2,610</td><td>2,480</td></tr>
+                    <tr><th>Sep 15</th><td>3,050</td><td>2,690</td></tr>
+                    <tr><th>Sep 20</th><td>3,420</td><td>2,760</td></tr>
+                    <tr><th>Sep 25</th><td>3,180</td><td>2,850</td></tr>
+                    <tr><th>Sep 30</th><td>3,610</td><td>2,930</td></tr>
+                    <tr><th>Oct 6</th><td>3,820</td><td>3,050</td></tr>
+                  </tbody>
+                </table>
+              </figure>
+              <div class="actions">
+                <a class="button text" href="#members">View members report<span class="material-symbols" aria-hidden="true">arrow_forward</span></a>
+              </div>
+            </article>
+          </div>
+
+          <div class="s12 xl4">
+            <article class="filled">
+              <header>
+                <h2 class="title-large">Right now</h2>
+                <p class="subhead">Members active in the last 30 minutes</p>
+              </header>
+              <div class="card-body">
+                <p class="display-medium my-0">214</p>
+                <figure class="column-chart sparkline">
+                  <figcaption class="visually-hidden">Active members per minute, last 30 minutes</figcaption>
+                  <table>
+                    <thead><tr><th>Minutes ago</th><th>Members</th></tr></thead>
+                    <tbody>
+                      <tr><th>30</th><td>6</td></tr><tr><th>27</th><td>9</td></tr><tr><th>24</th><td>7</td></tr>
+                      <tr><th>21</th><td>11</td></tr><tr><th>18</th><td>8</td></tr><tr><th>15</th><td>12</td></tr>
+                      <tr><th>12</th><td>10</td></tr><tr><th>9</th><td>14</td></tr><tr><th>6</th><td>13</td></tr>
+                      <tr><th>3</th><td>16</td></tr><tr><th>Now</th><td>15</td></tr>
+                    </tbody>
+                  </table>
+                </figure>
+              </div>
+              <figure class="bar-chart track values">
+                <figcaption class="title-small">Top pages right now</figcaption>
+                <table>
+                  <thead><tr><th>Page</th><th>Members</th></tr></thead>
+                  <tbody>
+                    <tr><th>Clean-up event</th><td>58</td></tr>
+                    <tr><th>Garden swap</th><td>41</td></tr>
+                    <tr><th>Home feed</th><td>37</td></tr>
+                    <tr><th>Tool library</th><td>22</td></tr>
+                  </tbody>
+                </table>
+              </figure>
+            </article>
+          </div>
+        </div>
+
+        <!-- Supporting breakdowns: one question per card. -->
+        <div class="row">
+          <div class="s12 l6 xl4">
+            <article class="filled">
+              <header>
+                <h2 class="title-large">Where sign-ups come from</h2>
+                <p class="subhead">New members by first visit</p>
+              </header>
+              <figure class="bar-chart track values">
+                <figcaption class="visually-hidden">New sign-ups by source, last 28 days</figcaption>
+                <table>
+                  <thead><tr><th>Source</th><th>Sign-ups</th></tr></thead>
+                  <tbody>
+                    <tr><th>Invites</th><td>812</td></tr>
+                    <tr><th>Search</th><td>506</td></tr>
+                    <tr><th>Event pages</th><td>344</td></tr>
+                    <tr><th>Flyers</th><td>186</td></tr>
+                    <tr><th>Other</th><td>88</td></tr>
+                  </tbody>
+                </table>
+              </figure>
+            </article>
+          </div>
+
+          <div class="s12 l6 xl4">
+            <article class="filled">
+              <header>
+                <h2 class="title-large">Devices</h2>
+                <p class="subhead">Share of active members</p>
+              </header>
+              <figure class="pie-chart donut">
+                <figcaption class="visually-hidden">Active members by device, last 28 days</figcaption>
+                <table>
+                  <thead><tr><th>Device</th><th>Members</th></tr></thead>
+                  <tbody>
+                    <tr><th>Phone</th><td>8,860</td></tr>
+                    <tr><th>Computer</th><td>2,870</td></tr>
+                    <tr><th>Tablet</th><td>750</td></tr>
+                  </tbody>
+                  <tfoot><tr><th>Active members</th><td>12,480</td></tr></tfoot>
+                </table>
+              </figure>
+            </article>
+          </div>
+
+          <!-- The one emphasized region on the page: an insight with a next step. -->
+          <div class="s12 xl4">
+            <article class="filled" vibrant>
+              <header>
+                <h2 class="title-large">Saturday events fill fastest</h2>
+                <p class="subhead">Insight from the last 90 days</p>
+              </header>
+              <p>Saturday morning events reach capacity in 2.4 days on average, against 5.1 days for weekday evenings.</p>
+              <figure class="radial-chart gauge" data-max="100">
+                <figcaption class="visually-hidden">Average Saturday event capacity filled, percent</figcaption>
+                <table>
+                  <thead><tr><th>Measure</th><th>Percent</th></tr></thead>
+                  <tbody><tr><th>Capacity filled</th><td>92%</td></tr></tbody>
+                  <tfoot><tr><th>Capacity filled</th><td>92%</td></tr></tfoot>
+                </table>
+              </figure>
+              <div class="actions">
+                <a class="button filled" href="#events">Plan a Saturday event</a>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Detail: exact numbers people sort and compare, beside a pattern view. -->
+        <div class="row">
+          <div class="s12 xl8">
+            <article class="filled">
+              <header>
+                <h2 class="title-large">Top events</h2>
+                <p class="subhead">Last 28 days</p>
+              </header>
+              <div class="data-table dense" role="region" aria-labelledby="events-caption" tabindex="0">
+                <table>
+                  <caption id="events-caption" class="visually-hidden">Top events, last 28 days</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col"><button type="button">Event</button></th>
+                      <th scope="col" class="text-nowrap">Date</th>
+                      <th scope="col" class="numeric" aria-sort="descending"><button type="button">RSVPs</button></th>
+                      <th scope="col" class="numeric"><button type="button">Attended</button></th>
+                      <th scope="col" class="numeric"><button type="button" class="text-nowrap">Show rate</button></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row">Saturday clean-up</th><td class="text-nowrap">Sep 27</td><td class="numeric">412</td><td class="numeric">371</td><td class="numeric">90%</td></tr>
+                    <tr><th scope="row">Garden swap</th><td class="text-nowrap">Oct 4</td><td class="numeric">356</td><td class="numeric">302</td><td class="numeric">85%</td></tr>
+                    <tr><th scope="row">Repair café</th><td class="text-nowrap">Sep 20</td><td class="numeric">288</td><td class="numeric">219</td><td class="numeric">76%</td></tr>
+                    <tr><th scope="row">Block party planning</th><td class="text-nowrap">Sep 24</td><td class="numeric">174</td><td class="numeric">121</td><td class="numeric">70%</td></tr>
+                    <tr><th scope="row">Tool library open hours</th><td class="text-nowrap">Oct 1</td><td class="numeric">139</td><td class="numeric">88</td><td class="numeric">63%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="actions">
+                <a class="button text" href="#events">View all events<span class="material-symbols" aria-hidden="true">arrow_forward</span></a>
+              </div>
+            </article>
+          </div>
+
+          <div class="s12 xl4">
+            <article class="filled">
+              <header>
+                <h2 class="title-large">When members are active</h2>
+                <p class="subhead">Average active members by day and time</p>
+              </header>
+              <figure class="heatmap-chart">
+                <figcaption class="visually-hidden">Average active members by day and time of day</figcaption>
+                <table>
+                  <thead><tr><th>Day</th><th>Morning</th><th>Midday</th><th>Evening</th><th>Night</th></tr></thead>
+                  <tbody>
+                    <tr><th>Mon</th><td>120</td><td>180</td><td>340</td><td>90</td></tr>
+                    <tr><th>Tue</th><td>110</td><td>170</td><td>320</td><td>80</td></tr>
+                    <tr><th>Wed</th><td>130</td><td>190</td><td>360</td><td>95</td></tr>
+                    <tr><th>Thu</th><td>125</td><td>185</td><td>380</td><td>100</td></tr>
+                    <tr><th>Fri</th><td>140</td><td>210</td><td>300</td><td>160</td></tr>
+                    <tr><th>Sat</th><td>520</td><td>460</td><td>280</td><td>150</td></tr>
+                    <tr><th>Sun</th><td>410</td><td>390</td><td>240</td><td>70</td></tr>
+                  </tbody>
+                </table>
+              </figure>
+            </article>
+          </div>
+        </div>
+      </main>
+
+      <footer class="app-navigation hide-on-med-and-up">
+        <nav class="navigation-bar" aria-label="Compact navigation">
+          <a href="#main" aria-current="page"><span class="material-symbols" aria-hidden="true">space_dashboard</span>Overview</a>
+          <a href="#members"><span class="material-symbols" aria-hidden="true">group</span>Members</a>
+          <a href="#events"><span class="material-symbols" aria-hidden="true">event</span>Events</a>
+          <a href="#reports"><span class="material-symbols" aria-hidden="true">bar_chart</span>Reports</a>
+        </nav>
+      </footer>
+    </div>
+  </div>
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Expressive.AutoInit();
+
+      // Sorting is page state: reorder the rows, then move aria-sort to the sorted header.
+      document.querySelectorAll('.data-table th > button').forEach((button) => {
+        button.addEventListener('click', () => {
+          const header = button.closest('th');
+          const body = header.closest('table').tBodies[0];
+          const numeric = header.classList.contains('numeric');
+          const current = header.getAttribute('aria-sort');
+          const direction = current === 'descending' ? 'ascending' : current ? 'descending' : numeric ? 'descending' : 'ascending';
+          const text = (row) => row.cells[header.cellIndex].textContent.trim();
+          const number = (row) => parseFloat(text(row).replace(/[^\d.-]/g, ''));
+          const rows = [...body.rows].sort((a, b) => {
+            const order = numeric ? number(a) - number(b) : text(a).localeCompare(text(b));
+            return direction === 'ascending' ? order : -order;
+          });
+          body.append(...rows);
+          header.closest('thead').querySelectorAll('th[aria-sort]').forEach((th) => th.removeAttribute('aria-sort'));
+          header.setAttribute('aria-sort', direction);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

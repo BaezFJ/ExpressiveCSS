@@ -969,6 +969,12 @@ const transport = new StdioClientTransport({
   assert.match(long.stdout, /long\.html:1:1 nav-needs-label/u);
   assert.doesNotMatch(long.stdout, /inspection-truncated/u);
   assert.equal(lint([outsideFile]).status, 0);
+  // The retired class name matches only as a whole class, not inside documented names that contain it.
+  const cardContentMarkup = path.join(outsideDir, 'card-content.html');
+  await writeFile(cardContentMarkup, '<style>article { --md-comp-card-content-padding: 24px; }</style>\n<div class="expanding-card-content">Details</div>\n<div class="card-content">Old</div>\n');
+  const cardContent = lint([cardContentMarkup]);
+  assert.equal(cardContent.stdout.match(/legacy-card-content/gu)?.length, 1, cardContent.stdout);
+  assert.match(cardContent.stdout, /card-content\.html:3:\d+ legacy-card-content/u);
   // Files the bounded reader refuses, and inspections that stop early, fail instead of passing silently.
   const linkedMarkup = path.join(outsideDir, 'linked.html');
   const crowdedMarkup = path.join(outsideDir, 'crowded.html');
