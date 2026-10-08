@@ -134,5 +134,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the message scroller: 65,721 gzip bytes (+152).
   // Reviewed the marquee: 66,079 gzip bytes (+358).
   // Reviewed the rich text editor: 66,394 gzip bytes (+315).
-  assert.ok(sizes(css).gzip <= 66394, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed <mark> and ::highlight(mark): 66,424 gzip bytes (+30).
+  assert.ok(sizes(css).gzip <= 66424, `CSS gzip: ${sizes(css).gzip}`);
 });

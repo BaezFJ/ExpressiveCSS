@@ -103,3 +103,19 @@ kbd {
     font-size: inherit;
   }
 }
+
+// Highlighted text. <mark> picks out a run of text that matters to what the
+// reader is doing, such as the matched part of a search result. It takes no
+// padding, so a match inside a word keeps the word's letter spacing.
+// ::highlight(mark) paints the same colors on ranges a script registers with
+// CSS.highlights.set("mark", highlight), without changing the DOM.
+mark {
+  border-radius: 2px;
+  background-color: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+}
+
+::highlight(mark) {
+  background-color: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+}
