@@ -4091,6 +4091,53 @@ Add `up` or `down` to `.stat-change` for an arrow, and `negative` when the chang
 
 ---
 
+## KPI
+
+One key figure in a card, with a trend chip, a sparkline and details.
+
+An `<article class="kpi">` holds a `<dl>` with a `<dt>` label, a `<dd class="kpi-value">` and an optional `<dd class="kpi-trend">` chip. The description list keeps the value paired with its label for assistive technology. The article is a card, so `filled` and `outlined` apply, and KPIs in a grid row stretch to one height with their footers aligned. CSS only; a chart inside is drawn by its own script.
+
+```html
+<article class="kpi outlined">
+  <dl>
+    <dt><span class="kpi-icon material-symbols-outlined" aria-hidden="true">payments</span>Revenue</dt>
+    <dd class="kpi-value">$48,200</dd>
+    <dd class="kpi-trend up">+12.5%</dd>
+  </dl>
+  <button type="button" class="icon-button kpi-actions" aria-label="Revenue options">
+    <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+  </button>
+  <figure class="line-chart sparkline area">
+    <figcaption class="visually-hidden">Revenue over 10 days, in thousands</figcaption>
+    <table>
+      <thead><tr><th>Day</th><th>Revenue</th></tr></thead>
+      <tbody><tr><th>Day 1</th><td>40.1</td></tr><tr><th>Day 2</th><td>42.3</td></tr></tbody>
+    </table>
+  </figure>
+  <div class="kpi-footer">Compared with $42,800 last month</div>
+</article>
+```
+
+- Add `up` or `down` to `.kpi-trend` for an arrow, and `negative` when the change is bad news. `negative` uses the error container colors and turns the first series of a line, column, bar or mixed chart in the same KPI to the error color. The arrow is decoration, so say the direction in the text.
+- `.kpi-icon` inside the `<dt>` draws a 40px tonal icon box. Hide the icon with `aria-hidden="true"`.
+- `.kpi-actions` on a button or menu trigger places it in the top end corner. Name it after the figure.
+- After the `<dl>`, parts stack in source order: a sparkline chart, a `<progress class="progress">` named with `aria-label`, a `<p>` of supporting text, and a `.kpi-footer` under a full-width divider. The footer sits at the bottom of a stretched card.
+- A sparkline is not focusable. Its caption names the measure and period, and its table stays in the page as the text alternative.
+- For several figures with no chart or actions, use `dl.stats` instead.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-kpi-icon-container-color` | `primary-container` |
+| `--md-comp-kpi-icon-color` | `on-primary-container` |
+| `--md-comp-kpi-trend-container-color` | `secondary-container` |
+| `--md-comp-kpi-trend-color` | `on-secondary-container` |
+
+The container color, shape and padding come from the card tokens.
+
+---
+
 ## Countdown
 
 A number from 0 to 999 whose digits roll to each new value.

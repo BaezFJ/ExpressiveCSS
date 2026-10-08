@@ -1,0 +1,162 @@
+@use "../abstracts" as *;
+
+// KPI. One key figure in a card: an <article class="kpi"> holding a <dl>
+// with a <dt> label, a <dd class="kpi-value"> and an optional
+// <dd class="kpi-trend"> chip. The article is a card, so filled and
+// outlined work as they do there.
+//
+// Optional parts, in source order after the <dl>:
+//   .kpi-icon     a tonal icon box, written inside the <dt>
+//   .kpi-actions  a button or menu, placed at the end of the label row
+//   a chart       a sparkline .line-chart or .column-chart figure
+//   .progress     a <progress> bar toward a goal
+//   <p>           supporting text
+//   .kpi-footer   details or links under a divider
+//
+// .kpi-trend takes .up or .down for the arrow and .negative when the change
+// is bad news; .negative also turns a line, column, bar or mixed chart's
+// first series to the error color. The arrow is decoration: say the
+// direction in the text, as in "+12%".
+//
+// Tokens:
+//   --md-comp-kpi-icon-container-color   primary-container
+//   --md-comp-kpi-icon-color             on-primary-container
+//   --md-comp-kpi-trend-container-color  secondary-container
+//   --md-comp-kpi-trend-color            on-secondary-container
+
+$_trend-charts: "line-chart", "column-chart", "bar-chart", "mixed-chart";
+
+.kpi {
+  --md-comp-kpi-icon-container-color: var(--md-sys-color-primary-container);
+  --md-comp-kpi-icon-color: var(--md-sys-color-on-primary-container);
+  --md-comp-kpi-trend-container-color: var(--md-sys-color-secondary-container);
+  --md-comp-kpi-trend-color: var(--md-sys-color-on-secondary-container);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: var(--md-comp-card-content-padding, 16px);
+
+  > * {
+    min-width: 0;
+    margin: 0;
+  }
+
+  > dl {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &:has(> .kpi-actions) > dl {
+    padding-inline-end: 40px;
+  }
+
+  // The card is the containing block, so the button sits in its corner
+  // without making the label row taller.
+  > .kpi-actions {
+    position: absolute;
+    inset-block-start: 8px;
+    inset-inline-end: 8px;
+  }
+
+  dt {
+    display: flex;
+    flex-basis: 100%;
+    align-items: center;
+    gap: 12px;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("title-small");
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  .kpi-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background-color: var(--md-comp-kpi-icon-container-color);
+    color: var(--md-comp-kpi-icon-color);
+    font-size: 24px;
+  }
+
+  .kpi-value {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--md-sys-color-on-surface);
+    font-variant-numeric: tabular-nums;
+    @include typescale("headline-large");
+  }
+
+  .kpi-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background-color: var(--md-comp-kpi-trend-container-color);
+    color: var(--md-comp-kpi-trend-color);
+    font-variant-numeric: tabular-nums;
+    @include typescale("label-large");
+
+    &:is(.up, .down) {
+      padding-inline-start: 4px;
+    }
+
+    &:is(.up, .down)::before {
+      content: "";
+      flex: none;
+      width: 18px;
+      height: 18px;
+      background-color: currentColor;
+      mask: $trend-arrow center / 18px no-repeat;
+    }
+
+    &.down::before {
+      transform: rotate(180deg);
+    }
+
+    &.negative {
+      --md-comp-kpi-trend-container-color: var(--md-sys-color-error-container);
+      --md-comp-kpi-trend-color: var(--md-sys-color-on-error-container);
+    }
+  }
+
+  > p {
+    padding: 0;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-medium");
+  }
+
+  > .kpi-footer {
+    // Auto top margin keeps the footer at the bottom of a stretched card.
+    margin: auto calc(-1 * var(--md-comp-card-content-padding, 16px)) calc(-1 * var(--md-comp-card-content-padding, 16px));
+    padding: 12px var(--md-comp-card-content-padding, 16px);
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-medium");
+  }
+}
+
+@each $chart in $_trend-charts {
+  .kpi:has(.kpi-trend.negative) > .#{$chart} {
+    --md-comp-#{$chart}-color-1: var(--md-sys-color-error);
+  }
+}
+
+@media (forced-colors: active) {
+  .kpi-trend {
+    outline: 1px solid CanvasText;
+  }
+
+  .kpi-trend::before {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+}

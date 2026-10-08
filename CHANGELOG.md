@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- KPI component: `article.kpi` is a card for one key figure, with its
+  label and value in a `<dl>`, a `.kpi-trend` chip that takes `up`, `down`
+  and `negative`, an optional `.kpi-icon`, a `.kpi-actions` corner button,
+  a sparkline chart, a progress bar and a `.kpi-footer`. A `negative` trend
+  also turns the sparkline to the error color. CSS only.
 - `.countdown` shows a whole number from 0 to 999 and rolls its digits up
   or down when `--md-comp-countdown-value` changes. The element's text is
   the value screen readers read. `--md-comp-countdown-digits` pads with

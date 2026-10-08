@@ -214,6 +214,21 @@ Verification gap: Tiling, wrapping, the value type role, arrow direction, the ne
 
 Mapped browser scope: One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion.
 
+## [KPI](../../components/kpi.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Pair the value with its label, state the direction and unit of a change in text, caption the sparkline and name the action after the figure.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework lays out the card, the trend chip and the footer; the page owns the figures, the wording of the change and the chart data.
+
+Verification gap: Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next check: Read a KPI row with a screen reader in each engine and confirm the label, value, trend and sparkline caption are announced in order; test enlarged text at narrow widths.
+
+Mapped browser scope: Trend beside the value, actions in the label row's end corner, chart under the value, an edge-to-edge footer closing the card, the headline value size, up and down arrows, the negative chip and chart colors and term-definition pairs in the accessibility tree. No spoken-output assertion.
+
+
 ## [Countdown](../../components/countdown.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
