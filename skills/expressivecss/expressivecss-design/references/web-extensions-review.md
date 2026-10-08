@@ -383,3 +383,17 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified. Next check: Rate with a keyboard and a screen reader in each engine, including Safari, and confirm the focus ring follows the arrows and each star is announced.
 
 Mapped browser scope: Visible 24px masked radios, fill up to the checked star, Tab entry and arrow keys, focus ring on entry, hover preview, form value, display width and fill direction in LTR and RTL, and the group, radio and image names. No spoken-output assertion.
+
+## [Aura](../../components/aura.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the light decorative and out of the accessibility tree, state the element's importance in text, and stop motion when reduced motion is requested.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the ring and its light; the page says in text why the element matters.
+
+Verification gap: The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified. Next check: Check the Highlight ring in Windows forced colors and confirm with a screen reader that only the wrapped element is announced.
+
+Mapped browser scope: Ring padding and corners around a button and a card, a running registered angle, its reverse in RTL, the glow halo, the stop under reduced motion, a stepped turn and a 0deg resting ring in a shadow-only load, and no aura nodes in the accessibility tree. No spoken-output assertion.

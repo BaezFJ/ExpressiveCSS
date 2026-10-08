@@ -346,6 +346,19 @@
         }
       ]
     },
+    "aura": {
+      "status": "enforced",
+      "note": "Added with the aura component. An aura wraps one element and draws its light with a pseudo-element.",
+      "rules": [
+        {
+          "id": "aura-wraps-one-element",
+          "kind": "forbid",
+          "selector": ".aura > * + *",
+          "fragmentSafe": true,
+          "message": "An .aura wraps one element. Give each highlighted element its own .aura, and keep to one per screen."
+        }
+      ]
+    },
     "carousel": {
       "status": "enforced",
       "note": "Swept 0.8.0. Material 3 items remain exposed because several can be visible at once. Checked at runtime in tests/generated-a11y.test.js. Its keyboard contract is implemented and tested, so tablist is rejected rather than withheld. The role rule keeps out every composite role but not every role: role=\"group\" with aria-roledescription=\"carousel\" is the pattern carousel.ts writes and stays legal.",
