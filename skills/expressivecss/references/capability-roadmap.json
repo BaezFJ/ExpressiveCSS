@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.12.0",
-  "sourceRevision": "7b4ef7a970e34012cc13d4c39ec94d2c29007808",
+  "sourceRevision": "41703891f1e247c8cb0d4256463a944a2805a77b",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-09-18",
