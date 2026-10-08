@@ -40,12 +40,6 @@
   );
 }
 
-// Under visually-hidden a table keeps its content width, which a wide grid
-// turns into page overflow; a fixed layout keeps it at the 1px it is given.
-.heatmap-chart:has(> .heatmap-chart-plot) > table {
-  table-layout: fixed;
-}
-
 .heatmap-chart-plot {
   height: auto;
   border: 0;

@@ -154,6 +154,8 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
           ${chart('class="line-chart stacked" id="stacked" data-max="10"', 'Stacked', '<th>A</th><th>B</th>', [['Jan', '1', '2'], ['Feb', '3', '4']])}
           ${chart('class="line-chart stacked" id="stacked-min" data-min="50"', 'Stacked min', '<th>A</th>', [['Jan', '60'], ['Feb', '100']])}
           ${chart('class="line-chart stacked" id="stacked-gap"', 'Stacked gap', '<th>A</th><th>B</th>', [['Jan', '1', '2'], ['Feb', '', '2'], ['Mar', '3', '2']])}
+          <div id="tile" style="width: 120px; overflow: auto">${chart('class="line-chart" style="--md-comp-line-chart-height: 48px"', 'Tile',
+            '<th>Revenue this year</th><th>Revenue last year</th>', Array.from({ length: 12 }, (_, i) => [String(i + 1), '$4,400,000', '$5,200,000']))}</div>
         </div>
         <script>${js}</script>`);
       await page.evaluate(() => Expressive.AutoInit());
@@ -164,6 +166,9 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         return [style.overflow, style.flexBasis, el.querySelector('.line-chart-plot').getBoundingClientRect().height];
       }), ['visible', 'auto', 240]);
       assert.equal(await page.locator('#action figcaption').evaluate((el) => getComputedStyle(el).position), 'static');
+
+      assert.deepEqual(await page.locator('#tile').evaluate((el) => [el.scrollWidth - el.clientWidth, el.scrollHeight - el.clientHeight]), [0, 0],
+        'a wide, tall hidden table adds no scrollable overflow to a narrow tile');
 
       assert.equal(await page.locator('#headless .line-chart-labels').innerText().then((text) => text.split(/\s+/).join(' ')), 'Jan Feb',
         'a header row without <thead> is not data');

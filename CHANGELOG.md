@@ -138,6 +138,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   tooltip is already hidden, so a dialog or sheet around the chart can close.
   Pressing a chart's plot away from its marks focuses it without showing the
   first row's tooltip; keyboard focus still shows it.
+- A drawn chart's hidden data table no longer makes a narrow tile or its page
+  scroll. The table keeps a fixed 1px layout, as the heatmap's already did,
+  and hangs up from the figure's bottom edge, so its rows cannot add overflow
+  below it.
+- The line chart docs' chart cards pad their stat and chart off the card's
+  border.
 
 ## [0.12.0] - 2026-10-01
 

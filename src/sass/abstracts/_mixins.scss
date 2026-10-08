@@ -373,12 +373,15 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
     }
 
     // A table keeps its content size under visually-hidden, so anchor it
-    // here rather than at some distant positioned ancestor.
+    // here rather than at some distant positioned ancestor. A fixed layout
+    // holds it to the 1px wide it is given. Its rows still set its height, so
+    // it hangs up from the bottom edge, where the overflow cannot scroll.
     position: relative;
 
     &:has(> .#{$name}-plot) > table {
       @include visually-hidden;
-      inset: 0 auto auto 0;
+      inset: auto auto 0 0;
+      table-layout: fixed;
     }
   }
 
