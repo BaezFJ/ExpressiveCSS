@@ -107,6 +107,31 @@ code {
   }
 }
 
+/* Landing page: banner calls to action, feature cards and the live demo. */
+.docs-hero-actions > p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.5rem 0 0;
+}
+
+.docs-hero-actions code {
+  padding: 0.5em 0.75em;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+}
+
+.docs-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+
+.docs-demo {
+  max-width: 28rem;
+  margin: 1.5rem 0;
+}
+
 /* Documentation prose uses the public ExpressiveCSS type roles. Component
    examples keep their own typography because these selectors only address
    direct documentation content. */

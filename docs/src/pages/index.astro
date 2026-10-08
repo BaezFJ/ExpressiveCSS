@@ -7,8 +7,47 @@ import { defineSections } from "../lib/sections";
 import { route } from "../lib/catalogue";
 import starter from "../../public/starter.html?raw";
 
+const features = [
+  { icon: "palette", title: "Material Design 3 tokens", text: "Color, typography, shape and elevation tokens, with the whole color scheme generated from one source color." },
+  { icon: "contrast", title: "Light and dark themes", text: "Set theme=\"light\" or theme=\"dark\" on the root element, or use auto to follow the operating system." },
+  { icon: "code", title: "Semantic HTML", text: "The element is the component: an article is a card and a label wrapping a checkbox is a switch." },
+  { icon: "accessibility_new", title: "Accessible components", text: "Interactive components manage focus, keyboard navigation and ARIA state for you." },
+  { icon: "bolt", title: "No build step required", text: "Link one stylesheet and one script, or import only the components you use from the ES module and Sass entries." },
+  { icon: "monitoring", title: "Charts included", text: "Line, column, bar, pie, radar and heatmap charts, each with an accessible data table." },
+];
+
+const demo = `<article class="outlined">
+  <header>
+    <h4>Trip settings</h4>
+    <p class="subhead">Weekend in the mountains</p>
+  </header>
+  <p>Every color here comes from theme tokens, so the card follows light and dark mode.</p>
+  <p>
+    <input type="checkbox" class="chip-input" id="demo-hiking" checked>
+    <label class="chip" for="demo-hiking">
+      <span class="material-symbols" aria-hidden="true">check</span>
+      Hiking
+    </label>
+    <input type="checkbox" class="chip-input" id="demo-camping">
+    <label class="chip" for="demo-camping">
+      <span class="material-symbols" aria-hidden="true">check</span>
+      Camping
+    </label>
+  </p>
+  <label class="switch">
+    <input type="checkbox" checked>
+    Download offline maps
+  </label>
+  <div class="actions">
+    <button type="button" class="text">Cancel</button>
+    <button type="button" class="filled">Save</button>
+  </div>
+</article>`;
+
 const S = defineSections([
-  { id: "download", label: "Download" },
+  { id: "features", label: "Features" },
+  { id: "demo", label: "Code demo" },
+  { id: "download", label: "Installation" },
   { id: "setup", label: "Setup" },
   { id: "templates", label: "Templates" },
   { id: "smaller-builds", label: "Smaller builds" },
@@ -16,7 +55,34 @@ const S = defineSections([
 ]);
 ---
 <DocsLayout page="index">
+<div slot="banner" class="docs-hero-actions">
+  <p>
+    <a class="button filled" href="#download">Get started</a>
+    <a class="button tonal" href={route("buttons")}>Browse components</a>
+    <a class="button text" href="https://github.com/BaezFJ/ExpressiveCSS">GitHub</a>
+  </p>
+  <p><code>npm install @expressivecss/expressive</code></p>
+</div>
 <PageBody sections={S}>
+  <Section {...S.features}>
+    <div class="docs-features">
+      {features.map((f) => (
+        <article class="filled">
+          <span class="material-symbols primary-text" aria-hidden="true">{f.icon}</span>
+          <h4>{f.title}</h4>
+          <p>{f.text}</p>
+        </article>
+      ))}
+    </div>
+  </Section>
+
+  <Section {...S.demo}>
+    <p>This card, its filter chips and its switch are plain HTML. Switch the theme from the app bar to see the
+      tokens change.</p>
+    <div class="docs-demo" data-markdown-ignore set:html={demo} />
+    <Code code={demo} />
+  </Section>
+
   <Section {...S.download}>
                     <p class="flow-text">
                         Expressive comes in two different forms. You can select which version you want depending on your

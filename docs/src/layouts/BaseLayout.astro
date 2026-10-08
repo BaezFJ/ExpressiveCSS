@@ -11,12 +11,14 @@ import Footer from "../components/Footer.astro";
 interface Props {
   /** The page's own name. The `<title>` and the app bar heading are built from it. */
   pageName: string;
+  /** The search-result and link-preview summary. */
+  description: string;
   bodyClass: string;
   /** The page-equivalent Markdown route agents can fetch instead of this HTML. */
   markdownPath: string;
 }
 
-const { pageName, bodyClass, markdownPath } = Astro.props;
+const { pageName, description, bodyClass, markdownPath } = Astro.props;
 
 // Stamped in by astro.config.mjs -- see the note there.
 declare const __REPO_ROOT__: string;
@@ -54,7 +56,14 @@ const canonical = new URL(path, Astro.site).href;
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{`${pageName} - ExpressiveCSS`}</title>
+    <meta name="description" content={description}>
     <link rel="canonical" href={canonical}>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="ExpressiveCSS">
+    <meta property="og:title" content={pageName}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={canonical}>
+    <meta name="twitter:card" content="summary">
     <link rel="describedby" href="/llms.txt">
     <link rel="alternate" type="text/markdown" href={markdownPath}>
     <link rel="stylesheet" href={cssUrl}>
