@@ -340,6 +340,22 @@ export class LineChart extends Component<LineChartOptions> {
     this.el.append(...this._generated);
   }
 
+  /**
+   * The <tfoot> row as a total to show over the plot, its value over its
+   * label, or null without one.
+   */
+  protected _total(className: string): HTMLElement | null {
+    const footer = this.el.querySelector<HTMLTableElement>(':scope > table')?.tFoot?.rows[0];
+    if (!footer) return null;
+    const total = document.createElement('div');
+    total.className = className;
+    const [label, value] = [document.createElement('span'), document.createElement('strong')];
+    label.textContent = footer.cells[0]?.textContent.trim() ?? '';
+    value.textContent = footer.cells[1]?.textContent.trim() ?? '';
+    total.append(value, label);
+    return total;
+  }
+
   /** The parts below the plot: the row labels and the legend. */
   protected _guides(): Element[] {
     const labels = document.createElement('ol');

@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**69 of 69 rows enforced; 0 remaining.**
+**70 of 70 rows enforced; 0 remaining.**
 
-65 of those rows are components - a part of the framework an author writes markup for.
+66 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 65 components declare conformance debt.**
+**3 of 66 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -756,6 +756,18 @@ Added with the radar chart component. The <table> is the chart's text alternativ
 
 - **radar-chart-is-a-figure-with-a-table** - Write .radar-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
 - **radar-chart-has-a-caption** - Name a .radar-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
+
+### radial-chart
+
+Added with the radial chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn rings, total and legend are aria-hidden.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `radial-chart-is-a-figure-with-a-table` | forbid | `.radial-chart:not(figure:has(> table))` | must not match |
+| `radial-chart-has-a-caption` | forbid | `.radial-chart:not(:has(> figcaption))` | must not match |
+
+- **radial-chart-is-a-figure-with-a-table** - Write .radial-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
+- **radial-chart-has-a-caption** - Name a .radial-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
 ### scrim
 

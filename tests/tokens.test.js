@@ -59,6 +59,15 @@ const UNREAD_ALLOWED = new Map([
       'missing feature rather than a wiring slip. Wire it or drop it, but do ' +
       'not leave it documented and inert.',
   ],
+  [
+    '--md-comp-radial-chart-thickness',
+    'read at runtime by RadialChart, which lays the rings out in SVG units ' +
+      'and hit-tests the pointer against the same radii.',
+  ],
+  [
+    '--md-comp-radial-chart-gap',
+    'read at runtime by RadialChart with the thickness token, for the same reason.',
+  ],
 ]);
 
 describe('Custom properties', () => {

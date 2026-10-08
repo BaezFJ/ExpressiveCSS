@@ -43,7 +43,7 @@ describe('Cards CSS', () => {
   test('rounds and clips direct card media, including primary-action media', () => {
     assert.match(
       css,
-      /article\s*>\s*img,[^{]+article\s*>\s*\.primary-action\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart\)\)\s*\{[^}]*border-radius:\s*var\(--md-comp-card-media-shape\)[^}]*overflow:\s*hidden/s
+      /article\s*>\s*img,[^{]+article\s*>\s*\.primary-action\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart,\s*\.radial-chart\)\)\s*\{[^}]*border-radius:\s*var\(--md-comp-card-media-shape\)[^}]*overflow:\s*hidden/s
     );
     assert.match(
       css,
@@ -62,11 +62,11 @@ describe('Cards CSS', () => {
     );
     assert.match(
       css,
-      /article\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart\)\)\s*>\s*figcaption,[^{]+\{[^}]*background-color:\s*var\(--md-comp-card-media-overlay-container-color\)[^}]*border-radius:\s*var\(--md-comp-card-media-overlay-shape\)/s
+      /article\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart,\s*\.radial-chart\)\)\s*>\s*figcaption,[^{]+\{[^}]*background-color:\s*var\(--md-comp-card-media-overlay-container-color\)[^}]*border-radius:\s*var\(--md-comp-card-media-overlay-shape\)/s
     );
     assert.doesNotMatch(
       css,
-      /article\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart\)\)\s*>\s*figcaption,[^{]+\{[^}]*background:\s*color-mix/s
+      /article\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart,\s*\.radial-chart\)\)\s*>\s*figcaption,[^{]+\{[^}]*background:\s*color-mix/s
     );
     assert.match(
       css,
@@ -98,7 +98,7 @@ describe('Cards CSS', () => {
       css,
       /--md-comp-card-supporting-text-color:\s*var\(--md-sys-color-on-surface-variant\)/
     );
-    assert.match(css, /article\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart\)\),[^{]+\.primary-action\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart\)\)\s*\{/s);
+    assert.match(css, /article\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart,\s*\.radial-chart\)\),[^{]+\.primary-action\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart,\s*\.radial-chart\)\)\s*\{/s);
     assert.match(css, /article\s*>\s*\.actions\s*\{/);
     assert.doesNotMatch(css, /article\s*>[^\{]*nav[^\{]*\{/);
     assert.doesNotMatch(css, /article\.sticky\s*>\s*:is\(nav/);
@@ -114,7 +114,7 @@ describe('Cards CSS', () => {
     );
     assert.match(
       css,
-      /article\.horizontal\s*>\s*img,[^{]+article\.horizontal\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart\)\)\s*\{[^}]*grid-column:\s*1[^}]*grid-row:\s*1\s*\/\s*-1/s
+      /article\.horizontal\s*>\s*img,[^{]+article\.horizontal\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart,\s*\.radial-chart\)\)\s*\{[^}]*grid-column:\s*1[^}]*grid-row:\s*1\s*\/\s*-1/s
     );
     assert.match(
       css,

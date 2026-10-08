@@ -20,6 +20,7 @@ export { BarChart } from "./barChart";
 export { PieChart } from "./pieChart";
 export { HeatmapChart } from "./heatmapChart";
 export { RadarChart } from "./radarChart";
+export { RadialChart } from "./radialChart";
 export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";
 export { Lightbox } from "./lightbox";

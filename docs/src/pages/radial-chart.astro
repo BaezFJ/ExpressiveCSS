@@ -1,0 +1,262 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "total", label: "Total" },
+  { id: "gauge", label: "Gauge" },
+  { id: "rings", label: "Ring size and tracks" },
+  { id: "cards", label: "Chart cards" },
+  { id: "data", label: "Values and colors" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const plans: [string, number][] = [["Free plan", 80], ["Basic plan", 70], ["Premium plan", 60], ["Enterprise plan", 50]];
+const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referral", 70], ["Social", 65]];
+---
+<DocsLayout page="radial-chart">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;figure class="radial-chart"&gt;</code> draws a
+          <code>&lt;table&gt;</code> of progress values as rings. The first
+          column of the table names each row and the second holds its value.
+        </p>
+        <p>
+          It takes the same markup as a <a href="column-chart.html">column
+          chart</a>. Each row is a ring, outermost first, filled clockwise from
+          the top as a share of 100. A legend lists the rows and their cells
+          when there is more than one. A tooltip follows the pointer across
+          the rings, and the arrow keys move it when the chart has focus. Keep
+          a radial chart to about four rings; to compare more values, use a
+          <a href="bar-chart.html">bar chart</a>.
+        </p>
+        <figure class="radial-chart" data-markdown-ignore>
+          <figcaption>Plan goals reached, 2026</figcaption>
+          <table>
+            <thead><tr><th>Plan</th><th>Goal reached</th></tr></thead>
+            <tbody>{plans.map(([plan, value]) => <tr><th>{plan}</th><td>{value}%</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="radial-chart">
+  <figcaption>Plan goals reached, 2026</figcaption>
+  <table>
+    <thead>
+      <tr><th>Plan</th><th>Goal reached</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Free plan</th><td>80%</td></tr>
+      <tr><th>Basic plan</th><td>70%</td></tr>
+      <tr><th>Premium plan</th><td>60%</td></tr>
+      <tr><th>Enterprise plan</th><td>50%</td></tr>
+    </tbody>
+  </table>
+</figure>
+`} />
+        <p>
+          The legend and tooltip show each cell's text as written, so format
+          values in the table. For values out of something other than 100,
+          set <code>data-max</code> on the figure.
+        </p>
+  </Section>
+  <Section {...S.total}>
+        <p>
+          A <code>&lt;tfoot&gt;</code> row shows in the middle: its value
+          large, with its label below. It is not drawn as a ring. A single
+          ring with a total is a progress dial.
+        </p>
+        <figure class="radial-chart" style="--md-comp-radial-chart-thickness: 14" data-markdown-ignore>
+          <figcaption>Monthly sales target</figcaption>
+          <table>
+            <thead><tr><th>Target</th><th>Reached</th></tr></thead>
+            <tbody><tr><th>Sales</th><td>55%</td></tr></tbody>
+            <tfoot><tr><th>Sales</th><td>250</td></tr></tfoot>
+          </table>
+        </figure>
+<Code code={`
+<figure class="radial-chart" style="--md-comp-radial-chart-thickness: 14">
+  <figcaption>Monthly sales target</figcaption>
+  <table>
+    <thead>
+      <tr><th>Target</th><th>Reached</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Sales</th><td>55%</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><th>Sales</th><td>250</td></tr>
+    </tfoot>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.gauge}>
+        <p>
+          <code>gauge</code> draws each ring as a half circle over the middle,
+          filling from the left. The total sits on the gauge's base line.
+          Here <code>data-max="25"</code> makes each value a share of 25 seats.
+        </p>
+        <figure class="radial-chart gauge" data-max="25" data-markdown-ignore>
+          <figcaption>Team capacity</figcaption>
+          <table>
+            <thead><tr><th>Seats</th><th>Count</th></tr></thead>
+            <tbody>
+              <tr><th>Filled</th><td>18</td></tr>
+              <tr><th>Offered</th><td>21</td></tr>
+            </tbody>
+            <tfoot><tr><th>Total seats</th><td>25</td></tr></tfoot>
+          </table>
+        </figure>
+<Code code={`
+<figure class="radial-chart gauge" data-max="25">
+  <figcaption>Team capacity</figcaption>
+  <table>
+    <thead>
+      <tr><th>Seats</th><th>Count</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Filled</th><td>18</td></tr>
+      <tr><th>Offered</th><td>21</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><th>Total seats</th><td>25</td></tr>
+    </tfoot>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.rings}>
+        <p>
+          <code>--md-comp-radial-chart-thickness</code> sets a ring's width and
+          <code>--md-comp-radial-chart-gap</code> the space between rings, both
+          in hundredths of the diameter. When there are too many rings to
+          leave a middle, the rings and gaps thin together to fit. Set <code>--md-comp-radial-chart-track-color</code>
+          to <code>transparent</code> to hide the tracks behind the rings.
+        </p>
+        <figure class="radial-chart" style="--md-comp-radial-chart-track-color: transparent; --md-comp-radial-chart-gap: 3" data-markdown-ignore>
+          <figcaption>Visitors by source, share of goal</figcaption>
+          <table>
+            <thead><tr><th>Source</th><th>Share of goal</th></tr></thead>
+            <tbody>{visitors.map(([source, value]) => <tr><th>{source}</th><td>{value}%</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="radial-chart"
+  style="--md-comp-radial-chart-track-color: transparent; --md-comp-radial-chart-gap: 3">
+  <figcaption>Visitors by source, share of goal</figcaption>
+  <table><!-- … --></table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.cards}>
+        <p>
+          A chart goes in a card with the figures it explains. The card adds
+          no chart styles; size the rings with
+          <code>--md-comp-radial-chart-height</code>, their diameter.
+        </p>
+        <article class="outlined" data-markdown-ignore>
+          <dl class="stats my-0">
+            <div><dt>Response rate</dt><dd>72%</dd><dd class="stat-change up">+14 points from last month</dd></div>
+          </dl>
+          <figure class="radial-chart" style="--md-comp-radial-chart-height: 180px">
+            <figcaption class="visually-hidden">Response rate by month</figcaption>
+            <table>
+              <thead><tr><th>Month</th><th>Response rate</th></tr></thead>
+              <tbody><tr><th>This month</th><td>72%</td></tr><tr><th>Last month</th><td>58%</td></tr></tbody>
+              <tfoot><tr><th>This month</th><td>72%</td></tr></tfoot>
+            </table>
+          </figure>
+        </article>
+<Code code={`
+<article class="outlined">
+  <dl class="stats my-0">
+    <div>
+      <dt>Response rate</dt>
+      <dd>72%</dd>
+      <dd class="stat-change up">+14 points from last month</dd>
+    </div>
+  </dl>
+  <figure class="radial-chart" style="--md-comp-radial-chart-height: 180px">
+    <figcaption class="visually-hidden">Response rate by month</figcaption>
+    <table><!-- … --></table>
+  </figure>
+</article>
+`} />
+        <p>
+          <code>sparkline</code> is a 48px chart with no legend or tooltip, for
+          a small dial or gauge beside a figure that already explains it.
+        </p>
+  </Section>
+  <Section {...S.data}>
+        <p>
+          Cells read as in a column chart: a cell's number is its
+          <code>data-value</code>, or its text without currency signs, percent
+          signs or grouping commas. A ring's fill is its value's share of
+          <code>data-max</code>, 100 by default; a maximum of zero or less is
+          ignored. Values past the maximum close the ring. A value under
+          about one ring's width of arc draws as a dot at the start, and zero,
+          negative and missing values leave only the track. Their rows stay in
+          the legend and the tooltip. A chart whose cells are all gaps shows
+          its table.
+        </p>
+        <p>
+          Rings take <code>primary</code>, <code>tertiary</code>,
+          <code>secondary</code> and <code>on-surface-variant</code> in turn;
+          a fifth ring repeats the first color.
+        </p>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The table is the chart's text alternative. Give it a header row and
+          a header cell per row, and name the chart with a
+          <code>&lt;figcaption&gt;</code>. The drawn rings, total and legend
+          are hidden from assistive technology.
+        </p>
+        <p>
+          The plot is one Tab stop named by the caption. Down and right move
+          to the next ring inwards, up and left to the one before, wrapping
+          between the innermost ring and the outermost. Home and End jump to
+          the ends and Escape hides the tooltip. On a touch screen, tap a ring
+          to show it. In a right-to-left page the rings and the arrows still
+          run clockwise. The tooltip is a
+          polite live region, so a screen reader hears each row's values as it
+          moves. A sparkline is not focusable. In forced colors the rings keep
+          their colors so the legend still keys them.
+        </p>
+  </Section>
+  <Section {...S.javascript}>
+        <p>
+          <code>AutoInit()</code> starts every <code>.radial-chart</code>. To
+          start one yourself, or to redraw a chart after changing its table or
+          its ring tokens, call <code>RadialChart.init</code> again. It has the
+          line chart's methods; the <code>max</code> option sets the maximum
+          when the figure has no <code>data-max</code>, and <code>min</code>
+          does not apply.
+        </p>
+<Code code={`
+const chart = Expressive.RadialChart.init(document.querySelector('.radial-chart'));
+chart.show(1);   // highlight the second ring; -1 hides the tooltip
+chart.destroy(); // remove the drawing and show the table again
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.radial-chart</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-radial-chart-height</code></td><td>240px, the rings' diameter; 48px for a sparkline</td></tr>
+          <tr><td><code>--md-comp-radial-chart-thickness</code></td><td>8, a ring's width in hundredths of the diameter</td></tr>
+          <tr><td><code>--md-comp-radial-chart-gap</code></td><td>2, the gap between rings in the same units</td></tr>
+          <tr><td><code>--md-comp-radial-chart-track-color</code></td><td><code>surface-container-highest</code>; <code>transparent</code> hides the tracks</td></tr>
+          <tr><td><code>--md-comp-radial-chart-color-1</code> … <code>-4</code></td><td><code>primary</code>, <code>tertiary</code>, <code>secondary</code>, <code>on-surface-variant</code></td></tr>
+        </TokenTable>
+        <p>For a selective Sass build, include <code>"radial-chart"</code> in <code>$components</code>.</p>
+  </Section>
+</PageBody>
+</DocsLayout>

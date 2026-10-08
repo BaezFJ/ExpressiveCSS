@@ -787,7 +787,7 @@
         },
         {
           "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "734b13a6a1775f1f293e49c16f50697cb9f3e6b0fc20c23bd2f950a87f7dede7"
+          "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
         },
         {
           "path": "src/sass/abstracts/_variables.scss",
@@ -866,7 +866,7 @@
         },
         {
           "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "734b13a6a1775f1f293e49c16f50697cb9f3e6b0fc20c23bd2f950a87f7dede7"
+          "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
         },
         {
           "path": "src/sass/abstracts/_variables.scss",
@@ -1521,7 +1521,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "26af91940e99dc87c3cf02c79bf7a334c2ff2ee13ad66a15f78792082c10fe55"
+          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
         }
       ],
       "gaps": [
@@ -1600,7 +1600,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "26af91940e99dc87c3cf02c79bf7a334c2ff2ee13ad66a15f78792082c10fe55"
+          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
         }
       ],
       "gaps": [
@@ -1677,7 +1677,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "26af91940e99dc87c3cf02c79bf7a334c2ff2ee13ad66a15f78792082c10fe55"
+          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
         }
       ],
       "gaps": [
@@ -1746,11 +1746,11 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "26af91940e99dc87c3cf02c79bf7a334c2ff2ee13ad66a15f78792082c10fe55"
+          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
         },
         {
           "path": "src/ts/components/pieChart.ts",
-          "sha256": "2b8e5940a604b7c4b9dbacfae6a4980b7a13f4df6e04c6c7d032a3b2c3f0bbd4"
+          "sha256": "d346e4b9b82814107f71872643a627971a249474de46cbc1f5bf4e4a5282811f"
         }
       ],
       "gaps": [
@@ -1823,7 +1823,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "26af91940e99dc87c3cf02c79bf7a334c2ff2ee13ad66a15f78792082c10fe55"
+          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
         }
       ],
       "gaps": [
@@ -1892,7 +1892,7 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "26af91940e99dc87c3cf02c79bf7a334c2ff2ee13ad66a15f78792082c10fe55"
+          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
         },
         {
           "path": "src/ts/components/radarChart.ts",
@@ -1922,6 +1922,79 @@
           "file": "tests/radar-chart-browser.test.js",
           "name": "chromium: radar chart tooltip follows the pointer round the spokes and the arrow keys",
           "scope": "Nearest spoke by pointer angle inside and past the rim, tooltip text without gaps, opening leftwards on the right half, the cursor spoke and its points, focus, all four arrows, wrapping past either end, End and Escape, and clockwise spokes and arrows in RTL. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "radial-chart",
+      "title": "Radial chart",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-07",
+      "scope": "Rings drawn clockwise from the top from a figure's data table as a share of data-max, with tracks, a legend of each row's cell for more than one row, gauge and sparkline modifiers, a <tfoot> total in the middle, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the ring.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rings, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-07",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, keep rings distinguishable and their values readable, and let a keyboard reach every ring the pointer can."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "dea628c2611f0a402af34df43eaeb0e86e2edf351e8a16e01fa9977e04f34f75"
+        },
+        {
+          "path": "src/sass/components/_radial-chart.scss",
+          "sha256": "4ebff333a3820b516fac11c5be053041d0d5c8a9841b579f35ef47e6cdc247fb"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "ade792d8f38e3f44408e4784a42f70112be452d877c47302810f8e8bb461467b"
+        },
+        {
+          "path": "src/ts/components/radialChart.ts",
+          "sha256": "2d6acf36785432d8c8ad32adc3aabe0441ad41efe7f14e78c707b1077b7e548e"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        },
+        {
+          "kind": "feature",
+          "description": "There are no labels on the rings, no gradient or segmented fills, and rings past four reuse the colors.",
+          "nextStep": "Add ring-start labels if charts need names on the rings; keep to four rings and use the legend meanwhile."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/radial-chart-browser.test.js",
+          "name": "chromium: radial chart draws rings, a legend and a total from its table",
+          "scope": "Hidden table in the accessibility tree, the named plot and its role description, the square plot, ring radii, widths, colors and dash shares, tracks, an empty ring for a missing value, legend cells, separate instances from line charts, the gauge's box, half-circle dash, round track caps and <tfoot> total, no legend for one ring, thinner crowded rings, a value past the maximum, the sparkline size and focus in a flex row, and destroy restoring the table.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/radial-chart-browser.test.js",
+          "name": "chromium: radial chart tooltip follows the pointer across the rings and the arrow keys",
+          "scope": "Pointer distance to ring, gaps split between rings, the active ring, tooltip text with further columns, swatches in the ring color, opening direction, hiding in the middle, off the rings and below a gauge's base line, focus, all four arrows, End and Escape, and clockwise rings with swapped arrows in RTL. No spoken-output assertion.",
           "state": "not-recorded"
         }
       ],

@@ -310,6 +310,22 @@ Feature gap: A gap joins the spokes either side of it rather than breaking the s
 
 Mapped browser scope: Hidden table in the accessibility tree, the named plot, the square plot, rings and spokes, shape geometry from zero to data-max, a joined gap and a clamped value, series colors and the dashed class, points and area, labels on their spokes, the legend, separate instances from line charts, the sparkline size and focus, destroy restoring the table, nearest-spoke pointer and keyboard tooltip movement, the cursor spoke and RTL. No spoken-output assertion.
 
+## [Radial chart](../../components/radial-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, keep rings distinguishable and their values readable, and let a keyboard reach every ring the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the rings, tracks, legend, total and tooltip from the page's table with the line chart's runtime; the page owns the data, its formatting, the maximum, the total and the caption. A running task's progress stays a progress indicator.
+
+Verification gap: Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+Feature gap: There are no labels on the rings, no gradient or segmented fills, and rings past four reuse the colors. Next check: Add ring-start labels if charts need names on the rings; keep to four rings and use the legend meanwhile.
+
+Mapped browser scope: Hidden table in the accessibility tree, the named plot, the square plot, ring geometry, colors and dash shares, tracks, legend cells, separate instances from line charts, the gauge box and total, thinner crowded rings, the sparkline size and focus, destroy restoring the table, pointer distance and keyboard tooltip movement, the active ring and RTL. No spoken-output assertion.
+
 ## [Timeline](../../components/timeline.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

@@ -96,7 +96,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the heatmap legend range fix: 53,190 gzip bytes (+82).
   // Reviewed heatmap hit testing by position, Escape and pointer focus fixes: 53,329 gzip bytes (+139).
   // Reviewed the radar chart and the shared circular chart hooks: 53,801 gzip bytes (+472).
-  assert.ok(sizes(js).gzip <= 53801, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the radial chart and its review fixes: 54,640 gzip bytes (+839).
+  assert.ok(sizes(js).gzip <= 54640, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -112,5 +113,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed heatmap text contrast and the legend range: 58,097 gzip bytes (+55).
   // Reviewed heatmap row label width and gap swatches: 58,103 gzip bytes (+6).
   // Reviewed the radar chart and its label room: 58,869 gzip bytes (+766).
-  assert.ok(sizes(css).gzip <= 58869, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the radial chart and its review fixes: 59,469 gzip bytes (+600).
+  assert.ok(sizes(css).gzip <= 59469, `CSS gzip: ${sizes(css).gzip}`);
 });

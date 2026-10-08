@@ -205,16 +205,8 @@ export class PieChart extends LineChart {
       pie.append(labels);
     }
 
-    const footer = this.el.querySelector<HTMLTableElement>(':scope > table')?.tFoot?.rows[0];
-    if (footer) {
-      const totalText = document.createElement('div');
-      totalText.className = 'pie-chart-total';
-      const [label, value] = [document.createElement('span'), document.createElement('strong')];
-      label.textContent = footer.cells[0]?.textContent.trim() ?? '';
-      value.textContent = footer.cells[1]?.textContent.trim() ?? '';
-      totalText.append(value, label);
-      pie.append(totalText);
-    }
+    const middle = this._total('pie-chart-total');
+    if (middle) pie.append(middle);
     return pie;
   }
 }
