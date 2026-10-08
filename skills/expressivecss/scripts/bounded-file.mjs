@@ -43,10 +43,13 @@ export async function readBoundedRegularFile(filePath, byteLimit, label, expecte
     }
     if (before.size > BigInt(byteLimit)) throw new Error(`${label} file exceeds ${byteLimit} bytes`);
 
-    const bytes = Buffer.allocUnsafe(byteLimit + 1);
+    // Size the buffer to the file, not the limit: one spare byte exposes growth,
+    // and the identity check below rejects any file that changed size.
+    const capacity = Number(before.size) + 1;
+    const bytes = Buffer.allocUnsafe(capacity);
     let total = 0;
-    while (total <= byteLimit) {
-      const chunk = await handle.read(bytes, total, byteLimit + 1 - total, total);
+    while (total < capacity) {
+      const chunk = await handle.read(bytes, total, capacity - total, total);
       if (chunk.bytesRead === 0) break;
       total += chunk.bytesRead;
     }

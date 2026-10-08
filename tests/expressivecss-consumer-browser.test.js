@@ -9,7 +9,8 @@ import test from 'node:test';
 import { chromium } from '@playwright/test';
 import { verifyConsumer } from '../scripts/lib/verify-consumer.mjs';
 
-const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
+const chromiumRun = !process.env.EXPRESSIVECSS_TEST_BROWSER || process.env.EXPRESSIVECSS_TEST_BROWSER === 'chromium';
+const browserTest = chromiumRun && existsSync(chromium.executablePath()) ? test : test.skip;
 const caseFor = (name, route = '/') => ({ name, path: route, width: 375, height: 900, colorScheme: 'light', reducedMotion: 'reduce', steps: [
   { action: 'click', selector: '#save' },
   { action: 'expect', selector: '#status', property: 'text', value: 'Saved' },

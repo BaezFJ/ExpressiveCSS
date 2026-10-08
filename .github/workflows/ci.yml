@@ -89,7 +89,10 @@ jobs:
       - run: npm ci --engine-strict
         working-directory: mcp/expressivecss
 
+      # The tarball check below runs the smoke test twice on 24.15.0: once as
+      # the prepack script and once from the installed package.
       - run: npm test
+        if: matrix.node != '24.15.0'
         working-directory: mcp/expressivecss
 
       - name: Verify the MCP tarball in a clean consumer
@@ -152,7 +155,7 @@ jobs:
 
   # One leg per engine: each test launches its own browser and node:test runs a
   # file's tests in sequence, so a single job spent ~8 minutes on the two
-  # largest files. Files that ignore EXPRESSIVECSS_TEST_BROWSER run in every leg.
+  # largest files. Chromium-only files skip themselves in the other legs.
   browser:
     runs-on: ubuntu-latest
     strategy:

@@ -5,7 +5,8 @@ import { chromium } from 'playwright';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
+const chromiumRun = !process.env.EXPRESSIVECSS_TEST_BROWSER || process.env.EXPRESSIVECSS_TEST_BROWSER === 'chromium';
+const browserTest = chromiumRun && existsSync(chromium.executablePath()) ? test : test.skip;
 
 browserTest('button-group toggle colors resolve in a browser', async () => {
   const browser = await chromium.launch({ headless: true });

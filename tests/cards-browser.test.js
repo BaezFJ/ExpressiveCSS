@@ -4,7 +4,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
+const chromiumRun = !process.env.EXPRESSIVECSS_TEST_BROWSER || process.env.EXPRESSIVECSS_TEST_BROWSER === 'chromium';
+const browserTest = chromiumRun && existsSync(chromium.executablePath()) ? test : test.skip;
 
 async function cardState(card) {
   return card.evaluate((el) => ({

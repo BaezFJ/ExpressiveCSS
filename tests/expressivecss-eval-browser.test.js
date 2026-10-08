@@ -51,7 +51,9 @@ async function fixture() {
   return { root, projectRoot: path.join(root, 'project'), artifactDirectory: path.join(root, 'artifacts') };
 }
 
+const chromiumRun = !process.env.EXPRESSIVECSS_TEST_BROWSER || process.env.EXPRESSIVECSS_TEST_BROWSER === 'chromium';
 async function requireBrowser(t) {
+  if (!chromiumRun) { t.skip('Chromium runs in its own engine leg'); return false; }
   try { await access(chromium.executablePath()); require.resolve('@modelcontextprotocol/sdk/client/index.js'); return true; }
   catch { t.skip('Optional evaluation SDK or Chromium is not installed'); return false; }
 }
@@ -124,6 +126,7 @@ test('fixture server blocks private paths, traversal, symlinks and foreign origi
 });
 
 test('shared post-run browser blocks external navigation, WebSockets and popup traffic', async (t) => {
+  if (!chromiumRun) { t.skip('Chromium runs in its own engine leg'); return; }
   try { await access(chromium.executablePath()); } catch { t.skip('Chromium is not installed'); return; }
   const files = await fixture(); let browser, fixtureServer;
   let externalRequests = 0;

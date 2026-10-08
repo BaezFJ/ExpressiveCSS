@@ -8,7 +8,8 @@ import { chromium } from '@playwright/test';
 import { materializeProjectFixture } from '../scripts/eval-expressivecss-skill.mjs';
 import { startFixtureServer, createRestrictedFixturePage } from '../scripts/expressivecss-eval-browser.mjs';
 
-const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
+const chromiumRun = !process.env.EXPRESSIVECSS_TEST_BROWSER || process.env.EXPRESSIVECSS_TEST_BROWSER === 'chromium';
+const browserTest = chromiumRun && existsSync(chromium.executablePath()) ? test : test.skip;
 const routeMarkup = `<div class="field"><select id="frequency"><option value="daily">Daily</option><option value="weekly">Weekly</option></select><label for="frequency">Frequency</label></div><button class="tooltipped" data-tooltip="Local preferences">Help</button>`;
 
 async function withConsumer(run) {

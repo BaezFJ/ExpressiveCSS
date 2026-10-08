@@ -6,6 +6,8 @@
   executable to run" from 0.2.0 onward because the package has two bins. A
   `mcp-server` bin now starts the server, so the documented client config works.
   The `expressivecss-mcp` bin is unchanged.
+- The server and `expressivecss-lint` start about 0.3 s faster. jsdom now loads
+  the first time a check inspects markup instead of at startup.
 
 ## 0.3.0 - 2026-10-06
 
