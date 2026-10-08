@@ -46,6 +46,7 @@ Build these regions in this order. Skip a region the questions do not need.
 | Key figures | `dl.stats` | Three to five figures. Each has a label, a value, and a change with its baseline. |
 | Primary story | Widest card, usually a line chart | The answer to the headline question. `s12 xl8` beside a narrower companion. |
 | Breakdowns | Cards with one chart each | One question per card. `s12 l6 xl4`. |
+| Alert | One error-colored card at the top (see section 3) | Only while something is wrong: what broke, the impact, and one filled button to the incident. |
 | Insight | One `article` with the `vibrant` attribute | At most one per page, with a filled button for the next step. |
 | Detail | `.data-table` in a card | Exact values people sort and compare. |
 
@@ -81,7 +82,21 @@ Dashboards look like Google products when the page is calm: one neutral surface,
 - **Cards are `article.filled`.** No shadows and no outlines between dashboard cards; the fill separates them. `surface-container` on `surface` works in both schemes because Material containers get lighter in dark mode.
 - **One corner size for every card and tile.** 24px reads as Material 3 Expressive. Charts keep their own small radii.
 - **Color roles only.** No hex, no gradients, no per-chart palettes. The charts already take `primary`, `tertiary`, `secondary`, and `on-surface-variant` in series order, and they follow the theme and `--md-source`.
-- **One `vibrant` region per page**, on the insight or alert the reader should act on. It remaps surfaces to the tertiary container; the filled button inside still stands out.
+- **One `vibrant` region per page**, on the insight or opportunity the reader should act on. It remaps surfaces to the tertiary container; the filled button inside still stands out. `vibrant` is emphasis, not alarm.
+- **Problems take the error roles.** An active incident, a failed payment run or a breached limit goes in a card painted with the error container, so it reads as a problem in both schemes:
+
+  ```css
+  .dashboard article.alert {
+    --md-comp-filled-card-container-color: var(--md-sys-color-error-container);
+    --md-comp-card-headline-color: var(--md-sys-color-on-error-container);
+    --md-comp-card-subhead-color: var(--md-sys-color-on-error-container);
+    --md-comp-card-supporting-text-color: var(--md-sys-color-on-error-container);
+    --md-comp-filled-button-container-color: var(--md-sys-color-error);
+    --md-comp-filled-button-label-text-color: var(--md-sys-color-on-error);
+  }
+  ```
+
+  Pair the color with an `error` icon and words ("Active incident"), never color alone.
 - **One filled button per page region.** Scope controls are outlined; card links are text buttons with a trailing `arrow_forward` icon.
 
 Brand a dashboard by setting `--md-source` on `:root`, not by recoloring charts.
@@ -114,6 +129,7 @@ Choose and build each chart with the [charts guide](../expressivecss-charts/SKIL
 
 - **Give the widest card to the headline trend.** Usually a `line-chart` of the headline metric, with the comparison period or target in a `th.dashed` column so the current series reads first.
 - **One question per chart.** If a card needs two charts to make its point, it is two cards, or a `display-medium` figure with a `sparkline` under it.
+- **Print values only when they fit.** Use `values` on a bar chart only when the smallest bar is at least about a sixth of the largest; shorter bars push their text into the next label. Otherwise leave the numbers to the tooltip and table.
 - **Keep labels short.** Bar labels past 40% of the width truncate, so keep categories under about 16 characters. A full-width card at 390px fits about six x labels like "Sep 9"; more rows truncate them, so sample the range or shorten the labels.
 - **Share scales between comparable charts.** Cards that compare the same measure use the same `data-min` and `data-max`.
 - **Exact values go in a `.data-table`, not a chart.** Use `numeric` on number columns, `dense` inside cards and `text-nowrap` on dates. Sorting is page state: a header `<button>` does nothing until the page reorders the rows and moves `aria-sort`. Copy the reference's sort handler, or leave the headers as plain text.
@@ -143,6 +159,8 @@ Choose and build each chart with the [charts guide](../expressivecss-charts/SKIL
 
 - The heading and subhead must be direct children of the card's `header`, or they lose the card's type styles. The reference's `<style>` places the overflow button beside them.
 - One overflow menu per card at most, named after the card. One action link per card at most.
+- A list of people or items that need attention gives each row its own action (Message, Review, Retry), with the item named in the accessible name ("Message Maya Patel"). A list the reader cannot act on is a report, not a to-do list.
+- Do not leave a short card stretched beside a tall one. Pair cards of similar height, move the short one into a row of its peers, or give it the supporting figure that makes its point (a sparkline, the numbers behind an insight).
 - Do not nest cards, put stat tiles inside small cards, or wrap a table in a second outline.
 - The figure, table, and body content sit 24px from the card edges. The reference's `.dashboard article > :is(figure, .data-table, .card-body)` rule does this. The charts guide's `px-4 pb-4` wrapper matches the default 16px card padding; on a dashboard that raises the padding to 24px, use the reference rule instead so content lines up with the card heading.
 
@@ -174,11 +192,12 @@ Render the page and look at it. Use [the design guide's review steps](../express
 
 - The headline question is answered in the first viewport at 1280px: key figures plus the primary trend.
 - Every number has a label, a unit or scope, and a baseline for its change.
-- Colors come from roles; there is at most one vibrant region and one filled button per region.
+- Colors come from roles; there is at most one vibrant region and one filled button per region; problems use the error roles, not `vibrant`.
+- No card has a large empty area, and every attention list row has an action.
 - The charts guide's "Before you finish" list passes for every chart, each card subtitle names its unit, and no truncated label hides meaning.
 - Loading, empty, and error states exist for each data card the feature can reach.
 - Light and dark schemes, 390px, 840px, and 1440px hold. Nothing overflows horizontally.
 - `AutoInit()` runs once; no console errors.
-- Run `npx --package @expressivecss/mcp-server expressivecss-lint <files>` on every markup file you touched.
+- Run `npx --package @expressivecss/mcp-server expressivecss-lint <files>` on every markup file you touched. Linter releases older than the fix for `legacy-card-content` flag the `--md-comp-card-content-padding` token by mistake; treat that one finding as a false positive.
 
 Do not claim a visual check passed when you did not render the page.

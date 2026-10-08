@@ -17,7 +17,7 @@ The reference implementation. Reader: a product or community lead, weekly.
 Reader: an on-call engineer or support lead, many times a day. The question is "is anything broken?", so status comes before trends.
 
 - Page header: environment or region select, auto-refresh state in the freshness line ("Live · Updated 12 seconds ago"), no Export.
-- Alert strip: when something is wrong, one `article` with the `vibrant` attribute at the top holding the active incident, its impact, and a filled "View incident" button. When nothing is wrong, a one-line inline status ("All systems normal") instead of an empty card.
+- Alert strip: when something is wrong, one `article.filled.alert` (the error-container card from the guide's section 3) at the top holding the active incident, its impact, and a filled "View incident" button. When nothing is wrong, a one-line inline status ("All systems normal") instead of an empty card. Keep `vibrant` for insights, not incidents.
 - Key figures: error rate, p95 latency, availability, open incidents. Mark worsening values `negative`. Use units in the value (`212 ms`, `99.95%`).
 - Hero: mixed chart of request volume (`th.column`) against error rate (`th.end` line), or a line chart of latency percentiles with the SLO as a dashed series.
 - Breakdowns: radial gauge for capacity or error budget remaining (`data-max` is the budget), bar chart of errors by service.
