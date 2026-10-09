@@ -51,6 +51,10 @@ window.instance = Expressive.MapView.init(map, {
 window.instance.map.once('load', () => { window.loaded = true; });
 </script></body></html>`;
 
+// MapLibre draws with WebGL2. Firefox in the Playwright container has no GL
+// driver, so it gets none; Chromium and WebKit render in software.
+const noWebGL = (page) => page.evaluate(() => !document.createElement('canvas').getContext('webgl2'));
+
 const server = createServer((request, response) => {
   const path = new URL(request.url, 'http://localhost').pathname;
   const file = files[path];
@@ -75,6 +79,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       const errors = [];
       page.on('pageerror', (error) => errors.push(error.message));
       await page.goto(origin);
+      if (await noWebGL(page)) { t.skip(`${name} has no WebGL2 here`); return; }
       await page.waitForFunction(() => window.loaded);
 
       const marker = page.getByRole('button', { name: 'Loop' });
@@ -188,6 +193,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     try {
       const page = await browser.newPage();
       await page.goto(origin);
+      if (await noWebGL(page)) { t.skip(`${name} has no WebGL2 here`); return; }
       await page.waitForFunction(() => window.loaded);
       await page.evaluate(() => new Promise((resolve) => {
         const host = document.createElement('div');
