@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**79 of 79 rows enforced; 0 remaining.**
+**80 of 80 rows enforced; 0 remaining.**
 
-75 of those rows are components - a part of the framework an author writes markup for.
+76 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 75 components declare conformance debt.**
+**3 of 76 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -778,6 +778,16 @@ Swept 0.8.0.
 | `pane-is-not-main` | forbid | `:is(.panes, .pane-layout, .list-detail, .supporting-pane-layout) main` | must not match |
 
 - **pane-is-not-main** - A document has one <main>, and a pane is a region inside it, not another one. Use <section>.
+
+### particles
+
+Added with the particles component. The dots are decoration drawn on a canvas, so the canvas is hidden from assistive technology.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `particles-canvas-is-hidden` | require-attr | `canvas.particles` | must have `aria-hidden` = `true` |
+
+- **particles-canvas-is-hidden** - Particles are decoration. Mark the canvas aria-hidden="true".
 
 ### pie-chart
 

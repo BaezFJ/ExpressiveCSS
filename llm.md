@@ -298,6 +298,7 @@ Opt an element out when it needs manual options:
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
 | `Confetti` | `.confetti` |
+| `Particles` | `canvas.particles` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
 | `HeatmapChart` | `.heatmap-chart` |
@@ -2667,6 +2668,48 @@ Removes a button's click handler, or stops and clears a canvas.
 
 ---
 
+## Particles
+
+Drifting dots behind a section, such as a hero or a sign-in panel, that lean toward the pointer.
+
+A `<canvas class="particles" aria-hidden="true">` covers its nearest positioned ancestor and lets clicks through. Each dot drifts slowly, fades out near the edges and moves toward the pointer while it is over the canvas. A dot that leaves the canvas is replaced inside it. `AutoInit()` starts every `canvas.particles`.
+
+```html
+<div style="position: relative; height: 320px">
+  <h2>Particles</h2>
+  <canvas class="particles" aria-hidden="true"></canvas>
+</div>
+
+<script>
+Expressive.Particles.init(document.querySelector('canvas.particles'), { quantity: 150, vy: -0.3, staticity: 20 });
+</script>
+```
+
+- The dots take the canvas's CSS `color`, which is `--md-sys-color-on-surface` unless the page sets another. The `color` option wins over the stylesheet.
+- The canvas refits and scatters a new set of dots when its box changes size.
+- Under reduced motion the dots are drawn once and stay still.
+- Particles are decoration. Keep the content above them readable.
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `quantity` | Number | `100` | Number of dots. |
+| `staticity` | Number | `50` | How firmly dots hold their place against the pointer; lower follows further. |
+| `ease` | Number | `50` | Frames a dot takes to catch up with the pointer; higher is slower. |
+| `size` | Number | `0.4` | Base radius in pixels. Each dot adds 0 or 1. |
+| `color` | String | `''` | A CSS color. Empty uses the canvas's CSS `color`. |
+| `vx` | Number | `0` | Horizontal drift in pixels per frame; negative drifts left. |
+| `vy` | Number | `0` | Vertical drift in pixels per frame; negative drifts up. |
+
+### Methods
+
+#### .destroy()
+
+Stops drawing, removes the pointer listener and clears the canvas.
+
+---
+
 ## Drag handle
 
 The bar that makes something legible as draggable: a bottom sheet's grabber, the gutter between two panes, the grip on a reorderable row.
@@ -4790,6 +4833,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
 | `Confetti` | `.confetti` |
+| `Particles` | `canvas.particles` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
 | `HeatmapChart` | `.heatmap-chart` |
