@@ -636,14 +636,17 @@ scenario('remaining progress and loading variants stop spatial motion', `
 });
 
 scenario('remaining snackbar retains a focused action until focus leaves', '<button id="outside">Continue</button>', async page => {
-  await page.evaluate(()=>{window.actions=0;window.snack=new Expressive.Snackbar({text:'Record archived',action:'Undo',displayLength:350,inDuration:0,outDuration:0,onAction:()=>window.actions++});});
+  // Each snackbar is focused in the script that creates it. A separate
+  // Playwright call is another round trip, and on a loaded runner it can
+  // arrive after the short display time has already dismissed the snackbar.
+  const showFocused=options=>page.evaluate(options=>{new Expressive.Snackbar({...options,onAction:()=>window.actions++});[...document.querySelectorAll('.snackbar button')].find(b=>b.textContent===options.action).focus();},options);
+  await page.evaluate(()=>{window.actions=0;});
   try {
-    await page.getByRole('button',{name:'Undo'}).focus();await page.waitForTimeout(500);
+    await showFocused({text:'Record archived',action:'Undo',displayLength:350,inDuration:0,outDuration:0});await page.waitForTimeout(500);
     await expect(page.getByRole('button',{name:'Undo'})).toBeFocused();
     await page.keyboard.press('Enter');await expect.poll(()=>page.evaluate(()=>window.actions)).toBe(1);
     await expect(page.getByRole('status')).toHaveCount(0);
-    await page.evaluate(()=>new Expressive.Snackbar({text:'Saved',action:'Review',displayLength:200,inDuration:0,outDuration:0}));
-    await page.getByRole('button',{name:'Review'}).focus();await page.waitForTimeout(300);
+    await showFocused({text:'Saved',action:'Review',displayLength:200,inDuration:0,outDuration:0});await page.waitForTimeout(300);
     await expect(page.getByRole('button',{name:'Review'})).toBeFocused();
     await page.locator('#outside').focus();await expect(page.getByRole('status')).toHaveCount(0);
   } finally { await page.evaluate(()=>Expressive.Snackbar.dismissAll()); }
