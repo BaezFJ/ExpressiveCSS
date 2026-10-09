@@ -210,11 +210,16 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
 // 18dp anatomy. Exclude .switch — that file paints the track on a span.
 $_cb-span: "*:not(.switch) > [type='checkbox'] + span:not(.lever, .supporting-text, .character-counter, .file-path)";
 
+// inline-block, not inline-flex: a flex span turns each text run and link
+// inside it into its own item, which drops the spaces around a link and
+// splits "I agree to the <a>Terms</a>" into columns. The block padding
+// centers one line in the 48px target, as align-items did.
 #{$_cb-span} {
   position: relative;
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
+  box-sizing: border-box;
   min-height: 48px;
+  padding-block: calc((48px - 1lh) / 2);
   padding-left: 30px;
   cursor: pointer;
   user-select: none;

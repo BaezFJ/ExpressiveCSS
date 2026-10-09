@@ -136,5 +136,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the marquee: 66,079 gzip bytes (+358).
   // Reviewed the rich text editor: 66,394 gzip bytes (+315).
   // Reviewed <mark> and ::highlight(mark): 66,424 gzip bytes (+30).
-  assert.ok(sizes(css).gzip <= 66424, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the inline legacy checkbox span: 66,444 gzip bytes (+20).
+  assert.ok(sizes(css).gzip <= 66444, `CSS gzip: ${sizes(css).gzip}`);
 });
