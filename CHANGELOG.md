@@ -5,6 +5,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- In Firefox, a carousel that moved several items while its item sizes were
+  still changing could slide back to an earlier item after it had settled.
+  Firefox re-snapped the track to whichever item it had passed mid-move.
+  Snapping is now off while the carousel scrolls to an item and comes back
+  once the item is in place.
+
 ## [0.13.1] - 2026-10-08
 
 ### Fixed
