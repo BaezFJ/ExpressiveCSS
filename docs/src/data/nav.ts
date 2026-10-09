@@ -555,6 +555,13 @@ export const NAV: DocsGroup[] = [
           "Bursts of theme-colored confetti for a moment worth celebrating.",
       },
       {
+        id: "particles",
+        label: "Particles",
+        route: "/particles.html",
+        description:
+          "Drifting dots behind a section that lean toward the pointer.",
+      },
+      {
         id: "media",
         label: "Lightbox",
         title: "Media",

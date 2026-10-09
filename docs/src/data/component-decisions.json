@@ -5160,6 +5160,96 @@
       }
     },
     {
+      "slug": "particles",
+      "title": "Particles",
+      "aliases": [
+        "particle background",
+        "floating dots",
+        "starfield",
+        "interactive background"
+      ],
+      "guideSource": {
+        "pageId": "particles",
+        "heading": "Particles",
+        "headingLevel": 2,
+        "semantics": [
+          "particles"
+        ]
+      },
+      "jobs": [
+        "Drifting dots behind a section that lean toward the pointer."
+      ],
+      "useWhen": [
+        "Give a hero, landing section or sign-in panel a sense of depth and movement behind short, high-contrast content."
+      ],
+      "avoidWhen": [
+        "Behind dense text, forms or data, and on pages that already animate; the motion competes with reading. Never carry meaning in the dots."
+      ],
+      "alternatives": [
+        "aura",
+        "confetti",
+        "marquee"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/particles.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#particles",
+          "reviewedOn": "2026-10-09",
+          "documentedSupport": "A canvas that covers its positioned ancestor with drifting dots that fade near the edges and lean toward the pointer, with quantity, staticity, ease, size, color and drift options and the theme on-surface color by default.",
+          "webAdaptation": "A canvas drawn with requestAnimationFrame, aria-hidden with pointer events off. The dot color comes from the canvas's CSS color, read each frame so theme changes apply. Reduced motion draws the dots once without motion.",
+          "limitations": [
+            "The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-09",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the effect decorative and out of the accessibility tree, never block input, keep text over it readable and stop motion when reduced motion is requested."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A product landing page can put particles behind its headline and sign-up button. Its pricing table and checkout form sit on a plain surface.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-09",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_particles.scss",
+            "sha256": "5d2d67515f7152d5b86d506e7fe42d9c66f058bd7b9e30a06a7b8fedc4738cc3"
+          },
+          {
+            "path": "src/ts/components/particles.ts",
+            "sha256": "7a22a1f580deb76e59bdeef75e8cfe432ee00743106a3348f5ad3c7f05e1f43b"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified.",
+            "nextStep": "Watch a full-width hero of particles on a low-end phone and in forced colors, and check text contrast over the densest area."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/particles-browser.test.js",
+            "name": "chromium: particles fill their box in the theme color, follow the pointer, drift, refit on resize and stay still under reduced motion",
+            "scope": "The canvas covering its positioned ancestor, a dot fading in where it was placed in the theme on-surface color, following the pointer inside the canvas and holding when it leaves, destroy clearing the canvas, vx drift, the color option, the pixel buffer after a resize and still dots under reduced motion. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "lightbox",
       "title": "Lightbox",
       "aliases": [

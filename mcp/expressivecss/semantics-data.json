@@ -1230,6 +1230,20 @@
           }
         ]
       },
+      "particles": {
+        "status": "enforced",
+        "note": "Added with the particles component. The dots are decoration drawn on a canvas, so the canvas is hidden from assistive technology.",
+        "rules": [
+          {
+            "id": "particles-canvas-is-hidden",
+            "kind": "require-attr",
+            "selector": "canvas.particles",
+            "attr": "aria-hidden",
+            "equals": "true",
+            "message": "Particles are decoration. Mark the canvas aria-hidden=\"true\"."
+          }
+        ]
+      },
       "tree": {
         "status": "enforced",
         "note": "Added with the tree component. Nested lists of native disclosures and links: every row is a Tab stop and the browser opens a branch, so no tree role is promised.",

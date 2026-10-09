@@ -13,6 +13,7 @@ export { ExpandingCard } from "./expandingCard";
 export { Carousel } from "./carousel";
 export { CharacterCounter } from "./characterCounter";
 export { Confetti } from "./confetti";
+export { Particles } from "./particles";
 export { Chips } from "./chips";
 export { CommandPalette } from "./commandPalette";
 export { Questionnaire } from "./questionnaire";

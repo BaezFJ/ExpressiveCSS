@@ -66,6 +66,7 @@ Last operator collection: 2026-10-08, Chromium 153.0.8010.12, passed; inputs cha
 | [Carousel](#carousel) | unassessed | needs-review | needs-rerun | 0 |
 | [Marquee](#marquee) | implemented | source-reviewed | incomplete | 0 |
 | [Confetti](#confetti) | implemented | source-reviewed | incomplete | 0 |
+| [Particles](#particles) | implemented | source-reviewed | incomplete | 0 |
 | [Lightbox](#lightbox) | unassessed | needs-review | needs-rerun | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Search](#search) | unassessed | needs-review | needs-rerun | 1 |
@@ -985,6 +986,22 @@ Web adaptation: A canvas drawn with requestAnimationFrame. The page canvas is an
 - verification: The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified. Next: Watch a burst on a low-end phone and in forced colors, and confirm a screen reader announces nothing for it.
 
 - not-recorded: [tests/confetti-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/e53457834f09cdaf3b7c3b60580219614ecb737e/tests/confetti-browser.test.js): `chromium: confetti bursts from its trigger in theme colors, on its own canvas, above a modal dialog and not under reduced motion`. A canvas bursting at its center on init, manualStart waiting for fire(), a button bursting from its center in the theme primary color, the page canvas covering the viewport in the top layer with aria-hidden and no pointer events, fire() resolving after it is removed, a burst over an open modal dialog, destroy and the reduced-motion skip. No spoken-output assertion.
+
+<a id="particles"></a>
+
+## Particles
+
+**implemented within the stated scope.** A canvas that covers its positioned ancestor with drifting dots that fade near the edges and lean toward the pointer, with quantity, staticity, ease, size, color and drift options and the theme on-surface color by default.
+
+Source review: source-reviewed, 2026-10-09. [src/sass/components/_particles.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/e53457834f09cdaf3b7c3b60580219614ecb737e/src/sass/components/_particles.scss), [src/ts/components/particles.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/e53457834f09cdaf3b7c3b60580219614ecb737e/src/ts/components/particles.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: A canvas drawn with requestAnimationFrame, aria-hidden with pointer events off. The dot color comes from the canvas's CSS color, read each frame so theme changes apply. Reduced motion draws the dots once without motion.
+
+- verification: The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified. Next: Watch a full-width hero of particles on a low-end phone and in forced colors, and check text contrast over the densest area.
+
+- not-recorded: [tests/particles-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/e53457834f09cdaf3b7c3b60580219614ecb737e/tests/particles-browser.test.js): `chromium: particles fill their box in the theme color, follow the pointer, drift, refit on resize and stay still under reduced motion`. The canvas covering its positioned ancestor, a dot fading in where it was placed in the theme on-surface color, following the pointer inside the canvas and holding when it leaves, destroy clearing the canvas, vx drift, the color option, the pixel buffer after a resize and still dots under reduced motion. No spoken-output assertion.
 
 <a id="lightbox"></a>
 

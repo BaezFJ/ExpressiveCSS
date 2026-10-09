@@ -502,3 +502,17 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified. Next check: Watch a burst on a low-end phone and in forced colors, and confirm a screen reader announces nothing for it.
 
 Mapped browser scope: A canvas bursting at its center on init, manualStart waiting for fire(), a button bursting from its center in the theme primary color, the page canvas covering the viewport in the top layer with aria-hidden and no pointer events, fire() resolving after it is removed, a burst over an open modal dialog, destroy and the reduced-motion skip. No spoken-output assertion.
+
+## [Particles](../../components/particles.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the effect decorative and out of the accessibility tree, never block input, keep text over it readable and stop motion when reduced motion is requested.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page places the canvas behind its content and keeps that content readable; the framework draws the dots in the theme color, keeps the canvas out of the accessibility tree and the pointer's way, and holds the dots still under reduced motion.
+
+Verification gap: The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified. Next check: Watch a full-width hero of particles on a low-end phone and in forced colors, and check text contrast over the densest area.
+
+Mapped browser scope: The canvas covering its positioned ancestor, a dot fading in where it was placed in the theme on-surface color, following the pointer inside the canvas and holding when it leaves, destroy clearing the canvas, vx drift, the color option, the pixel buffer after a resize and still dots under reduced motion. No spoken-output assertion.

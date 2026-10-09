@@ -14,6 +14,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   gravity, drift, colors, shapes and size. The page canvas draws above an
   open modal dialog and lets clicks through. Nothing is drawn when the reader
   prefers reduced motion.
+- `<canvas class="particles">` fills its positioned ancestor with drifting
+  dots in the theme's on-surface color that lean toward the pointer. Options
+  cover the count, size, color, drift and how far and how fast the dots
+  follow the pointer. The canvas lets clicks through, and under reduced
+  motion the dots are drawn once and stay still.
 
 ### Fixed
 

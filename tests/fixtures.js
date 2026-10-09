@@ -22,6 +22,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<button type="button" class="filled confetti">Celebrate</button>`,
   },
   {
+    name: "Particles",
+    selector: "canvas.particles",
+    html: `<div style="position: relative; height: 200px"><canvas class="particles" aria-hidden="true"></canvas></div>`,
+  },
+  {
     name: "ButtonGroup",
     selector: ".button-group",
     html: `<div class="button-group connected" data-selection="single" role="group" aria-label="View"><button type="button" aria-pressed="true">Day</button><button type="button" aria-pressed="false">Week</button></div>`,
