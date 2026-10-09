@@ -892,7 +892,10 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     let page;
     try {
       page = await browser.newPage({ reducedMotion: 'reduce' });
-      await page.clock.install();
+      // install() leaves the clock flowing in real time, so a slow runner could
+      // reach the 500ms interval before the test focuses or hovers the track.
+      await page.clock.install({ time: 0 });
+      await page.clock.pauseAt(1000);
       await page.setContent(`<style>${css}</style><button id="toggle" type="button">Pause</button><button id="outside" type="button">Outside</button><div class="carousel flat" style="width:320px" aria-label="Places">${[1, 2, 3].map(n => `<article class="carousel-item" tabindex="0">Place ${n}</article>`).join('')}</div>`);
       await page.addScriptTag({ content: js });
       await page.evaluate(() => {
@@ -952,7 +955,10 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     let page;
     try {
       page = await browser.newPage({ reducedMotion: 'no-preference' });
-      await page.clock.install();
+      // install() leaves the clock flowing in real time, so a slow runner could
+      // reach the 500ms interval before the test focuses or hovers the track.
+      await page.clock.install({ time: 0 });
+      await page.clock.pauseAt(1000);
       await page.setContent(`<style>${css}</style><button id="outside" type="button">Outside</button><div class="carousel flat" style="width:320px" aria-label="Places">${[1, 2, 3].map(n => `<article class="carousel-item" tabindex="0">Place ${n}<button type="button">Action ${n}</button></article>`).join('')}</div>`);
       await page.addScriptTag({ content: js });
       await page.evaluate(() => {
