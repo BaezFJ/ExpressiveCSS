@@ -820,6 +820,12 @@ export class Carousel extends Component<CarouselOptions> {
         : el.offsetLeft - inlinePadding;
     const top = el.offsetTop - blockPadding;
     this._ignoreScroll = true;
+    // Item sizes are still transitioning, so the track can be too narrow to
+    // reach the target and clamps short of it. Firefox takes whatever item
+    // sits at that clamped position as the snap target and re-snaps to it
+    // after each later layout change, undoing the alignment below. Snapping
+    // returns in _finishScroll, once the track has settled on the item.
+    this._scroller.style.scrollSnapType = 'none';
     this._scroller.scrollTo({
       left: this._vertical ? 0 : left,
       top: this._vertical ? top : 0,
@@ -831,6 +837,7 @@ export class Carousel extends Component<CarouselOptions> {
 
   private _finishScroll = () => {
     this._ignoreScroll = false;
+    this._scroller.style.scrollSnapType = '';
     clearTimeout(this._scrollEndTimeout);
     this._scroller.removeEventListener('scrollend', this._handleScrollEnd);
   };
