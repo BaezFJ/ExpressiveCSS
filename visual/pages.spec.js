@@ -123,6 +123,20 @@ for (const entry of PAGES) {
         };
       });
 
+      // The particles demos scatter their dots with Math.random, so each pass
+      // drew them somewhere else and all four particles shots failed on a
+      // tree with no source change. A seeded generator (mulberry32) hands
+      // both passes the same sequence.
+      await page.addInitScript(() => {
+        let seed = 1;
+        Math.random = () => {
+          seed = (seed + 0x6d2b79f5) | 0;
+          let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      });
+
       // highlight.js comes from cdnjs and rewrites every code block after
       // load. code-blocks.js already guards on `window.hljs`, so blocking it
       // leaves the samples unhighlighted and identical on both sides -- far
