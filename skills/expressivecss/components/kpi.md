@@ -9,7 +9,7 @@ Component ID: `kpi`
 
 Contract: ExpressiveCSS 0.13.1
 
-Contract SHA-256: `40fe9ddce08d6391c2ec98f4c44d119af258596e2ee5aefa45d7fc9a26c0bf77`
+Contract SHA-256: `00a489ca87d9b40b26e0d09ef894673c071e2bcba47ba606abced6d991c4a7d0`
 
 #### Selection and adaptation
 
