@@ -297,6 +297,7 @@ Opt an element out when it needs manual options:
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
+| `Confetti` | `.confetti` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
 | `HeatmapChart` | `.heatmap-chart` |
@@ -2609,6 +2610,63 @@ A `.marquee` holds two identical `<ul class="marquee-content">` groups. The seco
 
 ---
 
+## Confetti
+
+Bursts of theme-colored confetti for a moment worth celebrating, such as a finished order or a completed goal.
+
+Give a button the `confetti` class and each click bursts from its center over the whole page. A `<canvas class="confetti" aria-hidden="true">` covers its nearest positioned ancestor and bursts inside it once when initialized, unless `manualStart` is set, and again on each `fire()`. `Expressive.Confetti.fire(options)` bursts over the page with no markup. `AutoInit()` starts every `.confetti`.
+
+```html
+<button type="button" class="filled confetti">Celebrate</button>
+
+<div style="position: relative; height: 320px">
+  <canvas class="confetti" aria-hidden="true"></canvas>
+</div>
+
+<script>
+Expressive.Confetti.fire({ particleCount: 100, spread: 70, origin: { x: 0.5, y: 0.6 } });
+</script>
+```
+
+- The page canvas is a manual popover, so it draws above an open modal dialog. It ignores the pointer and is hidden from assistive technology, and it is removed when the last piece fades.
+- Without `colors`, the pieces use the theme's primary, secondary and tertiary colors and their containers, read where the burst starts.
+- Nothing is drawn when the reader prefers reduced motion, and `fire()` resolves at once.
+- Confetti is decoration. Say what happened in text as well, for example in a snackbar.
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `particleCount` | Number | `50` | Pieces per burst. |
+| `angle` | Number | `90` | Launch direction in degrees; 90 is straight up and 0 is right. |
+| `spread` | Number | `45` | Degrees the pieces fan out from the angle. |
+| `startVelocity` | Number | `45` | Launch speed in pixels per frame. A small canvas needs a lower speed to keep the pieces inside it. |
+| `decay` | Number | `0.9` | Share of its speed a piece keeps each frame. |
+| `gravity` | Number | `1` | Pull toward the bottom; 0 floats. |
+| `drift` | Number | `0` | Sideways push per frame; negative drifts left. |
+| `ticks` | Number | `200` | Frames a piece lives while it fades, counted at 60 per second. |
+| `origin` | Object | `{ x: 0.5, y: 0.5 }` | Launch point as fractions of the canvas from 0 to 1; a missing side is 0.5. A button launches from its own center instead. |
+| `colors` | Array | `[]` | CSS colors. Empty uses the theme colors. |
+| `shapes` | Array | `['square', 'circle']` | Any of `'square'`, `'circle'` and `'star'`. |
+| `scalar` | Number | `1` | Piece size multiplier. |
+| `manualStart` | Boolean | `false` | On a canvas, wait for `fire()` instead of bursting at init. |
+
+### Methods
+
+#### Confetti.fire(options)
+
+Bursts over the whole page. Returns a promise that resolves when the last piece is gone.
+
+#### .fire(options)
+
+Bursts on this canvas, or from this button's center over the page, with these options merged over the instance's. Returns the same kind of promise.
+
+#### .destroy()
+
+Removes a button's click handler, or stops and clears a canvas.
+
+---
+
 ## Drag handle
 
 The bar that makes something legible as draggable: a bottom sheet's grabber, the gutter between two panes, the grip on a reorderable row.
@@ -4731,6 +4789,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
+| `Confetti` | `.confetti` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
 | `HeatmapChart` | `.heatmap-chart` |

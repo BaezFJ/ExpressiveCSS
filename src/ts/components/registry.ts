@@ -39,6 +39,7 @@ export const AUTO_INIT_COMPONENTS = {
   },
   Carousel: { component: Components.Carousel, selector: ".carousel" },
   Chips: { component: Components.Chips, selector: ".chips" },
+  Confetti: { component: Components.Confetti, selector: ".confetti" },
   ColumnChart: { component: Components.ColumnChart, selector: ".column-chart" },
   BarChart: { component: Components.BarChart, selector: ".bar-chart" },
   PieChart: { component: Components.PieChart, selector: ".pie-chart" },

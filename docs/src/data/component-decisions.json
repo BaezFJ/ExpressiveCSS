@@ -5069,6 +5069,97 @@
       }
     },
     {
+      "slug": "confetti",
+      "title": "Confetti",
+      "aliases": [
+        "celebration",
+        "confetti cannon",
+        "fireworks",
+        "party popper",
+        "success animation"
+      ],
+      "guideSource": {
+        "pageId": "confetti",
+        "heading": "Confetti",
+        "headingLevel": 2,
+        "semantics": [
+          "confetti"
+        ]
+      },
+      "jobs": [
+        "Bursts of theme-colored confetti for a moment worth celebrating."
+      ],
+      "useWhen": [
+        "Mark a rare moment of success the person worked toward, such as a finished purchase, a completed goal or a first published post."
+      ],
+      "avoidWhen": [
+        "Routine saves, frequent actions and errors; repeated bursts lose their meaning and distract. Confetti never replaces a text confirmation such as a snackbar."
+      ],
+      "alternatives": [
+        "snackbar",
+        "empty-state",
+        "aura"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/confetti.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#confetti",
+          "reviewedOn": "2026-10-09",
+          "documentedSupport": "Bursts from a button's center over the page, inside an authored canvas, or from script, with count, angle, spread, speed, decay, gravity, drift, lifetime, origin, colors, square, circle and star shapes, and size options, theme colors by default and a promise that resolves when the burst ends.",
+          "webAdaptation": "A canvas drawn with requestAnimationFrame. The page canvas is an aria-hidden manual popover with pointer events off, so it draws above modal dialogs without blocking clicks. Reduced motion draws nothing.",
+          "limitations": [
+            "The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-09",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the effect decorative and out of the accessibility tree, never block input, state the outcome in text and draw nothing when reduced motion is requested."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A checkout's \"Order placed\" screen can burst confetti once beside its confirmation text. Saving a draft shows a snackbar and no confetti.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-09",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_confetti.scss",
+            "sha256": "0dc01d28e2bf26877ab57e5d5504b6dbd734b3ef64f593bf67e34753922a3d63"
+          },
+          {
+            "path": "src/ts/components/confetti.ts",
+            "sha256": "c5f6f8782548d71bce17e1f701b7f7c1376c2a88252fc3e07238699125c6503e"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified.",
+            "nextStep": "Watch a burst on a low-end phone and in forced colors, and confirm a screen reader announces nothing for it."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/confetti-browser.test.js",
+            "name": "chromium: confetti bursts from its trigger in theme colors, on its own canvas, above a modal dialog and not under reduced motion",
+            "scope": "A canvas bursting at its center on init, manualStart waiting for fire(), a button bursting from its center in the theme primary color, the page canvas covering the viewport in the top layer with aria-hidden and no pointer events, fire() resolving after it is removed, a burst over an open modal dialog, destroy and the reduced-motion skip. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "lightbox",
       "title": "Lightbox",
       "aliases": [

@@ -548,6 +548,13 @@ export const NAV: DocsGroup[] = [
           "A row of logos, images or text that scrolls without end.",
       },
       {
+        id: "confetti",
+        label: "Confetti",
+        route: "/confetti.html",
+        description:
+          "Bursts of theme-colored confetti for a moment worth celebrating.",
+      },
+      {
         id: "media",
         label: "Lightbox",
         title: "Media",

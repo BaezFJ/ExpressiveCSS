@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**78 of 78 rows enforced; 0 remaining.**
+**79 of 79 rows enforced; 0 remaining.**
 
-74 of those rows are components - a part of the framework an author writes markup for.
+75 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 74 components declare conformance debt.**
+**3 of 75 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -308,6 +308,16 @@ Added with the command palette component. A native modal dialog; the component m
 - **command-palette-is-a-dialog** - Write the palette as <dialog class="command-palette">. The dialog makes it modal, closes it on Escape and returns focus.
 - **command-palette-is-named** - Name the palette with aria-label so it is announced when it opens.
 - **command-palette-input-is-named** - Name the search input with aria-label. A placeholder disappears as the user types and is not a reliable name.
+
+### confetti
+
+Added with the confetti component. The pieces are decoration drawn on a canvas, so an authored confetti canvas is hidden from assistive technology. The page-wide canvas the script creates hides itself.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `confetti-canvas-is-hidden` | require-attr | `canvas.confetti` | must have `aria-hidden` = `true` |
+
+- **confetti-canvas-is-hidden** - Confetti is decoration. Mark the canvas aria-hidden="true" and say what happened in text, for example in a snackbar.
 
 ### countdown
 

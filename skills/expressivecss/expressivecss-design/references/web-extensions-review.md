@@ -488,3 +488,17 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified. Next check: Use the editor with a screen reader and an IME in each engine, paste from a word processor, and select text on touch devices.
 
 Mapped browser scope: Hidden textarea, textbox role and name from the label, starting HTML, label click focus, bold and heading commands with aria-pressed and .active, undo disabled state, textarea value and input event, empty value, and destroy. No spoken-output assertion.
+
+## [Confetti](../../components/confetti.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the effect decorative and out of the accessibility tree, never block input, state the outcome in text and draw nothing when reduced motion is requested.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page marks the trigger or canvas and states the outcome in text; the framework draws the burst in theme colors, keeps its canvas out of the accessibility tree and the pointer's way, and skips it under reduced motion.
+
+Verification gap: The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified. Next check: Watch a burst on a low-end phone and in forced colors, and confirm a screen reader announces nothing for it.
+
+Mapped browser scope: A canvas bursting at its center on init, manualStart waiting for fire(), a button bursting from its center in the theme primary color, the page canvas covering the viewport in the top layer with aria-hidden and no pointer events, fire() resolving after it is removed, a burst over an open modal dialog, destroy and the reduced-motion skip. No spoken-output assertion.

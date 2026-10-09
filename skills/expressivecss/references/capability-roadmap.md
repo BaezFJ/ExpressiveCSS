@@ -65,6 +65,7 @@ Last operator collection: 2026-10-08, Chromium 153.0.8010.12, passed; inputs cha
 | [Empty state](#empty-state) | implemented | source-reviewed | needs-rerun | 0 |
 | [Carousel](#carousel) | unassessed | needs-review | needs-rerun | 0 |
 | [Marquee](#marquee) | implemented | source-reviewed | incomplete | 0 |
+| [Confetti](#confetti) | implemented | source-reviewed | incomplete | 0 |
 | [Lightbox](#lightbox) | unassessed | needs-review | needs-rerun | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Search](#search) | unassessed | needs-review | needs-rerun | 1 |
@@ -968,6 +969,22 @@ Web adaptation: A visual copy of the item list marked aria-hidden, with its link
 - verification: The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified. Next: Listen to a marquee with a screen reader in each engine and confirm each item is read once; watch a long strip for a visible jump at the loop point.
 
 - not-recorded: [tests/marquee-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/3ed93f73a1e5a5ab9d201993b132fd64d81478ca/tests/marquee-browser.test.js): `chromium: marquee loops its two groups, pauses, follows direction and stops under reduced motion`. A short group filling the strip, the copy one gap after it, the half-cycle position horizontally, in RTL and vertically, reverse, pausing on hover, focus and .paused, one link per item in the accessibility tree and the reduced-motion stop with the copy hidden. No spoken-output assertion.
+
+<a id="confetti"></a>
+
+## Confetti
+
+**implemented within the stated scope.** Bursts from a button's center over the page, inside an authored canvas, or from script, with count, angle, spread, speed, decay, gravity, drift, lifetime, origin, colors, square, circle and star shapes, and size options, theme colors by default and a promise that resolves when the burst ends.
+
+Source review: source-reviewed, 2026-10-09. [src/sass/components/_confetti.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/3ed93f73a1e5a5ab9d201993b132fd64d81478ca/src/sass/components/_confetti.scss), [src/ts/components/confetti.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/3ed93f73a1e5a5ab9d201993b132fd64d81478ca/src/ts/components/confetti.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: A canvas drawn with requestAnimationFrame. The page canvas is an aria-hidden manual popover with pointer events off, so it draws above modal dialogs without blocking clicks. Reduced motion draws nothing.
+
+- verification: The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified. Next: Watch a burst on a low-end phone and in forced colors, and confirm a screen reader announces nothing for it.
+
+- not-recorded: [tests/confetti-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/3ed93f73a1e5a5ab9d201993b132fd64d81478ca/tests/confetti-browser.test.js): `chromium: confetti bursts from its trigger in theme colors, on its own canvas, above a modal dialog and not under reduced motion`. A canvas bursting at its center on init, manualStart waiting for fire(), a button bursting from its center in the theme primary color, the page canvas covering the viewport in the top layer with aria-hidden and no pointer events, fire() resolving after it is removed, a burst over an open modal dialog, destroy and the reduced-motion skip. No spoken-output assertion.
 
 <a id="lightbox"></a>
 
