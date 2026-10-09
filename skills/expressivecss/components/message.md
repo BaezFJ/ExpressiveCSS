@@ -9,7 +9,7 @@ Component ID: `message`
 
 Contract: ExpressiveCSS 0.13.1
 
-Contract SHA-256: `d0f72b8deea482a9ec047ca3315bcce02de2263c0ebb8a82af7c88dc9f268d37`
+Contract SHA-256: `8ae1192005cd7157218aa20935d3d4a5ada0934280eb2c4ba554076e504f2770`
 
 #### Selection and adaptation
 

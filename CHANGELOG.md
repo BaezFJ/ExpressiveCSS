@@ -230,6 +230,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A checkbox label written as `<input type="checkbox"><span>…</span>` keeps
+  links and other inline elements in its text. The span was a flex box, so
+  each text run and link became a separate item: the spaces around a link
+  disappeared and the words split into columns. It now lays out as inline
+  text, and one line still sits centered in the 48px target.
 - A focused line, column, bar or pie chart no longer cancels Escape when its
   tooltip is already hidden, so a dialog or sheet around the chart can close.
   Pressing a chart's plot away from its marks focuses it without showing the
