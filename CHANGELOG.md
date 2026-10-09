@@ -7,6 +7,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.map` is an interactive map built on MapLibre. The page installs
+  `maplibre-gl` and passes the module to `MapView.init()`; ExpressiveCSS does
+  not bundle it. `.map-marker` children sit at their `data-lng-lat`, can open
+  a `.map-popup` named by `aria-controls`, show a `.map-marker-label` and be
+  dragged with `data-draggable`. `.map-controls` buttons zoom, reset north,
+  locate the reader and go full screen. `addRoute()`, `addArcs()` and
+  `addClusters()` draw data in theme colors. The default OpenFreeMap style
+  follows the light or dark theme.
 - `.confetti` bursts theme-colored confetti. A button with the class bursts
   from its center over the page when clicked, a `<canvas class="confetti">`
   bursts inside its own box, and `Expressive.Confetti.fire(options)` bursts

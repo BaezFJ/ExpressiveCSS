@@ -137,6 +137,7 @@
     "esbuild": "^0.28.2",
     "fallow": "^3.23.0",
     "jsdom": "^30.0.1",
+    "maplibre-gl": "^6.13.0",
     "npm-run-all2": "^9.0.3",
     "sass": "^1.102.0",
     "smol-toml": "^1.8.0",

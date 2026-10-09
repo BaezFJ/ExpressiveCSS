@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**80 of 80 rows enforced; 0 remaining.**
+**81 of 81 rows enforced; 0 remaining.**
 
-76 of those rows are components - a part of the framework an author writes markup for.
+77 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 76 components declare conformance debt.**
+**3 of 77 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -662,6 +662,18 @@ Short waits with unknown duration. The current framework contract uses a named s
 
 - **loading-indicator-reports-itself** - The current loading-indicator contract requires role="status". Provide meaningful waiting text updates and verify announcement delivery; a role alone does not prove spoken output.
 - **loading-indicator-is-named** - Name the waiting state with aria-label or aria-labelledby. Verify meaningful status updates separately from its accessible name.
+
+### map
+
+Added with the map component. MapLibre draws the map on a canvas, so the frame needs a name for the region it is, and a marker that opens a popup has to be a button to be reached and activated from the keyboard. Icon-only controls are covered by icon-only-control-is-named.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `map-is-named` | forbid | `.map:not([aria-label], [aria-labelledby])` | must not match |
+| `map-popup-marker-is-button` | forbid | `.map-marker[aria-controls]:not(button)` | must not match |
+
+- **map-is-named** - Name the map with aria-label or aria-labelledby, and give it role="region". MapLibre's canvas has no useful name of its own.
+- **map-popup-marker-is-button** - A marker that opens a popup is a <button type="button"> with aria-label, so the keyboard can reach and open it.
 
 ### marquee
 

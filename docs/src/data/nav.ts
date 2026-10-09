@@ -570,6 +570,13 @@ export const NAV: DocsGroup[] = [
           "Lightbox for enlarge-on-click images.",
       },
       {
+        id: "map",
+        label: "Map",
+        route: "/map.html",
+        description:
+          "An interactive map with markers, popups, routes, arcs, clusters and controls, built on MapLibre.",
+      },
+      {
         id: "toolbars",
         label: "Toolbars",
         route: "/toolbars.html",

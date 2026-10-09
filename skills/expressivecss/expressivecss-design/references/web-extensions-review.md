@@ -6,7 +6,7 @@ Read the linked component guide for the ExpressiveCSS 0.13.1 markup and API cont
 
 ## Contents
 
-Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Data table, Avatar, Skeleton, Empty state, Stepper, Popover, Drop zone, Tree, Stat, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor.
+Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Data table, Avatar, Skeleton, Empty state, Stepper, Popover, Drop zone, Tree, Stat, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map.
 
 Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
 
@@ -516,3 +516,17 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified. Next check: Watch a full-width hero of particles on a low-end phone and in forced colors, and check text contrast over the densest area.
 
 Mapped browser scope: The canvas covering its positioned ancestor, a dot fading in where it was placed in the theme on-surface color, following the pointer inside the canvas and holding when it leaves, destroy clearing the canvas, vx drift, the color option, the pixel buffer after a resize and still dots under reduced motion. No spoken-output assertion.
+
+## [Map](../../components/map.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Name the map region, make interactive markers named buttons, return focus when a popup closes, keep tile attribution visible and give the same information in text.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page supplies MapLibre, names the region and writes markers, popups and controls as HTML; the framework places them, manages popup state and focus, colors data layers from the theme and follows the light or dark scheme.
+
+Verification gap: Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified. Next check: Use the map with a screen reader and on a touch device, try locate and full screen with real permissions, drag a marker with the keyboard, and check forced colors.
+
+Mapped browser scope: Markers placed with the default dot, the popup without a marker open at init, a marker button opening its popup with aria-expanded, Escape and a map click closing it with focus back on the marker, zoom out disabled at the minimum zoom, zoom in, the compass bearing and reset, route, arcs and clusters in the theme primary color, no count layer without glyphs, all redrawn in the dark primary after a theme change, removeOverlay, destroy restoring the markup and controls, a location arriving after destroy being ignored, and a marker in a shadow root opening its popup. No spoken-output assertion.

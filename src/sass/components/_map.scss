@@ -1,0 +1,188 @@
+@use "sass:map";
+@use "../abstracts" as *;
+
+// Map. A MapLibre map in a .map frame. The page loads maplibre-gl.css; these
+// rules restyle what MapLibre draws and add the ExpressiveCSS parts:
+//
+//   .map-marker    a point at data-lng-lat. With no content of its own it is
+//                  a primary dot; anything else inside replaces the dot.
+//                  A .map-marker-label shows below it (.top: above), and a
+//                  child .tooltip works as on any button.
+//   .map-popup     moved into a MapLibre popup, drawn as a surface card.
+//   .map-controls  a corner stack of .icon-button controls, top right
+//                  unless .top-left, .bottom-left or .bottom-right. A
+//                  .map-control-group joins buttons on one surface.
+//
+// Until the script starts the map, markers, popups and controls are hidden.
+// MapLibre moves markers and popups out of the frame, so the hiding rules
+// stop matching them once the map runs.
+//
+// Tokens:
+//   --md-comp-map-height              400px
+//   --md-comp-map-shape               16px
+//   --md-comp-map-marker-color        primary
+//   --md-comp-map-marker-ring-color   surface
+//   --md-comp-map-route-color         primary
+//   --md-comp-map-arc-color           tertiary
+//   --md-comp-map-cluster-color       primary
+//   --md-comp-map-cluster-label-color on-primary
+//   --md-comp-map-popup-max-width     280px
+//   --md-comp-map-control-offset      12px
+//
+// The script sets --md-comp-map-bearing, so a [data-action="compass"] icon
+// points north.
+
+.map {
+  --md-comp-map-height: 400px;
+  --md-comp-map-shape: 16px;
+  --md-comp-map-marker-color: var(--md-sys-color-primary);
+  --md-comp-map-marker-ring-color: var(--md-sys-color-surface);
+  --md-comp-map-route-color: var(--md-sys-color-primary);
+  --md-comp-map-arc-color: var(--md-sys-color-tertiary);
+  --md-comp-map-cluster-color: var(--md-sys-color-primary);
+  --md-comp-map-cluster-label-color: var(--md-sys-color-on-primary);
+  --md-comp-map-popup-max-width: 280px;
+  --md-comp-map-control-offset: 12px;
+
+  position: relative;
+  overflow: hidden;
+  block-size: var(--md-comp-map-height);
+  border-radius: var(--md-comp-map-shape);
+  background-color: var(--md-sys-color-surface-container);
+
+  &:fullscreen {
+    border-radius: 0;
+  }
+
+  > :is(.map-marker, .map-popup),
+  &:not(.maplibregl-map) > .map-controls {
+    display: none;
+  }
+}
+
+// Absolute, as MapLibre places it; a child .tooltip would otherwise make
+// the marker relative.
+.map .map-marker {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  @include focus-visible;
+
+  &:not(:has(> :not(.tooltip, .map-marker-label))) {
+    inline-size: 16px;
+    block-size: 16px;
+    border: 2px solid var(--md-comp-map-marker-ring-color);
+    border-radius: 50%;
+    background-color: var(--md-comp-map-marker-color);
+    @include z-depth(1);
+  }
+
+  &.location {
+    --md-comp-map-marker-color: var(--md-sys-color-tertiary);
+
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--md-comp-map-marker-color) 24%, transparent);
+    cursor: default;
+  }
+}
+
+.map-marker-label {
+  position: absolute;
+  inset-block-start: calc(100% + 4px);
+  padding: 2px 8px;
+  border-radius: 8px;
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface);
+  @include typescale("label-medium");
+  white-space: nowrap;
+  pointer-events: none;
+
+  &.top {
+    inset-block: auto calc(100% + 4px);
+  }
+}
+
+// MapLibre's popup, as an M3 surface card. The tip is dropped; the offset
+// keeps the card clear of its marker.
+//
+// maplibre-gl.css is unlayered, so it beats this layer wherever both set a
+// property. Those declarations are !important; an important declaration in
+// a layer outranks a normal unlayered one.
+.map {
+  .maplibregl-popup-content {
+    max-inline-size: var(--md-comp-map-popup-max-width);
+    padding: 12px 16px !important;
+    border-radius: 12px !important;
+    background: var(--md-sys-color-surface-container-low) !important;
+    color: var(--md-sys-color-on-surface);
+    @include typescale("body-medium");
+    box-shadow: map.get($elevations, "2") !important;
+
+    &:has(> .maplibregl-popup-close-button) {
+      padding-inline-end: 44px;
+    }
+
+    :is(h1, h2, h3, h4, h5, h6) {
+      margin: 0 0 4px;
+      @include typescale("title-small");
+    }
+
+    p {
+      margin: 0;
+      font: inherit;
+    }
+  }
+
+  .maplibregl-popup-tip {
+    display: none;
+  }
+
+  .maplibregl-popup-close-button {
+    inset: 4px 4px auto auto !important;
+    inline-size: 32px;
+    block-size: 32px;
+    border-radius: 50% !important;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 20px;
+    line-height: 1;
+
+    &:hover {
+      background-color: color-mix(in srgb, currentColor 8%, transparent) !important;
+    }
+
+    @include focus-visible;
+  }
+}
+
+.map-controls {
+  position: absolute;
+  inset: var(--md-comp-map-control-offset) var(--md-comp-map-control-offset) auto auto;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &.top-left { inset: var(--md-comp-map-control-offset) auto auto var(--md-comp-map-control-offset); }
+  &.bottom-left { inset: auto auto var(--md-comp-map-control-offset) var(--md-comp-map-control-offset); }
+  &.bottom-right { inset: auto var(--md-comp-map-control-offset) var(--md-comp-map-control-offset) auto; }
+
+  > .icon-button,
+  > .map-control-group {
+    border-radius: 9999px;
+    background-color: var(--md-sys-color-surface-container-low);
+    @include z-depth(2);
+  }
+
+  [data-action="compass"] > .material-symbols {
+    rotate: var(--md-comp-map-bearing, 0deg);
+  }
+}
+
+.map-control-group {
+  display: flex;
+  flex-direction: column;
+}

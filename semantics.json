@@ -973,6 +973,26 @@
         }
       ]
     },
+    "map": {
+      "status": "enforced",
+      "note": "Added with the map component. MapLibre draws the map on a canvas, so the frame needs a name for the region it is, and a marker that opens a popup has to be a button to be reached and activated from the keyboard. Icon-only controls are covered by icon-only-control-is-named.",
+      "rules": [
+        {
+          "id": "map-is-named",
+          "kind": "forbid",
+          "selector": ".map:not([aria-label], [aria-labelledby])",
+          "fragmentSafe": true,
+          "message": "Name the map with aria-label or aria-labelledby, and give it role=\"region\". MapLibre's canvas has no useful name of its own."
+        },
+        {
+          "id": "map-popup-marker-is-button",
+          "kind": "forbid",
+          "selector": ".map-marker[aria-controls]:not(button)",
+          "fragmentSafe": true,
+          "message": "A marker that opens a popup is a <button type=\"button\"> with aria-label, so the keyboard can reach and open it."
+        }
+      ]
+    },
     "accordion": {
       "status": "enforced",
       "note": "Added with the accordion component. Each item is a native <details>, so the browser exposes <summary> as a button with its expanded state and handles the keyboard. The rules keep authors from re-stating that state or nesting controls in the toggle.",

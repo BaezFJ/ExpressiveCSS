@@ -68,6 +68,7 @@ Last operator collection: 2026-10-08, Chromium 153.0.8010.12, passed; inputs cha
 | [Confetti](#confetti) | implemented | source-reviewed | incomplete | 0 |
 | [Particles](#particles) | implemented | source-reviewed | incomplete | 0 |
 | [Lightbox](#lightbox) | unassessed | needs-review | needs-rerun | 0 |
+| [Map](#map) | implemented | source-reviewed | incomplete | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Search](#search) | unassessed | needs-review | needs-rerun | 1 |
 | [Command palette](#command-palette) | implemented | source-reviewed | needs-rerun | 0 |
@@ -1027,6 +1028,23 @@ Web adaptation: ExpressiveCSS media behavior, not an upstream component contract
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4460053b15f1af96c6b74af6c0f8d93410c14e27/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: triggers`. Image and native button pointer/Enter/Space activation, Escape, overlay, scroll and resize dismissal, LTR/RTL and both motion preferences.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4460053b15f1af96c6b74af6c0f8d93410c14e27/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: callbacks`. Start callbacks may close, reopen or destroy without stale work or overriding application focus.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4460053b15f1af96c6b74af6c0f8d93410c14e27/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: destroy`. Opening/closing teardown restores attributes, styles and overflow, preserves unrelated focus, and supports remounting. All transition reliability cases also run in Firefox and WebKit.
+
+<a id="map"></a>
+
+## Map
+
+**implemented within the stated scope.** MapLibre map with themed OpenFreeMap styles, markers with labels, tooltips, popups and dragging, routes, arcs, clusters, and zoom, compass, locate and full screen controls.
+
+Source review: source-reviewed, 2026-10-09. [src/sass/components/_map.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/4460053b15f1af96c6b74af6c0f8d93410c14e27/src/sass/components/_map.scss), [src/ts/components/mapView.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/4460053b15f1af96c6b74af6c0f8d93410c14e27/src/ts/components/mapView.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The page passes in the maplibre-gl module. Markers, popups and controls are authored HTML moved into MapLibre; routes, arcs and clusters are GeoJSON layers whose colors are read from theme tokens and redrawn when the theme changes.
+
+- verification: Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified. Next: Use the map with a screen reader and on a touch device, try locate and full screen with real permissions, drag a marker with the keyboard, and check forced colors.
+
+- not-recorded: [tests/map-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4460053b15f1af96c6b74af6c0f8d93410c14e27/tests/map-browser.test.js): `chromium: map places markers and popups, runs controls, themes overlays and restores its markup`. Markers placed with the default dot, the popup without a marker open at init, a marker button opening its popup with aria-expanded, Escape and a map click closing it with focus back on the marker, zoom out disabled at the minimum zoom, zoom in, the compass bearing and reset, route, arcs and clusters in the theme primary color, no count layer without glyphs, all redrawn in the dark primary after a theme change, removeOverlay, destroy restoring the markup and controls, and a location arriving after destroy being ignored. No spoken-output assertion.
+- not-recorded: [tests/map-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/4460053b15f1af96c6b74af6c0f8d93410c14e27/tests/map-browser.test.js): `chromium: a map in a shadow root opens its marker popup`. A marker button inside a shadow root finding its popup by id, then opening it with aria-expanded. No spoken-output assertion.
 
 <a id="toolbars"></a>
 

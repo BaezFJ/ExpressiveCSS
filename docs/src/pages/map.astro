@@ -1,0 +1,325 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "setup", label: "Setup" },
+  { id: "styles", label: "Styles" },
+  { id: "markers", label: "Markers and popups" },
+  { id: "routes", label: "Routes and arcs" },
+  { id: "clusters", label: "Clusters" },
+  { id: "controls", label: "Controls" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const MAPLIBRE = "https://unpkg.com/maplibre-gl@6.13.0/dist";
+
+const controls = `
+  <div class="map-controls">
+    <div class="map-control-group">
+      <button type="button" class="icon-button" data-action="zoom-in" aria-label="Zoom in">
+        <span class="material-symbols" aria-hidden="true">add</span>
+      </button>
+      <button type="button" class="icon-button" data-action="zoom-out" aria-label="Zoom out">
+        <span class="material-symbols" aria-hidden="true">remove</span>
+      </button>
+    </div>
+    <button type="button" class="icon-button" data-action="compass" aria-label="Reset north">
+      <span class="material-symbols" aria-hidden="true">navigation</span>
+    </button>
+    <button type="button" class="icon-button" data-action="locate" aria-label="Show my location">
+      <span class="material-symbols" aria-hidden="true">my_location</span>
+    </button>
+    <button type="button" class="icon-button" data-action="fullscreen" aria-label="Full screen">
+      <span class="material-symbols" aria-hidden="true">fullscreen</span>
+    </button>
+  </div>`;
+---
+<DocsLayout page="map">
+<link slot="head" rel="stylesheet" href={`${MAPLIBRE}/maplibre-gl.css`}>
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.map</code> is an interactive map built on
+          <a href="https://maplibre.org/">MapLibre</a>, which the page
+          supplies. Markers, popups and controls are HTML; routes, arcs and
+          clusters are data added from script.
+        </p>
+        <div id="demo-map" class="map mb-3" role="region" aria-label="Chicago stores">
+          <button type="button" class="map-marker" data-lng-lat="-87.6278,41.8820" aria-label="Loop store" aria-controls="demo-loop">
+            <span class="map-marker-label">Loop</span>
+          </button>
+          <div class="map-popup" id="demo-loop">
+            <h3>Loop store</h3>
+            <p>Open until 9 p.m.</p>
+          </div>
+          <button type="button" class="map-marker" data-lng-lat="-87.6347,41.9214" aria-label="Lincoln Park store" aria-controls="demo-lincoln">
+            <span class="map-marker-label">Lincoln Park</span>
+          </button>
+          <div class="map-popup" id="demo-lincoln">
+            <h3>Lincoln Park store</h3>
+            <p>Open until 8 p.m.</p>
+          </div>
+          <Fragment set:html={controls} />
+        </div>
+<Code code={`
+<div class="map" role="region" aria-label="Chicago stores">
+  <button type="button" class="map-marker" data-lng-lat="-87.6278,41.8820"
+          aria-label="Loop store" aria-controls="loop">
+    <span class="map-marker-label">Loop</span>
+  </button>
+  <div class="map-popup" id="loop">
+    <h3>Loop store</h3>
+    <p>Open until 9 p.m.</p>
+  </div>
+  <div class="map-controls">
+    <div class="map-control-group">
+      <button type="button" class="icon-button" data-action="zoom-in" aria-label="Zoom in">
+        <span class="material-symbols" aria-hidden="true">add</span>
+      </button>
+      <button type="button" class="icon-button" data-action="zoom-out" aria-label="Zoom out">
+        <span class="material-symbols" aria-hidden="true">remove</span>
+      </button>
+    </div>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S.setup}>
+        <p>
+          ExpressiveCSS does not bundle MapLibre. Install it, load its
+          stylesheet before ExpressiveCSS, and pass the module to
+          <code>MapView.init()</code>. <code>AutoInit()</code> does not start
+          the map. The class is <code>MapView</code> so importing it does not
+          hide JavaScript's <code>Map</code>.
+        </p>
+<Code code={`npm install maplibre-gl`} />
+<Code code={`
+import 'maplibre-gl/dist/maplibre-gl.css';
+import * as maplibregl from 'maplibre-gl';
+import { MapView } from '@expressivecss/expressive';
+
+const map = MapView.init(document.querySelector('.map'), {
+  maplibregl,
+  center: [-87.65, 41.89],
+  zoom: 11
+});
+`} />
+        <p>
+          Without a bundler, import <code>maplibre-gl.mjs</code> from a CDN.
+          MapLibre loads its worker from the same folder, so a page with a
+          Content Security Policy needs <code>worker-src blob:</code> and the
+          CDN in <code>script-src</code>.
+        </p>
+  </Section>
+  <Section {...S.styles}>
+        <p>
+          By default the map uses <a href="https://openfreemap.org/">OpenFreeMap</a>'s
+          Positron style in the light theme and its Dark style in the dark
+          theme, which need no API key. The map changes style when the
+          <code>theme</code> attribute or the system color scheme changes.
+          Pass <code>style</code> as a style URL or object to keep one style,
+          or as <code>{`{ light, dark }`}</code> to choose both. Any
+          MapLibre style works, such as MapTiler, Stadia Maps or Protomaps;
+          follow your provider's terms and keep its attribution visible.
+        </p>
+<Code code={`
+MapView.init(el, {
+  maplibregl,
+  style: {
+    light: 'https://tiles.openfreemap.org/styles/liberty',
+    dark: 'https://tiles.openfreemap.org/styles/dark'
+  }
+});
+`} />
+  </Section>
+  <Section {...S.markers}>
+        <p>
+          A <code>.map-marker</code> sits at its
+          <code>data-lng-lat</code>, written as longitude then latitude. One
+          with no content of its own is a primary dot; put an
+          <a href={route('avatar')}>avatar</a>, icon or image inside to
+          replace the dot. A <code>.map-marker-label</code> shows below it, or
+          above with <code>.top</code>, and a child
+          <a href={route('tooltips')}><code>.tooltip</code></a> shows on hover
+          and focus.
+        </p>
+        <p>
+          Make a marker a <code>&lt;button&gt;</code> with
+          <code>aria-controls</code> naming a <code>.map-popup</code> and it
+          opens that popup, setting <code>aria-expanded</code>. A click on the
+          map or <kbd>Escape</kbd> closes it, and focus returns to the marker.
+          A <code>.map-popup</code> with its own <code>data-lng-lat</code> and
+          no marker opens when the map starts.
+        </p>
+        <p>
+          <code>data-draggable</code> lets the reader drag a marker. When the
+          drag ends, the marker's <code>data-lng-lat</code> holds the new
+          position and it fires <code>change</code>.
+        </p>
+<Code code={`
+<span class="map-marker" data-lng-lat="-87.62,41.88" data-draggable>
+  <span class="map-marker-label top">Drop-off</span>
+</span>
+<div class="map-popup" data-lng-lat="-87.70,41.85">Depot</div>
+
+<script>
+document.querySelector('.map').addEventListener('change', (event) => {
+  console.log(event.target.dataset.lngLat);
+});
+</script>
+`} />
+  </Section>
+  <Section {...S.routes}>
+        <p>
+          <code>addRoute(id, coordinates, options)</code> draws a line through
+          <code>[longitude, latitude]</code> points in the primary color.
+          <code>addArcs(id, arcs, options)</code> draws a curve for each
+          <code>{`{ from, to }`}</code> pair in the tertiary color. Both take
+          <code>color</code>, <code>width</code>, <code>opacity</code> and
+          <code>dashArray</code>. The map does not plan routes: get the
+          points from a routing service such as OSRM or Valhalla.
+        </p>
+<Code code={`
+const instance = MapView.init(el, { maplibregl });
+instance.addRoute('delivery', [[-87.70, 41.85], [-87.65, 41.87], [-87.62, 41.88]]);
+instance.addArcs('flights', [
+  { from: [-87.90, 41.97], to: [-73.78, 40.64] },
+  { from: [-87.90, 41.97], to: [-118.41, 33.94] }
+], { dashArray: [2, 2] });
+`} />
+  </Section>
+  <Section {...S.clusters}>
+        <p>
+          <code>addClusters(id, data, options)</code> draws GeoJSON points, or
+          the URL of a GeoJSON file, and groups those close together. A
+          cluster shows its count when the style has fonts, and a click
+          zooms in until it splits. Its layers are
+          <code>{`\${id}-clusters`}</code>, <code>{`\${id}-count`}</code> and
+          <code>{`\${id}-points`}</code>, so a click on a point can be handled
+          with <code>{`instance.map.on('click', \`\${id}-points\`, …)`}</code>.
+        </p>
+<Code code={`
+instance.addClusters('stores', 'https://example.com/stores.geojson', { radius: 50, maxZoom: 14 });
+instance.map.on('click', 'stores-points', (event) => {
+  console.log(event.features[0].properties);
+});
+`} />
+        <p>
+          Lines and clusters take their colors from the theme tokens where the
+          map is, and are drawn again in the new theme's colors when the
+          style changes. <code>removeOverlay(id)</code> removes one.
+        </p>
+  </Section>
+  <Section {...S.controls}>
+        <p>
+          A <code>.map-controls</code> stacks
+          <a href={route('icon_buttons')}>icon buttons</a> in the top right
+          corner, or <code>.top-left</code>, <code>.bottom-left</code> or
+          <code>.bottom-right</code>. A <code>.map-control-group</code> joins
+          buttons on one surface. Each button's <code>data-action</code> is
+          what it does:
+        </p>
+        <ul>
+          <li><code>zoom-in</code> and <code>zoom-out</code>, disabled at the zoom limits.</li>
+          <li><code>compass</code> turns the map back to north; its icon points north as the map rotates.</li>
+          <li><code>locate</code> centers the map on the reader's location and marks it. It is disabled if the reader refuses.</li>
+          <li><code>fullscreen</code> shows the map full screen and sets <code>aria-pressed</code>. It is hidden where full screen is unavailable.</li>
+        </ul>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          Name the map with <code>aria-label</code> and
+          <code>role="region"</code>. MapLibre makes the canvas focusable: the
+          arrow keys pan, <kbd>+</kbd> and <kbd>-</kbd> zoom, and
+          <kbd>Shift</kbd> with the arrows rotates. A marker that does
+          something should be a named <code>&lt;button&gt;</code>; a
+          decorative one can be a <code>&lt;span&gt;</code>. A map is hard to
+          use without sight, so put what matters, such as store addresses,
+          in text on the page as well.
+        </p>
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+          <tr>
+            <td><code>maplibregl</code></td>
+            <td>Module</td>
+            <td><code>null</code></td>
+            <td>The <code>maplibre-gl</code> module. Required.</td>
+          </tr>
+          <tr>
+            <td><code>style</code></td>
+            <td>String, Object</td>
+            <td>OpenFreeMap Positron and Dark</td>
+            <td>A style URL or object, or <code>{`{ light, dark }`}</code> to follow the theme.</td>
+          </tr>
+          <tr>
+            <td><code>center</code></td>
+            <td>Array</td>
+            <td><code>[0, 20]</code></td>
+            <td>Starting <code>[longitude, latitude]</code>.</td>
+          </tr>
+          <tr>
+            <td><code>zoom</code></td>
+            <td>Number</td>
+            <td><code>1</code></td>
+            <td>Starting zoom level.</td>
+          </tr>
+          <tr>
+            <td><code>mapOptions</code></td>
+            <td>Object</td>
+            <td><code>{`{}`}</code></td>
+            <td>More MapLibre <code>Map</code> options, such as <code>maxZoom</code> or <code>bearing</code>.</td>
+          </tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+const instance = Expressive.MapView.getInstance(document.querySelector('.map'));
+instance.map; // the MapLibre map, for anything else
+instance.markers; // the MapLibre markers, in markup order
+instance.addRoute(id, coordinates, options);
+instance.addArcs(id, arcs, options);
+instance.addClusters(id, data, options);
+instance.removeOverlay(id);
+instance.destroy(); // removes the map and puts the markup back
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.map</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-map-height</code></td><td>400px</td></tr>
+          <tr><td><code>--md-comp-map-shape</code></td><td>16px</td></tr>
+          <tr><td><code>--md-comp-map-marker-color</code></td><td>primary</td></tr>
+          <tr><td><code>--md-comp-map-marker-ring-color</code></td><td>surface</td></tr>
+          <tr><td><code>--md-comp-map-route-color</code></td><td>primary</td></tr>
+          <tr><td><code>--md-comp-map-arc-color</code></td><td>tertiary</td></tr>
+          <tr><td><code>--md-comp-map-cluster-color</code></td><td>primary</td></tr>
+          <tr><td><code>--md-comp-map-cluster-label-color</code></td><td>on-primary</td></tr>
+          <tr><td><code>--md-comp-map-popup-max-width</code></td><td>280px</td></tr>
+          <tr><td><code>--md-comp-map-control-offset</code></td><td>12px</td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+<script is:inline type="module">
+// ExpressiveCSS does not bundle MapLibre; the docs load a pinned copy.
+import * as maplibregl from 'https://unpkg.com/maplibre-gl@6.13.0/dist/maplibre-gl.mjs';
+
+const instance = Expressive.MapView.init(document.getElementById('demo-map'), {
+  maplibregl,
+  center: [-87.66, 41.895],
+  zoom: 11.5
+});
+instance.addRoute('demo-route', [[-87.6278, 41.8820], [-87.6316, 41.8960], [-87.6347, 41.9214]]);
+</script>
+</DocsLayout>
