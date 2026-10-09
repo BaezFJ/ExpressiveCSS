@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.13.1",
-  "sourceRevision": "4460053b15f1af96c6b74af6c0f8d93410c14e27",
+  "sourceRevision": "daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-08",
@@ -3462,6 +3462,66 @@
         }
       ],
       "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "map",
+      "title": "Map",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-09",
+      "scope": "MapLibre map with themed OpenFreeMap styles, markers with labels, tooltips, popups and dragging, routes, arcs, clusters, and zoom, compass, locate and full screen controls.",
+      "adaptation": "The page passes in the maplibre-gl module. Markers, popups and controls are authored HTML moved into MapLibre; routes, arcs and clusters are GeoJSON layers whose colors are read from theme tokens and redrawn when the theme changes.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-09",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Name the map region, make interactive markers named buttons, return focus when a popup closes, keep tile attribution visible and give the same information in text."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_map.scss",
+          "sha256": "3bc9d7ba4dcf2c8d632701d4a6d127dd0e83662b994591260a58581bc2f3d5de"
+        },
+        {
+          "path": "src/ts/components/mapView.ts",
+          "sha256": "eb0804b2b9368c8af1c9e6d6827c8bde42ceb4e01bdd9b3666d13a867bc67b03"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified.",
+          "nextStep": "Use the map with a screen reader and on a touch device, try locate and full screen with real permissions, drag a marker with the keyboard, and check forced colors."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/map-browser.test.js",
+          "name": "chromium: map places markers and popups, runs controls, themes overlays and restores its markup",
+          "scope": "Markers placed with the default dot, the popup without a marker open at init, a marker button opening its popup with aria-expanded, Escape and a map click closing it with focus back on the marker, zoom out disabled at the minimum zoom, zoom in, the compass bearing and reset, route, arcs and clusters in the theme primary color, no count layer without glyphs, all redrawn in the dark primary after a theme change, removeOverlay, destroy restoring the markup and controls, and a location arriving after destroy being ignored. No spoken-output assertion.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/map-browser.test.js",
+          "name": "chromium: a map in a shadow root opens its marker popup",
+          "scope": "A marker button inside a shadow root finding its popup by id, then opening it with aria-expanded. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

@@ -110,7 +110,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed carousel snapping held off during programmatic scrolls: 59,050 gzip bytes (+26).
   // Reviewed confetti: 60,733 gzip bytes (+1,683).
   // Reviewed particles: 61,568 gzip bytes (+835).
-  assert.ok(sizes(js).gzip <= 61568, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the map, which leaves MapLibre to the page: 64,375 gzip bytes (+2,807).
+  assert.ok(sizes(js).gzip <= 64375, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -140,5 +141,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed <mark> and ::highlight(mark): 66,424 gzip bytes (+30).
   // Reviewed the inline legacy checkbox span: 66,444 gzip bytes (+20).
   // Reviewed the particles canvas: 66,461 gzip bytes (+17).
-  assert.ok(sizes(css).gzip <= 66461, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the map: 67,259 gzip bytes (+798).
+  assert.ok(sizes(css).gzip <= 67259, `CSS gzip: ${sizes(css).gzip}`);
 });

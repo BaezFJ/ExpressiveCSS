@@ -2710,6 +2710,106 @@ Stops drawing, removes the pointer listener and clears the canvas.
 
 ---
 
+## Map
+
+An interactive map with markers, popups, routes, arcs, clusters and controls, built on MapLibre.
+
+A `.map` holds `.map-marker`, `.map-popup` and `.map-controls` children. ExpressiveCSS does not bundle MapLibre. Install `maplibre-gl`, load `maplibre-gl/dist/maplibre-gl.css` before ExpressiveCSS, and pass the module to `MapView.init()`. `AutoInit()` does not start the map. The class is `MapView` so importing it does not hide JavaScript's `Map`. Until the script runs, markers, popups and controls are hidden.
+
+The default style is OpenFreeMap's Positron in the light theme and its Dark style in the dark theme; neither needs an API key. The map swaps style when the `theme` attribute or the system color scheme changes. Pass `style` as a URL or object to keep one style, or `{ light, dark }`. Keep the provider's attribution visible.
+
+- A `.map-marker` sits at its `data-lng-lat`, longitude first. With no content of its own it is a primary dot; content inside replaces the dot. A `.map-marker-label` shows below it (`.top`: above), and a child `.tooltip` shows on hover and focus.
+- A `<button class="map-marker">` with `aria-controls` naming a `.map-popup` opens it and sets `aria-expanded`. A map click or Escape closes it and focus returns to the marker. A `.map-popup` with its own `data-lng-lat` and no marker opens at init.
+- `data-draggable` lets the reader drag a marker. When the drag ends, `data-lng-lat` holds the new position and the marker fires `change`.
+- `.map-controls` stacks icon buttons in the top right, or `.top-left`, `.bottom-left`, `.bottom-right`; `.map-control-group` joins buttons on one surface. `data-action` is `zoom-in`, `zoom-out` (disabled at the zoom limits), `compass` (resets north; the icon follows the bearing), `locate` (centers on the reader and marks the spot) or `fullscreen` (sets `aria-pressed`; hidden where unsupported).
+- Routes, arcs and clusters are data, added with methods. Lines and clusters take theme colors where the map is and are redrawn in the new colors when the theme changes. The map does not plan routes.
+- Name the map with `role="region"` and `aria-label`, and give what matters, such as addresses, in text too.
+
+```html
+<div class="map" role="region" aria-label="Chicago stores">
+  <button type="button" class="map-marker" data-lng-lat="-87.6278,41.8820"
+          aria-label="Loop store" aria-controls="loop">
+    <span class="map-marker-label">Loop</span>
+  </button>
+  <div class="map-popup" id="loop">
+    <h3>Loop store</h3>
+    <p>Open until 9 p.m.</p>
+  </div>
+  <div class="map-controls">
+    <div class="map-control-group">
+      <button type="button" class="icon-button" data-action="zoom-in" aria-label="Zoom in">
+        <span class="material-symbols" aria-hidden="true">add</span>
+      </button>
+      <button type="button" class="icon-button" data-action="zoom-out" aria-label="Zoom out">
+        <span class="material-symbols" aria-hidden="true">remove</span>
+      </button>
+    </div>
+  </div>
+</div>
+```
+
+```js
+import 'maplibre-gl/dist/maplibre-gl.css';
+import * as maplibregl from 'maplibre-gl';
+import { MapView } from '@expressivecss/expressive';
+
+const map = MapView.init(document.querySelector('.map'), { maplibregl, center: [-87.65, 41.89], zoom: 11 });
+map.addRoute('delivery', [[-87.70, 41.85], [-87.62, 41.88]]);
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `maplibregl` | Module | `null` | The `maplibre-gl` module. Required. |
+| `style` | String, Object | OpenFreeMap Positron and Dark | A style URL or object, or `{ light, dark }` to follow the theme. |
+| `center` | Array | `[0, 20]` | Starting `[longitude, latitude]`. |
+| `zoom` | Number | `1` | Starting zoom level. |
+| `mapOptions` | Object | `{}` | More MapLibre `Map` options, such as `maxZoom` or `bearing`. |
+
+### Methods
+
+#### .addRoute(id, coordinates, options)
+
+Draws a line through `[longitude, latitude]` points in the route color, 4px wide. Options: `color`, `width`, `opacity`, `dashArray`. Replaces an overlay with the same id.
+
+#### .addArcs(id, arcs, options)
+
+Draws a curve for each `{ from, to }` in the arc color, 2px wide, with the same options.
+
+#### .addClusters(id, data, options)
+
+Draws GeoJSON points, or a GeoJSON URL, as clusters that show their count when the style has fonts and zoom in when clicked. Options: `color`, `radius` (50), `maxZoom` (14). The layers are `${id}-clusters`, `${id}-count` and `${id}-points`.
+
+#### .removeOverlay(id)
+
+Removes a route, arcs or clusters.
+
+#### .map and .markers
+
+The MapLibre map and markers, for anything else.
+
+#### .destroy()
+
+Removes the map and puts the authored children back.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-map-height` | 400px |
+| `--md-comp-map-shape` | 16px |
+| `--md-comp-map-marker-color` | primary |
+| `--md-comp-map-marker-ring-color` | surface |
+| `--md-comp-map-route-color` | primary |
+| `--md-comp-map-arc-color` | tertiary |
+| `--md-comp-map-cluster-color` | primary |
+| `--md-comp-map-cluster-label-color` | on-primary |
+| `--md-comp-map-popup-max-width` | 280px |
+| `--md-comp-map-control-offset` | 12px |
+
+---
+
 ## Drag handle
 
 The bar that makes something legible as draggable: a bottom sheet's grabber, the gutter between two panes, the grip on a reorderable row.

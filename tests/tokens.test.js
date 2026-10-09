@@ -68,6 +68,11 @@ const UNREAD_ALLOWED = new Map([
     '--md-comp-radial-chart-gap',
     'read at runtime by RadialChart with the thickness token, for the same reason.',
   ],
+  ...['route', 'arc', 'cluster', 'cluster-label'].map((name) => [
+    `--md-comp-map-${name}-color`,
+    'read at runtime by MapView, which resolves it to an sRGB color for a ' +
+      'MapLibre layer. The canvas cannot read CSS.',
+  ]),
 ]);
 
 describe('Custom properties', () => {
