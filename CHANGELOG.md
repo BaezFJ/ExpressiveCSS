@@ -5,6 +5,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `.confetti` bursts theme-colored confetti. A button with the class bursts
+  from its center over the page when clicked, a `<canvas class="confetti">`
+  bursts inside its own box, and `Expressive.Confetti.fire(options)` bursts
+  over the page from script. Options cover the count, angle, spread, speed,
+  gravity, drift, colors, shapes and size. The page canvas draws above an
+  open modal dialog and lets clicks through. Nothing is drawn when the reader
+  prefers reduced motion.
+
 ### Fixed
 
 - In Firefox, a carousel that moved several items while its item sizes were

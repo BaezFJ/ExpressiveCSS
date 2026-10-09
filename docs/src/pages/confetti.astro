@@ -1,0 +1,222 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "canvas", label: "On a canvas" },
+  { id: "script", label: "From script" },
+  { id: "examples", label: "Examples" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+]);
+
+const randomScript = `Expressive.Confetti.fire({
+  angle: 55 + Math.random() * 70,
+  spread: 50 + Math.random() * 20,
+  particleCount: 50 + Math.floor(Math.random() * 50),
+  origin: { y: 0.6 }
+});`;
+
+const fireworksScript = `const end = Date.now() + 5000;
+const timer = setInterval(() => {
+  const left = end - Date.now();
+  if (left <= 0) return clearInterval(timer);
+  const burst = { spread: 360, startVelocity: 30, ticks: 60, particleCount: 50 * left / 5000 };
+  Expressive.Confetti.fire({ ...burst, origin: { x: 0.1 + Math.random() * 0.2, y: Math.random() - 0.2 } });
+  Expressive.Confetti.fire({ ...burst, origin: { x: 0.7 + Math.random() * 0.2, y: Math.random() - 0.2 } });
+}, 250);`;
+
+const cannonsScript = `const end = Date.now() + 3000;
+const colors = ['#a786ff', '#fd8bbc', '#eca184', '#f8deb1'];
+(function frame() {
+  if (Date.now() > end) return;
+  Expressive.Confetti.fire({ particleCount: 2, angle: 60, spread: 55, startVelocity: 60, origin: { x: 0, y: 0.5 }, colors });
+  Expressive.Confetti.fire({ particleCount: 2, angle: 120, spread: 55, startVelocity: 60, origin: { x: 1, y: 0.5 }, colors });
+  requestAnimationFrame(frame);
+})();`;
+
+const starsScript = `const stars = {
+  spread: 360, ticks: 50, gravity: 0, decay: 0.94, startVelocity: 30,
+  shapes: ['star'], colors: ['#ffe400', '#ffbd00', '#e89400', '#ffca6c', '#fdffb8']
+};
+for (const delay of [0, 100, 200]) {
+  setTimeout(() => {
+    Expressive.Confetti.fire({ ...stars, particleCount: 40 });
+    Expressive.Confetti.fire({ ...stars, particleCount: 10, shapes: ['circle'], scalar: 0.75 });
+  }, delay);
+}`;
+---
+<DocsLayout page="confetti">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          Confetti marks a moment worth celebrating, such as a finished order
+          or a completed goal.
+        </p>
+        <p>
+          Give a button the <code>confetti</code> class, and each click bursts
+          confetti from its center over the whole page. The pieces take the
+          theme's primary, secondary and tertiary colors and their containers.
+          The canvas they are drawn on lets clicks through and is removed when
+          the last piece fades. <code>AutoInit()</code> starts every
+          <code>.confetti</code>.
+        </p>
+        <p class="mb-3">
+          <button type="button" class="filled confetti">Celebrate</button>
+        </p>
+<Code code={`
+<button type="button" class="filled confetti">Celebrate</button>
+`} />
+  </Section>
+  <Section {...S.canvas}>
+        <p>
+          A <code>&lt;canvas class="confetti" aria-hidden="true"&gt;</code>
+          covers its nearest positioned ancestor and bursts inside it once
+          when it starts. Call <code>fire()</code> on its instance to burst
+          again, or set <code>manualStart</code> to wait for the first call.
+          A small canvas needs a lower <code>startVelocity</code> to keep the
+          pieces in view.
+        </p>
+        <div class="card outlined valign-wrapper" style="position: relative; height: 320px; justify-content: center; overflow: hidden" data-markdown-ignore>
+          <p class="display-medium" style="margin: 0">Confetti</p>
+          <canvas class="confetti no-autoinit" id="demo-canvas" aria-hidden="true"></canvas>
+        </div>
+        <p class="mb-3">
+          <button type="button" class="tonal" id="demo-canvas-fire">Burst again</button>
+        </p>
+<Code code={`
+<div style="position: relative; height: 320px">
+  <canvas class="confetti no-autoinit" aria-hidden="true"></canvas>
+</div>
+
+<script>
+const canvas = document.querySelector('canvas.confetti');
+const confetti = Expressive.Confetti.init(canvas, { startVelocity: 30, origin: { y: 0.6 } });
+button.addEventListener('click', () => confetti.fire());
+</script>
+`} />
+  </Section>
+  <Section {...S.script}>
+        <p>
+          <code>Expressive.Confetti.fire(options)</code> bursts over the page
+          with no markup, for example when a request succeeds. It returns a
+          promise that resolves when the last piece is gone.
+        </p>
+<Code code={`
+await saveOrder();
+Expressive.Confetti.fire({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+`} />
+  </Section>
+  <Section {...S.examples}>
+        <p>
+          Combine several calls for bigger effects. <code>origin</code> is a
+          fraction of the viewport, so <code>{"{ x: 0 }"}</code> is the left
+          edge.
+        </p>
+        <p class="mb-3" style="display: flex; flex-wrap: wrap; gap: 8px">
+          <button type="button" class="tonal" id="demo-random">Random direction</button>
+          <button type="button" class="tonal" id="demo-fireworks">Fireworks</button>
+          <button type="button" class="tonal" id="demo-cannons">Side cannons</button>
+          <button type="button" class="tonal" id="demo-stars">Stars</button>
+        </p>
+        <h3 class="title-medium">Random direction</h3>
+<Code code={randomScript} />
+        <h3 class="title-medium">Fireworks</h3>
+<Code code={fireworksScript} />
+        <h3 class="title-medium">Side cannons</h3>
+<Code code={cannonsScript} />
+        <h3 class="title-medium">Stars</h3>
+<Code code={starsScript} />
+  </Section>
+  <Section {...S.accessibility}>
+        <ul class="browser-default">
+          <li>Confetti is decoration. Say what happened in text as well, for example in a snackbar, and keep bursts for rare moments.</li>
+          <li>Mark an authored canvas <code>aria-hidden="true"</code>. The page canvas hides itself.</li>
+          <li>Nothing is drawn when the reader prefers reduced motion, and <code>fire()</code> resolves at once.</li>
+          <li>The page canvas is a manual popover with pointer events off, so it draws above an open modal dialog without blocking clicks or moving focus.</li>
+        </ul>
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+          <tr><td><code>particleCount</code></td><td>Number</td><td><code>50</code></td><td>Pieces per burst.</td></tr>
+          <tr><td><code>angle</code></td><td>Number</td><td><code>90</code></td><td>Launch direction in degrees; 90 is straight up and 0 is right.</td></tr>
+          <tr><td><code>spread</code></td><td>Number</td><td><code>45</code></td><td>Degrees the pieces fan out from the angle.</td></tr>
+          <tr><td><code>startVelocity</code></td><td>Number</td><td><code>45</code></td><td>Launch speed in pixels per frame.</td></tr>
+          <tr><td><code>decay</code></td><td>Number</td><td><code>0.9</code></td><td>Share of its speed a piece keeps each frame.</td></tr>
+          <tr><td><code>gravity</code></td><td>Number</td><td><code>1</code></td><td>Pull toward the bottom; 0 floats.</td></tr>
+          <tr><td><code>drift</code></td><td>Number</td><td><code>0</code></td><td>Sideways push per frame; negative drifts left.</td></tr>
+          <tr><td><code>ticks</code></td><td>Number</td><td><code>200</code></td><td>Frames a piece lives while it fades, counted at 60 per second.</td></tr>
+          <tr><td><code>origin</code></td><td>Object</td><td><code>{"{ x: 0.5, y: 0.5 }"}</code></td><td>Launch point as fractions of the canvas from 0 to 1; a missing side is 0.5. A button launches from its own center instead.</td></tr>
+          <tr><td><code>colors</code></td><td>Array</td><td><code>[]</code></td><td>CSS colors. Empty uses the theme colors.</td></tr>
+          <tr><td><code>shapes</code></td><td>Array</td><td><code>['square', 'circle']</code></td><td>Any of <code>'square'</code>, <code>'circle'</code> and <code>'star'</code>.</td></tr>
+          <tr><td><code>scalar</code></td><td>Number</td><td><code>1</code></td><td>Piece size multiplier.</td></tr>
+          <tr><td><code>manualStart</code></td><td>Boolean</td><td><code>false</code></td><td>On a canvas, wait for <code>fire()</code> instead of bursting at init.</td></tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+Expressive.Confetti.fire(options);   // bursts over the page; resolves when it ends
+
+const confetti = Expressive.Confetti.getInstance(element);
+confetti.fire({ spread: 90 });       // this canvas, or from this button's center
+confetti.destroy();                  // removes the click handler, or clears the canvas
+`} />
+  </Section>
+</PageBody>
+<script is:inline>
+// The bundle loads after the page body.
+document.addEventListener('DOMContentLoaded', () => {
+  const canvas = Expressive.Confetti.init(document.getElementById('demo-canvas'), { startVelocity: 30, origin: { y: 0.6 } });
+  document.getElementById('demo-canvas-fire').addEventListener('click', () => canvas.fire());
+  const demos = {
+    'demo-random': () => {
+      Expressive.Confetti.fire({
+        angle: 55 + Math.random() * 70,
+        spread: 50 + Math.random() * 20,
+        particleCount: 50 + Math.floor(Math.random() * 50),
+        origin: { y: 0.6 }
+      });
+    },
+    'demo-fireworks': () => {
+      const end = Date.now() + 5000;
+      const timer = setInterval(() => {
+        const left = end - Date.now();
+        if (left <= 0) return clearInterval(timer);
+        const burst = { spread: 360, startVelocity: 30, ticks: 60, particleCount: 50 * left / 5000 };
+        Expressive.Confetti.fire({ ...burst, origin: { x: 0.1 + Math.random() * 0.2, y: Math.random() - 0.2 } });
+        Expressive.Confetti.fire({ ...burst, origin: { x: 0.7 + Math.random() * 0.2, y: Math.random() - 0.2 } });
+      }, 250);
+    },
+    'demo-cannons': () => {
+      const end = Date.now() + 3000;
+      const colors = ['#a786ff', '#fd8bbc', '#eca184', '#f8deb1'];
+      (function frame() {
+        if (Date.now() > end) return;
+        Expressive.Confetti.fire({ particleCount: 2, angle: 60, spread: 55, startVelocity: 60, origin: { x: 0, y: 0.5 }, colors });
+        Expressive.Confetti.fire({ particleCount: 2, angle: 120, spread: 55, startVelocity: 60, origin: { x: 1, y: 0.5 }, colors });
+        requestAnimationFrame(frame);
+      })();
+    },
+    'demo-stars': () => {
+      const stars = {
+        spread: 360, ticks: 50, gravity: 0, decay: 0.94, startVelocity: 30,
+        shapes: ['star'], colors: ['#ffe400', '#ffbd00', '#e89400', '#ffca6c', '#fdffb8']
+      };
+      for (const delay of [0, 100, 200]) {
+        setTimeout(() => {
+          Expressive.Confetti.fire({ ...stars, particleCount: 40 });
+          Expressive.Confetti.fire({ ...stars, particleCount: 10, shapes: ['circle'], scalar: 0.75 });
+        }, delay);
+      }
+    }
+  };
+  for (const [id, run] of Object.entries(demos)) document.getElementById(id).addEventListener('click', run);
+});
+</script>
+</DocsLayout>

@@ -1216,6 +1216,20 @@
           }
         ]
       },
+      "confetti": {
+        "status": "enforced",
+        "note": "Added with the confetti component. The pieces are decoration drawn on a canvas, so an authored confetti canvas is hidden from assistive technology. The page-wide canvas the script creates hides itself.",
+        "rules": [
+          {
+            "id": "confetti-canvas-is-hidden",
+            "kind": "require-attr",
+            "selector": "canvas.confetti",
+            "attr": "aria-hidden",
+            "equals": "true",
+            "message": "Confetti is decoration. Mark the canvas aria-hidden=\"true\" and say what happened in text, for example in a snackbar."
+          }
+        ]
+      },
       "tree": {
         "status": "enforced",
         "note": "Added with the tree component. Nested lists of native disclosures and links: every row is a Tab stop and the browser opens a branch, so no tree role is promised.",
