@@ -9,7 +9,7 @@ Component ID: `skeleton`
 
 Contract: ExpressiveCSS 0.13.1
 
-Contract SHA-256: `18ec4146d300280bbcb74eb3b23f16d1015a0a3db86a8c59fc8348dbdf9d96c2`
+Contract SHA-256: `d0f72b8deea482a9ec047ca3315bcce02de2263c0ebb8a82af7c88dc9f268d37`
 
 #### Selection and adaptation
 
