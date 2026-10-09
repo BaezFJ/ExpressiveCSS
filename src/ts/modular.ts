@@ -6,7 +6,7 @@ export { Forms } from './behaviors/forms';
 export { AutoInit } from './components/registry';
 export type { AutoInitOptions } from './components/registry';
 
-export const version = '0.13.0';
+export const version = '0.13.1';
 
 export type * from './components/autocomplete';
 export type * from './components/appBar';

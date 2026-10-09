@@ -13,7 +13,7 @@
   drop zone, empty state, KPI, marquee, message, message scroller, popover,
   questionnaire, rating, rich text editor, skeleton, stat, stepper, timeline
   and tree.
-- Bundled framework guidance: ExpressiveCSS 0.13.0.
+- Bundled framework guidance: ExpressiveCSS 0.13.1.
 
 ## 0.3.0 - 2026-10-06
 

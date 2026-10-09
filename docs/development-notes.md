@@ -8,7 +8,7 @@ ExpressiveCSS is a Material Design 3 front-end framework. Framework source lives
 
 For agents, `llm.md` covers markup and JavaScript APIs; `m3-guidelines.md` covers Material 3 usage, anatomy, placement, adaptive design, and component behavior.
 
-Public APIs and markup use ExpressiveCSS names. Elements store instances as `el['Expressive_<Component>']`, the IIFE global is `Expressive`, and `src/ts/modular.ts` exports `version = '0.13.0'` to match `package.json`. The renamed classes and APIs are:
+Public APIs and markup use ExpressiveCSS names. Elements store instances as `el['Expressive_<Component>']`, the IIFE global is `Expressive`, and `src/ts/modular.ts` exports `version = '0.13.1'` to match `package.json`. The renamed classes and APIs are:
 
 | Upstream | Expressive |
 | --- | --- |
@@ -109,6 +109,11 @@ Follow [RELEASING.md](../RELEASING.md). The framework package version and runtim
 version export must agree. Stable release prose moves with stable releases;
 prereleases intentionally leave installation prose on the latest stable version.
 Never move or delete a published tag. Release a corrective version instead.
+
+`sourceRevision` in `docs/src/data/component-decisions.json` must be a commit
+on `master`. PRs are squash-merged, so a commit from a PR branch disappears
+after merge and the release job's `git ls-tree` check fails. That stopped
+`v0.13.0` before publishing.
 
 ## Visual regression
 
