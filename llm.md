@@ -5370,6 +5370,8 @@ Scrollspy watches a set of sections and which one is currently in view. The tabl
 
 Put `scrollspy` and an `id` on each section. The table of contents is a set of destinations within the page, so it lives in a labelled `<nav>`; use `table-of-contents` on its list and point each link at `#that-id`. `AutoInit()` starts every `.scrollspy` except those marked `no-autoinit`.
 
+Each link is at least 48dp tall, the Material touch target. For a denser list, set `--md-comp-toc-item-height` on the `.table-of-contents` list.
+
 ```html
 <div class="row">
   <div class="s12 m9">

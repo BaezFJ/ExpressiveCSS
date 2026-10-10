@@ -30,6 +30,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Table-of-contents links are 48dp tall, the Material touch target, instead
+  of 32dp. `--md-comp-toc-item-height` sets a denser height.
 - In Firefox, a carousel that moved several items while its item sizes were
   still changing could slide back to an earlier item after it had settled.
   Firefox re-snapped the track to whichever item it had passed mid-move.

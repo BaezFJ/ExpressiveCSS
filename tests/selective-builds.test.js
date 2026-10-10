@@ -142,5 +142,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the inline legacy checkbox span: 66,444 gzip bytes (+20).
   // Reviewed the particles canvas: 66,461 gzip bytes (+17).
   // Reviewed the map: 67,259 gzip bytes (+798).
-  assert.ok(sizes(css).gzip <= 67259, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the 48dp table-of-contents item height token: 67,269 gzip bytes (+10).
+  assert.ok(sizes(css).gzip <= 67269, `CSS gzip: ${sizes(css).gzip}`);
 });
