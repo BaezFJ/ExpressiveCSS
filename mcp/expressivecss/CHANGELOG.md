@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- Command-output redaction no longer stalls the server on long token runs.
+  160K characters of hex output took 6 s to redact; it now takes milliseconds.
+- New `EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS` setting limits which
+  directories a caller can pass as `projectRoot`. It is unset by default, which
+  keeps the current behavior.
+- Calls with a `projectRoot` are 3 to 5 times faster. The server resolves the
+  ExpressiveCSS version once per call and sizes file buffers to the file
+  instead of the read limit.
+- Tool results use compact JSON text, which is about a third smaller.
+
 ## 0.3.1 - 2026-10-08
 
 - Fix `npx @expressivecss/mcp-server`, which failed with "could not determine

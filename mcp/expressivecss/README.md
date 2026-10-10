@@ -619,6 +619,7 @@ network limits, evidence handling, and bounded repair workflow.
 - `EXPRESSIVECSS_MCP_QA_MAX_TOTAL_MB`
 - `EXPRESSIVECSS_MCP_COMMAND_TIMEOUT_MS`
 - `EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS`
+- `EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS`
 - `SKIP_SETUP_EXPERT`
 - `SKIP_RULES_ENFORCER`
 - `SKIP_CREATIVE_DIRECTOR`
@@ -641,6 +642,8 @@ EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS=["/srv/projects/site-a","/srv/projects/s
 ```
 
 The real `projectRoot` must equal or be contained by one of those roots. A tool caller cannot expand this policy. Allowed commands receive only the executable path, system/temp/locale variables, `CI=1`, `NO_COLOR=1`, and `HOME`/`USERPROFILE` reset to the project root. API keys, tokens, passwords, cloud credentials, SSH agent variables, and other MCP-process environment values are not forwarded.
+
+Any tool accepts a `projectRoot` by default, and `quality_inspector` reports the existence, size and SHA-256 of files under it. To limit which directories a caller can name, set `EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS` in the same format. A `projectRoot` whose real path is outside every listed root fails with a tool error. An empty or invalid value denies every caller-supplied root. The default root, from `--project-root` or the working directory, is not checked.
 
 ## Sample client configuration
 

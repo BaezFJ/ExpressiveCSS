@@ -62,6 +62,7 @@ function configuredCommandRoots(value) {
   return trimmed.split(path.delimiter).map((entry) => entry.trim()).filter(Boolean);
 }
 
+const PROJECT_ROOTS_SETTING = 'EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS';
 const QUALITY_SCRIPTS = ['typecheck', 'test', 'verify:expressivecss'];
 // Trusted server configuration can only narrow the built-in list. Invalid input denies all.
 function configuredScripts(value) {
@@ -82,6 +83,8 @@ const SETTINGS = {
   commandTimeoutMs: Number(process.env.EXPRESSIVECSS_MCP_COMMAND_TIMEOUT_MS || DEFAULT_COMMAND_TIMEOUT_MS),
   allowedScripts: configuredScripts(process.env.EXPRESSIVECSS_MCP_ALLOWED_SCRIPTS),
   allowedCommandRoots: configuredCommandRoots(process.env.EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS),
+  // Unset keeps every root open. A set but empty or invalid list denies every client-supplied root.
+  allowedProjectRoots: process.env[PROJECT_ROOTS_SETTING] === undefined ? null : configuredCommandRoots(process.env[PROJECT_ROOTS_SETTING]),
 };
 
 const SKIP_FLAGS = {
@@ -316,7 +319,29 @@ function parseCliProjectRoot() {
 }
 
 function resolveProjectRoot(projectRoot) {
-  return projectRoot ? path.resolve(projectRoot) : parseCliProjectRoot();
+  return projectRoot ? authorizedProjectRoot(projectRoot) : parseCliProjectRoot();
+}
+
+// The operator's default root is trusted. When configured, a client-supplied root must sit inside an allowed root.
+function authorizedProjectRoot(projectRoot) {
+  const resolved = path.resolve(projectRoot);
+  if (!SETTINGS.allowedProjectRoots) return resolved;
+  let canonical = null;
+  try { canonical = realpathSync(resolved); } catch {}
+  if (!canonical || !matchingRoot(SETTINGS.allowedProjectRoots, canonical)) {
+    throw new Error(`projectRoot is not inside a root allowed by ${PROJECT_ROOTS_SETTING}.`);
+  }
+  return resolved;
+}
+
+function matchingRoot(configuredRoots, candidate) {
+  return configuredRoots.flatMap((configuredRoot) => {
+    try {
+      return [realpathSync(path.resolve(configuredRoot))];
+    } catch {
+      return [];
+    }
+  }).find((allowedRoot) => isPathInside(allowedRoot, candidate)) ?? null;
 }
 
 function resolveRepoRoot(startDir) {
@@ -407,7 +432,7 @@ function serializeToolResult(payload) {
   return {
     content: [{
       type: 'text',
-      text: JSON.stringify(payload, null, GUIDANCE_TOOLS.has(payload.stage) ? undefined : 2),
+      text: JSON.stringify(payload),
     }],
     structuredContent: payload,
     ...(payload.responseBudget?.delivery === 'error' ? { isError: true } : {}),
@@ -833,6 +858,8 @@ async function loadGuideCatalog(projectRoot) {
     guideSource: 'bundled',
     count: bundledGuideCache.count,
     components: bundledGuideCache.components,
+    // Handlers reuse this resolution instead of reading the lockfiles again.
+    version: projectResolution,
   };
 }
 
@@ -965,9 +992,9 @@ async function projectSummary(projectRoot) {
   return summary;
 }
 
-async function resolveAgainstContract(projectRoot, contractVersion) {
-  const version = await resolveExpressiveVersion({ projectRoot, contractVersion });
-  if (contractVersion) return version;
+function resolveAgainstContract(catalog) {
+  const version = catalog.version;
+  if (catalog.frameworkVersion) return version;
   return {
     ...version,
     status: 'unresolved',
@@ -1534,14 +1561,7 @@ function isPathInside(root, candidate) {
 
 function commandExecutionPolicy(projectRoot) {
   const resolvedProjectRoot = realpathSync(path.resolve(projectRoot));
-  const allowedRoots = SETTINGS.allowedCommandRoots.flatMap((configuredRoot) => {
-    try {
-      return [realpathSync(path.resolve(configuredRoot))];
-    } catch {
-      return [];
-    }
-  });
-  const matchedRoot = allowedRoots.find((allowedRoot) => isPathInside(allowedRoot, resolvedProjectRoot)) ?? null;
+  const matchedRoot = matchingRoot(SETTINGS.allowedCommandRoots, resolvedProjectRoot);
   return {
     configured: SETTINGS.allowedCommandRoots.length > 0,
     allowed: Boolean(matchedRoot),
@@ -1591,7 +1611,7 @@ function stopProcessTree(proc, signal) {
   }
 }
 
-function redactSensitiveText(value) {
+export function redactSensitiveText(value) {
   return String(value)
     .replace(/(Authorization\s*:\s*Bearer\s+)[^\s,;]+/giu, '$1[REDACTED]')
     .replace(/\b(Bearer\s+)[A-Za-z0-9._~+\/-]{16,}/giu, '$1[REDACTED]')
@@ -1602,11 +1622,12 @@ function redactSensitiveText(value) {
     .replace(/\bxox[baprs]-[A-Za-z0-9-]{20,}\b/gu, '[REDACTED]')
     .replace(/\bsk-[A-Za-z0-9_-]{20,}\b/gu, '[REDACTED]')
     .replace(/\bAKIA[0-9A-Z]{16}\b/gu, '[REDACTED]')
-    .replace(/\b[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/gu, '[REDACTED]')
+    // Start only where a token run starts; a bare `\b` retries inside `a-b-c` runs in quadratic time.
+    .replace(/(?<![A-Za-z0-9_-])[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/gu, '[REDACTED]')
     .replace(/-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----/gu, '[REDACTED]')
     .replace(/(["'])(API[_-]?KEY|TOKEN|PASSWORD|PASSWD|SECRET|CLIENT[_-]?SECRET|CLIENTSECRET|CONNECTION[_-]?STRING|ACCESS_TOKEN|REFRESH_TOKEN|AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY)\1\s*:\s*(["'])[^"'\r\n]*\3/giu, '$1$2$1:$3[REDACTED]$3')
     .replace(/\b(API[_-]?KEY|TOKEN|PASSWORD|PASSWD|SECRET|CLIENT[_-]?SECRET|CLIENTSECRET|CONNECTION[_-]?STRING|ACCESS_TOKEN|REFRESH_TOKEN|AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY)\s*[:=]\s*[^\s,;]+/giu, '$1=[REDACTED]')
-    .replace(/([a-z][a-z0-9+.-]*:\/\/)[^\s/@:]+:[^\s/@]+@/giu, '$1[REDACTED]@')
+    .replace(/([a-z][a-z0-9+.-]{0,31}:\/\/)[^\s/@:]+:[^\s/@]+@/giu, '$1[REDACTED]@') // Bounded scheme keeps long runs linear.
     .replace(/\/(?:home|Users)\/[^/\s"'<>]+(?:\/[^\s"'<>),;\]}]*)?/gu, '[LOCAL_PATH]')
     .replace(/\/(?:private\/)?tmp\/[^\s"'<>),;\]}]+/gu, '[LOCAL_PATH]')
     .replace(/[A-Z]:\\+Users\\+[^\\\s]+(?:\\+[^\s]*)?/giu, '[LOCAL_PATH]');
@@ -1630,18 +1651,17 @@ export async function readInspectionFile(filePath, projectRoot, byteLimit) {
       throw error;
     }
 
-    const bytes = Buffer.allocUnsafe(byteLimit + 1);
+    // Size the buffer to the file, not the limit. The spare byte exposes growth
+    // and files such as /proc entries that report a smaller size than they hold.
+    const capacity = Number(before.size) + 1;
+    const bytes = Buffer.allocUnsafe(capacity);
     let total = 0;
-    while (total <= byteLimit) {
-      const chunk = await handle.read(bytes, total, byteLimit + 1 - total, total);
+    while (total < capacity) {
+      const chunk = await handle.read(bytes, total, capacity - total, total);
       if (chunk.bytesRead === 0) break;
       total += chunk.bytesRead;
     }
-    if (total > byteLimit) {
-      const error = new Error(`file exceeds ${byteLimit} byte read limit`);
-      error.code = 'INSPECTION_FILE_TOO_LARGE';
-      throw error;
-    }
+    if (total > before.size) throw new Error('file changed while reading');
 
     const after = await handle.stat({ bigint: true });
     const pathAfter = await lstat(filePath, { bigint: true });
@@ -1897,7 +1917,7 @@ async function setupExpertHandler(args) {
   const snapshot = await projectSummary(projectRoot);
   const catalog = await loadGuideCatalog(projectRoot);
   const contractVersion = catalog.frameworkVersion;
-  const version = await resolveExpressiveVersion({ projectRoot, contractVersion });
+  const version = catalog.version;
   const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
   const checks = [
     {
@@ -2015,7 +2035,7 @@ async function rulesEnforcerHandler(args) {
   const workflowId = parsed.workflowId || randomUUID();
   const projectRoot = resolveProjectRoot(parsed.projectRoot);
   const catalog = await loadGuideCatalog(projectRoot);
-  const version = await resolveAgainstContract(projectRoot, catalog.frameworkVersion);
+  const version = resolveAgainstContract(catalog);
   const hasSnippet = parsed.snippet.trim().length > 0;
   const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
 
@@ -2137,7 +2157,7 @@ async function creativeDirectorHandler(args) {
   const parsed = creativeSchemaParsed.parse(args);
   const projectRoot = resolveProjectRoot(parsed.projectRoot);
   const catalog = await loadGuideCatalog(projectRoot);
-  const version = await resolveAgainstContract(projectRoot, catalog.frameworkVersion);
+  const version = resolveAgainstContract(catalog);
   return toToolResult(buildCreativePayload(catalog, version, parsed), { ...parsed, projectRoot }, { catalog, version });
 }
 
@@ -2201,7 +2221,7 @@ async function pageArchitectHandler(args, stage = 'page_architect') {
   const workflowId = parsed.workflowId || randomUUID();
   const projectRoot = resolveProjectRoot(parsed.projectRoot);
   const catalog = await loadGuideCatalog(projectRoot);
-  const version = await resolveAgainstContract(projectRoot, catalog.frameworkVersion);
+  const version = resolveAgainstContract(catalog);
   const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
   const contractSafe = version.status === 'match' && !provenanceBlock;
 
@@ -2274,7 +2294,7 @@ async function componentSyntaxExpertHandler(args) {
   const parsed = syntaxSchemaParsed.parse(args);
   const projectRoot = resolveProjectRoot(parsed.projectRoot);
   const catalog = await loadGuideCatalog(projectRoot);
-  const version = await resolveAgainstContract(projectRoot, catalog.frameworkVersion);
+  const version = resolveAgainstContract(catalog);
   return toToolResult(buildSyntaxPayload(catalog, version, parsed), { ...parsed, projectRoot }, { catalog, version });
 }
 
@@ -2348,9 +2368,9 @@ function buildSyntaxPayload(catalog, version, parsed) {
 
 async function componentCatalogHandler(args) {
   const parsed = catalogSchemaParsed.parse(args);
-  const projectRoot = parsed.projectRoot === undefined ? undefined : path.resolve(parsed.projectRoot);
+  const projectRoot = parsed.projectRoot === undefined ? undefined : authorizedProjectRoot(parsed.projectRoot);
   const catalog = await loadGuideCatalog(projectRoot);
-  const version = projectRoot === undefined ? null : await resolveAgainstContract(projectRoot, catalog.frameworkVersion);
+  const version = projectRoot === undefined ? null : resolveAgainstContract(catalog);
   return toToolResult(buildCatalogPayload(catalog, version, parsed), parsed, { catalog, version });
 }
 
@@ -2424,8 +2444,7 @@ async function qualityInspectorHandler(args) {
   const projectRoot = resolveProjectRoot(parsed.projectRoot);
   const fileSummary = summarizeProjectFiles(parsed.files, projectRoot);
   const catalog = await loadGuideCatalog(projectRoot);
-  const contractVersion = catalog.frameworkVersion;
-  const version = await resolveExpressiveVersion({ projectRoot, contractVersion });
+  const version = catalog.version;
   const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
 
   const fileInspection = await findFileViolations(fileSummary.existing, projectRoot);
