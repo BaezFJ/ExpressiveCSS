@@ -256,3 +256,21 @@ log is `/tmp/expressivecss-roadmap-visual.log`. These artifacts are ignored by G
 ## Next action
 
 Open the visual report and inspect the first expected/actual pair. Allow two minutes.
+
+## Framework gaps found by the documentation redesign
+
+The 2026-10-10 redesign of the documentation shell found these gaps. The docs
+do not work around them in `docs/static/docs.css`; each needs its own change in
+`src/` with tests.
+
+- [ ] **Common button touch targets.** The `xsmall` and default (`small`) button
+  sizes are 32dp and 40dp tall, and the visible container is the whole hit
+  area. Material recommends a 48dp target. The docs app bar search button and
+  skip link set `--md-comp-filled-button-container-height: 48px`; every other
+  default button on the site stays at 40dp.
+- [ ] **Command palette supporting text.** A command row holds an icon, a label
+  and a trailing `<kbd>`, with no slot for a second line. The docs search
+  matches page descriptions through `data-keywords` but cannot show them.
+- [ ] **Visibility helpers for Large and up.** There is `.hide-on-expanded-and-up`
+  but no `.hide-on-large-and-up` or below-Large counterpart. The docs app bar
+  menu button combines `.hide-on-large-only` and `.hide-on-extra-large-only`.

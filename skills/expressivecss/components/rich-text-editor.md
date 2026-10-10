@@ -9,7 +9,7 @@ Component ID: `rich-text-editor`
 
 Contract: ExpressiveCSS 0.13.1
 
-Contract SHA-256: `ef221744c3f3b3cc8b1a36561b5290c9c3101a1e61736a58ccec7dc8c3583994`
+Contract SHA-256: `943d1954405337bea2d73053b650d0629a25feb28f8332dc140f6a32feb91a81`
 
 #### Selection and adaptation
 

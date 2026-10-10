@@ -47,9 +47,7 @@ export function renderMarkdownPage(html, markdownLinks = markdownLinkMap()) {
   const document = new JSDOM(html).window.document;
   const title = document.querySelector('main .docs-page-title')?.textContent?.trim();
   const description = document.querySelector('main .docs-page-description')?.textContent?.trim();
-  const source =
-    document.querySelector('main .docs-page-content') ??
-    document.querySelector('main > .container > .row > div:first-child');
+  const source = document.querySelector('main .docs-page-content');
 
   if (!title || !description || !source) {
     throw new Error('documentation page has no title, description, or content column');

@@ -112,7 +112,7 @@ describe('the Astro documentation pages', () => {
 
 describe('the Astro chrome', () => {
   const section = read('docs/src/components/Section.astro');
-  const banner = read('docs/src/components/Banner.astro');
+  const header = read('docs/src/components/PageHeader.astro');
   const base = read('docs/src/layouts/BaseLayout.astro');
 
   test('gives a section the hooks and heading roles docs.css styles it by', () => {
@@ -129,30 +129,29 @@ describe('the Astro chrome', () => {
     assert.deepEqual(roles, { h2: 'headline-large', h3: 'headline-medium' });
   });
 
-  test('the one hand-rolled scaffold keeps the table-of-contents hooks PageBody states', () => {
-    // floating-action-button.astro writes its own scaffold rather than going
-    // through <PageBody> because its content column intentionally omits
-    // `docs-page-content` (see docs/development-notes.md). That leaves a
-    // second copy of the table-of-contents markup with nothing holding the two
-    // together: renaming `toc-wrapper` or dropping the landmark name in
-    // PageBody would leave this page silently the odd one out, and it looks
-    // like nothing.
+  test('every page with sections renders them through PageBody', () => {
+    // PageBody owns the table of contents, its landmark name and the
+    // `docs-page-content` hook the Markdown generator and docs.css key on. A
+    // page that writes its own scaffold drifts from all three without failing.
     const pageBody = read('docs/src/components/PageBody.astro');
-    const fab = read('docs/src/pages/floating-action-button.astro');
-    for (const token of [
-      'hide-on-compact-only',
-      'toc-wrapper mt-5',
-      'aria-label="On this page"',
-      'section table-of-contents',
-    ]) {
+    for (const token of ['docs-toc', 'aria-label="On this page"', 'section table-of-contents', 'docs-page-content']) {
       assert.ok(pageBody.includes(token), `PageBody.astro no longer states ${token}`);
-      assert.ok(fab.includes(token), `floating-action-button.astro no longer states ${token}`);
+    }
+    const pagesDir = new URL('docs/src/pages/', root);
+    for (const file of readdirSync(pagesDir).filter((f) => f.endsWith('.astro'))) {
+      const source = read(`docs/src/pages/${file}`);
+      if (!source.includes('defineSections(')) continue;
+      assert.ok(source.includes('<PageBody'), `${file} declares sections but does not render them through <PageBody>`);
+      // The Scrollspy page demonstrates a table of contents inside its content.
+      if (file !== 'scrollspy.astro') {
+        assert.ok(!source.includes('table-of-contents'), `${file} writes its own table of contents`);
+      }
     }
   });
 
-  test('gives the banner its display and headline roles', () => {
-    assert.match(banner, /docs-page-title display-large on-primary-container-text/);
-    assert.match(banner, /docs-page-description headline-small on-primary-container-text/);
+  test('gives the page header its display and body roles', () => {
+    assert.match(header, /docs-page-title display-small/);
+    assert.match(header, /docs-page-description body-large on-surface-variant-text/);
   });
 
   test('versions the docs stylesheet so typography updates are not served stale', () => {
@@ -165,7 +164,8 @@ describe('the Astro chrome', () => {
         'navigation-rail no-autoinit docs-category-rail',
         'docs-page-navigation',
         'id="docs-navigation-dialog"',
-        'class="tabs"',
+        'side-sheet start docs-navigation-dialog',
+        'class="accordion"',
         'material-symbols',
         'aria-current',
         'active',
@@ -192,8 +192,9 @@ describe('the Astro chrome', () => {
     const script = read('docs/static/docs.js');
     const styles = read('docs/static/docs.css');
     assert.match(script, /navigationDialog\?\.showModal\(\)/);
-    assert.match(script, /navigationDialog\?\.addEventListener\("close", \(\) => navigationTrigger\?\.focus\(\)\)/);
-    assert.match(styles, /\.docs-navigation-dialog > section\s*\{[^}]*flex: 1 1 auto;[^}]*min-height: 0;[^}]*overflow-y: auto;/s);
+    assert.match(script, /navigationDialog\?\.addEventListener\("close", \(\) => \{[^}]*navigationTrigger\?\.checkVisibility\(\)/s);
+    assert.match(script, /if \(wide\.matches && navigationDialog\?\.open\) navigationDialog\.close\(\)/);
+    assert.match(styles, /\.docs-navigation-dialog > div\s*\{[^}]*flex: 1 1 auto;[^}]*min-height: 0;[^}]*overflow-y: auto;/s);
   });
 });
 

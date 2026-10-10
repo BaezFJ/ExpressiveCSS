@@ -17,8 +17,13 @@ export interface DocsPage {
   title?: string;
   /** The published path. Root-absolute, always `.html` -- these URLs are in search results. */
   route: string;
-  /** The one-line description in the page banner and in `llms.txt`. */
+  /** The one-line description in the page header and in `llms.txt`. */
   description: string;
+  /**
+   * The subheading this page sits under in its group's page list. Set it on
+   * the first page of each run; the pages after it inherit it until the next.
+   */
+  section?: string;
   /**
    * Other published paths that resolve here: the legacy routes kept for
    * compatibility, and — for the landing page — the canonical site root.
@@ -30,7 +35,6 @@ export interface DocsPage {
 export interface DocsGroup {
   label: string;
   icon: string;
-  blurb?: string;
   pages: DocsPage[];
 }
 
@@ -38,8 +42,6 @@ export const NAV: DocsGroup[] = [
   {
     label: "Start",
     icon: "home",
-    blurb:
-      "If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.",
     pages: [
       {
         id: "index",
@@ -271,6 +273,7 @@ export const NAV: DocsGroup[] = [
     pages: [
       {
         id: "buttons",
+        section: "Actions",
         label: "Buttons",
         route: "/buttons.html",
         description:
@@ -308,6 +311,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "cards",
+        section: "Containment",
         label: "Cards",
         route: "/cards.html",
         description:
@@ -351,6 +355,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "data_table",
+        section: "Data and charts",
         label: "Data table",
         route: "/data-table.html",
         description:
@@ -442,6 +447,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "dialogs",
+        section: "Dialogs and sheets",
         label: "Dialogs",
         route: "/dialogs.html",
         description:
@@ -471,6 +477,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "badges",
+        section: "Communication",
         label: "Badges",
         route: "/badges.html",
         description:
@@ -535,6 +542,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "carousel",
+        section: "Media and motion",
         label: "Carousel",
         route: "/carousel.html",
         description:
@@ -578,6 +586,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "toolbars",
+        section: "Search and commands",
         label: "Toolbars",
         route: "/toolbars.html",
         description:

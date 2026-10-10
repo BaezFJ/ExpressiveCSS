@@ -7,7 +7,34 @@ document.addEventListener("DOMContentLoaded", () => {
   const navigationDialog = document.getElementById("docs-navigation-dialog");
   const navigationTrigger = document.getElementById("docs-navigation-trigger");
   navigationTrigger?.addEventListener("click", () => navigationDialog?.showModal());
-  navigationDialog?.addEventListener("close", () => navigationTrigger?.focus());
+  // Return focus to the menu button, or to the current page in the page list
+  // when the window has grown past the button's range.
+  navigationDialog?.addEventListener("close", () => {
+    const target = navigationTrigger?.checkVisibility()
+      ? navigationTrigger
+      : document.querySelector('.docs-page-navigation [aria-current="page"]');
+    target?.focus();
+  });
+
+  // The table of contents is a closed disclosure below Large and an open
+  // column from Large up.
+  const toc = document.querySelector(".docs-toc > details");
+  const wide = window.matchMedia("(width >= 1200px)");
+  const syncToc = () => {
+    if (toc) toc.open = wide.matches;
+    // From Large up the page list is on screen and the menu button is hidden,
+    // so a drawer left open would close with nowhere to return focus.
+    if (wide.matches && navigationDialog?.open) navigationDialog.close();
+  };
+  syncToc();
+  wide.addEventListener("change", syncToc);
+
+  // The palette answers to Command+K on Apple platforms.
+  if (/Mac|iPhone|iPad/.test(navigator.platform)) {
+    document.querySelectorAll(".docs-search-shortcut").forEach((kbd) => {
+      kbd.textContent = "\u2318 K";
+    });
+  }
 
   const THEME_ICONS = {
     light: "light_mode",

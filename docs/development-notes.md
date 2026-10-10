@@ -711,18 +711,22 @@ and a page added to the catalogue is on the site with the next push to master.
   its whitespace is the author's. It escapes angle brackets and ampersands and
   leaves quotes alone. `check={false}` plus a `reason` opts one sample out, and
   `tests/semantics.test.js` reads it from the `docs/src` surface.
-- **One page hand-rolls the scaffold instead of `<PageBody>`, and must keep
-  doing so.** `floating-action-button.astro` writes its own container, row and
-  table of contents. Its content column is
-  `s12 m8 offset-m1 xl7 offset-xl1` *without* `docs-page-content`, so none of
-  the `.docs-page-content .docs-section` typography in `docs.css` reaches it.
-  `<PageBody>` always appends that class -- correctly, since `panes` passes a
-  custom `contentClass` and `docs.css` styles `.panes-page .docs-page-content`
-  -- so the page cannot go through it without changing how it renders. Add the
-  class in a change that owns the visual diff, not in a migration. Its copy of
-  the table-of-contents markup is pinned against `<PageBody>`'s by
-  `tests/docs-astro.test.js`; renaming `toc-wrapper` in one and not the other is
-  the failure that copy invites.
+- **Every page with sections goes through `<PageBody>`.** It renders the
+  table of contents before the `docs-page-content` column, so keyboard and
+  screen reader users meet it first. `docs.css` places it in a sticky column
+  from Large (1200px) and leaves it a closed accordion under the page header
+  below that; `docs.js` opens it from Large up. `wide` gives pages with wide
+  demos (Panes, Layout templates) the full width of the page. The FAB page used
+  to write its own scaffold without `docs-page-content`; it moved to
+  `<PageBody>` with the shell redesign, and `tests/docs-astro.test.js` now
+  fails any page that declares sections but writes its own table of contents.
+- **The shell follows the window classes.** The app bar spans the top. From
+  Expanded (840px) a collapsed rail holds the catalogue groups; from Large the
+  current group's pages sit beside it, split under the optional `section`
+  subheadings from `nav.ts`. Below Large the app bar's menu button opens the
+  whole catalogue as a modal start-edge side sheet. `<main>` and the footer are
+  offset by `--docs-rail-width` and `--docs-list-width`, which only the media
+  queries in `docs.css` set.
 - **A page needing its own `<head>` content puts `slot="head"` on the element.**
   `DocsLayout` forwards the named slot to `BaseLayout`, which renders it last in
   the head. Fonts no longer go there: `BaseLayout` loads the compiled sheet,
@@ -763,9 +767,7 @@ and a page added to the catalogue is on the site with the next push to master.
   verification. It selects the title, summary and content column, removes
   browser-only decoration, restores section headings from the page's own table
   of contents, preserves GFM tables and fenced samples, and rewrites links to
-  other canonical pages to their `.html.md` counterparts. The one hand-rolled
-  FAB scaffold is why the adapter has a structural fallback when
-  `.docs-page-content` is absent. The landing page publishes as
+  other canonical pages to their `.html.md` counterparts. The landing page publishes as
   `/index.html.md`; every other counterpart appends `.md` to the established
   `.html` route. `BaseLayout` advertises `/llms.txt` with `rel="describedby"`
   and `DocsLayout` supplies the page-specific
@@ -834,7 +836,7 @@ losing its name or two sharing one — moves no pixel. The two are complementary
 
 **`docs/src/data/nav.ts` is the only page inventory** (`adr/0003`): every
 canonical page's id, group, label, title, description, published route and
-legacy aliases, in one file. The pages, the navigation, the footer, the redirects,
+legacy aliases, in one file. The pages, the navigation, search, the redirects,
 `llms.txt` and the verifier all read it, so adding a page is one edit plus one
 `.astro` file.
 

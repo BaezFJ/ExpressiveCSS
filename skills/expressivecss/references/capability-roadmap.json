@@ -10,7 +10,7 @@
     "nodeVersion": "v24.21.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "d1ba450a9053a5adc356354105d98d9572bd9058a0fbaf2ec2f7e94406c21d50",
+    "reportSha256": "d46ea5a9cb49b111a75e343b9f44b8ba6238074bc6a8b10d1de557f1a9687de0",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
