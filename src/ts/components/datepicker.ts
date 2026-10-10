@@ -319,6 +319,8 @@ export class Datepicker extends Component<DatepickerOptions> {
   private _y: number;
   private _m: number;
   private displayPlugin: DockedDisplayPlugin;
+  /** Rows renderRow has already checked, so renderBody does not parse them again. */
+  private _checkedRows = new Set<string>();
   private footer: HTMLElement;
   /** Nesting depth of {@link _batchDraws}; > 0 means draws are being collected. */
   private _drawDepth = 0;
@@ -992,13 +994,14 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   /** Assemble calendar cells; reject unsupported elements and attributes. */
   renderRow(days, isRTL, isRowSelected) {
-    return (
+    const row =
       '<tr class="datepicker-row' +
       (isRowSelected ? ' is-selected' : '') +
       '">' +
       Datepicker._calendarMarkup((isRTL ? days.reverse() : days).join(''), 'tr') +
-      '</tr>'
-    );
+      '</tr>';
+    this._checkedRows.add(row);
+    return row;
   }
 
   /** Assemble calendar rows; reject unsupported elements and attributes. */
@@ -1026,7 +1029,11 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   /** Wrap calendar rows after validating and encoding their contents. */
   renderBody(rows) {
-    return '<tbody>' + Datepicker._calendarMarkup(rows.join(''), 'tbody') + '</tbody>';
+    const html = rows.join('');
+    // An overridden renderRow, or rows built by hand, still get checked here.
+    const checked = rows.every(row => this._checkedRows.has(row));
+    this._checkedRows.clear();
+    return '<tbody>' + (checked ? html : Datepicker._calendarMarkup(html, 'tbody')) + '</tbody>';
   }
 
   private static _calendarMarkup(html: string, parent: string): string {

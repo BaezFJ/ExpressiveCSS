@@ -113,7 +113,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the map, which leaves MapLibre to the page: 64,375 gzip bytes (+2,807).
   // Reviewed Autocomplete highlighting inside text nodes for unsafe HTML labels: 64,477 gzip bytes (+102).
   // Reviewed hot-path fixes in Datepicker, Autocomplete, Particles, Carousel and Tabs: 64,617 gzip bytes (+140).
-  assert.ok(sizes(js).gzip <= 64617, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed idle document listeners, repeat Init() calls and hot-path fixes in ScrollSpy, MapView, PieChart, Snackbar, Slider, the heatmap, Menu and Datepicker: 64,860 gzip bytes (+243).
+  assert.ok(sizes(js).gzip <= 64860, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

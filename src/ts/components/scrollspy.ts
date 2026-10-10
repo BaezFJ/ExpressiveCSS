@@ -126,8 +126,11 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
       best = ScrollSpy._nearestAbove(retained) ?? retained[0];
     }
 
-    const next = best ? ScrollSpy._linkFor(best.el.id, best.options) : null;
     const active = ScrollSpy._active.get(resolver);
+    // Most callbacks only move a ratio within the same section. Its link is
+    // already marked, so skip the document-wide lookup.
+    if (best && active === best && best._link?.isConnected) return;
+    const next = best ? ScrollSpy._linkFor(best.el.id, best.options) : null;
     if (active === best && active?._link === next) return;
     ScrollSpy._clearActive(resolver);
     if (!next) return;

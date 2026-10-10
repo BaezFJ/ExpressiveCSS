@@ -36,6 +36,28 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Idle components no longer listen to the whole document. Carousel attaches
+  its pointer listeners while a mouse press is down, Tooltip listens for Escape
+  while open, and the docked date picker listens for outside clicks while
+  shown.
+- Calling `Forms.Init()`, `BottomSheets.Init()` or `SideSheets.Init()` again,
+  as a page that loads both the root and `/modular` entries can, no longer
+  adds a second set of document listeners.
+- `Menu.destroy()` no longer throws when the menu's target element is missing,
+  which used to leave its listeners attached.
+- `Utils.throttle` times calls with `performance.now()`, so a system clock
+  change cannot hold a call back.
+- More hot-path fixes:
+  - ScrollSpy skips the document-wide link lookup while the same section
+    stays current.
+  - MapView finds its zoom buttons once, not on every `move` event.
+  - PieChart reuses one percent formatter per legend instead of making one
+    per row.
+  - Snackbar measures its width once per swipe, not on every pointer move.
+  - Slider updates once per drag frame. Its `pointermove` update also ran
+    before the browser moved the value.
+  - The heatmap tooltip measures its cell before writing to the page.
+  - Datepicker checks each calendar row's markup once.
 - Less work on hot paths:
   - Datepicker arrow keys inside the shown month move focus without
     redrawing the grid.

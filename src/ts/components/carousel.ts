@@ -353,9 +353,6 @@ export class Carousel extends Component<CarouselOptions> {
     });
     this._scroller.addEventListener('pointerdown', this._handleTrackPointerDown);
     this._scroller.addEventListener('wheel', this._handleNativeScroll, { passive: true });
-    document.addEventListener('pointermove', this._handleTrackPointerMove);
-    document.addEventListener('pointerup', this._handleTrackPointerUp);
-    document.addEventListener('pointercancel', this._handleTrackPointerUp);
     this._scroller.addEventListener('click', this._handleTrackClick, true);
     this._scroller.addEventListener('dragstart', this._handleTrackDragStart);
     this._scroller.addEventListener('transitionend', this._handleItemResize);
@@ -375,9 +372,7 @@ export class Carousel extends Component<CarouselOptions> {
     this._scroller.removeEventListener('scroll', this._handleTrackScroll);
     this._scroller.removeEventListener('pointerdown', this._handleTrackPointerDown);
     this._scroller.removeEventListener('wheel', this._handleNativeScroll);
-    document.removeEventListener('pointermove', this._handleTrackPointerMove);
-    document.removeEventListener('pointerup', this._handleTrackPointerUp);
-    document.removeEventListener('pointercancel', this._handleTrackPointerUp);
+    this._setDragListeners(false);
     this._scroller.removeEventListener('click', this._handleTrackClick, true);
     this._scroller.removeEventListener('dragstart', this._handleTrackDragStart);
     this._scroller.removeEventListener('transitionend', this._handleItemResize);
@@ -511,6 +506,14 @@ export class Carousel extends Component<CarouselOptions> {
     this._finishScroll();
   };
 
+  /** The document only hears from a carousel while a mouse press is down on its track. */
+  private _setDragListeners(on: boolean) {
+    const method = on ? 'addEventListener' : 'removeEventListener';
+    document[method]('pointermove', this._handleTrackPointerMove);
+    document[method]('pointerup', this._handleTrackPointerUp);
+    document[method]('pointercancel', this._handleTrackPointerUp);
+  }
+
   _handleTrackPointerDown = (e: PointerEvent) => {
     this._handleNativeScroll();
     if (e.pointerType !== 'mouse' || e.button !== 0) return;
@@ -521,6 +524,7 @@ export class Carousel extends Component<CarouselOptions> {
     this._dragStartX = e.clientX;
     this._dragStartY = e.clientY;
     this._dragStartScroll = this._vertical ? this._scroller.scrollTop : this._scroller.scrollLeft;
+    this._setDragListeners(true);
   };
 
   _handleTrackPointerMove = (e: PointerEvent) => {
@@ -550,6 +554,7 @@ export class Carousel extends Component<CarouselOptions> {
     if (!this.pressed || e.pointerId !== this._dragPointerId) return;
     this.pressed = false;
     this._dragPointerId = null;
+    this._setDragListeners(false);
     this.el.classList.remove('dragging');
     try {
       this._scroller.releasePointerCapture(e.pointerId);

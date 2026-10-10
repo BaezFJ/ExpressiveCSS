@@ -117,7 +117,7 @@ describe('layout reads per frame and resize', () => {
 describe('throttled resize after a clock change', () => {
   beforeEach(resetBody);
 
-  test('a backwards clock jump does not hold the next call for the size of the jump', () => {
+  test('a backwards clock jump does not hold the trailing call', async () => {
     document.body.innerHTML = `<ul class="tabs"><li class="tab"><a class="active" href="#t1">1</a></li></ul><div id="t1"></div>`;
     const el = document.querySelector('.tabs');
     const counter = { reads: 0 };
@@ -125,13 +125,15 @@ describe('throttled resize after a clock change', () => {
     const instance = Expressive.Tabs.init(el);
     const now = Date.now;
     try {
+      await sleep(250); // let construction fall out of the throttle window
       const start = now();
       Date.now = () => start;
       window.dispatchEvent(new window.Event('resize'));
       counter.reads = 0;
       Date.now = () => start - 5000;
       window.dispatchEvent(new window.Event('resize'));
-      assert.equal(counter.reads, 1, 'the call waited out the time the clock went back');
+      await sleep(250);
+      assert.equal(counter.reads, 1, 'the trailing call waited out the time the clock went back');
     } finally {
       Date.now = now;
       instance.destroy();

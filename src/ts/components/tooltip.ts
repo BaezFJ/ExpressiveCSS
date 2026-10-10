@@ -220,7 +220,6 @@ export class Tooltip extends Component<TooltipOptions> {
       el.addEventListener('focus', this._handleFocus, true);
       el.addEventListener('blur', this._handleBlur, true);
     }
-    this.el.ownerDocument.addEventListener('keydown', this._handleKeydown, true);
   }
 
   _removeEventHandlers() {
@@ -230,6 +229,7 @@ export class Tooltip extends Component<TooltipOptions> {
       el.removeEventListener('focus', this._handleFocus, true);
       el.removeEventListener('blur', this._handleBlur, true);
     }
+    // Escape is only listened for while open; see open() and close().
     this.el.ownerDocument.removeEventListener('keydown', this._handleKeydown, true);
   }
 
@@ -241,6 +241,7 @@ export class Tooltip extends Component<TooltipOptions> {
     clearTimeout(this._exitDelayTimeout);
     clearTimeout(this._animationTimeout);
     this.isOpen = true;
+    this.el.ownerDocument.addEventListener('keydown', this._handleKeydown, true);
     // Update tooltip content with HTML attribute options
     this.options = { ...this.options, ...this._getAttributeOptions() };
     this._updateTooltipContent();
@@ -255,6 +256,7 @@ export class Tooltip extends Component<TooltipOptions> {
     this.isHovered = false;
     this.isFocused = false;
     this.isOpen = false;
+    this.el.ownerDocument.removeEventListener('keydown', this._handleKeydown, true);
     clearTimeout(this._enterDelayTimeout);
     this._setExitDelayTimeout();
   };

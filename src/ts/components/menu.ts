@@ -675,6 +675,8 @@ export class Menu extends Component<MenuOptions> implements Openable {
   }
 
   _resetMenuStyles() {
+    // destroy() runs this even when the menu target was never found.
+    if (!this.menuEl) return;
     this.menuEl.style.display = '';
     this._resetMenuPositioningStyles();
     this.menuEl.style.transform = '';

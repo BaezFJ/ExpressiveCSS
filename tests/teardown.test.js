@@ -303,21 +303,76 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), [], 'NavigationRail left its keydown listener attached');
   });
 
-  test('the docked display plugin detaches its document click handler', () => {
+  test('the docked display plugin listens to the document only while shown', () => {
     document.body.innerHTML = `<input type="text" class="datepicker">`;
     const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
       displayPlugin: 'docked'
     });
     try {
-      assert.ok(
-        watch.live().includes('click'),
-        'the docked plugin did not attach a document click handler'
-      );
+      assert.deepEqual(watch.live(), [], 'the hidden plugin listened to document clicks');
+      instance.displayPlugin.show();
+      assert.ok(watch.live().includes('click'), 'the shown plugin did not attach a document click handler');
+      instance.displayPlugin.hide();
+      assert.deepEqual(watch.live(), [], 'hide() left the document click handler attached');
+      instance.displayPlugin.show();
     } finally {
       instance.destroy();
     }
 
     assert.deepEqual(watch.live(), [], 'the docked plugin outlived the picker that owns it');
+  });
+
+  test('Carousel listens to document pointer events only during a press', () => {
+    document.body.innerHTML = `
+      <div class="carousel">
+        <a class="carousel-item" href="#one">one</a>
+        <a class="carousel-item" href="#two">two</a>
+      </div>`;
+    const instance = Expressive.Carousel.init(document.querySelector('.carousel'));
+    try {
+      const pointer = (type) => new window.PointerEvent(type, { bubbles: true, pointerId: 1, pointerType: 'mouse', button: 0 });
+      assert.deepEqual(watch.live().filter((type) => type.startsWith('pointer')), [], 'an idle carousel listened to the document');
+      instance._scroller.dispatchEvent(pointer('pointerdown'));
+      assert.ok(watch.live().includes('pointermove'), 'a press did not attach the drag listeners');
+      document.dispatchEvent(pointer('pointerup'));
+      assert.deepEqual(watch.live().filter((type) => type.startsWith('pointer')), [], 'pointerup left the drag listeners attached');
+      instance._scroller.dispatchEvent(pointer('pointerdown'));
+    } finally {
+      instance.destroy();
+    }
+    assert.deepEqual(watch.live(), [], 'destroy() mid-press left the drag listeners attached');
+  });
+
+  test('Tooltip listens for Escape only while open', () => {
+    document.body.innerHTML = `<button class="tooltipped" data-tooltip="Hi">x</button>`;
+    const instance = Expressive.Tooltip.init(document.querySelector('.tooltipped'));
+    try {
+      assert.deepEqual(watch.live(), [], 'a closed tooltip listened to document keydown');
+      instance.open();
+      assert.ok(watch.live().includes('keydown'), 'open() did not attach the Escape handler');
+      instance.close();
+      assert.deepEqual(watch.live(), [], 'close() left the Escape handler attached');
+      instance.open();
+    } finally {
+      instance.destroy();
+    }
+    assert.deepEqual(watch.live(), [], 'destroy() left the Escape handler attached');
+  });
+
+  test('Menu without a target destroys cleanly', () => {
+    document.body.innerHTML = `<a class="button menu-trigger" data-target="missing">Drop</a>`;
+    const instance = Expressive.Menu.init(document.querySelector('.menu-trigger'));
+    instance.destroy();
+    assert.equal(document.querySelector('.menu-trigger').Expressive_Menu, undefined);
+    assert.deepEqual(watch.live(), []);
+  });
+
+  test('calling Init() again adds no document listeners', () => {
+    // The root entry already ran these on import, as a page that also loads
+    // the modular entry would see.
+    Expressive.Forms.Init();
+    Expressive.SideSheets.Init();
+    assert.deepEqual(watch.live(), []);
   });
 });
 

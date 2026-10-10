@@ -43,8 +43,6 @@ export class DockedDisplayPlugin {
     this.container.classList.add('display-docked');
     this.container.append(container);
     el.parentElement.append(this.container);
-
-    document.addEventListener('click', this._handleDocumentClick);
   }
 
   private _handleDocumentClick = (e: MouseEvent) => {
@@ -54,9 +52,9 @@ export class DockedDisplayPlugin {
   };
 
   /**
-   * Tears the plugin down. The document listener holds a reference to this
-   * instance - and through it the whole picker subtree - so the owning
-   * component must call this from its own destroy().
+   * Tears the plugin down. While shown, the document listener holds a
+   * reference to this instance - and through it the whole picker subtree - so
+   * the owning component must call this from its own destroy().
    */
   destroy = () => {
     document.removeEventListener('click', this._handleDocumentClick);
@@ -76,6 +74,7 @@ export class DockedDisplayPlugin {
   show = () => {
     if (this.visible) return;
     this.visible = true;
+    document.addEventListener('click', this._handleDocumentClick);
     const coordinates = Utils._setAbsolutePosition(this.el, this.container, 'bottom', this.options.margin, this.options.transition, this.options.align);
 
     // @todo move to Util? -> duplicate code fragment with tooltip
@@ -93,6 +92,7 @@ export class DockedDisplayPlugin {
   hide = () => {
     if (!this.visible) return;
     this.visible = false;
+    document.removeEventListener('click', this._handleDocumentClick);
     // @todo move to Util? -> duplicate code fragment with tooltip
     this.container.removeAttribute('style');
     this.container.style.transition = `

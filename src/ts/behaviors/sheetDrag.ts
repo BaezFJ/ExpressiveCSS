@@ -45,11 +45,16 @@ const FLICK_TIMEOUT = 100;
 /** Past this the pointer was dragging, not tapping. Hand jitter, in pixels. */
 const DRAG_SLOP = 4;
 
+/** Selectors whose drag is already installed, so a second `Init()` is a no-op. */
+const installed = new Set<string>();
+
 /**
  * Register one sheet kind's drag handlers on the document. Called once per kind
  * at import time; there is nothing to tear down.
  */
 export function installSheetDrag(config: SheetDragConfig): void {
+  if (installed.has(config.selector)) return;
+  installed.add(config.selector);
   const coord = (event: PointerEvent) => (config.axis === 'x' ? event.clientX : event.clientY);
   let observer: MutationObserver;
 

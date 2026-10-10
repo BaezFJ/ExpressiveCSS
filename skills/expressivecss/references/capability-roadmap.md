@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `4cb104c95e032d6af863a03ce83b49c0e0c1729adbb34afe9b9d5180af16ce4d`.
+Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -44,8 +44,8 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs mat
 | [Line chart](#line-chart) | implemented | source-reviewed | recorded-scoped-pass | 1 |
 | [Column chart](#column-chart) | implemented | source-reviewed | recorded-scoped-pass | 1 |
 | [Bar chart](#bar-chart) | implemented | source-reviewed | recorded-scoped-pass | 1 |
-| [Pie chart](#pie-chart) | implemented | source-reviewed | recorded-scoped-pass | 1 |
-| [Heatmap chart](#heatmap-chart) | implemented | source-reviewed | recorded-scoped-pass | 1 |
+| [Pie chart](#pie-chart) | unassessed | needs-review | recorded-scoped-pass | 1 |
+| [Heatmap chart](#heatmap-chart) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Radar chart](#radar-chart) | implemented | source-reviewed | recorded-scoped-pass | 1 |
 | [Radial chart](#radial-chart) | implemented | source-reviewed | recorded-scoped-pass | 1 |
 | [Mixed chart](#mixed-chart) | implemented | source-reviewed | recorded-scoped-pass | 1 |
@@ -68,14 +68,14 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs mat
 | [Confetti](#confetti) | implemented | source-reviewed | recorded-scoped-pass | 0 |
 | [Particles](#particles) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Lightbox](#lightbox) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Map](#map) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Map](#map) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Search](#search) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Command palette](#command-palette) | implemented | source-reviewed | recorded-scoped-pass | 0 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Text fields](#text-fields) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Rich text editor](#rich-text-editor) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Drop zone](#drop-zone) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Drop zone](#drop-zone) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Select](#select) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Checkboxes](#checkboxes) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Radio buttons](#radio-buttons) | unassessed | needs-review | recorded-scoped-pass | 0 |
@@ -616,9 +616,9 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 ## Pie chart
 
-**implemented within the stated scope.** Slices drawn clockwise from the top from a figure's data table, with a legend of each row's cell and share, donut, values and sparkline modifiers, a <tfoot> total in the donut hole, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the slice.
+**unassessed within the stated scope.** Slices drawn clockwise from the top from a figure's data table, with a legend of each row's cell and share, donut, values and sparkline modifiers, a <tfoot> total in the donut hole, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the slice.
 
-Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/abstracts/_mixins.scss), [src/sass/components/_pie-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/components/_pie-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/components/lineChart.ts), [src/ts/components/pieChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/components/pieChart.ts).
+Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/abstracts/_mixins.scss), [src/sass/components/_pie-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/components/_pie-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/components/lineChart.ts), [src/ts/components/pieChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/components/pieChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
 
@@ -634,9 +634,9 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 ## Heatmap chart
 
-**implemented within the stated scope.** Every body cell of a figure's data table drawn as a shaded grid cell, with row headers beside the grid, column headers below, a scale naming the lowest and highest cells, values, data-label short or hidden labels, data-min and data-max, gaps, and a pointer and keyboard tooltip that moves cell by cell.
+**unassessed within the stated scope.** Every body cell of a figure's data table drawn as a shaded grid cell, with row headers beside the grid, column headers below, a scale naming the lowest and highest cells, values, data-label short or hidden labels, data-min and data-max, gaps, and a pointer and keyboard tooltip that moves cell by cell.
 
-Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/abstracts/_mixins.scss), [src/sass/components/_heatmap-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/components/_heatmap-chart.scss), [src/ts/components/heatmapChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/components/heatmapChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/components/lineChart.ts).
+Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/abstracts/_mixins.scss), [src/sass/components/_heatmap-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/components/_heatmap-chart.scss), [src/ts/components/heatmapChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/components/heatmapChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/components/lineChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
 
@@ -1033,9 +1033,9 @@ Web adaptation: ExpressiveCSS media behavior, not an upstream component contract
 
 ## Map
 
-**implemented within the stated scope.** MapLibre map with themed OpenFreeMap styles, markers with labels, tooltips, popups and dragging, routes, arcs, clusters, and zoom, compass, locate and full screen controls.
+**unassessed within the stated scope.** MapLibre map with themed OpenFreeMap styles, markers with labels, tooltips, popups and dragging, routes, arcs, clusters, and zoom, compass, locate and full screen controls.
 
-Source review: source-reviewed, 2026-10-09. [src/sass/components/_map.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/components/_map.scss), [src/ts/components/mapView.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/components/mapView.ts).
+Source review: needs-review, 2026-10-09. [src/sass/components/_map.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/components/_map.scss), [src/ts/components/mapView.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/components/mapView.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components).
 
@@ -1148,9 +1148,9 @@ Web adaptation: The page supplies Tiptap's Editor class and extensions; the comp
 
 ## Drop zone
 
-**implemented within the stated scope.** A label-sized native file input with a dragover state and a list of chosen file names and locale-formatted sizes.
+**unassessed within the stated scope.** A label-sized native file input with a dragover state and a list of chosen file names and locale-formatted sizes.
 
-Source review: source-reviewed, 2026-10-06. [src/sass/components/forms/_drop-zone.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/components/forms/_drop-zone.scss), [src/ts/behaviors/forms.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/behaviors/forms.ts).
+Source review: needs-review, 2026-10-06. [src/sass/components/forms/_drop-zone.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/components/forms/_drop-zone.scss), [src/ts/behaviors/forms.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/behaviors/forms.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
 
