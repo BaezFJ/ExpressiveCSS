@@ -416,6 +416,7 @@ The documentation source lives in `docs/src/` and is published at
 | `docs/src` | Astro documentation and examples | Yes |
 | `mcp/expressivecss` | Independently versioned MCP package | Yes |
 | `skills/expressivecss` | Agent guidance and generated component references | Yes |
+| `skills/expressivecss-review` | Scored interface review that runs five specialist subagents | Yes |
 | `scripts`, `tests`, `visual` | Generators, verification, and test tooling | Source only |
 | `semantics.json`, `llm.md`, `m3-guidelines.md` | Markup rules, API reference, design guidance | Yes |
 | `SEMANTICS.md`, generated skill/MCP data | Derived files checked for drift | Yes |

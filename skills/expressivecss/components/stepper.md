@@ -9,7 +9,7 @@ Component ID: `stepper`
 
 Contract: ExpressiveCSS 0.13.1
 
-Contract SHA-256: `943d1954405337bea2d73053b650d0629a25feb28f8332dc140f6a32feb91a81`
+Contract SHA-256: `3e0a3c3678df98ee4b7f0fb553d9531b3dc2be1f038aa0a780920c4ee471496b`
 
 #### Selection and adaptation
 
