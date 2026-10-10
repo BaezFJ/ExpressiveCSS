@@ -12,7 +12,7 @@ All paths are relative to the base skill directory in your shared context.
 - `expressivecss-accessibility/SKILL.md` and `expressivecss-accessibility/references/web-checks.md`.
 - `expressivecss-design/references/performance.md`.
 
-If an `expressivecss-mcp` server is connected, `quality_inspector` runs scoped static checks and lists the review areas it did not inspect; copy its `uncheckedAreas` and `blockedChecks` into your BLOCKED list.
+If an `expressivecss-mcp` server is connected, `quality_inspector` runs scoped static checks and lists the review areas it did not inspect. Call it without `runCommands`, because that option runs the project's own npm scripts; copy its `uncheckedAreas` and `blockedChecks` into your BLOCKED list.
 
 ## What to check
 
