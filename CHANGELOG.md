@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- The `expressivecss-review` agent skill reviews a page, template, fragment
+  or screenshot with five specialist subagents (theme and tokens, layout,
+  component markup, lifecycle and accessibility, framework rules). It reuses
+  the `expressivecss` guides, version resolver and `expressivecss-lint`, and
+  returns one report scored out of 100 with five 20-point sections. One or two
+  critical findings cap the score at 69, and three or more at 49.
 - `.map` is an interactive map built on MapLibre. The page installs
   `maplibre-gl` and passes the module to `MapView.init()`; ExpressiveCSS does
   not bundle it. `.map-marker` children sit at their `data-lng-lat`, can open
