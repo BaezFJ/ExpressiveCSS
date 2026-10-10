@@ -192,7 +192,8 @@ describe('the Astro chrome', () => {
     const script = read('docs/static/docs.js');
     const styles = read('docs/static/docs.css');
     assert.match(script, /navigationDialog\?\.showModal\(\)/);
-    assert.match(script, /navigationDialog\?\.addEventListener\("close", \(\) => navigationTrigger\?\.focus\(\)\)/);
+    assert.match(script, /navigationDialog\?\.addEventListener\("close", \(\) => \{[^}]*navigationTrigger\?\.checkVisibility\(\)/s);
+    assert.match(script, /if \(wide\.matches && navigationDialog\?\.open\) navigationDialog\.close\(\)/);
     assert.match(styles, /\.docs-navigation-dialog > div\s*\{[^}]*flex: 1 1 auto;[^}]*min-height: 0;[^}]*overflow-y: auto;/s);
   });
 });
