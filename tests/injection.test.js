@@ -260,3 +260,32 @@ describe('Carousel generated names', () => {
     }
   });
 });
+
+describe('Autocomplete highlights matches without re-parsing markup', () => {
+  beforeEach(resetBody);
+
+  test('a match inside a sanitized attribute cannot close it', () => {
+    document.body.innerHTML = '<input type="text">';
+    const input = document.querySelector('input');
+    const instance = Expressive.Autocomplete.init(input, { allowUnsafeHTML: true });
+    try {
+      // html5lib-style sanitizers leave a raw < inside attribute values. The
+      // old code spliced the highlight span into this string at the "q", and
+      // its quotes closed alt early, so the second <img> became markup.
+      const label = '<img src="x" alt="q<img src=1 onerror=alert(1)>"> <b>Quince</b> pie';
+      input.value = 'pie';
+      let item = instance._createMenuItem({ id: '1', text: label });
+      assert.equal(item.querySelectorAll('img').length, 1, 'an attribute became markup');
+      assert.equal(item.querySelector('b').textContent, 'Quince');
+      assert.equal(item.querySelector('.highlight').textContent, 'pie');
+
+      input.value = 'q';
+      item = instance._createMenuItem({ id: '1', text: label });
+      assert.equal(item.querySelectorAll('img').length, 1, 'an attribute became markup');
+      assert.equal(item.querySelector('[onerror]'), null);
+      assert.equal(item.querySelector('.highlight').textContent, 'Q');
+    } finally {
+      instance.destroy();
+    }
+  });
+});

@@ -36,6 +36,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Autocomplete with `allowUnsafeHTML` highlights the typed text inside the
+  label's text only. It used to insert the highlight into the HTML string, so a
+  match inside an attribute value could close the attribute and turn the rest
+  of the sanitized label into markup.
 - Table-of-contents links are 48dp tall, the Material touch target, instead
   of 32dp. `--md-comp-toc-item-height` sets a denser height.
 - In Firefox, a carousel that moved several items while its item sizes were
