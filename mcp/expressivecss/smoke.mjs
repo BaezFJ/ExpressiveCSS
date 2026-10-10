@@ -996,6 +996,21 @@ const transport = new StdioClientTransport({
   assert.equal(execFileSync(process.execPath, ['--input-type=module', '-e', "import('./server.js').then(() => console.log('imported'))"], { cwd: packageDir, encoding: 'utf8', timeout: 30_000 }).trim(), 'imported');
 }
 
+{
+  const { redactSensitiveText, readInspectionFile } = await import('./server.js');
+  // Command output is captured up to 160K characters. Redaction must stay linear on long token runs.
+  const startedAt = Date.now();
+  for (const output of ['ab12'.repeat(40_000), 'a-'.repeat(80_000), 'a'.repeat(160_000)]) redactSensitiveText(output);
+  assert.ok(Date.now() - startedAt < 2_000, `redaction took ${Date.now() - startedAt} ms`);
+  const redacted = redactSensitiveText('token eyJhbGciOiJIUzI1.eyJzdWIiOiIxMjM0.SflKxwRJSMeKKF2QT git+https://user:pass@example.com/x');
+  assert.doesNotMatch(redacted, /eyJhbGci|user:pass/u);
+  assert.match(redacted, /git\+https:\/\/\[REDACTED\]@example\.com/u);
+  if (process.platform === 'linux') {
+    // procfs reports size 0 for files with content. A size-bound read must fail, not return a truncated file.
+    await assert.rejects(readInspectionFile('/proc/self/status', '/proc', 1024 * 1024), /changed while reading/u);
+  }
+}
+
 const client = new Client({ name: 'expressivecss-mcp-smoke', version: '0.1.0' });
 
 try {
@@ -1304,6 +1319,7 @@ try {
     },
   });
   assert.ok(boundedRules.structuredContent.issueCount <= 200);
+  assert.equal(boundedRules.content[0].text.includes('\n  '), false, 'tool results are compact JSON');
   assert.ok(boundedRules.structuredContent.blockedChecks.includes('static inspection limit reached'));
 
   const nestedMarkupStartedAt = Date.now();
@@ -2288,6 +2304,52 @@ try {
     assert.notEqual(timedOut.structuredContent.status, 'pass');
   } finally {
     await timeoutClient.close();
+  }
+
+  const rootsClient = new Client({ name: 'expressivecss-mcp-project-roots-smoke', version: '0.1.0' });
+  try {
+    await rootsClient.connect(new StdioClientTransport({
+      command: process.execPath,
+      args: [path.join(packageDir, 'server.js')],
+      cwd: packageDir,
+      stderr: 'pipe',
+      env: { ...process.env, EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS: outsideDir },
+    }));
+    // A root outside the allowlist must not become a file-existence or hash oracle.
+    for (const [name, args] of [
+      ['quality_inspector', { projectRoot: os.tmpdir(), files: [outsideFile] }],
+      ['component_catalog', { projectRoot: os.tmpdir() }],
+      ['setup_expert', { projectRoot: path.join(outsideDir, 'missing') }],
+    ]) {
+      const denied = await rootsClient.callTool({ name, arguments: args });
+      assert.equal(denied.isError, true, `${name} accepted a root outside the allowlist`);
+      assert.match(denied.content[0].text, /EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS/u);
+    }
+    const allowed = await rootsClient.callTool({ name: 'quality_inspector', arguments: { projectRoot: outsideDir, files: [] } });
+    assert.notEqual(allowed.isError, true, allowed.content[0].text);
+    const defaultRoot = await rootsClient.callTool({ name: 'component_catalog', arguments: {} });
+    assert.notEqual(defaultRoot.isError, true, 'the operator default root needs no allowlist entry');
+  } finally {
+    await rootsClient.close();
+  }
+
+  // Set but empty or invalid allowlists fail closed instead of allowing every root.
+  for (const setting of ['', '[]', '[broken', '[42]']) {
+    const closedClient = new Client({ name: 'expressivecss-mcp-closed-roots-smoke', version: '0.1.0' });
+    try {
+      await closedClient.connect(new StdioClientTransport({
+        command: process.execPath,
+        args: [path.join(packageDir, 'server.js')],
+        cwd: packageDir,
+        stderr: 'pipe',
+        env: { ...process.env, EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS: setting },
+      }));
+      const denied = await closedClient.callTool({ name: 'quality_inspector', arguments: { projectRoot: outsideDir, files: [outsideFile] } });
+      assert.equal(denied.isError, true, `allowlist ${JSON.stringify(setting)} allowed a client root`);
+      assert.equal(JSON.stringify(denied).includes('sha256'), false);
+    } finally {
+      await closedClient.close();
+    }
   }
 
   const trapTransport = new StdioClientTransport({
