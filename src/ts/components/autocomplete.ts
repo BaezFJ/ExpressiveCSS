@@ -525,11 +525,27 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
     // Text
     const inputText = this.el.value.toLocaleLowerCase();
-    const parts = this._highlightPartialText(inputText, (entry.text || entry.id).toString());
+    const label = (entry.text || entry.id).toString();
+    const parts = this._highlightPartialText(inputText, label);
     const div = document.createElement('div');
     div.setAttribute('style', 'line-height:1.2;font-weight:500;');
     if (this.options.allowUnsafeHTML) {
-      div.innerHTML = parts[0] + '<span class="highlight">' + parts[1] + '</span>' + parts[2];
+      // Highlight inside a parsed text node. Splicing the span into the HTML
+      // string put its quotes inside any attribute the match landed in, which
+      // closed that attribute and let the rest of it become markup.
+      div.innerHTML = label;
+      const walker = document.createTreeWalker(div, NodeFilter.SHOW_TEXT);
+      for (let node = walker.nextNode() as Text; node; node = walker.nextNode() as Text) {
+        const [before, match] = this._highlightPartialText(inputText, node.data);
+        if (!match) continue;
+        const matched = node.splitText(before.length);
+        matched.splitText(match.length);
+        const highlight = document.createElement('span');
+        highlight.classList.add('highlight');
+        matched.replaceWith(highlight);
+        highlight.append(matched);
+        break;
+      }
     } else {
       div.appendChild(document.createTextNode(parts[0]));
       if (parts[1]) {
