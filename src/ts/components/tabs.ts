@@ -1,5 +1,6 @@
 import { Carousel } from './carousel';
 import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Utils } from '../core/utils';
 
 export interface TabsOptions extends BaseOptions {
   /**
@@ -147,13 +148,17 @@ export class Tabs extends Component<TabsOptions> {
     this.el.removeEventListener('click', this._handleTabClick);
   }
 
-  _handleWindowResize = () => {
+  // Throttled like Carousel's: every bar re-measures on resize, and the left
+  // and right positions are both read before either is written.
+  _handleWindowResize = Utils.throttle(() => {
     this._setTabsAndTabWidth();
     if (this._tabWidth !== 0 && this._tabsWidth !== 0) {
-      this._indicator.style.left = this._calcLeftPos(this._activeTabLink) + 'px';
-      this._indicator.style.right = this._calcRightPos(this._activeTabLink) + 'px';
+      const left = this._calcLeftPos(this._activeTabLink);
+      const right = this._calcRightPos(this._activeTabLink);
+      this._indicator.style.left = left + 'px';
+      this._indicator.style.right = right + 'px';
     }
-  };
+  }, 200);
 
   _queryTabLinks() {
     return this.el.querySelectorAll<HTMLAnchorElement>(

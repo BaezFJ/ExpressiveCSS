@@ -1040,6 +1040,67 @@ describe('Autocomplete menuOptions.onItemClick', () => {
   });
 });
 
+describe('Autocomplete typing', () => {
+  for (const isMultiSelect of [false, true]) {
+    test(`renders each result once per keystroke in an open menu (isMultiSelect: ${isMultiSelect})`, async () => {
+      document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac"></div>`;
+      const el = document.getElementById('ac');
+      const data = [{ id: 'apple', text: 'Apple' }, { id: 'apricot', text: 'Apricot' }, { id: 'pear', text: 'Pear' }];
+      const instance = Expressive.Autocomplete.init(el, { data, isMultiSelect, menuOptions: { inDuration: 0, outDuration: 0 } });
+      try {
+        el.focus();
+        el.value = 'a';
+        fire(el, 'input');
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        assert.equal(instance.menu.isOpen, true);
+        let rendered = 0;
+        const create = instance._createMenuItem.bind(instance);
+        instance._createMenuItem = (entry) => (rendered++, create(entry));
+        el.value = 'ap';
+        fire(el, 'input');
+        assert.deepEqual([...instance.container.querySelectorAll('li')].map((li) => li.dataset.id), ['apple', 'apricot']);
+        // One pass over the two matches. The old results used to be rendered
+        // first, and isMultiSelect rendered the new ones twice.
+        assert.equal(rendered, 2);
+      } finally {
+        instance.destroy();
+      }
+    });
+  }
+});
+
+describe('Autocomplete with delayed results', () => {
+  for (const isMultiSelect of [false, true]) {
+    test(`a new query clears the active result before its results arrive (isMultiSelect: ${isMultiSelect})`, async () => {
+      document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac"></div>`;
+      const el = document.getElementById('ac');
+      const data = [{ id: 'apple', text: 'Apple' }, { id: 'pear', text: 'Pear' }];
+      let pending = null;
+      const instance = Expressive.Autocomplete.init(el, {
+        data, isMultiSelect, menuOptions: { inDuration: 0, outDuration: 0 },
+        onSearch: (text, ac) => { pending = () => ac.setMenuItems(data.filter((d) => d.text.toLowerCase().includes(text.toLowerCase()))); }
+      });
+      const key = (key) => el.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+      try {
+        el.focus();
+        el.value = 'a';
+        fire(el, 'input');
+        pending();
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        key('ArrowDown');
+        assert.equal(instance.activeIndex, 0, 'Apple is active');
+        el.value = 'pear';
+        fire(el, 'input');
+        key('Enter'); // before the results for "pear" arrive
+        assert.deepEqual(instance.selectedValues, []);
+        assert.equal(el.value, 'pear');
+      } finally {
+        instance.destroy();
+      }
+    });
+  }
+});
+
 describe('Chips', () => {
   test('a chip is excluded from the generic button rules', () => {
     // Assist and suggestion chips are real <button>s, which put them inside

@@ -91,6 +91,25 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       const drifted = await painted(40);
       assert.ok(center(drifted.box).x > 220, `vx drifts the particle right, got ${JSON.stringify(center(drifted.box))}`);
       assert.deepEqual(drifted.color, [255, 0, 0], 'the color option overrides the theme color');
+      // Scrolled out of view, the loop stops painting; back in view, it resumes.
+      const paints = (frames) => page.evaluate((frames) => new Promise((resolve) => {
+        const ctx = document.getElementById('particles').getContext('2d');
+        let count = 0;
+        const clear = ctx.clearRect;
+        ctx.clearRect = function (...args) { count++; return clear.apply(this, args); };
+        const read = () => {
+          if (--frames > 0) return requestAnimationFrame(read);
+          delete ctx.clearRect;
+          resolve(count);
+        };
+        requestAnimationFrame(read);
+      }), frames);
+      await page.locator('#box').evaluate((box) => { box.style.marginTop = '2000px'; });
+      await painted(5);
+      assert.equal(await paints(20), 0, 'an offscreen canvas keeps painting');
+      await page.locator('#box').evaluate((box) => { box.style.marginTop = ''; });
+      await painted(5);
+      assert.ok(await paints(20) > 0, 'the canvas does not resume painting when back in view');
       await page.locator('#box').evaluate((box) => { box.style.width = '300px'; });
       await painted(3);
       assert.deepEqual(await page.locator('#particles').evaluate((c) => [c.width / devicePixelRatio, c.clientWidth]), [300, 300], 'the pixel buffer follows a resize');

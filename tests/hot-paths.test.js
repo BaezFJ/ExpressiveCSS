@@ -65,6 +65,80 @@ describe('layout reads per scroll tick', () => {
 });
 
 
+describe('layout reads per frame and resize', () => {
+  beforeEach(resetBody);
+
+  test('Carousel parallax reads every item before writing any', () => {
+    document.body.innerHTML = `
+      <div class="carousel" aria-label="Places">
+        ${[1, 2, 3, 4].map((n) => `<a class="carousel-item" href="#i${n}">${n}</a>`).join('')}
+      </div>`;
+    const instance = Expressive.Carousel.init(document.querySelector('.carousel'));
+    try {
+      const log = [];
+      for (const item of instance.images) {
+        item.getBoundingClientRect = () => (log.push('read'), { top: 0, left: 0, width: 10, height: 10 });
+        const set = item.style.setProperty.bind(item.style);
+        item.style.setProperty = (...args) => (log.push('write'), set(...args));
+      }
+      instance._updateParallax();
+      assert.equal(log.filter((entry) => entry === 'read').length, 4);
+      // A read after a write forces a style recalculation, once per item.
+      assert.equal(log.lastIndexOf('read') < log.indexOf('write'), true, log.join(' '));
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('Tabs re-measures at most once per burst of resize events', async () => {
+    document.body.innerHTML = `
+      <ul class="tabs">
+        <li class="tab"><a class="active" href="#t1">1</a></li>
+        <li class="tab"><a href="#t2">2</a></li>
+      </ul>
+      <div id="t1">one</div><div id="t2">two</div>`;
+    const el = document.querySelector('.tabs');
+    const counter = { reads: 0 };
+    stubRect(el, counter);
+    const instance = Expressive.Tabs.init(el);
+    try {
+      await sleep(250); // let construction fall out of the throttle window
+      counter.reads = 0;
+      for (let i = 0; i < 10; i++) window.dispatchEvent(new window.Event('resize'));
+      assert.equal(counter.reads, 1, `ten resize events measured ${counter.reads} times`);
+      await sleep(250);
+      assert.equal(counter.reads, 2, 'the trailing resize was not measured');
+    } finally {
+      instance.destroy();
+    }
+  });
+});
+
+describe('throttled resize after a clock change', () => {
+  beforeEach(resetBody);
+
+  test('a backwards clock jump does not hold the next call for the size of the jump', () => {
+    document.body.innerHTML = `<ul class="tabs"><li class="tab"><a class="active" href="#t1">1</a></li></ul><div id="t1"></div>`;
+    const el = document.querySelector('.tabs');
+    const counter = { reads: 0 };
+    stubRect(el, counter);
+    const instance = Expressive.Tabs.init(el);
+    const now = Date.now;
+    try {
+      const start = now();
+      Date.now = () => start;
+      window.dispatchEvent(new window.Event('resize'));
+      counter.reads = 0;
+      Date.now = () => start - 5000;
+      window.dispatchEvent(new window.Event('resize'));
+      assert.equal(counter.reads, 1, 'the call waited out the time the clock went back');
+    } finally {
+      Date.now = now;
+      instance.destroy();
+    }
+  });
+});
+
 describe('Snackbar countdown', () => {
   beforeEach(resetBody);
 
@@ -138,6 +212,26 @@ describe('Datepicker redraws', () => {
         // setDateFromInput -> setDate -> gotoDate, then the direct draw(),
         // then the trailing gotoDate: three draws for one click.
         assert.equal(counter.draws, 1, `one click produced ${counter.draws} draws`);
+      }
+    );
+  });
+
+  test('arrow keys inside the shown month move focus without a redraw', () => {
+    withDrawCounter(
+      `<input type="text" class="datepicker" value="Jan 15, 2024">`,
+      {},
+      (input, instance, counter) => {
+        const day = (n, m = 0) => instance.calendarEl.querySelector(
+          `.datepicker-day-button[data-year="2024"][data-month="${m}"][data-day="${n}"]`);
+        const press = (button, key) => button.dispatchEvent(
+          new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+        press(day(15), 'ArrowRight');
+        assert.equal(counter.draws, 0, 'a move within January redrew the grid');
+        assert.equal(day(16).tabIndex, 0);
+        assert.equal(day(15).tabIndex, -1);
+        press(day(16), 'PageDown');
+        assert.equal(counter.draws, 1, 'a move into February must draw it');
+        assert.equal(day(16, 1).tabIndex, 0);
       }
     );
   });

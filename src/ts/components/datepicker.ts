@@ -1492,7 +1492,11 @@ export class Datepicker extends Component<DatepickerOptions> {
       || (date.getFullYear() === minYear && date.getMonth() < (minMonth ?? 0))
       || (date.getFullYear() === maxYear && date.getMonth() > (maxMonth ?? 11))) return;
     this._focusedDate = date;
-    this.gotoDate(date);
+    // Moving within the shown month only moves focus; redrawing the grid on
+    // every held arrow key rebuilt 42 cells for nothing.
+    const { year, month } = this.calendars[0];
+    if (date.getFullYear() === year && date.getMonth() === month) this._syncCalendarFocus(true);
+    else this.gotoDate(date);
   };
 
   _handleCalendarClick = (e) => {

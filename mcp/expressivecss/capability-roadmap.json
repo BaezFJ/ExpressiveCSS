@@ -10,7 +10,7 @@
     "nodeVersion": "v24.21.0",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "92bd28e1b6f4129c2dd8322ff7679a79101dfb3b2bd603cd54bb3cb18ed47749",
+    "reportSha256": "4cb104c95e032d6af863a03ce83b49c0e0c1729adbb34afe9b9d5180af16ce4d",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -3310,9 +3310,9 @@
       "slug": "particles",
       "title": "Particles",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-10-09",
       "scope": "A canvas that covers its positioned ancestor with drifting dots that fade near the edges and lean toward the pointer, with quantity, staticity, ease, size, color and drift options and the theme on-surface color by default.",
       "adaptation": "A canvas drawn with requestAnimationFrame, aria-hidden with pointer events off. The dot color comes from the canvas's CSS color, read each frame so theme changes apply. Reduced motion draws the dots once without motion.",
