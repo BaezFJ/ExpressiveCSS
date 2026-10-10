@@ -9,7 +9,7 @@ Component ID: `scrollspy`
 
 Contract: ExpressiveCSS 0.13.1
 
-Contract SHA-256: `494c4e3c43e4192a83efcb4fb031ac6928a2924a5cad93c26a9fcc3f6948218d`
+Contract SHA-256: `ef221744c3f3b3cc8b1a36561b5290c9c3101a1e61736a58ccec7dc8c3583994`
 
 #### Selection and adaptation
 
@@ -38,6 +38,8 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 Scrollspy watches a set of sections and which one is currently in view. The table of contents on the right of every documentation page is the live demo: the matching link gets `active`, and clicking a link scrolls to that section.
 
 Put `scrollspy` and an `id` on each section. The table of contents is a set of destinations within the page, so it lives in a labelled `<nav>`; use `table-of-contents` on its list and point each link at `#that-id`. `AutoInit()` starts every `.scrollspy` except those marked `no-autoinit`.
+
+Each link is at least 48dp tall, the Material touch target. For a denser list, set `--md-comp-toc-item-height` on the `.table-of-contents` list.
 
 #### Syntax
 
