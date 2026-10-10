@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `92bd28e1b6f4129c2dd8322ff7679a79101dfb3b2bd603cd54bb3cb18ed47749`.
+Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `4cb104c95e032d6af863a03ce83b49c0e0c1729adbb34afe9b9d5180af16ce4d`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -66,7 +66,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs mat
 | [Carousel](#carousel) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Marquee](#marquee) | implemented | source-reviewed | recorded-scoped-pass | 0 |
 | [Confetti](#confetti) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Particles](#particles) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Particles](#particles) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Lightbox](#lightbox) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Map](#map) | implemented | source-reviewed | recorded-scoped-pass | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
@@ -992,9 +992,9 @@ Web adaptation: A canvas drawn with requestAnimationFrame. The page canvas is an
 
 ## Particles
 
-**implemented within the stated scope.** A canvas that covers its positioned ancestor with drifting dots that fade near the edges and lean toward the pointer, with quantity, staticity, ease, size, color and drift options and the theme on-surface color by default.
+**unassessed within the stated scope.** A canvas that covers its positioned ancestor with drifting dots that fade near the edges and lean toward the pointer, with quantity, staticity, ease, size, color and drift options and the theme on-surface color by default.
 
-Source review: source-reviewed, 2026-10-09. [src/sass/components/_particles.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/components/_particles.scss), [src/ts/components/particles.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/components/particles.ts).
+Source review: needs-review, 2026-10-09. [src/sass/components/_particles.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/sass/components/_particles.scss), [src/ts/components/particles.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8/src/ts/components/particles.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components).
 

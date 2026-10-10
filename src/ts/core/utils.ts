@@ -272,7 +272,9 @@ export class Utils {
     return (...args: unknown[]) => {
       const now = Date.now();
       const remaining = wait - (now - previous);
-      if (remaining <= 0) {
+      // remaining > wait: the clock went back, which would otherwise hold the
+      // trailing call for as long as it jumped.
+      if (remaining <= 0 || remaining > wait) {
         clearTimeout(timeout);
         timeout = null;
         previous = now;

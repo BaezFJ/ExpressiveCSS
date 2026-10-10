@@ -36,6 +36,19 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Less work on hot paths:
+  - Datepicker arrow keys inside the shown month move focus without
+    redrawing the grid.
+  - Autocomplete renders the result list once per keystroke while its menu is
+    open. It used to render the previous results first, and twice more with
+    `isMultiSelect`.
+  - Particles stop animating and tracking the pointer while the canvas is off
+    screen.
+  - Carousel reads all item positions before writing parallax offsets and works
+    out item sizes before setting them, so scrolling no longer forces a style
+    recalculation per item.
+  - Tabs throttle their window resize handling.
+  - `Utils.throttle` no longer stalls when the system clock moves backwards.
 - Autocomplete with `allowUnsafeHTML` highlights the typed text inside the
   label's text only. It used to insert the highlight into the HTML string, so a
   match inside an attribute value could close the attribute and turn the rest

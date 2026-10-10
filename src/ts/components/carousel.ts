@@ -624,9 +624,9 @@ export class Carousel extends Component<CarouselOptions> {
     if (this._trackRaf !== null) return;
     this._trackRaf = requestAnimationFrame(() => {
       this._trackRaf = null;
+      // Read the nearest index before the parallax writes invalidate style.
+      const index = this._ignoreScroll ? this.center : this._nearestIndex();
       this._updateParallax();
-      if (this._ignoreScroll) return;
-      const index = this._nearestIndex();
       if (index !== this.center) this._syncActive(index, this.dragged);
     });
   };
@@ -667,52 +667,45 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   private _syncLayoutRoles(index: number) {
-    const setSize = (item: HTMLElement, size: 'large' | 'medium' | 'small') => {
-      if (this._authoredItemSizes.has(item)) return;
-      item.setAttribute('data-carousel-size', size);
-      this._generatedItemSizes.add(item);
+    // Every size is worked out before any is written. Writing `large` to all
+    // items and then reading clientWidth forced a layout in that interim
+    // state on every center change.
+    type Size = 'large' | 'medium' | 'small';
+    const sizes: Size[] = this.images.map(() => 'large');
+    const setSize = (i: number, size: Size) => {
+      if (this.images[i]) sizes[i] = size;
     };
-
-    this.images.forEach((item) => setSize(item, 'large'));
 
     if (
       this.el.classList.contains('flat') ||
       this.el.classList.contains('uncontained') ||
       (this.el.classList.contains('full-screen') && this._vertical)
     ) {
-      return;
-    }
-
-    if (
+      // Every item stays large.
+    } else if (
       this.el.classList.contains('hero') ||
       this.el.classList.contains('full-screen-horizontal')
     ) {
-      const next = this.images[index + 1];
-      if (next) setSize(next, 'small');
-      if (this.el.classList.contains('center-aligned')) {
-        const previous = this.images[index - 1];
-        if (previous) setSize(previous, 'small');
-      }
-      return;
+      setSize(index + 1, 'small');
+      if (this.el.classList.contains('center-aligned')) setSize(index - 1, 'small');
+    } else {
+      const width = this.el.clientWidth;
+      const desiredLargeCount = width >= 1600 ? 4 : width >= 1200 ? 3 : width >= 600 ? 2 : 1;
+      const largeCount = Math.min(desiredLargeCount, Math.max(1, this.count - 2));
+      this.el.classList.remove('multi-wide', 'multi-large', 'multi-extra-large');
+      if (largeCount === 2) this.el.classList.add('multi-wide');
+      else if (largeCount === 3) this.el.classList.add('multi-large');
+      else if (largeCount >= 4) this.el.classList.add('multi-extra-large');
+      this._generatedWideLayout = this._generatedWideLayout || largeCount > 1;
+      setSize(index + largeCount, 'medium');
+      setSize(index + largeCount + 1, 'small');
     }
 
-    const width = this.el.clientWidth;
-    const desiredLargeCount = width >= 1600 ? 4 : width >= 1200 ? 3 : width >= 600 ? 2 : 1;
-    const largeCount = Math.min(desiredLargeCount, Math.max(1, this.count - 2));
-    this.el.classList.remove('multi-wide', 'multi-large', 'multi-extra-large');
-    if (largeCount === 2) this.el.classList.add('multi-wide');
-    else if (largeCount === 3) this.el.classList.add('multi-large');
-    else if (largeCount >= 4) this.el.classList.add('multi-extra-large');
-    this._generatedWideLayout = this._generatedWideLayout || largeCount > 1;
-
-    for (let offset = 1; offset < largeCount; offset += 1) {
-      const item = this.images[index + offset];
-      if (item) setSize(item, 'large');
-    }
-    const medium = this.images[index + largeCount];
-    const small = this.images[index + largeCount + 1];
-    if (medium) setSize(medium, 'medium');
-    if (small) setSize(small, 'small');
+    this.images.forEach((item, i) => {
+      if (this._authoredItemSizes.has(item)) return;
+      item.setAttribute('data-carousel-size', sizes[i]);
+      this._generatedItemSizes.add(item);
+    });
   }
 
   private _syncAdaptiveMode() {
@@ -745,7 +738,7 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   private _updateParallax() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (this._motion.matches) {
       this.images.forEach((item) =>
         item.style.setProperty('--md-comp-carousel-item-parallax', '0px')
       );
@@ -758,8 +751,11 @@ export class Carousel extends Component<CarouselOptions> {
       : scrollerRect.left + scrollerRect.width / 2;
     const viewportSize = Math.max(1, this._vertical ? scrollerRect.height : scrollerRect.width);
 
-    this.images.forEach((item) => {
-      const rect = item.getBoundingClientRect();
+    // All reads, then all writes: a write between two reads forces a style
+    // recalculation per item on every scroll frame.
+    const rects = this.images.map((item) => item.getBoundingClientRect());
+    this.images.forEach((item, i) => {
+      const rect = rects[i];
       const itemCenter = this._vertical ? rect.top + rect.height / 2 : rect.left + rect.width / 2;
       const progress = Math.max(-1, Math.min(1, (itemCenter - viewportCenter) / viewportSize));
       item.style.setProperty('--md-comp-carousel-item-parallax', `${progress * -24}px`);

@@ -378,9 +378,16 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     const actualValue = this.el.value.toLocaleLowerCase();
     // Check if the input isn't empty, and that focus arrived by keyboard -
     // which is what `:focus-visible` means, and used to be a global flag this
-    // bundle maintained from four capture-phase document listeners.
-    if (this.oldVal !== actualValue && this.el.matches(':focus-visible')) {
-      this.open();
+    // bundle maintained from four capture-phase document listeners. An open
+    // menu is not re-rendered with the old results here: setMenuItems renders
+    // the new ones. Below minLength, open() still runs to clear the list.
+    if (this.oldVal !== actualValue) {
+      // The old results can stay on screen until setMenuItems replaces them,
+      // but none may stay active: Enter would select a result for the
+      // previous query.
+      this._resetCurrentElementPosition();
+      if (this.el.matches(':focus-visible')
+        && (!this.menu.isOpen || actualValue.length < this.options.minLength)) this.open();
     }
     this._inputChangeDetection(actualValue);
   };
@@ -687,8 +694,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
         (item) => !(selected.indexOf(<never>item.id) === -1)
       );
     }
+    // open() clears and renders the list itself.
     if (this.options.isMultiSelect) {
-      this._renderMenu();
+      if (!open) this._renderMenu();
     } else {
       this._refreshInputText();
     }

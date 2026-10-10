@@ -81,6 +81,7 @@ export class Particles extends Component<ParticlesOptions> {
   private _mouse = { x: 0, y: 0 };
   private _still = false;
   private _resizeObserver: ResizeObserver | null = null;
+  private _visibility: IntersectionObserver | null = null;
 
   constructor(el: HTMLElement, options: Partial<ParticlesOptions>) {
     super(el, options, Particles);
@@ -98,10 +99,14 @@ export class Particles extends Component<ParticlesOptions> {
       this._resizeObserver.observe(this.el);
     }
     if (this._still) return;
-    window.addEventListener('pointermove', this._onPointerMove, { passive: true });
-    // ponytail: keeps drawing while scrolled out of view; pause with an
-    // IntersectionObserver if pages stack many of these.
-    this._frame = requestAnimationFrame((now) => { this._last = now; this._draw(now); });
+    if (typeof IntersectionObserver === 'undefined') {
+      this._start();
+      return;
+    }
+    // Animates only while on screen. A canvas scrolled away, hidden or
+    // removed without destroy() stops drawing and following the pointer.
+    this._visibility = new IntersectionObserver(([entry]) => entry.isIntersecting ? this._start() : this._stop());
+    this._visibility.observe(this.el);
   }
 
   static get defaults(): ParticlesOptions {
@@ -122,14 +127,26 @@ export class Particles extends Component<ParticlesOptions> {
   }
 
   destroy() {
-    cancelAnimationFrame(this._frame);
+    this._stop();
     this._resizeObserver?.disconnect();
-    window.removeEventListener('pointermove', this._onPointerMove);
+    this._visibility?.disconnect();
     if (this._ctx) {
       this._ctx.setTransform(1, 0, 0, 1, 0, 0);
       this._ctx.clearRect(0, 0, this.el.width, this.el.height);
     }
     this.el['Expressive_Particles'] = undefined;
+  }
+
+  private _start() {
+    if (this._frame) return;
+    window.addEventListener('pointermove', this._onPointerMove, { passive: true });
+    this._frame = requestAnimationFrame((now) => { this._last = now; this._draw(now); });
+  }
+
+  private _stop() {
+    cancelAnimationFrame(this._frame);
+    this._frame = 0;
+    window.removeEventListener('pointermove', this._onPointerMove);
   }
 
   private _onPointerMove = (e: PointerEvent) => {
