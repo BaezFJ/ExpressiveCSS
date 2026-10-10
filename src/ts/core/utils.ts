@@ -267,14 +267,14 @@ export class Utils {
   static throttle(func: (...args: unknown[]) => void, wait: number) {
     let timeout: ReturnType<typeof setTimeout> = null;
     let lastArgs: unknown[] = null;
-    let previous = 0;
+    let previous = -Infinity;
 
     return (...args: unknown[]) => {
-      const now = Date.now();
+      // performance.now() is monotonic; Date.now() follows the system clock
+      // and a backward jump would hold the trailing call for as long as it jumped.
+      const now = performance.now();
       const remaining = wait - (now - previous);
-      // remaining > wait: the clock went back, which would otherwise hold the
-      // trailing call for as long as it jumped.
-      if (remaining <= 0 || remaining > wait) {
+      if (remaining <= 0) {
         clearTimeout(timeout);
         timeout = null;
         previous = now;
@@ -285,7 +285,7 @@ export class Utils {
         // used to fire with none at all.
         lastArgs = args;
         timeout = setTimeout(() => {
-          previous = Date.now();
+          previous = performance.now();
           timeout = null;
           func(...(lastArgs ?? []));
           lastArgs = null;

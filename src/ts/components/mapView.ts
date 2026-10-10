@@ -136,6 +136,9 @@ export class MapView extends Component<MapViewOptions> {
   private _location: any = null;
   private _media: MediaQueryList | null = null;
   private _observer: MutationObserver | null = null;
+  // Looked up once: `move` fires every frame of a pan or zoom.
+  private _zoomIn: HTMLButtonElement[] = [];
+  private _zoomOut: HTMLButtonElement[] = [];
 
   constructor(el: HTMLElement, options: Partial<MapViewOptions>) {
     super(el, options, MapView);
@@ -151,6 +154,8 @@ export class MapView extends Component<MapViewOptions> {
     }
 
     this._children = [...el.children];
+    this._zoomIn = [...this._buttons('zoom-in')];
+    this._zoomOut = [...this._buttons('zoom-out')];
     this._dark = this._isDark();
     this.map = new lib.Map({
       ...this.options.mapOptions,
@@ -478,8 +483,8 @@ export class MapView extends Component<MapViewOptions> {
 
   private _sync = () => {
     const zoom = this.map.getZoom();
-    for (const button of this._buttons('zoom-in')) button.disabled = zoom >= this.map.getMaxZoom();
-    for (const button of this._buttons('zoom-out')) button.disabled = zoom <= this.map.getMinZoom();
+    for (const button of this._zoomIn) button.disabled = zoom >= this.map.getMaxZoom();
+    for (const button of this._zoomOut) button.disabled = zoom <= this.map.getMinZoom();
     this.el.style.setProperty('--md-comp-map-bearing', `${-this.map.getBearing()}deg`);
   };
 

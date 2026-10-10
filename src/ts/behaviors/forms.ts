@@ -69,7 +69,15 @@ export class Forms {
     textarea.style.height = Math.max(originalHeight, contentHeight) + 'px';
   }
 
+  private static _initialized = false;
+
+  /**
+   * Safe to call more than once: the root entry calls it on import, and a page
+   * that also loads the modular entry may call it again.
+   */
   static Init() {
+    if (Forms._initialized) return;
+    Forms._initialized = true;
     Utils.onDocumentReady(() => {
       document.addEventListener('change', (e: KeyboardEvent) => {
         const target = <HTMLInputElement>e.target;

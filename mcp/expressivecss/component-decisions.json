@@ -8010,11 +8010,11 @@
       },
       {
         "path": "src/ts/behaviors/forms.ts",
-        "sha256": "57733061183d4f3adbedd53803d19f26c4d31ca2459cd1707a5266b8bff46d9a"
+        "sha256": "d587ba5088a8c47526ae819812a405db8eee4f89ffbf760fd42d6467cc8d4b10"
       },
       {
         "path": "src/ts/behaviors/sheetDrag.ts",
-        "sha256": "a859bc0cfc2ae1522d387b50aab56e82be7071eeef243f6f00410a5fe48f9c8b"
+        "sha256": "1a5533d79ce6e1f04b71a2951b933fb946cbc1e1300e6bc375b1e7bef9e7a2cc"
       },
       {
         "path": "src/ts/behaviors/sideSheets.ts",
@@ -8046,7 +8046,7 @@
       },
       {
         "path": "src/ts/components/carousel.ts",
-        "sha256": "57dbe79e2028a702660dd9f61e6f5ac1826e2247cf88451caf05f9739a4c9212"
+        "sha256": "80b9375732bb39f59c70714bf319443475e5bc9d8a0d65d380fa639cf91dc7f0"
       },
       {
         "path": "src/ts/components/characterCounter.ts",
@@ -8070,7 +8070,7 @@
       },
       {
         "path": "src/ts/components/datepicker.ts",
-        "sha256": "2df9a30f42b2c24597b3c12459943576c29895c11b4e300ba441562dfd78d1e2"
+        "sha256": "8dfdc94ddabb6d71075669a7fe31f04075e06c91c622caea6b9b7ffb5cac6fd0"
       },
       {
         "path": "src/ts/components/expandingCard.ts",
@@ -8078,7 +8078,7 @@
       },
       {
         "path": "src/ts/components/heatmapChart.ts",
-        "sha256": "c645df4cbb79baaacbe139fff85610cc033b2cec5091c465160294a634c4b997"
+        "sha256": "b096a90ebbf7f82c8e24233711017912c399721f0dd3c90e4dd3d1dfe92eddeb"
       },
       {
         "path": "src/ts/components/index.ts",
@@ -8094,11 +8094,11 @@
       },
       {
         "path": "src/ts/components/mapView.ts",
-        "sha256": "eb0804b2b9368c8af1c9e6d6827c8bde42ceb4e01bdd9b3666d13a867bc67b03"
+        "sha256": "8a06f6772c42ad11ee224f7f9a6d9dbe5253dbbc4a502a2b327c1a7743e45fa1"
       },
       {
         "path": "src/ts/components/menu.ts",
-        "sha256": "0ca7f4c0d80012adad3babdfc23005792dbaa2655c3fe5595bc9bcc7e2c35ce8"
+        "sha256": "93f75046bccfbefd2e5343a8e430ecb2e47f9254f20e089648b0ac5633823496"
       },
       {
         "path": "src/ts/components/messageScroller.ts",
@@ -8118,7 +8118,7 @@
       },
       {
         "path": "src/ts/components/pieChart.ts",
-        "sha256": "d346e4b9b82814107f71872643a627971a249474de46cbc1f5bf4e4a5282811f"
+        "sha256": "967f67f7a16d6f8df43480c212a141f80caf1573649cd367127c8dbf10e97b7c"
       },
       {
         "path": "src/ts/components/questionnaire.ts",
@@ -8142,7 +8142,7 @@
       },
       {
         "path": "src/ts/components/scrollspy.ts",
-        "sha256": "dd7d9babc18578824804f6c8c6b622c307712a7a93e6a40f4cbd6727f4814fd2"
+        "sha256": "c6eb9c5abecad248682e7609bedc7e5cc7717c5f42a7dd477bd18f9272714185"
       },
       {
         "path": "src/ts/components/select.ts",
@@ -8150,11 +8150,11 @@
       },
       {
         "path": "src/ts/components/slider.ts",
-        "sha256": "d6591284f074bb8774ca890c9e5d4f61b7cc1ca23f1d47b2e10a14c0d4cf6498"
+        "sha256": "ce112540ab0ebd60f725aef24f5b23331ac84e78a486a37fc4f597ff1cd04c0f"
       },
       {
         "path": "src/ts/components/snackbar.ts",
-        "sha256": "0fa8bf5e3c774b76c846b1e8c6e35e8d0f6b05bb18e1c486f9a387d9a8e179dd"
+        "sha256": "54d11224df9e9b71f4a9425194e6f1d29c038096ba0b2c72858ea183451e3d1e"
       },
       {
         "path": "src/ts/components/tabs.ts",
@@ -8166,7 +8166,7 @@
       },
       {
         "path": "src/ts/components/tooltip.ts",
-        "sha256": "1fb60d8396973881ea030378fb3d3110e5a8686e586726dfb310f7ef79bcfb7f"
+        "sha256": "9609eaab1882166b06315c72a0c9356b609ff88d1298282ce7dc1c8e15ee6800"
       },
       {
         "path": "src/ts/core/component.ts",
@@ -8174,7 +8174,7 @@
       },
       {
         "path": "src/ts/core/utils.ts",
-        "sha256": "1785c9a2d253ffda408b2f133e789fe5e2ce13bb88c277d7a4a18e15829599d5"
+        "sha256": "ac649d766db875dccb4abb6076533a16bfaf8b83ddf8bc28bae09009da255ce6"
       },
       {
         "path": "src/ts/index.ts",
@@ -8186,7 +8186,7 @@
       },
       {
         "path": "src/ts/plugins/dockedDisplayPlugin.ts",
-        "sha256": "e1e47f2934eca4d71036b5a2ce9b42999aee7f3ab9da43a05e0a03ff443cef28"
+        "sha256": "74c7b829ba983d87e16ad627fd2b50b222a315e9d2204610a2fc845c07589697"
       },
       {
         "path": "src/ts/README.md",
@@ -8582,7 +8582,7 @@
       },
       {
         "path": "tests/hot-paths.test.js",
-        "sha256": "599c1369ac4a9094da9b15e4dc05a582eb8722345d0814c1e60c34f2aeb52d7c"
+        "sha256": "a8ddeedde1db9901adb514913e5a6366f933b980fce78731869d288bcab0afee"
       },
       {
         "path": "tests/icon-buttons.test.js",
@@ -8730,7 +8730,7 @@
       },
       {
         "path": "tests/selective-builds.test.js",
-        "sha256": "c614e31cf6e73991013aaae548fbadca802f883a4777087f36edbccc3d481ddb"
+        "sha256": "33e1443db0c0580de1691a4f19e769c0413cff5cbe290d7a3ffc9e2c36f4d1b3"
       },
       {
         "path": "tests/semantics.test.js",
@@ -8782,7 +8782,7 @@
       },
       {
         "path": "tests/teardown.test.js",
-        "sha256": "240806a2cbf369357fa799793f626d447d981d71c8564a68291ec28de7bfc155"
+        "sha256": "d013afc697add8953116becfc80e6ffa99585a34484b3e5c496099d831850f82"
       },
       {
         "path": "tests/timeline-browser.test.js",
@@ -8869,22 +8869,6 @@
         "sha256": "5bcc3aa180e7f26f643cd5b2621cd7c2de193d0661d913a94afd3d4881a7a34b"
       },
       {
-        "path": "dist/js/chunks/chunk-237V4WM2.mjs",
-        "sha256": "ba538f4bd1ae3dbc332ecc3cd42135d47e8abb76a26794798361fdf99a9baf53"
-      },
-      {
-        "path": "dist/js/chunks/chunk-237V4WM2.mjs.map",
-        "sha256": "34544b87997e33c705cb0cde0f631ae38e77f05e12feb0cebdc722296821da06"
-      },
-      {
-        "path": "dist/js/chunks/chunk-2JHXGVXU.mjs",
-        "sha256": "e877f8a7251f8f3ba856216f9e14f78173a1d846c84d6b4e5d1da63a14d17305"
-      },
-      {
-        "path": "dist/js/chunks/chunk-2JHXGVXU.mjs.map",
-        "sha256": "393f008ebf1ccbf77f7edab6c480ed2ab7efc168159319f850c8d5890989419e"
-      },
-      {
         "path": "dist/js/chunks/chunk-3DHK5CZU.mjs",
         "sha256": "67f01c2ea63b185245a89a4972d955fbdf574f6ede4407975e37f5f18d8131e7"
       },
@@ -8893,12 +8877,28 @@
         "sha256": "d7195f2ff94cdbe9a048e9908afb4b0eb1f0059aa17fc695d48accf662867798"
       },
       {
-        "path": "dist/js/chunks/chunk-3NPZR3CJ.mjs",
-        "sha256": "0d8c6aec013bb37814cdc469b039f1140255e600fa2735ac9bf5b2617a9d7c2d"
+        "path": "dist/js/chunks/chunk-3GVFZ4XO.mjs",
+        "sha256": "85352f3590c1aeca4add68143932eec2ebf9e4b446938ceb4801f863a5d6b9aa"
       },
       {
-        "path": "dist/js/chunks/chunk-3NPZR3CJ.mjs.map",
-        "sha256": "68492925f3493679e4b9dd5a786ecdf4c54d86db6c3967b27b67190f547b0770"
+        "path": "dist/js/chunks/chunk-3GVFZ4XO.mjs.map",
+        "sha256": "34544b87997e33c705cb0cde0f631ae38e77f05e12feb0cebdc722296821da06"
+      },
+      {
+        "path": "dist/js/chunks/chunk-4HZMB7LI.mjs",
+        "sha256": "073e2ba38ae4e6365448ebdeaed999e3a197634d8f1878290c99eb94cc5eddbb"
+      },
+      {
+        "path": "dist/js/chunks/chunk-4HZMB7LI.mjs.map",
+        "sha256": "c119673b5a8dc0ba0971f80899e558136ce10c0c52df36801423618530d64304"
+      },
+      {
+        "path": "dist/js/chunks/chunk-4KMNFIFZ.mjs",
+        "sha256": "e2bb1a4a6f611edc76ed127825eb6e6e73e4fe2c0d0be261097799e9a13faa21"
+      },
+      {
+        "path": "dist/js/chunks/chunk-4KMNFIFZ.mjs.map",
+        "sha256": "d8851a76fd9fc7c4c48e9db3dd9f8fdf4acae8400501ef7dcae8e352834e377b"
       },
       {
         "path": "dist/js/chunks/chunk-4PWAPV6F.mjs",
@@ -8909,12 +8909,28 @@
         "sha256": "1be74b0d59fcbb282fd3d5d8dee554d28ae7e01d0c0470f6d39cf0a712a03e3b"
       },
       {
-        "path": "dist/js/chunks/chunk-6DQMFO7V.mjs",
-        "sha256": "823285f874d2cfea303c1a96315c531ea694d4e2cd32cc348e86b9f0fa7398ce"
+        "path": "dist/js/chunks/chunk-4TKTLGEM.mjs",
+        "sha256": "42020af24c63b2c533f1b61a2d8de0c873d4aeecae65825f41de4d2bbb170a1c"
       },
       {
-        "path": "dist/js/chunks/chunk-6DQMFO7V.mjs.map",
+        "path": "dist/js/chunks/chunk-4TKTLGEM.mjs.map",
+        "sha256": "f61b0c1c2574be682caad6268d1f3a3999b15426ca3826e87146fb51c6d2c764"
+      },
+      {
+        "path": "dist/js/chunks/chunk-5BKHWHYY.mjs",
+        "sha256": "b3dc2426a70f7d478667fe619267ca10cd5cfb2fb4ca21c077258371ed0b4973"
+      },
+      {
+        "path": "dist/js/chunks/chunk-5BKHWHYY.mjs.map",
         "sha256": "4614f2986d4a3357f489c49e5ce3d548f4b2d45d6c22f8208c884f07c48fc4af"
+      },
+      {
+        "path": "dist/js/chunks/chunk-5HQSGDZ5.mjs",
+        "sha256": "b5fac53eba98308f57bc6c8133034d1f70b33448cb80530efc4ae1081bc4ae91"
+      },
+      {
+        "path": "dist/js/chunks/chunk-5HQSGDZ5.mjs.map",
+        "sha256": "01f1d42ea6fe0804f35f0fb965d9e69cd96de749e4a9f4a199d37286e810dfd4"
       },
       {
         "path": "dist/js/chunks/chunk-6N2XAEFK.mjs",
@@ -8925,28 +8941,12 @@
         "sha256": "6a62358174e89f71c09ce703d73053b42b63c8773e8f47168225680a262fc710"
       },
       {
-        "path": "dist/js/chunks/chunk-772AGJLV.mjs",
-        "sha256": "44d6724cc00c2b5b96371591a0de9b8ec7de302ee70dc1a2ef0a3e03ed3b52ec"
+        "path": "dist/js/chunks/chunk-A7ALMYUR.mjs",
+        "sha256": "6f605a3ce92e51e42dbe0aed92270e8e6d69af90365100382fa0cbae06a3e21d"
       },
       {
-        "path": "dist/js/chunks/chunk-772AGJLV.mjs.map",
-        "sha256": "20b353dc8a72a10d6f4ae2df3b6aa477060e0ed1dcd0a56c8b7b20a241bb6e80"
-      },
-      {
-        "path": "dist/js/chunks/chunk-AS4GVIFG.mjs",
-        "sha256": "aa334d551df6ea6e2bca0695b2e6d13259c5c5603b0b784a60679115fb01f09d"
-      },
-      {
-        "path": "dist/js/chunks/chunk-AS4GVIFG.mjs.map",
-        "sha256": "d8851a76fd9fc7c4c48e9db3dd9f8fdf4acae8400501ef7dcae8e352834e377b"
-      },
-      {
-        "path": "dist/js/chunks/chunk-BFRNX4TC.mjs",
-        "sha256": "cde8aa1ff8036814f46dc0a1d2bf25da0b16ed61c7250fce284f4173ac725a9d"
-      },
-      {
-        "path": "dist/js/chunks/chunk-BFRNX4TC.mjs.map",
-        "sha256": "1748cdbef4964dd0567c7ef4b7b725397602884578fc3dd4b8c1566952d2eb46"
+        "path": "dist/js/chunks/chunk-A7ALMYUR.mjs.map",
+        "sha256": "08bb0265ec705ae08f1060d8a8bd46605cac4a0bdb268565c6c360eb4932a6b0"
       },
       {
         "path": "dist/js/chunks/chunk-BG6ZRB5H.mjs",
@@ -8957,44 +8957,44 @@
         "sha256": "9dca99dd6c7dee55582969db84b005231200bd583f957b83b8ee11ce366c89cf"
       },
       {
-        "path": "dist/js/chunks/chunk-CRQKCG7Y.mjs",
-        "sha256": "78d32a9e3c6dd73070a7de97c3914b2b75a0a1b7fee94c2b196097dd98c6ac92"
+        "path": "dist/js/chunks/chunk-CUQPB25U.mjs",
+        "sha256": "ed3c2d4637847fd246f7192fd17ad79eac002647d96d59fdfcec18fddd4f8fc8"
       },
       {
-        "path": "dist/js/chunks/chunk-CRQKCG7Y.mjs.map",
-        "sha256": "1a226e7ae06f27b28cd5f8081e585ff9b341838c83fbb5b71de4dd651c4b9ef7"
+        "path": "dist/js/chunks/chunk-CUQPB25U.mjs.map",
+        "sha256": "5f605a941afe58c631b6957235f91255a964f99757d0a6fdd048385e4e272cc7"
       },
       {
-        "path": "dist/js/chunks/chunk-DCQZSBV2.mjs",
-        "sha256": "57a70db2598d27d0373dfac7e161eb0bf6f749f2458406f163d92747edce541b"
+        "path": "dist/js/chunks/chunk-DAIU5SLG.mjs",
+        "sha256": "1497f087e639dbd864a037d077a9a655c5262a985690b2de1d15fe37e9959868"
       },
       {
-        "path": "dist/js/chunks/chunk-DCQZSBV2.mjs.map",
-        "sha256": "d8f52c6780677ebb57252e93306a498c1e4dfbbd1fa15391b62fd9db5aa3eb76"
+        "path": "dist/js/chunks/chunk-DAIU5SLG.mjs.map",
+        "sha256": "2de5b2094884aa4e42ae25eb8fb2449a635ef82237b676a7ce4ec7e037c31503"
       },
       {
-        "path": "dist/js/chunks/chunk-EUNIXZEJ.mjs",
-        "sha256": "6173798bbd0a940220490da46194fb17d743f86bd9280654982c992f751469e4"
+        "path": "dist/js/chunks/chunk-FS7XY3HT.mjs",
+        "sha256": "76e4e257878ad7c390bfc4f54b1e94b9ecbdc0427f1d264726148a50127cd0c4"
       },
       {
-        "path": "dist/js/chunks/chunk-EUNIXZEJ.mjs.map",
-        "sha256": "cda4907020c85e8821f40e9af53f6b0354b5beffce0033ea3f36e6804deba36c"
+        "path": "dist/js/chunks/chunk-FS7XY3HT.mjs.map",
+        "sha256": "692260e581d8980b4769e61b39dd7bf2f7e132a3157727f992d07b36b8ee271e"
       },
       {
-        "path": "dist/js/chunks/chunk-F6PARH3T.mjs",
-        "sha256": "34ecd5548e2e8f91bc63f392151f9a0550862d02304d88a79a4243b7e773f30b"
+        "path": "dist/js/chunks/chunk-GIW4K4SE.mjs",
+        "sha256": "061b8f8d4947762447661670f78c0035609d8aa462524d8e653a09942f7809dc"
       },
       {
-        "path": "dist/js/chunks/chunk-F6PARH3T.mjs.map",
-        "sha256": "b7b129388c274a348e94ed525bac547cc47743d485e520177a93806a2620af93"
+        "path": "dist/js/chunks/chunk-GIW4K4SE.mjs.map",
+        "sha256": "0215f997aadf2053668a91f5833ba9142e185389e94618c69232791678fa5932"
       },
       {
-        "path": "dist/js/chunks/chunk-FSGN25WE.mjs",
-        "sha256": "4aa299b990213ed574bbbaabc10e23a18dd8eeb9d808836295ac882c29eadb09"
+        "path": "dist/js/chunks/chunk-GUB3TNO2.mjs",
+        "sha256": "b04db85c359d3a3bbf04c1a1753922c503cd6d4b2f3d68b2e90e1bd8a4c94747"
       },
       {
-        "path": "dist/js/chunks/chunk-FSGN25WE.mjs.map",
-        "sha256": "f61b0c1c2574be682caad6268d1f3a3999b15426ca3826e87146fb51c6d2c764"
+        "path": "dist/js/chunks/chunk-GUB3TNO2.mjs.map",
+        "sha256": "83092f431a819dfaf1a3158091c9b98a438102391d73818fd567dedf889346b2"
       },
       {
         "path": "dist/js/chunks/chunk-GVGT6MIU.mjs",
@@ -9005,6 +9005,14 @@
         "sha256": "8c181eaae41d27a7d85a81c13fd9503502188c764a1fd111e3550f04cc47e623"
       },
       {
+        "path": "dist/js/chunks/chunk-GZKEFWPM.mjs",
+        "sha256": "789e5d8d256e98a24b6f3119c8896728aca40442f5bcdfeca919c8e12de278ae"
+      },
+      {
+        "path": "dist/js/chunks/chunk-GZKEFWPM.mjs.map",
+        "sha256": "b7683a745b31c030de71a57b290662f0e63b8c7a72f77007f83f66bf9d0a8e81"
+      },
+      {
         "path": "dist/js/chunks/chunk-HKT2S7VM.mjs",
         "sha256": "b136fa42337660ec033c9dc18a47cd0382b85f51348a149fb0d79370e69d2b9b"
       },
@@ -9013,60 +9021,44 @@
         "sha256": "e0cb3de50aa9aa95de8859cc3aaba92c8366a5c12be5eb7924759004f1dc92bc"
       },
       {
-        "path": "dist/js/chunks/chunk-HTVDCNFF.mjs",
-        "sha256": "79d84abd24ec22028c4060777b73f1510dbcf74b8fd3308f8b44a6e5b9f613f2"
+        "path": "dist/js/chunks/chunk-ILP3PDTL.mjs",
+        "sha256": "2b7ae0bed59c0b963a5045b45816d5e2e3949bc4e830069ce1adbd009a43199e"
       },
       {
-        "path": "dist/js/chunks/chunk-HTVDCNFF.mjs.map",
-        "sha256": "5f605a941afe58c631b6957235f91255a964f99757d0a6fdd048385e4e272cc7"
+        "path": "dist/js/chunks/chunk-ILP3PDTL.mjs.map",
+        "sha256": "4164fa43c8d54042c1891345b855f0c99d02d3ce27d2c2077dc1e38271afdcdb"
       },
       {
-        "path": "dist/js/chunks/chunk-HVTTFELZ.mjs",
-        "sha256": "f750d41de68b7b29b82c52b5cee8de2a5dc01881f0ca6818d2066237449f4af2"
+        "path": "dist/js/chunks/chunk-JIDMQGK6.mjs",
+        "sha256": "e18451dc61383fde51c2d08430e70ea0a73b76faa21d19198211a7a160ad7645"
       },
       {
-        "path": "dist/js/chunks/chunk-HVTTFELZ.mjs.map",
-        "sha256": "b7683a745b31c030de71a57b290662f0e63b8c7a72f77007f83f66bf9d0a8e81"
+        "path": "dist/js/chunks/chunk-JIDMQGK6.mjs.map",
+        "sha256": "5f2d7e1d1282c6862fa3cc2000b2804e4d12680fbc81373b5959aa2b19ebfa06"
       },
       {
-        "path": "dist/js/chunks/chunk-IPIHTPUQ.mjs",
-        "sha256": "a16a6c5acd24d36c6cc6a37c5ae38171b14274361f61609549240c9087fd7d6b"
+        "path": "dist/js/chunks/chunk-KHV6DZXX.mjs",
+        "sha256": "cc85af981511c2dab3f8a4af589c62c93479d23f3790376a9edda4623d1f22fb"
       },
       {
-        "path": "dist/js/chunks/chunk-IPIHTPUQ.mjs.map",
-        "sha256": "c06375094047be91d1b17c24ebf8f7452641ebee7a18c1111de34e9ca661be4d"
+        "path": "dist/js/chunks/chunk-KHV6DZXX.mjs.map",
+        "sha256": "2fe6f8edc8cb41cb0009c6ce7efb576c45fb7a5be880fed8a54138ef74ddd80d"
       },
       {
-        "path": "dist/js/chunks/chunk-J5CWMIOE.mjs",
-        "sha256": "1c7cfb4e6a171ee3af70f707c585afce9549d7901143516b9d6669948f671b89"
+        "path": "dist/js/chunks/chunk-KY6U46SM.mjs",
+        "sha256": "d4401b5c7d3921d63ac81a76e68adfd23b584844d54ff70d198d9f4007c21447"
       },
       {
-        "path": "dist/js/chunks/chunk-J5CWMIOE.mjs.map",
-        "sha256": "96da0e5aa345973b14f449eece28122babb1f2b4186a3e01ea7f9a1328575539"
+        "path": "dist/js/chunks/chunk-KY6U46SM.mjs.map",
+        "sha256": "8e5dae899f5b9bf94da86c8bad99c744b7833f9b5efc27437624e5d919a59b55"
       },
       {
-        "path": "dist/js/chunks/chunk-JE7XVCQR.mjs",
-        "sha256": "c50deed4007dfccbe27a96040d0c51ce90961e85520e94a856ae45fac3172de0"
+        "path": "dist/js/chunks/chunk-LRZMJZ3T.mjs",
+        "sha256": "2bc6a21b0956cbdca45ca20336f1573ac68247c21dd47233d0aaf98968bb78ac"
       },
       {
-        "path": "dist/js/chunks/chunk-JE7XVCQR.mjs.map",
-        "sha256": "856f5af6c6071779ba1fe42f272664ee87a1b554228f3532518545c041ac11e1"
-      },
-      {
-        "path": "dist/js/chunks/chunk-KYMDRT6D.mjs",
-        "sha256": "3cb0bc351e90a16d9cece0dbd9e909fca4174c34aa52be61590fe755668a8f00"
-      },
-      {
-        "path": "dist/js/chunks/chunk-KYMDRT6D.mjs.map",
-        "sha256": "c119673b5a8dc0ba0971f80899e558136ce10c0c52df36801423618530d64304"
-      },
-      {
-        "path": "dist/js/chunks/chunk-LNCCYGPC.mjs",
-        "sha256": "507085894301915a96109e3eab69453d3d878b2a1c01bfadd89c0c1c663a153f"
-      },
-      {
-        "path": "dist/js/chunks/chunk-LNCCYGPC.mjs.map",
-        "sha256": "c73e6c026dcf85f5f16acc04fef54ed4ec10b93b4b7330dfa26bf3ee50a42c6d"
+        "path": "dist/js/chunks/chunk-LRZMJZ3T.mjs.map",
+        "sha256": "9c8c7ee06b03cb0469d9ce8fa3c7cff843f8158fae75460ea8bd376f3d186b81"
       },
       {
         "path": "dist/js/chunks/chunk-LTWPGFBR.mjs",
@@ -9077,6 +9069,30 @@
         "sha256": "68af0d5ab516a4724ddd577199941fa2bf866d9b845d921664f6ab5a1217f1d6"
       },
       {
+        "path": "dist/js/chunks/chunk-MNPROCZF.mjs",
+        "sha256": "bbf5fa569597d5662771afe603ae66eb849ed9c5c96d931e52914de489bfaf1e"
+      },
+      {
+        "path": "dist/js/chunks/chunk-MNPROCZF.mjs.map",
+        "sha256": "ad62c5bdba510ff38aebb49570d8bac1a99d105207fb92ea7e4a1919fc71918f"
+      },
+      {
+        "path": "dist/js/chunks/chunk-MZ6Z24BX.mjs",
+        "sha256": "965282cca4c05109e910f227d86ac897c869dbcc163dfaeb8e6850a698cfadc0"
+      },
+      {
+        "path": "dist/js/chunks/chunk-MZ6Z24BX.mjs.map",
+        "sha256": "ff934417a63ea7f180ede7d6b7f02320a238d9ca626e410271f94e8af0faabf8"
+      },
+      {
+        "path": "dist/js/chunks/chunk-NS2UMNZV.mjs",
+        "sha256": "d8e03e36c5de84294d65f171f3f7808d71020725ebc37f57666cbacf4bb4a24c"
+      },
+      {
+        "path": "dist/js/chunks/chunk-NS2UMNZV.mjs.map",
+        "sha256": "393f008ebf1ccbf77f7edab6c480ed2ab7efc168159319f850c8d5890989419e"
+      },
+      {
         "path": "dist/js/chunks/chunk-O5XPWXIQ.mjs",
         "sha256": "3245ab1979d719c5a2ec3b8faf17682ee67cd1547f113cc9261397e3e6495db9"
       },
@@ -9085,12 +9101,12 @@
         "sha256": "b6a298bfe85f7ed0b0ef5648b0a5d940f886cd9e51107aa984221b5d099a4b58"
       },
       {
-        "path": "dist/js/chunks/chunk-P3G3QHII.mjs",
-        "sha256": "f1a2db1707301444ea9a289da43eeebebfde3e0458c8a659c9417885cd6d0be1"
+        "path": "dist/js/chunks/chunk-PM655FXL.mjs",
+        "sha256": "19b44599864fa6e7eee7a0ed93e1e94b8710fc6db1b86b0357d71d93c637fed0"
       },
       {
-        "path": "dist/js/chunks/chunk-P3G3QHII.mjs.map",
-        "sha256": "fbbdc6776de5d7ff6ffea391c5a58e6c2816008aace9e5ed49ec98a63b20f845"
+        "path": "dist/js/chunks/chunk-PM655FXL.mjs.map",
+        "sha256": "cda4907020c85e8821f40e9af53f6b0354b5beffce0033ea3f36e6804deba36c"
       },
       {
         "path": "dist/js/chunks/chunk-QDAL4IYN.mjs",
@@ -9101,20 +9117,20 @@
         "sha256": "0bc32dd7af1a8b54c41c3b14257abadd5a3a162fe10d60de3f1d8ea11797957c"
       },
       {
-        "path": "dist/js/chunks/chunk-QEDP7MZR.mjs",
-        "sha256": "40bd445192303f2a02aadb596135607ed44d75fd189fa71f7df309340efdb5a3"
+        "path": "dist/js/chunks/chunk-QERLECVU.mjs",
+        "sha256": "77a25570917fb957a243009c05c8da370955fd367440546239c71bcee1ad021f"
       },
       {
-        "path": "dist/js/chunks/chunk-QEDP7MZR.mjs.map",
-        "sha256": "2cf66d7eecc4a2c51216a2dfd245fe6d5da2cda20dbb49550582c5cf43b46458"
+        "path": "dist/js/chunks/chunk-QERLECVU.mjs.map",
+        "sha256": "ccbd308b18420034e16e300e7e0bfb0aa08bc06a6adac24f1ca8ecedcef716cf"
       },
       {
-        "path": "dist/js/chunks/chunk-QV2JAWIZ.mjs",
-        "sha256": "59be7ac5d73f4ae38bcbf742d3085b9704f5655551f5cafd7e799f3336279843"
+        "path": "dist/js/chunks/chunk-QJABDLSD.mjs",
+        "sha256": "7486983b726d2e3e1be386d72e5caa1576b988b26b17f8b50bbc484e55999f78"
       },
       {
-        "path": "dist/js/chunks/chunk-QV2JAWIZ.mjs.map",
-        "sha256": "136106681788a16e527b49c1a4845f686e0b2f131a9bf77317bd8befbe3c3074"
+        "path": "dist/js/chunks/chunk-QJABDLSD.mjs.map",
+        "sha256": "4361adc13a9689626807ea08ba8b71643310f1f3d6e2960c6eb62c63d7571a33"
       },
       {
         "path": "dist/js/chunks/chunk-RHRQKTTX.mjs",
@@ -9125,6 +9141,14 @@
         "sha256": "d89bc9767fb2c62f78c01de54bbd3575a8819c9b23dcd2dff001959b3407886d"
       },
       {
+        "path": "dist/js/chunks/chunk-S3XDFGSZ.mjs",
+        "sha256": "6c6e76090bd8dc0d172ddac8b8f695984cd45b19a930394e94549b8870cb9138"
+      },
+      {
+        "path": "dist/js/chunks/chunk-S3XDFGSZ.mjs.map",
+        "sha256": "68492925f3493679e4b9dd5a786ecdf4c54d86db6c3967b27b67190f547b0770"
+      },
+      {
         "path": "dist/js/chunks/chunk-SPETGK25.mjs",
         "sha256": "6a937838ab30857764b6d23da689400535c18fe6b2f70ca61f711dfc5e733e16"
       },
@@ -9133,12 +9157,12 @@
         "sha256": "a513caa6aa856bcdf3a43f41f510aa21e9980976340781a209da86d13ca0c64e"
       },
       {
-        "path": "dist/js/chunks/chunk-U4CTMVTB.mjs",
-        "sha256": "4f013616c248835f9d28a517ef34ae79d1a06d43f42e836983e62d11f285a824"
+        "path": "dist/js/chunks/chunk-TBM3FT7G.mjs",
+        "sha256": "56386c1bf4be975197957dcac056ffaa6c5623a3141d0a426cb8dd7c4172902a"
       },
       {
-        "path": "dist/js/chunks/chunk-U4CTMVTB.mjs.map",
-        "sha256": "a8ba9cd51051736cabdebe85fc5f6336b6e0f34b4e2a0aaefdcfaf84c60460d1"
+        "path": "dist/js/chunks/chunk-TBM3FT7G.mjs.map",
+        "sha256": "5adef2afe0537b6bb3b63197c07742e5c94694f1391331aae6c9afaaac63a195"
       },
       {
         "path": "dist/js/chunks/chunk-UEXCIMJZ.mjs",
@@ -9157,60 +9181,20 @@
         "sha256": "9b4bf1c7d344c9a9aa88f0a8bf38a7d2fe75e374d4b955ad7de2b7954d223285"
       },
       {
-        "path": "dist/js/chunks/chunk-UQR5DVSX.mjs",
-        "sha256": "0fcff3a4b82d7403083f66b1d807d8c72d85304bc43dc436032464766f4fd351"
+        "path": "dist/js/chunks/chunk-VGZSAFTX.mjs",
+        "sha256": "bc7bc7019a1738a57e800900181e89da4ada47627c82a879929bd52cbea7d7dd"
       },
       {
-        "path": "dist/js/chunks/chunk-UQR5DVSX.mjs.map",
-        "sha256": "53ee721194d51ec868fa976dd7d220b7e028942d4f96d8c34d904c441470187c"
+        "path": "dist/js/chunks/chunk-VGZSAFTX.mjs.map",
+        "sha256": "aef8591808a2ad885c33d4b0146ab7eeea5290ca0034e72d2dbfcf22a5abec5c"
       },
       {
-        "path": "dist/js/chunks/chunk-WFBBCTHU.mjs",
-        "sha256": "7f8a1417018e09a2de1f989c264b831130aa8143cbf386963671bf36eb2a96a3"
+        "path": "dist/js/chunks/chunk-X7OCHZVF.mjs",
+        "sha256": "526868ac0752f7dc9b8e01005788192bbd83a08f8e6b872e0ca72cdc1ed40322"
       },
       {
-        "path": "dist/js/chunks/chunk-WFBBCTHU.mjs.map",
-        "sha256": "d79f8dc58db33b8808095712790099b2dff6f908e57fdf8cb43f442d97858bad"
-      },
-      {
-        "path": "dist/js/chunks/chunk-XAB4HBMR.mjs",
-        "sha256": "02b9f785d39bd337d3c2111f4897c2ae4abb90d61bb1fa7eb496efc27f6bfb93"
-      },
-      {
-        "path": "dist/js/chunks/chunk-XAB4HBMR.mjs.map",
-        "sha256": "ccbd308b18420034e16e300e7e0bfb0aa08bc06a6adac24f1ca8ecedcef716cf"
-      },
-      {
-        "path": "dist/js/chunks/chunk-XBADBPIP.mjs",
-        "sha256": "bdb12416cd835d39585afae4151387b2ee729f5bc2b9a92cbbb6d04260a2acb2"
-      },
-      {
-        "path": "dist/js/chunks/chunk-XBADBPIP.mjs.map",
-        "sha256": "2de5b2094884aa4e42ae25eb8fb2449a635ef82237b676a7ce4ec7e037c31503"
-      },
-      {
-        "path": "dist/js/chunks/chunk-XIEDXETH.mjs",
-        "sha256": "36c1bb4fac952ed2e2a99c8244aa04651493f775d714c82aa6c8698a85decf4f"
-      },
-      {
-        "path": "dist/js/chunks/chunk-XIEDXETH.mjs.map",
-        "sha256": "412e06bc8ebf474f9b0af155581906ae4d63112147769515cafebb37726dd754"
-      },
-      {
-        "path": "dist/js/chunks/chunk-Y7G2EPZ7.mjs",
-        "sha256": "6453817174a79482005b8da051c8f2a18c52bcd40c24c813be2bd39ccfb3a179"
-      },
-      {
-        "path": "dist/js/chunks/chunk-Y7G2EPZ7.mjs.map",
-        "sha256": "2ad7c65589406d795217501b845e949632f8eff85898aa792606657240fa5ac7"
-      },
-      {
-        "path": "dist/js/chunks/chunk-YCYXRQV4.mjs",
-        "sha256": "666f7c566338baa13499726d921b731caff9b751749f69dff97085fe0b8bce48"
-      },
-      {
-        "path": "dist/js/chunks/chunk-YCYXRQV4.mjs.map",
-        "sha256": "8e5dae899f5b9bf94da86c8bad99c744b7833f9b5efc27437624e5d919a59b55"
+        "path": "dist/js/chunks/chunk-X7OCHZVF.mjs.map",
+        "sha256": "a8ba9cd51051736cabdebe85fc5f6336b6e0f34b4e2a0aaefdcfaf84c60460d1"
       },
       {
         "path": "dist/js/chunks/chunk-YDCS5S3J.mjs",
@@ -9221,12 +9205,28 @@
         "sha256": "214511538963d140758e41207e5aba1b87007f6dc6e62b69184cbf3fa5745484"
       },
       {
-        "path": "dist/js/chunks/chunk-YZOSW2PK.mjs",
-        "sha256": "b9b47e9dd535f09c27c5ce3bb12d1ebfb04049d025e388e61ca0c612ab194025"
+        "path": "dist/js/chunks/chunk-YMSXJON6.mjs",
+        "sha256": "e39b2cbc02e93757f13f133dc7e0e4cc11003e6127bb16c2e332469f485b47e6"
       },
       {
-        "path": "dist/js/chunks/chunk-YZOSW2PK.mjs.map",
-        "sha256": "692260e581d8980b4769e61b39dd7bf2f7e132a3157727f992d07b36b8ee271e"
+        "path": "dist/js/chunks/chunk-YMSXJON6.mjs.map",
+        "sha256": "dec16947ea4835e3951cf952d6867ceb52ebb0f9eaa3714e7be0255940a2636a"
+      },
+      {
+        "path": "dist/js/chunks/chunk-Z2NRKI7R.mjs",
+        "sha256": "0d63619b23bb2f8177a8c1e8b571a5143343301956934380709e4ef4a9897d70"
+      },
+      {
+        "path": "dist/js/chunks/chunk-Z2NRKI7R.mjs.map",
+        "sha256": "856f5af6c6071779ba1fe42f272664ee87a1b554228f3532518545c041ac11e1"
+      },
+      {
+        "path": "dist/js/chunks/chunk-ZAS25YFD.mjs",
+        "sha256": "f4b8b8959a2e8e20f302ab5521e7fb34a07500931fc7d164f97ae37102914310"
+      },
+      {
+        "path": "dist/js/chunks/chunk-ZAS25YFD.mjs.map",
+        "sha256": "b7b129388c274a348e94ed525bac547cc47743d485e520177a93806a2620af93"
       },
       {
         "path": "dist/js/chunks/chunk-ZKZKNSLC.mjs",
@@ -9238,31 +9238,31 @@
       },
       {
         "path": "dist/js/expressive.cjs",
-        "sha256": "63fee978dd1040f988a37323151ef9045fb3dd233e714599db8e9824c1c38dbd"
+        "sha256": "f34fe152d533cb5f794e5d39ef106b706d6608c10e72bb7cc8166389d793e7dc"
       },
       {
         "path": "dist/js/expressive.cjs.map",
-        "sha256": "079c3e90ba87ba0e9e250e9a7edf8c1481fd5b726e058e63b8aab6b3dc4fbe10"
+        "sha256": "39cbed0901c1889df6e96c32037ccaca42887609ca7bffa41df76760e51809a4"
       },
       {
         "path": "dist/js/expressive.js",
-        "sha256": "731b5672bda8bf23d3ab8639d1409f39fe35ccb4b9458af7e0aeabb16db32fe9"
+        "sha256": "12a3d0526490cd24c4dcf4389501fc116ec813b85ed57f14fb638aac65dc246d"
       },
       {
         "path": "dist/js/expressive.js.map",
-        "sha256": "c4d84af597126c7ed4a9bd76a6c8455c43fd9445304f5ec649c42585d25bb55b"
+        "sha256": "248767aaee54cfbf57ad65c7b5acfe35315bd5cb0cd948b63a72e3da0b9c84c6"
       },
       {
         "path": "dist/js/expressive.min.js",
-        "sha256": "c9c4850b095a007a7363c3a29cde948e71e0cc196b9759956f40c39f7e1dff2b"
+        "sha256": "bd4be697e621db307fa299ab5be29bea82a682e344133a22462ff2f8ea4e8cef"
       },
       {
         "path": "dist/js/expressive.min.js.map",
-        "sha256": "bb11952ddd620b7df92f298b875e1804feaa61c81b578fc919e3db31577ad809"
+        "sha256": "483a888585ac775c7d80980b2990bd6635189be8d33a7a499a7e3923ce0c9e18"
       },
       {
         "path": "dist/js/expressive.mjs",
-        "sha256": "4ba6b029f5fcc81b53438c643fd4f20e6a312d8286d875aeb53f14b85a86442a"
+        "sha256": "f71c0ebdf74d296399b3208581fcd82cff712e3c84cf9e95abbb16b3897fee32"
       },
       {
         "path": "dist/js/expressive.mjs.map",
@@ -9270,7 +9270,7 @@
       },
       {
         "path": "dist/js/internal/behaviors/bottomSheets.mjs",
-        "sha256": "d207e1894d016bc4238a6bd298a4dbccbd2a797fe583ccd6d15bbddf463054e0"
+        "sha256": "e6aade7066bf69dfcc975fca0e4e27d89bf403c78ba5701dac5fa01268fd5c19"
       },
       {
         "path": "dist/js/internal/behaviors/bottomSheets.mjs.map",
@@ -9278,7 +9278,7 @@
       },
       {
         "path": "dist/js/internal/behaviors/dialogs.mjs",
-        "sha256": "2fd8e6e10bc4d061f04e3788c1ac294350dd53abaf65ab8c0f315118192921b9"
+        "sha256": "ff475c913b399f5cb2b221a34200e6d9404e943ff7793ff66680df3fa3424b40"
       },
       {
         "path": "dist/js/internal/behaviors/dialogs.mjs.map",
@@ -9286,7 +9286,7 @@
       },
       {
         "path": "dist/js/internal/behaviors/forms.mjs",
-        "sha256": "47342efa2f0e9b2bd3d7770ced4eae9a80f4e74bc2c3b1a9f2725be4164874b1"
+        "sha256": "3b60a84f0f664a9ebc1819cdb8dff21e94aec412ab225af6ecb6474750e60a3e"
       },
       {
         "path": "dist/js/internal/behaviors/forms.mjs.map",
@@ -9294,7 +9294,7 @@
       },
       {
         "path": "dist/js/internal/behaviors/sheetDrag.mjs",
-        "sha256": "6c6a2e3a3d7cd673fa45e04a0f57a116f6d0dd591c40c3eaed3a6207d46a1037"
+        "sha256": "9d07774010b66d3d0784c781547d1277e9aebc99bbb7b908c94a10fed221fef1"
       },
       {
         "path": "dist/js/internal/behaviors/sheetDrag.mjs.map",
@@ -9302,7 +9302,7 @@
       },
       {
         "path": "dist/js/internal/behaviors/sideSheets.mjs",
-        "sha256": "d12122c8eac0acf7668ecbc324c85c85a0828d20d3502c15aedca1e7fdd8c3f0"
+        "sha256": "75f6fdff19f5ac72fc0a253228975c93d0ae8bd30d4776d2a265776097dba198"
       },
       {
         "path": "dist/js/internal/behaviors/sideSheets.mjs.map",
@@ -9318,7 +9318,7 @@
       },
       {
         "path": "dist/js/internal/components/autocomplete.mjs",
-        "sha256": "905ef9225bc97f39c904a4187de59cc3df3efbedb3de836f7528211bf9d0001b"
+        "sha256": "10c972f936626a8dd4e8e66bcf06a82365b591a7782f4aee0339cb6d0f564d27"
       },
       {
         "path": "dist/js/internal/components/autocomplete.mjs.map",
@@ -9342,7 +9342,7 @@
       },
       {
         "path": "dist/js/internal/components/buttons.mjs",
-        "sha256": "fa0fa36455ef0d6c531ca3ad76d90d745e4284f931e79fa60c807ac8237de524"
+        "sha256": "cbeacb787d2f438b45e40f17992dc0c70eb7f664b0a89cbca1bc13ce6c9c20f2"
       },
       {
         "path": "dist/js/internal/components/buttons.mjs.map",
@@ -9350,7 +9350,7 @@
       },
       {
         "path": "dist/js/internal/components/cards.mjs",
-        "sha256": "6b7757adc047955d1a198d4e2717a63c802a262da54cd431768ac8e4e1d355d5"
+        "sha256": "e60449a1ed5bcf03722b424c5e8343456a64ed5d468f1e497a999366d67a1462"
       },
       {
         "path": "dist/js/internal/components/cards.mjs.map",
@@ -9358,7 +9358,7 @@
       },
       {
         "path": "dist/js/internal/components/carousel.mjs",
-        "sha256": "acd666e5c523dc78ec35b3e8051f72e2285534545662b936aba3d9f53988944f"
+        "sha256": "c44355400899837860014ed3bb0a415771ee282695ad2996c2f25e8e04373a28"
       },
       {
         "path": "dist/js/internal/components/carousel.mjs.map",
@@ -9374,7 +9374,7 @@
       },
       {
         "path": "dist/js/internal/components/chips.mjs",
-        "sha256": "3c64c7290bd8365a2fc1821bc2fb888fbb837c2ee23165d7a7c00265be4cf841"
+        "sha256": "823c4687138fcfbed697504dfcd85b5845e028c532ede19551a6e4fb7d4d1c4c"
       },
       {
         "path": "dist/js/internal/components/chips.mjs.map",
@@ -9390,7 +9390,7 @@
       },
       {
         "path": "dist/js/internal/components/commandPalette.mjs",
-        "sha256": "0e35d2da3d366cec715d6bce77597129392ea80146295c1ebff3946350b079c1"
+        "sha256": "50d0a83aa407999581f7e59e18e1950148d1425cb949e442c1b81c0ff21d8f6e"
       },
       {
         "path": "dist/js/internal/components/commandPalette.mjs.map",
@@ -9406,7 +9406,7 @@
       },
       {
         "path": "dist/js/internal/components/datepicker.mjs",
-        "sha256": "9bdef491d57f660cb5ee415ee41d6812ea5000e7077122c46b0675860b3da2e3"
+        "sha256": "2cd878b85c032d3d2f31a9e75a66bb377f263639946bcd88c7026ac3000fe28d"
       },
       {
         "path": "dist/js/internal/components/datepicker.mjs.map",
@@ -9414,7 +9414,7 @@
       },
       {
         "path": "dist/js/internal/components/expandingCard.mjs",
-        "sha256": "c5f552243e4fbbfa84c7d08ff6e0f6a36e9ae6cde30f38c4b0509347200c9f5f"
+        "sha256": "32c56811519d425a01004f7ddcff7ca8b31581bd274a807f1aa03ae3714cf978"
       },
       {
         "path": "dist/js/internal/components/expandingCard.mjs.map",
@@ -9422,7 +9422,7 @@
       },
       {
         "path": "dist/js/internal/components/heatmapChart.mjs",
-        "sha256": "a39c0d8550757686f80801c0dec6c8f180cb70f97df7ffd7d48bac06fd06d570"
+        "sha256": "f06ea1e56109d04737d9d3fe2b5d7f5773dfcdefaa113a83e10edb90682b0264"
       },
       {
         "path": "dist/js/internal/components/heatmapChart.mjs.map",
@@ -9430,7 +9430,7 @@
       },
       {
         "path": "dist/js/internal/components/index.mjs",
-        "sha256": "1dc48600b5a7b3a741f6264b622045191e9d645c4b423039ffb3be24619ddcc4"
+        "sha256": "29f3f066fd330a712c898d1ccd3faf0d1d0c07d53db5f2ccaf844bd8f8f5f7d2"
       },
       {
         "path": "dist/js/internal/components/index.mjs.map",
@@ -9438,7 +9438,7 @@
       },
       {
         "path": "dist/js/internal/components/lightbox.mjs",
-        "sha256": "1fb0c04de0185b136466dfd2ea3737fc26d7e126d4862b2a1f6dc55deac01b28"
+        "sha256": "7693799f9fe27040517d7ce0f73e5c2a96feed5e0088fde4aa8cbed273741bca"
       },
       {
         "path": "dist/js/internal/components/lightbox.mjs.map",
@@ -9454,7 +9454,7 @@
       },
       {
         "path": "dist/js/internal/components/mapView.mjs",
-        "sha256": "7ba72471482d0e764ced209c597fd8d01c8d6ddbfb2c8ea6d326a67c253c18f4"
+        "sha256": "f54a0053af52cd1bbb6809e275b44c9517bcc9a0204fa1c4febf1635c9ca344d"
       },
       {
         "path": "dist/js/internal/components/mapView.mjs.map",
@@ -9462,7 +9462,7 @@
       },
       {
         "path": "dist/js/internal/components/menu.mjs",
-        "sha256": "105e9c186521ed5a44dbad0e76104f64e3249bd5c7f2f9167771331167949fea"
+        "sha256": "fa7380cadd68d4eaaf0853f37cb41ecd13fa92b16cd7093a872352112746714f"
       },
       {
         "path": "dist/js/internal/components/menu.mjs.map",
@@ -9470,7 +9470,7 @@
       },
       {
         "path": "dist/js/internal/components/messageScroller.mjs",
-        "sha256": "100d72e9600640e08631e1c3ccdf40b3e4a7831d4560cf35c1f49635b32c2a93"
+        "sha256": "07c3737d14f718f18c2884c5b9f13d0f67e963c0868dc75fbac0ea150f6e82ae"
       },
       {
         "path": "dist/js/internal/components/messageScroller.mjs.map",
@@ -9502,7 +9502,7 @@
       },
       {
         "path": "dist/js/internal/components/pieChart.mjs",
-        "sha256": "4349d66fe5913469b2c1bf034a2fa4fffdeac02527344674dc8ad0878b2527ac"
+        "sha256": "1169addb3790e4a7c3aa11f71314f09b24d17cf775b440a4fdbcd943b66279ed"
       },
       {
         "path": "dist/js/internal/components/pieChart.mjs.map",
@@ -9510,7 +9510,7 @@
       },
       {
         "path": "dist/js/internal/components/questionnaire.mjs",
-        "sha256": "3cb0d6ee7eaa3257145001c70aa523899de727be6468c60aefc7142d2d87ccf6"
+        "sha256": "cf207fa691ca234b79b397b772fc14f0ce5cabd01eb2d7fb9e29be0e29d9050c"
       },
       {
         "path": "dist/js/internal/components/questionnaire.mjs.map",
@@ -9534,7 +9534,7 @@
       },
       {
         "path": "dist/js/internal/components/registry.mjs",
-        "sha256": "361cb1803aa9f1a8d503ed75fb4f61ba182c48f985fcc7bf47c7b20af2d4a100"
+        "sha256": "b06abfabf5a14dfa96640fb5c654d5d8e0d0117b307a22b8bc2bd753fd316d4a"
       },
       {
         "path": "dist/js/internal/components/registry.mjs.map",
@@ -9542,7 +9542,7 @@
       },
       {
         "path": "dist/js/internal/components/richTextEditor.mjs",
-        "sha256": "957940b5f0887d10ea23f812e3028669e8ceb10377819f6987a0f4a8b1e040a9"
+        "sha256": "49a2fc820714a7454e84d037a0607d5d5aae0f8d53c05379d52daa2fce350073"
       },
       {
         "path": "dist/js/internal/components/richTextEditor.mjs.map",
@@ -9550,7 +9550,7 @@
       },
       {
         "path": "dist/js/internal/components/scrollspy.mjs",
-        "sha256": "4f6d058cc812011e8263d3fe105b8282a380587feb83fc280954e2ad2c9b2d65"
+        "sha256": "fc0deb0334112a05563f7ab5ca7fa312ceaa07c7c980a370d8c0ebe14d8e82e6"
       },
       {
         "path": "dist/js/internal/components/scrollspy.mjs.map",
@@ -9558,7 +9558,7 @@
       },
       {
         "path": "dist/js/internal/components/select.mjs",
-        "sha256": "b2649f41d86bf3ff7d5e2a0670fec9df69fb3a75fa831594912804bc7bc427a9"
+        "sha256": "49a2643e836186869716f4e33f2de908ee23ce7d4cfe3f43b74274d9e13c9294"
       },
       {
         "path": "dist/js/internal/components/select.mjs.map",
@@ -9566,7 +9566,7 @@
       },
       {
         "path": "dist/js/internal/components/slider.mjs",
-        "sha256": "a25ea01c722917cb6c68d250fe1844f75fb271421e699d2be355900a8843e6f4"
+        "sha256": "7ba72a1b15e26006143ed62637cec29db5d2d1212db87579fc2fe0fccdc01999"
       },
       {
         "path": "dist/js/internal/components/slider.mjs.map",
@@ -9574,7 +9574,7 @@
       },
       {
         "path": "dist/js/internal/components/snackbar.mjs",
-        "sha256": "88e99623c2ca78afadbe45c855f45e508ac3ab18bcbac119982db7909bdb9aa4"
+        "sha256": "7344bd1852566a2e3186539ebcd513ffe2f3bd8a72009b29f66362b2b378ba47"
       },
       {
         "path": "dist/js/internal/components/snackbar.mjs.map",
@@ -9582,7 +9582,7 @@
       },
       {
         "path": "dist/js/internal/components/tabs.mjs",
-        "sha256": "a47d21c63b0fad8634e710bae20ea0224f76dfacbe041f164dce9d59fc6662ae"
+        "sha256": "1216327ece83c428d50457bd141ef9adb3c603697229a77bfbdb552050c2013e"
       },
       {
         "path": "dist/js/internal/components/tabs.mjs.map",
@@ -9590,7 +9590,7 @@
       },
       {
         "path": "dist/js/internal/components/timepicker.mjs",
-        "sha256": "18a2ca875b493038522bb7785aa1f01ec6c80861144f9c23c55cf210f443142f"
+        "sha256": "782cb6e936ec67a417d6ca43047232a940e65a2112274dc8654d8eeb58b86e33"
       },
       {
         "path": "dist/js/internal/components/timepicker.mjs.map",
@@ -9598,7 +9598,7 @@
       },
       {
         "path": "dist/js/internal/components/tooltip.mjs",
-        "sha256": "046a13d87507449fa84495983ba93598020591ae9ce04805eb04e03793cfa4b6"
+        "sha256": "e13811b0de2dc29468c6658cf357fa10d8cc229d3700033ecaa21ad983edb205"
       },
       {
         "path": "dist/js/internal/components/tooltip.mjs.map",
@@ -9614,7 +9614,7 @@
       },
       {
         "path": "dist/js/internal/core/utils.mjs",
-        "sha256": "f22dcec5e18c34108767232d6ea7339b8ed2c628aa0030eb547a7e2c9e4428dd"
+        "sha256": "edbcf2234687a72318bfb675ddaba98b6c3186648ffba3acb634fbece0e12c27"
       },
       {
         "path": "dist/js/internal/core/utils.mjs.map",
@@ -9622,7 +9622,7 @@
       },
       {
         "path": "dist/js/internal/plugins/dockedDisplayPlugin.mjs",
-        "sha256": "5cfb794c05e7b42f19b5d405bcb072e92ad637f70fde4d30463ab41d6c417f53"
+        "sha256": "52d0d4d1f91458ba7cd2fb2b5724e244da6e02d4562bebd22ad46c3d7d2ed722"
       },
       {
         "path": "dist/js/internal/plugins/dockedDisplayPlugin.mjs.map",
@@ -9630,7 +9630,7 @@
       },
       {
         "path": "dist/js/modular.mjs",
-        "sha256": "d50a0af86e01eecf1dfc3bd96ceac48542539e9040f8297544dbc1415724e724"
+        "sha256": "1da064b09c0e5d428f176462de337535329dc7a62b41896f9445fdff7ca78b3e"
       },
       {
         "path": "dist/js/modular.mjs.map",
@@ -9646,7 +9646,7 @@
       },
       {
         "path": "dist/types/behaviors/forms.d.ts",
-        "sha256": "9ac00ec332e6eeffb9086b59c34347dffaf41464f42f09d26f16e2d82bd6c2e4"
+        "sha256": "07c0dc84dd70ff0e928968d134267a13050ad38fedb95b1ae5e10e3688b7bd0f"
       },
       {
         "path": "dist/types/behaviors/sheetDrag.d.ts",
@@ -9682,7 +9682,7 @@
       },
       {
         "path": "dist/types/components/carousel.d.ts",
-        "sha256": "1ee92d6d21dbbb2c3088ad5cef7266afe51cff2459210638f0c10e725068b88c"
+        "sha256": "ac7ef0df54c8f9dbd4913d5c393f289f6cb60a80334dad69bac2a421959cc75a"
       },
       {
         "path": "dist/types/components/characterCounter.d.ts",
@@ -9706,7 +9706,7 @@
       },
       {
         "path": "dist/types/components/datepicker.d.ts",
-        "sha256": "f39e34cd918a97d53ff4a82c349487294c8d04c6ddb95c37ae0d7167deaca296"
+        "sha256": "872f6f747c847a89f8c7b912ab5565ed9a6b22dea7b75e8c262eb851f59ea7d6"
       },
       {
         "path": "dist/types/components/expandingCard.d.ts",
@@ -9730,7 +9730,7 @@
       },
       {
         "path": "dist/types/components/mapView.d.ts",
-        "sha256": "8a0750b18ea07c3568e5694dbe287fe0302bbd9a5335e476a2ef5e7e939bdba2"
+        "sha256": "e0b819666c7c137a51b7c1e1855a01baeeca6d2a1eee643ea000b87545cbe5ae"
       },
       {
         "path": "dist/types/components/menu.d.ts",
@@ -9754,7 +9754,7 @@
       },
       {
         "path": "dist/types/components/pieChart.d.ts",
-        "sha256": "2dfb537dd2f2d76abf7f59c2406aa8a0c2cc9b6b3425d2ce87087efa4dc33e7f"
+        "sha256": "ec5087054d482355073830e5d317b08237887808df9ccba0e86805269a9b82dd"
       },
       {
         "path": "dist/types/components/questionnaire.d.ts",
@@ -9786,11 +9786,11 @@
       },
       {
         "path": "dist/types/components/slider.d.ts",
-        "sha256": "1d1927413d7871b2dd43db77b2be0ed5fb39505bfec732137f3970c071de8e1c"
+        "sha256": "5b1f750bd32b0610369a3504b3bf55c18732773e327e1c04b2823c625b034435"
       },
       {
         "path": "dist/types/components/snackbar.d.ts",
-        "sha256": "78d342fdf92d3c9e225cf39090ac86d7f54ea4cac283660881f6bce56ad30a13"
+        "sha256": "205d0e43be77b8e8282375c4be823ca20a228363223740c301818c5f6cabc57e"
       },
       {
         "path": "dist/types/components/tabs.d.ts",
@@ -9822,7 +9822,7 @@
       },
       {
         "path": "dist/types/plugins/dockedDisplayPlugin.d.ts",
-        "sha256": "46bd2a2de471505168226d20f528bdaeb6e297acffb1049c71e33989a10a1951"
+        "sha256": "99f1909e6cc3ac97b771aa7adeaddf56ac845eaa7c54a25bcf51b798ecf6ba91"
       },
       {
         "path": "skills/expressivecss/assets/examples/app.css",
@@ -9994,1203 +9994,1203 @@
         "file": "tests/accordion-browser.test.js",
         "name": "chromium: accordion joins its tiles, turns the chevron and keeps one item open per name",
         "status": "passed",
-        "durationMs": 384.369336
+        "durationMs": 365.515029
       },
       {
         "file": "tests/aura-browser.test.js",
         "name": "chromium: aura turns a ring around its element, stops under reduced motion and stays out of the accessibility tree",
         "status": "passed",
-        "durationMs": 1458.24251
+        "durationMs": 1460.579837
       },
       {
         "file": "tests/avatar-browser.test.js",
         "name": "chromium: avatar sizes its circle, names its initials and overlaps a group",
         "status": "passed",
-        "durationMs": 305.721898
+        "durationMs": 300.836705
       },
       {
         "file": "tests/bar-chart-browser.test.js",
         "name": "chromium: bar chart draws grouped, stacked and negative bars from its table",
         "status": "passed",
-        "durationMs": 327.018848
+        "durationMs": 314.786469
       },
       {
         "file": "tests/bar-chart-browser.test.js",
         "name": "chromium: bar chart tooltip and band follow the pointer and the up and down arrows",
         "status": "passed",
-        "durationMs": 607.017876
+        "durationMs": 600.223821
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group toggle colors resolve in a browser",
         "status": "passed",
-        "durationMs": 195.895137
+        "durationMs": 187.229749
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group geometry resolves for overrides, targets, and RTL",
         "status": "passed",
-        "durationMs": 166.252655
+        "durationMs": 158.265319
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "standard press redistribution keeps its rendered width stable",
         "status": "passed",
-        "durationMs": 710.759779
+        "durationMs": 708.703103
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "keyboard press changes icon widths and rendered corners",
         "status": "passed",
-        "durationMs": 1230.492396
+        "durationMs": 1233.152285
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "a selected connected item morphs to half its height, not to a clamp",
         "status": "passed",
-        "durationMs": 186.283215
+        "durationMs": 192.686441
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "selection-required skips disabled controls and preserves a selection",
         "status": "passed",
-        "durationMs": 343.8103
+        "durationMs": 327.163943
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "connected translated labels remain reachable in a constrained scroller",
         "status": "passed",
-        "durationMs": 155.751098
+        "durationMs": 157.405654
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "dragged and picked-up states override simultaneous pointer states",
         "status": "passed",
-        "durationMs": 788.660603
+        "durationMs": 779.040757
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "invalid disclosures keep their panels visible and operable",
         "status": "passed",
-        "durationMs": 184.234938
+        "durationMs": 168.273489
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
         "status": "passed",
-        "durationMs": 160.410996
+        "durationMs": 154.406126
       },
       {
         "file": "tests/column-chart-browser.test.js",
         "name": "chromium: column chart draws grouped, stacked and negative columns from its table",
         "status": "passed",
-        "durationMs": 303.048427
+        "durationMs": 285.285093
       },
       {
         "file": "tests/column-chart-browser.test.js",
         "name": "chromium: column chart tooltip and band follow the pointer and the arrow keys",
         "status": "passed",
-        "durationMs": 287.888083
+        "durationMs": 293.408996
       },
       {
         "file": "tests/command-palette-browser.test.js",
         "name": "chromium: command palette opens on its shortcut, filters, moves with the arrows and runs a command",
         "status": "passed",
-        "durationMs": 542.882655
+        "durationMs": 519.522257
       },
       {
         "file": "tests/confetti-browser.test.js",
         "name": "chromium: confetti bursts from its trigger in theme colors, on its own canvas, above a modal dialog and not under reduced motion",
         "status": "passed",
-        "durationMs": 3326.148009
+        "durationMs": 3306.294397
       },
       {
         "file": "tests/countdown-browser.test.js",
         "name": "chromium: countdown shows 0 to 999 as rolling digits and keeps the text for assistive technology",
         "status": "passed",
-        "durationMs": 240.236316
+        "durationMs": 229.621996
       },
       {
         "file": "tests/data-table-browser.test.js",
         "name": "chromium: data table keeps table semantics, sticks its header and draws sort and selection",
         "status": "passed",
-        "durationMs": 323.377043
+        "durationMs": 303.554447
       },
       {
         "file": "tests/drop-zone-browser.test.js",
         "name": "chromium: drop zone covers its label with the file input, marks a drag and lists chosen files",
         "status": "passed",
-        "durationMs": 384.369796
+        "durationMs": 370.917092
       },
       {
         "file": "tests/empty-state-browser.test.js",
         "name": "chromium: empty state centers its content and rings the leading icon",
         "status": "passed",
-        "durationMs": 241.933634
+        "durationMs": 237.882439
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (chromium)",
         "status": "passed",
-        "durationMs": 1868.882942
+        "durationMs": 1855.109835
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (chromium)",
         "status": "passed",
-        "durationMs": 261.351019
+        "durationMs": 265.057012
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete settings example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10262.906754
+        "durationMs": 10186.436396
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete editor example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10529.839593
+        "durationMs": 10371.390631
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete list-detail example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10458.700751
+        "durationMs": 10328.856894
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
         "status": "passed",
-        "durationMs": 869.477746
+        "durationMs": 847.371226
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "resource observations detect omitted teardown after a partial replacement",
         "status": "passed",
-        "durationMs": 194.03984
+        "durationMs": 181.204551
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip positioning preserves margins and viewport edges after scrolling",
         "status": "passed",
-        "durationMs": 189.610932
+        "durationMs": 185.707199
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip destroy cancels pending delay and animation callbacks",
         "status": "passed",
-        "durationMs": 176.671402
+        "durationMs": 174.664135
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Node can import the ESM bundle but runtime initialization requires a document",
         "status": "passed",
-        "durationMs": 38.858958
+        "durationMs": 36.395219
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "current FAB sizes preserve geometry and explicit extended variants",
         "status": "passed",
-        "durationMs": 191.861175
+        "durationMs": 177.849784
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "speed-dial CSS and runtime options are removed",
         "status": "passed",
-        "durationMs": 0.754744
+        "durationMs": 0.794484
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "FAB menu preserves keyboard, dismissal and responsive behavior",
         "status": "passed",
-        "durationMs": 748.733752
+        "durationMs": 736.982677
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material grading rejects candidate evidence and missing or malformed operator observations",
         "status": "passed",
-        "durationMs": 7.645497
+        "durationMs": 7.338919
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
         "status": "passed",
-        "durationMs": 23003.909259
+        "durationMs": 22547.98627
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material review fixture is semantically valid despite intrusive feedback and mismatched selection intent",
         "status": "passed",
-        "durationMs": 613.101963
+        "durationMs": 563.001677
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "web accessibility fixture exposes target geometry, keyboard reorder, and forced-color defects",
         "status": "passed",
-        "durationMs": 251.905024
+        "durationMs": 248.336927
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: tooltip hover, dismissal, reduced motion and native form behavior",
         "status": "passed",
-        "durationMs": 5665.027127
+        "durationMs": 5965.670076
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: select exposes only the generated control and restores native accessibility",
         "status": "passed",
-        "durationMs": 354.350557
+        "durationMs": 340.595541
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: select preserves every associated label and authored naming precedence",
         "status": "passed",
-        "durationMs": 1517.738213
+        "durationMs": 1483.884376
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: select validation remains usable with a hidden native control: multiple=false",
         "status": "passed",
-        "durationMs": 440.584062
+        "durationMs": 442.733237
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: select validation remains usable with a hidden native control: multiple=true",
         "status": "passed",
-        "durationMs": 446.792259
+        "durationMs": 434.294055
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: select validation preserves native focus scope: multiple=false",
         "status": "passed",
-        "durationMs": 364.582505
+        "durationMs": 360.011247
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: select validation preserves native focus scope: multiple=true",
         "status": "passed",
-        "durationMs": 367.665433
+        "durationMs": 336.39285
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining native controls preserve names, keyboard state and form values",
         "status": "passed",
-        "durationMs": 365.732097
+        "durationMs": 323.110941
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
         "status": "passed",
-        "durationMs": 260.938292
+        "durationMs": 241.039557
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: linear progress follows inherited and overridden RTL direction",
         "status": "passed",
-        "durationMs": 332.953697
+        "durationMs": 306.820344
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: progress remains visible in forced colors",
         "status": "passed",
-        "durationMs": 6111.2532
+        "durationMs": 6082.098593
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining progress and loading variants stop spatial motion",
         "status": "passed",
-        "durationMs": 233.455543
+        "durationMs": 228.083507
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining snackbar retains a focused action until focus leaves",
         "status": "passed",
-        "durationMs": 1312.70396
+        "durationMs": 1294.244334
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: autocomplete searches input-only edits without duplicate keyboard searches",
         "status": "passed",
-        "durationMs": 297.889052
+        "durationMs": 286.815602
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: autocomplete announces results and selection without moving focus",
         "status": "passed",
-        "durationMs": 265.639968
+        "durationMs": 254.912272
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker supports calendar keyboard navigation and redraw focus",
         "status": "passed",
-        "durationMs": 417.150036
+        "durationMs": 374.740986
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker selection lifecycle: default",
         "status": "passed",
-        "durationMs": 237.261817
+        "durationMs": 216.619596
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker selection lifecycle: multiple",
         "status": "passed",
-        "durationMs": 563.690029
+        "durationMs": 543.79846
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker selection lifecycle: range",
         "status": "passed",
-        "durationMs": 287.181147
+        "durationMs": 285.839678
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker selection lifecycle: clear",
         "status": "passed",
-        "durationMs": 250.456944
+        "durationMs": 266.412503
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker calendar-date parsing in America/Chicago",
         "status": "passed",
-        "durationMs": 469.168542
+        "durationMs": 429.596907
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker calendar-date parsing in UTC",
         "status": "passed",
-        "durationMs": 485.335918
+        "durationMs": 454.189588
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: date picker calendar-date parsing in Asia/Tokyo",
         "status": "passed",
-        "durationMs": 479.031132
+        "durationMs": 445.799196
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: time picker digital values: input",
         "status": "passed",
-        "durationMs": 547.94063
+        "durationMs": 549.130912
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: time picker digital values: empty",
         "status": "passed",
-        "durationMs": 418.317268
+        "durationMs": 437.289734
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: time picker digital values: boundaries",
         "status": "passed",
-        "durationMs": 315.330341
+        "durationMs": 319.01278
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Datepicker footer activates once per Enter or Space",
         "status": "passed",
-        "durationMs": 232.282052
+        "durationMs": 230.470461
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Timepicker footer activates once per Enter or Space",
         "status": "passed",
-        "durationMs": 220.968301
+        "durationMs": 217.61775
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: time picker exposes named keyboard controls in inline and docked modes",
         "status": "passed",
-        "durationMs": 293.061016
+        "durationMs": 283.859753
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: authored snackbar survives focus reentry during dismiss",
         "status": "passed",
-        "durationMs": 458.221559
+        "durationMs": 475.869268
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: authored snackbar survives focus reentry during replace",
         "status": "passed",
-        "durationMs": 466.786228
+        "durationMs": 462.246902
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: actionable snackbar persists and restores focus on keyboard dismissal",
         "status": "passed",
-        "durationMs": 720.712649
+        "durationMs": 661.206809
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining lightbox supports Space and preserves its image on teardown",
         "status": "passed",
-        "durationMs": 221.298469
+        "durationMs": 223.506719
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
         "status": "passed",
-        "durationMs": 348.505058
+        "durationMs": 357.645674
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
         "status": "passed",
-        "durationMs": 279.359792
+        "durationMs": 276.559202
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: interrupt",
         "status": "passed",
-        "durationMs": 400.727822
+        "durationMs": 390.341078
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: reopen",
         "status": "passed",
-        "durationMs": 710.706089
+        "durationMs": 702.602534
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: motion",
         "status": "passed",
-        "durationMs": 416.62498
+        "durationMs": 378.368481
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: focus",
         "status": "passed",
-        "durationMs": 412.781137
+        "durationMs": 397.122161
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: isolation",
         "status": "passed",
-        "durationMs": 682.193129
+        "durationMs": 664.744706
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: triggers",
         "status": "passed",
-        "durationMs": 3587.682746
+        "durationMs": 3570.344836
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: callbacks",
         "status": "passed",
-        "durationMs": 767.106204
+        "durationMs": 759.994469
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: Lightbox transition reliability: destroy",
         "status": "passed",
-        "durationMs": 586.36143
+        "durationMs": 597.971916
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: ScrollSpy isolation: offsets",
         "status": "passed",
-        "durationMs": 263.845171
+        "durationMs": 266.970299
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: ScrollSpy isolation: groups",
         "status": "passed",
-        "durationMs": 265.021503
+        "durationMs": 248.875474
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: ScrollSpy isolation: teardown",
         "status": "passed",
-        "durationMs": 237.842743
+        "durationMs": 232.802914
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: ScrollSpy isolation: anchors",
         "status": "passed",
-        "durationMs": 1672.452578
+        "durationMs": 1665.228745
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining lightbox teardown cancels pending work and preserves native button focus",
         "status": "passed",
-        "durationMs": 435.22699
+        "durationMs": 410.550878
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining slider accepts zero maximum and keeps value labels aligned after resize",
         "status": "passed",
-        "durationMs": 223.612923
+        "durationMs": 207.020782
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining autocomplete preserves a preselected display label on focus",
         "status": "passed",
-        "durationMs": 232.934247
+        "durationMs": 228.055987
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: carousel tracks keep default touch-action so a vertical swipe scrolls the page",
         "status": "passed",
-        "durationMs": 590.021825
+        "durationMs": 596.431256
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: top app bar rests on surface and fills only once the page scrolls",
         "status": "passed",
-        "durationMs": 467.227155
+        "durationMs": 467.260097
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: slider stops paint a dot on the active track at each step before the handle",
         "status": "passed",
-        "durationMs": 551.223526
+        "durationMs": 551.354457
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: native indeterminate progress keeps its track and a 40% indicator",
         "status": "passed",
-        "durationMs": 613.700309
+        "durationMs": 596.448546
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining datepicker date input shows its date where inputs cannot render ::after",
         "status": "passed",
-        "durationMs": 620.66476
+        "durationMs": 624.125296
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: carousel mouse drag scrolls every snapping layout and a drag never follows a link",
         "status": "passed",
-        "durationMs": 1049.045178
+        "durationMs": 1081.861009
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: datepicker date input overlay follows edits to the native value",
         "status": "passed",
-        "durationMs": 226.87155
+        "durationMs": 229.784245
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: datepicker replaces the native date picker only while its calendar is shown",
         "status": "passed",
-        "durationMs": 575.285448
+        "durationMs": 569.301683
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: field icons paint above a datepicker date input and under a docked search view",
         "status": "passed",
-        "durationMs": 230.471684
+        "durationMs": 226.758866
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: slider stops sit at each step from min, need a usable step and clear on destroy",
         "status": "passed",
-        "durationMs": 752.324747
+        "durationMs": 756.437053
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: a header that holds only tabs is not a pinned top app bar",
         "status": "passed",
-        "durationMs": 211.588007
+        "durationMs": 206.530975
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: flexible app bars keep the scroll position when they collapse",
         "status": "passed",
-        "durationMs": 1255.865718
+        "durationMs": 1242.54725
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: a flexible app bar low in the viewport keeps its size",
         "status": "passed",
-        "durationMs": 887.925407
+        "durationMs": 898.671342
       },
       {
         "file": "tests/heatmap-chart-browser.test.js",
         "name": "chromium: heatmap chart draws a shaded grid and a scale from its table",
         "status": "passed",
-        "durationMs": 285.185322
+        "durationMs": 289.038326
       },
       {
         "file": "tests/heatmap-chart-browser.test.js",
         "name": "chromium: heatmap chart tooltip follows the pointer and the arrow keys round the grid",
         "status": "passed",
-        "durationMs": 555.742576
+        "durationMs": 575.597181
       },
       {
         "file": "tests/kpi-browser.test.js",
         "name": "chromium: kpi lays out its label, value, trend, actions, chart and footer",
         "status": "passed",
-        "durationMs": 244.297838
+        "durationMs": 230.441321
       },
       {
         "file": "tests/line-chart-browser.test.js",
         "name": "chromium: line chart draws its table, keeps it readable and restores it on destroy",
         "status": "passed",
-        "durationMs": 271.394048
+        "durationMs": 260.116016
       },
       {
         "file": "tests/line-chart-browser.test.js",
         "name": "chromium: line chart tooltip follows the pointer and the arrow keys",
         "status": "passed",
-        "durationMs": 272.105573
+        "durationMs": 278.801037
       },
       {
         "file": "tests/line-chart-browser.test.js",
         "name": "chromium: line chart handles cards, headerless tables, RTL, strict values and forced colors",
         "status": "passed",
-        "durationMs": 336.578861
+        "durationMs": 318.326355
       },
       {
         "file": "tests/map-browser.test.js",
         "name": "chromium: map places markers and popups, runs controls, themes overlays and restores its markup",
         "status": "passed",
-        "durationMs": 2292.260105
+        "durationMs": 2299.379702
       },
       {
         "file": "tests/map-browser.test.js",
         "name": "chromium: a map in a shadow root opens its marker popup",
         "status": "passed",
-        "durationMs": 327.451715
+        "durationMs": 278.45841
       },
       {
         "file": "tests/marquee-browser.test.js",
         "name": "chromium: marquee loops its two groups, pauses, follows direction and stops under reduced motion",
         "status": "passed",
-        "durationMs": 284.734124
+        "durationMs": 273.271255
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "AppBar documentation demos leave site controls reachable (chromium)",
         "status": "passed",
-        "durationMs": 374.151328
+        "durationMs": 358.679026
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Select native form synchronization: disabled (chromium)",
         "status": "passed",
-        "durationMs": 320.029927
+        "durationMs": 310.38202
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Select native form synchronization: reset (chromium)",
         "status": "passed",
-        "durationMs": 539.574478
+        "durationMs": 517.408402
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Select native form synchronization: refresh (chromium)",
         "status": "passed",
-        "durationMs": 430.541203
+        "durationMs": 411.77673
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Select native form synchronization: interaction (chromium)",
         "status": "passed",
-        "durationMs": 785.137817
+        "durationMs": 756.033586
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Panes use the nearest available width at layout boundaries (chromium)",
         "status": "passed",
-        "durationMs": 958.467733
+        "durationMs": 959.271015
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Panes preserve footer icon-button geometry (chromium)",
         "status": "passed",
-        "durationMs": 327.784623
+        "durationMs": 323.128651
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Panes preserve compact selection and independent scrolling (chromium)",
         "status": "passed",
-        "durationMs": 934.56848
+        "durationMs": 951.478698
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "AppBar focus ownership and teardown (chromium)",
         "status": "passed",
-        "durationMs": 749.504097
+        "durationMs": 609.071049
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "AppBar collapsed actions remain reachable (chromium)",
         "status": "passed",
-        "durationMs": 4474.107223
+        "durationMs": 4457.0982
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "AppBar native search dismissal and reopening (chromium)",
         "status": "passed",
-        "durationMs": 5699.674804
+        "durationMs": 5684.796223
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Side sheet rendered docking and drag direction (chromium)",
         "status": "passed",
-        "durationMs": 22757.570026
+        "durationMs": 22590.894694
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Sheets distinguish recent flicks from pauses and reversals (chromium)",
         "status": "passed",
-        "durationMs": 2638.918316
+        "durationMs": 2602.694359
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Sheets cancel only the active pointer and clean interrupted drags (chromium)",
         "status": "passed",
-        "durationMs": 2322.827671
+        "durationMs": 2254.829809
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Side sheet translated content and close actions remain reachable (chromium)",
         "status": "passed",
-        "durationMs": 5132.629608
+        "durationMs": 5057.018412
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Bottom sheets keep long content and actions reachable at compact widths (chromium)",
         "status": "passed",
-        "durationMs": 483.545922
+        "durationMs": 476.157326
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel navigation scrolls and focuses logical items (chromium)",
         "status": "passed",
-        "durationMs": 29350.58865
+        "durationMs": 29052.015704
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel ignores stale scrollend during a newer navigation (chromium)",
         "status": "passed",
-        "durationMs": 311.07184
+        "durationMs": 311.223983
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel destroys pending scroll completion work (chromium)",
         "status": "passed",
-        "durationMs": 213.765532
+        "durationMs": 209.072678
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel mounted motion changes preserve explicit pause (chromium)",
         "status": "passed",
-        "durationMs": 725.092189
+        "durationMs": 704.538371
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Carousel focus and visibility suspension survive teardown (chromium)",
         "status": "passed",
-        "durationMs": 309.490151
+        "durationMs": 298.639481
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Slider labels follow native handles through direction and resize (chromium)",
         "status": "passed",
-        "durationMs": 6661.709112
+        "durationMs": 6627.272343
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Slider input events and paired ranges retain native interaction (chromium)",
         "status": "passed",
-        "durationMs": 2648.866445
+        "durationMs": 2650.008633
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Slider forced colors preserve tracks and handles (chromium)",
         "status": "passed",
-        "durationMs": 2358.507751
+        "durationMs": 2372.18323
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "select and calendar treat external values as data (chromium)",
         "status": "passed",
-        "durationMs": 150.997041
+        "durationMs": 146.757888
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu cancels superseded callbacks and teardown work (chromium)",
         "status": "passed",
-        "durationMs": 256.180675
+        "durationMs": 254.982841
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "NavigationRail dismisses a nested menu before handling Escape (chromium)",
         "status": "passed",
-        "durationMs": 641.003587
+        "durationMs": 644.579024
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "NavigationRail preserves callback focus inside child shadow roots (chromium)",
         "status": "passed",
-        "durationMs": 325.613407
+        "durationMs": 318.466214
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu click containment follows closeOnClick inside shadow roots (chromium)",
         "status": "passed",
-        "durationMs": 1570.989242
+        "durationMs": 1561.208352
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu dismissal preserves outside input and callback focus (chromium)",
         "status": "passed",
-        "durationMs": 840.671769
+        "durationMs": 792.266666
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu excludes closing content and preserves callback focus (chromium)",
         "status": "passed",
-        "durationMs": 292.667898
+        "durationMs": 291.101512
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu scopes nested keys and mirrors flyouts in RTL (chromium)",
         "status": "passed",
-        "durationMs": 580.283114
+        "durationMs": 587.065621
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu consumers keep values and focus through closing (chromium)",
         "status": "passed",
-        "durationMs": 268.109681
+        "durationMs": 287.976954
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
         "status": "passed",
-        "durationMs": 246.174294
+        "durationMs": 235.466046
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Chips deletion targets and focus recovery (chromium)",
         "status": "passed",
-        "durationMs": 1632.652188
+        "durationMs": 1666.893633
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Chips callbacks and instance teardown preserve focus (chromium)",
         "status": "passed",
-        "durationMs": 707.70154
+        "durationMs": 699.117568
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Chips wrapped labels keep separate actions reachable (chromium)",
         "status": "passed",
-        "durationMs": 308.031421
+        "durationMs": 314.64429
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs synchronize swipe selection and callbacks (chromium)",
         "status": "passed",
-        "durationMs": 654.90992
+        "durationMs": 650.770572
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs resolve literal panel IDs in normal and swipeable modes (chromium)",
         "status": "passed",
-        "durationMs": 952.446795
+        "durationMs": 930.388923
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs restore panels on teardown and remount (chromium)",
         "status": "passed",
-        "durationMs": 265.482729
+        "durationMs": 264.896783
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs threshold keeps native links and ordinary panels (chromium)",
         "status": "passed",
-        "durationMs": 216.378463
+        "durationMs": 247.807111
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Tabs hash selection, native dragging and overflow geometry (chromium)",
         "status": "passed",
-        "durationMs": 4193.217572
+        "durationMs": 4142.387311
       },
       {
         "file": "tests/message-browser.test.js",
         "name": "chromium: message layout anchors the avatar, follows its side and joins grouped corners",
         "status": "passed",
-        "durationMs": 346.400173
+        "durationMs": 339.30432
       },
       {
         "file": "tests/message-scroller-browser.test.js",
         "name": "chromium: message scroller follows output, keeps its place on prepend and anchors new turns",
         "status": "passed",
-        "durationMs": 2609.70155
+        "durationMs": 2608.951976
       },
       {
         "file": "tests/message-scroller-browser.test.js",
         "name": "chromium: message scroller opens saved transcripts at the requested position",
         "status": "passed",
-        "durationMs": 387.318326
+        "durationMs": 362.296222
       },
       {
         "file": "tests/message-scroller-browser.test.js",
         "name": "chromium: message scroller jumps to a message inside a shadow root",
         "status": "passed",
-        "durationMs": 1191.677428
+        "durationMs": 1201.298335
       },
       {
         "file": "tests/mixed-chart-browser.test.js",
         "name": "chromium: mixed chart draws columns, areas and lines on two scales",
         "status": "passed",
-        "durationMs": 250.470654
+        "durationMs": 257.505834
       },
       {
         "file": "tests/particles-browser.test.js",
         "name": "chromium: particles fill their box in the theme color, follow the pointer, drift, refit on resize and stay still under reduced motion",
         "status": "passed",
-        "durationMs": 2938.745964
+        "durationMs": 2922.690633
       },
       {
         "file": "tests/pie-chart-browser.test.js",
         "name": "chromium: pie chart draws slices, a legend and a donut total from its table",
         "status": "passed",
-        "durationMs": 293.581633
+        "durationMs": 277.390527
       },
       {
         "file": "tests/pie-chart-browser.test.js",
         "name": "chromium: pie chart tooltip follows the pointer round the pie and the arrow keys",
         "status": "passed",
-        "durationMs": 449.761038
+        "durationMs": 434.168366
       },
       {
         "file": "tests/popover-browser.test.js",
         "name": "chromium: popover anchors to its button, flips at the edge and stays open while used",
         "status": "passed",
-        "durationMs": 652.516737
+        "durationMs": 622.428038
       },
       {
         "file": "tests/questionnaire-browser.test.js",
         "name": "chromium: questionnaire shows one question, validates, skips, branches and submits",
         "status": "passed",
-        "durationMs": 625.412647
+        "durationMs": 628.031338
       },
       {
         "file": "tests/questionnaire-browser.test.js",
         "name": "chromium: questionnaire validates requestSubmit and ignores disabled checkboxes",
         "status": "passed",
-        "durationMs": 311.849314
+        "durationMs": 274.364798
       },
       {
         "file": "tests/radar-chart-browser.test.js",
         "name": "chromium: radar chart draws a grid, shapes, labels and a legend from its table",
         "status": "passed",
-        "durationMs": 266.729611
+        "durationMs": 259.783219
       },
       {
         "file": "tests/radar-chart-browser.test.js",
         "name": "chromium: radar chart tooltip follows the pointer round the spokes and the arrow keys",
         "status": "passed",
-        "durationMs": 301.286668
+        "durationMs": 303.489527
       },
       {
         "file": "tests/radial-chart-browser.test.js",
         "name": "chromium: radial chart draws rings, a legend and a total from its table",
         "status": "passed",
-        "durationMs": 284.488446
+        "durationMs": 281.098441
       },
       {
         "file": "tests/radial-chart-browser.test.js",
         "name": "chromium: radial chart tooltip follows the pointer across the rings and the arrow keys",
         "status": "passed",
-        "durationMs": 420.010337
+        "durationMs": 407.256901
       },
       {
         "file": "tests/rating-browser.test.js",
         "name": "chromium: rating fills stars up to the choice, previews on hover and keeps native radios",
         "status": "passed",
-        "durationMs": 487.888291
+        "durationMs": 455.920906
       },
       {
         "file": "tests/rich-text-editor-browser.test.js",
         "name": "chromium: rich text editor formats text, reflects state and keeps the textarea in sync",
         "status": "passed",
-        "durationMs": 471.699774
+        "durationMs": 450.170696
       },
       {
         "file": "tests/rich-text-editor-browser.test.js",
         "name": "chromium: rich text editor follows a disabled textarea",
         "status": "passed",
-        "durationMs": 300.781402
+        "durationMs": 283.728223
       },
       {
         "file": "tests/skeleton-browser.test.js",
         "name": "chromium: skeleton shimmers, stops under reduced motion and stays out of the accessibility tree",
         "status": "passed",
-        "durationMs": 296.056745
+        "durationMs": 281.752367
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the default split button is the small family",
         "status": "passed",
-        "durationMs": 0.614006
+        "durationMs": 0.598976
       },
       {
         "file": "tests/split-button.test.js",
         "name": "xsmall is 32px tall with a 22px trailing icon",
         "status": "passed",
-        "durationMs": 0.189959
+        "durationMs": 0.188648
       },
       {
         "file": "tests/split-button.test.js",
         "name": "small is 40px tall with a 22px trailing icon",
         "status": "passed",
-        "durationMs": 0.108029
+        "durationMs": 0.10581
       },
       {
         "file": "tests/split-button.test.js",
         "name": "medium is 56px tall with a 26px trailing icon",
         "status": "passed",
-        "durationMs": 0.108729
+        "durationMs": 0.10598
       },
       {
         "file": "tests/split-button.test.js",
         "name": "large is 96px tall with a 38px trailing icon",
         "status": "passed",
-        "durationMs": 0.121189
+        "durationMs": 0.11824
       },
       {
         "file": "tests/split-button.test.js",
         "name": "xlarge is 136px tall with a 50px trailing icon",
         "status": "passed",
-        "durationMs": 0.131989
+        "durationMs": 0.12587
       },
       {
         "file": "tests/split-button.test.js",
         "name": "every size is 2dp between the halves",
         "status": "passed",
-        "durationMs": 0.099229
+        "durationMs": 0.10362
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the leading half is round on the outside and morphs on the inside",
         "status": "passed",
-        "durationMs": 0.175919
+        "durationMs": 0.169078
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the leading half narrows its trailing inset toward the seam",
         "status": "passed",
-        "durationMs": 0.120819
+        "durationMs": 0.120419
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the trailing half is round on the outside and morphs on the inside",
         "status": "passed",
-        "durationMs": 0.169109
+        "durationMs": 0.157249
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the trailing half is symmetric and takes the larger split-button icon",
         "status": "passed",
-        "durationMs": 0.115399
+        "durationMs": 0.112989
       },
       {
         "file": "tests/split-button.test.js",
         "name": "hovering or pressing a half swells its inner corner",
         "status": "passed",
-        "durationMs": 0.289958
+        "durationMs": 0.266568
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the halves are matched with :where, so expanded outranks hover",
         "status": "passed",
-        "durationMs": 0.238579
+        "durationMs": 0.227378
       },
       {
         "file": "tests/split-button.test.js",
         "name": "an icon button is not a half, in the sheet as well as the rules",
         "status": "passed",
-        "durationMs": 0.177708
+        "durationMs": 0.153139
       },
       {
         "file": "tests/split-button.test.js",
         "name": "an expanded trailing half goes fully round on the seam",
         "status": "passed",
-        "durationMs": 0.096649
+        "durationMs": 0.083069
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the expanded trailing icon is turned over",
         "status": "passed",
-        "durationMs": 0.08969
+        "durationMs": 0.091679
       },
       {
         "file": "tests/split-button.test.js",
         "name": "a half still transitions its shadow, as every other button does",
         "status": "passed",
-        "durationMs": 0.069949
+        "durationMs": 0.07594
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the morph and the spin are both transitioned, and both stop under reduce",
         "status": "passed",
-        "durationMs": 0.394767
+        "durationMs": 0.375147
       },
       {
         "file": "tests/split-button.test.js",
         "name": "Menu writes aria-expanded on the trailing half, and clears it",
         "status": "passed",
-        "durationMs": 47.008301
+        "durationMs": 46.676068
       },
       {
         "file": "tests/split-button.test.js",
         "name": "the author never has to write it",
         "status": "passed",
-        "durationMs": 0.05628
+        "durationMs": 0.06167
       },
       {
         "file": "tests/split-button.test.js",
         "name": "split-button halves activate separately and Escape returns focus",
         "status": "passed",
-        "durationMs": 670.362901
+        "durationMs": 651.154439
       },
       {
         "file": "tests/stat-browser.test.js",
         "name": "chromium: stats tile their figures, wrap when narrow and mark the change",
         "status": "passed",
-        "durationMs": 297.046298
+        "durationMs": 277.745435
       },
       {
         "file": "tests/stepper-browser.test.js",
         "name": "chromium: stepper lays out its steps, marks their state and speaks it",
         "status": "passed",
-        "durationMs": 355.317659
+        "durationMs": 331.334875
       },
       {
         "file": "tests/timeline-browser.test.js",
         "name": "chromium: timeline marks each event, joins it to the next and swaps the dot for an icon",
         "status": "passed",
-        "durationMs": 308.339179
+        "durationMs": 301.209912
       },
       {
         "file": "tests/tree-browser.test.js",
         "name": "chromium: tree indents its levels, turns its chevrons and marks the current row",
         "status": "passed",
-        "durationMs": 361.697065
+        "durationMs": 356.288443
       }
     ],
     "directories": [
       {
         "path": "src",
-        "sha256": "7d621a010efe334847f0fb00e1de3c85e6951864e09de601e042ebda72d5e7aa"
+        "sha256": "d03daa23e1adb8094403d5d60dcd7d1d02dcb6ec419bd5c38542db2e406fd55b"
       },
       {
         "path": "tests",
-        "sha256": "d586d9e6e5a86c330264ea08748bba79b66b3715d6225bbf92bb6ac5aa5d4738"
+        "sha256": "87559f05734a96962a67e5a25223015de0b0cc900d041aac7d95a9ca0a89b038"
       },
       {
         "path": "dist",
-        "sha256": "7f8964314494093db0c628644067d4f737ce82d41cdc89a8983cff7fb9fe4a7e"
+        "sha256": "3ac2ec8c632a677e74cf3b660927db262b43a68c655996a4bf6960893eb330da"
       },
       {
         "path": "skills/expressivecss/assets/examples",
@@ -11202,7 +11202,7 @@
       }
     ],
     "inputsUnchanged": true,
-    "reportSha256": "4cb104c95e032d6af863a03ce83b49c0e0c1729adbb34afe9b9d5180af16ce4d"
+    "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
   "sourceRevision": "daa0f54fc40e4fd626c7daba8abe2cf2cbd7dae8"
 }

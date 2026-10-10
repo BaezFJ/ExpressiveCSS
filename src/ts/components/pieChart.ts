@@ -28,6 +28,8 @@ export class PieChart extends LineChart {
   /** Each row's color, or undefined for a row with no slice. */
   private _colors: (string | undefined)[];
   private _slices: (SVGPathElement | null)[];
+  /** Percent formatters by fraction digits, rebuilt once per legend. */
+  private _percents: Intl.NumberFormat[];
 
   protected get _type() {
     return 'pie-chart';
@@ -89,17 +91,25 @@ export class PieChart extends LineChart {
     if (end <= start) return '';
     const share = end - start;
     // Whole percentages, with a tenth below 10% so a small part is not 0%.
-    const options = { style: 'percent', maximumFractionDigits: share < 0.1 ? 1 : 0 } as const;
+    const digits = share < 0.1 ? 1 : 0;
+    (this._percents ??= [])[digits] ??= this._percent(digits);
+    return this._percents[digits].format(share);
+  }
+
+  private _percent(digits: number) {
+    const options = { style: 'percent', maximumFractionDigits: digits } as const;
     try {
-      return share.toLocaleString(this.el.closest<HTMLElement>('[lang]')?.lang || undefined, options);
+      return new Intl.NumberFormat(this.el.closest<HTMLElement>('[lang]')?.lang || undefined, options);
     } catch {
       // An invalid lang attribute.
-      return share.toLocaleString(undefined, options);
+      return new Intl.NumberFormat(undefined, options);
     }
   }
 
   /** The legend: every row with its color, its cell and its share. */
   protected _guides(): Element[] {
+    // A redraw picks up a changed lang attribute.
+    this._percents = [];
     const legend = document.createElement('ul');
     legend.className = 'pie-chart-legend';
     legend.setAttribute('aria-hidden', 'true');

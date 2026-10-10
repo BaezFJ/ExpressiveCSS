@@ -107,6 +107,8 @@ export class Snackbar {
   time: number;
   deltaX: number;
   velocityX: number;
+  /** Swipe distance that dismisses, measured once when the drag starts. */
+  private _activationDistance: number;
   private _dismissed = false;
   private _returnFocus: HTMLElement | null = null;
   private _events: AbortController;
@@ -212,6 +214,8 @@ export class Snackbar {
       snackbar.velocityX = 0;
       snackbar.time = Date.now();
       snackbar.xPos = e.clientX;
+      // A translateX does not change the width, so one read covers the drag.
+      snackbar._activationDistance = snackbar.el.offsetWidth * snackbar.options.activationPercent;
     }
   }
 
@@ -226,7 +230,7 @@ export class Snackbar {
       snackbar.time = Date.now();
 
       const totalDeltaX = snackbar.xPos - snackbar.startingXPos;
-      const activationDistance = snackbar.el.offsetWidth * snackbar.options.activationPercent;
+      const activationDistance = snackbar._activationDistance;
       snackbar.el.style.transform = `translateX(${totalDeltaX}px)`;
       snackbar.el.style.opacity = (1 - Math.abs(totalDeltaX / activationDistance)).toString();
     }
@@ -241,7 +245,7 @@ export class Snackbar {
       snackbar.el.classList.remove('panning');
 
       const totalDeltaX = snackbar.xPos - snackbar.startingXPos;
-      const activationDistance = snackbar.el.offsetWidth * snackbar.options.activationPercent;
+      const activationDistance = snackbar._activationDistance;
       const velocity = Date.now() - snackbar.time < 100 ? snackbar.velocityX : 0;
       const shouldBeDismissed = Math.abs(totalDeltaX) > activationDistance || velocity > 1;
 

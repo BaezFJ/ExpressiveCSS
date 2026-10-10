@@ -99,9 +99,9 @@ export class Slider extends Component<SliderOptions> {
   _setupEventHandlers() {
     this.el.addEventListener('change', this._handleRangeChange);
     this.el.addEventListener('pointerdown', this._handleRangePointerDown);
-    this.el.addEventListener('input', this._handleRangeInputOrMove);
-    // Never calls preventDefault, so it does not need to block scrolling.
-    this.el.addEventListener('pointermove', this._handleRangeInputOrMove, { passive: true });
+    // `input` alone tracks a drag. A `pointermove` sync used to run as well,
+    // twice per frame, and before the browser had moved the value.
+    this.el.addEventListener('input', this._handleRangeInput);
     this.el.addEventListener('pointerup', this._handleRangePointerUp);
     this.el.addEventListener('pointercancel', this._handleRangePointerUp);
     this.el.addEventListener('blur', this._handleRangeRelease);
@@ -116,8 +116,7 @@ export class Slider extends Component<SliderOptions> {
   _removeEventHandlers() {
     this.el.removeEventListener('change', this._handleRangeChange);
     this.el.removeEventListener('pointerdown', this._handleRangePointerDown);
-    this.el.removeEventListener('input', this._handleRangeInputOrMove);
-    this.el.removeEventListener('pointermove', this._handleRangeInputOrMove);
+    this.el.removeEventListener('input', this._handleRangeInput);
     this.el.removeEventListener('pointerup', this._handleRangePointerUp);
     this.el.removeEventListener('pointercancel', this._handleRangePointerUp);
     this.el.removeEventListener('blur', this._handleRangeRelease);
@@ -142,12 +141,10 @@ export class Slider extends Component<SliderOptions> {
     this.thumb.classList.add('active');
   };
 
-  _handleRangeInputOrMove = (e: Event) => {
-    if (e.type === 'input' || this._pointerDown) {
-      this._clampDual();
-      this._sync();
-      this.thumb.classList.add('active');
-    }
+  _handleRangeInput = () => {
+    this._clampDual();
+    this._sync();
+    this.thumb.classList.add('active');
   };
 
   _handleRangePointerUp = (e: PointerEvent) => {

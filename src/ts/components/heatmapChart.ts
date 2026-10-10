@@ -47,9 +47,13 @@ export class HeatmapChart extends LineChart {
   /** Highlights one cell, numbered row by row. Pass -1 to hide the tooltip. */
   show(index: number) {
     if (!this._tooltip || index === this.activeIndex) return;
+    const cell = this._cells[index];
+    // Measure before the writes below, which would otherwise force a layout.
+    const [left, top, width, plotWidth] = cell
+      ? [cell.offsetLeft, cell.offsetTop, cell.offsetWidth, this._plot.clientWidth]
+      : [];
     this._cells[this.activeIndex]?.classList.remove('active');
     this.activeIndex = index;
-    const cell = this._cells[index];
     this._tooltip.hidden = !cell;
     if (!cell) return;
     cell.classList.add('active');
@@ -67,10 +71,10 @@ export class HeatmapChart extends LineChart {
     this._tooltip.replaceChildren(title, name, text);
 
     // Beside the cell, on the side with more room.
-    const end = cell.offsetLeft + cell.offsetWidth / 2 > this._plot.clientWidth / 2;
+    const end = left + width / 2 > plotWidth / 2;
     this._tooltip.classList.toggle('end', end);
-    this._tooltip.style.left = `${cell.offsetLeft + (end ? 0 : cell.offsetWidth)}px`;
-    this._tooltip.style.top = `${cell.offsetTop}px`;
+    this._tooltip.style.left = `${left + (end ? 0 : width)}px`;
+    this._tooltip.style.top = `${top}px`;
   }
 
   /** Arrows move the way they point, so left and right swap in RTL. */
