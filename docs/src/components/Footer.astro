@@ -1,10 +1,8 @@
 ---
-import { NAV } from "../data/nav";
-import { route } from "../lib/catalogue";
-
 /**
- * The footer, rendered from the same catalogue as the navigation, so documenting
- * a page links it in both.
+ * The site footer: where the project lives, the documents agents read, and
+ * the version this site describes. Page navigation lives in the rail, the
+ * page list and search, so the footer does not repeat the catalogue.
  */
 interface Props {
   version: string;
@@ -13,18 +11,28 @@ interface Props {
 }
 
 const { version, prerelease } = Astro.props;
+const repo = "https://github.com/BaezFJ/ExpressiveCSS";
 ---
-<footer>
+<footer class="docs-footer">
   <div class="container">
-    {NAV.map((group, i) => (
-      <nav aria-labelledby={`footer-${i + 1}`}>
-        <h2 id={`footer-${i + 1}`}>{group.label}</h2>
-        {group.blurb && <p>{group.blurb}</p>}
-        {group.pages.map((page) => <a href={route(page.id)}>{page.label}</a>)}
-      </nav>
-    ))}
+    <nav aria-labelledby="footer-project">
+      <h2 id="footer-project">Project</h2>
+      <a href={repo}>GitHub repository</a>
+      <a href="https://www.npmjs.com/package/@expressivecss/expressive">npm package</a>
+      <a href="/CHANGELOG.md">Changelog</a>
+      <a href={`${repo}/issues`}>Report an issue</a>
+      <a href={`${repo}/blob/master/CONTRIBUTING.md`}>Contributing</a>
+    </nav>
+    <nav aria-labelledby="footer-agents">
+      <h2 id="footer-agents">For agents</h2>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/llm.md">API reference (llm.md)</a>
+      <a href="/m3-guidelines.md">Material 3 guidelines</a>
+      <a href="/SEMANTICS.md">HTML semantics</a>
+    </nav>
     <small>
       <span>&copy; 2026 ExpressiveCSS</span>
+      <span>MIT License</span>
       <span>v{version}{prerelease ? " (prerelease)" : ""}</span>
     </small>
   </div>

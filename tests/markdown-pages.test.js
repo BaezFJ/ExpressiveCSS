@@ -5,10 +5,10 @@ import { renderMarkdownPage } from '../scripts/generate-markdown-pages.mjs';
 
 const sample = `<!doctype html>
 <html><body><main>
-  <section id="index-banner">
+  <div class="docs-page-header">
     <h1 class="docs-page-title">Menu</h1>
     <p class="docs-page-description">Temporary actions beside a trigger.</p>
-  </section>
+  </div>
   <div class="container"><div class="row">
     <div class="docs-page-content">
       <div id="anatomy" class="docs-section">

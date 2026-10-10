@@ -1,4 +1,4 @@
-import { PAGES, type DocsPage } from "../data/nav.ts";
+import { NAV, PAGES, type DocsGroup, type DocsPage } from "../data/nav.ts";
 
 /**
  * How the Astro site reads the shared page catalogue.
@@ -49,4 +49,25 @@ export function aliases(): { from: string; to: string }[] {
         : (entry.aliases ?? []);
     return from.map((path) => ({ from: path, to: route(entry.id) }));
   });
+}
+
+/** The group a page belongs to. */
+export function groupOf(id: string): DocsGroup {
+  const group = NAV.find((g) => g.pages.some((p) => p.id === id));
+  if (!group) throw new Error(`no documented page "${id}" -- see docs/src/data/nav.ts`);
+  return group;
+}
+
+/**
+ * A group's pages split into runs under their `section` subheading. A page
+ * without one stays in the run before it, so a group with no sections is a
+ * single run with no label.
+ */
+export function sectionsOf(group: DocsGroup): { label?: string; pages: DocsPage[] }[] {
+  const runs: { label?: string; pages: DocsPage[] }[] = [];
+  for (const p of group.pages) {
+    if (p.section || runs.length === 0) runs.push({ label: p.section, pages: [] });
+    runs[runs.length - 1].pages.push(p);
+  }
+  return runs;
 }

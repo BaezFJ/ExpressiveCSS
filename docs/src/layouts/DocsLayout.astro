@@ -1,14 +1,14 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import Banner from "../components/Banner.astro";
+import PageHeader from "../components/PageHeader.astro";
 import DocsNavigation from "../components/DocsNavigation.astro";
 import { NAV } from "../data/nav";
 import { markdownRoute, page, route } from "../lib/catalogue";
 
 /**
- * Every documentation page. The title and the banner come from the shared
- * catalogue rather than being restated per page, so a page cannot call itself
- * one thing in navigation and another in its own heading.
+ * Every documentation page. The title and the page header come from the
+ * shared catalogue rather than being restated per page, so a page cannot call
+ * itself one thing in navigation and another in its own heading.
  */
 interface Props {
   /** The catalogue id of the page being rendered. */
@@ -31,13 +31,20 @@ const sourceColorPalettes = [
     {/* A page that needs its own <head> content -- an extra font, say -- fills this. */}
     <slot name="head" slot="head" />
 
-    <header>
+    <a class="visually-hidden-focusable button filled docs-skip-link" href="#docs-main">Skip to content</a>
+
+    <header class="docs-app-bar">
         <div class="bar">
-            <button type="button" id="docs-navigation-trigger" class="hide-on-expanded-and-up" aria-label="Browse documentation" aria-haspopup="dialog" aria-controls="docs-navigation-dialog">
+            <button type="button" id="docs-navigation-trigger" class="hide-on-large-only hide-on-extra-large-only" aria-label="Browse documentation" aria-haspopup="dialog" aria-controls="docs-navigation-dialog">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>{pageName}</h2>
-            <button type="button" commandfor="docs-search" command="show-modal" title="Search (Ctrl+K)" aria-label="Search documentation">
+            <h2 class="docs-brand"><a href="/">ExpressiveCSS</a></h2>
+            <button type="button" class="tonal docs-search-trigger hide-on-compact-only" commandfor="docs-search" command="show-modal" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K">
+                <span class="material-symbols" aria-hidden="true">search</span>
+                <span>Search</span>
+                <kbd class="docs-search-shortcut">Ctrl K</kbd>
+            </button>
+            <button type="button" class="hide-on-med-and-up" commandfor="docs-search" command="show-modal" title="Search (Ctrl+K)" aria-label="Search documentation" aria-keyshortcuts="Control+K Meta+K">
                 <span class="material-symbols" aria-hidden="true">search</span>
             </button>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
@@ -51,11 +58,13 @@ const sourceColorPalettes = [
 
 <DocsNavigation current={id} />
 
-    <main>
-        <Banner title={pageName} description={entry.description}>
-            <slot name="banner" />
-        </Banner>
-        <slot />
+    <main id="docs-main" tabindex="-1">
+        <div class="docs-page">
+            <PageHeader page={id} title={pageName} description={entry.description} markdownPath={markdownRoute(id)}>
+                <slot name="banner" />
+            </PageHeader>
+            <slot />
+        </div>
     </main>
 
     {/* Ctrl+K site search over the page catalogue: titles, then descriptions as keywords. */}

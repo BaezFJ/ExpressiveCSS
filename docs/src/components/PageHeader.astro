@@ -1,0 +1,40 @@
+---
+import { groupOf, route } from "../lib/catalogue";
+
+/**
+ * The page header: where the page sits in the catalogue, its title, its
+ * one-line description and its Markdown counterpart. The landing page fills
+ * the slot with its calls to action.
+ */
+interface Props {
+  page: string;
+  title: string;
+  description: string;
+  markdownPath: string;
+}
+
+const { page, title, description, markdownPath } = Astro.props;
+const group = groupOf(page);
+const first = group.pages[0];
+---
+<div class="docs-page-header">
+  {page !== "index" && (
+    <nav class="docs-breadcrumb" aria-label="Documentation breadcrumb">
+      <ol>
+        <li><a href={route(first.id)}>{group.label}</a></li>
+        <li><a href={route(page)} aria-current="page">{title}</a></li>
+      </ol>
+    </nav>
+  )}
+  <h1 class="docs-page-title display-small">{title}</h1>
+  <p class="docs-page-description body-large on-surface-variant-text">{description}</p>
+  <slot />
+  {page !== "index" && (
+    <p class="docs-page-actions">
+      <a class="button text" href={markdownPath}>
+        <span class="material-symbols" aria-hidden="true">description</span>
+        <span>View as Markdown</span>
+      </a>
+    </p>
+  )}
+</div>

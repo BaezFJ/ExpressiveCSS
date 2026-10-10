@@ -9,6 +9,23 @@ document.addEventListener("DOMContentLoaded", () => {
   navigationTrigger?.addEventListener("click", () => navigationDialog?.showModal());
   navigationDialog?.addEventListener("close", () => navigationTrigger?.focus());
 
+  // The table of contents is a closed disclosure below Large and an open
+  // column from Large up.
+  const toc = document.querySelector(".docs-toc > details");
+  const wide = window.matchMedia("(width >= 1200px)");
+  const syncToc = () => {
+    if (toc) toc.open = wide.matches;
+  };
+  syncToc();
+  wide.addEventListener("change", syncToc);
+
+  // The palette answers to Command+K on Apple platforms.
+  if (/Mac|iPhone|iPad/.test(navigator.platform)) {
+    document.querySelectorAll(".docs-search-shortcut").forEach((kbd) => {
+      kbd.textContent = "\u2318 K";
+    });
+  }
+
   const THEME_ICONS = {
     light: "light_mode",
     dark: "dark_mode",

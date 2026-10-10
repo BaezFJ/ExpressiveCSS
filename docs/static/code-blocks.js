@@ -69,7 +69,7 @@
     const label = document.createElement('span');
 
     button.type = 'button';
-    button.className = 'code-copy-button';
+    button.className = 'tonal code-copy-button';
     button.setAttribute('aria-live', 'polite');
     icon.className = 'material-symbols';
     icon.setAttribute('aria-hidden', 'true');

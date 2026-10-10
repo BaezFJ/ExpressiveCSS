@@ -7,21 +7,21 @@ const pageBody = readFileSync(
   new URL('../docs/src/components/PageBody.astro', import.meta.url),
   'utf8'
 );
+const pageHeader = readFileSync(
+  new URL('../docs/src/components/PageHeader.astro', import.meta.url),
+  'utf8'
+);
 const panes = readFileSync(
   new URL('../docs/src/pages/panes.astro', import.meta.url),
   'utf8'
 );
 
 describe('Documentation typography', () => {
-  test('uses ExpressiveCSS display roles for the shared banner', () => {
-    assert.match(
-      docsCss,
-      /\.docs-page-title[\s\S]*--md-sys-typescale-display-medium-font-size/
-    );
-    assert.match(
-      docsCss,
-      /@media \(width >= 840px\)[\s\S]*--md-sys-typescale-display-large-font-size/
-    );
+  test('uses ExpressiveCSS type role classes for the page header', () => {
+    // The header takes its roles from framework classes, not docs.css.
+    assert.match(pageHeader, /docs-page-title display-small/);
+    assert.match(pageHeader, /docs-page-description body-large/);
+    assert.doesNotMatch(docsCss, /\.docs-page-title[^{]*\{[^}]*--md-sys-typescale/);
   });
 
   test('uses M3 title and body roles for readable documentation prose', () => {
@@ -52,14 +52,9 @@ describe('Documentation typography', () => {
   });
 
   test('keeps the wide Panes page on the shared content and TOC scaffold', () => {
-    assert.match(
-      pageBody,
-      /contentClass = "s12 m8 offset-m1 xl7 offset-xl1"/
-    );
-    assert.match(
-      panes,
-      /<PageBody sections=\{S\} containerClass="panes-page" contentClass="s12 m9 l10" tocClass="m3 l2">/
-    );
+    assert.match(pageBody, /class:list=\{\["docs-page-content", \{ wide \}\]\}/);
+    assert.match(panes, /<PageBody sections=\{S\} wide>/);
+    assert.match(docsCss, /\.docs-page:has\(> \.docs-page-content\.wide\)/);
     assert.doesNotMatch(panes, /panes-page-(?:body|toc)/);
   });
 });
