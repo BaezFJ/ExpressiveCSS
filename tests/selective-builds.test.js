@@ -115,7 +115,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed hot-path fixes in Datepicker, Autocomplete, Particles, Carousel and Tabs: 64,617 gzip bytes (+140).
   // Reviewed idle document listeners, repeat Init() calls and hot-path fixes in ScrollSpy, MapView, PieChart, Snackbar, Slider, the heatmap, Menu and Datepicker: 64,860 gzip bytes (+243).
   // Reviewed the 0.14.0 version export: 64,861 gzip bytes (+1).
-  assert.ok(sizes(js).gzip <= 64861, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the Tabs indicator re-measure after web fonts load: 64,881 gzip bytes (+20).
+  assert.ok(sizes(js).gzip <= 64881, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
