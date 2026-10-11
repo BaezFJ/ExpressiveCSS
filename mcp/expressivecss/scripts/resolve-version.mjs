@@ -33,14 +33,15 @@ async function readBounded(filePath) {
     if (!before.isFile() || !sameFile(before, pathBefore)) return { error: 'identity-changed' };
     const limit = readLimit(filePath);
     if (before.size > BigInt(limit)) return { error: 'oversized' };
-    const buffer = Buffer.alloc(limit + 1);
+    // Size the buffer to the file, not the limit. The spare byte exposes growth.
+    const buffer = Buffer.allocUnsafe(Number(before.size) + 1);
     let offset = 0;
     while (offset < buffer.length) {
       const { bytesRead } = await handle.read(buffer, offset, buffer.length - offset, offset);
       if (bytesRead === 0) break;
       offset += bytesRead;
     }
-    if (offset > limit) return { error: 'oversized' };
+    if (offset > before.size) return { error: 'identity-changed' };
     const after = await handle.stat({ bigint: true });
     const pathAfter = await lstat(filePath, { bigint: true });
     const currentResolved = await realpath(filePath);
