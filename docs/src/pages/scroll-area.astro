@@ -8,6 +8,7 @@ import { defineSections } from "../lib/sections";
 const S = defineSections([
   { id: "usage", label: "Usage" },
   { id: "horizontal", label: "Horizontal scrolling" },
+  { id: "page", label: "Page scrollbar" },
   { id: "styling", label: "Custom styling" },
 ]);
 const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}`);
@@ -54,6 +55,11 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
     <span class="surface-container p-4">Archived releases</span>
   </div>
 </div>`} />
+  </Section>
+  <Section {...S.page}>
+    <p>Add the class to <code>&lt;html&gt;</code> to style the page's own scrollbar.
+      The viewport keeps native scrolling, and the thumb color follows the theme.</p>
+    <Code code={`<html lang="en" class="scroll-area">`} />
   </Section>
   <Section {...S.styling}>
     <p>Set these properties on the scroll container or an ancestor.</p>

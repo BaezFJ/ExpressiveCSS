@@ -5,6 +5,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- The scroll area docs show `.scroll-area` on `<html>` for a themed page
+  scrollbar. A browser test covers page scrolling and theme colors.
+
 ## [0.14.1] - 2026-10-11
 
 ### Fixed

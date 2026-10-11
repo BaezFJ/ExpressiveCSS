@@ -42,6 +42,32 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
     }
   });
 
+  browserTest(`scroll area on html themes the page scrollbar and keeps page scrolling (${engine})`, async () => {
+    const browser = await browserType.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
+      await page.setContent(`<html class="scroll-area"><head><style>${css}</style></head>
+        <body><p>Top</p><div style="height: 2000px"></div></body></html>`);
+      const standard = await page.evaluate(() => CSS.supports('scrollbar-color', 'red blue'));
+      const color = () => page.evaluate(standard => standard
+        ? getComputedStyle(document.documentElement).scrollbarColor
+        : getComputedStyle(document.documentElement, '::-webkit-scrollbar-thumb').backgroundColor, standard);
+      await page.evaluate(() => document.documentElement.setAttribute('theme', 'light'));
+      const light = await color();
+      await page.evaluate(() => document.documentElement.setAttribute('theme', 'dark'));
+      assert.notEqual(await color(), light, 'page thumb must follow the theme');
+      await page.mouse.move(200, 150);
+      await page.mouse.wheel(0, 400);
+      await page.waitForFunction(() => scrollY > 0);
+      await page.evaluate(() => scrollTo(0, 0));
+      await page.getByText('Top').click();
+      await page.keyboard.press('PageDown');
+      await page.waitForFunction(() => scrollY > 0);
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`scroll area follows themes, custom colors, and forced colors (${engine})`, async () => {
     const browser = await browserType.launch({ headless: true });
     try {
