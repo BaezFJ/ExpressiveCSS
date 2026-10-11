@@ -1030,10 +1030,10 @@ export class Datepicker extends Component<DatepickerOptions> {
   /** Wrap calendar rows after validating and encoding their contents. */
   renderBody(rows) {
     const html = rows.join('');
-    // An overridden renderRow, or rows built by hand, still get checked here.
-    const checked = rows.every(row => this._checkedRows.has(row));
+    // Always sanitize row markup before insertion to avoid propagating unsafe library input.
+    const safeHtml = Datepicker._calendarMarkup(html, 'tbody');
     this._checkedRows.clear();
-    return '<tbody>' + (checked ? html : Datepicker._calendarMarkup(html, 'tbody')) + '</tbody>';
+    return '<tbody>' + safeHtml + '</tbody>';
   }
 
   private static _calendarMarkup(html: string, parent: string): string {
