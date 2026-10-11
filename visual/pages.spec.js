@@ -117,9 +117,14 @@ for (const entry of PAGES) {
           return add(type, fn, options);
         };
 
+        // A full-page capture also resets every nested scroller to its start,
+        // and the scroll event that follows reaches the page whenever the real
+        // frame lands, before or after the clock next moves. Stopped in the
+        // capture phase, it never reaches the scroller's own listeners.
         window.__visualFreezeLayout = () => {
           observers.forEach((o) => o.disconnect());
           listeners.forEach(([fn, options]) => window.removeEventListener('resize', fn, options));
+          add('scroll', (e) => e.stopImmediatePropagation(), true);
         };
       });
 
@@ -172,6 +177,22 @@ for (const entry of PAGES) {
       // that has to settle before the shutter.
       await page.route('**://www.youtube.com/**', (r) => r.abort());
       await page.route('**://interactive-examples.mdn.mozilla.net/**', (r) => r.abort());
+
+      // The map demos draw OpenFreeMap vector tiles, and whether they had
+      // arrived by the shutter decided whether a pass photographed streets or
+      // an empty canvas. The tiles are blocked; the style itself is answered
+      // with a bare background, because MapView draws its routes on
+      // `style.load` and aborting the style would hide them in both passes.
+      // Playwright tries the most recently registered route first.
+      await page.route('**://tiles.openfreemap.org/**', (r) => r.abort());
+      await page.route('**://tiles.openfreemap.org/styles/**', (r) => r.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          version: 8,
+          sources: {},
+          layers: [{ id: 'background', type: 'background', paint: { 'background-color': '#d8dce0' } }],
+        }),
+      }));
 
       // `reducedMotion: 'reduce'` is set in the config and never reaches the
       // page: as of Playwright 1.62.1 the `use` option does not survive to
@@ -255,6 +276,18 @@ for (const entry of PAGES) {
         { timeout: 15_000 },
       );
 
+      // MapView draws its routes on `style.load`, and MapLibre only gets there
+      // on a timer, which the paused clock never fires on its own. Tick it
+      // until every map has its style, so the routes are drawn before the
+      // runFor below rather than whenever the style happened to arrive.
+      let mapsReady = false;
+      for (let tick = 0; tick < 100 && !mapsReady; tick++) {
+        if (tick) await page.clock.runFor(50);
+        mapsReady = await page.evaluate(() => Array.from(document.querySelectorAll('.maplibregl-map'))
+          .every((el) => el.Expressive_MapView?.map.isStyleLoaded() ?? true));
+      }
+      expect(mapsReady, 'every map loads its style').toBe(true);
+
       // Run the fake clock forward far enough for every easing loop to land on
       // its target and every init timeout to have fired. Deterministic by
       // construction: the same number of milliseconds elapses on both passes
@@ -314,28 +347,32 @@ for (const entry of PAGES) {
       // the page reacting to the capture's own viewport change.
       await page.evaluate(() => window.__visualFreezeLayout?.());
 
-      // The base pass has to stabilise by hand, and this asymmetry is subtle
-      // enough to be worth spelling out. toHaveScreenshot re-captures until
-      // two consecutive frames agree -- but only when it has something to
-      // compare against. Writing a *missing* snapshot under
-      // --update-snapshots is a single shot with no loop, so the baseline
-      // could be an unsettled frame while the head pass, which does loop, is
-      // settled. That produced a stable-but-wrong diff on a different pair of
-      // pages every run: 11,711 pixels on collections, 2,733 on range, with
-      // no source change between the two revisions.
-      if (MODE === 'base') {
-        let previous = null;
-        for (let attempt = 0; attempt < 10; attempt++) {
-          const frame = await page.screenshot({
-            fullPage: true,
-            animations: 'disabled',
-            caret: 'hide',
-            mask: CHROME_MASK(page),
-          });
-          if (previous?.equals(frame)) break;
-          previous = frame;
-          await page.clock.runFor(150);
-        }
+      // Both passes stabilise by hand, and the reasons are subtle enough to be
+      // worth spelling out. toHaveScreenshot re-captures until two
+      // consecutive frames agree -- but only when it has something to compare
+      // against. Writing a *missing* snapshot under --update-snapshots is a
+      // single shot with no loop, so the baseline could be an unsettled frame
+      // while the head pass, which does loop, is settled. That produced a
+      // stable-but-wrong diff on a different pair of pages every run: 11,711
+      // pixels on collections, 2,733 on range, with no source change between
+      // the two revisions.
+      //
+      // The head pass runs the same loop so both passes give the page the
+      // same clock time before the shutter. When only the base pass looped,
+      // anything still reacting at that point (the swipeable tabs demo, to
+      // the scroll reset described at __visualFreezeLayout) settled in the
+      // base and not in the head, on every run.
+      let previous = null;
+      for (let attempt = 0; attempt < 10; attempt++) {
+        const frame = await page.screenshot({
+          fullPage: true,
+          animations: 'disabled',
+          caret: 'hide',
+          mask: CHROME_MASK(page),
+        });
+        if (previous?.equals(frame)) break;
+        previous = frame;
+        await page.clock.runFor(150);
       }
 
       await expect(page).toHaveScreenshot(shot, { fullPage: true, mask: CHROME_MASK(page) });

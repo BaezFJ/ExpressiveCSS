@@ -299,10 +299,13 @@ async function verifyResponseBudgets(matchingDir, versionedDir) {
       assert.equal(result.structuredContent.skipped, true);
       assert.equal(result.structuredContent.contractCompatibility, 'unknown');
     }
-    await assert.rejects(peer.callTool(request('component_syntax_expert', { components: Array(400).fill(1) })), (error) => error.code === -32001);
   }, { env: { SKIP_SETUP_EXPERT: 'true', SKIP_CREATIVE_DIRECTOR: 'true', SKIP_PAGE_ARCHITECT: 'true', SKIP_COMPONENT_SYNTAX_EXPERT: 'true' } });
   await withServer(1, async ({ peer }) => {
     await assert.rejects(peer.callTool(request('component_syntax_expert', { components: ['cards'] })), (error) => error.code === -32001);
+    // A validation error is budgeted like any result. Its size is zod's to
+    // decide (4.6.6 stops at the array's maxItems), so only a 1-byte budget
+    // overflows it on every version.
+    await assert.rejects(peer.callTool(request('component_syntax_expert', { components: Array(400).fill(1) })), (error) => error.code === -32001);
   }, { env: { SKIP_COMPONENT_SYNTAX_EXPERT: 'true' } });
   for (const invalid of ['', '0', '-1', '+1', '1.5', 'NaN', 'Infinity', '1e4', ' 64', '9007199254740992']) {
     const child = spawnSync(process.execPath, [path.join(packageDir, 'server.js')], { env: { ...process.env, [setting]: invalid }, encoding: 'utf8', timeout: 10_000 });
