@@ -5,11 +5,11 @@ Material Design 3 text fields, from the HTML.
 
 Component ID: `text-fields`
 
-[Component documentation](https://www.expressivecss.com/text-inputs.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/text-inputs.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.13.1)
+[Component documentation](https://www.expressivecss.com/text-inputs.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/text-inputs.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.14.0)
 
-Contract: ExpressiveCSS 0.13.1
+Contract: ExpressiveCSS 0.14.0
 
-Contract SHA-256: `c96d637f76ad177ca12efab5d1528e3f9404b09198f33af286e82f05ab0cf59a`
+Contract SHA-256: `6aa9e43e922dfe22255daa3ec85ebefccd43c8d5d74bd4ffb8f8d81a8e7f95e2`
 
 #### Selection and adaptation
 

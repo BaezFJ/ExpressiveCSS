@@ -84,7 +84,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(bodyStart > 4, 'frontmatter is not closed');
     assert.match(frontmatter, /^name: expressivecss$/m);
     assert.match(frontmatter, /^  author: BaezFJ$/m);
-    assert.match(frontmatter, /^  version: "0\.9\.0"$/m);
+    assert.match(frontmatter, /^  version: "0\.10\.0"$/m);
 
     const description = frontmatter.match(/^description: (.+)$/m)?.[1];
     assert.ok(description, 'description is missing');
@@ -996,8 +996,8 @@ describe('the ExpressiveCSS agent skill', () => {
     // the rich text editor row at 39,600 bytes (+290); the second skill
     // best-practices pass at 39,580 bytes (-20); the confetti row at 39,960 bytes (+380);
     // the particles row at 40,301 bytes (+341);
-    // the map row at 40,672 bytes (+371).
-    assert.ok(bytes <= 40672, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // the map row at 40,672 bytes (+371); the 0.10.0 skill version at 40,673 bytes (+1).
+    assert.ok(bytes <= 40673, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 
