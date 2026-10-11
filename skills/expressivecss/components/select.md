@@ -5,11 +5,11 @@ Choose one option, or several, from a styled menu.
 
 Component ID: `select`
 
-[Component documentation](https://www.expressivecss.com/select.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/select.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.14.0)
+[Component documentation](https://www.expressivecss.com/select.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/select.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.14.1)
 
-Contract: ExpressiveCSS 0.14.0
+Contract: ExpressiveCSS 0.14.1
 
-Contract SHA-256: `6aa9e43e922dfe22255daa3ec85ebefccd43c8d5d74bd4ffb8f8d81a8e7f95e2`
+Contract SHA-256: `80d854b3978953f2491c292c4c9c0fe32f72842a9d9a03e4e0b8aff409314463`
 
 #### Selection and adaptation
 

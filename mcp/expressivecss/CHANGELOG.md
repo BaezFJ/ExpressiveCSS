@@ -12,7 +12,7 @@
   instead of the read limit.
 - Tool results use compact JSON text, which is about a third smaller.
 - The catalogue, guides and rules cover map, confetti and particles.
-- Bundled framework guidance: ExpressiveCSS 0.14.0.
+- Bundled framework guidance: ExpressiveCSS 0.14.1.
 
 ## 0.3.1 - 2026-10-08
 
