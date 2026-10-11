@@ -423,6 +423,8 @@ describe('Expressive selection and portable capability evidence', () => {
     const { execFileSync } = await import('node:child_process');
     function validateCapabilityLinks(roadmap, root) {
       assert.match(roadmap.sourceRevision, /^[a-f0-9]{40}$/u, 'Capability links require an immutable source revision');
+      // A squash merge drops PR branch commits, and the release job cannot find them.
+      execFileSync('git', ['merge-base', '--is-ancestor', roadmap.sourceRevision, 'HEAD'], { cwd: root });
       const tracked = new Set(execFileSync('git', ['ls-tree', '-r', '--name-only', roadmap.sourceRevision], { cwd: root, encoding: 'utf8' }).trim().split('\n'));
       for (const entry of roadmap.entries) {
         for (const name of [...entry.sources.map((source) => source.path), ...entry.browserChecks.map((check) => check.file)]) {

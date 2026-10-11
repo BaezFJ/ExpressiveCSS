@@ -5,6 +5,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.14.1] - 2026-10-11
+
+### Fixed
+
+- The capability roadmap's source links point at a commit on `master`. The
+  0.14.0 links pointed at a pull request commit that the squash merge left
+  off `master`, which stopped the 0.14.0 release before it reached npm. A
+  test now fails when the pinned commit is not an ancestor of the checkout.
+  0.14.1 contains the 0.14.0 changes below.
+
 ## [0.14.0] - 2026-10-11
 
 ### Added
@@ -2243,7 +2253,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.14.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.14.1...HEAD
+[0.14.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.13.1...v0.14.0
 [0.13.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.13.0...v0.13.1
 [0.13.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.12.0...v0.13.0
