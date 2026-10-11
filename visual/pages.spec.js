@@ -117,9 +117,14 @@ for (const entry of PAGES) {
           return add(type, fn, options);
         };
 
+        // A full-page capture also resets every nested scroller to its start,
+        // and the scroll event that follows reaches the page whenever the real
+        // frame lands, before or after the clock next moves. Stopped in the
+        // capture phase, it never reaches the scroller's own listeners.
         window.__visualFreezeLayout = () => {
           observers.forEach((o) => o.disconnect());
           listeners.forEach(([fn, options]) => window.removeEventListener('resize', fn, options));
+          add('scroll', (e) => e.stopImmediatePropagation(), true);
         };
       });
 
@@ -352,13 +357,11 @@ for (const entry of PAGES) {
       // pixels on collections, 2,733 on range, with no source change between
       // the two revisions.
       //
-      // The head pass runs the same loop because a full-page capture is not
-      // read-only. Chromium resets every nested scroller to scrollLeft 0 while
-      // it captures beyond the viewport, and a component that listens for
-      // scroll reacts on its next animation frame. The paused clock only
-      // delivers that frame through runFor, so when only the base pass looped,
-      // the swipeable tabs demo showed "Test 1" in the base and "Test 2" in
-      // the head on every run.
+      // The head pass runs the same loop so both passes give the page the
+      // same clock time before the shutter. When only the base pass looped,
+      // anything still reacting at that point (the swipeable tabs demo, to
+      // the scroll reset described at __visualFreezeLayout) settled in the
+      // base and not in the head, on every run.
       let previous = null;
       for (let attempt = 0; attempt < 10; attempt++) {
         const frame = await page.screenshot({

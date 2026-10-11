@@ -77,6 +77,11 @@ export class Tabs extends Component<TabsOptions> {
     this._setTabsAndTabWidth();
     this._createIndicator();
     this._setupEventHandlers();
+    // Labels measured before a web font arrives have the fallback's width,
+    // and nothing else re-measures them until the window resizes.
+    document.fonts?.ready.then(() => {
+      if (this.el['Expressive_Tabs'] === this) this._handleWindowResize();
+    });
   }
 
   static get defaults(): TabsOptions {
