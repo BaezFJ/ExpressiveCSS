@@ -5,6 +5,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-10-11
+
 ### Added
 
 - The `expressivecss-review` agent skill reviews a page, template, fragment
@@ -33,6 +35,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   cover the count, size, color, drift and how far and how fast the dots
   follow the pointer. The canvas lets clicks through, and under reduced
   motion the dots are drawn once and stay still.
+
+### Changed
+
+- The docs site has a new shell. A rail holds the five catalogue groups from
+  840px, with the current group's pages beside it from 1200px. Below 1200px
+  the menu button opens the catalogue in a side sheet. Each page opens with a
+  breadcrumb, title, description and a "View as Markdown" link, and the table
+  of contents sits in a sticky column. Page content and URLs are unchanged.
+- The `expressivecss` skill is version 0.10.0. It adds guides for map,
+  confetti and particles. Its version resolver sizes file reads to the file
+  and reports a file that grows during a read as changed.
 
 ### Fixed
 
@@ -2230,7 +2243,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.13.1...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.13.1...v0.14.0
 [0.13.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.13.0...v0.13.1
 [0.13.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.11.0...v0.12.0

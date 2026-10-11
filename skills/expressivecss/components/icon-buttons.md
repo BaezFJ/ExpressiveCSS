@@ -5,11 +5,11 @@ A single icon as the whole control, in four styles and five sizes.
 
 Component ID: `icon-buttons`
 
-[Component documentation](https://www.expressivecss.com/icon-buttons.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/icon-buttons.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.13.1)
+[Component documentation](https://www.expressivecss.com/icon-buttons.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/icon-buttons.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.14.0)
 
-Contract: ExpressiveCSS 0.13.1
+Contract: ExpressiveCSS 0.14.0
 
-Contract SHA-256: `c96d637f76ad177ca12efab5d1528e3f9404b09198f33af286e82f05ab0cf59a`
+Contract SHA-256: `6aa9e43e922dfe22255daa3ec85ebefccd43c8d5d74bd4ffb8f8d81a8e7f95e2`
 
 #### Selection and adaptation
 

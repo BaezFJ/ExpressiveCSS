@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "generatedBy": "scripts/gen-expressivecss-skill.mjs",
-  "frameworkVersion": "0.13.1",
-  "skillVersion": "0.9.0",
-  "matchingTag": "v0.13.1",
+  "frameworkVersion": "0.14.0",
+  "skillVersion": "0.10.0",
+  "matchingTag": "v0.14.0",
   "releaseTags": [
     "v0.10.0",
     "v0.10.1",
@@ -11,6 +11,7 @@
     "v0.12.0",
     "v0.13.0",
     "v0.13.1",
+    "v0.14.0",
     "v0.5.0",
     "v0.6.0",
     "v0.7.0",
@@ -27,5 +28,5 @@
     "package.json",
     "CHANGELOG.md"
   ],
-  "sourceHash": "c96d637f76ad177ca12efab5d1528e3f9404b09198f33af286e82f05ab0cf59a"
+  "sourceHash": "6aa9e43e922dfe22255daa3ec85ebefccd43c8d5d74bd4ffb8f8d81a8e7f95e2"
 }

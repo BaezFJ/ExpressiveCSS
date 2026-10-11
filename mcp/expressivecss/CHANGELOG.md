@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 - 2026-10-11
 
 - Command-output redaction no longer stalls the server on long token runs.
   160K characters of hex output took 6 s to redact; it now takes milliseconds.
@@ -11,6 +11,8 @@
   ExpressiveCSS version once per call and sizes file buffers to the file
   instead of the read limit.
 - Tool results use compact JSON text, which is about a third smaller.
+- The catalogue, guides and rules cover map, confetti and particles.
+- Bundled framework guidance: ExpressiveCSS 0.14.0.
 
 ## 0.3.1 - 2026-10-08
 
