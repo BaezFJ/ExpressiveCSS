@@ -1138,6 +1138,8 @@ Add `.scroll-area` to a bounded container for native scrolling with thin, theme-
 
 Give a generic scroll region `tabindex="0"` and an accessible name so keyboard users can focus and scroll it. Leave padding for child focus rings. Use `.min-h-0` or `.min-w-0` when a flex or grid child needs to shrink. The class supplies no dimensions, border, padding, or layout.
 
+Add `.scroll-area` to `<html>` to style the page's own scrollbar. The viewport keeps native scrolling, and the thumb color follows the theme.
+
 Override `--scroll-area-thumb-color` and `--scroll-area-track-color` on the container or an ancestor. Defaults are `var(--md-sys-color-on-surface-variant)` and `transparent`. Choose colors with enough contrast against the track and container. Native scrollbar shape, exact width, and automatic hiding depend on the browser and operating system. Older WebKit engines use rounded 8px scrollbars. Forced-colors mode restores system colors and the default width. Selective Sass builds can load `"scroll-area"` through `$utilities`.
 
 ### Shapes
