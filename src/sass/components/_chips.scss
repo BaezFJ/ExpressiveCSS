@@ -144,7 +144,6 @@
   box-shadow: none;
   margin: 0 0 8px 0;
   padding: 4px;
-  // min-height: 45px;
   outline: none;
   transition: all .3s;
 
@@ -167,13 +166,10 @@
     color: var(--md-sys-color-on-background);
     display: inline-block;
     font-size: 16px;
-    // height: 32px;
-    // line-height: 32px;
     height: 32px;
     outline: 0;
     margin: 0;
     padding: 0;
-    width: 120px;
     width: fit-content;
     min-width: 100px;
     max-width: 200px;
@@ -194,14 +190,12 @@
 // Form prefix
 .prefix ~ .chips {
   margin-left: 3rem;
-  width: 92%;
   width: calc(100% - 3rem);
 }
 
 // Form suffix
 .suffix ~ .chips {
   margin-right: 3rem;
-  width: 92%;
   width: calc(100% - 3rem);
 }
 

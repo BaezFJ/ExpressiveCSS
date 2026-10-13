@@ -19,6 +19,10 @@
 //
 // .filled-in is a no-op: the selected state is always the filled box.
 
+@mixin _ring($color, $state) {
+  @include state-layer-ring(var(--md-comp-checkbox-state-layer-size), var(--md-comp-checkbox-container-size), $color, $state);
+}
+
 $_cb-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M4 9.5 7.5 13 14 5.5'/%3E%3C/svg%3E");
 $_cb-dash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' d='M4.5 9h9'/%3E%3C/svg%3E");
 
@@ -82,32 +86,17 @@ label:has(> [type="checkbox"]):not(.switch) > [type="checkbox"],
   }
 
   &:hover {
-    @include state-layer-ring(
-    var(--md-comp-checkbox-state-layer-size),
-    var(--md-comp-checkbox-container-size),
-    var(--md-sys-color-on-surface),
-    "hover"
-  );
+    @include _ring(var(--md-sys-color-on-surface), "hover");
   }
 
   &:checked:hover,
   &:indeterminate:hover {
-    @include state-layer-ring(
-    var(--md-comp-checkbox-state-layer-size),
-    var(--md-comp-checkbox-container-size),
-    var(--md-sys-color-primary),
-    "hover"
-  );
+    @include _ring(var(--md-sys-color-primary), "hover");
   }
 
   &:focus-visible,
   &.tabbed:focus {
-    @include state-layer-ring(
-    var(--md-comp-checkbox-state-layer-size),
-    var(--md-comp-checkbox-container-size),
-    var(--md-sys-color-primary),
-    "focus"
-  );
+    @include _ring(var(--md-sys-color-primary), "focus");
     outline: none;
   }
 
@@ -126,12 +115,7 @@ label:has(> [type="checkbox"]):not(.switch) > [type="checkbox"],
 
   &.invalid:hover,
   &[aria-invalid="true"]:hover {
-    @include state-layer-ring(
-    var(--md-comp-checkbox-state-layer-size),
-    var(--md-comp-checkbox-container-size),
-    var(--md-sys-color-error),
-    "hover"
-  );
+    @include _ring(var(--md-sys-color-error), "hover");
   }
 
   &:disabled {
@@ -208,13 +192,16 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
 
 // Legacy / Select / Autocomplete: input + span draws the same
 // 18dp anatomy. Exclude .switch — that file paints the track on a span.
-$_cb-span: "*:not(.switch) > [type='checkbox'] + span:not(.lever, .supporting-text, .character-counter, .file-path)";
+// $state is appended to the checkbox, e.g. ":checked" or ".invalid".
+@function _cb-span($state: "") {
+  @return "*:not(.switch) > [type='checkbox']#{$state} + span:not(.lever, .supporting-text, .character-counter, .file-path)";
+}
 
 // inline-block, not inline-flex: a flex span turns each text run and link
 // inside it into its own item, which drops the spaces around a link and
 // splits "I agree to the <a>Terms</a>" into columns. The block padding
 // centers one line in the 48px target, as align-items did.
-#{$_cb-span} {
+#{_cb-span()} {
   position: relative;
   display: inline-block;
   box-sizing: border-box;
@@ -225,8 +212,8 @@ $_cb-span: "*:not(.switch) > [type='checkbox'] + span:not(.lever, .supporting-te
   user-select: none;
 }
 
-#{$_cb-span}::before,
-#{$_cb-span}::after {
+#{_cb-span()}::before,
+#{_cb-span()}::after {
   content: "";
   position: absolute;
   left: 0;
@@ -238,93 +225,78 @@ $_cb-span: "*:not(.switch) > [type='checkbox'] + span:not(.lever, .supporting-te
   border-radius: 2px;
 }
 
-#{$_cb-span}::before {
+#{_cb-span()}::before {
   border: 2px solid var(--md-sys-color-on-surface-variant);
   background-color: transparent;
   transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
 }
 
-#{$_cb-span}::after {
+#{_cb-span()}::after {
   background-color: var(--md-sys-color-on-primary);
   -webkit-mask: #{$_cb-check} center / contain no-repeat;
   mask: #{$_cb-check} center / contain no-repeat;
   opacity: 0;
 }
 
-*:not(.switch) > [type="checkbox"]:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+#{_cb-span(":is(:checked, :indeterminate)")}::before {
   border-color: var(--md-sys-color-primary);
   background-color: var(--md-sys-color-primary);
 }
 
-*:not(.switch) > [type="checkbox"]:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::after {
+#{_cb-span(":is(:checked, :indeterminate)")}::after {
   opacity: 1;
 }
 
-*:not(.switch) > [type="checkbox"]:indeterminate + span:not(.lever, .supporting-text, .character-counter, .file-path)::after {
+#{_cb-span(":indeterminate")}::after {
   -webkit-mask-image: #{$_cb-dash};
   mask-image: #{$_cb-dash};
 }
 
-*:not(.switch) > [type="checkbox"]:hover + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
-  @include state-layer-ring(
-    var(--md-comp-checkbox-state-layer-size),
-    var(--md-comp-checkbox-container-size),
-    var(--md-sys-color-on-surface),
-    "hover"
-  );
+#{_cb-span(":hover")}::before {
+  @include _ring(var(--md-sys-color-on-surface), "hover");
 }
 
-*:not(.switch) > [type="checkbox"]:is(:checked, :indeterminate):hover + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
-  @include state-layer-ring(
-    var(--md-comp-checkbox-state-layer-size),
-    var(--md-comp-checkbox-container-size),
-    var(--md-sys-color-primary),
-    "hover"
-  );
+#{_cb-span(":is(:checked, :indeterminate):hover")}::before {
+  @include _ring(var(--md-sys-color-primary), "hover");
 }
 
-*:not(.switch) > [type="checkbox"]:focus-visible + span:not(.lever, .supporting-text, .character-counter, .file-path)::before,
-*:not(.switch) > [type="checkbox"].tabbed:focus + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
-  @include state-layer-ring(
-    var(--md-comp-checkbox-state-layer-size),
-    var(--md-comp-checkbox-container-size),
-    var(--md-sys-color-primary),
-    "focus"
-  );
+#{_cb-span(":focus-visible")}::before,
+#{_cb-span(".tabbed:focus")}::before {
+  @include _ring(var(--md-sys-color-primary), "focus");
 }
 
-*:not(.switch) > [type="checkbox"].invalid + span:not(.lever, .supporting-text, .character-counter, .file-path)::before,
-*:not(.switch) > [type="checkbox"][aria-invalid="true"] + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+#{_cb-span(".invalid")}::before,
+#{_cb-span("[aria-invalid='true']")}::before {
   border-color: var(--md-sys-color-error);
 }
 
-*:not(.switch) > [type="checkbox"].invalid:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::before,
-*:not(.switch) > [type="checkbox"][aria-invalid="true"]:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+#{_cb-span(".invalid:is(:checked, :indeterminate)")}::before,
+#{_cb-span("[aria-invalid='true']:is(:checked, :indeterminate)")}::before {
   border-color: var(--md-sys-color-error);
   background-color: var(--md-sys-color-error);
 }
 
-*:not(.switch) > [type="checkbox"].invalid:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::after,
-*:not(.switch) > [type="checkbox"][aria-invalid="true"]:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::after {
+#{_cb-span(".invalid:is(:checked, :indeterminate)")}::after,
+#{_cb-span("[aria-invalid='true']:is(:checked, :indeterminate)")}::after {
   background-color: var(--md-sys-color-on-error);
 }
 
-*:not(.switch) > [type="checkbox"]:disabled + span:not(.lever, .supporting-text, .character-counter, .file-path) {
+#{_cb-span(":disabled")} {
   color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   cursor: default;
 }
 
-*:not(.switch) > [type="checkbox"]:disabled + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+#{_cb-span(":disabled")}::before {
   border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   background-color: transparent;
   box-shadow: none;
 }
 
-*:not(.switch) > [type="checkbox"]:disabled:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+#{_cb-span(":disabled:is(:checked, :indeterminate)")}::before {
   border-color: transparent;
   background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
 }
 
-*:not(.switch) > [type="checkbox"]:disabled:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::after {
+#{_cb-span(":disabled:is(:checked, :indeterminate)")}::after {
   background-color: var(--md-sys-color-surface);
 }

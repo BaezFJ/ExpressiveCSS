@@ -10,8 +10,8 @@
 // pressed are 0.1, not the 0.12 quoted in some secondary sources.
 //
 // Two shapes consume these. An overlay pseudo-element uses the number as an
-// `opacity` directly; a ring drawn with `color-mix()` needs a percentage, so it
-// multiplies by 100% - see the `state-layer-ring` mixin in abstracts.
+// `opacity` directly; a `color-mix()` tint needs a percentage, which
+// `state-opacity()` in abstracts supplies.
 
 @use "../abstracts" as *;
 

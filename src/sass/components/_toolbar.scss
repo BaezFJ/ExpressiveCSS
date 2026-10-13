@@ -51,10 +51,6 @@
 // (rule 4) - and not role="toolbar" either, because that is a composite role
 // promising arrow-key navigation nothing here implements (rule 2). The <nav>
 // form is the older markup and still works.
-//
-// Wrapped in :is() so it stays one compound selector: interpolating a bare
-// comma-separated list breaks out of its context. That mistake shipped once
-// already, in $_bar.
 $_toolbar: ".toolbar";
 
 // The two axes. `.max` is an alias for docked; `.filled` is the older

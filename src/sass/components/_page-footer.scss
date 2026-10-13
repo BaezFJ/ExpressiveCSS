@@ -54,16 +54,19 @@ footer:not(:has(> .navigation-bar:only-child)) {
   }
 }
 
-footer:not(:has(> nav:only-child)).filled,
-footer:not(:has(> nav:only-child)).surface {
+// Any footer except one wrapping a lone <nav>.
+$_footer: "footer:not(:has(> nav:only-child))";
+
+#{$_footer}.filled,
+#{$_footer}.surface {
   background-color: var(--md-sys-color-surface-container);
   border-top: 1px solid var(--md-sys-color-outline-variant);
 }
 
 // Columns: direct <nav> children. A wrapping .container is the grid
 // when the author uses one. Legacy .row still spans the full measure.
-footer:not(:has(> nav:only-child)) > .container,
-footer:not(:has(> nav:only-child)):not(:has(> .container)) {
+#{$_footer} > .container,
+#{$_footer}:not(:has(> .container)) {
   display: grid;
   gap: var(--md-comp-footer-gap);
   grid-template-columns: 1fr;
@@ -85,14 +88,14 @@ footer:not(:has(> nav:only-child)):not(:has(> .container)) {
   }
 }
 
-footer:not(:has(> nav:only-child)) > .container > .row,
-footer:not(:has(> nav:only-child)) > .row {
+#{$_footer} > .container > .row,
+#{$_footer} > .row {
   grid-column: 1 / -1;
 }
 
 // A column with no links is a <section>, not a <nav> - see rule 4. Both are
 // columns to look at.
-footer:not(:has(> nav:only-child)) :is(nav, section) {
+#{$_footer} :is(nav, section) {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -100,8 +103,8 @@ footer:not(:has(> nav:only-child)) :is(nav, section) {
   min-width: 0;
 }
 
-footer:not(:has(> nav:only-child)) nav > a:not(.button, .icon-button, .circle, .extra),
-footer:not(:has(> nav:only-child)) ul a:not(.button, .icon-button, .circle, .extra) {
+#{$_footer} nav > a:not(.button, .icon-button, .circle, .extra),
+#{$_footer} ul a:not(.button, .icon-button, .circle, .extra) {
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
@@ -119,8 +122,8 @@ footer:not(:has(> nav:only-child)) ul a:not(.button, .icon-button, .circle, .ext
 // The legal bar. `.container` is a supported columns wrapper - the rule above
 // already accounts for it - so the bar has to be found through it too, or a
 // footer written the documented way gets an unstyled copyright row.
-footer:not(:has(> nav:only-child)) > small:last-child,
-footer:not(:has(> nav:only-child)) > .container > small:last-child {
+#{$_footer} > small:last-child,
+#{$_footer} > .container > small:last-child {
   display: flex;
   flex-wrap: wrap;
   align-items: center;

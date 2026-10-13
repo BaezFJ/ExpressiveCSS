@@ -16,7 +16,6 @@
 :is(.timepicker-digital-display, .time-picker-digital-display) {
   width: auto;
   flex: 1 auto;
-  // background-color: var(--md-sys-color-surface);
   padding: 2rem .67rem .67rem .67rem;
   font-weight: 300;
 }
@@ -27,7 +26,6 @@
   text-align: left;
   color: var(--md-sys-color-on-surface-variant);
   font-weight: 400;
-  /*position: relative;*/
   user-select: none;
   padding: 1rem 1rem 1.3rem 1rem;
 
@@ -80,15 +78,8 @@ input[type=text]:is(.timepicker-input-minutes, .time-picker-input-minutes) {
   text-align: center;
 }
 
-/*input[type=text].text-primary {
-  color: var(--md-sys-color-on-background);
-}*/
-
 :is(.timepicker-display-am-pm, .time-picker-display-am-pm) {
   font-size: 1.3rem;
-  /*position: absolute;
-  top: 1rem;
-  right: 1rem;*/
   font-weight: 400;
 }
 
@@ -109,7 +100,6 @@ input[type=text]:is(.timepicker-input-minutes, .time-picker-input-minutes) {
   line-height: 2rem;
   vertical-align: middle;
   text-align: center;
-  // background-color: transparent;
   border: 1px solid var(--md-sys-color-outline);
 }
 
@@ -128,7 +118,6 @@ input[type=text]:is(.timepicker-input-minutes, .time-picker-input-minutes) {
 :is(.timepicker-analog-display, .time-picker-analog-display) {
   flex: 2.5 auto;
   padding: .67rem;
-  // background-color: var(--md-sys-color-surface);
 }
 
 :is(.timepicker-plate, .time-picker-plate) {
@@ -149,10 +138,7 @@ input[type=text]:is(.timepicker-input-minutes, .time-picker-input-minutes) {
 :is(.timepicker-canvas, .time-picker-canvas),
 :is(.timepicker-dial, .time-picker-dial) {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  inset: 0;
 }
 
 :is(.timepicker-minutes, .time-picker-minutes) {
@@ -206,11 +192,7 @@ input[type=text]:is(.timepicker-input-minutes, .time-picker-input-minutes) {
   opacity: 0.25;
 }
 
-:is(.timepicker-canvas-bearing, .time-picker-canvas-bearing) {
-  stroke: none;
-  fill: var(--md-sys-color-primary);
-}
-
+:is(.timepicker-canvas-bearing, .time-picker-canvas-bearing),
 :is(.timepicker-canvas-bg, .time-picker-canvas-bg) {
   stroke: none;
   fill: var(--md-sys-color-primary);
@@ -243,9 +225,6 @@ input[type=text]:is(.timepicker-input-minutes, .time-picker-input-minutes) {
   :is(.timepicker-container, .time-picker-container) {
     width: auto;
     max-width: 620px;
-  }
-
-  :is(.timepicker-container, .time-picker-container) {
     flex-direction: row;
   }
 
@@ -254,7 +233,6 @@ input[type=text]:is(.timepicker-input-minutes, .time-picker-input-minutes) {
   }
 
   :is(.timepicker-text-container, .time-picker-text-container) {
-    /*top: 31%;*/
     flex-direction: column;
     margin-top: 4.8rem;
     text-align: center;
@@ -277,24 +255,14 @@ input[type=text]:is(.timepicker-input-minutes, .time-picker-input-minutes) {
   :is(.timepicker-container, .time-picker-container) .am-btn,
   :is(.timepicker-container, .time-picker-container) .pm-btn {
     flex-grow: 1;
-    /*width: auto;*/
-    // Same two retired variables as above; both declarations
-    // rendered as 0. The corner rules that follow square off the inner
-    // edges, so the outer ones are the only radius in play.
-    padding-inline: 0;
+    // A retired variable that always rendered as 0. Squares all four
+    // corners of both buttons.
     border-radius: 0;
     border: 1px solid var(--md-sys-color-outline);
   }
 
-  :is(.timepicker-container, .time-picker-container) .am-btn {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-
   :is(.timepicker-container, .time-picker-container) .pm-btn {
     border-left: 0;
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
   }
 
   :is(.timepicker-plate, .time-picker-plate) {

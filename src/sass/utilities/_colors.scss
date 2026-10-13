@@ -19,7 +19,12 @@ $_role-named: "primary-container", "secondary-container", "tertiary-container";
 $_role-named-hosts: ":not(.extend):not(.fab-menu)";
 
 @each $role in $sys-color-roles {
-  #{if(list.index($_role-named, $role), ".#{$role}#{$_role-named-hosts}", ".#{$role}")} {
+  $fill: ".#{$role}";
+  @if list.index($_role-named, $role) {
+    $fill: "#{$fill}#{$_role-named-hosts}";
+  }
+
+  #{$fill} {
     background-color: var(--md-sys-color-#{$role});
   }
 

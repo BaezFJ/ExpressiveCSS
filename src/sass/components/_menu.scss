@@ -28,6 +28,13 @@
 
 $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M10 6l6 6-6 6'/%3E%3C/svg%3E");
 
+// Item states, interpolated after `li`. An item is any <li> that is not a
+// divider, optgroup, gap or label; an enabled item is also not disabled.
+$_item: ":not(.divider, .optgroup, .gap, .label)";
+$_enabled: ':not(.disabled, [aria-disabled="true"], .divider, .optgroup, .gap, .label)';
+$_selected: ':is(.selected, [aria-selected="true"], [aria-checked="true"])';
+$_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
+
 [popover] {
   outline: none;
   padding: 0;
@@ -188,7 +195,8 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     // butted against the label instead of flush right.
     //
     // Leading stays the default; a trailing icon names its side, the same way
-    // a field icon must (see rule 3 in CLAUDE.md).
+    // a field icon must (see rule 3 under "HTML semantics" in
+    // docs/development-notes.md).
     > :is(a, button) > #{$icon}:is(.suffix, :last-child:not(:only-child)) {
       margin-inline-start: auto;
       color: var(--md-comp-menu-item-trailing-icon-color);
@@ -209,33 +217,26 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     }
   }
 
-  > li:not(.divider, .optgroup, .gap, .label) {
+  > li#{$_item} {
     min-height: var(--md-comp-menu-item-container-height);
   }
 
-  > li:not(.divider, .optgroup, .gap, .label):first-child {
+  > li#{$_item}:first-child {
     border-radius: var(--md-comp-menu-item-edge-shape)
       var(--md-comp-menu-item-edge-shape)
       var(--md-comp-menu-item-container-shape)
       var(--md-comp-menu-item-container-shape);
   }
 
-  > li:not(.divider, .optgroup, .gap, .label):last-child {
+  > li#{$_item}:last-child {
     border-radius: var(--md-comp-menu-item-container-shape)
       var(--md-comp-menu-item-container-shape)
       var(--md-comp-menu-item-edge-shape) var(--md-comp-menu-item-edge-shape);
   }
 
   // Hover / press sit on extra-small corners and do not span the container.
-  > li:not(
-      .disabled,
-      [aria-disabled="true"],
-      .divider,
-      .optgroup,
-      .gap,
-      .label
-    ):hover,
-  > li.active:not(.selected, [aria-selected="true"], [aria-checked="true"]) {
+  > li#{$_enabled}:hover,
+  > li.active#{$_unselected} {
     background-color: color-mix(
       in oklab,
       var(--md-comp-menu-item-label-text-color) 8%,
@@ -243,14 +244,7 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     );
   }
 
-  > li:not(
-      .disabled,
-      [aria-disabled="true"],
-      .divider,
-      .optgroup,
-      .gap,
-      .label
-    ):active {
+  > li#{$_enabled}:active {
     background-color: color-mix(
       in oklab,
       var(--md-comp-menu-item-label-text-color) 10%,
@@ -261,9 +255,7 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
   // :not(.divider) only buys specificity: menu-item.selected.shape is 12dp
   // unconditionally, so it has to outrank the first/last-child edge rule that
   // would otherwise leave a selected end item with 4dp inner corners.
-  > li:is(.selected, [aria-selected="true"], [aria-checked="true"]):not(
-      .divider
-    ) {
+  > li#{$_selected}:not(.divider) {
     border-radius: var(--md-comp-menu-item-selected-container-shape);
     background-color: var(--md-comp-menu-item-selected-container-color);
     color: var(--md-comp-menu-item-selected-label-text-color);
@@ -282,7 +274,7 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     }
   }
 
-  > li:is(.selected, [aria-selected="true"], [aria-checked="true"]):hover {
+  > li#{$_selected}:hover {
     background-color: color-mix(
       in oklab,
       var(--md-comp-menu-item-selected-label-text-color) 8%,
@@ -290,11 +282,7 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     );
   }
 
-  > li:is(.selected, [aria-selected="true"], [aria-checked="true"]):is(
-      :focus,
-      :focus-visible,
-      :active
-    ) {
+  > li#{$_selected}:is(:focus, :focus-visible, :active) {
     background-color: color-mix(
       in oklab,
       var(--md-comp-menu-item-selected-label-text-color) 10%,
@@ -365,21 +353,21 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     // blur the menu itself. Grouped menus stay solid.
     backdrop-filter: none;
 
-    > li:not(.divider, .optgroup, .gap, .label) {
+    > li#{$_item} {
       padding-inline: var(--md-comp-menu-group-padding);
       background-color: var(--md-comp-menu-container-color);
       border-radius: 0;
     }
 
-    > li:not(.divider, .optgroup, .gap, .label):first-child,
-    > li.gap + li:not(.divider, .optgroup, .gap, .label) {
+    > li#{$_item}:first-child,
+    > li.gap + li#{$_item} {
       padding-block-start: var(--md-comp-menu-group-padding);
       border-start-start-radius: var(--md-comp-menu-group-shape);
       border-start-end-radius: var(--md-comp-menu-group-shape);
     }
 
-    > li:not(.divider, .optgroup, .gap, .label):has(+ li.gap),
-    > li:not(.divider, .optgroup, .gap, .label):last-child {
+    > li#{$_item}:has(+ li.gap),
+    > li#{$_item}:last-child {
       padding-block-end: var(--md-comp-menu-group-padding);
       border-end-start-radius: var(--md-comp-menu-group-shape);
       border-end-end-radius: var(--md-comp-menu-group-shape);
@@ -390,14 +378,7 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     }
 
     // State layers belong to the inset item while the group surface remains.
-    > li:not(
-        .disabled,
-        [aria-disabled="true"],
-        .divider,
-        .optgroup,
-        .gap,
-        .label
-      ):hover,
+    > li#{$_enabled}:hover,
     > li.active,
     > li.selected,
     > li[aria-selected="true"],
@@ -405,16 +386,9 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
       background-color: var(--md-comp-menu-container-color);
     }
 
-    > li:not(
-        .disabled,
-        [aria-disabled="true"],
-        .divider,
-        .optgroup,
-        .gap,
-        .label
-      ):hover
+    > li#{$_enabled}:hover
       > :is(a, button, #{$icon-label}),
-    > li.active:not(.selected, [aria-selected="true"], [aria-checked="true"])
+    > li.active#{$_unselected}
       > :is(a, button, #{$icon-label}) {
       border-radius: var(--md-comp-menu-item-container-shape);
       background-color: color-mix(
@@ -424,14 +398,7 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
       );
     }
 
-    > li:not(
-        .disabled,
-        [aria-disabled="true"],
-        .divider,
-        .optgroup,
-        .gap,
-        .label
-      ):active
+    > li#{$_enabled}:active
       > :is(a, button, #{$icon-label}) {
       background-color: color-mix(
         in oklab,
@@ -440,13 +407,13 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
       );
     }
 
-    > li:is(.selected, [aria-selected="true"], [aria-checked="true"])
+    > li#{$_selected}
       > :is(a, button, #{$icon-label}) {
       border-radius: var(--md-comp-menu-item-selected-container-shape);
       background-color: var(--md-comp-menu-item-selected-container-color);
     }
 
-    > li:is(.selected, [aria-selected="true"], [aria-checked="true"]):hover
+    > li#{$_selected}:hover
       > :is(a, button, #{$icon-label}) {
       background-color: color-mix(
         in oklab,
@@ -455,11 +422,7 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
       );
     }
 
-    > li:is(.selected, [aria-selected="true"], [aria-checked="true"]):is(
-        :focus,
-        :focus-visible,
-        :active
-      )
+    > li#{$_selected}:is(:focus, :focus-visible, :active)
       > :is(a, button, #{$icon-label}) {
       background-color: color-mix(
         in oklab,
@@ -576,18 +539,12 @@ menu[id] > li:focus-visible {
   );
 }
 
-menu[id]
-  > li:focus-visible:not(.selected, [aria-selected="true"], [aria-checked="true"]) {
-  outline: 3px solid var(--md-sys-color-secondary);
-  outline-offset: -3px;
-}
-
 menu[id].grouped > li:focus-visible {
   background-color: var(--md-comp-menu-container-color);
 }
 
 menu[id].grouped
-  > li:focus-visible:not(.selected, [aria-selected="true"], [aria-checked="true"])
+  > li:focus-visible#{$_unselected}
   > :is(a, button, span:not(.material-symbols, .badge, .supporting-text)) {
   border-radius: var(--md-comp-menu-item-container-shape);
   background-color: color-mix(

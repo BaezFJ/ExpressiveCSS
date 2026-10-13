@@ -55,14 +55,7 @@
 
 // Child of an icon: sit on the upper trailing corner of the 24dp
 // glyph, even when the <i> is a larger indicator pill.
-:is(
-  i,
-  .material-symbols,
-  .material-symbols-outlined,
-  .material-symbols-rounded,
-  .material-symbols-sharp,
-  .material-icons
-) {
+#{$icon} {
   position: relative;
   overflow: visible;
 

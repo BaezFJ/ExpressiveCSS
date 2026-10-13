@@ -112,13 +112,13 @@
 }
 
 .heatmap-chart-tooltip {
+  translate: 8px 0;
+
   // A gap's swatch, outlined like its cell.
   > span.gap::before {
     background: none;
     box-shadow: inset 0 0 0 1px var(--md-comp-heatmap-chart-grid-color);
   }
-
-  translate: 8px 0;
 
   &.end {
     translate: calc(-100% - 8px) 0;

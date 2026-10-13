@@ -99,9 +99,6 @@ td, th {
 @include bp-down("expanded") {
 
   table.responsive-table {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
     display: block;
     position: relative;
 
@@ -113,12 +110,12 @@ td, th {
       margin: 0;
       vertical-align: top;
     }
-    th {
-      text-align: left;
-    }
     thead {
       display: block;
       float: left;
+      /* sort out borders */
+      border: 0;
+      border-right: 1px solid var(--md-sys-color-outline-variant);
 
       tr {
         display: block;
@@ -148,16 +145,10 @@ td, th {
     td {
       display: block;
       min-height: 1.25em;
-      text-align: left;
     }
     tr {
       border-bottom: none;
       padding: 0 10px;
-    }
-    /* sort out borders */
-    thead {
-      border: 0;
-      border-right: 1px solid var(--md-sys-color-outline-variant);
     }
   }
 }

@@ -16,6 +16,10 @@
 //
 // .with-gap is a no-op: the selected state is always the ring + inner.
 
+@mixin _ring($color, $state) {
+  @include state-layer-ring(var(--md-comp-radio-button-state-layer-size), var(--md-comp-radio-button-icon-size), $color, $state);
+}
+
 label:has(> [type="radio"]),
 .radio {
   --md-comp-radio-button-icon-size: 20px;
@@ -75,31 +79,16 @@ label:has(> [type="radio"]) > [type="radio"],
   }
 
   &:hover {
-    @include state-layer-ring(
-    var(--md-comp-radio-button-state-layer-size),
-    var(--md-comp-radio-button-icon-size),
-    var(--md-sys-color-on-surface),
-    "hover"
-  );
+    @include _ring(var(--md-sys-color-on-surface), "hover");
   }
 
   &:checked:hover {
-    @include state-layer-ring(
-    var(--md-comp-radio-button-state-layer-size),
-    var(--md-comp-radio-button-icon-size),
-    var(--md-sys-color-primary),
-    "hover"
-  );
+    @include _ring(var(--md-sys-color-primary), "hover");
   }
 
   &:focus-visible,
   &.tabbed:focus {
-    @include state-layer-ring(
-    var(--md-comp-radio-button-state-layer-size),
-    var(--md-comp-radio-button-icon-size),
-    var(--md-sys-color-primary),
-    "focus"
-  );
+    @include _ring(var(--md-sys-color-primary), "focus");
     outline: none;
   }
 
@@ -180,31 +169,16 @@ label:has(> [type="radio"]:disabled),
 }
 
 [type="radio"]:hover + span::before {
-  @include state-layer-ring(
-    var(--md-comp-radio-button-state-layer-size),
-    var(--md-comp-radio-button-icon-size),
-    var(--md-sys-color-on-surface),
-    "hover"
-  );
+  @include _ring(var(--md-sys-color-on-surface), "hover");
 }
 
 [type="radio"]:checked:hover + span::before {
-  @include state-layer-ring(
-    var(--md-comp-radio-button-state-layer-size),
-    var(--md-comp-radio-button-icon-size),
-    var(--md-sys-color-primary),
-    "hover"
-  );
+  @include _ring(var(--md-sys-color-primary), "hover");
 }
 
 [type="radio"]:focus-visible + span::before,
 [type="radio"].tabbed:focus + span::before {
-  @include state-layer-ring(
-    var(--md-comp-radio-button-state-layer-size),
-    var(--md-comp-radio-button-icon-size),
-    var(--md-sys-color-primary),
-    "focus"
-  );
+  @include _ring(var(--md-sys-color-primary), "focus");
 }
 
 [type="radio"]:disabled + span {

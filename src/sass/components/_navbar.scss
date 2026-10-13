@@ -107,11 +107,7 @@ header:has(> #{$_bar}) {
   > #{$_bar} > hgroup > #{$_heading} {
     margin: 0;
     color: inherit;
-    font-family: var(--md-sys-typescale-title-large-font-family-name);
-    font-size: var(--md-sys-typescale-title-large-font-size);
-    font-weight: var(--md-sys-typescale-title-large-font-weight);
-    line-height: var(--md-sys-typescale-title-large-line-height);
-    letter-spacing: var(--md-sys-typescale-title-large-letter-spacing);
+    @include typescale("title-large");
   }
 
   > #{$_bar} > hgroup {
@@ -126,11 +122,7 @@ header:has(> #{$_bar}) {
   > #{$_bar} > hgroup > p {
     margin: 0;
     color: inherit;
-    font-family: var(--md-sys-typescale-label-medium-font-family-name);
-    font-size: var(--md-sys-typescale-label-medium-font-size);
-    font-weight: var(--md-sys-typescale-label-medium-font-weight);
-    line-height: var(--md-sys-typescale-label-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-label-medium-letter-spacing);
+    @include typescale("label-medium");
   }
 
   // Icon-only actions — 48dp target, 24dp glyph, 4dp from the container edge.
@@ -281,11 +273,7 @@ header:has(> #{$_bar}) {
   padding: 0 12px;
   color: inherit;
   text-decoration: none;
-  font-family: var(--md-sys-typescale-label-large-font-family-name);
-  font-size: var(--md-sys-typescale-label-large-font-size);
-  font-weight: var(--md-sys-typescale-label-large-font-weight);
-  line-height: var(--md-sys-typescale-label-large-line-height);
-  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing);
+  @include typescale("label-large");
   @include focus-visible;
 
   &:hover:not(.active) {
@@ -378,19 +366,11 @@ header.medium:has(> #{$_bar}) > #{$_bar} {
 
   > #{$_heading},
   > hgroup > #{$_heading} {
-    font-family: var(--md-sys-typescale-headline-medium-font-family-name);
-    font-size: var(--md-sys-typescale-headline-medium-font-size);
-    font-weight: var(--md-sys-typescale-headline-medium-font-weight);
-    line-height: var(--md-sys-typescale-headline-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-headline-medium-letter-spacing);
+    @include typescale("headline-medium");
   }
 
   > hgroup > p {
-    font-family: var(--md-sys-typescale-label-large-font-family-name);
-    font-size: var(--md-sys-typescale-label-large-font-size);
-    font-weight: var(--md-sys-typescale-label-large-font-weight);
-    line-height: var(--md-sys-typescale-label-large-line-height);
-    letter-spacing: var(--md-sys-typescale-label-large-letter-spacing);
+    @include typescale("label-large");
   }
 }
 
@@ -408,19 +388,11 @@ header.large:has(> #{$_bar}) > #{$_bar} {
 
   > #{$_heading},
   > hgroup > #{$_heading} {
-    font-family: var(--md-sys-typescale-display-small-font-family-name);
-    font-size: var(--md-sys-typescale-display-small-font-size);
-    font-weight: var(--md-sys-typescale-display-small-font-weight);
-    line-height: var(--md-sys-typescale-display-small-line-height);
-    letter-spacing: var(--md-sys-typescale-display-small-letter-spacing);
+    @include typescale("display-small");
   }
 
   > hgroup > p {
-    font-family: var(--md-sys-typescale-title-medium-font-family-name);
-    font-size: var(--md-sys-typescale-title-medium-font-size);
-    font-weight: var(--md-sys-typescale-title-medium-font-weight);
-    line-height: var(--md-sys-typescale-title-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-title-medium-letter-spacing);
+    @include typescale("title-medium");
   }
 }
 
@@ -473,20 +445,12 @@ header.large.collapsed:has(> #{$_bar}) > #{$_bar} {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-family: var(--md-sys-typescale-title-large-font-family-name);
-    font-size: var(--md-sys-typescale-title-large-font-size);
-    font-weight: var(--md-sys-typescale-title-large-font-weight);
-    line-height: var(--md-sys-typescale-title-large-line-height);
-    letter-spacing: var(--md-sys-typescale-title-large-letter-spacing);
+    @include typescale("title-large");
   }
 
   > hgroup > p {
     padding: 0;
-    font-family: var(--md-sys-typescale-label-medium-font-family-name);
-    font-size: var(--md-sys-typescale-label-medium-font-size);
-    font-weight: var(--md-sys-typescale-label-medium-font-weight);
-    line-height: var(--md-sys-typescale-label-medium-line-height);
-    letter-spacing: var(--md-sys-typescale-label-medium-letter-spacing);
+    @include typescale("label-medium");
   }
 }
 

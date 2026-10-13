@@ -39,17 +39,6 @@ $_standard-space: (
   "xlarge": 8px,
 );
 
-// md.comp.button.<size>.{container-shape-square, pressed-container-shape}.
-// Common buttons and icon buttons share these numbers, so the group can morph
-// either kind of child through one pair of properties.
-$_item-shapes: (
-  "xsmall": (square: 12px, pressed: 8px),
-  "small": (square: 12px, pressed: 8px),
-  "medium": (square: 16px, pressed: 12px),
-  "large": (square: 28px, pressed: 16px),
-  "xlarge": (square: 28px, pressed: 16px),
-);
-
 // md.comp.button-group.connected.<size>.{inner-corner, pressed.inner-corner}.
 // The live M3 measurement is authoritative for XS (4px). Material Web 34.0.21
 // still emits 8px there; S and M agree at 8px.
@@ -65,8 +54,15 @@ $_connected-corners: (
   @include z-depth("0");
   color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   pointer-events: none;
-  box-shadow: none;
   cursor: default;
+}
+
+// Toggle colors. The label and icon take the state-layer color.
+@mixin _toggle-colors($container, $state) {
+  --_toggle-container-color: #{$container};
+  --_toggle-state-color: #{$state};
+  color: $state;
+  background-color: var(--_toggle-container-color);
 }
 
 .button-group {
@@ -95,8 +91,9 @@ $_connected-corners: (
       @include button-size($name);
 
       --md-comp-button-group-between-space: #{map.get($_standard-space, $name)};
-      --md-comp-button-group-item-shape-square: #{map.get(map.get($_item-shapes, $name), square)};
-      --md-comp-button-group-pressed-item-shape: #{map.get(map.get($_item-shapes, $name), pressed)};
+      // Common and icon buttons share these two shapes.
+      --md-comp-button-group-item-shape-square: #{map.get($icon-button-sizes, $name, square)};
+      --md-comp-button-group-pressed-item-shape: #{map.get($icon-button-sizes, $name, pressed)};
 
       > #{$_label-item}:not(#{$_sized}) {
         @include typescale(map.get($s, label));
@@ -107,23 +104,23 @@ $_connected-corners: (
       }
 
       > .icon-button.narrow:not(#{$_sized}) {
-        --md-comp-icon-button-leading-space: #{map.get(map.get($icon-button-sizes, $name), narrow)};
-        --md-comp-icon-button-trailing-space: #{map.get(map.get($icon-button-sizes, $name), narrow)};
+        --md-comp-icon-button-leading-space: #{map.get($icon-button-sizes, $name, narrow)};
+        --md-comp-icon-button-trailing-space: #{map.get($icon-button-sizes, $name, narrow)};
       }
 
       > .icon-button.wide:not(#{$_sized}) {
-        --md-comp-icon-button-leading-space: #{map.get(map.get($icon-button-sizes, $name), wide)};
-        --md-comp-icon-button-trailing-space: #{map.get(map.get($icon-button-sizes, $name), wide)};
+        --md-comp-icon-button-leading-space: #{map.get($icon-button-sizes, $name, wide)};
+        --md-comp-icon-button-trailing-space: #{map.get($icon-button-sizes, $name, wide)};
       }
     }
 
     // Group shape tokens inherit, so an explicitly sized item must rewrite
     // them on itself just as its button geometry tokens do.
     > #{$_item}.#{$name} {
-      --md-comp-button-group-item-shape-square: #{map.get(map.get($_item-shapes, $name), square)};
-      --md-comp-button-group-pressed-item-shape: #{map.get(map.get($_item-shapes, $name), pressed)};
-      --md-comp-button-group-inner-corner-corner-size: #{map.get(map.get($_connected-corners, $name), inner)};
-      --md-comp-button-group-pressed-inner-corner-corner-size: #{map.get(map.get($_connected-corners, $name), pressed)};
+      --md-comp-button-group-item-shape-square: #{map.get($icon-button-sizes, $name, square)};
+      --md-comp-button-group-pressed-item-shape: #{map.get($icon-button-sizes, $name, pressed)};
+      --md-comp-button-group-inner-corner-corner-size: #{map.get($_connected-corners, $name, inner)};
+      --md-comp-button-group-pressed-inner-corner-corner-size: #{map.get($_connected-corners, $name, pressed)};
     }
   }
 
@@ -171,64 +168,40 @@ $_connected-corners: (
   // Shape and the filled icon below provide two non-color selection cues.
   > #{$_label-item}#{$_filled-item}[aria-pressed=false],
   > .icon-button.filled[aria-pressed=false] {
-    --_toggle-container-color: var(--md-sys-color-surface-container);
-    --_toggle-state-color: var(--md-sys-color-on-surface-variant);
-    color: var(--md-sys-color-on-surface-variant);
-    background-color: var(--_toggle-container-color);
+    @include _toggle-colors(var(--md-sys-color-surface-container), var(--md-sys-color-on-surface-variant));
   }
 
   > #{$_label-item}#{$_filled-item}[aria-pressed=true],
   > .icon-button.filled[aria-pressed=true] {
-    --_toggle-container-color: var(--md-sys-color-primary);
-    --_toggle-state-color: var(--md-sys-color-on-primary);
-    color: var(--md-sys-color-on-primary);
-    background-color: var(--_toggle-container-color);
+    @include _toggle-colors(var(--md-sys-color-primary), var(--md-sys-color-on-primary));
   }
 
   > #{$_label-item}.tonal[aria-pressed=false],
   > .icon-button.tonal[aria-pressed=false] {
-    --_toggle-container-color: var(--md-sys-color-secondary-container);
-    --_toggle-state-color: var(--md-sys-color-on-secondary-container);
-    color: var(--md-sys-color-on-secondary-container);
-    background-color: var(--_toggle-container-color);
+    @include _toggle-colors(var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container));
   }
 
   > #{$_label-item}.tonal[aria-pressed=true],
   > .icon-button.tonal[aria-pressed=true] {
-    --_toggle-container-color: var(--md-sys-color-secondary);
-    --_toggle-state-color: var(--md-sys-color-on-secondary);
-    color: var(--md-sys-color-on-secondary);
-    background-color: var(--_toggle-container-color);
+    @include _toggle-colors(var(--md-sys-color-secondary), var(--md-sys-color-on-secondary));
   }
 
   > #{$_label-item}.outlined[aria-pressed=false],
   > .icon-button.outlined[aria-pressed=false] {
-    --_toggle-container-color: transparent;
-    --_toggle-state-color: var(--md-sys-color-on-surface-variant);
-    color: var(--md-sys-color-on-surface-variant);
-    background-color: var(--_toggle-container-color);
+    @include _toggle-colors(transparent, var(--md-sys-color-on-surface-variant));
   }
 
   > #{$_label-item}.outlined[aria-pressed=true],
   > .icon-button.outlined[aria-pressed=true] {
-    --_toggle-container-color: var(--md-sys-color-inverse-surface);
-    --_toggle-state-color: var(--md-sys-color-inverse-on-surface);
-    color: var(--md-sys-color-inverse-on-surface);
-    background-color: var(--_toggle-container-color);
+    @include _toggle-colors(var(--md-sys-color-inverse-surface), var(--md-sys-color-inverse-on-surface));
   }
 
   > #{$_label-item}.elevated[aria-pressed=false] {
-    --_toggle-container-color: var(--md-sys-color-surface-container-low);
-    --_toggle-state-color: var(--md-sys-color-primary);
-    color: var(--md-sys-color-primary);
-    background-color: var(--_toggle-container-color);
+    @include _toggle-colors(var(--md-sys-color-surface-container-low), var(--md-sys-color-primary));
   }
 
   > #{$_label-item}.elevated[aria-pressed=true] {
-    --_toggle-container-color: var(--md-sys-color-primary);
-    --_toggle-state-color: var(--md-sys-color-on-primary);
-    color: var(--md-sys-color-on-primary);
-    background-color: var(--_toggle-container-color);
+    @include _toggle-colors(var(--md-sys-color-primary), var(--md-sys-color-on-primary));
   }
 
   > #{$_toggle-item}[aria-pressed]:hover {
@@ -310,10 +283,6 @@ $_connected-corners: (
       --md-comp-button-group-container-shape: var(--md-comp-button-group-inner-corner-corner-size);
     }
 
-    > #{$_item} {
-      min-width: 48px;
-    }
-
     // The corner goes through a variable so that pressing an item changes one
     // value rather than restating `border-radius`. A shorthand for the pressed
     // state would take the end items' round outer corners with it.
@@ -329,6 +298,7 @@ $_connected-corners: (
       --_round: calc(var(--md-comp-filled-button-container-height, 40px) / 2);
 
       flex: 1 1 0;
+      min-width: 48px;
       border-radius: var(--_corner);
 
       &.icon-button {

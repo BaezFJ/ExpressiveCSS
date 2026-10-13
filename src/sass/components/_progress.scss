@@ -102,7 +102,9 @@ progress.progress {
 // `<span class="progress circular">` is not a <progress>, has no determinate
 // child, and so matched this too - drawing a linear fill on top of the conic
 // circular indicator.
-.progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > .indeterminate)) {
+$_bare: ".progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > .indeterminate))";
+
+#{$_bare} {
   &::after {
     content: "";
     position: absolute;
@@ -219,7 +221,7 @@ progress.progress:indeterminate {
   .progress > .determinate,
   .progress > .indeterminate::before,
   .progress > .indeterminate::after,
-  .progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > .indeterminate))::after,
+  #{$_bare}::after,
   progress.progress:indeterminate::before,
   progress.progress:indeterminate::after {
     background-color: CanvasText;
@@ -253,7 +255,7 @@ progress.progress:indeterminate {
   .progress::after,
   progress.progress:indeterminate::before,
   progress.progress:indeterminate::after,
-  .progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > .indeterminate)):not([style*="--md-comp-progress-value"])::after,
+  #{$_bare}:not([style*="--md-comp-progress-value"])::after,
   :is(.preloader, .progress.circular) {
     animation: none;
   }
@@ -262,7 +264,7 @@ progress.progress:indeterminate {
   .progress > .indeterminate::after,
   progress.progress:indeterminate::before,
   progress.progress:indeterminate::after,
-  .progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > .indeterminate)):not([style*="--md-comp-progress-value"])::after {
+  #{$_bare}:not([style*="--md-comp-progress-value"])::after {
     width: 40%;
   }
 

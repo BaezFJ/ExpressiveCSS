@@ -88,9 +88,6 @@
 /* Date Display */
 :is(.datepicker-date-display, .date-picker-date-display) {
   flex: 1 auto;
-  // @removed since v2.2.1-dev regarding Material M3 standards
-  // background-color: var(--md-sys-color-primary);
-  // color:  var(--md-sys-color-on-primary);
   padding: 20px 22px;
   border-bottom: 1px solid var(--md-sys-color-surface-variant);
   font-weight: 500;
@@ -148,27 +145,12 @@
   :is(.datepicker-day, .date-picker-day) {
     padding: 0;
     color: var(--md-sys-color-on-background);
-    // border-radius: 50%;
 
     &.is-today {
       color: var(--md-sys-color-primary);
     }
-
-    /*&.is-selected button {
-      background-color: var(--md-sys-color-primary);
-      color:  var(--md-sys-color-on-primary);
-    }*/
   }
 }
-
-// @todo
-:is(.datepicker-day, .date-picker-day).has-event {}
-// @todo
-:is(.datepicker-day, .date-picker-day).is-inrange {}
-// @todo
-:is(.datepicker-day, .date-picker-day).is-startrange {}
-// @todo
-:is(.datepicker-day, .date-picker-day).is-endrange {}
 
 :is(.datepicker-day, .date-picker-day).is-daterange-start,
 :is(.datepicker-day, .date-picker-day).is-daterange-end,

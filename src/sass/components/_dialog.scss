@@ -247,10 +247,7 @@ dialog.max {
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
     }
 
-    &:focus-visible {
-      outline: 3px solid var(--md-sys-color-secondary);
-      outline-offset: 2px;
-    }
+    @include focus-visible;
   }
 
   // Confirming action in the header is a text button, not an icon.
