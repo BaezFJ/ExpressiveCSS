@@ -277,7 +277,7 @@
   }
 
   // Footer / Action Bar
-  > footer:not(:has(> nav:only-child)),
+  > footer:not(:has(> .navigation-bar:only-child)),
   > :is(footer, .pane-footer, nav:last-child) {
     display: flex;
     flex-wrap: wrap;

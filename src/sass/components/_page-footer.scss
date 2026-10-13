@@ -17,7 +17,10 @@
 // Unfilled by default (dashed hairline). .filled uses surface-container.
 // There is no JavaScript.
 
-footer:not(:has(> .navigation-bar:only-child)) {
+// Any footer except one wrapping a lone navigation bar.
+$_footer: "footer:not(:has(> .navigation-bar:only-child))";
+
+#{$_footer} {
   --md-comp-footer-padding-block: 3rem;
   --md-comp-footer-padding-inline: 1rem;
   --md-comp-footer-gap: 2rem;
@@ -53,9 +56,6 @@ footer:not(:has(> .navigation-bar:only-child)) {
     list-style: none;
   }
 }
-
-// Any footer except one wrapping a lone <nav>.
-$_footer: "footer:not(:has(> nav:only-child))";
 
 #{$_footer}.filled,
 #{$_footer}.surface {

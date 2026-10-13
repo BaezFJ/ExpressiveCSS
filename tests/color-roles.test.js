@@ -23,6 +23,10 @@ const required = [
 ];
 
 describe('M3 Expressive color roles', () => {
+  test('mixes colors in oklab, as src/sass/README.md requires', () => {
+    assert.ok(!css.includes('color-mix(in srgb'), 'a color-mix() interpolates in srgb');
+  });
+
   test('emits every standard and add-on role as a live token', () => {
     for (const role of required) {
       assert.match(css, new RegExp(`--md-sys-color-${role}:`), `missing --md-sys-color-${role}`);

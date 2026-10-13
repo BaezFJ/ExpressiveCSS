@@ -250,7 +250,7 @@
   inset-inline: 0;
   height: calc(100% / var(--rows, 1));
   border-radius: var(--md-comp-bar-chart-shape);
-  background-color: color-mix(in srgb, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+  background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
   translate: 0 -50%;
 }
 
