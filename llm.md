@@ -299,6 +299,7 @@ Opt an element out when it needs manual options:
 | `Chips` | `.chips` |
 | `Confetti` | `.confetti` |
 | `Particles` | `canvas.particles` |
+| `Keypad` | `.keypad, .keyboard` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
 | `HeatmapChart` | `.heatmap-chart` |
@@ -4936,6 +4937,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Chips` | `.chips` |
 | `Confetti` | `.confetti` |
 | `Particles` | `canvas.particles` |
+| `Keypad` | `.keypad, .keyboard` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
 | `HeatmapChart` | `.heatmap-chart` |
@@ -6586,6 +6588,105 @@ These methods are not provided. The clock defaults to visible inline presentatio
 | `minutes` | Number | The minute currently shown on the clock. |
 | `amOrPm` | String | `'AM'` or `'PM'` when `twelveHour` is true. |
 | `currentView` | String | `'hours'` or `'minutes'`. |
+
+---
+
+## Keypad and Keyboard
+
+On-screen keys that type into a text field: a PIN or dial pad, or a full keyboard.
+
+A `.keypad` is three columns of round 72dp keys for PINs, codes and amounts. A `.keyboard` is a surface of rows, each child a row of keys, for text. Both are a `role="group"` with an `aria-label`, and `aria-controls` names the `<input>` or `<textarea>` they type into. Every key is a `<button type="button">`. A key with a `value` types it at the caret, replacing any selection, and the field gets the same `input` event typing would fire. `AutoInit()` starts every `.keypad` and `.keyboard`.
+
+```html
+<div class="field outlined">
+  <input id="pin" type="password" inputmode="none" maxlength="6" placeholder=" " autocomplete="off">
+  <label for="pin">PIN</label>
+</div>
+
+<div class="keypad" role="group" aria-label="PIN keypad" aria-controls="pin">
+  <button type="button" value="1">1</button>
+  <button type="button" value="2">2</button>
+  <!-- … 3 to 9 … -->
+  <span></span>
+  <button type="button" value="0">0</button>
+  <button type="button" data-key="Backspace" aria-label="Delete">
+    <span class="material-symbols" aria-hidden="true">backspace</span>
+  </button>
+</div>
+
+<div class="keyboard" role="group" aria-label="Keyboard" aria-controls="message">
+  <div class="numbers"><button type="button" value="1">1</button><!-- … 2 to 0 … --></div>
+  <div><button type="button" value="q">q</button><!-- … --></div>
+  <div><!-- a to l --></div>
+  <div>
+    <button type="button" data-key="Shift" aria-pressed="false" aria-label="Shift">
+      <span class="material-symbols" aria-hidden="true">shift</span>
+    </button>
+    <!-- z to m -->
+    <button type="button" data-key="Backspace" aria-label="Delete">
+      <span class="material-symbols" aria-hidden="true">backspace</span>
+    </button>
+  </div>
+  <div>
+    <button type="button" value=" " aria-label="Space"></button>
+    <button type="button" data-key="Enter" aria-label="New line">
+      <span class="material-symbols" aria-hidden="true">keyboard_return</span>
+    </button>
+  </div>
+</div>
+```
+
+- `data-key="Backspace"` deletes the selection or the character before the caret. `data-key="Enter"` calls `requestSubmit()` on the field's form, so validation runs, or types a new line in a `<textarea>`. `data-key="Shift"` toggles `aria-pressed`; while pressed the character keys show capitals, and the next one types a capital and releases Shift. Any other `data-key` only calls `onKey`.
+- Typing stops at the field's `maxlength`. Browsers check `minlength` and `maxlength` only on what a person types, and a keypad's edit is a script's, so give a minimum length as `pattern` instead: `pattern="\d{4}"` for a four-digit PIN. `pattern`, `required` and the type checks hold for keypad edits, and Enter submits with `requestSubmit()`, so they run. Keys type at the caret; a field nobody has clicked into takes them at the end. Number and email inputs have no caret position, so keys type at the end. A button with neither `value` nor `data-key` is not a key and is ignored. A number input empties itself on a partial value such as `12.` or `-`, so the key is ignored there; use a text field with `inputmode="none"` for decimals and signs.
+- A dial-pad key puts its letters in `<small aria-hidden="true">` after the digit. A key with a button style class (`filled`, `tonal`, `outlined`, `elevated`, `text`) keeps that style. Keys fill their cell, and `wide` spans two as a pill, so a call key beside Backspace fills the last row:
+
+```html
+<button type="button" class="filled wide" data-key="Enter" aria-label="Call">
+  <span class="material-symbols" aria-hidden="true">call</span>
+</button>
+```
+
+- An empty `<span>` holds a keypad cell open. For a centered call key, put Backspace in the field as a trailing `<button class="icon-button suffix" data-key="Backspace">`: a `data-key` key inside the field's `.field` works like a keypad key, even when the field renders after the keypad, and runs once however many keypads share the field. Other buttons there, such as a password toggle, stay their own. An unknown `data-key`, such as `Contacts`, types nothing and calls `onKey`, so the empty cell can hold a page action.
+- On a keyboard a character key is a tenth of the row and may shrink, a function key is one and a half keys wide, and the space bar takes the rest. A nine-key row is centered, which gives QWERTY its half-key indent. `--md-comp-keyboard-columns` sets the column count. An optional `<div class="numbers">` row of digits above the letters has shorter 40dp keys; leave it out, or toggle `hidden` on it.
+- Keys square their corners on press with the button-group spring. Reduced motion drops the shape transition.
+- Add `inputmode="none"` to the field so a phone keeps its own keyboard closed. A pointer press keeps focus and the caret in the field while it has focus.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-keypad-key-size` | 72px |
+| `--md-comp-keypad-gap` | 12px |
+| `--md-comp-keypad-key-color` | `surface-container-highest` |
+| `--md-comp-keypad-key-label-color` | `on-surface` |
+| `--md-comp-keypad-function-key-color` | `secondary-container` |
+| `--md-comp-keypad-function-key-label-color` | `on-secondary-container` |
+| `--md-comp-keypad-key-pressed-shape` | 12px; keyboard: 6px |
+| `--md-comp-keyboard-columns` | 10 |
+| `--md-comp-keyboard-gap` | 6px |
+| `--md-comp-keyboard-key-height` | 48px |
+| `--md-comp-keyboard-number-key-height` | 40px |
+| `--md-comp-keyboard-key-shape` | 12px |
+| `--md-comp-keyboard-container-color` | `surface-container` |
+| `--md-comp-keyboard-container-shape` | 16px |
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `onKey` | Function | `null` | Called after every key press with the text typed or the function key's name (`'Backspace'`, `'Enter'`, `'Shift'`). Works without `aria-controls`. |
+
+### Methods
+
+#### .destroy()
+
+Stops the keypad typing. The shared listeners on the document or shadow root go with the last keypad there.
+
+### Properties
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `target` | Element | The field named by `aria-controls`, or `null`. |
 
 ---
 

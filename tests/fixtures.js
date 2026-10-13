@@ -27,6 +27,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div style="position: relative; height: 200px"><canvas class="particles" aria-hidden="true"></canvas></div>`,
   },
   {
+    name: "Keypad",
+    selector: ".keypad",
+    html: `<input id="fixture-pin" inputmode="none" aria-label="PIN"><div class="keypad" role="group" aria-label="PIN keypad" aria-controls="fixture-pin"><button type="button" value="1">1</button><button type="button" data-key="Backspace" aria-label="Delete">D</button></div>`,
+  },
+  {
     name: "ButtonGroup",
     selector: ".button-group",
     html: `<div class="button-group connected" data-selection="single" role="group" aria-label="View"><button type="button" aria-pressed="true">Day</button><button type="button" aria-pressed="false">Week</button></div>`,

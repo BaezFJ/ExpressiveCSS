@@ -1,0 +1,168 @@
+@use "../abstracts" as *;
+
+// Keypad and keyboard: on-screen keys that type into a text field.
+//
+// Anatomy is the HTML. Every key is a <button type="button">. A key with a
+// `value` types that value; a key with `data-key` is a function key
+// (Backspace, Enter, Shift). `.keypad` is a three-column grid of round keys,
+// the dial pad and PIN pad. `.keyboard` is a column of rows (any <div>), each
+// row a flex line of keys. A key carrying a button style class (.filled,
+// .tonal, .outlined, .elevated, .text) keeps that style, so a call or submit
+// key is written the same way as any other button.
+//
+// Keys press the same way button-group items do: the corner squares off on a
+// spring and springs back on release.
+//
+// Keyboard width comes from a column count rather than per-key classes. A
+// character key is one column wide and may shrink; a function key is one and
+// a half; the space bar takes what is left. Ten columns gives QWERTY's
+// half-key indent on the nine-key row with no extra markup.
+
+$_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
+
+:is(.keypad, .keyboard) {
+  --md-comp-keypad-key-color: var(--md-sys-color-surface-container-highest);
+  --md-comp-keypad-key-label-color: var(--md-sys-color-on-surface);
+  --md-comp-keypad-function-key-color: var(--md-sys-color-secondary-container);
+  --md-comp-keypad-function-key-label-color: var(--md-sys-color-on-secondary-container);
+  --md-comp-keypad-key-pressed-shape: 12px;
+  // Material's fast-spatial spring, the curve button groups press with.
+  --md-comp-keypad-motion: #{$motion-fast-spatial};
+
+  touch-action: manipulation;
+
+  button {
+    --_color: var(--md-comp-keypad-key-color);
+    --_label: var(--md-comp-keypad-key-label-color);
+    min-width: 0;
+    padding: 0;
+    transition:
+      border-radius 200ms var(--md-comp-keypad-motion),
+      background-color 200ms ease-out;
+
+    &[data-key] {
+      --_color: var(--md-comp-keypad-function-key-color);
+      --_label: var(--md-comp-keypad-function-key-label-color);
+    }
+
+    // The state layer's opacity. Only the rule below reads it, so a key
+    // that keeps a button style ignores it.
+    &:hover {
+      --_state: #{state-opacity("hover")};
+    }
+
+    &:focus {
+      --_state: #{state-opacity("focus")};
+    }
+
+    &:active {
+      --_state: #{state-opacity("pressed")};
+    }
+
+    &:active:not(:disabled) {
+      border-radius: var(--md-comp-keypad-key-pressed-shape);
+    }
+
+    // The shape stops moving; the color still fades, which is not motion.
+    @media (prefers-reduced-motion: reduce) {
+      transition-property: background-color;
+    }
+  }
+
+  #{$_key} {
+    color: var(--_label);
+    background-color: color-mix(in oklab, var(--_label) var(--_state, 0%), var(--_color));
+  }
+
+  // A latched Shift reads as selected: primary, like a selected toggle.
+  [data-key="Shift"][aria-pressed="true"] {
+    --_color: var(--md-sys-color-primary);
+    --_label: var(--md-sys-color-on-primary);
+  }
+}
+
+// Dial pad and PIN pad: three columns of round keys. A digit key may carry
+// its letters in a <small> under the digit. An empty cell is an empty <span>.
+// Keys fill their cell, so `.wide` spans two and becomes a pill: a call key
+// beside Backspace leaves no hole in the last row.
+.keypad {
+  --md-comp-keypad-key-size: 72px;
+  --md-comp-keypad-gap: 12px;
+
+  display: inline-grid;
+  grid-template-columns: repeat(3, var(--md-comp-keypad-key-size));
+  gap: var(--md-comp-keypad-gap);
+
+  button {
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    height: var(--md-comp-keypad-key-size);
+    border-radius: calc(var(--md-comp-keypad-key-size) / 2);
+    @include typescale("headline-medium");
+
+    &.wide {
+      grid-column: span 2;
+    }
+
+    > small {
+      @include typescale("label-small");
+      color: inherit;
+      opacity: .78;
+    }
+  }
+}
+
+// On-screen keyboard. The container is a docked surface; each row is a line
+// of keys sized from the column count. An optional `.numbers` row of digits
+// sits above the letters with shorter keys, as on a phone; `hidden` drops it.
+// Rows skip `display: flex` while hidden, which would otherwise outrank the
+// browser's `[hidden]` rule.
+.keyboard {
+  --md-comp-keyboard-columns: 10;
+  --md-comp-keyboard-gap: 6px;
+  --md-comp-keyboard-key-height: 48px;
+  --md-comp-keyboard-number-key-height: 40px;
+  --md-comp-keyboard-key-shape: 12px;
+  --md-comp-keypad-key-pressed-shape: 6px;
+  --md-comp-keyboard-container-color: var(--md-sys-color-surface-container);
+  --md-comp-keyboard-container-shape: 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-radius: var(--md-comp-keyboard-container-shape);
+  background-color: var(--md-comp-keyboard-container-color);
+
+  > :not([hidden]) {
+    --_unit: calc((100% - (var(--md-comp-keyboard-columns) - 1) * var(--md-comp-keyboard-gap)) / var(--md-comp-keyboard-columns));
+    display: flex;
+    justify-content: center;
+    gap: var(--md-comp-keyboard-gap);
+  }
+
+  button {
+    flex: 0 1 var(--_unit);
+    height: var(--md-comp-keyboard-key-height);
+    border-radius: var(--md-comp-keyboard-key-shape);
+    @include typescale("title-medium");
+
+    &[data-key] {
+      flex-basis: calc(1.5 * var(--_unit) + .5 * var(--md-comp-keyboard-gap));
+    }
+
+    &[value=" "] {
+      flex-grow: 1;
+    }
+  }
+
+  > .numbers button {
+    height: var(--md-comp-keyboard-number-key-height);
+  }
+
+  // Shift shows capitals on the character keys while it is latched.
+  &:has([data-key="Shift"][aria-pressed="true"]) button[value] {
+    text-transform: uppercase;
+  }
+}

@@ -1264,6 +1264,35 @@
           }
         ]
       },
+      "keypad": {
+        "status": "enforced",
+        "note": "Added with the keypad and keyboard component. The container is a named group, and every key is a native button that must not submit the form around it.",
+        "rules": [
+          {
+            "id": "keypad-is-group",
+            "kind": "require-attr",
+            "selector": ":is(.keypad, .keyboard)",
+            "attr": "role",
+            "equals": "group",
+            "message": "A keypad or keyboard is a set of related keys. Give it role=\"group\" and an aria-label so its keys are announced together."
+          },
+          {
+            "id": "keypad-is-labelled",
+            "kind": "require-attr",
+            "selector": ":is(.keypad, .keyboard)",
+            "attr": "aria-label",
+            "message": "Name the keypad or keyboard with aria-label, for example \"PIN keypad\"."
+          },
+          {
+            "id": "keypad-key-type",
+            "kind": "require-attr",
+            "selector": ":is(.keypad, .keyboard) button",
+            "attr": "type",
+            "equals": "button",
+            "message": "A <button> inside a form defaults to type=submit, so every key would submit it. Give each key type=\"button\"."
+          }
+        ]
+      },
       "tree": {
         "status": "enforced",
         "note": "Added with the tree component. Nested lists of native disclosures and links: every row is a Tab stop and the browser opens a branch, so no tree role is promised.",
