@@ -116,7 +116,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed idle document listeners, repeat Init() calls and hot-path fixes in ScrollSpy, MapView, PieChart, Snackbar, Slider, the heatmap, Menu and Datepicker: 64,860 gzip bytes (+243).
   // Reviewed the 0.14.0 version export: 64,861 gzip bytes (+1).
   // Reviewed the Tabs indicator re-measure after web fonts load: 64,881 gzip bytes (+20).
-  assert.ok(sizes(js).gzip <= 64881, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the keypad and keyboard, with keys in the field: 65,806 gzip bytes (+925).
+  assert.ok(sizes(js).gzip <= 65806, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -148,5 +149,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the particles canvas: 66,461 gzip bytes (+17).
   // Reviewed the map: 67,259 gzip bytes (+798).
   // Reviewed the 48dp table-of-contents item height token: 67,269 gzip bytes (+10).
-  assert.ok(sizes(css).gzip <= 67269, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the keypad and keyboard, with two-cell wide keys, a number row and the shared spring: 68,158 gzip bytes (+889).
+  assert.ok(sizes(css).gzip <= 68158, `CSS gzip: ${sizes(css).gzip}`);
 });

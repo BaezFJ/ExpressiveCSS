@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**81 of 81 rows enforced; 0 remaining.**
+**82 of 82 rows enforced; 0 remaining.**
 
-77 of those rows are components - a part of the framework an author writes markup for.
+78 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 77 components declare conformance debt.**
+**3 of 78 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -596,6 +596,20 @@ Swept 0.8.0. The canonical icon is <span class="material-symbols">, and an icon 
 
 - **icon-not-i-element** - <i> means idiomatic text. The canonical icon element is <span class="material-symbols">.
 - **icon-hidden-or-labelled** - The ligature is real text and is read out verbatim. An icon is either decoration - aria-hidden="true", with the enclosing control carrying the name - or an image in its own right, role="img" with a label. It is never left as bare text.
+
+### keypad
+
+Added with the keypad and keyboard component. The container is a named group, and every key is a native button that must not submit the form around it.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `keypad-is-group` | require-attr | `:is(.keypad, .keyboard)` | must have `role` = `group` |
+| `keypad-is-labelled` | require-attr | `:is(.keypad, .keyboard)` | must have `aria-label` |
+| `keypad-key-type` | require-attr | `:is(.keypad, .keyboard) button` | must have `type` = `button` |
+
+- **keypad-is-group** - A keypad or keyboard is a set of related keys. Give it role="group" and an aria-label so its keys are announced together.
+- **keypad-is-labelled** - Name the keypad or keyboard with aria-label, for example "PIN keypad".
+- **keypad-key-type** - A <button> inside a form defaults to type=submit, so every key would submit it. Give each key type="button".
 
 ### kpi
 

@@ -137,3 +137,13 @@ $icon-button-sizes: (
   "large": (height: 96px, icon: 32px, space: 32px, narrow: 16px, wide: 48px, square: 28px, pressed: 16px, outline: 2px),
   "xlarge": (height: 136px, icon: 40px, space: 48px, narrow: 32px, wide: 72px, square: 28px, pressed: 16px, outline: 3px),
 );
+
+// Material's fast-spatial spring (damping .9, stiffness 1400), sampled into a
+// CSS linear easing. Button groups and keypads both press with it, so the
+// curve lives here once.
+$motion-fast-spatial: linear(
+  0, .056 5%, .1796 10%, .3252 15%, .4675 20%, .5936 25%,
+  .6988 30%, .7828 35%, .8475 40%, .8959 45%, .931 50%,
+  .9559 55%, .973 60%, .9845 65%, .9919 70%, .9965 75%,
+  .9992 80%, 1.0006 85%, 1.0013 90%, 1.0015 95%, 1.0015
+);

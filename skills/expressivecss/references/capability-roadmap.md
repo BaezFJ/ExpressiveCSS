@@ -86,6 +86,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Autocomplete](#autocomplete) | unassessed | needs-review | needs-rerun | 1 |
 | [Date picker](#date-picker) | unassessed | needs-review | needs-rerun | 1 |
 | [Time picker](#time-picker) | unassessed | needs-review | needs-rerun | 2 |
+| [Keypad and Keyboard](#keypad) | implemented | source-reviewed | incomplete | 1 |
 | [Questionnaire](#questionnaire) | implemented | source-reviewed | needs-rerun | 1 |
 | [Typography](#typography) | unassessed | needs-review | needs-rerun | 2 |
 | [Shape](#shape) | unassessed | needs-review | needs-rerun | 1 |
@@ -1344,6 +1345,23 @@ Web adaptation: Default inline presentation with optional docked display plugin;
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/e48e958c184d2de2a972028a06c3a03e0e802197/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker digital values: input`. Input-only edits, invalid-value recovery, confirmation change counts and form values in 12/24-hour, inline/docked, LTR/RTL and ordinary/reduced motion fixtures. Physical keyboard and clipboard checks remain pending.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/e48e958c184d2de2a972028a06c3a03e0e802197/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker digital values: empty`. Empty hour/minute fallback display and submitted values agree, including twelve-hour midnight normalization and retained AM/PM state.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/e48e958c184d2de2a972028a06c3a03e0e802197/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker digital values: boundaries`. Reinitialization from midnight, noon, late-night 24-hour strings and lowercase AM/PM preserves twelve-hour display and period state.
+
+<a id="keypad"></a>
+
+## Keypad and Keyboard
+
+**implemented within the stated scope.** A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.
+
+Source review: source-reviewed, 2026-10-11. [src/sass/components/_keypad.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/e48e958c184d2de2a972028a06c3a03e0e802197/src/sass/components/_keypad.scss), [src/ts/components/keypad.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/e48e958c184d2de2a972028a06c3a03e0e802197/src/ts/components/keypad.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-11); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode="none" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so a minimum length is written as pattern.
+
+- verification: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. Next: Type a PIN and a message with a screen reader and on a touch device in each engine, and check forced colors and enlarged text.
+- feature: There is no caps lock, no symbol layer switching and no highlight of the key a hardware keyboard presses, and minlength does not apply to keypad edits. Next: Swap rows from onKey for a symbols key, add caps lock when a page needs it, and write a minimum length as pattern.
+
+- not-recorded: [tests/keypad-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/e48e958c184d2de2a972028a06c3a03e0e802197/tests/keypad-browser.test.js): `chromium: keypad and keyboard type at the caret, edit, submit, shift and lay out their keys`. Digits typed at the caret, maxlength, focus kept in the field on a pointer press, Backspace including emoji, Enter submitting once, a pattern mismatch blocking Enter, onKey values, composed input events from a shadow root, number, decimal and signed input, a disabled fieldset and its legend, a trailing Backspace in the field that runs once for two keypads, for a field inside its keyboard and for a field rendered after init, a password toggle that is not a key, a prefilled untouched field typed at the end, a caret placed at the start kept for keys activated from the keyboard, Shift showing capitals and releasing after one character, space and a textarea new line, three 72px round keypad columns, a two-cell wide key, a tenth-of-row letter key, the half-key indent, a one-and-a-half-key Shift, the space bar filling its row, a 40px number row that types and that hidden drops, the pressed corner, destroy, and the shared listeners leaving with the last keypad. No spoken-output assertion.
 
 <a id="questionnaire"></a>
 
