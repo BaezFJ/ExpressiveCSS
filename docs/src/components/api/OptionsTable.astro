@@ -1,6 +1,11 @@
 ---
-/** Plugin options. The header carries no information beyond its rows, so it lives here once instead of being retyped per page. */
+/**
+ * Plugin options. The header carries no information beyond its rows, so it
+ * lives here once instead of being retyped per page. The table scrolls in
+ * place when its code values are wider than a compact window.
+ */
 ---
+<div class="docs-table-scroll">
 <table class="striped">
   <thead>
     <tr>
@@ -14,3 +19,4 @@
     <slot />
   </tbody>
 </table>
+</div>
