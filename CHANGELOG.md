@@ -20,6 +20,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `minlength` for scripted edits, so the docs give a minimum length as
   `pattern`. `Keypad` is in `AutoInit()` and takes an `onKey` option.
 
+### Fixed
+
+- Date picker days outside `minDate`/`maxDate`, weekends under
+  `disableWeekends`, days rejected by `disableDayFn`, and the adjacent-month
+  days from `showDaysInNextAndPreviousMonths` now use the M3 disabled text
+  color and ignore the pointer. The rule looked for the state class on the day button,
+  but the picker puts it on the cell, so these days looked selectable.
+
 ## [0.14.1] - 2026-10-11
 
 ### Fixed
