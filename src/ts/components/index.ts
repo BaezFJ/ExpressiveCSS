@@ -14,6 +14,7 @@ export { Carousel } from "./carousel";
 export { CharacterCounter } from "./characterCounter";
 export { Confetti } from "./confetti";
 export { Particles } from "./particles";
+export { Keypad } from "./keypad";
 export { Chips } from "./chips";
 export { CommandPalette } from "./commandPalette";
 export { Questionnaire } from "./questionnaire";

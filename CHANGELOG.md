@@ -9,6 +9,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - The scroll area docs show `.scroll-area` on `<html>` for a themed page
   scrollbar. A browser test covers page scrolling and theme colors.
+- `.keypad` and `.keyboard` are on-screen keys that type into the text
+  field named by `aria-controls`. A keypad is three columns of round keys for
+  PINs, codes and dial pads; a keyboard is rows of keys sized from a column
+  count, with an optional `.numbers` row of shorter digit keys that
+  `hidden` drops. Keys with a `value` type at the caret and fire `input`; `data-key`
+  keys handle Backspace, Enter and a one-shot Shift. Keys square their
+  corners on press, and a `wide` key spans two cells. A key inside the
+  field's `.field`, such as a trailing Backspace, works too. Browsers skip
+  `minlength` for scripted edits, so the docs give a minimum length as
+  `pattern`. `Keypad` is in `AutoInit()` and takes an `onKey` option.
 
 ## [0.14.1] - 2026-10-11
 

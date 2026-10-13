@@ -77,14 +77,9 @@ $_connected-corners: (
   // M3 states this as a percentage of the item's own width. CSS cannot
   // multiply a length by one, so it is the same figure as a ratio.
   --md-comp-button-group-pressed-item-width-multiplier: .15;
-  // Material's fast-spatial spring (damping .9, stiffness 1400), sampled into
-  // a CSS linear easing so width and corner motion use the published dynamics.
-  --md-comp-button-group-motion: linear(
-    0, .056 5%, .1796 10%, .3252 15%, .4675 20%, .5936 25%,
-    .6988 30%, .7828 35%, .8475 40%, .8959 45%, .931 50%,
-    .9559 55%, .973 60%, .9845 65%, .9919 70%, .9965 75%,
-    .9992 80%, 1.0006 85%, 1.0013 90%, 1.0015 95%, 1.0015
-  );
+  // Material's fast-spatial spring, so width and corner motion use the
+  // published dynamics.
+  --md-comp-button-group-motion: #{$motion-fast-spatial};
 
   display: flex;
   align-items: center;

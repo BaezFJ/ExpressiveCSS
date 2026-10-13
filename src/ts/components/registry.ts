@@ -41,6 +41,7 @@ export const AUTO_INIT_COMPONENTS = {
   Chips: { component: Components.Chips, selector: ".chips" },
   Confetti: { component: Components.Confetti, selector: ".confetti" },
   Particles: { component: Components.Particles, selector: "canvas.particles" },
+  Keypad: { component: Components.Keypad, selector: ".keypad, .keyboard" },
   ColumnChart: { component: Components.ColumnChart, selector: ".column-chart" },
   BarChart: { component: Components.BarChart, selector: ".bar-chart" },
   PieChart: { component: Components.PieChart, selector: ".pie-chart" },

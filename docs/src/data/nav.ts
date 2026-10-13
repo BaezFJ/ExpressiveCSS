@@ -717,6 +717,14 @@ export const NAV: DocsGroup[] = [
           "Pick a time from a clock face, in 12-hour or 24-hour form.",
       },
       {
+        id: "keypad",
+        label: "Keypad",
+        title: "Keypad and Keyboard",
+        route: "/keypad.html",
+        description:
+          "On-screen keys that type into a text field: a PIN or dial pad, or a full keyboard.",
+      },
+      {
         id: "questionnaire",
         label: "Questionnaire",
         route: "/questionnaire.html",

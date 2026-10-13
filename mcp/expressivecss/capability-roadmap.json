@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.14.1",
-  "sourceRevision": "e48e958c184d2de2a972028a06c3a03e0e802197",
+  "sourceRevision": "5cd5bde4379bebb7873249bd8948879ae76634d9",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-10",
@@ -4674,6 +4674,65 @@
         }
       ],
       "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "keypad",
+      "title": "Keypad and Keyboard",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-11",
+      "scope": "A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.",
+      "adaptation": "Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode=\"none\" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so a minimum length is written as pattern.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-11",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Name the group and every icon key, keep keys from submitting the form, keep the field labelled and usable from a hardware keyboard, and keep keys at a usable target size."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_keypad.scss",
+          "sha256": "b530b6c62630f0bb86f146db24d4d7b363491355b2f2d3302a34b2274b42bf13"
+        },
+        {
+          "path": "src/ts/components/keypad.ts",
+          "sha256": "074900c8486ebcb978cb33bff7d51c47e1721e738eb593651768c3d17e768752"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified.",
+          "nextStep": "Type a PIN and a message with a screen reader and on a touch device in each engine, and check forced colors and enlarged text."
+        },
+        {
+          "kind": "feature",
+          "description": "There is no caps lock, no symbol layer switching and no highlight of the key a hardware keyboard presses, and minlength does not apply to keypad edits.",
+          "nextStep": "Swap rows from onKey for a symbols key, add caps lock when a page needs it, and write a minimum length as pattern."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/keypad-browser.test.js",
+          "name": "chromium: keypad and keyboard type at the caret, edit, submit, shift and lay out their keys",
+          "scope": "Digits typed at the caret, maxlength, focus kept in the field on a pointer press, Backspace including emoji, Enter submitting once, a pattern mismatch blocking Enter, onKey values, composed input events from a shadow root, number, decimal and signed input, a disabled fieldset and its legend, a trailing Backspace in the field that runs once for two keypads, for a field inside its keyboard and for a field rendered after init, a password toggle that is not a key, a prefilled untouched field typed at the end, a caret placed at the start kept for keys activated from the keyboard, Shift showing capitals and releasing after one character, space and a textarea new line, three 72px round keypad columns, a two-cell wide key, a tenth-of-row letter key, the half-key indent, a one-and-a-half-key Shift, the space bar filling its row, a 40px number row that types and that hidden drops, the pressed corner, destroy, and the shared listeners leaving with the last keypad. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

@@ -1,0 +1,322 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "dial-pad", label: "Dial pad" },
+  { id: "keyboard", label: "Keyboard" },
+  { id: "keys", label: "Keys" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "tokens", label: "Tokens" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+]);
+
+const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const dial = [["1", ""], ["2", "ABC"], ["3", "DEF"], ["4", "GHI"], ["5", "JKL"], ["6", "MNO"], ["7", "PQRS"], ["8", "TUV"], ["9", "WXYZ"], ["*", ""], ["0", "+"], ["#", ""]];
+const rows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+---
+<DocsLayout page="keypad">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A keypad or keyboard of on-screen keys that type into a text field.
+        </p>
+        <p>
+          A <code>.keypad</code> is three columns of round keys for PINs,
+          codes and amounts. A <code>.keyboard</code> is rows of keys for
+          text. Both are a <code>role="group"</code> with a name, and
+          <code>aria-controls</code> names the field they type into. Every key
+          is a <code>&lt;button type="button"&gt;</code>. A key with a
+          <code>value</code> types it at the caret, and the field gets the
+          same <code>input</code> event typing would fire.
+          <code>AutoInit()</code> starts every <code>.keypad</code> and
+          <code>.keyboard</code>.
+        </p>
+        <div data-markdown-ignore style="display: grid; gap: 16px; justify-items: center">
+          <div class="field outlined">
+            <input id="demo-pin" type="password" inputmode="none" maxlength="6" placeholder=" " autocomplete="off">
+            <label for="demo-pin">PIN</label>
+          </div>
+          <div class="keypad" role="group" aria-label="PIN keypad" aria-controls="demo-pin">
+            {digits.map((d) => <button type="button" value={String(d)}>{d}</button>)}
+            <span></span>
+            <button type="button" value="0">0</button>
+            <button type="button" data-key="Backspace" aria-label="Delete"><span class="material-symbols" aria-hidden="true">backspace</span></button>
+          </div>
+        </div>
+<Code code={`
+<div class="field outlined">
+  <input id="pin" type="password" inputmode="none" maxlength="6" placeholder=" " autocomplete="off">
+  <label for="pin">PIN</label>
+</div>
+
+<div class="keypad" role="group" aria-label="PIN keypad" aria-controls="pin">
+  <button type="button" value="1">1</button>
+  <button type="button" value="2">2</button>
+  <!-- … 3 to 9 … -->
+  <span></span>
+  <button type="button" value="0">0</button>
+  <button type="button" data-key="Backspace" aria-label="Delete">
+    <span class="material-symbols" aria-hidden="true">backspace</span>
+  </button>
+</div>
+`} />
+  </Section>
+  <Section {...S["dial-pad"]}>
+        <p>
+          Put a key's letters in a <code>&lt;small&gt;</code> after the digit.
+          A key with a button style class keeps that style, so a call key is
+          a <code>filled</code> button. Add <code>wide</code> to a key to span
+          two cells as a pill, which fills the last row beside Backspace.
+        </p>
+        <div data-markdown-ignore style="display: grid; gap: 16px; justify-items: center">
+          <div class="field">
+            <input id="demo-phone" type="tel" inputmode="none" placeholder=" " autocomplete="off">
+            <label for="demo-phone">Phone number</label>
+          </div>
+          <div class="keypad" role="group" aria-label="Dial pad" aria-controls="demo-phone">
+            {dial.map(([d, l]) => <button type="button" value={d}>{d}{l && <small aria-hidden="true">{l}</small>}</button>)}
+            <button type="button" class="filled wide" data-key="Enter" aria-label="Call"><span class="material-symbols" aria-hidden="true">call</span></button>
+            <button type="button" data-key="Backspace" aria-label="Delete"><span class="material-symbols" aria-hidden="true">backspace</span></button>
+          </div>
+        </div>
+<Code code={`
+<div class="keypad" role="group" aria-label="Dial pad" aria-controls="phone">
+  <button type="button" value="2">2<small aria-hidden="true">ABC</small></button>
+  <!-- … -->
+  <button type="button" class="filled wide" data-key="Enter" aria-label="Call">
+    <span class="material-symbols" aria-hidden="true">call</span>
+  </button>
+  <button type="button" data-key="Backspace" aria-label="Delete">
+    <span class="material-symbols" aria-hidden="true">backspace</span>
+  </button>
+</div>
+`} />
+        <h3>Backspace in the field</h3>
+        <p>
+          For a centered call key, move Backspace into the text field as a
+          trailing <code>icon-button suffix</code> and hold the cells beside
+          the call key open with empty <code>&lt;span&gt;</code> elements. A
+          <code>data-key</code> key inside the field's <code>.field</code> works
+          like a keypad key, even when the field renders after the keypad.
+          Other buttons there, such as a password toggle, stay their own.
+        </p>
+        <div data-markdown-ignore style="display: grid; gap: 16px; justify-items: center">
+          <div class="field">
+            <input id="demo-phone-b" type="tel" inputmode="none" placeholder=" " autocomplete="off">
+            <label for="demo-phone-b">Phone number</label>
+            <button type="button" class="icon-button suffix" data-key="Backspace" aria-label="Delete"><span class="material-symbols" aria-hidden="true">backspace</span></button>
+          </div>
+          <div class="keypad" role="group" aria-label="Dial pad, Backspace in the field" aria-controls="demo-phone-b">
+            {dial.map(([d, l]) => <button type="button" value={d}>{d}{l && <small aria-hidden="true">{l}</small>}</button>)}
+            <span></span>
+            <button type="button" class="filled" data-key="Enter" aria-label="Call"><span class="material-symbols" aria-hidden="true">call</span></button>
+            <span></span>
+          </div>
+        </div>
+<Code code={`
+<div class="field">
+  <input id="phone" type="tel" inputmode="none" placeholder=" " autocomplete="off">
+  <label for="phone">Phone number</label>
+  <button type="button" class="icon-button suffix" data-key="Backspace" aria-label="Delete">
+    <span class="material-symbols" aria-hidden="true">backspace</span>
+  </button>
+</div>
+
+<div class="keypad" role="group" aria-label="Dial pad" aria-controls="phone">
+  <!-- 1 to # -->
+  <span></span>
+  <button type="button" class="filled" data-key="Enter" aria-label="Call">
+    <span class="material-symbols" aria-hidden="true">call</span>
+  </button>
+  <span></span>
+</div>
+`} />
+        <h3>A third action</h3>
+        <p>
+          A key with a <code>data-key</code> the script does not know types
+          nothing and calls <code>onKey</code> with its name, so the empty cell
+          can hold a page action such as contacts.
+        </p>
+        <div data-markdown-ignore style="display: grid; gap: 16px; justify-items: center">
+          <div class="field">
+            <input id="demo-phone-c" type="tel" inputmode="none" placeholder=" " autocomplete="off">
+            <label for="demo-phone-c">Phone number</label>
+          </div>
+          <div class="keypad" role="group" aria-label="Dial pad with contacts" aria-controls="demo-phone-c">
+            {dial.map(([d, l]) => <button type="button" value={d}>{d}{l && <small aria-hidden="true">{l}</small>}</button>)}
+            <button type="button" data-key="Contacts" aria-label="Contacts"><span class="material-symbols" aria-hidden="true">contacts</span></button>
+            <button type="button" class="filled" data-key="Enter" aria-label="Call"><span class="material-symbols" aria-hidden="true">call</span></button>
+            <button type="button" data-key="Backspace" aria-label="Delete"><span class="material-symbols" aria-hidden="true">backspace</span></button>
+          </div>
+        </div>
+<Code code={`
+<div class="keypad" role="group" aria-label="Dial pad" aria-controls="phone">
+  <!-- 1 to # -->
+  <button type="button" data-key="Contacts" aria-label="Contacts">
+    <span class="material-symbols" aria-hidden="true">contacts</span>
+  </button>
+  <button type="button" class="filled" data-key="Enter" aria-label="Call">
+    <span class="material-symbols" aria-hidden="true">call</span>
+  </button>
+  <button type="button" data-key="Backspace" aria-label="Delete">
+    <span class="material-symbols" aria-hidden="true">backspace</span>
+  </button>
+</div>
+
+<script>
+Expressive.Keypad.init(document.querySelector('.keypad'), {
+  onKey: (key) => { if (key === 'Contacts') openContacts(); },
+});
+</script>
+`} />
+  </Section>
+  <Section {...S.keyboard}>
+        <p>
+          Each child of a <code>.keyboard</code> is a row. A character key is
+          a tenth of the row and may shrink, a function key is one and a half
+          keys wide, and the space bar takes what is left. A nine-key row is
+          centered, which gives QWERTY its half-key indent. Set
+          <code>--md-comp-keyboard-columns</code> for a layout with more or
+          fewer keys in its widest row.
+        </p>
+        <p>
+          An optional <code>&lt;div class="numbers"&gt;</code> row of digits
+          sits above the letters with shorter 40dp keys. Leave it out, or add
+          <code>hidden</code> to drop it and remove <code>hidden</code> to show
+          it again.
+        </p>
+        <div data-markdown-ignore style="display: grid; gap: 16px">
+          <div class="field">
+            <textarea id="demo-note" inputmode="none" placeholder=" "></textarea>
+            <label for="demo-note">Message</label>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="demo-number-row" checked>
+            Number row
+          </label>
+          <div class="keyboard" role="group" aria-label="Keyboard" aria-controls="demo-note">
+            <div class="numbers" id="demo-numbers">{[..."1234567890"].map((c) => <button type="button" value={c}>{c}</button>)}</div>
+            {rows.slice(0, 2).map((row) => <div>{[...row].map((c) => <button type="button" value={c}>{c}</button>)}</div>)}
+            <div>
+              <button type="button" data-key="Shift" aria-pressed="false" aria-label="Shift"><span class="material-symbols" aria-hidden="true">shift</span></button>
+              {[...rows[2]].map((c) => <button type="button" value={c}>{c}</button>)}
+              <button type="button" data-key="Backspace" aria-label="Delete"><span class="material-symbols" aria-hidden="true">backspace</span></button>
+            </div>
+            <div>
+              <button type="button" value=",">,</button>
+              <button type="button" value=" " aria-label="Space"></button>
+              <button type="button" value=".">.</button>
+              <button type="button" data-key="Enter" aria-label="New line"><span class="material-symbols" aria-hidden="true">keyboard_return</span></button>
+            </div>
+          </div>
+        </div>
+<Code code={`
+<div class="keyboard" role="group" aria-label="Keyboard" aria-controls="message">
+  <div class="numbers">
+    <button type="button" value="1">1</button>
+    <!-- … 2 to 0 … -->
+  </div>
+  <div>
+    <button type="button" value="q">q</button>
+    <!-- … w to p … -->
+  </div>
+  <div><!-- a to l --></div>
+  <div>
+    <button type="button" data-key="Shift" aria-pressed="false" aria-label="Shift">
+      <span class="material-symbols" aria-hidden="true">shift</span>
+    </button>
+    <!-- z to m -->
+    <button type="button" data-key="Backspace" aria-label="Delete">
+      <span class="material-symbols" aria-hidden="true">backspace</span>
+    </button>
+  </div>
+  <div>
+    <button type="button" value=",">,</button>
+    <button type="button" value=" " aria-label="Space"></button>
+    <button type="button" value=".">.</button>
+    <button type="button" data-key="Enter" aria-label="New line">
+      <span class="material-symbols" aria-hidden="true">keyboard_return</span>
+    </button>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S.keys}>
+        <table class="striped">
+          <thead><tr><th>Key</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code>value="…"</code></td><td>Types the value at the caret, replacing any selection. Typing stops at the field's <code>maxlength</code>.</td></tr>
+            <tr><td><code>data-key="Backspace"</code></td><td>Deletes the selection, or the character before the caret.</td></tr>
+            <tr><td><code>data-key="Enter"</code></td><td>Submits the field's form with <code>requestSubmit()</code>, so validation runs. In a <code>&lt;textarea&gt;</code> it types a new line.</td></tr>
+            <tr><td><code>data-key="Shift"</code></td><td>Toggles <code>aria-pressed</code>. While pressed the character keys show capitals, and the next one types a capital and releases Shift.</td></tr>
+            <tr><td>Any other <code>data-key</code></td><td>Types nothing and calls <code>onKey</code> with its name, for keys such as a symbols switch.</td></tr>
+          </tbody>
+        </table>
+        <p>
+          A <code>&lt;button&gt;</code> without <code>value</code> or
+          <code>data-key</code> is not a key, so the script ignores it. Keys
+          type at the caret; a field nobody has clicked into takes them at the
+          end. Number and email inputs have no caret position to read, so keys
+          type at the end. A number input empties itself on a partial value
+          such as <code>12.</code> or <code>-</code>, so the key is ignored
+          there. For decimals and signs, use a text field with
+          <code>inputmode="none"</code>.
+        </p>
+  </Section>
+  <Section {...S.accessibility}>
+        <ul class="browser-default">
+          <li>Name the group with <code>aria-label</code> and point <code>aria-controls</code> at the field. Give the field its own label.</li>
+          <li>Give every key <code>type="button"</code>, or a key inside a form submits it. Name icon keys and the space bar with <code>aria-label</code>.</li>
+          <li>Give a minimum length as <code>pattern</code>, such as <code>pattern="\d{'{4}'}"</code> for a four-digit PIN. Browsers check <code>minlength</code> only on what a person types, and a keypad's edit is a script's; <code>pattern</code> and <code>required</code> still hold.</li>
+          <li>Add <code>inputmode="none"</code> to the field so a phone or tablet keeps its own keyboard closed. A hardware keyboard still types into the field.</li>
+          <li>A pointer press keeps focus and the caret in the field while it has focus. Keys stay native buttons, so Tab, Enter and Space reach them.</li>
+          <li>Keys are 72dp on a keypad and 48dp tall on a keyboard. Keep a keyboard wide enough that a character key stays at least 24px wide.</li>
+        </ul>
+  </Section>
+  <Section {...S.tokens}>
+        <table class="striped">
+          <thead><tr><th>Token</th><th>Default</th></tr></thead>
+          <tbody>
+            <tr><td><code>--md-comp-keypad-key-size</code></td><td>72px</td></tr>
+            <tr><td><code>--md-comp-keypad-gap</code></td><td>12px</td></tr>
+            <tr><td><code>--md-comp-keypad-key-color</code></td><td><code>surface-container-highest</code></td></tr>
+            <tr><td><code>--md-comp-keypad-key-label-color</code></td><td><code>on-surface</code></td></tr>
+            <tr><td><code>--md-comp-keypad-function-key-color</code></td><td><code>secondary-container</code></td></tr>
+            <tr><td><code>--md-comp-keypad-function-key-label-color</code></td><td><code>on-secondary-container</code></td></tr>
+            <tr><td><code>--md-comp-keypad-key-pressed-shape</code></td><td>12px; keyboard: 6px</td></tr>
+            <tr><td><code>--md-comp-keyboard-columns</code></td><td>10</td></tr>
+            <tr><td><code>--md-comp-keyboard-gap</code></td><td>6px</td></tr>
+            <tr><td><code>--md-comp-keyboard-key-height</code></td><td>48px</td></tr>
+            <tr><td><code>--md-comp-keyboard-number-key-height</code></td><td>40px</td></tr>
+            <tr><td><code>--md-comp-keyboard-key-shape</code></td><td>12px</td></tr>
+            <tr><td><code>--md-comp-keyboard-container-color</code></td><td><code>surface-container</code></td></tr>
+            <tr><td><code>--md-comp-keyboard-container-shape</code></td><td>16px</td></tr>
+          </tbody>
+        </table>
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+          <tr><td><code>onKey</code></td><td>Function</td><td><code>null</code></td><td>Called after every key press with the text typed (<code>'7'</code>, <code>'A'</code>, <code>' '</code>) or the function key's name (<code>'Backspace'</code>, <code>'Enter'</code>, <code>'Shift'</code>). Works without <code>aria-controls</code>.</td></tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+const keypad = Expressive.Keypad.getInstance(el);
+keypad.target;    // the field named by aria-controls, or null
+keypad.destroy(); // removes the listeners
+`} />
+  </Section>
+</PageBody>
+<script is:inline>
+document.getElementById('demo-number-row').addEventListener('change', (e) => {
+  document.getElementById('demo-numbers').hidden = !e.target.checked;
+});
+</script>
+</DocsLayout>
