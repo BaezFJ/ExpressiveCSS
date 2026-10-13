@@ -18,7 +18,7 @@
 //
 // The --md-sys-color-*-light / -dark pairs are deliberately left in place.
 // They are the documented way to re-theme the framework (see the docs' Themes
-// page) and several components reference them directly.
+// page). Components read the live names, not the pairs.
 
 :root, :host {
   // `light dark` means: follow the OS unless an ancestor says otherwise.

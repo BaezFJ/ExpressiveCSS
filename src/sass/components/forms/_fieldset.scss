@@ -31,13 +31,13 @@ fieldset {
   min-inline-size: 0;
   margin: 0;
   padding: 16px;
+  border: var(--md-comp-fieldset-outline-width) solid var(--md-comp-fieldset-outline-color);
+  border-radius: var(--md-comp-fieldset-container-shape);
+  background-color: var(--md-comp-fieldset-container-color);
 
   & + & {
     margin-block-start: 24px;
   }
-  border: var(--md-comp-fieldset-outline-width) solid var(--md-comp-fieldset-outline-color);
-  border-radius: var(--md-comp-fieldset-container-shape);
-  background-color: var(--md-comp-fieldset-container-color);
 
   > legend {
     float: none;

@@ -6,7 +6,6 @@
   // the selected filename instead of consuming the entire field.
   grid-template-columns: fit-content(50%) minmax(0, 1fr);
   gap: 10px;
-  //position: relative;
 
   .file-path-wrapper {
     overflow: hidden;

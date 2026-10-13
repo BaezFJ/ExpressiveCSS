@@ -20,6 +20,25 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `minlength` for scripted edits, so the docs give a minimum length as
   `pattern`. `Keypad` is in `AutoInit()` and takes an `onKey` option.
 
+### Fixed
+
+- Date picker days outside `minDate`/`maxDate`, weekends under
+  `disableWeekends`, days rejected by `disableDayFn`, and the adjacent-month
+  days from `showDaysInNextAndPreviousMonths` now use the M3 disabled text
+  color and ignore the pointer. The rule looked for the state class on the
+  day button, but the picker puts it on the cell, so these days looked
+  selectable.
+- A footer whose only child is a plain `<nav>` link column now gets the full
+  page footer styles. When the navigation bar arrived, only the first footer
+  rule was narrowed to a lone `.navigation-bar`. The grid, `.filled`, link
+  and legal bar rules still skipped any footer with a lone `<nav>`. Pane
+  footers use the same guard, so they keep their flex action row.
+- Map markers and the column, bar and mixed chart hover layers mix
+  `in oklab` like the rest of the framework. Each mix is with `transparent`,
+  so the rendered colors do not change.
+- The date picker's unused `.year-text` no longer sets `on-primary`, a
+  leftover from the removed primary header.
+
 ## [0.14.1] - 2026-10-11
 
 ### Fixed

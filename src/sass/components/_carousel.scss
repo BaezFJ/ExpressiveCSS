@@ -20,6 +20,11 @@
 //   item shape          28dp
 //   small item width 40–56dp
 
+// A small item's width: $share of the track, held between the min and max tokens.
+@function _small-item-width($share) {
+  @return clamp(var(--md-comp-carousel-small-item-min-width), $share, var(--md-comp-carousel-small-item-max-width));
+}
+
 .carousel {
   --md-comp-carousel-height: 240px;
   --md-comp-carousel-shape: 28px;
@@ -110,16 +115,8 @@
     }
 
     &[data-carousel-size="small"] {
-      flex-basis: clamp(
-        var(--md-comp-carousel-small-item-min-width),
-        12%,
-        var(--md-comp-carousel-small-item-max-width)
-      );
-      width: clamp(
-        var(--md-comp-carousel-small-item-min-width),
-        12%,
-        var(--md-comp-carousel-small-item-max-width)
-      );
+      flex-basis: _small-item-width(12%);
+      width: _small-item-width(12%);
     }
 
     &[data-carousel-size="small"] > .carousel-item-content {
@@ -325,16 +322,8 @@
   );
 
   .carousel-track > .carousel-item[data-carousel-size="small"] {
-    flex-basis: clamp(
-      var(--md-comp-carousel-small-item-min-width),
-      8%,
-      var(--md-comp-carousel-small-item-max-width)
-    );
-    width: clamp(
-      var(--md-comp-carousel-small-item-min-width),
-      8%,
-      var(--md-comp-carousel-small-item-max-width)
-    );
+    flex-basis: _small-item-width(8%);
+    width: _small-item-width(8%);
   }
 }
 
@@ -360,16 +349,8 @@
   );
 
   .carousel-track > .carousel-item[data-carousel-size="small"] {
-    flex-basis: clamp(
-      var(--md-comp-carousel-small-item-min-width),
-      6%,
-      var(--md-comp-carousel-small-item-max-width)
-    );
-    width: clamp(
-      var(--md-comp-carousel-small-item-min-width),
-      6%,
-      var(--md-comp-carousel-small-item-max-width)
-    );
+    flex-basis: _small-item-width(6%);
+    width: _small-item-width(6%);
   }
 }
 
@@ -395,16 +376,8 @@
   );
 
   .carousel-track > .carousel-item[data-carousel-size="small"] {
-    flex-basis: clamp(
-      var(--md-comp-carousel-small-item-min-width),
-      4%,
-      var(--md-comp-carousel-small-item-max-width)
-    );
-    width: clamp(
-      var(--md-comp-carousel-small-item-min-width),
-      4%,
-      var(--md-comp-carousel-small-item-max-width)
-    );
+    flex-basis: _small-item-width(4%);
+    width: _small-item-width(4%);
   }
 }
 
@@ -445,11 +418,7 @@
   --md-comp-carousel-large-item-width: min(calc(100% - 96px), 720px);
 
   .carousel-track > .carousel-item[data-carousel-size="small"] {
-    flex-basis: clamp(
-      var(--md-comp-carousel-small-item-min-width),
-      12%,
-      var(--md-comp-carousel-small-item-max-width)
-    );
+    flex-basis: _small-item-width(12%);
   }
 
   &.center-aligned {
@@ -534,16 +503,8 @@
     border-radius: var(--md-comp-carousel-shape);
 
     &[data-carousel-size="small"] {
-      flex-basis: clamp(
-        var(--md-comp-carousel-small-item-min-width),
-        12%,
-        var(--md-comp-carousel-small-item-max-width)
-      );
-      width: clamp(
-        var(--md-comp-carousel-small-item-min-width),
-        12%,
-        var(--md-comp-carousel-small-item-max-width)
-      );
+      flex-basis: _small-item-width(12%);
+      width: _small-item-width(12%);
     }
 
     > img,

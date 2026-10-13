@@ -85,7 +85,7 @@
   &.location {
     --md-comp-map-marker-color: var(--md-sys-color-tertiary);
 
-    box-shadow: 0 0 0 8px color-mix(in srgb, var(--md-comp-map-marker-color) 24%, transparent);
+    box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-comp-map-marker-color) 24%, transparent);
     cursor: default;
   }
 }
@@ -151,7 +151,7 @@
     line-height: 1;
 
     &:hover {
-      background-color: color-mix(in srgb, currentColor 8%, transparent) !important;
+      background-color: color-mix(in oklab, currentColor 8%, transparent) !important;
     }
 
     @include focus-visible;

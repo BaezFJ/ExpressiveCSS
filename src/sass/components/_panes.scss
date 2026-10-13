@@ -169,7 +169,6 @@
     @include z-depth("0");
 
     &.elevated {
-      background-color: var(--md-sys-color-surface-container-low);
       @include z-depth("1");
     }
 
@@ -255,10 +254,7 @@
         background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
       }
 
-      &:focus-visible {
-        outline: 3px solid var(--md-sys-color-secondary);
-        outline-offset: 2px;
-      }
+      @include focus-visible;
     }
   }
 
@@ -281,7 +277,7 @@
   }
 
   // Footer / Action Bar
-  > footer:not(:has(> nav:only-child)),
+  > footer:not(:has(> .navigation-bar:only-child)),
   > :is(footer, .pane-footer, nav:last-child) {
     display: flex;
     flex-wrap: wrap;

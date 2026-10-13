@@ -62,52 +62,32 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 // State layers mix the on-color into the container in oklab; the opacities come
 // from md.sys.state via `state-opacity()`. Filled and tonal have no elevation.
 
-@mixin btn-filled {
-  color: var(--md-comp-filled-button-label-text-color, var(--md-sys-color-on-primary));
-  background-color: var(--md-comp-filled-button-container-color, var(--md-sys-color-primary));
-
+// Shared by filled, tonal, outlined and flat. Elevated also moves z-depth.
+@mixin _btn-states($on, $base) {
   &:hover {
-    background-color: color-mix(
-      in oklab,
-      var(--md-sys-color-on-primary) state-opacity("hover"),
-      var(--md-sys-color-primary)
-    );
+    background-color: color-mix(in oklab, #{$on} state-opacity("hover"), #{$base});
   }
 
   &:active,
   &:focus {
-    background-color: color-mix(
-      in oklab,
-      var(--md-sys-color-on-primary) state-opacity("focus"),
-      var(--md-sys-color-primary)
-    );
+    background-color: color-mix(in oklab, #{$on} state-opacity("focus"), #{$base});
   }
 
   @include focus-visible();
+}
+
+@mixin btn-filled {
+  color: var(--md-comp-filled-button-label-text-color, var(--md-sys-color-on-primary));
+  background-color: var(--md-comp-filled-button-container-color, var(--md-sys-color-primary));
+
+  @include _btn-states(var(--md-sys-color-on-primary), var(--md-sys-color-primary));
 }
 
 @mixin btn-tonal {
   color: var(--md-sys-color-on-secondary-container);
   background-color: var(--md-sys-color-secondary-container);
 
-  &:hover {
-    background-color: color-mix(
-      in oklab,
-      var(--md-sys-color-on-secondary-container) state-opacity("hover"),
-      var(--md-sys-color-secondary-container)
-    );
-  }
-
-  &:active,
-  &:focus {
-    background-color: color-mix(
-      in oklab,
-      var(--md-sys-color-on-secondary-container) state-opacity("focus"),
-      var(--md-sys-color-secondary-container)
-    );
-  }
-
-  @include focus-visible();
+  @include _btn-states(var(--md-sys-color-on-secondary-container), var(--md-sys-color-secondary-container));
 }
 
 @mixin btn-elevated {
@@ -138,16 +118,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   // height right.
   border: var(--md-comp-filled-button-outline-width, 1px) solid var(--md-sys-color-outline);
 
-  &:hover {
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), transparent);
-  }
-
-  &:active,
-  &:focus {
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), transparent);
-  }
-
-  @include focus-visible();
+  @include _btn-states(var(--md-sys-color-primary), transparent);
 }
 
 @mixin btn-flat {
@@ -156,16 +127,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   background-color: transparent;
   border-color: transparent;
 
-  &:hover {
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), transparent);
-  }
-
-  &:active,
-  &:focus {
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), transparent);
-  }
-
-  @include focus-visible();
+  @include _btn-states(var(--md-sys-color-primary), transparent);
 }
 
 @mixin btn-disabled {
@@ -174,7 +136,6 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 12%, transparent);
   border-color: transparent;
   pointer-events: none;
-  box-shadow: none;
   cursor: default;
 }
 
@@ -234,8 +195,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 ///
 /// Checkboxes and radio buttons have no room for an overlay pseudo-element, so
 /// they grow a `box-shadow` from the control's edge out to the state layer
-/// size. `color-mix()` wants a percentage where the token is a number, hence
-/// the `* 100%`.
+/// size.
 @mixin state-layer-ring($outer, $inner, $color, $state) {
   box-shadow: 0 0 0 calc((#{$outer} - #{$inner}) / 2)
     color-mix(
@@ -367,16 +327,16 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
     margin: $element-top-margin 0 $element-bottom-margin;
     color: var(--md-sys-color-on-surface);
 
-    > figcaption {
-      color: var(--md-sys-color-on-surface-variant);
-      @include typescale("title-small");
-    }
-
     // A table keeps its content size under visually-hidden, so anchor it
     // here rather than at some distant positioned ancestor. A fixed layout
     // holds it to the 1px wide it is given. Its rows still set its height, so
     // it hangs up from the bottom edge, where the overflow cannot scroll.
     position: relative;
+
+    > figcaption {
+      color: var(--md-sys-color-on-surface-variant);
+      @include typescale("title-small");
+    }
 
     &:has(> .#{$name}-plot) > table {
       @include visually-hidden;

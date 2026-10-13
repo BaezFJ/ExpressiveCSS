@@ -47,16 +47,10 @@ $_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
 
     // The state layer's opacity. Only the rule below reads it, so a key
     // that keeps a button style ignores it.
-    &:hover {
-      --_state: #{state-opacity("hover")};
-    }
-
-    &:focus {
-      --_state: #{state-opacity("focus")};
-    }
-
-    &:active {
-      --_state: #{state-opacity("pressed")};
+    @each $state, $selector in ("hover": "&:hover", "focus": "&:focus", "pressed": "&:active") {
+      #{$selector} {
+        --_state: #{state-opacity($state)};
+      }
     }
 
     &:active:not(:disabled) {

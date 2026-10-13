@@ -222,11 +222,7 @@ article > :is(h1, h2, h3, h4, h5, h6),
 article > :is(header, .primary-action) > :is(h1, h2, h3, h4, h5, h6) {
   margin: 0;
   padding: var(--md-comp-card-content-padding) var(--md-comp-card-content-padding) 0;
-  font-family: var(--md-sys-typescale-title-medium-font-family-name);
-  font-size: var(--md-sys-typescale-title-medium-font-size);
-  font-weight: var(--md-sys-typescale-title-medium-font-weight);
-  line-height: var(--md-sys-typescale-title-medium-line-height);
-  letter-spacing: var(--md-sys-typescale-title-medium-letter-spacing);
+  @include typescale("title-medium");
   color: var(--md-comp-card-headline-color);
 }
 
@@ -234,11 +230,7 @@ article > p,
 article > :is(header, .primary-action) > p {
   margin: 0;
   padding: var(--md-comp-card-between-space) var(--md-comp-card-content-padding) var(--md-comp-card-content-padding);
-  font-family: var(--md-sys-typescale-body-medium-font-family-name);
-  font-size: var(--md-sys-typescale-body-medium-font-size);
-  font-weight: var(--md-sys-typescale-body-medium-font-weight);
-  line-height: var(--md-sys-typescale-body-medium-line-height);
-  letter-spacing: var(--md-sys-typescale-body-medium-letter-spacing);
+  @include typescale("body-medium");
   color: var(--md-comp-card-supporting-text-color);
 }
 
@@ -248,11 +240,7 @@ article > p.subhead,
 article > :is(header, .primary-action) > p.subhead {
   margin: 0;
   padding: 4px var(--md-comp-card-content-padding) 0;
-  font-family: var(--md-sys-typescale-title-small-font-family-name);
-  font-size: var(--md-sys-typescale-title-small-font-size);
-  font-weight: var(--md-sys-typescale-title-small-font-weight);
-  line-height: var(--md-sys-typescale-title-small-line-height);
-  letter-spacing: var(--md-sys-typescale-title-small-letter-spacing);
+  @include typescale("title-small");
   color: var(--md-comp-card-subhead-color);
 }
 
@@ -304,10 +292,7 @@ article > .primary-action > figure img {
   border-radius: var(--md-comp-card-media-shape);
 }
 
-article > #{$_media-figure} {
-  position: relative;
-}
-
+article > #{$_media-figure},
 article > .primary-action > #{$_media-figure} {
   position: relative;
 }
@@ -655,17 +640,13 @@ article > aside > .reveal-actions > .reveal-action {
   padding-inline: 0;
   color: var(--md-sys-color-on-surface);
   border-radius: 8px;
-  font-family: var(--md-sys-typescale-body-medium-font-family-name);
-  font-size: var(--md-sys-typescale-body-medium-font-size);
-  font-weight: var(--md-sys-typescale-body-medium-font-weight);
-  line-height: var(--md-sys-typescale-body-medium-line-height);
-  letter-spacing: var(--md-sys-typescale-body-medium-letter-spacing);
+  @include typescale("body-medium");
 }
 
 article > aside > .reveal-actions > .reveal-action:hover {
   background-color: color-mix(
     in oklab,
-    var(--md-sys-color-on-surface) calc(var(--md-sys-state-hover-state-layer-opacity) * 100%),
+    var(--md-sys-color-on-surface) state-opacity("hover"),
     transparent
   );
 }

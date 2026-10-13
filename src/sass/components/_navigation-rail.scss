@@ -29,6 +29,27 @@
   --md-comp-nav-rail-expanded-width: 280px;
 }
 
+// Expanded rail as an overlay with a scrim.
+@mixin _modal-rail {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 998;
+  @include z-depth("1");
+
+  // A blurred rail would become the containing block of the fixed scrim
+  // below and clip it to the rail, so a modal rail stays solid.
+  background-color: var(--md-sys-color-surface-container);
+  backdrop-filter: none;
+
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-color: var(--md-comp-scrim-color);
+    z-index: -1;
+  }
+}
+
 .navigation-rail {
   --md-comp-nav-rail-icon-size: 24px;
   --md-comp-nav-rail-indicator-width: 56px;
@@ -278,42 +299,12 @@
   }
 
   &.expanded.modal {
-    position: fixed;
-    inset: 0 auto 0 0;
-    z-index: 998;
-    @include z-depth("1");
-
-    // A blurred rail would become the containing block of the fixed scrim
-    // below and clip it to the rail, so a modal rail stays solid.
-    background-color: var(--md-sys-color-surface-container);
-    backdrop-filter: none;
-
-    &::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-color: var(--md-comp-scrim-color);
-      z-index: -1;
-    }
+    @include _modal-rail;
   }
 
   @include bp-down("medium") {
     &.expanded:not(.modal) {
-      position: fixed;
-      inset: 0 auto 0 0;
-      z-index: 998;
-      @include z-depth("1");
-
-      background-color: var(--md-sys-color-surface-container);
-      backdrop-filter: none;
-
-      &::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background-color: var(--md-comp-scrim-color);
-        z-index: -1;
-      }
+      @include _modal-rail;
     }
   }
 }

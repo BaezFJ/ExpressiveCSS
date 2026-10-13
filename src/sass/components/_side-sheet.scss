@@ -153,10 +153,7 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
     }
 
-    &:focus-visible {
-      outline: 3px solid var(--md-sys-color-secondary);
-      outline-offset: 2px;
-    }
+    @include focus-visible;
   }
 
   > :is(form, nav):last-child {

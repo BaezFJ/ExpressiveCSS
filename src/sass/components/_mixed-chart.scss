@@ -125,7 +125,7 @@
     inset: 0;
     z-index: -1;
     border-radius: var(--md-comp-mixed-chart-shape);
-    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
   }
 
   > span {

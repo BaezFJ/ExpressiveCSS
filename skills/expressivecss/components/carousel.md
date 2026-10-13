@@ -9,7 +9,7 @@ Component ID: `carousel`
 
 Contract: ExpressiveCSS 0.14.1
 
-Contract SHA-256: `892dca6fc10f86c7617cd13d9c2a2fefe790f70548a209b4d771b258122d52b1`
+Contract SHA-256: `4c70af4ea6d309668c6660245cec6321554affce6a95df024e4093dd0be867c2`
 
 #### Selection and adaptation
 

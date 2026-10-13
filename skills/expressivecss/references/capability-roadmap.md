@@ -22,7 +22,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Tabs](#tabs) | unassessed | needs-review | needs-rerun | 1 |
 | [Breadcrumbs](#breadcrumbs) | unassessed | needs-review | needs-rerun | 0 |
 | [Pagination](#pagination) | unassessed | needs-review | needs-rerun | 1 |
-| [Stepper](#stepper) | implemented | source-reviewed | needs-rerun | 0 |
+| [Stepper](#stepper) | unassessed | needs-review | needs-rerun | 0 |
 | [Menu](#menu) | unassessed | needs-review | needs-rerun | 0 |
 | [Scrollspy](#scrollspy) | unassessed | needs-review | needs-rerun | 0 |
 | [Tree](#tree) | implemented | source-reviewed | needs-rerun | 0 |
@@ -37,18 +37,18 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Message](#message) | implemented | source-reviewed | needs-rerun | 0 |
 | [Message scroller](#message-scroller) | implemented | source-reviewed | needs-rerun | 0 |
 | [Accordion](#accordion) | implemented | source-reviewed | needs-rerun | 0 |
-| [Data table](#data-table) | implemented | source-reviewed | needs-rerun | 0 |
+| [Data table](#data-table) | unassessed | needs-review | needs-rerun | 0 |
 | [Stat](#stat) | implemented | source-reviewed | needs-rerun | 0 |
 | [KPI](#kpi) | implemented | source-reviewed | needs-rerun | 0 |
 | [Countdown](#countdown) | implemented | source-reviewed | needs-rerun | 0 |
-| [Line chart](#line-chart) | implemented | source-reviewed | needs-rerun | 1 |
-| [Column chart](#column-chart) | implemented | source-reviewed | needs-rerun | 1 |
-| [Bar chart](#bar-chart) | implemented | source-reviewed | needs-rerun | 1 |
+| [Line chart](#line-chart) | unassessed | needs-review | needs-rerun | 1 |
+| [Column chart](#column-chart) | unassessed | needs-review | needs-rerun | 1 |
+| [Bar chart](#bar-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Pie chart](#pie-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Heatmap chart](#heatmap-chart) | unassessed | needs-review | needs-rerun | 1 |
-| [Radar chart](#radar-chart) | implemented | source-reviewed | needs-rerun | 1 |
-| [Radial chart](#radial-chart) | implemented | source-reviewed | needs-rerun | 1 |
-| [Mixed chart](#mixed-chart) | implemented | source-reviewed | needs-rerun | 1 |
+| [Radar chart](#radar-chart) | unassessed | needs-review | needs-rerun | 1 |
+| [Radial chart](#radial-chart) | unassessed | needs-review | needs-rerun | 1 |
+| [Mixed chart](#mixed-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Timeline](#timeline) | implemented | source-reviewed | needs-rerun | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
@@ -86,7 +86,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Autocomplete](#autocomplete) | unassessed | needs-review | needs-rerun | 1 |
 | [Date picker](#date-picker) | unassessed | needs-review | needs-rerun | 1 |
 | [Time picker](#time-picker) | unassessed | needs-review | needs-rerun | 2 |
-| [Keypad and Keyboard](#keypad) | implemented | source-reviewed | incomplete | 1 |
+| [Keypad and Keyboard](#keypad) | unassessed | needs-review | incomplete | 1 |
 | [Questionnaire](#questionnaire) | implemented | source-reviewed | needs-rerun | 1 |
 | [Typography](#typography) | unassessed | needs-review | needs-rerun | 2 |
 | [Shape](#shape) | unassessed | needs-review | needs-rerun | 1 |
@@ -233,9 +233,9 @@ Web adaptation: CSS-only navigation; the application supplies destinations.
 
 ## Stepper
 
-**implemented within the stated scope.** Horizontal and vertical ordered lists with current, complete and invalid steps, supporting text, links back to finished steps and a content panel in vertical steps.
+**unassessed within the stated scope.** Horizontal and vertical ordered lists with current, complete and invalid steps, supporting text, links back to finished steps and a content panel in vertical steps.
 
-Source review: source-reviewed, 2026-10-06. [src/sass/components/_stepper.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_stepper.scss).
+Source review: needs-review, 2026-10-06. [src/sass/components/_stepper.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_stepper.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
 
@@ -498,9 +498,9 @@ Web adaptation: Native <details> and <summary>; the browser owns the toggle, its
 
 ## Data table
 
-**implemented within the stated scope.** Scrolling wrapper with an outline, sticky header row, numeric columns, dense rows, a sort arrow drawn from aria-sort and checkbox row selection.
+**unassessed within the stated scope.** Scrolling wrapper with an outline, sticky header row, numeric columns, dense rows, a sort arrow drawn from aria-sort and checkbox row selection.
 
-Source review: source-reviewed, 2026-10-06. [src/sass/components/_data-table.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_data-table.scss).
+Source review: needs-review, 2026-10-06. [src/sass/components/_data-table.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_data-table.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
 
@@ -562,9 +562,9 @@ Web adaptation: The element's text is the accessible value; the digit strips are
 
 ## Line chart
 
-**implemented within the stated scope.** Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.
+**unassessed within the stated scope.** Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.
 
-Source review: source-reviewed, 2026-10-06. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/abstracts/_mixins.scss), [src/sass/components/_line-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_line-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/lineChart.ts).
+Source review: needs-review, 2026-10-06. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/abstracts/_mixins.scss), [src/sass/components/_line-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_line-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/lineChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
 
@@ -581,9 +581,9 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 ## Column chart
 
-**implemented within the stated scope.** Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip with a highlight band.
+**unassessed within the stated scope.** Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip with a highlight band.
 
-Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/abstracts/_mixins.scss), [src/sass/components/_column-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_column-chart.scss), [src/ts/components/columnChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/columnChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/lineChart.ts).
+Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/abstracts/_mixins.scss), [src/sass/components/_column-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_column-chart.scss), [src/ts/components/columnChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/columnChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/lineChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
 
@@ -599,9 +599,9 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 ## Bar chart
 
-**implemented within the stated scope.** Horizontal bars drawn from zero from a figure's data table, grouped by row or stacked, with split, track, values and sparkline modifiers, negative values, gaps, a fixed value range, row labels, a legend, and a pointer and keyboard tooltip with a highlight band.
+**unassessed within the stated scope.** Horizontal bars drawn from zero from a figure's data table, grouped by row or stacked, with split, track, values and sparkline modifiers, negative values, gaps, a fixed value range, row labels, a legend, and a pointer and keyboard tooltip with a highlight band.
 
-Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/abstracts/_mixins.scss), [src/sass/components/_bar-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_bar-chart.scss), [src/ts/components/barChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/barChart.ts), [src/ts/components/columnChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/columnChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/lineChart.ts).
+Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/abstracts/_mixins.scss), [src/sass/components/_bar-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_bar-chart.scss), [src/ts/components/barChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/barChart.ts), [src/ts/components/columnChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/columnChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/lineChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
 
@@ -653,9 +653,9 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 ## Radar chart
 
-**implemented within the stated scope.** Spokes drawn clockwise from the top from a figure's data table, one shape per series from zero in the middle to the scale's top at the rim, row labels past each spoke, a legend for several series, area, points, dashed and sparkline modifiers, data-min and data-max, and a pointer and keyboard tooltip with a cursor spoke.
+**unassessed within the stated scope.** Spokes drawn clockwise from the top from a figure's data table, one shape per series from zero in the middle to the scale's top at the rim, row labels past each spoke, a legend for several series, area, points, dashed and sparkline modifiers, data-min and data-max, and a pointer and keyboard tooltip with a cursor spoke.
 
-Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/abstracts/_mixins.scss), [src/sass/components/_radar-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_radar-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/lineChart.ts), [src/ts/components/radarChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/radarChart.ts).
+Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/abstracts/_mixins.scss), [src/sass/components/_radar-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_radar-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/lineChart.ts), [src/ts/components/radarChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/radarChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
 
@@ -671,9 +671,9 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 ## Radial chart
 
-**implemented within the stated scope.** Rings drawn clockwise from the top from a figure's data table as a share of data-max, with tracks, a legend of each row's cell for more than one row, gauge and sparkline modifiers, a <tfoot> total in the middle, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the ring.
+**unassessed within the stated scope.** Rings drawn clockwise from the top from a figure's data table as a share of data-max, with tracks, a legend of each row's cell for more than one row, gauge and sparkline modifiers, a <tfoot> total in the middle, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the ring.
 
-Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/abstracts/_mixins.scss), [src/sass/components/_radial-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_radial-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/lineChart.ts), [src/ts/components/radialChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/radialChart.ts).
+Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/abstracts/_mixins.scss), [src/sass/components/_radial-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_radial-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/lineChart.ts), [src/ts/components/radialChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/radialChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
 
@@ -689,9 +689,9 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 ## Mixed chart
 
-**implemented within the stated scope.** Columns, smooth lines and areas drawn per series from a figure's data table by header class, with dashed lines, a second scale for end series with its own fixed range, x labels, a legend, a sparkline modifier, and a pointer and keyboard tooltip with points on the lines.
+**unassessed within the stated scope.** Columns, smooth lines and areas drawn per series from a figure's data table by header class, with dashed lines, a second scale for end series with its own fixed range, x labels, a legend, a sparkline modifier, and a pointer and keyboard tooltip with points on the lines.
 
-Source review: source-reviewed, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/abstracts/_mixins.scss), [src/sass/components/_mixed-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_mixed-chart.scss), [src/ts/components/columnChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/columnChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/lineChart.ts), [src/ts/components/mixedChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/mixedChart.ts).
+Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/abstracts/_mixins.scss), [src/sass/components/_mixed-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_mixed-chart.scss), [src/ts/components/columnChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/columnChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/lineChart.ts), [src/ts/components/mixedChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/mixedChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
 
@@ -1350,9 +1350,9 @@ Web adaptation: Default inline presentation with optional docked display plugin;
 
 ## Keypad and Keyboard
 
-**implemented within the stated scope.** A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.
+**unassessed within the stated scope.** A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.
 
-Source review: source-reviewed, 2026-10-11. [src/sass/components/_keypad.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_keypad.scss), [src/ts/components/keypad.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/keypad.ts).
+Source review: needs-review, 2026-10-11. [src/sass/components/_keypad.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_keypad.scss), [src/ts/components/keypad.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/ts/components/keypad.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-11); [reviewed source](https://m3.material.io/components).
 
