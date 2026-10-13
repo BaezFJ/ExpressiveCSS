@@ -766,6 +766,14 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         await page.addScriptTag({ content: js });
         await page.evaluate(() => {
           window.carousel = Expressive.Carousel.init(document.querySelector('.carousel'), { indicators: true, height: 240 });
+          // The last scroll positions, for the failure message below. This
+          // test has failed in CI WebKit without reproducing locally.
+          const track = document.querySelector('.carousel-track');
+          window.scrollLog = [];
+          track.addEventListener('scroll', () => {
+            scrollLog.push([Math.round(performance.now()), Math.round(track.scrollLeft), Math.round(track.scrollTop), carousel.center]);
+            if (scrollLog.length > 30) scrollLog.shift();
+          });
           document.querySelector('#previous').onclick = () => carousel.prev();
           document.querySelector('#next').onclick = () => carousel.next();
           window.navigationCalls = 0;
@@ -779,7 +787,30 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
           });
         });
         const vertical = layout === 'full-screen';
-        const visible = async index => {
+        // On failure, say where the carousel was and how it got there.
+        const state = () => page.evaluate(() => {
+          const track = document.querySelector('.carousel-track');
+          return {
+            now: Math.round(performance.now()),
+            center: carousel.center,
+            nearest: carousel._nearestIndex(),
+            ignoreScroll: carousel._ignoreScroll,
+            snap: track.style.scrollSnapType || getComputedStyle(track).scrollSnapType,
+            scroll: [Math.round(track.scrollLeft), Math.round(track.scrollTop)],
+            extent: [track.scrollWidth - track.clientWidth, track.scrollHeight - track.clientHeight],
+            sizes: carousel.images.map((item) => item.dataset.carouselSize),
+            running: carousel.images.some((item) => item.getAnimations().some((a) => a.playState === 'running')),
+            scrollLog,
+          };
+        });
+        const visible = async (index) => {
+          try {
+            await visibleAt(index);
+          } catch (error) {
+            throw new Error(`${error.message.split('\n')[0]}\ncarousel state: ${JSON.stringify(await state())}`, { cause: error });
+          }
+        };
+        const visibleAt = async index => {
           await expect.poll(() => page.evaluate(() => carousel.center), { message: `${layout} ${direction} ${reducedMotion} index ${index}` }).toBe(index);
           await expect.poll(() => page.evaluate(({ index, vertical }) => {
             const track = document.querySelector('.carousel-track').getBoundingClientRect();

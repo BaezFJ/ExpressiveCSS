@@ -382,6 +382,13 @@ for (const entry of PAGES) {
         await page.clock.runFor(150);
       }
 
+      // Where each carousel track sat at the shutter, logged in both passes.
+      // carousel--compact has differed by one track's position in CI without
+      // reproducing locally, so a failing run's log shows which one moved.
+      const tracks = await page.evaluate(() => [...document.querySelectorAll('.carousel-track')]
+        .map((t) => `${Math.round(t.scrollLeft)},${Math.round(t.scrollTop)}`).join(' '));
+      if (tracks) console.log(`[visual] ${MODE} ${shot} carousel tracks: ${tracks}`);
+
       await expect(page).toHaveScreenshot(shot, { fullPage: true, mask: CHROME_MASK(page) });
     });
   }
