@@ -329,9 +329,16 @@ main:focus {
   text-underline-offset: 0.18em;
 }
 
+/* The margin goes on the scroll wrapper, not the table inside it: the
+   wrapper's overflow stops a child's margins collapsing with its neighbours,
+   so a wrapped table would sit 1rem further down than a bare one. */
+.docs-page-content .docs-section > table,
+.docs-page-content .docs-section > .docs-table-scroll {
+  margin-block: 1.5rem 2rem;
+}
+
 .docs-page-content .docs-section > table,
 .docs-page-content .docs-section > .docs-table-scroll > table {
-  margin-block: 1.5rem 2rem;
   font-family: var(--md-sys-typescale-body-medium-font-family-name);
   font-size: var(--md-sys-typescale-body-medium-font-size);
   font-weight: var(--md-sys-typescale-body-medium-font-weight);
