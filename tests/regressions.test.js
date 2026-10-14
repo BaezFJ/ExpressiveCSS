@@ -1228,6 +1228,19 @@ describe('Tabs', () => {
     }
   });
 
+  test('Tabs without links, or swipeable tabs without panels, log instead of throwing', t => {
+    const error = t.mock.method(console, 'error', () => {});
+    document.body.innerHTML = `
+      <nav class="tabs" id="empty"><button>One</button></nav>
+      <nav class="tabs" id="orphan"><a href="#missing">One</a></nav>`;
+    for (const id of ['empty', 'orphan']) {
+      const instance = Expressive.Tabs.init(document.getElementById(id), { swipeable: true });
+      instance.destroy();
+      assert.equal(document.querySelector('.carousel'), null, `${id}: no swipe wrapper`);
+    }
+    assert.equal(error.mock.callCount(), 1, 'only the linkless bar is an error');
+  });
+
   test('a hash-selected tab is marked current on init', () => {
     document.body.innerHTML = `
       <nav class="tabs" aria-label="Demo">

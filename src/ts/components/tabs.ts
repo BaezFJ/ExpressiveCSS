@@ -56,6 +56,10 @@ export class Tabs extends Component<TabsOptions> {
     };
 
     this._tabLinks = this._queryTabLinks();
+    if (!this._tabLinks.length) {
+      console.error('Tabs: no tab links (an <a> child, or one inside .tab) to show');
+      return;
+    }
     this._tabLinks.forEach(link => {
       this._originalLinks.set(link, { active: link.classList.contains('active'), current: link.getAttribute('aria-current') });
       if (link.hasAttribute('target')) return;
@@ -65,7 +69,8 @@ export class Tabs extends Component<TabsOptions> {
         active: panel.classList.contains('active'), carousel: panel.classList.contains('carousel-item')
       });
     });
-    this.options.swipeable &&= window.innerWidth <= this.options.responsiveThreshold;
+    // Swiping needs at least one panel the links resolve to.
+    this.options.swipeable &&= window.innerWidth <= this.options.responsiveThreshold && this._originalPanels.size > 0;
     this._index = 0;
     this._setupActiveTabLink();
     if (this.options.swipeable) {
@@ -118,8 +123,8 @@ export class Tabs extends Component<TabsOptions> {
 
   destroy() {
     this._removeEventHandlers();
-    this._indicator.remove();
-    if (this.options.swipeable) {
+    this._indicator?.remove();
+    if (this._tabsCarousel) {
       this._teardownSwipeableTabs();
     }
     this._originalPanels.forEach((original, panel) => {

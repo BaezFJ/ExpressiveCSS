@@ -181,10 +181,14 @@ export class Tooltip extends Component<TooltipOptions> {
     this.tooltipEl.setAttribute('role', 'tooltip');
     this.el.setAttribute('aria-describedby', [this.el.getAttribute('aria-describedby'), this.tooltipEl.id].filter(Boolean).join(' '));
 
-    const tooltipContentEl = this.options.tooltipId
+    const richContentEl = this.options.tooltipId
       ? Utils.getElementById(this.el, this.options.tooltipId)
-      : document.createElement('div');
-    if (this.options.tooltipId) {
+      : null;
+    if (this.options.tooltipId && !richContentEl) {
+      console.error(`Tooltip: no element with id "${this.options.tooltipId}"; showing the text tooltip instead.`);
+    }
+    const tooltipContentEl = richContentEl ?? document.createElement('div');
+    if (richContentEl) {
       this.tooltipEl.classList.add('rich');
       const marker = document.createComment('');
       tooltipContentEl.before(marker);
@@ -205,7 +209,7 @@ export class Tooltip extends Component<TooltipOptions> {
   }
 
   _setTooltipContent(tooltipContentEl: HTMLElement) {
-    if (this.options.tooltipId) return;
+    if (this._originalContent) return;
     tooltipContentEl.innerText = this.options.text;
   }
 
