@@ -319,6 +319,8 @@ export class Datepicker extends Component<DatepickerOptions> {
   private _y: number;
   private _m: number;
   private displayPlugin: DockedDisplayPlugin;
+  /** What setInputValue last wrote, so reading it back does not depend on the parser. */
+  private _writtenInputs = new WeakMap<HTMLInputElement, { value: string; date: Date | null }>();
   /** Rows renderRow has already checked, so renderBody does not parse them again. */
   private _checkedRows = new Set<string>();
   private footer: HTMLElement;
@@ -621,7 +623,10 @@ export class Datepicker extends Component<DatepickerOptions> {
       this.draw();
       return;
     }
-    const parsedDate = this._parseInput(el.value);
+    // Without a custom parser, Date.parse reads "05/10/2026" from a dd/mm/yyyy
+    // format as 10 May, so reuse the date behind a value the picker wrote.
+    const written = !this.options.parse && this._writtenInputs.get(el);
+    const parsedDate = written && written.value === el.value ? written.date : this._parseInput(el.value);
     if (!Datepicker._isDate(parsedDate)) return;
     const date = new Date(parsedDate.getTime());
     Datepicker._setToStartOfDay(date);
@@ -752,6 +757,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     } else {
       el.value = this.toString(date);
     }
+    this._writtenInputs.set(el, { value: el.value, date: Datepicker._isDate(date) ? new Date(date.getTime()) : null });
     el.dispatchEvent(
       new CustomEvent('change', {
         bubbles: true,

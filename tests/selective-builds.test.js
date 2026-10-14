@@ -118,7 +118,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the Tabs indicator re-measure after web fonts load: 64,881 gzip bytes (+20).
   // Reviewed the keypad and keyboard, with keys in the field: 65,806 gzip bytes (+925).
   // Reviewed Tooltip and Tabs logging bad markup instead of aborting AutoInit: 65,924 gzip bytes (+118).
-  assert.ok(sizes(js).gzip <= 65924, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Datepicker reading back its own input value without the default parser: 65,996 gzip bytes (+72).
+  assert.ok(sizes(js).gzip <= 65996, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
