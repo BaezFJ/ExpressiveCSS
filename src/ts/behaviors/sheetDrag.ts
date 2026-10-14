@@ -89,21 +89,15 @@ export function installSheetDrag(config: SheetDragConfig): void {
     onCancel();
     config.onPress?.();
     const dialog = sheetFor(event.target);
-    if (!dialog?.open) {
-      drag = null;
-      return;
-    }
-    if (!config.inHandle(event, dialog)) {
-      drag = null;
-      return;
-    }
+    if (!dialog?.open || !config.inHandle(event, dialog)) return;
     dialog.style.transition = 'none';
+    const at = coord(event);
     drag = {
       dialog,
       pointerId: event.pointerId,
       direction: config.direction(dialog),
-      start: coord(event),
-      last: coord(event),
+      start: at,
+      last: at,
       lastT: Date.now(),
       velocity: 0,
       shift: 0
@@ -117,14 +111,15 @@ export function installSheetDrag(config: SheetDragConfig): void {
       onCancel();
       return;
     }
-    const delta = coord(event) - drag.start;
+    const at = coord(event);
+    const delta = at - drag.start;
     // Only movement toward dismissal counts; dragging the other way is a no-op
     // rather than a sheet that lifts off its edge.
     drag.shift = drag.direction === 1 ? Math.max(0, delta) : Math.min(0, delta);
-    if (coord(event) !== drag.last) {
+    if (at !== drag.last) {
       const now = Date.now();
-      drag.velocity = (coord(event) - drag.last) / Math.max(1, now - drag.lastT);
-      drag.last = coord(event);
+      drag.velocity = (at - drag.last) / Math.max(1, now - drag.lastT);
+      drag.last = at;
       drag.lastT = now;
     }
     drag.dialog.style.setProperty(config.property, `${drag.shift}px`);

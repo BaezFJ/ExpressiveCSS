@@ -26,16 +26,11 @@ export class Dialogs {
   }
 
   static _onPointerDown(event: PointerEvent) {
-    if (!Dialogs._isPrimaryPress(event)) {
-      Dialogs._down = null;
-      return;
-    }
-    const dialog = Dialogs._backdropDialog(event);
-    if (!dialog || !Dialogs._lightDismissible(dialog) || !Dialogs._outside(event, dialog)) {
-      Dialogs._down = null;
-      return;
-    }
-    Dialogs._down = { dialog, pointerId: event.pointerId };
+    const dialog = Dialogs._isPrimaryPress(event) ? Dialogs._backdropDialog(event) : null;
+    Dialogs._down =
+      dialog && Dialogs._lightDismissible(dialog) && Dialogs._outside(event, dialog)
+        ? { dialog, pointerId: event.pointerId }
+        : null;
   }
 
   static _onPointerUp(event: PointerEvent) {

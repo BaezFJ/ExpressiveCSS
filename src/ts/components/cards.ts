@@ -239,7 +239,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
     Utils.onDocumentReady(() => {
       const cards = Array.from(document.querySelectorAll(CARDS_SELECTOR)).filter(isCardReveal);
       cards.forEach((el) => {
-        if (el && el['Expressive_Cards'] == undefined) this.init(el as HTMLElement);
+        if (el['Expressive_Cards'] == undefined) this.init(el);
       });
     });
   }

@@ -63,7 +63,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     };
 
     this.isMultiple = this.el.multiple;
-    this.nativeTabIndex = this.el.tabIndex ?? -1;
+    this.nativeTabIndex = this.el.tabIndex;
     this.el.tabIndex = -1;
     this._values = [];
     this._createdWrapper = false;
@@ -433,13 +433,13 @@ export class FormSelect extends Component<FormSelectOptions> {
         if (selectedOption.id) this.input.setAttribute('aria-activedescendant', selectedOption.id);
       }
       this.input.ariaExpanded = 'true';
-      if (userOnOpenEnd && typeof userOnOpenEnd === 'function')
+      if (typeof userOnOpenEnd === 'function')
         userOnOpenEnd.call(this.menu, this.el);
     };
     menuOptions.onCloseEnd = () => {
       this.input.ariaExpanded = 'false';
       this.input.removeAttribute('aria-activedescendant');
-      if (userOnCloseEnd && typeof userOnCloseEnd === 'function')
+      if (typeof userOnCloseEnd === 'function')
         userOnCloseEnd.call(this.menu, this.el);
     };
     menuOptions.closeOnClick = false;
@@ -619,10 +619,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   }
 
   _getSelectedOptions(): HTMLOptionElement[] {
-    return Array.prototype.filter.call(
-      this.el.selectedOptions,
-      (realOption: HTMLOptionElement) => realOption
-    );
+    return Array.from(this.el.selectedOptions);
   }
 
   _setValueToInput() {

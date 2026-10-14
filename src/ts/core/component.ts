@@ -45,10 +45,7 @@ export class Component<O extends BaseOptions> {
       console.error(Error(el + ' is not an HTML Element'));
     }
     // If exists, destroy and reinitialize in child
-    const ins = classDef.getInstance(el);
-    if (!!ins) {
-      ins.destroy();
-    }
+    classDef.getInstance(el)?.destroy();
     this.el = el;
   }
 
@@ -96,16 +93,8 @@ export class Component<O extends BaseOptions> {
     options: Partial<O>,
     classDef: ComponentType<C, O>
   ): C | C[] {
-    let instances = null;
-    if (els instanceof Element) {
-      instances = new classDef(<HTMLElement>els, options);
-    } else if (els) {
-      instances = [];
-      for (let i = 0; i < els.length; i++) {
-        instances.push(new classDef(<HTMLElement>els[i], options));
-      }
-    }
-    return instances;
+    if (els instanceof Element) return new classDef(<HTMLElement>els, options);
+    return els ? Array.from(els, (el) => new classDef(<HTMLElement>el, options)) : null;
   }
 
   /**

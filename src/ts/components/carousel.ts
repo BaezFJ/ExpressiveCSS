@@ -82,6 +82,10 @@ const _defaults: CarouselOptions = {
   }
 };
 
+const naturallyFocusable =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
+  'textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export class Carousel extends Component<CarouselOptions> {
   hasMultipleSlides: boolean;
   showIndicators: boolean;
@@ -261,10 +265,6 @@ export class Carousel extends Component<CarouselOptions> {
       this._generatedContainerDescription = true;
     }
 
-    const naturallyFocusable =
-      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
-      'textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
     this.images.forEach((item, index) => {
       if (!item.hasAttribute('aria-roledescription')) {
         item.setAttribute('aria-roledescription', 'slide');
@@ -301,10 +301,6 @@ export class Carousel extends Component<CarouselOptions> {
       const button = document.createElement('button');
       button.type = 'button';
       button.classList.add('indicator-item');
-      if (i === 0) {
-        button.classList.add('active');
-        button.setAttribute('aria-current', 'true');
-      }
       button.setAttribute('aria-label', `${this.options.i18n.slide} ${i + 1}`);
       this._indicators.appendChild(button);
     });
@@ -730,15 +726,9 @@ export class Carousel extends Component<CarouselOptions> {
   private _focusItem(index: number) {
     const item = this.images[index];
     if (!item) return;
-    const focusable = item.matches(
-      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
-        'textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )
+    const focusable = item.matches(naturallyFocusable)
       ? item
-      : item.querySelector<HTMLElement>(
-          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
-            'textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        );
+      : item.querySelector<HTMLElement>(naturallyFocusable);
     (focusable ?? item).focus({ preventScroll: true });
   }
 
@@ -873,14 +863,14 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   next(n: number = 1) {
-    if (n === undefined || isNaN(n)) n = 1;
+    if (isNaN(n)) n = 1;
     const index = this.center + n;
     if (index >= this.count || index < 0) return;
     this._cycleTo(index);
   }
 
   prev(n: number = 1) {
-    if (n === undefined || isNaN(n)) n = 1;
+    if (isNaN(n)) n = 1;
     const index = this.center - n;
     if (index >= this.count || index < 0) return;
     this._cycleTo(index);

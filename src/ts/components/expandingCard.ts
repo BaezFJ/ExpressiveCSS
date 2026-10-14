@@ -89,11 +89,7 @@ export class ExpandingCard
 
   destroy() {
     this._removeEventHandlers();
-    this.closeGeneration++;
-    this.isOpen = false;
-    if (this.trigger) this.trigger.ariaExpanded = "false";
-    if (this.dialog) this.dialog.ariaExpanded = "false";
-    this.dialog?.classList.remove("expanded");
+    this._collapse();
     if (this.dialog?.open) this.dialog.close();
     this.el["Expressive_ExpandingCard"] = undefined;
   }
@@ -129,12 +125,19 @@ export class ExpandingCard
   private _handleNativeClose = () => {
     // A queued close event can arrive after a caller has reopened the dialog.
     if (this.dialog.open) return;
+    this._collapse();
+  };
+
+  /** Marks the card closed and invalidates any pending close. */
+  private _collapse() {
     this.closeGeneration++;
     this.isOpen = false;
-    this.trigger.ariaExpanded = "false";
-    this.dialog.ariaExpanded = "false";
-    this.dialog.classList.remove("expanded");
-  };
+    if (this.trigger) this.trigger.ariaExpanded = "false";
+    if (this.dialog) {
+      this.dialog.ariaExpanded = "false";
+      this.dialog.classList.remove("expanded");
+    }
+  }
 
   private _setTransitionOrigin = () => {
     if (!this.dialog) return;
@@ -143,27 +146,17 @@ export class ExpandingCard
       ":scope > figure, :scope > img",
     );
     const mediaRect = media?.getBoundingClientRect();
+    const set = (side: string, px: number) =>
+      this.dialog.style.setProperty(
+        `--md-comp-expanding-card-from-${side}`,
+        `${Math.max(0, px)}px`,
+      );
 
-    this.dialog.style.setProperty(
-      "--md-comp-expanding-card-from-top",
-      `${Math.max(0, card.top)}px`,
-    );
-    this.dialog.style.setProperty(
-      "--md-comp-expanding-card-from-right",
-      `${Math.max(0, window.innerWidth - card.right)}px`,
-    );
-    this.dialog.style.setProperty(
-      "--md-comp-expanding-card-from-bottom",
-      `${Math.max(0, window.innerHeight - card.bottom)}px`,
-    );
-    this.dialog.style.setProperty(
-      "--md-comp-expanding-card-from-left",
-      `${Math.max(0, card.left)}px`,
-    );
-    this.dialog.style.setProperty(
-      "--md-comp-expanding-card-from-media-height",
-      `${Math.max(0, mediaRect?.height ?? 0)}px`,
-    );
+    set("top", card.top);
+    set("right", window.innerWidth - card.right);
+    set("bottom", window.innerHeight - card.bottom);
+    set("left", card.left);
+    set("media-height", mediaRect?.height ?? 0);
   };
 
   open: () => void = () => {
@@ -187,12 +180,9 @@ export class ExpandingCard
 
   close: () => void = () => {
     if (!this.isOpen || !this.dialog || !this.trigger) return;
-    const generation = ++this.closeGeneration;
     this._setTransitionOrigin();
-    this.isOpen = false;
-    this.trigger.ariaExpanded = "false";
-    this.dialog.ariaExpanded = "false";
-    this.dialog.classList.remove("expanded");
+    this._collapse();
+    const generation = this.closeGeneration;
 
     if (typeof this.options.onClose === "function") {
       this.options.onClose.call(this, this.el);
@@ -217,7 +207,7 @@ export class ExpandingCard
   static Init() {
     Utils.onDocumentReady(() => {
       document.querySelectorAll(EXPANDING_CARD_SELECTOR).forEach((el) => {
-        if (el && el["Expressive_ExpandingCard"] == undefined) {
+        if (el["Expressive_ExpandingCard"] == undefined) {
           this.init(el as HTMLElement);
         }
       });

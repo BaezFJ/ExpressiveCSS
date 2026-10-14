@@ -1786,6 +1786,20 @@ describe('A cancelled pointer drag is not a completed one', () => {
     assert.equal(opacity, '0', 'a dismissed snackbar is faded out');
   });
 
+  for (const [label, to, offset] of [['left', -120, '-300px'], ['right', 120, '300px']]) {
+    test(`a snackbar swiped ${label} animates off that side`, () => {
+      const snackbar = new Expressive.Snackbar({ text: 'Saved', displayLength: Infinity, outDuration: 0 });
+      try {
+        Object.defineProperty(snackbar.el, 'offsetWidth', { value: 300 });
+        drag(snackbar.el, 'pointerup', { from: 0, to });
+        assert.equal(snackbar.el.style.transform, `translateX(${offset})`);
+        assert.match(snackbar.el.style.transition, /transform 0ms ease/, 'the slide-out is not animated');
+      } finally {
+        snackbar.dismiss();
+      }
+    });
+  }
+
   test('the same distance ending in pointercancel snaps back instead', () => {
     const { wasSwiped, opacity } = swipeSnackbar('pointercancel');
     assert.equal(wasSwiped, false, 'a cancelled swipe dismissed the snackbar');

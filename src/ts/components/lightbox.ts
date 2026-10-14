@@ -151,8 +151,8 @@ export class Lightbox extends Component<LightboxOptions> {
   }
 
   private _reset() {
-    window.removeEventListener('scroll', this._handleWindowScroll);
-    window.removeEventListener('resize', this._handleWindowResize);
+    window.removeEventListener('scroll', this._handleWindowChange);
+    window.removeEventListener('resize', this._handleWindowChange);
     window.removeEventListener('keyup', this._handleWindowEscape);
     this._overlay?.remove();
     this._photoCaption?.remove();
@@ -164,8 +164,8 @@ export class Lightbox extends Component<LightboxOptions> {
       }
     }
     this._changedAncestorList = [];
-    if (this.attrWidth !== null && this.attrWidth !== undefined) this.el.setAttribute('width', this.attrWidth);
-    if (this.attrHeight !== null && this.attrHeight !== undefined) this.el.setAttribute('height', this.attrHeight);
+    if (this.attrWidth != null) this.el.setAttribute('width', this.attrWidth);
+    if (this.attrHeight != null) this.el.setAttribute('height', this.attrHeight);
     this.el.classList.remove('active');
     this.placeholder.removeAttribute('style');
     if (this.originInlineStyles === null) this.el.removeAttribute('style');
@@ -202,19 +202,15 @@ export class Lightbox extends Component<LightboxOptions> {
 
   private _setupEventHandlers() {
     this._motion.addEventListener('change', this._handleMotionChange);
-    this._trigger.addEventListener('click', this._handleLightboxClick);
+    this._trigger.addEventListener('click', this._handleLightboxToggle);
     this.el.addEventListener('keydown', this._handleLightboxKeypress);
   }
 
   private _removeEventHandlers() {
     this._motion.removeEventListener('change', this._handleMotionChange);
-    this._trigger.removeEventListener('click', this._handleLightboxClick);
+    this._trigger.removeEventListener('click', this._handleLightboxToggle);
     this.el.removeEventListener('keydown', this._handleLightboxKeypress);
   }
-
-  private _handleLightboxClick = () => {
-    this._handleLightboxToggle();
-  };
 
   private _handleLightboxKeypress = (e: KeyboardEvent) => {
     if (this._trigger === this.el && (e.key === Utils.keys.ENTER || e.key === ' ')) {
@@ -229,11 +225,7 @@ export class Lightbox extends Component<LightboxOptions> {
     else this.open();
   };
 
-  private _handleWindowScroll = () => {
-    if (this.overlayActive) this.close();
-  };
-
-  private _handleWindowResize = () => {
+  private _handleWindowChange = () => {
     if (this.overlayActive) this.close();
   };
 
@@ -244,7 +236,7 @@ export class Lightbox extends Component<LightboxOptions> {
   private _makeAncestorsOverflowVisible() {
     this._changedAncestorList = [];
     let ancestor: Node = this.placeholder.parentNode;
-    while (ancestor !== null && ancestor !== undefined && ancestor !== document) {
+    while (ancestor != null && ancestor !== document) {
       const curr = <HTMLElement>ancestor;
       // A shadow root has no style; the clipping ancestors are above its host.
       if (curr.style && (curr.style.overflow !== 'visible' || Lightbox._overflow.has(curr))) {
@@ -344,19 +336,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this._photoCaption.innerText = this.caption;
     Utils.portalRoot(this.el).append(this._photoCaption);
     this._photoCaption.style.display = 'inline';
-    // Animate
-    this._photoCaption.style.transition = 'none';
-    this._photoCaption.style.opacity = '0';
-    const duration = this._motion.matches ? 0 : this.options.inDuration;
-    this._schedule(() => {
-      this._photoCaption.style.transition = `opacity ${duration}ms ease`;
-      this._photoCaption.style.opacity = '1';
-    }, 1);
-  }
-  private _removeCaption(): void {
-    const duration = this._motion.matches ? 0 : this.options.outDuration;
-    this._photoCaption.style.transition = `opacity ${duration}ms ease`;
-    this._photoCaption.style.opacity = '0';
+    this._fadeIn(this._photoCaption);
   }
 
   // Overlay
@@ -382,19 +362,23 @@ export class Lightbox extends Component<LightboxOptions> {
     this._overlay.style.left = -1 * overlayOffset.left + 'px';
     this._overlay.style.top = -1 * overlayOffset.top + 'px';
 
-    // Animate
-    this._overlay.style.transition = 'none';
-    this._overlay.style.opacity = '0';
+    this._fadeIn(this._overlay);
+  }
+
+  private _fadeIn(el: HTMLElement): void {
+    el.style.transition = 'none';
+    el.style.opacity = '0';
     const duration = this._motion.matches ? 0 : this.options.inDuration;
     this._schedule(() => {
-      this._overlay.style.transition = `opacity ${duration}ms ease`;
-      this._overlay.style.opacity = '1';
+      el.style.transition = `opacity ${duration}ms ease`;
+      el.style.opacity = '1';
     }, 1);
   }
-  private _removeOverlay(): void {
+
+  private _fadeOut(el: HTMLElement): void {
     const duration = this._motion.matches ? 0 : this.options.outDuration;
-    this._overlay.style.transition = `opacity ${duration}ms ease`;
-    this._overlay.style.opacity = '0';
+    el.style.transition = `opacity ${duration}ms ease`;
+    el.style.opacity = '0';
   }
 
   /**
@@ -448,8 +432,6 @@ export class Lightbox extends Component<LightboxOptions> {
     // Resize Image
     const widthPercent = this.originalWidth / this.windowWidth;
     const heightPercent = this.originalHeight / this.windowHeight;
-    this.newWidth = 0;
-    this.newHeight = 0;
     if (widthPercent > heightPercent) {
       // Width first
       const ratio = this.originalHeight / this.originalWidth;
@@ -462,8 +444,8 @@ export class Lightbox extends Component<LightboxOptions> {
       this.newHeight = this.windowHeight * 0.9;
     }
     // Handle Exit triggers
-    window.addEventListener('scroll', this._handleWindowScroll, { passive: true });
-    window.addEventListener('resize', this._handleWindowResize, { passive: true });
+    window.addEventListener('scroll', this._handleWindowChange, { passive: true });
+    window.addEventListener('resize', this._handleWindowChange, { passive: true });
     window.addEventListener('keyup', this._handleWindowEscape);
     this._animateImageIn();
   };
@@ -481,11 +463,11 @@ export class Lightbox extends Component<LightboxOptions> {
       this.options.onCloseStart.call(this, this.el);
     if (revision !== this._revision) return;
     // disable exit handlers
-    window.removeEventListener('scroll', this._handleWindowScroll);
-    window.removeEventListener('resize', this._handleWindowResize);
+    window.removeEventListener('scroll', this._handleWindowChange);
+    window.removeEventListener('resize', this._handleWindowChange);
     window.removeEventListener('keyup', this._handleWindowEscape);
-    if (this._overlay) this._removeOverlay();
-    if (this._photoCaption) this._removeCaption();
+    if (this._overlay) this._fadeOut(this._overlay);
+    if (this._photoCaption) this._fadeOut(this._photoCaption);
     this._animateImageOut();
   };
 }

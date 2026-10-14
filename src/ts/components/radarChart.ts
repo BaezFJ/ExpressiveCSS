@@ -1,5 +1,5 @@
 import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions, COLORS, svgNode as node } from './lineChart';
+import { LineChart, LineChartOptions, polarPoint, seriesColor, svgNode as node } from './lineChart';
 
 export type RadarChartOptions = LineChartOptions;
 
@@ -83,10 +83,7 @@ export class RadarChart extends LineChart {
    * the labels round it are HTML.
    */
   protected _draw(): Element {
-    const at = (index: number, share: number) => {
-      const angle = this._turn(index) * 2 * Math.PI;
-      return `${(50 * share * Math.sin(angle)).toFixed(3)},${(-50 * share * Math.cos(angle)).toFixed(3)}`;
-    };
+    const at = (index: number, share: number) => polarPoint(this._turn(index), 50 * share);
     // The rim is the scale's top, so _y is the distance in from the rim.
     const share = (value: number) => Math.min(1, Math.max(0, 1 - this._y(value) / 100));
     const rows = this.labels.map((_, i) => i);
@@ -102,7 +99,7 @@ export class RadarChart extends LineChart {
     this.series.forEach((series, s) => {
       const group = node('g', {
         class: `radar-chart-series ${series.className}`.trim(),
-        'data-series': String((s % COLORS) + 1)
+        'data-series': seriesColor(s)
       });
       // ponytail: a gap joins the spokes either side of it; mark gaps if charts need them.
       const drawn = rows.filter((i) => series.values[i] !== null);

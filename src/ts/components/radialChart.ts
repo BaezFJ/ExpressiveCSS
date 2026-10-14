@@ -1,5 +1,5 @@
 import { InitElements, InitElement } from '../core/component';
-import { COLORS, LineChart, LineChartOptions, svgNode as node } from './lineChart';
+import { LineChart, LineChartOptions, seriesColor, svgNode as node } from './lineChart';
 
 export type RadialChartOptions = LineChartOptions;
 
@@ -66,7 +66,7 @@ export class RadialChart extends LineChart {
     this._rings.forEach((ring, i) => ring.classList.toggle('active', i === index));
     // LineChart hides the tooltip for -1 and for an index past the last row.
     if (this._tooltip.hidden) return;
-    const color = this._color(index);
+    const color = seriesColor(index);
     this._tooltip.querySelectorAll<HTMLElement>('[data-series]').forEach((span) => {
       span.dataset.series = color;
     });
@@ -83,10 +83,6 @@ export class RadialChart extends LineChart {
     this._tooltip.classList.toggle('end', x > 0);
   }
 
-  private _color(index: number) {
-    return String((index % COLORS) + 1);
-  }
-
   /** A fraction of the ring as a turn clockwise from the top. */
   private _turn(fraction: number) {
     return this._gauge ? fraction / 2 - 0.25 : fraction;
@@ -101,7 +97,7 @@ export class RadialChart extends LineChart {
     const text = this.series[0].text;
     legend.append(...this.labels.map((label, i) => {
       const li = document.createElement('li');
-      li.dataset.series = this._color(i);
+      li.dataset.series = seriesColor(i);
       const [name, value] = [label, text[i]].map((content) => {
         const span = document.createElement('span');
         span.textContent = content;
@@ -166,7 +162,7 @@ export class RadialChart extends LineChart {
         return ring;
       };
       const ring = circle('radial-chart-ring', this._fractions[i], true) as SVGCircleElement;
-      ring.dataset.series = this._color(i);
+      ring.dataset.series = seriesColor(i);
       // An empty ring would still draw its round cap.
       if (!this._fractions[i]) ring.classList.add('empty');
       // Only a gauge's track has ends to round.

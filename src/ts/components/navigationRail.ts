@@ -28,6 +28,13 @@ const _defaults: NavigationRailOptions = {
 
 const COMPACT = '(width < 600px)';
 
+/** The focused element, followed down through open shadow roots. */
+function deepActiveElement(root: Document | ShadowRoot): Element | null {
+  let active = root.activeElement;
+  while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
+  return active;
+}
+
 /**
  * Navigation rail. Layout is CSS (collapsed / .expanded). This class
  * toggles that class from the menu button, closes a compact overlay on
@@ -142,7 +149,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   private _onClick = (e: MouseEvent) => {
     const target = e.target;
     if (!(target instanceof Node)) return;
-    if (this._toggle && (target === this._toggle || this._toggle.contains(target))) {
+    if (this._toggle?.contains(target)) {
       this.toggle();
       e.preventDefault();
       return;
@@ -157,12 +164,9 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     if (this.isExpanded && this._isModal()) {
       const root = this.el.getRootNode() as Document | ShadowRoot;
       const restoreFocus = this.el.contains(root.activeElement);
-      let focused = root.activeElement;
-      while (focused?.shadowRoot?.activeElement) focused = focused.shadowRoot.activeElement;
+      const focused = deepActiveElement(root);
       this.collapse();
-      let active = root.activeElement;
-      while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
-      if (!this.isExpanded && restoreFocus && active === focused) {
+      if (!this.isExpanded && restoreFocus && deepActiveElement(root) === focused) {
         this._toggle?.focus();
       }
     }

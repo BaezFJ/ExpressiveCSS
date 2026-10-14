@@ -257,11 +257,10 @@ export class Chips extends Component<ChipsOptions> {
   static _handleChipsKeydown(e: KeyboardEvent) {
     Chips._keydown = true;
     const chips = (<HTMLElement>e.target).closest('.chips');
-    const chipsKeydown = e.target && chips;
 
     // Don't handle keydown inputs on input and textarea
     const tag = (<HTMLElement>e.target).tagName;
-    if (tag === 'INPUT' || tag === 'TEXTAREA' || !chipsKeydown) return;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || !chips) return;
 
     const currChips: Chips = chips['Expressive_Chips'];
     if (!currChips) return; // .chips markup without an instance behind it
@@ -320,7 +319,7 @@ export class Chips extends Component<ChipsOptions> {
         return;
       }
       e.preventDefault();
-      if (!this.hasAutocomplete || (this.hasAutocomplete && !this.options.autocompleteOnly)) {
+      if (!this.hasAutocomplete || !this.options.autocompleteOnly) {
         this.addChip({ id: this._input.value });
       }
       this._input.value = '';
@@ -417,12 +416,9 @@ export class Chips extends Component<ChipsOptions> {
 
   _setPlaceholder() {
     if (!this._input) return;
-    if (this.chipsData !== undefined && !this.chipsData.length && this.options.placeholder) {
+    if (!this.chipsData.length && this.options.placeholder) {
       this._input.placeholder = this.options.placeholder;
-    } else if (
-      (this.chipsData === undefined || !!this.chipsData.length) &&
-      this.options.secondaryPlaceholder
-    ) {
+    } else if (this.chipsData.length && this.options.secondaryPlaceholder) {
       this._input.placeholder = this.options.secondaryPlaceholder;
     }
   }

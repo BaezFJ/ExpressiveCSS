@@ -326,7 +326,6 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
   _handleClick = (e: MouseEvent) => {
     e.preventDefault();
-    //this._moveMenu((<HTMLElement>e.target).closest('li'));
     if (this.isOpen) {
       this.close();
     } else {
@@ -335,7 +334,6 @@ export class Menu extends Component<MenuOptions> implements Openable {
   };
 
   _handleMouseEnter = () => {
-    //this._moveMenu((<HTMLElement>e.target).closest('li'));
     this.open();
   };
 
@@ -346,20 +344,9 @@ export class Menu extends Component<MenuOptions> implements Openable {
       this.close();
       return;
     }
-    const leaveToMenuContent = !!(this.menuEl && toEl && this.menuEl.contains(toEl));
-    let leaveToActiveMenuTrigger = false;
-    const closestTrigger = toEl.closest('.menu-trigger');
-    if (
-      closestTrigger &&
-      !!closestTrigger['Expressive_Menu'] &&
-      closestTrigger['Expressive_Menu'].isOpen
-    ) {
-      leaveToActiveMenuTrigger = true;
-    }
     // Close hover menu if mouse did not leave to either active menu-trigger or menu-content
-    if (!leaveToActiveMenuTrigger && !leaveToMenuContent) {
-      this.close();
-    }
+    const leaveToActiveMenuTrigger = toEl.closest('.menu-trigger')?.['Expressive_Menu']?.isOpen;
+    if (!leaveToActiveMenuTrigger && !this.menuEl?.contains(toEl)) this.close();
   };
 
   _handleDocumentClick = (e: MouseEvent) => {
@@ -375,11 +362,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     } else if (!inside) {
       // Do this one frame later so that if the element clicked also triggers _handleClick
       // For example, if a label for a select was clicked, that we don't close/open the menu
-      this._schedule(() => {
-        if (this.isOpen) {
-          this.close();
-        }
-      }, 0);
+      this._schedule(() => this.close(), 0);
     }
     this.isTouchMoving = false;
   };
@@ -479,10 +462,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
   private _toggleSubmenu(li: HTMLElement) {
     const open = !li.classList.contains('open');
     li.parentElement?.querySelectorAll(':scope > li.open').forEach((other) => {
-      if (other !== li) {
-        other.classList.remove('open', 'submenu-start');
-        this._syncSubmenuAria(other as HTMLElement, false);
-      }
+      if (other !== li) this._closeSubmenu(other as HTMLElement);
     });
     li.classList.toggle('open', open);
     if (open) this._alignSubmenu(li);
@@ -513,11 +493,13 @@ export class Menu extends Component<MenuOptions> implements Openable {
     if (rect.left < 8 || rect.right > window.innerWidth - 8) li.classList.add('submenu-start');
   }
 
+  private _closeSubmenu(li: HTMLElement) {
+    li.classList.remove('open', 'submenu-start');
+    this._syncSubmenuAria(li, false);
+  }
+
   private _closeSubmenus() {
-    this.menuEl?.querySelectorAll('li.open').forEach((li) => {
-      li.classList.remove('open', 'submenu-start');
-      this._syncSubmenuAria(li as HTMLElement, false);
-    });
+    this.menuEl?.querySelectorAll('li.open').forEach((li) => this._closeSubmenu(li as HTMLElement));
   }
 
   private _containingSubmenu(e: Event): HTMLElement | null {
@@ -568,13 +550,12 @@ export class Menu extends Component<MenuOptions> implements Openable {
       if (submenu) {
         e.preventDefault();
         const parentLi = submenu.parentElement as HTMLElement;
-        parentLi.classList.remove('open', 'submenu-start');
-        this._syncSubmenuAria(parentLi, false);
+        this._closeSubmenu(parentLi);
         this._focusRow(parentLi);
       }
     }
     // Navigate down menu list
-    else if (arrowUpOrDown && this.isOpen) {
+    else if (arrowUpOrDown) {
       e.preventDefault();
       const direction = e.key === Utils.keys.ARROW_DOWN ? 1 : -1;
       const row = this._focusedRow(e);
@@ -599,7 +580,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       }
     }
     // SPACE OR ENTER selects the focused item.
-    else if ((e.key === Utils.keys.ENTER || e.key === SPACE) && this.isOpen) {
+    else if (e.key === Utils.keys.ENTER || e.key === SPACE) {
       const li = this._focusedRow(e);
       e.preventDefault();
       if (li?.matches('.disabled, [aria-disabled="true"]')) return;
@@ -616,13 +597,12 @@ export class Menu extends Component<MenuOptions> implements Openable {
       }
     }
     // Close menu on ESC
-    else if (e.key === Utils.keys.ESC && this.isOpen) {
+    else if (e.key === Utils.keys.ESC) {
       e.preventDefault();
       const openSub = this._containingSubmenu(e)?.parentElement ??
         Array.from(this.menuEl.querySelectorAll('li.open')).reverse()[0];
       if (openSub) {
-        openSub.classList.remove('open', 'submenu-start');
-        this._syncSubmenuAria(openSub as HTMLElement, false);
+        this._closeSubmenu(openSub as HTMLElement);
         this._focusRow(openSub as HTMLElement);
       } else {
         this.close();
@@ -630,7 +610,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     }
 
     const keyText = e.key.toLowerCase();
-    if (e.key.length === 1 && e.key !== SPACE && !e.ctrlKey && !e.metaKey && !e.altKey && !e.isComposing) {
+    if (e.key.length === 1 && e.key !== SPACE) {
       this.filterQuery.push(keyText);
       const string = this.filterQuery.join('');
       // textContent rather than innerText: this scans every item on every
@@ -922,8 +902,6 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
     if (getComputedStyle(closestOverflowParent).position === 'static')
       closestOverflowParent.style.position = 'relative';
-
-    //this._moveMenu(closestOverflowParent);
 
     // Set width before calculating positionInfo. Both callers reset the
     // positioning styles first, so this reads the surface's natural width.

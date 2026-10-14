@@ -46,10 +46,18 @@ export class DockedDisplayPlugin {
   }
 
   private _handleDocumentClick = (e: MouseEvent) => {
-    if (this.visible && !e.composedPath().includes(this.el) && !e.composedPath().includes(this.container)) {
-      this.hide();
-    }
+    if (!this.visible) return;
+    const path = e.composedPath();
+    if (!path.includes(this.el) && !path.includes(this.container)) this.hide();
   };
+
+  // @todo move to Util? -> duplicate code fragment with tooltip
+  // easeOutCubic
+  private get _transition() {
+    return `
+      transform ${this.options.duration}ms ease-out,
+      opacity ${this.options.duration}ms ease-out`;
+  }
 
   /**
    * Tears the plugin down. While shown, the document listener holds a
@@ -77,15 +85,11 @@ export class DockedDisplayPlugin {
     document.addEventListener('click', this._handleDocumentClick);
     const coordinates = Utils._setAbsolutePosition(this.el, this.container, 'bottom', this.options.margin, this.options.transition, this.options.align);
 
-    // @todo move to Util? -> duplicate code fragment with tooltip
-    // easeOutCubic
     this.container.style.visibility = 'visible';
-    this.container.style.transition = `
-      transform ${this.options.duration}ms ease-out,
-      opacity ${this.options.duration}ms ease-out`;
+    this.container.style.transition = this._transition;
     setTimeout(() => {
       this.container.style.transform = `translateX(${coordinates.x}px) translateY(${coordinates.y}px)`;
-      this.container.style.opacity = (1).toString();
+      this.container.style.opacity = '1';
     }, 1);
   };
 
@@ -93,11 +97,8 @@ export class DockedDisplayPlugin {
     if (!this.visible) return;
     this.visible = false;
     document.removeEventListener('click', this._handleDocumentClick);
-    // @todo move to Util? -> duplicate code fragment with tooltip
     this.container.removeAttribute('style');
-    this.container.style.transition = `
-      transform ${this.options.duration}ms ease-out,
-      opacity ${this.options.duration}ms ease-out`;
+    this.container.style.transition = this._transition;
     setTimeout(() => {
       this.container.style.transform = `translateX(0px) translateY(0px)`;
       this.container.style.opacity = '0';

@@ -255,10 +255,7 @@ export class Snackbar {
         snackbar.dismiss();
         // Animate snackbar back to original position
       } else {
-        snackbar.el.style.transition = 'transform .2s, opacity .2s';
-        snackbar.el.style.transform = '';
-        snackbar.el.style.opacity = '';
-        snackbar._resumeTimer();
+        snackbar._snapBack();
       }
       Snackbar._draggedSnackbar = null;
     }
@@ -276,11 +273,15 @@ export class Snackbar {
     if (!snackbar) return;
     snackbar.panning = false;
     snackbar.el.classList.remove('panning');
-    snackbar.el.style.transition = 'transform .2s, opacity .2s';
-    snackbar.el.style.transform = '';
-    snackbar.el.style.opacity = '';
-    snackbar._resumeTimer();
+    snackbar._snapBack();
     Snackbar._draggedSnackbar = null;
+  }
+
+  private _snapBack() {
+    this.el.style.transition = 'transform .2s, opacity .2s';
+    this.el.style.transform = '';
+    this.el.style.opacity = '';
+    this._resumeTimer();
   }
 
   /**
@@ -298,7 +299,7 @@ export class Snackbar {
       ? Utils.getElementById(this.options.root ?? document.body, this.options.snackbarId)
       : document.createElement('div');
     if (snackbar instanceof HTMLTemplateElement) {
-      const node = (snackbar as HTMLTemplateElement).content.cloneNode(true);
+      const node = snackbar.content.cloneNode(true);
       snackbar = (node as HTMLElement).firstElementChild as HTMLElement;
     } else if (snackbar && this.options.snackbarId) {
       const placeholder = document.createComment('');
@@ -465,18 +466,18 @@ export class Snackbar {
     this.counterTimeout = null;
     this._restoreFocus();
     if (this._events.signal.aborted) return;
-    const activationDistance = this.el.offsetWidth * this.options.activationPercent;
+    const duration = this.options.outDuration;
+    const transitions = [`margin ${duration}ms ease`, `opacity ${duration}ms ease`];
 
     if (this.wasSwiped) {
-      this.el.style.transition = 'transform .05s, opacity .05s';
-      this.el.style.transform = `translateX(${activationDistance}px)`;
+      // Carry on off the side the user swiped toward, from where they let go.
+      const direction = this.xPos < this.startingXPos ? -1 : 1;
+      this.el.style.transform = `translateX(${direction * this.el.offsetWidth}px)`;
       this.el.style.opacity = '0';
+      transitions.push(`transform ${duration}ms ease`);
     }
 
-    // easeOutExpo
-    this.el.style.transition = `
-      margin ${this.options.outDuration}ms ease,
-      opacity ${this.options.outDuration}ms ease`;
+    this.el.style.transition = transitions.join(', ');
 
     clearTimeout(this._transitionTimer);
     this._transitionTimer = setTimeout(() => {
