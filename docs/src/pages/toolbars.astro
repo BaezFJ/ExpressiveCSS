@@ -23,7 +23,7 @@ const S = defineSections([
   <Section {...S.anatomy}>
         <p class="flow-text">
           Toolbars display frequently used actions relevant to the current
-          page. There are four, from two independent axes — a
+          page. There are four, from two independent axes: a
           <strong>shape</strong> (floating or docked) and a
           <strong>color style</strong> (standard or vibrant). They can hold
           buttons, icon buttons, and text fields, and a floating bar can sit
@@ -31,21 +31,21 @@ const S = defineSections([
           <a href={route('navigation_bar')}>navigation bar</a>.
         </p>
         <p>
-          A <code>&lt;div class="toolbar"&gt;</code> is the bar — not a
-          <code>&lt;nav&gt;</code>, because a toolbar holds commands rather than
+          A <code>&lt;div class="toolbar"&gt;</code> is the bar. It is not a
+          <code>&lt;nav&gt;</code> because a toolbar holds commands rather than
           destinations. Direct
           <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code> children
           are the actions. A <code>&lt;span class="material-symbols" aria-hidden="true"&gt;</code> is the icon; wrap a
           label in its own <code>&lt;span&gt;</code>, and give an icon-only
           action an <code>aria-label</code>. <code>.active</code> marks
           the selected action. <code>.filled</code> on an action is the
-          emphasized control. They are CSS only — nothing to AutoInit.
+          emphasized control. Toolbars are CSS only, with nothing to AutoInit.
         </p>
         <p>
           Floating is the default shape and standard the default color, so
-          neither needs a class — but <code>floating</code> and
-          <code>standard</code> are both accepted, so a bar can name all of
-          what it is. <code>filled</code> is the older name for
+          neither needs a class. The <code>floating</code> and
+          <code>standard</code> classes are still accepted, so a bar can name
+          both its shape and its color style. <code>filled</code> is the older name for
           <code>vibrant</code>, and <code>max</code> an alias for
           <code>docked</code>; both still work.
         </p>
@@ -80,10 +80,10 @@ const S = defineSections([
   </Section>
   <Section {...S.floating}>
         <p>
-          The default shape. It hugs its actions — 64dp tall, 32dp stadium
-          corners, elevation 3, 8dp end insets — and sits 16dp from the
-          viewport edge when fixed. Horizontal or <code>vertical</code>. It
-          can hold many controls, and it can sit next to a FAB.
+          Floating is the default shape. The bar sizes to its actions, at 64dp
+          tall with 32dp stadium corners, elevation 3, and 8dp end insets, and
+          sits 16dp from the viewport edge when fixed. It can be horizontal or
+          <code>vertical</code>, hold many controls, and sit next to a FAB.
         </p>
         <div class="toolbar">
           <button type="button" aria-label="Stop camera">
@@ -113,7 +113,7 @@ const S = defineSections([
 </div>
 `} />
         <p>
-          A label next to the icon needs a <code>&lt;span&gt;</code> —
+          A label next to the icon needs a <code>&lt;span&gt;</code>.
           <code>:only-child</code> ignores text nodes, so
           <code>&lt;span class="material-symbols"&gt;edit&lt;/span&gt;Edit</code> would
           look icon-only.
@@ -157,21 +157,22 @@ const S = defineSections([
           <code>on-surface-variant</code> content and a
           <code>secondary-container</code> selection.
           <code>vibrant</code> is <code>primary-container</code> /
-          <code>on-primary-container</code> — use it when the bar needs
-          more emphasis — and selection moves to
+          <code>on-primary-container</code>, for a bar that needs more
+          emphasis. Its selection moves to
           <code>surface-container</code> / <code>on-surface</code> so it
-          still reads against the accent. Either shape takes either color.
+          stays visible against the accent. Either shape takes either color.
         </p>
         <p>
           The <code>vibrant</code> <em>attribute</em> is a different thing, and
-          the bar deliberately does not answer to it as a class. That attribute
+          the toolbar CSS intentionally does not treat it like the class. That attribute
           is the
           <a href={`${route('themes')}#vibrant`}>emphasis foundation</a>,
-          whose one ramp is tertiary; a bar inside it — or carrying it — is
-          repainted by the foundation alone, with no toolbar-specific code,
-          because every colour above is a token pointed at a
-          <code>--md-sys-color-*</code> role. Nothing collides: selection is
-          <code>secondary-container</code>, which the foundation leaves alone.
+          whose one ramp is tertiary. The foundation repaints a bar inside it,
+          or a bar carrying it, without toolbar-specific code, because every
+          color above is a token pointed at a
+          <code>--md-sys-color-*</code> role. Selection uses
+          <code>secondary-container</code>, which the foundation leaves alone,
+          so the two do not collide.
         </p>
         <div class="toolbar vibrant">
           <button type="button" class="active" aria-label="Bold">
@@ -197,7 +198,7 @@ const S = defineSections([
   <Section {...S.vertical}>
         <p>
           <code>vertical</code> stacks the actions. Only floating bars
-          go vertical — a docked bar stays a horizontal strip.
+          go vertical. A docked bar stays a horizontal strip.
         </p>
         <div class="toolbar vertical">
           <button type="button" aria-label="Undo">
@@ -225,7 +226,7 @@ const S = defineSections([
           <code>docked</code>, also accepted as <code>max</code>, stretches
           the bar to the full width, drops the stadium and the elevation, takes 16dp end insets, and spaces the
           actions between 4dp and 32dp apart as the bar widens. It replaces
-          the bottom app bar: same job, shorter (64dp, not 80). Use it
+          the bottom app bar and does the same job at 64dp tall instead of 80dp. Use it
           for page actions; destinations belong on a
           <a href={route('navigation_bar')}>navigation bar</a>,
           and the two should not appear together. A child
@@ -292,9 +293,9 @@ const S = defineSections([
         <p>
           Wrap the toolbar and a sibling
           <code>.extra.circle</code> FAB in
-          <code>.toolbar-group</code>. The FAB stays a FAB — 56dp, 16dp
-          corners — and sits 8dp from the bar, lifted one level where the
-          bar is lifted three. Its color follows the bar's color style:
+          <code>.toolbar-group</code>. The FAB keeps its 56dp size and 16dp
+          corners and sits 8dp from the bar, at elevation 1 next to the bar's
+          elevation 3. Its color follows the bar's color style:
           <code>secondary-container</code> beside a standard bar,
           <code>tertiary-container</code> beside a vibrant one, so you mark
           only the bar. That is the companion FAB, not the in-bar
@@ -355,7 +356,7 @@ const S = defineSections([
           <tr><td><code>--md-comp-toolbar-leading-space</code></td><td>8px (16px when docked)</td></tr>
           <tr><td><code>--md-comp-toolbar-trailing-space</code></td><td>8px (16px when docked)</td></tr>
           <tr><td><code>--md-comp-toolbar-between-space</code></td><td>4px</td></tr>
-          <tr><td><code>--md-comp-toolbar-external-space</code></td><td>16px, 24px when vertical (floating only — a docked bar sits on the edge)</td></tr>
+          <tr><td><code>--md-comp-toolbar-external-space</code></td><td>16px, 24px when vertical (floating only, since a docked bar sits on the edge)</td></tr>
           <tr><td><code>--md-comp-toolbar-min-spacing</code></td><td>4px (docked)</td></tr>
           <tr><td><code>--md-comp-toolbar-max-spacing</code></td><td>32px (docked)</td></tr>
           <tr><td><code>--md-comp-toolbar-action-size</code></td><td>48px</td></tr>

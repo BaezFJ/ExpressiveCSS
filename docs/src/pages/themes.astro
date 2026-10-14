@@ -46,23 +46,23 @@ const S = defineSections([
           The attribute also sets <code>color-scheme</code> so native controls
           follow the same scheme. Each of those three rules is paired with a
           <code>:host([theme='&hellip;'])</code> twin, so a shadow host can be
-          pinned to a theme the same way <code>&lt;html&gt;</code> can. That
-          pairing is the rule for every token the sheet declares &mdash; the
-          sheet is supported as a shadow root's <em>only</em> stylesheet, and
+          pinned to a theme the same way <code>&lt;html&gt;</code> can. Every
+          token the sheet declares has that pairing, because the sheet is
+          supported as a shadow root's <em>only</em> stylesheet and
           <code>:root</code> matches the document element and nothing else.
         </p>
         <p>
           This site starts as
           <code>&lt;html lang="en" theme="auto"&gt;</code>. The theme control
-          in the app bar is a menu: Light, Dark, and Auto. The choice is
-          written to <code>localStorage</code> and restored before first
+          in the app bar is a menu: Light, Dark, and Auto. The site writes
+          the choice to <code>localStorage</code> and restores it before first
           paint so a reload does not flash the wrong scheme.
         </p>
         <article>
           <p class="title-medium mt-0">These tokens follow the page theme</p>
           <p class="mb-3">
-            Open the theme menu in the app bar — or the buttons in
-            <a href="#changing-theme">Changing theme</a> — and this card, the
+            Change the theme from the app bar menu or the buttons in
+            <a href="#changing-theme">Changing theme</a>, and this card, the
             buttons, and the swatches change with it.
           </p>
           <div class="row mb-3">
@@ -86,12 +86,12 @@ const S = defineSections([
         <p>
           Put a short inline script in <code>&lt;head&gt;</code>, before the
           stylesheet paints, if you want to restore a saved choice and avoid a
-          flash of the wrong scheme. The framework itself does not run this —
-          you own persistence.
+          flash of the wrong scheme. The framework does not run this script,
+          so persistence is up to you.
         </p>
         <p>
-          Without a <code>theme</code> attribute — or with
-          <code>theme="auto"</code> — the CSS already follows the OS.
+          Without a <code>theme</code> attribute, or with
+          <code>theme="auto"</code>, the CSS already follows the OS.
           <code>theme="light"</code> and <code>theme="dark"</code> lock it.
           The snippet below restores a stored choice before first paint.
         </p>
@@ -120,7 +120,7 @@ const S = defineSections([
   <Section {...S["changing-theme"]}>
         <p>
           Switch schemes by writing the attribute. That is the entire public
-          API — there is no <code>Expressive.theme</code> helper.
+          API. There is no <code>Expressive.theme</code> helper.
         </p>
 <Code code={`
 document.documentElement.setAttribute('theme', 'dark');
@@ -146,14 +146,14 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
         </p>
         <p>
           The same three choices live in the top-right of every docs page.
-          Reload keeps the one you picked.
+          A reload keeps the one you picked.
         </p>
   </Section>
   <Section {...S["creating-theme"]}>
         <p>
           Customize by overriding the Material Design 3 tokens. Do not set
           <code>--background-color</code>, <code>--primary-color</code>, or
-          other pre-2.1 names — those are not wired in Expressive.
+          other pre-2.1 names. Expressive does not read them.
         </p>
         <p>
           Three layers exist. <code>tokens/_reference.scss</code> generates the
@@ -237,11 +237,11 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
 }
 `} />
         <p>
-          <code>--md-source</code> is the seed the ramps are generated from, and
-          it is live: set it and every generated ramp — and every system color
-          that resolves to one — recolors at runtime, with no rebuild.
+          <code>--md-source</code> is the seed for the generated ramps, and it
+          is live. Setting it recolors every generated ramp, and every system
+          color that resolves to one, at runtime without a rebuild.
           Expressive ships <code>#c6a0f6</code>, Mist Iris. The palette icon in the
-          navbar opens a picker that writes this property; the choice is stored
+          navbar opens a picker that writes this property and stores the choice
           in <code>localStorage</code> so you can browse the rest of the docs
           in the palette you picked.
         </p>
@@ -253,22 +253,23 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
         <p>
           Five of the six ramps are derived this way with
           <code>oklch(from var(--md-source) …)</code>. The
-          <strong>error</strong> ramp is deliberately not: Material fixes the
-          error hue rather than deriving it, because "this went wrong" should
+          <strong>error</strong> ramp is not derived. Material fixes the
+          error hue because "this went wrong" should
           not change color when you change your brand color.
         </p>
         <p>
           Overriding an individual <code>-light</code>/<code>-dark</code> pair
-          still works and still wins — that is the more surgical tool.
-          <code>--md-source</code> is the blunt one.
+          still works and still wins over the generated value. Use a pair
+          override to change one role and <code>--md-source</code> to change
+          the whole palette.
         </p>
         <p>
-          Where the shipped seed <code>#c6a0f6</code> lands, for the roles you
-          will most often replace. These are <em>resolved</em> values: the
-          stylesheet ships the <code>oklch()</code> expression, and the browser
-          computes the color — including gamut-mapping the entries whose target
-          chroma sRGB cannot reach — so treat them as accurate to about a
-          rounding step rather than as literals to paste back in.
+          The table shows where the shipped seed <code>#c6a0f6</code> lands for
+          the roles you will most often replace. These are <em>resolved</em>
+          values. The stylesheet ships the <code>oklch()</code> expression and
+          the browser computes the color, including gamut-mapping the entries
+          whose target chroma sRGB cannot reach. Treat them as accurate to about
+          a rounding step, not as literals to paste back in.
         </p>
         <table class="striped">
           <thead>
@@ -296,7 +297,7 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
         </table>
         <p>
           <code>error</code> is the one row that does not move when you change
-          the seed — it is the ramp that is not generated.
+          the seed, because its ramp is not generated.
         </p>
         <p>
           The full list of role utilities lives on the
@@ -307,19 +308,19 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
   </Section>
   <Section {...S.vibrant}>
         <p>
-          <em>Vibrant</em> is Material 3 Expressive's emphasis axis. It is not a
-          component variant: it is the same component drawn on an accent
-          container instead of a neutral surface. Material ships it as a
-          parallel token set per component — <code>menus-vibrant</code>,
-          <code>toolbar-vibrant</code> — so every component that gains the axis
+          <em>Vibrant</em> is Material 3 Expressive's emphasis axis. It draws the
+          same component on an accent container instead of a neutral surface,
+          so it is not a separate component variant. Material ships it as a
+          parallel token set per component, such as <code>menus-vibrant</code> and
+          <code>toolbar-vibrant</code>, so every component that gains the axis
           restates the same mappings.
         </p>
         <p>
           Expressive makes it a foundation instead. The
           <code>vibrant</code> attribute remaps the surface family of
           <code>--md-sys-color-*</code> roles inside its subtree, and every
-          component already reads those roles, so nothing per-component is
-          needed and nothing changes until you write the attribute.
+          component already reads those roles, so components need no
+          per-component styles, and nothing changes until you write the attribute.
         </p>
 <Code code={`
 <article vibrant>
@@ -330,7 +331,7 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
         <article vibrant>
           <p class="title-medium mt-0">Vibrant surface</p>
           <p>
-            This panel is an ordinary Card — an <code>&lt;article&gt;</code>,
+            This panel is an ordinary Card, an <code>&lt;article&gt;</code>
             with no vibrant styling of its own anywhere in the sheet. It
             carries the attribute, so the surface and text roles it already
             read resolve to the tertiary container instead. The buttons still
@@ -342,39 +343,38 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
           <a class="button outlined mr-2 mb-2">Outlined</a>
         </article>
         <p>
-          There is one ramp, and it is tertiary — what Material uses for the
+          There is one ramp, tertiary, which is what Material uses for the
           axis. Pointing the surfaces at primary or secondary instead would
-          erase every component whose own fill is that container: a tonal
+          hide every component whose own fill is that container: a tonal
           button, a FAB, <code>.toolbar.vibrant</code> itself. If you want a
           different one, set the surface tokens on your own wrapper the way
           <a href="#creating-theme">Creating a theme</a> shows for any token.
         </p>
         <p>
-          Two things to know. The elevation ladder collapses — every
-          <code>surface-container</code> rung resolves to the one container
-          color, because that is what a vibrant surface is in Material, so
-          nesting surfaces inside a vibrant subtree stops telling them apart.
-          Put the attribute on the component you want emphasized, not on the
-          page. And the remap points at the live role names rather than a
+          Inside a vibrant subtree, every <code>surface-container</code> level
+          resolves to the one container color, because that is what a vibrant
+          surface is in Material, so you cannot tell nested surfaces apart
+          there. Put the attribute on the component you want emphasized, not
+          on the page. The remap also points at the live role names rather than a
           <code>-light</code>/<code>-dark</code> pair, which is why a runtime
           theme switch still reaches it.
         </p>
         <p>
-          Menus and toolbars also carry a <code>.vibrant</code> class. Those are
-          Material's own per-component token sets, with the colors that spec
-          gives each one; the attribute is the general axis and works on
-          anything. A menu inside a vibrant subtree adopts its own vibrant
-          mapping automatically, because it has to: a selected menu item is
-          filled with <code>tertiary-container</code>, which is the very color
-          the attribute paints the menu with, so selection would vanish into
-          its own surface. Material answers that by moving selection to solid
-          <code>tertiary</code>, which is what the class already did.
+          Menus and toolbars also have a <code>.vibrant</code> class. Those
+          classes are Material's own per-component token sets, with the colors
+          that spec gives each one. The attribute is the general axis and works
+          on any element. A menu inside a vibrant subtree adopts its own vibrant
+          mapping automatically. A selected menu item is filled with
+          <code>tertiary-container</code>, the same color the attribute gives
+          the menu, so the selection would not show against the surface.
+          Material handles that by moving selection to solid
+          <code>tertiary</code>, which the class already did.
         </p>
         <p>
           The attribute works in a shadow root too. A sheet loaded there cannot
           reach its own host with a descendant selector, so
-          <code>:host([vibrant])</code> is matched alongside it — the same
-          reason the token mapping carries <code>:host</code>.
+          <code>:host([vibrant])</code> is matched alongside it. The token
+          mapping carries <code>:host</code> for the same reason.
         </p>
   </Section>
 </PageBody>

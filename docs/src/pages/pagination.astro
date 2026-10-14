@@ -16,13 +16,13 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.basic}>
         <p class="flow-text">
-          Pagination is CSS-only. A <code>nav.pagination</code> whose child
-          is an <code>&lt;ol&gt;</code> of links. There is no JavaScript plugin.
+          Pagination is CSS-only, with no JavaScript plugin. The markup is a
+          <code>nav.pagination</code> whose child is an <code>&lt;ol&gt;</code> of links.
         </p>
         <p>
           Mark the current page with <code>aria-current="page"</code>
           (or the older <code>active</code> class on the <code>li</code>).
-          Unavailable prev/next use <code>aria-disabled="true"</code>
+          Mark unavailable previous and next links with <code>aria-disabled="true"</code>
           (or <code>disabled</code> on the <code>li</code>).
         </p>
 
@@ -64,8 +64,8 @@ const S = defineSections([
 </nav>
 `} />
         <p>
-          Items are the original compact 2rem chips. The current page
-          fills with <code>primary</code>. Icon-only prev/next need an
+          Items are compact 2rem chips. The current page
+          fills with <code>primary</code>. Icon-only previous and next links need an
           <code>aria-label</code>. A <code>&lt;span&gt;</code> next to
           the icon widens the control:
         </p>
@@ -91,7 +91,7 @@ const S = defineSections([
   </Section>
   <Section {...S.ellipsis}>
         <p>
-          A non-link <code>&lt;span&gt;</code> is an inert gap, not a target.
+          Use a non-link <code>&lt;span&gt;</code> for the gap, so it is inert and cannot be clicked.
         </p>
         <nav class="pagination" aria-label="Pagination with ellipsis">
           <ol>
@@ -153,9 +153,9 @@ const S = defineSections([
         <p>
           A bare <code>&lt;ul class="pagination"&gt;</code> still renders.
           <code>active</code>, <code>disabled</code>, <code>prev</code>,
-          <code>next</code>, and <code>pages</code> stay as aliases. It is not
-          the documented form: outside a labelled <code>&lt;nav&gt;</code> the
-          list is a row of numbers with nothing saying it paginates anything.
+          <code>next</code>, and <code>pages</code> stay as aliases. This is not
+          the documented form. Outside a labelled <code>&lt;nav&gt;</code>, the
+          list is a row of numbers, and nothing marks it as pagination.
         </p>
 <Code check={false} reason="pre-0.8.0 list alias, shown so readers recognise it" code={`
 <ul class="pagination">

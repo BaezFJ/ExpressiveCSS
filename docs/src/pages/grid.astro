@@ -10,29 +10,29 @@ const S = defineSections([
   { id: "grid-intro", label: "Introduction" },
   { id: "grid-offsets", label: "Offsets", tag: "h2" },
   { id: "grid-gaps", label: "Gaps", tag: "h2" },
-  { id: "grid-push", label: "Push and Pull", tag: "h2" },
-  { id: "grid-layouts", label: "Creating Layouts" },
-  { id: "grid-responsive", label: "Responsive Layouts", heading: "Creating Responsive Layouts" },
+  { id: "grid-push", label: "Push and pull", tag: "h2" },
+  { id: "grid-layouts", label: "Creating layouts" },
+  { id: "grid-responsive", label: "Responsive layouts", heading: "Creating responsive layouts" },
 ]);
 ---
 <DocsLayout page="grid">
 <PageBody sections={S}>
   <Section {...S["grid-container"]}>
-                    <p class="flow-text">We are using a standard 12 column fluid responsive grid system. The grid helps
-                        you layout your page in an ordered, easy fashion.</p>
+                    <p class="flow-text">ExpressiveCSS uses a standard 12-column fluid responsive grid to help
+                        you lay out your page.</p>
                     <h3>Container</h3>
                     <p>
-                        The container class is not strictly part of the grid but is important in laying out content. It
+                        The container class is not strictly part of the grid, but it matters for laying out content. It
                         centers the page and caps how wide it can grow, so a paragraph does not stretch across a 4K
                         monitor. Width is a percentage of the viewport (90% on Compact, 85% from Medium, 70% from
-                        Expanded, 75% from Extra-large). A max-width token stops that percentage from swallowing the
-                        screen: <code>1280px</code> by default, <code>1920px</code> from the extra-large breakpoint
+                        Expanded, 75% from Extra-large). A max-width token caps that percentage:
+                        <code>1280px</code> by default and <code>1920px</code> from the extra-large breakpoint
                         (1600px). Override the tokens, or pick a modifier:
                     </p>
                     <ul>
-                        <li><code>container</code> — default measure, 1280 then 1920.</li>
-                        <li><code>container wide</code> — 2400px cap, for dashboards and media.</li>
-                        <li><code>container max</code> — the percentage with no cap.</li>
+                        <li><code>container</code> is the default, capped at 1280px and then 1920px.</li>
+                        <li><code>container wide</code> raises the cap to 2400px, for dashboards and media.</li>
+                        <li><code>container max</code> uses the percentage with no cap.</li>
                     </ul>
 
                     <h5>Demo</h5>
@@ -67,7 +67,7 @@ const S = defineSections([
                     </div>
 
                     <p>
-                        To add a container just put your content inside a
+                        To add a container, put your content inside a
                         <code>&lt;div&gt;</code>
                         tag with a <code>container</code> class. Here's an example of how your page might be set up.
                     </p>
@@ -87,10 +87,10 @@ const S = defineSections([
 `} />
   </Section>
   <Section {...S["grid-intro"]}>
-                    <p>Take a look at this section to quickly understand how the grid works!</p>
-                    <h5>12 Columns</h5>
-                    <p>Our standard grid has 12 columns. No matter the size of the browser, each of these columns will
-                        always have an equal width.</p>
+                    <p>This section shows how the grid works.</p>
+                    <h5>12 columns</h5>
+                    <p>The grid has 12 columns. At every browser size, the columns have equal
+                        widths.</p>
                     <div class="row">
                         <div class="s1 primary-container on-primary-container-text center-align py-3">1</div>
                         <div class="s1 primary-container on-primary-container-text center-align py-3">2</div>
@@ -105,8 +105,7 @@ const S = defineSections([
                         <div class="s1 primary-container on-primary-container-text center-align py-3">11</div>
                         <div class="s1 primary-container on-primary-container-text center-align py-3">12</div>
                     </div>
-                    <p>To get a feel of how the grid is used in HTML, take a look at the code below which will produce a
-                        similar result to the one above.</p>
+                    <p>The HTML below produces a result similar to the one above.</p>
                     <Code code={`
 <div class="row">
   <div class="s1">1</div>
@@ -124,13 +123,12 @@ const S = defineSections([
 </div>
 `} />
                     <p>
-                        Note: For now, just know that the
-                        <code>s1</code> is one column at the Compact/default size and up.
+                        Note: <code>s1</code> is one column wide at the default Compact size and up.
                     </p>
 
-                    <h5>Columns live inside Rows</h5>
+                    <h5>Columns live inside rows</h5>
                     <p>
-                        Remember when you are creating your layout that all columns must be contained inside a row. Size
+                        All columns must be inside a row. Size
                         each inner div with a
                         screen-prefix class such as <code>s12</code> or <code>m6</code>.
                     </p>
@@ -155,13 +153,13 @@ const S = defineSections([
   </Section>
   <Section {...S["grid-offsets"]}>
                     <p>
-                        To offset, simply add
-                        <code>offset-s2</code> to the class where <code>s</code> signifies the screen class-prefix (s =
-                        Compact, m = Medium, l = Expanded, xl = Large, xxl = Extra-large) and the number after is the
-                        number of columns you want to offset by.
+                        To offset a column, add a class such as
+                        <code>offset-s2</code>, where <code>s</code> is the screen class prefix (s =
+                        Compact, m = Medium, l = Expanded, xl = Large, xxl = Extra-large) and the number is how
+                        many columns to offset by.
                     </p>
                     <p class="error-text">
-                        Attention! Offsets are calculated absolutely starting from the left. If you need relative
+                        Offsets count from the left edge of the row, not from the previous column. For relative
                         offsets, add empty columns to the row.
                     </p>
 
@@ -223,12 +221,11 @@ const S = defineSections([
   </Section>
   <Section {...S["grid-gaps"]}>
                     <p>
-                        There is a default gap between the columns (g-3). You can easily change the gap with the gap
-                        classes. Simply add
+                        Columns have a default gap (g-3). To change it, add one of
                         <code>g-0</code> to <code>g-5</code> to the element with the <code>row</code> class.
                     </p>
 
-                    <p>Standard Gaps (g-3)</p>
+                    <p>Standard gap (g-3)</p>
                     <div class="row">
                         <div class="s3 primary-container on-primary-container-text center-align py-3">1</div>
                         <div class="s3 primary-container on-primary-container-text center-align py-3">2</div>
@@ -236,14 +233,14 @@ const S = defineSections([
                         <div class="s3 primary-container on-primary-container-text center-align py-3">4</div>
                     </div>
 
-                    <p>No Gap (g-0)</p>
+                    <p>No gap (g-0)</p>
                     <div class="row g-0">
                         <div class="s4 primary-container on-primary-container-text center-align py-3">1</div>
                         <div class="s4 primary-container on-primary-container-text center-align py-3">2</div>
                         <div class="s4 primary-container on-primary-container-text center-align py-3">3</div>
                     </div>
 
-                    <p>Bigger Gap (g-4)</p>
+                    <p>Bigger gap (g-4)</p>
                     <div class="row g-4">
                         <div class="s4 primary-container on-primary-container-text center-align py-3">1</div>
                         <div class="s4 primary-container on-primary-container-text center-align py-3">2</div>
@@ -259,8 +256,8 @@ const S = defineSections([
 `} />
   </Section>
   <Section {...S["grid-push"]}>
-                    <p class="error-text">Deprecated. CSS Grid is used now — use offsets, or empty columns, to change
-                        placement.</p>
+                    <p class="error-text">Deprecated. The grid now uses CSS Grid, so change placement with offsets
+                        or empty columns.</p>
                     <p>
                         Older versions reordered columns with
                         <code>push-s2</code> or <code>pull-s2</code>, where <code>s</code> is the screen class-prefix
@@ -270,28 +267,27 @@ const S = defineSections([
   </Section>
   <Section {...S["grid-layouts"]}>
                     <p>
-                        Here we will show you how to create some commonly used layouts with our grid system. Hopefully
-                        these will get you more comfortable with laying out elements. To
-                        keep these demos simple, the ones here will not be responsive.
+                        These examples build some common layouts with the grid. To keep them simple, they are not
+                        responsive.
                     </p>
                     <div class="row">
                         <div class="s12 m6">
                             <h5>Section</h5>
                             <p>
-                                The section class is used for simple top and bottom padding. Just add the
-                                <code>section</code> class to your divs containing large blocks of content.
+                                The <code>section</code> class adds top and bottom padding. Add it to divs that
+                                contain large blocks of content.
                             </p>
                         </div>
                         <div class="s12 m6">
                             <h5>Divider</h5>
                             <p>
-                                Dividers are 1 pixel lines that help break up your content. Just add the
-                                <code>divider</code> class to a div in between your content.
+                                Dividers are 1 pixel lines that separate content. Add the
+                                <code>divider</code> class to a div between blocks of content.
                             </p>
                         </div>
                     </div>
 
-                    <h5>Example Sections and Dividers</h5>
+                    <h5>Example sections and dividers</h5>
                     <div class="divider"></div>
                     <div class="section">
                         <h5>Section 1</h5>
@@ -326,10 +322,10 @@ const S = defineSections([
 </div>
 `} />
 
-                    <h5>Example Promotion Table</h5>
+                    <h5>Example promotion table</h5>
                     <p>
-                        If we want 3 divs that are equal size, we define the divs with a width of 4-columns, as 4+4+4
-                        nicely adds up to 12. Inside those divs, we can put our content.
+                        For 3 divs of equal size, give each a width of 4 columns, since 4+4+4 adds up to 12. Put your
+                        content inside those divs.
                     </p>
                     <div class="row">
                         <div class="s4">
@@ -375,9 +371,8 @@ const S = defineSections([
 </div>
 `} />
 
-                    <h5>Example Side Navigation Layout</h5>
-                    <p>You can see how easy it is to create layouts using the grid system. Just remember to make sure
-                        your column numbers add up to 12 for an even layout.</p>
+                    <h5>Example side navigation layout</h5>
+                    <p>For an even layout, make sure your column numbers add up to 12.</p>
 
                     <div class="row">
                         <div class="s12">
@@ -423,24 +418,24 @@ const S = defineSections([
 `} />
   </Section>
   <Section {...S["grid-responsive"]}>
-                    <p>Above we showed you how to layout elements using our grid system. Now we'll show you how to
-                        design your layouts so that they look great on all screen sizes.</p>
-                    <h5>Screen Sizes</h5>
+                    <p>The examples above lay out elements with the grid. This section shows how to make those
+                        layouts adapt to each screen size.</p>
+                    <h5>Screen sizes</h5>
                     <div class="docs-table-scroll">
                     <table class="highlight">
                         <thead>
                         <tr>
                             <th></th>
                             <th>Compact &lt; 600px</th>
-                            <th>Medium 600–839px</th>
-                            <th>Expanded 840–1199px</th>
-                            <th>Large 1200–1599px</th>
+                            <th>Medium 600 to 839px</th>
+                            <th>Expanded 840 to 1199px</th>
+                            <th>Large 1200 to 1599px</th>
                             <th>Extra-large ≥ 1600px</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td><strong>Class Prefix</strong></td>
+                            <td><strong>Class prefix</strong></td>
                             <td><code>.s</code></td>
                             <td><code>.m</code></td>
                             <td><code>.l</code></td>
@@ -448,7 +443,7 @@ const S = defineSections([
                             <td><code>.xxl</code></td>
                         </tr>
                         <tr>
-                            <td><strong>Container Width</strong></td>
+                            <td><strong>Container width</strong></td>
                             <td>90%</td>
                             <td>85%</td>
                             <td>70%</td>
@@ -456,7 +451,7 @@ const S = defineSections([
                             <td>75%</td>
                         </tr>
                         <tr>
-                            <td><strong>Max Width</strong></td>
+                            <td><strong>Max width</strong></td>
                             <td>1280px</td>
                             <td>1280px</td>
                             <td>1280px</td>
@@ -464,7 +459,7 @@ const S = defineSections([
                             <td>1920px</td>
                         </tr>
                         <tr>
-                            <td><strong>Number of Columns</strong></td>
+                            <td><strong>Number of columns</strong></td>
                             <td>12</td>
                             <td>12</td>
                             <td>12</td>
@@ -475,19 +470,18 @@ const S = defineSections([
                     </table>
                     </div>
                     <p>
-                        Widescreen is Material’s extra-large window class. The twelve columns stay twelve — a 4K
-                        monitor does not need sixteen tracks, it needs a wider container and a chance to reflow
-                        (three panes, four cards). Use <code>xxl</code> for that. <code>container wide</code> raises
+                        Widescreen is Material's extra-large window class. The grid keeps twelve columns there. A 4K
+                        monitor gets a wider container and room to reflow, such as into three panes or four cards,
+                        instead of sixteen tracks. Use <code>xxl</code> for that. <code>container wide</code> raises
                         the cap to 2400px; <code>container max</code> drops it.
                     </p>
 
-                    <h5>Adding Responsiveness</h5>
+                    <h5>Adding responsiveness</h5>
                     <p>
-                        In the previous examples, we only defined the Compact/default size using <code>s12</code>.
-                        This is fine if we want a fixed layout
-                        since the rules propagate upwards. By just saying s12, we are essentially saying <code>s12 m12
-                        l12</code>. But by explicitly defining
-                        the size we can make our website more responsive.
+                        The previous examples set only the default Compact size with <code>s12</code>.
+                        That works for a fixed layout, because the rules apply upward to larger sizes: s12 alone
+                        means <code>s12 m12
+                        l12</code>. Set the other sizes explicitly to make the layout responsive.
                     </p>
 
                     <div class="row">
@@ -505,11 +499,10 @@ const S = defineSections([
 </div>
 `} />
 
-                    <h5>Responsive Side Navigation Layout</h5>
+                    <h5>Responsive side navigation layout</h5>
                     <p>
-                        In this example below, we take the same layout from above, but we make it responsive by defining
-                        how many columns the div should take up on each screen size. Try
-                        resizing your browser and watch the layout change below.
+                        This example makes the same layout responsive by setting how many columns each div takes at
+                        each screen size. Resize your browser to watch the layout change.
                     </p>
 
                     <div class="row">
@@ -563,7 +556,7 @@ const S = defineSections([
 </div>
 `} />
 
-                    <h5>More Responsive Grid Examples</h5>
+                    <h5>More responsive grid examples</h5>
                     <div class="row">
                         <div class="s12 primary-container on-primary-container-text center-align py-3">
                             <span class="flow-text">s12</span>

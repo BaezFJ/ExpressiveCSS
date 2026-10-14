@@ -101,7 +101,7 @@ const S = defineSections([
         <p>
           Put <code>invalid</code> or <code>aria-invalid="true"</code> on the
           input for the error state. Do not put <code>error</code> on the
-          wrapper — that class is a color utility and fills the field.
+          wrapper. That class is a color utility and fills the field.
           <code>.supporting-text</code> and <code>.prefix</code> /
           <code>.suffix</code> remain as aliases.
         </p>
@@ -133,8 +133,8 @@ const S = defineSections([
 </div>
 `} />
         <p>
-          <code>validate</code> also honors <code>data-length</code>: the
-          field is marked <code>invalid</code> when the value is longer than
+          <code>validate</code> also honors <code>data-length</code> and
+          marks the field <code>invalid</code> when the value is longer than
           that number. Prefer <code>maxlength</code> when you want the
           browser to cap input.
         </p>
@@ -161,7 +161,7 @@ This is an inline input field:
   <Section {...S["password-visibility"]}>
         <p>
           A trailing <code>.icon-button</code> with <code>suffix</code> is a
-          control in the field: it keeps its 40dp target and takes clicks.
+          control in the field. It keeps its 40dp target and takes clicks.
           Add <code>password-toggle</code>, two icons and
           <code>aria-pressed="false"</code>, and pressing it shows the
           password as text. The name stays "Show password" and

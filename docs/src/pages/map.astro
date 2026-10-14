@@ -187,7 +187,7 @@ document.querySelector('.map').addEventListener('change', (event) => {
           <code>addArcs(id, arcs, options)</code> draws a curve for each
           <code>{`{ from, to }`}</code> pair in the tertiary color. Both take
           <code>color</code>, <code>width</code>, <code>opacity</code> and
-          <code>dashArray</code>. The map does not plan routes: get the
+          <code>dashArray</code>. The map does not plan routes, so get the
           points from a routing service such as OSRM or Valhalla.
         </p>
 <Code code={`
@@ -217,7 +217,7 @@ instance.map.on('click', 'stores-points', (event) => {
 `} />
         <p>
           Lines and clusters take their colors from the theme tokens where the
-          map is, and are drawn again in the new theme's colors when the
+          map is, and the map redraws them in the new theme's colors when the
           style changes. <code>removeOverlay(id)</code> removes one.
         </p>
   </Section>

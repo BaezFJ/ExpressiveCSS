@@ -17,25 +17,26 @@ const S = defineSections([
 ]);
 ---
 <DocsLayout page="sliders">
-<p>Slider labels and track gaps align with native handles after resizing, including RTL and vertical layouts. Paired inputs accept track clicks and remain ordered. Forced-colors tracks use system colors.</p>
-<p>Native range inputs own keyboard and pointer interaction. Vertical values increase from bottom to top. For precise entry, applications can pair a labeled number input with a range input, assign its value and dispatch an <code>input</code> event to update the slider. Use matching bounds and steps on paired ranges.</p>
+<p>Slider labels and track gaps align with native handles after resizing, including RTL and vertical layouts. Paired inputs accept track clicks and stay in order. In forced-colors mode, tracks use system colors.</p>
+<p>The native range inputs handle keyboard and pointer interaction. Vertical values increase from bottom to top. For precise entry, applications can pair a labeled number input with a range input, assign its value and dispatch an <code>input</code> event to update the slider. Use matching bounds and steps on paired ranges.</p>
 
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Sliders let people pick from a range of values. An
           <code>&lt;input type="range"&gt;</code> is the control. A wrapping
-          <code>.slider</code> — or <code>.range</code>, or a
-          <code>&lt;label&gt;</code> — is the host. The plugin is
+          <code>.slider</code>, <code>.range</code>, or
+          <code>&lt;label&gt;</code> is the host. The plugin is
           <code>Expressive.Slider</code>, and <code>Expressive.Range</code>
           still resolves to it.
         </p>
         <p>
-          Three variants: <strong>standard</strong> (active from the start),
+          There are three variants: <strong>standard</strong> (active from the start),
           <strong>centered</strong> (active grows from the midpoint), and
-          <strong>range</strong> (two handles, active between them). Horizontal
-          or vertical. Five sizes: XS (the default), S, M, L, XL. Optional
-          inset icon, discrete stops, and a value indicator.
+          <strong>range</strong> (two handles, active between them). A slider
+          can be horizontal or vertical, and comes in five sizes: XS (the
+          default), S, M, L, and XL. An inset icon, discrete stops, and a
+          value indicator are optional.
         </p>
         <p>
           Tokens follow the
@@ -102,11 +103,11 @@ const S = defineSections([
 
   <Section {...S.sizes}>
         <p>
-          Default is XS (16dp track, 44dp handle).
+          The default is XS (16dp track, 44dp handle).
           <code>s</code> / <code>small</code> is S,
           <code>m</code> / <code>medium</code> is M,
           <code>l</code> / <code>large</code> is L,
-          <code>xl</code> is XL. Scope them on the host.
+          <code>xl</code> is XL. Set the size class on the host.
         </p>
         <form>
           <div class="slider">
@@ -135,8 +136,8 @@ const S = defineSections([
 
   <Section {...S.icon}>
         <p>
-          A leading icon sits in the active track —
-          M, L, and XL are tall enough. <code>stops</code> plus a
+          On M, L, and XL, which are tall enough, a leading icon sits in the
+          active track. <code>stops</code> plus a
           numeric <code>step</code> paints a dot on the active track at
           each step from <code>min</code>, except under the icon. Without a
           <code>step</code>, or with <code>step="any"</code>, the track has
@@ -165,8 +166,8 @@ const S = defineSections([
 
   <Section {...S.vertical}>
         <p>
-          <code>vertical</code> stands the track up. Minimum is at the
-          bottom.
+          <code>vertical</code> turns the track upright, with the minimum at
+          the bottom.
         </p>
         <form>
           <div class="slider vertical m">

@@ -20,7 +20,7 @@ const S = defineSections([
           <code>.left</code>) is the surface, docked to the trailing edge
           by default. Use it for optional content and actions so the main
           view stays put. People can move to another region inside the
-          sheet; a back icon is the affordance for that.
+          sheet, and a back icon is the control for that.
         </p>
         <p>
           Tokens follow the
@@ -32,18 +32,19 @@ const S = defineSections([
           is the action row.
         </p>
         <p>
-          Two variants, same sheet:
+          The sheet has two variants:
         </p>
         <ul>
           <li>
-            <strong>Standard</strong> — <code>show()</code>. No scrim; a
-            1dp divider on the inner edge. The page stays interactive.
-            Intended next to the main pane on large windows.
+            <strong>Standard</strong>. Open it with <code>show()</code>. It
+            has no scrim and a 1dp divider on the inner edge. The page stays
+            interactive. Use it next to the main pane on large windows.
           </li>
           <li>
-            <strong>Modal</strong> — <code>showModal()</code>. A scrim
-            sits beside the sheet and the page is inert. Inner corners are
-            28dp. Tap the scrim, drag the inner edge out, or use close.
+            <strong>Modal</strong>. Open it with <code>showModal()</code>. A
+            scrim sits beside the sheet and the page is inert. Inner corners
+            are 28dp. To dismiss it, tap the scrim, drag the inner edge out,
+            or use the close control.
           </li>
         </ul>
         <p>
@@ -114,8 +115,8 @@ const S = defineSections([
 </dialog>
 `} />
         <p>
-          There is no extra class for the modal variant —
-          <code>showModal()</code> vs <code>show()</code> is the split.
+          The modal variant has no extra class. Calling
+          <code>showModal()</code> or <code>show()</code> picks the variant.
           Add <code>.start</code>, <code>.left</code>, or <code>.left-sheet</code>
           to dock to the logical start edge. The default, <code>.right</code>,
           and <code>.right-sheet</code> dock to the logical end edge.
@@ -126,11 +127,11 @@ const S = defineSections([
   </Section>
   <Section {...S.header}>
         <p>
-          The header is 64dp. 24dp from the start to the headline, 12dp
-          between the headline and close, 24dp from the close icon to the
-          trailing edge. Put a back button first when the sheet has more
-          than one region — it does not close the sheet unless you wire it
-          to.
+          The header is 64dp tall, with 24dp from the start to the headline,
+          12dp between the headline and close, and 24dp from the close icon
+          to the trailing edge. Put a back button first when the sheet has
+          more than one region. The back button does not close the sheet
+          unless you wire it to.
         </p>
 <Code code={`
 <header>
@@ -148,9 +149,9 @@ const S = defineSections([
   </Section>
   <Section {...S.layout}>
         <p>
-          Standard sheets sit on large windows beside the main pane. Modal
-          sheets are the compact/medium pattern (or any time the sheet
-          should take focus). On small screens a
+          Standard sheets sit on large windows beside the main pane. Use modal
+          sheets on compact and medium windows, or any time the sheet should
+          take focus. On small screens a
           <a href={route('bottom_sheet')}>bottom sheet</a>
           is often a better fit.
         </p>

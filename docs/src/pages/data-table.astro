@@ -105,8 +105,8 @@ const S = defineSections([
 </thead>
 `} />
         <p>
-          The demo above sorts with a few lines of page script. Sorting a
-          server-paged table belongs on the server instead.
+          The demo above sorts with a few lines of page script. Sort a
+          server-paged table on the server.
         </p>
 <Code code={`
 <script>
@@ -134,8 +134,8 @@ document.querySelectorAll('[data-sortable] th > button').forEach((button) => {
           A checked checkbox in a row's first cell selects the row and fills
           it with <code>secondary-container</code>. Name each checkbox after
           its row. <code>aria-selected</code> is not valid on the rows of a
-          plain table, so the checkbox carries the state. A select-all box in
-          the header is the page's to wire.
+          plain table, so the checkbox carries the state. Your page script has
+          to wire up any select-all box in the header.
         </p>
         <div class="data-table">
           <table>

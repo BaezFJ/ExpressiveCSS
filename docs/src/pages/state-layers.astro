@@ -18,12 +18,12 @@ const S = defineSections([
     <p class="flow-text">
       A state layer is the translucent wash a component paints over itself to show that you are
       hovering it, that it has focus, or that you are pressing it. Material 3 uses it in place of
-      the ink ripple, and it is a <em>foundation</em>: you never write markup for one. Components
+      the ink ripple. It is a <em>foundation</em>, so you never write markup for one. Components
       paint it behind themselves, and these tokens decide how strong it is.
     </p>
     <p>
-      Because the opacity lives in one place, changing it changes every component at once, at
-      runtime, with no rebuild.
+      Because the opacity lives in one place, changing it at runtime changes every component at
+      once, without a rebuild.
     </p>
   </Section>
   <Section {...S.opacities}>
@@ -52,8 +52,8 @@ const S = defineSections([
 </style>
 `} />
     <p>
-      Components that expose their own state layer token read from these, so you can still reach
-      for one component without touching the rest. The component token is the override point; the
+      Components that expose their own state layer token read from these, so you can still change
+      one component without touching the rest. The component token is the override point; the
       value behind it comes from the foundation.
     </p>
 <Code code={`

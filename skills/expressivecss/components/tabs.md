@@ -9,7 +9,7 @@ Component ID: `tabs`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `e1c777a1bcd53d5a6ed4615075a7a500fb6f488050e727487804f8cc421b5902`
+Contract SHA-256: `ab707e0767ffd39857d91230d8ea2bf2ec9d007a91ee9b2326d5d9f428ad7d8f`
 
 #### Selection and adaptation
 
@@ -82,7 +82,7 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 
 #### Also documented
 
-The Tabs section of the [API reference](https://www.expressivecss.com/llm.md) also covers Secondary, Initialization, Properties, Preselecting a tab, Linking to an External Page, Swipeable Tabs, Fixed width, Inline icons.
+The Tabs section of the [API reference](https://www.expressivecss.com/llm.md) also covers Secondary, Initialization, Properties, Preselecting a tab, Linking to an External Page, Swipeable tabs, Fixed width, Inline icons.
 
 #### Rules
 

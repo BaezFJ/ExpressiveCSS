@@ -8,7 +8,7 @@ import { route } from "../lib/catalogue";
 
 const S = defineSections([
   { id: "footer", label: "Footer", heading: false },
-  { id: "sticky-footer", label: "Sticky Footer" },
+  { id: "sticky-footer", label: "Sticky footer" },
 ]);
 ---
 <DocsLayout page="footer">
@@ -28,8 +28,8 @@ const S = defineSections([
           component.
         </p>
         <p>
-          Unfilled by default: a dashed hairline and theme tokens — not a solid primary bar.
-          Add <code>filled</code> (or <code>surface</code>) for a
+          By default the footer is unfilled, with a dashed hairline and theme
+          tokens instead of a solid primary bar. Add <code>filled</code> (or <code>surface</code>) for a
           <code>surface-container</code> well.
         </p>
 
@@ -70,10 +70,10 @@ const S = defineSections([
 `} />
         <p>
           The grid still works if you prefer columns. <code>.page-footer</code> and
-          <code>.footer-copyright</code> are <strong>not</strong> aliases — no rule in
-          the sheet matches either, and a bare <code>&lt;footer&gt;</code> with
-          <code>&lt;nav&gt;</code> columns and a trailing <code>&lt;small&gt;</code>
-          is the component.
+          <code>.footer-copyright</code> are <strong>not</strong> aliases. No rule in
+          the stylesheet matches either class. The component is a bare
+          <code>&lt;footer&gt;</code> with <code>&lt;nav&gt;</code> columns and a
+          trailing <code>&lt;small&gt;</code>.
         </p>
 <Code code={`
 <footer>
@@ -97,9 +97,9 @@ const S = defineSections([
 </footer>
 `} />
         <p>
-          The trailing <code>&lt;small&gt;</code> is the copyright bar: a wrapping
-          flex row with space-between. Put the notice and the trailing link as two
-          children. A <code>right</code> float is not required.
+          The trailing <code>&lt;small&gt;</code> is the copyright bar, a wrapping
+          flex row with space-between. Give it two children, the notice and the
+          trailing link. A <code>right</code> float is not required.
         </p>
   </Section>
   <Section {...S["sticky-footer"]}>

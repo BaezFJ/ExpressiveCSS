@@ -15,8 +15,8 @@ const S = defineSections([
         <p class="flow-text">
           A <code>&lt;label class="switch"&gt;</code> wrapping
           <code>&lt;input type="checkbox"&gt;</code> is the control. The
-          label text is a sibling of the input — no
-          <code>.lever</code> required. They are CSS only. There is no
+          label text is a sibling of the input, and no
+          <code>.lever</code> is required. They are CSS only. There is no
           JavaScript component and nothing to AutoInit.
         </p>
         <p>
@@ -77,7 +77,7 @@ const S = defineSections([
         </p>
         <p>
           The on/off captions are decoration. Left as bare text they are folded
-          into the label, and the switch announces itself as “Off On” — so hide
+          into the label, and the switch announces itself as "Off On". Hide
           them and name the control itself. A switch whose only text is a
           caption needs an <code>aria-label</code>, because hiding both leaves
           it with no name at all.

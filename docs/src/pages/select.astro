@@ -16,15 +16,15 @@ const S = defineSections([
   { id: "methods", label: "Methods" },
   { id: "native-forms", label: "Native forms" },
   { id: "properties", label: "Properties" },
-  { id: "disabled", label: "Disabled Styles" },
+  { id: "disabled", label: "Disabled styles" },
 ]);
 ---
 <DocsLayout page="select">
 <PageBody sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
-          Select turns a native <code>&lt;select&gt;</code> into an exposed menu —
-          a text field plus a menu. Wrap it in
+          Select turns a native <code>&lt;select&gt;</code> into an exposed menu,
+          which is a text field paired with a menu. Wrap it in
           <code>.field</code> and give the label a matching
           <code>for</code>. Add <code>outlined</code> (or <code>border</code>) on that
           field for the outlined variant.
@@ -164,7 +164,7 @@ const S = defineSections([
         <p>
           The IIFE bundle exposes <code>Expressive.FormSelect</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
-          after adding a select dynamically, or after changing an existing select’s options.
+          after adding a select dynamically, or after changing an existing select's options.
           Otherwise <code>Expressive.AutoInit()</code> starts every <code>select</code>.
         </p>
 <Code code={`
@@ -208,7 +208,7 @@ Expressive.AutoInit(document.body, {
         <InstanceNote plugin="FormSelect" />
 
         <h5 class="light">.getSelectedValues();</h5>
-        <p>Selected values as an array of strings.</p>
+        <p>Returns the selected values as an array of strings.</p>
 <Code code={`
 instance.getSelectedValues();
 `} />
@@ -232,7 +232,7 @@ instance.destroy();
 `} />
   </Section>
   <Section {...S["native-forms"]}>
-        <p>The native select owns selection and form submission. Disabled options and
+        <p>The native select handles selection and form submission. Disabled options and
           disabled optgroups cannot be chosen in the generated menu. A selected
           disabled option remains visible in the field, but native form submission
           excludes it. An empty selection displays an empty field.</p>

@@ -33,19 +33,19 @@ const S = defineSections([
           icon is indistinguishable from a leading one in CSS. A
           <code>&lt;kbd&gt;</code> or a <code>.badge</code> is always
           trailing content. An
-          <code>&lt;li class="divider" role="separator"&gt;</code> is a divider —
+          <code>&lt;li class="divider" role="separator"&gt;</code> is a divider.
           <code>&lt;menu&gt;</code> is a list and permits only <code>&lt;li&gt;</code>,
-          so a bare <code>&lt;hr&gt;</code> there is invalid (it still renders);
-          a <code>.gap</code> splits groups; a <code>.label</code> is a
+          so a bare <code>&lt;hr&gt;</code> there is invalid, although it still renders.
+          A <code>.gap</code> splits groups, and a <code>.label</code> is a
           heading. A nested <code>&lt;menu&gt;</code> is a flyout. The
-          trigger’s <code>data-target</code> must match the menu’s
+          trigger's <code>data-target</code> must match the menu's
           <code>id</code>. <code>.menu-trigger</code> is the JavaScript contract.
         </p>
         <p>
           This is the M3 Expressive <em>vertical menu</em>. Tokens follow the
           <a href="https://m3.material.io/components/menus/specs">M3 menu spec</a>.
-          The container is <code>surface-container-low</code>, large (16dp)
-          corners, level 2 elevation, 2dp group padding, and 112–280dp wide.
+          The container is <code>surface-container-low</code> with large (16dp)
+          corners, level 2 elevation, 2dp group padding, and a width of 112 to 280dp.
           Items are at least 44dp tall, with 16dp edge spacing, extra-small
           (4dp) corners, <code>label-large</code> /
           <code>on-surface</code>; the first and last item round their outer
@@ -104,7 +104,7 @@ const S = defineSections([
         <p>
           The component repositions a menu when its preferred edge would be
           clipped. Nested menus open beside their parent item and switch sides
-          near the viewport edge. Use dividers in scrollable menus; don’t use
+          near the viewport edge. Use dividers in scrollable menus; don't use
           gaps there. Keep each row to one action, and keep icons decorative
           when the visible label already names the action.
         </p>
@@ -116,8 +116,8 @@ const S = defineSections([
           discoverable, but they cannot be selected.
         </p>
         <p>
-          Closing menus are excluded from keyboard focus and
-          preserves focus moved by close callbacks. Submenu entry and return
+          A closing menu is excluded from keyboard focus and
+          preserves focus that a close callback moved. Submenu entry and return
           arrows mirror in RTL; typeahead stays in the active list and skips
           headings and disabled items. Escape closes the innermost submenu
           first.
@@ -130,11 +130,11 @@ const S = defineSections([
 </Section>
   <Section {...S["layout-types"]}>
         <p>
-          <strong>Standard</strong> is the default: every item shares one
+          <strong>Standard</strong> is the default, with every item on one
           continuous menu surface. <strong>Grouped</strong> separates related
           runs into coplanar surfaces. Add <code>.grouped</code> to the menu
           and place an inert <code>&lt;li class="gap"&gt;</code> between groups.
-          The gap is skipped by pointer and keyboard navigation.
+          Pointer and keyboard navigation skip the gap.
         </p>
         <div class="row">
           <div class="s12 m6">
@@ -215,7 +215,7 @@ Expressive.AutoInit(document.body, {
               <td><code>constrainWidth</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>If true, the menu is as wide as the trigger. M3 menus are independently sized — pass <code>false</code> for that.</td>
+              <td>If true, the menu is as wide as the trigger. M3 menus are sized independently of the trigger, so pass <code>false</code> for M3 sizing.</td>
             </tr>
             <tr>
               <td><code>container</code></td>
@@ -358,12 +358,12 @@ Expressive.Menu.init(document.querySelector('#hover'), {
           single-select or multi-select menu, give items
           <code>role="menuitemradio"</code> or
           <code>role="menuitemcheckbox"</code> and synchronize
-          <code>aria-checked</code>. Don’t put <code>aria-selected</code> on a
-          menu item. Trailing
+          <code>aria-checked</code>. Don't put <code>aria-selected</code> on a
+          menu item. A trailing
           <code>&lt;kbd&gt;</code> is a keyboard shortcut. A
-          <code>.gap</code> item splits groups — more expressive than a
-          divider, and limited to one or two per menu. A
-          <code>.label</code> is a 32dp group heading. Don’t put gaps in
+          <code>.gap</code> item splits groups. It is more expressive than a
+          divider, so use one or two per menu at most. A
+          <code>.label</code> is a 32dp group heading. Don't put gaps in
           a scrollable menu.
         </p>
         <p>
@@ -446,10 +446,10 @@ Expressive.Menu.init(document.querySelector('#hover'), {
   </Section>
   <Section {...S.color}>
         <p>
-          Two mappings. <strong>Standard</strong> (the default) is
+          Menus have two color mappings. <strong>Standard</strong> (the default) is
           surface-based and lower emphasis.
-          <strong>Vibrant</strong> is tertiary-based and higher emphasis —
-          add <code>.vibrant</code> and use it sparingly.
+          <strong>Vibrant</strong> is tertiary-based and higher emphasis.
+          Add <code>.vibrant</code> to use it, and use it sparingly.
         </p>
         <p>
           <button type="button" class="tonal menu-trigger no-autoinit" id="menu-vibrant-trigger" data-target="menu-vibrant">Vibrant</button>
@@ -483,8 +483,9 @@ Expressive.Menu.init(document.querySelector('#hover'), {
   </Section>
   <Section {...S.nested}>
         <p>
-          Optional and desktop-first. Put a <code>&lt;menu&gt;</code> inside an
-          <code>&lt;li&gt;</code> — no extra trigger, no second instance.
+          Nested menus are optional and designed desktop-first. Put a
+          <code>&lt;menu&gt;</code> inside an <code>&lt;li&gt;</code>. It needs
+          no extra trigger or second instance.
           On a fine pointer the flyout opens on hover with a short
           scale and fade; the open flyout rounds up and the parent rounds
           down. On touch, a tap toggles <code>.open</code> on that row.
@@ -533,8 +534,8 @@ Expressive.Menu.init(document.querySelector('#hover'), {
         </p>
         <p>
           The region gets no <code>aria-expanded</code> or
-          <code>aria-haspopup</code>: those belong to buttons. Every action in
-          a context menu also needs another way in, such as a toolbar or an
+          <code>aria-haspopup</code>, because those attributes belong to buttons.
+          Every action in a context menu also needs another way to reach it, such as a toolbar or an
           item's own menu button. Touch browsers that do not fire
           <code>contextmenu</code> on long-press, such as iOS Safari, never
           show it.

@@ -12,7 +12,7 @@ const S = defineSections([
   { id: "introduction", label: "Introduction", heading: false },
   { id: "contact", label: "Contacts" },
   { id: "tag", label: "Tags" },
-  { id: "basic", label: "Plugin", heading: "Javascript Plugin" },
+  { id: "basic", label: "Plugin", heading: "JavaScript plugin" },
   { id: "initialization", label: "Initialization" },
   { id: "options", label: "Options" },
   { id: "methods", label: "Methods" },
@@ -23,8 +23,8 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
-          A chip is a <code>.chip</code>, and the element says which kind it is — the
-          four Material 3 chip types, plus a non-interactive display chip, across three
+          A chip is a <code>.chip</code>, and its element sets which kind it is. The
+          four Material 3 chip types and a non-interactive display chip use three
           root elements. Add <code>outlined</code> for a bordered style.
           Static chips are CSS. The JavaScript plugin lives on a <code>.chips</code>
           wrapper.
@@ -41,7 +41,7 @@ const S = defineSections([
             <tr>
               <td>Display</td>
               <td><code>&lt;span class="chip"&gt;</code></td>
-              <td>Presents information. Not a control, not in the tab order.</td>
+              <td>Presents information. It is not a control and is not in the tab order.</td>
             </tr>
             <tr>
               <td>Assist, suggestion</td>
@@ -51,7 +51,7 @@ const S = defineSections([
             <tr>
               <td>Filter</td>
               <td><code>&lt;input type="checkbox" class="chip-input"&gt;</code> + <code>&lt;label class="chip"&gt;</code></td>
-              <td>Multi-select and toggleable, and it carries a value into the form. No JavaScript.</td>
+              <td>Multi-select and toggleable, and it carries a value into the form without JavaScript.</td>
             </tr>
             <tr>
               <td>Input</td>
@@ -126,8 +126,8 @@ const S = defineSections([
         </p>
         <p>
           Before 0.8.0 every chip was a <code>&lt;div class="chip"&gt;</code> and the
-          delete affordance was an <code>&lt;i class="close"&gt;</code> — focusable via
-          <code>tabindex</code> but with no role and no name. That markup still
+          delete control was an <code>&lt;i class="close"&gt;</code>, focusable through
+          <code>tabindex</code> but with no role or name. That markup still
           renders; it is no longer correct and is not documented.
         </p>
   </Section>
@@ -135,7 +135,7 @@ const S = defineSections([
   <Section {...S.contact}>
         <p>
           Put an image inside the chip. The name next to it is the accessible name
-          already, so the image is decorative — <code>alt=""</code>.
+          already, so the image is decorative and takes <code>alt=""</code>.
         </p>
         <span class="chip mb-3">
           <img src="https://picsum.photos/id/64/100/100" alt="">
@@ -181,10 +181,11 @@ const S = defineSections([
           marks it <code>selected</code> and moves focus to its delete button.
         </p>
         <p>
-          Backspace and Delete remove the focused chip and select the preceding
-          survivor, otherwise the first survivor or the input. Activating a delete
-          button returns to the input. Programmatic deletion preserves unrelated
-          focus, and deletion callbacks can move focus without it being reset.
+          Backspace and Delete remove the focused chip and select the remaining chip
+          before it, or else the first remaining chip or the input. Activating a delete
+          button returns focus to the input. Deleting a chip from code does not move
+          focus that is elsewhere, and a deletion callback can move focus without the
+          plugin resetting it.
           Long labels wrap while the delete control keeps its size.
         </p>
         <p>
@@ -195,7 +196,7 @@ const S = defineSections([
           <code>no-autoinit</code>, but it uses the defaults, so those wrappers stay
           display-only until you call <code>init</code> with options.
         </p>
-        <p>Empty field — type a tag and press Enter:</p>
+        <p>An empty field. Type a tag and press Enter:</p>
         <div id="chips-empty" class="chips no-autoinit mb-5"></div>
         <p>Initial tags from the <code>data</code> option:</p>
         <div id="chips-initial" class="chips no-autoinit mb-5"></div>

@@ -30,7 +30,7 @@ const S = defineSections([
       <a href={route("buttons")}>buttons</a> and
       <a href={route("icon_buttons")}>icon buttons</a> can be direct children.
       <code>Expressive.AutoInit()</code> keeps standard-group width stable while
-      the pressed item grows; <code>data-selection</code> additionally enables
+      the pressed item grows; <code>data-selection</code> also enables
       managed toggle state.
     </p>
     <div>
@@ -241,7 +241,7 @@ const S = defineSections([
     <p>
       A button group is not a composite widget. Do not use
       <code>role="toolbar"</code>, <code>radiogroup</code>, or a roving
-      <code>tabindex</code>: items are reached with Tab. When the cluster needs
+      <code>tabindex</code>. Users reach items with Tab. When the cluster needs
       a name, use <code>role="group"</code> with <code>aria-label</code> or
       <code>aria-labelledby</code>. This role adds no arrow-key contract.
     </p>

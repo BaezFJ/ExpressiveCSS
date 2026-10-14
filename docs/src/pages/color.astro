@@ -48,8 +48,8 @@ const ROLE_GROUPS: RoleGroup[] = [
 <PageBody sections={S}>
   <Section {...S.tokens}>
         <p class="flow-text">
-          Color in Expressive is the Material Design 3 Expressive roles —
-          CSS custom properties on <code>:root</code> named
+          Color in Expressive uses the Material Design 3 Expressive roles.
+          They are CSS custom properties on <code>:root</code> named
           <code>--md-sys-color-*</code>, exposed as utility classes like
           <code>.primary</code> and <code>.on-surface-text</code>.
           There are 26 standard roles in six groups
@@ -60,11 +60,11 @@ const ROLE_GROUPS: RoleGroup[] = [
         <p>
           The 2014 Material palette that shipped with earlier versions
           (<code>.red</code>, <code>.blue.lighten-2</code>, <code>colorFunc()</code>)
-          has been removed. It generated 532 utility classes — 18% of the stylesheet —
-          expressing a design opinion this framework does not hold, and it did not
+          has been removed. It generated 532 utility classes, 18% of the stylesheet, that
+          expressed a design opinion this framework does not hold, and it did not
           follow the page theme. Replace a palette class with the role it was standing
-          in for: <code>.red</code> → <code>.error</code>, <code>.blue</code> →
-          <code>.primary</code>, <code>.green</code> → <code>.tertiary</code>, and pair
+          in for: <code>.red</code> becomes <code>.error</code>, <code>.blue</code> becomes
+          <code>.primary</code>, and <code>.green</code> becomes <code>.tertiary</code>. Pair
           each fill with its <code>on-*</code> text class.
         </p>
         <p>
@@ -79,18 +79,18 @@ const ROLE_GROUPS: RoleGroup[] = [
           spec intends so contrast stays at least 3:1 when the theme flips:
         </p>
         <ul>
-          <li><strong>Primary</strong> — most prominent components: FAB, filled buttons, active states.</li>
-          <li><strong>Secondary</strong> — less prominent components: filter chips, selected nav pills.</li>
-          <li><strong>Tertiary</strong> — contrasting accents that balance primary and secondary.</li>
-          <li><strong>Error</strong> — error states, not decoration.</li>
-          <li><strong>Surface</strong> — page backgrounds. <strong>Surface container</strong> — cards, sheets, dialogs, menus.</li>
-          <li><strong>On-*</strong> — text and icons on that fill. Never use a container role for text.</li>
-          <li><strong>Variant</strong> — a lower-emphasis alternative to its pair (<code>outline-variant</code>, <code>on-surface-variant</code>).</li>
+          <li><strong>Primary</strong> is for the most prominent components: FAB, filled buttons, and active states.</li>
+          <li><strong>Secondary</strong> is for less prominent components, such as filter chips and selected nav pills.</li>
+          <li><strong>Tertiary</strong> is for contrasting accents that balance primary and secondary.</li>
+          <li><strong>Error</strong> is for error states, not decoration.</li>
+          <li><strong>Surface</strong> is for page backgrounds. <strong>Surface container</strong> is for cards, sheets, dialogs, and menus.</li>
+          <li><strong>On-*</strong> is for text and icons on that fill. Never use a container role for text.</li>
+          <li><strong>Variant</strong> is a lower-emphasis alternative to its pair (<code>outline-variant</code>, <code>on-surface-variant</code>).</li>
         </ul>
         <p>
-          Example: a filled button is <code>primary</code> +
-          <code>on-primary</code>; a tonal button is
-          <code>secondary-container</code> +
+          For example, a filled button uses <code>primary</code> with
+          <code>on-primary</code>, and a tonal button uses
+          <code>secondary-container</code> with
           <code>on-secondary-container</code>.
         </p>
         <div class="row mb-3">
@@ -119,7 +119,7 @@ const ROLE_GROUPS: RoleGroup[] = [
         </p>
         <p>
           In Sass, consume the token directly. Do not write
-          <code>rgba(var(--md-sys-color-primary), 0.06)</code> — the tokens hold hex
+          <code>rgba(var(--md-sys-color-primary), 0.06)</code>. The tokens hold hex
           colors, so that form is invalid. Mix with transparency instead:
         </p>
 <Code code={`
@@ -141,8 +141,8 @@ const ROLE_GROUPS: RoleGroup[] = [
   </Section>
   <Section {...S.roles}>
         <p>
-          A role is a job, not a color: <code>error</code> means "this went
-          wrong", and what that looks like is the theme's business.
+          A role describes a purpose. <code>error</code> means "this went
+          wrong", and the theme decides what that looks like.
           Each swatch uses its paired <code>on-*</code> color for the label.
         </p>
 
@@ -171,12 +171,12 @@ const ROLE_GROUPS: RoleGroup[] = [
           </div>
         </div>
         <p>
-          <code>scrim</code> is the opaque neutral the wash behind a modal surface
-          is mixed from, not the wash itself. That is
-          <code>--md-comp-scrim-color</code> — the role at 32%, defined once at the
-          root and consumed by dialogs, both sheets, and the modal navigation
-          rail. Override it at the root to move every
-          scrim, or set it on one surface to dim just that one —
+          <code>scrim</code> is the opaque neutral that the dimming layer behind a modal
+          surface is mixed from. The dimming layer itself is
+          <code>--md-comp-scrim-color</code>, the role at 32%, defined once at the
+          root and used by dialogs, both sheets, and the modal navigation
+          rail. Override it at the root to change every
+          scrim, or set it on one surface to change only that surface's scrim, since
           <code>::backdrop</code> inherits from the element it belongs to. The
           mix resolves at the root, so overriding
           <code>--md-sys-color-scrim</code> on a subtree does not reach a scrim
@@ -192,8 +192,8 @@ const ROLE_GROUPS: RoleGroup[] = [
   </Section>
   <Section {...S.sass}>
         <p>
-          Do not <code>@extend</code> these classes across files — that is how the old
-          stylesheet lost control of cascade order. In a component partial, read the
+          Do not <code>@extend</code> these classes across files. The old
+          stylesheet lost control of cascade order that way. In a component partial, read the
           token directly.
         </p>
 <Code code={`
@@ -204,9 +204,9 @@ const ROLE_GROUPS: RoleGroup[] = [
 `} />
         <p>
           There is no Sass color function any more. <code>colorFunc()</code> and the
-          <code>$colors</code> map were removed with the palette — a Sass function
-          resolves at build time, which cannot follow a theme the user switches at
-          runtime. The custom property can.
+          <code>$colors</code> map were removed with the palette, because a Sass function
+          resolves at build time and cannot follow a theme the user switches at
+          runtime. A custom property can.
         </p>
   </Section>
 </PageBody>

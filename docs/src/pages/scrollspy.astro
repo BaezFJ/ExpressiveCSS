@@ -20,19 +20,19 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
-          Scrollspy watches a set of sections and which one is currently in view.
-          The table of contents on the right of every documentation page is the live demo:
-          the matching link gets <code>active</code> and <code>aria-current="true"</code>.
-          Clicking a link is a normal hash jump — the offset is
-          <code>scroll-margin</code>, the motion is
-          <code>scroll-behavior: smooth</code>.
+          Scrollspy watches a set of sections and tracks which one is in view.
+          The table of contents on the right of every documentation page is the live demo.
+          The matching link gets <code>active</code> and <code>aria-current="true"</code>.
+          Clicking a link is a normal hash jump.
+          <code>scroll-margin</code> sets the offset and
+          <code>scroll-behavior: smooth</code> sets the motion.
         </p>
         <p>
           Put <code>scrollspy</code> and an <code>id</code> on each section.
           The TOC is a set of destinations within the page, so it lives in a labelled <code>&lt;nav&gt;</code>; put <code>table-of-contents</code> on its list and point each link at
           <code>#that-id</code>. <code>AutoInit()</code> starts every
           <code>.scrollspy</code> except those marked <code>no-autoinit</code>.
-          Observation is <code>IntersectionObserver</code> — there is no
+          Scrollspy uses <code>IntersectionObserver</code> and has no
           scroll listener.
         </p>
         <p>
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 `} />
-        <p>Per-instance options can also be passed through AutoInit:</p>
+        <p>You can also pass per-instance options through AutoInit:</p>
 <Code code={`
 Expressive.AutoInit(document.body, {
   ScrollSpy: { scrollOffset: 200 }
@@ -93,9 +93,9 @@ Expressive.AutoInit(document.body, {
               <td>Number</td>
               <td><code>200</code></td>
               <td>
-                Offset in pixels. Written as
+                Offset in pixels. Scrollspy writes it to
                 <code>--md-comp-scrollspy-offset</code> (section
-                <code>scroll-margin</code>) and used as the observer
+                <code>scroll-margin</code>) and uses it as the observer
                 <code>rootMargin</code>.
               </td>
             </tr>
@@ -111,9 +111,9 @@ Expressive.AutoInit(document.body, {
               <td>see below</td>
               <td>
                 Optional. Returns a CSS selector for the element that should
-                receive <code>activeClass</code>, given the section’s id.
+                receive <code>activeClass</code>, given the section's id.
                 The default finds <code>a[href="#id"]</code> by comparing
-                attributes — it does not interpolate the id into a selector.
+                attributes and does not interpolate the id into a selector.
               </td>
             </tr>
             <tr>
@@ -142,7 +142,7 @@ function(id) {
         <InstanceNote plugin="ScrollSpy" />
 
         <h5 class="light">.destroy();</h5>
-        <p>Disconnect the section's observer, restore its original offset style, and update the current link within its group. Repeated destruction is safe.</p>
+        <p>Disconnect the section's observer, restore its original offset style, and update the current link within its group. Calling it more than once is safe.</p>
 <Code code={`
 instance.destroy();
 `} />

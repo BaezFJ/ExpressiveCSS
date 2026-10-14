@@ -19,17 +19,17 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>nav.navigation-rail</code> holds 3–7 destinations plus an
+          A <code>nav.navigation-rail</code> holds 3 to 7 destinations plus an
           optional FAB. Put it in the same place on every screen. Use it
           in medium, expanded, large, or extra-large windows.
         </p>
         <p>
           Collapsed is 96dp with the icon above the label. Add
-          <code>expanded</code> for 220–360dp, icon and label on one row,
-          and an extended FAB. The menu button toggles that class
+          <code>expanded</code> for a 220 to 360dp rail with icon and label
+          on one row and an extended FAB. The menu button toggles that class
           (<code>AutoInit()</code> starts it). On compact windows an
-          expanded rail is modal — a scrim, and Escape or a scrim tap
-          collapses it. Add <code>modal</code> to keep that overlay at
+          expanded rail is modal. It shows a scrim, and Escape or a tap on
+          the scrim collapses it. Add <code>modal</code> to keep that overlay at
           every breakpoint.
         </p>
         <p>
@@ -40,14 +40,14 @@ const S = defineSections([
         <p>
           Compact windows that need persistent destinations still use a
           <a href={route('navigation_bar')}>navigation bar</a>.
-          Larger hierarchies should be split into peer categories and a
-          separate page-level list.
+          Split larger hierarchies into peer categories and a separate
+          page-level list.
         </p>
   </Section>
   <Section {...S.collapsed}>
         <p>
-          Default. 96dp. Icon above the label; the selected pill sits
-          behind the icon. The FAB is icon-only. Offset the rest of the
+          This is the default. It is 96dp wide, with the icon above the
+          label and the selected pill behind the icon. The FAB is icon-only. Offset the rest of the
           page by <code>--md-comp-nav-rail-collapsed-width</code>.
         </p>
         <div class="rail-demo mb-3">
@@ -155,10 +155,10 @@ const S = defineSections([
   </Section>
   <Section {...S.modal}>
         <p>
-          On Compact windows, <code>expanded</code> already
+          On compact windows, <code>expanded</code> already
           overlays the page with a scrim. Add <code>modal</code> if you
-          want that overlay on tablets and desktops too — image 2 in
-          the spec, a compact window expanding in place.
+          want that overlay on tablets and desktops too. Image 2 in the
+          spec shows this case, a compact window expanding in place.
         </p>
 <Code code={`
 <nav class="navigation-rail expanded modal" aria-label="Main">…</nav>
@@ -167,7 +167,7 @@ const S = defineSections([
   <Section {...S.tokens}>
         <TokenTable>
             <tr><td><code>--md-comp-nav-rail-collapsed-width</code></td><td>96px</td></tr>
-            <tr><td><code>--md-comp-nav-rail-expanded-width</code></td><td>280px (clamped 220–360)</td></tr>
+            <tr><td><code>--md-comp-nav-rail-expanded-width</code></td><td>280px (clamped between 220 and 360)</td></tr>
             <tr><td><code>--md-comp-nav-rail-icon-size</code></td><td>24px</td></tr>
             <tr><td><code>--md-comp-nav-rail-indicator-width</code></td><td>56px</td></tr>
             <tr><td><code>--md-comp-nav-rail-fab-size</code></td><td>56px</td></tr>

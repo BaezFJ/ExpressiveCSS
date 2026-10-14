@@ -31,7 +31,7 @@ const S = defineSections([
           so a message has one. To keep a bubble and an attachment together,
           wrap them in a <code>&lt;div&gt;</code>, or use a
           <a href="#group">group</a>. The parts are <code>&lt;div&gt;</code>
-          elements: a <code>&lt;header&gt;</code> or <code>&lt;footer&gt;</code>
+          elements, because a <code>&lt;header&gt;</code> or <code>&lt;footer&gt;</code>
           outside sectioning content becomes a page landmark.
         </p>
         <div class="flex flex-column gap-4 mb-3" role="log" aria-label="Conversation with Oliver" style="max-width: 32rem;">
@@ -194,7 +194,7 @@ const S = defineSections([
   </Section>
   <Section {...S.attachments}>
         <p>
-          An <code>outlined</code> bubble has no fill, for attachments and
+          Use an <code>outlined</code> bubble, which has no fill, for attachments and
           other rich content. A bubble whose only child is an image or video
           frames it with a thin inset. Send several items as a group.
         </p>

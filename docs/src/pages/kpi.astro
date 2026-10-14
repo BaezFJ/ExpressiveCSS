@@ -23,7 +23,7 @@ const days = revenue.map((_, i) => `Day ${i + 1}`);
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          An <code>&lt;article class="kpi"&gt;</code> is a card for one key
+          An <code>&lt;article class="kpi"&gt;</code> is a card for one headline
           figure: a label, the value, a trend chip, a sparkline and a line of
           context.
         </p>
@@ -32,7 +32,8 @@ const days = revenue.map((_, i) => `Day ${i + 1}`);
           reader reads them as a pair. The article is a card, so
           <code>filled</code> and <code>outlined</code> work as they do on
           cards, and KPIs in a grid row stretch to the same height with their
-          footers aligned. CSS only; the chart is drawn by its own script.
+          footers aligned. The KPI itself is CSS only, and the chart component
+          draws the chart with its own script.
         </p>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px" data-markdown-ignore>
           <article class="kpi outlined">

@@ -16,8 +16,8 @@ const S = defineSections([
   { id: "method", label: "Methods" },
   { id: "properties", label: "Properties" },
   { id: "preselecting", label: "Preselecting", heading: "Preselecting a tab" },
-  { id: "external", label: "External Links", heading: "Linking to an External Page" },
-  { id: "swipeable", label: "Swipeable Tabs" },
+  { id: "external", label: "External links", heading: "Linking to an external page" },
+  { id: "swipeable", label: "Swipeable tabs" },
   { id: "fixed-width", label: "Fixed width" },
   { id: "icons", label: "Inline icons" },
 ]);
@@ -31,11 +31,11 @@ const S = defineSections([
           <code>&lt;span&gt;</code> (or the link text) is the label; a
           leading <code>&lt;span class="material-symbols" aria-hidden="true"&gt;</code> is the icon.
           Nest a <code>&lt;span class="badge"&gt;</code> in the icon for a count,
-          and put that count in the tab's <code>aria-label</code> so a hidden
-          icon does not swallow it.
-          <code>.active</code> is the selected tab. There is no
-          <code>li.tab</code> required —
-          <code>ul.tabs &gt; li.tab &gt; a</code> stays as an alias.
+          and put that count in the tab's <code>aria-label</code> so screen
+          readers still announce it when the icon is hidden.
+          <code>.active</code> is the selected tab. You do not need
+          <code>li.tab</code>, but
+          <code>ul.tabs &gt; li.tab &gt; a</code> still works as an alias.
           <code>AutoInit()</code> starts every <code>.tabs</code> except
           those marked <code>no-autoinit</code>.
         </p>
@@ -110,8 +110,9 @@ const S = defineSections([
   </Section>
   <Section {...S.secondary}>
         <p>
-          <code>tabs-secondary</code> is the in-content variant: always 48dp,
-          icons inline, a 2dp indicator. Use it to further split a pane.
+          <code>tabs-secondary</code> is the in-content variant. It is always
+          48dp, with inline icons and a 2dp indicator. Use it to split a pane
+          further.
         </p>
         <nav class="tabs tabs-secondary" aria-label="Trip">
           <a href="#tabs-sec-birds"><span class="material-symbols" aria-hidden="true">flight</span><span>Travel</span></a>
@@ -190,7 +191,7 @@ instance.select('tab_id');
 `} />
 
         <h5 class="light">.updateTabIndicator();</h5>
-        <p>Recalculate the indicator position. Useful if the bar was hidden or resized.</p>
+        <p>Recalculate the indicator position. Call it after the bar has been hidden or resized.</p>
 <Code code={`
 instance.updateTabIndicator();
 `} />
@@ -235,9 +236,9 @@ instance.destroy();
         <p>
           Set <code>swipeable: true</code> to swipe between panels on
           touch devices. Keep the tab panels in the same wrapping
-          container. The implementation wraps those panels in a
-          carousel. <code>responsiveThreshold</code> is the viewport
-          maximum width at which swipeable mode initializes. Resizing later
+          container. Tabs wraps those panels in a
+          carousel. <code>responsiveThreshold</code> is the maximum
+          viewport width at which swipeable mode initializes. Resizing later
           does not switch modes. Clicks and swipes update the current link and
           call <code>onShow</code> once per changed selection with the shown panel.
           <code>destroy()</code> removes the carousel wrapper and restores panel
