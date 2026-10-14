@@ -1099,6 +1099,39 @@ describe('Autocomplete keys while the list is closed', () => {
   });
 });
 
+describe('Autocomplete searches', () => {
+  test('keep the full data set and fire change only when the selection changes', async () => {
+    document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac"></div>`;
+    const el = document.getElementById('ac');
+    const data = [{ id: 'go', text: 'Google' }, { id: 'gh', text: 'GitHub' }];
+    const instance = Expressive.Autocomplete.init(el, {
+      data,
+      // The documented custom filter, which does not restore options.data.
+      onSearch: (text, ac) => ac.setMenuItems(ac.options.data.filter((d) => d.text.toLowerCase().includes(text.toLowerCase()))),
+      menuOptions: { inDuration: 0, outDuration: 0 }
+    });
+    let changes = 0;
+    el.addEventListener('change', () => changes++);
+    const search = (value) => { el.value = value; fire(el, 'input'); };
+    try {
+      el.focus();
+      search('goo');
+      search('g');
+      assert.equal(instance.options.data, data);
+      assert.deepEqual(instance.menuItems.map((d) => d.id), ['go', 'gh']);
+      assert.equal(changes, 0, 'searching is not selecting');
+      instance.selectOption('go');
+      assert.equal(changes, 1);
+      search('Googl');
+      assert.equal(changes, 2, 'editing the text deselects');
+      search('');
+      assert.equal(changes, 2, 'nothing left to deselect');
+    } finally {
+      instance.destroy();
+    }
+  });
+});
+
 describe('Autocomplete with delayed results', () => {
   for (const isMultiSelect of [false, true]) {
     test(`a new query clears the active result before its results arrive (isMultiSelect: ${isMultiSelect})`, async () => {
