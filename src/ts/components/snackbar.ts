@@ -466,18 +466,18 @@ export class Snackbar {
     this.counterTimeout = null;
     this._restoreFocus();
     if (this._events.signal.aborted) return;
-    const activationDistance = this.el.offsetWidth * this.options.activationPercent;
+    const duration = this.options.outDuration;
+    const transitions = [`margin ${duration}ms ease`, `opacity ${duration}ms ease`];
 
     if (this.wasSwiped) {
-      this.el.style.transition = 'transform .05s, opacity .05s';
-      this.el.style.transform = `translateX(${activationDistance}px)`;
+      // Carry on off the side the user swiped toward, from where they let go.
+      const direction = this.xPos < this.startingXPos ? -1 : 1;
+      this.el.style.transform = `translateX(${direction * this.el.offsetWidth}px)`;
       this.el.style.opacity = '0';
+      transitions.push(`transform ${duration}ms ease`);
     }
 
-    // easeOutExpo
-    this.el.style.transition = `
-      margin ${this.options.outDuration}ms ease,
-      opacity ${this.options.outDuration}ms ease`;
+    this.el.style.transition = transitions.join(', ');
 
     clearTimeout(this._transitionTimer);
     this._transitionTimer = setTimeout(() => {

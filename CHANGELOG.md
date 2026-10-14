@@ -39,6 +39,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A snackbar dismissed by a swipe now slides off the side it was swiped
+  toward, starting from where the pointer let go. It used to jump to the
+  right at once, even after a swipe to the left, because the dismiss
+  transition replaced the transform transition before it could run.
 - Date picker days outside `minDate`/`maxDate`, weekends under
   `disableWeekends`, days rejected by `disableDayFn`, and the adjacent-month
   days from `showDaysInNextAndPreviousMonths` now use the M3 disabled text
