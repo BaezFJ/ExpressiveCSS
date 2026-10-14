@@ -187,18 +187,6 @@
   }
 }
 
-// Form prefix
-.prefix ~ .chips {
-  margin-left: 3rem;
-  width: calc(100% - 3rem);
-}
-
-// Form suffix
-.suffix ~ .chips {
-  margin-right: 3rem;
-  width: calc(100% - 3rem);
-}
-
 .chips:empty ~ label  {
   font-size: 0.8rem;
   transform: translateY(-140%);

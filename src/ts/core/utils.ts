@@ -329,10 +329,13 @@ export class Utils {
     container.append(button);
   }
 
+  /**
+   * Places `container` below `origin`, kept on screen, and returns the offset
+   * it should transition in from.
+   */
   static _setAbsolutePosition(
     origin: HTMLElement,
     container: HTMLElement,
-    position: string,
     margin: number,
     transitionMovement: number,
     align: string = 'center'
@@ -341,34 +344,13 @@ export class Utils {
       originWidth = origin.offsetWidth,
       containerHeight = container.offsetHeight,
       containerWidth = container.offsetWidth,
-      originRect = origin.getBoundingClientRect(); // one rect, read twice below
-    let xMovement = 0,
-      yMovement = 0,
-      targetTop = originRect.top + Utils.getDocumentScrollTop(),
-      targetLeft = originRect.left + Utils.getDocumentScrollLeft();
+      originRect = origin.getBoundingClientRect();
+    const targetTop = originRect.top + Utils.getDocumentScrollTop() + originHeight + margin;
+    let targetLeft = originRect.left + Utils.getDocumentScrollLeft();
 
-    if (position === 'top') {
-      targetTop += -containerHeight - margin;
-      if (align === 'center') {
-        targetLeft += originWidth / 2 - containerWidth / 2; // This is center align
-      }
-      yMovement = -transitionMovement;
-    } else if (position === 'right') {
-      targetTop += originHeight / 2 - containerHeight / 2;
-      targetLeft = originWidth + margin;
-      xMovement = transitionMovement;
-    } else if (position === 'left') {
-      targetTop += originHeight / 2 - containerHeight / 2;
-      targetLeft = -containerWidth - margin;
-      xMovement = -transitionMovement;
-    } else {
-      targetTop += originHeight + margin;
-      if (align === 'center') {
-        targetLeft += originWidth / 2 - containerWidth / 2; // This is center align
-      }
-      yMovement = transitionMovement;
-    }
-    if (align === 'right') {
+    if (align === 'center') {
+      targetLeft += originWidth / 2 - containerWidth / 2;
+    } else if (align === 'right') {
       targetLeft += originWidth - containerWidth - margin;
     }
 
@@ -395,7 +377,7 @@ export class Utils {
     container.style.top = newCoordinates.y + 'px';
     container.style.left = newCoordinates.x + 'px';
 
-    return {x: xMovement, y: yMovement};
+    return {x: 0, y: transitionMovement};
   }
 
   static _repositionWithinScreen(

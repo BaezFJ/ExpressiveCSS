@@ -28,9 +28,8 @@
 //   3. !important is NOT dropped from utilities. Layer order reverses for
 //      important declarations, so an important rule inside `utilities` would
 //      also beat a consumer's own !important - but a *normal* rule in a layer
-//      loses to any unlayered consumer rule. Since `.hide`, `.m-3` and the
-//      palette classes exist precisely to be unconditional, they keep their
-//      flags and keep winning. Dropping them would silently make `.hide` lose
+//      loses to any unlayered consumer rule. Since `.hide` and `.m-3` exist
+//      precisely to be unconditional, they keep their flags and keep winning. Dropping them would silently make `.hide` lose
 //      to any unlayered `display` the consumer had already written.
 //
 // @forward cannot appear inside @layer, so each layer is pulled in with

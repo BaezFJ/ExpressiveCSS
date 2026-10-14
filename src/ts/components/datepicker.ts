@@ -178,10 +178,6 @@ export interface DatepickerOptions extends BaseOptions {
   minMonth?: number;
   /** Field used for internal calculations DO NOT CHANGE IT */
   maxMonth?: number;
-  /** Field used for internal calculations DO NOT CHANGE IT */
-  startRange?: Date;
-  /** Field used for internal calculations DO NOT CHANGE IT */
-  endRange?: Date;
   /**
    * Display plugin
    */
@@ -226,8 +222,6 @@ const _defaults: DatepickerOptions = {
   maxYear: 9999,
   minMonth: undefined,
   maxMonth: undefined,
-  startRange: null,
-  endRange: null,
   isRTL: false,
   yearRangeReverse: false,
   // Render the month after year in the calendar title
@@ -299,7 +293,6 @@ export class Datepicker extends Component<DatepickerOptions> {
   multiple: boolean = false;
   calendarEl: HTMLElement;
   containerEl: HTMLElement;
-  yearTextEl: HTMLElement;
   dateTextEl: HTMLElement;
   endDateEl: HTMLInputElement;
   dateEls: HTMLInputElement[];
@@ -850,14 +843,6 @@ export class Datepicker extends Component<DatepickerOptions> {
         isToday = Datepicker._compareDates(day, now),
         hasEvent = this.options.events.indexOf(day.toDateString()) !== -1,
         isEmpty = i < before || i >= days + before,
-        isStartRange =
-          this.options.startRange && Datepicker._compareDates(this.options.startRange, day),
-        isEndRange = this.options.endRange && Datepicker._compareDates(this.options.endRange, day),
-        isInRange =
-          this.options.startRange &&
-          this.options.endRange &&
-          this.options.startRange < day &&
-          day < this.options.endRange,
         isDisabled =
           (this.options.minDate && day < this.options.minDate) ||
           (this.options.maxDate && day > this.options.maxDate) ||
@@ -911,9 +896,6 @@ export class Datepicker extends Component<DatepickerOptions> {
         isToday: isToday,
         isDisabled: isDisabled,
         isEmpty: isEmpty,
-        isStartRange: isStartRange,
-        isEndRange: isEndRange,
-        isInRange: isInRange,
         showDaysInNextAndPreviousMonths: this.options.showDaysInNextAndPreviousMonths,
         isDateRangeStart: isDateRangeStart,
         isDateRangeEnd: isDateRangeEnd,
@@ -937,9 +919,6 @@ export class Datepicker extends Component<DatepickerOptions> {
         isToday: 'is-today',
         isSelected: 'is-selected',
         hasEvent: 'has-event',
-        isInRange: 'is-inrange',
-        isStartRange: 'is-startrange',
-        isEndRange: 'is-endrange',
         isDateRangeStart: 'is-daterange-start',
         isDateRangeEnd: 'is-daterange-end',
         isDateRange: 'is-daterange'
@@ -1298,7 +1277,6 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.containerEl = <HTMLElement>template.content.firstChild;
 
     this.calendarEl = this.containerEl.querySelector('.datepicker-calendar');
-    this.yearTextEl = this.containerEl.querySelector('.year-text');
     this.dateTextEl = this.containerEl.querySelector('.date-text');
     this.footer = this.containerEl.querySelector('.datepicker-footer');
 
@@ -1582,7 +1560,6 @@ export class Datepicker extends Component<DatepickerOptions> {
     Datepicker._template = `
         <div class="datepicker-container">
           <div class="datepicker-date-display">
-            <span class="year-text"></span>
             <span class="date-text"></span>
           </div>
           <div class="datepicker-calendar-container">

@@ -143,6 +143,14 @@ describe('Menu click containment', () => {
           assert.equal(menu.isOpen, true, 'a scrolling touch does not select an item');
           click(root.querySelector('#item span'));
           assert.equal(menu.isOpen, !closeOnClick, 'inside click follows closeOnClick');
+          // A scroll ends without a click, so the next tap has to start clean.
+          menu.open();
+          t.mock.timers.tick(0);
+          const item = root.querySelector('#item span');
+          item.dispatchEvent(new window.Event('touchmove', { bubbles: true, composed: true }));
+          item.dispatchEvent(new window.Event('pointerdown', { bubbles: true, composed: true }));
+          click(item);
+          assert.equal(menu.isOpen, !closeOnClick, 'a tap after a finished scroll follows closeOnClick');
           menu.open();
           t.mock.timers.tick(0);
           click(root.querySelector('#outside'));

@@ -171,7 +171,6 @@ export class Timepicker extends Component<TimepickerOptions> {
   private _amBtn: HTMLButtonElement;
   private _pmBtn: HTMLButtonElement;
   bg: Element;
-  bearing: Element;
   g: Element;
   toggleViewTimer: ReturnType<typeof setTimeout>;
   vibrateTimer: ReturnType<typeof setTimeout>;
@@ -505,7 +504,6 @@ export class Timepicker extends Component<TimepickerOptions> {
     this._canvas.appendChild(svg);
     this.hand = hand;
     this.bg = bg;
-    this.bearing = bearing;
     this.g = g;
   }
 
@@ -783,8 +781,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   cancel = () => {
-    // not logical clearing the input field on cancel, since the end user might want to make use of the previously submitted value
-    // this.clear();
+    // Cancel keeps the previously submitted value in the input.
     if (typeof this.options.onCancel === 'function') this.options.onCancel.call(this);
   }
 
@@ -798,7 +795,7 @@ export class Timepicker extends Component<TimepickerOptions> {
             <div class="timepicker-text-container">
               <div class="timepicker-display-column timepicker-display-digital-clock">
                 <div class="timepicker-input-hours-wrapper">
-                  <input type="text" maxlength="2" class="timepicker-input-hours text-primary" />
+                  <input type="text" maxlength="2" class="timepicker-input-hours" />
                 </div>
                 <div class="timepicker-input-divider-wrapper">
                   <span class="timepicker-input-divider">:</span>

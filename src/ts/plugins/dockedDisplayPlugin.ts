@@ -83,7 +83,7 @@ export class DockedDisplayPlugin {
     if (this.visible) return;
     this.visible = true;
     document.addEventListener('click', this._handleDocumentClick);
-    const coordinates = Utils._setAbsolutePosition(this.el, this.container, 'bottom', this.options.margin, this.options.transition, this.options.align);
+    const coordinates = Utils._setAbsolutePosition(this.el, this.container, this.options.margin, this.options.transition, this.options.align);
 
     this.container.style.visibility = 'visible';
     this.container.style.transition = this._transition;

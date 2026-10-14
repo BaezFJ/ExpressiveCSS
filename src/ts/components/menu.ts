@@ -265,6 +265,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
   _setupTemporaryEventHandlers() {
     document.body.addEventListener('click', this._handleDocumentClick);
+    this.menuEl?.addEventListener('pointerdown', this._handleMenuPointerdown, { passive: true });
     this.menuEl?.addEventListener('touchmove', this._handleDocumentTouchmove, { passive: true });
     document.body.addEventListener('touchmove', this._handleDocumentTouchmove, {
       passive: true
@@ -277,6 +278,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
   _removeTemporaryEventHandlers() {
     document.body.removeEventListener('click', this._handleDocumentClick);
+    this.menuEl?.removeEventListener('pointerdown', this._handleMenuPointerdown);
     this.menuEl?.removeEventListener('touchmove', this._handleDocumentTouchmove);
     document.body.removeEventListener('touchmove', this._handleDocumentTouchmove);
     this.menuEl?.removeEventListener('keydown', this._handleMenuKeydown);
@@ -381,6 +383,12 @@ export class Menu extends Component<MenuOptions> implements Openable {
       e.preventDefault();
       this.open();
     }
+  };
+
+  // A scroll ends without a click, which is the only other place the flag is
+  // cleared, so a new gesture has to clear it or the next tap is ignored.
+  _handleMenuPointerdown = () => {
+    this.isTouchMoving = false;
   };
 
   _handleDocumentTouchmove = (e: TouchEvent) => {
