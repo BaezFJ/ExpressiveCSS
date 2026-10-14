@@ -1069,6 +1069,36 @@ describe('Autocomplete typing', () => {
   }
 });
 
+describe('Autocomplete keys while the list is closed', () => {
+  test('Space and Enter reach the field, and ArrowDown opens the rendered list', async () => {
+    document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac"></div>`;
+    const el = document.getElementById('ac');
+    const instance = Expressive.Autocomplete.init(el, {
+      data: [{ id: 'apple' }, { id: 'apricot' }], menuOptions: { inDuration: 0, outDuration: 0 }
+    });
+    const key = (name) => {
+      const event = new window.KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true });
+      el.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+    try {
+      el.focus();
+      el.value = 'ap';
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      assert.equal(instance.menu.isOpen, false);
+      assert.equal(key(' '), false, 'Space types a space');
+      assert.equal(key('Enter'), false, 'Enter can submit the form');
+      assert.equal(instance.menu.isOpen, false);
+      assert.equal(key('ArrowDown'), true);
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      assert.equal(instance.menu.isOpen, true);
+      assert.deepEqual([...instance.container.querySelectorAll('li')].map((li) => li.dataset.id), ['apple', 'apricot']);
+    } finally {
+      instance.destroy();
+    }
+  });
+});
+
 describe('Autocomplete with delayed results', () => {
   for (const isMultiSelect of [false, true]) {
     test(`a new query clears the active result before its results arrive (isMultiSelect: ${isMultiSelect})`, async () => {

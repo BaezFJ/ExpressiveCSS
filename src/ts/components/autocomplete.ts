@@ -336,8 +336,10 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     const label = this.el.parentElement.querySelector('label');
     if (label) this.el.after(label);
 
-    // Sketchy removal of menu click handler
+    // Menu's trigger handlers open the list without rendering it, and its
+    // keydown cancels Space and Enter, which a text field needs.
     this.el.removeEventListener('click', this.menu._handleClick);
+    this.el.removeEventListener('keydown', this.menu._handleTriggerKeydown);
     if (!this.options.isMultiSelect) this._refreshInputText();
     // Set Value if already set in HTML
     if (this.el.value) this.selectOption(this.el.value);
@@ -436,6 +438,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // Capture up and down key
     if (e.key === Utils.keys.ARROW_UP || e.key === Utils.keys.ARROW_DOWN) {
       e.preventDefault();
+      // A list that is already opening keeps its rendered results.
+      if (!this.menu.isOpen && this._openTimer === undefined) {
+        this.open();
+        return;
+      }
       if (e.key === Utils.keys.ARROW_UP && this.activeIndex > 0) this.activeIndex--;
       if (e.key === Utils.keys.ARROW_DOWN && this.activeIndex < numItems - 1)
         this.activeIndex++;
