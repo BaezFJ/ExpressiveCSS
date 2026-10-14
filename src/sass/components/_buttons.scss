@@ -51,7 +51,7 @@
 // specificity; `.chip .close` would make it two and shift every button rule.
 // The delete button needs no entry: `.chip .close` is already two classes, so
 // it ties the state rules and wins on order.
-$_not-btn: ".datepicker-day-button, .date-picker-day-button, .month-prev, .month-next, .chip, .icon-button, .map-marker, .maplibregl-popup-close-button, .maplibregl-ctrl-attrib-button";
+$_not-btn: ".datepicker-day-button, .month-prev, .month-next, .chip, .icon-button, .map-marker, .maplibregl-popup-close-button, .maplibregl-ctrl-attrib-button";
 
 // `label.button` is here for the file input: the control has to be a <label>
 // so that clicking it reaches the <input type="file"> it wraps, but it is a
@@ -314,17 +314,6 @@ $_extend-sizes: (
     --md-comp-fab-container-shape: 20px;
     --md-comp-fab-icon-size: 26px;
   }
-
-  &.halfway-fab {
-    position: absolute;
-    inset-inline-end: 24px;
-    bottom: -28px;
-
-    &.left {
-      inset-inline-end: auto;
-      inset-inline-start: 24px;
-    }
-  }
 }
 
 // Large FAB: 96dp container, corner.extra-large, 36dp icon.
@@ -376,7 +365,7 @@ $_extend-sizes: (
 // bars and rails, tabs, pagination and snackbar actions are fixed-height
 // slots. `:where()` keeps the whole rule at zero specificity; it only has to
 // come after the base rule above, whose `height` and `nowrap` it replaces.
-$_fixed: ".circle, .extend, .indicator-item, .chip .close, :is(.timepicker-container, .time-picker-container) :is(.am-btn, .pm-btn), :is(.button-group, .split-button, .toolbar, .navigation-bar, .navigation-rail, .snackbar) > *, header > :is(nav, .bar) > *, :is(.pagination, .tabs, .snackbar > nav, dialog > header) *";
+$_fixed: ".circle, .extend, .indicator-item, .chip .close, .timepicker-container :is(.am-btn, .pm-btn), :is(.button-group, .split-button, .toolbar, .navigation-bar, .navigation-rail, .snackbar) > *, header > :is(nav, .bar) > *, :is(.pagination, .tabs, .snackbar > nav, dialog > header) *";
 
 :where(#{$_btn}):where(:not(#{$_fixed})) {
   height: auto;

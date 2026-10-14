@@ -328,7 +328,7 @@ textarea {
   // icons, which come before it. Raise them inside the field's own stacking
   // context, so they do not also rise over the docked search view or a
   // sticky header. A docked calendar in the field has to escape it.
-  .field:has(> :is(.datepicker-date-input, .date-picker-date-input)) {
+  .field:has(> .datepicker-date-input) {
     &:not(:has(> .display-docked)) {
       isolation: isolate;
     }
@@ -338,7 +338,7 @@ textarea {
     }
   }
 
-  :is(.datepicker-date-input, .date-picker-date-input) {
+  .datepicker-date-input {
     position: relative;
     text-indent: -9999px;
 

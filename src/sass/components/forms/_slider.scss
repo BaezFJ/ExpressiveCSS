@@ -243,7 +243,6 @@ $_active-pos: var(--md-comp-slider-active-position, var(--md-comp-slider-active-
 
 @mixin range-thumb {
   appearance: none;
-  -webkit-appearance: none;
   box-sizing: border-box;
   border: none;
   width: var(--md-comp-slider-handle-width);

@@ -5,6 +5,22 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Removed
+
+- Selectors and code that never matched or never ran. The date and time
+  picker rules no longer carry hyphenated twins of their generated parts,
+  such as `.date-picker-container`; the script only ever emitted the
+  unhyphenated names. The root `.date-picker` and `.time-picker` classes
+  still start the components. Also gone: the `.tabbed` focus class, which
+  every rule already paired with `:focus-visible`; the `.halfway-fab`,
+  `.searchbar.has-sidebar` and `.prefix ~ .chips` offsets; the
+  picker footer rules for buttons the script never created; and the
+  normalize rules for `h1`, `b`, `strong`, `small` and `kbd`, which the
+  typography rules already override.
+- Datepicker's `startRange` and `endRange` options. Nothing set them, and the
+  `is-startrange`, `is-endrange` and `is-inrange` classes they produced had
+  no styles. Use `isDateRange` for range selection.
+
 ## [0.15.0] - 2026-10-14
 
 ### Added

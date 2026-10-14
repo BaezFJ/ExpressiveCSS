@@ -90,20 +90,6 @@ export class Forms {
         Forms.validateField(target);
       });
 
-      document.addEventListener('keyup', (e: KeyboardEvent) => {
-        const target = <HTMLInputElement>e.target;
-        // Radio and Checkbox focus class
-        if (target instanceof HTMLInputElement && ['radio', 'checkbox'].includes(target.type)) {
-          // TAB, check if tabbing to radio or checkbox.
-          if (e.key === Utils.keys.TAB) {
-            target.classList.add('tabbed');
-            target.addEventListener('blur', () => target.classList.remove('tabbed'), {
-              once: true
-            });
-          }
-        }
-      });
-
       document.addEventListener('click', Forms.togglePassword);
       // Capture, so the password is hidden again before any submit handler
       // reads the form or the browser offers to save it.

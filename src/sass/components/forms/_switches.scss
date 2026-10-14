@@ -110,8 +110,7 @@
     box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), transparent);
   }
 
-  &:focus-visible,
-  &.tabbed:focus {
+  &:focus-visible {
     box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), transparent);
     outline: none;
   }
@@ -194,9 +193,7 @@
 }
 
 .switch [type="checkbox"]:focus-visible + .lever,
-.switch [type="checkbox"].tabbed:focus + .lever,
-.switch [type="checkbox"]:focus-visible + span,
-.switch [type="checkbox"].tabbed:focus + span {
+.switch [type="checkbox"]:focus-visible + span {
   box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), transparent);
 }
 

@@ -94,8 +94,7 @@ label:has(> [type="checkbox"]):not(.switch) > [type="checkbox"],
     @include _ring(var(--md-sys-color-primary), "hover");
   }
 
-  &:focus-visible,
-  &.tabbed:focus {
+  &:focus-visible {
     @include _ring(var(--md-sys-color-primary), "focus");
     outline: none;
   }
@@ -159,7 +158,6 @@ label:has(> [type="checkbox"]):not(.switch):not(:has(> [type="checkbox"] + span)
     margin-top: calc(var(--md-comp-checkbox-container-size) / -2);
     pointer-events: none;
     background-color: var(--md-sys-color-on-primary);
-    -webkit-mask: #{$_cb-check} center / contain no-repeat;
     mask: #{$_cb-check} center / contain no-repeat;
     opacity: 0;
   }
@@ -170,7 +168,6 @@ label:has(> [type="checkbox"]):not(.switch):not(:has(> [type="checkbox"] + span)
   }
 
   &:has(> [type="checkbox"]:indeterminate)::before {
-    -webkit-mask-image: #{$_cb-dash};
     mask-image: #{$_cb-dash};
   }
 
@@ -233,7 +230,6 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
 
 #{_cb-span()}::after {
   background-color: var(--md-sys-color-on-primary);
-  -webkit-mask: #{$_cb-check} center / contain no-repeat;
   mask: #{$_cb-check} center / contain no-repeat;
   opacity: 0;
 }
@@ -248,7 +244,6 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
 }
 
 #{_cb-span(":indeterminate")}::after {
-  -webkit-mask-image: #{$_cb-dash};
   mask-image: #{$_cb-dash};
 }
 
@@ -260,8 +255,7 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
   @include _ring(var(--md-sys-color-primary), "hover");
 }
 
-#{_cb-span(":focus-visible")}::before,
-#{_cb-span(".tabbed:focus")}::before {
+#{_cb-span(":focus-visible")}::before {
   @include _ring(var(--md-sys-color-primary), "focus");
 }
 

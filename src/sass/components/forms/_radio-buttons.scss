@@ -86,8 +86,7 @@ label:has(> [type="radio"]) > [type="radio"],
     @include _ring(var(--md-sys-color-primary), "hover");
   }
 
-  &:focus-visible,
-  &.tabbed:focus {
+  &:focus-visible {
     @include _ring(var(--md-sys-color-primary), "focus");
     outline: none;
   }
@@ -176,8 +175,7 @@ label:has(> [type="radio"]:disabled),
   @include _ring(var(--md-sys-color-primary), "hover");
 }
 
-[type="radio"]:focus-visible + span::before,
-[type="radio"].tabbed:focus + span::before {
+[type="radio"]:focus-visible + span::before {
   @include _ring(var(--md-sys-color-primary), "focus");
 }
 

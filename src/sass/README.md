@@ -247,7 +247,7 @@ it is not. Layer order *reverses* for important declarations, but the rule that
 matters here is simpler: a normal declaration inside a layer loses to any
 unlayered declaration. Drop the flag from `.hide` and it stops beating a
 consumer's own `display` — silently, and in the common case. Classes whose whole
-job is to be unconditional (`.hide`, `.m-3`, the palette classes) keep it.
+job is to be unconditional (`.hide`, `.m-3`) keep it.
 
 A few rules in `components/` still use `!important` for UA resets
 (modal float, staggered-list transitions, textarea padding), not for
