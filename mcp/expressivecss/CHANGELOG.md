@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1 - 2026-10-14
+
+- The catalogue, guides and rules cover keypad and keyboard.
+- Bundled framework guidance: ExpressiveCSS 0.15.0.
+
 ## 0.4.0 - 2026-10-11
 
 - Command-output redaction no longer stalls the server on long token runs.

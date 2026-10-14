@@ -5,11 +5,11 @@ Material Design 3 common buttons, icon buttons, and FABs — from the HTML.
 
 Component ID: `buttons`
 
-[Component documentation](https://www.expressivecss.com/buttons.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/buttons.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.14.1)
+[Component documentation](https://www.expressivecss.com/buttons.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/buttons.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.15.0)
 
-Contract: ExpressiveCSS 0.14.1
+Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `7202b449fc2bfba2cdd1fac6dc7d8f0971d3c339b0c15f3c2e05b8a87adf0b78`
+Contract SHA-256: `e1c777a1bcd53d5a6ed4615075a7a500fb6f488050e727487804f8cc421b5902`
 
 #### Selection and adaptation
 

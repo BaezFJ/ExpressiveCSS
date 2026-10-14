@@ -5,6 +5,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-10-14
+
 ### Added
 
 - The agent skill has a layout guide, `expressivecss-layout`. It covers
@@ -37,7 +39,18 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `minlength` for scripted edits, so the docs give a minimum length as
   `pattern`. `Keypad` is in `AutoInit()` and takes an `onKey` option.
 
+### Changed
+
+- The `expressivecss` skill is version 0.11.0. It adds the
+  `expressivecss-layout` guide and component guides for keypad and keyboard.
+
 ### Fixed
+
+- Reference tables on the docs site scroll sideways inside their own box on
+  narrow windows. At 375px, 22 docs pages used to scroll the whole page
+  sideways, mostly because of tables with long token names and defaults.
+  Three pages still do, because their demos (the 12-column grid, the large
+  icon and the extra-large split button) are wider than a phone.
 
 - A snackbar dismissed by a swipe now slides off the side it was swiped
   toward, starting from where the pointer let go. It used to jump to the
@@ -2326,7 +2339,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.14.1...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.15.0...HEAD
+[0.15.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.14.1...v0.15.0
 [0.14.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.13.1...v0.14.0
 [0.13.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.13.0...v0.13.1
