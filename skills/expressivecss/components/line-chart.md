@@ -5,11 +5,11 @@ Trends over time drawn from a data table, with a tooltip, a legend and a sparkli
 
 Component ID: `line-chart`
 
-[Component documentation](https://www.expressivecss.com/line-chart.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/line-chart.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.14.1)
+[Component documentation](https://www.expressivecss.com/line-chart.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/line-chart.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.15.0)
 
-Contract: ExpressiveCSS 0.14.1
+Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `7202b449fc2bfba2cdd1fac6dc7d8f0971d3c339b0c15f3c2e05b8a87adf0b78`
+Contract SHA-256: `e1c777a1bcd53d5a6ed4615075a7a500fb6f488050e727487804f8cc421b5902`
 
 #### Selection and adaptation
 
