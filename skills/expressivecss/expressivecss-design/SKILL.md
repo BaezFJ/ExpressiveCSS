@@ -19,6 +19,7 @@ Read each reference only when its condition applies.
 | --- | --- |
 | [design rules](../references/design-rules.md) | Always, before opening a component guide: hard rules, window sizes, component chooser, and screen recipes. |
 | [product context](./references/product-context.md) | The work spans pages, continues an established product, or changes a recorded design decision. |
+| [layout guide](../expressivecss-layout/SKILL.md) | A new page or app shell, or any layout that changes across widths: panes, navigation swaps, grids, spacing, or right-to-left layout. |
 | [scaffold](./references/scaffold.md) | A complete page, app shell, or adaptive pane layout. |
 | Theming [typography and emphasis](../expressivecss-theming/references/typography.md), [shape](../expressivecss-theming/references/shape.md), or [motion](../expressivecss-theming/references/motion.md) | A decision depends on one expressive foundation; read only that one. |
 | [dashboard guide](../expressivecss-dashboard/SKILL.md) | A dashboard, analytics overview, admin console, or reporting page. Start from its reference implementation, not the dashboard template. |
