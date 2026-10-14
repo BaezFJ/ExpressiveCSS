@@ -148,7 +148,8 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
             <tr><th>Month</th><th>V</th></tr><tr><th>Jan</th><td>1</td></tr><tr><th>Feb</th><td>2</td></tr></table></figure>
           <div dir="rtl">${chart('class="line-chart" id="rtl"', 'RTL', '<th>V</th>', rows)}</div>
           ${chart('class="line-chart" id="strict"', 'Strict', '<th>V</th>', [
-            ['A', '(1,200)'], ['B', '3–5'], ['C', '5 of 10'], ['D', '4.4k'], ['E', '−$1,200.5'], ['F', '12%'], ['G', '1,2,3']])}
+            ['A', '(1,200)'], ['B', '3–5'], ['C', '5 of 10'], ['D', '4.4k'], ['E', '−$1,200.5'], ['F', '12%'], ['G', '1,2,3'],
+            ['H', 'e5'], ['I', '1e400'], ['J', '1e3']])}
           ${chart('class="line-chart" id="empty"', 'Empty', '<th>V</th>', [['A', 'n/a']])}
           ${chart('class="line-chart" id="pair"', 'Pair', '<th>A</th><th>B</th>', [['Jan', '1', '2'], ['Feb', '3', '4']])}
           ${chart('class="line-chart stacked" id="stacked" data-max="10"', 'Stacked', '<th>A</th><th>B</th>', [['Jan', '1', '2'], ['Feb', '3', '4']])}
@@ -195,7 +196,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
 
       // Only a single number counts; anything else is a gap.
       assert.deepEqual(await page.evaluate(() => Expressive.LineChart.getInstance(document.querySelector('#strict')).series[0].values),
-        [null, null, null, null, -1200.5, 12, null]);
+        [null, null, null, null, -1200.5, 12, null, null, null, 1000]);
 
       assert.equal(await page.evaluate(() => {
         const chart = Expressive.LineChart.getInstance(document.querySelector('#empty'));

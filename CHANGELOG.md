@@ -55,6 +55,24 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   so the rendered colors do not change.
 - The date picker's unused `.year-text` no longer sets `on-primary`, a
   leftover from the removed primary header.
+- A `data-tooltip-id` that names no element now logs an error and shows the
+  `data-tooltip` text. A `.tabs` bar with no links logs an error, and
+  swipeable tabs whose links reach no panel act as normal tabs. Each of these
+  used to throw, which stopped `AutoInit()` before the components after it.
+- Reopening a date picker no longer re-reads a value it wrote itself. Without
+  a custom `parse`, `Date.parse` read a `dd/mm/yyyy` value of `05/10/2026` as
+  10 May and passed that to `onSelect`.
+- Space and Enter reach an autocomplete's text field while the list is
+  closed. The menu's trigger keys cancelled them, so a space typed after
+  Escape was lost and Enter could not submit the form. ArrowUp and ArrowDown
+  open the list with the current matches.
+- Autocomplete fires `change` and `onAutocomplete` only when the selection
+  changes, as documented, instead of after every search. `setMenuItems` no
+  longer replaces `options.data`, so the documented custom `onSearch` filter
+  keeps searching the full data set.
+- A chart cell such as `e5` or `1e400` is a gap. These passed the number
+  check but read as `NaN` or `Infinity`, so one such cell turned every point
+  in the chart into `NaN` and nothing was drawn.
 
 ## [0.14.1] - 2026-10-11
 

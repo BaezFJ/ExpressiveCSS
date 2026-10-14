@@ -97,15 +97,12 @@ const _defaults: AutocompleteOptions = {
   isMultiSelect: false,
   onSearch: (text: string, autocomplete: Autocomplete) => {
     const normSearch = text.toLocaleLowerCase();
-    const data = autocomplete.options.data;
     autocomplete.setMenuItems(
-      data.filter((option) =>
+      autocomplete.options.data.filter((option) =>
         option.id.toString().toLocaleLowerCase().includes(normSearch)
           || option.text?.toLocaleLowerCase().includes(normSearch)
-
       )
     );
-    autocomplete.options.data = data;
   },
   maxMenuHeight: '300px',
   allowUnsafeHTML: false,
@@ -336,8 +333,10 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     const label = this.el.parentElement.querySelector('label');
     if (label) this.el.after(label);
 
-    // Sketchy removal of menu click handler
+    // Menu's trigger handlers open the list without rendering it, and its
+    // keydown cancels Space and Enter, which a text field needs.
     this.el.removeEventListener('click', this.menu._handleClick);
+    this.el.removeEventListener('keydown', this.menu._handleTriggerKeydown);
     if (!this.options.isMultiSelect) this._refreshInputText();
     // Set Value if already set in HTML
     if (this.el.value) this.selectOption(this.el.value);
@@ -399,19 +398,16 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   };
 
   _inputChangeDetection = (value: string) => {
-    if (!this.options.isMultiSelect && this.selectedValues.length && this.el.value !== (this.selectedValues[0].text || String(this.selectedValues[0].id))) {
-      this.selectedValues = [];
-    }
+    // Editing or clearing a single selection's text deselects it.
+    const deselected = !this.options.isMultiSelect && this.selectedValues.length > 0
+      && this.el.value !== (this.selectedValues[0].text || String(this.selectedValues[0].id));
+    if (deselected) this.selectedValues = [];
     // Value has changed!
     if (this.oldVal !== value) {
       this._setStatusLoading();
       this.options.onSearch(this.el.value, this);
     }
-    // Reset Single-Select when Input cleared
-    if (!this.options.isMultiSelect && this.el.value.length === 0) {
-      this.selectedValues = [];
-      this._triggerChanged();
-    }
+    if (deselected) this._triggerChanged();
     this.oldVal = value;
   };
 
@@ -436,6 +432,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // Capture up and down key
     if (e.key === Utils.keys.ARROW_UP || e.key === Utils.keys.ARROW_DOWN) {
       e.preventDefault();
+      // A list that is already opening keeps its rendered results.
+      if (!this.menu.isOpen && this._openTimer === undefined) {
+        this.open();
+        return;
+      }
       if (e.key === Utils.keys.ARROW_UP && this.activeIndex > 0) this.activeIndex--;
       if (e.key === Utils.keys.ARROW_DOWN && this.activeIndex < numItems - 1)
         this.activeIndex++;
@@ -688,7 +689,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (this.el['Expressive_Autocomplete'] !== this) return;
     const resultCount = menuItems.length;
     this.menuItems = menuItems;
-    this.options.data = menuItems;
     if (selected) {
       this.selectedValues = this.menuItems.filter(
         (item) => !(selected.indexOf(<never>item.id) === -1)
@@ -703,7 +703,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (open) this.open();
     this._updateSelectedInfo();
     this._announce(open ? resultCount ? this.options.i18n.results(resultCount) : this.options.i18n.noResults : '');
-    this._triggerChanged();
+    if (selected) this._triggerChanged();
   }
 
   /**

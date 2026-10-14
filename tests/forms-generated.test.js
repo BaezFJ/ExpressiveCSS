@@ -221,9 +221,9 @@ describe('Autocomplete generated combobox', () => {
       inst.setMenuItems([loaded], [42], false);
       assert.equal(inst.el.value, 'Answer');
       assert.deepEqual(inst.selectedValues, [loaded]);
-      assert.equal(calls.length, 2);
-      assert.equal(calls[1][0], inst, 'the callback retains the Autocomplete receiver');
-      assert.equal(calls[1][1], inst.selectedValues);
+      assert.equal(calls.length, 1, 'results alone are not a selection');
+      assert.equal(calls[0][0], inst, 'the callback retains the Autocomplete receiver');
+      assert.equal(calls[0][1], inst.selectedValues);
       inst.setMenuItems([], null, false);
       assert.deepEqual(inst.selectedValues, [loaded], 'an empty result page does not erase selected IDs');
     } finally {

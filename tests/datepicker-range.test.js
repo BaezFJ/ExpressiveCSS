@@ -44,6 +44,29 @@ for (const generatedEnd of [false, true]) {
   });
 }
 
+test('reopening keeps the date the picker wrote in a day-first format', () => {
+  resetBody();
+  document.body.innerHTML = '<input id="date">';
+  const input = document.getElementById('date');
+  const selected = [];
+  const picker = Expressive.Datepicker.init(input, {
+    format: 'dd/mm/yyyy', defaultDate: new Date(2026, 9, 5), setDefaultDate: true,
+    onSelect: date => selected.push(date.getMonth())
+  });
+  try {
+    assert.equal(input.value, '05/10/2026');
+    input.click();
+    input.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    input.dispatchEvent(new window.Event('change', { bubbles: true }));
+    assert.equal(picker.date.getMonth(), 9, 'still October, not 10 May');
+    assert.equal(picker.date.getDate(), 5);
+    assert.ok(selected.every(month => month === 9), `onSelect months: ${selected}`);
+  } finally {
+    picker.destroy();
+    resetBody();
+  }
+});
+
 test('same-day ranges compare calendar dates without mutating a custom parser result', () => {
   resetBody();
   document.body.innerHTML = '<div><input id="start"><input id="end"></div>';

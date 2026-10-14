@@ -58,8 +58,10 @@ function cellValue(cell: Element | undefined): number | null {
   if (!cell) return null;
   const raw = (cell as HTMLElement).dataset.value ?? cell.textContent;
   const text = raw.replace(/\u2212/g, '-').replace(/[\s%\p{Sc}]/gu, '');
-  if (!/^[+-]?(\d{1,3}(,\d{3})+|\d+)?(\.\d+)?(e[+-]?\d+)?$/i.test(text) || !/\d/.test(text)) return null;
-  return parseFloat(text.replace(/,/g, ''));
+  if (!/^[+-]?(\d{1,3}(,\d{3})+|\d+)?(\.\d+)?(e[+-]?\d+)?$/i.test(text)) return null;
+  // The pattern also lets through "e5" (NaN) and "1e400" (Infinity).
+  const value = parseFloat(text.replace(/,/g, ''));
+  return Number.isFinite(value) ? value : null;
 }
 
 /**

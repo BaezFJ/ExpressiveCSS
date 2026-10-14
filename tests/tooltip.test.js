@@ -96,6 +96,22 @@ for (const shadow of [false, true]) {
   });
 }
 
+test('Tooltip with a missing data-tooltip-id falls back to its text', t => {
+  const error = t.mock.method(console, 'error', () => {});
+  document.body.innerHTML = '<button data-tooltip-id="typo" data-tooltip="Help text">Help</button>';
+  const trigger = document.querySelector('button');
+  const instance = Expressive.Tooltip.init(trigger);
+  try {
+    assert.equal(error.mock.callCount(), 1);
+    assert.equal(instance.tooltipEl.classList.contains('rich'), false);
+    assert.equal(instance.tooltipEl.textContent, 'Help text');
+    assert.ok(document.getElementById(trigger.getAttribute('aria-describedby')), 'description points at a real element');
+  } finally {
+    instance.destroy();
+  }
+  assert.equal(trigger.hasAttribute('aria-describedby'), false);
+});
+
 test('Tooltip removes only its generated description and class', () => {
   document.body.innerHTML = '<button data-tooltip-id="rich">Help</button><div id="rich" class="tooltip-content">Authored content</div>';
   const trigger = document.querySelector('button');
