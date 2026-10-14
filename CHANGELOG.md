@@ -5,6 +5,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- A JavaScript tooltip whose trigger sits in a shadow root now starts hidden
+  and absolutely positioned. The tooltip goes into that shadow root, where
+  neither `body > .tooltip` nor `:not(body) > .tooltip` matched it, so it
+  showed in the page flow before it was ever opened. `:host > .tooltip` now
+  gets the same rule as `body > .tooltip`.
+- A tap on a menu item after scrolling the menu by touch closes the menu
+  again. The scroll flag was cleared only by a click, and a touch scroll
+  ends without one, so the next tap was ignored as part of the scroll.
+
 ### Removed
 
 - Selectors and code that never matched or never ran. The date and time
