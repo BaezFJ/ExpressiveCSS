@@ -70,6 +70,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   changes, as documented, instead of after every search. `setMenuItems` no
   longer replaces `options.data`, so the documented custom `onSearch` filter
   keeps searching the full data set.
+- A chart cell such as `e5` or `1e400` is a gap. These passed the number
+  check but read as `NaN` or `Infinity`, so one such cell turned every point
+  in the chart into `NaN` and nothing was drawn.
 
 ## [0.14.1] - 2026-10-11
 
