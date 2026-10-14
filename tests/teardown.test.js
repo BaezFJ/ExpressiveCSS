@@ -304,8 +304,8 @@ describe('destroy() releases shared listeners', () => {
   });
 
   test('the docked display plugin listens to the document only while shown', () => {
-    document.body.innerHTML = `<input type="text" class="datepicker">`;
-    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
+    document.body.innerHTML = `<input type="text" class="date-picker">`;
+    const instance = Expressive.Datepicker.init(document.querySelector('.date-picker'), {
       displayPlugin: 'docked'
     });
     try {

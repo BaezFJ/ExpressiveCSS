@@ -126,7 +126,7 @@ describe('Portals inside a shadow root stay in that root', () => {
   });
 
   test('the datepicker hands its month/year menus the root, not document.body', () => {
-    const { root, el } = shadowHost('<div><input type="text" class="datepicker"></div>');
+    const { root, el } = shadowHost('<div><input type="text" class="date-picker"></div>');
     const instance = Expressive.Datepicker.init(el.querySelector('input'));
     try {
       // The calendar and both FormSelects are built at init.

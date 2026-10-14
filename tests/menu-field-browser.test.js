@@ -510,7 +510,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     const browser = await type.launch();
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 700 } });
-      for (const direction of ['ltr', 'rtl']) for (const variant of ['side-sheet', 'side-sheet end', 'right', 'right-sheet', 'side-sheet start', 'left', 'left-sheet']) for (const modal of [false, true]) for (const motion of ['reduce', 'no-preference']) {
+      for (const direction of ['ltr', 'rtl']) for (const variant of ['side-sheet', 'side-sheet end', 'side-sheet start']) for (const modal of [false, true]) for (const motion of ['reduce', 'no-preference']) {
         await sheetFixture(page, { variant, direction, modal, motion });
         const start = /start|left/.test(variant), left = start !== (direction === 'rtl');
         if (motion === 'no-preference') assert.equal(await page.evaluate(() => parseFloat(entryShift)), left ? -100 : 100, `${variant} ${direction} enters from its docked edge`);
@@ -1162,7 +1162,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     let page;
     try {
       page = await browser.newPage();
-      await page.setContent('<select><option value="one">One</option></select><input class="datepicker"><div id="result"></div>');
+      await page.setContent('<select><option value="one">One</option></select><input class="date-picker"><div id="result"></div>');
       await page.addScriptTag({ content: js });
       const result = await page.evaluate(() => {
         window.injected = false;
@@ -1171,7 +1171,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         let select, date;
         try {
           select = Expressive.FormSelect.init(document.querySelector('select'));
-          date = Expressive.Datepicker.init(document.querySelector('input.datepicker'));
+          date = Expressive.Datepicker.init(document.querySelector('input.date-picker'));
           const host = document.querySelector('#result');
           host.innerHTML = date.renderTitle(date, 0, 2026, 8, 2026, payload) + date.renderTable(date.options, [], payload);
           let rejected = 0;

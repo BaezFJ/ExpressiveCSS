@@ -97,7 +97,7 @@
   border-radius: 12px;
 }
 
-.chip > :is(.material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons) {
+.chip > :is(.material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp) {
   font-size: var(--font-size-icon);
   color: var(--md-sys-color-on-surface-variant);
 }

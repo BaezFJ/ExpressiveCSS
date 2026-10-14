@@ -251,4 +251,4 @@ job is to be unconditional (`.hide`, `.m-3`) keep it.
 
 A few rules in `components/` still use `!important` for UA resets
 (modal float, staggered-list transitions, textarea padding), not for
-JS-driven geometry. Tap target and the preloader no longer need the flag.
+JS-driven geometry. Tap target and the circular progress indicator no longer need the flag.

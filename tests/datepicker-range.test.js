@@ -250,3 +250,22 @@ for (const opening of ['click', 'Enter']) {
     }
   });
 }
+
+test('the month arrows are named from i18n', () => {
+  resetBody();
+  document.body.innerHTML = '<input id="date"><input id="localized">';
+  const pickers = [
+    Expressive.Datepicker.init(document.getElementById('date')),
+    Expressive.Datepicker.init(document.getElementById('localized'), { i18n: { previousMonth: 'Mois "précédent"', nextMonth: 'Mois suivant' } })
+  ];
+  try {
+    const names = pickers.map((picker) => {
+      picker.gotoDate(new Date(2026, 8, 1));
+      const label = (selector) => picker.calendarEl.querySelector(selector).getAttribute('aria-label');
+      return [label('.month-prev'), label('.month-next')];
+    });
+    assert.deepEqual(names, [['Previous month', 'Next month'], ['Mois "précédent"', 'Mois suivant']]);
+  } finally {
+    for (const picker of pickers) picker.destroy();
+  }
+});

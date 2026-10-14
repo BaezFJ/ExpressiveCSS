@@ -4,7 +4,7 @@
 //
 // Anatomy is the HTML. An <input type="range"> is the control. A wrapping
 // .slider is the host (.range and .range-field are the older names).
-// The plugin is Expressive.Slider; Expressive.Range is kept as an alias.
+// The plugin is Expressive.Slider.
 //
 // Variants (M3 Expressive):
 //   standard   default. Active from the start to the handle.
@@ -13,7 +13,7 @@
 //
 // Orientation: horizontal (default) or .vertical.
 // Size on the host: default XS, .s / .small, .m / .medium, .l / .large, .xl.
-// Optional: a leading <i> (inset icon), .stops (discrete ticks), value
+// Optional: a leading icon (inset), .stops (discrete ticks), value
 // label (JS .thumb).
 //
 // Tokens follow https://m3.material.io/components/sliders/specs

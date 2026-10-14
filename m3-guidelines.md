@@ -184,7 +184,6 @@ Material Symbols, outlined by default. The compiled sheet ships the variable fon
 - Default optical size 24 dp; buttons use 18 dp next to a label.
 - **Fill** the icon when the parent is selected (nav, rail, list). Do not swap to a different glyph to show selection.
 - Style (outlined / rounded / sharp) is the font family (`icon-style` or `--md-icon-font`). Pick one style per product.
-- `.material-icons` is a compat alias. Prefer `.material-symbols`.
 
 ## 2.7 Accessibility that affects component choice
 
@@ -726,7 +725,7 @@ Leading visual = first `i` / `img` / `input`. Trailing = last `i` / `kbd` / `but
 
 ## 6.3 Divider
 
-**M3:** Divider. **ExpressiveCSS:** `<hr>`, `.divider`, list/menu `<hr>`.
+**M3:** Divider. **ExpressiveCSS:** `<hr>`, `.divider`, list `<hr>`, menu `<li class="divider">`.
 
 Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a `.gap` is the more expressive grouping (M3 Expressive). Don't stack dividers and gaps.
 
@@ -793,7 +792,7 @@ Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a
 
 ## 7.2 Bottom sheets
 
-**M3:** Bottom sheets (standard / modal). **ExpressiveCSS:** `dialog.bottom-sheet` (alias `.bottom`). `BottomSheets.Init()` drag-dismisses from the top 48 dp handle. A named `<button>` handle also dismisses on click, tap, Enter, or Space. Verify native Escape against the opening mode, browser, and `closedby` policy.
+**M3:** Bottom sheets (standard / modal). **ExpressiveCSS:** `dialog.bottom-sheet`. `BottomSheets.Init()` drag-dismisses from the top 48 dp handle. A named `<button>` handle also dismisses on click, tap, Enter, or Space. Verify native Escape against the opening mode, browser, and `closedby` policy.
 
 **Use when** compact/medium windows need **secondary content** anchored to the bottom: extra actions, a short list, a player, filters.
 

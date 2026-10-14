@@ -20,7 +20,7 @@ Icons use Material Symbols, outlined by default (`--md-icon-font`). Select the o
 
 The compiled CSS includes unlayered `@font-face` rules. `dist/fonts/` holds the woff2 files: outlined, rounded, and sharp variable Symbols (opsz / wght / FILL / GRAD), Latin Roboto 400/500, and Latin Noto Sans 400/500. `build:css` copies them from Fontsource packages via `scripts/copy-fonts.mjs`. Browsers fetch a family only after markup uses it. Keep `dist/fonts/` next to `dist/css/` so `url(../fonts/...)` resolves. Sass consumers can set `$expressive-font-path` or `$expressive-include-fonts: false`.
 
-`.material-icons` is a compatibility alias that uses Symbols; do not ship the older Material Icons font. The `--md-sys-*` and `--md-ref-*` tokens retain their Material Design 3 spec names.
+Do not ship the older Material Icons font; `.material-icons` was removed in 1.0. The `--md-sys-*` and `--md-ref-*` tokens retain their Material Design 3 spec names.
 
 Preserve third-party copyright and license notices in `LICENSE` and the packaged license.
 
@@ -491,16 +491,17 @@ deliberate:
 | M3 | ExpressiveCSS | Note |
 | --- | --- | --- |
 | Slider | `.slider` / `Slider` | Held the image slideshow before 0.8.0; now the range control |
-| FAB | `.fab` | `.fixed-action-btn` alias |
-| Progress indicators | `.progress`, `.progress.circular` | `.preloader` alias |
-| Date / Time pickers | `.date-picker`, `.time-picker` | Unhyphenated forms alias |
-| Drag handle | `.drag-handle` | `.handle` alias, the bottom sheet's pre-1.0 slot class |
+| FAB | `.circle.extra` | The `.fab` and `.fixed-action-btn` speed-dial wrappers were removed |
+| Progress indicators | `.progress`, `.progress.circular` | `.preloader` removed in 1.0 |
+| Date / Time pickers | `.date-picker`, `.time-picker` | Unhyphenated root classes removed in 1.0; the generated parts keep `.datepicker-*` / `.timepicker-*` |
+| Drag handle | `.drag-handle` | `.handle`, the bottom sheet's pre-1.0 slot class, removed in 1.0 |
 | Text fields | `.field` | **Deliberately not `.text-field`** — the same container wraps `<select>`, autocomplete and file inputs, so the M3 name would be wrong for most of its uses |
 
-Every remaining rename is **additive**: the old class stays in the selector list, the old
-export stays as an alias, and `tests/m3-naming.test.js` asserts both — it walks
-every rule mentioning an old class and fails if the new one is not on it, which
-is how it caught `$_toolbar` excluding `.fixed-action-btn` but not `.fab`.
+From 0.8.0 to 1.0 every rename was **additive**: the old class stayed in the
+selector list and the old export stayed as an alias. 1.0 removes the old names
+(`.searchbar`, `.handle`, `.preloader`, `.material-icons`, the unhyphenated
+picker roots, `Range` and the rest listed in the CHANGELOG), and
+`tests/m3-naming.test.js` now asserts they stay gone.
 
 **One rename changed meaning rather than adding a name.** `Slider` was the image
 slideshow and is now the range control, because that is what M3 calls a slider.
@@ -591,7 +592,7 @@ export class X extends Component<XOptions> {
 
 The base constructor destroys any pre-existing instance found via `getInstance`, so re-initializing an element is safe. `getInstance`/`destroy` throw by default — a subclass that omits them is broken.
 
-`src/ts/components/registry.ts` holds `AUTO_INIT_COMPONENTS`, a table of `{ component, selector }` keyed by name. It is the single source of truth: the exported `AutoInitOptions` type is a mapped type over it, and `AutoInit(context, options)` loops it (each entry gets a `.no-autoinit` opt-out). Components absent from the table are never auto-started (`Snackbar`, `CharacterCounter`, `Range`).
+`src/ts/components/registry.ts` holds `AUTO_INIT_COMPONENTS`, a table of `{ component, selector }` keyed by name. It is the single source of truth: the exported `AutoInitOptions` type is a mapped type over it, and `AutoInit(context, options)` loops it (each entry gets a `.no-autoinit` opt-out). Components absent from the table are never auto-started (`Snackbar`, `CharacterCounter`).
 
 `src/ts/index.ts` re-exports `components/`, `Forms`, `Dialogs`, `BottomSheets`, `SideSheets`, `AutoInit` and `version`, and runs the import-time side effects: `Forms.Init()`, `Chips.Init()`, `Slider.Init()`, `Cards.Init()`, `ExpandingCard.Init()`, `Dialogs.Init()`, `BottomSheets.Init()`, `SideSheets.Init()`, plus document-level keyboard/focus listeners from `Utils`.
 

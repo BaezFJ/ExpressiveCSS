@@ -25,7 +25,6 @@ describe('Bottom sheet CSS', () => {
 
   test('only the modal variant paints a scrim', () => {
     assert.match(css, /dialog\.bottom-sheet:not\(:modal\)::backdrop/);
-    assert.match(css, /dialog\.bottom:not\(:modal\)::backdrop/);
   });
 });
 
@@ -140,12 +139,6 @@ describe('Bottom sheet handle button', () => {
   test('a keyboard activation dismisses', () => {
     const dialog = openSheet();
     activate(dialog.querySelector('.drag-handle'));
-    assert.equal(dialog.open, false);
-  });
-
-  test('the pre-1.0 .handle spelling is the same control', () => {
-    const dialog = openSheet('<button type="button" class="handle" aria-label="Dismiss"></button>');
-    activate(dialog.querySelector('.handle'));
     assert.equal(dialog.open, false);
   });
 

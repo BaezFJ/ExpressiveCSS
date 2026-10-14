@@ -90,7 +90,7 @@ nav:has(> .breadcrumb),
     color: var(--md-comp-breadcrumb-current-color);
   }
 
-  i {
+  #{$icon} {
     font-size: 1.125em;
     margin-inline-end: 4px;
   }

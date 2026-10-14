@@ -1,15 +1,12 @@
 import { installSheetDrag } from './sheetDrag';
 
-const startDocked = (dialog: HTMLDialogElement): boolean =>
-  dialog.classList.contains('left') ||
-  dialog.classList.contains('left-sheet') ||
-  dialog.classList.contains('start');
+const startDocked = (dialog: HTMLDialogElement): boolean => dialog.classList.contains('start');
 
 const leftDocked = (dialog: HTMLDialogElement): boolean =>
   startDocked(dialog) !== (getComputedStyle(dialog).direction === 'rtl');
 
 /**
- * Drag-to-dismiss for side sheets (`dialog.side-sheet` / `.right` / `.left`).
+ * Drag-to-dismiss for side sheets (`dialog.side-sheet`).
  *
  * Grab the header or the inner 24dp edge and drag toward the docked side.
  * Past 96dp, or a flick, closes. Light-dismiss on the scrim stays with
@@ -19,8 +16,7 @@ const leftDocked = (dialog: HTMLDialogElement): boolean =>
 export class SideSheets {
   static Init() {
     installSheetDrag({
-      selector:
-        'dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dialog.left-sheet',
+      selector: 'dialog.side-sheet',
       axis: 'x',
       property: '--md-comp-side-sheet-shift',
       direction: (dialog) => (leftDocked(dialog) ? -1 : 1),

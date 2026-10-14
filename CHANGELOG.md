@@ -92,8 +92,18 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - A tap on a menu item after scrolling the menu by touch closes the menu
   again. The scroll flag was cleared only by a click, and a touch scroll
   ends without one, so the next tap was ignored as part of the scroll.
+- Datepicker's previous and next month buttons have accessible names. The
+  `previousMonth` and `nextMonth` i18n strings were never read; they now label
+  the buttons and default to `'Previous month'` and `'Next month'`.
+- A drag that starts on a bottom sheet's `.drag-handle` now moves the sheet
+  wherever the handle sits. The drag check looked only for the pre-1.0
+  `.handle` class.
 
 ### Removed
+
+- **Breaking (1.0).** The names kept for markup written before 0.8.0 are
+  gone. Each one has a replacement that has been documented since 0.8.0;
+  see Migration below.
 
 - Selectors and code that never matched or never ran. The date and time
   picker rules no longer carry hyphenated twins of their generated parts,
@@ -108,6 +118,40 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Datepicker's `startRange` and `endRange` options. Nothing set them, and the
   `is-startrange`, `is-endrange` and `is-inrange` classes they produced had
   no styles. Use `isDateRange` for range selection.
+
+### Migration
+
+- Icons: write `<span class="material-symbols" aria-hidden="true">`. A bare
+  `<i>` is no longer treated as an icon inside buttons, lists, menus, chips,
+  bars or fields, and `.material-icons` is gone; use `.material-symbols`
+  (or the `-outlined`, `-rounded` and `-sharp` variants).
+- Field icons: name the side with `.prefix` or `.suffix`. The positional
+  `i:first-of-type` / `i:last-of-type` fallback is gone.
+- Visibility helpers: replace `.hide-on-small-only` and
+  `.hide-on-small-and-down` with `.hide-on-compact-only`, `.hide-on-med-only`
+  with `.hide-on-medium-only`, `.hide-on-xxl-only` with
+  `.hide-on-extra-large-only`, `.show-on-small` with `.show-on-compact`, and
+  `.show-on-xxl` with `.show-on-extra-large`.
+- Replace `.no-padding` with `.p-0` and `.center-block` with `.mx-auto` plus a
+  `display: block` of your own. `.no-select` has no replacement class; set
+  `user-select: none` in your own CSS.
+- Progress: replace `.preloader` with `.progress.circular`.
+- Date and time pickers: AutoInit starts `.date-picker` and `.time-picker`
+  only. Rename `class="datepicker"` and `class="timepicker"` on the inputs.
+- Search: replace `.searchbar` with `.search-bar`.
+- Sheets: replace `dialog.bottom` with `dialog.bottom-sheet`, and the sheet's
+  `.handle` with `.drag-handle`. Replace side sheet `dialog.right` and
+  `dialog.right-sheet` with `dialog.side-sheet`, and `dialog.left` and
+  `dialog.left-sheet` with `dialog.side-sheet.start`.
+- Toolbar: replace host `.max` with `.docked` and host `.filled` with
+  `.vibrant`. A `.filled` action and a `.max` spacer inside the bar are
+  unchanged.
+- Tooltip: replace `.tooltip.max` with `.tooltip.rich`.
+- Menus: replace a bare `<hr>` between items with
+  `<li class="divider" role="separator">`.
+- File input: the trigger is a `<label class="button">` wrapping the
+  `<input type="file">`. A `<button>` or `.btn` trigger is no longer styled.
+- Script: replace `Expressive.Range` with `Expressive.Slider`.
 
 ## [0.15.0] - 2026-10-14
 

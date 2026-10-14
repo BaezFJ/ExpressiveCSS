@@ -3,7 +3,7 @@
 // Dialogs (M3 Expressive).
 //
 // Anatomy is the HTML. A <dialog> is a basic dialog: optional leading
-// <i>, a heading, supporting <p> (or a wrapping <div>), optional <hr>
+// icon, a heading, supporting <p> (or a wrapping <div>), optional <hr>
 // + extra content, and a last-child <form method="dialog"> or <nav>
 // as the action row. dialog.max is the full-screen variant: a <header>
 // holds close, the headline, and the confirming action.
@@ -144,15 +144,7 @@ dialog > :is(form, nav):last-child {
   background: none;
 }
 
-dialog:not(
-    .bottom,
-    .bottom-sheet,
-    .side-sheet,
-    .right,
-    .right-sheet,
-    .left,
-    .left-sheet
-  )
+dialog:not(.bottom-sheet, .side-sheet)
   > :is(form, nav):last-child
   > :is(button, a.button):not(.tonal, .outlined, .elevated, .filled, .icon-button) {
   @include btn-flat;

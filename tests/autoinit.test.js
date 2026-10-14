@@ -220,7 +220,7 @@ describe("AutoInit", () => {
   });
 
   test("re-initializing a scoped date range skips its generated end input", () => {
-    document.body.innerHTML = '<div id="scope"><div><input id="start" class="datepicker"></div></div><input id="outside" class="datepicker">';
+    document.body.innerHTML = '<div id="scope"><div><input id="start" class="date-picker"></div></div><input id="outside" class="date-picker">';
     const scope = document.getElementById("scope");
     const start = document.getElementById("start");
     const options = { Datepicker: { isDateRange: true, format: "yyyy-mm-dd" } };
@@ -237,7 +237,7 @@ describe("AutoInit", () => {
       assert.equal(Expressive.Datepicker.getInstance(oldEnd), undefined);
       assert.equal(Expressive.Datepicker.getInstance(current.endDateEl), undefined);
       assert.equal(Expressive.Datepicker.getInstance(document.getElementById("outside")), undefined);
-      assert.equal(scope.querySelectorAll("input.datepicker").length, 2);
+      assert.equal(scope.querySelectorAll("input.date-picker").length, 2);
       assert.equal(scope.querySelectorAll(".datepicker-container").length, 1);
       assert.ok(current.endDateEl.classList.contains("no-autoinit"));
 

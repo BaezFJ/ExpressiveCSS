@@ -199,7 +199,7 @@ The existing single-file IIFE and CommonJS builds remain available.
 | Bottom-sheet drag dismissal | Call `BottomSheets.Init()` once; add `Dialogs.Init()` for light dismissal |
 | Side-sheet drag dismissal | Call `SideSheets.Init()` once; add `Dialogs.Init()` for light dismissal |
 
-`Range` retains its Slider alias. Component initializers include internal
+Component initializers include internal
 dependencies such as Menu in FormSelect, FormSelect in Datepicker, and Carousel in
 swipeable Tabs. Do not initialize those instances separately. Document behaviors
 apply to the whole page, so do not repeat their `.Init()` calls on route changes or

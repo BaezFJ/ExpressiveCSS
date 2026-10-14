@@ -15,7 +15,7 @@ export const fixtures = {
   forms: {
     exports: ['Forms', 'FormSelect', 'Datepicker'],
     components: ['icons-material-design', 'buttons', 'menu', 'forms', 'datepicker'],
-    markup: '<div class="field"><select id="choice"><option value="one">One</option><option value="two">Two</option></select><label for="choice">Choice</label></div><div class="field"><input id="date" class="datepicker" type="text"><label for="date">Date</label></div>',
+    markup: '<div class="field"><select id="choice"><option value="one">One</option><option value="two">Two</option></select><label for="choice">Choice</label></div><div class="field"><input id="date" class="date-picker" type="text"><label for="date">Date</label></div>',
     init: "FormSelect.init(document.querySelector('#choice'), { menuOptions: { inDuration: 0, outDuration: 0 } }), Datepicker.init(document.querySelector('#date'), { openByDefault: true, defaultDate: new Date(2026, 8, 12), setDefaultDate: true })",
   },
 };

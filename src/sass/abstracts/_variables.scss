@@ -7,13 +7,14 @@
 // inset, icon-only toolbar actions stopped being 48dp circles and picked up the
 // text-action pill instead.
 //
-// So the answer lives in one place. `i` stays in the list for markup written
-// before 0.8.0. Interpolate it inside :is() - never as a bare comma list, which
-// breaks out of its context (see $_bar in components/_navbar).
-$icon: ":is(i, .material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons)" !default;
+// So the answer lives in one place. Interpolate it inside :is() - never as a
+// bare comma list, which breaks out of its context (see $_bar in
+// components/_navbar). A bare <i> is idiomatic text, not an icon, so it is
+// not in the list.
+$icon: ":is(.material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp)" !default;
 
 // The label beside an icon: any span that is not itself an icon.
-$icon-label: "span:not(.material-symbols):not(.material-symbols-outlined):not(.material-symbols-rounded):not(.material-symbols-sharp):not(.material-icons)" !default;
+$icon-label: "span:not(.material-symbols):not(.material-symbols-outlined):not(.material-symbols-rounded):not(.material-symbols-sharp)" !default;
 
 // The up arrow on a change line (Stat, KPI). Rotate it 180deg for down.
 $trend-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 20V7.8l-5.6 5.6L4 12l8-8 8 8-1.4 1.4L13 7.8V20z'/%3E%3C/svg%3E") !default;

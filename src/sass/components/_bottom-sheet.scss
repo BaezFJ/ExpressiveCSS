@@ -2,10 +2,10 @@
 
 // Bottom sheets.
 //
-// Anatomy is the HTML. A dialog.bottom-sheet (or .bottom) is the surface.
+// Anatomy is the HTML. A dialog.bottom-sheet is the surface.
 // showModal() is the modal variant (scrim). show() is the standard variant
 // (no scrim, page stays interactive). ::before is the optional drag handle;
-// an explicit .handle button replaces it. A heading, body, and trailing
+// an explicit .drag-handle replaces it. A heading, body, and trailing
 // form[method=dialog] are the same slots as a basic dialog.
 //
 // Tokens follow https://m3.material.io/components/bottom-sheets
@@ -20,7 +20,6 @@
 
 $_handle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='4'%3E%3Crect width='32' height='4' rx='2' fill='black'/%3E%3C/svg%3E");
 
-dialog.bottom,
 dialog.bottom-sheet {
   --md-comp-bottom-sheet-container-color: var(--md-sys-color-surface-container-low);
   --md-comp-bottom-sheet-container-shape: 28px;
@@ -76,7 +75,7 @@ dialog.bottom-sheet {
     backdrop-filter: none;
   }
 
-  // Drag handle. 32×4 bar, 48dp hit. Hidden when the author supplies .handle.
+  // Drag handle. 32×4 bar, 48dp hit. Hidden when the author supplies .drag-handle.
   &::before {
     content: "";
     box-sizing: border-box;
@@ -91,12 +90,12 @@ dialog.bottom-sheet {
     pointer-events: none;
   }
 
-  &:has(> :is(.handle, .drag-handle))::before {
+  &:has(> .drag-handle)::before {
     content: none;
     display: none;
   }
 
-  > :is(.handle, .drag-handle) {
+  > .drag-handle {
     box-sizing: border-box;
     flex: 0 0 48px;
     align-self: center;
@@ -125,21 +124,18 @@ dialog.bottom-sheet {
   }
 }
 
-dialog.bottom[open],
 dialog.bottom-sheet[open] {
   display: flex;
   flex-direction: column;
 }
 
 @starting-style {
-  dialog.bottom[open],
   dialog.bottom-sheet[open] {
     translate: 0 100%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  dialog.bottom,
   dialog.bottom-sheet {
     transition: none;
   }

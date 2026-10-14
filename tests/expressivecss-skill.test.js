@@ -377,7 +377,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(helpers, /combine a base `\.hide` with one `\.show-on-\*` class/i);
     for (const className of [
       'valign-wrapper', 'left-align', 'right-align', 'center-align', 'center-on-small-only',
-      'divider', 'no-select', 'circle', 'center-block', 'truncate', 'no-padding',
+      'divider', 'circle', 'truncate',
       'responsive-img', 'responsive-video', 'video-container', 'hoverable', 'browser-default',
     ]) assert.ok(helpers.includes(`\`.${className}\``), `helpers reference omits .${className}`);
     for (const className of ['z-depth-0', 'z-depth-1', 'z-depth-1-half', 'z-depth-2', 'z-depth-3', 'z-depth-4', 'z-depth-5']) {
@@ -539,7 +539,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(references.elevation, /does not publish CSS custom-property elevation levels/);
     assert.match(references.elevation, /fixed shadow can lower an element that already has a higher elevation/);
 
-    for (const className of ['material-symbols', 'material-symbols-outlined', 'material-symbols-rounded', 'material-symbols-sharp', 'material-icons', 'icon-filled']) {
+    for (const className of ['material-symbols', 'material-symbols-outlined', 'material-symbols-rounded', 'material-symbols-sharp', 'icon-filled']) {
       assert.ok(references.icons.includes(`\`.${className}\``), `icons reference omits .${className}`);
       assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
     }

@@ -191,7 +191,7 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 </html>
 ```
 
-The IIFE bundle exposes the global `Expressive` object. The compiled stylesheet ships `@font-face` rules for variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes), Roboto 400 / 500, and the Noto Sans fallback. Keep `dist/fonts/` next to `dist/css/` so the relative font URLs resolve. Override the brand/plain tokens when the page uses different typefaces. The older Material Icons stylesheet is not required; `.material-icons` is a compat alias that uses Symbols.
+The IIFE bundle exposes the global `Expressive` object. The compiled stylesheet ships `@font-face` rules for variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes), Roboto 400 / 500, and the Noto Sans fallback. Keep `dist/fonts/` next to `dist/css/` so the relative font URLs resolve. Override the brand/plain tokens when the page uses different typefaces. Do not load the older Material Icons stylesheet; use `.material-symbols`.
 
 ## ES module setup
 
@@ -297,7 +297,7 @@ Opt an element out when it needs manual options:
 
 | Component | Selector |
 | --- | --- |
-| `AppBar` | `header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > :is(.search-bar, .searchbar))` |
+| `AppBar` | `header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > .search-bar)` |
 | `Autocomplete` | `.autocomplete` |
 | `ButtonGroup` | `.button-group` |
 | `Cards` | `article:has(> aside[id]:not([id=""])):not(:has(> aside ~ aside)):has(> button.card-reveal-trigger[type="button"], > :not(aside) button.card-reveal-trigger[type="button"])` |
@@ -316,7 +316,7 @@ Opt an element out when it needs manual options:
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
-| `Datepicker` | `.datepicker, .date-picker` |
+| `Datepicker` | `.date-picker` |
 | `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
 | `MessageScroller` | `.message-scroller` |
@@ -325,7 +325,7 @@ Opt an element out when it needs manual options:
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
 | `Tabs` | `.tabs` |
-| `Timepicker` | `.timepicker, .time-picker` |
+| `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
@@ -2869,7 +2869,7 @@ The two-column layout is the page's own — a flex or grid row, or a pane layout
 
 Material tokenised the *vertical* handle — a 4×48dp bar in a 24dp hit target, `outline`, swelling to 12×52dp on a 12dp corner in `on-surface` while held. That is what `.drag-handle` draws. The container is sized to the pressed bar, so holding it moves nothing beside it. `cursor: grab` is the default; a splitter that resizes reads better as `cursor: col-resize`, which is one declaration of your own.
 
-On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. A decorative handle needs a separate non-drag dismiss path. A named `<button>` handle closes the sheet by click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>; a `form method="dialog"` close button is another option. Native Escape behavior depends on the opening mode, browser, and `closedby` policy, and is not a pointer alternative. Scrim dismissal also depends on the installed shared runtime and `closedby` policy; test it before relying on it. A drag that snaps back does not also activate the button because the runtime distinguishes the ending click from a tap. Pane resizing is the only other place a drag handle is wired. `.handle` is the pre-1.0 spelling and still works, decorative or wired.
+On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. A decorative handle needs a separate non-drag dismiss path. A named `<button>` handle closes the sheet by click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>; a `form method="dialog"` close button is another option. Native Escape behavior depends on the opening mode, browser, and `closedby` policy, and is not a pointer alternative. Scrim dismissal also depends on the installed shared runtime and `closedby` policy; test it before relying on it. A drag that snaps back does not also activate the button because the runtime distinguishes the ending click from a tap. Pane resizing is the only other place a drag handle is wired.
 
 ```html
 <dialog class="bottom-sheet" aria-labelledby="sheet-title">
@@ -3468,16 +3468,16 @@ main {
 
 Google Material Icons and Material Symbols, sized with a few helper classes.
 
-Expressive uses Material Symbols: outlined, rounded, and sharp. The class names are Google's. `.material-icons` is a compat alias that uses the outlined Symbols family.
+Expressive uses Material Symbols: outlined, rounded, and sharp. The class names are Google's.
 
-**An icon is a `<span>`, not an `<i>`.** `<i>` means idiomatic text — a term, a thought, a phrase in another language — and an icon is none of those. `<i>` still renders; it is not the documented form.
+**An icon is a `<span>`, not an `<i>`.** `<i>` means idiomatic text — a term, a thought, a phrase in another language — and an icon is none of those. A bare `<i>` gets no icon styling.
 
 **An icon is either decoration or an image, and it has to say which.** The glyph is produced by a ligature, so the icon's text content is real text and a screen reader reads it: `<span class="material-symbols">add</span>` is announced as "add". Two correct forms:
 
 - Decoration — `aria-hidden="true"`. The enclosing control carries the name, so an icon-only button needs its own `aria-label`. This is almost always what you want.
 - An image in its own right — `role="img"` with an `aria-label`. Use this when the icon reports something no neighbouring text does, such as a badge count.
 
-The size and float modifiers (`tiny`, `small`, `medium`, `large`, `left`, `right`) hang off the icon class, not off `<i>`, so they follow either element.
+The size and float modifiers (`tiny`, `small`, `medium`, `large`, `left`, `right`) hang off the icon class, not off an element.
 
 Google publishes a [Material Symbols list](https://fonts.google.com/icons?icon.set=Material+Symbols). That catalog is the source for ligature names.
 
@@ -4131,7 +4131,7 @@ A search bar, and the view it expands into.
 
 A `<search>` with `search-bar` on it is the bar: a leading icon or icon button, an `<input type="search">`, and whatever trailing actions the query needs. The element is the landmark, so there is no `role="search"` to add. The input goes in bare — the bar is the container, so none of the text-field chrome (`.field`, the underline, the floating label) applies.
 
-Spacing follows what is at each end: a bare glyph sits 16dp from the edge, an icon button 4dp, because the button already insets its own glyph by 12dp. An `<img>` in the bar is the account avatar — 30dp and circular; put it inside the button when it is tappable, so the 48dp target comes from the button. `.searchbar`, the pre-1.0 name, reaches the same rules.
+Spacing follows what is at each end: a bare glyph sits 16dp from the edge, an icon button 4dp, because the button already insets its own glyph by 12dp. An `<img>` in the bar is the account avatar — 30dp and circular; put it inside the button when it is tappable, so the 48dp target comes from the button.
 
 ```html
 <search class="search-bar" aria-label="Search">
@@ -5178,7 +5178,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 
 | Name | Selector |
 | --- | --- |
-| `AppBar` | `header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > :is(.search-bar, .searchbar))` |
+| `AppBar` | `header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > .search-bar)` |
 | `Autocomplete` | `.autocomplete` |
 | `ButtonGroup` | `.button-group` |
 | `Cards` | `article:has(> aside[id]:not([id=""])):not(:has(> aside ~ aside)):has(> button.card-reveal-trigger[type="button"], > :not(aside) button.card-reveal-trigger[type="button"])` |
@@ -5197,7 +5197,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
-| `Datepicker` | `.datepicker, .date-picker` |
+| `Datepicker` | `.date-picker` |
 | `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
 | `MessageScroller` | `.message-scroller` |
@@ -5206,7 +5206,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
 | `Tabs` | `.tabs` |
-| `Timepicker` | `.timepicker, .time-picker` |
+| `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
@@ -5238,7 +5238,7 @@ Closing menus are excluded from keyboard focus, and close callbacks preserve foc
 
 Inside open or closed shadow roots, `closeOnClick` controls item clicks just as it does in the document. Submenu triggers keep the parent menu open; outside clicks dismiss it.
 
-A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by default; add `.suffix` to send it to the trailing edge, since a lone icon is indistinguishable from a leading one in CSS. A `<kbd>` or a `.badge` is always trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid (it still renders); a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
+A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by default; add `.suffix` to send it to the trailing edge, since a lone icon is indistinguishable from a leading one in CSS. A `<kbd>` or a `.badge` is always trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid and is not styled; a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
 
 This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https://m3.material.io/components/menus/specs). The container is `surface-container-low`, large (16dp) corners, elevation 2, 2dp group padding, 112–280dp wide. Items are 44dp with extra-small (4dp) corners, `label-large` / `on-surface`; the first and last item round their outer corners to 12dp. Icons are 20dp `on-surface-variant`. Selected items use medium (12dp) corners and `tertiary-container` / `on-tertiary-container`. Hover is an 8% state layer, focus and press 10%, none of which span the container. Dividers are inset. Add `.vibrant` for the tertiary mapping. Submenus fade and scale in; the open flyout rounds up and the parent rounds down.
 
@@ -5632,7 +5632,7 @@ Override these on the `<dialog>` if you need a different surface or width.
 
 A recent flick dismisses the sheet even if the pointer stops moving at release. For short drags, pausing for at least 100ms or reversing direction lets it snap back.
 
-A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss. A named `<button>` handle also dismisses on click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>. A decorative handle needs another non-drag pointer and keyboard dismiss path, such as a `form method="dialog"` close button. Verify native Escape against the opening mode, browser, and `closedby` policy.
+A `dialog.bottom-sheet` is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss. A named `<button>` handle also dismisses on click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>. A decorative handle needs another non-drag pointer and keyboard dismiss path, such as a `form method="dialog"` close button. Verify native Escape against the opening mode, browser, and `closedby` policy.
 
 ```html
 <dialog class="bottom-sheet" aria-labelledby="open-file-title">
@@ -5655,7 +5655,7 @@ A recent flick toward the docked edge dismisses the sheet. For short drags, paus
 
 A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to the side. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.
 
-Docking is logical: `.start`, `.left` and `.left-sheet` use the start edge; the default, `.right` and `.right-sheet` use the end edge. Drag direction, inner-edge hit testing, modal corners and opening motion follow computed RTL direction. Headings and actions wrap; the body scrolls independently. Shared sheet dragging ignores secondary-pointer cancellation and resets when a sheet closes, is removed, or a primary press starts elsewhere. Dismissal thresholds are unchanged. Keep an explicit close control; native zoom, assistive technology and physical-device review remain pending.
+Docking is logical: `.start` uses the start edge, and the default uses the end edge. Drag direction, inner-edge hit testing, modal corners and opening motion follow computed RTL direction. Headings and actions wrap; the body scrolls independently. Shared sheet dragging ignores secondary-pointer cancellation and resets when a sheet closes, is removed, or a primary press starts elsewhere. Dismissal thresholds are unchanged. Keep an explicit close control; native zoom, assistive technology and physical-device review remain pending.
 
 ```html
 <dialog class="side-sheet" aria-labelledby="headline-title">
@@ -6177,7 +6177,7 @@ Expressive.Snackbar.dismissAll();
 
 Material Design 3 tooltips, from the HTML.
 
-A child `.tooltip` is the bubble. No `tooltipped` class is required. They are CSS only on hover and keyboard focus. Helpers are only for placement and the rich variant: `top` (the default), `bottom`, `left`, `right`, `rich` / `max`.
+A child `.tooltip` is the bubble. No `tooltipped` class is required. They are CSS only on hover and keyboard focus. Helpers are only for placement and the rich variant: `top` (the default), `bottom`, `left`, `right`, `rich`.
 
 Tokens follow the [M3 tooltip spec](https://m3.material.io/components/tooltips/specs). A plain tooltip is `inverse-surface` / `inverse-on-surface`, 4dp corners, `body-small`, 24dp minimum, 4/8dp padding, 200dp max, no elevation and no caret. It sits 4dp from the activator. M3 prefers above.
 
@@ -6197,7 +6197,7 @@ Inside a `<button>` the bubble has to be a `<span>` — a `<div>` is not phrasin
 
 ### Rich
 
-`rich` (or its `max` alias) is the rich tooltip: `surface`, elevation 2, 12dp corners, 320dp max. A heading is the title (`title-small`), a `<p>` is supporting text (`body-medium`), and a trailing `<nav>` is the action. Rich bubbles can receive pointer events so the action is usable.
+`rich` is the rich tooltip: `surface`, elevation 2, 12dp corners, 320dp max. A heading is the title (`title-small`), a `<p>` is supporting text (`body-medium`), and a trailing `<nav>` is the action. Rich bubbles can receive pointer events so the action is usable.
 
 ```html
 <div>
@@ -6344,7 +6344,7 @@ The FAB-to-toolbar transition has been removed. Use this toolbar for persistent 
 </div>
 ```
 
-A label next to the icon needs a `<span>` — `:only-child` ignores text nodes, so `<i>edit</i>Edit` would look icon-only.
+A label next to the icon needs a `<span>` — `:only-child` ignores text nodes, so `<span class="material-symbols">edit</span>Edit` would look icon-only.
 
 ```html
 <div class="toolbar">
@@ -6367,7 +6367,7 @@ Four, from two independent axes — a **shape** (floating or docked) and a **col
 | **floating** | `class="toolbar"` | `class="toolbar vibrant"` |
 | **docked** | `class="toolbar docked"` | `class="toolbar docked vibrant"` |
 
-Floating is the default shape and standard the default color, so neither needs a class — but `floating` and `standard` are both accepted, so a bar can name all of what it is. `filled` is the older name for `vibrant`, and `max` an alias for `docked`; both still work.
+Floating is the default shape and standard the default color, so neither needs a class — but `floating` and `standard` are both accepted, so a bar can name all of what it is.
 
 **Floating** hugs its actions: 64dp tall, 32dp stadium corners, elevation 3, 8dp end insets, 16dp from the viewport edge (24dp when `vertical`). **Docked** is full width, square, unlifted, 16dp end insets, its actions between 4dp and 32dp apart. `vertical` stacks a floating bar; a docked bar stays a horizontal strip.
 
@@ -6632,8 +6632,8 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 | `cancel` | `'Cancel'` |
 | `clear` | `'Clear'` |
 | `done` | `'Ok'` |
-| `previousMonth` | `'‹'` |
-| `nextMonth` | `'›'` |
+| `previousMonth` | `'Previous month'` |
+| `nextMonth` | `'Next month'` |
 | `months` | `['January', …, 'December']` |
 | `monthsShort` | `['Jan', …, 'Dec']` |
 | `weekdays` | `['Sunday', …, 'Saturday']` |
@@ -7051,7 +7051,7 @@ Add `placeholder=" "` (one space) so the label floats with CSS only. A missing p
 
 Put `invalid` or `aria-invalid="true"` on the input for the error state. Do not put `error` on the wrapper — that class is a color utility and fills the field.
 
-A side is required on a field icon. The old markup let a bare `<i>` fall to whichever side its position implied, but that rule counted elements of the same *type* (`:first-of-type`), which only ever worked while icons were `<i>` and nothing else in the field was. `.prefix` / `.suffix` say it outright and work on any element.
+A field icon needs a side. `.prefix` is leading and `.suffix` is trailing; an icon without either is not positioned.
 
 ### Input types
 
@@ -7715,7 +7715,7 @@ An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) 
 
 Labels and track gaps align with native handle travel after resizing in LTR, RTL and vertical layouts. Vertical values increase from bottom to top. Paired inputs accept native track clicks and prevent crossing; use matching bounds and steps. Application-owned numeric fields can assign the range value and dispatch an `input` event to synchronize its label and track. Forced-colors tracks use system colors. Physical devices, screen readers and actual Windows contrast themes still need manual review.
 
-The plugin is `Expressive.Slider`, and `Expressive.Range` still resolves to it. Before 0.8.0 `.slider` and `Slider` meant the image slideshow; that component is now gone and Carousel covers the case, so `.slider` is the range control and nothing else.
+The plugin is `Expressive.Slider`. Before 0.8.0 `.slider` and `Slider` meant the image slideshow; that component is now gone and Carousel covers the case, so `.slider` is the range control and nothing else.
 
 Three variants: **standard** (active from the start to the handle), **centered** (`.centered`, active grows from the midpoint), and **range** (two inputs in one host, active between the handles). Horizontal or `.vertical`. Five sizes, an optional inset icon, discrete stops, and a value indicator.
 

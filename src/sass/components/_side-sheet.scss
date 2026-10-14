@@ -2,7 +2,7 @@
 
 // Side sheets.
 //
-// Anatomy is the HTML. A dialog.side-sheet (or .right / .left) is the
+// Anatomy is the HTML. A dialog.side-sheet is the
 // surface, docked to the trailing edge by default. showModal() is the
 // modal variant (scrim, rounded inner corners). show() is the standard
 // variant (no scrim, a divider on the inner edge, page stays interactive).
@@ -21,7 +21,7 @@
 // Standard is for large windows next to the main pane. Modal is for
 // compact/medium, or whenever the sheet should interrupt.
 
-$_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dialog.left-sheet";
+$_sheet: "dialog.side-sheet";
 
 #{$_sheet} {
   --md-comp-side-sheet-container-color: var(--md-sys-color-surface-container-low);
@@ -71,8 +71,6 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
   }
 
   // Leading-edge dock.
-  &.left,
-  &.left-sheet,
   &.start {
     inset-inline-start: 0;
     inset-inline-end: auto;
@@ -183,7 +181,7 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
       translate: -100% 0;
     }
 
-    &:is(.start, .left, .left-sheet) {
+    &.start {
       translate: -100% 0;
 
       &:dir(rtl) {

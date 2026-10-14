@@ -1,13 +1,12 @@
 import { installSheetDrag } from './sheetDrag';
 import { Utils } from '../core/utils';
 
-const SHEET_SELECTOR = 'dialog.bottom-sheet, dialog.bottom';
+const SHEET_SELECTOR = 'dialog.bottom-sheet';
 
 /**
- * Drag-to-dismiss for `dialog.bottom-sheet` / `dialog.bottom`.
+ * Drag-to-dismiss for `dialog.bottom-sheet`.
  *
- * The handle is the top 48dp of the sheet (or an explicit `.drag-handle`,
- * `.handle` being its pre-1.0 spelling). A downward drag past 96dp, or a
+ * The handle is the top 48dp of the sheet, or an explicit `.drag-handle`. A downward drag past 96dp, or a
  * flick, closes. Anything else snaps back. Content below the handle scrolls
  * normally. Light-dismiss on the scrim stays with {@link Dialogs}.
  *
@@ -35,7 +34,7 @@ export class BottomSheets {
       direction: () => 1,
       inHandle: (event, dialog) => {
         const target = event.target;
-        if (target instanceof Element && target.closest('.handle')) return true;
+        if (target instanceof Element && target.closest('.drag-handle')) return true;
         const rect = dialog.getBoundingClientRect();
         return event.clientY >= rect.top && event.clientY <= rect.top + 48;
       },
@@ -54,7 +53,7 @@ export class BottomSheets {
   static _onClick(event: MouseEvent) {
     const target = event.target;
     if (!(target instanceof Element)) return;
-    const handle = target.closest('.handle, .drag-handle');
+    const handle = target.closest('.drag-handle');
     // Only a <button> is a control. A decorative <span> in the same slot is
     // exactly what it looks like, and clicking it does nothing.
     if (!(handle instanceof HTMLButtonElement)) return;
