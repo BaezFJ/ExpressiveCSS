@@ -25,6 +25,7 @@ const supportGuides = [
   'expressivecss-runtime/SKILL.md',
   'expressivecss-accessibility/SKILL.md',
   'expressivecss-charts/SKILL.md',
+  'expressivecss-layout/SKILL.md',
   'expressivecss-dashboard/SKILL.md',
 ];
 
@@ -997,8 +998,9 @@ describe('the ExpressiveCSS agent skill', () => {
     // best-practices pass at 39,580 bytes (-20); the confetti row at 39,960 bytes (+380);
     // the particles row at 40,301 bytes (+341);
     // the map row at 40,672 bytes (+371); the 0.10.0 skill version at 40,673 bytes (+1);
-    // the keypad and keyboard row at 40,986 bytes (+313).
-    assert.ok(bytes <= 40986, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // the keypad and keyboard row at 40,986 bytes (+313); the layout guide route
+    // at 41,157 bytes (+171).
+    assert.ok(bytes <= 41157, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 

@@ -7,6 +7,23 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- The agent skill has a layout guide, `expressivecss-layout`. It covers
+  Material's layout principles, the five breakpoints with their grid
+  prefixes and Sass mixins, the canonical layout starting points,
+  right-to-left support, and where each Material layout term lives in
+  ExpressiveCSS. Its breakpoints reference lists the panes and components
+  for each breakpoint and walks through Material's five questions for the
+  next size: what to reveal, divide, resize, reposition or swap. Its
+  canonical layouts reference covers feed, list-detail and supporting pane
+  layouts, including list-detail behavior when the window crosses 840px and
+  a grid fallback for supporting content that must stack on narrow windows.
+  Its grids and spacing reference maps Material's 4, 8 and 12 column grids
+  onto the 12-track `.row`, rulers onto containers and pane margins, and
+  covers grouping, rhythm and opt-in density with 48px targets. The design
+  guide's scaffold reference now lists the recommended pane count for each
+  breakpoint, the 50% split-pane rule with a navigation rail, the
+  three-pane limit, drag-handle toggling and persistent resizing, and the
+  co-planar, floating and docked ways to show more than one pane.
 - The scroll area docs show `.scroll-area` on `<html>` for a themed page
   scrollbar. A browser test covers page scrolling and theme colors.
 - `.keypad` and `.keyboard` are on-screen keys that type into the text
