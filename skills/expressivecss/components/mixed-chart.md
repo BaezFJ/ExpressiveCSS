@@ -9,7 +9,7 @@ Component ID: `mixed-chart`
 
 Contract: ExpressiveCSS 0.14.1
 
-Contract SHA-256: `d6ad21b15b8417db1d740c61285ddd862ecfbab62a6ee83ae2f18b2097f14a47`
+Contract SHA-256: `a043bb1238e390e296dd899327ff0a837224b94b85a6a8951ee18f265abfbe18`
 
 #### Selection and adaptation
 
