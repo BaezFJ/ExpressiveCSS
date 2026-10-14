@@ -193,10 +193,14 @@ export class Slider extends Component<SliderOptions> {
     if (this.el === end && +end.value < +start.value) end.value = start.value;
   }
 
-  _fraction(el: HTMLInputElement): number {
+  /** The input's range, defaulting like the browser does: 0 to 100. */
+  private _bounds(el: HTMLInputElement) {
     const parsedMax = parseFloat(el.max);
-    const max = Number.isNaN(parsedMax) ? 100 : parsedMax;
-    const min = parseFloat(el.min) || 0;
+    return { max: Number.isNaN(parsedMax) ? 100 : parsedMax, min: parseFloat(el.min) || 0 };
+  }
+
+  _fraction(el: HTMLInputElement): number {
+    const { max, min } = this._bounds(el);
     const val = parseFloat(el.value) || 0;
     return max === min ? 0 : (val - min) / (max - min);
   }
@@ -232,9 +236,7 @@ export class Slider extends Component<SliderOptions> {
       this._set(host, '--md-comp-slider-end-position', `${handle / 2 + Math.max(...nums) * (length - handle)}px`);
     }
     if (host?.classList.contains('stops')) {
-      const parsedMax = parseFloat(this.el.max);
-      const max = Number.isNaN(parsedMax) ? 100 : parsedMax;
-      const min = parseFloat(this.el.min) || 0;
+      const { max, min } = this._bounds(this.el);
       const step = parseFloat(this.el.step);
       // Stops sit at min + k * step up to max, so a step that does not divide
       // the range ends short of max. No step, `any`, zero or a negative step
@@ -267,7 +269,7 @@ export class Slider extends Component<SliderOptions> {
     // Deferred like every other Init(): this ran at import time, so a bundle
     // loaded in <head> found no inputs at all.
     Utils.onDocumentReady(() => {
-      Slider.init(document.querySelectorAll('input[type=range]') as NodeListOf<HTMLInputElement>, {});
+      Slider.init(document.querySelectorAll<HTMLInputElement>('input[type=range]'));
     });
   }
 }

@@ -484,7 +484,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   _highlightPartialText(input: string, label: string) {
-    const start = label.toLocaleLowerCase().indexOf('' + input.toLocaleLowerCase() + '');
+    const start = label.toLocaleLowerCase().indexOf(input.toLocaleLowerCase());
     const end = start + input.length - 1;
     //custom filters may return results where the string does not match any part
     if (start == -1 || end == -1) {
@@ -569,7 +569,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     itemText.classList.add('item-text');
     itemText.setAttribute('style', 'padding:5px;overflow:hidden;');
     item.appendChild(itemText);
-    item.querySelector('.item-text').appendChild(div);
+    itemText.appendChild(div);
     // Description
     if (
       typeof entry.description === 'string' ||
@@ -581,7 +581,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
         'line-height:1.3;color:grey;white-space:nowrap;text-overflow:ellipsis;display:block;width:90%;overflow:hidden;'
       );
       description.innerText = entry.description;
-      item.querySelector('.item-text').appendChild(description);
+      itemText.appendChild(description);
     }
     // Set Grid
     const getGridConfig = () => {
@@ -620,6 +620,10 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (this._announcer.textContent !== text) this._announcer.textContent = text;
   }
 
+  private _resultsMessage(count: number) {
+    return count ? this.options.i18n.results(count) : this.options.i18n.noResults;
+  }
+
   _updateSelectedInfo() {
     const statusElement = this._statusInfo;
     if (statusElement) {
@@ -651,7 +655,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._resetAutocomplete();
     if (inputText.length >= this.options.minLength) {
       this._renderMenu();
-      this._announce(this.menuItems.length ? this.options.i18n.results(this.menuItems.length) : this.options.i18n.noResults);
+      this._announce(this._resultsMessage(this.menuItems.length));
     }
     // Open menu
     if (!this.menu.isOpen) {
@@ -702,7 +706,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
     if (open) this.open();
     this._updateSelectedInfo();
-    this._announce(open ? resultCount ? this.options.i18n.results(resultCount) : this.options.i18n.noResults : '');
+    this._announce(open ? this._resultsMessage(resultCount) : '');
     if (selected) this._triggerChanged();
   }
 
@@ -713,15 +717,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   selectOption(id: number | string) {
     const entry = this.menuItems.find((item) => item.id == id);
     if (!entry) return;
-    // Toggle Checkbox
-    /* const li = this.container.querySelector('li[data-id="' + id + '"]');
-    if (!li) return;*/
     if (this.options.isMultiSelect) {
-      /* const checkbox = <HTMLInputElement | null>li.querySelector('input[type="checkbox"]');
-      checkbox.checked = !checkbox.checked;*/
-      if (!(this.selectedValues.filter(
-        (selectedEntry) => selectedEntry.id === entry.id
-      ).length >= 1)) this.selectedValues.push(entry);
+      if (!this.selectedValues.some((selectedEntry) => selectedEntry.id === entry.id))
+        this.selectedValues.push(entry);
       else this.selectedValues = this.selectedValues.filter(
         (selectedEntry) => selectedEntry.id !== entry.id
       );

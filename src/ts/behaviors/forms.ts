@@ -25,10 +25,7 @@ export class Forms {
       textfield.classList.remove('invalid');
     } else if (textfield.classList.contains('validate')) {
       // Check for character counter attributes
-      if (
-        (textfield.validity.valid && hasLength && len <= lenAttr) ||
-        (textfield.validity.valid && !hasLength)
-      ) {
+      if (textfield.validity.valid && (!hasLength || len <= lenAttr)) {
         textfield.classList.remove('invalid');
       } else {
         textfield.classList.add('invalid');
@@ -79,19 +76,18 @@ export class Forms {
     if (Forms._initialized) return;
     Forms._initialized = true;
     Utils.onDocumentReady(() => {
-      document.addEventListener('change', (e: KeyboardEvent) => {
-        const target = <HTMLInputElement>e.target;
-        if (target instanceof HTMLInputElement && target.type === 'file') {
+      document.addEventListener('change', (e: Event) => {
+        const target = e.target;
+        if (!(target instanceof HTMLInputElement)) return;
+        if (target.type === 'file') {
           const zone = target.closest('.drop-zone');
           if (zone) Forms.listDropZoneFiles(zone, target);
         }
-        if (target instanceof HTMLInputElement) {
-          // The sibling-label loop that used to live here compared
-          // `tagName == 'label'` (tagName is uppercase) so it never matched,
-          // and no rule in the Sass styles `label.active` anyway - the
-          // floating label is driven by CSS, not by a class from here.
-          Forms.validateField(target);
-        }
+        // The sibling-label loop that used to live here compared
+        // `tagName == 'label'` (tagName is uppercase) so it never matched,
+        // and no rule in the Sass styles `label.active` anyway - the
+        // floating label is driven by CSS, not by a class from here.
+        Forms.validateField(target);
       });
 
       document.addEventListener('keyup', (e: KeyboardEvent) => {
@@ -219,12 +215,7 @@ export class Forms {
     fileInput.addEventListener('change', () => {
       const fileField = fileInput.closest('.file-field');
       const pathInput = <HTMLInputElement>fileField.querySelector('input.file-path');
-      const files = fileInput.files;
-      const filenames = [];
-      for (let i = 0; i < files.length; i++) {
-        filenames.push(files[i].name);
-      }
-      pathInput.value = filenames.join(', ');
+      pathInput.value = Array.from(fileInput.files, (f) => f.name).join(', ');
       pathInput.dispatchEvent(
         new Event('change', { bubbles: true, cancelable: true, composed: true })
       );

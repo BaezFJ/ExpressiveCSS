@@ -151,10 +151,7 @@ export class HeatmapChart extends LineChart {
       if (value < low) [low, this._ends[0]] = [value, series.text[row]];
       if (value > high) [high, this._ends[1]] = [value, series.text[row]];
     }));
-    const option = (name: 'min' | 'max') => {
-      const value = parseFloat(this.el.dataset[name] ?? '');
-      return Number.isFinite(value) ? value : this.options[name];
-    };
+    const option = (name: 'min' | 'max') => this._number(name) ?? this.options[name];
     const [min, max] = [option('min') ?? low, option('max') ?? high];
     const shade = (value: number) => Math.min(1, Math.max(0, (value - min) / (max - min || 1)));
     this._endLevels = [shade(low), shade(high)];

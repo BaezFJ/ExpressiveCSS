@@ -198,8 +198,8 @@ export class Timepicker extends Component<TimepickerOptions> {
     // than here - see _pickerSetup for when that first happens.
     this._pickerSetup();
 
-    if (this.options.displayPlugin) {
-      if (this.options.displayPlugin === 'docked') this.displayPlugin = DockedDisplayPlugin.init(this.el, this.containerEl, this.options.displayPluginOptions);
+    if (this.options.displayPlugin === 'docked') {
+      this.displayPlugin = DockedDisplayPlugin.init(this.el, this.containerEl, this.options.displayPluginOptions);
     }
   }
 
@@ -275,6 +275,10 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.el.removeEventListener('keydown', this._handleInputKeydown);
     // Drag handlers live on the document while the clock hand is held; if the
     // component is destroyed mid-drag they would otherwise outlive it.
+    this._removeDragListeners();
+  }
+
+  private _removeDragListeners() {
     document.removeEventListener('pointermove', this._handleDocumentClickMove);
     document.removeEventListener('pointerup', this._handleDocumentClickEnd);
     document.removeEventListener('pointercancel', this._handleDocumentClickCancel);
@@ -336,8 +340,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     if (e.pointerId !== this._dragPointerId) return;
     this._dragPointerId = null;
     e.preventDefault();
-    document.removeEventListener('pointerup', this._handleDocumentClickEnd);
-    document.removeEventListener('pointercancel', this._handleDocumentClickCancel);
+    this._removeDragListeners();
     const x = e.clientX - this.x0;
     const y = e.clientY - this.y0;
     if (this.moved && x === this.dx && y === this.dy) {
@@ -358,7 +361,6 @@ export class Timepicker extends Component<TimepickerOptions> {
     if (typeof this.options.onSelect === 'function') {
       this.options.onSelect.call(this, this.hours, this.minutes);
     }
-    document.removeEventListener('pointermove', this._handleDocumentClickMove);
   };
 
   /**
@@ -371,9 +373,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     if (e.pointerId !== this._dragPointerId) return;
     this._dragPointerId = null;
     this.moved = false;
-    document.removeEventListener('pointermove', this._handleDocumentClickMove);
-    document.removeEventListener('pointerup', this._handleDocumentClickEnd);
-    document.removeEventListener('pointercancel', this._handleDocumentClickCancel);
+    this._removeDragListeners();
   };
 
   _insertHTMLIntoDOM() {
@@ -513,14 +513,12 @@ export class Timepicker extends Component<TimepickerOptions> {
     // Hours view
     if (this.options.twelveHour) {
       for (let i = 1; i < 13; i += 1) {
-        // const tick = <HTMLElement>$tick.cloneNode(true);
         const radian = (i / 6) * Math.PI;
         const radius = this.options.outerRadius;
         this._buildHoursTick(i, radian, radius);
       }
     } else {
       for (let i = 0; i < 24; i += 1) {
-        // const tick = <HTMLElement>$tick.cloneNode(true);
         const radian = (i / 6) * Math.PI;
         const inner = i > 0 && i < 13;
         const radius = inner ? this.options.innerRadius : this.options.outerRadius;
@@ -530,36 +528,25 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   _buildHoursTick(i: number, radian: number, radius: number) {
+    this._placeTick(this.hoursView, radian, radius, i === 0 ? '00' : i.toString());
+  }
+
+  _buildMinutesView() {
+    for (let i = 0; i < 60; i += 5) {
+      const radian = (i / 30) * Math.PI;
+      this._placeTick(this.minutesView, radian, this.options.outerRadius, Timepicker._addLeadingZero(i));
+    }
+  }
+
+  private _placeTick(view: HTMLElement, radian: number, radius: number, text: string) {
     const tick = document.createElement('div');
     tick.classList.add('timepicker-tick');
     tick.style.left =
       this.options.dialRadius + Math.sin(radian) * radius - this.options.tickRadius + 'px';
     tick.style.top =
       this.options.dialRadius - Math.cos(radian) * radius - this.options.tickRadius + 'px';
-    tick.textContent = i === 0 ? '00' : i.toString();
-    this.hoursView.appendChild(tick);
-  }
-
-  _buildMinutesView() {
-    const _tick = document.createElement('div');
-    _tick.classList.add('timepicker-tick');
-    // Minutes view
-    for (let i = 0; i < 60; i += 5) {
-      const tick = <HTMLElement>_tick.cloneNode(true);
-      const radian = (i / 30) * Math.PI;
-      tick.style.left =
-        this.options.dialRadius +
-        Math.sin(radian) * this.options.outerRadius -
-        this.options.tickRadius +
-        'px';
-      tick.style.top =
-        this.options.dialRadius -
-        Math.cos(radian) * this.options.outerRadius -
-        this.options.tickRadius +
-        'px';
-      tick.textContent = Timepicker._addLeadingZero(i);
-      this.minutesView.appendChild(tick);
-    }
+    tick.textContent = text;
+    view.appendChild(tick);
   }
 
   _handleAmPmClick = (e: MouseEvent) => {
@@ -623,14 +610,6 @@ export class Timepicker extends Component<TimepickerOptions> {
       nextView = isHours ? this.hoursView : this.minutesView,
       hideView = isHours ? this.minutesView : this.hoursView;
     this.currentView = view;
-
-    /*if (isHours) {
-      this.inputHours.classList.add('text-primary');
-      this.inputMinutes.classList.remove('text-primary');
-    } else {
-      this.inputHours.classList.remove('text-primary');
-      this.inputMinutes.classList.add('text-primary');
-    }*/
 
     // Transition view
     hideView.classList.add('timepicker-dial-out');
@@ -707,12 +686,8 @@ export class Timepicker extends Component<TimepickerOptions> {
       unit = Math.PI / (isHours || roundBy5 ? 6 : 30),
       z = Math.sqrt(x * x + y * y),
       inner = isHours && z < (this.options.outerRadius + this.options.innerRadius) / 2;
-    let radian = Math.atan2(x, -y),
-      radius = inner ? this.options.innerRadius : this.options.outerRadius;
-
-    if (this.options.twelveHour) {
-      radius = this.options.outerRadius;
-    }
+    const radius = inner && !this.options.twelveHour ? this.options.innerRadius : this.options.outerRadius;
+    let radian = Math.atan2(x, -y);
 
     // Radian should in range [0, 2PI]
     if (radian < 0) {
@@ -726,48 +701,29 @@ export class Timepicker extends Component<TimepickerOptions> {
     radian = value * unit;
 
     // Correct the hours or minutes
-    if (this.options.twelveHour) {
-      if (isHours) {
-        if (value === 0) value = 12;
-      } else {
-        if (roundBy5) value *= 5;
-        if (value === 60) value = 0;
-      }
-    } else {
-      if (isHours) {
-        if (value === 12) {
-          value = 0;
-        }
-        value = inner ? (value === 0 ? 12 : value) : value === 0 ? 0 : value + 12;
-      } else {
-        if (roundBy5) {
-          value *= 5;
-        }
-        if (value === 60) {
-          value = 0;
-        }
-      }
+    if (!isHours) {
+      if (roundBy5) value *= 5;
+      if (value === 60) value = 0;
+    } else if (this.options.twelveHour) {
+      if (value === 0) value = 12;
+    } else if (value % 12 === 0) {
+      // 0 and 12 share a position: 12 on the inner ring, 00 on the outer.
+      value = inner ? 12 : 0;
+    } else if (!inner) {
+      value += 12;
     }
 
-    // Once hours or minutes changed, vibrate the device
-    if (this[this.currentView] !== value) {
-      if (this.canVibrate && this.options.vibrate) {
-        // Do not vibrate too frequently
-        if (!this.vibrateTimer) {
-          navigator.vibrate(10);
-          this.vibrateTimer = setTimeout(() => {
-            this.vibrateTimer = null;
-          }, 100);
-        }
-      }
+    // Once hours or minutes changed, vibrate the device. The timer keeps it
+    // from vibrating too frequently.
+    if (this[this.currentView] !== value && this.canVibrate && this.options.vibrate && !this.vibrateTimer) {
+      navigator.vibrate(10);
+      this.vibrateTimer = setTimeout(() => {
+        this.vibrateTimer = null;
+      }, 100);
     }
 
     this[this.currentView] = value;
-    if (isHours) {
-      this.inputHours.value = Timepicker._addLeadingZero(value);
-    } else {
-      this.inputMinutes.value = Timepicker._addLeadingZero(value);
-    }
+    (isHours ? this.inputHours : this.inputMinutes).value = Timepicker._addLeadingZero(value);
 
     // Set clock hand and others' position
     this.setClockAttributes(radian, radius);

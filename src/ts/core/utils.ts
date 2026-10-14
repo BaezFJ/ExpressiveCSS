@@ -230,12 +230,7 @@ export class Utils {
    * @param trigger Trigger element.
    */
   static getIdFromTrigger(trigger: HTMLElement): string {
-    let id = trigger.dataset.target;
-    if (!id) {
-      id = trigger.getAttribute('href');
-      return id ? id.slice(1) : '';
-    }
-    return id;
+    return trigger.dataset.target || (trigger.getAttribute('href')?.slice(1) ?? '');
   }
 
   /**
@@ -324,12 +319,11 @@ export class Utils {
     visibility: boolean = true,
     callback: (Function: object) => void = null
   ): void {
-    className = className.concat(['text']);
     const button = document.createElement('button');
-    button.className = className.join(' ');
+    button.className = className.concat(['text']).join(' ');
     button.style.visibility = visibility ? 'visible' : 'hidden';
     button.type = 'button';
-    button.tabIndex = !!visibility ? 0 : -1;
+    button.tabIndex = visibility ? 0 : -1;
     button.innerText = text;
     if (typeof callback === 'function') button.addEventListener('click', callback);
     container.append(button);

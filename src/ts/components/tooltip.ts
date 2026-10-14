@@ -64,7 +64,7 @@ const _defaults: TooltipOptions = {
   margin: 4,
   inDuration: 250,
   outDuration: 200,
-  position: 'bottom' as TooltipPosition,
+  position: 'bottom',
   transitionMovement: 10,
   opacity: 1
 };
@@ -283,7 +283,7 @@ export class Tooltip extends Component<TooltipOptions> {
 
   _positionTooltip() {
     const tooltip: HTMLElement = this.tooltipEl;
-    const origin = this.el as HTMLElement,
+    const origin = this.el,
       originHeight = origin.offsetHeight,
       originWidth = origin.offsetWidth,
       tooltipHeight = tooltip.offsetHeight,

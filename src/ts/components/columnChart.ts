@@ -1,5 +1,5 @@
 import { InitElements, InitElement } from '../core/component';
-import { COLORS, LineChart, LineChartOptions } from './lineChart';
+import { LineChart, LineChartOptions, seriesColor } from './lineChart';
 
 export type ColumnChartOptions = LineChartOptions;
 
@@ -61,7 +61,7 @@ export class ColumnChart extends LineChart {
         // A gap in a grouped row keeps its empty slot, so the series stay aligned.
         if (to !== null) {
           column.className = series.className;
-          column.dataset.series = String((this.series.indexOf(series) % COLORS) + 1);
+          column.dataset.series = seriesColor(this.series.indexOf(series));
           // A stacked segment never hangs from zero, so it keeps the top rounding.
           column.classList.toggle('negative', !series.base && to < from);
           column.style.setProperty('--top', `${clamp(Math.max(from, to), series.y)}%`);

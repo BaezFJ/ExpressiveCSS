@@ -1,5 +1,5 @@
 import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions, svgNode as node } from './lineChart';
+import { LineChart, LineChartOptions, polarPoint as at, svgNode as node } from './lineChart';
 
 export type PieChartOptions = LineChartOptions;
 
@@ -153,17 +153,13 @@ export class PieChart extends LineChart {
     let turn = 0;
     this._turns = values.map((value) => [turn, (turn += total ? value / total : 0)]);
     // Colors go round the drawn slices; the last skips the first's color beside it.
-    const drawn = this._turns.filter(([start, end]) => end > start).length;
+    const drawn = this._turns.filter(([start, end]) => end > start);
     let slice = 0;
     this._colors = this._turns.map(([start, end]) => {
       if (end <= start) return undefined;
       const index = slice++;
-      return String(index === drawn - 1 && index > 0 && index % COLORS === 0 ? 2 : (index % COLORS) + 1);
+      return String(index === drawn.length - 1 && index > 0 && index % COLORS === 0 ? 2 : (index % COLORS) + 1);
     });
-    const at = (t: number, r = RADIUS) => {
-      const angle = t * 2 * Math.PI;
-      return `${(r * Math.sin(angle)).toFixed(3)},${(-r * Math.cos(angle)).toFixed(3)}`;
-    };
 
     const pie = document.createElement('div');
     pie.className = 'pie-chart-pie';
@@ -172,13 +168,12 @@ export class PieChart extends LineChart {
     const id = `pie-chart-mask-${++_maskId}`;
     const area = { x: '-50', y: '-50', width: '100', height: '100' };
     const mask = node('mask', { id, maskUnits: 'userSpaceOnUse', ...area });
-    const edges = this._turns.filter(([start, end]) => end > start);
     mask.append(
       node('rect', { ...area, fill: 'white' }),
       node('path', {
         class: 'pie-chart-gaps',
         stroke: 'black',
-        d: edges.length > 1 ? edges.map(([start]) => `M0,0L${at(start, 50)}`).join('') : ''
+        d: drawn.length > 1 ? drawn.map(([start]) => `M0,0L${at(start, 50)}`).join('') : ''
       }),
       node('circle', { class: 'pie-chart-hole', r: String(RADIUS), fill: 'black' })
     );
@@ -193,7 +188,7 @@ export class PieChart extends LineChart {
         // A whole circle is two half arcs; one arc cannot end where it starts.
         d: end - start >= 1
           ? `M0,${-RADIUS}${arc} 1 1 0,${RADIUS}${arc} 1 1 0,${-RADIUS}Z`
-          : `M0,0L${at(start)}${arc} ${end - start > 0.5 ? 1 : 0} 1 ${at(end)}Z`
+          : `M0,0L${at(start, RADIUS)}${arc} ${end - start > 0.5 ? 1 : 0} 1 ${at(end, RADIUS)}Z`
       }) as SVGPathElement;
       slices.append(slice);
       return slice;

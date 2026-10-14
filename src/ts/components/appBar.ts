@@ -92,8 +92,7 @@ export class AppBar extends Component<BaseOptions> {
     if (!this._input) return;
 
     const id = this._input.getAttribute('aria-controls');
-    if (id) this._view = document.getElementById(id);
-    if (!this._view) this._view = this.el.querySelector('.search-view');
+    this._view = (id && document.getElementById(id)) || this.el.querySelector('.search-view');
     if (!this._view) return;
 
     this._input.addEventListener('focus', this._onSearchFocus);

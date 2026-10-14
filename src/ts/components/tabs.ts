@@ -62,8 +62,7 @@ export class Tabs extends Component<TabsOptions> {
     }
     this._tabLinks.forEach(link => {
       this._originalLinks.set(link, { active: link.classList.contains('active'), current: link.getAttribute('aria-current') });
-      if (link.hasAttribute('target')) return;
-      const panel = link.hash && document.getElementById(link.hash.slice(1));
+      const panel = this._panelFor(link);
       if (panel) this._originalPanels.set(panel, {
         display: panel.style.display, priority: panel.style.getPropertyPriority('display'),
         active: panel.classList.contains('active'), carousel: panel.classList.contains('carousel-item')
@@ -162,12 +161,7 @@ export class Tabs extends Component<TabsOptions> {
   // and right positions are both read before either is written.
   _handleWindowResize = Utils.throttle(() => {
     this._setTabsAndTabWidth();
-    if (this._tabWidth !== 0 && this._tabsWidth !== 0) {
-      const left = this._calcLeftPos(this._activeTabLink);
-      const right = this._calcRightPos(this._activeTabLink);
-      this._indicator.style.left = left + 'px';
-      this._indicator.style.right = right + 'px';
-    }
+    if (this._tabWidth !== 0 && this._tabsWidth !== 0) this._positionIndicator();
   }, 200);
 
   _queryTabLinks() {
@@ -179,7 +173,7 @@ export class Tabs extends Component<TabsOptions> {
   _handleTabClick = (e: MouseEvent) => {
     const target = e.target as Element | null;
     if (!target) return;
-    const tabLink = target.closest('a') as HTMLAnchorElement | null;
+    const tabLink = target.closest('a');
     if (!tabLink || !Array.from(this._tabLinks).includes(tabLink)) return;
 
     const tab = tabLink.parentElement;
@@ -194,8 +188,7 @@ export class Tabs extends Component<TabsOptions> {
     // Act as regular link if target attribute is specified.
     if (tabLink.hasAttribute('target')) return;
     if (this.options.swipeable) {
-      const panel = tabLink.hash && document.getElementById(tabLink.hash.slice(1));
-      const index = this._tabsCarousel.images.indexOf(panel as HTMLElement);
+      const index = this._tabsCarousel.images.indexOf(this._panelFor(tabLink));
       if (index >= 0) this._tabsCarousel.set(index);
       e.preventDefault();
       return;
@@ -230,8 +223,21 @@ export class Tabs extends Component<TabsOptions> {
     indicator.classList.add('indicator');
     this.el.appendChild(indicator);
     this._indicator = indicator;
-    this._indicator.style.left = this._calcLeftPos(this._activeTabLink) + 'px';
-    this._indicator.style.right = this._calcRightPos(this._activeTabLink) + 'px';
+    this._positionIndicator();
+  }
+
+  /** Reads both positions before writing either. */
+  private _positionIndicator() {
+    const left = this._calcLeftPos(this._activeTabLink);
+    const right = this._calcRightPos(this._activeTabLink);
+    this._indicator.style.left = left + 'px';
+    this._indicator.style.right = right + 'px';
+  }
+
+  /** The panel a link shows, or null for a `target` link or one without a hash. */
+  private _panelFor(a: HTMLAnchorElement): HTMLElement | null {
+    if (!a.hash || a.hasAttribute('target')) return null;
+    return document.getElementById(a.hash.slice(1));
   }
 
   /**
@@ -246,7 +252,7 @@ export class Tabs extends Component<TabsOptions> {
    * never moving it left the old tab announcing itself as current.
    */
   private _setActiveTabLink(tabLink: HTMLAnchorElement) {
-    Array.from(this._tabLinks).forEach((a: HTMLAnchorElement) => {
+    Array.from(this._tabLinks).forEach(a => {
       a.classList.remove('active');
       a.removeAttribute('aria-current');
     });
@@ -254,22 +260,16 @@ export class Tabs extends Component<TabsOptions> {
     tabLink.classList.add('active');
     tabLink.setAttribute('aria-current', 'page');
     this._index = Array.from(this._tabLinks).indexOf(tabLink);
-    this._content = tabLink.hasAttribute('target') ? null : document.getElementById(tabLink.hash.slice(1));
+    this._content = this._panelFor(tabLink);
   }
 
   _setupActiveTabLink() {
     // If the location.hash matches one of the links, use that as the active tab.
-    this._activeTabLink = Array.from(this._tabLinks).find(
-      (a: HTMLAnchorElement) => a.getAttribute('href') === location.hash
-    );
-    // If no match is found, use the first link or any with class 'active' as the initial active tab.
-    if (!this._activeTabLink) {
-      let activeTabLink = this.el.querySelector('a.active');
-      if (!activeTabLink) {
-        activeTabLink = this._tabLinks[0];
-      }
-      this._activeTabLink = activeTabLink as HTMLAnchorElement;
-    }
+    // If no match is found, use any with class 'active', then the first link.
+    this._activeTabLink =
+      Array.from(this._tabLinks).find(a => a.getAttribute('href') === location.hash) ??
+      this.el.querySelector<HTMLAnchorElement>('a.active') ??
+      this._tabLinks[0];
     this._setActiveTabLink(this._activeTabLink);
 
     this._originalPanels.forEach((_, panel) => panel.classList.toggle('active', panel === this._content));
@@ -278,12 +278,10 @@ export class Tabs extends Component<TabsOptions> {
   _setupSwipeableTabs() {
     const tabsContent = [];
     this._tabLinks.forEach((a) => {
-      if (a.hash && !a.hasAttribute('target')) {
-        const currContent = document.getElementById(a.hash.slice(1));
-        if (!currContent) return;
-        currContent.classList.add('carousel-item');
-        tabsContent.push(currContent);
-      }
+      const currContent = this._panelFor(a);
+      if (!currContent) return;
+      currContent.classList.add('carousel-item');
+      tabsContent.push(currContent);
     });
 
     // Create Carousel-Wrapper around Tab-Contents
@@ -325,11 +323,9 @@ export class Tabs extends Component<TabsOptions> {
   _setupNormalTabs() {
     // Hide Tabs Content
     Array.from(this._tabLinks).forEach((a) => {
-      if (a === this._activeTabLink || a.hasAttribute('target')) return;
-      if (a.hash) {
-        const currContent = document.getElementById(a.hash.slice(1));
-        if (currContent) currContent.style.display = 'none';
-      }
+      if (a === this._activeTabLink) return;
+      const currContent = this._panelFor(a);
+      if (currContent) currContent.style.display = 'none';
     });
   }
 
@@ -368,8 +364,7 @@ export class Tabs extends Component<TabsOptions> {
       left ${this.options.duration}ms ease-out ${leftDelay}ms,
       right ${this.options.duration}ms ease-out ${rightDelay}ms`;
 
-    this._indicator.style.left = this._calcLeftPos(this._activeTabLink) + 'px';
-    this._indicator.style.right = this._calcRightPos(this._activeTabLink) + 'px';
+    this._positionIndicator();
   }
 
   /**
@@ -377,9 +372,7 @@ export class Tabs extends Component<TabsOptions> {
    * @param tabId The id of the tab that you want to switch to.
    */
   select(tabId: string) {
-    const tab = Array.from(this._tabLinks).find(
-      (a: HTMLAnchorElement) => a.getAttribute('href') === '#' + tabId
-    );
-    if (tab) (<HTMLAnchorElement>tab).click();
+    const tab = Array.from(this._tabLinks).find(a => a.getAttribute('href') === '#' + tabId);
+    if (tab) tab.click();
   }
 }

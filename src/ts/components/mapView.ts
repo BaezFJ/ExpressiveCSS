@@ -284,6 +284,13 @@ export class MapView extends Component<MapViewOptions> {
     };
     const pointer = () => { this.map.getCanvas().style.cursor = 'pointer'; };
     const reset = () => { this.map.getCanvas().style.cursor = ''; };
+    const listen = (method: 'on' | 'off') => {
+      this.map[method]('click', clusters, zoomIn);
+      for (const layer of [clusters, points]) {
+        this.map[method]('mouseenter', layer, pointer);
+        this.map[method]('mouseleave', layer, reset);
+      }
+    };
     this._draw(id, {
       draw: () => {
         const color = options.color ?? this._color('var(--md-comp-map-cluster-color)');
@@ -329,19 +336,9 @@ export class MapView extends Component<MapViewOptions> {
           paint: { 'circle-color': color, 'circle-radius': 6, 'circle-stroke-width': 2, 'circle-stroke-color': surface }
         });
       },
-      off: () => {
-        this.map.off('click', clusters, zoomIn);
-        for (const layer of [clusters, points]) {
-          this.map.off('mouseenter', layer, pointer);
-          this.map.off('mouseleave', layer, reset);
-        }
-      }
+      off: () => listen('off')
     });
-    this.map.on('click', clusters, zoomIn);
-    for (const layer of [clusters, points]) {
-      this.map.on('mouseenter', layer, pointer);
-      this.map.on('mouseleave', layer, reset);
-    }
+    listen('on');
   }
 
   /** Removes a route, arcs or clusters added with this id. */

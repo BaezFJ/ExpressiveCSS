@@ -255,10 +255,7 @@ export class Snackbar {
         snackbar.dismiss();
         // Animate snackbar back to original position
       } else {
-        snackbar.el.style.transition = 'transform .2s, opacity .2s';
-        snackbar.el.style.transform = '';
-        snackbar.el.style.opacity = '';
-        snackbar._resumeTimer();
+        snackbar._snapBack();
       }
       Snackbar._draggedSnackbar = null;
     }
@@ -276,11 +273,15 @@ export class Snackbar {
     if (!snackbar) return;
     snackbar.panning = false;
     snackbar.el.classList.remove('panning');
-    snackbar.el.style.transition = 'transform .2s, opacity .2s';
-    snackbar.el.style.transform = '';
-    snackbar.el.style.opacity = '';
-    snackbar._resumeTimer();
+    snackbar._snapBack();
     Snackbar._draggedSnackbar = null;
+  }
+
+  private _snapBack() {
+    this.el.style.transition = 'transform .2s, opacity .2s';
+    this.el.style.transform = '';
+    this.el.style.opacity = '';
+    this._resumeTimer();
   }
 
   /**
@@ -298,7 +299,7 @@ export class Snackbar {
       ? Utils.getElementById(this.options.root ?? document.body, this.options.snackbarId)
       : document.createElement('div');
     if (snackbar instanceof HTMLTemplateElement) {
-      const node = (snackbar as HTMLTemplateElement).content.cloneNode(true);
+      const node = snackbar.content.cloneNode(true);
       snackbar = (node as HTMLElement).firstElementChild as HTMLElement;
     } else if (snackbar && this.options.snackbarId) {
       const placeholder = document.createComment('');

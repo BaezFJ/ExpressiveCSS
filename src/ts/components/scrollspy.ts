@@ -176,10 +176,6 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
       }
     }
     const href = `#${id}`;
-    const links = document.querySelectorAll('a[href^="#"]');
-    for (let i = 0; i < links.length; i++) {
-      if (links[i].getAttribute('href') === href) return links[i];
-    }
-    return null;
+    return Array.from(document.querySelectorAll('a[href^="#"]')).find(link => link.getAttribute('href') === href) ?? null;
   }
 }

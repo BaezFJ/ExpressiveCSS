@@ -28,6 +28,15 @@ export function svgNode(name: string, attributes: Record<string, string> = {}): 
   for (const key in attributes) element.setAttribute(key, attributes[key]);
   return element;
 }
+
+/** A point at a turn clockwise from the top and a distance from the middle, as "x,y". */
+export function polarPoint(turn: number, r: number): string {
+  const angle = turn * 2 * Math.PI;
+  return `${(r * Math.sin(angle)).toFixed(3)},${(-r * Math.cos(angle)).toFixed(3)}`;
+}
+
+/** A series' color number, for its `data-series`. */
+export const seriesColor = (i: number) => String((i % COLORS) + 1);
 let _gradientId = 0;
 
 export interface Series {
@@ -224,7 +233,7 @@ export class LineChart extends Component<LineChartOptions> {
     this.series.forEach((series, i) => {
       const value = series.values[index];
       if (value === null) return;
-      const color = String((i % COLORS) + 1);
+      const color = seriesColor(i);
       const top = series.tops[index];
       if (top !== null && this._points) {
         const dot = document.createElement('span');
@@ -398,7 +407,7 @@ export class LineChart extends Component<LineChartOptions> {
     legend.setAttribute('aria-hidden', 'true');
     legend.append(...this.series.map((series, i) => {
       const li = document.createElement('li');
-      li.dataset.series = String((i % COLORS) + 1);
+      li.dataset.series = seriesColor(i);
       li.textContent = series.name;
       return li;
     }));
@@ -407,16 +416,18 @@ export class LineChart extends Component<LineChartOptions> {
 
   /** Draws the series, which fill the plot. */
   protected _draw(drawn = this.series): Element {
-    const svg = document.createElementNS(SVG, 'svg');
-    svg.setAttribute('viewBox', '0 0 100 100');
-    svg.setAttribute('preserveAspectRatio', 'none');
-    svg.setAttribute('aria-hidden', 'true');
-    svg.setAttribute('focusable', 'false');
+    const svg = svgNode('svg', {
+      viewBox: '0 0 100 100',
+      preserveAspectRatio: 'none',
+      'aria-hidden': 'true',
+      focusable: 'false'
+    });
 
     for (const series of drawn) {
-      const group = document.createElementNS(SVG, 'g');
-      group.setAttribute('class', `${this._type}-series ${series.className}`.trim());
-      group.dataset.series = String((this.series.indexOf(series) % COLORS) + 1);
+      const group = svgNode('g', {
+        class: `${this._type}-series ${series.className}`.trim(),
+        'data-series': seriesColor(this.series.indexOf(series))
+      });
 
       // A gap in the data breaks the line into runs of row indexes.
       const runs: number[][] = [[]];
@@ -430,30 +441,25 @@ export class LineChart extends Component<LineChartOptions> {
       const tops = filled.map((run) => monotonePath(points(run, series.tops)));
 
       const id = `line-chart-gradient-${++_gradientId}`;
-      const gradient = document.createElementNS(SVG, 'linearGradient');
-      gradient.id = id;
-      gradient.setAttribute('x2', '0');
-      gradient.setAttribute('y2', '1');
-      gradient.append(document.createElementNS(SVG, 'stop'), document.createElementNS(SVG, 'stop'));
-      gradient.lastElementChild.setAttribute('offset', '1');
+      const gradient = svgNode('linearGradient', { id, x2: '0', y2: '1' });
+      gradient.append(svgNode('stop'), svgNode('stop', { offset: '1' }));
 
-      const area = document.createElementNS(SVG, 'path');
-      area.setAttribute('class', `${this._type}-area`);
-      area.setAttribute('fill', `url(#${id})`);
-      // A stacked area runs back along the series below; the reversed curve
-      // is the same curve. Its base stops at the plot bottom when the y axis
-      // starts above zero.
-      area.setAttribute('d', filled
-        .map((run, r) => {
-          if (!series.base) return `${tops[r]}V100H${this._x(run[0])}Z`;
-          const base = points(run, series.base).map(([x, y]): [number, number] => [x, Math.min(100, y)]);
-          return `${tops[r]}L${monotonePath(base.reverse()).slice(1)}Z`;
-        })
-        .join(''));
+      const area = svgNode('path', {
+        class: `${this._type}-area`,
+        fill: `url(#${id})`,
+        // A stacked area runs back along the series below; the reversed curve
+        // is the same curve. Its base stops at the plot bottom when the y axis
+        // starts above zero.
+        d: filled
+          .map((run, r) => {
+            if (!series.base) return `${tops[r]}V100H${this._x(run[0])}Z`;
+            const base = points(run, series.base).map(([x, y]): [number, number] => [x, Math.min(100, y)]);
+            return `${tops[r]}L${monotonePath(base.reverse()).slice(1)}Z`;
+          })
+          .join('')
+      });
 
-      const line = document.createElementNS(SVG, 'path');
-      line.setAttribute('class', `${this._type}-line`);
-      line.setAttribute('d', tops.join(''));
+      const line = svgNode('path', { class: `${this._type}-line`, d: tops.join('') });
 
       group.append(gradient, area, line);
       svg.append(group);
