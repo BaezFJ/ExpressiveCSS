@@ -18,17 +18,17 @@ const S = defineSections([
   { id: "custom-html", label: "Custom HTML" },
   { id: "callback", label: "Callback" },
   { id: "styling", label: "Styling" },
-  { id: "dismissal", label: "Dismissing snackbars", heading: "Dismiss a Snackbar Programmatically" },
+  { id: "dismissal", label: "Dismissing snackbars", heading: "Dismiss a snackbar programmatically" },
 ]);
 ---
 <DocsLayout page="snackbar">
-<p>Snackbars with an action are persistent and dismissible by default. Escape dismisses a focused snackbar; closing restores focus only when it remains inside the bar. Explicit finite timers still pause during focus or hover.</p>
+<p>Snackbars with an action are persistent and dismissible by default. Escape dismisses a focused snackbar, and closing it restores focus only when focus is still inside the bar. A finite timer that you set still pauses during focus or hover.</p>
 
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Snackbars show short updates about app processes at the bottom
-          of the screen. They should not interrupt browsing — people can
+          of the screen. They should not interrupt browsing. People can
           keep using the page without interacting with the bar. A
           <code>.snackbar</code> is the bar. A <code>&lt;p&gt;</code> is
           the supporting text. A trailing <code>&lt;button&gt;</code> is
@@ -38,21 +38,21 @@ const S = defineSections([
         <p>
           Tokens follow the
           <a href="https://m3.material.io/components/snackbar/specs">M3 snackbar spec</a>.
-          The container is <code>inverse-surface</code>, 4dp corners,
-          elevation 3, 48dp minimum. Supporting text is
-          <code>body-medium</code> / <code>inverse-on-surface</code>,
-          two lines max. The action is a <code>label-large</code> /
-          <code>inverse-primary</code> text button. Close is a 24dp
+          The container is <code>inverse-surface</code> with 4dp corners,
+          elevation 3, and a 48dp minimum height. Supporting text is
+          <code>body-medium</code> in <code>inverse-on-surface</code>,
+          up to two lines. The action is a <code>label-large</code> text button in
+          <code>inverse-primary</code>. Close is a 24dp
           <code>inverse-on-surface</code> icon. On compact viewports the
-          bar is inset 8dp from the edges; from the Medium breakpoint up it
-          hugs content (344–672dp) and sits centered 24dp from the bottom.
+          bar is inset 8dp from the edges. From the Medium breakpoint up it
+          fits its content, between 344dp and 672dp wide, and sits centered 24dp from the bottom.
         </p>
         <p>
           A text-only snackbar defaults to 4 seconds. Setting <code>action</code>
           defaults to <code>displayLength: Infinity</code> and
           <code>dismissible: true</code>. Explicit options override these defaults. Only one shows at a
-          time. Snackbar is not in <code>AutoInit()</code> — construct one
-          when you need it, or drop a static <code>.snackbar</code> in
+          time. Snackbar is not in <code>AutoInit()</code>. Construct one
+          when you need it, or put a static <code>.snackbar</code> in
           the page and add <code>.active</code> to pin it.
         </p>
 
@@ -103,7 +103,7 @@ new Expressive.Snackbar({
     <p>Actions and Dismiss use ordinary Tab navigation. Provide a visible notification-actions button near the task trigger when reaching the end of the page would be cumbersome. Its click handler can call <code>instance.el.querySelector('button, a[href]')?.focus()</code>. Do not call it automatically when showing a snackbar. Escape is handled only inside the snackbar and does not also dismiss an enclosing dialog. If an action moves focus elsewhere, closing preserves that focus. Keep an equivalent persistent message for timed feedback.</p>
         <p>
           The IIFE bundle exposes <code>Expressive.Snackbar</code>. Snackbar is
-          not in <code>AutoInit()</code> — construct one when you need it.
+          not in <code>AutoInit()</code>, so construct one when you need it.
         </p>
 <Code code={`
 new Expressive.Snackbar({
@@ -123,7 +123,7 @@ document.getElementById('snackbar-basic').addEventListener('click', function() {
   <Section {...S.markup}>
         <p>
           The same anatomy works as static HTML. Without
-          <code>.active</code> the bar is in-flow — useful for previews.
+          <code>.active</code> the bar stays in the document flow, which is useful for previews.
           With <code>.active</code> it pins to the bottom of the
           viewport, centered from the Medium breakpoint. Add
           <code>.top</code> only if you must move it off the bottom.
@@ -222,7 +222,7 @@ document.getElementById('snackbar-basic').addEventListener('click', function() {
               <td><code>activationPercent</code></td>
               <td>Number</td>
               <td><code>0.8</code></td>
-              <td>Fraction of the snackbar’s width a drag must travel to dismiss it.</td>
+              <td>Fraction of the snackbar's width a drag must travel to dismiss it.</td>
             </tr>
             <tr>
               <td><code>root</code></td>
@@ -313,8 +313,8 @@ new Expressive.Snackbar({
   <Section {...S.styling}>
         <p>
           Pass classes in the <code>classes</code> option.
-          <code>rounded</code> is a 24dp stadium — the M3 default is 4dp.
-          Snackbars sit at the bottom; <code>top</code> is the exception.
+          <code>rounded</code> is a 24dp stadium. The M3 default is 4dp corners.
+          Snackbars sit at the bottom unless you add <code>top</code>.
         </p>
         <p>
           <button type="button" id="snackbar-rounded">Show round Snackbar</button>
@@ -335,8 +335,8 @@ new Expressive.Snackbar({
   <Section {...S.dismissal}>
         <p>
           To remove a specific snackbar, get the instance from the snackbar
-          element and call <code>dismiss()</code>. Swipe also dismisses when you
-          drag past 80% of the width or flick. After a short drag, pausing for at
+          element and call <code>dismiss()</code>. A swipe also dismisses it when you
+          drag past 80% of the width or flick it. After a short drag, pausing for at
           least 100ms before release lets the snackbar snap back. Cancelling a swipe leaves the snackbar
           open and does not affect the next gesture. The action and close
           buttons are not swipe handles.

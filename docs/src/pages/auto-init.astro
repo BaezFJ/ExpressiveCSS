@@ -11,7 +11,7 @@ const S = defineSections([
   { id: "initialization", label: "Initialization" },
   { id: "options", label: "Options" },
   { id: "components", label: "Components" },
-  { id: "ignoring", label: "Ignoring Elements" },
+  { id: "ignoring", label: "Ignoring elements" },
 ]);
 ---
 <DocsLayout page="auto_init">
@@ -70,11 +70,11 @@ Tooltip.init(element, { position: 'top' });
               <td><code>options</code></td>
               <td>Object</td>
               <td><code>{"{}"}</code></td>
-              <td>Options for each component, keyed by name. See that component’s page for its own options.</td>
+              <td>Options for each component, keyed by name. See that component's page for its own options.</td>
             </tr>
         </OptionsTable>
         <p>
-          Calling <code>AutoInit()</code> again on the same elements is safe: each component’s constructor
+          Calling <code>AutoInit()</code> again on the same elements is safe: each component's constructor
           destroys any existing instance on that element before creating a new one.
         </p>
   </Section>
@@ -135,8 +135,8 @@ Tooltip.init(element, { position: 'top' });
   </Section>
   <Section {...S.ignoring}>
         <p>
-          If you want <code>AutoInit()</code> to skip an element, add the class
-          <code>no-autoinit</code>. Initialize that element yourself with the component’s
+          To make <code>AutoInit()</code> skip an element, add the class
+          <code>no-autoinit</code>. Initialize that element yourself with the component's
           <code>init</code> method when you need options other than the defaults.
         </p>
 <Code code={`

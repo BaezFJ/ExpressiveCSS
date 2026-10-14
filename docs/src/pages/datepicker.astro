@@ -23,7 +23,7 @@ const S = defineSections([
 ---
 <DocsLayout page="datepicker">
 <PageBody sections={S}>
-<p>The inline and docked calendars support keyboard navigation. Enter on the date input focuses a day. Tab enters or leaves the grid; arrow keys move by day or week. Home/End follow <code>firstDay</code>, and Left/Right follow <code>isRTL</code>. PageUp/PageDown change month; hold Shift to change year. Enter or Space selects an enabled day. Disabled dates remain focusable and are announced as unavailable. Navigation respects configured bounds and preserves focus after redraws. This does not apply to modal pickers.</p>
+<p>The inline and docked calendars support keyboard navigation. Enter on the date input focuses a day. Tab enters or leaves the grid; arrow keys move by day or week. Home and End follow <code>firstDay</code>, and Left and Right follow <code>isRTL</code>. PageUp and PageDown change the month; hold Shift to change the year. Enter or Space selects an enabled day. Disabled dates remain focusable and are announced as unavailable. Navigation respects configured bounds and preserves focus after redraws. This does not apply to modal pickers.</p>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>date-picker</code> to a text input. <code>AutoInit()</code> starts every
@@ -105,7 +105,7 @@ Expressive.Datepicker.init(elem, {
 });
 `} />
         <p>
-          The popover stays inside the input’s parent and accounts for its
+          The popover stays inside the input's parent and accounts for its
           positioning and scroll offsets. Positioned wrappers such as
           <code>.field</code> can be used directly.
         </p>
@@ -157,7 +157,7 @@ Expressive.Datepicker.init(elem, {
               <td><code>defaultDate</code></td>
               <td>Date</td>
               <td><code>null</code></td>
-              <td>Initial date to view. Falls back to the input’s current value, then today.</td>
+              <td>Initial date to view. Falls back to the input's current value, then today.</td>
             </tr>
             <tr>
               <td><code>defaultEndDate</code></td>
@@ -265,7 +265,7 @@ Expressive.Datepicker.init(elem, {
               <td><code>i18n</code></td>
               <td>Object</td>
               <td>See below</td>
-              <td>Labels and month/weekday names. Partial objects are merged with the defaults.</td>
+              <td>Labels and month and weekday names. Partial objects are merged with the defaults.</td>
             </tr>
             <tr>
               <td><code>events</code></td>
@@ -334,42 +334,42 @@ Expressive.Datepicker.init(elem, {
             <tr>
               <td><code>d</code></td>
               <td>Date of the month.</td>
-              <td>1–31</td>
+              <td>1 to 31</td>
             </tr>
             <tr>
               <td><code>dd</code></td>
               <td>Date of the month, two digits.</td>
-              <td>01–31</td>
+              <td>01 to 31</td>
             </tr>
             <tr>
               <td><code>ddd</code></td>
               <td>Weekday short name from <code>i18n</code>.</td>
-              <td>Sun–Sat</td>
+              <td>Sun to Sat</td>
             </tr>
             <tr>
               <td><code>dddd</code></td>
               <td>Weekday full name from <code>i18n</code>.</td>
-              <td>Sunday–Saturday</td>
+              <td>Sunday to Saturday</td>
             </tr>
             <tr>
               <td><code>m</code></td>
               <td>Month of the year.</td>
-              <td>1–12</td>
+              <td>1 to 12</td>
             </tr>
             <tr>
               <td><code>mm</code></td>
               <td>Month of the year, two digits.</td>
-              <td>01–12</td>
+              <td>01 to 12</td>
             </tr>
             <tr>
               <td><code>mmm</code></td>
               <td>Month short name from <code>i18n</code>.</td>
-              <td>Jan–Dec</td>
+              <td>Jan to Dec</td>
             </tr>
             <tr>
               <td><code>mmmm</code></td>
               <td>Month full name from <code>i18n</code>.</td>
-              <td>January–December</td>
+              <td>January to December</td>
             </tr>
             <tr>
               <td><code>yy</code></td>

@@ -19,16 +19,16 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>nav.navigation-bar</code> holds 3–5 destinations of equal
+          A <code>nav.navigation-bar</code> holds 3 to 5 destinations of equal
           importance. Destinations do not change from screen to screen.
-          There is no JavaScript — mark the current view with
+          The bar needs no JavaScript. Mark the current view with
           <code>aria-current="page"</code> (or <code>active</code>).
         </p>
         <p>
           This is not the
           <a href={route('navbar')}>app bar</a>.
-          The app bar names the current page and holds 1–2 actions.
-          The navigation bar switches between the app’s top-level views.
+          The app bar names the current page and holds one or two actions.
+          The navigation bar switches between the app's top-level views.
           Use it in compact and medium windows; a
           <a href={route('navigation_rail')}>navigation rail</a>
           can also serve medium windows. Prefer an expanded rail in wider windows.
@@ -37,7 +37,7 @@ const S = defineSections([
   </Section>
   <Section {...S.stacked}>
         <p>
-          Default. Icon above the label. The selected destination puts a
+          This is the default, with the icon above the label. The selected destination puts a
           pill behind the icon and fills the glyph. Use this in compact
           windows.
         </p>

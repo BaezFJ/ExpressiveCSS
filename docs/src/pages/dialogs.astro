@@ -19,10 +19,10 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          Use a dialog so people act on information — confirm a high-risk
-          action, finish one task, or read the copy that belongs to that
-          task. Two variants, same element: a basic dialog and a
-          full-screen dialog. There is no
+          Use a dialog when people need to act on information: to confirm a
+          high-risk action, finish one task, or read the copy that belongs to
+          that task. The basic and full-screen variants use the same element.
+          There is no
           <code>modal-header</code>, <code>modal-content</code>, or
           <code>modal-footer</code> class.
         </p>
@@ -30,7 +30,7 @@ const S = defineSections([
           Tokens follow the
           <a href="https://m3.material.io/components/dialogs/specs">M3 dialog spec</a>.
           The basic container is <code>surface-container-high</code>, 28dp
-          corners, 280–560dp, elevation 3. The headline is
+          corners, 280 to 560dp wide, and elevation 3. The headline is
           <code>headline-small</code> / <code>on-surface</code>; supporting
           text is <code>body-medium</code> /
           <code>on-surface-variant</code>. Actions are text buttons, end
@@ -41,7 +41,7 @@ const S = defineSections([
         </p>
         <p>
           Open it with <code>showModal()</code> and close it with
-          <code>close()</code> — the Dialog API, not a plugin.
+          <code>close()</code>. These are Dialog API methods, not a plugin.
         </p>
   </Section>
   <Section {...S.basic}>
@@ -121,8 +121,8 @@ const S = defineSections([
         <p>
           A <code>&lt;form method="dialog"&gt;</code> closes the dialog when a
           submit button is pressed and sets <code>dialog.returnValue</code>
-          from the button’s <code>value</code>. Action buttons are text
-          buttons by default — add <code>filled</code>, <code>tonal</code>,
+          from the button's <code>value</code>. Action buttons are text
+          buttons by default. Add <code>filled</code>, <code>tonal</code>,
           or <code>outlined</code> if you need more emphasis. Tapping the
           scrim closes it too, but only if the press and the release both
           miss the dialog. Docked panes are
@@ -133,8 +133,8 @@ const S = defineSections([
   </Section>
   <Section {...S.fullscreen}>
         <p>
-          Add <code>max</code> when the task needs the whole viewport —
-          typically on compact windows, or any time the dialog holds a
+          Add <code>max</code> when the task needs the whole viewport,
+          typically on compact windows or whenever the dialog holds a
           form. There is no scrim and no corner radius. A
           <code>&lt;header&gt;</code> is the 64dp top bar: a close icon,
           a <code>title-large</code> headline, and the confirming text
@@ -209,9 +209,9 @@ dialog.close();
 `} />
         <p>
           A tap or click on the scrim also closes a basic dialog. Both ends
-          of the gesture have to land outside the dialog’s box, so a drag
-          that starts on the dialog — selecting text, missing a button —
-          cannot dismiss it. Set <code>closedby="none"</code> or
+          of the gesture have to land outside the dialog's box, so a drag
+          that starts on the dialog, such as selecting text or missing a
+          button, cannot dismiss it. Set <code>closedby="none"</code> or
           <code>closedby="closerequest"</code> to opt out.
         </p>
   </Section>

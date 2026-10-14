@@ -15,8 +15,8 @@ const S = defineSections([
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>&lt;label&gt;</code> wrapping <code>&lt;input type="radio"&gt;</code>
-          is the control. The label text is a sibling of the input — no extra
-          class, no required <code>&lt;span&gt;</code>. They are CSS only.
+          is the control. The label text is a sibling of the input. It needs no
+          extra class or <code>&lt;span&gt;</code>. They are CSS only.
           There is no JavaScript component and nothing to AutoInit.
         </p>
         <p>
@@ -31,7 +31,7 @@ const S = defineSections([
         <p>
           Use the same <code>name</code> on every radio in a group. Add
           <code>disabled</code> to disable one. <code>with-gap</code> is a
-          no-op — the selected state is always the ring plus inner disc.
+          no-op, because the selected state is always the ring plus inner disc.
         </p>
         <fieldset>
           <legend>Colour</legend>

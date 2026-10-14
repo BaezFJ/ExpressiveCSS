@@ -22,33 +22,33 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          An icon button is one action expressed as one icon — the toolbar
-          overflow, the close on a dialog, the star on a row. Add
+          An icon button is one action shown as one icon, such as a toolbar
+          overflow, a dialog's close button, or the star on a row. Add
           <code>icon-button</code> to a <code>&lt;button&gt;</code>, or to an
           <code>&lt;a&gt;</code> when it navigates, and put a single
           <code>&lt;span class="material-symbols"&gt;</code> inside it.
         </p>
         <p>
-          The icon is decoration, so it is <code>aria-hidden</code> — which
-          leaves the control with nothing to be named by. Every icon button
-          needs an <code>aria-label</code>. That is not a suggestion here:
+          The icon is decoration, so it is <code>aria-hidden</code>, which
+          leaves the control without an accessible name. Every icon button
+          needs an <code>aria-label</code>.
           <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">SEMANTICS.md</a>
-          enforces both halves against the docs, and a bare icon button fails
+          enforces both rules against the docs, and a bare icon button fails
           the suite.
         </p>
         <p>
-          It keeps its own look inside the components that host actions — a
+          It keeps its own look inside the components that host actions: a
           toolbar, an app bar, a list row, a dialog header, a snackbar, a
-          navigation rail, a pane header, a footer. Those hosts style the plain
-          controls they are given and step aside for a control that styles
-          itself, the same way they already do for <code>button</code>.
+          navigation rail, a pane header, or a footer. Those hosts style plain
+          controls placed in them and leave a control that styles itself
+          alone, as they already do for <code>button</code>.
         </p>
         <p>
-          This is a component in its own right, not a modifier on the common
+          This is a separate component, not a modifier on the common
           button. Material 3 gives it its own token families, its own size
-          ladder and its own colours, and none of them line up with a common
+          scale and its own colours, and none of them line up with a common
           button's. The older <code>&lt;button class="circle"&gt;</code> still
-          works and is still the 40dp common button in a round shape — see
+          works and is still the 40dp common button in a round shape. See
           <a href={route('buttons')}>Buttons</a>.
         </p>
         <p>
@@ -73,20 +73,20 @@ const S = defineSections([
   </Section>
   <Section {...S.styles}>
         <p>
-          Four styles, and the modifier names are the button axis's:
+          There are four styles, and they use the same modifier names as buttons:
           <strong>standard</strong> is the default and has no container,
           <code>filled</code> is <code>primary</code>,
           <code>tonal</code> is <code>secondary-container</code>, and
           <code>outlined</code> is an <code>outline-variant</code> border with
           no fill. Material 3 gives icon buttons no elevated style, so there is
-          no <code>elevated</code> here; <code>text</code> is what standard
-          already is.
+          no <code>elevated</code> here. Standard is already what
+          <code>text</code> would be.
         </p>
         <div class="docs-table-scroll">
         <table class="striped">
           <thead><tr><th>Style</th><th>Container</th><th>Icon</th><th>Use it for</th></tr></thead>
           <tbody>
-            <tr><td>standard (default)</td><td>none</td><td><code>on-surface-variant</code></td><td>The usual case — toolbars, list rows, app bars.</td></tr>
+            <tr><td>standard (default)</td><td>none</td><td><code>on-surface-variant</code></td><td>The usual case, in toolbars, list rows and app bars.</td></tr>
             <tr><td><code>filled</code></td><td><code>primary</code></td><td><code>on-primary</code></td><td>The one high-emphasis action on the screen.</td></tr>
             <tr><td><code>tonal</code></td><td><code>secondary-container</code></td><td><code>on-secondary-container</code></td><td>Medium emphasis, without the weight of a filled one.</td></tr>
             <tr><td><code>outlined</code></td><td>none, <code>outline-variant</code> border</td><td><code>on-surface-variant</code></td><td>Medium emphasis on a busy or image background.</td></tr>
@@ -102,7 +102,7 @@ const S = defineSections([
   </Section>
   <Section {...S.sizes}>
         <p>
-          Five sizes. <code>small</code> is the default at 40dp with a 24dp
+          There are five sizes. <code>small</code> is the default at 40dp with a 24dp
           icon, so it needs no class. The rest are
           <code>xsmall</code> (32dp, 20dp icon),
           <code>medium</code> (56dp, 24dp),
@@ -137,11 +137,11 @@ const S = defineSections([
   </Section>
   <Section {...S.width}>
         <p>
-          Width is the inset plus the icon, not a size of its own — which is
-          why the default width of every size equals its height, and why a
-          round icon button is a circle without being told to be one. Add
-          <code>narrow</code> to tighten the inset or <code>wide</code> to open
-          it up; both follow whichever size they are on.
+          Width is the inset plus the icon, so it has no size of its own. That
+          is why the default width of every size equals its height, and why a
+          round icon button is already a circle. Add <code>narrow</code> to
+          tighten the inset or <code>wide</code> to widen it. Both scale with
+          whichever size they are on.
         </p>
         <p>
           <button type="button" class="icon-button tonal medium narrow" aria-label="Star, narrow">
@@ -161,9 +161,9 @@ const S = defineSections([
   </Section>
   <Section {...S.shape}>
         <p>
-          Round by default. Add <code>square</code> for the squared container,
-          whose corner grows with the size — 12dp on the two small sizes, 16dp
-          on medium, 28dp on the two large ones. Either way the corner tightens
+          Icon buttons are round by default. Add <code>square</code> for the
+          squared container, whose corner grows with the size: 12dp on the
+          two small sizes, 16dp on medium, and 28dp on the two large ones. Either way the corner tightens
           while the button is pressed, which is the Material 3 Expressive shape
           morph.
         </p>
@@ -184,20 +184,20 @@ const S = defineSections([
   </Section>
   <Section {...S.disabled}>
         <p>
-          <code>disabled</code> on the <code>&lt;button&gt;</code>. The icon
+          Set <code>disabled</code> on the <code>&lt;button&gt;</code>. The icon
           drops to <code>on-surface</code> at 38%, and a style that has a
           container drops it to 10%.
         </p>
         <p>
           <strong>An <code>&lt;a href&gt;</code> cannot be disabled, and no
-          class makes it so.</strong> <code>pointer-events: none</code> stops
-          the pointer and nothing else: the link stays in the tab order and
-          still navigates on Enter, so a <code>.disabled</code> anchor is a
-          control that looks inert and is not. Drop the <code>href</code> — an
-          anchor without one is neither focusable nor actionable — or drop the
-          link entirely. <code>aria-disabled="true"</code> is styled the same
-          way for the case where the element must stay in the document and
-          announce itself as unavailable.
+          class makes it so.</strong> <code>pointer-events: none</code> only
+          blocks the pointer. The link stays in the tab order and still
+          navigates on Enter, so a <code>.disabled</code> anchor looks inert but
+          still works. Remove the <code>href</code>, since an anchor without one
+          is neither focusable nor actionable, or remove the link entirely.
+          <code>aria-disabled="true"</code> gets the same styling, for an
+          element that must stay in the document and announce itself as
+          unavailable.
         </p>
         <p>
           <button type="button" class="icon-button" aria-label="Add" disabled>
@@ -221,9 +221,9 @@ const S = defineSections([
   </Section>
   <Section {...S.links}>
         <p>
-          An icon button that navigates is an <code>&lt;a&gt;</code>. Note it
-          takes <code>icon-button</code> alone — not <code>button</code> as
-          well, which is the common button's class.
+          An icon button that navigates is an <code>&lt;a&gt;</code>. It
+          takes <code>icon-button</code> alone. Do not add <code>button</code>,
+          which is the common button's class.
         </p>
         <p>
           <a class="icon-button outlined" href={route('buttons')} aria-label="Open the Buttons page">
@@ -239,8 +239,8 @@ const S = defineSections([
   <Section {...S.tokens}>
         <p>
           Set these on the control, or on an ancestor to reach a group of them.
-          The size classes are nothing but a block of these values, so an
-          override is a size of your own.
+          Each size class only sets these values, so overriding them gives you
+          a custom size.
         </p>
         <TokenTable>
                 <tr><td><code>--md-comp-icon-button-container-height</code></td><td><code>40px</code></td></tr>

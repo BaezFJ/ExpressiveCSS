@@ -20,7 +20,7 @@ const S = defineSections([
         <p class="flow-text">
           Badges show notifications, counts, or status information on
           navigation items and icons. They can hold a label or a number.
-          Two variants: <strong>small</strong> (an empty
+          There are two variants: <strong>small</strong> (an empty
           <code>&lt;span class="badge"&gt;</code>, a 6dp dot) and
           <strong>large</strong> (text inside, a 16dp stadium). Nest the
           badge in the icon so it anchors at the upper trailing edge of
@@ -55,8 +55,8 @@ const S = defineSections([
   </Section>
   <Section {...S.small}>
         <p>
-          Leave the badge empty. It is a 6dp circle with no label —
-          an unread mark, not a count.
+          Leave the badge empty. It is a 6dp circle with no label that
+          marks something as unread. Use a large badge for a count.
         </p>
         <p>
           <button type="button" class="button extra circle" aria-label="Notifications, unread">
@@ -69,8 +69,8 @@ const S = defineSections([
   </Section>
   <Section {...S.large}>
         <p>
-          Put a number or short label in the badge. Height is 16dp,
-          corners are a stadium, inset is 4dp. Cap the string at four
+          Put a number or short label in the badge. It is 16dp high, with
+          stadium corners and a 4dp inset. Cap the string at four
           characters; use <code>999+</code> when the count is larger.
         </p>
         <p>
@@ -89,8 +89,8 @@ const S = defineSections([
   <Section {...S.navigation}>
         <p>
           A destination can nest the badge in the icon, or keep it as a
-          sibling after the label — the bar and rail position that
-          sibling on the icon’s upper trailing corner. Tabs nest it in
+          sibling after the label. The bar and rail position that
+          sibling on the icon's upper trailing corner. Tabs nest it in
           the icon.
         </p>
         <nav class="navigation-bar mb-3" aria-label="Mail">
@@ -117,8 +117,8 @@ const S = defineSections([
   <Section {...S.lists}>
         <p>
           A trailing <code>.badge</code> in a list row stays
-          in flow on the end, as a count, not overlapped on the leading
-          icon.
+          in flow at the end of the row as a count. It does not overlap the
+          leading icon.
         </p>
         <ul class="list">
           <li>
@@ -143,9 +143,9 @@ const S = defineSections([
   </Section>
   <Section {...S.color}>
         <p>
-          Default is <code>error</code> / <code>on-error</code>. Override
-          with a fill + <code>on-*</code> pair when the badge is not an
-          error/notification.
+          The default is <code>error</code> / <code>on-error</code>. Override
+          it with a fill utility and its <code>on-*</code> pair when the badge
+          is not an error or notification.
         </p>
         <p>
           <span class="material-symbols" role="img" aria-label="Mail, 3 unread">mail<span class="badge">3</span></span>

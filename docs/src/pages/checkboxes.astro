@@ -17,9 +17,9 @@ const S = defineSections([
         <p class="flow-text">
           A <code>&lt;label&gt;</code> wrapping
           <code>&lt;input type="checkbox"&gt;</code> is the control. The
-          label text is a sibling of the input — no extra class, no
-          required <code>&lt;span&gt;</code>. They are CSS only. There is
-          no JavaScript component and nothing to AutoInit.
+          label text is a sibling of the input and needs no extra class or
+          <code>&lt;span&gt;</code>. Checkboxes are CSS only, with no
+          JavaScript component to AutoInit.
         </p>
         <p>
           Tokens follow the
@@ -35,8 +35,8 @@ const S = defineSections([
         <p>
           Put the input first. Add <code>checked</code> or
           <code>disabled</code> on the input. Indeterminate is not an
-          HTML attribute — set <code>element.indeterminate = true</code>
-          in script. <code>filled-in</code> is a no-op: the selected
+          HTML attribute. Set <code>element.indeterminate = true</code>
+          in script. <code>filled-in</code> is a no-op because the selected
           state is always the filled box.
         </p>
         <form>

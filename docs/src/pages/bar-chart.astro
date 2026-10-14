@@ -108,8 +108,8 @@ const spent = sum(spending.map(([, value]) => value));
           <code>stacked</code> draws one bar per row with each series after
           the ones before it, so the bar's length is the total. Only the last
           segment rounds its end. Stack values that add up and keep them
-          positive; an empty cell leaves the total unknown, so the segments
-          after it are left out.
+          positive; an empty cell leaves the total unknown, so the chart
+          leaves out the segments after it.
         </p>
         <figure class="bar-chart stacked" data-markdown-ignore>
           <figcaption>Subscriptions by plan, stacked</figcaption>

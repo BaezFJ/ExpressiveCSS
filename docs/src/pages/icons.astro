@@ -69,8 +69,8 @@ const S = defineSections([
   <Section {...S.style}>
         <p>
           Outlined, rounded, and sharp are font families, not variation
-          axes. Set the <code>icon-style</code> attribute — the same idea as
-          <code>theme</code> — or set <code>--md-icon-font</code> directly.
+          axes. Set the <code>icon-style</code> attribute, which works like
+          <code>theme</code>, or set <code>--md-icon-font</code> directly.
           Either one inherits, so a subtree can use a different style.
         </p>
 <Code code={`
@@ -104,7 +104,7 @@ const S = defineSections([
           These four are variable-font axes. They inherit, so set them on
           <code>:root</code> or on a wrapper. A missing range in the Google
           Fonts URL (a link without <code>opsz,wght,FILL,GRAD@…</code>)
-          serves a static instance and the axes will not move.
+          serves a static instance, and the axes have no effect.
         </p>
         <table class="striped">
           <thead>
@@ -175,7 +175,7 @@ const S = defineSections([
           Size an icon with <code>font-size</code>, or use the preset classes
           on the icon: <code>tiny</code> (1rem),
           <code>small</code> (2rem), <code>medium</code> (4rem), and
-          <code>large</code> (6rem). Those classes also nudge
+          <code>large</code> (6rem). Those classes also adjust
           <code>--md-icon-optical-size</code> so the glyph is cut for that
           size.
         </p>

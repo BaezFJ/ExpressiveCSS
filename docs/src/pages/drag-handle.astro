@@ -20,19 +20,19 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A drag handle is the affordance that makes something legible as
-          draggable: the grabber on a
+          A drag handle is the mark that shows something can be dragged: the
+          grabber on a
           <a href={route('bottom_sheet')}>bottom sheet</a>, the bar in
           the gutter between two <a href={route('panes')}>panes</a>, the
           grip on a row that can be reordered.
         </p>
         <p>
-          Which element you write <em>is</em> the semantic. A
+          The element you write sets the semantics. A
           <code>&lt;span class="drag-handle" aria-hidden="true"&gt;</code> is
-          decoration — the usual case. A
+          decoration, which is the usual case. A
           <code>&lt;button class="drag-handle"&gt;</code> with a name is a
-          control, and you write that one only when something is genuinely
-          wired to it. Nothing else about the markup changes.
+          control, and you write that one only when something is wired to it.
+          The rest of the markup is the same.
         </p>
         <div class="drag-handle-demo">
           <div>Editor</div>
@@ -45,12 +45,12 @@ const S = defineSections([
   </Section>
   <Section {...S.dragging}>
         <p>
-          This component is a bar. Nothing in it starts a drag, moves anything,
-          or reorders anything. The one exception is not the handle's doing: a
+          This component is a bar. It does not start a drag, move anything, or
+          reorder anything. The one exception comes from the sheet: a
           handle written as a <code>&lt;button&gt;</code> inside a
           <a href={route('bottom_sheet')}>bottom sheet</a> dismisses
-          that sheet, because the sheet's own behaviour claims it. Everywhere
-          else the bar is inert, and that is worth being blunt about.
+          that sheet, because the sheet's own behaviour handles it. Everywhere
+          else the bar is inert.
         </p>
         <p>
           Provide keyboard operation and a single-pointer alternative without
@@ -62,33 +62,33 @@ const S = defineSections([
           unmodified user agent owns the functionality. Test each path.
         </p>
         <p>
-          ExpressiveCSS ships no reordering behaviour, so there is nothing here
-          that supplies that path for you. The handle makes the gesture
-          discoverable to people who can use it; the rest is yours.
+          ExpressiveCSS ships no reordering behaviour, so you have to supply
+          that path yourself. The handle shows people who can drag that the
+          gesture exists. You build everything else.
         </p>
   </Section>
   <Section {...S.decorative}>
         <p>
           A handle draws a bar and contains no text, so it reports nothing to a
-          screen reader. Left exposed it arrives in the reading order as an
-          unlabelled blank. Hide it:
+          screen reader. If you leave it exposed, a screen reader reaches it in
+          the reading order as an unlabelled blank. Hide it:
         </p>
 <Code code={`
 <span class="drag-handle" aria-hidden="true"></span>
 `} />
         <p>
           Make it a <code>&lt;button&gt;</code> only when activating it does
-          something — and then it needs a name, because there is no text inside
-          it to be named by. The interactive states (hover, focus ring, and the
-          swell to 12&times;52dp while it is held) are scoped to the button
-          spelling for exactly this reason: a decorative handle must not light
-          up under a pointer that merely crosses it.
+          something. The button then needs a name, because it has no text
+          inside to take one from. The interactive states (hover, focus ring,
+          and the swell to 12&times;52dp while it is held) apply only to the
+          button version, so a decorative handle does not react when a pointer
+          crosses it.
         </p>
 <Code code={`
 <button type="button" class="drag-handle" aria-label="Resize the editor"></button>
 `} />
         <p>
-          What you must not write is a hidden button. <code>aria-hidden</code>
+          Do not write a hidden button. <code>aria-hidden</code>
           takes an element out of the accessibility tree without taking it out
           of the tab order, so focus lands on something that, as far as
           assistive technology is concerned, is not there.
@@ -97,11 +97,11 @@ const S = defineSections([
   <Section {...S.panes}>
         <p>
           This is the shape Material tokenised: a vertical bar in the gutter of
-          a two-column layout, 4&times;48dp inside a 24dp hit target. The layout
-          is yours — a flex or grid row of your own, or a
-          <a href={route('panes')}>pane layout</a>. The handle is
-          whatever sits between the columns; it brings its own width and needs
-          no wrapper class.
+          a two-column layout, 4&times;48dp inside a 24dp hit target. You
+          provide the layout, either a flex or grid row of your own or a
+          <a href={route('panes')}>pane layout</a>. Put the handle
+          between the columns. It sets its own width and needs no wrapper
+          class.
         </p>
 <Code code={`
 <section aria-label="Editor">…</section>
@@ -110,20 +110,20 @@ const S = defineSections([
 `} />
         <p>
           The handle is <code>cursor: grab</code> by default. A splitter that
-          resizes rather than moves reads better as
-          <code>cursor: col-resize</code> — one declaration, and the component
-          does not guess which of the two you meant.
+          resizes rather than moves is clearer with
+          <code>cursor: col-resize</code>. Add that declaration yourself,
+          because the component does not guess which of the two you meant.
         </p>
   </Section>
   <Section {...S["bottom-sheet"]}>
         <p>
           A <a href={route('bottom_sheet')}>bottom sheet</a> paints its
           grabber with <code>::before</code> and needs no markup at all. Write a
-          handle yourself only when you want a real element in that slot — and
-          it takes the sheet's shape rather than the vertical one, because
+          handle yourself only when you want a real element in that slot. It
+          then takes the sheet's shape instead of the vertical one, because
           Material gives the sheet's grabber its own size and colour
-          (32&times;4dp at 40% <code>on-surface-variant</code>). One class,
-          whichever host it lands in.
+          (32&times;4dp at 40% <code>on-surface-variant</code>). The same class
+          works in both places.
         </p>
 <Code code={`
 <dialog class="bottom-sheet" aria-labelledby="sheet-title">
@@ -179,9 +179,9 @@ const S = defineSections([
         </TokenTable>        <p>
           The container is sized to the <em>pressed</em> bar rather than the
           resting one, so holding the handle swells the bar without moving
-          anything beside it. Inside a bottom sheet none of these apply — the
+          anything beside it. Inside a bottom sheet none of these apply. The
           sheet's own <code>--md-comp-bottom-sheet-drag-handle-color</code>
-          does.
+          sets the colour instead.
         </p>
   </Section></PageBody>
 </DocsLayout>

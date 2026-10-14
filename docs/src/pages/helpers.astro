@@ -9,21 +9,21 @@ const S = defineSections([
   { id: "valign", label: "Alignment" },
   { id: "flex", label: "Flex" },
   { id: "overflow", label: "Sizing and overflow" },
-  { id: "hiding", label: "Hiding/Showing Content" },
-  { id: "spacing", label: "Spacing Content", heading: "Spacing" },
+  { id: "hiding", label: "Hiding and showing content" },
+  { id: "spacing", label: "Spacing content", heading: "Spacing" },
   { id: "formatting", label: "Formatting" },
-  { id: "browser-default", label: "Browser Defaults" },
+  { id: "browser-default", label: "Browser defaults" },
 ]);
 ---
 <DocsLayout page="helpers">
 <PageBody sections={S}>
   <Section {...S.valign}>
-        <p class="flow-text">Easy-to-use classes to help you align your content.</p>
+        <p class="flow-text">Use these classes to align content.</p>
 
-        <h5>Vertical Align</h5>
+        <h5>Vertical align</h5>
         <p>
-          You can easily vertically center things by adding the class
-          <code>valign-wrapper</code> to the container holding the items you want to vertically align.
+          To center items vertically, add the class
+          <code>valign-wrapper</code> to their container.
         </p>
         <div class="valign-demo valign-wrapper primary-container px-4">
           <p class="on-primary-container-text my-0">This should be vertically aligned</p>
@@ -34,12 +34,12 @@ const S = defineSections([
 </div>
 `} />
 
-        <h5>Text Align</h5>
+        <h5>Text align</h5>
         <p>
           These classes are for horizontally aligning content:
           <code>.left-align</code>, <code>.right-align</code> and <code>.center-align</code>.
           Use <code>.start-align</code> and <code>.end-align</code> to follow the
-          text direction. The physical left and right classes keep their existing behavior.
+          text direction. The left and right classes stay physical and do not mirror in RTL.
         </p>
         <article class="surface-variant">
           <h5 class="left-align">This should be left aligned</h5>
@@ -68,7 +68,7 @@ const S = defineSections([
   </Section>
   <Section {...S.flex}>
         <p>
-          One class per declaration, applied to the container. Row direction and start
+          Each class sets one declaration, usually on the container. Row direction and start
           alignment are the flex defaults, so only the overrides have a class.
         </p>
         <table class="striped">
@@ -149,23 +149,23 @@ const S = defineSections([
           and an accessible name when keyboard users cannot otherwise focus and scroll it.
           Leave padding for child focus rings, such as <code>.p-2</code>.
           <code>.overflow-hidden</code> clips content and focus rings, so use it only
-          when the clipped content is intentionally unavailable visually.
+          when you mean to hide the clipped content.
         </p>
         <p>Use <a href="/scroll-area.html">scroll area</a> for a native scroll container with themed scrollbars.</p>
   </Section>
   <Section {...S.hiding}>
-        <p>We provide easy to use classes to hide/show content on specific screen sizes.</p>
+        <p>These classes hide or show content at specific screen sizes.</p>
         <table class="striped">
           <thead>
             <tr>
               <th>Class</th>
-              <th>Screen Range</th>
+              <th>Screen range</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><code><strong>.hide</strong></code></td>
-              <td>Hidden for all Devices</td>
+              <td>Hidden on all devices</td>
             </tr>
             <tr>
               <td><code><strong>.hide-on-compact-only</strong></code></td>
@@ -173,11 +173,11 @@ const S = defineSections([
             </tr>
             <tr>
               <td><code><strong>.hide-on-medium-only</strong></code></td>
-              <td>Hidden on Medium (600–839px)</td>
+              <td>Hidden on Medium (600 to 839px)</td>
             </tr>
             <tr>
               <td><code><strong>.hide-on-expanded-only</strong></code></td>
-              <td>Hidden on Expanded (840–1199px)</td>
+              <td>Hidden on Expanded (840 to 1199px)</td>
             </tr>
             <tr>
               <td><code><strong>.hide-on-expanded-and-up</strong></code></td>
@@ -185,7 +185,7 @@ const S = defineSections([
             </tr>
             <tr>
               <td><code><strong>.hide-on-large-only</strong></code></td>
-              <td>Hidden on Large (1200–1599px)</td>
+              <td>Hidden on Large (1200 to 1599px)</td>
             </tr>
             <tr>
               <td><code><strong>.hide-on-extra-large-only</strong></code></td>
@@ -197,15 +197,15 @@ const S = defineSections([
             </tr>
             <tr>
               <td><code><strong>.show-on-medium</strong></code></td>
-              <td>Shown on Medium (600–839px)</td>
+              <td>Shown on Medium (600 to 839px)</td>
             </tr>
             <tr>
               <td><code><strong>.show-on-expanded</strong></code></td>
-              <td>Shown on Expanded (840–1199px)</td>
+              <td>Shown on Expanded (840 to 1199px)</td>
             </tr>
             <tr>
               <td><code><strong>.show-on-large</strong></code></td>
-              <td>Shown on Large (1200–1599px)</td>
+              <td>Shown on Large (1200 to 1599px)</td>
             </tr>
             <tr>
               <td><code><strong>.show-on-extra-large</strong></code></td>
@@ -269,7 +269,7 @@ const S = defineSections([
   </Section>
   <Section {...S.spacing}>
         <p>
-          These classes help space elements with margin and padding helpers for all directions. This works by combining a margin/padding prefix, a direction infix and value
+          The spacing helpers set margin and padding on any side. Each class combines a margin or padding prefix, a direction infix and a value
           suffix.
         </p>
         <h5>Prefix margin and padding modifiers</h5>
@@ -283,11 +283,11 @@ const S = defineSections([
           <tbody>
             <tr>
               <td><code><strong>m*</strong></code></td>
-              <td>Modifies the margin according to the infix and suffix values. If no infix is provided, it will be applied to all directions.</td>
+              <td>Modifies the margin according to the infix and suffix values. With no infix, it applies to all directions.</td>
             </tr>
             <tr>
               <td><code><strong>p*</strong></code></td>
-              <td>Modifies the padding according to the infix and suffix values. If no infix is provided, it will be applied to all directions.</td>
+              <td>Modifies the padding according to the infix and suffix values. With no infix, it applies to all directions.</td>
             </tr>
           </tbody>
         </table>
@@ -302,35 +302,35 @@ const S = defineSections([
           <tbody>
             <tr>
               <td><code><strong>*t</strong></code></td>
-              <td>Applies modifier to the top side of the element</td>
+              <td>Applies the modifier to the top side of the element</td>
             </tr>
             <tr>
               <td><code><strong>*r</strong></code></td>
-              <td>Applies modifier to the right side of the element</td>
+              <td>Applies the modifier to the right side of the element</td>
             </tr>
             <tr>
               <td><code><strong>*b</strong></code></td>
-              <td>Applies modifier to the bottom side of the element</td>
+              <td>Applies the modifier to the bottom side of the element</td>
             </tr>
             <tr>
               <td><code><strong>*l</strong></code></td>
-              <td>Applies modifier to the left side of the element</td>
+              <td>Applies the modifier to the left side of the element</td>
             </tr>
             <tr>
               <td><code><strong>*s</strong></code></td>
-              <td>Applies modifier to the inline-start side, following the writing direction</td>
+              <td>Applies the modifier to the inline-start side, following the writing direction</td>
             </tr>
             <tr>
               <td><code><strong>*e</strong></code></td>
-              <td>Applies modifier to the inline-end side, following the writing direction</td>
+              <td>Applies the modifier to the inline-end side, following the writing direction</td>
             </tr>
             <tr>
               <td><code><strong>*x</strong></code></td>
-              <td>Applies modifier to the left and right sides of the element</td>
+              <td>Applies the modifier to the left and right sides of the element</td>
             </tr>
             <tr>
               <td><code><strong>*y</strong></code></td>
-              <td>Applies modifier to the top and bottom sides of the element</td>
+              <td>Applies the modifier to the top and bottom sides of the element</td>
             </tr>
           </tbody>
         </table>
@@ -630,12 +630,12 @@ const S = defineSections([
 `} />
   </Section>
   <Section {...S.formatting}>
-        <p>These classes help format various content on your site.</p>
+        <p>These classes handle truncation, text wrapping and hover effects.</p>
 
         <h5>Truncation</h5>
         <p>
-          To truncate long lines of text in an ellipsis, add the class
-          <code>truncate</code> to the tag which contains the text. See an example below of a header being truncated inside a card.
+          To truncate a long line of text with an ellipsis, add the class
+          <code>truncate</code> to the element that contains it. The example below truncates a heading inside a card.
           A flex or grid child may also need <code>.min-w-0</code> to shrink.
         </p>
         <div class="row">
@@ -662,8 +662,8 @@ const S = defineSections([
 
         <h5>Hover</h5>
         <p>
-          The <code>hoverable</code> class adds an animation for box shadow as seen below. It can be used on most elements, but is meant
-          for use on cards.
+          The <code>hoverable</code> class animates the box shadow, as in the example below. It works on most elements but is meant
+          for cards.
         </p>
         <article class="hoverable">Hoverable article</article>
 <Code code={`
@@ -672,14 +672,14 @@ const S = defineSections([
   </Section>
   <Section {...S["browser-default"]}>
         <p>
-          Because we override many of the default browser styles and elements, we provide the
-          <code>.browser-default</code> class to opt those elements out of the framework treatment.
+          ExpressiveCSS overrides many default browser styles. Add the
+          <code>.browser-default</code> class to an element to opt it out of those styles.
         </p>
         <table class="striped">
           <thead>
             <tr>
-              <th>Name of Element</th>
-              <th>Reverted Style</th>
+              <th>Element</th>
+              <th>Reverted style</th>
             </tr>
           </thead>
           <tbody>

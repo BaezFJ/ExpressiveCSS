@@ -23,7 +23,7 @@ const S = defineSections([
           header, and everything after the summary is its panel.
         </p>
         <p>
-          The browser does the work: the summary is a button that reports
+          The browser handles the behavior. The summary is a button that reports
           whether the item is open, Enter and Space toggle it, and the
           <code>open</code> attribute sets the starting state. There is no
           JavaScript. Opening animates where the engine can transition to
@@ -60,7 +60,7 @@ const S = defineSections([
   <Section {...S.exclusive}>
         <p>
           Give the items one shared <code>name</code> and the browser keeps at
-          most one of them open: opening an item closes the one that was open.
+          most one of them open. Opening an item closes the one that was open.
         </p>
         <div class="accordion" style="max-width: 36rem;">
           <details name="shipping" open>
@@ -130,7 +130,7 @@ const S = defineSections([
         </p>
         <p>
           Keep links and buttons out of the summary. It is already a button,
-          so a control inside it is a control nested in a control: pressing it
+          so a control inside it is nested in another control, and pressing it
           also toggles the item. Put actions in the panel.
         </p>
   </Section>

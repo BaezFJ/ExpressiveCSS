@@ -23,8 +23,8 @@ const S = defineSections([
                         A <code>&lt;search&gt;</code> with <code>search-bar</code> on it
                         is the bar: a leading icon or icon button, an
                         <code>&lt;input type="search"&gt;</code>, and whatever trailing
-                        actions the query needs. The element is the landmark — there is
-                        no <code>role="search"</code> to add.
+                        actions the query needs. The element is the landmark, so you do
+                        not need to add <code>role="search"</code>.
                     </p>
                     <search class="search-bar" aria-label="Search — Anatomy">
                         <span class="material-symbols" aria-hidden="true">search</span>
@@ -43,16 +43,16 @@ const S = defineSections([
 </search>
 `} />
                     <p>
-                        The input carries none of the text-field chrome — no underline,
-                        no floating label, no container of its own. The bar is the
-                        container, so the input goes in bare rather than inside a
+                        The input has none of the text field chrome: no underline,
+                        floating label, or container of its own. The bar is the
+                        container, so put the input in bare, not inside a
                         <code>.field</code>.
                     </p>
                     <p>
                         Spacing follows what is at each end: a bare glyph sits 16dp from
                         the edge, an icon button 4dp, because the button already insets
-                        its own glyph by 12dp. Nothing to set — the bar reads its own
-                        children.
+                        its own glyph by 12dp. You do not need to set anything, because
+                        the bar adjusts to its children.
                     </p>
                     <p>
                         <code>.searchbar</code>, the pre-1.0 name, still reaches the
@@ -62,7 +62,8 @@ const S = defineSections([
   <Section {...S["leading-action"]}>
                     <p>
                         When the bar opens a drawer or goes back, the leading glyph
-                        becomes an icon button. The bar closes up around it on its own.
+                        becomes an icon button. The bar's leading space shrinks to 4dp
+                        on its own.
                     </p>
                     <search class="search-bar" aria-label="Search — A leading action">
                         <button type="button" class="icon-button" aria-label="Open navigation">
@@ -86,21 +87,21 @@ const S = defineSections([
 `} />
                     <p>
                         An <code>&lt;img&gt;</code> in the bar is the account avatar M3
-                        puts in that slot — 30dp and circular. Put it inside the button
+                        puts in that slot. It is 30dp and circular. Put it inside the button
                         when it is tappable, so the 48dp target comes from the button.
                     </p>
   </Section>
   <Section {...S.docked}>
                     <p>
                         The docked view is a <code>.search-view</code> inside the bar. It
-                        hangs off the bar, so the bar keeps its
+                        is positioned against the bar, so the bar keeps its
                         <code>position: relative</code> and the view needs no coordinates
                         of its own. Show and hide it with the
                         <code>hidden</code> attribute.
                     </p>
                     <p>
-                        It is a plain element rather than a <code>&lt;dialog&gt;</code> on
-                        purpose: <code>dialog.show()</code> moves focus into the dialog,
+                        It is a plain element and not a <code>&lt;dialog&gt;</code>
+                        because <code>dialog.show()</code> moves focus into the dialog,
                         which would take the caret out of the input the user is typing in.
                     </p>
                     <p>
@@ -147,10 +148,10 @@ const S = defineSections([
   <Section {...S["full-screen"]}>
                     <p>
                         Full screen, the view is a <code>&lt;dialog&gt;</code> opened with
-                        <code>showModal()</code>. Escape and a tap outside come from the
-                        platform, so there is nothing to wire up beyond opening it. Its
-                        header is another <code>.search-bar</code> — same markup, with the
-                        pill and the shadow taken off.
+                        <code>showModal()</code>. The browser handles Escape and a tap
+                        outside, so you only have to open it. Its header is another
+                        <code>.search-bar</code> with the same markup, minus the pill
+                        shape and the shadow.
                     </p>
                     <button type="button" class="outlined"
                             onclick="document.getElementById('search-full').showModal()">
@@ -193,19 +194,19 @@ const S = defineSections([
 </dialog>
 `} />
                     <p>
-                        <code>autofocus</code> on the input matters here.
+                        Put <code>autofocus</code> on the input.
                         <code>showModal()</code> focuses the first focusable descendant,
-                        which is the back button — so without it a keyboard user lands on
-                        Back and cannot type.
+                        which is the back button, so without <code>autofocus</code> a
+                        keyboard user lands on Back and cannot type.
                     </p>
                     <p>
-                        Full screen at Compact and docked from Medium up is the M3 rule of
-                        thumb, and <strong>the app picks</strong>: there is no breakpoint
-                        in the sheet that swaps one for the other. The two are not
-                        interchangeable markup — the docked view is a plain element
-                        nested inside the bar, the full-screen one a top-level
-                        <code>&lt;dialog&gt;</code> — so render the one the window calls
-                        for.
+                        The M3 guideline is the full-screen view at Compact and the
+                        docked view from Medium up. <strong>The app picks</strong>; the
+                        stylesheet has no breakpoint that swaps one for the other. The
+                        two use different markup. The docked view is a plain element
+                        nested inside the bar, and the full-screen view is a top-level
+                        <code>&lt;dialog&gt;</code>, so render the one that fits the
+                        window size.
                     </p>
                     <Code code={`
 if (window.matchMedia('(width < 600px)').matches) {
@@ -220,9 +221,9 @@ if (window.matchMedia('(width < 600px)').matches) {
                         Search does not ship a suggestion list of its own. Put
                         <code>autocomplete</code> on the bar's input and you get the
                         combobox, its listbox, and the arrow-key and
-                        <code>aria-activedescendant</code> handling that
-                        <a href={route('autocomplete')}>Autocomplete</a> already
-                        implements and is tested for.
+                        <code>aria-activedescendant</code> handling from
+                        <a href={route('autocomplete')}>Autocomplete</a>, which
+                        already implements and tests them.
                     </p>
                     <Code code={`
 <search class="search-bar" aria-label="Search">
@@ -237,11 +238,11 @@ Expressive.Autocomplete.init(document.querySelector('.search-bar input'), {
 });
 `} />
                     <p>
-                        That is the whole relationship, and it is deliberate. A
-                        <code>.search-view</code> takes no composite role: its contents
-                        are links and buttons reached with Tab, and a second listbox here
-                        would be the same promise as Autocomplete's with no keyboard model
-                        behind it. Use the view for recent searches, filters, and results;
+                        Search and Autocomplete share nothing else, by design. A
+                        <code>.search-view</code> takes no composite role. Its contents
+                        are links and buttons that users reach with Tab. A second listbox
+                        here would announce the same behavior as Autocomplete's without
+                        the keyboard handling behind it. Use the view for recent searches, filters, and results;
                         use Autocomplete for a list the user arrows through.
                     </p>
   </Section>

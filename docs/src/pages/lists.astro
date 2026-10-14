@@ -22,8 +22,8 @@ const S = defineSections([
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>.list</code> is a vertical index. Use it so people can find
-          an item and act on it. There is no JavaScript — the HTML is the
-          component. Order items logically, keep each row short, and put
+          an item and act on it. The component is HTML only, with no
+          JavaScript. Order items logically, keep each row short, and put
           icons, text, and actions in the same place on every row.
         </p>
         <p>
@@ -33,20 +33,20 @@ const S = defineSections([
           <code>&lt;kbd&gt;</code>, <code>&lt;button&gt;</code>,
           <code>&lt;time&gt;</code>, or <code>.meta</code>. A following
           <code>&lt;p&gt;</code> is supporting text. Mark the current row
-          with <code>active</code> or <code>selected</code> — <strong>not</strong>
-          <code>aria-selected</code>, which is not valid on a plain
+          with <code>active</code> or <code>selected</code>. Do <strong>not</strong>
+          use <code>aria-selected</code>, which is not valid on a plain
           <code>listitem</code>. It needs a role (<code>option</code>,
           <code>tab</code>, <code>row</code>, <code>treeitem</code>), and each of
           those brings a keyboard contract with it.
         </p>
         <p>
-          Two variants: <strong>standard</strong> (the default) and
+          There are two variants: <strong>standard</strong> (the default) and
           <code>segmented</code>.
         </p>
   </Section>
   <Section {...S.standard}>
         <p>
-          Transparent rows. The selected item is a pill in
+          Standard rows are transparent. The selected item is a pill in
           <code>secondary-container</code>. The leading icon fills when
           the row is selected.
         </p>
@@ -171,7 +171,7 @@ const S = defineSections([
   <Section {...S.icons}>
         <p>
           A leading icon is a quick visual cue for the label. A trailing
-          icon is status or an action — more, info, chevron.
+          icon shows status or an action, such as more, info, or a chevron.
         </p>
         <ul class="list">
           <li>

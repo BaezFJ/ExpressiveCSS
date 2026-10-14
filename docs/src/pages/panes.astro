@@ -26,8 +26,8 @@ const S = defineSections([
       <p class="flow-text">
         A <code>.panes</code> (or <code>.pane-layout</code>, or
         <code>.list-detail</code>) is the container. Two or three
-        <code>.pane</code> children are the surfaces. There is no
-        JavaScript — the HTML is the layout.
+        <code>.pane</code> children are the surfaces. The component has no
+        JavaScript, so the HTML structure sets the layout.
       </p>
       <p>
         Tokens follow the
@@ -41,7 +41,7 @@ const S = defineSections([
         primary content on compact and medium layouts; this component's
         one-active-pane behavior is a framework adaptation. Compact widths add 16dp inline margins; every wider
         layout uses 24dp margins and 24dp spacers. Give the container a
-        height — it is <code>height: 100%</code>.
+        height. It is <code>height: 100%</code>.
       </p>
       <p>
         Semantic child names are aliases of <code>.pane</code>:
@@ -55,8 +55,8 @@ const S = defineSections([
   </Section>
   <Section {...S["list-detail"]}>
       <p>
-        The default. A 360dp list pane beside a flexible detail pane.
-        People pick a row; the detail shows that item. Use
+        This is the default: a 360dp list pane beside a flexible detail
+        pane. When people pick a row, the detail pane shows that item. Use
         <code>.list-detail</code> or a plain <code>.panes</code>.
         Pair the list pane with a
         <a href={route('lists')}>list</a>.
@@ -148,13 +148,13 @@ const S = defineSections([
         widths (below 840px), every pane is hidden except
         <code>active</code>. If none is active, the first pane shows.
         Toggle <code>active</code> yourself when the user picks a row
-        or taps back — <code>AutoInit()</code> does not start panes.
+        or taps back, because <code>AutoInit()</code> does not start panes.
         At Expanded widths both panes are shown regardless of
         <code>active</code>, so the same markup works at every size.
       </p>
       <p>
-        The illustration below is forced to one pane so the swap is
-        visible here. Change the width of <code>#pane-column</code> in developer
+        The illustration below always shows one pane so you can see the
+        swap. Change the width of <code>#pane-column</code> in developer
         tools to test the list-detail demo above without resizing the viewport.
         Its nearest containing column controls the split.
       </p>
@@ -216,10 +216,10 @@ back.addEventListener('click', () => {
   </Section>
   <Section {...S.supporting}>
       <p>
-        A flexible primary pane plus a 360dp supporting pane on the
-        trailing edge. Use it when the extra content is secondary — a
-        related list, inspector, or outline — and should stay in view
-        beside the focus. Add <code>supporting</code>, or use
+        This layout puts a flexible primary pane next to a 360dp supporting
+        pane on the trailing edge. Use it when the extra content is
+        secondary, such as a related list, an inspector or an outline, and
+        should stay in view beside the main content. Add <code>supporting</code>, or use
         <code>.supporting-pane-layout</code>.
       </p>
       <p>
@@ -285,8 +285,8 @@ back.addEventListener('click', () => {
   <Section {...S.equal}>
       <p>
         <code>equal</code> splits two panes 1fr / 1fr. Use it when the
-        two surfaces have the same weight — two documents, a diff, an
-        editor and a preview.
+        two surfaces have the same weight, such as two documents, a diff,
+        or an editor and a preview.
       </p>
       <div class="panes equal panes-demo">
         <section class="pane">
@@ -315,9 +315,10 @@ back.addEventListener('click', () => {
   </Section>
   <Section {...S["three-pane"]}>
       <p>
-        <code>three-pane</code> is list + focus + supporting. It
-        needs 1200px of container width, or viewport width without a query
-        container: 360dp list, a flexible middle, 360dp supporting.
+        <code>three-pane</code> holds a list, a main pane and a supporting
+        pane. It needs 1200px of container width, or of viewport width
+        without a query container. The columns are a 360dp list, a flexible
+        middle and a 360dp supporting pane.
         Between 840px and 1200px the default two-column list-detail
         grid still applies, so the third pane wraps. Below 840px it
         is the same single-pane <code>active</code> pattern as the

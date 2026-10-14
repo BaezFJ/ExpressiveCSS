@@ -16,9 +16,10 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.basic}>
         <p class="flow-text">
-          M3 Expressive's indicator for a short wait. One element, CSS-only,
-          no JavaScript plugin. The shape morphs through a circle and four
-          cookie shapes while the whole thing rotates.
+          This is M3 Expressive's indicator for a short wait. It is a single
+          CSS-only element and needs no JavaScript plugin. The shape morphs
+          through a circle and four cookie shapes while the whole indicator
+          rotates.
         </p>
         <p class="py-5 center-align">
           <span class="loading-indicator" role="status" aria-label="Loading"></span>
@@ -28,10 +29,11 @@ const S = defineSections([
 `} />
         <p>
           The element is empty, so it reports nothing on its own.
-          Supply a named waiting state and meaningful status text updates;
-          verify spoken delivery with assistive technology. An indeterminate
-          <code>progressbar</code> is also valid and omits <code>aria-valuenow</code>.
-          The current framework contract requires a named status. A name alone does not prove an announcement.
+          Give the waiting state a name, make status text updates meaningful,
+          and check what assistive technology actually announces.
+          An indeterminate <code>progressbar</code> is also valid and omits
+          <code>aria-valuenow</code>. The framework currently requires a named
+          status, but a name alone does not guarantee an announcement.
         </p>
   </Section>
   <Section {...S.contained}>
@@ -61,7 +63,7 @@ const S = defineSections([
             <tr><th>Situation</th><th>Use</th></tr>
           </thead>
           <tbody>
-            <tr><td>Under 200&nbsp;ms</td><td>Nothing — show the result</td></tr>
+            <tr><td>Under 200&nbsp;ms</td><td>Nothing. Show the result.</td></tr>
             <tr><td>Up to about 5&nbsp;s, percentage unknown</td><td><code>.loading-indicator</code></td></tr>
             <tr><td>Longer, percentage known</td><td><code>.progress</code>, determinate</td></tr>
             <tr><td>Longer, percentage unknown</td><td><code>.progress</code>, indeterminate linear</td></tr>
@@ -79,7 +81,7 @@ const S = defineSections([
           </thead>
           <tbody>
             <tr><td><code>--md-comp-loading-indicator-active-indicator-size</code></td><td><code>38px</code></td><td>The morphing shape.</td></tr>
-            <tr><td><code>--md-comp-loading-indicator-container-size</code></td><td><code>48px</code></td><td>The box it sits in — the visible circle when <code>contained</code>.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-container-size</code></td><td><code>48px</code></td><td>The box it sits in, which is the visible circle when <code>contained</code>.</td></tr>
             <tr><td><code>--md-comp-loading-indicator-active-indicator-color</code></td><td><code>primary</code></td><td>The shape's fill.</td></tr>
             <tr><td><code>--md-comp-loading-indicator-container-color</code></td><td><code>transparent</code></td><td>The container fill.</td></tr>
             <tr><td><code>--md-comp-loading-indicator-duration</code></td><td><code>3000ms</code></td><td>One full morph-and-spin cycle.</td></tr>

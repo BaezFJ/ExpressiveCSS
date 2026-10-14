@@ -16,25 +16,25 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>&lt;fieldset&gt;</code> is the group. A
+          A <code>&lt;fieldset&gt;</code> is the group and its
           <code>&lt;legend&gt;</code> is the headline. Everything else is
-          a field — <code>.field</code>, radios, switches, a
-          <code>&lt;nav&gt;</code> of radios, a trailing
-          <code>&lt;small&gt;</code> as supporting text. There is no
-          wrapper class. They are CSS only. There is no JavaScript
-          component and nothing to AutoInit.
+          a field: a <code>.field</code>, radios, switches, a
+          <code>&lt;nav&gt;</code> of radios, or a trailing
+          <code>&lt;small&gt;</code> as supporting text. Fieldsets need no
+          wrapper class and are CSS only, with no JavaScript
+          component to AutoInit.
         </p>
         <p>
           Material Design 3 has no fieldset component. Tokens follow the
           outlined grouping container used around related form content,
           and the
           <a href="https://m3.material.io/components/text-fields/specs">outlined text-field</a>
-          shape so a group of fields matches the fields. The container is
+          shape so a group of fields matches the fields. The container has
           4dp corners and a 1dp <code>outline-variant</code> stroke.
-          The legend is <code>title-small</code> /
+          The legend uses <code>title-small</code> in
           <code>on-surface</code>. Supporting text is
-          <code>body-small</code>. Padding is 16dp; children sit 16dp
-          apart. Disabled is 38%.
+          <code>body-small</code>. Padding is 16dp, and children sit 16dp
+          apart. A disabled group drops to 38%.
         </p>
 
         <fieldset>
@@ -65,7 +65,7 @@ const S = defineSections([
   <Section {...S.choices}>
         <p>
           A fieldset is also the right parent for a radio, checkbox, or
-          switch group — the legend names the question, the
+          switch group. The legend names the question, and the
           <code>disabled</code> attribute disables every control inside.
           Put the labels in a <code>&lt;div class="inline"&gt;</code> to sit them on one
           line.
@@ -131,11 +131,11 @@ const S = defineSections([
   <Section {...S.variants}>
         <p>
           The default is outlined. <code>filled</code> is a
-          <code>surface-variant</code> well with no stroke — pair it with
+          <code>surface-variant</code> well with no stroke. Pair it with
           <code>outlined</code> fields so the wells stay distinct.
-          <code>rounded</code> is 12dp corners (M3 medium, like a card).
+          <code>rounded</code> gives 12dp corners (M3 medium, like a card).
           <code>outlined</code> and <code>border</code> name the default
-          if you need to say it.
+          if you want to state it explicitly.
         </p>
         <fieldset class="filled">
           <legend>

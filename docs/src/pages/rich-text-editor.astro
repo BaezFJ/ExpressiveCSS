@@ -89,7 +89,7 @@ const actions = [
           <code>aria-label</code> or <code>aria-labelledby</code>, and a click
           on the label focuses it. Tiptap's keyboard shortcuts work, such as
           <kbd>Ctrl</kbd>+<kbd>B</kbd> for bold and <kbd>Ctrl</kbd>+<kbd>Z</kbd>
-          to undo. Toolbar buttons are reached with <kbd>Tab</kbd>.
+          to undo. <kbd>Tab</kbd> moves to the toolbar buttons.
         </p>
   </Section>
   <Section {...S.setup}>
@@ -132,7 +132,7 @@ RichTextEditor.init(document.querySelector('.rich-text-editor'), {
           The textarea submits the editor's HTML with its form, and fires
           <code>input</code> on every change. An empty editor submits an empty
           value. Tiptap drops markup its extensions do not know, but the value
-          comes from the browser: sanitize it on the server before storing or
+          comes from the browser, so sanitize it on the server before storing or
           showing it. A <code>disabled</code> or <code>readonly</code>
           textarea makes the editor read-only and disables the toolbar.
         </p>

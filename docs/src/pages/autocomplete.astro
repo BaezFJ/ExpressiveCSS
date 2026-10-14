@@ -17,18 +17,18 @@ const S = defineSections([
 ]);
 ---
 <DocsLayout page="autocomplete">
-<p>Autocomplete preserves the original suggestion dataset and selected display label while editing. Escape and Tab close from the input, cancel pending opening, and keep listbox options outside sequential Tab order.</p>
+<p>Autocomplete preserves the original suggestion dataset and selected display label while editing. Escape and Tab in the input close the menu and cancel a pending open. Listbox options stay out of the sequential Tab order.</p>
 <p><code>isOpen</code> follows the suggestion menu through rerenders and dismissal. Selection changes emit a bubbling, composed <code>change</code> event from the input, so delegated form listeners can observe them.</p>
 
 <PageBody sections={S}>
-  <p>Autocomplete adds a visually hidden, polite live region for loading, result counts and multi-selection changes. The visible spinner and count stay unchanged. Announcements require input focus and <code>minLength</code>; closing clears the region. Check spoken delivery with a screen reader.</p>
-  <p>Override <code>i18n.loading</code> and <code>i18n.noResults</code>, which default to "Loading results." and "No results.". Supply <code>i18n.results(count)</code> and <code>i18n.selected(count)</code> functions for localized plurals. Defaults produce "1 result available." or "N results available." and "1 item selected." or "N items selected.". Missing keys retain defaults, and all messages are plain text.</p>
-  <p>Updates announce the count passed to <code>setMenuItems</code>, excluding fallback selected items. Opening an existing list announces its displayed item count. Updates with <code>open: false</code> stay silent. Applications own request cancellation, stale-response ordering and error handling. Results delivered after <code>destroy()</code> are ignored.</p>
+  <p>Autocomplete adds a visually hidden, polite live region for loading, result counts and multi-selection changes. The visible spinner and count stay unchanged. Announcements happen only while the input has focus and its text meets <code>minLength</code>. Closing the menu clears the region. Check spoken delivery with a screen reader.</p>
+  <p>Override <code>i18n.loading</code> and <code>i18n.noResults</code>, which default to "Loading results." and "No results.". Supply <code>i18n.results(count)</code> and <code>i18n.selected(count)</code> functions for localized plurals. Defaults produce "1 result available." or "N results available." and "1 item selected." or "N items selected.". Missing keys keep their defaults, and all messages are plain text.</p>
+  <p>Updates announce the count passed to <code>setMenuItems</code>, excluding fallback selected items. Opening an existing list announces its displayed item count. Updates with <code>open: false</code> stay silent. Your application handles request cancellation, stale-response ordering and errors. The plugin ignores results delivered after <code>destroy()</code>.</p>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>autocomplete</code> to a text input inside <code>.field</code>.
           <code>AutoInit()</code> starts every <code>.autocomplete</code> except
-          <code>no-autoinit</code>, but the default <code>data</code> list is empty — pass
+          <code>no-autoinit</code>, but the default <code>data</code> list is empty. Pass
           options (or call <code>init</code>) to give it something to suggest.
         </p>
         <div class="field mb-5">
@@ -58,22 +58,22 @@ const S = defineSections([
         </p>
         <ul>
           <li>
-            <strong>id</strong> (required) — a string or number. Used as the option text
+            <strong>id</strong> (required). A string or number, used as the option text
             when <code>text</code> is omitted.
           </li>
           <li>
-            <strong>text</strong> — display label. The default search matches
+            <strong>text</strong>. The display label. The default search matches
             <code>id</code> and <code>text</code>.
           </li>
           <li>
-            <strong>image</strong> — image URL. Shown as a circle; not searched by default.
+            <strong>image</strong>. An image URL, shown as a circle. The default search ignores it.
           </li>
           <li>
-            <strong>description</strong> — optional secondary line under the label.
+            <strong>description</strong>. An optional secondary line under the label.
           </li>
         </ul>
         <p>
-          Extra properties are ignored by the default search. Filter them yourself in
+          The default search ignores extra properties. Filter them yourself in
           <code>onSearch</code>.
         </p>
 <Code code={`
@@ -102,7 +102,7 @@ Expressive.Autocomplete.init(document.querySelector('#autocomplete-multi'), {
 });
 `} />
         <p>
-          Custom <code>onSearch</code> can load data asynchronously. When the list is
+          A custom <code>onSearch</code> can load data asynchronously. When the list is
           ready, call <code>setMenuItems</code>. The default filter looks at
           <code>id</code> and <code>text</code> only:
         </p>
@@ -131,7 +131,7 @@ onSearch: function(text, autocomplete) {
               <td><code>isMultiSelect</code></td>
               <td>Boolean</td>
               <td><code>false</code></td>
-              <td>If true, several values can be selected. <code>onAutocomplete</code> receives an array.</td>
+              <td>If true, the user can select several values. <code>onAutocomplete</code> receives an array.</td>
             </tr>
             <tr>
               <td><code>maxMenuHeight</code></td>
@@ -185,7 +185,7 @@ onSearch: function(text, autocomplete) {
 
   <Section {...S.methods}>
         <blockquote>
-          All methods are called on the plugin instance. You can get the instance like this:
+          Call all methods on the plugin instance. You can get the instance like this:
         </blockquote>
 <Code code={`
 const instance = Expressive.Autocomplete.getInstance(elem);
@@ -222,7 +222,7 @@ instance.setMenuItems([
 `} />
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove the menu, and tear down its event handlers.</p>
+        <p>Destroy the plugin instance, remove the menu, and detach its event handlers.</p>
 <Code code={`
 instance.destroy();
 `} />
@@ -238,7 +238,7 @@ instance.destroy();
             <tr>
               <td><code>count</code></td>
               <td>Number</td>
-              <td>Number of matching options (reset on each input/focus).</td>
+              <td>Number of matching options (reset on each input or focus).</td>
             </tr>
             <tr>
               <td><code>activeIndex</code></td>

@@ -77,8 +77,8 @@ const S = defineSections([
 </div>
 `} />
 <p>
-  The text treatment is an opaque <code>surface</code> /
-  <code>on-surface</code> bounding shape, so its contrast does not depend on the
+  Text sits on an opaque bounding shape in <code>surface</code> and
+  <code>on-surface</code> colors, so its contrast does not depend on the
   image. The component uses native scrolling, 8dp gaps, 16dp inline padding, 8dp
   block padding, and 28dp item corners.
 </p>
@@ -87,7 +87,7 @@ const S = defineSections([
 <p>
   Choose one layout for the content. Multi-browse is the default and is best for
   many simple visuals. <code>uncontained</code> suits text-heavy or highly
-  customized items. <code>hero</code> spotlights one visual.
+  customized items. <code>hero</code> shows one large visual.
   <code>full-screen</code> is an immersive vertical feed.
 </p>
 
@@ -95,7 +95,7 @@ const S = defineSections([
 <p>
   Uncontained items keep one width and can stop anywhere. Add
   <code>snap</code> when snapping is preferable. Add
-  <code>multi-aspect</code> only when the source media genuinely has different
+  <code>multi-aspect</code> only when the source media has different
   aspect ratios; widths stay between 9:16 and 16:9.
 </p>
 <div class="carousel uncontained mb-3" aria-label="Travel stories">
@@ -143,7 +143,7 @@ const S = defineSections([
 
 <h4>Hero</h4>
 <p>
-  Hero shows one large item and a 40–56dp preview of the next item. Add
+  Hero shows one large item and a 40 to 56dp preview of the next item. Add
   <code>center-aligned</code> to center the large item and preview both
   neighbors. Hero always snap-scrolls.
 </p>
@@ -172,7 +172,7 @@ const S = defineSections([
 <p>
   Full-screen is vertical, edge-to-edge, and always snap-scrolls one item at a
   time in portrait compact and medium layouts. In landscape or at expanded
-  widths, the same markup automatically adapts to a horizontal hero.
+  widths, the same markup becomes a horizontal hero.
 </p>
 <Code code={`
 <div class="carousel full-screen" aria-label="Featured stories">
@@ -215,32 +215,30 @@ const S = defineSections([
   provide them.
   Localize generated strings with the <code>i18n</code> option. Layout changes
   follow the carousel's rendered width, including when a pane or side navigation
-  resizes without a window resize. A full-screen carousel automatically becomes
+  resizes without a window resize. A full-screen carousel becomes
   a horizontal hero in landscape or at an expanded width. Reduced-motion mode
   removes parallax and size morphing, uses equal item widths, and disables
   smooth scrolling.
 </p>
 <p>
   An <code>interval</code> makes the carousel advance on its own, and content
-  that moves by itself has to be stoppable. So the pause contract is not
-  optional and there is no option that turns it off: an interval always pauses
-  while the pointer is over the carousel, while focus is inside it, and while
-  the tab is in the background, and
+  that moves by itself has to be stoppable, so no option turns off the pause
+  contract. An interval always pauses while the pointer is over the carousel,
+  while focus is inside it, and while the tab is in the background.
   <code>prefers-reduced-motion: reduce</code> suppresses auto-advance
   altogether. An explicit <code>noWrap</code> stops it after one pass instead
-  of looping. Arrow keys and <code>set()</code> stop at the ends either way
-  &mdash; a scroll track has ends, and auto-advance is the one caller that can
-  loop back past them.
+  of looping. Arrow keys and <code>set()</code> stop at the ends either way.
+  Auto-advance is the only caller that can loop back past them.
 </p>
 <p>
   Carousel responds to reduced-motion changes while mounted without
   clearing an explicit pause. Editable descendants keep their own navigation
-  keys. Actual screen-reader, native zoom and physical-device checks remain pending.
+  keys. Testing with real screen readers, native zoom and physical devices is still pending.
 </p>
 <h4>Application-owned pause control</h4>
 <p>
-  When enabling automatic movement, provide a visible pause/resume button using
-  <code>pause()</code> and <code>start()</code>. Resuming still respects hover,
+  If you turn on automatic movement, add a visible pause and resume button that
+  calls <code>pause()</code> and <code>start()</code>. Resuming still respects hover,
   focus, background-tab and reduced-motion suspension.
 </p>
 <button type="button" class="button tonal mb-1" id="carousel-motion-toggle" aria-controls="carousel-motion">Pause automatic movement</button>
@@ -320,7 +318,7 @@ toggle.addEventListener('click', () => {
   </tr>
 </TokenTable>
   <p>
-  The older <code>--carousel-height</code> author hook is still read.
+  The carousel still reads the older <code>--carousel-height</code> author hook.
   Interactive state layer, focus indicator, and disabled opacity tokens are also
   available in the compiled component source.
 </p>
@@ -375,8 +373,7 @@ Expressive.AutoInit(document.body, {
     <td><code>false</code></td>
     <td>
       Stop auto-advance at the last item instead of looping back to the first.
-      Arrow keys and <code>set()</code> stop at the ends either way &mdash; a
-      scroll track has ends.
+      Arrow keys and <code>set()</code> stop at the ends of the track either way.
     </td>
   </tr>
   <tr>
@@ -385,12 +382,12 @@ Expressive.AutoInit(document.body, {
     <td><code>0</code></td>
     <td>
       Milliseconds to rest between automatic advances, on top of
-      <code>duration</code> — the gap follows each transition rather than
-      containing it, so a full cycle takes <code>duration + interval</code>.
+      <code>duration</code>. The rest starts after each transition ends, so a
+      full cycle takes <code>duration + interval</code>.
       <code>0</code> leaves auto-advance off, and setting it turns on the pause
-      contract below. Each rest is armed by the move before it rather than on a
-      fixed phase, so a dropped tick costs a whole rest rather than leaving
-      whatever is left of one.
+      contract below. Each rest starts from the move before it, not from a
+      fixed schedule, so a dropped tick costs a whole rest instead of the
+      remainder of one.
     </td>
   </tr>
   <tr>

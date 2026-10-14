@@ -42,7 +42,7 @@ const S = defineSections([
   <button class="button text" type="button">Retry sync</button>
 </div>
 `} />
-      <p>Connect the button to your application's retry action. No new component or initialization is needed.</p>
+      <p>Connect the button to your application's retry action. You do not need a new component or initialization.</p>
     </Section>
     <Section {...S.semantics}>
       <p>
@@ -54,8 +54,9 @@ const S = defineSections([
         Use named buttons for commands, not a navigation landmark. The
         <code>role="banner"</code> landmark identifies the page header, not a message.
         If your application allows dismissal, restore logical focus when removing
-        the focused control. Allow text and actions to wrap; check narrow screens
-        and enlarged text without fixed heights or clipped controls.
+        the focused control. Let text and actions wrap instead of using fixed
+        heights, and check that narrow screens and enlarged text do not clip
+        controls.
       </p>
     </Section>
   </PageBody>

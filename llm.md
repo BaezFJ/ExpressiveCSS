@@ -413,7 +413,7 @@ yarn add @expressivecss/expressive
 
 ### Setup
 
-#### Project Structure
+#### Project structure
 
 After building, copy the compiled files into the directory where your website is located. Your directory will look something like this.
 
@@ -435,7 +435,7 @@ MyWebsite/
   |--index.html
 ```
 
-#### HTML Setup
+#### HTML setup
 
 Next you just have to make sure you link the files properly in your webpage. Generally it is wise to import JavaScript files at the end of the body to reduce page load time. Follow the example below on how to import Expressive into your webpage.
 
@@ -505,7 +505,7 @@ Start from a documented layout instead of an empty page. These two pages show ho
 
 #### Helpers
 
-### Sass Setup
+### Sass setup
 
 This section is only relevant if you chose to use the Sass sources.
 
@@ -886,13 +886,13 @@ There is a default gap between the columns (g-3). You can easily change the gap 
 </div>
 ```
 
-### Push and Pull
+### Push and pull
 
 Deprecated. CSS Grid is used now — use offsets, or empty columns, to change placement.
 
 Older versions reordered columns with `push-s2` or `pull-s2`, where `s` is the screen class-prefix and the number is how many columns to push or pull by. Those classes are no longer part of the grid.
 
-### Creating Layouts
+### Creating layouts
 
 Here we will show you how to create some commonly used layouts with our grid system. Hopefully these will get you more comfortable with laying out elements. To keep these demos simple, the ones here will not be responsive.
 
@@ -959,7 +959,7 @@ You can see how easy it is to create layouts using the grid system. Just remembe
 </div>
 ```
 
-### Creating Responsive Layouts
+### Creating responsive layouts
 
 Above we showed you how to layout elements using our grid system. Now we'll show you how to design your layouts so that they look great on all screen sizes.
 
@@ -1156,7 +1156,7 @@ Add one `.shape-*` class to cut an element to a rounded shape. The twenty shapes
 
 The shapes are drawn for a square box and stretch with a non-square one. On `<img>`, `<video>`, and `<canvas>` the class also sets `aspect-ratio: 1`, `height: auto`, and `object-fit: cover`. Use them on icon buttons, FABs, or buttons with equal width and height. A focused shape draws its focus ring inside its edge, a 3px secondary band and a 2px gap, because the mask clips outlines; images show the gap only. Forced-colors mode paints the band in `Highlight`. The cut-away parts of the box do not take clicks. The class adds `contain: paint`, so overflow, shadows, and borders are clipped to the shape; put `filter: drop-shadow()` on a wrapper for a shadow. Native video controls sit at the box edges and are mostly cut off. Selective Sass builds can load `"shapes"` through `$utilities`.
 
-### Hiding/Showing Content
+### Hiding/showing content
 
 We provide easy to use classes to hide/show content on specific screen sizes.
 
@@ -1333,7 +1333,7 @@ The `hoverable` class adds an animation for box shadow as seen below. It can be 
 <article class="hoverable">Hoverable Card</article>
 ```
 
-### Browser Defaults
+### Browser defaults
 
 Because we override many of the default browser styles and elements, we provide the `.browser-default` class to opt those elements out of the framework treatment.
 
@@ -1504,7 +1504,7 @@ Tables are a nice way to organize a lot of data. We provide a few utility classe
 </table>
 ```
 
-### Striped Table
+### Striped table
 
 Add `class="striped"` to the table tag for a striped table.
 
@@ -1515,7 +1515,7 @@ Add `class="striped"` to the table tag for a striped table.
 | Jonathan | Lollipop | $7.00 |
 | Shannon | KitKat | $9.99 |
 
-### Highlight Table
+### Highlight table
 
 Add `class="highlight"` to the table tag for a highlight table.
 
@@ -1526,7 +1526,7 @@ Add `class="highlight"` to the table tag for a highlight table.
 | Jonathan | Lollipop | $7.00 |
 | Shannon | KitKat | $9.99 |
 
-### Centered Table
+### Centered table
 
 Add `class="centered"` to the table tag to center align all the text in the table.
 
@@ -1537,7 +1537,7 @@ Add `class="centered"` to the table tag to center align all the text in the tabl
 | Jonathan | Lollipop | $7.00 |
 | Shannon | KitKat | $9.99 |
 
-### Responsive Table
+### Responsive table
 
 Add `class="responsive-table"` to the table tag to make the table horizontally scrollable on smaller screen widths.
 
@@ -1662,7 +1662,7 @@ Blockquotes emphasize a quote or citation. The left bar uses `--md-sys-color-pri
 <p>Press <kbd><kbd>Ctrl</kbd>+<kbd>K</kbd></kbd> to open the command palette.</p>
 ```
 
-### Flow Text
+### Flow text
 
 `flow-text` scales font size with the viewport so line length stays readable. Resize the window and watch the sample change, or use the button to compare with unscaled body text.
 
@@ -3353,7 +3353,7 @@ Expressive’s footer is unfilled by default. It draws a dashed top border and u
 
 The `<small>` bar is a flex row with space-between, so put the notice and the trailing link in as two children. A `right` float is not required.
 
-### Sticky Footer
+### Sticky footer
 
 A sticky footer stays at the bottom of the viewport when the page is short, and is pushed down when the content is taller. That is different from a fixed footer. Expressive does not include these rules — add them to your own stylesheet after you have the `header` / `main` / `footer` landmarks.
 
@@ -4962,7 +4962,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 
 Snackbar, CharacterCounter, and Slider stay out of this table. Slider still starts itself when the bundle loads. Forms, Chips, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets also run an import-time `Init()`. Chips, Cards, and ExpandingCard appear in the table as well so a later `AutoInit()` can pick up elements added after load.
 
-### Ignoring Elements
+### Ignoring elements
 
 If you want `AutoInit()` to skip an element, add the class `no-autoinit`. Initialize that element yourself with the component’s `init` method when you need options other than the defaults.
 
@@ -5606,7 +5606,7 @@ Tabs ignore default anchor behaviour. To keep a tab as a normal hyperlink, set `
 </nav>
 ```
 
-### Swipeable Tabs
+### Swipeable tabs
 
 Set `swipeable: true` to swipe between panels on touch devices. Keep the tab panels in the same wrapping container. The implementation wraps those panels in a carousel. `responsiveThreshold` is the maximum viewport width at which swipeable mode initializes; resizing later does not switch modes. Each changed swipeable selection updates `aria-current` and calls `onShow` once with the shown panel. `destroy()` removes the carousel wrapper and restores panel positions and Tabs-owned state.
 
@@ -7346,7 +7346,7 @@ instance.destroy();
 | `input` | Element | The text input that shows the current selection. |
 | `menu` | Menu | The Menu instance for this select. |
 
-### Disabled Styles
+### Disabled styles
 
 `disabled` on the `<select>` disables the whole control. `disabled` on an `<option>` makes that item unselectable.
 
@@ -7635,7 +7635,7 @@ Put a `button.close` inside the chip. Give it `type="button"` so it cannot submi
 </span>
 ```
 
-### Javascript Plugin
+### JavaScript plugin
 
 The plugin turns a `.chips` container into an editable tag field. Type a value and press Enter to add a chip. Delete with the chip's delete button, or select a chip and press Backspace or Delete. Selecting a chip marks it `selected` and moves focus to its delete button.
 

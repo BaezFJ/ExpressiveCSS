@@ -51,7 +51,7 @@ const S = defineSections([
   { id: "setup", label: "Setup" },
   { id: "templates", label: "Templates" },
   { id: "smaller-builds", label: "Smaller builds" },
-  { id: "sass", label: "Sass", heading: "Sass Setup" },
+  { id: "sass", label: "Sass", heading: "Sass setup" },
 ]);
 ---
 <DocsLayout page="index">
@@ -85,7 +85,7 @@ const S = defineSections([
 
   <Section {...S.download}>
                     <p class="flow-text">
-                        Expressive comes in two different forms. You can select which version you want depending on your
+                        Expressive comes in two forms. Choose one based on your
                         preference and expertise.
                         The project is at version <code>0.15.0</code> and is still growing, so the usual path is to build
                         from the repository.
@@ -104,9 +104,8 @@ const S = defineSections([
                         <div class="s12 m6">
                             <h5>Sass</h5>
                             <p>
-                                This version is the source SCSS in <code>src/sass</code>. By choosing this version you
-                                have more control over
-                                which layers to include. You will need a Sass compiler if you choose this option.
+                                This version is the source SCSS in <code>src/sass</code>. It gives you more control over
+                                which layers to include, and it needs a Sass compiler.
                             </p>
                         </div>
                     </div>
@@ -143,21 +142,20 @@ npm install @expressivecss/expressive
 `} />
 
                     <h5>Yarn</h5>
-                    <p>Or you can add the package with yarn.</p>
+                    <p>You can also add the package with yarn.</p>
                     <Code code={`
 yarn add @expressivecss/expressive
 `} />
   </Section>
 
   <Section {...S.setup}>
-                    <h5>Project Structure</h5>
+                    <h5>Project structure</h5>
                     <p>After building, copy the compiled files into the directory where your website is located. Your
                         directory will look something like this.</p>
                     <p>
-                        You'll notice that there are two sets of the files. The
-                        <code>min</code> means that the file is compressed to reduce load times. These minified files
-                        are usually used in production while it is
-                        better to use the unminified files during development.
+                        There are two sets of files. The
+                        <code>min</code> files are compressed to reduce load times. Use the minified files
+                        in production and the unminified files during development.
                     </p>
                     <Code code={`
 MyWebsite/
@@ -175,11 +173,11 @@ MyWebsite/
   |--index.html
 `} />
 
-                    <h5>HTML Setup</h5>
+                    <h5>HTML setup</h5>
                     <p>
-                        Next you just have to make sure you link the files properly in your webpage. Generally it is
-                        wise to import JavaScript files at the end of the body to reduce page
-                        load time. Follow the example below on how to import Expressive into your webpage.
+                        Next, link the files in your webpage. Load JavaScript files at the end of the body to
+                        reduce page load time. The example below shows how to import Expressive into your
+                        webpage.
                     </p>
                     <Code code={`
 <!DOCTYPE html>
@@ -212,7 +210,7 @@ MyWebsite/
                     <p>
                         <code>AutoInit()</code> scans <code>document.body</code> by default. Pass a container to limit
                         the scan, or add the
-                        <code>no-autoinit</code> class to an element that should be initialized manually.
+                        <code>no-autoinit</code> class to an element you want to initialize yourself.
                     </p>
                     <Code code={`
 Expressive.AutoInit();
@@ -252,7 +250,7 @@ document.documentElement.setAttribute('theme', 'dark');
                     <h5>Basic starter</h5>
                     <p>Download this HTML file as <code>index.html</code> and put the framework's
                         <code>dist/</code> directory beside it. It includes an app bar, responsive cards,
-                        a tooltip, and a theme that follows your system settings. No bundler is required.</p>
+                        a tooltip, and a theme that follows your system settings. You do not need a bundler.</p>
                     <p><a class="button filled" href="/starter.html" download="index.html">Download starter HTML</a>
                         <a class="button outlined" href="/starter.html">Preview starter</a></p>
                     <p>From a built repository checkout, create a separate starter directory:</p>
@@ -289,8 +287,8 @@ my-site/
                                 <span class="material-symbols medium primary-text" aria-hidden="true">grid_on</span>
                                 <h5>Grid</h5>
                                 <p class="left-align">
-                                    The 12-column CSS Grid, containers, offsets, and responsive layouts. The first thing
-                                    to learn after you link the stylesheet.
+                                    The 12-column CSS Grid, containers, offsets, and responsive layouts. Start here
+                                    after you link the stylesheet.
                                 </p>
                                 <a class="button filled" href={route("grid")}>Open Grid</a>
                             </article>
@@ -341,11 +339,11 @@ const tabs = Tabs.init(document.querySelector('.tabs'));`} />
                     <p class="flow-text">This section is only relevant if you chose to use the Sass sources.</p>
                     <h5>Compiling Sass</h5>
                     <p>
-                        Instead of only a CSS folder, the repository contains many <code>.scss</code> files which
-                        contain the styles of individual layers
-                        and components. The browser cannot interpret Sass, so you must compile <code>src/sass/expressive.scss</code>
+                        Besides compiled CSS, the repository contains many <code>.scss</code> files with the
+                        styles of individual layers
+                        and components. Browsers cannot read Sass, so compile <code>src/sass/expressive.scss</code>
                         into a regular CSS file.
-                        At this point you can link this newly outputted file in your HTML page.
+                        Then link the compiled file in your HTML page.
                     </p>
                     <p>From the repository, the npm script does that for you:</p>
                     <Code code={`

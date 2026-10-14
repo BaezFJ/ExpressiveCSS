@@ -9,7 +9,7 @@ Component ID: `footer`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `e1c777a1bcd53d5a6ed4615075a7a500fb6f488050e727487804f8cc421b5902`
+Contract SHA-256: `ab707e0767ffd39857d91230d8ea2bf2ec9d007a91ee9b2326d5d9f428ad7d8f`
 
 #### Selection and adaptation
 
@@ -63,7 +63,7 @@ Expressive’s footer is unfilled by default. It draws a dashed top border and u
 
 #### Also documented
 
-The Footer section of the [API reference](https://www.expressivecss.com/llm.md) also covers Sticky Footer.
+The Footer section of the [API reference](https://www.expressivecss.com/llm.md) also covers Sticky footer.
 
 #### Rules
 

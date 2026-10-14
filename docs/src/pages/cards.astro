@@ -36,9 +36,9 @@ const S = defineSections([
           The elevated container is <code>surface-container-low</code> with
           12dp corners. The default sits at elevation 1; an interactive card
           rises to 2 on hover. The
-          headline is <code>title-medium</code> / <code>on-surface</code>, the
-          subhead is <code>title-small</code> / <code>on-surface</code>, and
-          supporting text is <code>body-medium</code> /
+          headline is <code>title-medium</code> in <code>on-surface</code>, the
+          subhead is <code>title-small</code> in <code>on-surface</code>, and
+          supporting text is <code>body-medium</code> in
           <code>on-surface-variant</code>. Inset is 16dp.
         </p>
         <article class="mb-3" data-markdown-ignore>
@@ -70,7 +70,7 @@ const S = defineSections([
   </Section>
   <Section {...S.variants}>
         <p>
-          Default is elevated. <code>filled</code> uses
+          The default is elevated. <code>filled</code> uses
           <code>surface-container-highest</code> at rest (no shadow).
           <code>outlined</code> (or <code>border</code>) draws a 1dp
           <code>outline-variant</code> stroke over <code>surface</code>.
@@ -375,13 +375,13 @@ const S = defineSections([
           media, headline, and subhead. Place a
           <code>.card-reveal-trigger</code> button over the media;
           the same button opens and closes the details.
-          <code>Cards.Init()</code> (and <code>AutoInit()</code> when the card
-          contains both that button and one identified direct <code>&lt;aside&gt;</code>)
-          owns <code>aria-expanded</code> and applies the closed-panel styles
-          only after the disclosure contract is accepted. The trigger must be
-          enabled when Cards initializes; rejected, disabled-only, unidentified,
-          or multi-panel disclosures leave every panel visible, available, and
-          untouched. The native button handles Enter and Space. Escape closes
+          <code>Cards.Init()</code>, and <code>AutoInit()</code> when the card
+          contains both that button and one identified direct <code>&lt;aside&gt;</code>,
+          manages <code>aria-expanded</code>. It applies the closed-panel styles
+          only when the disclosure markup passes these checks, and the trigger must be
+          enabled when Cards initializes. A disclosure that fails, such as one with only
+          disabled triggers, an unidentified panel, or several panels, leaves every
+          panel visible, available, and untouched. The native button handles Enter and Space. Escape closes
           an open panel and returns focus to its trigger. A trigger belongs to
           its closest <code>&lt;article&gt;</code>; nested cards, including cards
           inside an outer reveal panel, keep their own disclosure ownership and
@@ -537,8 +537,8 @@ const S = defineSections([
           <code>small</code>, <code>medium</code>, and <code>large</code>
           lock the height at 300px, 400px, and 500px so a row of cards lines
           up. Media takes the top 60%; the action row sticks to the bottom.
-          These sizes are not in the M3 spec — they are optional layout
-          helpers.
+          These sizes are optional layout helpers and are not part of the M3
+          spec.
         </p>
         <div class="row" data-markdown-ignore>
           <div class="s12 m6">

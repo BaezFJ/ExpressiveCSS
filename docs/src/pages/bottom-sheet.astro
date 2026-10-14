@@ -17,32 +17,32 @@ const S = defineSections([
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>dialog.bottom-sheet</code> (or <code>.bottom</code>) is the
-          surface. Use it for additional or secondary content — not the app’s
-          main view — on compact and medium windows. People dismiss it to get
-          back to the page.
+          surface. On compact and medium windows, use it for additional or
+          secondary content, not for the app's main view. People dismiss it to
+          get back to the page.
         </p>
         <p>
           Tokens follow the
           <a href="https://m3.material.io/components/bottom-sheets">M3 bottom sheet spec</a>.
-          The container is <code>surface-container-low</code>, 28dp top
-          corners, elevation 1. Max width is 640dp. From the Medium breakpoint
+          The container uses <code>surface-container-low</code>, with 28dp top
+          corners and elevation 1. Max width is 640dp. From the Medium breakpoint
           the sheet is inset 56dp from the sides. It never covers the top
           72dp of the viewport. The drag handle is a 32×4dp bar in a 48dp
           hit target.
         </p>
         <p>
-          Two variants, same sheet:
+          The same sheet has two variants:
         </p>
         <ul>
           <li>
-            <strong>Modal</strong> — <code>showModal()</code>. A scrim sits
+            <strong>Modal</strong> uses <code>showModal()</code>. A scrim sits
             behind the sheet and the page is inert. Tap the scrim, drag the
             handle down, or submit a <code>&lt;form method="dialog"&gt;</code>
             to dismiss.
           </li>
           <li>
-            <strong>Standard</strong> — <code>show()</code>. No scrim; the
-            page stays interactive. Drag the handle down or use a close
+            <strong>Standard</strong> uses <code>show()</code>. It has no
+            scrim, and the page stays interactive. Drag the handle down or use a close
             action to dismiss.
           </li>
         </ul>
@@ -95,9 +95,9 @@ const S = defineSections([
 </dialog>
 `} />
         <p>
-          There is no extra class for the modal variant — <code>showModal()</code>
-          vs <code>show()</code> is the split. The handle is painted with
-          <code>::before</code>. Put a
+          The modal variant has no extra class. Calling <code>showModal()</code>
+          or <code>show()</code> picks the variant. A <code>::before</code>
+          pseudo-element draws the handle. Put a
           <a href={route('drag_handle')}>drag handle</a> first if you
           want a real element in that slot.
         </p>
@@ -119,17 +119,17 @@ const S = defineSections([
 `} />
         <p>
           A <code>&lt;span&gt;</code> there is decoration and does nothing on
-          its own — dragging is a pointer gesture, and <kbd>Esc</kbd> already
-          dismisses the sheet from the keyboard, so the bar sits on top of a
-          path that exists without it.
+          its own. Dragging is a pointer gesture, and <kbd>Esc</kbd> already
+          dismisses the sheet from the keyboard, so keyboard users do not need
+          the bar.
         </p>
         <p>
           Make it a <code>&lt;button&gt;</code> when you want a visible dismiss
-          control, and give it a name. Activating it closes the sheet, by
-          pointer or by <kbd>Enter</kbd> — dragging is not the only way in.
-          A drag that snaps back does not also dismiss: the click that ends a
-          drag is told apart from a tap, so the sheet the drag declined to close
-          stays open.
+          control, and give it a name. Activating it by pointer or by
+          <kbd>Enter</kbd> closes the sheet, so dragging is not the only way to
+          use it. A drag that snaps back does not also dismiss the sheet. The
+          component tells the click that ends a drag apart from a tap, so the
+          sheet stays open.
         </p>
 <Code code={`
 <dialog class="bottom-sheet" aria-labelledby="title-title">
@@ -140,12 +140,13 @@ const S = defineSections([
 `} />
         <p>
           <code>.handle</code> is the pre-1.0 spelling of the same slot and
-          still works, decorative or wired.
+          still works, as decoration or as a button.
         </p>
   </Section>
   <Section {...S.layout}>
         <p>
-          Compact (below 600px) is full-bleed, flush to the bottom. From
+          On compact windows (below 600px) the sheet is full-bleed and flush
+          to the bottom. From
           the Medium breakpoint the sheet is at most 640dp wide with 56dp
           side inset. It always stops 72dp short of the top. On large
           screens a

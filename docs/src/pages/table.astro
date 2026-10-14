@@ -7,17 +7,17 @@ import { defineSections } from "../lib/sections";
 
 const S = defineSections([
   { id: "introduction", label: "Introduction", heading: false },
-  { id: "striped", label: "Striped", heading: "Striped Table" },
-  { id: "highlight", label: "Highlight", heading: "Highlight Table" },
-  { id: "centered", label: "Centered", heading: "Centered Table" },
-  { id: "responsive", label: "Responsive", heading: "Responsive Table" },
+  { id: "striped", label: "Striped", heading: "Striped table" },
+  { id: "highlight", label: "Highlight", heading: "Highlight table" },
+  { id: "centered", label: "Centered", heading: "Centered table" },
+  { id: "responsive", label: "Responsive", heading: "Responsive table" },
 ]);
 ---
 <DocsLayout page="table">
 <PageBody sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
-          Tables are a nice way to organize a lot of data. We provide a few utility classes to help you style your table as easily as possible.
+          Tables organize a lot of data. A few utility classes change how a table looks.
         </p>
         <table>
           <thead>
@@ -148,7 +148,7 @@ const S = defineSections([
         </table>
   </Section>
   <Section {...S.centered}>
-        <p>Add <code>class="centered"</code> to the table tag to center align all the text in the table.</p>
+        <p>Add <code>class="centered"</code> to the table tag to center-align all the text in the table.</p>
         <table class="centered">
           <thead>
             <tr>

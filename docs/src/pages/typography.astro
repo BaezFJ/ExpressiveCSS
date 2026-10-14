@@ -12,7 +12,7 @@ const S = defineSections([
   { id: "blockquote", label: "Blockquotes" },
   { id: "keyboard-keys", label: "Keyboard keys" },
   { id: "highlight", label: "Highlighted text" },
-  { id: "flow", label: "Flow Text" },
+  { id: "flow", label: "Flow text" },
   { id: "fontstack", label: "Typeface tokens" },
 ]);
 ---
@@ -20,11 +20,11 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          The type scale is the HTML. <code>&lt;h1&gt;</code>–<code>&lt;h6&gt;</code>
+          The type scale is the HTML. <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code>
           are display and headline roles, <code>&lt;p&gt;</code> is body-large,
           <code>&lt;small&gt;</code> is body-small. You do not need a class
-          unless the element cannot carry the role — a
-          <code>&lt;span class="label-large"&gt;</code>, or a
+          unless the element cannot carry the role, such as a
+          <code>&lt;span class="label-large"&gt;</code> or a
           <code>&lt;p class="display-large"&gt;</code> used as a hero numeral.
         </p>
         <p>
@@ -32,8 +32,8 @@ const S = defineSections([
           <a href="https://m3.material.io/styles/typography/overview">M3 type system</a>.
           Each role sets family, size, weight, line-height, and letter-spacing
           from <code>--md-sys-typescale-*</code>. They do not set
-          <code>font-style</code> — the token named
-          <code>-font-family-style</code> holds “Regular” / “Medium”, which
+          <code>font-style</code>. The token named
+          <code>-font-family-style</code> holds "Regular" / "Medium", which
           are weights, not CSS <code>font-style</code> keywords.
         </p>
         <p>
@@ -85,8 +85,8 @@ const S = defineSections([
   </Section>
   <Section {...S.typescale}>
         <p>
-          When the tag cannot say the role, use the class. Display-large and
-          display-medium have no heading — they are for short, important
+          When no tag maps to the role, use the class. Display-large and
+          display-medium have no heading. Use them for short, important
           numerals and hero lines.
         </p>
         <p class="display-large">Display Large</p>
