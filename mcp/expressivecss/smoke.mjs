@@ -978,14 +978,15 @@ const transport = new StdioClientTransport({
   const cardContent = lint([cardContentMarkup]);
   assert.equal(cardContent.stdout.match(/legacy-card-content/gu)?.length, 1, cardContent.stdout);
   assert.match(cardContent.stdout, /card-content\.html:3:\d+ legacy-card-content/u);
-  // Each name 1.0 removed is flagged on its own line (4-15). Lines 1-3 hold
-  // their replacements and markup that only shares a name: an id, italic
-  // prose, a radio label with a span and a sortable list's handle.
+  // Each name 1.0 removed is flagged on its own line (4-18, 16 in JSX). Lines
+  // 1-3 hold their replacements and markup that only shares a name: an id,
+  // italic prose, a radio label with a span, a sortable list's handle and a
+  // switch written on its label.
   const removedMarkup = path.join(outsideDir, 'removed-in-1-0.html');
   await writeFile(removedMarkup, [
     '<span class="material-symbols" aria-hidden="true">add</span><input class="date-picker"><button class="circle extra">+</button><p><i>et al.</i></p>',
     '<div class="toolbar docked vibrant"><button class="filled">Go</button><span class="max"></span></div><div class="datepicker-container surface-container-highest"></div>',
-    '<input id="searchbar" type="search"><label><input type="radio" name="a"> <span>Daily</span></label><ul class="sortable"><li><span class="handle"></span></li></ul>',
+    '<input id="searchbar" type="search"><label><input type="radio" name="a"> <span>Daily</span></label><ul class="sortable"><li><span class="handle"></span></li></ul><p><i>sic</i></p><label class="switch"><input type="checkbox">Wifi</label>',
     '<span class="material-icons">add</span>',
     '<button><i>add</i></button>',
     '<div class="hide-on-small-only"></div>',
@@ -998,6 +999,9 @@ const transport = new StdioClientTransport({
     'Carousel.init(el, { fullWidth: true });',
     '<div style="background: var(--md-sys-color-surface-variant)"></div>',
     'Expressive.Range.init(el);',
+    '<div className="toolbar filled"></div>',
+    '<div class="switch"><label><input type="checkbox">Wifi</label></div>',
+    'Datepicker.init(el, { startRange: start });',
   ].join('\n'));
   const removed = lint([removedMarkup]);
   const removedIds = [...removed.stdout.matchAll(/removed-in-1-0\.html:(\d+):\d+ (legacy-[\w-]+)/gu)].map(([, line, id]) => `${line} ${id}`).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
@@ -1005,6 +1009,7 @@ const transport = new StdioClientTransport({
     '4 legacy-material-icons', '5 legacy-i-icon', '6 legacy-visibility-alias', '7 legacy-helper-class',
     '8 legacy-renamed-component', '9 legacy-picker-root', '10 legacy-sheet-class', '11 legacy-variant-alias',
     '12 legacy-markup-path', '13 legacy-carousel-flat', '14 legacy-color-role', '15 legacy-range-export',
+    '16 legacy-variant-alias', '17 legacy-markup-path', '18 legacy-datepicker-range',
   ], removed.stdout);
   // Unclosed tags must not make the tag patterns backtrack. Each shape alone,
   // because a file of all of them stops at the markup structure limit before

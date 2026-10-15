@@ -101,36 +101,19 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Removed
 
-- **Breaking (1.0).** The names kept for markup written before 0.8.0 are
+- **Breaking (1.0).** Most names kept for markup written before 0.8.0 are
   gone. Each one has a replacement that has been documented since 0.8.0;
-  see Migration below.
+  see Migration below. A few stay: `.breadcrumb` and `.breadcrumb-wrapper`,
+  a bare `ul.pagination`, and checkbox `input + span`, which multiple Select
+  still emits.
 - **Breaking (1.0).** The remaining compatibility paths are gone too: the
   `.range` and `.range-field` slider hosts, a switch whose `.switch` class
-  sits on a wrapper around the label, the `.extra` size on a common button, radio `input + span` and switch
-  `input + span` / `.lever` drawing, the `li.tab` wrapper, a chip's `.active`,
-  Carousel's `.flat` layout, `fullWidth` option and `.carousel-fixed-item`,
-  and the `background`, `on-background`, `surface-variant` and `surface-tint`
-  color roles with their `-light`/`-dark` pairs and utility classes.
-
-### Changed
-
-- Snackbar's generated close button holds its icon in a
-  `<span class="material-symbols">` instead of an `<i>`. Styles that targeted
-  `.snackbar i` need `.snackbar .material-symbols`.
-- Swipeable tabs no longer use Carousel. The panels move into a full-width
-  `.tabs-content` scroll-snap track, so touch and trackpad swipes are native
-  scrolling. Only the shown panel is reachable by keyboard; the others are
-  `inert`. The track re-aligns when its width changes, so a tab bar started
-  in a closed dialog or sheet shows the current panel once opened. Dragging the panels with a mouse no longer switches tabs; click
-  the tab instead.
-- Components that read `surface-variant` now read
-  `surface-container-highest`, as Material 3 maps it: the unselected switch
-  track, the time picker's clock face and hour and minute inputs, the date
-  picker's header rule and focused month and year field, and disabled cards.
-  In dark mode those surfaces are a little darker and more neutral. Rules
-  that read `background` or `on-background` now read `surface` and
-  `on-surface`, which resolve to the same colors.
-
+  sits on a wrapper around the label, the `.extra` size on a common button,
+  radio `input + span` and switch `input + span` / `.lever` drawing, the
+  `li.tab` wrapper, a chip's `.active`, Carousel's `.flat` layout, `fullWidth`
+  option and `.carousel-fixed-item`, and the `background`, `on-background`,
+  `surface-variant` and `surface-tint` color roles with their `-light`/`-dark`
+  pairs and utility classes.
 - Selectors and code that never matched or never ran. The date and time
   picker rules no longer carry hyphenated twins of their generated parts,
   such as `.date-picker-container`; the script only ever emitted the
@@ -144,6 +127,25 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Datepicker's `startRange` and `endRange` options. Nothing set them, and the
   `is-startrange`, `is-endrange` and `is-inrange` classes they produced had
   no styles. Use `isDateRange` for range selection.
+
+### Changed
+
+- Snackbar's generated close button holds its icon in a
+  `<span class="material-symbols">` instead of an `<i>`. Styles that targeted
+  `.snackbar i` need `.snackbar .material-symbols`.
+- Swipeable tabs no longer use Carousel. The panels move into a full-width
+  `.tabs-content` scroll-snap track, so touch and trackpad swipes are native
+  scrolling. Only the shown panel is reachable by keyboard; the others are
+  `inert`. The track re-aligns when its width changes, so a tab bar started
+  in a closed dialog or sheet shows the current panel once opened. Dragging
+  the panels with a mouse no longer switches tabs; click the tab instead.
+- Components that read `surface-variant` now read
+  `surface-container-highest`, as Material 3 maps it: the unselected switch
+  track, the time picker's clock face and hour and minute inputs, the date
+  picker's header rule and focused month and year field, and disabled cards.
+  In dark mode those surfaces are a little darker and more neutral. Rules
+  that read `background` or `on-background` now read `surface` and
+  `on-surface`, which resolve to the same colors.
 
 ### Migration
 

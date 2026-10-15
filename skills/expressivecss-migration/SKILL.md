@@ -117,7 +117,7 @@ These have no class to rename. Replace each with what it was standing in for.
 | `.sidenav`, `.navigation-drawer` | `NavigationRail`; a navigation bar on Compact when the hierarchy fits, or a full-screen dialog for a larger menu |
 | `.bottom-app-bar` | `.toolbar.docked` or `.toolbar.fixed`, with any FAB in `.toolbar-group` |
 | `.fixed-action-btn`, `.fab` speed dial | `.fab-menu` with labelled actions; a toolbar for persistent commands |
-| `.banner` | Inline text and buttons for a persistent message, a snackbar for temporary feedback, a dialog for a blocking decision |
+| `.banner` | An `.alert` for a persistent message in the page, a snackbar for temporary feedback, a dialog for a blocking decision |
 | `.floating-sheet` | A dialog for blocking work, a bottom sheet on Compact, or a side sheet |
 | `.segmented-button` | `.button-group.connected`, keeping native radios or checkboxes when the form submits them |
 | `.tabs` inside an app bar, `.tabs.transparent` | A standalone `.tabs` component below the bar |
@@ -218,6 +218,7 @@ These keep their class names but look different. Compare a page before and after
 
 - Button sizes (0.8.0): `small` is 40dp, not 32dp; the old 32dp button is `xsmall`. `large` is 96dp, not 56dp; the old 56dp button is `medium`. Before 1.0 `extra` also meant 56dp; in 1.0 it only marks the `circle extra` FAB. The default inset is 16dp on both sides.
 - `button.circle` with no size class has a 20px glyph instead of 24px (0.8.0). Use `.icon-button`, or `.circle.medium`, to keep 24px.
+- Snackbar's generated close button holds its icon in a `<span class="material-symbols">`, not an `<i>` (1.0). Point custom styles at `.snackbar .material-symbols` instead of `.snackbar i`.
 - A button's height is a `min-height` (0.11.0). A rule that shrinks a button with `height` must also set `min-height`, or set `--md-comp-filled-button-container-height`.
 - The default theme seed is Mist Iris `#c6a0f6` (0.13.0). Set `--md-source` or Sass `$md-source` to keep the brand color.
 - `--md-sys-color-scrim` set on a subtree no longer reaches scrims (0.8.0). Set it at the root, or set `--md-comp-scrim-color` on one surface.

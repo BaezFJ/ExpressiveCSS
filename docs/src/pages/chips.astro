@@ -126,8 +126,9 @@ const S = defineSections([
         <p>
           Before 0.8.0 every chip was a <code>&lt;div class="chip"&gt;</code> and the
           delete control was an <code>&lt;i class="close"&gt;</code>, focusable through
-          <code>tabindex</code> but with no role or name. That markup still
-          renders; it is no longer correct and is not documented.
+          <code>tabindex</code> but with no role or name. In 1.0 that
+          <code>&lt;i&gt;</code> is no longer an icon and shows the word
+          "close"; write the <code>&lt;button class="close"&gt;</code> shown here.
         </p>
   </Section>
 

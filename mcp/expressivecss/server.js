@@ -165,8 +165,8 @@ const LegacyPatternList = [
   {
     id: 'legacy-i-icon',
     severity: 'medium',
-    description: 'A bare `<i>` holding an icon name is italic text in 1.0, not an icon; write `<span class="material-symbols" aria-hidden="true">`.',
-    pattern: /<i(?:\s(?![^<>]*material-symbols)[^<>]*)?>\s*[a-z][a-z0-9]*(?:_[a-z0-9]+)*\s*<\/i>/g,
+    description: 'A bare `<i>` holding an icon name is italic text in 1.0, not an icon; write `<span class="material-symbols" aria-hidden="true">`. Only an `<i>` that opens a button, link, list item, label or similar host is checked; if it is italic prose, ignore this.',
+    pattern: /(?<=<(?:a|button|label|li|span|div|nav|header|footer|menu|summary|td|th)\b[^<>]*>\s*)<i(?:\s(?![^<>]*material-symbols)[^<>]*)?>\s*[a-z][a-z0-9]*(?:_[a-z0-9]+)*\s*<\/i>/g,
   },
   {
     id: 'legacy-visibility-alias',
@@ -196,31 +196,37 @@ const LegacyPatternList = [
     id: 'legacy-sheet-class',
     severity: 'high',
     description: 'Sheet aliases were removed in 1.0; use `dialog.bottom-sheet` with `.drag-handle`, and `dialog.side-sheet` (add `.start` for the start edge).',
-    pattern: /<dialog\b[^<>]*(?<![-\w])class\s*=\s*["'][^"']*(?<![-\w])(?:bottom|right|left|right-sheet|left-sheet)(?![-\w])|<dialog\b(?=[^<>]*bottom-sheet)[^<>]*>(?:(?!<\/dialog>)[^]){0,4000}?(?<![-\w])class(?:Name)?\s*=\s*["'][^"']*(?<![-\w])handle(?![-\w])/g,
+    pattern: /<dialog\b[^<>]*(?<![-\w])class(?:Name)?\s*=\s*["'][^"']*(?<![-\w])(?:bottom|right|left|right-sheet|left-sheet)(?![-\w])|<dialog\b(?=[^<>]*bottom-sheet)[^<>]*>(?:(?!<\/dialog>)[^]){0,4000}?(?<![-\w])class(?:Name)?\s*=\s*["'][^"']*(?<![-\w])handle(?![-\w])/g,
   },
   {
     id: 'legacy-variant-alias',
     severity: 'high',
     description: 'Variant aliases were removed in 1.0: use `.tooltip.rich` for `.tooltip.max`, `.toolbar.docked` for a `.max` bar and `.toolbar.vibrant` for a `.filled` bar, and `.selected` for a chip\'s `.active`.',
-    pattern: /(?<![-\w])class\s*=\s*["'](?=[^"']*(?<![-\w])(?:tooltip|toolbar|chip)(?![-\w]))(?=[^"']*(?<![-\w])(?:max|filled|active)(?![-\w]))[^"']*["']/g,
+    pattern: /(?<![-\w])class(?:Name)?\s*=\s*["'](?=[^"']*(?<![-\w])(?:tooltip|toolbar|chip)(?![-\w]))(?=[^"']*(?<![-\w])(?:max|filled|active)(?![-\w]))[^"']*["']/g,
   },
   {
     id: 'legacy-markup-path',
     severity: 'high',
-    description: 'Pre-1.0 markup paths were removed in 1.0: put tab links directly in `nav.tabs` (no `li.tab`), and use `.medium` for a 56dp common button (`.extra` only marks `circle extra` FABs).',
-    pattern: /<li\b[^<>]*(?<![-\w])class\s*=\s*["'][^"']*(?<![-\w])tab(?![-\w])|(?<![-\w])class\s*=\s*["'](?![^"']*(?<![-\w])circle(?![-\w]))[^"']*(?<![-\w])extra(?![-\w])/g,
+    description: 'Pre-1.0 markup paths were removed in 1.0: put tab links directly in `nav.tabs` (no `li.tab`), put `.switch` on the `<label>` that wraps the checkbox, and use `.medium` for a 56dp common button (`.extra` only marks `circle extra` FABs).',
+    pattern: /<(?!label\b)[a-z][\w-]*\b[^<>]*(?<![-\w])class(?:Name)?\s*=\s*["'][^"']*(?<![-\w])switch(?![-\w])|<li\b[^<>]*(?<![-\w])class(?:Name)?\s*=\s*["'][^"']*(?<![-\w])tab(?![-\w])|(?<![-\w])class(?:Name)?\s*=\s*["'](?![^"']*(?<![-\w])circle(?![-\w]))[^"']*(?<![-\w])extra(?![-\w])/g,
   },
   {
     id: 'legacy-carousel-flat',
     severity: 'medium',
     description: 'Carousel `.flat`, the `fullWidth` option and `.carousel-fixed-item` were removed in 1.0; choose an M3 layout such as `.hero` or `.uncontained`.',
-    pattern: /(?<![-\w])class\s*=\s*["'](?=[^"']*(?<![-\w])carousel(?![-\w]))[^"']*(?<![-\w])flat(?![-\w])|\bfullWidth\s*:\s*true\b|(?<![-\w])carousel-fixed-item(?![-\w])/g,
+    pattern: /(?<![-\w])class(?:Name)?\s*=\s*["'](?=[^"']*(?<![-\w])carousel(?![-\w]))[^"']*(?<![-\w])flat(?![-\w])|\bfullWidth\s*:\s*true\b|(?<![-\w])carousel-fixed-item(?![-\w])/g,
   },
   {
     id: 'legacy-color-role',
     severity: 'high',
     description: 'The legacy color roles were removed in 1.0, with their `-light`/`-dark` pairs and classes; use `surface` for `background`, `on-surface` for `on-background`, `surface-container-highest` for `surface-variant` and `primary` for `surface-tint`.',
     pattern: /--md-sys-color-(?:background|on-background|surface-variant|surface-tint)(?:-light|-dark)?(?![-\w])|(?<![-\w])class(?:Name)?\s*=\s*["'][^"']*(?<![-\w])(?:background|on-background|surface-variant|surface-tint)(?:-text)?(?![-\w])/g,
+  },
+  {
+    id: 'legacy-datepicker-range',
+    severity: 'high',
+    description: 'Datepicker `startRange` and `endRange` were removed in 1.0; use `isDateRange` for range selection.',
+    pattern: /\b(?:startRange|endRange)\s*:/g,
   },
   {
     id: 'legacy-range-export',
