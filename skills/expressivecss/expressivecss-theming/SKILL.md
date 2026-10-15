@@ -5,6 +5,17 @@ description: Themes ExpressiveCSS color roles, brand seeds, typography, icon sty
 
 # ExpressiveCSS themes and colors
 
+## Workflow
+
+Copy this checklist and tick it off:
+
+```
+- [ ] 1. Find the token owner and the existing theme decisions
+- [ ] 2. Read the focused reference for each token family you change
+- [ ] 3. Change tokens within the core rules
+- [ ] 4. Run the verification checks, fix failures, and repeat them
+```
+
 ## Before changing tokens
 
 Reuse the root version resolution. Before changing a brand choice, check the application's existing theme notes and token owner. For conflicting decisions or a change shared across pages, read the [product context reference](../expressivecss-design/references/product-context.md); a token-only task does not need the full Design workflow.

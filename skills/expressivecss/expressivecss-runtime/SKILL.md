@@ -5,6 +5,18 @@ description: Initializes and destroys ExpressiveCSS JavaScript components, handl
 
 # ExpressiveCSS JavaScript runtime
 
+## Workflow
+
+Copy this checklist and tick it off:
+
+```
+- [ ] 1. Read the selected component guide
+- [ ] 2. Choose one initialization owner: Auto Init or manual
+- [ ] 3. Initialize after the markup exists and destroy route-owned instances before their DOM goes
+- [ ] 4. For a reported slowdown, record the same interaction before and after the change
+- [ ] 5. Run the verification checklist
+```
+
 ## Initialization and lifecycle
 
 Reuse the root version resolution and read the selected component guide first. Open the [Auto Init documentation](https://www.expressivecss.com/auto-init.html.md) or the component's page only for missing options, methods, events, conflicts, or version uncertainty.

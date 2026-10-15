@@ -31,11 +31,21 @@ Material's overview lists six principles. Each one has a concrete check in Expre
 
 ## Workflow for a new layout
 
+Copy this checklist and tick it off:
+
+```
+- [ ] 1. List the regions the task needs
+- [ ] 2. Pick the canonical layout and copy the closest template
+- [ ] 3. Write the compact layout first
+- [ ] 4. Decide what changes at each wider breakpoint
+- [ ] 5. Check RTL and every breakpoint boundary
+```
+
 1. List the regions the task needs with the [scaffold reference](../expressivecss-design/references/scaffold.md): bars, rails, panes and safety regions. Leave out regions the task does not need.
 2. Pick the canonical layout (feed, list-detail or supporting pane) with the [canonical layouts reference](./references/canonical-layouts.md), then copy the closest template or example.
 3. Write the compact layout first with meaningful source order. Then add changes only at the breakpoints where the content needs more or less room.
 4. For each breakpoint after the first, decide what to reveal, divide, resize, reposition or swap, and choose panes, navigation and transient surfaces with the [breakpoints reference](./references/breakpoints.md).
-5. Check the page in RTL and at every breakpoint boundary it uses, such as 599px and 600px.
+5. Check the page in RTL and at every breakpoint boundary it uses, such as 599px and 600px. Fix what fails and check the same boundaries again.
 
 ## Breakpoints
 
