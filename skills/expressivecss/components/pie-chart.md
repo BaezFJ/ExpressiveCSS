@@ -9,7 +9,7 @@ Component ID: `pie-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `bd71f03212a61939c306a50d67f32fcee8e6d685e15c4e2d726ec9a3e9946b9b`
+Contract SHA-256: `ed430c29a42b417942ea653304ec7f75fe7b78f12ed301eb38359d30afd11898`
 
 #### Selection and adaptation
 

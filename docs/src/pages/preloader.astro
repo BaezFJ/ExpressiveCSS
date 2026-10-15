@@ -9,6 +9,7 @@ import { route } from "../lib/catalogue";
 const S = defineSections([
   { id: "linear", label: "Linear", heading: false },
   { id: "circular", label: "Circular" },
+  { id: "meter", label: "Meter" },
   { id: "colors", label: "Colors" },
 ]);
 ---
@@ -112,6 +113,51 @@ const S = defineSections([
       aria-valuemin="0" aria-valuemax="100"
       aria-label="Loading"></span>
 `} />
+  </Section>
+  <Section {...S.meter}>
+        <p>
+          A <code>&lt;progress&gt;</code> shows how far a task has gone. A
+          <code>&lt;meter&gt;</code> shows a measurement within a known range,
+          such as storage used or password strength. It needs no class: every
+          meter gets an 8px bar on a <code>secondary-container</code> track
+          and fills its container's width. Set <code>width</code> on a meter
+          to keep it inline.
+        </p>
+        <p>
+          The fill color comes from the native <code>low</code>,
+          <code>high</code> and <code>optimum</code> attributes. A value in
+          the same region as <code>optimum</code> is <code>primary</code>, one
+          region away is <code>tertiary</code>, and two regions away is
+          <code>error</code>. In the storage example below, less is better,
+          so <code>optimum</code> sits below <code>low</code>.
+        </p>
+        <p>
+          <label for="meter-demo-ok">Storage used: 40 GB of 100 GB</label>
+          <meter id="meter-demo-ok" min="0" max="100" low="60" high="85" optimum="0" value="40">40 GB</meter>
+        </p>
+        <p>
+          <label for="meter-demo-warn">Storage used: 70 GB of 100 GB</label>
+          <meter id="meter-demo-warn" min="0" max="100" low="60" high="85" optimum="0" value="70">70 GB</meter>
+        </p>
+        <p>
+          <label for="meter-demo-full">Storage used: 95 GB of 100 GB</label>
+          <meter id="meter-demo-full" min="0" max="100" low="60" high="85" optimum="0" value="95">95 GB</meter>
+        </p>
+<Code code={`
+<label for="storage">Storage used: 70 GB of 100 GB</label>
+<meter id="storage" min="0" max="100" low="60" high="85" optimum="0" value="70">70 GB</meter>
+`} />
+        <p>
+          Give each meter a visible label that states the value, because the
+          color alone does not tell anyone whether the reading is good.
+          Override <code>--md-comp-meter-track</code>,
+          <code>--md-comp-meter-optimum</code>,
+          <code>--md-comp-meter-suboptimum</code>,
+          <code>--md-comp-meter-even-less-good</code>,
+          <code>--md-comp-meter-thickness</code> and
+          <code>--md-comp-meter-shape</code> to change the colors, height and
+          corner radius.
+        </p>
   </Section>
   <Section {...S.colors}>
         <p>
