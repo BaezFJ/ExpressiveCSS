@@ -603,7 +603,7 @@ Switch schemes by writing the attribute:
 document.documentElement.setAttribute('theme', 'dark');
 ```
 
-Or let the `Theme` behavior do it. A click on any element with `data-theme-set="light"`, `"dark"` or `"auto"` writes the attribute and saves the choice to `localStorage` under `theme`, the key the snippet above reads. The behavior starts on import and marks every theme control as current or not: `aria-checked` on `menuitemradio` and `radio` roles, `aria-pressed` on anything else. Other values are ignored.
+Or let the `Theme` behavior do it. A click on any element with `data-theme-set="light"`, `"dark"` or `"auto"` writes the attribute and saves the choice to `localStorage` under `theme`, the key the snippet above reads. The root bundle starts it on load, and the modular entry with `Theme.Init()`. It marks every theme control as current or not: `aria-checked` on `menuitemradio` and `radio` roles, `aria-pressed` on anything else. Other values are ignored.
 
 ```html
 <div class="button-group" role="group" aria-label="Theme">
@@ -2067,7 +2067,7 @@ Every value is a `--md-comp-icon-button-*` custom property — `container-height
 
 ### Copy button
 
-Any button copies to the clipboard with `data-copy-for`, naming the id of a field or element, or with `data-copy`, holding the text itself. A field copies its value; other elements copy their trimmed text. A snackbar confirms the result, and screen readers announce it. `data-copy-message` and `data-copy-error` replace its texts for one button; `Expressive.Copy.i18n` (`copied`, `failed`) replaces them everywhere. The `Copy` behavior starts on import. The clipboard needs a secure context (HTTPS or localhost); elsewhere the snackbar reports the failure.
+Any button copies to the clipboard with `data-copy-for`, naming the id of a field or element, or with `data-copy`, holding the text itself. A field copies its value; other elements copy their trimmed text. A snackbar confirms the result, and screen readers announce it. `data-copy-message` and `data-copy-error` replace its texts for one button; `Expressive.Copy.i18n` (`copied`, `failed`) replaces them everywhere. The root bundle starts the `Copy` behavior on load; with the modular entry, call `Copy.Init()`. The clipboard needs a secure context (HTTPS or localhost); elsewhere the snackbar reports the failure.
 
 ```html
 <input id="api-key" value="sk-123" readonly aria-label="API key">

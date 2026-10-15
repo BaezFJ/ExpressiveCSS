@@ -17,12 +17,14 @@ const markup = `<!doctype html><html lang="en" theme="dark"><head><style>${css}<
 <button id="copy-literal" class="button text" type="button" data-copy="https://example.com/share/42" data-copy-error="Copy failed">Share link</button>
 <button id="copy-missing" class="button text" type="button" data-copy-for="nothing">Broken</button>
 <button id="copy-disabled" class="button text" type="button" data-copy="no" disabled>Disabled</button>
+<button id="copy-aria-disabled" class="button text" type="button" data-copy="no" aria-disabled="true">Unavailable</button>
 
 <div class="button-group">
   <button id="light" class="button" type="button" data-theme-set="light">Light</button>
   <button id="dark" class="button" type="button" data-theme-set="dark">Dark</button>
   <button id="auto" class="button" type="button" data-theme-set="auto">Auto</button>
   <button id="bogus" class="button" type="button" data-theme-set="sepia">Sepia</button>
+  <button id="locked" class="button" type="button" data-theme-set="dark" aria-disabled="true">Dark (locked)</button>
 </div>
 <menu role="menu"><li id="menu-light" role="menuitemradio" data-theme-set="light" tabindex="-1">Light</li></menu>
 <script>${js}</script>
@@ -58,6 +60,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await page.click('#copy-literal');
       await page.click('#copy-missing');
       await page.click('#copy-disabled', { force: true });
+      await page.click('#copy-aria-disabled', { force: true });
       assert.deepEqual(await page.evaluate(() => window.__copied), [
         'sk-123',
         'npm install @expressivecss/expressive',
@@ -100,6 +103,8 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
 
       await page.click('#bogus');
       assert.equal((await state()).theme, 'light', 'unknown values are ignored');
+      await page.click('#locked', { force: true });
+      assert.equal((await state()).theme, 'light', 'aria-disabled controls are ignored');
 
       await page.click('#auto');
       s = await state();

@@ -40,6 +40,12 @@
   color: var(--md-comp-alert-color);
   @include typescale("body-medium");
 
+  // display: grid would otherwise beat the browser's [hidden] rule, and
+  // toggling hidden is the usual way to show and dismiss an alert.
+  &[hidden] {
+    display: none;
+  }
+
   &.critical {
     --md-comp-alert-container-color: var(--md-sys-color-error-container);
     --md-comp-alert-color: var(--md-sys-color-on-error-container);

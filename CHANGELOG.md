@@ -25,7 +25,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `<meter>` gets an 8px bar on a `secondary-container` track. The fill is
   `primary` in the optimum region, `tertiary` one region away and `error` two
   away, from the native `low`, `high` and `optimum` attributes. No class is
-  needed.
+  needed, so existing meters change appearance and fill their container's
+  width; set `width` on a meter to keep it inline.
 - Copy buttons: `data-copy-for="id"` copies a field's value or an element's
   text, and `data-copy="text"` copies the text itself. A snackbar confirms the
   result. `Expressive.Copy.i18n` and `data-copy-message` / `data-copy-error`

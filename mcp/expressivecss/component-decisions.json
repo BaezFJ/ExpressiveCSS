@@ -4940,7 +4940,7 @@
         "sources": [
           {
             "path": "src/sass/components/_alert.scss",
-            "sha256": "c755f7e301099a8ee887006a05fdfeb7e6630010217d1ec8b9f8d5f7cc15be5c"
+            "sha256": "67af3cb5731ec433de0af98707c9ce91445412fb132ac7324b6e83661166b0ad"
           }
         ],
         "gaps": [

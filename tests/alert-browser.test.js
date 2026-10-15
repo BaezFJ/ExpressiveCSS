@@ -19,6 +19,7 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
   </div>
   <div id="plain" class="alert"><p id="plain-text">Your trial ends in 3 days.</p></div>
   <div id="critical" class="alert critical" role="alert"><p>Payment failed.</p></div>
+  <div id="hidden" class="alert" hidden><p>Dismissed.</p></div>
 </main></body></html>`;
 
 for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
@@ -71,6 +72,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       assert.equal(await style('#critical', 'backgroundColor'), tone.error);
       assert.equal(await style('#critical', 'color'), tone.onError);
       assert.equal(await page.getByRole('alert').count(), 1, 'only the authored role is exposed');
+      assert.equal(await style('#hidden', 'display'), 'none', 'the hidden attribute hides an alert');
 
       await page.setViewportSize({ width: 320, height: 900 });
       await page.locator('main').evaluate((el) => { el.style.width = '280px'; });

@@ -130,7 +130,8 @@ document.documentElement.setAttribute('theme', 'dark');
           with <code>data-theme-set="light"</code>, <code>"dark"</code> or
           <code>"auto"</code> writes the attribute and saves the choice to
           <code>localStorage</code> under <code>theme</code>, the key the
-          snippet above reads. It starts on import and marks each theme
+          snippet above reads. The root bundle starts it on load, and the
+          modular entry with <code>Theme.Init()</code>. It marks each theme
           control as current or not: <code>aria-checked</code> on
           <code>menuitemradio</code> and <code>radio</code> roles,
           <code>aria-pressed</code> on anything else.

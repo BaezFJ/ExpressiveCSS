@@ -248,8 +248,9 @@ const S = defineSections([
         <p>
           <code>data-copy-message</code> and <code>data-copy-error</code>
           replace the snackbar's texts for one button, and
-          <code>Expressive.Copy.i18n</code> replaces them everywhere. The
-          behavior starts on import. The clipboard needs HTTPS or localhost;
+          <code>Expressive.Copy.i18n</code> replaces them everywhere. The root
+          bundle starts the behavior on load; with the modular entry, call
+          <code>Copy.Init()</code>. The clipboard needs HTTPS or localhost;
           anywhere else the snackbar reports the failure.
         </p>
         <div class="field mb-3" style="max-width: 20rem;">
