@@ -7,6 +7,19 @@ description: Builds accessible ExpressiveCSS charts from data tables, including 
 
 Every ExpressiveCSS chart is a `<figure>` holding a `<figcaption>` and a plain `<table>`. `AutoInit()` reads the table and draws an SVG over it. The table stays in the page, visually hidden, as the text alternative, and it is what shows when JavaScript does not run. There is no chart library, canvas or JSON config. A good chart here starts as a good table: clean headers, numbers the parser can read, and a caption that names what the reader is looking at.
 
+## Workflow
+
+Copy this checklist and tick it off:
+
+```
+- [ ] 1. Pick the chart class from the question the reader asks
+- [ ] 2. Read the generated component guide for that class
+- [ ] 3. Write the table with the shared contract and real data
+- [ ] 4. Set honest scales, units and caption
+- [ ] 5. Style with tokens and wire initialization
+- [ ] 6. Run the "Before you finish" list until it passes
+```
+
 ## Related guides
 
 Read [Usage](../expressivecss-usage/SKILL.md) for page layout and [Theming](../expressivecss-theming/SKILL.md) before changing brand colors. Read the generated guide in [components](../components/) for each chart class you use; it holds the contract and rule IDs. For a full dashboard or reporting page, also read the [dashboard guide](../expressivecss-dashboard/SKILL.md), which adds the shell, scope controls, card system and loading states.

@@ -873,16 +873,16 @@ describe('the ExpressiveCSS agent skill', () => {
 
     assert.match(routing, /Classify the task.*runtime ownership first/i);
     assert.match(routing, /Classify.*runtime ownership first/is);
-    assert.match(routing, /Record actual guide reads, not links/is);
+    assert.match(routing, /list the ones you opened, not ones you only saw linked/is);
     assert.match(routing, /\| Task classification \| Must read \| Must not read by default \|/);
     for (const [task, load, avoid] of expectedRows) {
       assert.ok(routing.includes(`| ${task} | ${load} | ${avoid} |`), `wrong route for ${task}`);
     }
-    assert.match(routing, /Inspect runtime ownership in the decision index/is);
-    assert.match(routing, /Interface implementation and review require Usage and Accessibility/i);
-    assert.match(routing, /Theming for visual\/token work/i);
-    assert.match(routing, /JavaScript.*Auto Init.*shared-runtime.*manual ownership require Runtime/is);
-    assert.match(routing, /CSS-only and native ownership do not/i);
+    assert.match(routing, /Runtime ownership in the decision index decides Runtime/is);
+    assert.match(routing, /Building or reviewing an interface needs Usage and Accessibility/i);
+    assert.match(routing, /Visual or token work adds Theming/i);
+    assert.match(routing, /decides Runtime: JavaScript.*Auto Init.*shared-runtime.*manual need it/is);
+    assert.match(routing, /CSS-only and native do not/i);
     assert.match(routing, /Setup only.*Install/is);
     assert.doesNotMatch(design, /\| Guide \| Load condition \|/, 'design guide duplicates the routing truth table');
     assert.match(design, /follow the root staged routing truth table/i);
@@ -999,8 +999,9 @@ describe('the ExpressiveCSS agent skill', () => {
     // the particles row at 40,301 bytes (+341);
     // the map row at 40,672 bytes (+371); the 0.10.0 skill version at 40,673 bytes (+1);
     // the keypad and keyboard row at 40,986 bytes (+313); the layout guide route
-    // at 41,157 bytes (+171).
-    assert.ok(bytes <= 41157, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // at 41,157 bytes (+171); the layout, dashboard and chart discovery terms
+    // at 41,205 bytes (+48).
+    assert.ok(bytes <= 41205, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 

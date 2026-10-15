@@ -5,6 +5,17 @@ description: Installs and configures @expressivecss/expressive: package versions
 
 # Install ExpressiveCSS
 
+## Workflow
+
+Copy this checklist and tick it off:
+
+```
+- [ ] 1. Resolve the version and read the manifest and lockfile
+- [ ] 2. Add the package only when the task includes setup
+- [ ] 3. Load CSS, JavaScript and fonts through one delivery path
+- [ ] 4. Run the verification checklist
+```
+
 ## Steps
 
 Reuse the root version resolution, or run its bundled resolver if this guide was loaded directly. This bundled guide covers the setup below. Consult the [getting-started documentation](https://www.expressivecss.com/index.html.md) only for missing details, and treat the public site's version as unverified until provenance proves it. For an older installed version, inspect `node_modules/@expressivecss/expressive` and the matching repository tag or commit before applying contract-dependent changes.

@@ -1,0 +1,125 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+// The skills table reads each top-level skill's frontmatter, so a new
+// `skills/<name>/SKILL.md` appears here without editing this page.
+const skillFiles = import.meta.glob<string>("../../../skills/*/SKILL.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
+const skills = Object.values(skillFiles)
+  .map((source) => ({
+    name: source.match(/^name: (.+)$/m)?.[1] ?? "",
+    description: source.match(/^description: (.+)$/m)?.[1] ?? "",
+  }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const S = defineSections([
+  { id: "introduction", label: "Introduction", heading: false },
+  { id: "docs", label: "Machine-readable docs" },
+  { id: "skills", label: "Agent skills" },
+  { id: "mcp", label: "MCP server" },
+  { id: "lint", label: "Lint checks" },
+]);
+---
+<DocsLayout page="ai">
+<PageBody sections={S}>
+  <Section {...S.introduction}>
+    <p class="flow-text">
+      ExpressiveCSS ships its documentation in plain text, agent skills that walk a coding agent
+      through common tasks, an MCP server, and a lint command that checks markup against the
+      framework's rules.
+    </p>
+  </Section>
+
+  <Section {...S.docs}>
+    <p>
+      Every documentation page has a Markdown copy at the same address with <code>.md</code> added,
+      such as <a href="/auto-init.html.md"><code>/auto-init.html.md</code></a>. These files collect
+      the rest:
+    </p>
+    <div class="docs-table-scroll">
+    <table class="striped">
+      <thead>
+        <tr><th>File</th><th>Contents</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="/llms.txt"><code>llms.txt</code></a></td><td>An index of every page with a one-line description, following the <a href="https://llmstxt.org/">llms.txt</a> convention.</td></tr>
+        <tr><td><a href="/llms-full.txt"><code>llms-full.txt</code></a></td><td>The API reference and the design guidance in one file.</td></tr>
+        <tr><td><a href="/llm.md"><code>llm.md</code></a></td><td>Markup, classes, options, methods, and events for every component.</td></tr>
+        <tr><td><a href="/m3-guidelines.md"><code>m3-guidelines.md</code></a></td><td>Material 3 guidance: which component to use, anatomy, and adaptive layout.</td></tr>
+        <tr><td><a href="/SEMANTICS.md"><code>SEMANTICS.md</code></a></td><td>The markup rules the lint command enforces.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </Section>
+
+  <Section {...S.skills}>
+    <p>Install every ExpressiveCSS skill into your coding agent:</p>
+<Code code={`
+npx skills add BaezFJ/ExpressiveCSS
+`} />
+    <p>
+      Add <code>--skill &lt;name&gt;</code> to install one. The skills live in the
+      <a href="https://github.com/BaezFJ/ExpressiveCSS/tree/master/skills"><code>skills/</code> directory</a>
+      of the repository, and each is a <code>SKILL.md</code> file you can also copy by hand.
+    </p>
+    <div class="docs-table-scroll">
+    <table class="striped">
+      <thead>
+        <tr><th>Skill</th><th>What it does</th></tr>
+      </thead>
+      <tbody>
+        {skills.map((skill) => (
+          <tr>
+            <td><a href={`https://github.com/BaezFJ/ExpressiveCSS/tree/master/skills/${skill.name}`}><code>{skill.name}</code></a></td>
+            <td>{skill.description.split("`").map((part, i) => (i % 2 ? <code>{part}</code> : part))}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    </div>
+  </Section>
+
+  <Section {...S.mcp}>
+    <p>
+      The <code>@expressivecss/mcp-server</code> package gives an MCP client tools for setup, component
+      syntax, rule checks, and quality checks. Add it to your client's configuration:
+    </p>
+<Code code={`
+{
+  "mcpServers": {
+    "expressivecss-mcp": {
+      "command": "npx",
+      "args": ["-y", "@expressivecss/mcp-server@latest"]
+    }
+  }
+}
+`} />
+    <p>
+      The <a href="https://github.com/BaezFJ/ExpressiveCSS/tree/master/mcp/expressivecss">server's README</a>
+      lists its tools, limits, and environment variables. The skills work without it.
+    </p>
+  </Section>
+
+  <Section {...S.lint}>
+    <p>
+      <code>expressivecss-lint</code> runs the server's static checks without an MCP client. It exits 1
+      when it finds a problem, so it fits a pre-commit hook or CI. Run it from the project root with
+      relative paths:
+    </p>
+<Code code={`
+npx --package @expressivecss/mcp-server expressivecss-lint src/pages/*.html
+`} />
+    <p>
+      In Claude Code, add <code>expressivecss-lint --hook</code> as a <code>PostToolUse</code> hook to
+      check every file the agent edits; the server's README has the settings.
+    </p>
+  </Section>
+</PageBody>
+</DocsLayout>

@@ -2,7 +2,7 @@
 
 # ExpressiveCSS design rules
 
-Copied from `m3-guidelines.md` (SHA-256 `7230a1b3dae7aa33c415136e1e84ee8b0fba3606c1d1376152edc086e974f886`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
+Copied from `m3-guidelines.md` (SHA-256 `58d034fe189f649209ac7602fedb243c1e3341cb30e305fa39bbce6aa2f50afa`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
 
 Contents: Hard rules · 1.2 What changes with window size · 1.4 Navigation by window size · 3. Component chooser · 12. Screen recipes · 13. Quick anatomy cheat sheet · 14. Name map (retired names → ExpressiveCSS).
 
@@ -103,7 +103,7 @@ The **app bar** is not navigation between app views. It names the current page a
 | Immediate on/off setting | **Switch** |
 | One of a long set | **Select** (or autocomplete) |
 | Type and pick | **Autocomplete** |
-| Value along a range | **Slider** (`input type="range"`, *not* `.slider`) |
+| Value along a range | **Slider** (`input type="range"` in `.slider`) |
 | Filter a collection | **Filter chips** |
 | Date | **Date picker** |
 | Time | **Time picker** |
@@ -194,7 +194,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Checkbox / radio | `label > input` | Label text | `checked` |
 | Switch | `label.switch > input` | Label text | `checked` |
 | Chip | `.chip` | Label | — |
-| Slider | `.range > input[type=range]` | Label | — |
+| Slider | `.slider > input[type=range]` | Label | — |
 | Date / time | `input.date-picker` / `.time-picker` | Label in `.field` | AutoInit |
 | Progress | `progress.progress` or circular markup | `value` if determinate | — |
 | Loading indicator | `span.loading-indicator` | `role="status"` + name | `contained` |
@@ -222,5 +222,6 @@ If training data or the user says the left column, emit the right.
 | `.materialize-textarea` | `.expressive-textarea` |
 | `.lever`, `.filled-in`, `.with-gap` | (omit) |
 | `Collapsible` | `<details>` / `<summary>` on the page |
-| `.slider` on a range | `.range` + `input[type=range]` |
+| `.range`, `.range-field` | `.slider` + `input[type=range]` |
+| `.slider` as an image slideshow | `.carousel` |
 | Bottom app bar | `div.toolbar.docked` |

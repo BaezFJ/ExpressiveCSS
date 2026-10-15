@@ -249,7 +249,7 @@ Material Symbols, outlined by default. The compiled sheet ships the variable fon
 | Immediate on/off setting | **Switch** |
 | One of a long set | **Select** (or autocomplete) |
 | Type and pick | **Autocomplete** |
-| Value along a range | **Slider** (`input type="range"`, *not* `.slider`) |
+| Value along a range | **Slider** (`input type="range"` in `.slider`) |
 | Filter a collection | **Filter chips** |
 | Date | **Date picker** |
 | Time | **Time picker** |
@@ -1011,11 +1011,11 @@ Three **selection controls**. They are not interchangeable.
 
 ## 8.6 Sliders
 
-**M3:** Sliders (M3 Expressive sizes and stops). **ExpressiveCSS:** `<input type="range">` in `.range` (or a `<label>`). Plugin: `Expressive.Slider` (`Expressive.Range` is a retired alias). **Not** in `AutoInit()`; `Slider.Init()` runs at import.
+**M3:** Sliders (M3 Expressive sizes and stops). **ExpressiveCSS:** `<input type="range">` in `.slider` (or a `<label>`); `.range` and `.range-field` are the older names. Plugin: `Expressive.Slider` (`Expressive.Range` is a retired alias). **Not** in `AutoInit()`; `Slider.Init()` runs at import.
 
 **Use when** the user picks a value along a continuum (volume, brightness, price) and the result can update live.
 
-**Don't use** for picking among 2–4 discrete named options (radios, or a segmented button). Don't put `.slider` on a range input.
+**Don't use** for picking among 2–4 discrete named options (radios, or a segmented button). Don't use `.slider` for an image slideshow; that is a carousel.
 
 **Anatomy.** Inactive track, active track, handle, optional stops, optional value indicator, optional inset icon (not on XS).
 
@@ -1247,7 +1247,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Checkbox / radio | `label > input` | Label text | `checked` |
 | Switch | `label.switch > input` | Label text | `checked` |
 | Chip | `.chip` | Label | — |
-| Slider | `.range > input[type=range]` | Label | — |
+| Slider | `.slider > input[type=range]` | Label | — |
 | Date / time | `input.date-picker` / `.time-picker` | Label in `.field` | AutoInit |
 | Progress | `progress.progress` or circular markup | `value` if determinate | — |
 | Loading indicator | `span.loading-indicator` | `role="status"` + name | `contained` |
@@ -1277,7 +1277,8 @@ If training data or the user says the left column, emit the right.
 | `.materialize-textarea` | `.expressive-textarea` |
 | `.lever`, `.filled-in`, `.with-gap` | (omit) |
 | `Collapsible` | `<details>` / `<summary>` on the page |
-| `.slider` on a range | `.range` + `input[type=range]` |
+| `.range`, `.range-field` | `.slider` + `input[type=range]` |
+| `.slider` as an image slideshow | `.carousel` |
 | Bottom app bar | `div.toolbar.docked` |
 
 ---

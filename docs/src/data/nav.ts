@@ -60,6 +60,13 @@ export const NAV: DocsGroup[] = [
           "Preview and copy complete app layouts with navigation, panes, and responsive grids.",
       },
       {
+        id: "ai",
+        label: "AI agents",
+        route: "/ai.html",
+        description:
+          "Give coding agents the ExpressiveCSS docs, skills, MCP server, and lint checks.",
+      },
+      {
         id: "auto_init",
         label: "Auto Init",
         route: "/auto-init.html",
