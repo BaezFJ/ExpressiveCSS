@@ -14,7 +14,7 @@ test('removed banners have no shipped selectors, tokens or component rules', () 
 test('the old banner route retains migration guidance without banner examples', () => {
   const page = readFileSync(new URL('../docs/src/pages/banners.astro', import.meta.url), 'utf8');
   assert.match(page, /DocsLayout page="banners"/);
-  assert.match(page, /native inline text/);
+  assert.match(page, /route\("alert"\)/);
   assert.match(page, /route\("snackbar"\)/);
   assert.match(page, /route\("dialogs"\)/);
   assert.doesNotMatch(page, /class="banner(?:\s|")/);

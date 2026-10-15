@@ -1,0 +1,135 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "critical", label: "Critical" },
+  { id: "actions", label: "Actions and close" },
+  { id: "announcing", label: "Announcing changes" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="alert">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          An <code>.alert</code> is a message that stays in the page, next to
+          the content it is about, until the problem goes away or the user
+          dismisses it.
+        </p>
+        <p>
+          Use a <a href={route("snackbar")}>snackbar</a> for brief feedback
+          after an action, and a <a href={route("dialogs")}>dialog</a> when the
+          user must decide before going on. An alert holds an optional leading
+          icon, then the message: a heading, a <code>&lt;p&gt;</code>, or both.
+        </p>
+        <div class="alert mb-3">
+          <span class="material-symbols" aria-hidden="true">info</span>
+          <p>Your trial ends in 3 days. <a href="#tokens">See plans</a></p>
+        </div>
+<Code code={`
+<div class="alert">
+  <span class="material-symbols" aria-hidden="true">info</span>
+  <p>Your trial ends in 3 days. <a href="/plans">See plans</a></p>
+</div>
+`} />
+  </Section>
+  <Section {...S.critical}>
+        <p>
+          <code>critical</code> uses the error container colors for problems
+          that stop something from working.
+        </p>
+        <div class="alert critical mb-3">
+          <span class="material-symbols" aria-hidden="true">error</span>
+          <h4>Payment failed</h4>
+          <p>Your card was declined. Update it to keep your workspace active.</p>
+        </div>
+<Code code={`
+<div class="alert critical">
+  <span class="material-symbols" aria-hidden="true">error</span>
+  <h3>Payment failed</h3>
+  <p>Your card was declined. Update it to keep your workspace active.</p>
+</div>
+`} />
+  </Section>
+  <Section {...S.actions}>
+        <p>
+          An <code>.alert-actions</code> row puts buttons under the message,
+          aligned to the end. An <code>.icon-button</code> as the last child is
+          the close button; it stays beside the first line. Closing the alert
+          is the page's job: remove it, then move focus to something nearby
+          so it does not fall back to the top of the page.
+        </p>
+        <div class="alert mb-3">
+          <span class="material-symbols" aria-hidden="true">cloud_off</span>
+          <p>You're offline. Edits are saved on this device and sync when the connection returns.</p>
+          <div class="alert-actions">
+            <button class="button text" type="button">Retry sync</button>
+          </div>
+          <button class="icon-button" type="button" aria-label="Dismiss">
+            <span class="material-symbols" aria-hidden="true">close</span>
+          </button>
+        </div>
+<Code code={`
+<div class="alert">
+  <span class="material-symbols" aria-hidden="true">cloud_off</span>
+  <p>You're offline. Edits are saved on this device and sync when the connection returns.</p>
+  <div class="alert-actions">
+    <button class="button text" type="button">Retry sync</button>
+  </div>
+  <button class="icon-button" type="button" aria-label="Dismiss">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</div>
+`} />
+  </Section>
+  <Section {...S.announcing}>
+        <p>
+          An alert that is in the page when it loads needs no role. When one
+          appears or changes while the page is in use, put
+          <code>role="status"</code> on its text, or <code>role="alert"</code>
+          when the user must act now. The live element must already be in the
+          page before you write the text into it, and it must not hold the
+          buttons: a screen reader would read their labels as part of the
+          message. Never use <code>role="banner"</code>, which marks the page
+          header.
+        </p>
+<Code code={`
+<div class="alert critical">
+  <span class="material-symbols" aria-hidden="true">error</span>
+  <p role="alert" id="save-error"></p>
+  <div class="alert-actions">
+    <button class="button text" type="button">Try again</button>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.alert</code>.</p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-alert-container-color</code></td>
+            <td><code>--md-sys-color-secondary-container</code>; critical: <code>--md-sys-color-error-container</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-alert-color</code></td>
+            <td><code>--md-sys-color-on-secondary-container</code>; critical: <code>--md-sys-color-on-error-container</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-alert-shape</code></td>
+            <td>16px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-alert-padding</code></td>
+            <td>16px</td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

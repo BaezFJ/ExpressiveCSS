@@ -866,7 +866,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ## 7.5 Persistent inline feedback
 
-Use native text and controls near the affected content when an issue persists but work can continue. The banner component has been removed; the reviewed current M3 inventory has no dedicated banner entry. This does not establish an explicit Google deprecation.
+Use an `.alert` near the affected content when an issue persists but work can continue. It replaces the removed banner component; the reviewed current M3 inventory has no dedicated banner entry, and this does not establish an explicit Google deprecation.
 
 Use snackbar for temporary confirmations and dialog only for blocking decisions. Keep controls outside dynamic status text, and let the application manage dismissal and focus.
 

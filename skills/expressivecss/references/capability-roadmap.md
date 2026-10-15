@@ -63,6 +63,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | needs-rerun | 1 |
 | [Skeleton](#skeleton) | implemented | source-reviewed | needs-rerun | 0 |
 | [Empty state](#empty-state) | implemented | source-reviewed | needs-rerun | 0 |
+| [Alert](#alert) | implemented | source-reviewed | incomplete | 0 |
 | [Carousel](#carousel) | unassessed | needs-review | needs-rerun | 0 |
 | [Marquee](#marquee) | implemented | source-reviewed | needs-rerun | 0 |
 | [Confetti](#confetti) | implemented | source-reviewed | needs-rerun | 0 |
@@ -937,6 +938,22 @@ Web adaptation: A plain div around authored heading, text and buttons; the page 
 - verification: Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified. Next: Empty a filtered list with a screen reader and confirm the change is announced; test enlarged text and narrow widths.
 
 - stale: [tests/empty-state-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/tests/empty-state-browser.test.js): `chromium: empty state centers its content and rings the leading icon`. Centered column, icon circle size and fill, text width cap, centered wrapping actions and an empty alt image left out of the accessibility tree. No spoken-output assertion.
+
+<a id="alert"></a>
+
+## Alert
+
+**implemented within the stated scope.** A tonal container with an optional leading icon, a heading and text, an end-aligned actions row, a close button and a critical error-container tone.
+
+Source review: source-reviewed, 2026-10-15. [src/sass/components/_alert.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/src/sass/components/_alert.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: A plain div around authored text and buttons; a changing alert puts role="status" or role="alert" on its text, never on the controls.
+
+- verification: The layout, both tones, enlarged-text wrapping and the authored role are checked in a browser; live announcements and spoken output remain unverified. Next: Show and update an alert with a screen reader in each engine and confirm status and alert roles are announced once, without the button labels; test forced colors.
+
+- not-recorded: [tests/alert-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/5cd5bde4379bebb7873249bd8948879ae76634d9/tests/alert-browser.test.js): `chromium: alert lays out icon, text, close and actions, and colors the critical tone`. Icon, heading, text, close and actions placement, end-aligned actions, 16px corners, title-small heading, underlined links, text start without an icon, secondary and critical container colors, the authored alert role and controls kept inside at 280px. No spoken-output assertion.
 
 <a id="carousel"></a>
 

@@ -17,6 +17,24 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the install command for the agent skills, the MCP server configuration and
   the `expressivecss-lint` command. Its skills table is read from each
   `skills/<name>/SKILL.md`, so a new skill appears without editing the page.
+- Alert component: `.alert` is a persistent message in the page flow with an
+  optional leading icon, a heading and text, an `.alert-actions` row and a
+  close button. `critical` switches to the error container colors. CSS only.
+  It replaces the banner as the answer for persistent, nonblocking messages,
+  and the banner migration page now points to it.
+- `<meter>` gets an 8px bar on a `secondary-container` track. The fill is
+  `primary` in the optimum region, `tertiary` one region away and `error` two
+  away, from the native `low`, `high` and `optimum` attributes. No class is
+  needed.
+- Copy buttons: `data-copy-for="id"` copies a field's value or an element's
+  text, and `data-copy="text"` copies the text itself. A snackbar confirms the
+  result. `Expressive.Copy.i18n` and `data-copy-message` / `data-copy-error`
+  replace its texts.
+- Theme switch: `data-theme-set="light|dark|auto"` on any control writes the
+  `theme` attribute, saves the choice to `localStorage` and marks the current
+  control with `aria-pressed` or `aria-checked`. `Expressive.Theme` adds
+  `set()`, `get()` and `sync()`. Restoring a saved choice before first paint
+  stays with the page's inline script.
 
 ### Fixed
 

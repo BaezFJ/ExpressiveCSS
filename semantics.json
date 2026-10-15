@@ -1098,6 +1098,26 @@
         }
       ]
     },
+    "alert": {
+      "status": "enforced",
+      "note": "Added with the alert component, which replaces the removed banner. A static alert is plain content and needs no role. A live region must hold only the message, because a screen reader reads every button label inside it as part of the announcement.",
+      "rules": [
+        {
+          "id": "alert-is-not-the-banner-landmark",
+          "kind": "forbid",
+          "selector": ".alert[role=\"banner\"]",
+          "fragmentSafe": true,
+          "message": "role=\"banner\" is the page header landmark, not a message. Remove it: a static alert needs no role, and a changing one puts role=\"status\" or role=\"alert\" on its text."
+        },
+        {
+          "id": "alert-live-region-holds-no-controls",
+          "kind": "forbid",
+          "selector": ".alert:is([role=\"alert\"], [role=\"status\"], [aria-live]):has(button, a[href], input, select, textarea)",
+          "fragmentSafe": true,
+          "message": "Put role=\"status\" or role=\"alert\" on the alert's text, not on an alert that holds buttons or links. A live region reads its controls' labels as part of the message."
+        }
+      ]
+    },
     "countdown": {
       "status": "enforced",
       "note": "Added with the countdown component. The digits are generated content hidden from assistive technology, so the element's text is the value a screen reader reads.",

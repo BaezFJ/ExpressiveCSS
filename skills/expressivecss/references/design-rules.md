@@ -2,7 +2,7 @@
 
 # ExpressiveCSS design rules
 
-Copied from `m3-guidelines.md` (SHA-256 `58d034fe189f649209ac7602fedb243c1e3341cb30e305fa39bbce6aa2f50afa`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
+Copied from `m3-guidelines.md` (SHA-256 `442617a7a9ad00f42d9943b1a3feb599fd6436533b46546bbc87ec4d9d08be5e`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
 
 Contents: Hard rules · 1.2 What changes with window size · 1.4 Navigation by window size · 3. Component chooser · 12. Screen recipes · 13. Quick anatomy cheat sheet · 14. Name map (retired names → ExpressiveCSS).
 

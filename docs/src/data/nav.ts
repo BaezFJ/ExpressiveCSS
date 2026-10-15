@@ -78,7 +78,7 @@ export const NAV: DocsGroup[] = [
         label: "Banner migration",
         route: "/banners.html",
         description:
-          "Replace removed banners with inline messages, snackbars or dialogs.",
+          "Replace removed banners with alerts, snackbars or dialogs.",
       },
     ],
   },
@@ -546,6 +546,13 @@ export const NAV: DocsGroup[] = [
         route: "/empty-state.html",
         description:
           "What a view shows when it has nothing to list: an icon, a heading, text and actions.",
+      },
+      {
+        id: "alert",
+        label: "Alert",
+        route: "/alert.html",
+        description:
+          "A message that stays in the page next to the content it is about, with optional actions.",
       },
       {
         id: "carousel",

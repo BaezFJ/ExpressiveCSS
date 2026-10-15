@@ -64,6 +64,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Loading indicator
 - Skeleton
 - Empty state
+- Alert
 - Popover
 - Stepper
 - Timeline
@@ -322,7 +323,7 @@ Opt an element out when it needs manual options:
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab-menu` |
 
-`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, and Theme behaviors.
 
 ## Component lifecycle
 
@@ -342,6 +343,7 @@ current?.destroy();
 The main bundle exports:
 
 - `AutoInit`, `Forms`, and `version`
+- `Copy` and `Theme`, the copy button and theme switch behaviors
 - `Dialogs`, `BottomSheets`, and `SideSheets`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Menu`, and `Lightbox`
@@ -568,7 +570,7 @@ This site starts as `<html lang="en" theme="auto">`. The theme control in the ap
 
 ### Reading the theme
 
-Put a short inline script in `<head>`, before the stylesheet paints, if you want to restore a saved choice and avoid a flash of the wrong scheme. The framework itself does not run this — you own persistence.
+Put a short inline script in `<head>`, before the stylesheet paints, if you want to restore a saved choice and avoid a flash of the wrong scheme. The framework does not run this: the `Theme` behavior saves a choice when a control is clicked, but restoring it before first paint is the page's job.
 
 Without a `theme` attribute the CSS already follows the OS through `color-scheme: light dark`. Setting the attribute to `light` or `dark` locks the scheme; `auto` goes back to following the OS. The snippet below reads a stored value first, then falls back to the OS preference, then writes the attribute so the override is explicit.
 
@@ -576,7 +578,7 @@ Without a `theme` attribute the CSS already follows the OS through `color-scheme
 <script>
   function getTheme() {
     const stored = localStorage.getItem('theme');
-    if (stored === 'dark' || stored === 'light') return stored;
+    if (stored === 'dark' || stored === 'light' || stored === 'auto') return stored;
     const prefersDark = window.matchMedia
       && window.matchMedia('(prefers-color-scheme: dark)').matches;
     return prefersDark ? 'dark' : 'light';
@@ -595,26 +597,23 @@ Keep this inline rather than in an external file so it runs before the first pai
 
 ### Changing the theme
 
-Switch schemes by writing the attribute. That is the entire public API — there is no `Expressive.theme` helper.
+Switch schemes by writing the attribute:
 
 ```js
 document.documentElement.setAttribute('theme', 'dark');
-document.documentElement.setAttribute('theme', 'light');
 ```
 
-Bind that to a control. The theme menu on this site does exactly that and writes the choice to `localStorage`. A consumer app that wants the choice to stick can reuse `setTheme` from the snippet above:
+Or let the `Theme` behavior do it. A click on any element with `data-theme-set="light"`, `"dark"` or `"auto"` writes the attribute and saves the choice to `localStorage` under `theme`, the key the snippet above reads. The behavior starts on import and marks every theme control as current or not: `aria-checked` on `menuitemradio` and `radio` roles, `aria-pressed` on anything else. Other values are ignored.
 
-```js
-document.getElementById('theme-toggle').addEventListener('click', (event) => {
-  event.preventDefault();
-  const next = document.documentElement.getAttribute('theme') === 'dark'
-    ? 'light'
-    : 'dark';
-  setTheme(next);
-});
+```html
+<div class="button-group" role="group" aria-label="Theme">
+  <button type="button" class="button" data-theme-set="light">Light</button>
+  <button type="button" class="button" data-theme-set="dark">Dark</button>
+  <button type="button" class="button" data-theme-set="auto">Auto</button>
+</div>
 ```
 
-The same control lives in the top-right of every docs page, and the choice survives a reload.
+From script, `Expressive.Theme.set('dark')` does the same as a click, `Expressive.Theme.get()` returns the current theme (`auto` without an attribute), and `Expressive.Theme.sync(root)` marks theme controls rendered after load. The behavior never restores a saved choice on load, because the bundle runs after first paint; keep the inline snippet for that.
 
 ### Creating a theme
 
@@ -1825,7 +1824,7 @@ A `.avatar` is an `<img>`, or a `<span>` holding initials or an icon. It is 40px
 
 The banner component has been removed. Remove `.banner`, its `rich`, `vibrant` and `square` modifiers, and `--md-comp-banners-*` overrides from former banner markup. These modifiers may still serve other components.
 
-Use native inline text and buttons for persistent nonblocking messages, snackbar for temporary feedback, and dialog for decisions that must block progress. Keep dynamic status text in an existing `role="status"` node with action buttons outside it. Static messages need no live region. The application owns updates, dismissal and logical focus recovery. Never use the page-header landmark `role="banner"` for a message.
+Use an `.alert` for persistent nonblocking messages, snackbar for temporary feedback, and dialog for decisions that must block progress. Keep dynamic status text in an existing `role="status"` node with action buttons outside it. Static messages need no live region. The application owns updates, dismissal and logical focus recovery. Never use the page-header landmark `role="banner"` for a message.
 
 ## Breadcrumbs
 
@@ -2064,6 +2063,19 @@ Every value is a `--md-comp-icon-button-*` custom property — `container-height
 <button type="button" class="icon-button filled" style="--md-comp-icon-button-container-height: 48px" aria-label="Add">
   <span class="material-symbols" aria-hidden="true">add</span>
 </button>
+```
+
+### Copy button
+
+Any button copies to the clipboard with `data-copy-for`, naming the id of a field or element, or with `data-copy`, holding the text itself. A field copies its value; other elements copy their trimmed text. A snackbar confirms the result, and screen readers announce it. `data-copy-message` and `data-copy-error` replace its texts for one button; `Expressive.Copy.i18n` (`copied`, `failed`) replaces them everywhere. The `Copy` behavior starts on import. The clipboard needs a secure context (HTTPS or localhost); elsewhere the snackbar reports the failure.
+
+```html
+<input id="api-key" value="sk-123" readonly aria-label="API key">
+<button type="button" class="icon-button" data-copy-for="api-key" aria-label="Copy API key">
+  <span class="material-symbols" aria-hidden="true">content_copy</span>
+</button>
+
+<button type="button" class="button text" data-copy="https://example.com/share/42" data-copy-message="Link copied">Copy link</button>
 ```
 
 ---
@@ -4008,6 +4020,17 @@ of the page. Override it for a one-off color — a role token, never a raw hex.
       role="status" aria-label="Loading"></span>
 ```
 
+### Meter
+
+A `<meter>` shows a measurement within a known range, such as storage used or password strength. Use `<progress>` for progress toward completion. Every `<meter>` gets an 8px bar on a `secondary-container` track with no class needed. The fill color follows the native `low`, `high` and `optimum` attributes: `primary` in the optimum region, `tertiary` one region away and `error` two away. Give it a visible label.
+
+```html
+<label for="storage">Storage: 7.2 of 10 GB</label>
+<meter id="storage" min="0" max="10" low="7" high="9" optimum="0" value="7.2">7.2 GB</meter>
+```
+
+Tokens on the `meter`: `--md-comp-meter-track`, `--md-comp-meter-optimum`, `--md-comp-meter-suboptimum`, `--md-comp-meter-even-less-good`, `--md-comp-meter-thickness` (8px) and `--md-comp-meter-shape` (4px). In forced-colors mode the fill is `CanvasText` on a `Canvas` track with an outline.
+
 
 ## Search
 
@@ -4228,6 +4251,71 @@ When a filter or search empties a list, offer the way back as the action.
 | `--md-comp-empty-state-icon-container-size` | 96px |
 | `--md-comp-empty-state-icon-container-color` | `surface-container-high` |
 | `--md-comp-empty-state-image-max-width` | 240px |
+
+## Alert
+
+A message that stays in the page next to the content it is about, with optional actions.
+
+An `.alert` holds an optional leading icon, then the message: a heading, a `<p>`, or both. It stays until the problem goes away or the user dismisses it. Use a snackbar for brief feedback after an action, and a dialog when the user must decide before going on. CSS only; there is no JavaScript.
+
+```html
+<div class="alert">
+  <span class="material-symbols" aria-hidden="true">info</span>
+  <p>Your trial ends in 3 days. <a href="/plans">See plans</a></p>
+</div>
+```
+
+### Critical
+
+`critical` uses the error container colors for problems that stop something from working. There are no success or warning tones: Material has no color roles for them.
+
+```html
+<div class="alert critical">
+  <span class="material-symbols" aria-hidden="true">error</span>
+  <h3>Payment failed</h3>
+  <p>Your card was declined. Update it to keep your workspace active.</p>
+</div>
+```
+
+### Actions and close
+
+An `.alert-actions` row puts buttons under the message, aligned to the end. An `.icon-button` as the last child is the close button, and it stays beside the first line. The page removes a dismissed alert and moves focus to something nearby.
+
+```html
+<div class="alert">
+  <span class="material-symbols" aria-hidden="true">cloud_off</span>
+  <p>You're offline. Edits are saved on this device and sync when the connection returns.</p>
+  <div class="alert-actions">
+    <button class="button text" type="button">Retry sync</button>
+  </div>
+  <button class="icon-button" type="button" aria-label="Dismiss">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</div>
+```
+
+### Announcing changes
+
+An alert that is in the page when it loads needs no role. When one appears or changes during use, put `role="status"` on its text, or `role="alert"` when the user must act now. The live element must be in the page before its text is written, and it must not hold buttons or links, because a screen reader reads their labels as part of the message. Never use `role="banner"`, which is the page header landmark.
+
+```html
+<div class="alert critical">
+  <span class="material-symbols" aria-hidden="true">error</span>
+  <p role="alert" id="save-error"></p>
+  <div class="alert-actions">
+    <button class="button text" type="button">Try again</button>
+  </div>
+</div>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-alert-container-color` | `secondary-container`; critical: `error-container` |
+| `--md-comp-alert-color` | `on-secondary-container`; critical: `on-error-container` |
+| `--md-comp-alert-shape` | 16px |
+| `--md-comp-alert-padding` | 16px |
 
 ---
 

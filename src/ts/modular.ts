@@ -3,6 +3,8 @@ export { Dialogs } from './behaviors/dialogs';
 export { BottomSheets } from './behaviors/bottomSheets';
 export { SideSheets } from './behaviors/sideSheets';
 export { Forms } from './behaviors/forms';
+export { Copy } from './behaviors/copy';
+export { Theme } from './behaviors/theme';
 export { AutoInit } from './components/registry';
 export type { AutoInitOptions } from './components/registry';
 

@@ -1270,7 +1270,9 @@
       "slug": "icon-buttons",
       "title": "Icon buttons",
       "aliases": [
-        "icon button"
+        "icon button",
+        "copy button",
+        "clipboard"
       ],
       "guideSource": {
         "pageId": "icon_buttons",
@@ -4500,7 +4502,9 @@
       "aliases": [
         "progress",
         "preloader",
-        "progress indicator"
+        "progress indicator",
+        "meter",
+        "gauge"
       ],
       "guideSource": {
         "pageId": "preloader",
@@ -4869,6 +4873,92 @@
       }
     },
     {
+      "slug": "alert",
+      "title": "Alert",
+      "aliases": [
+        "callout",
+        "inline message",
+        "notice",
+        "banner"
+      ],
+      "guideSource": {
+        "pageId": "alert",
+        "heading": "Alert",
+        "headingLevel": 2,
+        "semantics": [
+          "alert"
+        ]
+      },
+      "jobs": [
+        "A message that stays in the page next to the content it is about, with optional actions."
+      ],
+      "useWhen": [
+        "Tell people about a persistent, nonblocking condition such as being offline, an expiring trial or a failed payment, next to the content it affects."
+      ],
+      "avoidWhen": [
+        "Brief feedback after an action belongs in a snackbar; a decision that must block progress belongs in a dialog."
+      ],
+      "alternatives": [
+        "snackbar",
+        "dialogs",
+        "empty-state"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/alert.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#alert",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "A tonal container with an optional leading icon, a heading and text, an end-aligned actions row, a close button and a critical error-container tone.",
+          "webAdaptation": "A plain div around authored text and buttons; a changing alert puts role=\"status\" or role=\"alert\" on its text, never on the controls.",
+          "limitations": [
+            "The layout, both tones, enlarged-text wrapping and the authored role are checked in a browser; live announcements and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the message in the reading order next to what it describes, convey tone in text as well as color, keep controls out of any live region and return focus when an alert is dismissed."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory. Replaces the removed banner."
+      },
+      "selectionExample": "\"Saved\" after pressing Save is a snackbar. \"You're offline; edits sync later\" stays true until the connection returns, so it is an alert above the editor.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_alert.scss",
+            "sha256": "c755f7e301099a8ee887006a05fdfeb7e6630010217d1ec8b9f8d5f7cc15be5c"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The layout, both tones, enlarged-text wrapping and the authored role are checked in a browser; live announcements and spoken output remain unverified.",
+            "nextStep": "Show and update an alert with a screen reader in each engine and confirm status and alert roles are announced once, without the button labels; test forced colors."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/alert-browser.test.js",
+            "name": "chromium: alert lays out icon, text, close and actions, and colors the critical tone",
+            "scope": "Icon, heading, text, close and actions placement, end-aligned actions, 16px corners, title-small heading, underlined links, text start without an icon, secondary and critical container colors, the authored alert role and controls kept inside at 280px. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "carousel",
       "title": "Carousel",
       "aliases": [
@@ -5006,7 +5096,7 @@
         "Show a long, decorative set of logos, photos or short slogans in a small space, such as customer logos on a landing page."
       ],
       "avoidWhen": [
-        "People need to read, compare or act on the items; a list, grid or carousel lets them do it at their own pace. Time-sensitive alerts need a banner or snackbar."
+        "People need to read, compare or act on the items; a list, grid or carousel lets them do it at their own pace. Urgent messages need an alert or snackbar."
       ],
       "alternatives": [
         "carousel",

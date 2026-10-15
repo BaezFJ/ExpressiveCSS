@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**82 of 82 rows enforced; 0 remaining.**
+**83 of 83 rows enforced; 0 remaining.**
 
-78 of those rows are components - a part of the framework an author writes markup for.
+79 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 78 components declare conformance debt.**
+**3 of 79 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -66,6 +66,18 @@ Added with the accordion component. Each item is a native <details>, so the brow
 - **accordion-items-are-details** - Write every accordion item as <details> with a <summary>. The element is the disclosure: a div with a click handler has no expanded state and no keyboard support.
 - **accordion-summary-holds-no-controls** - A <summary> is already the toggle button. A link or control inside it is a control nested in a control: pressing it also opens or closes the item, and screen readers flatten it into the summary name. Put actions in the panel.
 - **accordion-summary-state-is-native** - The browser exposes <summary> as a button and reports its expanded state from the open attribute. An authored role="button" repeats it, and an authored aria-expanded goes stale the first time the item toggles.
+
+### alert
+
+Added with the alert component, which replaces the removed banner. A static alert is plain content and needs no role. A live region must hold only the message, because a screen reader reads every button label inside it as part of the announcement.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `alert-is-not-the-banner-landmark` | forbid | `.alert[role="banner"]` | must not match |
+| `alert-live-region-holds-no-controls` | forbid | `.alert:is([role="alert"], [role="status"], [aria-live]):has(button, a[href], input, select, textarea)` | must not match |
+
+- **alert-is-not-the-banner-landmark** - role="banner" is the page header landmark, not a message. Remove it: a static alert needs no role, and a changing one puts role="status" or role="alert" on its text.
+- **alert-live-region-holds-no-controls** - Put role="status" or role="alert" on the alert's text, not on an alert that holds buttons or links. A live region reads its controls' labels as part of the message.
 
 ### aura
 

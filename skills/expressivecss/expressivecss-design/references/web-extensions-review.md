@@ -6,7 +6,7 @@ Read the linked component guide for the ExpressiveCSS 0.15.0 markup and API cont
 
 ## Contents
 
-Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Data table, Avatar, Skeleton, Empty state, Stepper, Popover, Drop zone, Tree, Stat, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map.
+Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Data table, Avatar, Skeleton, Empty state, Alert, Stepper, Popover, Drop zone, Tree, Stat, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map.
 
 Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
 
@@ -163,6 +163,20 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified. Next check: Empty a filtered list with a screen reader and confirm the change is announced; test enlarged text and narrow widths.
 
 Mapped browser scope: Centered column, icon circle size and fill, text width cap, centered wrapping actions and an empty alt image left out of the accessibility tree. No spoken-output assertion.
+
+## [Alert](../../components/alert.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the message in the reading order next to what it describes, convey tone in text as well as color, keep controls out of any live region and return focus when an alert is dismissed.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework lays out the icon, text, actions and close button; the page owns the role, dismissal and focus.
+
+Verification gap: The layout, both tones, enlarged-text wrapping and the authored role are checked in a browser; live announcements and spoken output remain unverified. Next check: Show and update an alert with a screen reader in each engine and confirm status and alert roles are announced once, without the button labels; test forced colors.
+
+Mapped browser scope: Icon, heading, text, close and actions placement, end-aligned actions, 16px corners, title-small heading, underlined links, text start without an icon, secondary and critical container colors, the authored alert role and controls kept inside at 280px. No spoken-output assertion.
 
 ## [Stepper](../../components/stepper.md)
 
