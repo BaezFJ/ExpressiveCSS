@@ -978,6 +978,22 @@ const transport = new StdioClientTransport({
   const cardContent = lint([cardContentMarkup]);
   assert.equal(cardContent.stdout.match(/legacy-card-content/gu)?.length, 1, cardContent.stdout);
   assert.match(cardContent.stdout, /card-content\.html:3:\d+ legacy-card-content/u);
+  // The names 1.0 removed are flagged on their own line; their replacements, and
+  // longer names that contain them, are not.
+  const removedMarkup = path.join(outsideDir, 'removed-in-1-0.html');
+  await writeFile(removedMarkup, [
+    '<span class="material-symbols" aria-hidden="true">add</span><input class="date-picker"><button class="circle extra">+</button>',
+    '<div class="toolbar docked vibrant"><button class="filled">Go</button><span class="max"></span></div><div class="datepicker-container surface-container-highest"></div>',
+    '<span class="material-icons">add</span>',
+    '<input class="datepicker">',
+    '<div class="toolbar filled"></div>',
+    '<button class="extra">Compose</button>',
+    '<div style="background: var(--md-sys-color-surface-variant)"></div>',
+    'Expressive.Range.init(el);',
+  ].join('\n'));
+  const removed = lint([removedMarkup]);
+  const removedIds = [...removed.stdout.matchAll(/removed-in-1-0\.html:(\d+):\d+ (legacy-[\w-]+)/gu)].map(([, line, id]) => `${line} ${id}`);
+  assert.deepEqual(removedIds, ['3 legacy-material-icons', '4 legacy-picker-root', '5 legacy-variant-alias', '6 legacy-markup-path', '7 legacy-color-role', '8 legacy-range-export'], removed.stdout);
   // Files the bounded reader refuses, and inspections that stop early, fail instead of passing silently.
   const linkedMarkup = path.join(outsideDir, 'linked.html');
   const crowdedMarkup = path.join(outsideDir, 'crowded.html');

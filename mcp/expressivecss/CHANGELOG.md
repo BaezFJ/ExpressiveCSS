@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- `rules_enforcer` and the lint command flag the class names, color roles
+  and markup paths that ExpressiveCSS 1.0 removes, and each finding names
+  the replacement. The new rule IDs start with `legacy-`: material-icons,
+  i-icon, visibility-alias, helper-class, renamed-component, picker-root,
+  sheet-class, variant-alias, markup-path, carousel-flat, color-role and
+  range-export.
+
 ## 0.4.1 - 2026-10-14
 
 - The catalogue, guides and rules cover keypad and keyboard.

@@ -151,6 +151,80 @@ const LegacyPatternList = [
     description: '`.materialize-textarea` is retired; use `.expressive-textarea`.',
     pattern: /\bmaterialize-textarea\b/g,
   },
+  // Names removed in 1.0. Each description gives the replacement; the
+  // framework CHANGELOG's 1.0 migration notes list them together.
+  {
+    id: 'legacy-material-icons',
+    severity: 'high',
+    description: '`.material-icons` was removed in 1.0; use `.material-symbols` (or `-outlined`, `-rounded`, `-sharp`).',
+    pattern: /(?<![-\w])material-icons(?![-\w])/g,
+  },
+  {
+    id: 'legacy-i-icon',
+    severity: 'high',
+    description: 'A bare `<i>` is not an icon in 1.0; write `<span class="material-symbols" aria-hidden="true">`.',
+    pattern: /<i\b[^>]*\bclass\s*=\s*["'][^"']*(?<![-\w])material-symbols/g,
+  },
+  {
+    id: 'legacy-visibility-alias',
+    severity: 'high',
+    description: 'The small/med/xxl visibility aliases were removed in 1.0; use `.hide-on-compact-only`, `.hide-on-medium-only`, `.hide-on-extra-large-only`, `.show-on-compact` or `.show-on-extra-large`.',
+    pattern: /(?<![-\w])(?:hide-on-(?:small-only|small-and-down|med-only|xxl-only)|show-on-(?:small|xxl))(?![-\w])/g,
+  },
+  {
+    id: 'legacy-helper-class',
+    severity: 'medium',
+    description: '`.no-padding`, `.center-block` and `.no-select` were removed in 1.0; use `.p-0`, `.mx-auto` with `display: block`, or `user-select: none` in your own CSS.',
+    pattern: /(?<![-\w])(?:no-padding|center-block|no-select)(?![-\w])/g,
+  },
+  {
+    id: 'legacy-renamed-component',
+    severity: 'high',
+    description: '`.preloader` and `.searchbar` were removed in 1.0; use `.progress.circular` and `.search-bar`.',
+    pattern: /(?<![-\w])(?:preloader|searchbar)(?![-\w])/g,
+  },
+  {
+    id: 'legacy-picker-root',
+    severity: 'high',
+    description: 'AutoInit starts `.date-picker` and `.time-picker` in 1.0; rename `class="datepicker"` and `class="timepicker"`.',
+    pattern: /\bclass(?:Name)?\s*=\s*["'][^"']*(?<![-\w])(?:date|time)picker(?![-\w])/g,
+  },
+  {
+    id: 'legacy-sheet-class',
+    severity: 'high',
+    description: 'Sheet aliases were removed in 1.0; use `dialog.bottom-sheet` with `.drag-handle`, and `dialog.side-sheet` (add `.start` for the start edge).',
+    pattern: /<dialog\b[^>]*\bclass\s*=\s*["'][^"']*(?<![-\w])(?:bottom|right|left|right-sheet|left-sheet)(?![-\w])|\bclass\s*=\s*["'][^"']*(?<![-\w])handle(?![-\w])/g,
+  },
+  {
+    id: 'legacy-variant-alias',
+    severity: 'high',
+    description: 'Variant aliases were removed in 1.0: use `.tooltip.rich` for `.tooltip.max`, `.toolbar.docked` for a `.max` bar and `.toolbar.vibrant` for a `.filled` bar, and `.selected` for a chip\'s `.active`.',
+    pattern: /\bclass\s*=\s*["'](?=[^"']*(?<![-\w])(?:tooltip|toolbar|chip)(?![-\w]))(?=[^"']*(?<![-\w])(?:max|filled|active)(?![-\w]))[^"']*["']/g,
+  },
+  {
+    id: 'legacy-markup-path',
+    severity: 'high',
+    description: 'Pre-1.0 markup paths were removed in 1.0: put tab links directly in `nav.tabs` (no `li.tab`), let a radio label hold its text without a following `<span>`, and use `.medium` for a 56dp common button (`.extra` only marks `circle extra` FABs).',
+    pattern: /<li\b[^>]*\bclass\s*=\s*["'][^"']*(?<![-\w])tab(?![-\w])|<input\b[^>]*\btype\s*=\s*["']radio["'][^>]*>\s*<span\b|\bclass\s*=\s*["'](?![^"']*(?<![-\w])circle(?![-\w]))[^"']*(?<![-\w])extra(?![-\w])/g,
+  },
+  {
+    id: 'legacy-carousel-flat',
+    severity: 'medium',
+    description: 'Carousel `.flat` and `fullWidth` were removed in 1.0; choose an M3 layout such as `.hero` or `.uncontained`.',
+    pattern: /\bclass\s*=\s*["'](?=[^"']*(?<![-\w])carousel(?![-\w]))[^"']*(?<![-\w])flat(?![-\w])/g,
+  },
+  {
+    id: 'legacy-color-role',
+    severity: 'high',
+    description: 'The legacy color roles were removed in 1.0; use `surface` for `background`, `on-surface` for `on-background`, `surface-container-highest` for `surface-variant` and `primary` for `surface-tint`.',
+    pattern: /--md-sys-color-(?:background|on-background|surface-variant|surface-tint)(?![-\w])|\bclass\s*=\s*["'][^"']*(?<![-\w])(?:on-background|surface-variant|surface-tint)(?:-text)?(?![-\w])/g,
+  },
+  {
+    id: 'legacy-range-export',
+    severity: 'high',
+    description: '`Expressive.Range` was removed in 1.0; use `Expressive.Slider`.',
+    pattern: /\bExpressive\.Range\b/g,
+  },
   {
     id: 'raw-color-in-component-style',
     severity: 'medium',
