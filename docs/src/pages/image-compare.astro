@@ -1,0 +1,66 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="image_compare">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.image-compare</code> stacks two images of the same scene
+          with a divider that reveals the second over the first.
+        </p>
+        <p>
+          It holds two <code>&lt;img&gt;</code> elements and a native
+          <code>&lt;input type="range"&gt;</code>. The range is the control,
+          so arrow keys, dragging and taps work as they do on any slider, and
+          screen readers hear its value. It covers the images invisibly; the
+          <code>ImageCompare</code> behavior moves the divider to its value.
+          Give each image alt text that says which it is, and name the range.
+          Several unrelated images belong in a
+          <a href={route("carousel")}>carousel</a>.
+        </p>
+        <div class="image-compare mb-3" style="max-width: 480px">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect width='800' height='400' fill='%23c6a0f6'/%3E%3C/svg%3E" alt="Before: a lilac panel" width="800" height="400">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect width='800' height='400' fill='%23455a64'/%3E%3C/svg%3E" alt="After: a slate panel" width="800" height="400">
+          <input type="range" min="0" max="100" value="50" aria-label="Compare before and after">
+        </div>
+<Code code={`
+<div class="image-compare">
+  <img src="before.jpg" alt="Before: the faded original photo" width="800" height="500">
+  <img src="after.jpg" alt="After: the restored photo" width="800" height="500">
+  <input type="range" min="0" max="100" value="50" aria-label="Compare before and after">
+</div>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-image-compare-position</code></td>
+            <td>50% (written by the behavior)</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-image-compare-shape</code></td>
+            <td>16px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-image-compare-divider-color</code></td>
+            <td><code>--md-sys-color-surface</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-image-compare-handle-size</code></td>
+            <td>40px</td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

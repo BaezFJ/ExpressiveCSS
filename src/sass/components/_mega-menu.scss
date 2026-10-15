@@ -1,0 +1,136 @@
+@use "../abstracts" as *;
+
+// Mega menu. Site navigation whose top items open wide panels of grouped
+// links. A nav.mega-menu holds links and disclosure buttons; each button
+// names a .mega-menu-panel with popovertarget. The panel is a native
+// [popover], so the browser owns opening, light dismiss, Escape, the focus
+// order after the button and the button's expanded state. There is no
+// JavaScript and no menu role: these are links, read and tabbed in order.
+//
+// The panel sits below its button and spans the window, inset by
+// --md-comp-mega-menu-margin; its sections flow into as many columns as fit.
+//
+// Tokens:
+//   --md-comp-mega-menu-container-color   surface-container
+//   --md-comp-mega-menu-shape             16px
+//   --md-comp-mega-menu-margin            16px (panel inset from the window)
+//   --md-comp-mega-menu-column-width      200px (minimum)
+
+.mega-menu {
+  --md-comp-mega-menu-container-color: var(--md-sys-color-surface-container);
+  --md-comp-mega-menu-shape: 16px;
+  --md-comp-mega-menu-margin: 16px;
+  --md-comp-mega-menu-column-width: 200px;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+
+  // Top items: links and disclosure buttons share one look.
+  > :is(a, button) {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-block-size: 40px;
+    margin: 0;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 20px;
+    background: none;
+    color: var(--md-sys-color-on-surface);
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    @include typescale("label-large");
+    @include focus-visible;
+
+    &:hover {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+    }
+
+    &[aria-current="page"] {
+      background-color: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-on-secondary-container);
+    }
+  }
+
+  // A trailing chevron turns while the button's panel is open.
+  > button::after {
+    content: "";
+    inline-size: 18px;
+    block-size: 18px;
+    background-color: currentColor;
+    mask: $caret-down center / 18px no-repeat;
+    transition: transform 150ms ease-out;
+  }
+
+  > button:has(+ .mega-menu-panel:popover-open)::after {
+    transform: rotate(180deg);
+  }
+}
+
+.mega-menu-panel {
+  box-sizing: border-box;
+  inline-size: auto;
+  max-block-size: calc(100dvh - 96px);
+  inset: auto;
+  margin: 8px var(--md-comp-mega-menu-margin, 16px);
+  padding: 24px;
+  overflow: auto;
+  border: 0;
+  border-radius: var(--md-comp-mega-menu-shape, 16px);
+  background-color: var(--md-comp-mega-menu-container-color, var(--md-sys-color-surface-container));
+  color: var(--md-sys-color-on-surface);
+  @include z-depth("2");
+
+  position-area: block-end span-all;
+  justify-self: stretch;
+
+  &:popover-open {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--md-comp-mega-menu-column-width, 200px), 1fr));
+    gap: 24px;
+  }
+
+  > section {
+    min-inline-size: 0;
+
+    > :is(h2, h3, h4) {
+      margin: 0 0 8px;
+      color: var(--md-sys-color-on-surface-variant);
+      @include typescale("title-small");
+    }
+
+    > ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    a {
+      display: block;
+      padding: 8px 12px;
+      margin-inline: -12px;
+      border-radius: 8px;
+      color: var(--md-sys-color-on-surface);
+      text-decoration: none;
+      @include typescale("body-large");
+      @include focus-visible;
+
+      &:hover {
+        background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+      }
+
+      > small {
+        display: block;
+        color: var(--md-sys-color-on-surface-variant);
+        @include typescale("body-small");
+      }
+    }
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+}

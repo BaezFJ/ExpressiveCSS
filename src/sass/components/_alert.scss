@@ -1,0 +1,102 @@
+@use "../abstracts" as *;
+
+// Alert. A persistent message in the flow of the page, next to the content it
+// is about: an optional leading icon, text, an optional close button and an
+// optional row of actions. `critical` is the error-container tone. Static
+// alerts need no role; see llm.md for announcing changes.
+//
+// Anatomy is the HTML, in order:
+//   icon               leading; sits beside the first line of text
+//   h1–h6, p, ...      the message; every other child stacks in the text column
+//   .icon-button       last child, the close button
+//   .alert-actions     buttons under the text, aligned to the end
+//
+// The grid pins the icon and close button to the first row, so a long message
+// or enlarged text wraps under itself instead of under them.
+//
+// Tokens:
+//   --md-comp-alert-container-color   secondary-container / critical: error-container
+//   --md-comp-alert-color             on-secondary-container / critical: on-error-container
+//   --md-comp-alert-shape             16px
+//   --md-comp-alert-padding           16px
+
+.alert {
+  --md-comp-alert-container-color: var(--md-sys-color-secondary-container);
+  --md-comp-alert-color: var(--md-sys-color-on-secondary-container);
+  --md-comp-alert-shape: 16px;
+  --md-comp-alert-padding: 16px;
+
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  row-gap: 4px;
+  margin-block: 8px;
+  padding: var(--md-comp-alert-padding);
+  // Transparent so forced-colors mode, which drops the fill, still draws an edge.
+  border: 1px solid transparent;
+  border-radius: var(--md-comp-alert-shape);
+  background-color: var(--md-comp-alert-container-color);
+  color: var(--md-comp-alert-color);
+  @include typescale("body-medium");
+
+  // display: grid would otherwise beat the browser's [hidden] rule, and
+  // toggling hidden is the usual way to show and dismiss an alert.
+  &[hidden] {
+    display: none;
+  }
+
+  &.critical {
+    --md-comp-alert-container-color: var(--md-sys-color-error-container);
+    --md-comp-alert-color: var(--md-sys-color-on-error-container);
+  }
+
+  > * {
+    grid-column: 2;
+    margin: 0;
+  }
+
+  > #{$icon}:first-child {
+    grid-column: 1;
+    grid-row: 1;
+    margin-inline-end: 12px;
+    font-size: 24px;
+    line-height: 20px;
+  }
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    @include typescale("title-small");
+  }
+
+  > p {
+    @include typescale("body-medium");
+  }
+
+  a:not(.button, .icon-button) {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  // The close button's 48px target overhangs the padding instead of adding a
+  // row's worth of height to a one-line alert.
+  > .icon-button:last-child {
+    grid-column: 3;
+    grid-row: 1;
+    margin-block: -12px;
+    margin-inline: 4px -12px;
+    color: inherit;
+  }
+
+  > .alert-actions {
+    grid-column: 2 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-block-start: 8px;
+  }
+
+  @media (forced-colors: active) {
+    border-color: CanvasText;
+  }
+}

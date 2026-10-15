@@ -17,6 +17,61 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the install command for the agent skills, the MCP server configuration and
   the `expressivecss-lint` command. Its skills table is read from each
   `skills/<name>/SKILL.md`, so a new skill appears without editing the page.
+- Menubar component: a `.menubar` of `.menu-trigger` buttons gets the menubar
+  and menuitem roles, one Tab stop, Left, Right, Home and End along the bar,
+  and Left and Right between open menus. Each item opens an ordinary Menu.
+  AutoInit starts it.
+- Mega menu component: a `nav.mega-menu` of links and buttons whose
+  `.mega-menu-panel` popovers open wide panels of grouped links below the bar.
+  CSS only, on native popovers.
+- Tour component: a `.tour` manual popover walks through `<section>` steps
+  beside each `data-tour-target`, with Back, Next, Done, progress text,
+  skipped missing targets, Escape and focus return. `Expressive.Tour` adds
+  `start()`, `go()` and `end()`.
+- Image compare component: a `.image-compare` reveals its second image up to
+  a native range input's value. The `ImageCompare` behavior moves the
+  divider, and Slider no longer initializes that range.
+- Calendar component: a page-rendered `table.calendar` draws a month grid
+  with weekday headers, today, outside days and event chips. CSS only.
+- Sortable lists: a `.sortable` list reorders by dragging an item's
+  `.drag-handle` or with its `[data-move]` buttons, announces each move and
+  fires `change` with `{ item, from, to }`. Semantics require the buttons.
+- `<input type="color">` is drawn as a round swatch of its color.
+- Description list component: `dl.description-list` lays out label and value
+  pairs in two columns with a divider per pair, stacking each label above its
+  value at Compact widths. CSS only.
+- Error summary: an `.error-summary` alert in a `novalidate` form stops an
+  invalid submit, lists one link per invalid field with its label and the
+  browser's message, and takes focus. Each link focuses its field. Part of
+  the Forms behavior.
+- Resizable panes: a `<button class="drag-handle">` between the two panes of
+  a list-detail or supporting layout resizes them by drag, arrow keys, Home
+  and End, or a click that steps through narrow, middle and wide. The
+  `PaneResize` behavior writes `--md-comp-pane-list-width` or
+  `--md-comp-pane-supporting-width`.
+- Data table bulk actions and row expansion: a `.data-table-actions` bar
+  joins the table's top edge and takes the selected color while rows are
+  selected, and a `tr.data-table-detail` shows while the row before it holds
+  a button with `aria-expanded="true"`. CSS only; the page flips the state.
+- Alert component: `.alert` is a persistent message in the page flow with an
+  optional leading icon, a heading and text, an `.alert-actions` row and a
+  close button. `critical` switches to the error container colors. CSS only.
+  It replaces the banner as the answer for persistent, nonblocking messages,
+  and the banner migration page now points to it.
+- `<meter>` gets an 8px bar on a `secondary-container` track. The fill is
+  `primary` in the optimum region, `tertiary` one region away and `error` two
+  away, from the native `low`, `high` and `optimum` attributes. No class is
+  needed, so existing meters change appearance and fill their container's
+  width; set `width` on a meter to keep it inline.
+- Copy buttons: `data-copy-for="id"` copies a field's value or an element's
+  text, and `data-copy="text"` copies the text itself. A snackbar confirms the
+  result. `Expressive.Copy.i18n` and `data-copy-message` / `data-copy-error`
+  replace its texts.
+- Theme switch: `data-theme-set="light|dark|auto"` on any control writes the
+  `theme` attribute, saves the choice to `localStorage` and marks the current
+  control with `aria-pressed` or `aria-checked`. `Expressive.Theme` adds
+  `set()`, `get()` and `sync()`. Restoring a saved choice before first paint
+  stays with the page's inline script.
 
 ### Fixed
 

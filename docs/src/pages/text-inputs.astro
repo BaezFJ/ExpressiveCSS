@@ -13,6 +13,7 @@ const S = defineSections([
   { id: "otp", label: "One-time code" },
   { id: "textarea", label: "Textarea" },
   { id: "file", label: "File input" },
+  { id: "color", label: "Color" },
   { id: "character-counter", label: "Character counter" },
 ]);
 ---
@@ -267,6 +268,22 @@ Expressive.Forms.InitTextarea(document.querySelector('#textarea1'));
 </div>
 `} />
         <p>Add <code>multiple</code> to allow more than one file.</p>
+  </Section>
+  <Section {...S.color}>
+        <p>
+          An <code>&lt;input type="color"&gt;</code> keeps the browser's
+          picker and is drawn as a 40px round swatch of the chosen color in a
+          48px target. Label it like any field. It sits outside a
+          <code>.field</code>, which would give it the 56dp text well.
+        </p>
+        <p>
+          <label for="demo-accent">Accent color</label>
+          <input id="demo-accent" type="color" value="#c6a0f6">
+        </p>
+<Code code={`
+<label for="accent">Accent color</label>
+<input id="accent" type="color" value="#c6a0f6">
+`} />
   </Section>
   <Section {...S["character-counter"]}>
         <p>

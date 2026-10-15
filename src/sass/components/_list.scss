@@ -67,7 +67,7 @@
     padding: 8px var(--md-comp-list-item-padding);
     @include typescale("body-large");
 
-    > :is(#{$icon}, img, input):first-child {
+    > :is(#{$icon}, img, input, .drag-handle):first-child {
       grid-column: 1;
       grid-row: 1 / -1;
       align-self: center;
@@ -109,7 +109,7 @@
     // this rule used to pull the leading icon out of column 1 and into the
     // text column - the icon rules above went dead and this one over-matched.
     > div:not(.meta),
-    > #{$icon-label} {
+    > #{$icon-label}:not(.drag-handle, .sortable-actions) {
       grid-column: 2;
       min-width: 0;
     }
@@ -123,7 +123,7 @@
       @include typescale("body-medium");
     }
 
-    > :is(#{$icon}, kbd, button, time, .meta, .badge, .button, a):last-child:not(:first-child) {
+    > :is(#{$icon}, kbd, button, time, .meta, .badge, .button, a, .sortable-actions):last-child:not(:first-child) {
       grid-column: 3;
       grid-row: 1 / -1;
       justify-self: end;
@@ -252,5 +252,39 @@
     display: flex;
     flex-direction: column;
     gap: var(--md-comp-list-segmented-gap);
+  }
+}
+
+// Sortable. The Sortable behavior moves `.sortable > li` rows by their
+// `.drag-handle` or their `[data-move]` buttons. The handle takes the drag
+// gesture away from scrolling, and the row being dragged lifts.
+.sortable > li {
+  .drag-handle {
+    cursor: grab;
+    touch-action: none;
+  }
+
+  &.dragged {
+    position: relative;
+    z-index: 1;
+    background-color: var(--md-sys-color-surface-container-highest);
+    @include z-depth("2");
+
+    .drag-handle {
+      cursor: grabbing;
+    }
+  }
+
+  // The handle is taller than a line of text, so a one-line title spans both
+  // grid rows and centers on it instead of riding the top.
+  > :not(.drag-handle, .sortable-actions, p):nth-child(2):nth-last-child(2) {
+    grid-row: 1 / -1;
+    align-self: center;
+  }
+
+  // The Move up / Move down pair takes the row's trailing slot as one group.
+  > .sortable-actions {
+    display: inline-flex;
+    align-self: center;
   }
 }

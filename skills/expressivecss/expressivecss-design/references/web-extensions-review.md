@@ -6,7 +6,7 @@ Read the linked component guide for the ExpressiveCSS 0.15.0 markup and API cont
 
 ## Contents
 
-Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Data table, Avatar, Skeleton, Empty state, Stepper, Popover, Drop zone, Tree, Stat, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map.
+Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Data table, Avatar, Skeleton, Empty state, Alert, Stepper, Popover, Drop zone, Tree, Stat, Description list, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map, Mega menu, Menubar, Calendar, Tour, Image compare.
 
 Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
 
@@ -164,6 +164,20 @@ Verification gap: Centering, the icon circle and the actions row are checked in 
 
 Mapped browser scope: Centered column, icon circle size and fill, text width cap, centered wrapping actions and an empty alt image left out of the accessibility tree. No spoken-output assertion.
 
+## [Alert](../../components/alert.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the message in the reading order next to what it describes, convey tone in text as well as color, keep controls out of any live region and return focus when an alert is dismissed.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework lays out the icon, text, actions and close button; the page owns the role, dismissal and focus.
+
+Verification gap: The layout, both tones, enlarged-text wrapping and the authored role are checked in a browser; live announcements and spoken output remain unverified. Next check: Show and update an alert with a screen reader in each engine and confirm status and alert roles are announced once, without the button labels; test forced colors.
+
+Mapped browser scope: Icon, heading, text, close and actions placement, end-aligned actions, 16px corners, title-small heading, underlined links, text start without an icon, secondary and critical container colors, the authored alert role and controls kept inside at 280px. No spoken-output assertion.
+
 ## [Stepper](../../components/stepper.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
@@ -233,6 +247,20 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next check: Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths.
 
 Mapped browser scope: One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion.
+
+## [Description list](../../components/description-list.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the native dl so each value stays paired with its label, keep the reading order label before value and let long values wrap.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The browser exposes the pairing; the framework lays out the columns and dividers.
+
+Verification gap: Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified. Next check: Read a description list with a screen reader in each engine and confirm each value is announced with its label; test enlarged text.
+
+Mapped browser scope: Label and value columns, shared rows, div-wrapped groups, stacked extra values, one divider per pair, the compact stacked layout and unchanged reading order. No spoken-output assertion.
 
 ## [KPI](../../components/kpi.md)
 
@@ -544,3 +572,73 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. Next check: Type a PIN and a message with a screen reader and on a touch device in each engine, and check forced colors and enlarged text.
 
 Mapped browser scope: Digits typed at the caret, maxlength, focus kept in the field on a pointer press, Backspace including emoji, Enter submitting once, a pattern mismatch blocking Enter, onKey values, composed input events from a shadow root, number, decimal and signed input, a disabled fieldset and its legend, a trailing Backspace in the field that runs once for two keypads, for a field inside its keyboard and for a field rendered after init, a password toggle that is not a key, a prefilled untouched field typed at the end, a caret placed at the start kept for keys activated from the keyboard, Shift showing capitals and releasing after one character, space and a textarea new line, three 72px round keypad columns, a two-cell wide key, a tenth-of-row letter key, the half-key indent, a one-and-a-half-key Shift, the space bar filling its row, a 40px number row that types and that hidden drops, the pressed corner, destroy, and the shared listeners leaving with the last keypad. No spoken-output assertion.
+
+## [Mega menu](../../components/mega-menu.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the top items as links and disclosure buttons in a named nav, expose the expanded state, keep the panel next in the focus order, close on Escape and do not claim menu roles.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework lays out the bar and panel; the browser owns the disclosure.
+
+Verification gap: Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified. Next check: Open and close each panel with a screen reader in each engine and confirm the expanded state is announced.
+
+Mapped browser scope: Popover opening from its button, the panel below the bar spanning the window, side-by-side groups, the turning chevron, Tab into the panel, Escape, closed links out of reach and stacked groups on a phone. No spoken-output assertion.
+
+## [Menubar](../../components/menubar.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Name the menubar, give it one tab stop, move between items with Left and Right, open a menu with Down, Enter or Space, move between open menus with Left and Right, and close with Escape back to the bar.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework implements the menubar keyboard contract over its Menu component.
+
+Verification gap: Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified. Next check: Operate the menubar with a screen reader in each engine and confirm menu and item announcements; check typeahead across the bar.
+
+Mapped browser scope: Menubar and menuitem roles, one tab stop that follows focus, Left, Right, Home and End with wrapping, Down opening on the first item, Right and Left between open menus, flyout rows keeping Right, Escape back to the bar and RTL. No spoken-output assertion.
+
+## [Calendar](../../components/calendar.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Name the month in a caption, keep weekday column headers, mark today in text as well as color, and keep each event a reachable link or text.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the month grid; the page owns dates and navigation.
+
+Verification gap: Equal columns, today, outside days, ellipsized event chips, column headers and the phone width are checked in a browser; screen reader output remains unverified. Next check: Read a month with a screen reader in each engine and confirm the day and weekday are announced with each event.
+
+Mapped browser scope: Seven equal columns, day height, the today mark, muted outside days, event chips that stay inside their day and ellipsize, event links, column headers and the month at phone width. No spoken-output assertion.
+
+## [Tour](../../components/tour.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Let the user start, skip and end the tour, name the card by the step heading, move focus to it and back afterwards, and skip steps whose target is not shown.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework steps through authored content; the page decides when to offer the tour.
+
+Verification gap: Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified. Next check: Take a tour with a screen reader in each engine and confirm each step is announced when it opens.
+
+Mapped browser scope: Opening from a start button, the card named by the step heading, progress text, skipped missing targets, button visibility per step, placement below each target, releasing the previous target, Escape, focus return and cleanup after hidePopover. No spoken-output assertion.
+
+## [Image compare](../../components/image-compare.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Give both images alt text that says which is which, name the range, and keep it operable by keyboard and pointer.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The browser owns the control; the framework draws the reveal.
+
+Verification gap: The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified. Next check: Move the divider with a screen reader in each engine and confirm the value is announced.
+
+Mapped browser scope: The initial value applied on load, each image on its side of the divider, arrow keys moving the divider, the handle focus ring, RTL, named native sliders and Slider leaving the range alone. No spoken-output assertion.

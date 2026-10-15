@@ -9,7 +9,7 @@ Component ID: `icon-buttons`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `2e7f14a2a208cec56dc94f72c403044ed06cfdfeeb5d76265d22475dcbf6f8c0`
+Contract SHA-256: `bd71f03212a61939c306a50d67f32fcee8e6d685e15c4e2d726ec9a3e9946b9b`
 
 #### Selection and adaptation
 
@@ -59,7 +59,7 @@ It is a component, not a modifier on the common button: M3 gives it its own toke
 
 #### Also documented
 
-The Icon buttons section of the [API reference](https://www.expressivecss.com/llm.md) also covers Styles, Sizes, width and shape, Disabled and tokens.
+The Icon buttons section of the [API reference](https://www.expressivecss.com/llm.md) also covers Styles, Sizes, width and shape, Disabled and tokens, Copy button.
 
 #### Rules
 

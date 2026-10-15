@@ -28,6 +28,7 @@ export { RadialChart } from "./radialChart";
 export { MixedChart } from "./mixedChart";
 export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";
+export { Menubar } from "./menubar";
 export { MessageScroller } from "./messageScroller";
 export { RichTextEditor } from "./richTextEditor";
 export { MapView } from "./mapView";

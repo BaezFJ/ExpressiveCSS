@@ -94,6 +94,8 @@ export class Forms {
       // Capture, so the password is hidden again before any submit handler
       // reads the form or the browser offers to save it.
       document.addEventListener('submit', Forms.resetFormExtras, true);
+      document.addEventListener('submit', Forms.summarizeErrors, true);
+      document.addEventListener('click', Forms.focusSummaryField);
       document.addEventListener('reset', Forms.resetFormExtras, true);
       for (const type of ['dragenter', 'dragover', 'dragleave', 'drop']) {
         document.addEventListener(type, Forms.markDropZone);
@@ -148,6 +150,73 @@ export class Forms {
       form.querySelectorAll('.drop-zone-files').forEach((list) => list.replaceChildren());
       form.querySelectorAll('.drop-zone.dragover').forEach((zone) => zone.classList.remove('dragover'));
     }
+  }
+
+  /**
+   * Error summary. A `novalidate` form holding a `.error-summary` is checked
+   * when it is submitted. While any field is invalid the submit stops, as it
+   * would natively, and the summary's list gets one link per invalid field,
+   * "Label: browser message", before the summary is shown and focused. A
+   * valid submit hides it again. A submitter with `formnovalidate` skips the
+   * check.
+   */
+  static summarizeErrors(e: SubmitEvent) {
+    const form = e.target;
+    if (!(form instanceof HTMLFormElement)) return;
+    const summary = form.querySelector<HTMLElement>('.error-summary');
+    const list = summary?.querySelector('ul, ol');
+    if (!list || e.submitter?.hasAttribute('formnovalidate')) return;
+    // checkValidity fires `invalid` on each field, which FormSelect needs to
+    // mark its generated field.
+    if (form.checkValidity()) {
+      summary.hidden = true;
+      list.replaceChildren();
+      return;
+    }
+    e.preventDefault();
+    // Stop here, in the capture phase, so the page's own submit handlers do
+    // not run for a form the browser would not have submitted.
+    e.stopPropagation();
+    const seen = new Set<string>();
+    const items = [...form.elements].flatMap((field: HTMLInputElement) => {
+      if (!field.willValidate || field.validity.valid) return [];
+      // One entry per radio group.
+      if (field.type === 'radio') {
+        if (seen.has(field.name)) return [];
+        seen.add(field.name);
+      }
+      if (!field.id) field.id = `field-${Utils.guid()}`;
+      const group = field.type === 'radio' ? field.closest('fieldset')?.querySelector('legend') : null;
+      // An enhanced select's label names the generated input, so fall back to
+      // the label in the same .field.
+      const named = group ?? field.labels?.[0] ?? field.closest('.field')?.querySelector('label');
+      // A label can wrap its control; a select's options are not its name.
+      const text = named?.cloneNode(true) as Element;
+      text?.querySelectorAll('select, textarea').forEach((control) => control.remove());
+      const label = text?.textContent ?? field.getAttribute('aria-label') ?? '';
+      const link = document.createElement('a');
+      link.href = `#${field.id}`;
+      link.textContent = [label.replace(/\s+/g, ' ').trim(), field.validationMessage].filter(Boolean).join(': ');
+      const item = document.createElement('li');
+      item.append(link);
+      return [item];
+    });
+    list.replaceChildren(...items);
+    if (!summary.hasAttribute('tabindex')) summary.tabIndex = -1;
+    summary.hidden = false;
+    summary.focus();
+  }
+
+  /**
+   * A summary link focuses its field instead of only scrolling to it. An
+   * enhanced select passes that focus on to its generated input itself.
+   */
+  static focusSummaryField(e: MouseEvent) {
+    const link = (<Element>e.target).closest?.('.error-summary a[href^="#"]');
+    const field = link && Utils.getElementById(link, link.getAttribute('href').slice(1));
+    if (!field) return;
+    e.preventDefault();
+    field.focus();
   }
 
   /**

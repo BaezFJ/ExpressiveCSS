@@ -1,0 +1,108 @@
+@use "../abstracts" as *;
+
+// Image compare. Two images of the same scene stacked, with a divider that
+// reveals the second over the first. A .image-compare holds two <img> and a
+// native <input type="range">: the range is the control, so keyboard,
+// pointer, touch and its "slider" semantics are the browser's. It covers the
+// images invisibly, and the container draws the divider and handle at
+// --md-comp-image-compare-position, which the ImageCompare behavior keeps in
+// step with the range's value.
+//
+// Tokens:
+//   --md-comp-image-compare-position       50% (from the inline start)
+//   --md-comp-image-compare-shape          16px
+//   --md-comp-image-compare-divider-color  surface
+//   --md-comp-image-compare-handle-size    40px
+
+.image-compare {
+  --md-comp-image-compare-position: 50%;
+  --md-comp-image-compare-shape: 16px;
+  --md-comp-image-compare-divider-color: var(--md-sys-color-surface);
+  --md-comp-image-compare-handle-size: 40px;
+
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  border-radius: var(--md-comp-image-compare-shape);
+  isolation: isolate;
+
+  > img {
+    grid-area: 1 / 1;
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  > img + img {
+    clip-path: inset(0 0 0 var(--md-comp-image-compare-position));
+  }
+
+  &:dir(rtl) > img + img {
+    clip-path: inset(0 var(--md-comp-image-compare-position) 0 0);
+  }
+
+  > input[type="range"] {
+    grid-area: 1 / 1;
+    z-index: 2;
+    inline-size: 100%;
+    block-size: 100%;
+    margin: 0;
+    cursor: ew-resize;
+    opacity: 0;
+  }
+
+  // The divider line, then the round handle on it.
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset-inline-start: var(--md-comp-image-compare-position);
+    pointer-events: none;
+    translate: -50% 0;
+  }
+
+  &:dir(rtl)::before,
+  &:dir(rtl)::after {
+    translate: 50% 0;
+  }
+
+  &::before {
+    inset-block: 0;
+    inline-size: 2px;
+    background-color: var(--md-comp-image-compare-divider-color);
+  }
+
+  &::after {
+    inset-block-start: calc(50% - var(--md-comp-image-compare-handle-size) / 2);
+    inline-size: var(--md-comp-image-compare-handle-size);
+    block-size: var(--md-comp-image-compare-handle-size);
+    border-radius: 50%;
+    background-color: var(--md-comp-image-compare-divider-color);
+    @include z-depth("2");
+  }
+
+  &:has(> input:focus-visible)::after {
+    @include focus-ring();
+  }
+
+  &:has(> input:disabled) {
+    > input {
+      cursor: default;
+    }
+
+    &::after {
+      opacity: 0.38;
+    }
+  }
+
+  @media (forced-colors: active) {
+    &::before,
+    &::after {
+      forced-color-adjust: none;
+      background-color: Canvas;
+      outline: 2px solid CanvasText;
+    }
+  }
+}

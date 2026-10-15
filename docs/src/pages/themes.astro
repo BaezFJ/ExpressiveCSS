@@ -86,8 +86,9 @@ const S = defineSections([
         <p>
           Put a short inline script in <code>&lt;head&gt;</code>, before the
           stylesheet paints, if you want to restore a saved choice and avoid a
-          flash of the wrong scheme. The framework does not run this script,
-          so persistence is up to you.
+          flash of the wrong scheme. The framework does not run this script.
+          The theme switch below saves a choice, but restoring it before first
+          paint is the page's job.
         </p>
         <p>
           Without a <code>theme</code> attribute, or with
@@ -119,18 +120,38 @@ const S = defineSections([
   </Section>
   <Section {...S["changing-theme"]}>
         <p>
-          Switch schemes by writing the attribute. That is the entire public
-          API. There is no <code>Expressive.theme</code> helper.
+          Switch schemes by writing the attribute:
         </p>
 <Code code={`
 document.documentElement.setAttribute('theme', 'dark');
-document.documentElement.setAttribute('theme', 'light');
-document.documentElement.setAttribute('theme', 'auto');
 `} />
         <p>
-          Bind that to a control. The app-bar menu on this site writes one of
-          those three values and persists it with
-          <code>setTheme</code> from the snippet above:
+          Or let the <code>Theme</code> behavior do it. A click on any element
+          with <code>data-theme-set="light"</code>, <code>"dark"</code> or
+          <code>"auto"</code> writes the attribute and saves the choice to
+          <code>localStorage</code> under <code>theme</code>, the key the
+          snippet above reads. The root bundle starts it on load, and the
+          modular entry with <code>Theme.Init()</code>. It marks each theme
+          control as current or not: <code>aria-checked</code> on
+          <code>menuitemradio</code> and <code>radio</code> roles,
+          <code>aria-pressed</code> on anything else.
+        </p>
+<Code code={`
+<div class="button-group" role="group" aria-label="Theme">
+  <button type="button" class="button" data-theme-set="light">Light</button>
+  <button type="button" class="button" data-theme-set="dark">Dark</button>
+  <button type="button" class="button" data-theme-set="auto">Auto</button>
+</div>
+`} />
+        <p>
+          From script, <code>Expressive.Theme.set('dark')</code> does the same
+          as a click, <code>Expressive.Theme.get()</code> returns the current
+          theme, and <code>Expressive.Theme.sync(root)</code> marks theme
+          controls rendered after load.
+        </p>
+        <p>
+          This site's app-bar menu predates the behavior and also swaps its
+          icon, so it writes the attribute itself:
         </p>
 <Code code={`
 Expressive.Menu.init(document.getElementById('theme-toggle'), {

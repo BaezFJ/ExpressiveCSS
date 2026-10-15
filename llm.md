@@ -47,6 +47,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Cards
 - Aura
 - Carousel
+- Image compare
 - Drag handle
 - Lists
 - Accordion
@@ -64,10 +65,14 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Loading indicator
 - Skeleton
 - Empty state
+- Alert
 - Popover
+- Mega menu
 - Stepper
 - Timeline
+- Calendar
 - Stat
+- Description list
 - Tree
 - Search
 - Button groups
@@ -78,6 +83,8 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Auto Init
 - Navigation rail
 - Menu
+- Menubar
+- Tour
 - Media
 - Dialogs
 - Bottom sheet
@@ -321,8 +328,9 @@ Opt an element out when it needs manual options:
 | `Timepicker` | `.timepicker, .time-picker` |
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab-menu` |
+| `Menubar` | `.menubar` |
 
-`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, ImageCompare, Tour, and Sortable behaviors.
 
 ## Component lifecycle
 
@@ -342,6 +350,8 @@ current?.destroy();
 The main bundle exports:
 
 - `AutoInit`, `Forms`, and `version`
+- `Copy` and `Theme`, the copy button and theme switch behaviors
+- `PaneResize`, `ImageCompare`, `Tour` and `Sortable` behaviors, and the `Menubar` component
 - `Dialogs`, `BottomSheets`, and `SideSheets`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Menu`, and `Lightbox`
@@ -568,7 +578,7 @@ This site starts as `<html lang="en" theme="auto">`. The theme control in the ap
 
 ### Reading the theme
 
-Put a short inline script in `<head>`, before the stylesheet paints, if you want to restore a saved choice and avoid a flash of the wrong scheme. The framework itself does not run this — you own persistence.
+Put a short inline script in `<head>`, before the stylesheet paints, if you want to restore a saved choice and avoid a flash of the wrong scheme. The framework does not run this: the `Theme` behavior saves a choice when a control is clicked, but restoring it before first paint is the page's job.
 
 Without a `theme` attribute the CSS already follows the OS through `color-scheme: light dark`. Setting the attribute to `light` or `dark` locks the scheme; `auto` goes back to following the OS. The snippet below reads a stored value first, then falls back to the OS preference, then writes the attribute so the override is explicit.
 
@@ -576,7 +586,7 @@ Without a `theme` attribute the CSS already follows the OS through `color-scheme
 <script>
   function getTheme() {
     const stored = localStorage.getItem('theme');
-    if (stored === 'dark' || stored === 'light') return stored;
+    if (stored === 'dark' || stored === 'light' || stored === 'auto') return stored;
     const prefersDark = window.matchMedia
       && window.matchMedia('(prefers-color-scheme: dark)').matches;
     return prefersDark ? 'dark' : 'light';
@@ -595,26 +605,23 @@ Keep this inline rather than in an external file so it runs before the first pai
 
 ### Changing the theme
 
-Switch schemes by writing the attribute. That is the entire public API — there is no `Expressive.theme` helper.
+Switch schemes by writing the attribute:
 
 ```js
 document.documentElement.setAttribute('theme', 'dark');
-document.documentElement.setAttribute('theme', 'light');
 ```
 
-Bind that to a control. The theme menu on this site does exactly that and writes the choice to `localStorage`. A consumer app that wants the choice to stick can reuse `setTheme` from the snippet above:
+Or let the `Theme` behavior do it. A click on any element with `data-theme-set="light"`, `"dark"` or `"auto"` writes the attribute and saves the choice to `localStorage` under `theme`, the key the snippet above reads. The root bundle starts it on load, and the modular entry with `Theme.Init()`. It marks every theme control as current or not: `aria-checked` on `menuitemradio` and `radio` roles, `aria-pressed` on anything else. Other values are ignored.
 
-```js
-document.getElementById('theme-toggle').addEventListener('click', (event) => {
-  event.preventDefault();
-  const next = document.documentElement.getAttribute('theme') === 'dark'
-    ? 'light'
-    : 'dark';
-  setTheme(next);
-});
+```html
+<div class="button-group" role="group" aria-label="Theme">
+  <button type="button" class="button" data-theme-set="light">Light</button>
+  <button type="button" class="button" data-theme-set="dark">Dark</button>
+  <button type="button" class="button" data-theme-set="auto">Auto</button>
+</div>
 ```
 
-The same control lives in the top-right of every docs page, and the choice survives a reload.
+From script, `Expressive.Theme.set('dark')` does the same as a click, `Expressive.Theme.get()` returns the current theme (`auto` without an attribute), and `Expressive.Theme.sync(root)` marks theme controls rendered after load. The behavior never restores a saved choice on load, because the bundle runs after first paint; keep the inline snippet for that.
 
 ### Creating a theme
 
@@ -1825,7 +1832,7 @@ A `.avatar` is an `<img>`, or a `<span>` holding initials or an icon. It is 40px
 
 The banner component has been removed. Remove `.banner`, its `rich`, `vibrant` and `square` modifiers, and `--md-comp-banners-*` overrides from former banner markup. These modifiers may still serve other components.
 
-Use native inline text and buttons for persistent nonblocking messages, snackbar for temporary feedback, and dialog for decisions that must block progress. Keep dynamic status text in an existing `role="status"` node with action buttons outside it. Static messages need no live region. The application owns updates, dismissal and logical focus recovery. Never use the page-header landmark `role="banner"` for a message.
+Use an `.alert` for persistent nonblocking messages, snackbar for temporary feedback, and dialog for decisions that must block progress. Keep dynamic status text in an existing `role="status"` node with action buttons outside it. Static messages need no live region. The application owns updates, dismissal and logical focus recovery. Never use the page-header landmark `role="banner"` for a message.
 
 ## Breadcrumbs
 
@@ -2064,6 +2071,19 @@ Every value is a `--md-comp-icon-button-*` custom property — `container-height
 <button type="button" class="icon-button filled" style="--md-comp-icon-button-container-height: 48px" aria-label="Add">
   <span class="material-symbols" aria-hidden="true">add</span>
 </button>
+```
+
+### Copy button
+
+Any button copies to the clipboard with `data-copy-for`, naming the id of a field or element, or with `data-copy`, holding the text itself. A field copies its value; other elements copy their trimmed text. A snackbar confirms the result, and screen readers announce it. `data-copy-message` and `data-copy-error` replace its texts for one button; `Expressive.Copy.i18n` (`copied`, `failed`) replaces them everywhere. The root bundle starts the `Copy` behavior on load; with the modular entry, call `Copy.Init()`. The clipboard needs a secure context (HTTPS or localhost); elsewhere the snackbar reports the failure.
+
+```html
+<input id="api-key" value="sk-123" readonly aria-label="API key">
+<button type="button" class="icon-button" data-copy-for="api-key" aria-label="Copy API key">
+  <span class="material-symbols" aria-hidden="true">content_copy</span>
+</button>
+
+<button type="button" class="button text" data-copy="https://example.com/share/42" data-copy-message="Link copied">Copy link</button>
 ```
 
 ---
@@ -2578,6 +2598,24 @@ instead of laying them over the media; markup can do the same by carrying
 
 ---
 
+## Image compare
+
+Two images of the same scene with a divider that reveals one over the other.
+
+A `.image-compare` holds two `<img>` and a native `<input type="range">`. The range is the control, so keys, drags and taps work as on any slider and its value is announced; it covers the images invisibly. The `ImageCompare` behavior writes the value to `--md-comp-image-compare-position`, which clips the second image and places the divider and handle. RTL starts the first image on the right. Slider leaves this range alone. Give each image alt text that says which it is, and name the range. `Expressive.ImageCompare.sync(range)` places a compare added after load; the root bundle starts the behavior on load, and the modular entry with `ImageCompare.Init()`.
+
+```html
+<div class="image-compare">
+  <img src="before.jpg" alt="Before: the faded original photo" width="800" height="500">
+  <img src="after.jpg" alt="After: the restored photo" width="800" height="500">
+  <input type="range" min="0" max="100" value="50" aria-label="Compare before and after">
+</div>
+```
+
+Tokens: `--md-comp-image-compare-position` (50%, written by the behavior), `--md-comp-image-compare-shape` (16px), `--md-comp-image-compare-divider-color` (`surface`) and `--md-comp-image-compare-handle-size` (40px).
+
+---
+
 ## Marquee
 
 A row of logos, images or text that scrolls without end.
@@ -2819,7 +2857,7 @@ The bar that makes something legible as draggable: a bottom sheet's grabber, the
 
 Which element you write *is* the semantic. A `<span class="drag-handle" aria-hidden="true">` is decoration and is the usual case — the handle draws a bar and contains no text, so exposed it arrives in the reading order as an unlabelled blank. A `<button class="drag-handle">` with an `aria-label` is a control, written only when activating it does something — inside a bottom sheet it always does, and everywhere else that is the page's to arrange. Never `aria-hidden` a button: that hides it from assistive technology without taking it out of the tab order. The hover, focus and pressed states are scoped to the button spelling, so a decorative handle does not light up under a passing pointer.
 
-**Nothing here drags.** No script belongs to this component and ExpressiveCSS ships no reordering behaviour. The one thing a handle is wired to is the bottom sheet's, below. Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
+**Nothing here drags on its own.** Three places wire it: the bottom sheet below, the pane layouts, where a `<button class="drag-handle">` between two panes resizes them (see Panes, "Resizing"), and sortable lists, where a decorative handle drags its row and Move up and Move down buttons cover keyboard and single-pointer use (see Lists, "Sortable"). Anywhere else the page supplies reordering. Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
 
 The two-column layout is the page's own — a flex or grid row, or a pane layout. The handle is what sits between the columns and needs no wrapper class of its own.
 
@@ -2831,7 +2869,7 @@ The two-column layout is the page's own — a flex or grid row, or a pane layout
 
 Material tokenised the *vertical* handle — a 4×48dp bar in a 24dp hit target, `outline`, swelling to 12×52dp on a 12dp corner in `on-surface` while held. That is what `.drag-handle` draws. The container is sized to the pressed bar, so holding it moves nothing beside it. `cursor: grab` is the default; a splitter that resizes reads better as `cursor: col-resize`, which is one declaration of your own.
 
-On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. A decorative handle needs a separate non-drag dismiss path. A named `<button>` handle closes the sheet by click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>; a `form method="dialog"` close button is another option. Native Escape behavior depends on the opening mode, browser, and `closedby` policy, and is not a pointer alternative. Scrim dismissal also depends on the installed shared runtime and `closedby` policy; test it before relying on it. A drag that snaps back does not also activate the button because the runtime distinguishes the ending click from a tap. This is the only place a drag handle is wired to anything. `.handle` is the pre-1.0 spelling and still works, decorative or wired.
+On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. A decorative handle needs a separate non-drag dismiss path. A named `<button>` handle closes the sheet by click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>; a `form method="dialog"` close button is another option. Native Escape behavior depends on the opening mode, browser, and `closedby` policy, and is not a pointer alternative. Scrim dismissal also depends on the installed shared runtime and `closedby` policy; test it before relying on it. A drag that snaps back does not also activate the button because the runtime distinguishes the ending click from a tap. Pane resizing is the only other place a drag handle is wired. `.handle` is the pre-1.0 spelling and still works, decorative or wired.
 
 ```html
 <dialog class="bottom-sheet" aria-labelledby="sheet-title">
@@ -2921,6 +2959,28 @@ Wrap the row in an `<a>` or `<label>` to make the whole item the target. `aria-c
     Inbox
   </a>
 </li>
+```
+
+
+### Sortable
+
+Add `sortable` to a list to let people reorder it. Drag an item by its decorative `.drag-handle`, or press its `[data-move="up"]` and `[data-move="down"]` buttons; every item needs both, in the row (a `.sortable-actions` group) or in a menu, because they are the keyboard path and the single-pointer alternative to dragging. Escape during a drag puts the item back. After each move the list fires a bubbling `change` event whose `detail` is `{ item, from, to }`, and a polite live region announces the position (`Expressive.Sortable.i18n.moved`). `Expressive.Sortable.move(item, index)` works from script. The root bundle starts the behavior on load; with the modular entry, call `Sortable.Init()`.
+
+```html
+<ul class="list sortable" aria-label="Playlist">
+  <li>
+    <span class="drag-handle" aria-hidden="true"></span>
+    <span>Blue in Green</span>
+    <span class="sortable-actions">
+      <button type="button" class="icon-button" data-move="up" aria-label="Move Blue in Green up">
+        <span class="material-symbols" aria-hidden="true">arrow_upward</span>
+      </button>
+      <button type="button" class="icon-button" data-move="down" aria-label="Move Blue in Green down">
+        <span class="material-symbols" aria-hidden="true">arrow_downward</span>
+      </button>
+    </span>
+  </li>
+</ul>
 ```
 
 ---
@@ -3189,6 +3249,38 @@ A checked checkbox in a row's first cell selects the row and fills it with `seco
 </div>
 ```
 
+### Bulk actions
+
+A `.data-table-actions` bar written just before the `.data-table` joins its top edge and takes the selected color while any row is selected. A leading label, such as a count, pushes the buttons to the end. The page keeps the count current and decides which buttons apply; `hidden` removes the bar.
+
+```html
+<div class="data-table-actions">
+  <span>2 selected</span>
+  <button type="button" class="button text">Archive</button>
+</div>
+<div class="data-table">
+  <table>…</table>
+</div>
+```
+
+### Row expansion
+
+A `tr.data-table-detail` right after a row shows only while that row holds a button with `aria-expanded="true"`. The page flips the attribute; the framework shows the row and turns the button's icon. Put the toggle in a `<td>`, because a button in a `<th>` is drawn as a sort control, and span the detail cell across the table.
+
+```html
+<tr>
+  <th scope="row">Order 1042</th>
+  <td>
+    <button type="button" class="icon-button" aria-expanded="false" aria-controls="order-1042" aria-label="Details for order 1042">
+      <span class="material-symbols" aria-hidden="true">expand_more</span>
+    </button>
+  </td>
+</tr>
+<tr id="order-1042" class="data-table-detail">
+  <td colspan="2">Two items, shipped Monday.</td>
+</tr>
+```
+
 ### Scrolling
 
 A wrapper that scrolls must be reachable from the keyboard. Give it `tabindex="0"`, `role="region"` and a name, usually the caption.
@@ -3218,6 +3310,7 @@ A wrapper that scrolls must be reachable from the keyboard. Give it `tabindex="0
 | `--md-comp-data-table-row-height` | 52px; `dense`: 40px |
 | `--md-comp-data-table-cell-padding` | 16px |
 | `--md-comp-data-table-selected-container-color` | `secondary-container` |
+| `--md-comp-data-table-detail-container-color` | `surface-container-low` |
 
 ---
 
@@ -3876,6 +3969,18 @@ At Compact widths (`< 600px`) the container has 16px inline margins. Medium and 
 </div>
 ```
 
+### Resizing
+
+A `<button class="drag-handle">` between the two panes of a list-detail or supporting layout resizes them at 840px and up. It takes the spacer's place and replaces the divider. Drag it, or press Left and Right to move it 16px (Shift for 64px), Home and End for the narrowest and widest, or click it (Enter and Space too) to step through narrow, middle and wide. The click is the single-pointer alternative to dragging. A resized pane stays at least 240px wide, and the other keeps `--md-comp-pane-primary-min-width`. The width is written to `--md-comp-pane-list-width` or `--md-comp-pane-supporting-width` on the layout's style; save it to restore a user's choice. The root bundle starts `PaneResize` on load, and the modular entry with `PaneResize.Init()`. Equal and three-pane layouts do not resize. `PaneResize.setWidth(handle, px)` and `PaneResize.width(handle)` work from script.
+
+```html
+<div class="panes list-detail">
+  <div class="list-pane">…</div>
+  <button type="button" class="drag-handle" aria-label="Resize list"></button>
+  <div class="detail-pane">…</div>
+</div>
+```
+
 ### Appearance
 
 The default is coplanar: full-bleed surfaces with a 1px `outline-variant` divider between them. `separated` (alias `floating`) instead gives each pane a 16px rounded `surface-container-low` card with a 24px gap. Inside a separated layout, a pane can take `elevated` for a shadow or `outlined` for a `surface` fill with a border.
@@ -4007,6 +4112,17 @@ of the page. Override it for a one-off color — a role token, never a raw hex.
       style="--md-comp-progress-indicator: var(--md-sys-color-error)"
       role="status" aria-label="Loading"></span>
 ```
+
+### Meter
+
+A `<meter>` shows a measurement within a known range, such as storage used or password strength. Use `<progress>` for progress toward completion. Every `<meter>` gets an 8px bar on a `secondary-container` track with no class needed. The fill color follows the native `low`, `high` and `optimum` attributes: `primary` in the optimum region, `tertiary` one region away and `error` two away. Give it a visible label.
+
+```html
+<label for="storage">Storage: 7.2 of 10 GB</label>
+<meter id="storage" min="0" max="10" low="7" high="9" optimum="0" value="7.2">7.2 GB</meter>
+```
+
+Tokens on the `meter`: `--md-comp-meter-track`, `--md-comp-meter-optimum`, `--md-comp-meter-suboptimum`, `--md-comp-meter-even-less-good`, `--md-comp-meter-thickness` (8px) and `--md-comp-meter-shape` (4px). In forced-colors mode the fill is `CanvasText` on a `Canvas` track with an outline.
 
 
 ## Search
@@ -4229,6 +4345,88 @@ When a filter or search empties a list, offer the way back as the action.
 | `--md-comp-empty-state-icon-container-color` | `surface-container-high` |
 | `--md-comp-empty-state-image-max-width` | 240px |
 
+## Alert
+
+A message that stays in the page next to the content it is about, with optional actions.
+
+An `.alert` holds an optional leading icon, then the message: a heading, a `<p>`, or both. It stays until the problem goes away or the user dismisses it. Use a snackbar for brief feedback after an action, and a dialog when the user must decide before going on. CSS only; there is no JavaScript.
+
+```html
+<div class="alert">
+  <span class="material-symbols" aria-hidden="true">info</span>
+  <p>Your trial ends in 3 days. <a href="/plans">See plans</a></p>
+</div>
+```
+
+### Critical
+
+`critical` uses the error container colors for problems that stop something from working. There are no success or warning tones: Material has no color roles for them.
+
+```html
+<div class="alert critical">
+  <span class="material-symbols" aria-hidden="true">error</span>
+  <h3>Payment failed</h3>
+  <p>Your card was declined. Update it to keep your workspace active.</p>
+</div>
+```
+
+### Actions and close
+
+An `.alert-actions` row puts buttons under the message, aligned to the end. An `.icon-button` as the last child is the close button, and it stays beside the first line. The page removes a dismissed alert and moves focus to something nearby.
+
+```html
+<div class="alert">
+  <span class="material-symbols" aria-hidden="true">cloud_off</span>
+  <p>You're offline. Edits are saved on this device and sync when the connection returns.</p>
+  <div class="alert-actions">
+    <button class="button text" type="button">Retry sync</button>
+  </div>
+  <button class="icon-button" type="button" aria-label="Dismiss">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</div>
+```
+
+### Announcing changes
+
+An alert that is in the page when it loads needs no role. When one appears or changes during use, put `role="status"` on its text, or `role="alert"` when the user must act now. The live element must be in the page before its text is written, and it must not hold buttons or links, because a screen reader reads their labels as part of the message. Never use `role="banner"`, which is the page header landmark.
+
+```html
+<div class="alert critical">
+  <span class="material-symbols" aria-hidden="true">error</span>
+  <p role="alert" id="save-error"></p>
+  <div class="alert-actions">
+    <button class="button text" type="button">Try again</button>
+  </div>
+</div>
+```
+
+### Error summary
+
+An `.error-summary` alert at the top of a `novalidate` form lists what is wrong when the form is submitted. While any field is invalid, the submit stops as it would natively, and the Forms behavior writes one link per invalid field into the summary's `<ul>`: the field's label and the browser's validation message. A radio group gets one link, named by its legend. The summary then shows and takes focus, so a screen reader reads it, and each link focuses its field. A valid submit hides it again, and a submit button with `formnovalidate` skips the check. `novalidate` is required: without it the browser blocks the submit event and shows only the first field's bubble. Keep each field's own error text; the summary only gathers them.
+
+```html
+<form novalidate>
+  <div class="alert critical error-summary" hidden aria-labelledby="problem">
+    <span class="material-symbols" aria-hidden="true">error</span>
+    <h2 id="problem">There is a problem</h2>
+    <ul></ul>
+  </div>
+  <label for="email">Email address</label>
+  <input id="email" type="email" required>
+  <button type="submit">Send</button>
+</form>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-alert-container-color` | `secondary-container`; critical: `error-container` |
+| `--md-comp-alert-color` | `on-secondary-container`; critical: `on-error-container` |
+| `--md-comp-alert-shape` | 16px |
+| `--md-comp-alert-padding` | 16px |
+
 ---
 
 ## Popover
@@ -4365,6 +4563,34 @@ An `<ol class="timeline">` lists events in the order the page chooses, newest or
 
 ---
 
+## Calendar
+
+A month of days with their events, on a table the page renders.
+
+A `table.calendar` has a `<caption>` naming the month, a header row of weekday `<th scope="col">` cells, then a row per week. Each day `<td>` starts with a `<time datetime>` and may hold a `.calendar-events` list of links or text. Mark days from other months with `outside` and today with `aria-current="date"`. The page owns the dates, the navigation between months and the events; CSS draws seven equal columns, the today mark and event chips that ellipsize. On a phone the days get shorter and chips tighter. CSS only; there is no JavaScript. Use the date picker to choose a date for a field.
+
+```html
+<table class="calendar">
+  <caption>October 2026</caption>
+  <thead>
+    <tr><th scope="col"><abbr title="Sunday">Sun</abbr></th>…</tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="outside"><time datetime="2026-09-27">27</time></td>
+      <td aria-current="date">
+        <time datetime="2026-10-15">15</time>
+        <ul class="calendar-events"><li><a href="/events/standup">Standup</a></li></ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+```
+
+Tokens: `--md-comp-calendar-day-min-height` (96px; 64px Compact), `--md-comp-calendar-outline-color` (`outline-variant`), `--md-comp-calendar-event-container-color` (`primary-container`) and `--md-comp-calendar-event-color` (`on-primary-container`).
+
+---
+
 ## Stat
 
 Key figures in tiles, each with a label, a value and an optional change.
@@ -4395,6 +4621,30 @@ Add `up` or `down` to `.stat-change` for an arrow, and `negative` when the chang
 | `--md-comp-stat-container-color` | `surface-container-low` |
 | `--md-comp-stat-shape` | 16px |
 | `--md-comp-stat-min-width` | 160px |
+
+---
+
+## Description list
+
+A record's details as label and value pairs, in two columns that stack on compact screens.
+
+A `dl.description-list` pairs each `<dt>` label with the `<dd>` values after it. Labels take the first column from Medium widths up, with a divider above each pair; at Compact widths each label sits above its value. A `<div>` may wrap each pair and adds no box. Several `<dd>` elements under one label stack without a divider. Use stat tiles for big numbers instead. CSS only; there is no JavaScript.
+
+```html
+<dl class="description-list">
+  <dt>Status</dt><dd>Shipped</dd>
+  <dt>Ship to</dt><dd>Alvin Lee, 12 Harbor Road, Portland</dd>
+  <dt>Total</dt><dd>$87.00</dd>
+</dl>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-description-list-label-width` | minmax(8rem, 33%) |
+| `--md-comp-description-list-divider-color` | `outline-variant` |
+| `--md-comp-description-list-padding` | 12px |
 
 ---
 
@@ -4959,6 +5209,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Timepicker` | `.timepicker, .time-picker` |
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab-menu` |
+| `Menubar` | `.menubar` |
 
 Snackbar, CharacterCounter, and Slider stay out of this table. Slider still starts itself when the bundle loads. Forms, Chips, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets also run an import-time `Init()`. Chips, Cards, and ExpandingCard appear in the table as well so a later `AutoInit()` can pick up elements added after load.
 
@@ -5142,6 +5393,82 @@ instance.destroy();
 | `isOpen` | Boolean | Whether the menu is open. |
 | `isScrollable` | Boolean | Whether the menu content is scrollable. |
 | `focusedIndex` | Number | Index of the focused item. |
+
+---
+
+## Mega menu
+
+Site navigation whose top items open wide panels of grouped links, on native popovers.
+
+A `nav.mega-menu` holds links and `<button>`s. Each button names a `.mega-menu-panel` with `popovertarget`, so the panel is a native popover: the browser opens it, closes it on Escape or an outside click, puts it next in the Tab order and exposes the button's expanded state. There is no JavaScript and no menu role; these are links read and tabbed in order. The panel opens below the bar, spans the window less `--md-comp-mega-menu-margin`, and lays its `<section>` groups out in as many columns as fit. A `<small>` in a link is a description line. Use a menubar for application commands.
+
+```html
+<nav class="mega-menu" aria-label="Main">
+  <a href="/" aria-current="page">Home</a>
+  <button type="button" popovertarget="products">Products</button>
+  <div id="products" class="mega-menu-panel" popover>
+    <section>
+      <h2>Build</h2>
+      <ul>
+        <li><a href="/editor">Editor<small>Write and preview</small></a></li>
+        <li><a href="/api">API</a></li>
+      </ul>
+    </section>
+  </div>
+  <a href="/pricing">Pricing</a>
+</nav>
+```
+
+Tokens: `--md-comp-mega-menu-container-color` (`surface-container`), `--md-comp-mega-menu-shape` (16px), `--md-comp-mega-menu-margin` (16px) and `--md-comp-mega-menu-column-width` (200px minimum).
+
+---
+
+## Menubar
+
+An application's row of menus, such as File, Edit and View, with the menubar keyboard contract.
+
+A `.menubar` holds `.menu-trigger` buttons, each opening an ordinary Menu written after the bar. The `Menubar` component sets `role="menubar"` on the bar and `role="menuitem"` on each button, and keeps one Tab stop that follows focus. Left and Right move along the bar and wrap, Home and End go to the ends, and both mirror in RTL. Down, Enter and Space open a menu on its first item. In an open menu, Left and Right open the neighbouring menu unless the focused row opens or closes a submenu. Escape closes it and returns to the bar. `AutoInit()` starts it after Menu, and its `menuOptions` (default `{ constrainWidth: false, coverTrigger: false }`) replace each item's Menu options. Name the bar with `aria-label`.
+
+```html
+<div class="menubar" aria-label="Editor">
+  <button type="button" class="menu-trigger" data-target="file-menu">File</button>
+  <button type="button" class="menu-trigger" data-target="edit-menu">Edit</button>
+</div>
+<menu id="file-menu">
+  <li><button type="button">New</button></li>
+</menu>
+<menu id="edit-menu">
+  <li><button type="button">Undo</button></li>
+</menu>
+```
+
+Tokens: `--md-comp-menubar-container-color` (`surface-container`), `--md-comp-menubar-shape` (12px) and `--md-comp-menubar-item-height` (40px).
+
+---
+
+## Tour
+
+A card that walks people through an interface one step at a time, beside each element it explains.
+
+A `.tour` is a `popover="manual"` element with `role="dialog"`, holding one `<section>` per step. Each section's `data-tour-target` names the id of the element it explains. Add a `.tour-progress` line, a `.tour-actions` row with `[data-tour-back]`, `[data-tour-next]` and `[data-tour-done]` buttons, and a `[data-tour-close]` button; a `[data-tour-start="tour-id"]` button starts it. The `Tour` behavior shows one step at a time below its target (above when there is no room), rings the target with `.tour-target` and scrolls it into view, and skips steps whose target is missing or hidden. Back hides on the first step, Next on the last, and Done shows only on the last. The card is named by the step heading and takes focus. Escape, Done or close end the tour and return focus; the card's `toggle` event reports it. `Expressive.Tour.start(el, index)`, `go(el, index)` and `end(el)` work from script, and `Expressive.Tour.i18n.progress` holds "Step {current} of {total}". The root bundle starts the behavior on load; with the modular entry, call `Tour.Init()`.
+
+```html
+<button type="button" data-tour-start="welcome">Take the tour</button>
+<div id="welcome" class="tour" popover="manual" role="dialog">
+  <section data-tour-target="search-button">
+    <h2>Search everything</h2>
+    <p>Find files, people and settings from here.</p>
+  </section>
+  <p class="tour-progress"></p>
+  <div class="tour-actions">
+    <button type="button" class="button text" data-tour-back>Back</button>
+    <button type="button" class="button filled" data-tour-next>Next</button>
+    <button type="button" class="button filled" data-tour-done>Done</button>
+  </div>
+</div>
+```
+
+Tokens: `--md-comp-tour-container-color` (`surface-container-high`), `--md-comp-tour-shape` (16px), `--md-comp-tour-max-width` (360px) and `--md-comp-tour-gap` (12px).
 
 ---
 
@@ -6827,6 +7154,16 @@ The trigger is a `<label>` **wrapping** the file input, not a `<button>` wrappin
 ```
 
 Add `multiple` to allow more than one file.
+
+
+### Color
+
+An `<input type="color">` keeps the browser's picker and is drawn as a 40px round swatch of its color in a 48px target, with the shared focus ring. Label it like any field and keep it outside a `.field`. Tokens on the input: `--md-comp-color-input-size` (40px) and `--md-comp-color-input-outline-color` (`outline`).
+
+```html
+<label for="accent">Accent color</label>
+<input id="accent" type="color" value="#c6a0f6">
+```
 
 ### Character counter
 

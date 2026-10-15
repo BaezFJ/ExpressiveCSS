@@ -1,0 +1,73 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "keyboard", label: "Keyboard" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="menubar">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.menubar</code> is an application's row of menus, such as
+          File, Edit and View.
+        </p>
+        <p>
+          It holds <code>.menu-trigger</code> buttons, and each one opens an
+          ordinary <a href={route("menu")}>menu</a> written after the bar.
+          The <code>Menubar</code> component adds the menubar and menuitem
+          roles and the keyboard below. <code>AutoInit()</code> starts it;
+          otherwise call <code>Expressive.Menubar.init(el)</code>. Name the
+          bar with <code>aria-label</code>. For site navigation, use a
+          <a href={route("mega_menu")}>mega menu</a> of links instead.
+        </p>
+<Code code={`
+<div class="menubar" aria-label="Editor">
+  <button type="button" class="menu-trigger" data-target="file-menu">File</button>
+  <button type="button" class="menu-trigger" data-target="edit-menu">Edit</button>
+</div>
+<menu id="file-menu">
+  <li><button type="button">New</button></li>
+  <li><button type="button">Open</button></li>
+</menu>
+<menu id="edit-menu">
+  <li><button type="button">Undo</button></li>
+  <li><button type="button">Redo</button></li>
+</menu>
+`} />
+  </Section>
+  <Section {...S.keyboard}>
+        <ul>
+          <li>The bar is one Tab stop, and it remembers the last item focused.</li>
+          <li><kbd>Left</kbd> and <kbd>Right</kbd> move along the bar and wrap; <kbd>Home</kbd> and <kbd>End</kbd> go to the ends. Both mirror in right-to-left pages.</li>
+          <li><kbd>Down</kbd>, <kbd>Enter</kbd> or <kbd>Space</kbd> opens a menu on its first item.</li>
+          <li>In an open menu, <kbd>Left</kbd> and <kbd>Right</kbd> open the neighbouring menu, unless the row opens or closes a submenu.</li>
+          <li><kbd>Escape</kbd> closes the menu and returns to its item.</li>
+        </ul>
+  </Section>
+  <Section {...S.tokens}>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-menubar-container-color</code></td>
+            <td><code>--md-sys-color-surface-container</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-menubar-shape</code></td>
+            <td>12px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-menubar-item-height</code></td>
+            <td>40px</td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

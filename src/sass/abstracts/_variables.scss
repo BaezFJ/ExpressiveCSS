@@ -17,6 +17,8 @@ $icon-label: "span:not(.material-symbols):not(.material-symbols-outlined):not(.m
 
 // The up arrow on a change line (Stat, KPI). Rotate it 180deg for down.
 $trend-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 20V7.8l-5.6 5.6L4 12l8-8 8 8-1.4 1.4L13 7.8V20z'/%3E%3C/svg%3E") !default;
+// The drop-down chevron: a select's caret and a mega menu button's trailing icon.
+$caret-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") !default;
 
 // Colors
 //

@@ -31,18 +31,21 @@ const S = defineSections([
     </Section>
     <Section {...S.when}>
       <ul>
-        <li>Persistent, nonblocking issues: native inline text and controls near the affected content.</li>
+        <li>Persistent, nonblocking issues: an <a href={route("alert")}>alert</a> next to the affected content.</li>
         <li>Temporary feedback after an action: <a href={route("snackbar")}>snackbar</a>.</li>
         <li>Decisions that must block progress: <a href={route("dialogs")}>dialog</a>.</li>
       </ul>
       <p>An offline message can remain in normal document flow while editing continues:</p>
       <Code code={`
-<div>
+<div class="alert">
+  <span class="material-symbols" aria-hidden="true">cloud_off</span>
   <p>You're offline. Edits are saved locally and will sync later.</p>
-  <button class="button text" type="button">Retry sync</button>
+  <div class="alert-actions">
+    <button class="button text" type="button">Retry sync</button>
+  </div>
 </div>
 `} />
-      <p>Connect the button to your application's retry action. You do not need a new component or initialization.</p>
+      <p>Connect the button to your application's retry action. An alert is CSS only and needs no initialization.</p>
     </Section>
     <Section {...S.semantics}>
       <p>

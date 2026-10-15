@@ -14,6 +14,7 @@ const S = defineSections([
   { id: "icons", label: "Icons" },
   { id: "media", label: "Avatars and images" },
   { id: "links", label: "Links and selection" },
+  { id: "sortable", label: "Sortable" },
   { id: "tokens", label: "Tokens" },
 ]);
 ---
@@ -299,6 +300,44 @@ const S = defineSections([
     </li>
   </ul>
 </fieldset>
+`} />
+  </Section>
+  <Section {...S.sortable}>
+        <p>
+          Add <code>sortable</code> to a list to let people reorder it. Drag
+          an item by its <code>.drag-handle</code>, or press its
+          <code>[data-move="up"]</code> and <code>[data-move="down"]</code>
+          buttons. Every item needs both buttons, in the row or in a menu:
+          they are the keyboard path and the single-pointer alternative to
+          dragging. Escape during a drag puts the item back.
+        </p>
+        <p>
+          After each move the list fires a bubbling <code>change</code>
+          event whose <code>detail</code> is <code>{"{ item, from, to }"}</code>,
+          so the page can save the order, and a polite live region announces
+          the new position (<code>Expressive.Sortable.i18n.moved</code>). The
+          root bundle starts the behavior on load; with the modular entry,
+          call <code>Sortable.Init()</code>.
+        </p>
+        <ul class="list sortable mb-3" aria-label="Playlist">
+          <li><span class="drag-handle" aria-hidden="true"></span><span>Blue in Green</span><span class="sortable-actions"><button type="button" class="icon-button" data-move="up" aria-label="Move Blue in Green up"><span class="material-symbols" aria-hidden="true">arrow_upward</span></button><button type="button" class="icon-button" data-move="down" aria-label="Move Blue in Green down"><span class="material-symbols" aria-hidden="true">arrow_downward</span></button></span></li><li><span class="drag-handle" aria-hidden="true"></span><span>So What</span><span class="sortable-actions"><button type="button" class="icon-button" data-move="up" aria-label="Move So What up"><span class="material-symbols" aria-hidden="true">arrow_upward</span></button><button type="button" class="icon-button" data-move="down" aria-label="Move So What down"><span class="material-symbols" aria-hidden="true">arrow_downward</span></button></span></li><li><span class="drag-handle" aria-hidden="true"></span><span>Freddie Freeloader</span><span class="sortable-actions"><button type="button" class="icon-button" data-move="up" aria-label="Move Freddie Freeloader up"><span class="material-symbols" aria-hidden="true">arrow_upward</span></button><button type="button" class="icon-button" data-move="down" aria-label="Move Freddie Freeloader down"><span class="material-symbols" aria-hidden="true">arrow_downward</span></button></span></li>
+        </ul>
+<Code code={`
+<ul class="list sortable" aria-label="Playlist">
+  <li>
+    <span class="drag-handle" aria-hidden="true"></span>
+    <span>Blue in Green</span>
+    <span class="sortable-actions">
+      <button type="button" class="icon-button" data-move="up" aria-label="Move Blue in Green up">
+        <span class="material-symbols" aria-hidden="true">arrow_upward</span>
+      </button>
+      <button type="button" class="icon-button" data-move="down" aria-label="Move Blue in Green down">
+        <span class="material-symbols" aria-hidden="true">arrow_downward</span>
+      </button>
+    </span>
+  </li>
+  …
+</ul>
 `} />
   </Section>
   <Section {...S.tokens}>

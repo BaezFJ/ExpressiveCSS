@@ -1,0 +1,98 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "behavior", label: "Behavior" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="tour">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.tour</code> walks people through an interface one step at
+          a time, beside each element it explains.
+        </p>
+        <p>
+          The card is a <code>popover="manual"</code> dialog holding a
+          <code>&lt;section&gt;</code> per step. Each section's
+          <code>data-tour-target</code> names the id of the element it is
+          about. Add a <code>.tour-progress</code> line, a
+          <code>.tour-actions</code> row with Back, Next and Done buttons, and
+          a close button. A <code>data-tour-start</code> button names the tour
+          to start. For one hint beside one control, use a
+          <a href={route("popover")}>popover</a>.
+        </p>
+<Code code={`
+<button type="button" data-tour-start="welcome">Take the tour</button>
+
+<div id="welcome" class="tour" popover="manual" role="dialog">
+  <section data-tour-target="search-button">
+    <h2>Search everything</h2>
+    <p>Find files, people and settings from here.</p>
+  </section>
+  <section data-tour-target="new-button">
+    <h2>Create</h2>
+    <p>Start a document, sheet or folder.</p>
+  </section>
+  <p class="tour-progress"></p>
+  <div class="tour-actions">
+    <button type="button" class="button text" data-tour-back>Back</button>
+    <button type="button" class="button filled" data-tour-next>Next</button>
+    <button type="button" class="button filled" data-tour-done>Done</button>
+  </div>
+  <button type="button" class="icon-button" data-tour-close aria-label="Close tour">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</div>
+`} />
+  </Section>
+  <Section {...S.behavior}>
+        <p>
+          The <code>Tour</code> behavior shows one step at a time below its
+          target, flipping above when there is no room, rings the target and
+          scrolls it into view. Steps whose target is missing or hidden are
+          skipped. Back hides on the first step, Next on the last, and Done
+          shows only on the last. The card is named by the step's heading and
+          takes focus. Escape, Done or the close button end the tour and
+          return focus to where it was; the card's <code>toggle</code> event
+          tells the page, for example to remember that the tour was seen.
+        </p>
+        <p>
+          <code>Expressive.Tour.start(el, index)</code>,
+          <code>go(el, index)</code> and <code>end(el)</code> work from script,
+          and <code>Expressive.Tour.i18n.progress</code> holds the
+          <code>{"Step {current} of {total}"}</code> text. The root bundle starts the
+          behavior on load; with the modular entry, call
+          <code>Tour.Init()</code>.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-tour-container-color</code></td>
+            <td><code>--md-sys-color-surface-container-high</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-tour-shape</code></td>
+            <td>16px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-tour-max-width</code></td>
+            <td>360px</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-tour-gap</code></td>
+            <td>12px (from the target)</td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

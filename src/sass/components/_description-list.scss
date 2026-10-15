@@ -1,0 +1,79 @@
+@use "../abstracts" as *;
+
+// Description list. Label and value pairs for a record's details, such as an
+// order's status, dates and totals, on a native <dl>: each <dt> is a label and
+// the <dd> elements after it are its values. A <div> may wrap each group, as
+// HTML allows; it takes no box of its own.
+//
+// Two columns from Medium up, labels in the first; at Compact widths each
+// label sits above its values. A divider runs above every group.
+//
+// Tokens:
+//   --md-comp-description-list-label-width   minmax(8rem, 33%)
+//   --md-comp-description-list-divider-color outline-variant
+//   --md-comp-description-list-padding       12px (block, per row)
+
+dl.description-list {
+  --md-comp-description-list-label-width: minmax(8rem, 33%);
+  --md-comp-description-list-divider-color: var(--md-sys-color-outline-variant);
+  --md-comp-description-list-padding: 12px;
+
+  display: grid;
+  grid-template-columns: var(--md-comp-description-list-label-width) minmax(0, 1fr);
+  margin: $element-top-margin 0 $element-bottom-margin;
+
+  > div {
+    display: contents;
+  }
+
+  dt,
+  dd {
+    margin: 0;
+    padding-block: var(--md-comp-description-list-padding);
+    overflow-wrap: break-word;
+  }
+
+  // The space between the columns is the label's own padding, so a group's
+  // divider runs unbroken across both.
+  dt {
+    grid-column: 1;
+    padding-inline-end: 24px;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("label-large");
+  }
+
+  dd {
+    grid-column: 2;
+    color: var(--md-sys-color-on-surface);
+    @include typescale("body-medium");
+  }
+
+  // A group's first row carries the divider; extra values under one label
+  // continue the group without one.
+  dt,
+  dt + dd {
+    border-block-start: 1px solid var(--md-comp-description-list-divider-color);
+  }
+
+  dd + dd {
+    padding-block-start: 0;
+  }
+
+  @include bp-down("medium") {
+    grid-template-columns: minmax(0, 1fr);
+
+    dt,
+    dd {
+      grid-column: 1;
+    }
+
+    dt {
+      padding-block-end: 0;
+    }
+
+    dt + dd {
+      padding-block-start: 4px;
+      border-block-start: 0;
+    }
+  }
+}

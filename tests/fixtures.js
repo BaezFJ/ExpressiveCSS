@@ -160,4 +160,9 @@ export const AUTO_INIT_FIXTURES = [
     selector: ".fab-menu",
     html: `<div class="fab-menu"><button type="button" class="button extra circle" aria-label="Create"><span class="material-symbols" aria-hidden="true">add</span></button><ul><li><button type="button"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button></li></ul></div>`,
   },
+  {
+    name: "Menubar",
+    selector: ".menubar",
+    html: `<div class="menubar" aria-label="Editor"><button type="button" class="menu-trigger" data-target="fixture-file-menu">File</button></div><menu id="fixture-file-menu"><li><button type="button">New</button></li></menu>`,
+  },
 ];

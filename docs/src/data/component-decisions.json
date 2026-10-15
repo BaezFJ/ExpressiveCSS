@@ -289,7 +289,9 @@
       "title": "Panes",
       "aliases": [
         "split view",
-        "two pane"
+        "two pane",
+        "splitter",
+        "resizable panes"
       ],
       "guideSource": {
         "pageId": "panes",
@@ -388,6 +390,11 @@
             "file": "tests/menu-field-browser.test.js",
             "name": "Panes preserve compact selection and independent scrolling (chromium)",
             "scope": "Active selection and first-pane fallback through resizing, independent body scrolling, DOM order, translated footer actions at enlarged root text size, both directions and motion preferences. Not native zoom or screen-reader verification."
+          },
+          {
+            "file": "tests/pane-resize-browser.test.js",
+            "name": "chromium: a drag handle between panes resizes by pointer, keyboard and click",
+            "scope": "Handle placed in the spacer column, pointer drag, arrow, Shift, Home and End keys, click and Enter stepping, the other pane's minimum, the supporting-pane token, RTL direction, hiding below 840px and named buttons. No spoken-output assertion."
           }
         ],
         "inventorySha256": "c3004ac31f2dbff296c888cc8f85d66105fe2f354fe5ffe509528df310d98f1d"
@@ -965,6 +972,176 @@
       }
     },
     {
+      "slug": "mega-menu",
+      "title": "Mega menu",
+      "aliases": [
+        "mega dropdown",
+        "site navigation menu",
+        "flyout navigation"
+      ],
+      "guideSource": {
+        "pageId": "mega_menu",
+        "heading": "Mega menu",
+        "headingLevel": 2,
+        "semantics": [
+          "mega-menu"
+        ]
+      },
+      "jobs": [
+        "Site navigation whose top items open wide panels of grouped links, on native popovers."
+      ],
+      "useWhen": [
+        "Give a site with many sections top-level navigation whose items open panels of grouped links."
+      ],
+      "avoidWhen": [
+        "Commands in an application belong in a menu or menubar; a short list of destinations needs a navbar or navigation rail."
+      ],
+      "alternatives": [
+        "menu",
+        "menubar",
+        "app-bar"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/mega-menu.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#mega-menu",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "Links and disclosure buttons in a row, wide panels of grouped links below the bar, a turning chevron and current-page state.",
+          "webAdaptation": "Native popovers opened with popovertarget; the browser owns opening, light dismiss, Escape, focus order and the expanded state.",
+          "limitations": [
+            "Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the top items as links and disclosure buttons in a named nav, expose the expanded state, keep the panel next in the focus order, close on Escape and do not claim menu roles."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A docs site with Products, Solutions and Resources sections uses a mega menu. A text editor with File, Edit and View commands uses a menubar.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_mega-menu.scss",
+            "sha256": "b758dd7848889422d714b8b1a6f36cb51d99aa74bc9e312de73f08bfbd481f22"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified.",
+            "nextStep": "Open and close each panel with a screen reader in each engine and confirm the expanded state is announced."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/mega-menu-browser.test.js",
+            "name": "chromium: mega menu opens a wide panel of link groups below its button",
+            "scope": "Popover opening from its button, the panel below the bar spanning the window, side-by-side groups, the turning chevron, Tab into the panel, Escape, closed links out of reach and stacked groups on a phone. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "menubar",
+      "title": "Menubar",
+      "aliases": [
+        "application menu",
+        "file edit view",
+        "menu bar"
+      ],
+      "guideSource": {
+        "pageId": "menubar",
+        "heading": "Menubar",
+        "headingLevel": 2,
+        "semantics": [
+          "menubar"
+        ]
+      },
+      "jobs": [
+        "An application's row of menus, such as File, Edit and View, with the menubar keyboard contract."
+      ],
+      "useWhen": [
+        "Give an application, such as an editor, a persistent row of command menus people move through with the arrow keys."
+      ],
+      "avoidWhen": [
+        "Site navigation needs a navbar or mega menu of links; a single overflow of actions needs one menu."
+      ],
+      "alternatives": [
+        "menu",
+        "toolbars",
+        "mega-menu"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/menubar.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#menubar",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.",
+          "webAdaptation": "Each item opens an ordinary Menu; the Menubar component adds the menubar and menuitem roles and the roving tab stop at runtime.",
+          "limitations": [
+            "Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Name the menubar, give it one tab stop, move between items with Left and Right, open a menu with Down, Enter or Space, move between open menus with Left and Right, and close with Escape back to the bar."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "File, Edit and View in a document editor are a menubar. One \"More\" button with five actions is a single menu.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/components/menubar.ts",
+            "sha256": "73c7307ad8cf681f85fd4834d90a862e3a941513861529ec25a0663cf81c6e64"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified.",
+            "nextStep": "Operate the menubar with a screen reader in each engine and confirm menu and item announcements; check typeahead across the bar."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/menubar-browser.test.js",
+            "name": "chromium: a menubar has one tab stop and moves between its menus with the arrow keys",
+            "scope": "Menubar and menuitem roles, one tab stop that follows focus, Left, Right, Home and End with wrapping, Down opening on the first item, Right and Left between open menus, flyout rows keeping Right, Escape back to the bar and RTL. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "scrollspy",
       "title": "Scrollspy",
       "aliases": [
@@ -1270,7 +1447,9 @@
       "slug": "icon-buttons",
       "title": "Icon buttons",
       "aliases": [
-        "icon button"
+        "icon button",
+        "copy button",
+        "clipboard"
       ],
       "guideSource": {
         "pageId": "icon_buttons",
@@ -1934,7 +2113,10 @@
       "slug": "lists",
       "title": "Lists",
       "aliases": [
-        "list"
+        "list",
+        "sortable",
+        "reorder",
+        "drag and drop"
       ],
       "guideSource": {
         "pageId": "lists",
@@ -2307,7 +2489,9 @@
         "table",
         "data grid",
         "grid view",
-        "sortable table"
+        "sortable table",
+        "bulk actions",
+        "expandable rows"
       ],
       "guideSource": {
         "pageId": "data_table",
@@ -2381,6 +2565,11 @@
             "file": "tests/data-table-browser.test.js",
             "name": "chromium: data table keeps table semantics, sticks its header and draws sort and selection",
             "scope": "Table, column header and row counts through the wrapper, sticky header offset after scrolling, end-aligned numeric cells in LTR and RTL, sort arrow opacity and rotation, selected row fill and the named scroll region. No spoken-output assertion."
+          },
+          {
+            "file": "tests/data-table-browser.test.js",
+            "name": "chromium: data table joins a bulk-action bar and expands detail rows",
+            "scope": "Bar joined to the table's top edge, squared table corners, a hidden bar leaving the table alone, the selected tint, end-aligned buttons, detail rows hidden and shown by aria-expanded, the turned chevron and the detail row kept a table row. No spoken-output assertion."
           }
         ]
       }
@@ -2467,6 +2656,92 @@
             "file": "tests/stat-browser.test.js",
             "name": "chromium: stats tile their figures, wrap when narrow and mark the change",
             "scope": "One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "description-list",
+      "title": "Description list",
+      "aliases": [
+        "key-value list",
+        "details list",
+        "definition list",
+        "property list"
+      ],
+      "guideSource": {
+        "pageId": "description_list",
+        "heading": "Description list",
+        "headingLevel": 2,
+        "semantics": [
+          "description-list"
+        ]
+      },
+      "jobs": [
+        "A record's details as label and value pairs, in two columns that stack on compact screens."
+      ],
+      "useWhen": [
+        "Show the fields of one record, such as an order's status, address and total, as labelled values people read rather than edit."
+      ],
+      "avoidWhen": [
+        "Many records compared side by side need a data table; a few headline numbers need stat tiles; editable values need form fields."
+      ],
+      "alternatives": [
+        "stat",
+        "data-table",
+        "lists"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/description-list.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#description-list",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "Label and value columns with a divider per pair, a compact stacked layout, div-wrapped groups and several values per label.",
+          "webAdaptation": "A native dl, dt and dd; the browser exposes the label-value pairing.",
+          "limitations": [
+            "Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the native dl so each value stays paired with its label, keep the reading order label before value and let long values wrap."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "An order page shows Status, Ship to and Total for one order as a description list. A table of fifty orders with those columns is a data table.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_description-list.scss",
+            "sha256": "deae3f67f9dfa6bee0464bd3b64d0df58d6b0bcf1a4d352d364f70ac9167f9b3"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified.",
+            "nextStep": "Read a description list with a screen reader in each engine and confirm each value is announced with its label; test enlarged text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/description-list-browser.test.js",
+            "name": "chromium: description list pairs labels and values in two columns and stacks them when compact",
+            "scope": "Label and value columns, shared rows, div-wrapped groups, stacked extra values, one divider per pair, the compact stacked layout and unchanged reading order. No spoken-output assertion."
           }
         ]
       }
@@ -3619,6 +3894,91 @@
       }
     },
     {
+      "slug": "calendar",
+      "title": "Calendar",
+      "aliases": [
+        "month view",
+        "event calendar",
+        "schedule"
+      ],
+      "guideSource": {
+        "pageId": "calendar",
+        "heading": "Calendar",
+        "headingLevel": 2,
+        "semantics": [
+          "calendar"
+        ]
+      },
+      "jobs": [
+        "A month of days with their events, on a table the page renders."
+      ],
+      "useWhen": [
+        "Show a month of days with events people scan by date, such as bookings or a team schedule."
+      ],
+      "avoidWhen": [
+        "Picking one date for a field needs the date picker; an ordered list of dated events needs a timeline."
+      ],
+      "alternatives": [
+        "date-picker",
+        "timeline",
+        "data-table"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/calendar.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#calendar",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize.",
+          "webAdaptation": "A native table with a caption; the page renders the dates, navigation and events.",
+          "limitations": [
+            "Equal columns, today, outside days, ellipsized event chips, column headers and the phone width are checked in a browser; screen reader output remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Name the month in a caption, keep weekday column headers, mark today in text as well as color, and keep each event a reachable link or text."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A team schedule for October is a calendar. Choosing a delivery date in a form is the date picker.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_calendar.scss",
+            "sha256": "46fe1ef955fe033fa3e300bef0e2048c665a84656f4da602ad00eec4da602ec9"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Equal columns, today, outside days, ellipsized event chips, column headers and the phone width are checked in a browser; screen reader output remains unverified.",
+            "nextStep": "Read a month with a screen reader in each engine and confirm the day and weekday are announced with each event."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/calendar-browser.test.js",
+            "name": "chromium: calendar lays out a month grid with today, outside days and event chips",
+            "scope": "Seven equal columns, day height, the today mark, muted outside days, event chips that stay inside their day and ellipsize, event links, column headers and the month at phone width. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "dialogs",
       "title": "Dialogs",
       "aliases": [
@@ -4396,6 +4756,92 @@
       }
     },
     {
+      "slug": "tour",
+      "title": "Tour",
+      "aliases": [
+        "product tour",
+        "onboarding",
+        "coach mark",
+        "walkthrough"
+      ],
+      "guideSource": {
+        "pageId": "tour",
+        "heading": "Tour",
+        "headingLevel": 2,
+        "semantics": [
+          "tour"
+        ]
+      },
+      "jobs": [
+        "A card that walks people through an interface one step at a time, beside each element it explains."
+      ],
+      "useWhen": [
+        "Introduce new or changed parts of an interface in a short sequence the user starts and can leave at any time."
+      ],
+      "avoidWhen": [
+        "One hint beside one control needs a popover or tooltip; content people must read needs to stay on the page."
+      ],
+      "alternatives": [
+        "popover",
+        "tooltips",
+        "dialogs"
+      ],
+      "adaptive": [],
+      "runtime": "shared-runtime",
+      "guide": "../components/tour.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#tour",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.",
+          "webAdaptation": "A manual native popover placed with CSS anchor positioning; the Tour behavior moves the anchor and focus.",
+          "limitations": [
+            "Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Let the user start, skip and end the tour, name the card by the step heading, move focus to it and back afterwards, and skip steps whose target is not shown."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Three new features after an update are a tour. One unexplained icon is a tooltip.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/behaviors/tour.ts",
+            "sha256": "f7aa25d13a8b392871cbe6d601366418fb6b975b6b540a77f220fc143ec79278"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified.",
+            "nextStep": "Take a tour with a screen reader in each engine and confirm each step is announced when it opens."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/tour-browser.test.js",
+            "name": "chromium: a tour steps through its targets beside each one and returns focus",
+            "scope": "Opening from a start button, the card named by the step heading, progress text, skipped missing targets, button visibility per step, placement below each target, releasing the previous target, Escape, focus return and cleanup after hidePopover. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "snackbar",
       "title": "Snackbar",
       "aliases": [
@@ -4500,7 +4946,9 @@
       "aliases": [
         "progress",
         "preloader",
-        "progress indicator"
+        "progress indicator",
+        "meter",
+        "gauge"
       ],
       "guideSource": {
         "pageId": "preloader",
@@ -4869,6 +5317,99 @@
       }
     },
     {
+      "slug": "alert",
+      "title": "Alert",
+      "aliases": [
+        "callout",
+        "inline message",
+        "notice",
+        "banner",
+        "error summary",
+        "validation summary"
+      ],
+      "guideSource": {
+        "pageId": "alert",
+        "heading": "Alert",
+        "headingLevel": 2,
+        "semantics": [
+          "alert"
+        ]
+      },
+      "jobs": [
+        "A message that stays in the page next to the content it is about, with optional actions."
+      ],
+      "useWhen": [
+        "Tell people about a persistent, nonblocking condition such as being offline, an expiring trial or a failed payment, next to the content it affects."
+      ],
+      "avoidWhen": [
+        "Brief feedback after an action belongs in a snackbar; a decision that must block progress belongs in a dialog."
+      ],
+      "alternatives": [
+        "snackbar",
+        "dialogs",
+        "empty-state"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/alert.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#alert",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "A tonal container with an optional leading icon, a heading and text, an end-aligned actions row, a close button and a critical error-container tone.",
+          "webAdaptation": "A plain div around authored text and buttons; a changing alert puts role=\"status\" or role=\"alert\" on its text, never on the controls.",
+          "limitations": [
+            "The layout, both tones, enlarged-text wrapping and the authored role are checked in a browser; live announcements and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the message in the reading order next to what it describes, convey tone in text as well as color, keep controls out of any live region and return focus when an alert is dismissed."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory. Replaces the removed banner."
+      },
+      "selectionExample": "\"Saved\" after pressing Save is a snackbar. \"You're offline; edits sync later\" stays true until the connection returns, so it is an alert above the editor.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_alert.scss",
+            "sha256": "67af3cb5731ec433de0af98707c9ce91445412fb132ac7324b6e83661166b0ad"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The layout, both tones, enlarged-text wrapping and the authored role are checked in a browser; live announcements and spoken output remain unverified.",
+            "nextStep": "Show and update an alert with a screen reader in each engine and confirm status and alert roles are announced once, without the button labels; test forced colors."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/alert-browser.test.js",
+            "name": "chromium: alert lays out icon, text, close and actions, and colors the critical tone",
+            "scope": "Icon, heading, text, close and actions placement, end-aligned actions, 16px corners, title-small heading, underlined links, text start without an icon, secondary and critical container colors, the authored alert role and controls kept inside at 280px. No spoken-output assertion."
+          },
+          {
+            "file": "tests/error-summary-browser.test.js",
+            "name": "chromium: error summary lists invalid fields, takes focus and links to each field",
+            "scope": "Blocked invalid submit, page handlers not reached, one labelled link per invalid field and radio group, focus on the summary, links focusing fields, generated ids, formnovalidate, and hiding after a valid submit. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "carousel",
       "title": "Carousel",
       "aliases": [
@@ -4982,6 +5523,92 @@
       }
     },
     {
+      "slug": "image-compare",
+      "title": "Image compare",
+      "aliases": [
+        "before and after",
+        "image slider",
+        "comparison slider",
+        "diff"
+      ],
+      "guideSource": {
+        "pageId": "image_compare",
+        "heading": "Image compare",
+        "headingLevel": 2,
+        "semantics": [
+          "image-compare"
+        ]
+      },
+      "jobs": [
+        "Two images of the same scene with a divider that reveals one over the other."
+      ],
+      "useWhen": [
+        "Let people compare two images of the same scene, such as before and after an edit."
+      ],
+      "avoidWhen": [
+        "Several unrelated images need a carousel; one image with detail needs a lightbox."
+      ],
+      "alternatives": [
+        "carousel",
+        "lightbox",
+        "slider"
+      ],
+      "adaptive": [],
+      "runtime": "shared-runtime",
+      "guide": "../components/image-compare.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#image-compare",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "Two stacked images, a divider and handle driven by a native range input, keyboard and pointer control, RTL and a focus ring.",
+          "webAdaptation": "A native range input covers the images invisibly; the ImageCompare behavior writes its value to the divider position.",
+          "limitations": [
+            "The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Give both images alt text that says which is which, name the range, and keep it operable by keyboard and pointer."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A photo before and after retouching is an image compare. Five product photos are a carousel.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_image-compare.scss",
+            "sha256": "b1630c0d7c232fae99d3b428595c5c8680a92dffd5c2ddb07fe93334782266dd"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified.",
+            "nextStep": "Move the divider with a screen reader in each engine and confirm the value is announced."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/image-compare-browser.test.js",
+            "name": "chromium: image compare reveals the second image up to the range's value",
+            "scope": "The initial value applied on load, each image on its side of the divider, arrow keys moving the divider, the handle focus ring, RTL, named native sliders and Slider leaving the range alone. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "marquee",
       "title": "Marquee",
       "aliases": [
@@ -5006,7 +5633,7 @@
         "Show a long, decorative set of logos, photos or short slogans in a small space, such as customer logos on a landing page."
       ],
       "avoidWhen": [
-        "People need to read, compare or act on the items; a list, grid or carousel lets them do it at their own pace. Time-sensitive alerts need a banner or snackbar."
+        "People need to read, compare or act on the items; a list, grid or carousel lets them do it at their own pace. Urgent messages need an alert or snackbar."
       ],
       "alternatives": [
         "carousel",
@@ -5829,7 +6456,9 @@
         "input field",
         "password field",
         "one-time code",
-        "verification code"
+        "verification code",
+        "color picker",
+        "color input"
       ],
       "guideSource": {
         "pageId": "text_inputs",
@@ -11302,5 +11931,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "5cd5bde4379bebb7873249bd8948879ae76634d9"
+  "sourceRevision": "134d4e31a040e95391918dccbfdeaf77fd23bcbd"
 }

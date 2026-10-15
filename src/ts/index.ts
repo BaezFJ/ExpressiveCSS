@@ -16,6 +16,12 @@ import { Dialogs } from "./behaviors/dialogs";
 import { BottomSheets } from "./behaviors/bottomSheets";
 import { SideSheets } from "./behaviors/sideSheets";
 import { Forms } from "./behaviors/forms";
+import { Copy } from "./behaviors/copy";
+import { Theme } from "./behaviors/theme";
+import { PaneResize } from "./behaviors/paneResize";
+import { ImageCompare } from "./behaviors/imageCompare";
+import { Tour } from "./behaviors/tour";
+import { Sortable } from "./behaviors/sortable";
 
 export * from './modular';
 
@@ -36,3 +42,9 @@ ExpandingCard.Init();
 Dialogs.Init();
 BottomSheets.Init();
 SideSheets.Init();
+Copy.Init();
+Theme.Init();
+PaneResize.Init();
+ImageCompare.Init();
+Tour.Init();
+Sortable.Init();

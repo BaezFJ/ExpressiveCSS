@@ -1,0 +1,89 @@
+@use "../abstracts" as *;
+
+// Tour. A card that walks people through an interface one step at a time,
+// beside the element each step explains. The card is a .tour
+// [popover="manual"] holding a <section> per step, an optional .tour-progress
+// line, a .tour-actions row and an optional close .icon-button; the Tour
+// behavior shows one section, writes the progress and gives the current
+// target the anchor the card is placed against. The target gets .tour-target,
+// a ring that marks what the step is about.
+//
+// Tokens:
+//   --md-comp-tour-container-color  surface-container-high
+//   --md-comp-tour-shape            16px
+//   --md-comp-tour-max-width        360px
+//   --md-comp-tour-gap              12px (from the target)
+
+.tour {
+  --md-comp-tour-container-color: var(--md-sys-color-surface-container-high);
+  --md-comp-tour-shape: 16px;
+  --md-comp-tour-max-width: 360px;
+  --md-comp-tour-gap: 12px;
+
+  box-sizing: border-box;
+  inline-size: max-content;
+  max-inline-size: min(var(--md-comp-tour-max-width), calc(100vw - 32px));
+  inset: auto;
+  margin: var(--md-comp-tour-gap);
+  padding: 20px 24px 16px;
+  border: 0;
+  border-radius: var(--md-comp-tour-shape);
+  background-color: var(--md-comp-tour-container-color);
+  color: var(--md-sys-color-on-surface);
+  @include z-depth("3");
+  @include typescale("body-medium");
+
+  position-anchor: --tour-target;
+  position-area: block-end;
+  position-try-fallbacks: flip-block, inline-end, inline-start;
+
+  &:focus {
+    outline: none;
+  }
+
+  // The behavior hides steps and buttons with the hidden attribute, which a
+  // button's own display rule would otherwise beat.
+  [hidden] {
+    display: none;
+  }
+
+  > section > :is(h1, h2, h3, h4, h5, h6) {
+    margin: 0 0 8px;
+    padding-inline-end: 32px;
+    @include typescale("title-medium");
+  }
+
+  > section > p {
+    margin: 0;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  > .tour-progress {
+    margin: 16px 0 0;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("label-medium");
+  }
+
+  > .tour-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-block-start: 12px;
+  }
+
+  > .icon-button:last-child {
+    position: absolute;
+    inset-block-start: 8px;
+    inset-inline-end: 8px;
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+}
+
+.tour-target {
+  outline: 3px solid var(--md-sys-color-primary);
+  outline-offset: 4px;
+}

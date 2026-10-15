@@ -15,6 +15,7 @@ const S = defineSections([
   { id: "shape", label: "Shape" },
   { id: "disabled", label: "Disabled" },
   { id: "links", label: "As a link" },
+  { id: "copy", label: "Copy button" },
   { id: "tokens", label: "Tokens" },
 ]);
 ---
@@ -234,6 +235,39 @@ const S = defineSections([
 <a class="icon-button outlined" href="/buttons" aria-label="Open the Buttons page">
   <span class="material-symbols" aria-hidden="true">open_in_new</span>
 </a>
+`} />
+  </Section>
+  <Section {...S.copy}>
+        <p>
+          Any button copies to the clipboard. <code>data-copy-for</code> names
+          the id of a field, which copies its value, or of another element,
+          which copies its trimmed text. <code>data-copy</code> holds the text
+          itself. A snackbar confirms the result, and screen readers announce
+          it.
+        </p>
+        <p>
+          <code>data-copy-message</code> and <code>data-copy-error</code>
+          replace the snackbar's texts for one button, and
+          <code>Expressive.Copy.i18n</code> replaces them everywhere. The root
+          bundle starts the behavior on load; with the modular entry, call
+          <code>Copy.Init()</code>. The clipboard needs HTTPS or localhost;
+          anywhere else the snackbar reports the failure.
+        </p>
+        <div class="field mb-3" style="max-width: 20rem;">
+          <input id="copy-demo-key" type="text" placeholder=" " value="sk-live-4f9a2c" readonly>
+          <label for="copy-demo-key">API key</label>
+          <button type="button" class="icon-button suffix" data-copy-for="copy-demo-key" aria-label="Copy API key">
+            <span class="material-symbols" aria-hidden="true">content_copy</span>
+          </button>
+        </div>
+<Code code={`
+<input id="api-key" value="sk-123" readonly aria-label="API key">
+<button type="button" class="icon-button" data-copy-for="api-key" aria-label="Copy API key">
+  <span class="material-symbols" aria-hidden="true">content_copy</span>
+</button>
+
+<button type="button" class="button text" data-copy="https://example.com/share/42"
+        data-copy-message="Link copied">Copy link</button>
 `} />
   </Section>
   <Section {...S.tokens}>

@@ -58,7 +58,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
 
   // Checkboxes / radios inside a field (multi-select menu) are not text
   // fields — do not give them the 56dp well.
-  input:not([type="range"], [type="checkbox"], [type="radio"], [type="file"]),
+  input:not([type="range"], [type="checkbox"], [type="radio"], [type="file"], [type="color"]),
   textarea {
     box-sizing: border-box;
     padding: 20px 16px 8px;
@@ -480,5 +480,45 @@ input.otp:not(.browser-default) {
     &:focus {
       --md-comp-otp-indicator-color: Highlight;
     }
+  }
+}
+
+// Color input. The native picker stays; the control is drawn as a 40px round
+// swatch of the chosen color with an outline, a 48px target and the shared
+// focus ring. Each engine's swatch is a private pseudo-element in its own rule.
+input[type="color"] {
+  --md-comp-color-input-size: 40px;
+  --md-comp-color-input-outline-color: var(--md-sys-color-outline);
+
+  box-sizing: content-box;
+  inline-size: var(--md-comp-color-input-size);
+  block-size: var(--md-comp-color-input-size);
+  margin: 0;
+  padding: 4px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  vertical-align: middle;
+  appearance: none;
+  @include focus-visible;
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  &::-webkit-color-swatch {
+    border: 1px solid var(--md-comp-color-input-outline-color);
+    border-radius: 50%;
+  }
+
+  &::-moz-color-swatch {
+    border: 1px solid var(--md-comp-color-input-outline-color);
+    border-radius: 50%;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.38;
   }
 }

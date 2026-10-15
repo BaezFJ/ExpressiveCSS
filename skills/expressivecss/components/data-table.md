@@ -9,7 +9,7 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `2e7f14a2a208cec56dc94f72c403044ed06cfdfeeb5d76265d22475dcbf6f8c0`
+Contract SHA-256: `bd71f03212a61939c306a50d67f32fcee8e6d685e15c4e2d726ec9a3e9946b9b`
 
 #### Selection and adaptation
 
@@ -70,7 +70,7 @@ Sorting is page state. Put a `<button>` in each sortable `<th>` and set `aria-so
 
 #### Also documented
 
-The Data table section of the [API reference](https://www.expressivecss.com/llm.md) also covers Row selection, Scrolling, Tokens.
+The Data table section of the [API reference](https://www.expressivecss.com/llm.md) also covers Row selection, Bulk actions, Row expansion, Scrolling, Tokens.
 
 #### Rules
 

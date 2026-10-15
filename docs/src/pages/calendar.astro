@@ -1,0 +1,80 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="calendar">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>table.calendar</code> shows a month of days with their
+          events.
+        </p>
+        <p>
+          The page renders it: a <code>&lt;caption&gt;</code> naming the
+          month, a header row of weekdays, then a row per week. Each day starts
+          with a <code>&lt;time&gt;</code> and may hold a
+          <code>.calendar-events</code> list of links or text. Mark days from
+          other months with <code>outside</code> and today with
+          <code>aria-current="date"</code>. The page owns the dates, the
+          navigation between months and the events; CSS draws the grid. Long
+          event titles ellipsize, and on a phone the days get shorter. To pick
+          a date for a field, use the <a href={route("datepicker")}>date picker</a>.
+        </p>
+        <table class="calendar mb-3"><caption>October 2026</caption><thead><tr><th scope="col"><abbr title="Sun">Sun</abbr></th><th scope="col"><abbr title="Mon">Mon</abbr></th><th scope="col"><abbr title="Tue">Tue</abbr></th><th scope="col"><abbr title="Wed">Wed</abbr></th><th scope="col"><abbr title="Thu">Thu</abbr></th><th scope="col"><abbr title="Fri">Fri</abbr></th><th scope="col"><abbr title="Sat">Sat</abbr></th></tr></thead><tbody><tr><td class="outside"><time datetime="2026-09-27">27</time></td><td class="outside"><time datetime="2026-09-28">28</time></td><td class="outside"><time datetime="2026-09-29">29</time></td><td class="outside"><time datetime="2026-09-30">30</time></td><td><time datetime="2026-10-01">1</time></td><td><time datetime="2026-10-02">2</time></td><td><time datetime="2026-10-03">3</time></td></tr><tr><td><time datetime="2026-10-04">4</time></td><td><time datetime="2026-10-05">5</time><ul class="calendar-events"><li><a href="#tokens">Design review</a></li></ul></td><td><time datetime="2026-10-06">6</time></td><td><time datetime="2026-10-07">7</time></td><td><time datetime="2026-10-08">8</time></td><td><time datetime="2026-10-09">9</time></td><td><time datetime="2026-10-10">10</time></td></tr><tr><td><time datetime="2026-10-11">11</time></td><td><time datetime="2026-10-12">12</time></td><td><time datetime="2026-10-13">13</time></td><td><time datetime="2026-10-14">14</time></td><td aria-current="date"><time datetime="2026-10-15">15</time><ul class="calendar-events"><li><a href="#tokens">Standup</a></li><li>Lunch with the team</li></ul></td><td><time datetime="2026-10-16">16</time></td><td><time datetime="2026-10-17">17</time></td></tr></tbody></table>
+<Code code={`
+<table class="calendar">
+  <caption>October 2026</caption>
+  <thead>
+    <tr>
+      <th scope="col"><abbr title="Sunday">Sun</abbr></th>
+      <th scope="col"><abbr title="Monday">Mon</abbr></th>
+      …
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="outside"><time datetime="2026-09-27">27</time></td>
+      …
+      <td aria-current="date">
+        <time datetime="2026-10-15">15</time>
+        <ul class="calendar-events">
+          <li><a href="/events/standup">Standup</a></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-calendar-day-min-height</code></td>
+            <td>96px (Compact: 64px)</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-calendar-outline-color</code></td>
+            <td><code>--md-sys-color-outline-variant</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-calendar-event-container-color</code></td>
+            <td><code>--md-sys-color-primary-container</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-calendar-event-color</code></td>
+            <td><code>--md-sys-color-on-primary-container</code></td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>
