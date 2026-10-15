@@ -105,7 +105,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   gone. Each one has a replacement that has been documented since 0.8.0;
   see Migration below.
 - **Breaking (1.0).** The remaining compatibility paths are gone too: the
-  `.extra` size on a common button, radio `input + span` and switch
+  `.range` and `.range-field` slider hosts, a switch whose `.switch` class
+  sits on a wrapper around the label, the `.extra` size on a common button, radio `input + span` and switch
   `input + span` / `.lever` drawing, the `li.tab` wrapper, a chip's `.active`,
   Carousel's `.flat` layout, `fullWidth` option and `.carousel-fixed-item`,
   and the `background`, `on-background`, `surface-variant` and `surface-tint`
@@ -174,10 +175,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `<input type="file">`. A `<button>` or `.btn` trigger is no longer styled.
 - Script: replace `Expressive.Range` with `Expressive.Slider`.
 - Buttons: replace `class="button extra"` on a common button with
-  `class="button medium"`. `circle extra` is still the FAB. A navigation
+  `class="button medium"`. Its label grows from `label-large` (14px) to
+  `title-medium` (16px). `circle extra` is still the FAB. A navigation
   rail FAB is a plain `.button`.
 - Radios and switches: drop the `<span>` or `.lever` after the input; the
-  input draws the control and the label text sits beside it.
+  input draws the control and the label text sits beside it. Put `.switch`
+  on the `<label>` itself: `<div class="switch"><label>` now draws a
+  checkbox.
+- Sliders: replace a `.range` or `.range-field` host with `.slider`, or wrap
+  the input in a `<label>`.
 - Tabs: put the `<a>` links directly in `nav.tabs`, without `ul` and
   `li.tab`.
 - Chips: replace `.active` with `.selected`.

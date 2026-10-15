@@ -46,6 +46,7 @@ export class Tabs extends Component<TabsOptions> {
   // there pass over other panels and must not select them.
   private _scrollTarget: number | null = null;
   private _scrollTimer: ReturnType<typeof setTimeout>;
+  private _trackObserver: ResizeObserver | null = null;
   _activeTabLink: HTMLAnchorElement;
   _content: HTMLElement;
   private _originalPanels = new Map<HTMLElement, { display: string; priority: string; active: boolean; inert: boolean; marker?: Comment }>();
@@ -295,11 +296,20 @@ export class Tabs extends Component<TabsOptions> {
     // A swipe or wheel that interrupts a programmatic scroll takes over from it.
     track.addEventListener('pointerdown', this._releaseScrollTarget, { passive: true });
     track.addEventListener('wheel', this._releaseScrollTarget, { passive: true });
+    // A track that starts hidden (in a closed dialog or sheet) is 0px wide, so
+    // the scroll below cannot reach the active panel. Re-align whenever the
+    // track's width changes, which also covers window resizes.
+    if (typeof ResizeObserver !== 'undefined') {
+      this._trackObserver = new ResizeObserver(() => this._scrollToActivePanel('instant'));
+      this._trackObserver.observe(track);
+    }
     this._scrollToActivePanel('instant');
   }
 
   _teardownSwipeableTabs() {
     const track = this._track;
+    this._trackObserver?.disconnect();
+    this._trackObserver = null;
     this._releaseScrollTarget();
     track.removeEventListener('scroll', this._handleTrackScroll);
     track.removeEventListener('pointerdown', this._releaseScrollTarget);

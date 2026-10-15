@@ -575,7 +575,7 @@ Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select
 
 ### forms/slider
 
-Swept 0.8.0. Renamed from range to the name M3 uses; `.range` stays as an alias.
+Swept 0.8.0. Renamed from range to the name M3 uses; 1.0 removed the `.range` and `.range-field` hosts.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |

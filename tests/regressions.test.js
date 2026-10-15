@@ -1690,7 +1690,7 @@ describe('Icon selectors keyed on <i>, second sweep', () => {
   test('the slider inset icon sits in the active track', () => {
     assertIconIsAClass(
       'slider inset icon',
-      /\.slider\b|\.range\b/,
+      /\.slider\b/,
       /font-size:\s*var\(--md-comp-slider-icon-size\)/
     );
   });

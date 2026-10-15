@@ -157,7 +157,7 @@ Materialize names, and markup that 0.8.0 corrected. Old markup in this table sti
 | `.materialboxed` | `.lightboxed` with `tabindex="0" role="button"` |
 | `<div class="chip">` | `<span class="chip">`, or `<button type="button" class="chip">` when it acts. A filter chip is `input.chip-input` with a `label.chip` |
 | `<i class="close">` in a chip | `<button type="button" class="close" aria-label="Remove …">` holding the icon |
-| `.carousel-slider` | `.carousel.flat` |
+| `.carousel-slider` | `.carousel.hero`, or `.carousel.uncontained` for full-size items |
 | `a.breadcrumb` | `<nav aria-label="Breadcrumb"><ol><li><a>`, with `aria-current="page"` on the last crumb |
 | `ul.pagination` | `<nav class="pagination" aria-label="Pagination"><ol>` |
 | `.page-footer`, `.footer-copyright` | A bare `<footer>` with `<nav>` link columns and a trailing `<small>` |
@@ -196,8 +196,15 @@ These still work in 0.x and stop working in 1.0. Replace them now; each replacem
 | `<hr>` between menu items | `<li class="divider" role="separator"></li>` |
 | `<button>` or `.btn` as a file trigger | `<label class="button">` wrapping the input |
 | `Expressive.Range` | `Expressive.Slider` |
+| `.extra` on a common button | `.medium` for the 56dp button; its label grows to `title-medium`. `circle extra` is still the FAB |
+| A `<span>` after a radio or switch input | Nothing: the input draws the control and the label text sits beside it |
+| `<div class="switch"><label>` | `<label class="switch">` wrapping the checkbox |
+| `.range`, `.range-field` slider hosts | `.slider`, or a `<label>` wrapping the input |
+| `ul.tabs` with `li.tab` | `<a>` links directly in `nav.tabs` |
+| Carousel `.flat`, `fullWidth: true` | An M3 layout such as `.hero` or `.uncontained` |
+| The `background`, `on-background`, `surface-variant` and `surface-tint` roles, their `-light`/`-dark` pairs and classes | `surface`, `on-surface`, `surface-container-highest` and `primary` |
 
-Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git "material-icons|<i[ >]|hide-on-(small-only|small-and-down|med-only|xxl-only)|show-on-(small|xxl)\b|no-padding|center-block|no-select|\bpreloader\b|\"(datepicker|timepicker)\"|searchbar|dialog[^>]*\b(bottom|right|left)(-sheet)?\b|\.handle\b|tooltip[^\"]*\bmax\b|Expressive\.Range" .`
+Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git "material-icons|<i[ >]|hide-on-(small-only|small-and-down|med-only|xxl-only)|show-on-(small|xxl)\b|no-padding|center-block|no-select|\bpreloader\b|\"(datepicker|timepicker)\"|searchbar|dialog[^>]*\b(bottom|right|left)(-sheet)?\b|\.handle\b|tooltip[^\"]*\bmax\b|Expressive\.Range|class=\"tab\b|carousel[^\"]*\bflat\b|fullWidth|(-color-|[\" .])(on-background|surface-variant|surface-tint)\b|-color-background\b" .`
 
 The `<i[ >]` and dialog patterns over-match, so check each hit by hand. `.hide-on-med-and-down` and `.hide-on-med-and-up` are current helpers, not aliases; keep them.
 
@@ -207,7 +214,7 @@ The `<i[ >]` and dialog patterns over-match, so check each hit by hand. `.hide-o
 
 These keep their class names but look different. Compare a page before and after, and decide with the user which to keep.
 
-- Button sizes (0.8.0): `small` is 40dp, not 32dp; the old 32dp button is `xsmall`. `large` is 96dp, not 56dp; the old 56dp button is `medium`, and `extra` still means 56dp. The default inset is 16dp on both sides.
+- Button sizes (0.8.0): `small` is 40dp, not 32dp; the old 32dp button is `xsmall`. `large` is 96dp, not 56dp; the old 56dp button is `medium`. Before 1.0 `extra` also meant 56dp; in 1.0 it only marks the `circle extra` FAB. The default inset is 16dp on both sides.
 - `button.circle` with no size class has a 20px glyph instead of 24px (0.8.0). Use `.icon-button`, or `.circle.medium`, to keep 24px.
 - A button's height is a `min-height` (0.11.0). A rule that shrinks a button with `height` must also set `min-height`, or set `--md-comp-filled-button-container-height`.
 - The default theme seed is Mist Iris `#c6a0f6` (0.13.0). Set `--md-source` or Sass `$md-source` to keep the brand color.

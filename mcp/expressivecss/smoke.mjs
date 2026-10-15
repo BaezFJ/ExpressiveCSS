@@ -990,10 +990,18 @@ const transport = new StdioClientTransport({
     '<button class="extra">Compose</button>',
     '<div style="background: var(--md-sys-color-surface-variant)"></div>',
     'Expressive.Range.init(el);',
+    '<div class="range"><input type="range" aria-label="Volume"></div>',
   ].join('\n'));
   const removed = lint([removedMarkup]);
-  const removedIds = [...removed.stdout.matchAll(/removed-in-1-0\.html:(\d+):\d+ (legacy-[\w-]+)/gu)].map(([, line, id]) => `${line} ${id}`);
-  assert.deepEqual(removedIds, ['3 legacy-material-icons', '4 legacy-picker-root', '5 legacy-variant-alias', '6 legacy-markup-path', '7 legacy-color-role', '8 legacy-range-export'], removed.stdout);
+  const removedIds = [...removed.stdout.matchAll(/removed-in-1-0\.html:(\d+):\d+ (legacy-[\w-]+)/gu)].map(([, line, id]) => `${line} ${id}`).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+  assert.deepEqual(removedIds, ['3 legacy-material-icons', '4 legacy-picker-root', '5 legacy-variant-alias', '6 legacy-markup-path', '7 legacy-color-role', '8 legacy-range-export', '9 legacy-renamed-component'], removed.stdout);
+  // Unclosed tags must not make the tag patterns backtrack: each of these took
+  // seconds at this size before the patterns stopped at `<`.
+  const unclosedMarkup = path.join(outsideDir, 'unclosed.html');
+  await writeFile(unclosedMarkup, ['<input type="radio" ', '<i ', '<li ', '<dialog class="x '].map((tag) => tag.repeat(Math.ceil(50_000 / tag.length))).join('\n'));
+  const unclosedStart = performance.now();
+  lint([unclosedMarkup]);
+  assert.ok(performance.now() - unclosedStart < 5_000, 'tag patterns backtrack on unclosed markup');
   // Files the bounded reader refuses, and inspections that stop early, fail instead of passing silently.
   const linkedMarkup = path.join(outsideDir, 'linked.html');
   const crowdedMarkup = path.join(outsideDir, 'crowded.html');

@@ -163,7 +163,7 @@ const LegacyPatternList = [
     id: 'legacy-i-icon',
     severity: 'high',
     description: 'A bare `<i>` is not an icon in 1.0; write `<span class="material-symbols" aria-hidden="true">`.',
-    pattern: /<i\b[^>]*\bclass\s*=\s*["'][^"']*(?<![-\w])material-symbols/g,
+    pattern: /<i\b[^<>]*\bclass\s*=\s*["'][^"']*(?<![-\w])material-symbols/g,
   },
   {
     id: 'legacy-visibility-alias',
@@ -180,8 +180,8 @@ const LegacyPatternList = [
   {
     id: 'legacy-renamed-component',
     severity: 'high',
-    description: '`.preloader` and `.searchbar` were removed in 1.0; use `.progress.circular` and `.search-bar`.',
-    pattern: /(?<![-\w])(?:preloader|searchbar)(?![-\w])/g,
+    description: '`.preloader`, `.searchbar` and the `.range` / `.range-field` slider hosts were removed in 1.0; use `.progress.circular`, `.search-bar` and `.slider`.',
+    pattern: /(?<![-\w])(?:preloader|searchbar)(?![-\w])|\bclass\s*=\s*["'][^"']*(?<![-\w])range(?:-field)?(?![-\w])/g,
   },
   {
     id: 'legacy-picker-root',
@@ -193,7 +193,7 @@ const LegacyPatternList = [
     id: 'legacy-sheet-class',
     severity: 'high',
     description: 'Sheet aliases were removed in 1.0; use `dialog.bottom-sheet` with `.drag-handle`, and `dialog.side-sheet` (add `.start` for the start edge).',
-    pattern: /<dialog\b[^>]*\bclass\s*=\s*["'][^"']*(?<![-\w])(?:bottom|right|left|right-sheet|left-sheet)(?![-\w])|\bclass\s*=\s*["'][^"']*(?<![-\w])handle(?![-\w])/g,
+    pattern: /<dialog\b[^<>]*\bclass\s*=\s*["'][^"']*(?<![-\w])(?:bottom|right|left|right-sheet|left-sheet)(?![-\w])|\bclass\s*=\s*["'][^"']*(?<![-\w])handle(?![-\w])/g,
   },
   {
     id: 'legacy-variant-alias',
@@ -205,7 +205,7 @@ const LegacyPatternList = [
     id: 'legacy-markup-path',
     severity: 'high',
     description: 'Pre-1.0 markup paths were removed in 1.0: put tab links directly in `nav.tabs` (no `li.tab`), let a radio label hold its text without a following `<span>`, and use `.medium` for a 56dp common button (`.extra` only marks `circle extra` FABs).',
-    pattern: /<li\b[^>]*\bclass\s*=\s*["'][^"']*(?<![-\w])tab(?![-\w])|<input\b[^>]*\btype\s*=\s*["']radio["'][^>]*>\s*<span\b|\bclass\s*=\s*["'](?![^"']*(?<![-\w])circle(?![-\w]))[^"']*(?<![-\w])extra(?![-\w])/g,
+    pattern: /<li\b[^<>]*\bclass\s*=\s*["'][^"']*(?<![-\w])tab(?![-\w])|<input\b[^<>]*\btype\s*=\s*["']radio["'][^<>]*>\s*<span\b|\bclass\s*=\s*["'](?![^"']*(?<![-\w])circle(?![-\w]))[^"']*(?<![-\w])extra(?![-\w])/g,
   },
   {
     id: 'legacy-carousel-flat',

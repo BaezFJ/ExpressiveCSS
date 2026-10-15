@@ -1905,6 +1905,31 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     }
   });
 
+  browserTest(`Tabs started while hidden show the current panel once visible (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      // A tab bar in a closed dialog or sheet: the track is 0px wide when it is built.
+      await page.setContent(`<style>${css}</style><div id="wrap" style="display:none;width:320px">
+        <nav class="tabs" aria-label="Sections"><a href="#one">One</a><a href="#two">Two</a><a href="#three" class="active">Three</a></nav>
+        <section id="one"><button>First action</button></section><section id="two"><button>Second action</button></section><section id="three"><button>Third action</button></section></div>`);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => {
+        window.tabs = Expressive.Tabs.init(document.querySelector('nav'), { swipeable: true });
+        document.getElementById('wrap').style.display = 'block';
+      });
+      await page.waitForFunction(() => {
+        const track = document.querySelector('.tabs-content').getBoundingClientRect();
+        return Math.abs(document.getElementById('three').getBoundingClientRect().left - track.left) < 2;
+      });
+      assert.equal(await page.evaluate(() => document.getElementById('three').inert), false);
+      await expect(page.locator('a[aria-current="page"]')).toHaveAttribute('href', '#three');
+    } finally {
+      try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }
+    }
+  });
+
   browserTest(`Tabs threshold keeps native links and ordinary panels (${engine})`, async () => {
     const browser = await type.launch();
     let page;

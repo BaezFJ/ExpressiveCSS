@@ -33,16 +33,9 @@
   @include typescale("body-large");
 }
 
-.switch label {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  user-select: none;
-}
-
-// Paint the switch on the checkbox.
-.switch [type="checkbox"] {
+// Paint the switch on the checkbox. The class goes on the <label> that wraps
+// it; a checkbox nested deeper is an ordinary checkbox.
+.switch > [type="checkbox"] {
   appearance: none;
   flex: 0 0 var(--md-comp-switch-track-width);
   box-sizing: border-box;
@@ -108,8 +101,7 @@
   }
 }
 
-.switch:has(> [type="checkbox"]:disabled),
-.switch:has([type="checkbox"]:disabled) label {
+.switch:has(> [type="checkbox"]:disabled) {
   color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   cursor: default;
 }

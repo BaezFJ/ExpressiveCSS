@@ -1010,7 +1010,7 @@ Three **selection controls**. They are not interchangeable.
 
 ## 8.6 Sliders
 
-**M3:** Sliders (M3 Expressive sizes and stops). **ExpressiveCSS:** `<input type="range">` in `.slider` (or a `<label>`); `.range` and `.range-field` are the older names. Plugin: `Expressive.Slider` (`Expressive.Range` is a retired alias). **Not** in `AutoInit()`; `Slider.Init()` runs at import.
+**M3:** Sliders (M3 Expressive sizes and stops). **ExpressiveCSS:** `<input type="range">` in `.slider` (or a `<label>`). Plugin: `Expressive.Slider` (`Expressive.Range` is a retired alias). **Not** in `AutoInit()`; `Slider.Init()` runs at import.
 
 **Use when** the user picks a value along a continuum (volume, brightness, price) and the result can update live.
 

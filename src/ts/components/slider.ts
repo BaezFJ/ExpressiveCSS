@@ -180,7 +180,7 @@ export class Slider extends Component<SliderOptions> {
     // `.slider` is the documented host now; without it here a dual-handle
     // control could not find its wrapper, so the handles never clamped and the
     // shared start/end fractions never tracked the interval.
-    return this.el.closest('.slider, .range, .range-field, label');
+    return this.el.closest('.slider, label');
   }
 
   _clampDual() {

@@ -349,7 +349,7 @@ on. The five rules:
    selectors used to make it themselves with `i` versus `span`, and all five
    broke silently the day the canonical icon became a `<span>` — icon+label
    buttons lost their leading inset, icon-only toolbar actions turned into text
-   pills. `i` stays in `$icon` for pre-0.8.0 markup.
+   pills. `i` stayed in `$icon` for pre-0.8.0 markup until 1.0 removed it.
 
    Icons are `<span class="material-symbols">`, and each one declares itself:
    `aria-hidden="true"` for decoration (the usual case, with the enclosing
@@ -357,7 +357,8 @@ on. The five rules:
    something no neighbouring text does. **Hiding an icon hides everything inside
    it** — that is how a badge count nested in an icon becomes inaudible, and
    `aria-hidden="false"` on the descendant does not rescue it. The ligature is
-   real text and is announced. `<i>` still works and is undocumented. The size and
+   real text and is announced. An `<i>` with an icon class still renders; a bare
+   `<i>` is not an icon since 1.0. The size and
    float modifiers hang off the `$_icon` class list in
    `components/_icons-material-design.scss`, never off the `i` element — they were
    keyed on `i` in `base/_global.scss`, which meant the canonical `<span>` form
@@ -516,8 +517,9 @@ alive while pretending one had died.
 either.** `.small` was 32dp and `.large` 56dp; M3 names those `xsmall` and
 `medium`, and its `small` — 40dp — is the default size. Holding `.small` at
 32dp would put two names on one rung and leave M3's small with none, so the
-whole ladder would be off by one. `.extra` still resolves to the 56dp
-geometry, so `class="button extra"` is unchanged; `.small` and `.large` are
+whole ladder would be off by one. `.extra` resolved to the 56dp geometry
+until 1.0, which removed that size alias and left `.extra` marking only the
+`circle extra` FAB; `.small` and `.large` were
 breaks, recorded in the CHANGELOG's migration notes. This is a 1.0 change, and
 the only reason it is not a `.slider`-style content test is that a size has no
 content to tell it apart by.

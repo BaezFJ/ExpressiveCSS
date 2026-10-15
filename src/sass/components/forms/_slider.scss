@@ -3,13 +3,13 @@
 // Sliders.
 //
 // Anatomy is the HTML. An <input type="range"> is the control. A wrapping
-// .slider is the host (.range and .range-field are the older names).
+// .slider is the host, or a <label> wrapping the input.
 // The plugin is Expressive.Slider.
 //
 // Variants (M3 Expressive):
 //   standard   default. Active from the start to the handle.
 //   .centered  active grows from the midpoint to the handle.
-//   dual       two inputs in one .range; active is between the handles.
+//   dual       two inputs in one .slider; active is between the handles.
 //
 // Orientation: horizontal (default) or .vertical.
 // Size on the host: default XS, .s / .small, .m / .medium, .l / .large, .xl.
@@ -32,7 +32,7 @@
 // M3 calls this component "Slider", so `.slider` is the name. It was the image
 // slideshow's host before 0.8.0. The slideshow is gone in 0.8.0, so the class
 // belongs to this component and nothing else.
-$_host: ".slider, .range, .range-field, label:has(> [type='range'])";
+$_host: ".slider, label:has(> [type='range'])";
 
 :is(#{$_host}),
 input[type="range"] {

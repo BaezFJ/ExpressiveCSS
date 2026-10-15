@@ -193,8 +193,7 @@ $_vibrant: "#{$_toolbar}.vibrant";
     margin: 0;
   }
 
-  // Spacer between leading and trailing actions. `.max` on a *child* is the
-  // spacer; on the bar itself it is the docked alias.
+  // Spacer between leading and trailing actions: a `.max` child.
   > .max {
     flex: 1 1 auto;
     align-self: stretch;

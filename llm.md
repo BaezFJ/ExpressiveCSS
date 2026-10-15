@@ -1181,8 +1181,6 @@ We provide easy to use classes to hide/show content on specific screen sizes.
 | `.show-on-medium-and-up` | Shown from Medium (`>= 600px`) |
 | `.show-on-medium-and-down` | Shown on Compact and Medium (`< 840px`) |
 
-Legacy `small`, `med`, and `xxl` utility names remain aliases for compatibility.
-
 #### Usage
 
 ```html
@@ -4028,7 +4026,7 @@ Set these on the container to resize a layout.
 
 ## Progress indicators
 
-Native and custom progress use system colors in forced-colors mode, outline empty linear tracks, and preserve circular value segments. Reduced motion retains static feedback, including the legacy preloader. Browser emulation checks do not replace Windows high-contrast or screen-reader review.
+Native and custom progress use system colors in forced-colors mode, outline empty linear tracks, and preserve circular value segments. Reduced motion retains static feedback. Browser emulation checks do not replace Windows high-contrast or screen-reader review.
 
 Activity and progress indicators for content that takes time to load.
 
@@ -6380,7 +6378,7 @@ The `vibrant` *attribute* is a different thing, and the bar deliberately does no
 
 ### Docked
 
-`docked`, also accepted as `max`, stretches the bar to the full width, drops the stadium and the elevation, and spaces the actions. Use it for page actions at the bottom of the screen; destinations belong on a navigation bar. A child `.max` is a spacer, not the bar.
+`docked` stretches the bar to the full width, drops the stadium and the elevation, and spaces the actions. Use it for page actions at the bottom of the screen; destinations belong on a navigation bar. A child `.max` is a spacer, not the bar.
 
 ```html
 <div class="toolbar docked">
@@ -7705,7 +7703,7 @@ Sliders handle a maximum of zero and update value-label placement when the input
 
 Material Design 3 sliders, from the HTML.
 
-An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label; `.range` and `.range-field` are the older names and still work.
+An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label.
 
 Labels and track gaps align with native handle travel after resizing in LTR, RTL and vertical layouts. Vertical values increase from bottom to top. Paired inputs accept native track clicks and prevent crossing; use matching bounds and steps. Application-owned numeric fields can assign the range value and dispatch an `input` event to synchronize its label and track. Forced-colors tracks use system colors. Physical devices, screen readers and actual Windows contrast themes still need manual review.
 

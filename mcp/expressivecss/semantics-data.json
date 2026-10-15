@@ -769,7 +769,7 @@
       },
       "forms/slider": {
         "status": "enforced",
-        "note": "Swept 0.8.0. Renamed from range to the name M3 uses; `.range` stays as an alias.",
+        "note": "Swept 0.8.0. Renamed from range to the name M3 uses; 1.0 removed the `.range` and `.range-field` hosts.",
         "rules": [
           {
             "id": "range-labelled",
