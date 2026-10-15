@@ -17,6 +17,26 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the install command for the agent skills, the MCP server configuration and
   the `expressivecss-lint` command. Its skills table is read from each
   `skills/<name>/SKILL.md`, so a new skill appears without editing the page.
+- Menubar component: a `.menubar` of `.menu-trigger` buttons gets the menubar
+  and menuitem roles, one Tab stop, Left, Right, Home and End along the bar,
+  and Left and Right between open menus. Each item opens an ordinary Menu.
+  AutoInit starts it.
+- Mega menu component: a `nav.mega-menu` of links and buttons whose
+  `.mega-menu-panel` popovers open wide panels of grouped links below the bar.
+  CSS only, on native popovers.
+- Tour component: a `.tour` manual popover walks through `<section>` steps
+  beside each `data-tour-target`, with Back, Next, Done, progress text,
+  skipped missing targets, Escape and focus return. `Expressive.Tour` adds
+  `start()`, `go()` and `end()`.
+- Image compare component: a `.image-compare` reveals its second image up to
+  a native range input's value. The `ImageCompare` behavior moves the
+  divider, and Slider no longer initializes that range.
+- Calendar component: a page-rendered `table.calendar` draws a month grid
+  with weekday headers, today, outside days and event chips. CSS only.
+- Sortable lists: a `.sortable` list reorders by dragging an item's
+  `.drag-handle` or with its `[data-move]` buttons, announces each move and
+  fires `change` with `{ item, from, to }`. Semantics require the buttons.
+- `<input type="color">` is drawn as a round swatch of its color.
 - Description list component: `dl.description-list` lays out label and value
   pairs in two columns with a divider per pair, stacking each label above its
   value at Compact widths. CSS only.

@@ -1,0 +1,59 @@
+@use "../abstracts" as *;
+
+// Menubar. An application's row of menus (File, Edit, View) on a .menubar of
+// .menu-trigger buttons; each opens an ordinary <menu>. The Menubar
+// component adds the menubar role and keyboard contract. The bar is a
+// surface-container row of text-styled items, and an item whose menu is open
+// stays selected.
+//
+// Tokens:
+//   --md-comp-menubar-container-color   surface-container
+//   --md-comp-menubar-shape             12px
+//   --md-comp-menubar-item-height       40px
+
+.menubar {
+  --md-comp-menubar-container-color: var(--md-sys-color-surface-container);
+  --md-comp-menubar-shape: 12px;
+  --md-comp-menubar-item-height: 40px;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  padding: 4px;
+  border-radius: var(--md-comp-menubar-shape);
+  background-color: var(--md-comp-menubar-container-color);
+
+  > .menu-trigger {
+    min-block-size: var(--md-comp-menubar-item-height);
+    margin: 0;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 8px;
+    background: none;
+    color: var(--md-sys-color-on-surface);
+    font: inherit;
+    cursor: pointer;
+    @include typescale("label-large");
+    @include focus-visible;
+
+    &:hover {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+    }
+
+    &[aria-expanded="true"] {
+      background-color: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-on-secondary-container);
+    }
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+
+    > .menu-trigger[aria-expanded="true"] {
+      outline: 2px solid Highlight;
+    }
+  }
+}

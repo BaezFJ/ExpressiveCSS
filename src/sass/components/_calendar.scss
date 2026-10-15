@@ -1,0 +1,128 @@
+@use "../abstracts" as *;
+
+// Calendar. A month of days with their events, on a native <table> the page
+// renders: a <caption> with the month, a header row of weekdays, then a row
+// per week. Each day cell starts with a <time> holding the day number and
+// may hold a .calendar-events list of links or text. The page owns the dates,
+// navigation and events; the framework draws the grid.
+//
+//   td.outside            a day from the previous or next month
+//   td[aria-current=date] today
+//
+// At Compact widths days get shorter and event chips tighter; long titles
+// ellipsize rather than hide, so each event stays a visible target.
+//
+// Tokens:
+//   --md-comp-calendar-day-min-height     96px (Compact: 64px)
+//   --md-comp-calendar-outline-color      outline-variant
+//   --md-comp-calendar-event-container-color  primary-container
+//   --md-comp-calendar-event-color            on-primary-container
+
+table.calendar {
+  --md-comp-calendar-day-min-height: 96px;
+  --md-comp-calendar-outline-color: var(--md-sys-color-outline-variant);
+  --md-comp-calendar-event-container-color: var(--md-sys-color-primary-container);
+  --md-comp-calendar-event-color: var(--md-sys-color-on-primary-container);
+
+  inline-size: 100%;
+  margin: $element-top-margin 0 $element-bottom-margin;
+  border-collapse: collapse;
+  table-layout: fixed;
+  color: var(--md-sys-color-on-surface);
+
+  > caption {
+    padding-block-end: 12px;
+    text-align: start;
+    @include typescale("title-large");
+  }
+
+  th {
+    padding: 8px 4px;
+    border: 0;
+    color: var(--md-sys-color-on-surface-variant);
+    text-align: center;
+    @include typescale("label-medium");
+
+    abbr {
+      text-decoration: none;
+    }
+  }
+
+  td {
+    block-size: var(--md-comp-calendar-day-min-height);
+    padding: 4px;
+    border: 1px solid var(--md-comp-calendar-outline-color);
+    vertical-align: top;
+    overflow: hidden;
+
+    > time {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-inline-size: 28px;
+      block-size: 28px;
+      border-radius: 14px;
+      @include typescale("label-large");
+    }
+
+    &.outside > time {
+      color: var(--md-sys-color-on-surface-variant);
+      opacity: 0.6;
+    }
+
+    &[aria-current="date"] > time {
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+    }
+  }
+
+  .calendar-events {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 4px 0 0;
+    padding: 0;
+    list-style: none;
+
+    > li {
+      overflow: hidden;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background-color: var(--md-comp-calendar-event-container-color);
+      color: var(--md-comp-calendar-event-color);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      @include typescale("label-small");
+
+      > a {
+        color: inherit;
+        text-decoration: none;
+        @include focus-visible;
+      }
+    }
+  }
+
+  // Compact: shorter days and tighter chips. Chips keep their text, which
+  // ellipsizes, so every event stays a visible, reachable target.
+  @include bp-down("medium") {
+    --md-comp-calendar-day-min-height: 64px;
+
+    td {
+      padding: 2px;
+    }
+
+    .calendar-events > li {
+      padding: 1px 3px;
+    }
+  }
+
+  @media (forced-colors: active) {
+    td[aria-current="date"] > time {
+      outline: 2px solid CanvasText;
+    }
+
+    .calendar-events > li {
+      border: 1px solid CanvasText;
+    }
+  }
+}

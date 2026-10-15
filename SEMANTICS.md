@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**84 of 84 rows enforced; 0 remaining.**
+**89 of 89 rows enforced; 0 remaining.**
 
-80 of those rows are components - a part of the framework an author writes markup for.
+85 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 80 components declare conformance debt.**
+**3 of 85 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -210,6 +210,18 @@ Icon-only controls need accessible names.
 - **fab-no-small-variant** - The 40dp small FAB has been removed. Use circle extra for a 56dp FAB.
 - **extended-fab-requires-size** - The baseline extended FAB has been removed. Specify extend small, extend medium or extend large.
 - **fab-no-surface-color** - Use a primary, secondary or tertiary container color for a FAB instead of a surface color.
+
+### calendar
+
+Added with the calendar component. A native table the page renders; its caption and column headers are what tell a screen reader the month and weekday of each day.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `calendar-is-a-table` | forbid | `.calendar:not(table)` | must not match |
+| `calendar-has-a-caption` | forbid | `table.calendar:not(:has(> caption))` | must not match |
+
+- **calendar-is-a-table** - Write .calendar as a <table> with a <caption> and a header row of weekdays. A grid of divs loses the day-to-weekday relationship.
+- **calendar-has-a-caption** - Give the calendar a <caption> naming the month, such as "October 2026". Without it nothing says which month the days belong to.
 
 ### cards
 
@@ -403,7 +415,7 @@ Swept 0.8.0. A behavior, not a component: the picker plugins generate this posit
 
 ### drag-handle
 
-The affordance that says a thing can be dragged, added with the drag handle component (#34). Which element it is *is* the whole semantic: a <span aria-hidden="true"> when it is decoration - the usual case, and what a bottom sheet wants, since Escape already dismisses the sheet and the drag is a pointer nicety on top - and a <button> with a name when something is genuinely wired to it. The two rules below hold that split, and the sheet leans on it: `button.drag-handle` is where every interactive state in the partial is scoped, which is only correct because nothing else can be interactive. What no rule can check is the thing this component is most likely to be misused for. Dragging is a pointer gesture, so any outcome reachable only by dragging is unreachable without one; the framework ships no reordering behaviour to hang off this handle, and a page that builds one owes it a keyboard path of its own. The docs say so plainly rather than implying the handle supplies it. Every selector below names `.handle` beside `.drag-handle`: the bottom sheet styles the pre-1.0 spelling too, and an alias the framework blesses is an alias these rules have to reach. The first rule is deliberately not fragmentSafe - what it detects is a *missing* aria-hidden, and a fragment omits by nature.
+The affordance that says a thing can be dragged, added with the drag handle component (#34). Which element it is *is* the whole semantic: a <span aria-hidden="true"> when it is decoration - the usual case, and what a bottom sheet wants, since Escape already dismisses the sheet and the drag is a pointer nicety on top - and a <button> with a name when something is genuinely wired to it. The two rules below hold that split, and the sheet leans on it: `button.drag-handle` is where every interactive state in the partial is scoped, which is only correct because nothing else can be interactive. What no rule can check is the thing this component is most likely to be misused for. Dragging is a pointer gesture, so any outcome reachable only by dragging is unreachable without one; the Sortable behavior, the one reordering the framework ships, pairs a decorative handle with Move up and Move down buttons, and a page that builds its own owes it a keyboard path too. The docs say so plainly rather than implying the handle supplies it. Every selector below names `.handle` beside `.drag-handle`: the bottom sheet styles the pre-1.0 spelling too, and an alias the framework blesses is an alias these rules have to reach. The first rule is deliberately not fragmentSafe - what it detects is a *missing* aria-hidden, and a fragment omits by nature.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
@@ -623,6 +635,20 @@ Swept 0.8.0. The canonical icon is <span class="material-symbols">, and an icon 
 - **icon-not-i-element** - <i> means idiomatic text. The canonical icon element is <span class="material-symbols">.
 - **icon-hidden-or-labelled** - The ligature is real text and is read out verbatim. An icon is either decoration - aria-hidden="true", with the enclosing control carrying the name - or an image in its own right, role="img" with a label. It is never left as bare text.
 
+### image-compare
+
+Added with the image compare component. A native range input is the control, so its slider semantics are the browser's; both images need alt text that says which is which.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `image-compare-has-a-range` | forbid | `.image-compare:not(:has(> input[type="range"]))` | must not match |
+| `image-compare-range-is-named` | require-accessible-name | `.image-compare > input[type="range"]` | must end up with an accessible name |
+| `image-compare-images-have-alt` | forbid | `.image-compare > img:not([alt])` | must not match |
+
+- **image-compare-has-a-range** - Put an <input type="range"> in the .image-compare. It is the control people use, by pointer or keyboard; without it the divider cannot move.
+- **image-compare-range-is-named** - Name the range, such as aria-label="Compare before and after". It is the only control and has no visible label.
+- **image-compare-images-have-alt** - Give each image alt text that says which it is, such as "Before: faded photo". The comparison means nothing if neither image is described.
+
 ### keypad
 
 Added with the keypad and keyboard component. The container is a named group, and every key is a native button that must not submit the form around it.
@@ -688,8 +714,10 @@ Swept 0.8.0.
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `list-item-not-selected` | forbid | `li[aria-selected]:not([role])` | must not match |
+| `sortable-items-move-without-dragging` | forbid | `.sortable > li:not(:has([data-move="up"]):has([data-move="down"]))` | must not match |
 
 - **list-item-not-selected** - aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role’s keyboard contract, or drop the attribute.
+- **sortable-items-move-without-dragging** - Give each .sortable item a [data-move="up"] and a [data-move="down"] button, in the row or in a menu. Dragging is a pointer gesture; the buttons are the keyboard path and the single-pointer alternative WCAG 2.5.7 requires.
 
 ### loading-indicator
 
@@ -725,6 +753,24 @@ Added with the marquee component. The second group is a visual copy for the seam
 
 - **marquee-copy-is-hidden** - The second .marquee-content repeats the first so the loop has no gap. Mark it aria-hidden="true" and give each link or button in it tabindex="-1", or a screen reader reads every item twice.
 
+### mega-menu
+
+Added with the mega menu component. A named nav of links and disclosure buttons whose panels are native popovers; the browser owns the expanded state, so no menu role is promised.
+
+**Rejected role:** `menu` is not withheld but declined - its items are links and disclosure buttons reached with Tab in reading order - a menu role promises arrow-key navigation and menuitems that site navigation does not have, and the menubar component is the place for that contract. `mega-menu-is-not-a-composite-widget` enforces that, keeping every composite role out.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `mega-menu-is-a-named-nav` | forbid | `.mega-menu:not(nav)` | must not match |
+| `mega-menu-panel-is-a-popover` | forbid | `.mega-menu-panel:not([popover])` | must not match |
+| `mega-menu-is-not-a-composite-widget` | forbid-composite-roles | `.mega-menu` | must not match with any composite role |
+| `mega-menu-items-are-not-menuitems` | forbid | `.mega-menu :is([role="menu"], [role="menuitem"])` | must not match |
+
+- **mega-menu-is-a-named-nav** - Write .mega-menu as a <nav> with an aria-label. It is site navigation: a landmark people jump to, not a generic row.
+- **mega-menu-panel-is-a-popover** - Give .mega-menu-panel the popover attribute and open it with popovertarget on its button. The browser then owns opening, Escape, light dismiss and the button's expanded state.
+- **mega-menu-is-not-a-composite-widget** - A mega menu is links and disclosure buttons reached with Tab. A menu, menubar or any other composite role promises arrow-key navigation it does not have; use a menubar for application commands.
+- **mega-menu-items-are-not-menuitems** - Leave the bar's links, buttons and panels without menu or menuitem roles. They are reached with Tab, and those roles promise arrow keys and typeahead the mega menu does not have.
+
 ### menu
 
 Swept 0.8.0. A [data-context-menu] trigger is a region: the menu opens at the pointer and the region carries no expanded state.
@@ -736,6 +782,18 @@ Swept 0.8.0. A [data-context-menu] trigger is a region: the menu opens at the po
 
 - **menu-children-are-list-items** - <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
 - **context-menu-region-is-not-a-control** - data-context-menu goes on a region of content. A button or link already has an action for Enter and click; give it its own menu trigger instead.
+
+### menubar
+
+Added with the menubar component. The Menubar component sets role=menubar on the bar and role=menuitem on each trigger at runtime and implements the menubar keyboard contract over Menu; tests/menubar-browser.test.js checks it.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `menubar-is-named` | require-accessible-name | `.menubar` | must end up with an accessible name |
+| `menubar-holds-only-triggers` | forbid | `.menubar > :not(.menu-trigger)` | must not match |
+
+- **menubar-is-named** - Name the menubar with aria-label, such as "Editor". A page can hold several, and the name says which commands they are.
+- **menubar-holds-only-triggers** - A .menubar holds only .menu-trigger buttons. Anything else breaks the menubar's arrow-key order; put the menus themselves after the bar.
 
 ### message
 
@@ -1100,6 +1158,20 @@ Swept 0.8.0.
 | `css-tooltip-is-described-by` | forbid | `:is(a, button):has(> .tooltip):not([aria-describedby])` | must not match |
 
 - **css-tooltip-is-described-by** - A .tooltip inside its control is swallowed: with an aria-label present the label wins and the tooltip is never announced, and without one the two run together. Give the tooltip an id and point aria-describedby at it.
+
+### tour
+
+Added with the tour component. A manual popover the Tour behavior shows one section at a time; the author writes it as a dialog so the step heading names it when focus arrives.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `tour-is-a-manual-popover` | forbid | `.tour:not([popover="manual"])` | must not match |
+| `tour-is-a-dialog` | require-attr | `.tour` | must have `role` = `dialog` |
+| `tour-steps-name-a-target` | forbid | `.tour > section:not([data-tour-target])` | must not match |
+
+- **tour-is-a-manual-popover** - Write the .tour with popover="manual". An auto popover closes on any outside click, which ends the tour while the user looks at the target.
+- **tour-is-a-dialog** - Give the .tour role="dialog". The behavior labels it with the current step's heading and moves focus to it, and the dialog role is what makes that name announced.
+- **tour-steps-name-a-target** - Each step <section> needs data-tour-target with the id of the element it explains. A step without one is never shown.
 
 ### transitions
 

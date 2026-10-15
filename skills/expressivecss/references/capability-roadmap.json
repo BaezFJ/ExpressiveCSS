@@ -632,6 +632,106 @@
       ]
     },
     {
+      "slug": "mega-menu",
+      "title": "Mega menu",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-15",
+      "scope": "Links and disclosure buttons in a row, wide panels of grouped links below the bar, a turning chevron and current-page state.",
+      "adaptation": "Native popovers opened with popovertarget; the browser owns opening, light dismiss, Escape, focus order and the expanded state.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-15",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the top items as links and disclosure buttons in a named nav, expose the expanded state, keep the panel next in the focus order, close on Escape and do not claim menu roles."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_mega-menu.scss",
+          "sha256": "b758dd7848889422d714b8b1a6f36cb51d99aa74bc9e312de73f08bfbd481f22"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified.",
+          "nextStep": "Open and close each panel with a screen reader in each engine and confirm the expanded state is announced."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/mega-menu-browser.test.js",
+          "name": "chromium: mega menu opens a wide panel of link groups below its button",
+          "scope": "Popover opening from its button, the panel below the bar spanning the window, side-by-side groups, the turning chevron, Tab into the panel, Escape, closed links out of reach and stacked groups on a phone. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "menubar",
+      "title": "Menubar",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-15",
+      "scope": "A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.",
+      "adaptation": "Each item opens an ordinary Menu; the Menubar component adds the menubar and menuitem roles and the roving tab stop at runtime.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-15",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Name the menubar, give it one tab stop, move between items with Left and Right, open a menu with Down, Enter or Space, move between open menus with Left and Right, and close with Escape back to the bar."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/ts/components/menubar.ts",
+          "sha256": "73c7307ad8cf681f85fd4834d90a862e3a941513861529ec25a0663cf81c6e64"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified.",
+          "nextStep": "Operate the menubar with a screen reader in each engine and confirm menu and item announcements; check typeahead across the bar."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/menubar-browser.test.js",
+          "name": "chromium: a menubar has one tab stop and moves between its menus with the arrow keys",
+          "scope": "Menubar and menuitem roles, one tab stop that follows focus, Left, Right, Home and End with wrapping, Down opening on the first item, Right and Left between open menus, flyout rows keeping Right, Escape back to the bar and RTL. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
       "slug": "scrollspy",
       "title": "Scrollspy",
       "kind": "component",
@@ -2405,6 +2505,56 @@
       ]
     },
     {
+      "slug": "calendar",
+      "title": "Calendar",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-15",
+      "scope": "A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize.",
+      "adaptation": "A native table with a caption; the page renders the dates, navigation and events.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-15",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Name the month in a caption, keep weekday column headers, mark today in text as well as color, and keep each event a reachable link or text."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_calendar.scss",
+          "sha256": "46fe1ef955fe033fa3e300bef0e2048c665a84656f4da602ad00eec4da602ec9"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Equal columns, today, outside days, ellipsized event chips, column headers and the phone width are checked in a browser; screen reader output remains unverified.",
+          "nextStep": "Read a month with a screen reader in each engine and confirm the day and weekday are announced with each event."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/calendar-browser.test.js",
+          "name": "chromium: calendar lays out a month grid with today, outside days and event chips",
+          "scope": "Seven equal columns, day height, the today mark, muted outside days, event chips that stay inside their day and ellipsize, event links, column headers and the month at phone width. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
       "slug": "dialogs",
       "title": "Dialogs",
       "kind": "component",
@@ -2885,6 +3035,56 @@
       ]
     },
     {
+      "slug": "tour",
+      "title": "Tour",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-15",
+      "scope": "One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.",
+      "adaptation": "A manual native popover placed with CSS anchor positioning; the Tour behavior moves the anchor and focus.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-15",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Let the user start, skip and end the tour, name the card by the step heading, move focus to it and back afterwards, and skip steps whose target is not shown."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/ts/behaviors/tour.ts",
+          "sha256": "f7aa25d13a8b392871cbe6d601366418fb6b975b6b540a77f220fc143ec79278"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified.",
+          "nextStep": "Take a tour with a screen reader in each engine and confirm each step is announced when it opens."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/tour-browser.test.js",
+          "name": "chromium: a tour steps through its targets beside each one and returns focus",
+          "scope": "Opening from a start button, the card named by the step heading, progress text, skipped missing targets, button visibility per step, placement below each target, releasing the previous target, Escape, focus return and cleanup after hidePopover. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
       "slug": "snackbar",
       "title": "Snackbar",
       "kind": "component",
@@ -3314,6 +3514,56 @@
         }
       ],
       "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "image-compare",
+      "title": "Image compare",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-15",
+      "scope": "Two stacked images, a divider and handle driven by a native range input, keyboard and pointer control, RTL and a focus ring.",
+      "adaptation": "A native range input covers the images invisibly; the ImageCompare behavior writes its value to the divider position.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-15",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Give both images alt text that says which is which, name the range, and keep it operable by keyboard and pointer."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_image-compare.scss",
+          "sha256": "b1630c0d7c232fae99d3b428595c5c8680a92dffd5c2ddb07fe93334782266dd"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified.",
+          "nextStep": "Move the divider with a screen reader in each engine and confirm the value is announced."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/image-compare-browser.test.js",
+          "name": "chromium: image compare reveals the second image up to the range's value",
+          "scope": "The initial value applied on load, each image on its side of the divider, arrow keys moving the divider, the handle focus ring, RTL, named native sliders and Slider leaving the range alone. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

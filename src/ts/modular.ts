@@ -6,6 +6,9 @@ export { Forms } from './behaviors/forms';
 export { Copy } from './behaviors/copy';
 export { Theme } from './behaviors/theme';
 export { PaneResize } from './behaviors/paneResize';
+export { ImageCompare } from './behaviors/imageCompare';
+export { Tour } from './behaviors/tour';
+export { Sortable } from './behaviors/sortable';
 export { AutoInit } from './components/registry';
 export type { AutoInitOptions } from './components/registry';
 
@@ -31,6 +34,7 @@ export type * from './components/mixedChart';
 export type * from './components/questionnaire';
 export type * from './components/datepicker';
 export type * from './components/menu';
+export type * from './components/menubar';
 export type * from './components/lightbox';
 export type * from './components/slider';
 export type * from './components/scrollspy';

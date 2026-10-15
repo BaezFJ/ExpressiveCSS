@@ -259,6 +259,20 @@ export const NAV: DocsGroup[] = [
         aliases: ["/dropdown.html"],
       },
       {
+        id: "mega_menu",
+        label: "Mega menu",
+        route: "/mega-menu.html",
+        description:
+          "Site navigation whose top items open wide panels of grouped links, on native popovers.",
+      },
+      {
+        id: "menubar",
+        label: "Menubar",
+        route: "/menubar.html",
+        description:
+          "An application's row of menus, such as File, Edit and View, with the menubar keyboard contract.",
+      },
+      {
         id: "scrollspy",
         label: "Scrollspy",
         route: "/scrollspy.html",
@@ -460,6 +474,13 @@ export const NAV: DocsGroup[] = [
           "Events in order, each with a time, a title and details, joined by a line.",
       },
       {
+        id: "calendar",
+        label: "Calendar",
+        route: "/calendar.html",
+        description:
+          "A month of days with their events, on a table the page renders.",
+      },
+      {
         id: "dialogs",
         section: "Dialogs and sheets",
         label: "Dialogs",
@@ -519,6 +540,13 @@ export const NAV: DocsGroup[] = [
           "A panel that opens from a button and stays until dismissed, on the native popover attribute.",
       },
       {
+        id: "tour",
+        label: "Tour",
+        route: "/tour.html",
+        description:
+          "A card that walks people through an interface one step at a time, beside each element it explains.",
+      },
+      {
         id: "snackbar",
         label: "Snackbar",
         route: "/snackbar.html",
@@ -568,6 +596,13 @@ export const NAV: DocsGroup[] = [
         route: "/carousel.html",
         description:
           "Material 3 adaptive carousels for visual collections.",
+      },
+      {
+        id: "image_compare",
+        label: "Image compare",
+        route: "/image-compare.html",
+        description:
+          "Two images of the same scene with a divider that reveals one over the other.",
       },
       {
         id: "marquee",

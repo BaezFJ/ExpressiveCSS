@@ -47,6 +47,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Cards
 - Aura
 - Carousel
+- Image compare
 - Drag handle
 - Lists
 - Accordion
@@ -66,8 +67,10 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Empty state
 - Alert
 - Popover
+- Mega menu
 - Stepper
 - Timeline
+- Calendar
 - Stat
 - Description list
 - Tree
@@ -80,6 +83,8 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Auto Init
 - Navigation rail
 - Menu
+- Menubar
+- Tour
 - Media
 - Dialogs
 - Bottom sheet
@@ -323,8 +328,9 @@ Opt an element out when it needs manual options:
 | `Timepicker` | `.timepicker, .time-picker` |
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab-menu` |
+| `Menubar` | `.menubar` |
 
-`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, and Theme behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, ImageCompare, Tour, and Sortable behaviors.
 
 ## Component lifecycle
 
@@ -345,6 +351,7 @@ The main bundle exports:
 
 - `AutoInit`, `Forms`, and `version`
 - `Copy` and `Theme`, the copy button and theme switch behaviors
+- `PaneResize`, `ImageCompare`, `Tour` and `Sortable` behaviors, and the `Menubar` component
 - `Dialogs`, `BottomSheets`, and `SideSheets`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Menu`, and `Lightbox`
@@ -2591,6 +2598,24 @@ instead of laying them over the media; markup can do the same by carrying
 
 ---
 
+## Image compare
+
+Two images of the same scene with a divider that reveals one over the other.
+
+A `.image-compare` holds two `<img>` and a native `<input type="range">`. The range is the control, so keys, drags and taps work as on any slider and its value is announced; it covers the images invisibly. The `ImageCompare` behavior writes the value to `--md-comp-image-compare-position`, which clips the second image and places the divider and handle. RTL starts the first image on the right. Slider leaves this range alone. Give each image alt text that says which it is, and name the range. `Expressive.ImageCompare.sync(range)` places a compare added after load; the root bundle starts the behavior on load, and the modular entry with `ImageCompare.Init()`.
+
+```html
+<div class="image-compare">
+  <img src="before.jpg" alt="Before: the faded original photo" width="800" height="500">
+  <img src="after.jpg" alt="After: the restored photo" width="800" height="500">
+  <input type="range" min="0" max="100" value="50" aria-label="Compare before and after">
+</div>
+```
+
+Tokens: `--md-comp-image-compare-position` (50%, written by the behavior), `--md-comp-image-compare-shape` (16px), `--md-comp-image-compare-divider-color` (`surface`) and `--md-comp-image-compare-handle-size` (40px).
+
+---
+
 ## Marquee
 
 A row of logos, images or text that scrolls without end.
@@ -2832,7 +2857,7 @@ The bar that makes something legible as draggable: a bottom sheet's grabber, the
 
 Which element you write *is* the semantic. A `<span class="drag-handle" aria-hidden="true">` is decoration and is the usual case — the handle draws a bar and contains no text, so exposed it arrives in the reading order as an unlabelled blank. A `<button class="drag-handle">` with an `aria-label` is a control, written only when activating it does something — inside a bottom sheet it always does, and everywhere else that is the page's to arrange. Never `aria-hidden` a button: that hides it from assistive technology without taking it out of the tab order. The hover, focus and pressed states are scoped to the button spelling, so a decorative handle does not light up under a passing pointer.
 
-**Nothing here drags on its own.** ExpressiveCSS ships no reordering behaviour. Two layouts wire a `<button class="drag-handle">`: the bottom sheet below, and the pane layouts, where a handle between two panes resizes them (see Panes, "Resizing"). Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
+**Nothing here drags on its own.** Three places wire it: the bottom sheet below, the pane layouts, where a `<button class="drag-handle">` between two panes resizes them (see Panes, "Resizing"), and sortable lists, where a decorative handle drags its row and Move up and Move down buttons cover keyboard and single-pointer use (see Lists, "Sortable"). Anywhere else the page supplies reordering. Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
 
 The two-column layout is the page's own — a flex or grid row, or a pane layout. The handle is what sits between the columns and needs no wrapper class of its own.
 
@@ -2934,6 +2959,28 @@ Wrap the row in an `<a>` or `<label>` to make the whole item the target. `aria-c
     Inbox
   </a>
 </li>
+```
+
+
+### Sortable
+
+Add `sortable` to a list to let people reorder it. Drag an item by its decorative `.drag-handle`, or press its `[data-move="up"]` and `[data-move="down"]` buttons; every item needs both, in the row (a `.sortable-actions` group) or in a menu, because they are the keyboard path and the single-pointer alternative to dragging. Escape during a drag puts the item back. After each move the list fires a bubbling `change` event whose `detail` is `{ item, from, to }`, and a polite live region announces the position (`Expressive.Sortable.i18n.moved`). `Expressive.Sortable.move(item, index)` works from script. The root bundle starts the behavior on load; with the modular entry, call `Sortable.Init()`.
+
+```html
+<ul class="list sortable" aria-label="Playlist">
+  <li>
+    <span class="drag-handle" aria-hidden="true"></span>
+    <span>Blue in Green</span>
+    <span class="sortable-actions">
+      <button type="button" class="icon-button" data-move="up" aria-label="Move Blue in Green up">
+        <span class="material-symbols" aria-hidden="true">arrow_upward</span>
+      </button>
+      <button type="button" class="icon-button" data-move="down" aria-label="Move Blue in Green down">
+        <span class="material-symbols" aria-hidden="true">arrow_downward</span>
+      </button>
+    </span>
+  </li>
+</ul>
 ```
 
 ---
@@ -4516,6 +4563,34 @@ An `<ol class="timeline">` lists events in the order the page chooses, newest or
 
 ---
 
+## Calendar
+
+A month of days with their events, on a table the page renders.
+
+A `table.calendar` has a `<caption>` naming the month, a header row of weekday `<th scope="col">` cells, then a row per week. Each day `<td>` starts with a `<time datetime>` and may hold a `.calendar-events` list of links or text. Mark days from other months with `outside` and today with `aria-current="date"`. The page owns the dates, the navigation between months and the events; CSS draws seven equal columns, the today mark and event chips that ellipsize. On a phone the days get shorter and chips tighter. CSS only; there is no JavaScript. Use the date picker to choose a date for a field.
+
+```html
+<table class="calendar">
+  <caption>October 2026</caption>
+  <thead>
+    <tr><th scope="col"><abbr title="Sunday">Sun</abbr></th>…</tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="outside"><time datetime="2026-09-27">27</time></td>
+      <td aria-current="date">
+        <time datetime="2026-10-15">15</time>
+        <ul class="calendar-events"><li><a href="/events/standup">Standup</a></li></ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+```
+
+Tokens: `--md-comp-calendar-day-min-height` (96px; 64px Compact), `--md-comp-calendar-outline-color` (`outline-variant`), `--md-comp-calendar-event-container-color` (`primary-container`) and `--md-comp-calendar-event-color` (`on-primary-container`).
+
+---
+
 ## Stat
 
 Key figures in tiles, each with a label, a value and an optional change.
@@ -5134,6 +5209,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Timepicker` | `.timepicker, .time-picker` |
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab-menu` |
+| `Menubar` | `.menubar` |
 
 Snackbar, CharacterCounter, and Slider stay out of this table. Slider still starts itself when the bundle loads. Forms, Chips, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets also run an import-time `Init()`. Chips, Cards, and ExpandingCard appear in the table as well so a later `AutoInit()` can pick up elements added after load.
 
@@ -5317,6 +5393,82 @@ instance.destroy();
 | `isOpen` | Boolean | Whether the menu is open. |
 | `isScrollable` | Boolean | Whether the menu content is scrollable. |
 | `focusedIndex` | Number | Index of the focused item. |
+
+---
+
+## Mega menu
+
+Site navigation whose top items open wide panels of grouped links, on native popovers.
+
+A `nav.mega-menu` holds links and `<button>`s. Each button names a `.mega-menu-panel` with `popovertarget`, so the panel is a native popover: the browser opens it, closes it on Escape or an outside click, puts it next in the Tab order and exposes the button's expanded state. There is no JavaScript and no menu role; these are links read and tabbed in order. The panel opens below the bar, spans the window less `--md-comp-mega-menu-margin`, and lays its `<section>` groups out in as many columns as fit. A `<small>` in a link is a description line. Use a menubar for application commands.
+
+```html
+<nav class="mega-menu" aria-label="Main">
+  <a href="/" aria-current="page">Home</a>
+  <button type="button" popovertarget="products">Products</button>
+  <div id="products" class="mega-menu-panel" popover>
+    <section>
+      <h2>Build</h2>
+      <ul>
+        <li><a href="/editor">Editor<small>Write and preview</small></a></li>
+        <li><a href="/api">API</a></li>
+      </ul>
+    </section>
+  </div>
+  <a href="/pricing">Pricing</a>
+</nav>
+```
+
+Tokens: `--md-comp-mega-menu-container-color` (`surface-container`), `--md-comp-mega-menu-shape` (16px), `--md-comp-mega-menu-margin` (16px) and `--md-comp-mega-menu-column-width` (200px minimum).
+
+---
+
+## Menubar
+
+An application's row of menus, such as File, Edit and View, with the menubar keyboard contract.
+
+A `.menubar` holds `.menu-trigger` buttons, each opening an ordinary Menu written after the bar. The `Menubar` component sets `role="menubar"` on the bar and `role="menuitem"` on each button, and keeps one Tab stop that follows focus. Left and Right move along the bar and wrap, Home and End go to the ends, and both mirror in RTL. Down, Enter and Space open a menu on its first item. In an open menu, Left and Right open the neighbouring menu unless the focused row opens or closes a submenu. Escape closes it and returns to the bar. `AutoInit()` starts it after Menu, and its `menuOptions` (default `{ constrainWidth: false, coverTrigger: false }`) replace each item's Menu options. Name the bar with `aria-label`.
+
+```html
+<div class="menubar" aria-label="Editor">
+  <button type="button" class="menu-trigger" data-target="file-menu">File</button>
+  <button type="button" class="menu-trigger" data-target="edit-menu">Edit</button>
+</div>
+<menu id="file-menu">
+  <li><button type="button">New</button></li>
+</menu>
+<menu id="edit-menu">
+  <li><button type="button">Undo</button></li>
+</menu>
+```
+
+Tokens: `--md-comp-menubar-container-color` (`surface-container`), `--md-comp-menubar-shape` (12px) and `--md-comp-menubar-item-height` (40px).
+
+---
+
+## Tour
+
+A card that walks people through an interface one step at a time, beside each element it explains.
+
+A `.tour` is a `popover="manual"` element with `role="dialog"`, holding one `<section>` per step. Each section's `data-tour-target` names the id of the element it explains. Add a `.tour-progress` line, a `.tour-actions` row with `[data-tour-back]`, `[data-tour-next]` and `[data-tour-done]` buttons, and a `[data-tour-close]` button; a `[data-tour-start="tour-id"]` button starts it. The `Tour` behavior shows one step at a time below its target (above when there is no room), rings the target with `.tour-target` and scrolls it into view, and skips steps whose target is missing or hidden. Back hides on the first step, Next on the last, and Done shows only on the last. The card is named by the step heading and takes focus. Escape, Done or close end the tour and return focus; the card's `toggle` event reports it. `Expressive.Tour.start(el, index)`, `go(el, index)` and `end(el)` work from script, and `Expressive.Tour.i18n.progress` holds "Step {current} of {total}". The root bundle starts the behavior on load; with the modular entry, call `Tour.Init()`.
+
+```html
+<button type="button" data-tour-start="welcome">Take the tour</button>
+<div id="welcome" class="tour" popover="manual" role="dialog">
+  <section data-tour-target="search-button">
+    <h2>Search everything</h2>
+    <p>Find files, people and settings from here.</p>
+  </section>
+  <p class="tour-progress"></p>
+  <div class="tour-actions">
+    <button type="button" class="button text" data-tour-back>Back</button>
+    <button type="button" class="button filled" data-tour-next>Next</button>
+    <button type="button" class="button filled" data-tour-done>Done</button>
+  </div>
+</div>
+```
+
+Tokens: `--md-comp-tour-container-color` (`surface-container-high`), `--md-comp-tour-shape` (16px), `--md-comp-tour-max-width` (360px) and `--md-comp-tour-gap` (12px).
 
 ---
 
@@ -7002,6 +7154,16 @@ The trigger is a `<label>` **wrapping** the file input, not a `<button>` wrappin
 ```
 
 Add `multiple` to allow more than one file.
+
+
+### Color
+
+An `<input type="color">` keeps the browser's picker and is drawn as a 40px round swatch of its color in a 48px target, with the shared focus ring. Label it like any field and keep it outside a `.field`. Tokens on the input: `--md-comp-color-input-size` (40px) and `--md-comp-color-input-outline-color` (`outline`).
+
+```html
+<label for="accent">Accent color</label>
+<input id="accent" type="color" value="#c6a0f6">
+```
 
 ### Character counter
 

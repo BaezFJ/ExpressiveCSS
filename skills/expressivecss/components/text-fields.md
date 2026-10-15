@@ -9,7 +9,7 @@ Component ID: `text-fields`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `0a4039bf8e6728b6e3646b7392f76c8bde9dd39467b3711782700382cd04a65d`
+Contract SHA-256: `c345c8ebcbed3c7af0115432b6a8c94413bc09ccb8eac09ff1348f2703215d76`
 
 #### Selection and adaptation
 
@@ -63,7 +63,7 @@ Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fi
 
 #### Also documented
 
-The Text Inputs section of the [API reference](https://www.expressivecss.com/llm.md) also covers Input types, Inline, Textarea, Trailing button, Password visibility, One-time code, File input, Character counter.
+The Text Inputs section of the [API reference](https://www.expressivecss.com/llm.md) also covers Input types, Inline, Textarea, Trailing button, Password visibility, One-time code, File input, Color, Character counter.
 
 #### Rules
 

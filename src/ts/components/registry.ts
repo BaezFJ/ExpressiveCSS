@@ -84,6 +84,8 @@ export const AUTO_INIT_COMPONENTS = {
     component: Components.FloatingActionButton,
     selector: ".fab-menu",
   },
+  // After Menu, so the bar's own menu options replace AutoInit's defaults.
+  Menubar: { component: Components.Menubar, selector: ".menubar" },
 };
 
 type Registry = typeof AUTO_INIT_COMPONENTS;

@@ -738,7 +738,7 @@ Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a
 
 **Use when** something is draggable and nothing else says so: a bottom sheet's grabber, the gutter between two panes, the grip on a reorderable row.
 
-**Don't use** it as the only route to an outcome. Provide keyboard operation and a single-pointer alternative without dragging. Clickable "Move up" / "Move down" controls or a position input can serve both; arrow keys alone cannot. [WCAG 2.2 AA SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) excepts essential dragging and unmodified user-agent functionality. ExpressiveCSS ships no reordering behaviour, so the application must implement and test each path.
+**Don't use** it as the only route to an outcome. Provide keyboard operation and a single-pointer alternative without dragging. Clickable "Move up" / "Move down" controls or a position input can serve both; arrow keys alone cannot. [WCAG 2.2 AA SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) excepts essential dragging and unmodified user-agent functionality. A `.sortable` list provides both paths with its Move up and Move down buttons; any other reordering must implement and test each path itself.
 
 **Anatomy.** A bar and nothing else. `<span aria-hidden="true">` when decorative, which is the usual case; `<button>` with an `aria-label` when activating it does something. Never both — `aria-hidden` on a button leaves it in the tab order while hiding it from assistive technology. Inside a bottom sheet the button spelling is wired: it dismisses the sheet. Nowhere else is.
 

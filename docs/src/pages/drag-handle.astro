@@ -49,9 +49,10 @@ const S = defineSections([
           anything, or reorder anything. Two layouts wire it: a handle written
           as a <code>&lt;button&gt;</code> inside a
           <a href={route('bottom_sheet')}>bottom sheet</a> dismisses that
-          sheet, and one between the two panes of a
-          <a href={route('panes')}>pane layout</a> resizes them. Everywhere
-          else the bar is inert.
+          sheet, one between the two panes of a
+          <a href={route('panes')}>pane layout</a> resizes them, and a
+          decorative one in a <a href={route('lists')}>sortable list</a>
+          row drags the row. Everywhere else the bar is inert.
         </p>
         <p>
           Provide keyboard operation and a single-pointer alternative without
@@ -63,9 +64,10 @@ const S = defineSections([
           unmodified user agent owns the functionality. Test each path.
         </p>
         <p>
-          ExpressiveCSS ships no reordering behaviour, so you have to supply
-          that path yourself. The handle shows people who can drag that the
-          gesture exists. You build everything else.
+          A <a href={route('lists')}>sortable list</a> wires the handle for
+          reordering and adds Move up and Move down buttons as the other two
+          paths. Anywhere else you supply those paths yourself; the handle
+          only shows people who can drag that the gesture exists.
         </p>
   </Section>
   <Section {...S.decorative}>

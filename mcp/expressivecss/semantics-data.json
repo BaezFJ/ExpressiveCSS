@@ -499,7 +499,7 @@
       },
       "drag-handle": {
         "status": "enforced",
-        "note": "The affordance that says a thing can be dragged, added with the drag handle component (#34). Which element it is *is* the whole semantic: a <span aria-hidden=\"true\"> when it is decoration - the usual case, and what a bottom sheet wants, since Escape already dismisses the sheet and the drag is a pointer nicety on top - and a <button> with a name when something is genuinely wired to it. The two rules below hold that split, and the sheet leans on it: `button.drag-handle` is where every interactive state in the partial is scoped, which is only correct because nothing else can be interactive. What no rule can check is the thing this component is most likely to be misused for. Dragging is a pointer gesture, so any outcome reachable only by dragging is unreachable without one; the framework ships no reordering behaviour to hang off this handle, and a page that builds one owes it a keyboard path of its own. The docs say so plainly rather than implying the handle supplies it. Every selector below names `.handle` beside `.drag-handle`: the bottom sheet styles the pre-1.0 spelling too, and an alias the framework blesses is an alias these rules have to reach. The first rule is deliberately not fragmentSafe - what it detects is a *missing* aria-hidden, and a fragment omits by nature.",
+        "note": "The affordance that says a thing can be dragged, added with the drag handle component (#34). Which element it is *is* the whole semantic: a <span aria-hidden=\"true\"> when it is decoration - the usual case, and what a bottom sheet wants, since Escape already dismisses the sheet and the drag is a pointer nicety on top - and a <button> with a name when something is genuinely wired to it. The two rules below hold that split, and the sheet leans on it: `button.drag-handle` is where every interactive state in the partial is scoped, which is only correct because nothing else can be interactive. What no rule can check is the thing this component is most likely to be misused for. Dragging is a pointer gesture, so any outcome reachable only by dragging is unreachable without one; the Sortable behavior, the one reordering the framework ships, pairs a decorative handle with Move up and Move down buttons, and a page that builds its own owes it a keyboard path too. The docs say so plainly rather than implying the handle supplies it. Every selector below names `.handle` beside `.drag-handle`: the bottom sheet styles the pre-1.0 spelling too, and an alias the framework blesses is an alias these rules have to reach. The first rule is deliberately not fragmentSafe - what it detects is a *missing* aria-hidden, and a fragment omits by nature.",
         "rules": [
           {
             "id": "drag-handle-is-hidden-or-a-control",
@@ -896,6 +896,12 @@
             "selector": "li[aria-selected]:not([role])",
             "message": "aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role’s keyboard contract, or drop the attribute.",
             "fragmentSafe": true
+          },
+          {
+            "id": "sortable-items-move-without-dragging",
+            "kind": "forbid",
+            "selector": ".sortable > li:not(:has([data-move=\"up\"]):has([data-move=\"down\"]))",
+            "message": "Give each .sortable item a [data-move=\"up\"] and a [data-move=\"down\"] button, in the row or in a menu. Dragging is a pointer gesture; the buttons are the keyboard path and the single-pointer alternative WCAG 2.5.7 requires."
           }
         ]
       },
@@ -1144,6 +1150,136 @@
             "selector": ".description-list:not(dl)",
             "fragmentSafe": true,
             "message": "Write .description-list as a <dl> with <dt> labels and <dd> values. Divs drawn as two columns read as an unpaired run of text."
+          }
+        ]
+      },
+      "mega-menu": {
+        "status": "enforced",
+        "note": "Added with the mega menu component. A named nav of links and disclosure buttons whose panels are native popovers; the browser owns the expanded state, so no menu role is promised.",
+        "rejects": {
+          "rejected_role": "menu",
+          "because": "its items are links and disclosure buttons reached with Tab in reading order - a menu role promises arrow-key navigation and menuitems that site navigation does not have, and the menubar component is the place for that contract",
+          "rule": "mega-menu-is-not-a-composite-widget"
+        },
+        "rules": [
+          {
+            "id": "mega-menu-is-a-named-nav",
+            "kind": "forbid",
+            "selector": ".mega-menu:not(nav)",
+            "fragmentSafe": true,
+            "message": "Write .mega-menu as a <nav> with an aria-label. It is site navigation: a landmark people jump to, not a generic row."
+          },
+          {
+            "id": "mega-menu-panel-is-a-popover",
+            "kind": "forbid",
+            "selector": ".mega-menu-panel:not([popover])",
+            "fragmentSafe": true,
+            "message": "Give .mega-menu-panel the popover attribute and open it with popovertarget on its button. The browser then owns opening, Escape, light dismiss and the button's expanded state."
+          },
+          {
+            "id": "mega-menu-is-not-a-composite-widget",
+            "kind": "forbid-composite-roles",
+            "selector": ".mega-menu",
+            "fragmentSafe": true,
+            "message": "A mega menu is links and disclosure buttons reached with Tab. A menu, menubar or any other composite role promises arrow-key navigation it does not have; use a menubar for application commands."
+          },
+          {
+            "id": "mega-menu-items-are-not-menuitems",
+            "kind": "forbid",
+            "selector": ".mega-menu :is([role=\"menu\"], [role=\"menuitem\"])",
+            "fragmentSafe": true,
+            "message": "Leave the bar's links, buttons and panels without menu or menuitem roles. They are reached with Tab, and those roles promise arrow keys and typeahead the mega menu does not have."
+          }
+        ]
+      },
+      "menubar": {
+        "status": "enforced",
+        "note": "Added with the menubar component. The Menubar component sets role=menubar on the bar and role=menuitem on each trigger at runtime and implements the menubar keyboard contract over Menu; tests/menubar-browser.test.js checks it.",
+        "rules": [
+          {
+            "id": "menubar-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".menubar",
+            "message": "Name the menubar with aria-label, such as \"Editor\". A page can hold several, and the name says which commands they are."
+          },
+          {
+            "id": "menubar-holds-only-triggers",
+            "kind": "forbid",
+            "selector": ".menubar > :not(.menu-trigger)",
+            "fragmentSafe": true,
+            "message": "A .menubar holds only .menu-trigger buttons. Anything else breaks the menubar's arrow-key order; put the menus themselves after the bar."
+          }
+        ]
+      },
+      "calendar": {
+        "status": "enforced",
+        "note": "Added with the calendar component. A native table the page renders; its caption and column headers are what tell a screen reader the month and weekday of each day.",
+        "rules": [
+          {
+            "id": "calendar-is-a-table",
+            "kind": "forbid",
+            "selector": ".calendar:not(table)",
+            "fragmentSafe": true,
+            "message": "Write .calendar as a <table> with a <caption> and a header row of weekdays. A grid of divs loses the day-to-weekday relationship."
+          },
+          {
+            "id": "calendar-has-a-caption",
+            "kind": "forbid",
+            "selector": "table.calendar:not(:has(> caption))",
+            "message": "Give the calendar a <caption> naming the month, such as \"October 2026\". Without it nothing says which month the days belong to."
+          }
+        ]
+      },
+      "tour": {
+        "status": "enforced",
+        "note": "Added with the tour component. A manual popover the Tour behavior shows one section at a time; the author writes it as a dialog so the step heading names it when focus arrives.",
+        "rules": [
+          {
+            "id": "tour-is-a-manual-popover",
+            "kind": "forbid",
+            "selector": ".tour:not([popover=\"manual\"])",
+            "fragmentSafe": true,
+            "message": "Write the .tour with popover=\"manual\". An auto popover closes on any outside click, which ends the tour while the user looks at the target."
+          },
+          {
+            "id": "tour-is-a-dialog",
+            "kind": "require-attr",
+            "selector": ".tour",
+            "attr": "role",
+            "equals": "dialog",
+            "message": "Give the .tour role=\"dialog\". The behavior labels it with the current step's heading and moves focus to it, and the dialog role is what makes that name announced."
+          },
+          {
+            "id": "tour-steps-name-a-target",
+            "kind": "forbid",
+            "selector": ".tour > section:not([data-tour-target])",
+            "fragmentSafe": true,
+            "message": "Each step <section> needs data-tour-target with the id of the element it explains. A step without one is never shown."
+          }
+        ]
+      },
+      "image-compare": {
+        "status": "enforced",
+        "note": "Added with the image compare component. A native range input is the control, so its slider semantics are the browser's; both images need alt text that says which is which.",
+        "rules": [
+          {
+            "id": "image-compare-has-a-range",
+            "kind": "forbid",
+            "selector": ".image-compare:not(:has(> input[type=\"range\"]))",
+            "message": "Put an <input type=\"range\"> in the .image-compare. It is the control people use, by pointer or keyboard; without it the divider cannot move."
+          },
+          {
+            "id": "image-compare-range-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".image-compare > input[type=\"range\"]",
+            "message": "Name the range, such as aria-label=\"Compare before and after\". It is the only control and has no visible label."
+          },
+          {
+            "id": "image-compare-images-have-alt",
+            "kind": "forbid",
+            "selector": ".image-compare > img:not([alt])",
+            "fragmentSafe": true,
+            "message": "Give each image alt text that says which it is, such as \"Before: faded photo\". The comparison means nothing if neither image is described."
           }
         ]
       },

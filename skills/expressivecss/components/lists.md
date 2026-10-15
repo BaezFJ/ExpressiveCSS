@@ -9,7 +9,7 @@ Component ID: `lists`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `0a4039bf8e6728b6e3646b7392f76c8bde9dd39467b3711782700382cd04a65d`
+Contract SHA-256: `c345c8ebcbed3c7af0115432b6a8c94413bc09ccb8eac09ff1348f2703215d76`
 
 #### Selection and adaptation
 
@@ -64,8 +64,9 @@ Two variants: standard (the default) and `segmented`.
 
 #### Also documented
 
-The Lists section of the [API reference](https://www.expressivecss.com/llm.md) also covers Standard, Segmented, Text, Icons, Links.
+The Lists section of the [API reference](https://www.expressivecss.com/llm.md) also covers Standard, Segmented, Text, Icons, Links, Sortable.
 
 #### Rules
 
 - `list-item-not-selected`: aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role’s keyboard contract, or drop the attribute.
+- `sortable-items-move-without-dragging`: Give each .sortable item a [data-move="up"] and a [data-move="down"] button, in the row or in a menu. Dragging is a pointer gesture; the buttons are the keyboard path and the single-pointer alternative WCAG 2.5.7 requires.

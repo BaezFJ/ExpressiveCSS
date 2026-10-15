@@ -24,6 +24,8 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Pagination](#pagination) | unassessed | needs-review | needs-rerun | 1 |
 | [Stepper](#stepper) | unassessed | needs-review | needs-rerun | 0 |
 | [Menu](#menu) | unassessed | needs-review | needs-rerun | 0 |
+| [Mega menu](#mega-menu) | implemented | source-reviewed | incomplete | 0 |
+| [Menubar](#menubar) | implemented | source-reviewed | incomplete | 0 |
 | [Scrollspy](#scrollspy) | unassessed | needs-review | needs-rerun | 0 |
 | [Tree](#tree) | implemented | source-reviewed | needs-rerun | 0 |
 | [Buttons](#buttons) | unassessed | needs-review | needs-rerun | 1 |
@@ -51,6 +53,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Radial chart](#radial-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Mixed chart](#mixed-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Timeline](#timeline) | implemented | source-reviewed | needs-rerun | 0 |
+| [Calendar](#calendar) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
 | [Side sheet](#side-sheet) | unassessed | needs-review | needs-rerun | 0 |
@@ -59,6 +62,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Avatar](#avatar) | implemented | source-reviewed | needs-rerun | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | needs-rerun | 0 |
 | [Popover](#popover) | implemented | source-reviewed | needs-rerun | 0 |
+| [Tour](#tour) | implemented | source-reviewed | incomplete | 0 |
 | [Snackbar](#snackbar) | unassessed | needs-review | needs-rerun | 0 |
 | [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 1 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | needs-rerun | 1 |
@@ -66,6 +70,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Empty state](#empty-state) | implemented | source-reviewed | needs-rerun | 0 |
 | [Alert](#alert) | implemented | source-reviewed | incomplete | 0 |
 | [Carousel](#carousel) | unassessed | needs-review | needs-rerun | 0 |
+| [Image compare](#image-compare) | implemented | source-reviewed | incomplete | 0 |
 | [Marquee](#marquee) | implemented | source-reviewed | needs-rerun | 0 |
 | [Confetti](#confetti) | implemented | source-reviewed | needs-rerun | 0 |
 | [Particles](#particles) | unassessed | needs-review | needs-rerun | 0 |
@@ -268,6 +273,38 @@ Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavio
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/menu-field-browser.test.js): `Menu excludes closing content and preserves callback focus (chromium)`. Tab exclusion during nonzero closing transitions, callback-directed focus, reopening, autoFocus false, and authored inert restoration. Ordinary and reduced motion; equivalent Firefox and WebKit cases run in the same file.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/menu-field-browser.test.js): `Menu scopes nested keys and mirrors flyouts in RTL (chromium)`. Nested entry/return keys, innermost Escape, scoped typeahead, disabled activation, representative 44px targets, single activation, and both viewport edges in LTR/RTL. Equivalent Firefox and WebKit cases run in the same file.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/menu-field-browser.test.js): `Menu consumers keep values and focus through closing (chromium)`. Enhanced select submits the selected value and changes once; autocomplete selection retains input focus; Tab skips closing lists. Equivalent Firefox and WebKit cases run in the same file.
+
+<a id="mega-menu"></a>
+
+## Mega menu
+
+**implemented within the stated scope.** Links and disclosure buttons in a row, wide panels of grouped links below the bar, a turning chevron and current-page state.
+
+Source review: source-reviewed, 2026-10-15. [src/sass/components/_mega-menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/src/sass/components/_mega-menu.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: Native popovers opened with popovertarget; the browser owns opening, light dismiss, Escape, focus order and the expanded state.
+
+- verification: Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified. Next: Open and close each panel with a screen reader in each engine and confirm the expanded state is announced.
+
+- not-recorded: [tests/mega-menu-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/mega-menu-browser.test.js): `chromium: mega menu opens a wide panel of link groups below its button`. Popover opening from its button, the panel below the bar spanning the window, side-by-side groups, the turning chevron, Tab into the panel, Escape, closed links out of reach and stacked groups on a phone. No spoken-output assertion.
+
+<a id="menubar"></a>
+
+## Menubar
+
+**implemented within the stated scope.** A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.
+
+Source review: source-reviewed, 2026-10-15. [src/ts/components/menubar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/src/ts/components/menubar.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: Each item opens an ordinary Menu; the Menubar component adds the menubar and menuitem roles and the roving tab stop at runtime.
+
+- verification: Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified. Next: Operate the menubar with a screen reader in each engine and confirm menu and item announcements; check typeahead across the bar.
+
+- not-recorded: [tests/menubar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/menubar-browser.test.js): `chromium: a menubar has one tab stop and moves between its menus with the arrow keys`. Menubar and menuitem roles, one tab stop that follows focus, Left, Right, Home and End with wrapping, Down opening on the first item, Right and Left between open menus, flyout rows keeping Right, Escape back to the bar and RTL. No spoken-output assertion.
 
 <a id="scrollspy"></a>
 
@@ -738,6 +775,22 @@ Web adaptation: An <ol> of events with <time datetime>; the dots and line are de
 
 - stale: [tests/timeline-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/timeline-browser.test.js): `chromium: timeline marks each event, joins it to the next and swaps the dot for an icon`. Marker column, dot size, connecting line and its absence on the last event, the icon circle and its column in LTR and RTL. No spoken-output assertion.
 
+<a id="calendar"></a>
+
+## Calendar
+
+**implemented within the stated scope.** A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize.
+
+Source review: source-reviewed, 2026-10-15. [src/sass/components/_calendar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/src/sass/components/_calendar.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: A native table with a caption; the page renders the dates, navigation and events.
+
+- verification: Equal columns, today, outside days, ellipsized event chips, column headers and the phone width are checked in a browser; screen reader output remains unverified. Next: Read a month with a screen reader in each engine and confirm the day and weekday are announced with each event.
+
+- not-recorded: [tests/calendar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/calendar-browser.test.js): `chromium: calendar lays out a month grid with today, outside days and event chips`. Seven equal columns, day height, the today mark, muted outside days, event chips that stay inside their day and ellipsize, event links, column headers and the month at phone width. No spoken-output assertion.
+
 <a id="dialogs"></a>
 
 ## Dialogs
@@ -874,6 +927,22 @@ Web adaptation: The browser owns opening, light dismiss, Escape, focus return an
 
 - stale: [tests/popover-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/popover-browser.test.js): `chromium: popover anchors to its button, flips at the edge and stays open while used`. Default, top and end placement against the button in LTR and RTL, both-axis flip at the viewport corner, Escape with focus return, outside click, staying open for an inner button, one auto popover at a time and the Chromium expanded state. No spoken-output assertion.
 
+<a id="tour"></a>
+
+## Tour
+
+**implemented within the stated scope.** One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.
+
+Source review: source-reviewed, 2026-10-15. [src/ts/behaviors/tour.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/src/ts/behaviors/tour.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: A manual native popover placed with CSS anchor positioning; the Tour behavior moves the anchor and focus.
+
+- verification: Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified. Next: Take a tour with a screen reader in each engine and confirm each step is announced when it opens.
+
+- not-recorded: [tests/tour-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/tour-browser.test.js): `chromium: a tour steps through its targets beside each one and returns focus`. Opening from a start button, the card named by the step heading, progress text, skipped missing targets, button visibility per step, placement below each target, releasing the previous target, Escape, focus return and cleanup after hidePopover. No spoken-output assertion.
+
 <a id="snackbar"></a>
 
 ## Snackbar
@@ -993,6 +1062,22 @@ Web adaptation: Runtime owns sizing and navigation; reduced motion removes paral
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/menu-field-browser.test.js): `Carousel mounted motion changes preserve explicit pause (chromium)`. Visible application-owned pause/resume button and mounted reduced-motion changes without cancelling explicit pause; enabling reduced motion interrupts smooth scrolling and immediately realigns the active item.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/menu-field-browser.test.js): `Carousel focus and visibility suspension survive teardown (chromium)`. Hover and internal focus suspension, simulated document.hidden events, timer teardown and single advancement after remount. Actual background-device behavior pending.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/menu-field-browser.test.js): `Carousel destroys pending scroll completion work (chromium)`. Rapid navigation and queued resize followed by destruction leave no auto-advance, resize or scroll-completion timers.
+
+<a id="image-compare"></a>
+
+## Image compare
+
+**implemented within the stated scope.** Two stacked images, a divider and handle driven by a native range input, keyboard and pointer control, RTL and a focus ring.
+
+Source review: source-reviewed, 2026-10-15. [src/sass/components/_image-compare.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/src/sass/components/_image-compare.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: A native range input covers the images invisibly; the ImageCompare behavior writes its value to the divider position.
+
+- verification: The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified. Next: Move the divider with a screen reader in each engine and confirm the value is announced.
+
+- not-recorded: [tests/image-compare-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/59e317ff0ed4c59777fe987b13903f424700ab73/tests/image-compare-browser.test.js): `chromium: image compare reveals the second image up to the range's value`. The initial value applied on load, each image on its side of the divider, arrow keys moving the divider, the handle focus ring, RTL, named native sliders and Slider leaving the range alone. No spoken-output assertion.
 
 <a id="marquee"></a>
 
