@@ -45,11 +45,12 @@ const S = defineSections([
   </Section>
   <Section {...S.dragging}>
         <p>
-          This component is a bar. It does not start a drag, move anything, or
-          reorder anything. The one exception comes from the sheet: a
-          handle written as a <code>&lt;button&gt;</code> inside a
-          <a href={route('bottom_sheet')}>bottom sheet</a> dismisses
-          that sheet, because the sheet's own behaviour handles it. Everywhere
+          This component is a bar. On its own it does not start a drag, move
+          anything, or reorder anything. Two layouts wire it: a handle written
+          as a <code>&lt;button&gt;</code> inside a
+          <a href={route('bottom_sheet')}>bottom sheet</a> dismisses that
+          sheet, and one between the two panes of a
+          <a href={route('panes')}>pane layout</a> resizes them. Everywhere
           else the bar is inert.
         </p>
         <p>
@@ -109,10 +110,12 @@ const S = defineSections([
 <section aria-label="Preview">…</section>
 `} />
         <p>
-          The handle is <code>cursor: grab</code> by default. A splitter that
-          resizes rather than moves is clearer with
-          <code>cursor: col-resize</code>. Add that declaration yourself,
-          because the component does not guess which of the two you meant.
+          The handle is <code>cursor: grab</code> by default. A
+          <code>&lt;button class="drag-handle"&gt;</code> placed directly
+          between the panes of a list-detail or supporting
+          <a href={route('panes')}>pane layout</a> becomes a working splitter
+          with <code>cursor: col-resize</code>; the panes page describes it.
+          In a layout of your own, a splitter is yours to build.
         </p>
   </Section>
   <Section {...S["bottom-sheet"]}>

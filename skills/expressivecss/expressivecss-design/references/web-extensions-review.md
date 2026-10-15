@@ -6,7 +6,7 @@ Read the linked component guide for the ExpressiveCSS 0.15.0 markup and API cont
 
 ## Contents
 
-Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Data table, Avatar, Skeleton, Empty state, Alert, Stepper, Popover, Drop zone, Tree, Stat, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map.
+Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Data table, Avatar, Skeleton, Empty state, Alert, Stepper, Popover, Drop zone, Tree, Stat, Description list, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map.
 
 Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
 
@@ -247,6 +247,20 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next check: Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths.
 
 Mapped browser scope: One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion.
+
+## [Description list](../../components/description-list.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the native dl so each value stays paired with its label, keep the reading order label before value and let long values wrap.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The browser exposes the pairing; the framework lays out the columns and dividers.
+
+Verification gap: Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified. Next check: Read a description list with a screen reader in each engine and confirm each value is announced with its label; test enlarged text.
+
+Mapped browser scope: Label and value columns, shared rows, div-wrapped groups, stacked extra values, one divider per pair, the compact stacked layout and unchanged reading order. No spoken-output assertion.
 
 ## [KPI](../../components/kpi.md)
 

@@ -376,6 +376,13 @@ export const NAV: DocsGroup[] = [
           "Key figures in tiles, each with a label, a value and an optional change.",
       },
       {
+        id: "description_list",
+        label: "Description list",
+        route: "/description-list.html",
+        description:
+          "A record's details as label and value pairs, in two columns that stack on compact screens.",
+      },
+      {
         id: "kpi",
         label: "KPI",
         route: "/kpi.html",

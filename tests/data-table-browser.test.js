@@ -85,4 +85,50 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await browser.close();
     }
   });
+
+  test(`${name}: data table joins a bulk-action bar and expands detail rows`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 800, height: 700 } });
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        <div id="bar" class="data-table-actions"><span id="count">1 selected</span><button class="button text" type="button">Archive</button></div>
+        <div id="table" class="data-table"><table>
+          <thead><tr><th scope="col"></th><th scope="col">Order</th><th scope="col"></th></tr></thead>
+          <tbody>
+            <tr><td><label><input id="pick" type="checkbox" aria-label="Select order 1"></label></td>
+              <th scope="row">Order 1</th>
+              <td><button id="toggle" class="icon-button" type="button" aria-expanded="false" aria-controls="detail" aria-label="Details for order 1"><span id="chevron" class="material-symbols" aria-hidden="true">expand_more</span></button></td></tr>
+            <tr id="detail" class="data-table-detail"><td colspan="3">Two items, shipped Monday.</td></tr>
+            <tr><td></td><th scope="row">Order 2</th><td></td></tr>
+          </tbody>
+        </table></div>
+        <div id="lone-bar" class="data-table-actions" hidden>Hidden bar</div>
+        <div id="lone" class="data-table"><table><tbody><tr><td>x</td></tr></tbody></table></div>
+      </body></html>`);
+      const style = (selector, property) => page.locator(selector).evaluate((el, p) => getComputedStyle(el)[p], property);
+      const bar = await page.locator('#bar').boundingBox();
+      const table = await page.locator('#table').boundingBox();
+      assert.ok(Math.abs(bar.y + bar.height - table.y) < 1, 'the bar sits on the table with no gap');
+      assert.equal(await style('#table', 'borderTopLeftRadius'), '0px', 'the joined table squares its top corners');
+      assert.equal(await style('#lone', 'borderTopLeftRadius'), '12px', 'a hidden bar leaves the table corners alone');
+      assert.equal(await style('#lone-bar', 'display'), 'none');
+
+      const resting = await style('#bar', 'backgroundColor');
+      await page.check('#pick');
+      assert.notEqual(await style('#bar', 'backgroundColor'), resting, 'a selected row tints the bar');
+      const count = await page.locator('#count').boundingBox();
+      const archive = await page.locator('#bar button').boundingBox();
+      assert.ok(count.x < archive.x && archive.x + archive.width > bar.x + bar.width - 24, 'the label leads and the buttons sit at the end');
+
+      assert.equal(await style('#detail', 'display'), 'none', 'a collapsed toggle hides its detail row');
+      await page.locator('#toggle').evaluate((el) => el.setAttribute('aria-expanded', 'true'));
+      assert.equal(await style('#detail', 'display'), 'table-row', 'an expanded toggle shows its detail row');
+      await page.waitForTimeout(250);
+      assert.match(await style('#chevron', 'transform'), /^matrix\(-1, /, 'the chevron turns over');
+      assert.equal(await page.locator('#table').getByRole('row').count(), 4, 'the detail row stays a table row');
+    } finally {
+      await browser.close();
+    }
+  });
 }

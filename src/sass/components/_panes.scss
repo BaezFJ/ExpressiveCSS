@@ -151,6 +151,35 @@
 }
 
 // ---------------------------------------------------------------------------
+// Resizable panes
+// ---------------------------------------------------------------------------
+// A <button class="drag-handle"> between the two panes of a list-detail or
+// supporting layout takes the spacer's place as its own column, and the
+// PaneResize behavior writes the list or supporting width token as it moves.
+// Below 840px only one pane shows, so the handle hides with the others.
+// Equal and three-pane layouts have no width token to move, so they keep
+// their own columns.
+:is(.panes, .pane-layout, .list-detail, .supporting-pane-layout):not(.equal, .three-pane):has(> button.drag-handle) {
+  --_pane-expanded-columns: var(--md-comp-pane-list-width) auto minmax(0, 1fr);
+  column-gap: 0;
+
+  > button.drag-handle {
+    display: var(--_pane-display);
+    align-self: center;
+    cursor: col-resize;
+    touch-action: none;
+  }
+}
+
+:is(.panes.supporting, .supporting-pane-layout):has(> button.drag-handle) {
+  --_pane-expanded-columns: minmax(0, 1fr) auto var(--md-comp-pane-supporting-width);
+
+  &:is(.start, .left) {
+    --_pane-expanded-columns: var(--md-comp-pane-supporting-width) auto minmax(0, 1fr);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Separated / Floating Appearance
 // ---------------------------------------------------------------------------
 .panes.separated,
@@ -183,7 +212,7 @@
 // Coplanar / Docked Dividers (Default)
 // ---------------------------------------------------------------------------
 :is(.panes, .pane-layout, .list-detail, .supporting-pane-layout):not(.separated, .floating) {
-  > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane):not(:last-child) {
+  > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane):not(:last-child, :has(+ button.drag-handle)) {
     border-inline-end: var(--_pane-divider) solid var(--md-comp-pane-divider-color);
   }
 }

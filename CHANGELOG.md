@@ -17,6 +17,22 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the install command for the agent skills, the MCP server configuration and
   the `expressivecss-lint` command. Its skills table is read from each
   `skills/<name>/SKILL.md`, so a new skill appears without editing the page.
+- Description list component: `dl.description-list` lays out label and value
+  pairs in two columns with a divider per pair, stacking each label above its
+  value at Compact widths. CSS only.
+- Error summary: an `.error-summary` alert in a `novalidate` form stops an
+  invalid submit, lists one link per invalid field with its label and the
+  browser's message, and takes focus. Each link focuses its field. Part of
+  the Forms behavior.
+- Resizable panes: a `<button class="drag-handle">` between the two panes of
+  a list-detail or supporting layout resizes them by drag, arrow keys, Home
+  and End, or a click that steps through narrow, middle and wide. The
+  `PaneResize` behavior writes `--md-comp-pane-list-width` or
+  `--md-comp-pane-supporting-width`.
+- Data table bulk actions and row expansion: a `.data-table-actions` bar
+  joins the table's top edge and takes the selected color while rows are
+  selected, and a `tr.data-table-detail` shows while the row before it holds
+  a button with `aria-expanded="true"`. CSS only; the page flips the state.
 - Alert component: `.alert` is a persistent message in the page flow with an
   optional leading icon, a heading and text, an `.alert-actions` row and a
   close button. `critical` switches to the error container colors. CSS only.

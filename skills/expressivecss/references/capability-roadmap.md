@@ -39,6 +39,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Accordion](#accordion) | implemented | source-reviewed | needs-rerun | 0 |
 | [Data table](#data-table) | unassessed | needs-review | needs-rerun | 0 |
 | [Stat](#stat) | implemented | source-reviewed | needs-rerun | 0 |
+| [Description list](#description-list) | implemented | source-reviewed | incomplete | 0 |
 | [KPI](#kpi) | implemented | source-reviewed | needs-rerun | 0 |
 | [Countdown](#countdown) | implemented | source-reviewed | needs-rerun | 0 |
 | [Line chart](#line-chart) | unassessed | needs-review | needs-rerun | 1 |
@@ -161,6 +162,7 @@ Web adaptation: CSS viewport and container queries; the application chooses the 
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/c7cf14daedf856b9cdfa27c9fb14634874f54fb3/tests/menu-field-browser.test.js): `Panes use the nearest available width at layout boundaries (chromium)`. Independent viewport/container widths, both sides and exact 840px/1200px boundaries, nearest-container precedence, viewport fallback, pane aliases, start/left supporting columns, equal/three-pane, separated/floating and RTL. Equivalent Firefox and WebKit cases run in the same suite.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/c7cf14daedf856b9cdfa27c9fb14634874f54fb3/tests/menu-field-browser.test.js): `Panes preserve footer icon-button geometry (chromium)`. All five icon-button sizes retain their height, width and block padding for native buttons and anchors across footer aliases. Equivalent Firefox and WebKit cases run in the same suite.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/c7cf14daedf856b9cdfa27c9fb14634874f54fb3/tests/menu-field-browser.test.js): `Panes preserve compact selection and independent scrolling (chromium)`. Active selection and first-pane fallback through resizing, independent body scrolling, DOM order, translated footer actions at enlarged root text size, both directions and motion preferences. Not native zoom or screen-reader verification.
+- not-recorded: [tests/pane-resize-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/c7cf14daedf856b9cdfa27c9fb14634874f54fb3/tests/pane-resize-browser.test.js): `chromium: a drag handle between panes resizes by pointer, keyboard and click`. Handle placed in the spacer column, pointer drag, arrow, Shift, Home and End keys, click and Enter stepping, the other pane's minimum, the supporting-pane token, RTL direction, hiding below 840px and named buttons. No spoken-output assertion.
 
 <a id="footer"></a>
 
@@ -510,6 +512,7 @@ Web adaptation: A plain div wraps a native <table>, so the table keeps its role;
 - verification: Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified. Next: Sort and select rows with a screen reader in each engine and confirm the sort state and selection are announced; test enlarged text and RTL.
 
 - stale: [tests/data-table-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/c7cf14daedf856b9cdfa27c9fb14634874f54fb3/tests/data-table-browser.test.js): `chromium: data table keeps table semantics, sticks its header and draws sort and selection`. Table, column header and row counts through the wrapper, sticky header offset after scrolling, end-aligned numeric cells in LTR and RTL, sort arrow opacity and rotation, selected row fill and the named scroll region. No spoken-output assertion.
+- not-recorded: [tests/data-table-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/c7cf14daedf856b9cdfa27c9fb14634874f54fb3/tests/data-table-browser.test.js): `chromium: data table joins a bulk-action bar and expands detail rows`. Bar joined to the table's top edge, squared table corners, a hidden bar leaving the table alone, the selected tint, end-aligned buttons, detail rows hidden and shown by aria-expanded, the turned chevron and the detail row kept a table row. No spoken-output assertion.
 
 <a id="stat"></a>
 
@@ -526,6 +529,22 @@ Web adaptation: A <dl> pairs each value with its label; the arrow is decoration 
 - verification: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths.
 
 - stale: [tests/stat-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/c7cf14daedf856b9cdfa27c9fb14634874f54fb3/tests/stat-browser.test.js): `chromium: stats tile their figures, wrap when narrow and mark the change`. One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion.
+
+<a id="description-list"></a>
+
+## Description list
+
+**implemented within the stated scope.** Label and value columns with a divider per pair, a compact stacked layout, div-wrapped groups and several values per label.
+
+Source review: source-reviewed, 2026-10-15. [src/sass/components/_description-list.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/c7cf14daedf856b9cdfa27c9fb14634874f54fb3/src/sass/components/_description-list.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: A native dl, dt and dd; the browser exposes the label-value pairing.
+
+- verification: Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a description list with a screen reader in each engine and confirm each value is announced with its label; test enlarged text.
+
+- not-recorded: [tests/description-list-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/c7cf14daedf856b9cdfa27c9fb14634874f54fb3/tests/description-list-browser.test.js): `chromium: description list pairs labels and values in two columns and stacks them when compact`. Label and value columns, shared rows, div-wrapped groups, stacked extra values, one divider per pair, the compact stacked layout and unchanged reading order. No spoken-output assertion.
 
 <a id="kpi"></a>
 
@@ -954,6 +973,7 @@ Web adaptation: A plain div around authored text and buttons; a changing alert p
 - verification: The layout, both tones, enlarged-text wrapping and the authored role are checked in a browser; live announcements and spoken output remain unverified. Next: Show and update an alert with a screen reader in each engine and confirm status and alert roles are announced once, without the button labels; test forced colors.
 
 - not-recorded: [tests/alert-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/c7cf14daedf856b9cdfa27c9fb14634874f54fb3/tests/alert-browser.test.js): `chromium: alert lays out icon, text, close and actions, and colors the critical tone`. Icon, heading, text, close and actions placement, end-aligned actions, 16px corners, title-small heading, underlined links, text start without an icon, secondary and critical container colors, the authored alert role and controls kept inside at 280px. No spoken-output assertion.
+- not-recorded: [tests/error-summary-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/c7cf14daedf856b9cdfa27c9fb14634874f54fb3/tests/error-summary-browser.test.js): `chromium: error summary lists invalid fields, takes focus and links to each field`. Blocked invalid submit, page handlers not reached, one labelled link per invalid field and radio group, focus on the summary, links focusing fields, generated ids, formnovalidate, and hiding after a valid submit. No spoken-output assertion.
 
 <a id="carousel"></a>
 

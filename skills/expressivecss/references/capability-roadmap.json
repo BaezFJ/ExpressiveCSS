@@ -239,6 +239,12 @@
           "name": "Panes preserve compact selection and independent scrolling (chromium)",
           "scope": "Active selection and first-pane fallback through resizing, independent body scrolling, DOM order, translated footer actions at enlarged root text size, both directions and motion preferences. Not native zoom or screen-reader verification.",
           "state": "stale"
+        },
+        {
+          "file": "tests/pane-resize-browser.test.js",
+          "name": "chromium: a drag handle between panes resizes by pointer, keyboard and click",
+          "scope": "Handle placed in the spacer column, pointer drag, arrow, Shift, Home and End keys, click and Enter stepping, the other pane's minimum, the supporting-pane token, RTL direction, hiding below 840px and named buttons. No spoken-output assertion.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -1545,6 +1551,12 @@
           "name": "chromium: data table keeps table semantics, sticks its header and draws sort and selection",
           "scope": "Table, column header and row counts through the wrapper, sticky header offset after scrolling, end-aligned numeric cells in LTR and RTL, sort arrow opacity and rotation, selected row fill and the named scroll region. No spoken-output assertion.",
           "state": "stale"
+        },
+        {
+          "file": "tests/data-table-browser.test.js",
+          "name": "chromium: data table joins a bulk-action bar and expands detail rows",
+          "scope": "Bar joined to the table's top edge, squared table corners, a hidden bar leaving the table alone, the selected tint, end-aligned buttons, detail rows hidden and shown by aria-expanded, the turned chevron and the detail row kept a table row. No spoken-output assertion.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -1598,6 +1610,56 @@
         }
       ],
       "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "description-list",
+      "title": "Description list",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-15",
+      "scope": "Label and value columns with a divider per pair, a compact stacked layout, div-wrapped groups and several values per label.",
+      "adaptation": "A native dl, dt and dd; the browser exposes the label-value pairing.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-15",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the native dl so each value stays paired with its label, keep the reading order label before value and let long values wrap."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_description-list.scss",
+          "sha256": "deae3f67f9dfa6bee0464bd3b64d0df58d6b0bcf1a4d352d364f70ac9167f9b3"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified.",
+          "nextStep": "Read a description list with a screen reader in each engine and confirm each value is announced with its label; test enlarged text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/description-list-browser.test.js",
+          "name": "chromium: description list pairs labels and values in two columns and stacks them when compact",
+          "scope": "Label and value columns, shared rows, div-wrapped groups, stacked extra values, one divider per pair, the compact stacked layout and unchanged reading order. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -3162,6 +3224,12 @@
           "file": "tests/alert-browser.test.js",
           "name": "chromium: alert lays out icon, text, close and actions, and colors the critical tone",
           "scope": "Icon, heading, text, close and actions placement, end-aligned actions, 16px corners, title-small heading, underlined links, text start without an icon, secondary and critical container colors, the authored alert role and controls kept inside at 280px. No spoken-output assertion.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/error-summary-browser.test.js",
+          "name": "chromium: error summary lists invalid fields, takes focus and links to each field",
+          "scope": "Blocked invalid submit, page handlers not reached, one labelled link per invalid field and radio group, focus on the summary, links focusing fields, generated ids, formnovalidate, and hiding after a valid submit. No spoken-output assertion.",
           "state": "not-recorded"
         }
       ],

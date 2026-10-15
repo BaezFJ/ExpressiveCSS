@@ -1,4 +1,5 @@
 import { Snackbar } from '../components/snackbar';
+import { Utils } from '../core/utils';
 
 /**
  * Copy buttons. A click on `[data-copy]` writes that attribute's text to the
@@ -21,8 +22,7 @@ export class Copy {
   /** The text a copy button would write, or null when it names nothing. */
   static textFor(button: Element): string | null {
     if (button.hasAttribute('data-copy')) return button.getAttribute('data-copy');
-    const root = button.getRootNode() as Document | ShadowRoot;
-    const source = root.getElementById?.(button.getAttribute('data-copy-for') ?? '');
+    const source = Utils.getElementById(button, button.getAttribute('data-copy-for') ?? '');
     if (!source) return null;
     return source instanceof HTMLInputElement ||
       source instanceof HTMLTextAreaElement ||

@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**83 of 83 rows enforced; 0 remaining.**
+**84 of 84 rows enforced; 0 remaining.**
 
-79 of those rows are components - a part of the framework an author writes markup for.
+80 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 79 components declare conformance debt.**
+**3 of 80 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -75,9 +75,13 @@ Added with the alert component, which replaces the removed banner. A static aler
 | --- | --- | --- | --- |
 | `alert-is-not-the-banner-landmark` | forbid | `.alert[role="banner"]` | must not match |
 | `alert-live-region-holds-no-controls` | forbid | `.alert:is([role="alert"], [role="status"], [aria-live]):has(button, a[href], input, select, textarea)` | must not match |
+| `error-summary-form-is-novalidate` | forbid | `form:not([novalidate]):has(.error-summary)` | must not match |
+| `error-summary-has-a-list` | forbid | `.error-summary:not(:has(ul, ol))` | must not match |
 
 - **alert-is-not-the-banner-landmark** - role="banner" is the page header landmark, not a message. Remove it: a static alert needs no role, and a changing one puts role="status" or role="alert" on its text.
 - **alert-live-region-holds-no-controls** - Put role="status" or role="alert" on the alert's text, not on an alert that holds buttons or links. A live region reads its controls' labels as part of the message.
+- **error-summary-form-is-novalidate** - Add novalidate to a form with an .error-summary. Without it the browser stops an invalid submit before the submit event, so the summary never fills and only the first field's bubble shows.
+- **error-summary-has-a-list** - Give the .error-summary an empty <ul>. The Forms behavior writes one link per invalid field into it.
 
 ### aura
 
@@ -366,6 +370,16 @@ Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the cont
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 
+
+### description-list
+
+Added with the description list component. The native <dl> is what pairs each value with its label for assistive technology, so the class only works on one.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `description-list-is-a-dl` | forbid | `.description-list:not(dl)` | must not match |
+
+- **description-list-is-a-dl** - Write .description-list as a <dl> with <dt> labels and <dd> values. Divs drawn as two columns read as an unpaired run of text.
 
 ### dialog
 

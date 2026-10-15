@@ -9,7 +9,7 @@ Component ID: `alert`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `19440ccb0b52b4464530ec543d9cbcb4f5982b1c180cdd78852d61d8b232e04c`
+Contract SHA-256: `2c0b190265a7278de1eb7c1744a26bc40f2ca88a830ff57fe0e3352706ffb4bf`
 
 #### Selection and adaptation
 
@@ -48,9 +48,11 @@ An `.alert` holds an optional leading icon, then the message: a heading, a `<p>`
 
 #### Also documented
 
-The Alert section of the [API reference](https://www.expressivecss.com/llm.md) also covers Critical, Actions and close, Announcing changes, Tokens.
+The Alert section of the [API reference](https://www.expressivecss.com/llm.md) also covers Critical, Actions and close, Announcing changes, Error summary, Tokens.
 
 #### Rules
 
 - `alert-is-not-the-banner-landmark`: role="banner" is the page header landmark, not a message. Remove it: a static alert needs no role, and a changing one puts role="status" or role="alert" on its text.
 - `alert-live-region-holds-no-controls`: Put role="status" or role="alert" on the alert's text, not on an alert that holds buttons or links. A live region reads its controls' labels as part of the message.
+- `error-summary-form-is-novalidate`: Add novalidate to a form with an .error-summary. Without it the browser stops an invalid submit before the submit event, so the summary never fills and only the first field's bubble shows.
+- `error-summary-has-a-list`: Give the .error-summary an empty <ul>. The Forms behavior writes one link per invalid field into it.

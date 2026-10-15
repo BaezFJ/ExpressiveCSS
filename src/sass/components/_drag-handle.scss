@@ -8,12 +8,14 @@
 // to it. semantics.json enforces exactly that split, which is what lets the
 // interactive states below key off `button` and be right every time.
 //
-// **Nothing here drags.** The handle is CSS; the dragging is the page's, and so
-// is the keyboard path to whatever the drag achieves. A handle that answers
-// only a pointer puts its outcome out of reach of everyone not using one, so
-// the framework ships no reordering behaviour to hang off this and the docs say
-// plainly that a drag-only reorder is unreachable. The decorative spelling is
-// the default; the button spelling has to earn its name.
+// **Nothing here drags.** The handle is CSS. Two behaviors wire the button
+// spelling: the bottom sheet's dismiss drag and PaneResize between two panes,
+// each with its own keyboard and single-pointer path. Anywhere else the
+// dragging is the page's, and so is the keyboard path to whatever the drag
+// achieves. A handle that answers only a pointer puts its outcome out of reach
+// of everyone not using one, so the framework ships no reordering behaviour
+// and the docs say plainly that a drag-only reorder is unreachable. The
+// decorative spelling is the default; the button spelling has to earn its name.
 //
 // M3 Expressive tokenised the *vertical* handle - the one sitting in the gutter
 // between two panes, Compose's VerticalDragHandle: a 4x48dp bar in a 24dp

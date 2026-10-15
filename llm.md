@@ -69,6 +69,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Stepper
 - Timeline
 - Stat
+- Description list
 - Tree
 - Search
 - Button groups
@@ -2831,7 +2832,7 @@ The bar that makes something legible as draggable: a bottom sheet's grabber, the
 
 Which element you write *is* the semantic. A `<span class="drag-handle" aria-hidden="true">` is decoration and is the usual case — the handle draws a bar and contains no text, so exposed it arrives in the reading order as an unlabelled blank. A `<button class="drag-handle">` with an `aria-label` is a control, written only when activating it does something — inside a bottom sheet it always does, and everywhere else that is the page's to arrange. Never `aria-hidden` a button: that hides it from assistive technology without taking it out of the tab order. The hover, focus and pressed states are scoped to the button spelling, so a decorative handle does not light up under a passing pointer.
 
-**Nothing here drags.** No script belongs to this component and ExpressiveCSS ships no reordering behaviour. The one thing a handle is wired to is the bottom sheet's, below. Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
+**Nothing here drags on its own.** ExpressiveCSS ships no reordering behaviour. Two layouts wire a `<button class="drag-handle">`: the bottom sheet below, and the pane layouts, where a handle between two panes resizes them (see Panes, "Resizing"). Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
 
 The two-column layout is the page's own — a flex or grid row, or a pane layout. The handle is what sits between the columns and needs no wrapper class of its own.
 
@@ -2843,7 +2844,7 @@ The two-column layout is the page's own — a flex or grid row, or a pane layout
 
 Material tokenised the *vertical* handle — a 4×48dp bar in a 24dp hit target, `outline`, swelling to 12×52dp on a 12dp corner in `on-surface` while held. That is what `.drag-handle` draws. The container is sized to the pressed bar, so holding it moves nothing beside it. `cursor: grab` is the default; a splitter that resizes reads better as `cursor: col-resize`, which is one declaration of your own.
 
-On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. A decorative handle needs a separate non-drag dismiss path. A named `<button>` handle closes the sheet by click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>; a `form method="dialog"` close button is another option. Native Escape behavior depends on the opening mode, browser, and `closedby` policy, and is not a pointer alternative. Scrim dismissal also depends on the installed shared runtime and `closedby` policy; test it before relying on it. A drag that snaps back does not also activate the button because the runtime distinguishes the ending click from a tap. This is the only place a drag handle is wired to anything. `.handle` is the pre-1.0 spelling and still works, decorative or wired.
+On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. A decorative handle needs a separate non-drag dismiss path. A named `<button>` handle closes the sheet by click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>; a `form method="dialog"` close button is another option. Native Escape behavior depends on the opening mode, browser, and `closedby` policy, and is not a pointer alternative. Scrim dismissal also depends on the installed shared runtime and `closedby` policy; test it before relying on it. A drag that snaps back does not also activate the button because the runtime distinguishes the ending click from a tap. Pane resizing is the only other place a drag handle is wired. `.handle` is the pre-1.0 spelling and still works, decorative or wired.
 
 ```html
 <dialog class="bottom-sheet" aria-labelledby="sheet-title">
@@ -3201,6 +3202,38 @@ A checked checkbox in a row's first cell selects the row and fills it with `seco
 </div>
 ```
 
+### Bulk actions
+
+A `.data-table-actions` bar written just before the `.data-table` joins its top edge and takes the selected color while any row is selected. A leading label, such as a count, pushes the buttons to the end. The page keeps the count current and decides which buttons apply; `hidden` removes the bar.
+
+```html
+<div class="data-table-actions">
+  <span>2 selected</span>
+  <button type="button" class="button text">Archive</button>
+</div>
+<div class="data-table">
+  <table>…</table>
+</div>
+```
+
+### Row expansion
+
+A `tr.data-table-detail` right after a row shows only while that row holds a button with `aria-expanded="true"`. The page flips the attribute; the framework shows the row and turns the button's icon. Put the toggle in a `<td>`, because a button in a `<th>` is drawn as a sort control, and span the detail cell across the table.
+
+```html
+<tr>
+  <th scope="row">Order 1042</th>
+  <td>
+    <button type="button" class="icon-button" aria-expanded="false" aria-controls="order-1042" aria-label="Details for order 1042">
+      <span class="material-symbols" aria-hidden="true">expand_more</span>
+    </button>
+  </td>
+</tr>
+<tr id="order-1042" class="data-table-detail">
+  <td colspan="2">Two items, shipped Monday.</td>
+</tr>
+```
+
 ### Scrolling
 
 A wrapper that scrolls must be reachable from the keyboard. Give it `tabindex="0"`, `role="region"` and a name, usually the caption.
@@ -3230,6 +3263,7 @@ A wrapper that scrolls must be reachable from the keyboard. Give it `tabindex="0
 | `--md-comp-data-table-row-height` | 52px; `dense`: 40px |
 | `--md-comp-data-table-cell-padding` | 16px |
 | `--md-comp-data-table-selected-container-color` | `secondary-container` |
+| `--md-comp-data-table-detail-container-color` | `surface-container-low` |
 
 ---
 
@@ -3888,6 +3922,18 @@ At Compact widths (`< 600px`) the container has 16px inline margins. Medium and 
 </div>
 ```
 
+### Resizing
+
+A `<button class="drag-handle">` between the two panes of a list-detail or supporting layout resizes them at 840px and up. It takes the spacer's place and replaces the divider. Drag it, or press Left and Right to move it 16px (Shift for 64px), Home and End for the narrowest and widest, or click it (Enter and Space too) to step through narrow, middle and wide. The click is the single-pointer alternative to dragging. A resized pane stays at least 240px wide, and the other keeps `--md-comp-pane-primary-min-width`. The width is written to `--md-comp-pane-list-width` or `--md-comp-pane-supporting-width` on the layout's style; save it to restore a user's choice. The root bundle starts `PaneResize` on load, and the modular entry with `PaneResize.Init()`. Equal and three-pane layouts do not resize. `PaneResize.setWidth(handle, px)` and `PaneResize.width(handle)` work from script.
+
+```html
+<div class="panes list-detail">
+  <div class="list-pane">…</div>
+  <button type="button" class="drag-handle" aria-label="Resize list"></button>
+  <div class="detail-pane">…</div>
+</div>
+```
+
 ### Appearance
 
 The default is coplanar: full-bleed surfaces with a 1px `outline-variant` divider between them. `separated` (alias `floating`) instead gives each pane a 16px rounded `surface-container-low` card with a 24px gap. Inside a separated layout, a pane can take `elevated` for a shadow or `outlined` for a `surface` fill with a border.
@@ -4308,6 +4354,23 @@ An alert that is in the page when it loads needs no role. When one appears or ch
 </div>
 ```
 
+### Error summary
+
+An `.error-summary` alert at the top of a `novalidate` form lists what is wrong when the form is submitted. While any field is invalid, the submit stops as it would natively, and the Forms behavior writes one link per invalid field into the summary's `<ul>`: the field's label and the browser's validation message. A radio group gets one link, named by its legend. The summary then shows and takes focus, so a screen reader reads it, and each link focuses its field. A valid submit hides it again, and a submit button with `formnovalidate` skips the check. `novalidate` is required: without it the browser blocks the submit event and shows only the first field's bubble. Keep each field's own error text; the summary only gathers them.
+
+```html
+<form novalidate>
+  <div class="alert critical error-summary" hidden aria-labelledby="problem">
+    <span class="material-symbols" aria-hidden="true">error</span>
+    <h2 id="problem">There is a problem</h2>
+    <ul></ul>
+  </div>
+  <label for="email">Email address</label>
+  <input id="email" type="email" required>
+  <button type="submit">Send</button>
+</form>
+```
+
 ### Tokens
 
 | Token | Default |
@@ -4483,6 +4546,30 @@ Add `up` or `down` to `.stat-change` for an arrow, and `negative` when the chang
 | `--md-comp-stat-container-color` | `surface-container-low` |
 | `--md-comp-stat-shape` | 16px |
 | `--md-comp-stat-min-width` | 160px |
+
+---
+
+## Description list
+
+A record's details as label and value pairs, in two columns that stack on compact screens.
+
+A `dl.description-list` pairs each `<dt>` label with the `<dd>` values after it. Labels take the first column from Medium widths up, with a divider above each pair; at Compact widths each label sits above its value. A `<div>` may wrap each pair and adds no box. Several `<dd>` elements under one label stack without a divider. Use stat tiles for big numbers instead. CSS only; there is no JavaScript.
+
+```html
+<dl class="description-list">
+  <dt>Status</dt><dd>Shipped</dd>
+  <dt>Ship to</dt><dd>Alvin Lee, 12 Harbor Road, Portland</dd>
+  <dt>Total</dt><dd>$87.00</dd>
+</dl>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-description-list-label-width` | minmax(8rem, 33%) |
+| `--md-comp-description-list-divider-color` | `outline-variant` |
+| `--md-comp-description-list-padding` | 12px |
 
 ---
 

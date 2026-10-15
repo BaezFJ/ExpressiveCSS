@@ -12,6 +12,7 @@ const S = defineSections([
   { id: "critical", label: "Critical" },
   { id: "actions", label: "Actions and close" },
   { id: "announcing", label: "Announcing changes" },
+  { id: "error-summary", label: "Error summary" },
   { id: "tokens", label: "Tokens" },
 ]);
 ---
@@ -108,6 +109,38 @@ const S = defineSections([
     <button class="button text" type="button">Try again</button>
   </div>
 </div>
+`} />
+  </Section>
+  <Section {...S["error-summary"]}>
+        <p>
+          An <code>.error-summary</code> alert at the top of a
+          <code>novalidate</code> form lists what is wrong when the form is
+          submitted. While any field is invalid the submit stops, as it would
+          natively, and the Forms behavior writes one link per invalid field
+          into the summary's <code>&lt;ul&gt;</code>: the field's label and
+          the browser's message. A radio group gets one link, named by its
+          legend. Then the summary shows and takes focus, so a screen reader
+          reads it. Each link focuses its field. A valid submit hides the
+          summary again, and a submit button with
+          <code>formnovalidate</code> skips the check.
+        </p>
+        <p>
+          <code>novalidate</code> is required. Without it the browser stops an
+          invalid form before the submit event, and only the first field's
+          bubble appears. Keep each field's own error text too; the summary
+          only gathers them.
+        </p>
+<Code code={`
+<form novalidate>
+  <div class="alert critical error-summary" hidden aria-labelledby="problem">
+    <span class="material-symbols" aria-hidden="true">error</span>
+    <h2 id="problem">There is a problem</h2>
+    <ul></ul>
+  </div>
+  <label for="email">Email address</label>
+  <input id="email" type="email" required>
+  <button type="submit">Send</button>
+</form>
 `} />
   </Section>
   <Section {...S.tokens}>

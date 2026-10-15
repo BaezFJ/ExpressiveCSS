@@ -11,6 +11,8 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "sorting", label: "Sorting" },
   { id: "selection", label: "Row selection" },
+  { id: "bulk-actions", label: "Bulk actions" },
+  { id: "expansion", label: "Row expansion" },
   { id: "scrolling", label: "Scrolling" },
   { id: "dense", label: "Dense" },
   { id: "tokens", label: "Tokens" },
@@ -161,6 +163,57 @@ document.querySelectorAll('[data-sortable] th > button').forEach((button) => {
 </tr>
 `} />
   </Section>
+  <Section {...S["bulk-actions"]}>
+        <p>
+          A <code>.data-table-actions</code> bar written just before the
+          <code>.data-table</code> joins its top edge. It takes the selected
+          color while any row is selected. A leading label, such as a count,
+          pushes the buttons to the end. The page keeps the count current
+          and decides which buttons apply; add <code>hidden</code> to remove
+          the bar.
+        </p>
+<Code code={`
+<div class="data-table-actions">
+  <span>2 selected</span>
+  <button type="button" class="button text">Archive</button>
+  <button type="button" class="button text">Delete</button>
+</div>
+<div class="data-table">
+  <table>…</table>
+</div>
+`} />
+  </Section>
+  <Section {...S.expansion}>
+        <p>
+          A <code>tr.data-table-detail</code> right after a row shows only
+          while that row holds a button with <code>aria-expanded="true"</code>.
+          The page flips the attribute; the framework shows the row and turns
+          the button's icon. Put the toggle in a <code>&lt;td&gt;</code>,
+          because a button in a <code>&lt;th&gt;</code> is drawn as a sort
+          control, and give the detail cell a <code>colspan</code> across the
+          table.
+        </p>
+<Code code={`
+<tr>
+  <th scope="row">Order 1042</th>
+  <td class="numeric">$87.00</td>
+  <td>
+    <button type="button" class="icon-button" aria-expanded="false"
+            aria-controls="order-1042" aria-label="Details for order 1042">
+      <span class="material-symbols" aria-hidden="true">expand_more</span>
+    </button>
+  </td>
+</tr>
+<tr id="order-1042" class="data-table-detail">
+  <td colspan="3">Two items, shipped Monday.</td>
+</tr>
+`} />
+<Code code={`
+toggle.addEventListener('click', () => {
+  toggle.setAttribute('aria-expanded', String(toggle.getAttribute('aria-expanded') !== 'true'));
+});
+`} />
+  </Section>
   <Section {...S.scrolling}>
         <p>
           The header row sticks to the top of the wrapper once the wrapper
@@ -248,6 +301,10 @@ document.querySelectorAll('[data-sortable] th > button').forEach((button) => {
           <tr>
             <td><code>--md-comp-data-table-selected-container-color</code></td>
             <td><code>--md-sys-color-secondary-container</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-data-table-detail-container-color</code></td>
+            <td><code>--md-sys-color-surface-container-low</code></td>
           </tr>
         </TokenTable>
   </Section>

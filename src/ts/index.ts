@@ -18,6 +18,7 @@ import { SideSheets } from "./behaviors/sideSheets";
 import { Forms } from "./behaviors/forms";
 import { Copy } from "./behaviors/copy";
 import { Theme } from "./behaviors/theme";
+import { PaneResize } from "./behaviors/paneResize";
 
 export * from './modular';
 
@@ -40,3 +41,4 @@ BottomSheets.Init();
 SideSheets.Init();
 Copy.Init();
 Theme.Init();
+PaneResize.Init();

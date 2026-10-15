@@ -5,6 +5,7 @@ export { SideSheets } from './behaviors/sideSheets';
 export { Forms } from './behaviors/forms';
 export { Copy } from './behaviors/copy';
 export { Theme } from './behaviors/theme';
+export { PaneResize } from './behaviors/paneResize';
 export { AutoInit } from './components/registry';
 export type { AutoInitOptions } from './components/registry';
 

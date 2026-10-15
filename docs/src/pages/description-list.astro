@@ -1,0 +1,78 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "groups", label: "Groups and several values" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="description_list">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>dl.description-list</code> shows a record's details as
+          label and value pairs, such as an order's status, address and total.
+        </p>
+        <p>
+          Each <code>&lt;dt&gt;</code> is a label and the
+          <code>&lt;dd&gt;</code> after it is its value. Labels take the first
+          column from Medium widths up, and a divider runs above each pair. At
+          Compact widths each label sits above its value. For big numbers in
+          tiles, use <a href={route("stat")}>stat</a> instead.
+        </p>
+        <dl class="description-list mb-3">
+          <dt>Status</dt><dd>Shipped</dd>
+          <dt>Ship to</dt><dd>Alvin Lee, 12 Harbor Road, Portland</dd>
+          <dt>Total</dt><dd>$87.00</dd>
+        </dl>
+<Code code={`
+<dl class="description-list">
+  <dt>Status</dt><dd>Shipped</dd>
+  <dt>Ship to</dt><dd>Alvin Lee, 12 Harbor Road, Portland</dd>
+  <dt>Total</dt><dd>$87.00</dd>
+</dl>
+`} />
+  </Section>
+  <Section {...S.groups}>
+        <p>
+          A <code>&lt;div&gt;</code> may wrap each pair, as HTML allows; it
+          adds no box. A label with several values lists them as consecutive
+          <code>&lt;dd&gt;</code> elements, which stack in the value column
+          without a divider between them.
+        </p>
+<Code code={`
+<dl class="description-list">
+  <div>
+    <dt>Contacts</dt>
+    <dd>ada@example.com</dd>
+    <dd>+1 555 0100</dd>
+  </div>
+</dl>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.description-list</code>.</p>
+        <TokenTable>
+          <tr>
+            <td><code>--md-comp-description-list-label-width</code></td>
+            <td>minmax(8rem, 33%)</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-description-list-divider-color</code></td>
+            <td><code>--md-sys-color-outline-variant</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-description-list-padding</code></td>
+            <td>12px</td>
+          </tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

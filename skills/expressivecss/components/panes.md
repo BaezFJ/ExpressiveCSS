@@ -9,7 +9,7 @@ Component ID: `panes`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `19440ccb0b52b4464530ec543d9cbcb4f5982b1c180cdd78852d61d8b232e04c`
+Contract SHA-256: `2c0b190265a7278de1eb7c1744a26bc40f2ca88a830ff57fe0e3352706ffb4bf`
 
 #### Selection and adaptation
 
@@ -70,7 +70,7 @@ Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane`
 
 #### Also documented
 
-The Panes section of the [API reference](https://www.expressivecss.com/llm.md) also covers List-detail, Compact, Supporting pane, Equal, Three-pane, Appearance, Pane anatomy, Tokens.
+The Panes section of the [API reference](https://www.expressivecss.com/llm.md) also covers List-detail, Compact, Supporting pane, Equal, Three-pane, Resizing, Appearance, Pane anatomy, Tokens.
 
 #### Rules
 

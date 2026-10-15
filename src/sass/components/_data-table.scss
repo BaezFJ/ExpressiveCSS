@@ -12,7 +12,11 @@
 // Sorting and selection are page state written into the markup:
 //   th[aria-sort]      a <button> in the header cell shows the sort arrow
 //   row checkbox       a checked box in the first cell selects the row
-// The framework only draws them; the page reorders rows.
+//   [aria-expanded]    a button in a row shows or hides the
+//                      tr.data-table-detail right after it
+// The framework only draws them; the page reorders rows and flips
+// aria-expanded. A .data-table-actions bar just before the wrapper joins its
+// top edge and takes the selected color while any row is selected.
 //
 // Tokens:
 //   --md-comp-data-table-container-color           surface
@@ -22,6 +26,7 @@
 //   --md-comp-data-table-row-height                52px / dense 40px
 //   --md-comp-data-table-cell-padding              16px
 //   --md-comp-data-table-selected-container-color  secondary-container
+//   --md-comp-data-table-detail-container-color    surface-container-low
 
 .data-table {
   --md-comp-data-table-container-color: var(--md-sys-color-surface);
@@ -31,6 +36,7 @@
   --md-comp-data-table-row-height: 52px;
   --md-comp-data-table-cell-padding: 16px;
   --md-comp-data-table-selected-container-color: var(--md-sys-color-secondary-container);
+  --md-comp-data-table-detail-container-color: var(--md-sys-color-surface-container-low);
 
   box-sizing: border-box;
   max-width: 100%;
@@ -119,6 +125,25 @@
     }
   }
 
+  // Row expansion. The detail row shows only while the row before it holds an
+  // expanded toggle, so the page flips one attribute and nothing else.
+  > table > tbody > tr:not(:has([aria-expanded="true"])) + tr.data-table-detail {
+    display: none;
+  }
+
+  > table > tbody > tr.data-table-detail > td {
+    padding-block: 16px;
+    background-color: var(--md-comp-data-table-detail-container-color);
+  }
+
+  td [aria-expanded] > #{$icon} {
+    transition: transform 0.2s ease-out;
+  }
+
+  td [aria-expanded="true"] > #{$icon} {
+    transform: rotate(180deg);
+  }
+
   // A checkbox cell hugs its box rather than taking a text column's width.
   :is(th, td):has(> label > input[type="checkbox"]:only-child) {
     width: 1px;
@@ -182,5 +207,48 @@
   .data-table th > button::after {
     forced-color-adjust: none;
     background-color: CanvasText;
+  }
+}
+
+// Bulk actions. A bar of buttons for the selected rows, written just before
+// the .data-table it acts on. It shares the table's outline and joins its top
+// edge; while a body row is selected it takes the selected color, so it reads
+// as part of the selection. The page keeps any "3 selected" text current.
+.data-table-actions {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 56px;
+  margin: $element-top-margin 0 0;
+  padding: 8px 16px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-block-end: 0;
+  border-radius: 12px 12px 0 0;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  transition: background-color 0.2s ease-out;
+  @include typescale("title-small");
+
+  &[hidden] {
+    display: none;
+  }
+
+  &:has(+ .data-table > table > tbody > tr > :first-child input[type="checkbox"]:checked) {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+
+  // The count or label pushes the buttons to the end.
+  > :first-child:not(button, .button, .icon-button) {
+    margin-inline-end: auto;
+  }
+
+  // A hidden bar leaves the table's own top edge alone.
+  &:not([hidden]) + .data-table {
+    margin-block-start: 0;
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
   }
 }

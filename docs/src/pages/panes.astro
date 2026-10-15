@@ -14,6 +14,7 @@ const S = defineSections([
   { id: "supporting", label: "Supporting pane" },
   { id: "equal", label: "Equal" },
   { id: "three-pane", label: "Three-pane" },
+  { id: "resizing", label: "Resizing" },
   { id: "appearance", label: "Appearance" },
   { id: "pane", label: "A pane" },
   { id: "tokens", label: "Tokens" },
@@ -381,6 +382,36 @@ back.addEventListener('click', () => {
   <section class="list-pane">…</section>
   <section class="detail-pane">…</section>
   <section class="supporting-pane">…</section>
+</div>
+`} />
+  </Section>
+  <Section {...S.resizing}>
+      <p>
+        A <code>&lt;button class="drag-handle"&gt;</code> written between
+        the two panes of a list-detail or supporting layout lets people
+        resize them at 840px and up. It replaces the spacer and the divider,
+        and resizes the list or supporting pane. Drag it; press
+        <kbd>Left</kbd> or <kbd>Right</kbd> to move it 16px
+        (<kbd>Shift</kbd> for 64px) and <kbd>Home</kbd> or <kbd>End</kbd>
+        for the narrowest and widest; or click it, or press
+        <kbd>Enter</kbd>, to step through narrow, middle and wide. The
+        click is the single-pointer alternative to dragging. A resized pane
+        stays at least 240px wide, and the other pane keeps
+        <code>--md-comp-pane-primary-min-width</code>.
+      </p>
+      <p>
+        The new width is written to <code>--md-comp-pane-list-width</code>
+        or <code>--md-comp-pane-supporting-width</code> on the layout, so
+        save that value to restore it later. The root bundle starts the
+        <code>PaneResize</code> behavior on load; with the modular entry,
+        call <code>PaneResize.Init()</code>. Equal and three-pane layouts
+        do not resize.
+      </p>
+<Code code={`
+<div class="panes list-detail">
+  <div class="list-pane">…</div>
+  <button type="button" class="drag-handle" aria-label="Resize list"></button>
+  <div class="detail-pane">…</div>
 </div>
 `} />
   </Section>

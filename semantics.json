@@ -1115,6 +1115,31 @@
           "selector": ".alert:is([role=\"alert\"], [role=\"status\"], [aria-live]):has(button, a[href], input, select, textarea)",
           "fragmentSafe": true,
           "message": "Put role=\"status\" or role=\"alert\" on the alert's text, not on an alert that holds buttons or links. A live region reads its controls' labels as part of the message."
+        },
+        {
+          "id": "error-summary-form-is-novalidate",
+          "kind": "forbid",
+          "selector": "form:not([novalidate]):has(.error-summary)",
+          "message": "Add novalidate to a form with an .error-summary. Without it the browser stops an invalid submit before the submit event, so the summary never fills and only the first field's bubble shows."
+        },
+        {
+          "id": "error-summary-has-a-list",
+          "kind": "forbid",
+          "selector": ".error-summary:not(:has(ul, ol))",
+          "message": "Give the .error-summary an empty <ul>. The Forms behavior writes one link per invalid field into it."
+        }
+      ]
+    },
+    "description-list": {
+      "status": "enforced",
+      "note": "Added with the description list component. The native <dl> is what pairs each value with its label for assistive technology, so the class only works on one.",
+      "rules": [
+        {
+          "id": "description-list-is-a-dl",
+          "kind": "forbid",
+          "selector": ".description-list:not(dl)",
+          "fragmentSafe": true,
+          "message": "Write .description-list as a <dl> with <dt> labels and <dd> values. Divs drawn as two columns read as an unpaired run of text."
         }
       ]
     },
