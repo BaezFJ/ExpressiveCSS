@@ -13,6 +13,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   1.0 removes, silent visual changes, and verification. Each step ends with a
   search for the names it replaces, and the skill installs on its own with
   `npx skills add BaezFJ/ExpressiveCSS`.
+- An "AI agents" documentation page at `/ai.html` lists the plain-text docs,
+  the install command for the agent skills, the MCP server configuration and
+  the `expressivecss-lint` command. Its skills table is read from each
+  `skills/<name>/SKILL.md`, so a new skill appears without editing the page.
 
 ### Fixed
 
