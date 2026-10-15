@@ -5,6 +5,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- The `expressivecss-migration` agent skill moves a project from Materialize
+  or an older 0.x release to current names in eight steps: package and
+  assets, JavaScript API, removed components, classes and markup, the aliases
+  1.0 removes, silent visual changes, and verification. Each step ends with a
+  search for the names it replaces, and the skill installs on its own with
+  `npx skills add BaezFJ/ExpressiveCSS`.
+
 ### Fixed
 
 - A JavaScript tooltip whose trigger sits in a shadow root now starts hidden
