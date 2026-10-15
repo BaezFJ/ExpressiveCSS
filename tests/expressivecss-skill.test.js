@@ -999,8 +999,9 @@ describe('the ExpressiveCSS agent skill', () => {
     // the particles row at 40,301 bytes (+341);
     // the map row at 40,672 bytes (+371); the 0.10.0 skill version at 40,673 bytes (+1);
     // the keypad and keyboard row at 40,986 bytes (+313); the layout guide route
-    // at 41,157 bytes (+171).
-    assert.ok(bytes <= 41157, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // at 41,157 bytes (+171); the layout, dashboard and chart discovery terms
+    // at 41,205 bytes (+48).
+    assert.ok(bytes <= 41205, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 

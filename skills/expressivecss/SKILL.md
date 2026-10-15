@@ -1,6 +1,6 @@
 ---
 name: expressivecss
-description: Build, refine, review, install, theme, and debug ExpressiveCSS interfaces. Use for @expressivecss/expressive markup, components, accessibility, runtime lifecycle, performance, and framework contributions. Exclude generic Material Design or CSS work in projects without ExpressiveCSS.
+description: Build, refine, review, install, theme, and debug ExpressiveCSS interfaces, including page layouts, dashboards, and charts. Use for @expressivecss/expressive markup, components, accessibility, runtime lifecycle, performance, and framework contributions. Exclude generic Material Design or CSS work in projects without ExpressiveCSS.
 license: MIT
 compatibility: Requires access to the target project's files or the public ExpressiveCSS documentation.
 metadata:
