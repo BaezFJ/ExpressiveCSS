@@ -351,15 +351,16 @@ export class Tabs extends Component<TabsOptions> {
     this._track.scrollTo({ left, behavior });
   }
 
-  // A smooth scroll that something else cut short never arrives. Once the
-  // track has been still for half a second, stop waiting and take whatever
-  // panel it settled on. Every scroll event restarts the wait, so a slow
-  // scroll on a busy page is never cut off.
+  // A smooth scroll that something cut short never arrives, and on a busy page
+  // one can also take a while to start. Once the track has been still for half
+  // a second, jump to the selected panel. The selection stands: a swipe or
+  // wheel that took over has already released the target, so the scroll
+  // events that follow choose the panel. Every scroll event restarts the wait.
   private _waitForScroll() {
     clearTimeout(this._scrollTimer);
     this._scrollTimer = setTimeout(() => {
       this._releaseScrollTarget();
-      this._handleTrackScroll();
+      this._scrollToActivePanel('instant');
     }, 500);
   }
 

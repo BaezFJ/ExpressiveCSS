@@ -1905,6 +1905,33 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     }
   });
 
+  browserTest(`Tabs keep a clicked tab when the scroll is slow to start (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await fixture(page, { swipeable: true });
+      // A busy page: the first scroll starts 700ms late, after the 500ms wait
+      // for a stalled scroll has run out.
+      await page.evaluate(() => {
+        const track = document.querySelector('.tabs-content');
+        const scrollTo = track.scrollTo.bind(track);
+        let delayed = false;
+        track.scrollTo = (options) => {
+          if (delayed) return scrollTo(options);
+          delayed = true;
+          setTimeout(() => scrollTo(options), 700);
+        };
+      });
+      await page.locator('a[href="#two"]').click();
+      await page.waitForTimeout(1200);
+      assert.deepEqual(await page.evaluate(() => ({ shown, panel: tabs._content.id, index: tabs._trackIndex() })), { shown: ['two'], panel: 'two', index: 1 });
+    } finally {
+      try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }
+    }
+  });
+
   browserTest(`Tabs started while hidden show the current panel once visible (${engine})`, async () => {
     const browser = await type.launch();
     let page;

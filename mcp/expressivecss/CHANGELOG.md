@@ -7,8 +7,9 @@
   the replacement. The new rule IDs start with `legacy-`: material-icons,
   i-icon, visibility-alias, helper-class, renamed-component, picker-root,
   sheet-class, variant-alias, markup-path, carousel-flat, color-role,
-  datepicker-range and range-export. They read JSX `className` as well as
-  `class`.
+  selector, datepicker-range and range-export. Class names match as whole
+  tokens in `class`, JSX `className`, `className={"…"}` and template
+  literals; `legacy-selector` covers CSS selectors and query strings.
 - The three drag-handle rules select `.drag-handle` only; `.handle` is a
   removed name that `legacy-sheet-class` reports inside a bottom sheet.
 
