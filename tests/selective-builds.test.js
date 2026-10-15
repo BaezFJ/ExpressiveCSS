@@ -126,7 +126,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the splitter's padded bounds and keyboard click after a touch drag, and wrapped select labels: 66,897 gzip bytes (+35).
   // Reviewed the menubar, tour, sortable lists and image compare: 69,030 gzip bytes (+2,133).
   // Reviewed the 1.0 alias removal with scroll-snap swipeable tabs: 69,143 gzip bytes (+113).
-  assert.ok(sizes(js).gzip <= 69143, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed swipeable tabs re-aligning only when the track's width changes: 69,170 gzip bytes (+27).
+  assert.ok(sizes(js).gzip <= 69170, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

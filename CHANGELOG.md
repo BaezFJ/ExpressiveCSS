@@ -120,7 +120,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Swipeable tabs no longer use Carousel. The panels move into a full-width
   `.tabs-content` scroll-snap track, so touch and trackpad swipes are native
   scrolling. Only the shown panel is reachable by keyboard; the others are
-  `inert`. Dragging the panels with a mouse no longer switches tabs; click
+  `inert`. The track re-aligns when its width changes, so a tab bar started
+  in a closed dialog or sheet shows the current panel once opened. Dragging the panels with a mouse no longer switches tabs; click
   the tab instead.
 - Components that read `surface-variant` now read
   `surface-container-highest`, as Material 3 maps it: the unselected switch

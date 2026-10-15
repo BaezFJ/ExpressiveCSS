@@ -47,6 +47,7 @@ export class Tabs extends Component<TabsOptions> {
   private _scrollTarget: number | null = null;
   private _scrollTimer: ReturnType<typeof setTimeout>;
   private _trackObserver: ResizeObserver | null = null;
+  private _trackWidth = -1;
   _activeTabLink: HTMLAnchorElement;
   _content: HTMLElement;
   private _originalPanels = new Map<HTMLElement, { display: string; priority: string; active: boolean; inert: boolean; marker?: Comment }>();
@@ -298,9 +299,14 @@ export class Tabs extends Component<TabsOptions> {
     track.addEventListener('wheel', this._releaseScrollTarget, { passive: true });
     // A track that starts hidden (in a closed dialog or sheet) is 0px wide, so
     // the scroll below cannot reach the active panel. Re-align whenever the
-    // track's width changes, which also covers window resizes.
+    // track's width changes, which also covers window resizes. Only the width:
+    // a panel growing taller mid-swipe must not pull the track back.
     if (typeof ResizeObserver !== 'undefined') {
-      this._trackObserver = new ResizeObserver(() => this._scrollToActivePanel('instant'));
+      this._trackObserver = new ResizeObserver(() => {
+        if (track.clientWidth === this._trackWidth) return;
+        this._trackWidth = track.clientWidth;
+        this._scrollToActivePanel('instant');
+      });
       this._trackObserver.observe(track);
     }
     this._scrollToActivePanel('instant');

@@ -1006,13 +1006,21 @@ const transport = new StdioClientTransport({
     '8 legacy-renamed-component', '9 legacy-picker-root', '10 legacy-sheet-class', '11 legacy-variant-alias',
     '12 legacy-markup-path', '13 legacy-carousel-flat', '14 legacy-color-role', '15 legacy-range-export',
   ], removed.stdout);
-  // Unclosed tags must not make the tag patterns backtrack: each of these took
-  // seconds at this size before the patterns stopped at `<`.
-  const unclosedMarkup = path.join(outsideDir, 'unclosed.html');
-  await writeFile(unclosedMarkup, ['<input type="radio" ', '<i ', '<li ', '<dialog class="x ', '<dialog class="bottom-sheet">'].map((tag) => tag.repeat(Math.ceil(50_000 / tag.length))).join('\n'));
-  const unclosedStart = performance.now();
-  lint([unclosedMarkup]);
-  assert.ok(performance.now() - unclosedStart < 5_000, 'tag patterns backtrack on unclosed markup');
+  // Unclosed tags must not make the tag patterns backtrack. Each shape alone,
+  // because a file of all of them stops at the markup structure limit before
+  // any pattern runs. Every one of these took 1.9 s or more at 200 KB before
+  // the patterns stopped at `<` and tested `bottom-sheet` in a lookahead; they
+  // now take milliseconds.
+  const { inspectAuthoringRules } = await import(path.join(packageDir, 'server.js'));
+  const fill = (text) => text.repeat(Math.ceil(200_000 / text.length));
+  for (const unclosed of [
+    fill('<input type="radio" '), fill('<i '), fill('<li '), fill('<dialog class="x '), fill('<dialog class="bottom-sheet">'),
+    '<dialog ' + fill('bottom-sheet '),
+  ]) {
+    const start = performance.now();
+    inspectAuthoringRules(unclosed);
+    assert.ok(performance.now() - start < 500, `tag patterns backtrack on unclosed ${JSON.stringify(unclosed.slice(0, 30))}`);
+  }
   // Files the bounded reader refuses, and inspections that stop early, fail instead of passing silently.
   const linkedMarkup = path.join(outsideDir, 'linked.html');
   const crowdedMarkup = path.join(outsideDir, 'crowded.html');

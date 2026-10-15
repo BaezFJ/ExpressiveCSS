@@ -196,7 +196,7 @@ const LegacyPatternList = [
     id: 'legacy-sheet-class',
     severity: 'high',
     description: 'Sheet aliases were removed in 1.0; use `dialog.bottom-sheet` with `.drag-handle`, and `dialog.side-sheet` (add `.start` for the start edge).',
-    pattern: /<dialog\b[^<>]*(?<![-\w])class\s*=\s*["'][^"']*(?<![-\w])(?:bottom|right|left|right-sheet|left-sheet)(?![-\w])|<dialog\b[^<>]*bottom-sheet[^<>]*>(?:(?!<\/dialog>)[^]){0,4000}?(?<![-\w])class(?:Name)?\s*=\s*["'][^"']*(?<![-\w])handle(?![-\w])/g,
+    pattern: /<dialog\b[^<>]*(?<![-\w])class\s*=\s*["'][^"']*(?<![-\w])(?:bottom|right|left|right-sheet|left-sheet)(?![-\w])|<dialog\b(?=[^<>]*bottom-sheet)[^<>]*>(?:(?!<\/dialog>)[^]){0,4000}?(?<![-\w])class(?:Name)?\s*=\s*["'][^"']*(?<![-\w])handle(?![-\w])/g,
   },
   {
     id: 'legacy-variant-alias',

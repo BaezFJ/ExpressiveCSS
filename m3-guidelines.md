@@ -817,7 +817,7 @@ Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a
 
 ## 7.3 Side sheets
 
-**M3:** Side sheets (standard / modal). **ExpressiveCSS:** `dialog.side-sheet` (`.right` default, `.left`). `SideSheets.Init()` drag-dismisses from the header or the inner 24 dp edge.
+**M3:** Side sheets (standard / modal). **ExpressiveCSS:** `dialog.side-sheet` (trailing edge by default, `.start` for the leading edge). `SideSheets.Init()` drag-dismisses from the header or the inner 24 dp edge.
 
 **Use when** optional content should sit **beside** the main view: inspector, filters, in-app player, thread details. The user can navigate *inside* the sheet; a back icon is that affordance.
 
@@ -873,7 +873,7 @@ Use snackbar for temporary confirmations and dialog only for blocking decisions.
 
 ## 7.6 Tooltips
 
-**M3:** Tooltips (plain / rich). **ExpressiveCSS:** child `.tooltip` (CSS on hover and keyboard focus). Placement: `top` (M3 default), `bottom`, `left`, `right`. `rich` / `max` for rich. Legacy `.tooltipped` still AutoInits.
+**M3:** Tooltips (plain / rich). **ExpressiveCSS:** child `.tooltip` (CSS on hover and keyboard focus). Placement: `top` (M3 default), `bottom`, `left`, `right`. `rich` for rich. Legacy `.tooltipped` still AutoInits.
 
 **Use when**
 
@@ -1130,7 +1130,7 @@ Three **selection controls**. They are not interchangeable.
 
 ## 9.2 Carousel
 
-**M3:** Carousel (multi-browse, uncontained, hero, full-screen). **ExpressiveCSS:** `.carousel`. Default = multi-browse. Add `.uncontained`, `.hero`, `.hero.center-aligned`, or `.full-screen` for the other M3 layouts. `.flat` / `fullWidth` is retained only for full-width compatibility such as swipeable tabs. `AutoInit()`.
+**M3:** Carousel (multi-browse, uncontained, hero, full-screen). **ExpressiveCSS:** `.carousel`. Default = multi-browse. Add `.uncontained`, `.hero`, `.hero.center-aligned`, or `.full-screen` for the other M3 layouts. `AutoInit()`.
 
 **Use when** items are **visual** and the user is browsing, not searching for a specific row (that is a list).
 

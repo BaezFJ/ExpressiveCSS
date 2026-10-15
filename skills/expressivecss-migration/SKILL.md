@@ -206,9 +206,9 @@ These still work in 0.x and stop working in 1.0. Replace them now; each replacem
 | Carousel `.flat`, `fullWidth: true`, `.carousel-fixed-item` | An M3 layout such as `.hero` or `.uncontained`; place a fixed overlay yourself |
 | The `background`, `on-background`, `surface-variant` and `surface-tint` roles, their `-light`/`-dark` pairs and classes | `surface`, `on-surface`, `surface-container-highest` and `primary` |
 
-Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git "material-icons|<i[ >]|hide-on-(small-only|small-and-down|med-only|xxl-only)|show-on-(small|xxl)\b|no-padding|center-block|no-select|\bpreloader\b|\"(datepicker|timepicker)\"|searchbar|dialog[^>]*\b(bottom|right|left)(-sheet)?\b|\.handle\b|tooltip[^\"]*\bmax\b|Expressive\.Range|class=\"tab\b|carousel[^\"]*\bflat\b|fullWidth|carousel-fixed-item|(-color-|[\" .])(on-background|surface-variant|surface-tint)\b|-color-background\b" .`
+Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git "material-icons|<i>[a-z0-9_]+</i>|hide-on-(small-only|small-and-down|med-only|xxl-only)|show-on-(small|xxl)\b|no-padding|center-block|no-select|\bpreloader\b|searchbar|class=.([^\"']* )?(datepicker|timepicker|range|range-field|handle|background|background-text)( [^\"']*)?[\"']|<dialog[^>]*class=.([^\"']* )?(bottom|right|left|right-sheet|left-sheet)( [^\"']*)?[\"']|class=.([^\"']* )?(toolbar|tooltip|chip)( [^\"']*)? (max|filled|active)( [^\"']*)?[\"']|class=.([^\"']* )?(max|filled|active) ([^\"']* )?(toolbar|tooltip|chip)( [^\"']*)?[\"']|<li[^>]*class=.([^\"']* )?tab( [^\"']*)?[\"']|<div[^>]*class=.([^\"']* )?switch( [^\"']*)?[\"']|class=.(button )?extra[\"']|\.handle\b|Expressive\.Range|startRange|endRange|carousel[^\"]*\bflat\b|fullWidth|carousel-fixed-item|(-color-|[\" .])(on-background|surface-variant|surface-tint)\b|-color-background\b" .`
 
-The `<i[ >]` and dialog patterns over-match, so check each hit by hand. `.hide-on-med-and-down` and `.hide-on-med-and-up` are current helpers, not aliases; keep them.
+Check each hit by hand: `searchbar` and `preloader` also match ids and prose, and `<i>[a-z0-9_]+</i>` matches a short italic word. `.hide-on-med-and-down` and `.hide-on-med-and-up` are current helpers, not aliases; keep them.
 
 ---
 
