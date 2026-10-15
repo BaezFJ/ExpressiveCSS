@@ -208,7 +208,7 @@ Expressive.Timepicker.init(elem, {
               <td><code>dialRadius</code></td>
               <td>Number</td>
               <td><code>135</code></td>
-              <td>Radius of the dial, in pixels. The clock face is drawn at twice this size; <code>.timepicker-plate</code> is 260px in CSS, so resize the plate to match.</td>
+              <td>Radius of the dial, in pixels. The clock face is drawn at twice this size inside <code>.timepicker-plate</code>, which CSS fixes at 260px. Change the plate's <code>width</code> and <code>height</code> in step with this option.</td>
             </tr>
             <tr>
               <td><code>outerRadius</code></td>
@@ -226,7 +226,7 @@ Expressive.Timepicker.init(elem, {
               <td><code>tickRadius</code></td>
               <td>Number</td>
               <td><code>20</code></td>
-              <td>Radius of the circle that marks the selected value, in pixels.</td>
+              <td>Radius of the circle that marks the selected value, in pixels. Each <code>.timepicker-tick</code> is 40px in CSS, twice the default, so resize the ticks in step with this option.</td>
             </tr>
         </OptionsTable>
   </Section>
