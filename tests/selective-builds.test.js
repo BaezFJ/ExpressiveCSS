@@ -125,7 +125,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the error summary and pane resizing: 66,862 gzip bytes (+840).
   // Reviewed the splitter's padded bounds and keyboard click after a touch drag, and wrapped select labels: 66,897 gzip bytes (+35).
   // Reviewed the menubar, tour, sortable lists and image compare: 69,030 gzip bytes (+2,133).
-  assert.ok(sizes(js).gzip <= 69030, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the 1.0 alias removal with scroll-snap swipeable tabs: 69,143 gzip bytes (+113).
+  assert.ok(sizes(js).gzip <= 69143, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -161,5 +162,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the description list, data table bulk actions and row expansion, and resizable panes: 68,410 gzip bytes (+252).
   // Reviewed data table toggles that leave row menus alone: 68,426 gzip bytes (+16).
   // Reviewed the mega menu, menubar, tour, calendar, image compare, sortable rows and color inputs: 70,392 gzip bytes (+1,966).
-  assert.ok(sizes(css).gzip <= 70392, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the 1.0 alias and legacy color role removal: 68,614 gzip bytes (-1,778).
+  assert.ok(sizes(css).gzip <= 68614, `CSS gzip: ${sizes(css).gzip}`);
 });

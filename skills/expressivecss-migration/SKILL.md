@@ -15,7 +15,7 @@ metadata:
 
 ExpressiveCSS is derived from MaterializeCSS v2.2.2, and its names changed in three waves. 0.5.0 removed the Materialize components Material 3 has no place for. 0.8.0 renamed the rest to Material 3 names and corrected the markup so each element states what the component is. 1.0 removes the aliases kept since 0.8.0.
 
-Almost nothing warns. Old classes render unstyled or slightly wrong, and old markup from before 0.8.0 keeps rendering. The search for leftover names after each step is the real check, so run it every time.
+Almost nothing warns. Old classes render unstyled or slightly wrong, and some markup from before 0.8.0 keeps rendering until 1.0 removes it. The search for leftover names after each step is the real check, so run it every time.
 
 For a component's full markup, options and rules, use the `expressivecss` skill or the [API reference](https://www.expressivecss.com/llm.md). The [changelog](https://github.com/BaezFJ/ExpressiveCSS/blob/master/CHANGELOG.md) has a Migration entry for every release that needs one.
 
@@ -131,7 +131,7 @@ Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.
 
 ## Step 5: Classes and markup
 
-Materialize names, and markup that 0.8.0 corrected. Old markup in this table still renders, so nothing tells you it is wrong.
+Materialize names, and markup that 0.8.0 corrected. Before 1.0 much of the old markup in this table still renders, so nothing tells you it is wrong; in 1.0 most of it stops rendering.
 
 | Old | Current |
 | --- | --- |
@@ -196,15 +196,17 @@ These still work in 0.x and stop working in 1.0. Replace them now; each replacem
 | `<hr>` between menu items | `<li class="divider" role="separator"></li>` |
 | `<button>` or `.btn` as a file trigger | `<label class="button">` wrapping the input |
 | `Expressive.Range` | `Expressive.Slider` |
+| Datepicker `startRange`, `endRange` options | `isDateRange` |
+| A navigation rail FAB written `a.button.extra` | `a.button`; the rail sizes it |
 | `.extra` on a common button | `.medium` for the 56dp button; its label grows to `title-medium`. `circle extra` is still the FAB |
 | A `<span>` after a radio or switch input | Nothing: the input draws the control and the label text sits beside it |
 | `<div class="switch"><label>` | `<label class="switch">` wrapping the checkbox |
 | `.range`, `.range-field` slider hosts | `.slider`, or a `<label>` wrapping the input |
 | `ul.tabs` with `li.tab` | `<a>` links directly in `nav.tabs` |
-| Carousel `.flat`, `fullWidth: true` | An M3 layout such as `.hero` or `.uncontained` |
+| Carousel `.flat`, `fullWidth: true`, `.carousel-fixed-item` | An M3 layout such as `.hero` or `.uncontained`; place a fixed overlay yourself |
 | The `background`, `on-background`, `surface-variant` and `surface-tint` roles, their `-light`/`-dark` pairs and classes | `surface`, `on-surface`, `surface-container-highest` and `primary` |
 
-Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git "material-icons|<i[ >]|hide-on-(small-only|small-and-down|med-only|xxl-only)|show-on-(small|xxl)\b|no-padding|center-block|no-select|\bpreloader\b|\"(datepicker|timepicker)\"|searchbar|dialog[^>]*\b(bottom|right|left)(-sheet)?\b|\.handle\b|tooltip[^\"]*\bmax\b|Expressive\.Range|class=\"tab\b|carousel[^\"]*\bflat\b|fullWidth|(-color-|[\" .])(on-background|surface-variant|surface-tint)\b|-color-background\b" .`
+Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git "material-icons|<i[ >]|hide-on-(small-only|small-and-down|med-only|xxl-only)|show-on-(small|xxl)\b|no-padding|center-block|no-select|\bpreloader\b|\"(datepicker|timepicker)\"|searchbar|dialog[^>]*\b(bottom|right|left)(-sheet)?\b|\.handle\b|tooltip[^\"]*\bmax\b|Expressive\.Range|class=\"tab\b|carousel[^\"]*\bflat\b|fullWidth|carousel-fixed-item|(-color-|[\" .])(on-background|surface-variant|surface-tint)\b|-color-background\b" .`
 
 The `<i[ >]` and dialog patterns over-match, so check each hit by hand. `.hide-on-med-and-down` and `.hide-on-med-and-up` are current helpers, not aliases; keep them.
 

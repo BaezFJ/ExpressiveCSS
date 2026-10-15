@@ -114,6 +114,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Snackbar's generated close button holds its icon in a
+  `<span class="material-symbols">` instead of an `<i>`. Styles that targeted
+  `.snackbar i` need `.snackbar .material-symbols`.
 - Swipeable tabs no longer use Carousel. The panels move into a full-width
   `.tabs-content` scroll-snap track, so touch and trackpad swipes are native
   scrolling. Only the shown panel is reachable by keyboard; the others are
@@ -188,7 +191,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `li.tab`.
 - Chips: replace `.active` with `.selected`.
 - Carousel: replace `.flat` or `fullWidth: true` with an M3 layout such as
-  `.hero` or `.uncontained`.
+  `.hero` or `.uncontained`. A `.carousel-fixed-item` child is now an
+  ordinary item; position a fixed overlay in your own CSS.
 - Color: replace `--md-sys-color-background` with `surface`, `on-background`
   with `on-surface`, `surface-variant` with `surface-container-highest` and
   `surface-tint` with `primary`, in variables and in the `.x` / `.x-text`

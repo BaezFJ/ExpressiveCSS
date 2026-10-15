@@ -371,7 +371,7 @@ export class Snackbar {
       close.type = 'button';
       close.className = 'circle';
       close.setAttribute('aria-label', 'Dismiss');
-      const icon = document.createElement('i');
+      const icon = document.createElement('span');
       icon.className = 'material-symbols';
       icon.setAttribute('aria-hidden', 'true');
       icon.textContent = 'close';

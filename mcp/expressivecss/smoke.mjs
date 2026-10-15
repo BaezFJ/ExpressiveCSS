@@ -978,27 +978,38 @@ const transport = new StdioClientTransport({
   const cardContent = lint([cardContentMarkup]);
   assert.equal(cardContent.stdout.match(/legacy-card-content/gu)?.length, 1, cardContent.stdout);
   assert.match(cardContent.stdout, /card-content\.html:3:\d+ legacy-card-content/u);
-  // The names 1.0 removed are flagged on their own line; their replacements, and
-  // longer names that contain them, are not.
+  // Each name 1.0 removed is flagged on its own line (4-15). Lines 1-3 hold
+  // their replacements and markup that only shares a name: an id, italic
+  // prose, a radio label with a span and a sortable list's handle.
   const removedMarkup = path.join(outsideDir, 'removed-in-1-0.html');
   await writeFile(removedMarkup, [
-    '<span class="material-symbols" aria-hidden="true">add</span><input class="date-picker"><button class="circle extra">+</button>',
+    '<span class="material-symbols" aria-hidden="true">add</span><input class="date-picker"><button class="circle extra">+</button><p><i>et al.</i></p>',
     '<div class="toolbar docked vibrant"><button class="filled">Go</button><span class="max"></span></div><div class="datepicker-container surface-container-highest"></div>',
+    '<input id="searchbar" type="search"><label><input type="radio" name="a"> <span>Daily</span></label><ul class="sortable"><li><span class="handle"></span></li></ul>',
     '<span class="material-icons">add</span>',
+    '<button><i>add</i></button>',
+    '<div class="hide-on-small-only"></div>',
+    '<div class="no-padding"></div>',
+    '<div class="range"><input type="range" aria-label="Volume"></div>',
     '<input class="datepicker">',
+    '<dialog class="bottom"></dialog>',
     '<div class="toolbar filled"></div>',
     '<button class="extra">Compose</button>',
+    'Carousel.init(el, { fullWidth: true });',
     '<div style="background: var(--md-sys-color-surface-variant)"></div>',
     'Expressive.Range.init(el);',
-    '<div class="range"><input type="range" aria-label="Volume"></div>',
   ].join('\n'));
   const removed = lint([removedMarkup]);
   const removedIds = [...removed.stdout.matchAll(/removed-in-1-0\.html:(\d+):\d+ (legacy-[\w-]+)/gu)].map(([, line, id]) => `${line} ${id}`).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
-  assert.deepEqual(removedIds, ['3 legacy-material-icons', '4 legacy-picker-root', '5 legacy-variant-alias', '6 legacy-markup-path', '7 legacy-color-role', '8 legacy-range-export', '9 legacy-renamed-component'], removed.stdout);
+  assert.deepEqual(removedIds, [
+    '4 legacy-material-icons', '5 legacy-i-icon', '6 legacy-visibility-alias', '7 legacy-helper-class',
+    '8 legacy-renamed-component', '9 legacy-picker-root', '10 legacy-sheet-class', '11 legacy-variant-alias',
+    '12 legacy-markup-path', '13 legacy-carousel-flat', '14 legacy-color-role', '15 legacy-range-export',
+  ], removed.stdout);
   // Unclosed tags must not make the tag patterns backtrack: each of these took
   // seconds at this size before the patterns stopped at `<`.
   const unclosedMarkup = path.join(outsideDir, 'unclosed.html');
-  await writeFile(unclosedMarkup, ['<input type="radio" ', '<i ', '<li ', '<dialog class="x '].map((tag) => tag.repeat(Math.ceil(50_000 / tag.length))).join('\n'));
+  await writeFile(unclosedMarkup, ['<input type="radio" ', '<i ', '<li ', '<dialog class="x ', '<dialog class="bottom-sheet">'].map((tag) => tag.repeat(Math.ceil(50_000 / tag.length))).join('\n'));
   const unclosedStart = performance.now();
   lint([unclosedMarkup]);
   assert.ok(performance.now() - unclosedStart < 5_000, 'tag patterns backtrack on unclosed markup');

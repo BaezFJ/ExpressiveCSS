@@ -419,9 +419,9 @@ The affordance that says a thing can be dragged, added with the drag handle comp
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `drag-handle-is-hidden-or-a-control` | forbid | `:is(.handle, .drag-handle):not(button):not([aria-hidden="true"])` | must not match |
-| `drag-handle-button-is-not-hidden` | forbid | `button:is(.handle, .drag-handle)[aria-hidden="true"]` | must not match |
-| `drag-handle-button-is-named` | require-accessible-name | `button:is(.handle, .drag-handle)` | must end up with an accessible name |
+| `drag-handle-is-hidden-or-a-control` | forbid | `.drag-handle:not(button):not([aria-hidden="true"])` | must not match |
+| `drag-handle-button-is-not-hidden` | forbid | `button.drag-handle[aria-hidden="true"]` | must not match |
+| `drag-handle-button-is-named` | require-accessible-name | `button.drag-handle` | must end up with an accessible name |
 
 - **drag-handle-is-hidden-or-a-control** - A drag handle has no text and reports nothing, so on any element but a <button> it is decoration and needs aria-hidden="true". Left exposed it arrives as an unlabelled blank in the reading order. Make it a <button> with a name if it is meant to be operated.
 - **drag-handle-button-is-not-hidden** - aria-hidden on a <button> hides it from assistive technology without taking it out of the tab order, so keyboard focus lands on something that is not there. Decoration is a <span>; a control stays exposed.
