@@ -242,7 +242,7 @@ const S = defineSections([
   focus, background-tab and reduced-motion suspension.
 </p>
 <button type="button" class="button tonal mb-1" id="carousel-motion-toggle" aria-controls="carousel-motion">Pause automatic movement</button>
-<div id="carousel-motion" class="carousel flat no-autoinit" aria-label="Automatic landscape collection">
+<div id="carousel-motion" class="carousel hero no-autoinit" aria-label="Automatic landscape collection">
   <article class="carousel-item"><img src="https://picsum.photos/id/1015/800/500" alt="Mountain lake" /></article>
   <article class="carousel-item"><img src="https://picsum.photos/id/1016/800/500" alt="Forest path" /></article>
   <article class="carousel-item"><img src="https://picsum.photos/id/1018/800/500" alt="Rocky coastline" /></article>
@@ -347,15 +347,6 @@ Expressive.AutoInit(document.body, {
     <td>
       Milliseconds allowed for a programmatic scroll to land, and the part of
       each auto-advance rest that is not <code>interval</code>.
-    </td>
-  </tr>
-  <tr>
-    <td><code>fullWidth</code></td>
-    <td>Boolean</td>
-    <td><code>false</code></td>
-    <td>
-      Add the full-width compatibility layout used by swipeable tabs. Prefer an M3
-      layout class for new carousels.
     </td>
   </tr>
   <tr>

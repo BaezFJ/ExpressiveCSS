@@ -182,7 +182,7 @@ $_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-
   @include z-depth("0");
   background-color: color-mix(
     in oklab,
-    var(--md-sys-color-surface-variant) var(--md-comp-card-disabled-container-opacity),
+    var(--md-sys-color-surface-container-highest) var(--md-comp-card-disabled-container-opacity),
     transparent
   );
 }

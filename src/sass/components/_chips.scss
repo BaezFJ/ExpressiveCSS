@@ -41,11 +41,9 @@
   font-family: inherit;
   text-align: inherit;
 
-  // Selected. `.active` is the pre-0.8.0 name and still works; `:focus` used
-  // to stand in for selection here, which meant a chip could not show focus
-  // and selection as the different things they are.
-  &.selected,
-  &.active {
+  // Selected. `:focus` used to stand in for selection here, which meant a
+  // chip could not show focus and selection as the different things they are.
+  &.selected {
     background-color: var(--md-sys-color-secondary-container);
     color: var(--md-sys-color-on-secondary-container);
   }
@@ -163,7 +161,7 @@
   input:not([type]):not(.browser-default).input {
     background: none;
     border: 0;
-    color: var(--md-sys-color-on-background);
+    color: var(--md-sys-color-on-surface);
     display: inline-block;
     font-size: 16px;
     height: 32px;

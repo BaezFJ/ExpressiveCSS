@@ -215,7 +215,7 @@ these calls alongside the root entry. `AutoInit` still includes the full registr
 Both ESM entries share constructors; hosting them directly requires their chunks.
 
 Use `@use "pkg:@expressivecss/expressive/scss/custom" with ($components:
-("icons-material-design", "tabs", "carousel"), $utilities: ());` with Sass's
+("icons-material-design", "tabs"), $utilities: ());` with Sass's
 Node package importer. Tokens and base remain included. Lists preserve the given
 order; `null` includes a whole group and `()` omits it. For FormSelect and
 Datepicker use `("icons-material-design", "buttons", "menu", "forms", "datepicker")`.
@@ -706,10 +706,8 @@ Where the shipped seed `#c6a0f6` lands, for the roles you will most often replac
 | `secondary-container` | #e8ddf2 | #4b4253 |
 | `tertiary` | #7a5059 | #e8b7c0 |
 | `error` | #ba1a1a | #ffb4ab |
-| `background` | #faf8fb | #090809 |
 | `surface` | #faf8fb | #090809 |
 | `on-surface` | #1c1b1d | #e3e1e4 |
-| `surface-variant` | #e5e0e9 | #49444b |
 | `outline` | #7a757c | #938e96 |
 
 `error` is the one row that does not move when you change the seed — it is the ramp that is not generated.
@@ -724,7 +722,7 @@ The full list of role utilities lives on the Color page. Pair a fill with its `o
 <article vibrant>…</article>
 ```
 
-The remap covers `surface`, `background`, all five `surface-container` rungs, `surface-dim`, `surface-bright`, `surface-variant`, and their `on-*` roles. Accent roles are untouched, so a filled button still stands out; outline roles are untouched too, because M3's outline is neutral-variant rather than an opacity of the text color, and deriving it would turn every checkbox, radio and switch border in the subtree translucent. It points at the live role names, so a runtime theme switch reaches it.
+The remap covers `surface`, all five `surface-container` rungs, `surface-dim`, `surface-bright`, and their `on-*` roles. Accent roles are untouched, so a filled button still stands out; outline roles are untouched too, because M3's outline is neutral-variant rather than an opacity of the text color, and deriving it would turn every checkbox, radio and switch border in the subtree translucent. It points at the live role names, so a runtime theme switch reaches it.
 
 There is one ramp, tertiary — M3's for this axis. Pointing the surfaces at primary or secondary would erase every component whose own fill is that container: a tonal button, a FAB, `.toolbar.vibrant`. Set the surface tokens on your own wrapper if you want a different one.
 
@@ -1983,7 +1981,7 @@ A FAB is `circle extra` or `circle large`: 56dp, 16dp corners, `primary-containe
 
 ### Sizes
 
-Five sizes. `small` is the default at 40dp with a 20dp icon, so it needs no class. The rest are `xsmall` (32dp, 20dp icon), `medium` (56dp, 24dp, `title-medium` label), `large` (96dp, 32dp, `headline-small`) and `xlarge` (136dp, 40dp, `headline-large`). The inset and the icon gap grow with the size, and an `outlined` button's border thickens with it — 1dp up to medium, 2dp large, 3dp extra large. `extra` is the pre-1.0 name for the 56dp button and still gives you that geometry, though not `medium`'s bigger label — it never carried one. The ladder is the common button's, and `circle` is on it: a `circle` is a round common button, so it takes its rung's box *and* its rung's glyph — 40dp with a 20dp icon by default, 136dp with a 40dp icon at `xlarge`. Only `circle extra` / `circle large` step off it, because those are FAB sizes with a ladder of their own. If you want the icon *button*'s numbers — 40dp with a 24dp icon — that component is `.icon-button`.
+Five sizes. `small` is the default at 40dp with a 20dp icon, so it needs no class. The rest are `xsmall` (32dp, 20dp icon), `medium` (56dp, 24dp, `title-medium` label), `large` (96dp, 32dp, `headline-small`) and `xlarge` (136dp, 40dp, `headline-large`). The inset and the icon gap grow with the size, and an `outlined` button's border thickens with it — 1dp up to medium, 2dp large, 3dp extra large. The ladder is the common button's, and `circle` is on it: a `circle` is a round common button, so it takes its rung's box *and* its rung's glyph — 40dp with a 20dp icon by default, 136dp with a 40dp icon at `xlarge`. Only `circle extra` / `circle large` step off it, because those are FAB sizes with a ladder of their own. If you want the icon *button*'s numbers — 40dp with a 24dp icon — that component is `.icon-button`.
 
 ```html
 <button class="xsmall">Extra small</button>
@@ -2551,7 +2549,6 @@ Expressive.AutoInit(document.body, {
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `duration` | Number | `200` | Milliseconds allowed for a programmatic scroll to land, and the part of each auto-advance rest that is not `interval`. |
-| `fullWidth` | Boolean | `false` | Full-width compatibility layout used by swipeable tabs. Prefer an M3 layout class for new carousels. |
 | `indicators` | Boolean | `false` | Legacy paging dots. M3 recommends a nearby Show all path instead of overlay controls. |
 | `noWrap` | Boolean | `false` | Stop auto-advance at the last item instead of looping back to the first. Arrow keys and `set()` stop at the ends either way — a scroll track has ends. |
 | `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. Each rest is armed by the move before it rather than on a fixed phase. |
@@ -3798,7 +3795,7 @@ Escape closes an open nested menu first. A second Escape collapses the modal rai
   <button type="button" aria-label="Menu">
     <span class="material-symbols" aria-hidden="true">menu</span>
   </button>
-  <a class="button extra" href="/compose">
+  <a class="button" href="/compose">
     <span class="material-symbols" aria-hidden="true">edit</span>
     <span>Compose</span>
   </a>
@@ -5831,7 +5828,7 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 <div id="explore">Explore</div>
 ```
 
-Add `disabled` on the `<a>` (or on a wrapping `li.tab`) to make it inaccessible. Tabs become scrollable when there are too many to fit.
+Add `disabled` on the `<a>` to make it inaccessible. Tabs become scrollable when there are too many to fit.
 
 ### Secondary
 
@@ -5869,7 +5866,7 @@ document.addEventListener('DOMContentLoaded', function() {
 | --- | --- | --- | --- |
 | `duration` | Number | `300` | Indicator transition duration, in milliseconds. |
 | `onShow` | Function | `null` | Called when a new tab panel is shown. Receives the panel element. |
-| `swipeable` | Boolean | `false` | Enable swipeable tabs. Uses `responsiveThreshold`. Wraps the panels in a carousel. |
+| `swipeable` | Boolean | `false` | Enable swipeable tabs. Uses `responsiveThreshold`. Moves the panels into a scroll-snap track. |
 | `responsiveThreshold` | Number | `Infinity` | Maximum viewport width, in pixels, at which swipeable mode starts. Wider viewports stay non-swipeable. |
 
 ### Methods
@@ -5935,7 +5932,7 @@ Tabs ignore default anchor behaviour. To keep a tab as a normal hyperlink, set `
 
 ### Swipeable tabs
 
-Set `swipeable: true` to swipe between panels on touch devices. Keep the tab panels in the same wrapping container. The implementation wraps those panels in a carousel. `responsiveThreshold` is the maximum viewport width at which swipeable mode initializes; resizing later does not switch modes. Each changed swipeable selection updates `aria-current` and calls `onShow` once with the shown panel. `destroy()` removes the carousel wrapper and restores panel positions and Tabs-owned state.
+Set `swipeable: true` to swipe between panels with touch or a trackpad. Keep the tab panels in the same wrapping container. Tabs moves those panels into a full-width `.tabs-content` scroll-snap track, and only the shown panel is reachable by keyboard. `responsiveThreshold` is the maximum viewport width at which swipeable mode initializes; resizing later does not switch modes. Each changed swipeable selection updates `aria-current` and calls `onShow` once with the shown panel. `destroy()` removes the track and restores panel positions and Tabs-owned state.
 
 This demo is marked `no-autoinit` and started with `swipeable: true`.
 
@@ -7025,7 +7022,7 @@ A `.field` is the container. The `<label>` after the control is the floating lab
 
 `.input-field` is **not** the container and never was — the only rule matching it in the sheet is `.chips.input-field`.
 
-Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fields/specs). Height is 56dp. Filled is a `surface-variant` well with 4dp top corners and a 1dp / 2dp bottom indicator. Outlined is a 1dp / 2dp `outline` at 4dp. The label is `body-large` at rest and `body-small` floated. Input text is `body-large` / `on-surface`. Icons are 24dp, 12dp from the edge.
+Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fields/specs). Height is 56dp. Filled is a `surface-container-highest` well with 4dp top corners and a 1dp / 2dp bottom indicator. Outlined is a 1dp / 2dp `outline` at 4dp. The label is `body-large` at rest and `body-small` floated. Input text is `body-large` / `on-surface`. Icons are 24dp, 12dp from the edge.
 
 Add `placeholder=" "` (one space) so the label floats with CSS only. A missing placeholder, or any other string, keeps the label floated. Importing the bundle runs `Forms.Init()`; it validates `.validate` fields on `change` and starts textareas and file paths. Character Counter is not in `AutoInit()`.
 
@@ -7334,7 +7331,7 @@ A fieldset is also the right parent for a radio, checkbox, or switch group — t
 
 ### Variants
 
-The default is outlined. `filled` is a `surface-variant` well with no stroke — pair it with `outlined` fields so the wells stay distinct. `rounded` is 12dp corners (M3 medium, like a card). `outlined` and `border` name the default if you need to say it.
+The default is outlined. `filled` is a `surface-container-highest` well with no stroke — pair it with `outlined` fields so the wells stay distinct. `rounded` is 12dp corners (M3 medium, like a card). `outlined` and `border` name the default if you need to say it.
 
 `plain` drops the container for a group that already sits on a surface, such as radios in a card or a dialog: no outline, fill, padding, or margin from a preceding fieldset, and the legend starts flush with the content.
 
@@ -7504,7 +7501,7 @@ Material Design 3 switches, from the HTML.
 
 A `<label class="switch">` wrapping `<input type="checkbox">` is the control. The label text is a sibling of the input — no `.lever` required. They are CSS only. There is no JavaScript component and nothing to AutoInit.
 
-Tokens follow the [M3 switch spec](https://m3.material.io/components/switch/specs). The track is 52×32dp. Unselected is `surface-variant` with a 2dp `outline` and a 16dp handle. Selected is a `primary` track and a 24dp `on-primary` handle. The state layer is 40dp at 8% hover and 10% focus. The touch target is 48dp. The label is `body-large` / `on-surface`. Disabled is 38%.
+Tokens follow the [M3 switch spec](https://m3.material.io/components/switch/specs). The track is 52×32dp. Unselected is `surface-container-highest` with a 2dp `outline` and a 16dp handle. Selected is a `primary` track and a 24dp `on-primary` handle. The state layer is 40dp at 8% hover and 10% focus. The touch target is 48dp. The label is `body-large` / `on-surface`. Disabled is 38%.
 
 ```html
 <label class="switch">
@@ -7523,15 +7520,12 @@ Tokens follow the [M3 switch spec](https://m3.material.io/components/switch/spec
 </label>
 ```
 
-An `input + span` or `input + .lever` still works if you already have that markup.
-
 The on/off captions are decoration. Left as bare text they are folded into the label, and the switch announces itself as "Off On" — so hide them and name the control itself. A switch whose only text is a caption needs an `aria-label`, because hiding both leaves it with no name at all.
 
 ```html
 <label class="switch">
   <span aria-hidden="true">Off</span>
   <input type="checkbox" aria-label="Dark mode">
-  <span class="lever"></span>
   <span aria-hidden="true">On</span>
 </label>
 ```
@@ -7865,18 +7859,6 @@ Use the same `name` on every radio in a group. Add `disabled` to disable one. `w
 </fieldset>
 ```
 
-An `input + span` still works if you already have that markup, including the `<label class="radio">` pattern.
-
-```html
-<fieldset>
-  <legend>Colour</legend>
-  <label class="radio">
-    <input type="radio" name="group1">
-    <span>Yellow</span>
-  </label>
-</fieldset>
-```
-
 ### In a row
 
 Put the labels in a `<div class="inline">` to sit them on one line. A bare group stacks vertically. It is not a `<nav>`: a row of form controls is not navigation, and marking it as one spends a landmark and announces "navigation" over a set of choices.
@@ -7942,7 +7924,7 @@ A long label wraps and the chip grows from its 32dp minimum, with 4dp above and 
 
 The delete button needs its own `aria-label` naming the chip it removes, because its only content is an icon. The icon is `aria-hidden` in every chip: the ligature is real text and is otherwise read out alongside the label.
 
-A filter chip's selected state is `:checked` on its input, so it needs no script. Everywhere else the selected look is the `selected` class (`active` is the pre-0.8.0 name and still works).
+A filter chip's selected state is `:checked` on its input, so it needs no script. Everywhere else the selected look is the `selected` class.
 
 Clicking `.close` removes the chip only when it sits inside a `.chips` container. Importing the bundle runs `Chips.Init()` on `DOMContentLoaded`, which wires that click. A lone `.chip` does not remove itself.
 

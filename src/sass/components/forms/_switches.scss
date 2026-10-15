@@ -4,12 +4,11 @@
 //
 // Anatomy is the HTML. A <label class="switch"> wrapping
 // <input type="checkbox"> is the control. The label text is a sibling of
-// the input — no .lever required. input + .lever and input + span still
-// work (legacy).
+// the input — no .lever required.
 //
 // Tokens follow https://m3.material.io/components/switch/specs
 //   track          52×32dp, 16dp corners
-//   unselected     surface-variant + 2dp outline, 16dp handle
+//   unselected     surface-container-highest + 2dp outline, 16dp handle
 //   selected       primary track, 24dp on-primary handle
 //   state layer    40dp, 8% hover / 10% focus
 //   touch target   48dp
@@ -42,22 +41,9 @@
   user-select: none;
 }
 
-// Hide the native control only when a following span/lever draws the track.
-.switch [type="checkbox"]:has(+ .lever),
-.switch [type="checkbox"]:has(+ span) {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-
-// Paint the switch on the checkbox when there is no lever/span.
-.switch [type="checkbox"]:not(:has(+ .lever)):not(:has(+ span)) {
+// Paint the switch on the checkbox.
+.switch [type="checkbox"] {
   appearance: none;
-  position: static;
-  opacity: 1;
-  pointer-events: auto;
   flex: 0 0 var(--md-comp-switch-track-width);
   box-sizing: border-box;
   width: var(--md-comp-switch-track-width);
@@ -66,7 +52,7 @@
   padding: 0;
   border: 2px solid var(--md-sys-color-outline);
   border-radius: 16px;
-  background-color: var(--md-sys-color-surface-variant);
+  background-color: var(--md-sys-color-surface-container-highest);
   // Size the image to the handle. A 100% gradient keeps the circle in
   // the middle of the track, so background-position cannot put off on
   // the start and on on the end.
@@ -126,123 +112,4 @@
 .switch:has([type="checkbox"]:disabled) label {
   color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   cursor: default;
-}
-
-// Legacy: input + .lever or input + span draws the same anatomy.
-.switch [type="checkbox"] + .lever,
-.switch [type="checkbox"] + span {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  flex: 0 0 auto;
-  box-sizing: border-box;
-  width: var(--md-comp-switch-track-width);
-  height: var(--md-comp-switch-track-height);
-  margin: 0;
-  padding: 0;
-  border: 2px solid var(--md-sys-color-outline);
-  border-radius: 16px;
-  background-color: var(--md-sys-color-surface-variant);
-  vertical-align: middle;
-  transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
-
-  &::before,
-  &::after {
-    content: "";
-    position: absolute;
-    top: 6px;
-    left: 6px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    transition: left .2s ease, top .2s ease, width .2s ease, height .2s ease,
-      background-color .2s ease, transform .2s ease;
-  }
-
-  &::after {
-    background-color: var(--md-sys-color-outline);
-  }
-}
-
-.switch [type="checkbox"]:checked + .lever,
-.switch [type="checkbox"]:checked + span {
-  border-color: var(--md-sys-color-primary);
-  background-color: var(--md-sys-color-primary);
-
-  &::before,
-  &::after {
-    top: 2px;
-    left: 22px;
-    width: 24px;
-    height: 24px;
-  }
-
-  &::after {
-    background-color: var(--md-sys-color-on-primary);
-  }
-}
-
-.switch [type="checkbox"]:hover + .lever,
-.switch [type="checkbox"]:hover + span {
-  box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
-}
-
-.switch [type="checkbox"]:checked:hover + .lever,
-.switch [type="checkbox"]:checked:hover + span {
-  box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), transparent);
-}
-
-.switch [type="checkbox"]:focus-visible + .lever,
-.switch [type="checkbox"]:focus-visible + span {
-  box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), transparent);
-}
-
-.switch [type="checkbox"]:disabled + .lever,
-.switch [type="checkbox"]:disabled + span {
-  opacity: 0.38;
-  box-shadow: none;
-  cursor: default;
-}
-
-// The span holds the label text as well as the track.
-.switch [type="checkbox"] + span:not(.lever):not(:empty) {
-  width: auto;
-  min-width: var(--md-comp-switch-track-width);
-  height: auto;
-  min-height: var(--md-comp-switch-track-height);
-  padding-left: calc(var(--md-comp-switch-track-width) + 12px);
-  border: 0;
-  background-color: transparent;
-  border-radius: 0;
-
-  &::before {
-    border: 2px solid var(--md-sys-color-outline);
-    background-color: var(--md-sys-color-surface-variant);
-    box-sizing: border-box;
-    width: var(--md-comp-switch-track-width);
-    height: var(--md-comp-switch-track-height);
-    border-radius: 16px;
-    top: 0;
-    left: 0;
-  }
-
-  &::after {
-    top: 8px;
-    left: 8px;
-  }
-}
-
-.switch [type="checkbox"]:checked + span:not(.lever):not(:empty) {
-  background-color: transparent;
-  border-color: transparent;
-
-  &::before {
-    border-color: var(--md-sys-color-primary);
-    background-color: var(--md-sys-color-primary);
-  }
-
-  &::after {
-    top: 4px;
-    left: 24px;
-  }
 }

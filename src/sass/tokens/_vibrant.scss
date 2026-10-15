@@ -34,7 +34,6 @@
 //   outline roles    neutral-variant in M3, not an opacity of the text color.
 //                    Deriving them from on-*-container turns every checkbox,
 //                    radio and switch border inside the subtree translucent.
-//   surface-tint     an accent despite the name - it is the elevation tint.
 //   inverse-*, scrim they exist to contrast with the page, not to follow it.
 //
 // The elevation ladder does collapse: every surface-container rung resolves to
@@ -52,11 +51,10 @@
 // Every surface role, derived rather than restated: a rung added to
 // $sys-color-roles and forgotten here would keep its neutral value and sit as a
 // grey patch on an accent one. `on-` and `inverse-surface` are excluded by the
-// prefix test; surface-tint by name, per the note above.
+// prefix test.
 $_vibrant-surfaces: ();
 @each $role in $sys-color-roles {
-  @if $role == "background" or
-      (string.index($role, "surface") == 1 and $role != "surface-tint") {
+  @if string.index($role, "surface") == 1 {
     $_vibrant-surfaces: list.append($_vibrant-surfaces, $role);
   }
 }
@@ -72,5 +70,4 @@ $_vibrant-surfaces: ();
 
   --md-sys-color-on-surface: var(--md-sys-color-on-tertiary-container);
   --md-sys-color-on-surface-variant: var(--md-sys-color-on-tertiary-container);
-  --md-sys-color-on-background: var(--md-sys-color-on-tertiary-container);
 }

@@ -33,9 +33,7 @@ const S = defineSections([
           Nest a <code>&lt;span class="badge"&gt;</code> in the icon for a count,
           and put that count in the tab's <code>aria-label</code> so screen
           readers still announce it when the icon is hidden.
-          <code>.active</code> is the selected tab. You do not need
-          <code>li.tab</code>, but
-          <code>ul.tabs &gt; li.tab &gt; a</code> still works as an alias.
+          <code>.active</code> is the selected tab.
           <code>AutoInit()</code> starts every <code>.tabs</code> except
           those marked <code>no-autoinit</code>.
         </p>
@@ -79,8 +77,7 @@ const S = defineSections([
 <div id="explore">Explore</div>
 `} />
         <p>
-          Add <code>disabled</code> on the <code>&lt;a&gt;</code> (or on
-          a wrapping <code>li.tab</code>) to make it inaccessible. Tabs
+          Add <code>disabled</code> on the <code>&lt;a&gt;</code> to make it inaccessible. Tabs
           become scrollable when there are too many to fit.
         </p>
         <nav class="tabs" aria-label="Many destinations">
@@ -170,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <td><code>swipeable</code></td>
               <td>Boolean</td>
               <td><code>false</code></td>
-              <td>Enable swipeable tabs. Uses <code>responsiveThreshold</code>. Wraps the panels in a carousel.</td>
+              <td>Enable swipeable tabs. Uses <code>responsiveThreshold</code>. Moves the panels into a scroll-snap track.</td>
             </tr>
             <tr>
               <td><code>responsiveThreshold</code></td>
@@ -234,14 +231,15 @@ instance.destroy();
   </Section>
   <Section {...S.swipeable}>
         <p>
-          Set <code>swipeable: true</code> to swipe between panels on
-          touch devices. Keep the tab panels in the same wrapping
-          container. Tabs wraps those panels in a
-          carousel. <code>responsiveThreshold</code> is the maximum
+          Set <code>swipeable: true</code> to swipe between panels with
+          touch or a trackpad. Keep the tab panels in the same wrapping
+          container. Tabs moves those panels into a full-width
+          <code>.tabs-content</code> scroll-snap track, and only the shown
+          panel is reachable by keyboard. <code>responsiveThreshold</code> is the maximum
           viewport width at which swipeable mode initializes. Resizing later
           does not switch modes. Clicks and swipes update the current link and
           call <code>onShow</code> once per changed selection with the shown panel.
-          <code>destroy()</code> removes the carousel wrapper and restores panel
+          <code>destroy()</code> removes the track and restores panel
           positions and the state owned by Tabs.
         </p>
         <p>This demo is marked <code>no-autoinit</code> and started with <code>swipeable: true</code>.</p>

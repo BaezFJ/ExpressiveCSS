@@ -44,7 +44,9 @@ test('selective consumer builds remove unused components and reduce transfers', 
     }
     assert.doesNotMatch(selective.js, /Expressive_Timepicker|Expressive_NavigationDrawer/);
     if (name === 'tabs') assert.doesNotMatch(selective.js, /Expressive_Datepicker|Expressive_FormSelect/);
-    assert.match(selective.js, name === 'tabs' ? /Expressive_Carousel/ : /Expressive_Menu/);
+    // Swipeable tabs scroll their own track, so Tabs pulls in no Carousel.
+    if (name === 'tabs') assert.doesNotMatch(selective.js, /Expressive_Carousel/);
+    assert.match(selective.js, name === 'tabs' ? /Expressive_Tabs/ : /Expressive_Menu/);
     report[name] = { full: full.sizes, selective: selective.sizes };
   }
   mkdirSync(`${root}/.cache/selective-builds`, { recursive: true });

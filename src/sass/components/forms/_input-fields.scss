@@ -10,7 +10,7 @@
 // the outlined variant; the default is filled.
 //
 // Tokens follow https://m3.material.io/components/text-fields/specs
-//   filled     surface-variant well, 1rem corners, 1dp/2dp bottom indicator
+//   filled     surface-container-highest well, 1rem corners, 1dp/2dp bottom indicator
 //   outlined   1dp/2dp outline, 1rem corners
 //   height     56dp
 //   label      body-large rest, body-small floated
@@ -252,7 +252,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
         left: 16px;
         margin-left: -4px;
         padding: 0 4px;
-        background-color: var(--md-sys-color-background);
+        background-color: var(--md-sys-color-surface);
       }
 
       &:disabled,

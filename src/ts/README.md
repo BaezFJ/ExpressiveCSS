@@ -93,8 +93,6 @@ read-it-off-the-element access that key provides.
   Native tracks use container-aware sizing, fine-pointer dragging, and
   keyboard navigation. Full-screen automatically becomes a horizontal hero
   in landscape or at Expanded widths.
-  `.flat` / `fullWidth` remains the full-width compatibility track used by
-  swipeable tabs.
   `destroy()` removes generated labels, size roles, indicators, and wrappers.
 - **Menu nested menus are markup.** A `<menu>` inside an `<li>`
   is a flyout. Hover on `(hover: hover) and

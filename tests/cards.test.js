@@ -258,7 +258,7 @@ describe('Cards CSS', () => {
     );
     assert.match(
       css,
-      /\.filled:is\(\.disabled, \[aria-disabled=true\]\)[^{]*\{[^}]*box-shadow:\s*none\s*!important[^}]*var\(--md-sys-color-surface-variant\) var\(--md-comp-card-disabled-container-opacity\)/s
+      /\.filled:is\(\.disabled, \[aria-disabled=true\]\)[^{]*\{[^}]*box-shadow:\s*none\s*!important[^}]*var\(--md-sys-color-surface-container-highest\) var\(--md-comp-card-disabled-container-opacity\)/s
     );
   });
 

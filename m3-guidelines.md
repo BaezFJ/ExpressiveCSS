@@ -1266,7 +1266,7 @@ If training data or the user says the left column, emit the right.
 | `.navbar`, `.nav-wrapper`, `.brand-logo` | `header > nav` |
 | “bottom navigation” as `.tabs` | `nav.navigation-bar` |
 | “navigation drawer” | `.navigation-rail.expanded`; split trees into peer categories and page lists |
-| `.btn`, `.btn-large`, `.btn-flat` | `<button>`, `large` / `extra`, `text` |
+| `.btn`, `.btn-large`, `.btn-flat` | `<button>`, `medium`, `text` |
 | `.btn-floating` | `circle extra` / `.fab-menu` |
 | `.card`, `.card-content`, `.card-title`, `.card-action` | `<article>`, heading, `<p>`, `.actions` |
 | `.collection` | `ul.list` |

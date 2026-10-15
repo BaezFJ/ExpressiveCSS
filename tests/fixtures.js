@@ -143,7 +143,7 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: "Tabs",
     selector: ".tabs",
-    html: `<nav class="tabs" aria-label="Demo"><li class="tab"><a class="active" aria-current="page" href="#tab1">Tab 1</a></li><li class="tab"><a href="#tab2">Tab 2</a></li></nav><div id="tab1">one</div><div id="tab2">two</div>`,
+    html: `<nav class="tabs" aria-label="Demo"><a class="active" aria-current="page" href="#tab1">Tab 1</a><a href="#tab2">Tab 2</a></nav><div id="tab1">one</div><div id="tab2">two</div>`,
   },
   {
     name: "Timepicker",

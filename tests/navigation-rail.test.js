@@ -9,7 +9,7 @@ const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url),
 const railHtml = `
   <nav class="navigation-rail" aria-label="Main">
     <button type="button" aria-label="Menu"><i class="material-symbols">menu</i></button>
-    <a class="button extra" href="#!"><i class="material-symbols">edit</i><span>Label</span></a>
+    <a class="button" href="#!"><i class="material-symbols">edit</i><span>Label</span></a>
     <a href="#!" aria-current="page"><i class="material-symbols">star</i>Label</a>
   </nav>`;
 

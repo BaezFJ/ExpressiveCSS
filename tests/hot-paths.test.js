@@ -92,10 +92,10 @@ describe('layout reads per frame and resize', () => {
 
   test('Tabs re-measures at most once per burst of resize events', async () => {
     document.body.innerHTML = `
-      <ul class="tabs">
-        <li class="tab"><a class="active" href="#t1">1</a></li>
-        <li class="tab"><a href="#t2">2</a></li>
-      </ul>
+      <nav class="tabs" aria-label="Tabs">
+        <a class="active" href="#t1">1</a>
+        <a href="#t2">2</a>
+      </nav>
       <div id="t1">one</div><div id="t2">two</div>`;
     const el = document.querySelector('.tabs');
     const counter = { reads: 0 };
@@ -118,7 +118,7 @@ describe('throttled resize after a clock change', () => {
   beforeEach(resetBody);
 
   test('a backwards clock jump does not hold the trailing call', async () => {
-    document.body.innerHTML = `<ul class="tabs"><li class="tab"><a class="active" href="#t1">1</a></li></ul><div id="t1"></div>`;
+    document.body.innerHTML = `<nav class="tabs" aria-label="Tabs"><a class="active" href="#t1">1</a></nav><div id="t1"></div>`;
     const el = document.querySelector('.tabs');
     const counter = { reads: 0 };
     stubRect(el, counter);

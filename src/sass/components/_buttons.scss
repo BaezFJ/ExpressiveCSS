@@ -133,16 +133,8 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   }
 }
 
-// `.extra` is the pre-1.0 name for the 56dp button, which is now `.medium`.
-// It aliases the geometry and not the type role, because it never carried
-// one: a rail's FAB is `a.button.extra`, its label is label-large, and
-// `.medium`'s title-medium would grow it. Size, not size-and-label.
-//
-// It is also the FAB's marker class - `circle extra` is a FAB, and the rules
-// below reset this geometry entirely.
-:where(#{$_btn}).extra {
-  @include button-size("medium");
-}
+// `.extra` marks the FAB: `circle extra` is a FAB. On its own it no longer
+// sizes a common button; use `.medium` for the 56dp one.
 
 // Every size is corner.full already, so this only bites when a consumer has
 // themed the shape token to something squarer and wants one button back.

@@ -180,9 +180,9 @@ describe('Carousel', () => {
     instance.destroy();
   });
 
-  test('flat mode keeps indicators outside the scroll track', () => {
+  test('indicators stay outside the scroll track', () => {
     document.body.innerHTML = `
-      <div class="carousel flat">
+      <div class="carousel uncontained">
         <div class="carousel-item">one</div>
         <div class="carousel-item">two</div>
       </div>`;

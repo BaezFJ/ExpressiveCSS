@@ -104,6 +104,27 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Breaking (1.0).** The names kept for markup written before 0.8.0 are
   gone. Each one has a replacement that has been documented since 0.8.0;
   see Migration below.
+- **Breaking (1.0).** The remaining compatibility paths are gone too: the
+  `.extra` size on a common button, radio `input + span` and switch
+  `input + span` / `.lever` drawing, the `li.tab` wrapper, a chip's `.active`,
+  Carousel's `.flat` layout, `fullWidth` option and `.carousel-fixed-item`,
+  and the `background`, `on-background`, `surface-variant` and `surface-tint`
+  color roles with their `-light`/`-dark` pairs and utility classes.
+
+### Changed
+
+- Swipeable tabs no longer use Carousel. The panels move into a full-width
+  `.tabs-content` scroll-snap track, so touch and trackpad swipes are native
+  scrolling. Only the shown panel is reachable by keyboard; the others are
+  `inert`. Dragging the panels with a mouse no longer switches tabs; click
+  the tab instead.
+- Components that read `surface-variant` now read
+  `surface-container-highest`, as Material 3 maps it: the unselected switch
+  track, the time picker's clock face and hour and minute inputs, the date
+  picker's header rule and focused month and year field, and disabled cards.
+  In dark mode those surfaces are a little darker and more neutral. Rules
+  that read `background` or `on-background` now read `surface` and
+  `on-surface`, which resolve to the same colors.
 
 - Selectors and code that never matched or never ran. The date and time
   picker rules no longer carry hyphenated twins of their generated parts,
@@ -152,6 +173,21 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - File input: the trigger is a `<label class="button">` wrapping the
   `<input type="file">`. A `<button>` or `.btn` trigger is no longer styled.
 - Script: replace `Expressive.Range` with `Expressive.Slider`.
+- Buttons: replace `class="button extra"` on a common button with
+  `class="button medium"`. `circle extra` is still the FAB. A navigation
+  rail FAB is a plain `.button`.
+- Radios and switches: drop the `<span>` or `.lever` after the input; the
+  input draws the control and the label text sits beside it.
+- Tabs: put the `<a>` links directly in `nav.tabs`, without `ul` and
+  `li.tab`.
+- Chips: replace `.active` with `.selected`.
+- Carousel: replace `.flat` or `fullWidth: true` with an M3 layout such as
+  `.hero` or `.uncontained`.
+- Color: replace `--md-sys-color-background` with `surface`, `on-background`
+  with `on-surface`, `surface-variant` with `surface-container-highest` and
+  `surface-tint` with `primary`, in variables and in the `.x` / `.x-text`
+  utility classes. Overrides of the `-light`/`-dark` pairs move the same
+  way.
 
 ## [0.15.0] - 2026-10-14
 

@@ -8,7 +8,7 @@ export const sizes = value => ({ raw: Buffer.byteLength(value), gzip: gzipSync(v
 export const fixtures = {
   tabs: {
     exports: ['Tabs'],
-    components: ['icons-material-design', 'tabs', 'carousel'],
+    components: ['icons-material-design', 'tabs'],
     markup: '<nav class="tabs" aria-label="Sections"><a href="#first" class="active">First</a><a href="#second">Second</a></nav><section id="first">First panel</section><section id="second">Second panel</section>',
     init: "Tabs.init(document.querySelector('.tabs'), { duration: 0 })",
   },

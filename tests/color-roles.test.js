@@ -63,7 +63,7 @@ describe('Vibrant emphasis', () => {
     const rule = block('vibrant');
     assert.ok(rule, 'no [vibrant] rule in the sheet');
     for (const role of [
-      'surface', 'surface-dim', 'surface-bright', 'surface-variant', 'background',
+      'surface', 'surface-dim', 'surface-bright',
       'surface-container-lowest', 'surface-container-low', 'surface-container',
       'surface-container-high', 'surface-container-highest',
     ]) {
@@ -87,7 +87,7 @@ describe('Vibrant emphasis', () => {
     for (const role of [
       'primary', 'secondary', 'tertiary', 'error',
       'primary-container', 'secondary-container', 'tertiary-container',
-      'outline', 'outline-variant', 'surface-tint',
+      'outline', 'outline-variant',
       'inverse-surface', 'inverse-on-surface', 'scrim',
     ]) {
       assert.doesNotMatch(

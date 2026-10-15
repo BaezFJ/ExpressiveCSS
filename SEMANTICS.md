@@ -204,7 +204,7 @@ Icon-only controls need accessible names.
 | `icon-only-control-is-named` | require-accessible-name | `:is(a, button):has([aria-hidden="true"])` | must end up with an accessible name |
 | `fab-no-small-variant` | forbid | `:is(button, a.button, label.button).circle:is(.extra, .large).small` | must not match |
 | `extended-fab-requires-size` | forbid | `:is(button, a.button, label.button).extend:not(.small, .medium, .large)` | must not match |
-| `fab-no-surface-color` | forbid | `:is(button, a.button, label.button):is(.circle.extra, .circle.large, .extend):is(.surface, .surface-dim, .surface-bright, .surface-variant, .surface-container, .surface-container-lowest, .surface-container-low, .surface-container-high, .surface-container-highest)` | must not match |
+| `fab-no-surface-color` | forbid | `:is(button, a.button, label.button):is(.circle.extra, .circle.large, .extend):is(.surface, .surface-dim, .surface-bright, .surface-container, .surface-container-lowest, .surface-container-low, .surface-container-high, .surface-container-highest)` | must not match |
 
 - **icon-only-control-is-named** - Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
 - **fab-no-small-variant** - The 40dp small FAB has been removed. Use circle extra for a 56dp FAB.
@@ -561,7 +561,7 @@ Added with the rating component. The input is a fieldset of native radios drawn 
 
 - **rating-is-a-fieldset-or-an-image** - A .rating is either a <fieldset> of radios, for input, or an element with role="img" and a name, for display. Anything else draws stars that say nothing.
 - **rating-display-is-named** - Name a rating display with the value, such as aria-label="Rated 4.5 out of 5".
-- **rating-label-text-precedes-the-radio** - Put a star's visually hidden text before its radio. A span after the radio is the older input + span pattern, which hides the radio and with it the star.
+- **rating-label-text-precedes-the-radio** - Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 1.0 no longer draws.
 
 ### forms/select
 
@@ -590,7 +590,7 @@ Swept 0.8.0.
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `switch-is-label` | forbid | `.switch:not(label)` | must not match |
-| `switch-decorative-text-hidden` | require-attr | `.switch > span:not(.lever)` | must have `aria-hidden` = `true` |
+| `switch-decorative-text-hidden` | require-attr | `.switch > span` | must have `aria-hidden` = `true` |
 
 - **switch-is-label** - A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name.
 - **switch-decorative-text-hidden** - On/off captions inside the label are folded into the accessible name, which then reads "Off On". Hide them and let the label text name the switch.

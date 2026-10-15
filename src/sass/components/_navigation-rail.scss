@@ -111,6 +111,8 @@
 
   // Optional FAB. Collapsed: icon-only 56dp. Expanded: extended.
   > :is(a, button).button {
+    --md-comp-filled-button-icon-size: 24px;
+
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;

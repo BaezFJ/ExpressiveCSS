@@ -16,7 +16,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     try {
       page = await browser.newPage({ viewport: { width: 800, height: 600 } });
       await page.emulateMedia({ reducedMotion: 'reduce' });
-      for (const layout of ['uncontained', 'flat']) {
+      for (const layout of ['uncontained']) {
         await page.setContent(`
           <style>${css}
             .carousel { width: 480px; margin: 40px 180px; }

@@ -124,7 +124,7 @@
         {
           "id": "fab-no-surface-color",
           "kind": "forbid",
-          "selector": ":is(button, a.button, label.button):is(.circle.extra, .circle.large, .extend):is(.surface, .surface-dim, .surface-bright, .surface-variant, .surface-container, .surface-container-lowest, .surface-container-low, .surface-container-high, .surface-container-highest)",
+          "selector": ":is(button, a.button, label.button):is(.circle.extra, .circle.large, .extend):is(.surface, .surface-dim, .surface-bright, .surface-container, .surface-container-lowest, .surface-container-low, .surface-container-high, .surface-container-highest)",
           "fragmentSafe": true,
           "message": "Use a primary, secondary or tertiary container color for a FAB instead of a surface color."
         }
@@ -747,7 +747,7 @@
           "kind": "forbid",
           "selector": "fieldset.rating [type=\"radio\"] + span",
           "fragmentSafe": true,
-          "message": "Put a star's visually hidden text before its radio. A span after the radio is the older input + span pattern, which hides the radio and with it the star."
+          "message": "Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 1.0 no longer draws."
         }
       ]
     },
@@ -789,7 +789,7 @@
         {
           "id": "switch-decorative-text-hidden",
           "kind": "require-attr",
-          "selector": ".switch > span:not(.lever)",
+          "selector": ".switch > span",
           "attr": "aria-hidden",
           "equals": "true",
           "message": "On/off captions inside the label are folded into the accessible name, which then reads \"Off On\". Hide them and let the label text name the switch."
