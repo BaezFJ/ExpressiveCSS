@@ -407,6 +407,14 @@ back.addEventListener('click', () => {
         call <code>PaneResize.Init()</code>. Equal and three-pane layouts
         do not resize.
       </p>
+      <p>
+        From script, <code>Expressive.PaneResize.width(handle)</code> returns
+        the resizable pane's current width in pixels, or <code>null</code>
+        when the handle is not in a layout that resizes.
+        <code>Expressive.PaneResize.setWidth(handle, width)</code> sets it,
+        clamped to the same bounds as dragging, which is how to restore a
+        saved width.
+      </p>
 <Code code={`
 <div class="panes list-detail">
   <div class="list-pane">…</div>

@@ -630,7 +630,7 @@ const S = defineSections([
 `} />
   </Section>
   <Section {...S.formatting}>
-        <p>These classes handle truncation, text wrapping and hover effects.</p>
+        <p>These classes handle truncation, text wrapping, spacing resets, selection and hover effects.</p>
 
         <h5>Truncation</h5>
         <p>
@@ -659,6 +659,16 @@ const S = defineSections([
           </tbody>
         </table>
         <p>Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.</p>
+
+        <h5>Block, padding and selection</h5>
+        <table class="striped">
+          <thead><tr><th>Class</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td><code>.center-block</code></td><td><code>display: block</code> with auto inline margins centers an element that has a width.</td></tr>
+            <tr><td><code>.no-padding</code></td><td><code>padding: 0 !important</code> removes a component's own padding.</td></tr>
+            <tr><td><code>.no-select</code></td><td><code>user-select: none</code> stops text selection on a control that is dragged or pressed repeatedly. Leave content people may want to copy selectable.</td></tr>
+          </tbody>
+        </table>
 
         <h5>Hover</h5>
         <p>

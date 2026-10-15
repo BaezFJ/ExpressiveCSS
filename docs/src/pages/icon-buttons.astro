@@ -252,6 +252,9 @@ const S = defineSections([
           bundle starts the behavior on load; with the modular entry, call
           <code>Copy.Init()</code>. The clipboard needs HTTPS or localhost;
           anywhere else the snackbar reports the failure.
+          <code>Expressive.Copy.textFor(button)</code> returns the text a
+          button would copy, or <code>null</code> when its
+          <code>data-copy-for</code> names no element.
         </p>
         <div class="field mb-3" style="max-width: 20rem;">
           <input id="copy-demo-key" type="text" placeholder=" " value="sk-live-4f9a2c" readonly>

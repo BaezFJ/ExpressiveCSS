@@ -9,7 +9,7 @@ Component ID: `dialogs`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `bd71f03212a61939c306a50d67f32fcee8e6d685e15c4e2d726ec9a3e9946b9b`
+Contract SHA-256: `6c74a70f67d0a02a0e88e7ffae6cdea4722301373ca61b757e2f63ab3ab6d299`
 
 #### Selection and adaptation
 

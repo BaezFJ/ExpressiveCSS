@@ -390,6 +390,13 @@ const S = defineSections([
           This replaces legacy <code>.activator</code> markup and heading-based
           close controls. Use the same native button to open and close the panel.
         </p>
+        <p>
+          <code>Cards.init(el, options)</code> takes two callbacks, both
+          <code>null</code> by default and both called with the card:
+          <code>onOpen</code> after the panel opens and <code>onClose</code>
+          after it closes. <code>open()</code> and <code>close()</code> on the
+          instance do the same as the trigger.
+        </p>
         <div class="row" data-markdown-ignore>
           <div class="s12 m10 l10">
             <article class="filled">
@@ -454,7 +461,10 @@ const S = defineSections([
           container timing. Closing waits for the actual clip transition, including
           cancellation; zero duration and reduced motion close immediately.
           Reopening or destroying the instance invalidates pending close cleanup.
-          The <code>onClose</code> callback runs when closing starts.
+          <code>ExpandingCard.init(el, options)</code> takes two callbacks, both
+          called with the card: <code>onOpen</code> runs once the dialog is
+          open and focus is on the back button, and <code>onClose</code> runs
+          when closing starts.
         </p>
         <div class="row" data-markdown-ignore>
           <div class="s12 m10 l10">
