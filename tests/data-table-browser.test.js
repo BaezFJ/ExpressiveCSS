@@ -100,7 +100,9 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
               <th scope="row">Order 1</th>
               <td><button id="toggle" class="icon-button" type="button" aria-expanded="false" aria-controls="detail" aria-label="Details for order 1"><span id="chevron" class="material-symbols" aria-hidden="true">expand_more</span></button></td></tr>
             <tr id="detail" class="data-table-detail"><td colspan="3">Two items, shipped Monday.</td></tr>
-            <tr><td></td><th scope="row">Order 2</th><td></td></tr>
+            <tr><td></td><th scope="row">Order 2</th>
+              <td><button id="row-menu" class="icon-button" type="button" aria-haspopup="menu" aria-expanded="true" aria-label="Actions for order 2"><span id="dots" class="material-symbols" aria-hidden="true">more_vert</span></button></td></tr>
+            <tr id="menu-detail" class="data-table-detail"><td colspan="3">Not a disclosure.</td></tr>
           </tbody>
         </table></div>
         <div id="lone-bar" class="data-table-actions" hidden>Hidden bar</div>
@@ -126,7 +128,9 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       assert.equal(await style('#detail', 'display'), 'table-row', 'an expanded toggle shows its detail row');
       await page.waitForTimeout(250);
       assert.match(await style('#chevron', 'transform'), /^matrix\(-1, /, 'the chevron turns over');
-      assert.equal(await page.locator('#table').getByRole('row').count(), 4, 'the detail row stays a table row');
+      assert.equal(await style('#menu-detail', 'display'), 'none', 'an open row menu does not reveal a detail row');
+      assert.equal(await style('#dots', 'transform'), 'none', 'nor turn its icon');
+      assert.equal(await page.locator('#table').getByRole('row').count(), 4, 'the expanded detail row stays a table row');
     } finally {
       await browser.close();
     }

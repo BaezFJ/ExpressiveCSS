@@ -59,8 +59,11 @@ export class PaneResize {
 
   private static _bounds(handle: Element): [number, number] {
     const layout = handle.parentElement;
-    const other = parseFloat(getComputedStyle(layout).getPropertyValue('--md-comp-pane-primary-min-width')) || 360;
-    const room = layout.clientWidth - handle.getBoundingClientRect().width - other;
+    const style = getComputedStyle(layout);
+    const other = parseFloat(style.getPropertyValue('--md-comp-pane-primary-min-width')) || 360;
+    // The separated appearance pads the layout, so measure its content box.
+    const content = layout.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    const room = content - handle.getBoundingClientRect().width - other;
     return [minWidth, Math.max(minWidth, room)];
   }
 
@@ -99,11 +102,10 @@ export class PaneResize {
   private static _onClick(e: MouseEvent) {
     const handle = (<Element>e.target).closest?.(handleSelector);
     if (!handle) return;
-    // The click that ends a drag is not a request to step.
-    if (PaneResize._dragged) {
-      PaneResize._dragged = false;
-      return;
-    }
+    // The click that ends a mouse drag is not a request to step. A keyboard
+    // click (detail 0) always is, even after a touch drag that left the flag
+    // set; the next pointerdown clears it. BottomSheets guards the same way.
+    if (e.detail !== 0 && PaneResize._dragged) return;
     const [min, max] = PaneResize._bounds(handle);
     const current = PaneResize.width(handle);
     const next = [min, (min + max) / 2, max].find((width) => width > current + 1) ?? min;

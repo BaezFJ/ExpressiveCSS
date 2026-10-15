@@ -13,7 +13,9 @@
 //   th[aria-sort]      a <button> in the header cell shows the sort arrow
 //   row checkbox       a checked box in the first cell selects the row
 //   [aria-expanded]    a button in a row shows or hides the
-//                      tr.data-table-detail right after it
+//                      tr.data-table-detail right after it; a button with
+//                      aria-haspopup (a row's menu, select or combobox) is
+//                      not a disclosure and is left alone
 // The framework only draws them; the page reorders rows and flips
 // aria-expanded. A .data-table-actions bar just before the wrapper joins its
 // top edge and takes the selected color while any row is selected.
@@ -127,7 +129,7 @@
 
   // Row expansion. The detail row shows only while the row before it holds an
   // expanded toggle, so the page flips one attribute and nothing else.
-  > table > tbody > tr:not(:has([aria-expanded="true"])) + tr.data-table-detail {
+  > table > tbody > tr:not(:has(button[aria-expanded="true"]:not([aria-haspopup]))) + tr.data-table-detail {
     display: none;
   }
 
@@ -136,11 +138,11 @@
     background-color: var(--md-comp-data-table-detail-container-color);
   }
 
-  td [aria-expanded] > #{$icon} {
+  td button[aria-expanded]:not([aria-haspopup]) > #{$icon} {
     transition: transform 0.2s ease-out;
   }
 
-  td [aria-expanded="true"] > #{$icon} {
+  td button[aria-expanded="true"]:not([aria-haspopup]) > #{$icon} {
     transform: rotate(180deg);
   }
 

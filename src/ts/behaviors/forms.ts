@@ -190,7 +190,10 @@ export class Forms {
       // An enhanced select's label names the generated input, so fall back to
       // the label in the same .field.
       const named = group ?? field.labels?.[0] ?? field.closest('.field')?.querySelector('label');
-      const label = named?.textContent ?? field.getAttribute('aria-label') ?? '';
+      // A label can wrap its control; a select's options are not its name.
+      const text = named?.cloneNode(true) as Element;
+      text?.querySelectorAll('select, textarea').forEach((control) => control.remove());
+      const label = text?.textContent ?? field.getAttribute('aria-label') ?? '';
       const link = document.createElement('a');
       link.href = `#${field.id}`;
       link.textContent = [label.replace(/\s+/g, ' ').trim(), field.validationMessage].filter(Boolean).join(': ');

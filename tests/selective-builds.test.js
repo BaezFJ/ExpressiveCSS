@@ -121,7 +121,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Datepicker reading back its own input value without the default parser: 65,996 gzip bytes (+72).
   // Reviewed Autocomplete leaving Space and Enter to its text field: 66,022 gzip bytes (+26).
   // Reviewed the error summary and pane resizing: 66,862 gzip bytes (+840).
-  assert.ok(sizes(js).gzip <= 66862, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the splitter's padded bounds and keyboard click after a touch drag, and wrapped select labels: 66,897 gzip bytes (+35).
+  assert.ok(sizes(js).gzip <= 66897, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -155,5 +156,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the 48dp table-of-contents item height token: 67,269 gzip bytes (+10).
   // Reviewed the keypad and keyboard, with two-cell wide keys, a number row and the shared spring: 68,158 gzip bytes (+889).
   // Reviewed the description list, data table bulk actions and row expansion, and resizable panes: 68,410 gzip bytes (+252).
-  assert.ok(sizes(css).gzip <= 68410, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed data table toggles that leave row menus alone: 68,426 gzip bytes (+16).
+  assert.ok(sizes(css).gzip <= 68426, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -18,6 +18,7 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
 ${layout('ld', 'list-detail')}
 ${layout('sp', 'supporting')}
 ${layout('rtl', 'list-detail', 'rtl')}
+${layout('sep', 'list-detail separated')}
 <script>${js}</script>
 </body></html>`;
 
@@ -26,7 +27,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
-      const page = await browser.newPage({ viewport: { width: 1100, height: 900 } });
+      const page = await browser.newPage({ viewport: { width: 1100, height: 900 }, hasTouch: true });
       await page.setContent(markup);
       const width = (selector) => page.locator(selector).evaluate((el) => Math.round(el.getBoundingClientRect().width));
       const handle = (id) => page.locator(`#${id} > .drag-handle`);
@@ -75,10 +76,31 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await page.keyboard.press('ArrowRight');
       assert.equal(await width('#rtl > .list-pane'), 344, 'in RTL the list sits to the right, so Right narrows it');
 
+      // The separated appearance pads the layout; End still leaves the other pane its minimum.
+      await handle('sep').focus();
+      await page.keyboard.press('End');
+      assert.equal(await width('#sep > .detail-pane'), 360, 'padding is not counted as room');
+
+      // A touch drag ends without a click; the next Enter must still step.
+      if (name === 'chromium') {
+        const touch = await page.context().newCDPSession(page);
+        const b = await handle('ld').boundingBox();
+        const [x, y] = [b.x + b.width / 2, b.y + b.height / 2];
+        await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
+        for (let i = 1; i <= 5; i++) await touch.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x - i * 10, y }] });
+        await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+        const dragged = await width('#ld > .list-pane');
+        assert.ok(dragged < widest, 'the touch drag moved the boundary');
+        await handle('ld').focus();
+        await page.keyboard.press('Enter');
+        const stepped = await width('#ld > .list-pane');
+        assert.notEqual(stepped, dragged, 'Enter after a touch drag still steps');
+      }
+
       // Compact widths show one pane and no handle.
       await page.locator('#ld').evaluate((el) => { el.parentElement.style.width = '700px'; el.parentElement.style.containerType = 'inline-size'; });
       assert.equal(await handle('ld').isVisible(), false, 'the handle hides below 840px');
-      assert.equal(await page.getByRole('button', { name: 'Resize pane', includeHidden: true }).count(), 3, 'every handle is a named button');
+      assert.equal(await page.getByRole('button', { name: 'Resize pane', includeHidden: true }).count(), 4, 'every handle is a named button');
     } finally {
       await browser.close();
     }

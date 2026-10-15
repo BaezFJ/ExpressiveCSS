@@ -17,6 +17,7 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
   <label for="email">Email address</label>
   <input id="email" type="email" required>
   <label>Nickname <input name="nickname" required></label>
+  <label>Size <select name="size" required><option value="">Choose</option><option>Small</option><option>Large</option></select></label>
   <fieldset><legend>Delivery</legend>
     <label><input type="radio" name="delivery" value="post" required> Post</label>
     <label><input type="radio" name="delivery" value="pickup"> Pickup</label>
@@ -51,13 +52,14 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       assert.equal(await page.evaluate(() => document.activeElement.id), 'summary', 'the summary takes focus');
       assert.deepEqual(await page.evaluate(() => window.__submits), [], 'an invalid form does not reach page submit handlers');
       const texts = await links.allTextContents();
-      assert.equal(texts.length, 5, 'one link per invalid field, one per radio group');
+      assert.equal(texts.length, 6, 'one link per invalid field, one per radio group');
       assert.match(texts[0], /^Email address: \S/);
       assert.match(texts[1], /^Nickname: \S/);
-      assert.match(texts[2], /^Delivery: \S/);
-      assert.match(texts[3], /^Coupon: \S/);
-      assert.match(texts[4], /^Fruit: \S/, 'an enhanced select is named by the label in its field');
-      await links.nth(4).click();
+      assert.match(texts[2], /^Size: \S/, 'a wrapped select leaves its options out of the name');
+      assert.match(texts[3], /^Delivery: \S/);
+      assert.match(texts[4], /^Coupon: \S/);
+      assert.match(texts[5], /^Fruit: \S/, 'an enhanced select is named by the label in its field');
+      await links.nth(5).click();
       assert.equal(await page.evaluate(() => document.activeElement.closest('.field')?.querySelector('select')?.id), 'fruit', 'its link focuses the generated input');
       assert.equal(await page.evaluate(() => document.activeElement.tagName), 'INPUT');
       assert.equal(await page.getByRole('heading', { name: 'There is a problem' }).count(), 1);
@@ -73,6 +75,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await page.fill('#email', 'ada@example.com');
       await page.fill('input[name=nickname]', 'Ada');
       await page.check('input[value=pickup]');
+      await page.selectOption('select[name=size]', 'Small');
       await page.fill('input[aria-label=Coupon]', 'SAVE');
       await page.locator('#fruit').evaluate((el) => { el.value = 'apple'; });
       await page.click('#submit');
