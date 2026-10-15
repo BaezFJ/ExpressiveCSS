@@ -82,8 +82,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `onOpen` and `onClose` callbacks of cards and expanding cards, the
   timepicker's `dialRadius`, `outerRadius`, `innerRadius` and `tickRadius`
   options, `PaneResize.width()` and `PaneResize.setWidth()`,
-  `Copy.textFor()`, and the `.overline`, `.center-block`, `.no-padding` and
-  `.no-select` helpers.
+  `Copy.textFor()`, and the `.overline` helper.
 - A JavaScript tooltip whose trigger sits in a shadow root now starts hidden
   and absolutely positioned. The tooltip goes into that shadow root, where
   neither `body > .tooltip` nor `:not(body) > .tooltip` matched it, so it

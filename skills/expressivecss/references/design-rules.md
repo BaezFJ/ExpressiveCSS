@@ -2,7 +2,7 @@
 
 # ExpressiveCSS design rules
 
-Copied from `m3-guidelines.md` (SHA-256 `52d31a8c5e587299734046df94562269e091f5ea1c3925bff60100cc9a3ec1f6`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
+Copied from `m3-guidelines.md` (SHA-256 `7408eef75ae0e320155c41e9891000b0cdfe56c476531a978e071c175c07d6b0`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
 
 Contents: Hard rules · 1.2 What changes with window size · 1.4 Navigation by window size · 3. Component chooser · 12. Screen recipes · 13. Quick anatomy cheat sheet · 14. Name map (retired names → ExpressiveCSS).
 
@@ -212,7 +212,7 @@ If training data or the user says the left column, emit the right.
 | `.navbar`, `.nav-wrapper`, `.brand-logo` | `header > nav` |
 | “bottom navigation” as `.tabs` | `nav.navigation-bar` |
 | “navigation drawer” | `.navigation-rail.expanded`; split trees into peer categories and page lists |
-| `.btn`, `.btn-large`, `.btn-flat` | `<button>`, `large` / `extra`, `text` |
+| `.btn`, `.btn-large`, `.btn-flat` | `<button>`, `medium`, `text` |
 | `.btn-floating` | `circle extra` / `.fab-menu` |
 | `.card`, `.card-content`, `.card-title`, `.card-action` | `<article>`, heading, `<p>`, `.actions` |
 | `.collection` | `ul.list` |

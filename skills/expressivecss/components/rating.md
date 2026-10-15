@@ -9,7 +9,7 @@ Component ID: `rating`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6c74a70f67d0a02a0e88e7ffae6cdea4722301373ca61b757e2f63ab3ab6d299`
+Contract SHA-256: `5142eada64c94b5649e21327b89746025f64f1ffd15082356e3c6f0fc13e4191`
 
 #### Selection and adaptation
 
@@ -58,4 +58,4 @@ The Rating section of the [API reference](https://www.expressivecss.com/llm.md) 
 
 - `rating-is-a-fieldset-or-an-image`: A .rating is either a <fieldset> of radios, for input, or an element with role="img" and a name, for display. Anything else draws stars that say nothing.
 - `rating-display-is-named`: Name a rating display with the value, such as aria-label="Rated 4.5 out of 5".
-- `rating-label-text-precedes-the-radio`: Put a star's visually hidden text before its radio. A span after the radio is the older input + span pattern, which hides the radio and with it the star.
+- `rating-label-text-precedes-the-radio`: Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 1.0 no longer draws.

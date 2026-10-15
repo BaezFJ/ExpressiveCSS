@@ -9,7 +9,7 @@ Component ID: `slider`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6c74a70f67d0a02a0e88e7ffae6cdea4722301373ca61b757e2f63ab3ab6d299`
+Contract SHA-256: `5142eada64c94b5649e21327b89746025f64f1ffd15082356e3c6f0fc13e4191`
 
 #### Selection and adaptation
 
@@ -43,7 +43,7 @@ Sliders handle a maximum of zero and update value-label placement when the input
 
 Material Design 3 sliders, from the HTML.
 
-An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label; `.range` and `.range-field` are the older names and still work.
+An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label.
 
 #### Syntax
 

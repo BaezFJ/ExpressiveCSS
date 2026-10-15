@@ -9,7 +9,7 @@ Component ID: `navigation-rail`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6c74a70f67d0a02a0e88e7ffae6cdea4722301373ca61b757e2f63ab3ab6d299`
+Contract SHA-256: `5142eada64c94b5649e21327b89746025f64f1ffd15082356e3c6f0fc13e4191`
 
 #### Selection and adaptation
 
@@ -49,7 +49,7 @@ Escape closes an open nested menu first. A second Escape collapses the modal rai
   <button type="button" aria-label="Menu">
     <span class="material-symbols" aria-hidden="true">menu</span>
   </button>
-  <a class="button extra" href="/compose">
+  <a class="button" href="/compose">
     <span class="material-symbols" aria-hidden="true">edit</span>
     <span>Compose</span>
   </a>

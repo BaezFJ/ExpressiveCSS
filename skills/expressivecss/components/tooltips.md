@@ -9,7 +9,7 @@ Component ID: `tooltips`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6c74a70f67d0a02a0e88e7ffae6cdea4722301373ca61b757e2f63ab3ab6d299`
+Contract SHA-256: `5142eada64c94b5649e21327b89746025f64f1ffd15082356e3c6f0fc13e4191`
 
 #### Selection and adaptation
 
@@ -35,7 +35,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A child `.tooltip` is the bubble. No `tooltipped` class is required. They are CSS only on hover and keyboard focus. Helpers are only for placement and the rich variant: `top` (the default), `bottom`, `left`, `right`, `rich` / `max`.
+A child `.tooltip` is the bubble. No `tooltipped` class is required. They are CSS only on hover and keyboard focus. Helpers are only for placement and the rich variant: `top` (the default), `bottom`, `left`, `right`, `rich`.
 
 Tokens follow the [M3 tooltip spec](https://m3.material.io/components/tooltips/specs). A plain tooltip is `inverse-surface` / `inverse-on-surface`, 4dp corners, `body-small`, 24dp minimum, 4/8dp padding, 200dp max, no elevation and no caret. It sits 4dp from the activator. M3 prefers above.
 
