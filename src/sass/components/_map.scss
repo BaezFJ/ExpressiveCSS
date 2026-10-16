@@ -122,8 +122,10 @@
     @include typescale("body-medium");
     box-shadow: map.get($elevations, "2") !important;
 
+    // !important to beat the padding shorthand above, which MapLibre's own
+    // stylesheet forces it to carry.
     &:has(> .maplibregl-popup-close-button) {
-      padding-inline-end: 44px;
+      padding-inline-end: 44px !important;
     }
 
     :is(h1, h2, h3, h4, h5, h6) {

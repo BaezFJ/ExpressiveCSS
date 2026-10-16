@@ -166,8 +166,12 @@
   width: 50%;
 }
 
+// Physical on purpose. The `isRTL` option reverses the cells in script
+// rather than setting `dir`, so day order and page direction can disagree;
+// a logical inset pointed the band away from the range on an RTL page with
+// `isRTL: true`. ponytail: render isRTL with dir="rtl" and make this logical.
 .datepicker-day.is-daterange-start:before {
-  inset-inline-start: 50%;
+  left: 50%;
 }
 
 .datepicker-day-button {

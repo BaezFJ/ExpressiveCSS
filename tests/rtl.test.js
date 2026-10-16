@@ -16,7 +16,6 @@ describe('Right-to-left layout', () => {
     'floating label': /^\.field > label:not\(\.button, \.icon-button\)$/,
     'check mark': /^label:has\(> \[type=checkbox\]\):not\(\.switch\):not\(:has\(> \[type=checkbox\] \+ span\)\)::before$/,
     'legacy checkbox span': /^\*:not\(\.switch\) > \[type=checkbox\] \+ span:not\(\.supporting-text, \.character-counter, \.file-path\)$/,
-    'range band start': /^\.datepicker-day\.is-daterange-start:before$/,
     'modal navigation rail': /^\.navigation-rail\.expanded\.modal$/,
     'snackbar container': /^#snackbar-container$/,
     'map popup close button': /^\.map \.maplibregl-popup-close-button$/,

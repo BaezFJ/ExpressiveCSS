@@ -52,6 +52,21 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   --md-comp-filled-text-field-caret-color: var(--md-sys-color-primary);
   --input-color: var(--md-comp-filled-text-field-caret-color);
 
+  // Horizontal padding of the input, keyed to the field's direction. An input
+  // can carry its own dir ("auto" for mixed-language text, "ltr" for an email
+  // address on an RTL page), and logical padding would follow that instead,
+  // leaving the text under the prefix or suffix icon. The icons themselves
+  // are placed with :dir(), which reads the field's direction too.
+  --_field-start: 16px;
+  --_field-end: 16px;
+  --_field-left: var(--_field-start);
+  --_field-right: var(--_field-end);
+
+  &:dir(rtl) {
+    --_field-left: var(--_field-end);
+    --_field-right: var(--_field-start);
+  }
+
   position: relative;
   clear: both;
 
@@ -60,7 +75,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   input:not([type="range"], [type="checkbox"], [type="radio"], [type="file"], [type="color"]),
   textarea {
     box-sizing: border-box;
-    padding: 20px 16px 8px;
+    padding: 20px var(--_field-right) 8px var(--_field-left);
     border: none;
     border-radius: var(--md-comp-filled-text-field-container-shape);
     border-bottom: 1px solid var(--md-sys-color-on-surface-variant);
@@ -143,13 +158,14 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     top: 16px;
     cursor: text;
     transform-origin: top left;
+    pointer-events: none;
+    @include typescale("body-large");
+    // left and right: the logical inset moves on `right` in a right-to-left field.
+    transition: left 0.2s ease-out, right 0.2s ease-out, top 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out;
 
     &:dir(rtl) {
       transform-origin: top right;
     }
-    pointer-events: none;
-    @include typescale("body-large");
-    transition: left 0.2s ease-out, top 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out;
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -226,9 +242,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   }
 
   &:has(> .prefix) {
-    > :is(input, textarea) {
-      padding-inline-start: 52px;
-    }
+    --_field-start: 52px;
 
     // The exclusion list is what stops this indenting things that are not the
     // floating label. Without .prefix / .suffix in it the leading icon was
@@ -242,9 +256,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   }
 
   &:has(> .suffix) {
-    > :is(input, textarea) {
-      padding-inline-end: 52px;
-    }
+    --_field-end: 52px;
   }
 
   &.outlined {

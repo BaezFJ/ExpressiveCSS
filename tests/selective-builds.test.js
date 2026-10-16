@@ -132,7 +132,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the time picker sizing its clock face from dialRadius: 69,184 gzip bytes (+14).
   // Reviewed tooltips and snackbars in the top layer over modal dialogs: 69,446 gzip bytes (+262).
   // Reviewed keeping the snackbar out of modal dialogs: 69,325 gzip bytes (-121).
-  assert.ok(sizes(js).gzip <= 69325, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the character counter floating to inline-end: 69,328 gzip bytes (+3).
+  assert.ok(sizes(js).gzip <= 69328, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -174,5 +175,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed logical properties and :dir() swaps for right-to-left fields, checkboxes, menus and overlays: 69,311 gzip bytes (+83).
   // Reviewed the popover resets for top-layer tooltips and snackbars: 69,321 gzip bytes (+10).
   // Reviewed the disabled guards from #310 on top of the systemic fixes: 69,392 gzip bytes (+71).
-  assert.ok(sizes(css).gzip <= 69392, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed field padding keyed to the field's direction and the RTL follow-ups: 69,450 gzip bytes (+58).
+  assert.ok(sizes(css).gzip <= 69450, `CSS gzip: ${sizes(css).gzip}`);
 });

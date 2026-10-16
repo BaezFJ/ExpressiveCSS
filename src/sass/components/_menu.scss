@@ -495,17 +495,17 @@ menu[id] li > menu {
   pointer-events: none;
   transform: translateX(-4px) scale(0.96);
   transform-origin: 0 0;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    visibility 180ms ease,
+    border-radius 200ms ease;
 
   // The flyout opens toward inline-end, so it slides in from the other side.
   &:dir(rtl) {
     transform: translateX(4px) scale(0.96);
     transform-origin: 100% 0;
   }
-  transition:
-    opacity 180ms ease,
-    transform 180ms ease,
-    visibility 180ms ease,
-    border-radius 200ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -530,6 +530,11 @@ menu[id] li.submenu-start > menu {
   inset-inline-start: auto;
   inset-inline-end: 100%;
   transform-origin: 100% 0;
+
+  // Flipped toward inline-start, which is the right in a right-to-left menu.
+  &:dir(rtl) {
+    transform-origin: 0 0;
+  }
 }
 
 menu[id] li.submenu-start:is(:hover, :focus-within, .open) > menu {
