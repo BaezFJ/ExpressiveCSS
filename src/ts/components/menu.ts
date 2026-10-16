@@ -266,10 +266,10 @@ export class Menu extends Component<MenuOptions> implements Openable {
   }
 
   _setupTemporaryEventHandlers() {
-    document.body.addEventListener('click', this._handleDocumentClick);
+    document.addEventListener('click', this._handleDocumentClick);
     this.menuEl?.addEventListener('pointerdown', this._handleMenuPointerdown, { passive: true });
     this.menuEl?.addEventListener('touchmove', this._handleDocumentTouchmove, { passive: true });
-    document.body.addEventListener('touchmove', this._handleDocumentTouchmove, {
+    document.addEventListener('touchmove', this._handleDocumentTouchmove, {
       passive: true
     });
     this.menuEl?.addEventListener('keydown', this._handleMenuKeydown);
@@ -280,10 +280,10 @@ export class Menu extends Component<MenuOptions> implements Openable {
   }
 
   _removeTemporaryEventHandlers() {
-    document.body.removeEventListener('click', this._handleDocumentClick);
+    document.removeEventListener('click', this._handleDocumentClick);
     this.menuEl?.removeEventListener('pointerdown', this._handleMenuPointerdown);
     this.menuEl?.removeEventListener('touchmove', this._handleDocumentTouchmove);
-    document.body.removeEventListener('touchmove', this._handleDocumentTouchmove);
+    document.removeEventListener('touchmove', this._handleDocumentTouchmove);
     this.menuEl?.removeEventListener('keydown', this._handleMenuKeydown);
     document.removeEventListener('keydown', this._handleDocumentKeydown);
     window.removeEventListener('resize', this._handleWindowResize);

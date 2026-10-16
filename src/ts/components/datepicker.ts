@@ -383,6 +383,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     }
     if (this.options.displayPlugin === 'docked') {
       this.displayPlugin = DockedDisplayPlugin.init(this.el, this.containerEl, this.options.displayPluginOptions);
+      if (this.endDateEl) this.displayPlugin.triggers.push(this.endDateEl);
     }
     // A form reset brings back these texts long after the cache of written
     // values has moved on, so keep the dates they stood for.

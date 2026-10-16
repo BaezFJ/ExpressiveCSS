@@ -54,6 +54,9 @@ export class Tour {
     if (!steps.length) return;
     const root = tour.getRootNode() as Document | ShadowRoot;
     const previous = states.get(tour);
+    // Restarting a running tour: let go of the step it was showing, or two
+    // targets carry the highlight and the card's anchor name.
+    if (previous) Tour._release(previous.steps[previous.index]);
     states.set(tour, {
       steps,
       index: 0,

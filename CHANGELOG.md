@@ -75,6 +75,19 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A docked Datepicker for a date range now opens from its end input, and a
+  click on that input no longer closes it. The plugin counted the end input
+  as outside.
+- Menus listen for outside clicks on the document instead of `<body>`, so a
+  click below the content of a page shorter than the window closes them.
+- A MapView marker or popup whose `data-lng-lat` is not "longitude,latitude",
+  such as Google's latitude-first order, is skipped with a warning. MapLibre
+  threw on it after the map was created, which leaked the map and stopped
+  the rest of that `init()` call.
+- Restarting a running Tour releases the step it was showing, so only one
+  target carries the highlight.
+- Autocomplete results that arrive after the user left the field update the
+  list without opening it under the input.
 - A date typed into a Datepicker that the calendar would not offer, outside
   `minDate`/`maxDate`, a disabled weekend or refused by `disableDayFn`, now
   puts the input back to the selected date. A date before `minDate` used to

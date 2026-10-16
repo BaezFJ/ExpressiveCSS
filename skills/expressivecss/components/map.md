@@ -9,7 +9,7 @@ Component ID: `map`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `145d3781b3eb0d6a1b008c8fbe18920157ba6d8975068800503089d8ff3a8ffd`
+Contract SHA-256: `350faf1ed7ce537d52e160521803fe298863986c630006043654c4bc9057ee3f`
 
 #### Selection and adaptation
 
@@ -39,7 +39,7 @@ A `.map` holds `.map-marker`, `.map-popup` and `.map-controls` children. Express
 
 The default style is OpenFreeMap's Positron in the light theme and its Dark style in the dark theme; neither needs an API key. The map swaps style when the `theme` attribute or the system color scheme changes. Pass `style` as a URL or object to keep one style, or `{ light, dark }`. Keep the provider's attribution visible.
 
-- A `.map-marker` sits at its `data-lng-lat`, longitude first. With no content of its own it is a primary dot; content inside replaces the dot. A `.map-marker-label` shows below it (`.top`: above), and a child `.tooltip` shows on hover and focus. - A `<button class="map-marker">` with `aria-controls` naming a `.map-popup` opens it and sets `aria-expanded`. A map click or Escape closes it and focus returns to the marker. A `.map-popup` with its own `data-lng-lat` and no marker opens at init. - `data-draggable` lets the reader drag a marker. When the drag ends, `data-lng-lat` holds the new position and the marker fires `change`. - `.map-controls` stacks icon buttons in the top right, or `.top-left`, `.bottom-left`, `.bottom-right`; `.map-control-group` joins buttons on one surface. `data-action` is `zoom-in`, `zoom-out` (disabled at the zoom limits), `compass` (resets north; the icon follows the bearing), `locate` (centers on the reader and marks the spot) or `fullscreen` (sets `aria-pressed`; hidden where unsupported). - Routes, arcs and clusters are data, added with methods. Lines and clusters take theme colors where the map is and are redrawn in the new colors when the theme changes. The map does not plan routes. - Name the map with `role="region"` and `aria-label`, and give what matters, such as addresses, in text too.
+- A `.map-marker` sits at its `data-lng-lat`, longitude first. A value that is not two numbers with a latitude between -90 and 90 is skipped with a console warning. With no content of its own it is a primary dot; content inside replaces the dot. A `.map-marker-label` shows below it (`.top`: above), and a child `.tooltip` shows on hover and focus. - A `<button class="map-marker">` with `aria-controls` naming a `.map-popup` opens it and sets `aria-expanded`. A map click or Escape closes it and focus returns to the marker. A `.map-popup` with its own `data-lng-lat` and no marker opens at init. - `data-draggable` lets the reader drag a marker. When the drag ends, `data-lng-lat` holds the new position and the marker fires `change`. - `.map-controls` stacks icon buttons in the top right, or `.top-left`, `.bottom-left`, `.bottom-right`; `.map-control-group` joins buttons on one surface. `data-action` is `zoom-in`, `zoom-out` (disabled at the zoom limits), `compass` (resets north; the icon follows the bearing), `locate` (centers on the reader and marks the spot) or `fullscreen` (sets `aria-pressed`; hidden where unsupported). - Routes, arcs and clusters are data, added with methods. Lines and clusters take theme colors where the map is and are redrawn in the new colors when the theme changes. The map does not plan routes. - Name the map with `role="region"` and `aria-label`, and give what matters, such as addresses, in text too.
 
 #### Syntax
 
