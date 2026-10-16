@@ -82,6 +82,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   changelog for 0.13.0 and the migration skill describe. The variable moved
   to `abstracts/_variables.scss`; before, Sass rejected the configuration
   because the tokens layer is loaded with `meta.load-css()`.
+- The time picker's clock face is sized from `dialRadius`. It was a fixed
+  260px while the hand and numbers centred on the default 135px radius, so
+  the hand sat 5px off centre, further with a custom `dialRadius`.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.
