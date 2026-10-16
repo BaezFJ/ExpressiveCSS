@@ -813,14 +813,14 @@ describe('Select caret position', () => {
   test('the floating-label span rule excludes .caret', () => {
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
     // `.field > span:not(...)` is the floating label. The caret is a
-    // <span class="caret">, so omitting it from the :not() list set
-    // left:16px. Combined with width:24px that ignored inset-inline-end
+    // <span class="caret">, so omitting it from the :not() list set a 16px
+    // start inset. Combined with width:24px that ignored inset-inline-end
     // and pinned the chevron over the value.
     assert.match(
       css,
       /\.field\s*>\s*span:not\([^)]*\.caret[^)]*\)/
     );
-    assert.match(css, /\.caret\s*\{[^}]*left:\s*auto/s);
+    assert.match(css, /\.caret\s*\{[^}]*inset-inline-start:\s*auto/s);
   });
 });
 

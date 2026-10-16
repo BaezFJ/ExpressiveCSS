@@ -168,5 +168,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the mega menu, menubar, tour, calendar, image compare, sortable rows and color inputs: 70,392 gzip bytes (+1,966).
   // Reviewed the 1.0 alias and legacy color role removal: 68,614 gzip bytes (-1,778).
   // Reviewed forced-colors states for selection, form controls, the datepicker and indicators: 69,228 gzip bytes (+617).
-  assert.ok(sizes(css).gzip <= 69228, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed logical properties and :dir() swaps for right-to-left fields, checkboxes, menus and overlays: 69,311 gzip bytes (+83).
+  assert.ok(sizes(css).gzip <= 69311, `CSS gzip: ${sizes(css).gzip}`);
 });

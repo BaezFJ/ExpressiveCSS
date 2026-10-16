@@ -126,7 +126,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     padding: 0;
     width: 100%;
     cursor: pointer;
-    text-align: left;
+    text-align: start;
     border-radius: var(--md-comp-menu-item-container-shape);
 
     // The bare-span arm is the non-interactive item. It has to exclude icons,
@@ -493,6 +493,12 @@ menu[id] li > menu {
   pointer-events: none;
   transform: translateX(-4px) scale(0.96);
   transform-origin: 0 0;
+
+  // The flyout opens toward inline-end, so it slides in from the other side.
+  &:dir(rtl) {
+    transform: translateX(4px) scale(0.96);
+    transform-origin: 100% 0;
+  }
   transition:
     opacity 180ms ease,
     transform 180ms ease,

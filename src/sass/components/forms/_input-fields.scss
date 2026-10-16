@@ -139,10 +139,14 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     color: var(--md-sys-color-on-surface-variant);
     user-select: none;
     position: absolute;
-    left: 16px;
+    inset-inline-start: 16px;
     top: 16px;
     cursor: text;
     transform-origin: top left;
+
+    &:dir(rtl) {
+      transform-origin: top right;
+    }
     pointer-events: none;
     @include typescale("body-large");
     transition: left 0.2s ease-out, top 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out;
@@ -162,7 +166,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   }
 
   > .character-counter {
-    float: right;
+    float: inline-end;
     margin-top: 4px;
     padding: 0 16px;
     color: var(--md-sys-color-on-surface-variant);
@@ -186,9 +190,17 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     user-select: none;
   }
 
+  // Physical sides, swapped by :dir(). The icon font sets direction: ltr on
+  // the icon itself, and Chromium maps an icon's own inset-inline-* through
+  // that, so a logical inset would stay on the left in a right-to-left page.
   > .prefix {
     left: 12px;
     pointer-events: none;
+
+    &:dir(rtl) {
+      left: auto;
+      right: 12px;
+    }
   }
 
   > .suffix:not(.icon-button) {
@@ -197,6 +209,11 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     // excluded from it. .prefix restates it below; .suffix has to as well, or
     // the trailing icon swallows the click that should focus the input.
     pointer-events: none;
+
+    &:dir(rtl) {
+      right: auto;
+      left: 12px;
+    }
   }
 
   // A trailing icon button is a control, so it keeps its 40dp target and its
@@ -204,13 +221,13 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   > .icon-button.suffix {
     position: absolute;
     top: 8px;
-    right: 4px;
+    inset-inline-end: 4px;
     z-index: 1;
   }
 
   &:has(> .prefix) {
     > :is(input, textarea) {
-      padding-left: 52px;
+      padding-inline-start: 52px;
     }
 
     // The exclusion list is what stops this indenting things that are not the
@@ -220,13 +237,13 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
       label,
       span:not(#{$_not-label})
     ) {
-      left: 52px;
+      inset-inline-start: 52px;
     }
   }
 
   &:has(> .suffix) {
     > :is(input, textarea) {
-      padding-right: 52px;
+      padding-inline-end: 52px;
     }
   }
 
@@ -253,8 +270,8 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
       &:not([placeholder=" "]) + span:not(#{$_not-label}),
       &:not(:placeholder-shown) + span:not(#{$_not-label}) {
         top: -8px;
-        left: 16px;
-        margin-left: -4px;
+        inset-inline-start: 16px;
+        margin-inline-start: -4px;
         padding: 0 4px;
         background-color: var(--md-sys-color-surface);
       }

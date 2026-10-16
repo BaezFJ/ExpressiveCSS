@@ -142,7 +142,8 @@
   }
 
   .maplibregl-popup-close-button {
-    inset: 4px 4px auto auto !important;
+    inset-block: 4px auto !important;
+    inset-inline: auto 4px !important;
     inline-size: 32px;
     block-size: 32px;
     border-radius: 50% !important;

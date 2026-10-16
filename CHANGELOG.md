@@ -116,6 +116,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   The datepicker marks today, the selected day and the range. Small badges,
   the loading indicator and carousel dots keep their shape. A keyboard-focused
   tab also gets the focus ring instead of only a faint tint.
+- Right-to-left pages lay out text fields, checkboxes and more on the correct
+  side. The floating label, prefix and suffix icons, trailing icon button,
+  character counter and the select caret's inset follow the reading
+  direction, as do the checkbox mark, the date picker's range band, the modal
+  navigation rail, the snackbar container and its padding, the dialog header
+  form, menu item text and the nested menu's entry slide, and the map popup's
+  close button.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.
