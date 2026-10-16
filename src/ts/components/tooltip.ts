@@ -341,6 +341,10 @@ export class Tooltip extends Component<TooltipOptions> {
     const reduce = this.el.ownerDocument.defaultView.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const duration = reduce ? 0 : show ? this.options.inDuration : this.options.outDuration;
     if (show) {
+      // The top layer lifts it above an open modal dialog.
+      // ponytail: a rich tooltip's action stays inert under a modal, since the
+      // tooltip is outside it; portal into the modal if that ever matters.
+      Utils.showInTopLayer(this.tooltipEl);
       this._positionTooltip();
       style.visibility = 'visible';
       style.overflow = 'visible';
@@ -353,6 +357,7 @@ export class Tooltip extends Component<TooltipOptions> {
       if (!show) this._animationTimeout = setTimeout(() => {
         style.visibility = 'hidden';
         style.overflow = '';
+        Utils.hideFromTopLayer(this.tooltipEl);
       }, duration);
     }, 1);
   }

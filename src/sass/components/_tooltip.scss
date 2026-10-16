@@ -115,6 +115,9 @@
 body > .tooltip,
 :host > .tooltip {
   position: absolute;
+  // JS shows the tooltip as a manual popover; clear the UA [popover] inset so
+  // only the scripted left and top apply.
+  inset: auto;
   left: 0;
   top: 0;
   visibility: hidden;

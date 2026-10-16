@@ -42,6 +42,14 @@ $_bar: ".snackbar";
   max-width: calc(100% - var(--md-comp-snackbar-container-margin-leading) - var(--md-comp-snackbar-container-margin-trailing));
   // The page stays browsable — only the bar itself receives pointer events.
   pointer-events: none;
+  // JS shows the container as a manual popover so it sits above modal
+  // dialogs. Clear what the UA [popover] style adds.
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  overflow: visible;
 
   > * {
     pointer-events: auto;

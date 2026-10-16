@@ -123,6 +123,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   navigation rail, the snackbar container and its padding, the dialog header
   form, menu item text and the nested menu's entry slide, and the map popup's
   close button.
+- Tooltips and snackbars show above an open modal dialog. Both now use the
+  top layer as manual popovers; no z-index can rise above a modal. A snackbar
+  shown while a modal is open goes inside it, so its action stays clickable,
+  and moves back to the page when that dialog closes. The menu partial's
+  `[popover]` reset is now zero-specificity, so a component's own popover
+  styles (the tooltip's padding) win over it.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.

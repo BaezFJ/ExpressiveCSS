@@ -78,6 +78,39 @@ export class Utils {
   }
 
   /**
+   * The open modal dialog in `el`'s tree, if any. A modal makes everything
+   * outside it inert, so a runtime element that has to stay interactive (a
+   * snackbar action, a rich tooltip) goes inside it.
+   */
+  static openModal(el: Node): HTMLDialogElement | null {
+    const root = el.getRootNode() as Document | ShadowRoot;
+    if (!root.querySelectorAll) return null;
+    const isModal = (dialog: HTMLDialogElement) => {
+      try {
+        return dialog.matches(':modal');
+      } catch {
+        // ponytail: an engine without :modal (jsdom) has no inert modals to escape.
+        return false;
+      }
+    };
+    return [...root.querySelectorAll<HTMLDialogElement>('dialog[open]')].filter(isModal).at(-1) ?? null;
+  }
+
+  /**
+   * Show `el` in the top layer as a manual popover, above any modal dialog,
+   * which no z-index can do. A no-op where popovers are unsupported.
+   */
+  static showInTopLayer(el: HTMLElement) {
+    if (!el.isConnected || typeof el.showPopover !== 'function') return;
+    if (!el.hasAttribute('popover')) el.setAttribute('popover', 'manual');
+    if (!el.matches(':popover-open')) el.showPopover();
+  }
+
+  static hideFromTopLayer(el: HTMLElement) {
+    if (typeof el.hidePopover === 'function' && el.matches(':popover-open')) el.hidePopover();
+  }
+
+  /**
    * `getElementById` against the tree `el` lives in. The mirror of
    * `portalRoot`: an id in a shadow root is invisible to
    * `document.getElementById`, so a trigger and its target inside the same

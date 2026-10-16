@@ -35,7 +35,9 @@ $_enabled: ':not(.disabled, [aria-disabled="true"], .divider, .optgroup, .gap, .
 $_selected: ':is(.selected, [aria-selected="true"], [aria-checked="true"])';
 $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
 
-[popover] {
+// Zero specificity: this only has to beat the UA [popover] style, and any
+// component that styles its own popover (the tooltip's padding) wins over it.
+:where([popover]) {
   outline: none;
   padding: 0;
   border: none;
