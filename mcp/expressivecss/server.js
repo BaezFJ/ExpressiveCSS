@@ -176,7 +176,9 @@ const LegacyPatternList = [
     id: 'legacy-i-icon',
     severity: 'medium',
     description: 'A bare `<i>` holding an icon name is italic text in 1.0, not an icon; write `<span class="material-symbols" aria-hidden="true">`. Only an `<i>` that opens a button, link, list item, label or similar host is checked; if it is italic prose, ignore this.',
-    pattern: /(?<=<(?:a|button|label|li|span|div|nav|header|footer|menu|summary)\b[^<>]*>\s*)<i(?:\s(?![^<>]*material-symbols)[^<>]*)?>\s*[a-z][a-z0-9]*(?:_[a-z0-9]+)*\s*<\/i>/g,
+    // The host tag is part of the match, not a lookbehind: Node 22's V8 runs a
+    // variable-length lookbehind at every position, which is quadratic.
+    pattern: /<(?:a|button|label|li|span|div|nav|header|footer|menu|summary)\b[^<>]*>\s*<i(?:\s(?![^<>]*material-symbols)[^<>]*)?>\s*[a-z][a-z0-9]*(?:_[a-z0-9]+)*\s*<\/i>/g,
   },
   {
     id: 'legacy-visibility-alias',
@@ -252,7 +254,7 @@ const LegacyPatternList = [
     id: 'legacy-datepicker-range',
     severity: 'high',
     description: 'Datepicker `startRange` and `endRange` were removed in 1.0; use `isDateRange` for range selection.',
-    pattern: /(?<=[{,]\s*)(["']?)\b(?:startRange|endRange)\1\s*:/g,
+    pattern: /[{,]\s*(["']?)\b(?:startRange|endRange)\1\s*:/g,
   },
   {
     id: 'legacy-range-export',
