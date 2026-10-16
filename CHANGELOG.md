@@ -166,7 +166,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the primary container, and an `elevated` pane in a separated or floating
   layout now shows its elevation. Disabled FAB menu items and toolbar FABs,
   including `aria-disabled="true"` ones, paint as disabled and no longer lift
-  or tint on focus, and `.hoverable` no longer lifts a disabled element.
+  or tint on focus; `aria-disabled` ones still take hover, so a tooltip can
+  say why. `.hoverable` no longer lifts a disabled element.
 - A shadow root that adopts the sheet as its only stylesheet now inherits the
   page defaults: `border-box` sizing, the body-medium type role and the
   on-surface text color. These were set only on `html` and `body`, which a
@@ -174,9 +175,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   browser's default text color.
 - With reduced motion requested, the floating label, switch handle, icon
   button shape, slider value label, chips, time picker dial and the open card
-  reveal panel no longer animate. Carousels keep their normal layout and drop
-  only smooth scrolling, size transitions and parallax. Before, a hero or
-  multi-browse carousel ended up partly resized with no edge padding.
+  reveal panel no longer animate.
 - A carousel that reaches the end of its track keeps the item you moved to.
   Items past the end share that scroll position, and a one-pixel rounding
   difference in WebKit could select a later one in a right-to-left carousel.
@@ -196,11 +195,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   form, menu item text and the nested menu's entry slide, and the map popup's
   close button. A field's label, icons and icon clearance follow the field's
   `dir`, so an input with `dir="auto"` or its own `dir` keeps its text clear
-  of the icon. Fields read `dir`; a page that sets only the CSS `direction`
-  property renders them left to right. The date picker's `isRTL` now sets
-  `dir="rtl"` on the calendar table instead of reordering the cells, so an
-  RTL page with `isRTL: true` shows a right-to-left calendar rather than
-  flipping it back.
+  of the icon. Fields and the character counter read `dir`; a page that sets
+  only the CSS `direction` property renders them left to right. Known issue:
+  the date picker's `isRTL` option reverses the cells in script, so the range
+  band points the wrong way with it on, and on an RTL page it turns the
+  calendar back to left to right. On an RTL page, leave `isRTL` off.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.
@@ -277,9 +276,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Sass: `@include z-depth("0")`, `btn-flat` and `btn-disabled` no longer emit
   `box-shadow: none !important`. A stylesheet that relied on the flag to
   cancel its own higher-specificity or inline shadow needs the flag itself.
-  The `.z-depth-0` class keeps it. A pressed `.filled` or `.outlined` card
-  with `.hoverable` now keeps the hover shadow, because the utility layer
-  outranks the card's pressed reset.
+  The `.z-depth-0` class keeps it. Because the utility layer outranks those
+  resets, `.hoverable` on a text button now lifts it on hover, and a pressed
+  `.filled` or `.outlined` card with `.hoverable` keeps the hover shadow.
 
 - Icons: write `<span class="material-symbols" aria-hidden="true">`. A bare
   `<i>` is no longer treated as an icon inside buttons, lists, menus, chips,

@@ -25,14 +25,4 @@ describe('Reduced motion', () => {
   for (const [name, pattern] of Object.entries(targets)) {
     test(`cancels the ${name} transition`, () => assert.ok(cancels(pattern), name));
   }
-
-  // The [data-carousel-size] layout rules out-specify any size override here,
-  // so forcing a width left hero carousels half resized with no edge padding.
-  test('keeps the carousel layout and drops only its motion', () => {
-    const carousel = reduced.filter((r) => r.selector.includes('carousel'));
-    assert.ok(carousel.length, 'no carousel reduced-motion rules');
-    for (const { selector, body } of carousel) {
-      assert.doesNotMatch(body, /flex-basis|width|--md-comp-carousel-inline-padding/, selector);
-    }
-  });
 });

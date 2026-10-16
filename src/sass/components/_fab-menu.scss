@@ -134,12 +134,19 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
       // block, so a disabled item paints itself. aria-disabled is included:
       // with the menu's own state arms skipped, the generic button focus tint
       // would otherwise show through on a focused aria-disabled item.
-      &#{$disabled} {
+      &#{$expressive-disabled} {
         @include btn-disabled;
       }
 
+      // aria-disabled keeps pointer events, so a tooltip or title explaining
+      // why the item is unavailable still shows on hover. Activation is
+      // already ignored by the FAB script.
+      &[aria-disabled="true"] {
+        pointer-events: auto;
+      }
+
       // Enabled is elevation 0; only the states lift, and only when enabled.
-      &:hover:not(:where(#{$disabled})) {
+      &:hover:not(:where(#{$expressive-disabled})) {
         @include z-depth("4");
         background-color: color-mix(
           in oklab,
@@ -148,8 +155,8 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
         );
       }
 
-      &:active:not(:where(#{$disabled})),
-      &:focus:not(:where(#{$disabled})) {
+      &:active:not(:where(#{$expressive-disabled})),
+      &:focus:not(:where(#{$expressive-disabled})) {
         @include z-depth("3");
         background-color: color-mix(
           in oklab,

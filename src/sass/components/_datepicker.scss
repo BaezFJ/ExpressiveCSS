@@ -166,19 +166,19 @@
   width: 50%;
 }
 
-// Each band covers the half of its cell that faces the rest of the range, in
-// the table's reading direction. `isRTL` sets dir="rtl" on the table, so day
-// order and these insets agree on any page.
-.datepicker-day.is-daterange-start:before {
-  inset-inline-end: 0;
-}
-
+// Follows the table's reading direction, which is the page's. Known issue:
+// the `isRTL` option reverses the cells in script instead, so with it on this
+// band points away from the range (and on an RTL page the calendar reads left
+// to right again). ponytail: render isRTL as dir="rtl" on the table; that also
+// needs the arrow keys and renderRow callers handled, see the 2026-10-16 review.
+// Before the start rule: a one-day range carries both classes and keeps the
+// start band, as it always has in LTR.
 .datepicker-day.is-daterange-end:before {
   inset-inline-start: 0;
 }
 
-.datepicker-day.is-daterange:before {
-  inset-inline: 0;
+.datepicker-day.is-daterange-start:before {
+  inset-inline-start: 50%;
 }
 
 .datepicker-day-button {

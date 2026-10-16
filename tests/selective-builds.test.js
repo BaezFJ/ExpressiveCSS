@@ -142,7 +142,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed isRTL mirroring the date picker through the table's dir: 69,191 gzip bytes (+4).
   // Reviewed the carousel keeping its item when later items share the clamped scroll end: 69,203 gzip bytes (+12).
   // Reviewed the TypeScript review fixes from #312 on top of the Sass review fixes: 70,146 gzip bytes (+943).
-  assert.ok(sizes(js).gzip <= 70146, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed dropping the isRTL table dir and the counter's inline float on top of #312: 70,130 gzip bytes (-16).
+  assert.ok(sizes(js).gzip <= 70130, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -191,5 +192,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed reverting the popover resets for top-layer tooltips and snackbars: 69,528 gzip bytes (-13).
   // Reviewed field label, toggle and padding keyed to :dir() and logical date range bands: 69,633 gzip bytes (+105).
   // Reviewed the sheet touch-action from #312 on top of the Sass review fixes: 69,649 gzip bytes (+16).
-  assert.ok(sizes(css).gzip <= 69649, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed aria-disabled pointer events, page-direction date range bands and the carousel's reduced-motion block on top of #312: 69,701 gzip bytes (+52).
+  assert.ok(sizes(css).gzip <= 69701, `CSS gzip: ${sizes(css).gzip}`);
 });

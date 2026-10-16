@@ -960,10 +960,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       row.push(this.renderDay(dayConfig));
 
       if (++r === 7) {
-        // Date order: `isRTL` mirrors the calendar through the table's dir
-        // (renderTable), so styles that follow the reading direction agree
-        // with it on any page. renderRow's own reversal stays for callers.
-        data.push(this.renderRow(row, false, false));
+        data.push(this.renderRow(row, this.options.isRTL, false));
         row = [];
         r = 0;
       }
@@ -1024,9 +1021,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   /** Assemble calendar rows; reject unsupported elements and attributes. */
   renderTable(opts, data, randId) {
     return (
-      '<div class="datepicker-table-wrapper"><table cellpadding="0" cellspacing="0" class="datepicker-table" role="grid"' +
-      (opts.isRTL ? ' dir="rtl"' : '') +
-      ' aria-labelledby="' +
+      '<div class="datepicker-table-wrapper"><table cellpadding="0" cellspacing="0" class="datepicker-table" role="grid" aria-labelledby="' +
       Datepicker._escape(randId) +
       '">' +
       this.renderHead(opts) +
@@ -1043,7 +1038,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       const abbrev = Datepicker._escape(this.renderDayName(opts, i, true));
       arr.push(`<th scope="col"><abbr title="${full}">${abbrev}</abbr></th>`);
     }
-    return '<thead><tr>' + arr.join('') + '</tr></thead>';
+    return '<thead><tr>' + (opts.isRTL ? arr.reverse() : arr).join('') + '</tr></thead>';
   }
 
   /** Wrap calendar rows after validating and encoding their contents. */

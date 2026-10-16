@@ -31,8 +31,20 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
 
       const fill = (id) => page.locator(`#${id}`).evaluate((el) => getComputedStyle(el).backgroundColor);
 
-      // A disabled menu item paints like any disabled button, at rest and on focus.
-      assert.equal(await fill('menu-item'), await fill('reference'), 'the disabled menu item looks enabled at rest');
+      // Every disabled control paints like any disabled button at rest.
+      const reference = await fill('reference');
+      for (const id of ['menu-item', 'menu-aria', 'group-fab', 'group-aria']) {
+        assert.equal(await fill(id), reference, `${id} looks enabled at rest`);
+      }
+
+      // aria-disabled keeps hover, so a tooltip saying why it is unavailable still shows.
+      for (const id of ['menu-aria', 'group-aria']) {
+        const hit = await page.locator(`#${id}`).evaluate((el) => {
+          const r = el.getBoundingClientRect();
+          return el.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2));
+        });
+        assert.ok(hit, `${id} no longer receives hover`);
+      }
 
       for (const id of ['menu-item', 'menu-aria', 'group-fab', 'group-aria']) {
         const rest = await fill(id);
