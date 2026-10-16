@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- A navigation rail destination can open a `.navigation-rail-panel` side
+  panel of more links. Make the destination a `<button popovertarget>` and
+  put the panel popover right after it. The panel docks beside the rail at
+  full height, a click toggles it, and with a mouse hovering the destination
+  opens it. `<details>` groups inside the panel are its dropdowns.
 - `.org-chart` draws a reporting line top down, with each person as a card
   under their manager. Write nested lists; a manager's card is the
   `<summary>` of a `<details>` that folds the team away. Cards take an

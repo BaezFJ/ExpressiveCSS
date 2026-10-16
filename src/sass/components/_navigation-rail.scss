@@ -9,6 +9,11 @@
 // remaining text is the label, optional .badge). A heading is a
 // section header (expanded only). aria-current / .active is selected.
 //
+// Side panel: a destination <button popovertarget> followed by its
+// .navigation-rail-panel [popover]. The panel docks beside the rail at full
+// height and holds links, headings and <details> groups. The browser owns
+// click, light dismiss, Escape and the expanded state; JS opens it on hover.
+//
 // .expanded widens the rail (icon+label on one row, extended FAB).
 // Below `small`, .expanded is modal (scrim). .modal forces that
 // overlay at every breakpoint. JS toggles .expanded from the menu
@@ -21,6 +26,7 @@
 //   --md-comp-nav-rail-indicator-width     56px
 //   --md-comp-nav-rail-indicator-height    32px / 56px expanded
 //   --md-comp-nav-rail-fab-size            56px
+//   --md-comp-nav-rail-panel-width         256px
 //
 // Nest descendants inside this block.
 
@@ -302,6 +308,10 @@
     > :is(h1, h2, h3, h4, h5, h6) {
       display: block;
     }
+
+    > .navigation-rail-panel {
+      --_nav-rail-panel-offset: 16px;
+    }
   }
 
   &.expanded.modal {
@@ -315,7 +325,109 @@
   }
 }
 
+// A destination whose panel is open keeps its hover state layer.
+.navigation-rail:not(.expanded) > button:has(+ .navigation-rail-panel:popover-open):not(.active, [aria-current]) > #{$icon},
+.navigation-rail.expanded > button:has(+ .navigation-rail-panel:popover-open):not(.active, [aria-current]) {
+  background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+}
+
+// Docks against the trigger's inline end; the offset clears the rail's
+// inline padding so the panel meets the rail's edge. The position area is
+// the space after the trigger, so 100% is what is left of the window.
+.navigation-rail-panel {
+  --_nav-rail-panel-offset: 8px;
+
+  box-sizing: border-box;
+  inline-size: var(--md-comp-nav-rail-panel-width, 256px);
+  max-inline-size: calc(100% - var(--_nav-rail-panel-offset));
+  block-size: auto;
+  inset: auto;
+  margin: 0;
+  margin-inline-start: var(--_nav-rail-panel-offset);
+  padding: 12px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  border-start-end-radius: 16px;
+  border-end-end-radius: 16px;
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface-variant);
+  @include z-depth("1");
+
+  position-area: span-all inline-end;
+  align-self: stretch;
+
+  &:popover-open {
+    display: flex;
+    flex-direction: column;
+  }
+
+  :is(a, summary) {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 12px;
+    box-sizing: border-box;
+    min-block-size: 48px;
+    padding: 0 16px;
+    border-radius: 24px;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    @include typescale("label-large");
+    @include focus-visible;
+
+    &:hover:not([aria-current]) {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+    }
+
+    &[aria-current] {
+      background-color: var(--md-comp-nav-rail-active-indicator-color);
+      color: var(--md-comp-nav-rail-active-color);
+      @include forced-colors-selected;
+    }
+  }
+
+  summary {
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::after {
+      content: "";
+      flex: none;
+      inline-size: 18px;
+      block-size: 18px;
+      margin-inline-start: auto;
+      background-color: currentColor;
+      mask: $caret-down center / 18px no-repeat;
+      transition: transform 150ms ease-out;
+    }
+  }
+
+  details[open] > summary::after {
+    transform: rotate(180deg);
+  }
+
+  details > a {
+    padding-inline-start: 28px;
+  }
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    margin: 0;
+    padding: 16px 16px 8px;
+    @include typescale("title-small");
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .navigation-rail-panel summary::after,
   .navigation-rail {
     transition: none;
   }

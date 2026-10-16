@@ -1756,6 +1756,13 @@
           "selector": ".navigation-rail a.active:not([aria-current])",
           "fragmentSafe": false,
           "message": "The active destination needs aria-current=\"page\"."
+        },
+        {
+          "id": "navigation-rail-panel-is-a-popover",
+          "kind": "forbid",
+          "selector": ".navigation-rail-panel:not([popover])",
+          "fragmentSafe": true,
+          "message": "Give .navigation-rail-panel the popover attribute and put it right after the destination button that names it with popovertarget. The browser then owns opening, Escape, light dismiss and the button's expanded state."
         }
       ]
     },

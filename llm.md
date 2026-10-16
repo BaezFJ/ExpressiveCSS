@@ -3788,6 +3788,8 @@ Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp,
 
 Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the rail toggle, unless a close callback moves focus elsewhere.
 
+A destination can open a side panel of more links. Make it a `<button popovertarget>` and put its `.navigation-rail-panel` popover right after it. The panel docks beside the rail at full height. A click toggles it; with a mouse, hovering the destination opens it and leaving the rail and panel closes it. A `<details>` in the panel is a dropdown group. Escape closes the panel before the rail and returns focus to its destination.
+
 ```html
 <nav class="navigation-rail" aria-label="Main">
   <button type="button" aria-label="Menu">
@@ -3811,6 +3813,21 @@ Escape closes an open nested menu first. A second Escape collapses the modal rai
 ```html
 <nav class="navigation-rail expanded" aria-label="Main">…</nav>
 <nav class="navigation-rail expanded modal" aria-label="Main">…</nav>
+```
+
+```html
+<button type="button" popovertarget="components-panel">
+  <span class="material-symbols" aria-hidden="true">widgets</span>
+  Components
+</button>
+<div id="components-panel" class="navigation-rail-panel" popover>
+  <a href="/components" aria-current="page">Components overview</a>
+  <details>
+    <summary>Date &amp; time pickers</summary>
+    <a href="/date-pickers">Date pickers</a>
+    <a href="/time-pickers">Time pickers</a>
+  </details>
+</div>
 ```
 
 Offset the rest of the page:

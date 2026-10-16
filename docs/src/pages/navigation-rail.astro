@@ -12,6 +12,7 @@ const S = defineSections([
   { id: "collapsed", label: "Collapsed" },
   { id: "expanded", label: "Expanded" },
   { id: "modal", label: "Modal" },
+  { id: "side-panel", label: "Side panel" },
   { id: "tokens", label: "Tokens" },
 ]);
 ---
@@ -164,6 +165,73 @@ const S = defineSections([
 <nav class="navigation-rail expanded modal" aria-label="Main">…</nav>
 `} />
   </Section>
+  <Section {...S["side-panel"]}>
+        <p>
+          A destination can open a panel of more links beside the rail. Make
+          the destination a <code>&lt;button&gt;</code> with
+          <code>popovertarget</code> and put its
+          <code>.navigation-rail-panel</code> popover right after it. The
+          panel docks against the rail's edge at full window height. A click
+          toggles it, and the browser handles light dismiss, Escape and the
+          button's expanded state. With a mouse, hovering the destination
+          opens the panel, which closes again once the pointer leaves both;
+          clicking a hovered destination keeps its panel open.
+        </p>
+        <p>
+          Group links under a <code>&lt;details&gt;</code>. Its
+          <code>&lt;summary&gt;</code> is the dropdown row, and the links after
+          it are indented. Mark the current page with
+          <code>aria-current="page"</code>.
+        </p>
+        <div class="rail-demo mb-3">
+          <nav class="navigation-rail" aria-label="Main — Side panel">
+            <button type="button" aria-label="Menu">
+              <span class="material-symbols" aria-hidden="true">menu</span>
+            </button>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">home</span>
+              Home
+            </a>
+            <button type="button" popovertarget="rail-components-panel" aria-current="page">
+              <span class="material-symbols" aria-hidden="true">widgets</span>
+              Components
+            </button>
+            <div id="rail-components-panel" class="navigation-rail-panel" popover>
+              <a href="#!" aria-current="page">Components overview</a>
+              <a href="#!">App bars</a>
+              <a href="#!">Badges</a>
+              <details>
+                <summary>Date &amp; time pickers</summary>
+                <a href="#!">Date pickers</a>
+                <a href="#!">Time pickers</a>
+              </details>
+              <a href="#!">Dialogs</a>
+            </div>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">palette</span>
+              Styles
+            </a>
+          </nav>
+        </div>
+<Code code={`
+<nav class="navigation-rail" aria-label="Main">
+  …
+  <button type="button" popovertarget="components-panel">
+    <span class="material-symbols" aria-hidden="true">widgets</span>
+    Components
+  </button>
+  <div id="components-panel" class="navigation-rail-panel" popover>
+    <a href="/components" aria-current="page">Components overview</a>
+    <a href="/app-bars">App bars</a>
+    <details>
+      <summary>Date &amp; time pickers</summary>
+      <a href="/date-pickers">Date pickers</a>
+      <a href="/time-pickers">Time pickers</a>
+    </details>
+  </div>
+</nav>
+`} />
+  </Section>
   <Section {...S.tokens}>
         <TokenTable>
             <tr><td><code>--md-comp-nav-rail-collapsed-width</code></td><td>96px</td></tr>
@@ -171,6 +239,7 @@ const S = defineSections([
             <tr><td><code>--md-comp-nav-rail-icon-size</code></td><td>24px</td></tr>
             <tr><td><code>--md-comp-nav-rail-indicator-width</code></td><td>56px</td></tr>
             <tr><td><code>--md-comp-nav-rail-fab-size</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-nav-rail-panel-width</code></td><td>256px</td></tr>
         </TokenTable>
   </Section>
 </PageBody>
