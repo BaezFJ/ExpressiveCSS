@@ -98,6 +98,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   shows the enabled fill or the elevated focus shadow, a disabled FAB takes
   the disabled fill instead of the primary container, and an `elevated` pane
   in a separated or floating layout now shows its elevation.
+- A shadow root that adopts the sheet as its only stylesheet now inherits the
+  page defaults: `border-box` sizing, the body-medium type role and the
+  on-surface text color. These were set only on `html` and `body`, which a
+  shadow tree cannot reach, so its elements were `content-box` with the
+  browser's default text color.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.
