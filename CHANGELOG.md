@@ -75,6 +75,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A modal or compact NavigationRail no longer collapses when blank space
+  inside it is tapped. Its scrim is the rail's own `::before`, so those taps
+  looked like scrim taps; only a tap beside the rail collapses it now.
+- Touch drags on a bottom sheet's `.drag-handle` and a side sheet's
+  `<header>` now dismiss the sheet. Without `touch-action` the browser took
+  the drag as a pan and cancelled the pointer, so the sheet snapped back. The
+  bottom sheet's built-in handle band and the side sheet's inner edge have no
+  element of their own to carry `touch-action`, so on touch screens the
+  explicit handle and the header are the drag areas.
 - A docked Datepicker for a date range now opens from its end input, and a
   click on that input no longer closes it. The plugin counted the end input
   as outside.

@@ -131,7 +131,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed keyboard and focus fixes in Tooltip, Menu, Timepicker and Chips: 69,490 gzip bytes (+191).
   // Reviewed Datepicker typed-date, initial-value and reset fixes, Slider reset and Questionnaire skip: 69,877 gzip bytes (+387).
   // Reviewed docked range end input, document-level menu dismissal, MapView coordinate checks, Tour restart and late Autocomplete results: 70,066 gzip bytes (+189).
-  assert.ok(sizes(js).gzip <= 70066, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed NavigationRail scrim taps measured against the rail's box: 70,109 gzip bytes (+43).
+  assert.ok(sizes(js).gzip <= 70109, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -168,5 +169,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed data table toggles that leave row menus alone: 68,426 gzip bytes (+16).
   // Reviewed the mega menu, menubar, tour, calendar, image compare, sortable rows and color inputs: 70,392 gzip bytes (+1,966).
   // Reviewed the 1.0 alias and legacy color role removal: 68,614 gzip bytes (-1,778).
-  assert.ok(sizes(css).gzip <= 68614, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed touch-action on the sheet drag handle and header: 68,632 gzip bytes (+18).
+  assert.ok(sizes(css).gzip <= 68632, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -127,6 +127,25 @@ describe('Dismissal and lifecycle', () => {
     }
   });
 
+  test('a modal NavigationRail collapses on its scrim, not on blank space inside it', () => {
+    document.body.innerHTML = `<nav class="navigation-rail modal" aria-label="Main">
+      <button type="button" aria-label="Menu"></button><a href="#home">Home</a></nav>`;
+    const nav = document.querySelector('nav');
+    const rail = Expressive.NavigationRail.init(nav);
+    // jsdom has no layout: give the rail the 0 to 220px column it occupies.
+    nav.getBoundingClientRect = () => ({ left: 0, right: 220, top: 0, bottom: 700, width: 220, height: 700 });
+    const press = (clientX) => nav.dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true, clientX, clientY: 300 }));
+    try {
+      rail.expand();
+      press(100);
+      assert.equal(rail.isExpanded, true, 'a tap between destinations keeps the rail open');
+      press(320);
+      assert.equal(rail.isExpanded, false, 'a tap on the scrim beside the rail collapses it');
+    } finally {
+      rail.destroy();
+    }
+  });
+
   test('Autocomplete results that arrive after the user left do not reopen the list', async () => {
     document.body.innerHTML = '<div class="field"><input id="ac" type="text"></div><button id="next">Next</button>';
     const el = document.getElementById('ac');

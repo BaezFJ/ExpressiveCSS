@@ -154,10 +154,19 @@ export class NavigationRail extends Component<NavigationRailOptions> {
       e.preventDefault();
       return;
     }
-    if (target === this.el && this.isExpanded && this._isModal()) {
+    if (this._isScrimClick(e) && this.isExpanded && this._isModal()) {
       this.collapse();
     }
   };
+
+  // The scrim is the rail's own ::before, so a click on blank space inside the
+  // rail targets the rail just as a scrim click does. Only a click beside the
+  // rail's box landed on the scrim; a modal rail spans the full height.
+  private _isScrimClick(e: MouseEvent) {
+    if (e.target !== this.el) return false;
+    const { left, right } = this.el.getBoundingClientRect();
+    return e.clientX < left || e.clientX > right;
+  }
 
   private _onKeyDown = (e: KeyboardEvent) => {
     if (e.key !== 'Escape' || e.defaultPrevented) return;
