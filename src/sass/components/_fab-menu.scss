@@ -130,8 +130,9 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
         color: inherit;
       }
 
-      // Enabled is elevation 0; only the states lift.
-      &:hover {
+      // Enabled is elevation 0; only the states lift, and only when enabled:
+      // these arms outrank the shared disabled rule in _buttons.scss.
+      &:hover:not(:disabled, [disabled], .disabled) {
         @include z-depth("4");
         background-color: color-mix(
           in oklab,
@@ -140,8 +141,8 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
         );
       }
 
-      &:active,
-      &:focus {
+      &:active:not(:disabled, [disabled], .disabled),
+      &:focus:not(:disabled, [disabled], .disabled) {
         @include z-depth("3");
         background-color: color-mix(
           in oklab,

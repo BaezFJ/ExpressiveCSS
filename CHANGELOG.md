@@ -95,9 +95,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the search view's bar) used `box-shadow: none !important`, and a layered
   `!important` beats every unlayered rule. Only the `.z-depth-0` utility
   keeps the flag. A focused disabled `a.button` with an `href` no longer
-  shows the enabled fill or the elevated focus shadow, a disabled FAB takes
-  the disabled fill instead of the primary container, and an `elevated` pane
-  in a separated or floating layout now shows its elevation.
+  shows the enabled fill, a disabled FAB takes the disabled fill instead of
+  the primary container, and an `elevated` pane in a separated or floating
+  layout now shows its elevation. Disabled FAB menu items and toolbar FABs
+  no longer lift or tint on focus, and `.hoverable` no longer lifts a
+  disabled element.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.
@@ -170,6 +172,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `on-surface`, which resolve to the same colors.
 
 ### Migration
+
+- Sass: `@include z-depth("0")`, `btn-flat` and `btn-disabled` no longer emit
+  `box-shadow: none !important`. A stylesheet that relied on the flag to
+  cancel its own higher-specificity or inline shadow needs the flag itself.
+  The `.z-depth-0` class keeps it. A pressed `.filled` or `.outlined` card
+  with `.hoverable` now keeps the hover shadow, because the utility layer
+  outranks the card's pressed reset.
 
 - Icons: write `<span class="material-symbols" aria-hidden="true">`. A bare
   `<i>` is no longer treated as an icon inside buttons, lists, menus, chips,

@@ -11,9 +11,11 @@
   }
 }
 
+// A disabled element does not lift. Utilities outrank components, so the
+// disabled card and button rules cannot cancel this shadow themselves.
 .hoverable {
   transition: box-shadow 0.25s;
-  &:hover {
+  &:hover:not(:disabled, [disabled], .disabled, [aria-disabled="true"], :has(> .primary-action[aria-disabled="true"])) {
     box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   }
 }

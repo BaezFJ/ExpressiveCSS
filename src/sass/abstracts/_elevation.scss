@@ -25,7 +25,7 @@ $elevations: (
     @error "Unknown elevation `#{$level}`. Available: #{map.keys($elevations)}.";
   }
   $shadow: map.get($elevations, $key);
-  // Only the .z-depth-N utilities pass $important. Inside the components
+  // Only the .z-depth-0 utility passes $important. Inside the components
   // layer an !important would beat every unlayered consumer rule, so a
   // component that cancels a shadow has to out-specify the rule that set it.
   @if $important {
