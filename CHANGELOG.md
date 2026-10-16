@@ -175,9 +175,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   browser's default text color.
 - With reduced motion requested, the floating label, switch handle, icon
   button shape, slider value label, chips, time picker dial and the open card
-  reveal panel no longer animate. Carousels keep their normal layout and drop
-  only smooth scrolling, size transitions and parallax. Before, a hero or
-  multi-browse carousel ended up partly resized with no edge padding.
+  reveal panel no longer animate.
 - A carousel that reaches the end of its track keeps the item you moved to.
   Items past the end share that scroll position, and a one-pixel rounding
   difference in WebKit could select a later one in a right-to-left carousel.

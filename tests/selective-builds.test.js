@@ -194,5 +194,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the sheet touch-action from #312 on top of the Sass review fixes: 69,649 gzip bytes (+16).
   // Reviewed aria-disabled host controls keeping pointer events: NEW gzip bytes.
   // Reviewed the page-direction date range bands and the :dir() counter float: NEW gzip bytes.
+  // Reviewed restoring the carousel's reduced-motion block: NEW gzip bytes.
   assert.ok(sizes(css).gzip <= 69649, `CSS gzip: ${sizes(css).gzip}`);
 });
