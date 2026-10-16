@@ -11,6 +11,6 @@ List checks actually run and any skipped checks with reasons.
 - [ ] Generated semantics, skill, and MCP data are current.
 - [ ] Compatibility changes have migration notes, or there are none.
 - [ ] Required CI passes and review conversations are resolved.
-- [ ] BaezFJ reviewed the visual report, or this change has no visual effect.
+- [ ] Visual changes were checked locally with `npm run test:visual`, or there are none.
 
 Report vulnerabilities privately through [SECURITY.md](../SECURITY.md).
