@@ -197,11 +197,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   form, menu item text and the nested menu's entry slide, and the map popup's
   close button. A field's label, icons and icon clearance follow the field's
   `dir`, so an input with `dir="auto"` or its own `dir` keeps its text clear
-  of the icon. Fields read `dir`; a page that sets only the CSS `direction`
-  property renders them left to right. The date picker's `isRTL` now sets
-  `dir="rtl"` on the calendar table instead of reordering the cells, so an
-  RTL page with `isRTL: true` shows a right-to-left calendar rather than
-  flipping it back.
+  of the icon. Fields and the character counter read `dir`; a page that sets
+  only the CSS `direction` property renders them left to right. Known issue:
+  the date picker's `isRTL` option reverses the cells in script, so the range
+  band points the wrong way with it on, and on an RTL page it turns the
+  calendar back to left to right. On an RTL page, leave `isRTL` off.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.
