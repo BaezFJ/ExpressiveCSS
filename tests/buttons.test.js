@@ -159,3 +159,32 @@ describe('The axes compose without per-combination rules', () => {
     assert.deepEqual(missing, [], `read but never declared: ${missing.join(', ')}`);
   });
 });
+
+describe('Disabled buttons and consumer overrides', () => {
+  // A layered !important beats every unlayered rule, so a consumer could not
+  // give a text button or a docked toolbar a shadow. Only the utility keeps it.
+  test('only the .z-depth-0 utility cancels a shadow with !important', () => {
+    const important = rules
+      .filter((r) => /box-shadow:\s*none\s*!important/.test(r.body))
+      .flatMap((r) => r.selectors)
+      .filter((s) => !s.startsWith('.z-depth-'));
+    assert.deepEqual(important, []);
+  });
+
+  // `a.button.elevated.disabled` with an href takes focus, and the variant's
+  // `:focus` rule out-specifies a bare disabled rule.
+  test('a focused disabled button keeps the disabled look', () => {
+    const body = ruleFor((selector) => /:is\(:disabled, \[disabled\], \.disabled\):is\(:hover, :active, :focus\)/.test(selector));
+    assert.ok(body, 'no state arm on the disabled rule');
+    assert.match(body, /box-shadow:\s*none/);
+    assert.match(body, /pointer-events:\s*none/);
+  });
+
+  // The FAB rule is (0,2,0) and its states (0,3,0), so a disabled FAB needs
+  // its own arm or it keeps the enabled fill and its level 3 shadow.
+  test('a disabled FAB takes the disabled look', () => {
+    const body = ruleFor((selector) => /:is\(\.extra, \.large\)\.circle:is\(:disabled, \[disabled\], \.disabled\)/.test(selector));
+    assert.ok(body, 'no FAB arm on the disabled rule');
+    assert.match(body, /box-shadow:\s*none/);
+  });
+});

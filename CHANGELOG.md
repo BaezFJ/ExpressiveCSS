@@ -75,6 +75,31 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Focused read-only text fields now show the focus underline. The field's
+  focus styles skipped `[readonly]`, and FormSelect makes its combobox input
+  read-only, so a focused select had no visible focus indicator.
+- `@use "expressive" with ($md-source: …)` now sets the theme seed, as the
+  changelog for 0.13.0 and the migration skill describe. The variable moved
+  to `abstracts/_variables.scss`; before, Sass rejected the configuration
+  because the tokens layer is loaded with `meta.load-css()`.
+- The time picker's clock face is sized from `dialRadius`. It was a fixed
+  260px while the hand and numbers centred on the default 135px radius, so
+  the hand sat 5px off centre, further with a custom `dialRadius`.
+- Menus, context menus and select dropdowns open next to their trigger in
+  right-to-left pages. The menu kept the browser's `[popover]` `inset: 0`,
+  so with its explicit width the right edge won over `left`, and the menu
+  opened against the right side of its container.
+- Unlayered CSS can set a shadow on any component again. Thirteen component
+  rules that remove a shadow (text buttons, disabled buttons, docked
+  toolbars, filled and outlined cards, full-screen dialogs, separated panes,
+  the search view's bar) used `box-shadow: none !important`, and a layered
+  `!important` beats every unlayered rule. Only the `.z-depth-0` utility
+  keeps the flag. A focused disabled `a.button` with an `href` no longer
+  shows the enabled fill, a disabled FAB takes the disabled fill instead of
+  the primary container, and an `elevated` pane in a separated or floating
+  layout now shows its elevation. Disabled FAB menu items and toolbar FABs,
+  including `aria-disabled="true"` ones, paint as disabled and no longer lift
+  or tint on focus, and `.hoverable` no longer lifts a disabled element.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.
@@ -147,6 +172,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `on-surface`, which resolve to the same colors.
 
 ### Migration
+
+- Sass: `@include z-depth("0")`, `btn-flat` and `btn-disabled` no longer emit
+  `box-shadow: none !important`. A stylesheet that relied on the flag to
+  cancel its own higher-specificity or inline shadow needs the flag itself.
+  The `.z-depth-0` class keeps it. A pressed `.filled` or `.outlined` card
+  with `.hoverable` now keeps the hover shadow, because the utility layer
+  outranks the card's pressed reset.
 
 - Icons: write `<span class="material-symbols" aria-hidden="true">`. A bare
   `<i>` is no longer treated as an icon inside buttons, lists, menus, chips,

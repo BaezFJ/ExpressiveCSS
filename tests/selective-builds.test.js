@@ -64,6 +64,8 @@ test('default custom Sass matches the complete stylesheet and preserves configur
   assert.match(empty, /--md-sys-color-primary:/);
   assert.doesNotMatch(empty, /@font-face|\.datepicker|\.tabs/);
   assert.doesNotMatch(empty, /\.scroll-area/);
+  const seeded = compileString('@use "expressive" with ($md-source: #6750a4, $expressive-include-fonts: false);', options).css;
+  assert.match(seeded, /--md-source: ?#6750a4/);
   const scrollArea = compileString('@use "custom" with ($components: (), $utilities: ("scroll-area"), $expressive-include-fonts: false);', options).css;
   assert.match(scrollArea, /\.scroll-area\{overflow:auto;scrollbar-width:thin/);
   assert.doesNotMatch(scrollArea, /\.datepicker|\.tabs|\.overflow-x-auto/);
@@ -127,7 +129,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the menubar, tour, sortable lists and image compare: 69,030 gzip bytes (+2,133).
   // Reviewed the 1.0 alias removal with scroll-snap swipeable tabs: 69,143 gzip bytes (+113).
   // Reviewed swipeable tabs re-aligning only when the track's width changes: 69,170 gzip bytes (+27).
-  assert.ok(sizes(js).gzip <= 69170, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the time picker sizing its clock face from dialRadius: 69,184 gzip bytes (+14).
+  assert.ok(sizes(js).gzip <= 69184, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -164,5 +167,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed data table toggles that leave row menus alone: 68,426 gzip bytes (+16).
   // Reviewed the mega menu, menubar, tour, calendar, image compare, sortable rows and color inputs: 70,392 gzip bytes (+1,966).
   // Reviewed the 1.0 alias and legacy color role removal: 68,614 gzip bytes (-1,778).
-  assert.ok(sizes(css).gzip <= 68614, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed disabled guards on FAB menu, toolbar FAB and .hoverable states: 68,676 gzip bytes (+62).
+  // Reviewed the shared $disabled selector and host disabled paint for FAB menu items and toolbar FABs: 68,787 gzip bytes (+111).
+  // Reviewed floating labels that skip their transition under reduced motion: 68,796 gzip bytes (+9).
+  assert.ok(sizes(css).gzip <= 68796, `CSS gzip: ${sizes(css).gzip}`);
 });

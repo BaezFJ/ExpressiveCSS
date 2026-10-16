@@ -35,6 +35,7 @@ import { M3_REFERENCE_RAMPS, MD_SOURCE } from './m3-reference-ramps.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SCSS = readFileSync(join(ROOT, 'src/sass/tokens/_reference.scss'), 'utf8');
+const VARIABLES = readFileSync(join(ROOT, 'src/sass/abstracts/_variables.scss'), 'utf8');
 
 // A generated entry may sit this far (dEok) from the Material Theme Builder
 // value. The JND is around 0.02; the worst entry currently measures 0.0077, so
@@ -110,8 +111,8 @@ const deltaEok = (hexA, hexB) => {
 /* ------------------------------------------- read the Sass generation ----- */
 
 function parseSource() {
-  const m = SCSS.match(/\$md-source:\s*(#[0-9a-fA-F]{6})/);
-  assert.ok(m, '$md-source not found in tokens/_reference.scss');
+  const m = VARIABLES.match(/\$md-source:\s*(#[0-9a-fA-F]{6})/);
+  assert.ok(m, '$md-source not found in abstracts/_variables.scss');
   return m[1].toLowerCase();
 }
 

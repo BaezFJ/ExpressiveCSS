@@ -79,6 +79,22 @@ describe('Timepicker host input', () => {
     }
   }
 
+  // The CSS plate used to be 260px while the dial centred on dialRadius 135,
+  // so the hand sat 5px off the face's centre.
+  for (const dialRadius of [undefined, 100]) {
+    test(`the clock face matches dialRadius ${dialRadius ?? '(default)'}`, () => {
+      document.body.innerHTML = '<input type="text">';
+      const picker = Expressive.Timepicker.init(document.querySelector('input'), dialRadius ? { dialRadius } : {});
+      try {
+        const diameter = `${picker.options.dialRadius * 2}px`;
+        assert.equal(picker.plate.style.width, diameter);
+        assert.equal(picker.plate.style.height, diameter);
+      } finally {
+        picker.destroy();
+      }
+    });
+  }
+
   test('opening an empty input still uses the configured default time', () => {
     document.body.innerHTML = '<input type="text">';
     const input = document.querySelector('input');
