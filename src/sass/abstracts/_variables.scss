@@ -28,11 +28,13 @@ $caret-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' v
 // are loaded with meta.load-css(), which takes no configuration.
 $md-source: #c6a0f6 !default;
 
-// A control the user cannot operate, natively or by ARIA. A host's :hover,
-// :focus and :active arms skip it through :not(:where(#{$disabled})), which
-// adds no specificity, so a disabled control never lifts or takes an enabled
-// tint. One list, because four hand-copied ones had already drifted.
-$disabled: ':is(:disabled, [disabled], .disabled, [aria-disabled="true"])' !default;
+// A control the user cannot operate, natively or by ARIA. The FAB menu and
+// toolbar-group hosts and .hoverable skip it through
+// :not(:where(#{$expressive-disabled})), which adds no specificity, so a
+// disabled control never lifts or takes an enabled tint. Prefixed because
+// abstracts is forwarded to consumers, and a bare $disabled would collide
+// with theirs; not !default, since it is not a setting.
+$expressive-disabled: ':is(:disabled, [disabled], .disabled, [aria-disabled="true"])';
 
 // Colors
 //

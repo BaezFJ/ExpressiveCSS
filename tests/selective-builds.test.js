@@ -191,5 +191,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed reverting the popover resets for top-layer tooltips and snackbars: 69,528 gzip bytes (-13).
   // Reviewed field label, toggle and padding keyed to :dir() and logical date range bands: 69,633 gzip bytes (+105).
   // Reviewed the sheet touch-action from #312 on top of the Sass review fixes: 69,649 gzip bytes (+16).
+  // Reviewed aria-disabled host controls keeping pointer events: NEW gzip bytes.
   assert.ok(sizes(css).gzip <= 69649, `CSS gzip: ${sizes(css).gzip}`);
 });

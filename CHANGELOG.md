@@ -166,7 +166,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the primary container, and an `elevated` pane in a separated or floating
   layout now shows its elevation. Disabled FAB menu items and toolbar FABs,
   including `aria-disabled="true"` ones, paint as disabled and no longer lift
-  or tint on focus, and `.hoverable` no longer lifts a disabled element.
+  or tint on focus; `aria-disabled` ones still take hover, so a tooltip can
+  say why. `.hoverable` no longer lifts a disabled element.
 - A shadow root that adopts the sheet as its only stylesheet now inherits the
   page defaults: `border-box` sizing, the body-medium type role and the
   on-surface text color. These were set only on `html` and `body`, which a
@@ -277,9 +278,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Sass: `@include z-depth("0")`, `btn-flat` and `btn-disabled` no longer emit
   `box-shadow: none !important`. A stylesheet that relied on the flag to
   cancel its own higher-specificity or inline shadow needs the flag itself.
-  The `.z-depth-0` class keeps it. A pressed `.filled` or `.outlined` card
-  with `.hoverable` now keeps the hover shadow, because the utility layer
-  outranks the card's pressed reset.
+  The `.z-depth-0` class keeps it. Because the utility layer outranks those
+  resets, `.hoverable` on a text button now lifts it on hover, and a pressed
+  `.filled` or `.outlined` card with `.hoverable` keeps the hover shadow.
 
 - Icons: write `<span class="material-symbols" aria-hidden="true">`. A bare
   `<i>` is no longer treated as an icon inside buttons, lists, menus, chips,

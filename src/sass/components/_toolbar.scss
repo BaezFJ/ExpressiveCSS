@@ -304,8 +304,13 @@ $_vibrant: "#{$_toolbar}.vibrant";
     // A disabled FAB without .circle misses the (0,3,0) FAB disabled arm in
     // _buttons.scss, and this block's level 1 would win at rest. aria-disabled
     // is included so the FAB's own focus tint does not show through.
-    &#{$disabled} {
+    &#{$expressive-disabled} {
       @include btn-disabled;
+    }
+
+    // aria-disabled keeps pointer events so hover help still reaches it.
+    &[aria-disabled="true"] {
+      pointer-events: auto;
     }
 
     // State arms skip a disabled FAB, which they would otherwise outrank.
@@ -313,7 +318,7 @@ $_vibrant: "#{$_toolbar}.vibrant";
     // included: .extra.circle draws its own `:active, :focus` tint over
     // primary-container, and leaving either uncovered would flash the FAB's
     // default colour through a click on this one.
-    &:hover:not(:where(#{$disabled})) {
+    &:hover:not(:where(#{$expressive-disabled})) {
       background-color: color-mix(
         in oklab,
         var(--md-comp-toolbar-floating-fab-icon-color) state-opacity("hover"),
@@ -322,7 +327,7 @@ $_vibrant: "#{$_toolbar}.vibrant";
       @include z-depth("2");
     }
 
-    &:focus:not(:where(#{$disabled})) {
+    &:focus:not(:where(#{$expressive-disabled})) {
       background-color: color-mix(
         in oklab,
         var(--md-comp-toolbar-floating-fab-icon-color) state-opacity("focus"),
@@ -330,7 +335,7 @@ $_vibrant: "#{$_toolbar}.vibrant";
       );
     }
 
-    &:active:not(:where(#{$disabled})) {
+    &:active:not(:where(#{$expressive-disabled})) {
       background-color: color-mix(
         in oklab,
         var(--md-comp-toolbar-floating-fab-icon-color) state-opacity("pressed"),
