@@ -75,6 +75,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Focused read-only text fields now show the focus underline. The field's
+  focus styles skipped `[readonly]`, and FormSelect makes its combobox input
+  read-only, so a focused select had no visible focus indicator.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.

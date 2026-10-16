@@ -67,7 +67,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     background-color: var(--md-comp-filled-text-field-container-color);
     caret-color: var(--input-color);
 
-    &:focus:not([readonly]) {
+    &:focus {
       border-bottom-width: 2px;
       border-bottom-color: var(--input-color);
       padding-bottom: 7px;
@@ -80,15 +80,15 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 4%, transparent);
     }
 
-    &:focus:not([readonly]) + label,
-    &:focus:not([readonly]) + span:not(#{$_not-label}) {
+    &:focus + label,
+    &:focus + span:not(#{$_not-label}) {
       color: var(--input-color);
     }
 
-    &:focus:not([readonly]) + label,
+    &:focus + label,
     &:not([placeholder=" "]) + label,
     &:not(:placeholder-shown) + label,
-    &:focus:not([readonly]) + span:not(#{$_not-label}),
+    &:focus + span:not(#{$_not-label}),
     &:not([placeholder=" "]) + span:not(#{$_not-label}),
     &:not(:placeholder-shown) + span:not(#{$_not-label}) {
       transform: scale(calc(12 / 16));
@@ -235,17 +235,17 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
       border: 1px solid var(--md-sys-color-outline);
       border-radius: var(--md-comp-filled-text-field-container-shape);
 
-      &:focus:not([readonly]) {
+      &:focus {
         border-width: 2px;
         border-color: var(--input-color);
         padding-top: 7px;
         padding-bottom: 7px;
       }
 
-      &:focus:not([readonly]) + label,
+      &:focus + label,
       &:not([placeholder=" "]) + label,
       &:not(:placeholder-shown) + label,
-      &:focus:not([readonly]) + span:not(#{$_not-label}),
+      &:focus + span:not(#{$_not-label}),
       &:not([placeholder=" "]) + span:not(#{$_not-label}),
       &:not(:placeholder-shown) + span:not(#{$_not-label}) {
         top: -8px;
