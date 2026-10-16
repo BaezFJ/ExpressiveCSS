@@ -22,7 +22,10 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       await mkdir(artifacts, { recursive: true });
       await cp(`${root}/dist/fonts`, join(directory, 'node_modules/@expressivecss/expressive/dist/fonts'), { recursive: true });
       server = await startFixtureServer(directory);
-      browser = await engine.launch({ headless: true });
+      // Chromium re-rasters only the invalidated part of a tile, and a field
+      // repainted after focus leaves it can then differ by two color levels at
+      // an antialiased edge. Raster whole tiles so both builds paint alike.
+      browser = await engine.launch({ headless: true, args: engineName === 'chromium' ? ['--disable-partial-raster'] : [] });
       for (const [name, fixture] of Object.entries(fixtures)) {
         for (const theme of ['light', 'dark']) {
           const reference = {};

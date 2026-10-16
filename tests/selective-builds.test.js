@@ -169,5 +169,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the 1.0 alias and legacy color role removal: 68,614 gzip bytes (-1,778).
   // Reviewed disabled guards on FAB menu, toolbar FAB and .hoverable states: 68,676 gzip bytes (+62).
   // Reviewed the shared $disabled selector and host disabled paint for FAB menu items and toolbar FABs: 68,787 gzip bytes (+111).
-  assert.ok(sizes(css).gzip <= 68787, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed floating labels that skip their transition under reduced motion: 68,796 gzip bytes (+9).
+  assert.ok(sizes(css).gzip <= 68796, `CSS gzip: ${sizes(css).gzip}`);
 });
