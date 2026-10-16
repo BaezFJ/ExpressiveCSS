@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.org-chart` draws a reporting line top down, with each person as a card
+  under their manager. Write nested lists; a manager's card is the
+  `<summary>` of a `<details>` that folds the team away. Cards take an
+  `.org-chart-role` band, an `.avatar` and an `.org-chart-name`. A wide
+  chart scrolls sideways. CSS only.
 - The `expressivecss-migration` agent skill moves a project from Materialize
   or an older 0.x release to current names in eight steps: package and
   assets, JavaScript API, removed components, classes and markup, the aliases

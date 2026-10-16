@@ -1282,7 +1282,8 @@
       "alternatives": [
         "lists",
         "navigation-rail",
-        "accordion"
+        "accordion",
+        "org-chart"
       ],
       "adaptive": [],
       "runtime": "native",
@@ -4575,6 +4576,94 @@
             "file": "tests/avatar-browser.test.js",
             "name": "chromium: avatar sizes its circle, names its initials and overlaps a group",
             "scope": "Default, small and large sizes, circle radius, image and initials names in the accessibility tree, and the group overlap in LTR and RTL. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "org-chart",
+      "title": "Organization chart",
+      "aliases": [
+        "org chart",
+        "organisation chart",
+        "organization tree",
+        "reporting line",
+        "staff hierarchy",
+        "team tree"
+      ],
+      "guideSource": {
+        "pageId": "org-chart",
+        "heading": "Organization chart",
+        "headingLevel": 2,
+        "semantics": [
+          "org-chart"
+        ]
+      },
+      "jobs": [
+        "A reporting line drawn top down, with each person as a card under their manager."
+      ],
+      "useWhen": [
+        "Show who reports to whom for a team or company of a few dozen people, with a face and a name on each card."
+      ],
+      "avoidWhen": [
+        "Hundreds of people or a search for one person need a searchable list or table; a deep hierarchy of pages or files needs a tree."
+      ],
+      "alternatives": [
+        "tree",
+        "lists",
+        "data-table"
+      ],
+      "adaptive": [],
+      "runtime": "native",
+      "guide": "../components/org-chart.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#organization-chart",
+          "reviewedOn": "2026-10-16",
+          "documentedSupport": "Nested lists of native disclosures drawn as cards under their manager, with connector lines, a role band, an avatar and a name, profile links on cards without reports, mirrored order in RTL and sideways scrolling when wide.",
+          "webAdaptation": "Native <details> managers and nested lists; every manager is a Tab stop and no tree role is promised.",
+          "limitations": [
+            "Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-16",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Carry the hierarchy in nested lists, expose each manager's expanded state, keep every manager reachable by keyboard, keep the drawn lines silent and avoid a tree role without its arrow-key contract."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Twelve people in four teams under a CIO are an org chart. Three hundred employees someone needs to search are a data table with a manager column.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-16",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_org-chart.scss",
+            "sha256": "dcd58be2c6dda140491a82a05a70dd98c9bed3e56713bcf9fedc8ed298d81903"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified.",
+            "nextStep": "Read a chart with a screen reader in each engine and confirm each list's level and size and each manager's expanded state are announced; check forced colors and 200% text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/org-chart-browser.test.js",
+            "name": "chromium: org chart centres each manager over its reports, collapses a team and scrolls when wide",
+            "scope": "Reports side by side below their manager in order, the manager over its reports, the bar stopping at the end reports, the drop from the manager, mirrored order and bar in RTL, a narrow chart scrolling with every card's start reachable, Enter folding a team, the caret under reduced motion, the CanvasText caret in forced colors and nested lists in the accessibility tree. No spoken-output assertion."
           }
         ]
       }
@@ -11932,5 +12021,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "93db5863ce06b56136ecade392f04d479033d8d9"
+  "sourceRevision": "aaa4ce1befee9bd5b46b488bd8d4836d956599e0"
 }

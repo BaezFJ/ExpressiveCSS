@@ -642,3 +642,17 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified. Next check: Move the divider with a screen reader in each engine and confirm the value is announced.
 
 Mapped browser scope: The initial value applied on load, each image on its side of the divider, arrow keys moving the divider, the handle focus ring, RTL, named native sliders and Slider leaving the range alone. No spoken-output assertion.
+
+## [Organization chart](../../components/org-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Carry the hierarchy in nested lists, expose each manager's expanded state, keep every manager reachable by keyboard, keep the drawn lines silent and avoid a tree role without its arrow-key contract.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page writes nested lists of disclosures and cards; the framework lays the cards out under their managers, draws the connecting lines and scrolls a wide chart.
+
+Verification gap: Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm each list's level and size and each manager's expanded state are announced; check forced colors and 200% text.
+
+Mapped browser scope: Reports side by side below their manager in order, the manager over its reports, the bar stopping at the end reports, the drop from the manager, mirrored order and bar in RTL, a narrow chart scrolling with every card's start reachable, Enter folding a team, the caret under reduced motion, the CanvasText caret in forced colors and nested lists in the accessibility tree. No spoken-output assertion.

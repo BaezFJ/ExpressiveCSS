@@ -526,6 +526,13 @@ export const NAV: DocsGroup[] = [
           "A person or account as a circular image, initials or icon, alone or in an overlapping group.",
       },
       {
+        id: "org-chart",
+        label: "Organization chart",
+        route: "/org-chart.html",
+        description:
+          "A reporting line drawn top down, with each person as a card under their manager.",
+      },
+      {
         id: "tooltips",
         label: "Tooltips",
         route: "/tooltips.html",

@@ -5116,6 +5116,55 @@ It is lists of disclosures and links rather than `role="tree"`: every row is a T
 
 ---
 
+## Organization chart
+
+A reporting line drawn top down, with each person as a card under their manager.
+
+A `<ul class="org-chart">` nests lists, one `<li>` per person. A person with reports holds a `<details open>`: its `<summary class="org-chart-node">` is the card and its nested `<ul>` the reports, so the browser folds a team away. A person without reports holds a `<div class="org-chart-node">`, or an `<a class="org-chart-node">` to their profile. A card stacks an optional `.org-chart-role` band, which must come first, an `.avatar` and an `.org-chart-name`. The stylesheet draws the connecting lines. CSS only.
+
+```html
+<ul class="org-chart" aria-label="Company staff">
+  <li>
+    <details open>
+      <summary class="org-chart-node">
+        <span class="org-chart-role">CIO</span>
+        <img class="avatar large" src="marisol.jpg" alt="">
+        <span class="org-chart-name">Marisol Okafor</span>
+      </summary>
+      <ul>
+        <li>
+          <div class="org-chart-node">
+            <span class="org-chart-role">R&amp;D</span>
+            <span class="avatar large" aria-hidden="true">IH</span>
+            <span class="org-chart-name">Ingrid Halvorsen</span>
+          </div>
+        </li>
+      </ul>
+    </details>
+  </li>
+</ul>
+```
+
+- Name the root list with `aria-label`. The nested lists carry the hierarchy; the lines say nothing.
+- Give an avatar image `alt=""`, and an initials avatar `aria-hidden="true"`, when the name follows it.
+- Keep a manager's card a `<summary>` and put no link inside it. Only a card without reports can be a link.
+- No `role="tree"`: like `.tree`, the chart is native disclosures, with each manager a Tab stop.
+- Siblings sit side by side, so a wide chart scrolls sideways inside the root list. Right-to-left pages mirror the order.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-org-chart-line-color` | `outline-variant` |
+| `--md-comp-org-chart-line-length` | 24px; each vertical connector |
+| `--md-comp-org-chart-gap` | 16px; between siblings |
+| `--md-comp-org-chart-node-container-color` | `surface-container-high` |
+| `--md-comp-org-chart-node-shape` | 12px |
+| `--md-comp-org-chart-role-container-color` | `primary-container` |
+| `--md-comp-org-chart-role-color` | `on-primary-container` |
+
+---
+
 ## Auto Init
 
 Initialize every registered component with one function call.
