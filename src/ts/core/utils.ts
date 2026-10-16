@@ -70,6 +70,8 @@ export class Utils {
    * both hazards come back: the host's own ancestors still form the containing
    * block, so a transformed ancestor re-anchors `position: fixed` and a
    * positioned one re-anchors `position: absolute`.
+   * Tooltips and the snackbar container avoid that by showing in the top
+   * layer (`showInTopLayer`), whose containing block is the viewport.
    */
   static portalRoot(el: Node): HTMLElement | ShadowRoot {
     const root = el.getRootNode() as ShadowRoot;
@@ -78,32 +80,16 @@ export class Utils {
   }
 
   /**
-   * The open modal dialog in `el`'s tree, if any. A modal makes everything
-   * outside it inert, so a runtime element that has to stay interactive (a
-   * snackbar action, a rich tooltip) goes inside it.
-   */
-  static openModal(el: Node): HTMLDialogElement | null {
-    const root = el.getRootNode() as Document | ShadowRoot;
-    if (!root.querySelectorAll) return null;
-    const isModal = (dialog: HTMLDialogElement) => {
-      try {
-        return dialog.matches(':modal');
-      } catch {
-        // ponytail: an engine without :modal (jsdom) has no inert modals to escape.
-        return false;
-      }
-    };
-    return [...root.querySelectorAll<HTMLDialogElement>('dialog[open]')].filter(isModal).at(-1) ?? null;
-  }
-
-  /**
    * Show `el` in the top layer as a manual popover, above any modal dialog,
-   * which no z-index can do. A no-op where popovers are unsupported.
+   * which no z-index can do. A no-op where popovers are unsupported. An open
+   * popover is re-shown, because top-layer order is insertion order and a
+   * dialog opened since would otherwise stay above it.
    */
   static showInTopLayer(el: HTMLElement) {
     if (!el.isConnected || typeof el.showPopover !== 'function') return;
     if (!el.hasAttribute('popover')) el.setAttribute('popover', 'manual');
-    if (!el.matches(':popover-open')) el.showPopover();
+    if (el.matches(':popover-open')) el.hidePopover();
+    el.showPopover();
   }
 
   static hideFromTopLayer(el: HTMLElement) {

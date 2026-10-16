@@ -131,7 +131,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed swipeable tabs re-aligning only when the track's width changes: 69,170 gzip bytes (+27).
   // Reviewed the time picker sizing its clock face from dialRadius: 69,184 gzip bytes (+14).
   // Reviewed tooltips and snackbars in the top layer over modal dialogs: 69,446 gzip bytes (+262).
-  assert.ok(sizes(js).gzip <= 69446, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed keeping the snackbar out of modal dialogs: 69,325 gzip bytes (-121).
+  assert.ok(sizes(js).gzip <= 69325, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

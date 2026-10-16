@@ -147,10 +147,7 @@ export class Snackbar {
     this.el = this._createSnackbar();
     // One container serves every snackbar, and only one snackbar shows at a
     // time — so it is moved rather than duplicated when the root changes.
-    // An open modal makes everything outside it inert, so the bar and its
-    // action go inside it; the top layer then lifts the bar above it.
-    const origin = this.options.root ?? document.body;
-    const root = Utils.openModal(origin) ?? Utils.portalRoot(origin);
+    const root = Utils.portalRoot(this.options.root ?? document.body);
     if (
       !Snackbar._container ||
       !Snackbar._container.isConnected ||
@@ -160,17 +157,10 @@ export class Snackbar {
       Snackbar._createContainer(root);
     }
     Snackbar._container.appendChild(this.el);
+    // The top layer paints the bar above an open modal dialog. Its action is
+    // still inert there: a modal blocks everything outside it, and moving the
+    // bar into the dialog broke the dialog's own :last-child action row.
     Utils.showInTopLayer(Snackbar._container);
-    // A bar shown just before its dialog closes ("Saved", then close) would
-    // vanish with the dialog, so it moves back out when the dialog closes.
-    if (root instanceof HTMLDialogElement) {
-      root.addEventListener('close', () => {
-        const container = Snackbar._container;
-        if (container?.parentNode !== root) return;
-        Utils.portalRoot(origin).appendChild(container);
-        Utils.showInTopLayer(container);
-      }, { once: true });
-    }
     this.el['Expressive_Snackbar'] = this;
     Snackbar._snackbars.push(this);
     this._animateIn();
