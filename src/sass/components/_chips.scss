@@ -145,6 +145,10 @@
   outline: none;
   transition: all .3s;
 
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
   &.focus {
     border-bottom: 1px solid var(--md-sys-color-primary);
     box-shadow: 0 1px 0 0 var(--md-sys-color-primary);

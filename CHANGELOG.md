@@ -103,6 +103,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   on-surface text color. These were set only on `html` and `body`, which a
   shadow tree cannot reach, so its elements were `content-box` with the
   browser's default text color.
+- With reduced motion requested, the floating label, switch handle, icon
+  button shape, slider value label, chips, time picker dial and the open card
+  reveal panel no longer animate. Carousels keep their normal layout and drop
+  only smooth scrolling, size transitions and parallax. Before, a hero or
+  multi-browse carousel ended up partly resized with no edge padding.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.

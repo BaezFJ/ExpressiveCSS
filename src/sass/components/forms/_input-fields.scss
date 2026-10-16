@@ -146,6 +146,10 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     pointer-events: none;
     @include typescale("body-large");
     transition: left 0.2s ease-out, top 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
   }
 
   > small,
