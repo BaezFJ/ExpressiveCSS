@@ -322,9 +322,11 @@ $_extend-sizes: (
   --md-comp-fab-icon-size: 36px;
 }
 
-:where(#{$_btn}):disabled,
-:where(#{$_btn})[disabled],
-:where(#{$_btn}).disabled {
+// The second arm matters for a focusable disabled control (`a.button.disabled`
+// with an href, or a `<button class="disabled">`): a variant's `:focus` state
+// is (0,2,0), so the plain disabled rule would lose its shadow and fill to it.
+:where(#{$_btn}):is(:disabled, [disabled], .disabled),
+:where(#{$_btn}):is(:disabled, [disabled], .disabled):is(:hover, :active, :focus) {
   @include btn-disabled;
 }
 

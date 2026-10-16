@@ -89,6 +89,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   right-to-left pages. The menu kept the browser's `[popover]` `inset: 0`,
   so with its explicit width the right edge won over `left`, and the menu
   opened against the right side of its container.
+- Unlayered CSS can set a shadow on any component again. Thirteen component
+  rules that remove a shadow (text buttons, disabled buttons, docked
+  toolbars, filled and outlined cards, full-screen dialogs, separated panes,
+  the search view's bar) used `box-shadow: none !important`, and a layered
+  `!important` beats every unlayered rule. Only the `.z-depth-0` utility
+  keeps the flag. A focused disabled `a.button` with an `href` no longer
+  shows the enabled fill or the elevated focus shadow.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.

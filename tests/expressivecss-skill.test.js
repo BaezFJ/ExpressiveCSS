@@ -386,7 +386,9 @@ describe('the ExpressiveCSS agent skill', () => {
     }
     assert.match(helpers, /`\.z-depth-0`[\s\S]*`!important`/);
     assert.match(elevationSass, /"0": none[\s\S]*"1-half":[\s\S]*"5":/);
-    assert.match(elevationSass, /box-shadow: none !important/);
+    // Only the .z-depth-0 utility asks for the flag; the components layer
+    // must not, or no unlayered consumer rule could set a shadow.
+    assert.match(elevationSass, /@if \$important \{\s*box-shadow: \$shadow !important;/);
     assert.match(helpers, /`\.hide-on-med-and-down`[\s\S]*below 840px/i);
     assert.match(helpers, /`\.hide-on-med-and-up`[\s\S]*600px and above/i);
     assert.doesNotMatch(helpers, /`\.hide-on-med-and-(?:down|up)`[^\n]*alias/i);

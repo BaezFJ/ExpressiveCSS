@@ -6,7 +6,8 @@
 
 @each $level in map.keys($elevations) {
   .z-depth-#{$level} {
-    @include z-depth($level);
+    // Level 0 exists to cancel a shadow, so it alone stays unconditional.
+    @include z-depth($level, $important: $level == "0");
   }
 }
 
