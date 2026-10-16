@@ -7,12 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const navigationDialog = document.getElementById("docs-navigation-dialog");
   const navigationTrigger = document.getElementById("docs-navigation-trigger");
   navigationTrigger?.addEventListener("click", () => navigationDialog?.showModal());
-  // Return focus to the menu button, or to the current page in the page list
+  // Return focus to the menu button, or to the current group in the rail
   // when the window has grown past the button's range.
   navigationDialog?.addEventListener("close", () => {
     const target = navigationTrigger?.checkVisibility()
       ? navigationTrigger
-      : document.querySelector('.docs-page-navigation [aria-current="page"]');
+      : document.querySelector('.docs-category-rail > [aria-current]');
     target?.focus();
   });
 
@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const wide = window.matchMedia("(width >= 1200px)");
   const syncToc = () => {
     if (toc) toc.open = wide.matches;
-    // From Large up the page list is on screen and the menu button is hidden,
-    // so a drawer left open would close with nowhere to return focus.
+    // From Large up the menu button is hidden and the rail holds the
+    // navigation, so a drawer left open closes and focus goes to the rail.
     if (wide.matches && navigationDialog?.open) navigationDialog.close();
   };
   syncToc();

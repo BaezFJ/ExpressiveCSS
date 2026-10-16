@@ -163,6 +163,23 @@ describe('NavigationRail', () => {
     }
   });
 
+  test('a first destination that opens a side panel is not the menu toggle', () => {
+    document.body.innerHTML = `<nav class="navigation-rail" aria-label="Main">
+      <button type="button" popovertarget="start-panel"><i class="material-symbols">home</i>Start</button>
+      <div id="start-panel" class="navigation-rail-panel" popover></div>
+    </nav>`;
+    const el = document.querySelector('.navigation-rail');
+    const instance = Expressive.NavigationRail.init(el);
+
+    try {
+      fire(el.querySelector('button'), 'click');
+      assert.equal(instance.isExpanded, false);
+      assert.equal(el.querySelector('button').hasAttribute('aria-expanded'), false);
+    } finally {
+      instance.destroy();
+    }
+  });
+
   test('expand() and collapse() are idempotent', () => {
     document.body.innerHTML = railHtml;
     const el = document.querySelector('.navigation-rail');

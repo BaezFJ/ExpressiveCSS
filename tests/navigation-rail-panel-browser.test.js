@@ -48,6 +48,9 @@ for (const [name, engine] of engines) {
         const edge = dir === 'ltr' ? p.x - (rail.x + rail.width) : rail.x - (p.x + p.width);
         assert.ok(Math.abs(edge) < 1, `the panel meets the rail's edge: ${edge}`);
         assert.ok(p.y < 1 && Math.abs(p.height - 700) < 1, `the panel spans the window height: ${p.y}, ${p.height}`);
+        const link = await page.locator('#overview').boundingBox();
+        const inset = dir === 'ltr' ? link.x - p.x : p.x + p.width - (link.x + link.width);
+        assert.ok(Math.abs(inset - 12) < 1, `links sit inside the panel's padding: ${inset}`);
 
         await page.hover('#overview');
         await page.waitForTimeout(400);
@@ -123,4 +126,25 @@ for (const [name, engine] of engines) {
       }
     });
   }
+
+  test(`${name}: a rail that starts with a panel destination has no menu toggle`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
+      await page.setContent(`<!doctype html><html lang="en" theme="light"><head><style>${css}</style></head><body style="margin:0">
+<nav class="navigation-rail" aria-label="Main">
+  <button id="start" type="button" popovertarget="start-panel"><span class="material-symbols" aria-hidden="true">home</span>Start</button>
+  <div id="start-panel" class="navigation-rail-panel" popover><a href="#one">One</a></div>
+  <a id="other" href="#other"><span class="material-symbols" aria-hidden="true">star</span>Other</a>
+</nav></body></html>`);
+      const box = (selector) => page.locator(selector).boundingBox();
+      const [start, other] = [await box('#start'), await box('#other')];
+      assert.equal(start.width, other.width, 'the panel destination is laid out like the other destinations');
+      assert.equal(start.height, other.height, 'a button destination is as tall as a link destination');
+      assert.equal(await page.locator('#start').evaluate((el) => getComputedStyle(el).flexDirection), 'column');
+    } finally {
+      await browser.close();
+    }
+  });
 }
