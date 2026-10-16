@@ -13,7 +13,6 @@ const PHYSICAL = /(^|[\s;{])(left|right|padding-left|padding-right|margin-left|m
 
 describe('Right-to-left layout', () => {
   const logical = {
-    'floating label': /^\.field > label:not\(\.button, \.icon-button\)$/,
     'check mark': /^label:has\(> \[type=checkbox\]\):not\(\.switch\):not\(:has\(> \[type=checkbox\] \+ span\)\)::before$/,
     'legacy checkbox span': /^\*:not\(\.switch\) > \[type=checkbox\] \+ span:not\(\.supporting-text, \.character-counter, \.file-path\)$/,
     'modal navigation rail': /^\.navigation-rail\.expanded\.modal$/,
@@ -34,9 +33,14 @@ describe('Right-to-left layout', () => {
 
   // The icon font sets direction: ltr on the icon, and an icon's own logical
   // inset follows it, so these swap physical sides with :dir(rtl) instead.
-  test('swaps the field prefix and suffix icons with :dir(rtl)', () => {
+  // A field keys every side to its own dir through :dir(), never through the
+  // input's dir or a CSS-only direction; see tests/rtl-browser.test.js.
+  test('swaps the field icons, label and icon button with :dir(rtl)', () => {
     assert.ok(bodies(/^\.field > \.prefix:dir\(rtl\)$/).some((b) => /right:\s*12px/.test(b)), 'prefix');
     assert.ok(bodies(/^\.field > \.suffix:not\(\.icon-button\):dir\(rtl\)$/).some((b) => /left:\s*12px/.test(b)), 'suffix');
+    assert.ok(bodies(/^\.field > label:not\(\.button, \.icon-button\):dir\(rtl\)$/).some((b) => /right:\s*var\(--_field-start\)/.test(b)), 'label');
+    assert.ok(bodies(/^\.field > \.icon-button\.suffix:dir\(rtl\)$/).some((b) => /left:\s*4px/.test(b)), 'icon button');
+    assert.ok(bodies(/^\.field:dir\(rtl\)$/).some((b) => /--_field-left:\s*var\(--_field-end\)/.test(b)), 'input padding');
   });
 
   test('mirrors the label transform origin and the flyout entry', () => {

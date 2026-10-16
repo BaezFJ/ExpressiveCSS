@@ -121,12 +121,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Right-to-left pages lay out text fields, checkboxes and more on the correct
   side. The floating label, prefix and suffix icons, trailing icon button,
   character counter and the select caret's inset follow the reading
-  direction, as do the checkbox mark, the modal navigation rail, the snackbar
-  container and its padding, the dialog header form, menu item text and the
-  nested menu's entry slide, and the map popup's close button. A field's icon
-  clearance follows the field's `dir`, so an input with `dir="auto"` or its
-  own `dir` keeps its text clear of the icon. Fields read `dir`; a page that
-  sets only the CSS `direction` property is not mirrored.
+  direction, as do the checkbox mark, the date range band, the modal
+  navigation rail, the snackbar container and its padding, the dialog header
+  form, menu item text and the nested menu's entry slide, and the map popup's
+  close button. A field's label, icons and icon clearance follow the field's
+  `dir`, so an input with `dir="auto"` or its own `dir` keeps its text clear
+  of the icon. Fields read `dir`; a page that sets only the CSS `direction`
+  property renders them left to right. The date picker's `isRTL` now sets
+  `dir="rtl"` on the calendar table instead of reordering the cells, so an
+  RTL page with `isRTL: true` shows a right-to-left calendar rather than
+  flipping it back.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.

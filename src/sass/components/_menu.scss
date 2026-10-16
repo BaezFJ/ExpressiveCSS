@@ -529,8 +529,12 @@ menu[id] li.submenu-start > menu {
   inset-inline-end: 100%;
   transform-origin: 100% 0;
 
-  // Flipped toward inline-start, which is the right in a right-to-left menu.
+  // Flipped toward inline-start, so it also slides in from the far side:
+  // the right in a right-to-left menu.
+  transform: translateX(4px) scale(0.96);
+
   &:dir(rtl) {
+    transform: translateX(-4px) scale(0.96);
     transform-origin: 0 0;
   }
 }

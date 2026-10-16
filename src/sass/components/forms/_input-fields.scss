@@ -52,11 +52,11 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   --md-comp-filled-text-field-caret-color: var(--md-sys-color-primary);
   --input-color: var(--md-comp-filled-text-field-caret-color);
 
-  // Horizontal padding of the input, keyed to the field's direction. An input
-  // can carry its own dir ("auto" for mixed-language text, "ltr" for an email
-  // address on an RTL page), and logical padding would follow that instead,
-  // leaving the text under the prefix or suffix icon. The icons themselves
-  // are placed with :dir(), which reads the field's direction too.
+  // Start and end clearance of the field's own input, label and icons, in
+  // physical terms keyed to the field's dir through :dir(). An input can carry
+  // its own dir ("auto" for mixed-language text, "ltr" for an email address on
+  // an RTL page), and logical properties would follow that, or a CSS-only
+  // `direction`, instead. A page that sets only `direction` renders as LTR.
   --_field-start: 16px;
   --_field-end: 16px;
   --_field-left: var(--_field-start);
@@ -75,7 +75,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   input:not([type="range"], [type="checkbox"], [type="radio"], [type="file"], [type="color"]),
   textarea {
     box-sizing: border-box;
-    padding: 20px var(--_field-right) 8px var(--_field-left);
+    padding: 20px 16px 8px;
     border: none;
     border-radius: var(--md-comp-filled-text-field-container-shape);
     border-bottom: 1px solid var(--md-sys-color-on-surface-variant);
@@ -147,6 +147,15 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     user-select: none;
   }
 
+  // After the base rule, which ties it on specificity. Only the field's own
+  // control: an input nested deeper keeps 16px. Longhands, so a bad custom
+  // property costs one side rather than all four.
+  > :is(input:not([type="range"], [type="checkbox"], [type="radio"], [type="file"], [type="color"]), textarea) {
+    padding-left: var(--_field-left);
+    padding-right: var(--_field-right);
+  }
+
+
   // :not(.button, .icon-button) - the file input's trigger is a <label> and is
   // a button, not this field's floating label.
   > label:not(.button, .icon-button),
@@ -154,7 +163,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     color: var(--md-sys-color-on-surface-variant);
     user-select: none;
     position: absolute;
-    inset-inline-start: 16px;
+    left: var(--_field-start);
     top: 16px;
     cursor: text;
     transform-origin: top left;
@@ -164,6 +173,8 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     transition: left 0.2s ease-out, right 0.2s ease-out, top 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out;
 
     &:dir(rtl) {
+      left: auto;
+      right: var(--_field-start);
       transform-origin: top right;
     }
 
@@ -237,22 +248,18 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   > .icon-button.suffix {
     position: absolute;
     top: 8px;
-    inset-inline-end: 4px;
+    right: 4px;
     z-index: 1;
+
+    &:dir(rtl) {
+      right: auto;
+      left: 4px;
+    }
   }
 
+  // The label reads --_field-start too, so it indents with the input.
   &:has(> .prefix) {
     --_field-start: 52px;
-
-    // The exclusion list is what stops this indenting things that are not the
-    // floating label. Without .prefix / .suffix in it the leading icon was
-    // pushed to 52px, i.e. indented past its own padding.
-    > :is(
-      label,
-      span:not(#{$_not-label})
-    ) {
-      inset-inline-start: 52px;
-    }
   }
 
   &:has(> .suffix) {
@@ -282,10 +289,17 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
       &:not([placeholder=" "]) + span:not(#{$_not-label}),
       &:not(:placeholder-shown) + span:not(#{$_not-label}) {
         top: -8px;
-        inset-inline-start: 16px;
-        margin-inline-start: -4px;
+        left: 16px;
+        margin-left: -4px;
         padding: 0 4px;
         background-color: var(--md-sys-color-surface);
+
+        &:dir(rtl) {
+          left: auto;
+          right: 16px;
+          margin-left: 0;
+          margin-right: -4px;
+        }
       }
 
       &:disabled,
