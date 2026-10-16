@@ -370,8 +370,13 @@ export class Tooltip extends Component<TooltipOptions> {
 
   _handleKeydown = (event: KeyboardEvent) => {
     if (event.key !== 'Escape' || !this.isOpen) return;
-    event.preventDefault();
-    event.stopPropagation();
+    // Escape always dismisses the tooltip, but it is only the tooltip's key
+    // when focus is on its trigger. A tooltip left open by hover must not
+    // swallow the Escape meant for the dialog or menu that has focus.
+    if (Utils.focusIsIn(this.el, this.tooltipEl)) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     this.close();
     clearTimeout(this._exitDelayTimeout);
     this._animateOut();

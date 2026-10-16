@@ -111,7 +111,6 @@ export class Chips extends Component<ChipsOptions> {
   _input: HTMLInputElement;
   _label: HTMLLabelElement;
   _chips: HTMLElement[];
-  static _keydown: boolean;
   private _selectedChip: HTMLElement;
 
   /**
@@ -215,8 +214,8 @@ export class Chips extends Component<ChipsOptions> {
   _setupEventHandlers() {
     this.el.addEventListener('click', this._handleChipClick);
     this.el.addEventListener('keydown', Chips._handleChipsKeydown);
-    this.el.addEventListener('keyup', Chips._handleChipsKeyup);
-    this.el.addEventListener('blur', Chips._handleChipsBlur, true);
+    this.el.addEventListener('focusin', this._handleFocusIn);
+    this.el.addEventListener('focusout', this._handleFocusOut);
     this._input.addEventListener('focus', this._handleInputFocus);
     this._input.addEventListener('blur', this._handleInputBlur);
     this._input.addEventListener('keydown', this._handleInputKeydown);
@@ -225,8 +224,8 @@ export class Chips extends Component<ChipsOptions> {
   _removeEventHandlers() {
     this.el.removeEventListener('click', this._handleChipClick);
     this.el.removeEventListener('keydown', Chips._handleChipsKeydown);
-    this.el.removeEventListener('keyup', Chips._handleChipsKeyup);
-    this.el.removeEventListener('blur', Chips._handleChipsBlur, true);
+    this.el.removeEventListener('focusin', this._handleFocusIn);
+    this.el.removeEventListener('focusout', this._handleFocusOut);
     this._input.removeEventListener('focus', this._handleInputFocus);
     this._input.removeEventListener('blur', this._handleInputBlur);
     this._input.removeEventListener('keydown', this._handleInputKeydown);
@@ -255,7 +254,6 @@ export class Chips extends Component<ChipsOptions> {
   };
 
   static _handleChipsKeydown(e: KeyboardEvent) {
-    Chips._keydown = true;
     const chips = (<HTMLElement>e.target).closest('.chips');
 
     // Don't handle keydown inputs on input and textarea
@@ -270,15 +268,15 @@ export class Chips extends Component<ChipsOptions> {
       if (index < 0) return;
       e.preventDefault();
       currChips._deleteChip(index, 'previous');
-    } else if (e.key === Utils.keys.ARROW_LEFT) {
-      if (currChips._selectedChip) {
-        const selectIndex = currChips._chips.indexOf(currChips._selectedChip) - 1;
-        if (selectIndex < 0) return;
-        currChips.selectChip(selectIndex);
-      }
-    } else if (e.key === Utils.keys.ARROW_RIGHT) {
-      if (currChips._selectedChip) {
-        const selectIndex = currChips._chips.indexOf(currChips._selectedChip) + 1;
+    } else if (e.key === Utils.keys.ARROW_LEFT || e.key === Utils.keys.ARROW_RIGHT) {
+      // Move from the chip that has focus, the same one Backspace deletes.
+      const current = (e.target as HTMLElement).closest<HTMLElement>('.chip') ?? currChips._selectedChip;
+      const index = currChips._chips.indexOf(current);
+      if (index < 0) return;
+      if (e.key === Utils.keys.ARROW_LEFT) {
+        if (index > 0) currChips.selectChip(index - 1);
+      } else {
+        const selectIndex = index + 1;
         if (selectIndex >= currChips.chipsData.length) {
           // Walking off the end returns to the input, so nothing is selected
           // any more - without this the last chip kept the class.
@@ -290,17 +288,16 @@ export class Chips extends Component<ChipsOptions> {
     }
   }
 
-  static _handleChipsKeyup() {
-    Chips._keydown = false;
-  }
+  // Selection follows focus: a chip is selected while focus is inside it, and
+  // none is once focus moves to the input or out of the field.
+  _handleFocusIn = (e: FocusEvent) => {
+    const chip = (e.target as HTMLElement).closest<HTMLElement>('.chip');
+    this._setSelected(chip && this._chips.includes(chip) ? chip : null);
+  };
 
-  static _handleChipsBlur(e: Event) {
-    if (!Chips._keydown && document.hidden) {
-      const chips = (<HTMLElement>e.target).closest('.chips');
-      const currChips: Chips = chips?.['Expressive_Chips'];
-      if (currChips) currChips._setSelected(null);
-    }
-  }
+  _handleFocusOut = (e: FocusEvent) => {
+    if (!this.el.contains(e.relatedTarget as Node | null)) this._setSelected(null);
+  };
 
   _handleInputFocus = () => {
     this.el.classList.add('focus');
@@ -311,7 +308,6 @@ export class Chips extends Component<ChipsOptions> {
   };
 
   _handleInputKeydown = (e: KeyboardEvent) => {
-    Chips._keydown = true;
     if (e.key === Utils.keys.ENTER) {
       // Override enter if autocompleting.
       if (this.hasAutocomplete && this.autocomplete?.isOpen &&
@@ -518,9 +514,5 @@ export class Chips extends Component<ChipsOptions> {
         });
       });
     });
-  }
-
-  static {
-    Chips._keydown = false;
   }
 }

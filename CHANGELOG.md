@@ -75,6 +75,23 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A tooltip opened by hover still closes on Escape but no longer takes the key
+  from the focused control, so the same Escape also closes the dialog or menu
+  the user is in. On its own trigger, Escape stays the tooltip's.
+- A hover menu no longer moves focus into itself when the pointer passes its
+  trigger, which pulled focus out of the field being typed in. Space, Enter or
+  an arrow key on the trigger moves focus into the open menu, and Escape
+  closes it from wherever focus is.
+- Clicking inside an open Autocomplete input, for example to move the caret,
+  no longer closes its list. A trigger's own click is no longer treated as an
+  outside click by Menu.
+- Enter in a Timepicker hour or minute field writes the typed time, after an
+  emptied field takes its default as it would on leaving. With the
+  default `autoSubmit` there is no Ok button, so a keyboard user could type a
+  time but never set it.
+- Chips selection follows focus. Arrow keys used to move from the highlighted
+  chip while Backspace deleted the focused one, and the highlight stayed after
+  focus left the field.
 - Behaviors that listen on the document now work inside an open shadow root.
   Copy, Theme, Dialogs light dismiss, bottom and side sheet dragging, the
   bottom sheet handle button, ImageCompare, PaneResize, Sortable, Tour

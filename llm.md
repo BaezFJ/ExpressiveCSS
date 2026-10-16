@@ -5300,7 +5300,7 @@ Expressive.AutoInit(document.body, {
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `alignment` | String | `'left'` | Edge the menu is aligned to. `'left'` or `'right'`. |
-| `autoFocus` | Boolean | `true` | If true, automatically focus the menu for keyboard navigation. This option is named `autoFocus`, not `autoTrigger`. |
+| `autoFocus` | Boolean | `true` | If true, automatically focus the menu for keyboard navigation. A menu opened by hover leaves focus where it was until Space, Enter or an arrow key on the trigger. This option is named `autoFocus`, not `autoTrigger`. |
 | `constrainWidth` | Boolean | `true` | If true, the menu is as wide as the trigger. M3 menus are independently sized — pass `false` for that. |
 | `container` | Element | `null` | Element that will contain the menu. When omitted, the menu is moved next to the trigger. |
 | `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |
@@ -6758,7 +6758,7 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 
 Wrap the input in its own small parent — a `.field`, or a bare `<div>`. The clock is appended inside that parent.
 
-Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital hour and minute fields.
+Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital hour and minute fields; Enter in either one writes the typed time.
 
 Digital edits use native input events, including paste. Invalid edits restore
 the last valid value on blur. Empty fields use the current hour or minute without

@@ -103,6 +103,19 @@ export class Utils {
   }
 
   /**
+   * Whether focus is on or inside any of `els`, read from each element's own
+   * root. A document listener cannot tell from `composedPath()` when the
+   * element sits in a closed shadow root, but the element's root still knows
+   * what has focus.
+   */
+  static focusIsIn(...els: (Element | null | undefined)[]): boolean {
+    return els.some((el) => {
+      const active = el && (el.getRootNode() as Document | ShadowRoot).activeElement;
+      return !!active && el.contains(active);
+    });
+  }
+
+  /**
    * `closest()` for a document listener: the nearest element on the event's
    * composed path that matches `selector`. Unlike `eventTarget(e).closest()`
    * it climbs out of shadow roots too, so a press on a shadow-root icon inside

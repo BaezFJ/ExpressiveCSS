@@ -9,7 +9,7 @@ Component ID: `menu`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `db8d84083963b11b37db77e525b72e7bda8488b90008028bd074cc6875ba73b1`
+Contract SHA-256: `5eeba2d4da1be350e9a37473ed9e4f5db3b195a61931421d594365cc63443d5d`
 
 #### Selection and adaptation
 
@@ -66,7 +66,7 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `alignment` | String | `'left'` | Edge the menu is aligned to. `'left'` or `'right'`. |
-| `autoFocus` | Boolean | `true` | If true, automatically focus the menu for keyboard navigation. This option is named `autoFocus`, not `autoTrigger`. |
+| `autoFocus` | Boolean | `true` | If true, automatically focus the menu for keyboard navigation. A menu opened by hover leaves focus where it was until Space, Enter or an arrow key on the trigger. This option is named `autoFocus`, not `autoTrigger`. |
 | `constrainWidth` | Boolean | `true` | If true, the menu is as wide as the trigger. M3 menus are independently sized — pass `false` for that. |
 | `container` | Element | `null` | Element that will contain the menu. When omitted, the menu is moved next to the trigger. |
 | `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |

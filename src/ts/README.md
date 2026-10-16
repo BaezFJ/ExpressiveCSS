@@ -108,8 +108,8 @@ read-it-off-the-element access that key provides.
   Standard is the default continuous surface. Add `.grouped` and separate
   item runs with `.gap` to render distinct coplanar surfaces; `.label` is a
   32dp heading. Standard and grouped menus receive
-  `menu` / `menuitem` roles, focus their first item when opened, and keep
-  disabled items focusable but inert.
+  `menu` / `menuitem` roles, focus their first item when opened (not when
+  opened by hover), and keep disabled items focusable but inert.
 - **FAB menus use .fab-menu.** JS owns expanded state, click activation, Escape,
   outside dismissal and focus recovery. Hidden actions are inert. Motion is CSS.
 - **ScrollSpy is IntersectionObserver.** No window scroll listener and
