@@ -9,7 +9,7 @@ Component ID: `bar-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `8ff24ba421187d4b22225c97c503cd51ed7ab81d24f321f39f5617d206cffab0`
+Contract SHA-256: `ff0e251756db0e6251395e8afe354fea356b66359ab3de8ab4f0bd43c3b036e7`
 
 #### Selection and adaptation
 

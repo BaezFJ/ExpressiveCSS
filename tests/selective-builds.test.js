@@ -168,8 +168,10 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed data table toggles that leave row menus alone: 68,426 gzip bytes (+16).
   // Reviewed the mega menu, menubar, tour, calendar, image compare, sortable rows and color inputs: 70,392 gzip bytes (+1,966).
   // Reviewed the 1.0 alias and legacy color role removal: 68,614 gzip bytes (-1,778).
+  // Reviewed disabled guards on FAB menu, toolbar FAB and .hoverable states: 68,676 gzip bytes (+62).
   // Reviewed forced-colors states for selection, form controls, the datepicker and indicators: 69,228 gzip bytes (+617).
   // Reviewed logical properties and :dir() swaps for right-to-left fields, checkboxes, menus and overlays: 69,311 gzip bytes (+83).
   // Reviewed the popover resets for top-layer tooltips and snackbars: 69,321 gzip bytes (+10).
-  assert.ok(sizes(css).gzip <= 69321, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the disabled guards from #310 on top of the systemic fixes: 69,392 gzip bytes (+71).
+  assert.ok(sizes(css).gzip <= 69392, `CSS gzip: ${sizes(css).gzip}`);
 });
