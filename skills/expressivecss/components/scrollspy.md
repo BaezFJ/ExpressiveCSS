@@ -9,7 +9,7 @@ Component ID: `scrollspy`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `31753ceeeb6baa48bbb09a1c24997ccaaf3aa15b16993f0e30f5cde85f6aee43`
+Contract SHA-256: `9a00b9978e911e4bea6e69785df0183cbe2f738bd1d9969de8a083a456b8318e`
 
 #### Selection and adaptation
 

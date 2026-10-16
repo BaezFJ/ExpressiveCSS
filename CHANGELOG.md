@@ -127,14 +127,6 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   clearance follows the field's `dir`, so an input with `dir="auto"` or its
   own `dir` keeps its text clear of the icon. Fields read `dir`; a page that
   sets only the CSS `direction` property is not mirrored.
-- Tooltips and snackbars show above an open modal dialog. Both now use the
-  top layer as manual popovers; no z-index can rise above a modal. A
-  snackbar's action is still not clickable while a modal is open, because a
-  modal makes everything outside it inert. In a shadow root, both now
-  position against the viewport rather than a transformed or positioned
-  ancestor of the host. The menu partial's `[popover]` reset is now
-  zero-specificity, so a component's own popover styles (the tooltip's
-  padding) win over it.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.

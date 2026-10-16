@@ -70,30 +70,11 @@ export class Utils {
    * both hazards come back: the host's own ancestors still form the containing
    * block, so a transformed ancestor re-anchors `position: fixed` and a
    * positioned one re-anchors `position: absolute`.
-   * Tooltips and the snackbar container avoid that by showing in the top
-   * layer (`showInTopLayer`), whose containing block is the viewport.
    */
   static portalRoot(el: Node): HTMLElement | ShadowRoot {
     const root = el.getRootNode() as ShadowRoot;
     // Only a ShadowRoot has a host; a Document or a detached subtree does not.
     return root.host ? root : document.body;
-  }
-
-  /**
-   * Show `el` in the top layer as a manual popover, above any modal dialog,
-   * which no z-index can do. A no-op where popovers are unsupported. An open
-   * popover is re-shown, because top-layer order is insertion order and a
-   * dialog opened since would otherwise stay above it.
-   */
-  static showInTopLayer(el: HTMLElement) {
-    if (!el.isConnected || typeof el.showPopover !== 'function') return;
-    if (!el.hasAttribute('popover')) el.setAttribute('popover', 'manual');
-    if (el.matches(':popover-open')) el.hidePopover();
-    el.showPopover();
-  }
-
-  static hideFromTopLayer(el: HTMLElement) {
-    if (typeof el.hidePopover === 'function' && el.matches(':popover-open')) el.hidePopover();
   }
 
   /**

@@ -133,7 +133,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed tooltips and snackbars in the top layer over modal dialogs: 69,446 gzip bytes (+262).
   // Reviewed keeping the snackbar out of modal dialogs: 69,325 gzip bytes (-121).
   // Reviewed the character counter floating to inline-end: 69,328 gzip bytes (+3).
-  assert.ok(sizes(js).gzip <= 69328, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed reverting the top-layer tooltip and snackbar: 69,187 gzip bytes (-141).
+  assert.ok(sizes(js).gzip <= 69187, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -178,5 +179,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the disabled guards from #310 on top of the systemic fixes: 69,392 gzip bytes (+71).
   // Reviewed field padding keyed to the field's direction and the RTL follow-ups: 69,450 gzip bytes (+58).
   // Reviewed the shared disabled selector from #310 on top of the systemic fixes: 69,541 gzip bytes (+91).
-  assert.ok(sizes(css).gzip <= 69541, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed reverting the popover resets for top-layer tooltips and snackbars: 69,528 gzip bytes (-13).
+  assert.ok(sizes(css).gzip <= 69528, `CSS gzip: ${sizes(css).gzip}`);
 });

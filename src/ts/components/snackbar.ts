@@ -157,10 +157,6 @@ export class Snackbar {
       Snackbar._createContainer(root);
     }
     Snackbar._container.appendChild(this.el);
-    // The top layer paints the bar above an open modal dialog. Its action is
-    // still inert there: a modal blocks everything outside it, and moving the
-    // bar into the dialog broke the dialog's own :last-child action row.
-    Utils.showInTopLayer(Snackbar._container);
     this.el['Expressive_Snackbar'] = this;
     Snackbar._snackbars.push(this);
     this._animateIn();
