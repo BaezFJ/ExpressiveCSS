@@ -110,6 +110,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   reveal panel no longer animate. Carousels keep their normal layout and drop
   only smooth scrolling, size transitions and parallax. Before, a hero or
   multi-browse carousel ended up partly resized with no edge padding.
+- A carousel that reaches the end of its track keeps the item you moved to.
+  Items past the end share that scroll position, and a one-pixel rounding
+  difference in WebKit could select a later one in a right-to-left carousel.
 - Selection and checked states stay visible with forced colors (Windows High
   Contrast). Tabs, navigation bar and rail destinations, pagination, toolbar
   actions, menu and list items, mega menu links and filter chips mark the

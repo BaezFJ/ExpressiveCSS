@@ -135,7 +135,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the character counter floating to inline-end: 69,328 gzip bytes (+3).
   // Reviewed reverting the top-layer tooltip and snackbar: 69,187 gzip bytes (-141).
   // Reviewed isRTL mirroring the date picker through the table's dir: 69,191 gzip bytes (+4).
-  assert.ok(sizes(js).gzip <= 69191, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the carousel keeping its item when later items share the clamped scroll end: 69,203 gzip bytes (+12).
+  assert.ok(sizes(js).gzip <= 69203, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
