@@ -5,7 +5,11 @@
 // Helper classes belong in utilities/, and anything that serves a single widget
 // belongs in that widget's partial - nothing here should name a component.
 
-html {
+// Each document anchor pairs with :host so a shadow-only load (see
+// src/sass/README.md, "Shadow roots") inherits the same defaults. The page
+// background stays on body: on :host it would paint the host element.
+html,
+:host {
   box-sizing: border-box;
 }
 
@@ -15,6 +19,10 @@ html {
 
 body {
   background-color: var(--md-sys-color-surface);
+}
+
+body,
+:host {
   color: var(--md-sys-color-on-surface);
 }
 

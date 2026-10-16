@@ -102,6 +102,18 @@ describe('Shadow-only loading', () => {
     );
   });
 
+  // Inherited text properties and box-sizing reach a shadow tree only through
+  // the host, so a page default set on html or body needs the same twin, or
+  // shadow content falls back to content-box and the host page's font.
+  test('every html or body default that shadow content inherits carries :host', () => {
+    const INHERITED = /(^|[\s;{])(box-sizing|color|font(-[a-z]+)?|line-height|letter-spacing)\s*:/;
+    const missing = rules
+      .filter(({ selectors, body }) => INHERITED.test(body) && selectors.some((s) => s === 'html' || s === 'body'))
+      .filter(({ selectors }) => !selectors.includes(':host'))
+      .map(({ selector }) => selector);
+    assert.deepEqual(missing, []);
+  });
+
   test('the reference layer is one of them', () => {
     // The 338-declaration block that made the split fatal rather than partial.
     const ref = rules.find((r) => r.body.includes('--md-source:'));

@@ -245,8 +245,11 @@
       cursor: pointer;
       transition: background-color 200ms ease-out;
 
+      @include forced-colors-fill(GrayText);
+
       &:is(.active, [aria-current="true"]) {
         background-color: var(--md-sys-color-primary);
+        @include forced-colors-fill;
       }
 
       @include focus-visible;
@@ -551,35 +554,28 @@
   }
 }
 
+// Reduced motion keeps the layout and drops the motion: no smooth scroll, no
+// size transitions and no parallax. An earlier version also forced every item
+// to the uncontained width, but the [data-carousel-size] layout rules
+// out-specify it, so hero and multi-browse carousels ended up half resized
+// with their edge padding removed.
 @media (prefers-reduced-motion: reduce) {
   .carousel {
-    --md-comp-carousel-inline-padding: 0px;
-
     > .carousel-track {
       scroll-behavior: auto;
     }
 
     .carousel-track > .carousel-item {
-      flex-basis: var(--md-comp-carousel-uncontained-item-width);
-      width: var(--md-comp-carousel-uncontained-item-width);
       transition: none;
 
       > img,
       > video,
       > picture,
       > picture > img {
-        width: 100%;
         transform: none;
         transition: none;
       }
     }
-  }
-
-  .carousel.full-screen:not(.full-screen-horizontal)
-    .carousel-track
-    > .carousel-item {
-    flex-basis: 100%;
-    width: 100%;
   }
 }
 

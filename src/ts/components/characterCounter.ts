@@ -90,7 +90,9 @@ export class CharacterCounter extends Component<BaseOptions> {
     // atomic so "18/20" is read as one figure rather than a changed digit.
     this.counterEl.setAttribute('aria-live', 'polite');
     this.counterEl.setAttribute('aria-atomic', 'true');
-    this.counterEl.style.float = 'right';
+    // inline-end, not right: the counter sits at the end of the line in
+    // either reading direction. Inline because the parent need not be a .field.
+    this.counterEl.style.float = 'inline-end';
     this.counterEl.style.fontSize = '12px';
     this.counterEl.style.height = '1';
     this.el.parentElement.appendChild(this.counterEl);

@@ -590,7 +590,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(references.typography, /semantic HTML first/i);
     assert.match(references.typography, /type-role loop and text helpers live in `src\/sass\/utilities\/_typescale\.scss`/);
     assert.match(references.typography, /element defaults and `\.flow-text` live in `src\/sass\/base\/_typography\.scss`/);
-    assert.match(baseTypographySass, /body\s*\{[\s\S]*?@include typescale\("body-medium"\)/);
+    assert.match(baseTypographySass, /body(?:,\s*:host)?\s*\{[\s\S]*?@include typescale\("body-medium"\)/);
     assert.match(references.typography, /`body` uses body-medium/);
     const flowTextSize = compiledCss.match(/\.flow-text\s*\{\s*font-size:\s*([^;]+);/)?.[1];
     assert.equal(flowTextSize, 'clamp(1.2rem, 0.912rem + 1.28vw, 1.68rem)');

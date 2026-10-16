@@ -161,6 +161,10 @@ input[type=text].timepicker-input-minutes {
 
 .timepicker-dial {
   transition: transform 350ms, opacity 350ms;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 .timepicker-dial-out {
@@ -177,6 +181,10 @@ input[type=text].timepicker-input-minutes {
 
 .timepicker-canvas {
   transition: opacity 175ms;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 
   line {
     stroke: var(--md-sys-color-primary);

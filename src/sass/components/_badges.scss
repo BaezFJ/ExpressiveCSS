@@ -50,6 +50,7 @@
     font-size: 0;
     line-height: 0;
     color: transparent;
+    @include forced-colors-fill;
   }
 }
 

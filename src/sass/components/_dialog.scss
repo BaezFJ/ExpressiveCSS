@@ -200,7 +200,8 @@ dialog.max {
     flex: 0 0 auto;
     align-items: center;
     margin: 0;
-    padding: 0 8px 0 0;
+    padding: 0;
+    padding-inline-end: 8px;
     border: 0;
     background: none;
     box-shadow: none;

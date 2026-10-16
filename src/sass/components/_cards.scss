@@ -663,7 +663,8 @@ article > aside > .reveal-actions > .reveal-action > :is(.material-symbols, .car
   :where(#{$_card}),
   :where(#{$_card})::after,
   article > figure > .card-reveal-trigger,
-  article.card-reveal-initialized > aside {
+  article.card-reveal-initialized > aside,
+  article.card-reveal-initialized > aside.open {
     transition: none;
   }
 }

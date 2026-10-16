@@ -65,6 +65,10 @@
   transition: background-color .2s ease, background-position .2s ease,
     background-size .2s ease, border-color .2s ease, box-shadow .2s ease;
 
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
   &:checked {
     border-color: var(--md-sys-color-primary);
     background-color: var(--md-sys-color-primary);
@@ -104,4 +108,36 @@
 .switch:has(> [type="checkbox"]:disabled) {
   color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   cursor: default;
+}
+
+// Forced colors drop the gradient handle, so a switch shows only an empty
+// track whatever its state. Repaint the whole control in system colors.
+@media (forced-colors: active) {
+  .switch > [type="checkbox"] {
+    forced-color-adjust: none;
+    border-color: CanvasText;
+    background-color: Canvas;
+    background-image: radial-gradient(circle closest-side, CanvasText 100%, transparent 101%);
+
+    &:checked {
+      border-color: Highlight;
+      background-color: Highlight;
+      background-image: radial-gradient(circle closest-side, HighlightText 100%, transparent 101%);
+    }
+
+    &:disabled {
+      border-color: GrayText;
+      background-image: radial-gradient(circle closest-side, GrayText 100%, transparent 101%);
+    }
+
+    &:disabled:checked {
+      background-color: GrayText;
+      background-image: radial-gradient(circle closest-side, Canvas 100%, transparent 101%);
+    }
+
+    &:focus-visible {
+      outline: 2px solid CanvasText;
+      outline-offset: 2px;
+    }
+  }
 }

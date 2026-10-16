@@ -55,7 +55,7 @@ describe('Material 3 typography', () => {
 
   test('does not override the browser root size', () => {
     const typographyHtml = css.match(
-      /html \{\s*font-family: var\(--md-ref-typeface-plain\)[\s\S]*?\n  \}/
+      /html,\s*:host \{\s*font-family: var\(--md-ref-typeface-plain\)[\s\S]*?\n  \}/
     );
     assert.ok(typographyHtml, 'missing typography html rule');
     assert.doesNotMatch(typographyHtml[0], /font-size:/);

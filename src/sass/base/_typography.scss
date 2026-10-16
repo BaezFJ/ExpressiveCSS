@@ -14,13 +14,15 @@
 // large for a default <h1>. Component slots (app bar, card, dialog) set
 // their own roles and win on specificity.
 
-html {
+html,
+:host {
   font-family: $font-stack;
   font-weight: var(--md-sys-typescale-body-medium-font-weight);
   color: $text-color;
 }
 
-body {
+body,
+:host {
   @include typescale("body-medium");
 }
 

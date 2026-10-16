@@ -84,14 +84,13 @@ select.browser-default {
   }
 
   // Trailing expand icon. Empty .caret is the hook; the glyph is a mask.
-  // `left: auto` beats `.field > span { left: 16px }` if that rule ever
-  // matches again — left + width would otherwise ignore inset-inline-end
-  // and pin the chevron over the value.
+  // `inset-inline-start: auto` beats `.field > span { inset-inline-start:
+  // 16px }` if that rule ever matches again — a start inset + width would
+  // otherwise ignore inset-inline-end and pin the chevron over the value.
   .caret {
     position: absolute;
     inset-block-start: 16px;
     inset-inline-start: auto;
-    left: auto;
     inset-inline-end: 12px;
     z-index: 1;
     width: var(--md-comp-filled-select-trailing-icon-size);
@@ -151,7 +150,7 @@ select.browser-default {
   }
 
   &:has(> .prefix) > label {
-    padding-left: 52px;
+    padding-inline-start: 52px;
   }
 
   &.disabled > label {

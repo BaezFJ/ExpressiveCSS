@@ -309,7 +309,7 @@ describe('Cards CSS', () => {
   test('disables card state and reveal transitions for reduced motion', () => {
     assert.match(
       css,
-      /@media \(prefers-reduced-motion: reduce\)\s*\{[^}]*:where\(article\),\s*:where\(article\)::after,\s*article\s*>\s*figure\s*>\s*\.card-reveal-trigger,\s*article\.card-reveal-initialized\s*>\s*aside\s*\{[^}]*transition:\s*none/s
+      /@media \(prefers-reduced-motion: reduce\)\s*\{[^}]*:where\(article\),\s*:where\(article\)::after,\s*article\s*>\s*figure\s*>\s*\.card-reveal-trigger,\s*article\.card-reveal-initialized\s*>\s*aside,\s*article\.card-reveal-initialized\s*>\s*aside\.open\s*\{[^}]*transition:\s*none/s
     );
   });
 });

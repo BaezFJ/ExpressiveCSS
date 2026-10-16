@@ -151,7 +151,7 @@ label:has(> [type="checkbox"]):not(.switch):not(:has(> [type="checkbox"] + span)
   &::before {
     content: "";
     position: absolute;
-    left: 0;
+    inset-inline-start: 0;
     top: 50%;
     width: var(--md-comp-checkbox-container-size);
     height: var(--md-comp-checkbox-container-size);
@@ -204,7 +204,7 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
   box-sizing: border-box;
   min-height: 48px;
   padding-block: calc((48px - 1lh) / 2);
-  padding-left: 30px;
+  padding-inline-start: 30px;
   cursor: pointer;
   user-select: none;
 }
@@ -213,7 +213,7 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
 #{_cb-span()}::after {
   content: "";
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   top: 50%;
   box-sizing: border-box;
   width: 18px;
@@ -293,4 +293,52 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
 
 #{_cb-span(":disabled:is(:checked, :indeterminate)")}::after {
   background-color: var(--md-sys-color-surface);
+}
+
+// Forced colors paint the box and the masked check as Canvas, so checked and
+// unchecked look the same, and the focus ring is a box-shadow they drop. Draw
+// the state in system colors and give focus a real outline.
+@media (forced-colors: active) {
+  label:has(> [type="checkbox"]):not(.switch) > [type="checkbox"],
+  .checkbox > [type="checkbox"] {
+    &:focus-visible {
+      outline: 2px solid CanvasText;
+      outline-offset: 2px;
+    }
+
+    &:is(:checked, :indeterminate) {
+      forced-color-adjust: none;
+      border-color: Highlight;
+      background-color: Highlight;
+    }
+
+    &:disabled:is(:checked, :indeterminate) {
+      border-color: GrayText;
+      background-color: GrayText;
+    }
+  }
+
+  label:has(> [type="checkbox"]):not(.switch):not(:has(> [type="checkbox"] + span)),
+  .checkbox:not(:has(> [type="checkbox"] + span)) {
+    &::before {
+      forced-color-adjust: none;
+      background-color: HighlightText;
+    }
+  }
+
+  #{_cb-span(":is(:checked, :indeterminate)")}::before {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background-color: Highlight;
+  }
+
+  #{_cb-span()}::after {
+    forced-color-adjust: none;
+    background-color: HighlightText;
+  }
+
+  #{_cb-span(":focus-visible")}::before {
+    outline: 2px solid CanvasText;
+    outline-offset: 2px;
+  }
 }

@@ -59,3 +59,25 @@ export function splitSelectorList(list) {
   out.push(list.slice(start));
   return out.map((s) => s.trim().replace(/\s+/g, ' '));
 }
+
+/**
+ * Every rule nested in an `@media (<query>)` block of `source`, parsed. Used
+ * for the user-preference queries, where a rule outside the block is not the
+ * rule that matters.
+ */
+export function mediaRules(source, query) {
+  const out = [];
+  const opener = `@media (${query})`;
+  let from = 0;
+  for (let at = source.indexOf(opener, from); at !== -1; at = source.indexOf(opener, from)) {
+    let i = source.indexOf('{', at) + 1;
+    const start = i;
+    for (let depth = 1; depth && i < source.length; i++) {
+      if (source[i] === '{') depth++;
+      else if (source[i] === '}') depth--;
+    }
+    out.push(...parseRules(source.slice(start, i - 1)));
+    from = i;
+  }
+  return out;
+}

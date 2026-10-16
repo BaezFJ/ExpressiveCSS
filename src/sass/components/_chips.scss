@@ -46,6 +46,7 @@
   &.selected {
     background-color: var(--md-sys-color-secondary-container);
     color: var(--md-sys-color-on-secondary-container);
+    @include forced-colors-selected;
   }
 
   @include focus-visible();
@@ -73,6 +74,7 @@
 .chip-input:checked + .chip {
   background-color: var(--md-sys-color-secondary-container);
   color: var(--md-sys-color-on-secondary-container);
+  @include forced-colors-selected;
 }
 
 .chip-input:focus-visible + .chip {
@@ -144,6 +146,10 @@
   padding: 4px;
   outline: none;
   transition: all .3s;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 
   &.focus {
     border-bottom: 1px solid var(--md-sys-color-primary);

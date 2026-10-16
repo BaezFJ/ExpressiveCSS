@@ -72,6 +72,7 @@ $_points: 24;
     width: var(--md-comp-loading-indicator-active-indicator-size);
     height: var(--md-comp-loading-indicator-active-indicator-size);
     background-color: var(--md-comp-loading-indicator-active-indicator-color);
+    @include forced-colors-fill;
     clip-path: _petal-shape(0, 0);
     animation:
       loading-indicator-morph var(--md-comp-loading-indicator-duration) ease-in-out infinite,

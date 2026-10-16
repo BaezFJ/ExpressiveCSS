@@ -100,6 +100,40 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   layout now shows its elevation. Disabled FAB menu items and toolbar FABs,
   including `aria-disabled="true"` ones, paint as disabled and no longer lift
   or tint on focus, and `.hoverable` no longer lifts a disabled element.
+- A shadow root that adopts the sheet as its only stylesheet now inherits the
+  page defaults: `border-box` sizing, the body-medium type role and the
+  on-surface text color. These were set only on `html` and `body`, which a
+  shadow tree cannot reach, so its elements were `content-box` with the
+  browser's default text color.
+- With reduced motion requested, the floating label, switch handle, icon
+  button shape, slider value label, chips, time picker dial and the open card
+  reveal panel no longer animate. Carousels keep their normal layout and drop
+  only smooth scrolling, size transitions and parallax. Before, a hero or
+  multi-browse carousel ended up partly resized with no edge padding.
+- A carousel that reaches the end of its track keeps the item you moved to.
+  Items past the end share that scroll position, and a one-pixel rounding
+  difference in WebKit could select a later one in a right-to-left carousel.
+- Selection and checked states stay visible with forced colors (Windows High
+  Contrast). Tabs, navigation bar and rail destinations, pagination, toolbar
+  actions, menu and list items, mega menu links and filter chips mark the
+  selected item with a Highlight outline. Checkboxes, radios and switches draw
+  their checked state in system colors and get an outline on keyboard focus.
+  The datepicker marks today, the selected day and the range. Small badges,
+  the loading indicator and carousel dots keep their shape. A keyboard-focused
+  tab also gets the focus ring instead of only a faint tint.
+- Right-to-left pages lay out text fields, checkboxes and more on the correct
+  side. The floating label, prefix and suffix icons, trailing icon button,
+  character counter and the select caret's inset follow the reading
+  direction, as do the checkbox mark, the date range band, the modal
+  navigation rail, the snackbar container and its padding, the dialog header
+  form, menu item text and the nested menu's entry slide, and the map popup's
+  close button. A field's label, icons and icon clearance follow the field's
+  `dir`, so an input with `dir="auto"` or its own `dir` keeps its text clear
+  of the icon. Fields read `dir`; a page that sets only the CSS `direction`
+  property renders them left to right. The date picker's `isRTL` now sets
+  `dir="rtl"` on the calendar table instead of reordering the cells, so an
+  RTL page with `isRTL: true` shows a right-to-left calendar rather than
+  flipping it back.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.

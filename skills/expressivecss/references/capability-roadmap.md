@@ -24,7 +24,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Pagination](#pagination) | unassessed | needs-review | needs-rerun | 1 |
 | [Stepper](#stepper) | unassessed | needs-review | needs-rerun | 0 |
 | [Menu](#menu) | unassessed | needs-review | needs-rerun | 0 |
-| [Mega menu](#mega-menu) | implemented | source-reviewed | incomplete | 0 |
+| [Mega menu](#mega-menu) | unassessed | needs-review | incomplete | 0 |
 | [Menubar](#menubar) | implemented | source-reviewed | incomplete | 0 |
 | [Scrollspy](#scrollspy) | unassessed | needs-review | needs-rerun | 0 |
 | [Tree](#tree) | implemented | source-reviewed | needs-rerun | 0 |
@@ -278,9 +278,9 @@ Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavio
 
 ## Mega menu
 
-**implemented within the stated scope.** Links and disclosure buttons in a row, wide panels of grouped links below the bar, a turning chevron and current-page state.
+**unassessed within the stated scope.** Links and disclosure buttons in a row, wide panels of grouped links below the bar, a turning chevron and current-page state.
 
-Source review: source-reviewed, 2026-10-15. [src/sass/components/_mega-menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/sass/components/_mega-menu.scss).
+Source review: needs-review, 2026-10-15. [src/sass/components/_mega-menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/sass/components/_mega-menu.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
 

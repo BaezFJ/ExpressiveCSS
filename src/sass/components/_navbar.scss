@@ -282,6 +282,7 @@ header:has(> #{$_bar}) {
 
   &.active {
     background-color: color-mix(in oklab, currentColor 10%, transparent);
+    @include forced-colors-selected;
   }
 }
 

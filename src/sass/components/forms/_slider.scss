@@ -252,6 +252,10 @@ $_active-pos: var(--md-comp-slider-active-position, var(--md-comp-slider-active-
   box-shadow: none;
   cursor: grab;
   transition: box-shadow 0.2s ease, width 0.15s ease, height 0.15s ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 @mixin range-thumb-vertical {
@@ -476,6 +480,10 @@ input[type="range"] + .thumb {
   transform: translate(-50%, calc(-100% - 4px)) scale(0.9);
   transform-origin: center bottom;
   transition: opacity 0.15s ease, transform 0.15s ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
   @include typescale("body-small");
 
   .value {
