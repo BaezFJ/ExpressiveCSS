@@ -130,9 +130,16 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
         color: inherit;
       }
 
-      // Enabled is elevation 0; only the states lift, and only when enabled:
-      // these arms outrank the shared disabled rule in _buttons.scss.
-      &:hover:not(:disabled, [disabled], .disabled) {
+      // The shared disabled rule in _buttons.scss is (0,1,0) and loses to this
+      // block, so a disabled item paints itself. aria-disabled is included:
+      // with the menu's own state arms skipped, the generic button focus tint
+      // would otherwise show through on a focused aria-disabled item.
+      &#{$disabled} {
+        @include btn-disabled;
+      }
+
+      // Enabled is elevation 0; only the states lift, and only when enabled.
+      &:hover:not(:where(#{$disabled})) {
         @include z-depth("4");
         background-color: color-mix(
           in oklab,
@@ -141,8 +148,8 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
         );
       }
 
-      &:active:not(:disabled, [disabled], .disabled),
-      &:focus:not(:disabled, [disabled], .disabled) {
+      &:active:not(:where(#{$disabled})),
+      &:focus:not(:where(#{$disabled})) {
         @include z-depth("3");
         background-color: color-mix(
           in oklab,

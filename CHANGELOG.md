@@ -97,9 +97,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   keeps the flag. A focused disabled `a.button` with an `href` no longer
   shows the enabled fill, a disabled FAB takes the disabled fill instead of
   the primary container, and an `elevated` pane in a separated or floating
-  layout now shows its elevation. Disabled FAB menu items and toolbar FABs
-  no longer lift or tint on focus, and `.hoverable` no longer lifts a
-  disabled element.
+  layout now shows its elevation. Disabled FAB menu items and toolbar FABs,
+  including `aria-disabled="true"` ones, paint as disabled and no longer lift
+  or tint on focus, and `.hoverable` no longer lifts a disabled element.
 - A shadow root that adopts the sheet as its only stylesheet now inherits the
   page defaults: `border-box` sizing, the body-medium type role and the
   on-surface text color. These were set only on `html` and `body`, which a
