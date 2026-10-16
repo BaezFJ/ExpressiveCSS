@@ -6637,7 +6637,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 
 ### Calendar keyboard navigation
 
-The inline and docked calendars support keyboard navigation. Enter on a date input focuses the calendar. Tab enters or leaves its single day stop; arrow keys move by day or week. Left/Right follow `isRTL`. Home/End move to the first/last day of the week using `firstDay`. PageUp/PageDown change month, and Shift changes year, clamping to the last day of shorter months. Enter or Space selects an enabled day. Disabled dates remain focusable with `aria-disabled` but cannot be selected. Navigation respects date and year/month bounds and restores day focus after redraws without moving focus from outside the calendar. No modal picker is added.
+The inline and docked calendars support keyboard navigation. Enter on a date input focuses the calendar. Tab enters or leaves its single day stop; arrow keys move by day or week. Left/Right follow `isRTL`. Home/End move to the first/last day of the week using `firstDay`. PageUp/PageDown change month, and Shift changes year, clamping to the last day of shorter months. Enter or Space selects an enabled day. Disabled dates remain focusable with `aria-disabled` but cannot be selected. A typed date that is outside the bounds, a disabled weekend or refused by `disableDayFn` puts the input back to the selected date. An input's initial value is the selection, and a form reset reads the selection back from the reset values. Navigation respects date and year/month bounds and restores day focus after redraws without moving focus from outside the calendar. No modal picker is added.
 
 ### Date range
 

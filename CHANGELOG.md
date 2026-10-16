@@ -75,6 +75,20 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A date typed into a Datepicker that the calendar would not offer, outside
+  `minDate`/`maxDate`, a disabled weekend or refused by `disableDayFn`, now
+  puts the input back to the selected date. A date before `minDate` used to
+  become `minDate` in the picker while the input, and the submitted form
+  value, kept the typed text.
+- A Datepicker input's initial value is now the selection, as it already was
+  once the input was clicked. `instance.date` was undefined until then, and a
+  multiple selection started empty.
+- A form reset now resets a Datepicker: the inputs added for extra dates in
+  multiple selection are removed, and the selection is read back from the
+  reset values. A refused date typed into one of those inputs restores that
+  input's own date. A Slider's fill and value label also follow a form reset.
+- Skipping a Questionnaire question clears its error. A skipped question
+  whose answer had been wrong still showed the error when the user went back.
 - A tooltip opened by hover still closes on Escape but no longer takes the key
   from the focused control, so the same Escape also closes the dialog or menu
   the user is in. On its own trigger, Escape stays the tooltip's.

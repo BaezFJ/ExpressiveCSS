@@ -305,6 +305,9 @@ export class Datepicker extends Component<DatepickerOptions> {
   private displayPlugin: DockedDisplayPlugin;
   /** What setInputValue last wrote, so reading it back does not depend on the parser. */
   private _writtenInputs = new WeakMap<HTMLInputElement, { value: string; date: Date | null }>();
+  private _form: HTMLFormElement | null = null;
+  private _resetDates = new WeakMap<HTMLInputElement, { value: string; date: Date | null }>();
+  private _resetTimer: ReturnType<typeof setTimeout>;
   /** Rows renderRow has already checked, so renderBody does not parse them again. */
   private _checkedRows = new Set<string>();
   private footer: HTMLElement;
@@ -348,7 +351,8 @@ export class Datepicker extends Component<DatepickerOptions> {
     this._insertHTMLIntoDOM();
     this._setupEventHandlers();
 
-    if (!this.options.defaultDate) {
+    const fromValue = !this.options.defaultDate;
+    if (fromValue) {
       this.options.defaultDate = this._parseInput(this.el.value);
     }
 
@@ -357,6 +361,10 @@ export class Datepicker extends Component<DatepickerOptions> {
       if (this.options.setDefaultDate) {
         this.setDate(defDate, true);
         this.setInputValue(this.el, defDate);
+      } else if (fromValue && this._isSelectableDay(defDate)) {
+        // The input already holds this date, so it is the selection, as it
+        // is once the input is clicked. Its text is left as written.
+        this.setDate(defDate, true);
       } else {
         this.gotoDate(defDate);
       }
@@ -376,6 +384,16 @@ export class Datepicker extends Component<DatepickerOptions> {
     if (this.options.displayPlugin === 'docked') {
       this.displayPlugin = DockedDisplayPlugin.init(this.el, this.containerEl, this.options.displayPluginOptions);
     }
+    // A form reset brings back these texts long after the cache of written
+    // values has moved on, so keep the dates they stood for.
+    for (const input of [this.el, this.endDateEl]) this._rememberResetDate(input);
+  }
+
+  // Only a default the picker wrote needs this: any other default text parses
+  // at reset exactly as it did here.
+  private _rememberResetDate(input: HTMLInputElement | undefined) {
+    const written = input && this._writtenInputs.get(input);
+    if (written && written.value === input.defaultValue) this._resetDates.set(input, written);
   }
 
   static get defaults() {
@@ -594,24 +612,25 @@ export class Datepicker extends Component<DatepickerOptions> {
    */
   setDateFromInput(el: HTMLInputElement) {
     // The native input's overlay follows edits, including cleared or partial values.
-    if (el.type === 'date') this.setDataDate(el, Datepicker._parseDate(el.value));
+    this._syncDataDate(el);
     if ((this.options.isDateRange || !this.options.isMultipleSelection) && !el.value.trim()) {
       this.setSingleDate(null, el === this.endDateEl);
       this.draw();
       return;
     }
-    // Without a custom parser, Date.parse reads "05/10/2026" from a dd/mm/yyyy
-    // format as 10 May, so reuse the date behind a value the picker wrote.
-    const written = !this.options.parse && this._writtenInputs.get(el);
-    const parsedDate = written && written.value === el.value ? written.date : this._parseInput(el.value);
+    const parsedDate = this._dateInInput(el);
     if (!Datepicker._isDate(parsedDate)) return;
     const date = new Date(parsedDate.getTime());
     Datepicker._setToStartOfDay(date);
     const isEndDate = el === this.endDateEl;
-    if (this.options.isDateRange && (isEndDate
+    // A day the calendar would not let anyone pick, or a range end before its
+    // start, puts the input back to the date already chosen. The typed text
+    // is what the form submits, so it cannot be left behind a clamped date.
+    const outOfOrder = this.options.isDateRange && (isEndDate
       ? this.date && date < this.date
-      : this.endDate && date > this.endDate)) {
-      this.setInputValue(el, isEndDate ? this.endDate : this.date);
+      : this.endDate && date > this.endDate);
+    if (outOfOrder || this._isDisabledDay(date)) {
+      this.setInputValue(el, this._selectedDateFor(el));
       return;
     }
     this.setDate(date, false, isEndDate, true);
@@ -662,6 +681,45 @@ export class Datepicker extends Component<DatepickerOptions> {
       date = max;
     }
     return new Date(date.getTime());
+  }
+
+  /**
+   * The date an input holds. Without a custom parser, Date.parse reads
+   * "05/10/2026" from a dd/mm/yyyy format as 10 May, so reuse the date behind
+   * a value the picker wrote, or behind the value the input resets to.
+   */
+  _dateInInput(el: HTMLInputElement): Date | null {
+    const known = !this.options.parse && [this._writtenInputs.get(el), this._resetDates.get(el)]
+      .find((entry) => entry?.value === el.value);
+    return known ? known.date : this._parseInput(el.value);
+  }
+
+  /** The selected date an input shows: its place in `dates` for a multiple selection. */
+  _selectedDateFor(el: HTMLInputElement): Date | null {
+    if (this.options.isMultipleSelection) return this.dates[this.dateEls.indexOf(el)] ?? null;
+    return el === this.endDateEl ? this.endDate : this.date;
+  }
+
+  /** `_isDisabledDay` for a date that may carry a time of day. */
+  _isSelectableDay(date: Date): boolean {
+    const day = new Date(date.getTime());
+    Datepicker._setToStartOfDay(day);
+    return !this._isDisabledDay(day);
+  }
+
+  /** Whether the calendar shows `day` as disabled: outside the bounds, or refused by an option. */
+  _isDisabledDay(day: Date): boolean {
+    return this._isOutOfBounds(day) || this._isRefusedDay(day);
+  }
+
+  _isOutOfBounds(day: Date): boolean {
+    const { minDate, maxDate } = this.options;
+    return (minDate && day < minDate) || (maxDate && day > maxDate);
+  }
+
+  _isRefusedDay(day: Date): boolean {
+    const { disableWeekends, disableDayFn } = this.options;
+    return (disableWeekends && Datepicker._isWeekend(day)) || !!disableDayFn?.(day);
   }
 
   /**
@@ -843,11 +901,7 @@ export class Datepicker extends Component<DatepickerOptions> {
         isToday = Datepicker._compareDates(day, now),
         hasEvent = this.options.events.indexOf(day.toDateString()) !== -1,
         isEmpty = i < before || i >= days + before,
-        isDisabled =
-          (this.options.minDate && day < this.options.minDate) ||
-          (this.options.maxDate && day > this.options.maxDate) ||
-          (this.options.disableWeekends && Datepicker._isWeekend(day)) ||
-          (this.options.disableDayFn && this.options.disableDayFn(day)),
+        isDisabled = this._isDisabledDay(day),
         isDateRangeStart = this.options.isDateRange && this.date && this.endDate && Datepicker._compareDates(this.date, day),
         isDateRangeEnd = this.options.isDateRange && this.endDate && Datepicker._compareDates(this.endDate, day),
         isDateRange =
@@ -1259,6 +1313,8 @@ export class Datepicker extends Component<DatepickerOptions> {
   _setupEventHandlers() {
     this._addInputEventHandlers(this.el);
     if (this.endDateEl) this._addInputEventHandlers(this.endDateEl);
+    this._form = this.el.form;
+    this._form?.addEventListener('reset', this._handleFormReset);
     this.calendarEl.addEventListener('click', this._handleCalendarClick);
     this.calendarEl.addEventListener('keydown', this._handleCalendarKeydown);
     this.calendarEl.addEventListener('focusin', this._handleCalendarFocus);
@@ -1311,6 +1367,8 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   _removeEventHandlers() {
+    this._form?.removeEventListener('reset', this._handleFormReset);
+    clearTimeout(this._resetTimer);
     for (const input of this.dateEls ?? [this.el]) this._removeInputEventHandlers(input);
     this.calendarEl.removeEventListener('click', this._handleCalendarClick);
     this.calendarEl.removeEventListener('keydown', this._handleCalendarKeydown);
@@ -1510,6 +1568,38 @@ export class Datepicker extends Component<DatepickerOptions> {
       this.calendars[0].year = parseInt(year, 10);
       this.adjustCalendars();
     }
+  }
+
+  // A reset restores the inputs' values after its event, without a change
+  // event. Drop the inputs added for extra dates and read the selection back
+  // from what the reset left.
+  _handleFormReset = (e: Event) => {
+    clearTimeout(this._resetTimer);
+    this._resetTimer = setTimeout(() => {
+      if (e.defaultPrevented) return;
+      if (this.options.isMultipleSelection) this._readBackMultiple();
+      else this._readBackSingle();
+      this.draw();
+    });
+  };
+
+  private _readBackMultiple() {
+    for (const input of this.dateEls.splice(1)) this._removeDateInput(input);
+    this.dates = [];
+    this._syncDataDate(this.el);
+    const date = this._dateInInput(this.el);
+    if (Datepicker._isDate(date) && this._isSelectableDay(date)) this.setDate(date, true);
+  }
+
+  /** A native date input's overlay text follows its value, including an empty one. */
+  private _syncDataDate(el: HTMLInputElement) {
+    if (el.type === 'date') this.setDataDate(el, Datepicker._parseDate(el.value));
+  }
+
+  private _readBackSingle() {
+    this.setSingleDate(null, false);
+    this.setSingleDate(null, true);
+    for (const input of [this.el, this.endDateEl]) if (input) this.setDateFromInput(input);
   }
 
   _handleInputChange = (e: Event) => {
