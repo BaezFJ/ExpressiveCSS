@@ -161,14 +161,20 @@ describe('the Astro chrome', () => {
   test('the documentation navigation and footer keep their shared hooks', () => {
     const shared = {
       'docs/src/components/DocsNavigation.astro': [
-        'navigation-rail no-autoinit docs-category-rail',
-        'docs-page-navigation',
+        'navigation-rail docs-category-rail',
+        'popovertarget={panelId(group.label)}',
+        'class="navigation-rail-panel" popover',
+        '<DocsRailPanel',
         'id="docs-navigation-dialog"',
         'side-sheet start docs-navigation-dialog',
         'class="accordion"',
         'material-symbols',
         'aria-current',
         'active',
+      ],
+      'docs/src/components/DocsRailPanel.astro': [
+        '<details open=',
+        '<summary>',
       ],
       'docs/src/layouts/DocsLayout.astro': [
         'id="docs-navigation-trigger"',

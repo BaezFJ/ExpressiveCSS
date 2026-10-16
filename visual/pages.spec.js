@@ -37,16 +37,6 @@ const root = new URL('../', import.meta.url);
 /** Where Astro publishes a page. */
 const url = (page) => route(page.id);
 
-/**
- * The docs-site chrome, masked identically in both passes. See the note at the
- * shutter. The page list beside the content names every page in its group, so
- * adding one page would otherwise change every other page's shot in that group.
- * It is fixed and scrolls on its own, so masking it is enough; it cannot change
- * the page's height the way the footer did. `#nav-mobile` was the old shell's
- * drawer, gone since the shell redesign.
- */
-const CHROME_MASK = (page) => [page.locator('.docs-page-navigation')];
-
 for (const variant of VARIANTS) for (const direction of ['ltr', 'rtl']) {
   test(`side-sheet open ${direction} @ ${variant.name}`, async ({ page }) => {
     await page.setViewportSize({ width: variant.width, height: variant.height });
@@ -375,7 +365,6 @@ for (const entry of PAGES) {
           fullPage: true,
           animations: 'disabled',
           caret: 'hide',
-          mask: CHROME_MASK(page),
         });
         if (previous?.equals(frame)) break;
         previous = frame;
@@ -389,7 +378,7 @@ for (const entry of PAGES) {
         .map((t) => `${Math.round(t.scrollLeft)},${Math.round(t.scrollTop)}`).join(' '));
       if (tracks) console.log(`[visual] ${MODE} ${shot} carousel tracks: ${tracks}`);
 
-      await expect(page).toHaveScreenshot(shot, { fullPage: true, mask: CHROME_MASK(page) });
+      await expect(page).toHaveScreenshot(shot, { fullPage: true });
     });
   }
 }

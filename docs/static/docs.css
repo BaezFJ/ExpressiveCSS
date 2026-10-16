@@ -27,16 +27,15 @@ code {
 }
 
 /* Shell. The app bar spans the top. From Expanded the category rail sits
-   under it on the start edge, and from Large the current group's page list
-   sits beside the rail; the page and footer are offset by whatever shows. */
+   under it on the start edge and opens each group's pages in a side panel;
+   the page and footer are offset by the rail. */
 body.docs {
   --docs-bar-height: 64px;
   --docs-rail-width: 0px;
-  --docs-list-width: 0px;
 }
 
 body.docs > :is(main, footer) {
-  margin-inline-start: calc(var(--docs-rail-width) + var(--docs-list-width));
+  margin-inline-start: var(--docs-rail-width);
 }
 
 .docs-brand a {
@@ -75,12 +74,10 @@ main:focus {
   outline: none;
 }
 
-.docs-navigation-wide,
-.docs-page-navigation {
+.docs-navigation-wide {
   display: none;
 }
 
-.docs-page-navigation > :is(h2, h3),
 .docs-navigation-dialog details > h3 {
   margin: 16px 16px 4px;
 }
@@ -109,24 +106,10 @@ main:focus {
     min-height: 0;
     z-index: 999;
   }
-}
 
-@media (width >= 1200px) {
-  body.docs {
-    --docs-list-width: 272px;
-  }
-
-  .docs-page-navigation {
-    display: block;
-    position: fixed;
-    inset-block: var(--docs-bar-height) 0;
-    inset-inline-start: var(--docs-rail-width);
-    z-index: 998;
-    box-sizing: border-box;
-    width: var(--docs-list-width);
-    padding: 0 12px 24px;
-    overflow-y: auto;
-    overscroll-behavior: contain;
+  /* A group's panel opens under the app bar. */
+  .docs-category-rail > .navigation-rail-panel {
+    margin-block-start: var(--docs-bar-height);
   }
 }
 

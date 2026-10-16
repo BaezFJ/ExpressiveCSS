@@ -726,12 +726,12 @@ and a page added to the catalogue is on the site with the next push to master.
   `<PageBody>` with the shell redesign, and `tests/docs-astro.test.js` now
   fails any page that declares sections but writes its own table of contents.
 - **The shell follows the window classes.** The app bar spans the top. From
-  Expanded (840px) a collapsed rail holds the catalogue groups; from Large the
-  current group's pages sit beside it, split under the optional `section`
-  subheadings from `nav.ts`. Below Large the app bar's menu button opens the
-  whole catalogue as a modal start-edge side sheet. `<main>` and the footer are
-  offset by `--docs-rail-width` and `--docs-list-width`, which only the media
-  queries in `docs.css` set.
+  Expanded (840px) a collapsed rail holds the catalogue groups, and each opens
+  its pages in a `.navigation-rail-panel` (`DocsRailPanel.astro`), with the
+  optional `section` subheadings from `nav.ts` as `<details>` dropdowns. Below
+  Large the app bar's menu button opens the whole catalogue as a modal
+  start-edge side sheet. `<main>` and the footer are offset by
+  `--docs-rail-width`, which only the media queries in `docs.css` set.
 - **A page needing its own `<head>` content puts `slot="head"` on the element.**
   `DocsLayout` forwards the named slot to `BaseLayout`, which renders it last in
   the head. Fonts no longer go there: `BaseLayout` loads the compiled sheet,

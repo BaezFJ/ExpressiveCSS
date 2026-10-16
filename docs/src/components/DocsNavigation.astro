@@ -1,11 +1,13 @@
 ---
 import { NAV } from "../data/nav";
+import DocsRailPanel from "./DocsRailPanel.astro";
 import { groupOf, route, sectionsOf } from "../lib/catalogue";
 
 /**
  * Site navigation. From Expanded up a collapsed rail holds the catalogue
- * groups; from Large up the current group's pages stay beside it. Below
- * Large the app bar's menu button opens the same catalogue as a modal sheet.
+ * groups; each opens a side panel of its pages on hover or click, with a
+ * section as a dropdown. Below Large the app bar's menu button also opens
+ * the whole catalogue as a modal sheet.
  */
 interface Props {
   current: string;
@@ -14,34 +16,24 @@ interface Props {
 const { current } = Astro.props;
 const currentGroup = groupOf(current);
 const id = (label: string) => `docs-group-${label.toLowerCase()}`;
+const panelId = (label: string) => `docs-rail-panel-${label.toLowerCase()}`;
 ---
 <div class="docs-navigation-wide">
-  <nav class="navigation-rail no-autoinit docs-category-rail" aria-label="Documentation categories">
+  <nav class="navigation-rail docs-category-rail" aria-label="Documentation categories">
     {NAV.map((group) => (
-      <a
-        href={route(group.pages[0].id)}
-        class={group === currentGroup ? "active" : undefined}
-        aria-current={group === currentGroup ? "true" : undefined}
-      >
-        <span class="material-symbols" aria-hidden="true">{group.icon}</span>
-        {group.label}
-      </a>
-    ))}
-  </nav>
-  <nav class="docs-page-navigation" aria-labelledby="docs-page-navigation-title">
-    <h2 id="docs-page-navigation-title" class="title-medium">{currentGroup.label}</h2>
-    {sectionsOf(currentGroup).map((run) => (
       <Fragment>
-        {run.label && <h3 class="label-large on-surface-variant-text">{run.label}</h3>}
-        <ul class="list">
-          {run.pages.map((page) => (
-            <li>
-              <a href={route(page.id)} aria-current={current === page.id ? "page" : undefined}>
-                {page.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <button
+          type="button"
+          popovertarget={panelId(group.label)}
+          class={group === currentGroup ? "active" : undefined}
+          aria-current={group === currentGroup ? "true" : undefined}
+        >
+          <span class="material-symbols" aria-hidden="true">{group.icon}</span>
+          {group.label}
+        </button>
+        <div id={panelId(group.label)} class="navigation-rail-panel" popover>
+          <DocsRailPanel group={group} current={current} />
+        </div>
       </Fragment>
     ))}
   </nav>

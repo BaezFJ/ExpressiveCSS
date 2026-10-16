@@ -141,7 +141,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   };
 
   private _findToggle(): HTMLButtonElement | null {
-    const first = this.el.querySelector(':scope > button:not(.button)');
+    const first = this.el.querySelector(':scope > button:not(.button, [popovertarget])');
     return first instanceof HTMLButtonElement ? first : null;
   }
 

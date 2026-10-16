@@ -85,6 +85,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A navigation rail `<button>` destination is now as tall as a link
+  destination instead of the default button's 40px.
+- A side panel destination that comes first in a navigation rail is laid out
+  as a destination, and `NavigationRail` no longer treats it as the menu
+  toggle.
+- The navigation rail side panel keeps its 12px padding. The global
+  `[popover]` reset in the menu styles had cleared it.
 - A modal or compact NavigationRail no longer collapses when blank space
   inside it is tapped. Its scrim is the rail's own `::before`, so those taps
   looked like scrim taps; only a tap beside the rail collapses it now.
@@ -264,6 +271,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The documentation's category rail opens each group's pages in a side
+  panel on hover or click, with each section as a dropdown. The section
+  holding the current page starts open. The panel replaces the page list that
+  sat beside the rail from Large up.
 - Snackbar's generated close button holds its icon in a
   `<span class="material-symbols">` instead of an `<i>`. Styles that targeted
   `.snackbar i` need `.snackbar .material-symbols`.

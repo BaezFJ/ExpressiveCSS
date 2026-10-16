@@ -3788,7 +3788,7 @@ Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp,
 
 Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the rail toggle, unless a close callback moves focus elsewhere.
 
-A destination can open a side panel of more links. Make it a `<button popovertarget>` and put its `.navigation-rail-panel` popover right after it. The panel docks beside the rail at full height. A click toggles it; with a mouse, hovering the destination opens it and leaving the rail and panel closes it. A `<details>` in the panel is a dropdown group. Escape closes the panel before the rail and returns focus to its destination.
+A destination can open a side panel of more links. Make it a `<button popovertarget>` and put its `.navigation-rail-panel` popover right after it. The panel docks beside the rail at full height. A click toggles it; with a mouse, hovering the destination opens it and leaving the rail and panel closes it. A `<details>` in the panel is a dropdown group. Escape closes the panel before the rail and returns focus to its destination. A panel's destination is never the menu toggle, so a rail without one can start with it.
 
 ```html
 <nav class="navigation-rail" aria-label="Main">
