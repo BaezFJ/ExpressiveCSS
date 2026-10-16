@@ -179,4 +179,12 @@ describe('Disabled buttons and consumer overrides', () => {
     assert.match(body, /box-shadow:\s*none/);
     assert.match(body, /pointer-events:\s*none/);
   });
+
+  // The FAB rule is (0,2,0) and its states (0,3,0), so a disabled FAB needs
+  // its own arm or it keeps the enabled fill and its level 3 shadow.
+  test('a disabled FAB takes the disabled look', () => {
+    const body = ruleFor((selector) => /:is\(\.extra, \.large\)\.circle:is\(:disabled, \[disabled\], \.disabled\)/.test(selector));
+    assert.ok(body, 'no FAB arm on the disabled rule');
+    assert.match(body, /box-shadow:\s*none/);
+  });
 });

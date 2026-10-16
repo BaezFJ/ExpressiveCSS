@@ -95,7 +95,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the search view's bar) used `box-shadow: none !important`, and a layered
   `!important` beats every unlayered rule. Only the `.z-depth-0` utility
   keeps the flag. A focused disabled `a.button` with an `href` no longer
-  shows the enabled fill or the elevated focus shadow.
+  shows the enabled fill or the elevated focus shadow, a disabled FAB takes
+  the disabled fill instead of the primary container, and an `elevated` pane
+  in a separated or floating layout now shows its elevation.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.
