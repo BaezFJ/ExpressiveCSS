@@ -142,6 +142,65 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   of offset by the host's position. `change`, `submit`, `reset` and `toggle`
   events do not leave a shadow root, so file lists, field validation, the
   error summary and Tour's own toggle handling still need light DOM.
+- Focused read-only text fields now show the focus underline. The field's
+  focus styles skipped `[readonly]`, and FormSelect makes its combobox input
+  read-only, so a focused select had no visible focus indicator.
+- `@use "expressive" with ($md-source: …)` now sets the theme seed, as the
+  changelog for 0.13.0 and the migration skill describe. The variable moved
+  to `abstracts/_variables.scss`; before, Sass rejected the configuration
+  because the tokens layer is loaded with `meta.load-css()`.
+- The time picker's clock face is sized from `dialRadius`. It was a fixed
+  260px while the hand and numbers centred on the default 135px radius, so
+  the hand sat 5px off centre, further with a custom `dialRadius`.
+- Menus, context menus and select dropdowns open next to their trigger in
+  right-to-left pages. The menu kept the browser's `[popover]` `inset: 0`,
+  so with its explicit width the right edge won over `left`, and the menu
+  opened against the right side of its container.
+- Unlayered CSS can set a shadow on any component again. Thirteen component
+  rules that remove a shadow (text buttons, disabled buttons, docked
+  toolbars, filled and outlined cards, full-screen dialogs, separated panes,
+  the search view's bar) used `box-shadow: none !important`, and a layered
+  `!important` beats every unlayered rule. Only the `.z-depth-0` utility
+  keeps the flag. A focused disabled `a.button` with an `href` no longer
+  shows the enabled fill, a disabled FAB takes the disabled fill instead of
+  the primary container, and an `elevated` pane in a separated or floating
+  layout now shows its elevation. Disabled FAB menu items and toolbar FABs,
+  including `aria-disabled="true"` ones, paint as disabled and no longer lift
+  or tint on focus, and `.hoverable` no longer lifts a disabled element.
+- A shadow root that adopts the sheet as its only stylesheet now inherits the
+  page defaults: `border-box` sizing, the body-medium type role and the
+  on-surface text color. These were set only on `html` and `body`, which a
+  shadow tree cannot reach, so its elements were `content-box` with the
+  browser's default text color.
+- With reduced motion requested, the floating label, switch handle, icon
+  button shape, slider value label, chips, time picker dial and the open card
+  reveal panel no longer animate. Carousels keep their normal layout and drop
+  only smooth scrolling, size transitions and parallax. Before, a hero or
+  multi-browse carousel ended up partly resized with no edge padding.
+- A carousel that reaches the end of its track keeps the item you moved to.
+  Items past the end share that scroll position, and a one-pixel rounding
+  difference in WebKit could select a later one in a right-to-left carousel.
+- Selection and checked states stay visible with forced colors (Windows High
+  Contrast). Tabs, navigation bar and rail destinations, pagination, toolbar
+  actions, menu and list items, mega menu links and filter chips mark the
+  selected item with a Highlight outline. Checkboxes, radios and switches draw
+  their checked state in system colors and get an outline on keyboard focus.
+  The datepicker marks today, the selected day and the range. Small badges,
+  the loading indicator and carousel dots keep their shape. A keyboard-focused
+  tab also gets the focus ring instead of only a faint tint.
+- Right-to-left pages lay out text fields, checkboxes and more on the correct
+  side. The floating label, prefix and suffix icons, trailing icon button,
+  character counter and the select caret's inset follow the reading
+  direction, as do the checkbox mark, the date range band, the modal
+  navigation rail, the snackbar container and its padding, the dialog header
+  form, menu item text and the nested menu's entry slide, and the map popup's
+  close button. A field's label, icons and icon clearance follow the field's
+  `dir`, so an input with `dir="auto"` or its own `dir` keeps its text clear
+  of the icon. Fields read `dir`; a page that sets only the CSS `direction`
+  property renders them left to right. The date picker's `isRTL` now sets
+  `dir="rtl"` on the calendar table instead of reordering the cells, so an
+  RTL page with `isRTL: true` shows a right-to-left calendar rather than
+  flipping it back.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.
@@ -214,6 +273,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `on-surface`, which resolve to the same colors.
 
 ### Migration
+
+- Sass: `@include z-depth("0")`, `btn-flat` and `btn-disabled` no longer emit
+  `box-shadow: none !important`. A stylesheet that relied on the flag to
+  cancel its own higher-specificity or inline shadow needs the flag itself.
+  The `.z-depth-0` class keeps it. A pressed `.filled` or `.outlined` card
+  with `.hoverable` now keeps the hover shadow, because the utility layer
+  outranks the card's pressed reset.
 
 - Icons: write `<span class="material-symbols" aria-hidden="true">`. A bare
   `<i>` is no longer treated as an icon inside buttons, lists, menus, chips,

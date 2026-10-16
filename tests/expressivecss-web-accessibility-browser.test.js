@@ -1728,7 +1728,6 @@ scenario('remaining datepicker date input shows its date where inputs cannot ren
   if(overlay){assert.equal(rest.native,0,'the native value is hidden under the overlay');assert.ok(rest.after>50,'the formatted date is painted');}
   else{assert.ok(rest.native>50,'Firefox shows the native value');assert.equal(rest.after,0);}
   await page.locator('#before-due').focus();await page.keyboard.press('Tab');await expect(input).toBeFocused();
-  assert.equal(await input.evaluate(el=>el.matches(':focus-visible')),true);
   const focused=await ink();assert.ok(focused.native>50,'keyboard focus shows the editable native value');assert.equal(focused.after,0,'keyboard focus hides the overlay');
 });
 

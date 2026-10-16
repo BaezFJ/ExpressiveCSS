@@ -243,7 +243,7 @@ describe('Cards CSS', () => {
     );
     assert.match(
       css,
-      /:is\(\.filled, \.outlined, \.border\):has\(> \.primary-action:active\)\s*\{[^}]*box-shadow:\s*none\s*!important/s
+      /:is\(\.filled, \.outlined, \.border\):has\(> \.primary-action:active\)\s*\{[^}]*box-shadow:\s*none;/s
     );
   });
 
@@ -258,7 +258,7 @@ describe('Cards CSS', () => {
     );
     assert.match(
       css,
-      /\.filled:is\(\.disabled, \[aria-disabled=true\]\)[^{]*\{[^}]*box-shadow:\s*none\s*!important[^}]*var\(--md-sys-color-surface-container-highest\) var\(--md-comp-card-disabled-container-opacity\)/s
+      /\.filled:is\(\.disabled, \[aria-disabled=true\]\)[^{]*\{[^}]*box-shadow:\s*none;[^}]*var\(--md-sys-color-surface-container-highest\) var\(--md-comp-card-disabled-container-opacity\)/s
     );
   });
 
@@ -309,7 +309,7 @@ describe('Cards CSS', () => {
   test('disables card state and reveal transitions for reduced motion', () => {
     assert.match(
       css,
-      /@media \(prefers-reduced-motion: reduce\)\s*\{[^}]*:where\(article\),\s*:where\(article\)::after,\s*article\s*>\s*figure\s*>\s*\.card-reveal-trigger,\s*article\.card-reveal-initialized\s*>\s*aside\s*\{[^}]*transition:\s*none/s
+      /@media \(prefers-reduced-motion: reduce\)\s*\{[^}]*:where\(article\),\s*:where\(article\)::after,\s*article\s*>\s*figure\s*>\s*\.card-reveal-trigger,\s*article\.card-reveal-initialized\s*>\s*aside,\s*article\.card-reveal-initialized\s*>\s*aside\.open\s*\{[^}]*transition:\s*none/s
     );
   });
 });

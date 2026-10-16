@@ -67,6 +67,10 @@
   -webkit-tap-highlight-color: transparent;
   transition: background-color .2s ease-out, border-radius .2s ease-out;
 
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
   > #{$icon} {
     flex: 0 0 auto;
     font-size: var(--md-comp-icon-button-icon-size);

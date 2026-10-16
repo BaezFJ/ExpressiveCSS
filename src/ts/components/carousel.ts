@@ -769,18 +769,23 @@ export class Carousel extends Component<CarouselOptions> {
     const padding = parseFloat(this._vertical ? style.paddingBlockStart : style.paddingInlineStart) || 0;
     let best = this.center;
     let bestDist = Infinity;
+    let centerDist = Infinity;
     this.images.forEach((el, i) => {
       const start = this._vertical ? el.offsetTop : el.offsetLeft;
       const size = this._vertical ? el.offsetHeight : el.offsetWidth;
       const target = centered ? start - (viewport - size) / 2 : start + (rtl ? size - viewport + padding : -padding);
       const bounded = Math.max(rtl ? -extent : 0, Math.min(rtl ? 0 : extent, target));
       const dist = Math.abs(bounded - position);
-      if (dist < bestDist || (dist === bestDist && i === this.center)) {
+      if (i === this.center) centerDist = dist;
+      if (dist < bestDist) {
         bestDist = dist;
         best = i;
       }
     });
-    return best;
+    // Items past the scroll end all clamp to it, and a subpixel wobble there
+    // (WebKit reports -179 for -178 in a right-to-left track) must not hand
+    // the selection to a later item that only shares the clamped position.
+    return centerDist - bestDist <= 1 ? this.center : best;
   }
 
   private _scrollToIndex(n: number, smooth = true) {

@@ -112,6 +112,11 @@ Setting `--md-source` re-themes the whole system at runtime, with no rebuild:
 :root { --md-source: #6750a4; }   /* everything but the error ramp follows */
 ```
 
+To change the compiled default instead, configure the Sass variable:
+`@use "expressive" with ($md-source: #6750a4);`. It lives in
+`abstracts/_variables.scss`, because only `abstracts` is forwarded and
+`meta.load-css()` passes no configuration to the layers.
+
 Two things about that file are load-bearing and non-obvious. **M3 "tone" is
 CIELAB L\*, not OKLCH lightness** — `oklch(40% c h)` is not tone 40, and using it
 drifts far past the just-noticeable difference; the `$tones` table is the

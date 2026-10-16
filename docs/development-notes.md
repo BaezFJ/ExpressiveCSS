@@ -121,8 +121,8 @@ after its merge. Pin a commit already on `master`, such as the branch's base.
 
 `npm run test:visual` photographs the merge base, then this working tree, and
 reports every page that moved. `npm run test:visual:report` opens the diffs.
-`visual/run.mjs` is the orchestrator and its header states the usage; the CI
-job is `visual.yml`, pull requests only.
+`visual/run.mjs` is the orchestrator and its header states the usage. It runs
+locally only; the pull request job was removed because nobody read its report.
 
 - **No baselines are committed, on purpose.** 59 pages x 4 variants of
   full-page PNG is 100+ MB per revision. Each run instead builds the base

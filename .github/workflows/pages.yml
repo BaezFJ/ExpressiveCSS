@@ -39,7 +39,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")"
           git merge-base --is-ancestor HEAD origin/master
           node -e 'const p=JSON.parse(require("fs").readFileSync("package.json","utf8")); if (p.version !== process.env.RELEASE_VERSION || !/^\d+\.\d+\.\d+$/.test(p.version)) process.exit(1)'
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -64,7 +64,7 @@ jobs:
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version-file: .nvmrc
       - name: Recheck npm latest immediately before deployment

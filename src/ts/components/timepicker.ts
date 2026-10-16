@@ -482,6 +482,9 @@ export class Timepicker extends Component<TimepickerOptions> {
     const dialRadius = this.options.dialRadius;
     const tickRadius = this.options.tickRadius;
     const diameter = dialRadius * 2;
+    // The ticks, hand and pointer math all centre on dialRadius, so the
+    // painted face has to be the same size or the hand sits off centre.
+    this.plate.style.width = this.plate.style.height = diameter + 'px';
     const svg = Timepicker._createSVGEl('svg');
     svg.setAttribute('class', 'timepicker-svg');
     svg.setAttribute('width', diameter.toString());

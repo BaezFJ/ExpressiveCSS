@@ -126,7 +126,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     padding: 0;
     width: 100%;
     cursor: pointer;
-    text-align: left;
+    text-align: start;
     border-radius: var(--md-comp-menu-item-container-shape);
 
     // The bare-span arm is the non-interactive item. It has to exclude icons,
@@ -259,6 +259,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     border-radius: var(--md-comp-menu-item-selected-container-shape);
     background-color: var(--md-comp-menu-item-selected-container-color);
     color: var(--md-comp-menu-item-selected-label-text-color);
+    @include forced-colors-selected;
 
     > :is(a, button, #{$icon-label}) {
       color: var(--md-comp-menu-item-selected-label-text-color);
@@ -451,6 +452,9 @@ menu[id] {
 
   display: none;
   position: absolute;
+  // JS positions the menu with physical left/top. Clear the UA [popover]
+  // inset: 0 first, or the over-constrained box ignores left in RTL.
+  inset: auto;
   left: 0;
   top: 0;
   z-index: 9999;
@@ -494,6 +498,12 @@ menu[id] li > menu {
     transform 180ms ease,
     visibility 180ms ease,
     border-radius 200ms ease;
+
+  // The flyout opens toward inline-end, so it slides in from the other side.
+  &:dir(rtl) {
+    transform: translateX(4px) scale(0.96);
+    transform-origin: 100% 0;
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -518,6 +528,15 @@ menu[id] li.submenu-start > menu {
   inset-inline-start: auto;
   inset-inline-end: 100%;
   transform-origin: 100% 0;
+
+  // Flipped toward inline-start, so it also slides in from the far side:
+  // the right in a right-to-left menu.
+  transform: translateX(4px) scale(0.96);
+
+  &:dir(rtl) {
+    transform: translateX(-4px) scale(0.96);
+    transform-origin: 0 0;
+  }
 }
 
 menu[id] li.submenu-start:is(:hover, :focus-within, .open) > menu {

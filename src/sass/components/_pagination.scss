@@ -116,6 +116,7 @@
   li:has(> [aria-current="page"]) > :is(a, button) {
     background-color: var(--md-comp-pagination-selected-color);
     color: var(--md-comp-pagination-selected-on-color);
+    @include forced-colors-selected;
 
     &:hover {
       background-color: color-mix(

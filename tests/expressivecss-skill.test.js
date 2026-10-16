@@ -386,7 +386,9 @@ describe('the ExpressiveCSS agent skill', () => {
     }
     assert.match(helpers, /`\.z-depth-0`[\s\S]*`!important`/);
     assert.match(elevationSass, /"0": none[\s\S]*"1-half":[\s\S]*"5":/);
-    assert.match(elevationSass, /box-shadow: none !important/);
+    // Only the .z-depth-0 utility asks for the flag; the components layer
+    // must not, or no unlayered consumer rule could set a shadow.
+    assert.match(elevationSass, /@if \$important \{\s*box-shadow: \$shadow !important;/);
     assert.match(helpers, /`\.hide-on-med-and-down`[\s\S]*below 840px/i);
     assert.match(helpers, /`\.hide-on-med-and-up`[\s\S]*600px and above/i);
     assert.doesNotMatch(helpers, /`\.hide-on-med-and-(?:down|up)`[^\n]*alias/i);
@@ -588,7 +590,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(references.typography, /semantic HTML first/i);
     assert.match(references.typography, /type-role loop and text helpers live in `src\/sass\/utilities\/_typescale\.scss`/);
     assert.match(references.typography, /element defaults and `\.flow-text` live in `src\/sass\/base\/_typography\.scss`/);
-    assert.match(baseTypographySass, /body\s*\{[\s\S]*?@include typescale\("body-medium"\)/);
+    assert.match(baseTypographySass, /body(?:,\s*:host)?\s*\{[\s\S]*?@include typescale\("body-medium"\)/);
     assert.match(references.typography, /`body` uses body-medium/);
     const flowTextSize = compiledCss.match(/\.flow-text\s*\{\s*font-size:\s*([^;]+);/)?.[1];
     assert.equal(flowTextSize, 'clamp(1.2rem, 0.912rem + 1.28vw, 1.68rem)');

@@ -52,6 +52,21 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   --md-comp-filled-text-field-caret-color: var(--md-sys-color-primary);
   --input-color: var(--md-comp-filled-text-field-caret-color);
 
+  // Start and end clearance of the field's own input, label and icons, in
+  // physical terms keyed to the field's dir through :dir(). An input can carry
+  // its own dir ("auto" for mixed-language text, "ltr" for an email address on
+  // an RTL page), and logical properties would follow that, or a CSS-only
+  // `direction`, instead. A page that sets only `direction` renders as LTR.
+  --_field-start: 16px;
+  --_field-end: 16px;
+  --_field-left: var(--_field-start);
+  --_field-right: var(--_field-end);
+
+  &:dir(rtl) {
+    --_field-left: var(--_field-end);
+    --_field-right: var(--_field-start);
+  }
+
   position: relative;
   clear: both;
 
@@ -67,7 +82,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     background-color: var(--md-comp-filled-text-field-container-color);
     caret-color: var(--input-color);
 
-    &:focus:not([readonly]) {
+    &:focus {
       border-bottom-width: 2px;
       border-bottom-color: var(--input-color);
       padding-bottom: 7px;
@@ -80,15 +95,15 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 4%, transparent);
     }
 
-    &:focus:not([readonly]) + label,
-    &:focus:not([readonly]) + span:not(#{$_not-label}) {
+    &:focus + label,
+    &:focus + span:not(#{$_not-label}) {
       color: var(--input-color);
     }
 
-    &:focus:not([readonly]) + label,
+    &:focus + label,
     &:not([placeholder=" "]) + label,
     &:not(:placeholder-shown) + label,
-    &:focus:not([readonly]) + span:not(#{$_not-label}),
+    &:focus + span:not(#{$_not-label}),
     &:not([placeholder=" "]) + span:not(#{$_not-label}),
     &:not(:placeholder-shown) + span:not(#{$_not-label}) {
       transform: scale(calc(12 / 16));
@@ -132,6 +147,15 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     user-select: none;
   }
 
+  // After the base rule, which ties it on specificity. Only the field's own
+  // control: an input nested deeper keeps 16px. Longhands, so a bad custom
+  // property costs one side rather than all four.
+  > :is(input:not([type="range"], [type="checkbox"], [type="radio"], [type="file"], [type="color"]), textarea) {
+    padding-left: var(--_field-left);
+    padding-right: var(--_field-right);
+  }
+
+
   // :not(.button, .icon-button) - the file input's trigger is a <label> and is
   // a button, not this field's floating label.
   > label:not(.button, .icon-button),
@@ -139,13 +163,24 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     color: var(--md-sys-color-on-surface-variant);
     user-select: none;
     position: absolute;
-    left: 16px;
+    left: var(--_field-start);
     top: 16px;
     cursor: text;
     transform-origin: top left;
     pointer-events: none;
     @include typescale("body-large");
-    transition: left 0.2s ease-out, top 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out;
+    // left and right: the logical inset moves on `right` in a right-to-left field.
+    transition: left 0.2s ease-out, right 0.2s ease-out, top 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out;
+
+    &:dir(rtl) {
+      left: auto;
+      right: var(--_field-start);
+      transform-origin: top right;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
   }
 
   > small,
@@ -158,7 +193,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   }
 
   > .character-counter {
-    float: right;
+    float: inline-end;
     margin-top: 4px;
     padding: 0 16px;
     color: var(--md-sys-color-on-surface-variant);
@@ -182,9 +217,17 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     user-select: none;
   }
 
+  // Physical sides, swapped by :dir(). The icon font sets direction: ltr on
+  // the icon itself, and Chromium maps an icon's own inset-inline-* through
+  // that, so a logical inset would stay on the left in a right-to-left page.
   > .prefix {
     left: 12px;
     pointer-events: none;
+
+    &:dir(rtl) {
+      left: auto;
+      right: 12px;
+    }
   }
 
   > .suffix:not(.icon-button) {
@@ -193,6 +236,11 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     // excluded from it. .prefix restates it below; .suffix has to as well, or
     // the trailing icon swallows the click that should focus the input.
     pointer-events: none;
+
+    &:dir(rtl) {
+      right: auto;
+      left: 12px;
+    }
   }
 
   // A trailing icon button is a control, so it keeps its 40dp target and its
@@ -202,28 +250,20 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     top: 8px;
     right: 4px;
     z-index: 1;
+
+    &:dir(rtl) {
+      right: auto;
+      left: 4px;
+    }
   }
 
+  // The label reads --_field-start too, so it indents with the input.
   &:has(> .prefix) {
-    > :is(input, textarea) {
-      padding-left: 52px;
-    }
-
-    // The exclusion list is what stops this indenting things that are not the
-    // floating label. Without .prefix / .suffix in it the leading icon was
-    // pushed to 52px, i.e. indented past its own padding.
-    > :is(
-      label,
-      span:not(#{$_not-label})
-    ) {
-      left: 52px;
-    }
+    --_field-start: 52px;
   }
 
   &:has(> .suffix) {
-    > :is(input, textarea) {
-      padding-right: 52px;
-    }
+    --_field-end: 52px;
   }
 
   &.outlined {
@@ -235,17 +275,17 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
       border: 1px solid var(--md-sys-color-outline);
       border-radius: var(--md-comp-filled-text-field-container-shape);
 
-      &:focus:not([readonly]) {
+      &:focus {
         border-width: 2px;
         border-color: var(--input-color);
         padding-top: 7px;
         padding-bottom: 7px;
       }
 
-      &:focus:not([readonly]) + label,
+      &:focus + label,
       &:not([placeholder=" "]) + label,
       &:not(:placeholder-shown) + label,
-      &:focus:not([readonly]) + span:not(#{$_not-label}),
+      &:focus + span:not(#{$_not-label}),
       &:not([placeholder=" "]) + span:not(#{$_not-label}),
       &:not(:placeholder-shown) + span:not(#{$_not-label}) {
         top: -8px;
@@ -253,6 +293,13 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
         margin-left: -4px;
         padding: 0 4px;
         background-color: var(--md-sys-color-surface);
+
+        &:dir(rtl) {
+          left: auto;
+          right: 16px;
+          margin-left: 0;
+          margin-right: -4px;
+        }
       }
 
       &:disabled,
@@ -337,11 +384,14 @@ textarea {
       text-indent: 0;
     }
 
-    &:focus-visible {
+    // A focused date input edits its native fields, so show them. WebKit 27
+    // stopped matching :focus-visible on a date input, even after Tab, and
+    // Chromium already matches it on every focus, mouse included.
+    &:focus {
       text-indent: 0;
     }
 
-    &:focus-visible:after {
+    &:focus:after {
       text-indent: -9999px;
     }
   }

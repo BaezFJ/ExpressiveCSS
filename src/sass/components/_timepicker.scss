@@ -119,8 +119,9 @@ input[type=text].timepicker-input-minutes {
 .timepicker-plate {
   background-color: var(--md-sys-color-surface-container-highest);
   border-radius: 50%;
-  width: 260px;
-  height: 260px;
+  // The default dialRadius (135) doubled. JS sets the size from the option.
+  width: 270px;
+  height: 270px;
   overflow: visible;
   position: relative;
   margin: 0 1.6rem 1.6rem 1.6rem;
@@ -160,6 +161,10 @@ input[type=text].timepicker-input-minutes {
 
 .timepicker-dial {
   transition: transform 350ms, opacity 350ms;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 .timepicker-dial-out {
@@ -176,6 +181,10 @@ input[type=text].timepicker-input-minutes {
 
 .timepicker-canvas {
   transition: opacity 175ms;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 
   line {
     stroke: var(--md-sys-color-primary);

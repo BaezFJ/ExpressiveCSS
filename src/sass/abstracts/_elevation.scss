@@ -19,15 +19,17 @@ $elevations: (
   "5": (0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12), 0 11px 15px -7px rgba(0, 0, 0, 0.2))
 ) !default;
 
-@mixin z-depth($level) {
+@mixin z-depth($level, $important: false) {
   $key: "#{$level}";
   @if not map.has-key($elevations, $key) {
     @error "Unknown elevation `#{$level}`. Available: #{map.keys($elevations)}.";
   }
   $shadow: map.get($elevations, $key);
-  @if $shadow == none {
-    // Level 0 stays !important: it is used to cancel a shadow a component set.
-    box-shadow: none !important;
+  // Only the .z-depth-0 utility passes $important. Inside the components
+  // layer an !important would beat every unlayered consumer rule, so a
+  // component that cancels a shadow has to out-specify the rule that set it.
+  @if $important {
+    box-shadow: $shadow !important;
   } @else {
     box-shadow: $shadow;
   }

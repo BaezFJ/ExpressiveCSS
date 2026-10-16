@@ -44,9 +44,11 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
         const field = await box('field');
         const toggle = await box('toggle');
         assert.equal(toggle.width, 40, `${dir}: the trailing button keeps its 40px target`);
-        assert.ok(Math.abs(field.right - toggle.right - 4) < 1, `${dir}: it sits 4px from the field edge`);
+        // Trailing means inline-end, so the toggle mirrors in RTL.
+        const gap = dir === 'ltr' ? field.right - toggle.right : toggle.left - field.left;
+        assert.ok(Math.abs(gap - 4) < 1, `${dir}: it sits 4px from the field's end edge, got ${gap}`);
         assert.ok(Math.abs((toggle.top + toggle.bottom) / 2 - (field.top + 28)) < 1, `${dir}: it centres on the 56px field`);
-        assert.equal(await page.locator('#pw').evaluate((el) => getComputedStyle(el).paddingRight), '52px');
+        assert.equal(await page.locator('#pw').evaluate((el) => getComputedStyle(el).paddingInlineEnd), '52px');
 
         assert.deepEqual([await shown('eye'), await shown('eye-off')], [true, false]);
         await page.click('#toggle');

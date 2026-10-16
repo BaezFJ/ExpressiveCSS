@@ -36,9 +36,8 @@ $_bar: ".snackbar";
   gap: 8px;
   position: fixed;
   z-index: 10000;
-  inset: auto var(--md-comp-snackbar-container-margin-trailing)
-    max(var(--md-comp-snackbar-container-margin-bottom), env(safe-area-inset-bottom, 0px))
-    var(--md-comp-snackbar-container-margin-leading);
+  inset-block: auto max(var(--md-comp-snackbar-container-margin-bottom), env(safe-area-inset-bottom, 0px));
+  inset-inline: var(--md-comp-snackbar-container-margin-leading) var(--md-comp-snackbar-container-margin-trailing);
   width: auto;
   max-width: calc(100% - var(--md-comp-snackbar-container-margin-leading) - var(--md-comp-snackbar-container-margin-trailing));
   // The page stays browsable — only the bar itself receives pointer events.
@@ -91,7 +90,8 @@ $_bar: ".snackbar";
   max-width: 672px;
   min-height: 48px;
   margin: 0;
-  padding: 4px 8px 4px 16px;
+  padding-block: 4px;
+  padding-inline: 16px 8px;
   border: none;
   border-radius: var(--md-comp-snackbar-container-shape);
   background-color: var(--md-comp-snackbar-container-color);
