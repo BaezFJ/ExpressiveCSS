@@ -85,6 +85,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The time picker's clock face is sized from `dialRadius`. It was a fixed
   260px while the hand and numbers centred on the default 135px radius, so
   the hand sat 5px off centre, further with a custom `dialRadius`.
+- Menus, context menus and select dropdowns open next to their trigger in
+  right-to-left pages. The menu kept the browser's `[popover]` `inset: 0`,
+  so with its explicit width the right edge won over `left`, and the menu
+  opened against the right side of its container.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.

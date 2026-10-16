@@ -451,6 +451,9 @@ menu[id] {
 
   display: none;
   position: absolute;
+  // JS positions the menu with physical left/top. Clear the UA [popover]
+  // inset: 0 first, or the over-constrained box ignores left in RTL.
+  inset: auto;
   left: 0;
   top: 0;
   z-index: 9999;

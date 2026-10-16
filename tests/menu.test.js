@@ -72,6 +72,15 @@ describe("Menu", () => {
     assert.doesNotMatch(css.match(/menu\[id\][\s\S]*?\.menu-trigger/)[0], /\s12%,/);
   });
 
+  // A menu opened as a popover keeps the UA `inset: 0` unless the rule clears
+  // it; with an explicit width, RTL then pins the menu to the right edge.
+  test("clears the popover inset before JS sets left and top", () => {
+    const rule = [...css.matchAll(/(?:^|\})\s*menu\[id\]\s*\{([^}]*)\}/g)]
+      .map((m) => m[1])
+      .find((body) => /position:\s*absolute/.test(body)) ?? "";
+    assert.match(rule, /inset:\s*auto;[\s\S]*left:\s*0/);
+  });
+
   test("icons are 20dp", () => {
     assert.match(css, /--md-comp-menu-item-icon-size:\s*20px/);
   });
