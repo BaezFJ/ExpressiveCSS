@@ -120,7 +120,7 @@ export class Forms {
    * state, so there is no generated text to translate.
    */
   static togglePassword(e: MouseEvent) {
-    const button = (<Element>e.target).closest?.('.password-toggle');
+    const button = Utils.closestInPath(e, '.password-toggle');
     const input = button?.closest('.field')?.querySelector<HTMLInputElement>(
       'input[type="password"], input[data-password]'
     );
@@ -212,7 +212,7 @@ export class Forms {
    * enhanced select passes that focus on to its generated input itself.
    */
   static focusSummaryField(e: MouseEvent) {
-    const link = (<Element>e.target).closest?.('.error-summary a[href^="#"]');
+    const link = Utils.closestInPath(e, '.error-summary a[href^="#"]');
     const field = link && Utils.getElementById(link, link.getAttribute('href').slice(1));
     if (!field) return;
     e.preventDefault();
@@ -226,7 +226,7 @@ export class Forms {
    * leaving the zone.
    */
   static markDropZone(e: DragEvent) {
-    const input = <Element>e.target;
+    const input = Utils.eventTarget(e);
     if (!(input instanceof HTMLInputElement) || input.type !== 'file') return;
     const zone = input.closest('.drop-zone');
     if (!zone) return;

@@ -25,7 +25,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Stepper](#stepper) | unassessed | needs-review | needs-rerun | 0 |
 | [Menu](#menu) | unassessed | needs-review | needs-rerun | 0 |
 | [Mega menu](#mega-menu) | implemented | source-reviewed | incomplete | 0 |
-| [Menubar](#menubar) | implemented | source-reviewed | incomplete | 0 |
+| [Menubar](#menubar) | unassessed | needs-review | incomplete | 0 |
 | [Scrollspy](#scrollspy) | unassessed | needs-review | needs-rerun | 0 |
 | [Tree](#tree) | implemented | source-reviewed | needs-rerun | 0 |
 | [Buttons](#buttons) | unassessed | needs-review | needs-rerun | 1 |
@@ -62,7 +62,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Avatar](#avatar) | implemented | source-reviewed | needs-rerun | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | needs-rerun | 0 |
 | [Popover](#popover) | implemented | source-reviewed | needs-rerun | 0 |
-| [Tour](#tour) | implemented | source-reviewed | incomplete | 0 |
+| [Tour](#tour) | unassessed | needs-review | incomplete | 0 |
 | [Snackbar](#snackbar) | unassessed | needs-review | needs-rerun | 0 |
 | [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 1 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | needs-rerun | 1 |
@@ -294,9 +294,9 @@ Web adaptation: Native popovers opened with popovertarget; the browser owns open
 
 ## Menubar
 
-**implemented within the stated scope.** A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.
+**unassessed within the stated scope.** A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.
 
-Source review: source-reviewed, 2026-10-15. [src/ts/components/menubar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/ts/components/menubar.ts).
+Source review: needs-review, 2026-10-15. [src/ts/components/menubar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/ts/components/menubar.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
 
@@ -931,9 +931,9 @@ Web adaptation: The browser owns opening, light dismiss, Escape, focus return an
 
 ## Tour
 
-**implemented within the stated scope.** One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.
+**unassessed within the stated scope.** One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.
 
-Source review: source-reviewed, 2026-10-15. [src/ts/behaviors/tour.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/ts/behaviors/tour.ts).
+Source review: needs-review, 2026-10-15. [src/ts/behaviors/tour.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/ts/behaviors/tour.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
 

@@ -92,6 +92,30 @@ export class Utils {
   }
 
   /**
+   * The element an event really started on, for a listener on the document.
+   * There `event.target` is retargeted to the shadow host, so delegation that
+   * reads it never sees anything inside an open shadow root. A closed root
+   * keeps its inside private and still yields the host.
+   */
+  static eventTarget(event: Event): Element | null {
+    const target = event.composedPath()[0] ?? event.target;
+    return target instanceof Element ? target : null;
+  }
+
+  /**
+   * `closest()` for a document listener: the nearest element on the event's
+   * composed path that matches `selector`. Unlike `eventTarget(e).closest()`
+   * it climbs out of shadow roots too, so a press on a shadow-root icon inside
+   * a light-DOM button still finds the button.
+   */
+  static closestInPath(event: Event, selector: string): Element | null {
+    for (const node of event.composedPath()) {
+      if (node instanceof Element && node.matches(selector)) return node;
+    }
+    return null;
+  }
+
+  /**
    * Checks for exceeded edges
    * @param container Container element.
    * @param bounding Bounding rect.
@@ -364,20 +388,28 @@ export class Utils {
       align
     );
 
-    const parent = container.offsetParent as HTMLElement;
-    // A static body uses document coordinates; positioned parents use their
-    // padding edge, including borders and local scrolling.
+    Utils._placeInOffsetParent(container, newCoordinates);
+
+    return {x: 0, y: transitionMovement};
+  }
+
+  /**
+   * Writes document coordinates as `top`/`left` on an absolutely positioned
+   * element. A static body uses document coordinates; positioned parents,
+   * such as a shadow host, use their padding edge, including borders and
+   * local scrolling.
+   */
+  static _placeInOffsetParent(el: HTMLElement, coordinates: { x: number; y: number }) {
+    let { x, y } = coordinates;
+    const parent = el.offsetParent as HTMLElement;
     if (parent && (parent !== document.body || getComputedStyle(parent).position !== 'static')) {
       const rect = parent.getBoundingClientRect();
       const root = parent === document.scrollingElement;
-      newCoordinates.x -= rect.left + Utils.getDocumentScrollLeft() + parent.clientLeft - (root ? 0 : parent.scrollLeft);
-      newCoordinates.y -= rect.top + Utils.getDocumentScrollTop() + parent.clientTop - (root ? 0 : parent.scrollTop);
+      x -= rect.left + Utils.getDocumentScrollLeft() + parent.clientLeft - (root ? 0 : parent.scrollLeft);
+      y -= rect.top + Utils.getDocumentScrollTop() + parent.clientTop - (root ? 0 : parent.scrollTop);
     }
-
-    container.style.top = newCoordinates.y + 'px';
-    container.style.left = newCoordinates.x + 'px';
-
-    return {x: 0, y: transitionMovement};
+    el.style.top = y + 'px';
+    el.style.left = x + 'px';
   }
 
   static _repositionWithinScreen(

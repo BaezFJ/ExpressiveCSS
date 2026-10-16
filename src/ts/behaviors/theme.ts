@@ -1,3 +1,5 @@
+import { Utils } from '../core/utils';
+
 const themes = ['light', 'dark', 'auto'];
 const storageKey = 'theme';
 
@@ -56,8 +58,11 @@ export class Theme {
   }
 
   private static _onClick(e: MouseEvent) {
-    const control = (<Element>e.target).closest?.('[data-theme-set]');
+    const control = Utils.closestInPath(e, '[data-theme-set]');
     if (!control || control.matches(':disabled, [aria-disabled="true"]')) return;
     Theme.set(control.getAttribute('data-theme-set'));
+    // set() marks the document's controls; a shadow root's need their own pass.
+    const root = control.getRootNode();
+    if (root !== document) Theme.sync(root as ParentNode);
   }
 }

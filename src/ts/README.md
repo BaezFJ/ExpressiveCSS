@@ -66,6 +66,10 @@ read-it-off-the-element access that key provides.
   listeners those install are what several components rely on. `Dialogs.Init()`
   light-dismisses an open `<dialog>` only when both ends of a pointer gesture
   land outside its box — a drag that starts on the dialog cannot close it.
+- **Document listeners read `Utils.eventTarget(e)`, not `e.target`.** At the
+  document, `e.target` is the shadow host, so delegation that reads it never
+  sees an open shadow root's content. Look ids up with `Utils.getElementById`
+  and query `el.getRootNode()` rather than `document` for the same reason.
 - **The modular entry is inert.** Consumers initialize selected components and
   behaviors explicitly. `scripts/build-esm.mjs` builds both ESM entries and
   internal modules together so constructors are shared across entries and unused

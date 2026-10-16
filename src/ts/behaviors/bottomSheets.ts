@@ -33,8 +33,7 @@ export class BottomSheets {
       property: '--md-comp-bottom-sheet-shift',
       direction: () => 1,
       inHandle: (event, dialog) => {
-        const target = event.target;
-        if (target instanceof Element && target.closest('.drag-handle')) return true;
+        if (Utils.closestInPath(event, '.drag-handle')) return true;
         const rect = dialog.getBoundingClientRect();
         return event.clientY >= rect.top && event.clientY <= rect.top + 48;
       },
@@ -51,9 +50,7 @@ export class BottomSheets {
   }
 
   static _onClick(event: MouseEvent) {
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    const handle = target.closest('.drag-handle');
+    const handle = Utils.closestInPath(event, '.drag-handle');
     // Only a <button> is a control. A decorative <span> in the same slot is
     // exactly what it looks like, and clicking it does nothing.
     if (!(handle instanceof HTMLButtonElement)) return;

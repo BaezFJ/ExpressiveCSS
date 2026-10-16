@@ -129,9 +129,10 @@ export class Menubar extends Component<MenubarOptions> {
     const step = this._step(e.key);
     if (!step || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
     const items = this._items;
+    const path = e.composedPath();
     const index = items.findIndex((item) => {
       const menu = Menu.getInstance(item);
-      return menu?.isOpen && menu.menuEl?.contains(e.target as Node);
+      return menu?.isOpen && menu.menuEl && path.includes(menu.menuEl);
     });
     if (index < 0) return;
     e.preventDefault();

@@ -322,8 +322,7 @@ export class Tooltip extends Component<TooltipOptions> {
     );
 
     tooltip.style.setProperty('--md-comp-tooltip-anchor-gap', `${Math.max(0, margin) + Math.abs(this.options.transitionMovement)}px`);
-    tooltip.style.top = newCoordinates.y + 'px';
-    tooltip.style.left = newCoordinates.x + 'px';
+    Utils._placeInOffsetParent(tooltip, newCoordinates);
   }
 
   _repositionWithinScreen(x: number, y: number, width: number, height: number) {

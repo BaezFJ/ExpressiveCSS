@@ -130,7 +130,7 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     // Most callbacks only move a ratio within the same section. Its link is
     // already marked, so skip the document-wide lookup.
     if (best && active === best && best._link?.isConnected) return;
-    const next = best ? ScrollSpy._linkFor(best.el.id, best.options) : null;
+    const next = best ? ScrollSpy._linkFor(best.el.id, best.options, best.el.getRootNode() as ParentNode) : null;
     if (active === best && active?._link === next) return;
     ScrollSpy._clearActive(resolver);
     if (!next) return;
@@ -166,16 +166,16 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
    * Default lookup compares href attributes (no interpolated selector).
    * A custom getActiveElement still returns a selector.
    */
-  static _linkFor(id: string, options: ScrollSpyOptions): Element | null {
+  static _linkFor(id: string, options: ScrollSpyOptions, root: ParentNode = document): Element | null {
     if (!id) return null;
     if (options.getActiveElement !== _defaultGetActiveElement) {
       try {
-        return document.querySelector(options.getActiveElement(id));
+        return root.querySelector(options.getActiveElement(id));
       } catch {
         return null;
       }
     }
     const href = `#${id}`;
-    return Array.from(document.querySelectorAll('a[href^="#"]')).find(link => link.getAttribute('href') === href) ?? null;
+    return Array.from(root.querySelectorAll('a[href^="#"]')).find(link => link.getAttribute('href') === href) ?? null;
   }
 }

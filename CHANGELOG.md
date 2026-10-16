@@ -75,6 +75,20 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Behaviors that listen on the document now work inside an open shadow root.
+  Copy, Theme, Dialogs light dismiss, bottom and side sheet dragging, the
+  bottom sheet handle button, ImageCompare, PaneResize, Sortable, Tour
+  controls, the password toggle, error summary links and drop zones read the
+  event's `composedPath()` instead of its target, which the document sees as
+  the shadow host. Sortable keeps focus on a moved item's button there, Theme
+  marks the controls in the clicked control's shadow root, and a sheet closed
+  there in the middle of a drag reopens without the drag offset.
+  Menubar moves between open menus, ScrollSpy marks links, and a card reveal
+  trigger named by `aria-labelledby` is accepted in a shadow root too. A
+  tooltip under a positioned shadow host now sits next to its trigger instead
+  of offset by the host's position. `change`, `submit`, `reset` and `toggle`
+  events do not leave a shadow root, so file lists, field validation, the
+  error summary and Tour's own toggle handling still need light DOM.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.
