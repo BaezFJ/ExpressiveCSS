@@ -18,18 +18,29 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
       await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        <button id="reference" class="button" disabled>Reference</button>
         <div class="fab-menu active"><button class="button extra circle" aria-label="Menu">+</button>
-          <ul><li><button id="menu-item" class="disabled">Compose</button></li></ul></div>
+          <ul><li><button id="menu-item" class="disabled">Compose</button></li>
+            <li><button id="menu-aria" aria-disabled="true">Share</button></li></ul></div>
         <div class="toolbar-group"><div class="toolbar"><button>A</button></div>
-          <a id="group-fab" href="#" class="button extra circle disabled" aria-label="Reply">R</a></div>
+          <a id="group-fab" href="#" class="button extra circle disabled" aria-label="Reply">R</a>
+          <button id="group-aria" class="button extra circle" aria-disabled="true" aria-label="Edit">E</button></div>
         <article id="card" class="filled hoverable"><a class="primary-action" aria-disabled="true">Open</a><p>Body</p></article>
       </body></html>`);
       const shadow = (id) => page.locator(`#${id}`).evaluate((el) => getComputedStyle(el).boxShadow);
 
-      for (const id of ['menu-item', 'group-fab']) {
+      const fill = (id) => page.locator(`#${id}`).evaluate((el) => getComputedStyle(el).backgroundColor);
+
+      // A disabled menu item paints like any disabled button, at rest and on focus.
+      assert.equal(await fill('menu-item'), await fill('reference'), 'the disabled menu item looks enabled at rest');
+
+      for (const id of ['menu-item', 'menu-aria', 'group-fab', 'group-aria']) {
+        const rest = await fill(id);
         await page.locator(`#${id}`).focus();
         await page.waitForTimeout(350);
         assert.equal(await shadow(id), 'none', `${id} lifts on focus`);
+        assert.equal(await fill(id), rest, `${id} takes a state tint on focus`);
+        await page.locator(`#${id}`).blur();
       }
 
       await page.locator('#card p').hover();

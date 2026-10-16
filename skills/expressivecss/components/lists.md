@@ -9,7 +9,7 @@ Component ID: `lists`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `9eb6a54cd5342ac4c855179ce5a308fe7051194b8e888beafeb5505a9c4f224d`
+Contract SHA-256: `0cbbb167c12808bfb55306fda504dcd0c211675cdb292e313ebfa158b50b4cbd`
 
 #### Selection and adaptation
 

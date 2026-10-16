@@ -28,6 +28,12 @@ $caret-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' v
 // are loaded with meta.load-css(), which takes no configuration.
 $md-source: #c6a0f6 !default;
 
+// A control the user cannot operate, natively or by ARIA. A host's :hover,
+// :focus and :active arms skip it through :not(:where(#{$disabled})), which
+// adds no specificity, so a disabled control never lifts or takes an enabled
+// tint. One list, because four hand-copied ones had already drifted.
+$disabled: ':is(:disabled, [disabled], .disabled, [aria-disabled="true"])' !default;
+
 // Colors
 //
 // The 2014 Material palette ($colors + colorFunc()) is gone. It generated 532
