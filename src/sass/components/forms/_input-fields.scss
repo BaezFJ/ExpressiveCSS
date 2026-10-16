@@ -384,11 +384,14 @@ textarea {
       text-indent: 0;
     }
 
-    &:focus-visible {
+    // A focused date input edits its native fields, so show them. WebKit 27
+    // stopped matching :focus-visible on a date input, even after Tab, and
+    // Chromium already matches it on every focus, mouse included.
+    &:focus {
       text-indent: 0;
     }
 
-    &:focus-visible:after {
+    &:focus:after {
       text-indent: -9999px;
     }
   }
