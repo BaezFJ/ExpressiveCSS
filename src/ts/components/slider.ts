@@ -15,6 +15,7 @@ export class Slider extends Component<SliderOptions> {
   declare el: HTMLInputElement;
   private _pointerDown: boolean;
   private _resizeObserver: ResizeObserver | null = null;
+  private _form: HTMLFormElement | null = null;
   value: HTMLElement;
   thumb: HTMLElement;
 
@@ -111,6 +112,9 @@ export class Slider extends Component<SliderOptions> {
     // touch lifts, which would clear the thumb's active state at a moment
     // nothing cleared it before.
     this.el.addEventListener('mouseout', this._handleRangeRelease);
+    // A form reset restores the value without an input event.
+    this._form = this.el.form;
+    this._form?.addEventListener('reset', this._handleFormReset);
   }
 
   _removeEventHandlers() {
@@ -121,7 +125,16 @@ export class Slider extends Component<SliderOptions> {
     this.el.removeEventListener('pointercancel', this._handleRangePointerUp);
     this.el.removeEventListener('blur', this._handleRangeRelease);
     this.el.removeEventListener('mouseout', this._handleRangeRelease);
+    this._form?.removeEventListener('reset', this._handleFormReset);
+    this._form = null;
   }
+
+  // The reset event fires before the browser restores the values.
+  _handleFormReset = () => {
+    setTimeout(() => {
+      if (Slider.getInstance(this.el) === this) this._sync();
+    });
+  };
 
   _handleRangeChange = () => {
     this._clampDual();

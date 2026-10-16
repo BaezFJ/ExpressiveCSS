@@ -1,3 +1,5 @@
+import { Utils } from '../core/utils';
+
 const itemSelector = '.sortable > li';
 
 interface Drag {
@@ -39,7 +41,8 @@ export class Sortable {
     to = Math.min(Math.max(to, 0), items.length - 1);
     if (to === from) return;
     // Moving a node drops focus from inside it, so it is put back after.
-    const focused = item.contains(document.activeElement) ? (document.activeElement as HTMLElement) : null;
+    const active = (item.getRootNode() as Document | ShadowRoot).activeElement;
+    const focused = item.contains(active) ? (active as HTMLElement) : null;
     list.insertBefore(item, items[to > from ? to + 1 : to] ?? null);
     focused?.focus();
     Sortable._done(list, item, from, to);
@@ -61,7 +64,7 @@ export class Sortable {
   }
 
   private static _onClick(e: MouseEvent) {
-    const button = (<Element>e.target).closest?.('[data-move]');
+    const button = Utils.closestInPath(e, '[data-move]');
     const item = button?.closest<HTMLElement>(itemSelector);
     if (!item || button.matches(':disabled, [aria-disabled="true"]')) return;
     const index = [...item.parentElement.children].indexOf(item);
@@ -71,7 +74,7 @@ export class Sortable {
   }
 
   private static _onPointerDown(e: PointerEvent) {
-    const handle = (<Element>e.target).closest?.('.drag-handle');
+    const handle = Utils.closestInPath(e, '.drag-handle');
     const item = handle?.closest<HTMLElement>(itemSelector);
     if (!item || e.button !== 0 || Sortable._drag) return;
     e.preventDefault();

@@ -75,6 +75,73 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A modal or compact NavigationRail no longer collapses when blank space
+  inside it is tapped. Its scrim is the rail's own `::before`, so those taps
+  looked like scrim taps; only a tap beside the rail collapses it now.
+- Touch drags on a bottom sheet's `.drag-handle` and a side sheet's
+  `<header>` now dismiss the sheet. Without `touch-action` the browser took
+  the drag as a pan and cancelled the pointer, so the sheet snapped back. The
+  bottom sheet's built-in handle band and the side sheet's inner edge have no
+  element of their own to carry `touch-action`, so on touch screens the
+  explicit handle and the header are the drag areas.
+- A docked Datepicker for a date range now opens from its end input, and a
+  click on that input no longer closes it. The plugin counted the end input
+  as outside.
+- Menus listen for outside clicks on the document instead of `<body>`, so a
+  click below the content of a page shorter than the window closes them.
+- A MapView marker or popup whose `data-lng-lat` is not "longitude,latitude",
+  such as Google's latitude-first order, is skipped with a warning. MapLibre
+  threw on it after the map was created, which leaked the map and stopped
+  the rest of that `init()` call.
+- Restarting a running Tour releases the step it was showing, so only one
+  target carries the highlight.
+- Autocomplete results that arrive after the user left the field update the
+  list without opening it under the input.
+- A date typed into a Datepicker that the calendar would not offer, outside
+  `minDate`/`maxDate`, a disabled weekend or refused by `disableDayFn`, now
+  puts the input back to the selected date. A date before `minDate` used to
+  become `minDate` in the picker while the input, and the submitted form
+  value, kept the typed text.
+- A Datepicker input's initial value is now the selection, as it already was
+  once the input was clicked. `instance.date` was undefined until then, and a
+  multiple selection started empty.
+- A form reset now resets a Datepicker: the inputs added for extra dates in
+  multiple selection are removed, and the selection is read back from the
+  reset values. A refused date typed into one of those inputs restores that
+  input's own date. A Slider's fill and value label also follow a form reset.
+- Skipping a Questionnaire question clears its error. A skipped question
+  whose answer had been wrong still showed the error when the user went back.
+- A tooltip opened by hover still closes on Escape but no longer takes the key
+  from the focused control, so the same Escape also closes the dialog or menu
+  the user is in. On its own trigger, Escape stays the tooltip's.
+- A hover menu no longer moves focus into itself when the pointer passes its
+  trigger, which pulled focus out of the field being typed in. Space, Enter or
+  an arrow key on the trigger moves focus into the open menu, and Escape
+  closes it from wherever focus is.
+- Clicking inside an open Autocomplete input, for example to move the caret,
+  no longer closes its list. A trigger's own click is no longer treated as an
+  outside click by Menu.
+- Enter in a Timepicker hour or minute field writes the typed time, after an
+  emptied field takes its default as it would on leaving. With the
+  default `autoSubmit` there is no Ok button, so a keyboard user could type a
+  time but never set it.
+- Chips selection follows focus. Arrow keys used to move from the highlighted
+  chip while Backspace deleted the focused one, and the highlight stayed after
+  focus left the field.
+- Behaviors that listen on the document now work inside an open shadow root.
+  Copy, Theme, Dialogs light dismiss, bottom and side sheet dragging, the
+  bottom sheet handle button, ImageCompare, PaneResize, Sortable, Tour
+  controls, the password toggle, error summary links and drop zones read the
+  event's `composedPath()` instead of its target, which the document sees as
+  the shadow host. Sortable keeps focus on a moved item's button there, Theme
+  marks the controls in the clicked control's shadow root, and a sheet closed
+  there in the middle of a drag reopens without the drag offset.
+  Menubar moves between open menus, ScrollSpy marks links, and a card reveal
+  trigger named by `aria-labelledby` is accepted in a shadow root too. A
+  tooltip under a positioned shadow host now sits next to its trigger instead
+  of offset by the host's position. `change`, `submit`, `reset` and `toggle`
+  events do not leave a shadow root, so file lists, field validation, the
+  error summary and Tour's own toggle handling still need light DOM.
 - Focused read-only text fields now show the focus underline. The field's
   focus styles skipped `[readonly]`, and FormSelect makes its combobox input
   read-only, so a focused select had no visible focus indicator.

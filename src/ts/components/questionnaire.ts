@@ -174,6 +174,9 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
       else control.value = '';
       control.dispatchEvent(new Event('change', { bubbles: true }));
     }
+    // A skipped question has no answer left to be wrong about. Clearing fires
+    // only `change`, not the `input` that clears an error, so clear it here.
+    this._setInvalid(this._active, false);
     this.goTo(this.index + 1);
   };
 

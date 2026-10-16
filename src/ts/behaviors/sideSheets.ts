@@ -1,4 +1,5 @@
 import { installSheetDrag } from './sheetDrag';
+import { Utils } from '../core/utils';
 
 const startDocked = (dialog: HTMLDialogElement): boolean => dialog.classList.contains('start');
 
@@ -21,8 +22,7 @@ export class SideSheets {
       property: '--md-comp-side-sheet-shift',
       direction: (dialog) => (leftDocked(dialog) ? -1 : 1),
       inHandle: (event, dialog) => {
-        const target = event.target;
-        if (target instanceof Element && target.closest('header')) return true;
+        if (Utils.closestInPath(event, 'header')) return true;
         const rect = dialog.getBoundingClientRect();
         return leftDocked(dialog)
           ? event.clientX >= rect.right - 24 && event.clientX <= rect.right

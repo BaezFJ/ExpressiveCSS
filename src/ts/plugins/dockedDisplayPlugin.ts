@@ -31,9 +31,16 @@ export class DockedDisplayPlugin {
   private readonly container: HTMLDivElement;
   private options: Partial<DockedDisplayPluginOptions>;
   private visible: boolean;
+  /**
+   * Elements whose clicks count as inside, beside the container: the element
+   * the container docks to, and any other control that opens it, such as a
+   * date range's end input. A click on one of those must not close it.
+   */
+  readonly triggers: HTMLElement[];
 
   constructor(el: HTMLElement, container: HTMLElement, options: Partial<DockedDisplayPluginOptions>) {
     this.el = el;
+    this.triggers = [el];
     this.options = {
       ..._defaults,
       ...options
@@ -48,7 +55,7 @@ export class DockedDisplayPlugin {
   private _handleDocumentClick = (e: MouseEvent) => {
     if (!this.visible) return;
     const path = e.composedPath();
-    if (!path.includes(this.el) && !path.includes(this.container)) this.hide();
+    if (![...this.triggers, this.container].some((inside) => path.includes(inside))) this.hide();
   };
 
   // @todo move to Util? -> duplicate code fragment with tooltip

@@ -31,7 +31,7 @@ function hasAccessibleName(trigger: HTMLButtonElement) {
     const referencedText = labelledBy
       .trim()
       .split(/\s+/)
-      .map((id) => trigger.ownerDocument.getElementById(id)?.textContent ?? '')
+      .map((id) => Utils.getElementById(trigger, id)?.textContent ?? '')
       .join(' ')
       .trim();
     if (referencedText) return true;

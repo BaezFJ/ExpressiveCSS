@@ -92,7 +92,22 @@ const _defaults: MapViewOptions = {
 
 type Overlay = { draw: () => void; off?: () => void };
 
-const lngLat = (el: HTMLElement) => el.dataset.lngLat.split(',').map(Number) as LngLat;
+const isLngLat = (value: number[]): value is LngLat =>
+  value.length === 2 && value.every(Number.isFinite) && Math.abs(value[1]) <= 90;
+
+// MapLibre throws on a bad position only after the map exists, which leaked
+// the map and stopped every later element in the same init(). A value that
+// is not "lng,lat", such as Google's lat,lng order past 90, is skipped.
+const lngLat = (el: HTMLElement): LngLat | null => {
+  const value = el.dataset.lngLat.split(',').map(Number);
+  if (isLngLat(value)) return value;
+  console.warn(`MapView skipped data-lng-lat="${el.dataset.lngLat}": expected "longitude,latitude".`, el);
+  return null;
+};
+
+/** The elements with a usable `data-lng-lat`, each paired with its position. */
+const positioned = (elements: HTMLElement[]) =>
+  elements.map((el) => [el, lngLat(el)] as const).filter((pair): pair is readonly [HTMLElement, LngLat] => pair[1] !== null);
 
 // A quadratic Bézier from `from` to `to`, bowed north of an eastward line.
 // ponytail: drawn in degrees, so an arc across the antimeridian goes the long
@@ -170,14 +185,14 @@ export class MapView extends Component<MapViewOptions> {
 
     const children = this._children.filter((child): child is HTMLElement => child instanceof HTMLElement);
     const claimed = new Set<Element>();
-    for (const marker of children.filter((child) => child.matches('.map-marker[data-lng-lat]'))) {
+    for (const [marker, at] of positioned(children.filter((child) => child.matches('.map-marker[data-lng-lat]')))) {
       const target = marker.hasAttribute('aria-controls') ? Utils.getElementById(marker, marker.getAttribute('aria-controls')) : null;
       const popup = target?.parentElement === el && target.matches('.map-popup') ? target : null;
       if (popup) claimed.add(popup);
-      this._addMarker(marker, popup);
+      this._addMarker(marker, popup, at);
     }
-    for (const popup of children.filter((child) => child.matches('.map-popup[data-lng-lat]') && !claimed.has(child))) {
-      this._popup(popup, 0).setLngLat(lngLat(popup)).addTo(this.map);
+    for (const [popup, at] of positioned(children.filter((child) => child.matches('.map-popup[data-lng-lat]') && !claimed.has(child)))) {
+      this._popup(popup, 0).setLngLat(at).addTo(this.map);
     }
 
     if (this._themed()) {
@@ -380,11 +395,11 @@ export class MapView extends Component<MapViewOptions> {
     if (this._styleReady) overlay.draw();
   }
 
-  private _addMarker(element: HTMLElement, content: HTMLElement | null) {
+  private _addMarker(element: HTMLElement, content: HTMLElement | null, at: LngLat) {
     const marker = new this.options.maplibregl.Marker({
       element,
       draggable: element.hasAttribute('data-draggable')
-    }).setLngLat(lngLat(element)).addTo(this.map);
+    }).setLngLat(at).addTo(this.map);
     marker.on('dragend', () => {
       const { lng, lat } = marker.getLngLat();
       element.dataset.lngLat = `${lng},${lat}`;

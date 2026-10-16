@@ -113,6 +113,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   declare el: HTMLInputElement;
   /** If the autocomplete is open. */
   isOpen: boolean;
+  /** Whether the user left the field since the last search, so late results must not reopen it. */
+  private _left = false;
   /** Number of matching autocomplete options. */
   count: number;
   /** Index of the current selected option. */
@@ -363,6 +365,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   _handleInputBlur = () => {
     if (!this._pointerDown) {
+      this._left = true;
       this.close();
       this._resetAutocomplete();
     }
@@ -373,6 +376,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   };
 
   _handleInput = () => {
+    this._left = false;
     this.count = 0;
     const actualValue = this.el.value.toLocaleLowerCase();
     // Check if the input isn't empty, and that focus arrived by keyboard -
@@ -392,6 +396,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   };
 
   _handleInputFocus = () => {
+    this._left = false;
     this.count = 0;
     const actualValue = this.el.value.toLocaleLowerCase();
     this._inputChangeDetection(actualValue);
@@ -691,6 +696,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
    */
   setMenuItems(menuItems: AutocompleteData[], selected: number[] | string[] = null, open: boolean = true) {
     if (this.el['Expressive_Autocomplete'] !== this) return;
+    // Results that arrive after the user left the field update the list
+    // without opening it under an input nobody is using.
+    open &&= !this._left;
     const resultCount = menuItems.length;
     this.menuItems = menuItems;
     if (selected) {

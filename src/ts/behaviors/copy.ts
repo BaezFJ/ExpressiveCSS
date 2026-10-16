@@ -32,7 +32,7 @@ export class Copy {
   }
 
   private static async _onClick(e: MouseEvent) {
-    const button = (<Element>e.target).closest?.('[data-copy], [data-copy-for]');
+    const button = Utils.closestInPath(e, '[data-copy], [data-copy-for]');
     if (!button || button.matches(':disabled, [aria-disabled="true"]')) return;
     const text = Copy.textFor(button);
     if (text === null) return;

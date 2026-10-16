@@ -1,3 +1,5 @@
+import { Utils } from '../core/utils';
+
 const container = ':is(.panes, .pane-layout, .list-detail, .supporting-pane-layout):not(.equal, .three-pane)';
 const handleSelector = `${container} > button.drag-handle`;
 // The narrowest a resized pane may get, and the arrow-key step.
@@ -73,7 +75,7 @@ export class PaneResize {
   }
 
   private static _onPointerDown(e: PointerEvent) {
-    const handle = (<Element>e.target).closest?.(handleSelector) as HTMLElement;
+    const handle = Utils.closestInPath(e, handleSelector) as HTMLElement;
     if (!handle || e.button !== 0) return;
     const pane = PaneResize._pane(handle);
     if (!pane) return;
@@ -100,7 +102,7 @@ export class PaneResize {
   }
 
   private static _onClick(e: MouseEvent) {
-    const handle = (<Element>e.target).closest?.(handleSelector);
+    const handle = Utils.closestInPath(e, handleSelector);
     if (!handle) return;
     // The click that ends a mouse drag is not a request to step. A keyboard
     // click (detail 0) always is, even after a touch drag that left the flag
@@ -113,7 +115,7 @@ export class PaneResize {
   }
 
   private static _onKeyDown(e: KeyboardEvent) {
-    const handle = (<Element>e.target).closest?.(handleSelector);
+    const handle = Utils.closestInPath(e, handleSelector);
     if (!handle || e.altKey || e.ctrlKey || e.metaKey) return;
     const current = PaneResize.width(handle);
     const [min, max] = PaneResize._bounds(handle);

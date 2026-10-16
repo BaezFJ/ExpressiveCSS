@@ -109,6 +109,9 @@ const S = defineSections([
           dismiss. A recent flick counts even if the pointer stops moving at release.
           For short drags, pausing for at least 100ms or reversing direction lets
           the sheet snap back. The rest of the sheet scrolls if the body overflows.
+          On touch screens, give the sheet an explicit drag handle: it sets
+          <code>touch-action: none</code>, and the browser takes a touch drag on
+          the built-in band as a scroll.
         </p>
 <Code code={`
 <dialog class="bottom-sheet" aria-labelledby="title-title">

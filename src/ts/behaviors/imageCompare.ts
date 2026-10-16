@@ -15,7 +15,8 @@ export class ImageCompare {
     if (ImageCompare._initialized || typeof document === 'undefined') return;
     ImageCompare._initialized = true;
     document.addEventListener('input', (e) => {
-      if ((<Element>e.target).matches?.(rangeSelector)) ImageCompare.sync(<HTMLInputElement>e.target);
+      const range = Utils.eventTarget(e);
+      if (range?.matches(rangeSelector)) ImageCompare.sync(<HTMLInputElement>range);
     });
     Utils.onDocumentReady(() => {
       document.querySelectorAll<HTMLInputElement>(rangeSelector).forEach((range) => ImageCompare.sync(range));

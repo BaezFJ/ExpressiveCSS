@@ -146,8 +146,9 @@ MapView.init(el, {
   <Section {...S.markers}>
         <p>
           A <code>.map-marker</code> sits at its
-          <code>data-lng-lat</code>, written as longitude then latitude. One
-          with no content of its own is a primary dot; put an
+          <code>data-lng-lat</code>, written as longitude then latitude. A value
+          that is not two numbers with a latitude between -90 and 90 is skipped
+          with a console warning. One with no content of its own is a primary dot; put an
           <a href={route('avatar')}>avatar</a>, icon or image inside to
           replace the dot. A <code>.map-marker-label</code> shows below it, or
           above with <code>.top</code>, and a child

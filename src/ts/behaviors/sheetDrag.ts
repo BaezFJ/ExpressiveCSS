@@ -69,9 +69,8 @@ export function installSheetDrag(config: SheetDragConfig): void {
     shift: number;
   } | null = null;
 
-  const sheetFor = (target: EventTarget | null): HTMLDialogElement | null => {
-    if (!(target instanceof Element)) return null;
-    const dialog = target.closest(config.selector);
+  const sheetFor = (event: Event): HTMLDialogElement | null => {
+    const dialog = Utils.closestInPath(event, config.selector);
     return dialog instanceof HTMLDialogElement ? dialog : null;
   };
 
@@ -88,7 +87,7 @@ export function installSheetDrag(config: SheetDragConfig): void {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
     onCancel();
     config.onPress?.();
-    const dialog = sheetFor(event.target);
+    const dialog = sheetFor(event);
     if (!dialog?.open || !config.inHandle(event, dialog)) return;
     dialog.style.transition = 'none';
     const at = coord(event);
@@ -102,7 +101,12 @@ export function installSheetDrag(config: SheetDragConfig): void {
       velocity: 0,
       shift: 0
     };
-    observer.observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['open'], attributeOldValue: true });
+    // The document cannot see inside a shadow root, so a sheet there is
+    // watched in its own root too; host removal still shows up in the document.
+    const watch = { childList: true, subtree: true, attributes: true, attributeFilter: ['open'], attributeOldValue: true };
+    const root = dialog.getRootNode();
+    observer.observe(document, watch);
+    if (root !== document) observer.observe(root, watch);
   };
 
   const onMove = (event: PointerEvent) => {

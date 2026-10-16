@@ -130,6 +130,8 @@ export class Menu extends Component<MenuOptions> implements Openable {
   private _transition = 0;
   private _originalInert: string | null;
   private _menuClickTargets = new WeakMap<Event, HTMLElement>();
+  /** Whether the pointer opened the menu, so opening leaves focus where it was. */
+  private _openedByHover = false;
   /**
    * Viewport point the open context menu belongs to. Null outside a
    * right-click, so a keyboard or programmatic open uses the region's corner
@@ -264,24 +266,26 @@ export class Menu extends Component<MenuOptions> implements Openable {
   }
 
   _setupTemporaryEventHandlers() {
-    document.body.addEventListener('click', this._handleDocumentClick);
+    document.addEventListener('click', this._handleDocumentClick);
     this.menuEl?.addEventListener('pointerdown', this._handleMenuPointerdown, { passive: true });
     this.menuEl?.addEventListener('touchmove', this._handleDocumentTouchmove, { passive: true });
-    document.body.addEventListener('touchmove', this._handleDocumentTouchmove, {
+    document.addEventListener('touchmove', this._handleDocumentTouchmove, {
       passive: true
     });
     this.menuEl?.addEventListener('keydown', this._handleMenuKeydown);
+    document.addEventListener('keydown', this._handleDocumentKeydown);
     window.addEventListener('resize', this._handleWindowResize);
     // A right-click elsewhere fires no click, so it would leave the menu open.
     if (this.options.contextMenu) document.addEventListener('contextmenu', this._handleDocumentContextMenu);
   }
 
   _removeTemporaryEventHandlers() {
-    document.body.removeEventListener('click', this._handleDocumentClick);
+    document.removeEventListener('click', this._handleDocumentClick);
     this.menuEl?.removeEventListener('pointerdown', this._handleMenuPointerdown);
     this.menuEl?.removeEventListener('touchmove', this._handleDocumentTouchmove);
-    document.body.removeEventListener('touchmove', this._handleDocumentTouchmove);
+    document.removeEventListener('touchmove', this._handleDocumentTouchmove);
     this.menuEl?.removeEventListener('keydown', this._handleMenuKeydown);
+    document.removeEventListener('keydown', this._handleDocumentKeydown);
     window.removeEventListener('resize', this._handleWindowResize);
     document.removeEventListener('contextmenu', this._handleDocumentContextMenu);
   }
@@ -336,6 +340,10 @@ export class Menu extends Component<MenuOptions> implements Openable {
   };
 
   _handleMouseEnter = () => {
+    if (this.isOpen) return;
+    // A pointer passing over the trigger must not pull focus out of whatever
+    // the user is typing in, so a hover-opened menu leaves focus alone.
+    this._openedByHover = true;
     this.open();
   };
 
@@ -355,6 +363,14 @@ export class Menu extends Component<MenuOptions> implements Openable {
     const path = e.composedPath();
     const menuTarget = this._menuClickTargets.get(e);
     this._menuClickTargets.delete(e);
+    // A click on the trigger belongs to the trigger's own click handler (which
+    // toggles), not to outside dismissal: an Autocomplete input has no toggle,
+    // so moving the caret closed its list. A context region still closes on a
+    // left click, since that is how its menu is dismissed.
+    if (!menuTarget && !this.options.contextMenu && path.includes(this.el)) {
+      this.isTouchMoving = false;
+      return;
+    }
     const target = menuTarget ?? <HTMLElement>(path[0] || e.target);
     const inside = !!menuTarget || path.includes(this.menuEl) || this.menuEl?.contains(target);
     if (this._isSubmenuTriggerClick(target)) return;
@@ -369,6 +385,15 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.isTouchMoving = false;
   };
 
+  // A hover-opened menu does not hold focus, so its own keydown handler never
+  // sees Escape. Close it from wherever focus is, without moving focus, and
+  // take the key only when it was pressed on the trigger.
+  _handleDocumentKeydown = (e: KeyboardEvent) => {
+    if (e.key !== 'Escape' || !this._openedByHover) return;
+    if (Utils.focusIsIn(this.el)) e.preventDefault();
+    this.close();
+  };
+
   _handleTriggerKeydown = (e: KeyboardEvent) => {
     // A context region keeps its keys for its own content; the browser turns
     // the menu key and Shift+F10 into a contextmenu event.
@@ -379,9 +404,15 @@ export class Menu extends Component<MenuOptions> implements Openable {
       e.key === Utils.keys.ENTER ||
       e.key === Utils.keys.ARROW_DOWN ||
       e.key === Utils.keys.ARROW_UP;
-    if (opensMenu && !this.isOpen) {
+    if (!opensMenu) return;
+    if (!this.isOpen) {
       e.preventDefault();
       this.open();
+    } else if (this._openedByHover) {
+      // The keyboard takes over a menu the pointer opened.
+      e.preventDefault();
+      this._openedByHover = false;
+      this._focusInitialItem();
     }
   };
 
@@ -843,6 +874,10 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
   _animateIn() {
     const transition = this._transition;
+    // Decided now: a hover open leaves focus alone, and if the keyboard takes
+    // the menu over before the animation ends it has already placed focus,
+    // so the delayed call must not pull it back to the first item.
+    const focusOnOpen = !this._openedByHover;
     const duration = this.options.inDuration;
     this.menuEl.style.transition = 'none';
     // from
@@ -854,7 +889,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       this.menuEl.style.transform = 'scale(1)';
     }, 1);
     this._schedule(() => {
-      this._focusInitialItem();
+      if (focusOnOpen) this._focusInitialItem();
       if (transition !== this._transition) return;
       if (typeof this.options.onOpenEnd === 'function') this.options.onOpenEnd.call(this, this.el);
     }, duration);
@@ -1035,6 +1070,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     const root = this.menuEl.getRootNode() as Document | ShadowRoot;
     const focused = root.activeElement;
     this.isOpen = false;
+    this._openedByHover = false;
     this.menuEl.setAttribute('inert', '');
     clearTimeout(this.filterTimeout);
     this._resetFilterQuery();

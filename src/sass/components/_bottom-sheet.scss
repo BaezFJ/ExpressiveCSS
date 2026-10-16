@@ -109,6 +109,10 @@ dialog.bottom-sheet {
     mask: $_handle center / 32px 4px no-repeat;
     cursor: grab;
     appearance: none;
+    // The drag is pointer events. With the default touch-action the browser
+    // takes a vertical touch drag as a pan and cancels the pointer, so the
+    // sheet never dismisses on a touch screen.
+    touch-action: none;
   }
 
   // The sheet paints its own bar with a mask on the element, so the vertical

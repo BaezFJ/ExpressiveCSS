@@ -2754,7 +2754,7 @@ A `.map` holds `.map-marker`, `.map-popup` and `.map-controls` children. Express
 
 The default style is OpenFreeMap's Positron in the light theme and its Dark style in the dark theme; neither needs an API key. The map swaps style when the `theme` attribute or the system color scheme changes. Pass `style` as a URL or object to keep one style, or `{ light, dark }`. Keep the provider's attribution visible.
 
-- A `.map-marker` sits at its `data-lng-lat`, longitude first. With no content of its own it is a primary dot; content inside replaces the dot. A `.map-marker-label` shows below it (`.top`: above), and a child `.tooltip` shows on hover and focus.
+- A `.map-marker` sits at its `data-lng-lat`, longitude first. A value that is not two numbers with a latitude between -90 and 90 is skipped with a console warning. With no content of its own it is a primary dot; content inside replaces the dot. A `.map-marker-label` shows below it (`.top`: above), and a child `.tooltip` shows on hover and focus.
 - A `<button class="map-marker">` with `aria-controls` naming a `.map-popup` opens it and sets `aria-expanded`. A map click or Escape closes it and focus returns to the marker. A `.map-popup` with its own `data-lng-lat` and no marker opens at init.
 - `data-draggable` lets the reader drag a marker. When the drag ends, `data-lng-lat` holds the new position and the marker fires `change`.
 - `.map-controls` stacks icon buttons in the top right, or `.top-left`, `.bottom-left`, `.bottom-right`; `.map-control-group` joins buttons on one surface. `data-action` is `zoom-in`, `zoom-out` (disabled at the zoom limits), `compass` (resets north; the icon follows the bearing), `locate` (centers on the reader and marks the spot) or `fullscreen` (sets `aria-pressed`; hidden where unsupported).
@@ -5300,7 +5300,7 @@ Expressive.AutoInit(document.body, {
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `alignment` | String | `'left'` | Edge the menu is aligned to. `'left'` or `'right'`. |
-| `autoFocus` | Boolean | `true` | If true, automatically focus the menu for keyboard navigation. This option is named `autoFocus`, not `autoTrigger`. |
+| `autoFocus` | Boolean | `true` | If true, automatically focus the menu for keyboard navigation. A menu opened by hover leaves focus where it was until Space, Enter or an arrow key on the trigger. This option is named `autoFocus`, not `autoTrigger`. |
 | `constrainWidth` | Boolean | `true` | If true, the menu is as wide as the trigger. M3 menus are independently sized — pass `false` for that. |
 | `container` | Element | `null` | Element that will contain the menu. When omitted, the menu is moved next to the trigger. |
 | `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |
@@ -6637,7 +6637,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 
 ### Calendar keyboard navigation
 
-The inline and docked calendars support keyboard navigation. Enter on a date input focuses the calendar. Tab enters or leaves its single day stop; arrow keys move by day or week. Left/Right follow `isRTL`. Home/End move to the first/last day of the week using `firstDay`. PageUp/PageDown change month, and Shift changes year, clamping to the last day of shorter months. Enter or Space selects an enabled day. Disabled dates remain focusable with `aria-disabled` but cannot be selected. Navigation respects date and year/month bounds and restores day focus after redraws without moving focus from outside the calendar. No modal picker is added.
+The inline and docked calendars support keyboard navigation. Enter on a date input focuses the calendar. Tab enters or leaves its single day stop; arrow keys move by day or week. Left/Right follow `isRTL`. Home/End move to the first/last day of the week using `firstDay`. PageUp/PageDown change month, and Shift changes year, clamping to the last day of shorter months. Enter or Space selects an enabled day. Disabled dates remain focusable with `aria-disabled` but cannot be selected. A typed date that is outside the bounds, a disabled weekend or refused by `disableDayFn` puts the input back to the selected date. An input's initial value is the selection, and a form reset reads the selection back from the reset values. Navigation respects date and year/month bounds and restores day focus after redraws without moving focus from outside the calendar. No modal picker is added.
 
 ### Date range
 
@@ -6758,7 +6758,7 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 
 Wrap the input in its own small parent — a `.field`, or a bare `<div>`. The clock is appended inside that parent.
 
-Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital hour and minute fields.
+Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital hour and minute fields; Enter in either one writes the typed time.
 
 Digital edits use native input events, including paste. Invalid edits restore
 the last valid value on blur. Empty fields use the current hour or minute without
@@ -8255,7 +8255,7 @@ onSearch: function(text, autocomplete) {
 
 Autocomplete provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
 
-Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still own asynchronous request cancellation, stale-response ordering and error handling. Results delivered after `destroy()` are ignored. Test actual spoken delivery with a screen reader.
+Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still own asynchronous request cancellation, stale-response ordering and error handling. Results delivered after `destroy()` are ignored, and results delivered after the user leaves the field update the list without opening it. Test actual spoken delivery with a screen reader.
 
 ### Methods
 

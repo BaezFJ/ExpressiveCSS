@@ -52,7 +52,7 @@ export class Dialogs {
 
   /** Backdrop hits retarget to the dialog itself, never a child. */
   private static _backdropDialog(event: Event): HTMLDialogElement | null {
-    const target = event.target;
+    const target = Utils.eventTarget(event);
     if (!(target instanceof HTMLDialogElement) || !target.open) return null;
     return target;
   }

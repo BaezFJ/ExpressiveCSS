@@ -31,7 +31,7 @@ export class Tour {
     Tour._initialized = true;
     document.addEventListener('click', Tour._onClick);
     document.addEventListener('keydown', (e) => {
-      const tour = (<Element>e.target).closest?.('.tour');
+      const tour = Utils.closestInPath(e, '.tour');
       if (e.key === 'Escape' && tour instanceof HTMLElement && states.has(tour)) Tour.end(tour);
     });
     // A page that hides the card itself still gets the target released.
@@ -54,6 +54,9 @@ export class Tour {
     if (!steps.length) return;
     const root = tour.getRootNode() as Document | ShadowRoot;
     const previous = states.get(tour);
+    // Restarting a running tour: let go of the step it was showing, or two
+    // targets carry the highlight and the card's anchor name.
+    if (previous) Tour._release(previous.steps[previous.index]);
     states.set(tour, {
       steps,
       index: 0,
@@ -121,7 +124,8 @@ export class Tour {
   }
 
   private static _onClick(e: MouseEvent) {
-    const control = (<Element>e.target).closest?.(
+    const control = Utils.closestInPath(
+      e,
       '[data-tour-start], [data-tour-back], [data-tour-next], [data-tour-done], [data-tour-close]'
     );
     if (!control) return;

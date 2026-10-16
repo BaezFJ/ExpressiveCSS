@@ -100,6 +100,9 @@ $_sheet: "dialog.side-sheet";
     padding-inline: 24px 12px;
     background: none;
     box-shadow: none;
+    // A horizontal touch drag here dismisses the sheet; the browser would
+    // otherwise take it as a pan and cancel the pointer.
+    touch-action: pan-y;
   }
 
   > header:has(> :is(button, a):first-child) {

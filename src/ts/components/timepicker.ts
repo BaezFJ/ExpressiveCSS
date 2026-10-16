@@ -262,6 +262,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.el.addEventListener('keydown', this._handleInputKeydown);
     this.plate.addEventListener('pointerdown', this._handleClockClickStart);
     this.digitalClock.addEventListener('input', this._inputFromTextField);
+    this.digitalClock.addEventListener('keydown', this._handleDigitalKeydown);
     this.inputHours.addEventListener('focus', () => this.showView('hours'));
     this.inputHours.addEventListener('focusout', () => this.formatHours());
     this.inputMinutes.addEventListener('focus', () => this.showView('minutes'));
@@ -270,6 +271,7 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   _removeEventHandlers() {
     this.digitalClock.removeEventListener('input', this._inputFromTextField);
+    this.digitalClock.removeEventListener('keydown', this._handleDigitalKeydown);
     this.el.removeEventListener('click', this._handleInputClick);
     this.el.removeEventListener('keydown', this._handleInputKeydown);
     // Drag handlers live on the document while the clock hand is held; if the
@@ -654,6 +656,24 @@ export class Timepicker extends Component<TimepickerOptions> {
       this.setHand(x, y);
     }
   }
+
+  /**
+   * Enter in the hour or minute field commits the typed time. The dial ticks
+   * are pointer targets only, and under `autoSubmit` there is no Ok button,
+   * so without this a keyboard user could type a time but never set it.
+   * Cancelling also keeps Enter from submitting a surrounding form. The
+   * listener's column holds only the two fields; AM/PM is a separate column.
+   */
+  _handleDigitalKeydown = (event: KeyboardEvent) => {
+    if (event.key !== Utils.keys.ENTER) return;
+    event.preventDefault();
+    // Normalize first, as leaving the field would: an emptied field takes its
+    // default, and the committed time has to be the one the fields then show.
+    this.formatHours();
+    this.formatMinutes();
+    if (this.options.autoSubmit) this.done();
+    else this.confirm();
+  };
 
   _inputFromTextField = (event: Event) => {
     const input = event.target as HTMLInputElement;

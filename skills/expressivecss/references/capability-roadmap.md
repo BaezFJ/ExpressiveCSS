@@ -25,7 +25,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Stepper](#stepper) | unassessed | needs-review | needs-rerun | 0 |
 | [Menu](#menu) | unassessed | needs-review | needs-rerun | 0 |
 | [Mega menu](#mega-menu) | unassessed | needs-review | incomplete | 0 |
-| [Menubar](#menubar) | implemented | source-reviewed | incomplete | 0 |
+| [Menubar](#menubar) | unassessed | needs-review | incomplete | 0 |
 | [Scrollspy](#scrollspy) | unassessed | needs-review | needs-rerun | 0 |
 | [Tree](#tree) | implemented | source-reviewed | needs-rerun | 0 |
 | [Buttons](#buttons) | unassessed | needs-review | needs-rerun | 1 |
@@ -62,7 +62,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Avatar](#avatar) | implemented | source-reviewed | needs-rerun | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | needs-rerun | 0 |
 | [Popover](#popover) | implemented | source-reviewed | needs-rerun | 0 |
-| [Tour](#tour) | implemented | source-reviewed | incomplete | 0 |
+| [Tour](#tour) | unassessed | needs-review | incomplete | 0 |
 | [Snackbar](#snackbar) | unassessed | needs-review | needs-rerun | 0 |
 | [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 1 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | needs-rerun | 1 |
@@ -94,7 +94,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Date picker](#date-picker) | unassessed | needs-review | needs-rerun | 1 |
 | [Time picker](#time-picker) | unassessed | needs-review | needs-rerun | 2 |
 | [Keypad and Keyboard](#keypad) | unassessed | needs-review | incomplete | 1 |
-| [Questionnaire](#questionnaire) | implemented | source-reviewed | needs-rerun | 1 |
+| [Questionnaire](#questionnaire) | unassessed | needs-review | needs-rerun | 1 |
 | [Typography](#typography) | unassessed | needs-review | needs-rerun | 2 |
 | [Shape](#shape) | unassessed | needs-review | needs-rerun | 1 |
 | [Motion](#motion) | unassessed | needs-review | needs-rerun | 1 |
@@ -294,9 +294,9 @@ Web adaptation: Native popovers opened with popovertarget; the browser owns open
 
 ## Menubar
 
-**implemented within the stated scope.** A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.
+**unassessed within the stated scope.** A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.
 
-Source review: source-reviewed, 2026-10-15. [src/ts/components/menubar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/ts/components/menubar.ts).
+Source review: needs-review, 2026-10-15. [src/ts/components/menubar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/ts/components/menubar.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
 
@@ -931,9 +931,9 @@ Web adaptation: The browser owns opening, light dismiss, Escape, focus return an
 
 ## Tour
 
-**implemented within the stated scope.** One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.
+**unassessed within the stated scope.** One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.
 
-Source review: source-reviewed, 2026-10-15. [src/ts/behaviors/tour.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/ts/behaviors/tour.ts).
+Source review: needs-review, 2026-10-15. [src/ts/behaviors/tour.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/ts/behaviors/tour.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
 
@@ -1489,9 +1489,9 @@ Web adaptation: Keys are native buttons in a named group; edits go through the f
 
 ## Questionnaire
 
-**implemented within the stated scope.** A native form of fieldsets shown one at a time, with single choice, multiple choice and text answers, choice descriptions, required and data-required questions, Skip for optional ones, authored or generated errors, a progress row, Enter to advance, disabled questions for branching and normal form submission.
+**unassessed within the stated scope.** A native form of fieldsets shown one at a time, with single choice, multiple choice and text answers, choice descriptions, required and data-required questions, Skip for optional ones, authored or generated errors, a progress row, Enter to advance, disabled questions for branching and normal form submission.
 
-Source review: source-reviewed, 2026-10-08. [src/sass/components/_questionnaire.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/sass/components/_questionnaire.scss), [src/ts/components/questionnaire.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/ts/components/questionnaire.ts).
+Source review: needs-review, 2026-10-08. [src/sass/components/_questionnaire.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/sass/components/_questionnaire.scss), [src/ts/components/questionnaire.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/ts/components/questionnaire.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
 
