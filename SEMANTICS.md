@@ -852,8 +852,10 @@ Swept 0.8.0.
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `navigation-rail-marks-current` | forbid | `.navigation-rail a.active:not([aria-current])` | must not match |
+| `navigation-rail-panel-is-a-popover` | forbid | `.navigation-rail-panel:not([popover])` | must not match |
 
 - **navigation-rail-marks-current** - The active destination needs aria-current="page".
+- **navigation-rail-panel-is-a-popover** - Give .navigation-rail-panel the popover attribute and put it right after the destination button that names it with popovertarget. The browser then owns opening, Escape, light dismiss and the button's expanded state.
 
 ### org-chart
 

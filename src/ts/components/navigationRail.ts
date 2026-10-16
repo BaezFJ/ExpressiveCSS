@@ -27,6 +27,9 @@ const _defaults: NavigationRailOptions = {
 };
 
 const COMPACT = '(width < 600px)';
+// Delay before a hovered destination opens its panel, and before the panel
+// closes once the pointer leaves; it covers the trip across the rail's padding.
+const HOVER_DELAY = 200;
 
 /** The focused element, followed down through open shadow roots. */
 function deepActiveElement(root: Document | ShadowRoot): Element | null {
@@ -38,12 +41,16 @@ function deepActiveElement(root: Document | ShadowRoot): Element | null {
 /**
  * Navigation rail. Layout is CSS (collapsed / .expanded). This class
  * toggles that class from the menu button, closes a compact overlay on
- * Escape or a scrim tap, and keeps aria-expanded in sync.
+ * Escape or a scrim tap, and keeps aria-expanded in sync. A destination's
+ * .navigation-rail-panel is a native popover; this class also opens it on
+ * mouse hover.
  */
 export class NavigationRail extends Component<NavigationRailOptions> {
   isExpanded: boolean;
   private _toggle: HTMLButtonElement | null;
   private _mql: MediaQueryList;
+  private _hoverPanel: HTMLElement | null = null;
+  private _hoverTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor(el: HTMLElement, options: Partial<NavigationRailOptions>) {
     super(el, options, NavigationRail);
@@ -59,6 +66,8 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     this.isExpanded = this.el.classList.contains('expanded');
     this._sync();
     this.el.addEventListener('click', this._onClick);
+    this.el.addEventListener('pointerover', this._onPointerOver);
+    this.el.addEventListener('pointerleave', this._onPointerLeave);
     document.addEventListener('keydown', this._onKeyDown);
   }
 
@@ -84,7 +93,10 @@ export class NavigationRail extends Component<NavigationRailOptions> {
 
   destroy() {
     this.el.removeEventListener('click', this._onClick);
+    this.el.removeEventListener('pointerover', this._onPointerOver);
+    this.el.removeEventListener('pointerleave', this._onPointerLeave);
     document.removeEventListener('keydown', this._onKeyDown);
+    clearTimeout(this._hoverTimer);
     this.el['Expressive_NavigationRail'] = undefined;
   }
 
@@ -146,9 +158,69 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     this._toggle?.setAttribute('aria-expanded', this.isExpanded ? 'true' : 'false');
   }
 
+  /** The side panel of the enabled destination around `target`, if any. */
+  private _panelAt(target: EventTarget | null): HTMLElement | null {
+    const trigger = target instanceof Element ? target.closest('button[popovertarget]:enabled') : null;
+    const panel = (trigger as HTMLButtonElement | null)?.popoverTargetElement;
+    return panel?.classList.contains('navigation-rail-panel') ? (panel as HTMLElement) : null;
+  }
+
+  // Looks the panel up again because the trigger can be disabled during the delay.
+  private _hoverOpen(target: Element) {
+    const panel = this._panelAt(target);
+    if (!panel || panel.matches(':popover-open')) return;
+    // `source` makes the trigger the panel's anchor and invoker, as a click would.
+    (panel.showPopover as (options?: { source?: Element | null }) => void).call(panel, {
+      source: target.closest('button[popovertarget]')
+    });
+    this._hoverPanel = panel;
+  }
+
+  // Closes the hover-opened panel after the delay, unless the pointer is still inside it.
+  private _hoverClose(target: Element | null = null) {
+    const panel = this._hoverPanel;
+    if (!panel || panel.contains(target)) return;
+    this._hoverTimer = setTimeout(() => {
+      // Keyboard focus inside the panel keeps it open, as a click would.
+      const root = this.el.getRootNode() as Document | ShadowRoot;
+      if (panel.matches(':popover-open') && !panel.contains(root.activeElement)) panel.hidePopover();
+      if (this._hoverPanel === panel) this._hoverPanel = null;
+    }, HOVER_DELAY);
+  }
+
+  private _onPointerOver = (e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') return;
+    clearTimeout(this._hoverTimer);
+    const target = e.target as Element;
+    const panel = this._panelAt(target);
+    if (!panel) this._hoverClose(target);
+    // Hovering the open panel's own trigger leaves it as it is.
+    else if (panel !== this._hoverPanel) {
+      this._hoverTimer = setTimeout(() => this._hoverOpen(target), HOVER_DELAY);
+    }
+  };
+
+  // The panel is a descendant, so moving onto it does not leave the rail.
+  private _onPointerLeave = (e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') return;
+    clearTimeout(this._hoverTimer);
+    this._hoverClose();
+  };
+
+  // Clicking a hover-opened panel's trigger keeps it open instead of toggling
+  // it shut; either way the panel no longer follows the pointer.
+  private _pinPanel(e: MouseEvent): boolean {
+    const panel = this._panelAt(e.target);
+    if (!panel) return false;
+    clearTimeout(this._hoverTimer);
+    if (panel === this._hoverPanel && panel.matches(':popover-open')) e.preventDefault();
+    this._hoverPanel = null;
+    return true;
+  }
+
   private _onClick = (e: MouseEvent) => {
     const target = e.target;
-    if (!(target instanceof Node)) return;
+    if (!(target instanceof Node) || this._pinPanel(e)) return;
     if (this._toggle?.contains(target)) {
       this.toggle();
       e.preventDefault();
@@ -158,6 +230,27 @@ export class NavigationRail extends Component<NavigationRailOptions> {
       this.collapse();
     }
   };
+
+  // Escape closes an open side panel before the rail, and reports whether a
+  // panel took the key. A hover-opened panel has no focus to return to, so
+  // focus inside it goes back to its trigger.
+  private _escapePanel(e: KeyboardEvent): boolean {
+    // A pending hover would reopen a panel Escape just dismissed.
+    clearTimeout(this._hoverTimer);
+    this._hoverPanel = null;
+    const panel = Array.from(this.el.querySelectorAll<HTMLElement>('.navigation-rail-panel')).find(
+      (el) => el.matches(':popover-open')
+    );
+    if (!panel) return false;
+    // A popover open inside the panel is on top; the browser closes it first.
+    if (panel.querySelector(':popover-open')) return true;
+    const root = this.el.getRootNode() as Document | ShadowRoot;
+    const hadFocus = panel.contains(root.activeElement);
+    panel.hidePopover();
+    if (hadFocus) (panel.previousElementSibling as HTMLElement | null)?.focus();
+    e.preventDefault();
+    return true;
+  }
 
   // The scrim is the rail's own ::before, so a click on blank space inside the
   // rail targets the rail just as a scrim click does. Only a click beside the
@@ -169,7 +262,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   }
 
   private _onKeyDown = (e: KeyboardEvent) => {
-    if (e.key !== 'Escape' || e.defaultPrevented) return;
+    if (e.key !== 'Escape' || e.defaultPrevented || this._escapePanel(e)) return;
     if (this.isExpanded && this._isModal()) {
       const root = this.el.getRootNode() as Document | ShadowRoot;
       const restoreFocus = this.el.contains(root.activeElement);
