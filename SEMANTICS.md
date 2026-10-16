@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**89 of 89 rows enforced; 0 remaining.**
+**90 of 90 rows enforced; 0 remaining.**
 
-85 of those rows are components - a part of the framework an author writes markup for.
+86 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 85 components declare conformance debt.**
+**3 of 86 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -854,6 +854,20 @@ Swept 0.8.0.
 | `navigation-rail-marks-current` | forbid | `.navigation-rail a.active:not([aria-current])` | must not match |
 
 - **navigation-rail-marks-current** - The active destination needs aria-current="page".
+
+### org-chart
+
+Added with the org chart component. Nested lists of native disclosures: each manager's card is a summary that folds the team away, so no tree role is promised.
+
+**Rejected role:** `tree` is not withheld but declined - its managers are native disclosures reached with Tab - a tree role promises arrow-key navigation, type-ahead and expanded states on treeitems that the markup does not have and that native details would fight. `org-chart-is-not-a-tree-widget` enforces that.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `org-chart-is-not-a-tree-widget` | forbid | `.org-chart[role], .org-chart [role="treeitem"], .org-chart [role="group"]` | must not match |
+| `org-chart-manager-holds-no-link` | forbid | `.org-chart summary :is(a[href], button)` | must not match |
+
+- **org-chart-is-not-a-tree-widget** - A .org-chart takes no ARIA tree roles. It is lists of disclosures, which keep their own roles and keyboard behavior.
+- **org-chart-manager-holds-no-link** - A manager's card is the summary that opens the team, so a link or button inside it competes with that. Link the profile elsewhere; only a card without reports can be an <a class="org-chart-node">.
 
 ### page-footer
 

@@ -193,5 +193,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed field label, toggle and padding keyed to :dir() and logical date range bands: 69,633 gzip bytes (+105).
   // Reviewed the sheet touch-action from #312 on top of the Sass review fixes: 69,649 gzip bytes (+16).
   // Reviewed aria-disabled pointer events, page-direction date range bands and the carousel's reduced-motion block on top of #312: 69,701 gzip bytes (+52).
-  assert.ok(sizes(css).gzip <= 69701, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the organization chart on top of the #315 review commits: 70,262 gzip bytes (+561).
+  assert.ok(sizes(css).gzip <= 70262, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -1,0 +1,192 @@
+@use "../abstracts" as *;
+
+// Organization chart. A reporting line drawn top down: a <ul class="org-chart">
+// of nested lists, one <li> per person. A person with reports holds a
+// <details open>: its <summary class="org-chart-node"> is the card and its
+// nested <ul> the reports, so the browser collapses a team. A person without
+// reports holds a <div class="org-chart-node">, or an <a> to a profile.
+//
+// A node stacks an optional .org-chart-role band, an .avatar and an
+// .org-chart-name. The nested lists carry the hierarchy to assistive
+// technology; the connector lines are drawn with pseudo-elements and say
+// nothing. Like .tree it is disclosures and links, not role="tree".
+//
+// Siblings sit side by side, so a wide chart scrolls sideways inside the
+// root list instead of the page. Right-to-left pages mirror the order.
+//
+// Tokens:
+//   --md-comp-org-chart-line-color              outline-variant
+//   --md-comp-org-chart-line-length             24px; each vertical connector
+//   --md-comp-org-chart-gap                     16px; between siblings
+//   --md-comp-org-chart-node-container-color    surface-container-high
+//   --md-comp-org-chart-node-shape              12px
+//   --md-comp-org-chart-role-container-color    primary-container
+//   --md-comp-org-chart-role-color              on-primary-container
+
+.org-chart {
+  --md-comp-org-chart-line-color: var(--md-sys-color-outline-variant);
+  --md-comp-org-chart-line-length: 24px;
+  --md-comp-org-chart-gap: 16px;
+  --md-comp-org-chart-node-container-color: var(--md-sys-color-surface-container-high);
+  --md-comp-org-chart-node-shape: 12px;
+  --md-comp-org-chart-role-container-color: var(--md-sys-color-primary-container);
+  --md-comp-org-chart-role-color: var(--md-sys-color-on-primary-container);
+  --_line: 1px solid var(--md-comp-org-chart-line-color);
+
+  display: flex;
+  // `safe` keeps an overflowing chart's start edge reachable by scrolling.
+  justify-content: safe center;
+  margin: $element-top-margin 0 $element-bottom-margin;
+  padding: 0 0 8px;
+  overflow-x: auto;
+  list-style: none;
+
+  ul {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: var(--md-comp-org-chart-line-length) 0 0;
+    list-style: none;
+
+    // The drop from the manager down to the bar over the reports.
+    &::before {
+      content: "";
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 50%;
+      block-size: var(--md-comp-org-chart-line-length);
+      border-inline-start: var(--_line);
+    }
+  }
+
+  li {
+    position: relative;
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding-inline: calc(var(--md-comp-org-chart-gap) / 2);
+  }
+
+  // Each report draws half the bar on either side of its centre and a drop
+  // from the bar to its card. The outer halves of the first and last
+  // report are left off, so the bar spans exactly from end card to end card.
+  ul > li {
+    padding-block-start: var(--md-comp-org-chart-line-length);
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset-block-start: 0;
+      inline-size: 50%;
+      block-size: var(--md-comp-org-chart-line-length);
+      border-block-start: var(--_line);
+    }
+
+    &::before {
+      inset-inline-end: 50%;
+    }
+
+    &::after {
+      inset-inline-start: 50%;
+      border-inline-start: var(--_line);
+    }
+
+    &:first-child::before,
+    &:last-child::after {
+      border-block-start: 0;
+    }
+  }
+}
+
+.org-chart-node {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  inline-size: fit-content;
+  min-inline-size: 128px;
+  max-inline-size: 192px;
+  margin-inline: auto;
+  padding: 16px;
+  border-radius: var(--md-comp-org-chart-node-shape);
+  overflow: hidden;
+  background-color: var(--md-comp-org-chart-node-container-color);
+  color: var(--md-sys-color-on-surface);
+  text-align: center;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  @include typescale("body-medium");
+
+  &:is(a, summary) {
+    cursor: pointer;
+    @include focus-visible;
+
+    &:hover {
+      background-image: linear-gradient(
+        color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent) 0 0
+      );
+    }
+  }
+
+  // A summary would otherwise show its own triangle; the card draws a
+  // caret under the name that turns over once the team is open.
+  &:is(summary) {
+    list-style: none;
+    user-select: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::after {
+      content: "";
+      flex: none;
+      inline-size: 24px;
+      block-size: 24px;
+      margin-block: -8px;
+      background-color: currentColor;
+      mask: $caret-down center / 24px no-repeat;
+      transition: rotate 150ms ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+
+      @include forced-colors-fill;
+    }
+  }
+
+  [open] > &::after {
+    rotate: 180deg;
+  }
+}
+
+// A band across the top of the card, so it must come first in the node.
+.org-chart-role {
+  align-self: stretch;
+  margin: -16px -16px 0;
+  padding: 8px 16px;
+  background-color: var(--md-comp-org-chart-role-container-color);
+  color: var(--md-comp-org-chart-role-color);
+  @include typescale("label-large");
+}
+
+.org-chart-name {
+  @include typescale("title-small");
+}
+
+// Forced colors drop the fills, so a border keeps each card and the band.
+@media (forced-colors: active) {
+  .org-chart-node {
+    border: 1px solid CanvasText;
+  }
+
+  .org-chart-role {
+    border-block-end: 1px solid CanvasText;
+  }
+}

@@ -60,6 +60,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Drag handle](#drag-handle) | unassessed | needs-review | no-mapped-checks | 1 |
 | [Badges](#badges) | unassessed | needs-review | needs-rerun | 0 |
 | [Avatar](#avatar) | implemented | source-reviewed | needs-rerun | 0 |
+| [Organization chart](#org-chart) | implemented | source-reviewed | incomplete | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | needs-rerun | 0 |
 | [Popover](#popover) | implemented | source-reviewed | needs-rerun | 0 |
 | [Tour](#tour) | unassessed | needs-review | incomplete | 0 |
@@ -891,6 +892,22 @@ Web adaptation: An <img> or a <span> with role="img" and a name; initials scale 
 - verification: Sizes, the circle, the group overlap and named initials are checked in a browser; image loading failures, enlarged text and spoken output remain unverified. Next: Read a group of avatars with a screen reader and confirm each name and the count are announced once; test enlarged text and RTL.
 
 - stale: [tests/avatar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/tests/avatar-browser.test.js): `chromium: avatar sizes its circle, names its initials and overlaps a group`. Default, small and large sizes, circle radius, image and initials names in the accessibility tree, and the group overlap in LTR and RTL. No spoken-output assertion.
+
+<a id="org-chart"></a>
+
+## Organization chart
+
+**implemented within the stated scope.** Nested lists of native disclosures drawn as cards under their manager, with connector lines, a role band, an avatar and a name, profile links on cards without reports, mirrored order in RTL and sideways scrolling when wide.
+
+Source review: source-reviewed, 2026-10-16. [src/sass/components/_org-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/src/sass/components/_org-chart.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-16); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: Native <details> managers and nested lists; every manager is a Tab stop and no tree role is promised.
+
+- verification: Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm each list's level and size and each manager's expanded state are announced; check forced colors and 200% text.
+
+- not-recorded: [tests/org-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/93db5863ce06b56136ecade392f04d479033d8d9/tests/org-chart-browser.test.js): `chromium: org chart centres each manager over its reports, collapses a team and scrolls when wide`. Reports side by side below their manager in order, the manager over its reports, the bar stopping at the end reports, the drop from the manager, mirrored order and bar in RTL, a narrow chart scrolling with every card's start reachable, Enter folding a team, the caret under reduced motion, the CanvasText caret in forced colors and nested lists in the accessibility tree. No spoken-output assertion.
 
 <a id="tooltips"></a>
 
