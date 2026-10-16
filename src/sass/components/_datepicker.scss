@@ -223,3 +223,25 @@
   padding: 0 1rem;
 }
 
+
+// Today, the selected day and the range are colour only, and forced colors
+// paint them all as Canvas.
+@media (forced-colors: active) {
+  .datepicker-day.is-today .datepicker-day-button {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
+  .is-selected .datepicker-day-button {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    color: HighlightText;
+  }
+
+  // A filled band would sit behind CanvasText day numbers, and no system
+  // color pair guarantees contrast there. Rule the band top and bottom.
+  .datepicker-day:is(.is-daterange-start, .is-daterange-end, .is-daterange)::before {
+    box-sizing: border-box;
+    border-block: 1px solid CanvasText;
+  }
+}

@@ -259,6 +259,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     border-radius: var(--md-comp-menu-item-selected-container-shape);
     background-color: var(--md-comp-menu-item-selected-container-color);
     color: var(--md-comp-menu-item-selected-label-text-color);
+    @include forced-colors-selected;
 
     > :is(a, button, #{$icon-label}) {
       color: var(--md-comp-menu-item-selected-label-text-color);

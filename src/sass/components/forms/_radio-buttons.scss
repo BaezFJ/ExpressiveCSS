@@ -110,3 +110,25 @@ label:has(> [type="radio"]:disabled),
   color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   cursor: default;
 }
+
+// Forced colors drop the gradient dot and the box-shadow focus ring.
+@media (forced-colors: active) {
+  label:has(> [type="radio"]) > [type="radio"],
+  .radio > [type="radio"] {
+    &:focus-visible {
+      outline: 2px solid CanvasText;
+      outline-offset: 2px;
+    }
+
+    &:checked {
+      forced-color-adjust: none;
+      border-color: Highlight;
+      background-image: radial-gradient(circle at center, Highlight 0 5px, transparent 5.5px);
+    }
+
+    &:disabled:checked {
+      border-color: GrayText;
+      background-image: radial-gradient(circle at center, GrayText 0 5px, transparent 5.5px);
+    }
+  }
+}

@@ -95,6 +95,13 @@ $_tab: "> a";
       outline: none;
     }
 
+    // The tint alone is faint and vanishes under forced colors. Inset, so the
+    // scrolling tab row does not clip it.
+    &:focus-visible {
+      @include focus-ring;
+      outline-offset: -3px;
+    }
+
     &.active {
       color: var(--md-comp-primary-tab-active-label-text-color);
       background-color: transparent;
@@ -139,6 +146,7 @@ $_tab: "> a";
         height: var(--md-comp-primary-tab-active-indicator-height);
         background-color: var(--md-comp-primary-tab-active-indicator-color);
         border-radius: var(--md-comp-primary-tab-active-indicator-shape);
+        @include forced-colors-fill(Highlight);
       }
     }
   }
@@ -153,6 +161,7 @@ $_tab: "> a";
     list-style: none;
     padding: 0;
     margin: 0;
+    @include forced-colors-fill(Highlight);
   }
 }
 

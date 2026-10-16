@@ -4,28 +4,9 @@
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseRules, sheet } from './css.js';
+import { mediaRules, sheet } from './css.js';
 
-const css = sheet();
-
-/** Every rule nested in a reduced-motion media block, as parsed rules. */
-function reducedMotionRules() {
-  const out = [];
-  for (const match of css.matchAll(/@media \(prefers-reduced-motion: reduce\)\s*\{/g)) {
-    let depth = 1;
-    let i = match.index + match[0].length;
-    const start = i;
-    while (depth && i < css.length) {
-      if (css[i] === '{') depth++;
-      else if (css[i] === '}') depth--;
-      i++;
-    }
-    out.push(...parseRules(css.slice(start, i - 1)));
-  }
-  return out;
-}
-
-const reduced = reducedMotionRules();
+const reduced = mediaRules(sheet(), 'prefers-reduced-motion: reduce');
 const cancels = (pattern) =>
   reduced.some((r) => r.selectors.some((s) => pattern.test(s)) && /transition:\s*none/.test(r.body));
 

@@ -134,6 +134,7 @@ $_vibrant: "#{$_toolbar}.vibrant";
     &.active {
       background-color: var(--md-comp-toolbar-selected-container-color);
       color: var(--md-comp-toolbar-selected-color);
+      @include forced-colors-selected;
     }
 
     &:disabled {

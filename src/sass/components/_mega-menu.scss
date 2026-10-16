@@ -52,6 +52,7 @@
     &[aria-current="page"] {
       background-color: var(--md-sys-color-secondary-container);
       color: var(--md-sys-color-on-secondary-container);
+      @include forced-colors-selected;
     }
   }
 

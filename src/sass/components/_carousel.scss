@@ -245,8 +245,11 @@
       cursor: pointer;
       transition: background-color 200ms ease-out;
 
+      @include forced-colors-fill(GrayText);
+
       &:is(.active, [aria-current="true"]) {
         background-color: var(--md-sys-color-primary);
+        @include forced-colors-fill;
       }
 
       @include focus-visible;

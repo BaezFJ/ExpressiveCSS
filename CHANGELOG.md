@@ -108,6 +108,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   reveal panel no longer animate. Carousels keep their normal layout and drop
   only smooth scrolling, size transitions and parallax. Before, a hero or
   multi-browse carousel ended up partly resized with no edge padding.
+- Selection and checked states stay visible with forced colors (Windows High
+  Contrast). Tabs, navigation bar and rail destinations, pagination, toolbar
+  actions, menu and list items, mega menu links and filter chips mark the
+  selected item with a Highlight outline. Checkboxes, radios and switches draw
+  their checked state in system colors and get an outline on keyboard focus.
+  The datepicker marks today, the selected day and the range. Small badges,
+  the loading indicator and carousel dots keep their shape. A keyboard-focused
+  tab also gets the focus ring instead of only a faint tint.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.

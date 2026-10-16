@@ -96,6 +96,7 @@
         background-color: var(--md-comp-nav-bar-active-indicator-color);
         color: var(--md-comp-nav-bar-active-color);
         --md-icon-fill: 1;
+        @include forced-colors-selected;
       }
     }
 
@@ -160,10 +161,12 @@
       &[aria-current] {
         background-color: var(--md-comp-nav-bar-active-indicator-color);
         color: var(--md-comp-nav-bar-active-color);
+        @include forced-colors-selected;
 
         > #{$icon} {
           background-color: transparent;
           color: inherit;
+          outline: none;
         }
       }
     }

@@ -197,6 +197,7 @@
   > li:has(:checked) {
     background-color: var(--md-comp-list-selected-container-color);
     color: var(--md-comp-list-selected-color);
+    @include forced-colors-selected;
 
     #{$icon},
     p,
