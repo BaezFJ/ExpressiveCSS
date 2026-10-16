@@ -9,7 +9,7 @@ Component ID: `switches`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `df5a00f6541e03ac83128b567dfe2023980696da4839bf15735044e5693af9ee`
+Contract SHA-256: `cbfc70d4270121e1b5172a358096faad93be88bcb6c3def3b305e4a284f80ed3`
 
 #### Selection and adaptation
 
