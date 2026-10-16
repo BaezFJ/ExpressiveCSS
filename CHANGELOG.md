@@ -78,6 +78,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Focused read-only text fields now show the focus underline. The field's
   focus styles skipped `[readonly]`, and FormSelect makes its combobox input
   read-only, so a focused select had no visible focus indicator.
+- `@use "expressive" with ($md-source: …)` now sets the theme seed, as the
+  changelog for 0.13.0 and the migration skill describe. The variable moved
+  to `abstracts/_variables.scss`; before, Sass rejected the configuration
+  because the tokens layer is loaded with `meta.load-css()`.
 - The modular entry now exports the option types of `CommandPalette`,
   `Confetti`, `Particles`, `Keypad`, `MessageScroller`, `RichTextEditor` and
   `MapView`, as it already did for the other components.

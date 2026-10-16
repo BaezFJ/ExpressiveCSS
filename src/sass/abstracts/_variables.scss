@@ -21,6 +21,13 @@ $trend-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' 
 // The drop-down chevron: a select's caret and a mega menu button's trailing icon.
 $caret-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") !default;
 
+// Mist Iris is the default seed for the generated ramps. Primary, secondary,
+// tertiary and neutral colors derive from it; the error ramp stays fixed. It
+// lives here rather than in tokens/_reference so `@use "expressive" with
+// ($md-source: ...)` reaches it: only abstracts is forwarded, and the layers
+// are loaded with meta.load-css(), which takes no configuration.
+$md-source: #c6a0f6 !default;
+
 // Colors
 //
 // The 2014 Material palette ($colors + colorFunc()) is gone. It generated 532

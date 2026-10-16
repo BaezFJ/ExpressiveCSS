@@ -64,6 +64,8 @@ test('default custom Sass matches the complete stylesheet and preserves configur
   assert.match(empty, /--md-sys-color-primary:/);
   assert.doesNotMatch(empty, /@font-face|\.datepicker|\.tabs/);
   assert.doesNotMatch(empty, /\.scroll-area/);
+  const seeded = compileString('@use "expressive" with ($md-source: #6750a4, $expressive-include-fonts: false);', options).css;
+  assert.match(seeded, /--md-source: ?#6750a4/);
   const scrollArea = compileString('@use "custom" with ($components: (), $utilities: ("scroll-area"), $expressive-include-fonts: false);', options).css;
   assert.match(scrollArea, /\.scroll-area\{overflow:auto;scrollbar-width:thin/);
   assert.doesNotMatch(scrollArea, /\.datepicker|\.tabs|\.overflow-x-auto/);
