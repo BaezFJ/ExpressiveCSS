@@ -9,7 +9,7 @@ Component ID: `tooltips`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `26c0755503d4b62ff0b46abaa762decd3dba0d9f3c5616ae1c11c92a7af9f150`
+Contract SHA-256: `eb3a4795e9f66a52a9925469a607609f2cdcc59308254156a4e79295d49b8a29`
 
 #### Selection and adaptation
 
