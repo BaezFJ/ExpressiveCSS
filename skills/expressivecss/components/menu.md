@@ -9,7 +9,7 @@ Component ID: `menu`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6c74a70f67d0a02a0e88e7ffae6cdea4722301373ca61b757e2f63ab3ab6d299`
+Contract SHA-256: `5142eada64c94b5649e21327b89746025f64f1ffd15082356e3c6f0fc13e4191`
 
 #### Selection and adaptation
 
@@ -41,7 +41,7 @@ Closing menus are excluded from keyboard focus, and close callbacks preserve foc
 
 Inside open or closed shadow roots, `closeOnClick` controls item clicks just as it does in the document. Submenu triggers keep the parent menu open; outside clicks dismiss it.
 
-A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by default; add `.suffix` to send it to the trailing edge, since a lone icon is indistinguishable from a leading one in CSS. A `<kbd>` or a `.badge` is always trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid (it still renders); a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
+A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by default; add `.suffix` to send it to the trailing edge, since a lone icon is indistinguishable from a leading one in CSS. A `<kbd>` or a `.badge` is always trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid and is not styled; a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
 
 #### Syntax
 

@@ -112,24 +112,16 @@ browserTest('enlarged text grows a button instead of overflowing it', async () =
 for (const engine of [chromium, firefox, webkit]) {
 if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine.name()) continue;
 const fileTest = existsSync(engine.executablePath()) ? test : test.skip;
-fileTest(`file triggers center legacy labels and reserve space for selected filenames (${engine.name()})`, async () => {
+fileTest(`file triggers reserve space for selected filenames (${engine.name()})`, async () => {
   const browser = await engine.launch({ headless: true });
   try {
     const page = await browser.newPage({ viewport: { width: 320, height: 900 } });
     await page.setContent(`<style>${css}</style>
-      <div class="file-field" style="width: 300px">
-        <div id="legacy" class="btn"><span>Upload</span><input type="file"></div>
-        <div class="file-path-wrapper"><input class="file-path" value="orders.csv" readonly aria-label="Selected file"></div>
-      </div>
       <div class="file-field" style="width: 150px">
         <label class="button"><span>${long}</span><input type="file"></label>
         <div id="path" class="file-path-wrapper"><input class="file-path" value="orders.csv" readonly aria-label="Selected file"></div>
       </div>`);
-    const boxes = await measure(page);
-    assert.deepEqual({
-      legacyCentered: Math.abs(boxes.legacy.topInset - boxes.legacy.bottomInset) <= 1,
-      pathVisible: await page.locator('#path').evaluate(el => el.getBoundingClientRect().width >= 60)
-    }, { legacyCentered: true, pathVisible: true });
+    assert.equal(await page.locator('#path').evaluate(el => el.getBoundingClientRect().width >= 60), true, 'the filename stays visible');
   } finally {
     await browser.close();
   }

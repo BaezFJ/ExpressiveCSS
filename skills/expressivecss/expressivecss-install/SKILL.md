@@ -79,7 +79,7 @@ Load the compiled stylesheet, then the IIFE JavaScript bundle near the end of `<
 
 The `theme` attribute only works on `<html>` (or a shadow host). Drop both `<script>` tags on a CSS-only page. For persistent navigation, start from the matching layout template: [compact](../assets/templates/layout-compact.html), [navigation rail](../assets/templates/layout-rail.html), [expanded rail](../assets/templates/layout-expanded.html), [list-detail](../assets/templates/layout-list-detail.html), or [dashboard](../assets/templates/layout-dashboard.html). The screen recipes in the [design rules](../references/design-rules.md) explain when each fits.
 
-The compiled stylesheet ships `@font-face` rules for Material Symbols (outlined, rounded, sharp), Roboto 400/500, and Noto Sans 400/500. Keep `dist/fonts/` next to `dist/css/` so the relative `url(../fonts/...)` paths resolve. Override the brand and plain typeface tokens when the page uses different typefaces. `.material-icons` is a compatibility alias that uses Symbols; do not load the older Material Icons stylesheet.
+The compiled stylesheet ships `@font-face` rules for Material Symbols (outlined, rounded, sharp), Roboto 400/500, and Noto Sans 400/500. Keep `dist/fonts/` next to `dist/css/` so the relative `url(../fonts/...)` paths resolve. Override the brand and plain typeface tokens when the page uses different typefaces. Do not load the older Material Icons stylesheet; use `.material-symbols`.
 
 ## Rules
 

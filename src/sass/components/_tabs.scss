@@ -3,7 +3,7 @@
 // Tabs.
 //
 // Anatomy is the HTML. A <nav class="tabs"> of <a href="#panel"> is the
-// bar. A heading or <span> is the label; a leading <i> is the icon.
+// bar. A heading or <span> is the label; a leading icon is the icon.
 // .active is the selected tab. Helpers: .tabs-secondary, .horizontal,
 // .max.
 //
@@ -17,13 +17,10 @@
 //   divider     1dp outline-variant
 //   disabled    38%
 
-// Comma list of tab-link selectors. Always nest suffixes inside
-// `#{$_tab} { &.foo {} }` — interpolating `#{$_tab}.foo` only
-// attaches `.foo` to the last alternative and leaves `> a` bare
-// (same bug as the icon size classes). That compiled the disabled
-// rule as `.tabs > a, .tabs > .tab > a.disabled`, so every
-// `nav.tabs > a` got pointer-events:none and could not switch panels.
-$_tab: "> a, > .tab > a";
+// The tab link. Nest suffixes inside `#{$_tab} { &.foo {} }`: when this
+// was a comma list, `#{$_tab}.foo` attached `.foo` to the last alternative
+// only and compiled the disabled rule onto every `nav.tabs > a`.
+$_tab: "> a";
 
 .tabs {
   --md-comp-primary-tab-container-color: var(--md-sys-color-surface);
@@ -52,14 +49,6 @@ $_tab: "> a, > .tab > a";
 
   &::-webkit-scrollbar {
     display: none;
-  }
-
-  > .tab {
-    display: flex;
-    flex: 0 0 auto;
-    list-style: none;
-    margin: 0;
-    padding: 0;
   }
 
   #{$_tab} {
@@ -120,8 +109,7 @@ $_tab: "> a, > .tab > a";
       background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), transparent);
     }
 
-    // Disabled — on the <a>. The wrapping `.tab.disabled` case is
-    // below; it cannot live in this block.
+    // Disabled — on the <a>.
     &.disabled,
     &[aria-disabled="true"] {
       color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
@@ -166,13 +154,6 @@ $_tab: "> a, > .tab > a";
     padding: 0;
     margin: 0;
   }
-
-  > .tab.disabled > a {
-    color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
-    background-color: transparent;
-    cursor: default;
-    pointer-events: none;
-  }
 }
 
 // Secondary — 48dp, icons inline, 2dp indicator.
@@ -199,7 +180,7 @@ $_tab: "> a, > .tab > a";
 
 // Equal-width tabs. Default on compact so a few destinations still fill.
 .tabs.max {
-  > :is(a, .tab) {
+  > a {
     flex: 1 1 0;
     min-width: 0;
   }
@@ -211,7 +192,7 @@ $_tab: "> a, > .tab > a";
 
 @include bp-down("expanded") {
   .tabs {
-    > :is(a, .tab) {
+    > a {
       flex: 1 1 0;
       min-width: 0;
     }
@@ -220,5 +201,30 @@ $_tab: "> a, > .tab > a";
       width: 100%;
       padding-inline: 12px;
     }
+  }
+}
+
+// Swipeable tabs. The script moves the panels into this track, one panel per
+// track width, so a touch or trackpad swipe is native scrolling and the snap
+// settles it on a panel.
+.tabs-content {
+  display: flex;
+  align-items: flex-start;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > * {
+    flex: 0 0 100%;
+    box-sizing: border-box;
+    min-width: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
 }

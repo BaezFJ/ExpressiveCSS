@@ -510,7 +510,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     const browser = await type.launch();
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 700 } });
-      for (const direction of ['ltr', 'rtl']) for (const variant of ['side-sheet', 'side-sheet end', 'right', 'right-sheet', 'side-sheet start', 'left', 'left-sheet']) for (const modal of [false, true]) for (const motion of ['reduce', 'no-preference']) {
+      for (const direction of ['ltr', 'rtl']) for (const variant of ['side-sheet', 'side-sheet end', 'side-sheet start']) for (const modal of [false, true]) for (const motion of ['reduce', 'no-preference']) {
         await sheetFixture(page, { variant, direction, modal, motion });
         const start = /start|left/.test(variant), left = start !== (direction === 'rtl');
         if (motion === 'no-preference') assert.equal(await page.evaluate(() => parseFloat(entryShift)), left ? -100 : 100, `${variant} ${direction} enters from its docked edge`);
@@ -760,7 +760,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     let page;
     try {
       page = await browser.newPage({ viewport: { width: 600, height: 900 } });
-      for (const reducedMotion of ['reduce', 'no-preference']) for (const layout of ['flat', '', 'hero', 'hero center-aligned', 'uncontained', 'full-screen']) for (const direction of ['ltr', 'rtl']) {
+      for (const reducedMotion of ['reduce', 'no-preference']) for (const layout of ['', 'hero', 'hero center-aligned', 'uncontained', 'full-screen']) for (const direction of ['ltr', 'rtl']) {
         await page.emulateMedia({ reducedMotion });
         await page.setContent(`<style>${css}</style><button id="previous" type="button">Previous</button><button id="next" type="button">Next</button><div class="carousel ${layout}" dir="${direction}" style="width:360px" aria-label="Places">${[1, 2, 3, 4].map(n => `<article class="carousel-item" tabindex="0">Place ${n}<input aria-label="Note ${n}"><span contenteditable="">Edit</span></article>`).join('')}</div>`);
         await page.addScriptTag({ content: js });
@@ -871,7 +871,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     let page;
     try {
       page = await browser.newPage({ reducedMotion: 'no-preference' });
-      await page.setContent(`<style>${css}</style><div class="carousel flat" style="width:320px">
+      await page.setContent(`<style>${css}</style><div class="carousel uncontained" style="width:320px">
         <article class="carousel-item">One</article><article class="carousel-item">Two</article><article class="carousel-item active">Three</article></div>`);
       await page.addScriptTag({ content: js });
       const pending = await page.evaluate(() => {
@@ -899,7 +899,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     let page;
     try {
       page = await browser.newPage();
-      await page.setContent(`<style>${css}</style><div class="carousel flat" style="width:320px"><article class="carousel-item">One</article><article class="carousel-item">Two</article></div>`);
+      await page.setContent(`<style>${css}</style><div class="carousel uncontained" style="width:320px"><article class="carousel-item">One</article><article class="carousel-item">Two</article></div>`);
       await page.addScriptTag({ content: js });
       const pending = await page.evaluate(() => {
         const timers = new Set(), schedule = window.setTimeout, cancel = window.clearTimeout;
@@ -927,7 +927,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       // reach the 500ms interval before the test focuses or hovers the track.
       await page.clock.install({ time: 0 });
       await page.clock.pauseAt(1000);
-      await page.setContent(`<style>${css}</style><button id="toggle" type="button">Pause</button><button id="outside" type="button">Outside</button><div class="carousel flat" style="width:320px" aria-label="Places">${[1, 2, 3].map(n => `<article class="carousel-item" tabindex="0">Place ${n}</article>`).join('')}</div>`);
+      await page.setContent(`<style>${css}</style><button id="toggle" type="button">Pause</button><button id="outside" type="button">Outside</button><div class="carousel uncontained" style="width:320px" aria-label="Places">${[1, 2, 3].map(n => `<article class="carousel-item" tabindex="0">Place ${n}</article>`).join('')}</div>`);
       await page.addScriptTag({ content: js });
       await page.evaluate(() => {
         window.cycles = 0;
@@ -990,7 +990,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       // reach the 500ms interval before the test focuses or hovers the track.
       await page.clock.install({ time: 0 });
       await page.clock.pauseAt(1000);
-      await page.setContent(`<style>${css}</style><button id="outside" type="button">Outside</button><div class="carousel flat" style="width:320px" aria-label="Places">${[1, 2, 3].map(n => `<article class="carousel-item" tabindex="0">Place ${n}<button type="button">Action ${n}</button></article>`).join('')}</div>`);
+      await page.setContent(`<style>${css}</style><button id="outside" type="button">Outside</button><div class="carousel uncontained" style="width:320px" aria-label="Places">${[1, 2, 3].map(n => `<article class="carousel-item" tabindex="0">Place ${n}<button type="button">Action ${n}</button></article>`).join('')}</div>`);
       await page.addScriptTag({ content: js });
       await page.evaluate(() => {
         window.cycles = 0;
@@ -1162,7 +1162,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     let page;
     try {
       page = await browser.newPage();
-      await page.setContent('<select><option value="one">One</option></select><input class="datepicker"><div id="result"></div>');
+      await page.setContent('<select><option value="one">One</option></select><input class="date-picker"><div id="result"></div>');
       await page.addScriptTag({ content: js });
       const result = await page.evaluate(() => {
         window.injected = false;
@@ -1171,7 +1171,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         let select, date;
         try {
           select = Expressive.FormSelect.init(document.querySelector('select'));
-          date = Expressive.Datepicker.init(document.querySelector('input.datepicker'));
+          date = Expressive.Datepicker.init(document.querySelector('input.date-picker'));
           const host = document.querySelector('#result');
           host.innerHTML = date.renderTitle(date, 0, 2026, 8, 2026, payload) + date.renderTable(date.options, [], payload);
           let rejected = 0;
@@ -1822,10 +1822,17 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         await page.locator('a[href="#two"]').click();
         await expect(page.locator('a[href="#two"]')).toBeFocused();
         assert.deepEqual(await page.evaluate(() => shown), ['two']);
-        await page.evaluate(() => tabs._tabsCarousel.next());
+        await page.waitForFunction(() => tabs._scrollTarget === null);
+        await page.evaluate(() => {
+          const track = document.querySelector('.tabs-content');
+          const sign = getComputedStyle(track).direction === 'rtl' ? -1 : 1;
+          track.scrollTo({ left: sign * 2 * track.clientWidth, behavior: 'instant' });
+        });
         await expect(page.locator('a[href="#three"]')).toHaveAttribute('aria-current', 'page');
         assert.deepEqual(await page.evaluate(() => ({ shown, index: tabs.index, panel: tabs._content.id })), { shown: ['two', 'three'], index: 2, panel: 'three' });
         await expect(page.locator('#three')).toHaveClass(/active/);
+        // Only the shown panel is reachable; the others sit off to the side.
+        assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('section')].map(s => s.inert)), [true, true, false]);
         await page.evaluate(() => tabs.destroy());
       }
     } finally {
@@ -1898,6 +1905,58 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     }
   });
 
+  browserTest(`Tabs keep a clicked tab when the scroll is slow to start (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await fixture(page, { swipeable: true });
+      // A busy page: the first scroll starts 700ms late, after the 500ms wait
+      // for a stalled scroll has run out.
+      await page.evaluate(() => {
+        const track = document.querySelector('.tabs-content');
+        const scrollTo = track.scrollTo.bind(track);
+        let delayed = false;
+        track.scrollTo = (options) => {
+          if (delayed) return scrollTo(options);
+          delayed = true;
+          setTimeout(() => scrollTo(options), 700);
+        };
+      });
+      await page.locator('a[href="#two"]').click();
+      await page.waitForTimeout(1200);
+      assert.deepEqual(await page.evaluate(() => ({ shown, panel: tabs._content.id, index: tabs._trackIndex() })), { shown: ['two'], panel: 'two', index: 1 });
+    } finally {
+      try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }
+    }
+  });
+
+  browserTest(`Tabs started while hidden show the current panel once visible (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      // A tab bar in a closed dialog or sheet: the track is 0px wide when it is built.
+      await page.setContent(`<style>${css}</style><div id="wrap" style="display:none;width:320px">
+        <nav class="tabs" aria-label="Sections"><a href="#one">One</a><a href="#two">Two</a><a href="#three" class="active">Three</a></nav>
+        <section id="one"><button>First action</button></section><section id="two"><button>Second action</button></section><section id="three"><button>Third action</button></section></div>`);
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => {
+        window.tabs = Expressive.Tabs.init(document.querySelector('nav'), { swipeable: true });
+        document.getElementById('wrap').style.display = 'block';
+      });
+      await page.waitForFunction(() => {
+        const track = document.querySelector('.tabs-content').getBoundingClientRect();
+        return Math.abs(document.getElementById('three').getBoundingClientRect().left - track.left) < 2;
+      });
+      assert.equal(await page.evaluate(() => document.getElementById('three').inert), false);
+      await expect(page.locator('a[aria-current="page"]')).toHaveAttribute('href', '#three');
+    } finally {
+      try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }
+    }
+  });
+
   browserTest(`Tabs threshold keeps native links and ordinary panels (${engine})`, async () => {
     const browser = await type.launch();
     let page;
@@ -1928,7 +1987,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     }
   });
 
-  browserTest(`Tabs hash selection, native dragging and overflow geometry (${engine})`, async () => {
+  browserTest(`Tabs hash selection, native swiping and overflow geometry (${engine})`, async () => {
     const browser = await type.launch();
     let page;
     try {
@@ -1938,25 +1997,24 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         await page.emulateMedia({ reducedMotion });
         await fixture(page, { swipeable: true, responsiveThreshold: 800, direction, staleActive: true });
         assert.equal(await page.evaluate(() => tabs.index), 1);
-        assert.equal(await page.evaluate(() => tabs._tabsCarousel.center), 1);
+        assert.equal(await page.evaluate(() => tabs._trackIndex()), 1);
         await expect(page.locator('section.active')).toHaveAttribute('id', 'two');
         assert.deepEqual(await page.evaluate(() => shown), []);
         await expect(page.locator('a[href="#two"]')).toHaveAttribute('aria-current', 'page');
         await page.waitForTimeout(450);
-        const box = await page.locator('.carousel-track').boundingBox();
-        const start = direction === 'ltr' ? box.x + box.width - 25 : box.x + 25;
-        const end = direction === 'ltr' ? box.x + 25 : box.x + box.width - 25;
-        await page.mouse.move(start, box.y + box.height - 20);
-        await page.mouse.down();
-        await page.mouse.move(end, box.y + box.height - 20, { steps: 15 });
-        await page.mouse.up();
+        // A touch swipe is native scrolling; scrolling one panel on is its end state.
+        await page.evaluate(() => {
+          const track = document.querySelector('.tabs-content');
+          const sign = getComputedStyle(track).direction === 'rtl' ? -1 : 1;
+          track.scrollBy({ left: sign * track.clientWidth, behavior: 'instant' });
+        });
         await expect(page.locator('a[href="#three"]')).toHaveAttribute('aria-current', 'page');
         assert.deepEqual(await page.evaluate(() => shown), ['three']);
         await page.locator('a[href="#three"]').focus();
         await page.waitForTimeout(200);
         const geometry = await page.evaluate(() => {
           const link = tabs._activeTabLink.getBoundingClientRect(), indicator = tabs._indicator.getBoundingClientRect();
-          const panel = tabs._content.getBoundingClientRect(), track = document.querySelector('.carousel-track').getBoundingClientRect();
+          const panel = tabs._content.getBoundingClientRect(), track = document.querySelector('.tabs-content').getBoundingClientRect();
           return { delta: Math.abs(link.left - indicator.left), width: Math.abs(link.width - indicator.width), visible: panel.right > track.left && panel.left < track.right };
         });
         assert.ok(geometry.delta <= 2 && geometry.width <= 2 && geometry.visible, JSON.stringify(geometry));

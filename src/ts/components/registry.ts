@@ -14,13 +14,13 @@ import { EXPANDING_CARD_SELECTOR } from "./expandingCard";
  * is forgotten.
  *
  * A component that should only ever be constructed explicitly (Snackbar,
- * CharacterCounter, Range, ...) simply stays out of this table.
+ * CharacterCounter, ...) simply stays out of this table.
  */
 export const AUTO_INIT_COMPONENTS = {
   AppBar: {
     component: Components.AppBar,
     selector:
-      "header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > :is(.search-bar, .searchbar))",
+      "header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > .search-bar)",
   },
   Autocomplete: {
     component: Components.Autocomplete,
@@ -59,7 +59,7 @@ export const AUTO_INIT_COMPONENTS = {
   },
   Datepicker: {
     component: Components.Datepicker,
-    selector: ".datepicker, .date-picker",
+    selector: ".date-picker",
   },
   LineChart: { component: Components.LineChart, selector: ".line-chart" },
   Menu: { component: Components.Menu, selector: ".menu-trigger" },
@@ -77,7 +77,7 @@ export const AUTO_INIT_COMPONENTS = {
   Tabs: { component: Components.Tabs, selector: ".tabs" },
   Timepicker: {
     component: Components.Timepicker,
-    selector: ".timepicker, .time-picker",
+    selector: ".time-picker",
   },
   Tooltip: { component: Components.Tooltip, selector: ".tooltipped" },
   FloatingActionButton: {

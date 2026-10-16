@@ -542,7 +542,6 @@ scenario('progress remains visible in forced colors', `
 <div id="bare-motion" class="progress" role="progressbar" aria-label="Preparing"></div>
 <span id="circle-fill" class="progress circular determinate" role="progressbar" aria-label="Circular upload" aria-valuenow="25" style="--md-comp-progress-value:25%"></span>
 <span id="circle-motion" class="progress circular" role="status" aria-label="Connecting"></span>
-<span id="legacy-motion" class="preloader" role="status" aria-label="Waiting"></span>
 </section>`, async page => {
   await page.addStyleTag({ content: '#contrast *, #contrast ::after { transition:none; }' });
   for (const colorScheme of ['light', 'dark']) {
@@ -596,7 +595,7 @@ scenario('progress remains visible in forced colors', `
           return animations.length;
         });
         assert.equal(animations > 0, reducedMotion === 'no-preference');
-        for (const id of ['native-motion', 'custom-motion', 'bare-motion', 'circle-motion', 'legacy-motion']) {
+        for (const id of ['native-motion', 'custom-motion', 'bare-motion', 'circle-motion']) {
           const indicator = page.locator(`#${id}`);
           const png = utilsBundle.PNG.sync.read(await indicator.screenshot());
           let ink = 0;
@@ -1821,7 +1820,7 @@ scenario('slider stops sit at each step from min, need a usable step and clear o
 <div id="uneven" class="slider stops" style="width:364px;--md-sys-color-on-primary:red"><input type="range" aria-label="Uneven" min="0" max="100" step="30" value="90"></div>
 <div id="uneven-rtl" class="slider stops" dir="rtl" style="width:364px;--md-sys-color-on-primary:red"><input type="range" aria-label="Uneven" min="0" max="100" step="30" value="90"></div>
 <div id="ltr-input" class="slider stops" dir="rtl" style="width:364px;--md-sys-color-on-primary:red"><input dir="ltr" type="range" aria-label="Left to right" min="0" max="100" step="30" value="90"></div>
-<div id="icon" class="slider m stops" style="width:364px;--md-sys-color-on-primary:red"><i aria-hidden="true"></i><input type="range" aria-label="Icon" min="0" max="100" step="5" value="30"></div>
+<div id="icon" class="slider m stops" style="width:364px;--md-sys-color-on-primary:red"><span class="material-symbols" aria-hidden="true"></span><input type="range" aria-label="Icon" min="0" max="100" step="5" value="30"></div>
 <div id="no-step" class="slider stops" style="width:364px;--md-sys-color-on-primary:red"><input type="range" aria-label="No step" min="0" max="100" value="90"></div>
 <div id="any-step" class="slider stops" style="width:364px;--md-sys-color-on-primary:red"><input type="range" aria-label="Any step" min="0" max="100" step="any" value="90"></div>
 <div id="zero-step" class="slider stops" style="width:364px;--md-sys-color-on-primary:red"><input type="range" aria-label="Zero step" min="0" max="100" step="0" value="90"></div>`, async page => {

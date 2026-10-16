@@ -23,7 +23,7 @@ const S = defineSections([
           Tokens follow the
           <a href="https://m3.material.io/components/switch/specs">M3 switch spec</a>.
           The track is 52×32dp. Unselected is
-          <code>surface-variant</code> with a 2dp <code>outline</code> and
+          <code>surface-container-highest</code> with a 2dp <code>outline</code> and
           a 16dp handle. Selected is a <code>primary</code> track and a
           24dp <code>on-primary</code> handle. The state layer is 40dp at
           8% hover and 10% focus. The touch target is 48dp. The label is
@@ -72,10 +72,6 @@ const S = defineSections([
 </label>
 `} />
         <p>
-          An <code>input + span</code> or <code>input + .lever</code> still
-          works if you already have that markup.
-        </p>
-        <p>
           The on/off captions are decoration. Left as bare text they are folded
           into the label, and the switch announces itself as "Off On". Hide
           them and name the control itself. A switch whose only text is a
@@ -86,7 +82,6 @@ const S = defineSections([
 <label class="switch">
   <span aria-hidden="true">Off</span>
   <input type="checkbox" aria-label="Dark mode">
-  <span class="lever"></span>
   <span aria-hidden="true">On</span>
 </label>
 `} />

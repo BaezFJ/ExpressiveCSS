@@ -3,15 +3,14 @@
 // Text fields.
 //
 // Anatomy is the HTML. .field is the container. The <label> after the
-// control is the floating label. A leading <i> (or .prefix) is the
-// leading icon; .suffix (or a second / trailing <i>) is the trailing
-// icon. Icons come before the control in the documented markup, so
+// control is the floating label. A .prefix icon is the leading icon and a
+// .suffix icon the trailing one. Icons come before the control in the documented markup, so
 // trailing cannot be selected with :last-child — that left .suffix
 // in flow above the well. <small> is supporting text. .outlined is
 // the outlined variant; the default is filled.
 //
 // Tokens follow https://m3.material.io/components/text-fields/specs
-//   filled     surface-variant well, 1rem corners, 1dp/2dp bottom indicator
+//   filled     surface-container-highest well, 1rem corners, 1dp/2dp bottom indicator
 //   outlined   1dp/2dp outline, 1rem corners
 //   height     56dp
 //   label      body-large rest, body-small floated
@@ -37,8 +36,8 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
 }
 
 // A .field is full of spans that are not the floating label: supporting text,
-// the character counter, the file path, the select caret, and - since field
-// icons stopped being <i> - the leading and trailing icons. Every rule that
+// the character counter, the file path, the select caret, and the leading and
+// trailing icons. Every rule that
 // styles "the label, or the span standing in for it" has to exclude all of
 // them, and there are five such rules. They were five hand-copied lists that
 // had already drifted (.file-path was in two of them), and adding .prefix /
@@ -166,17 +165,10 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     @include typescale("body-small");
   }
 
-  // Shared icon box. Position is set on the leading / trailing rules;
-  // a lone <i> matches several of the :is() items and must not pick
-  // a side here.
-  //
-  // The `i` rules are the legacy path and still work. They cannot be widened
-  // to the canonical <span class="material-symbols"> form, because they lean
-  // on :first-of-type / :last-of-type - which count elements of the same
-  // *type*, and a field is full of other spans (.supporting-text, .caret,
-  // .character-counter, .file-path). So the documented markup names the side
-  // explicitly with .prefix / .suffix, and those rules key on nothing else.
-  > i:is(.prefix, .suffix, :first-of-type, :last-of-type, :last-child),
+  // Shared icon box. Position is set on the leading / trailing rules. The
+  // side is named with .prefix / .suffix rather than taken from position:
+  // :first-of-type counts elements of the same *type*, and a field is full
+  // of other spans (.supporting-text, .caret, .character-counter, .file-path).
   > :is(.prefix, .suffix):not(.icon-button) {
     position: absolute;
     top: 16px;
@@ -190,16 +182,11 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     user-select: none;
   }
 
-  > i:first-of-type:not(.suffix):not(:last-child),
-  > i.prefix,
   > .prefix {
     left: 12px;
     pointer-events: none;
   }
 
-  > i.suffix,
-  > i:last-of-type:not(:first-of-type),
-  > i:last-child:not(:first-child):not(.prefix),
   > .suffix:not(.icon-button) {
     right: 12px;
     // Both icons inherited this from the floating-label rule until they were
@@ -217,15 +204,14 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     z-index: 1;
   }
 
-  &:has(> i:first-of-type:not(.suffix):not(:last-child), > i.prefix, > .prefix) {
+  &:has(> .prefix) {
     > :is(input, textarea) {
       padding-left: 52px;
     }
 
     // The exclusion list is what stops this indenting things that are not the
-    // floating label. .prefix / .suffix joined it when field icons stopped
-    // being <i> and became spans - without them the leading icon was pushed
-    // to 52px, i.e. indented past its own padding.
+    // floating label. Without .prefix / .suffix in it the leading icon was
+    // pushed to 52px, i.e. indented past its own padding.
     > :is(
       label,
       span:not(#{$_not-label})
@@ -234,7 +220,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     }
   }
 
-  &:has(> i.suffix, > i:last-of-type:not(:first-of-type), > i:last-child:not(:first-child):not(.prefix), > .suffix) {
+  &:has(> .suffix) {
     > :is(input, textarea) {
       padding-right: 52px;
     }
@@ -266,7 +252,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
         left: 16px;
         margin-left: -4px;
         padding: 0 4px;
-        background-color: var(--md-sys-color-background);
+        background-color: var(--md-sys-color-surface);
       }
 
       &:disabled,
@@ -333,7 +319,7 @@ textarea {
       isolation: isolate;
     }
 
-    > :is(i, .prefix, .suffix) {
+    > :is(.prefix, .suffix) {
       z-index: 1;
     }
   }

@@ -9,7 +9,7 @@ Component ID: `search`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6c74a70f67d0a02a0e88e7ffae6cdea4722301373ca61b757e2f63ab3ab6d299`
+Contract SHA-256: `5142eada64c94b5649e21327b89746025f64f1ffd15082356e3c6f0fc13e4191`
 
 #### Selection and adaptation
 
@@ -39,7 +39,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 A `<search>` with `search-bar` on it is the bar: a leading icon or icon button, an `<input type="search">`, and whatever trailing actions the query needs. The element is the landmark, so there is no `role="search"` to add. The input goes in bare — the bar is the container, so none of the text-field chrome (`.field`, the underline, the floating label) applies.
 
-Spacing follows what is at each end: a bare glyph sits 16dp from the edge, an icon button 4dp, because the button already insets its own glyph by 12dp. An `<img>` in the bar is the account avatar — 30dp and circular; put it inside the button when it is tappable, so the 48dp target comes from the button. `.searchbar`, the pre-1.0 name, reaches the same rules.
+Spacing follows what is at each end: a bare glyph sits 16dp from the edge, an icon button 4dp, because the button already insets its own glyph by 12dp. An `<img>` in the bar is the account avatar — 30dp and circular; put it inside the button when it is tappable, so the 48dp target comes from the button.
 
 #### Syntax
 
@@ -60,4 +60,4 @@ The Search section of the [API reference](https://www.expressivecss.com/llm.md) 
 #### Rules
 
 - `search-view-not-a-composite-widget`: The search view takes no composite role. Its contents are links and buttons reached with Tab; the combobox and listbox belong to the Autocomplete on the bar's input.
-- `search-bar-holds-a-search-input`: The bar's control is a search input. `type="search"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it. The selector names `.search-bar` and deliberately not the `.searchbar` alias: pre-1.0 markup of that shape predates the requirement, and holding old markup to a rule it could not have known is how a promise of an additive rename gets broken.
+- `search-bar-holds-a-search-input`: The bar's control is a search input. `type="search"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it.

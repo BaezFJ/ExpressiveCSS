@@ -224,7 +224,7 @@ describe('M3 ramp generation', () => {
       const block = SCSS.match(new RegExp(`\\$sys-${scheme}:\\s*\\(([\\s\\S]*?)\\n\\)\\s*!default`));
       assert.ok(block, `$sys-${scheme} map not found`);
       const entries = [...block[1].matchAll(/"([a-z-]+)":\s*"([a-z-]+\d+)"/g)];
-      assert.equal(entries.length, 49, `$sys-${scheme} should map all 49 roles`);
+      assert.equal(entries.length, 45, `$sys-${scheme} should map all 45 roles`);
       for (const [, role, ref] of entries) {
         assert.ok(declared.has(ref), `$sys-${scheme} role "${role}" points at --md-ref-palette-${ref}, which is never declared`);
       }

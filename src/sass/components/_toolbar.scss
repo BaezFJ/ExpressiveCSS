@@ -3,7 +3,7 @@
 // Toolbars (M3 Expressive).
 //
 // Anatomy is the HTML. A <div class="toolbar"> is the bar. Direct
-// <button> / <a> children are the actions. An <i> is the icon; wrap a
+// <button> / <a> children are the actions. An icon is a .material-symbols span; wrap a
 // label in <span>. .active marks the selected action. A .filled action
 // is the emphasized control (the in-bar FAB). Helpers are only for
 // variants markup cannot express: .docked, .vibrant, .vertical, .fixed,
@@ -53,12 +53,11 @@
 // form is the older markup and still works.
 $_toolbar: ".toolbar";
 
-// The two axes. `.max` is an alias for docked; `.filled` is the older
-// name for vibrant. Both stay in the :is() lists.
-$_floating: "#{$_toolbar}:is(.floating, :not(.docked, .max))";
-$_docked: "#{$_toolbar}:is(.docked, .max)";
-$_standard: "#{$_toolbar}:is(.standard, :not(.vibrant, .filled))";
-$_vibrant: "#{$_toolbar}:is(.vibrant, .filled)";
+// The two axes.
+$_floating: "#{$_toolbar}:is(.floating, :not(.docked))";
+$_docked: "#{$_toolbar}.docked";
+$_standard: "#{$_toolbar}:is(.standard, :not(.vibrant))";
+$_vibrant: "#{$_toolbar}.vibrant";
 
 #{$_toolbar} {
   // Shared across all four variants. --md-comp-toolbar-color stands for
@@ -194,8 +193,7 @@ $_vibrant: "#{$_toolbar}:is(.vibrant, .filled)";
     margin: 0;
   }
 
-  // Spacer between leading and trailing actions. `.max` on a *child* is the
-  // spacer; on the bar itself it is the docked alias.
+  // Spacer between leading and trailing actions: a `.max` child.
   > .max {
     flex: 1 1 auto;
     align-self: stretch;

@@ -191,7 +191,7 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 </html>
 ```
 
-The IIFE bundle exposes the global `Expressive` object. The compiled stylesheet ships `@font-face` rules for variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes), Roboto 400 / 500, and the Noto Sans fallback. Keep `dist/fonts/` next to `dist/css/` so the relative font URLs resolve. Override the brand/plain tokens when the page uses different typefaces. The older Material Icons stylesheet is not required; `.material-icons` is a compat alias that uses Symbols.
+The IIFE bundle exposes the global `Expressive` object. The compiled stylesheet ships `@font-face` rules for variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes), Roboto 400 / 500, and the Noto Sans fallback. Keep `dist/fonts/` next to `dist/css/` so the relative font URLs resolve. Override the brand/plain tokens when the page uses different typefaces. Do not load the older Material Icons stylesheet; use `.material-symbols`.
 
 ## ES module setup
 
@@ -215,7 +215,7 @@ these calls alongside the root entry. `AutoInit` still includes the full registr
 Both ESM entries share constructors; hosting them directly requires their chunks.
 
 Use `@use "pkg:@expressivecss/expressive/scss/custom" with ($components:
-("icons-material-design", "tabs", "carousel"), $utilities: ());` with Sass's
+("icons-material-design", "tabs"), $utilities: ());` with Sass's
 Node package importer. Tokens and base remain included. Lists preserve the given
 order; `null` includes a whole group and `()` omits it. For FormSelect and
 Datepicker use `("icons-material-design", "buttons", "menu", "forms", "datepicker")`.
@@ -297,7 +297,7 @@ Opt an element out when it needs manual options:
 
 | Component | Selector |
 | --- | --- |
-| `AppBar` | `header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > :is(.search-bar, .searchbar))` |
+| `AppBar` | `header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > .search-bar)` |
 | `Autocomplete` | `.autocomplete` |
 | `ButtonGroup` | `.button-group` |
 | `Cards` | `article:has(> aside[id]:not([id=""])):not(:has(> aside ~ aside)):has(> button.card-reveal-trigger[type="button"], > :not(aside) button.card-reveal-trigger[type="button"])` |
@@ -316,7 +316,7 @@ Opt an element out when it needs manual options:
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
-| `Datepicker` | `.datepicker, .date-picker` |
+| `Datepicker` | `.date-picker` |
 | `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
 | `MessageScroller` | `.message-scroller` |
@@ -325,7 +325,7 @@ Opt an element out when it needs manual options:
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
 | `Tabs` | `.tabs` |
-| `Timepicker` | `.timepicker, .time-picker` |
+| `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
@@ -706,10 +706,8 @@ Where the shipped seed `#c6a0f6` lands, for the roles you will most often replac
 | `secondary-container` | #e8ddf2 | #4b4253 |
 | `tertiary` | #7a5059 | #e8b7c0 |
 | `error` | #ba1a1a | #ffb4ab |
-| `background` | #faf8fb | #090809 |
 | `surface` | #faf8fb | #090809 |
 | `on-surface` | #1c1b1d | #e3e1e4 |
-| `surface-variant` | #e5e0e9 | #49444b |
 | `outline` | #7a757c | #938e96 |
 
 `error` is the one row that does not move when you change the seed — it is the ramp that is not generated.
@@ -724,7 +722,7 @@ The full list of role utilities lives on the Color page. Pair a fill with its `o
 <article vibrant>…</article>
 ```
 
-The remap covers `surface`, `background`, all five `surface-container` rungs, `surface-dim`, `surface-bright`, `surface-variant`, and their `on-*` roles. Accent roles are untouched, so a filled button still stands out; outline roles are untouched too, because M3's outline is neutral-variant rather than an opacity of the text color, and deriving it would turn every checkbox, radio and switch border in the subtree translucent. It points at the live role names, so a runtime theme switch reaches it.
+The remap covers `surface`, all five `surface-container` rungs, `surface-dim`, `surface-bright`, and their `on-*` roles. Accent roles are untouched, so a filled button still stands out; outline roles are untouched too, because M3's outline is neutral-variant rather than an opacity of the text color, and deriving it would turn every checkbox, radio and switch border in the subtree translucent. It points at the live role names, so a runtime theme switch reaches it.
 
 There is one ramp, tertiary — M3's for this axis. Pointing the surfaces at primary or secondary would erase every component whose own fill is that container: a tonal button, a FAB, `.toolbar.vibrant`. Set the surface tokens on your own wrapper if you want a different one.
 
@@ -1182,8 +1180,6 @@ We provide easy to use classes to hide/show content on specific screen sizes.
 | `.show-on-extra-large` | Shown on Extra-large (`>= 1600px`) |
 | `.show-on-medium-and-up` | Shown from Medium (`>= 600px`) |
 | `.show-on-medium-and-down` | Shown on Compact and Medium (`< 840px`) |
-
-Legacy `small`, `med`, and `xxl` utility names remain aliases for compatibility.
 
 #### Usage
 
@@ -1983,7 +1979,7 @@ A FAB is `circle extra` or `circle large`: 56dp, 16dp corners, `primary-containe
 
 ### Sizes
 
-Five sizes. `small` is the default at 40dp with a 20dp icon, so it needs no class. The rest are `xsmall` (32dp, 20dp icon), `medium` (56dp, 24dp, `title-medium` label), `large` (96dp, 32dp, `headline-small`) and `xlarge` (136dp, 40dp, `headline-large`). The inset and the icon gap grow with the size, and an `outlined` button's border thickens with it — 1dp up to medium, 2dp large, 3dp extra large. `extra` is the pre-1.0 name for the 56dp button and still gives you that geometry, though not `medium`'s bigger label — it never carried one. The ladder is the common button's, and `circle` is on it: a `circle` is a round common button, so it takes its rung's box *and* its rung's glyph — 40dp with a 20dp icon by default, 136dp with a 40dp icon at `xlarge`. Only `circle extra` / `circle large` step off it, because those are FAB sizes with a ladder of their own. If you want the icon *button*'s numbers — 40dp with a 24dp icon — that component is `.icon-button`.
+Five sizes. `small` is the default at 40dp with a 20dp icon, so it needs no class. The rest are `xsmall` (32dp, 20dp icon), `medium` (56dp, 24dp, `title-medium` label), `large` (96dp, 32dp, `headline-small`) and `xlarge` (136dp, 40dp, `headline-large`). The inset and the icon gap grow with the size, and an `outlined` button's border thickens with it — 1dp up to medium, 2dp large, 3dp extra large. The ladder is the common button's, and `circle` is on it: a `circle` is a round common button, so it takes its rung's box *and* its rung's glyph — 40dp with a 20dp icon by default, 136dp with a 40dp icon at `xlarge`. Only `circle extra` / `circle large` step off it, because those are FAB sizes with a ladder of their own. If you want the icon *button*'s numbers — 40dp with a 24dp icon — that component is `.icon-button`.
 
 ```html
 <button class="xsmall">Extra small</button>
@@ -2551,7 +2547,6 @@ Expressive.AutoInit(document.body, {
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `duration` | Number | `200` | Milliseconds allowed for a programmatic scroll to land, and the part of each auto-advance rest that is not `interval`. |
-| `fullWidth` | Boolean | `false` | Full-width compatibility layout used by swipeable tabs. Prefer an M3 layout class for new carousels. |
 | `indicators` | Boolean | `false` | Legacy paging dots. M3 recommends a nearby Show all path instead of overlay controls. |
 | `noWrap` | Boolean | `false` | Stop auto-advance at the last item instead of looping back to the first. Arrow keys and `set()` stop at the ends either way — a scroll track has ends. |
 | `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. Each rest is armed by the move before it rather than on a fixed phase. |
@@ -2869,7 +2864,7 @@ The two-column layout is the page's own — a flex or grid row, or a pane layout
 
 Material tokenised the *vertical* handle — a 4×48dp bar in a 24dp hit target, `outline`, swelling to 12×52dp on a 12dp corner in `on-surface` while held. That is what `.drag-handle` draws. The container is sized to the pressed bar, so holding it moves nothing beside it. `cursor: grab` is the default; a splitter that resizes reads better as `cursor: col-resize`, which is one declaration of your own.
 
-On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. A decorative handle needs a separate non-drag dismiss path. A named `<button>` handle closes the sheet by click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>; a `form method="dialog"` close button is another option. Native Escape behavior depends on the opening mode, browser, and `closedby` policy, and is not a pointer alternative. Scrim dismissal also depends on the installed shared runtime and `closedby` policy; test it before relying on it. A drag that snaps back does not also activate the button because the runtime distinguishes the ending click from a tap. Pane resizing is the only other place a drag handle is wired. `.handle` is the pre-1.0 spelling and still works, decorative or wired.
+On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. A decorative handle needs a separate non-drag dismiss path. A named `<button>` handle closes the sheet by click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>; a `form method="dialog"` close button is another option. Native Escape behavior depends on the opening mode, browser, and `closedby` policy, and is not a pointer alternative. Scrim dismissal also depends on the installed shared runtime and `closedby` policy; test it before relying on it. A drag that snaps back does not also activate the button because the runtime distinguishes the ending click from a tap. Panes and sortable lists wire handles too, as described above.
 
 ```html
 <dialog class="bottom-sheet" aria-labelledby="sheet-title">
@@ -3468,16 +3463,16 @@ main {
 
 Google Material Icons and Material Symbols, sized with a few helper classes.
 
-Expressive uses Material Symbols: outlined, rounded, and sharp. The class names are Google's. `.material-icons` is a compat alias that uses the outlined Symbols family.
+Expressive uses Material Symbols: outlined, rounded, and sharp. The class names are Google's.
 
-**An icon is a `<span>`, not an `<i>`.** `<i>` means idiomatic text — a term, a thought, a phrase in another language — and an icon is none of those. `<i>` still renders; it is not the documented form.
+**An icon is a `<span>`, not an `<i>`.** `<i>` means idiomatic text — a term, a thought, a phrase in another language — and an icon is none of those. A bare `<i>` gets no icon styling.
 
 **An icon is either decoration or an image, and it has to say which.** The glyph is produced by a ligature, so the icon's text content is real text and a screen reader reads it: `<span class="material-symbols">add</span>` is announced as "add". Two correct forms:
 
 - Decoration — `aria-hidden="true"`. The enclosing control carries the name, so an icon-only button needs its own `aria-label`. This is almost always what you want.
 - An image in its own right — `role="img"` with an `aria-label`. Use this when the icon reports something no neighbouring text does, such as a badge count.
 
-The size and float modifiers (`tiny`, `small`, `medium`, `large`, `left`, `right`) hang off the icon class, not off `<i>`, so they follow either element.
+The size and float modifiers (`tiny`, `small`, `medium`, `large`, `left`, `right`) hang off the icon class, not off an element.
 
 Google publishes a [Material Symbols list](https://fonts.google.com/icons?icon.set=Material+Symbols). That catalog is the source for ligature names.
 
@@ -3798,7 +3793,7 @@ Escape closes an open nested menu first. A second Escape collapses the modal rai
   <button type="button" aria-label="Menu">
     <span class="material-symbols" aria-hidden="true">menu</span>
   </button>
-  <a class="button extra" href="/compose">
+  <a class="button" href="/compose">
     <span class="material-symbols" aria-hidden="true">edit</span>
     <span>Compose</span>
   </a>
@@ -4031,7 +4026,7 @@ Set these on the container to resize a layout.
 
 ## Progress indicators
 
-Native and custom progress use system colors in forced-colors mode, outline empty linear tracks, and preserve circular value segments. Reduced motion retains static feedback, including the legacy preloader. Browser emulation checks do not replace Windows high-contrast or screen-reader review.
+Native and custom progress use system colors in forced-colors mode, outline empty linear tracks, and preserve circular value segments. Reduced motion retains static feedback. Browser emulation checks do not replace Windows high-contrast or screen-reader review.
 
 Activity and progress indicators for content that takes time to load.
 
@@ -4131,7 +4126,7 @@ A search bar, and the view it expands into.
 
 A `<search>` with `search-bar` on it is the bar: a leading icon or icon button, an `<input type="search">`, and whatever trailing actions the query needs. The element is the landmark, so there is no `role="search"` to add. The input goes in bare — the bar is the container, so none of the text-field chrome (`.field`, the underline, the floating label) applies.
 
-Spacing follows what is at each end: a bare glyph sits 16dp from the edge, an icon button 4dp, because the button already insets its own glyph by 12dp. An `<img>` in the bar is the account avatar — 30dp and circular; put it inside the button when it is tappable, so the 48dp target comes from the button. `.searchbar`, the pre-1.0 name, reaches the same rules.
+Spacing follows what is at each end: a bare glyph sits 16dp from the edge, an icon button 4dp, because the button already insets its own glyph by 12dp. An `<img>` in the bar is the account avatar — 30dp and circular; put it inside the button when it is tappable, so the 48dp target comes from the button.
 
 ```html
 <search class="search-bar" aria-label="Search">
@@ -5178,7 +5173,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 
 | Name | Selector |
 | --- | --- |
-| `AppBar` | `header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > :is(.search-bar, .searchbar))` |
+| `AppBar` | `header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > .search-bar)` |
 | `Autocomplete` | `.autocomplete` |
 | `ButtonGroup` | `.button-group` |
 | `Cards` | `article:has(> aside[id]:not([id=""])):not(:has(> aside ~ aside)):has(> button.card-reveal-trigger[type="button"], > :not(aside) button.card-reveal-trigger[type="button"])` |
@@ -5197,7 +5192,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
-| `Datepicker` | `.datepicker, .date-picker` |
+| `Datepicker` | `.date-picker` |
 | `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
 | `MessageScroller` | `.message-scroller` |
@@ -5206,7 +5201,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
 | `Tabs` | `.tabs` |
-| `Timepicker` | `.timepicker, .time-picker` |
+| `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
@@ -5238,7 +5233,7 @@ Closing menus are excluded from keyboard focus, and close callbacks preserve foc
 
 Inside open or closed shadow roots, `closeOnClick` controls item clicks just as it does in the document. Submenu triggers keep the parent menu open; outside clicks dismiss it.
 
-A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by default; add `.suffix` to send it to the trailing edge, since a lone icon is indistinguishable from a leading one in CSS. A `<kbd>` or a `.badge` is always trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid (it still renders); a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
+A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by default; add `.suffix` to send it to the trailing edge, since a lone icon is indistinguishable from a leading one in CSS. A `<kbd>` or a `.badge` is always trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid and is not styled; a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
 
 This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https://m3.material.io/components/menus/specs). The container is `surface-container-low`, large (16dp) corners, elevation 2, 2dp group padding, 112–280dp wide. Items are 44dp with extra-small (4dp) corners, `label-large` / `on-surface`; the first and last item round their outer corners to 12dp. Icons are 20dp `on-surface-variant`. Selected items use medium (12dp) corners and `tertiary-container` / `on-tertiary-container`. Hover is an 8% state layer, focus and press 10%, none of which span the container. Dividers are inset. Add `.vibrant` for the tertiary mapping. Submenus fade and scale in; the open flyout rounds up and the parent rounds down.
 
@@ -5632,7 +5627,7 @@ Override these on the `<dialog>` if you need a different surface or width.
 
 A recent flick dismisses the sheet even if the pointer stops moving at release. For short drags, pausing for at least 100ms or reversing direction lets it snap back.
 
-A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss. A named `<button>` handle also dismisses on click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>. A decorative handle needs another non-drag pointer and keyboard dismiss path, such as a `form method="dialog"` close button. Verify native Escape against the opening mode, browser, and `closedby` policy.
+A `dialog.bottom-sheet` is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss. A named `<button>` handle also dismisses on click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>. A decorative handle needs another non-drag pointer and keyboard dismiss path, such as a `form method="dialog"` close button. Verify native Escape against the opening mode, browser, and `closedby` policy.
 
 ```html
 <dialog class="bottom-sheet" aria-labelledby="open-file-title">
@@ -5653,9 +5648,9 @@ document.getElementById('sheet').show();      // standard, no scrim
 
 A recent flick toward the docked edge dismisses the sheet. For short drags, pausing for at least 100ms or reversing direction lets it snap back.
 
-A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to the side. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.
+A `dialog.side-sheet` is optional content anchored to the side, at the trailing edge unless it has `.start`. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.
 
-Docking is logical: `.start`, `.left` and `.left-sheet` use the start edge; the default, `.right` and `.right-sheet` use the end edge. Drag direction, inner-edge hit testing, modal corners and opening motion follow computed RTL direction. Headings and actions wrap; the body scrolls independently. Shared sheet dragging ignores secondary-pointer cancellation and resets when a sheet closes, is removed, or a primary press starts elsewhere. Dismissal thresholds are unchanged. Keep an explicit close control; native zoom, assistive technology and physical-device review remain pending.
+Docking is logical: `.start` uses the start edge, and the default uses the end edge. Drag direction, inner-edge hit testing, modal corners and opening motion follow computed RTL direction. Headings and actions wrap; the body scrolls independently. Shared sheet dragging ignores secondary-pointer cancellation and resets when a sheet closes, is removed, or a primary press starts elsewhere. Dismissal thresholds are unchanged. Keep an explicit close control; native zoom, assistive technology and physical-device review remain pending.
 
 ```html
 <dialog class="side-sheet" aria-labelledby="headline-title">
@@ -5831,7 +5826,7 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 <div id="explore">Explore</div>
 ```
 
-Add `disabled` on the `<a>` (or on a wrapping `li.tab`) to make it inaccessible. Tabs become scrollable when there are too many to fit.
+Add `disabled` on the `<a>` to make it inaccessible. Tabs become scrollable when there are too many to fit.
 
 ### Secondary
 
@@ -5869,7 +5864,7 @@ document.addEventListener('DOMContentLoaded', function() {
 | --- | --- | --- | --- |
 | `duration` | Number | `300` | Indicator transition duration, in milliseconds. |
 | `onShow` | Function | `null` | Called when a new tab panel is shown. Receives the panel element. |
-| `swipeable` | Boolean | `false` | Enable swipeable tabs. Uses `responsiveThreshold`. Wraps the panels in a carousel. |
+| `swipeable` | Boolean | `false` | Enable swipeable tabs. Uses `responsiveThreshold`. Moves the panels into a scroll-snap track. |
 | `responsiveThreshold` | Number | `Infinity` | Maximum viewport width, in pixels, at which swipeable mode starts. Wider viewports stay non-swipeable. |
 
 ### Methods
@@ -5935,7 +5930,7 @@ Tabs ignore default anchor behaviour. To keep a tab as a normal hyperlink, set `
 
 ### Swipeable tabs
 
-Set `swipeable: true` to swipe between panels on touch devices. Keep the tab panels in the same wrapping container. The implementation wraps those panels in a carousel. `responsiveThreshold` is the maximum viewport width at which swipeable mode initializes; resizing later does not switch modes. Each changed swipeable selection updates `aria-current` and calls `onShow` once with the shown panel. `destroy()` removes the carousel wrapper and restores panel positions and Tabs-owned state.
+Set `swipeable: true` to swipe between panels with touch or a trackpad. Keep the tab panels in the same wrapping container. Tabs moves those panels into a full-width `.tabs-content` scroll-snap track, and only the shown panel is reachable by keyboard. `responsiveThreshold` is the maximum viewport width at which swipeable mode initializes; resizing later does not switch modes. Each changed swipeable selection updates `aria-current` and calls `onShow` once with the shown panel. `destroy()` removes the track and restores panel positions and Tabs-owned state.
 
 This demo is marked `no-autoinit` and started with `swipeable: true`.
 
@@ -6177,7 +6172,7 @@ Expressive.Snackbar.dismissAll();
 
 Material Design 3 tooltips, from the HTML.
 
-A child `.tooltip` is the bubble. No `tooltipped` class is required. They are CSS only on hover and keyboard focus. Helpers are only for placement and the rich variant: `top` (the default), `bottom`, `left`, `right`, `rich` / `max`.
+A child `.tooltip` is the bubble. No `tooltipped` class is required. They are CSS only on hover and keyboard focus. Helpers are only for placement and the rich variant: `top` (the default), `bottom`, `left`, `right`, `rich`.
 
 Tokens follow the [M3 tooltip spec](https://m3.material.io/components/tooltips/specs). A plain tooltip is `inverse-surface` / `inverse-on-surface`, 4dp corners, `body-small`, 24dp minimum, 4/8dp padding, 200dp max, no elevation and no caret. It sits 4dp from the activator. M3 prefers above.
 
@@ -6197,7 +6192,7 @@ Inside a `<button>` the bubble has to be a `<span>` — a `<div>` is not phrasin
 
 ### Rich
 
-`rich` (or its `max` alias) is the rich tooltip: `surface`, elevation 2, 12dp corners, 320dp max. A heading is the title (`title-small`), a `<p>` is supporting text (`body-medium`), and a trailing `<nav>` is the action. Rich bubbles can receive pointer events so the action is usable.
+`rich` is the rich tooltip: `surface`, elevation 2, 12dp corners, 320dp max. A heading is the title (`title-small`), a `<p>` is supporting text (`body-medium`), and a trailing `<nav>` is the action. Rich bubbles can receive pointer events so the action is usable.
 
 ```html
 <div>
@@ -6344,7 +6339,7 @@ The FAB-to-toolbar transition has been removed. Use this toolbar for persistent 
 </div>
 ```
 
-A label next to the icon needs a `<span>` — `:only-child` ignores text nodes, so `<i>edit</i>Edit` would look icon-only.
+A label next to the icon needs a `<span>` — `:only-child` ignores text nodes, so `<span class="material-symbols">edit</span>Edit` would look icon-only.
 
 ```html
 <div class="toolbar">
@@ -6367,7 +6362,7 @@ Four, from two independent axes — a **shape** (floating or docked) and a **col
 | **floating** | `class="toolbar"` | `class="toolbar vibrant"` |
 | **docked** | `class="toolbar docked"` | `class="toolbar docked vibrant"` |
 
-Floating is the default shape and standard the default color, so neither needs a class — but `floating` and `standard` are both accepted, so a bar can name all of what it is. `filled` is the older name for `vibrant`, and `max` an alias for `docked`; both still work.
+Floating is the default shape and standard the default color, so neither needs a class — but `floating` and `standard` are both accepted, so a bar can name all of what it is.
 
 **Floating** hugs its actions: 64dp tall, 32dp stadium corners, elevation 3, 8dp end insets, 16dp from the viewport edge (24dp when `vertical`). **Docked** is full width, square, unlifted, 16dp end insets, its actions between 4dp and 32dp apart. `vertical` stacks a floating bar; a docked bar stays a horizontal strip.
 
@@ -6383,7 +6378,7 @@ The `vibrant` *attribute* is a different thing, and the bar deliberately does no
 
 ### Docked
 
-`docked`, also accepted as `max`, stretches the bar to the full width, drops the stadium and the elevation, and spaces the actions. Use it for page actions at the bottom of the screen; destinations belong on a navigation bar. A child `.max` is a spacer, not the bar.
+`docked` stretches the bar to the full width, drops the stadium and the elevation, and spaces the actions. Use it for page actions at the bottom of the screen; destinations belong on a navigation bar. A child `.max` is a spacer, not the bar.
 
 ```html
 <div class="toolbar docked">
@@ -6632,8 +6627,8 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 | `cancel` | `'Cancel'` |
 | `clear` | `'Clear'` |
 | `done` | `'Ok'` |
-| `previousMonth` | `'‹'` |
-| `nextMonth` | `'›'` |
+| `previousMonth` | `'Previous month'` |
+| `nextMonth` | `'Next month'` |
 | `months` | `['January', …, 'December']` |
 | `monthsShort` | `['Jan', …, 'Dec']` |
 | `weekdays` | `['Sunday', …, 'Saturday']` |
@@ -7025,7 +7020,7 @@ A `.field` is the container. The `<label>` after the control is the floating lab
 
 `.input-field` is **not** the container and never was — the only rule matching it in the sheet is `.chips.input-field`.
 
-Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fields/specs). Height is 56dp. Filled is a `surface-variant` well with 4dp top corners and a 1dp / 2dp bottom indicator. Outlined is a 1dp / 2dp `outline` at 4dp. The label is `body-large` at rest and `body-small` floated. Input text is `body-large` / `on-surface`. Icons are 24dp, 12dp from the edge.
+Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fields/specs). Height is 56dp. Filled is a `surface-container-highest` well with 4dp top corners and a 1dp / 2dp bottom indicator. Outlined is a 1dp / 2dp `outline` at 4dp. The label is `body-large` at rest and `body-small` floated. Input text is `body-large` / `on-surface`. Icons are 24dp, 12dp from the edge.
 
 Add `placeholder=" "` (one space) so the label floats with CSS only. A missing placeholder, or any other string, keeps the label floated. Importing the bundle runs `Forms.Init()`; it validates `.validate` fields on `change` and starts textareas and file paths. Character Counter is not in `AutoInit()`.
 
@@ -7051,7 +7046,7 @@ Add `placeholder=" "` (one space) so the label floats with CSS only. A missing p
 
 Put `invalid` or `aria-invalid="true"` on the input for the error state. Do not put `error` on the wrapper — that class is a color utility and fills the field.
 
-A side is required on a field icon. The old markup let a bare `<i>` fall to whichever side its position implied, but that rule counted elements of the same *type* (`:first-of-type`), which only ever worked while icons were `<i>` and nothing else in the field was. `.prefix` / `.suffix` say it outright and work on any element.
+A field icon needs a side. `.prefix` is leading and `.suffix` is trailing; an icon without either is not positioned.
 
 ### Input types
 
@@ -7334,7 +7329,7 @@ A fieldset is also the right parent for a radio, checkbox, or switch group — t
 
 ### Variants
 
-The default is outlined. `filled` is a `surface-variant` well with no stroke — pair it with `outlined` fields so the wells stay distinct. `rounded` is 12dp corners (M3 medium, like a card). `outlined` and `border` name the default if you need to say it.
+The default is outlined. `filled` is a `surface-container-highest` well with no stroke — pair it with `outlined` fields so the wells stay distinct. `rounded` is 12dp corners (M3 medium, like a card). `outlined` and `border` name the default if you need to say it.
 
 `plain` drops the container for a group that already sits on a surface, such as radios in a card or a dialog: no outline, fill, padding, or margin from a preceding fieldset, and the legend starts flush with the content.
 
@@ -7504,7 +7499,7 @@ Material Design 3 switches, from the HTML.
 
 A `<label class="switch">` wrapping `<input type="checkbox">` is the control. The label text is a sibling of the input — no `.lever` required. They are CSS only. There is no JavaScript component and nothing to AutoInit.
 
-Tokens follow the [M3 switch spec](https://m3.material.io/components/switch/specs). The track is 52×32dp. Unselected is `surface-variant` with a 2dp `outline` and a 16dp handle. Selected is a `primary` track and a 24dp `on-primary` handle. The state layer is 40dp at 8% hover and 10% focus. The touch target is 48dp. The label is `body-large` / `on-surface`. Disabled is 38%.
+Tokens follow the [M3 switch spec](https://m3.material.io/components/switch/specs). The track is 52×32dp. Unselected is `surface-container-highest` with a 2dp `outline` and a 16dp handle. Selected is a `primary` track and a 24dp `on-primary` handle. The state layer is 40dp at 8% hover and 10% focus. The touch target is 48dp. The label is `body-large` / `on-surface`. Disabled is 38%.
 
 ```html
 <label class="switch">
@@ -7523,15 +7518,12 @@ Tokens follow the [M3 switch spec](https://m3.material.io/components/switch/spec
 </label>
 ```
 
-An `input + span` or `input + .lever` still works if you already have that markup.
-
 The on/off captions are decoration. Left as bare text they are folded into the label, and the switch announces itself as "Off On" — so hide them and name the control itself. A switch whose only text is a caption needs an `aria-label`, because hiding both leaves it with no name at all.
 
 ```html
 <label class="switch">
   <span aria-hidden="true">Off</span>
   <input type="checkbox" aria-label="Dark mode">
-  <span class="lever"></span>
   <span aria-hidden="true">On</span>
 </label>
 ```
@@ -7711,11 +7703,11 @@ Sliders handle a maximum of zero and update value-label placement when the input
 
 Material Design 3 sliders, from the HTML.
 
-An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label; `.range` and `.range-field` are the older names and still work.
+An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label.
 
 Labels and track gaps align with native handle travel after resizing in LTR, RTL and vertical layouts. Vertical values increase from bottom to top. Paired inputs accept native track clicks and prevent crossing; use matching bounds and steps. Application-owned numeric fields can assign the range value and dispatch an `input` event to synchronize its label and track. Forced-colors tracks use system colors. Physical devices, screen readers and actual Windows contrast themes still need manual review.
 
-The plugin is `Expressive.Slider`, and `Expressive.Range` still resolves to it. Before 0.8.0 `.slider` and `Slider` meant the image slideshow; that component is now gone and Carousel covers the case, so `.slider` is the range control and nothing else.
+The plugin is `Expressive.Slider`. Before 0.8.0 `.slider` and `Slider` meant the image slideshow; that component is now gone and Carousel covers the case, so `.slider` is the range control and nothing else.
 
 Three variants: **standard** (active from the start to the handle), **centered** (`.centered`, active grows from the midpoint), and **range** (two inputs in one host, active between the handles). Horizontal or `.vertical`. Five sizes, an optional inset icon, discrete stops, and a value indicator.
 
@@ -7865,18 +7857,6 @@ Use the same `name` on every radio in a group. Add `disabled` to disable one. `w
 </fieldset>
 ```
 
-An `input + span` still works if you already have that markup, including the `<label class="radio">` pattern.
-
-```html
-<fieldset>
-  <legend>Colour</legend>
-  <label class="radio">
-    <input type="radio" name="group1">
-    <span>Yellow</span>
-  </label>
-</fieldset>
-```
-
 ### In a row
 
 Put the labels in a `<div class="inline">` to sit them on one line. A bare group stacks vertically. It is not a `<nav>`: a row of form controls is not navigation, and marking it as one spends a landmark and announces "navigation" over a set of choices.
@@ -7942,11 +7922,11 @@ A long label wraps and the chip grows from its 32dp minimum, with 4dp above and 
 
 The delete button needs its own `aria-label` naming the chip it removes, because its only content is an icon. The icon is `aria-hidden` in every chip: the ligature is real text and is otherwise read out alongside the label.
 
-A filter chip's selected state is `:checked` on its input, so it needs no script. Everywhere else the selected look is the `selected` class (`active` is the pre-0.8.0 name and still works).
+A filter chip's selected state is `:checked` on its input, so it needs no script. Everywhere else the selected look is the `selected` class.
 
 Clicking `.close` removes the chip only when it sits inside a `.chips` container. Importing the bundle runs `Chips.Init()` on `DOMContentLoaded`, which wires that click. A lone `.chip` does not remove itself.
 
-Before 0.8.0 every chip was a `<div class="chip">` and the delete affordance was an `<i class="close">` — focusable via `tabindex` but with no role and no name. That markup still renders; it is no longer correct and is not documented.
+Before 0.8.0 every chip was a `<div class="chip">` and the delete affordance was an `<i class="close">` — focusable via `tabindex` but with no role and no name. In 1.0 that `<i>` is no longer an icon, so the button reads the word "close"; write the `<button class="close">` shown here.
 
 ### Contacts
 

@@ -116,7 +116,7 @@ describe('Side sheet drag', () => {
   // flip is the one thing behaviors/sheetDrag.ts parameterises which the
   // end-docked cases above cannot reach.
   test('a start-docked sheet dismisses toward the start edge', () => {
-    const dialog = openSheet('left');
+    const dialog = openSheet('start');
     tap(dialog, 'pointerdown', { x: 790, y: 200 });
     tap(dialog, 'pointermove', { x: 690, y: 200 });
     tap(dialog, 'pointerup', { x: 690, y: 200 });
@@ -124,7 +124,7 @@ describe('Side sheet drag', () => {
   });
 
   test('a start-docked sheet ignores a drag the other way', () => {
-    const dialog = openSheet('left');
+    const dialog = openSheet('start');
     tap(dialog, 'pointerdown', { x: 790, y: 200 });
     tap(dialog, 'pointermove', { x: 890, y: 200 });
     tap(dialog, 'pointerup', { x: 890, y: 200 });

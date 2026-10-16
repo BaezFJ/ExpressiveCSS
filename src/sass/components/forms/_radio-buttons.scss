@@ -4,7 +4,7 @@
 //
 // Anatomy is the HTML. A <label> wrapping <input type="radio"> is the
 // control. The label text is a sibling of the input — no extra class, no
-// required <span>. input + span still works (legacy).
+// required <span>.
 //
 // Tokens follow https://m3.material.io/components/radio-button/specs
 //   icon           20dp ring, 2dp stroke, on-surface-variant
@@ -51,9 +51,7 @@ label:has(> [type="radio"]),
   display: inline-flex;
 }
 
-// Paint the radio on the input. A following span (legacy) hides this
-// control and draws the same anatomy. Nested :has() is invalid, so
-// do not write :has(:not(:has(+ span))).
+// Paint the radio on the input.
 label:has(> [type="radio"]) > [type="radio"],
 .radio > [type="radio"] {
   appearance: none;
@@ -105,90 +103,10 @@ label:has(> [type="radio"]) > [type="radio"],
       transparent 5.5px
     );
   }
-
-  &:has(+ span) {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-    border: 0;
-    background: none;
-    box-shadow: none;
-    pointer-events: none;
-  }
 }
 
 label:has(> [type="radio"]:disabled),
 .radio:has([type="radio"]:disabled) {
   color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   cursor: default;
-}
-
-// Legacy: input + span draws the same 20/10 anatomy.
-[type="radio"] + span {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  min-height: 48px;
-  padding-left: 32px;
-  cursor: pointer;
-  user-select: none;
-}
-
-[type="radio"] + span::before,
-[type="radio"] + span::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  box-sizing: border-box;
-  width: 20px;
-  height: 20px;
-  margin-top: -10px;
-  border-radius: 50%;
-}
-
-[type="radio"] + span::before {
-  border: 2px solid var(--md-sys-color-on-surface-variant);
-  transition: border-color .2s ease, box-shadow .2s ease;
-}
-
-[type="radio"] + span::after {
-  background-color: var(--md-sys-color-primary);
-  transform: scale(0);
-  transition: transform .2s ease;
-}
-
-[type="radio"]:checked + span::before {
-  border-color: var(--md-sys-color-primary);
-}
-
-[type="radio"]:checked + span::after {
-  transform: scale(0.5);
-}
-
-[type="radio"]:hover + span::before {
-  @include _ring(var(--md-sys-color-on-surface), "hover");
-}
-
-[type="radio"]:checked:hover + span::before {
-  @include _ring(var(--md-sys-color-primary), "hover");
-}
-
-[type="radio"]:focus-visible + span::before {
-  @include _ring(var(--md-sys-color-primary), "focus");
-}
-
-[type="radio"]:disabled + span {
-  color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
-  cursor: default;
-}
-
-[type="radio"]:disabled + span::before {
-  border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
-  box-shadow: none;
-}
-
-[type="radio"]:disabled:checked + span::after {
-  background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
 }

@@ -15,7 +15,7 @@ metadata:
 
 ExpressiveCSS is derived from MaterializeCSS v2.2.2, and its names changed in three waves. 0.5.0 removed the Materialize components Material 3 has no place for. 0.8.0 renamed the rest to Material 3 names and corrected the markup so each element states what the component is. 1.0 removes the aliases kept since 0.8.0.
 
-Almost nothing warns. Old classes render unstyled or slightly wrong, and old markup from before 0.8.0 keeps rendering. The search for leftover names after each step is the real check, so run it every time.
+Almost nothing warns. Old classes render unstyled or slightly wrong, and some markup from before 0.8.0 keeps rendering until 1.0 removes it. The search for leftover names after each step is the real check, so run it every time.
 
 For a component's full markup, options and rules, use the `expressivecss` skill or the [API reference](https://www.expressivecss.com/llm.md). The [changelog](https://github.com/BaezFJ/ExpressiveCSS/blob/master/CHANGELOG.md) has a Migration entry for every release that needs one.
 
@@ -117,7 +117,7 @@ These have no class to rename. Replace each with what it was standing in for.
 | `.sidenav`, `.navigation-drawer` | `NavigationRail`; a navigation bar on Compact when the hierarchy fits, or a full-screen dialog for a larger menu |
 | `.bottom-app-bar` | `.toolbar.docked` or `.toolbar.fixed`, with any FAB in `.toolbar-group` |
 | `.fixed-action-btn`, `.fab` speed dial | `.fab-menu` with labelled actions; a toolbar for persistent commands |
-| `.banner` | Inline text and buttons for a persistent message, a snackbar for temporary feedback, a dialog for a blocking decision |
+| `.banner` | An `.alert` for a persistent message in the page, a snackbar for temporary feedback, a dialog for a blocking decision |
 | `.floating-sheet` | A dialog for blocking work, a bottom sheet on Compact, or a side sheet |
 | `.segmented-button` | `.button-group.connected`, keeping native radios or checkboxes when the form submits them |
 | `.tabs` inside an app bar, `.tabs.transparent` | A standalone `.tabs` component below the bar |
@@ -131,7 +131,7 @@ Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.
 
 ## Step 5: Classes and markup
 
-Materialize names, and markup that 0.8.0 corrected. Old markup in this table still renders, so nothing tells you it is wrong.
+Materialize names, and markup that 0.8.0 corrected. Before 1.0 much of the old markup in this table still renders, so nothing tells you it is wrong; in 1.0 most of it stops rendering.
 
 | Old | Current |
 | --- | --- |
@@ -157,7 +157,7 @@ Materialize names, and markup that 0.8.0 corrected. Old markup in this table sti
 | `.materialboxed` | `.lightboxed` with `tabindex="0" role="button"` |
 | `<div class="chip">` | `<span class="chip">`, or `<button type="button" class="chip">` when it acts. A filter chip is `input.chip-input` with a `label.chip` |
 | `<i class="close">` in a chip | `<button type="button" class="close" aria-label="Remove …">` holding the icon |
-| `.carousel-slider` | `.carousel.flat` |
+| `.carousel-slider` | `.carousel.hero`, or `.carousel.uncontained` for full-size items |
 | `a.breadcrumb` | `<nav aria-label="Breadcrumb"><ol><li><a>`, with `aria-current="page"` on the last crumb |
 | `ul.pagination` | `<nav class="pagination" aria-label="Pagination"><ol>` |
 | `.page-footer`, `.footer-copyright` | A bare `<footer>` with `<nav>` link columns and a trailing `<small>` |
@@ -196,10 +196,19 @@ These still work in 0.x and stop working in 1.0. Replace them now; each replacem
 | `<hr>` between menu items | `<li class="divider" role="separator"></li>` |
 | `<button>` or `.btn` as a file trigger | `<label class="button">` wrapping the input |
 | `Expressive.Range` | `Expressive.Slider` |
+| Datepicker `startRange`, `endRange` options | `isDateRange` |
+| A navigation rail FAB written `a.button.extra` | `a.button`; the rail sizes it |
+| `.extra` on a common button | `.medium` for the 56dp button; its label grows to `title-medium`. `circle extra` is still the FAB |
+| A `<span>` after a radio or switch input | Nothing: the input draws the control and the label text sits beside it |
+| `<div class="switch"><label>` | `<label class="switch">` wrapping the checkbox |
+| `.range`, `.range-field` slider hosts | `.slider`, or a `<label>` wrapping the input |
+| `ul.tabs` with `li.tab` | `<a>` links directly in `nav.tabs` |
+| Carousel `.flat`, `fullWidth: true`, `.carousel-fixed-item` | An M3 layout such as `.hero` or `.uncontained`; place a fixed overlay yourself |
+| The `background`, `on-background`, `surface-variant` and `surface-tint` roles, their `-light`/`-dark` pairs and classes | `surface`, `on-surface`, `surface-container-highest` and `primary` |
 
-Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git "material-icons|<i[ >]|hide-on-(small-only|small-and-down|med-only|xxl-only)|show-on-(small|xxl)\b|no-padding|center-block|no-select|\bpreloader\b|\"(datepicker|timepicker)\"|searchbar|dialog[^>]*\b(bottom|right|left)(-sheet)?\b|\.handle\b|tooltip[^\"]*\bmax\b|Expressive\.Range" .`
+Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git "material-icons|<i>[a-z0-9_]+</i>|hide-on-(small-only|small-and-down|med-only|xxl-only)|show-on-(small|xxl)\b|no-padding|center-block|no-select|\bpreloader\b|searchbar|class=.([^\"']* )?(datepicker|timepicker|range|range-field|handle|background|background-text)( [^\"']*)?[\"']|<dialog[^>]*class=.([^\"']* )?(bottom|right|left|right-sheet|left-sheet)( [^\"']*)?[\"']|class=.([^\"']* )?(toolbar|tooltip|chip)( [^\"']*)? (max|filled|active)( [^\"']*)?[\"']|class=.([^\"']* )?(max|filled|active) ([^\"']* )?(toolbar|tooltip|chip)( [^\"']*)?[\"']|<li[^>]*class=.([^\"']* )?tab( [^\"']*)?[\"']|<div[^>]*class=.([^\"']* )?switch( [^\"']*)?[\"']|class=.(button )?extra[\"']|\.handle\b|Expressive\.Range|startRange|endRange|carousel[^\"]*\bflat\b|fullWidth|carousel-fixed-item|(-color-|[\" .])(on-background|surface-variant|surface-tint)\b|-color-background\b" .`
 
-The `<i[ >]` and dialog patterns over-match, so check each hit by hand. `.hide-on-med-and-down` and `.hide-on-med-and-up` are current helpers, not aliases; keep them.
+Check each hit by hand: `searchbar` and `preloader` also match ids and prose, and `<i>[a-z0-9_]+</i>` matches a short italic word. `.hide-on-med-and-down` and `.hide-on-med-and-up` are current helpers, not aliases; keep them.
 
 ---
 
@@ -207,8 +216,9 @@ The `<i[ >]` and dialog patterns over-match, so check each hit by hand. `.hide-o
 
 These keep their class names but look different. Compare a page before and after, and decide with the user which to keep.
 
-- Button sizes (0.8.0): `small` is 40dp, not 32dp; the old 32dp button is `xsmall`. `large` is 96dp, not 56dp; the old 56dp button is `medium`, and `extra` still means 56dp. The default inset is 16dp on both sides.
+- Button sizes (0.8.0): `small` is 40dp, not 32dp; the old 32dp button is `xsmall`. `large` is 96dp, not 56dp; the old 56dp button is `medium`. Before 1.0 `extra` also meant 56dp; in 1.0 it only marks the `circle extra` FAB. The default inset is 16dp on both sides.
 - `button.circle` with no size class has a 20px glyph instead of 24px (0.8.0). Use `.icon-button`, or `.circle.medium`, to keep 24px.
+- Snackbar's generated close button holds its icon in a `<span class="material-symbols">`, not an `<i>` (1.0). Point custom styles at `.snackbar .material-symbols` instead of `.snackbar i`.
 - A button's height is a `min-height` (0.11.0). A rule that shrinks a button with `height` must also set `min-height`, or set `--md-comp-filled-button-container-height`.
 - The default theme seed is Mist Iris `#c6a0f6` (0.13.0). Set `--md-source` or Sass `$md-source` to keep the brand color.
 - `--md-sys-color-scrim` set on a subtree no longer reaches scrims (0.8.0). Set it at the root, or set `--md-comp-scrim-color` on one surface.

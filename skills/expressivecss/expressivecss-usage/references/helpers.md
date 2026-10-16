@@ -106,7 +106,7 @@ Use a targeted media rule for display requirements the existing hide ranges cann
 
 `.center-on-small-only` centers text below 600px and leaves alignment unchanged at wider widths.
 
-Compatibility aliases remain in the stylesheet: `.hide-on-small-only`, `.hide-on-small-and-down`, `.hide-on-med-only`, `.hide-on-xxl-only`, `.show-on-small`, and `.show-on-xxl`. Preserve them when maintaining older markup, but prefer canonical Compact/Medium/Expanded/Large/Extra-large names in new code. The two `med-and-*` hide classes in the table are public helpers, not aliases for nonexistent `.hide-on-medium-and-down` or `.hide-on-medium-and-up` classes.
+The two `med-and-*` hide classes in the table are public helpers, not aliases for nonexistent `.hide-on-medium-and-down` or `.hide-on-medium-and-up` classes.
 
 Never use display hiding as the only way to provide required content or actions. Confirm hidden content is intentionally removed from visual layout and the accessibility tree.
 
@@ -138,7 +138,6 @@ Never use display hiding as the only way to provide required content or actions.
 | `.right-align` | Right-aligns text. | Physical alignment does not mirror in RTL. |
 | `.start-align`, `.end-align` | `text-align: start` or `text-align: end`. | Follow text direction and mirror in RTL. |
 | `.center-align` | Centers text. | Use on the text container. `.center` is not the canonical helper. |
-| `.center-block` | Sets `display: block` and horizontal auto margins. | Visible centering requires a used width narrower than the parent. |
 | `.divider` | Draws a 1px `outline-variant` divider. | Keep decorative dividers out of the accessibility tree; use semantic grouping or headings for real structure. |
 
 ```html
@@ -206,13 +205,11 @@ Give a generic scroll region `tabindex="0"` and an accessible name when keyboard
 
 | Class | Effect | Use carefully |
 | --- | --- | --- |
-| `.no-select` | Disables text selection. | Do not apply to content users may need to copy. |
 | `.circle` | Applies a 50% border radius except when paired with `.extra` or `.large`. | Use component-owned shape variants first. FAB sizing has its own shape contract. |
 | `.truncate` | One line, clipped overflow, ellipsis. | The element needs a constrained width; a flex/grid child may also need `.min-w-0`. Preserve the full value elsewhere when it matters. |
 | `.break-words` | `overflow-wrap: anywhere`. | Lets long URLs or identifiers wrap without clipping. |
 | `.text-nowrap` | `white-space: nowrap`. | Keeps one line without clipping or ellipsis; check narrow screens. |
 | `.text-wrap` | `white-space: normal`. | Restores ordinary wrapping. |
-| `.no-padding` | Sets `padding: 0 !important`. | Overrides component padding; use only when removing all padding is intentional. |
 | `.hoverable` | Transitions to one fixed hover shadow. | That shadow can be lower than an existing high z-depth; hover must not be the only cue or interaction path. |
 
 ```html

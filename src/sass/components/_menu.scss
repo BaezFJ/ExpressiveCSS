@@ -3,9 +3,9 @@
 // Vertical menus (M3 Expressive).
 //
 // Anatomy is the HTML. A <menu id> is the surface; each <li> is an item.
-// A leading <i> is the leading icon; a trailing <i> or <kbd> is trailing
-// content. An <li class="divider" role="separator"> is a divider; a bare
-// <hr> is the older form and still styled, though <menu> only permits <li>.
+// An icon leads its label; a trailing icon or <kbd> is trailing content. An
+// <li class="divider" role="separator"> is a divider: <menu> only permits
+// <li>, so a bare <hr> is not styled.
 // A .gap <li> splits groups. A .label
 // <li> is a 32dp group heading. A nested <menu> is a flyout. The trigger
 // is .menu-trigger[data-target] — that is the JS contract.
@@ -301,7 +301,6 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
   }
 
   // Inset divider — selection and rules do not span the container.
-  > hr,
   > li.divider {
     display: block;
     width: calc(100% - 8px);

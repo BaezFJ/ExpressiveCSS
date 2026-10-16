@@ -9,7 +9,7 @@ Component ID: `autocomplete`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6c74a70f67d0a02a0e88e7ffae6cdea4722301373ca61b757e2f63ab3ab6d299`
+Contract SHA-256: `5142eada64c94b5649e21327b89746025f64f1ffd15082356e3c6f0fc13e4191`
 
 #### Selection and adaptation
 
@@ -86,7 +86,7 @@ The Autocomplete section of the [API reference](https://www.expressivecss.com/ll
 - `field-container-class`: The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.
 - `field-icon-not-i`: <i> means idiomatic text, not icon. Use <span class="material-symbols">.
 - `field-icon-hidden`: The ligature is read aloud. A field icon is decoration; the label names the control.
-- `field-icon-side`: A field icon must name its side with .prefix or .suffix. The positional fallback counts elements of the same *type*, which only ever worked for <i>.
+- `field-icon-side`: A field icon must name its side with .prefix or .suffix. Fields have no positional fallback.
 - `field-label-for`: A label that does not wrap its control has to name it. The floating label sits *after* the control and cannot wrap it, so it always needs `for`; a label that does wrap its control (the file input trigger) does not.
 - `field-control-id`: Without an id the label has nothing to point at.
 - `field-supporting-text-id`: Supporting and error text has to be referenceable to be announced with the control.

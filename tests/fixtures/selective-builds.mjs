@@ -8,14 +8,14 @@ export const sizes = value => ({ raw: Buffer.byteLength(value), gzip: gzipSync(v
 export const fixtures = {
   tabs: {
     exports: ['Tabs'],
-    components: ['icons-material-design', 'tabs', 'carousel'],
+    components: ['icons-material-design', 'tabs'],
     markup: '<nav class="tabs" aria-label="Sections"><a href="#first" class="active">First</a><a href="#second">Second</a></nav><section id="first">First panel</section><section id="second">Second panel</section>',
     init: "Tabs.init(document.querySelector('.tabs'), { duration: 0 })",
   },
   forms: {
     exports: ['Forms', 'FormSelect', 'Datepicker'],
     components: ['icons-material-design', 'buttons', 'menu', 'forms', 'datepicker'],
-    markup: '<div class="field"><select id="choice"><option value="one">One</option><option value="two">Two</option></select><label for="choice">Choice</label></div><div class="field"><input id="date" class="datepicker" type="text"><label for="date">Date</label></div>',
+    markup: '<div class="field"><select id="choice"><option value="one">One</option><option value="two">Two</option></select><label for="choice">Choice</label></div><div class="field"><input id="date" class="date-picker" type="text"><label for="date">Date</label></div>',
     init: "FormSelect.init(document.querySelector('#choice'), { menuOptions: { inDuration: 0, outDuration: 0 } }), Datepicker.init(document.querySelector('#date'), { openByDefault: true, defaultDate: new Date(2026, 8, 12), setDefaultDate: true })",
   },
 };

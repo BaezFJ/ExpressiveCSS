@@ -64,13 +64,13 @@ describe("Tabs", () => {
 
   test("select() moves the active link", () => {
     document.body.innerHTML = `
-      <ul class="tabs">
-        <li class="tab"><a class="active" href="#tab1">Tab 1</a></li>
-        <li class="tab"><a href="#tab2">Tab 2</a></li>
-      </ul>
+      <nav class="tabs" aria-label="Tabs">
+        <a class="active" href="#tab1">Tab 1</a>
+        <a href="#tab2">Tab 2</a>
+      </nav>
       <div id="tab1">one</div><div id="tab2">two</div>`;
     const instance = Expressive.Tabs.init(document.querySelector(".tabs"));
-    const [link1, link2] = document.querySelectorAll(".tabs .tab a");
+    const [link1, link2] = document.querySelectorAll(".tabs > a");
 
     assert.equal(link1.classList.contains("active"), true);
 

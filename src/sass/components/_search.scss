@@ -4,7 +4,7 @@
 //
 // Anatomy is the HTML. A `<search class="search-bar">` is the bar - an
 // optional leading icon or icon button, an `<input type="search">`, and
-// optional trailing actions. `.searchbar` is the pre-1.0 alias.
+// optional trailing actions.
 //
 // `.search-view` is the surface the bar expands into, and it is two different
 // native elements because the two variants want two different behaviours:
@@ -46,7 +46,7 @@
 // a bare list interpolated into `.search-view > #{$_bar}` breaks out of its
 // context and emits a top-level rule.
 
-$_bar: ":is(.search-bar, .searchbar)";
+$_bar: ".search-bar";
 
 #{$_bar} {
   --md-comp-search-bar-container-color: var(--md-sys-color-surface-container-high);

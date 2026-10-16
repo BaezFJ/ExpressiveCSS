@@ -10,7 +10,7 @@ Use a `span` and the `.material-symbols` class for the default outlined Material
 <span class="material-symbols" aria-hidden="true">search</span>
 ```
 
-`.material-symbols` and `.material-symbols-outlined` both select the outlined family. `.material-symbols-rounded` and `.material-symbols-sharp` select the other bundled families. `.material-icons` is a legacy compatibility alias; do not choose it for new work.
+`.material-symbols` and `.material-symbols-outlined` both select the outlined family. `.material-symbols-rounded` and `.material-symbols-sharp` select the other bundled families.
 
 | Class | Family |
 |---|---|
@@ -18,7 +18,6 @@ Use a `span` and the `.material-symbols` class for the default outlined Material
 | `.material-symbols-outlined` | Material Symbols Outlined |
 | `.material-symbols-rounded` | Material Symbols Rounded |
 | `.material-symbols-sharp` | Material Symbols Sharp |
-| `.material-icons` | legacy Material Icons compatibility |
 
 Use `.icon-filled` to set the variable font fill axis to `1`.
 

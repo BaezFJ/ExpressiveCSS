@@ -3,7 +3,7 @@
 // Progress. Anatomy is the HTML:
 //   <progress class="progress" value="70" max="100">   determinate bar
 //   <progress class="progress">                        indeterminate bar
-//   <span class="preloader" role="status">             circular spinner
+//   <span class="progress circular" role="status">     circular spinner
 //
 // Linear aliases: .progress > .determinate / .indeterminate, and
 // --md-comp-progress-value on a bare div.progress.
@@ -18,10 +18,8 @@
 //   --md-comp-progress-circular-thickness  4px
 
 // M3 names this component "Progress indicators", linear and circular. The
-// class is `.progress`; `.preloader` is the older name for the circular
-// one and stays as an alias, as does `.progress.circular`.
-.progress,
-.preloader {
+// class is `.progress`, and `.progress.circular` is the circular one.
+.progress {
   --md-comp-progress-track: var(--md-sys-color-secondary-container);
   --md-comp-progress-indicator: var(--md-sys-color-primary);
   --md-comp-progress-thickness: 4px;
@@ -161,9 +159,8 @@ progress.progress:indeterminate {
 // Circular — one element
 // ---------------------------------------------------------------------------
 
-// The circular indicator. `.progress.circular` is the M3-aligned name;
-// `.preloader` remains a compatibility alias.
-:is(.preloader, .progress.circular) {
+// The circular indicator.
+.progress.circular {
   box-sizing: border-box;
   display: inline-block;
   width: var(--md-comp-progress-circular-size);
@@ -201,8 +198,7 @@ progress.progress:indeterminate {
 }
 
 @media (forced-colors: active) {
-  .progress,
-  .preloader {
+  .progress {
     forced-color-adjust: none;
   }
 
@@ -231,7 +227,7 @@ progress.progress:indeterminate {
     animation: none;
   }
 
-  :is(.preloader, .progress.circular) {
+  .progress.circular {
     background: conic-gradient(CanvasText 0 90deg, transparent 90deg 360deg);
 
     &.determinate {
@@ -250,7 +246,7 @@ progress.progress:indeterminate {
   progress.progress:indeterminate::before,
   progress.progress:indeterminate::after,
   #{$_bare}:not([style*="--md-comp-progress-value"])::after,
-  :is(.preloader, .progress.circular) {
+  .progress.circular {
     animation: none;
   }
 
@@ -260,10 +256,6 @@ progress.progress:indeterminate {
   progress.progress:indeterminate::after,
   #{$_bare}:not([style*="--md-comp-progress-value"])::after {
     width: 40%;
-  }
-
-  .preloader {
-    transform: none;
   }
 
   progress.progress:indeterminate::-moz-progress-bar {

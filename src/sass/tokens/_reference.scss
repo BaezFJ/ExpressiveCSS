@@ -83,9 +83,7 @@ $sys-light: (
   "outline": "neutral-variant50", "outline-variant": "neutral-variant80",
   "inverse-surface": "neutral20", "inverse-on-surface": "neutral95",
   "inverse-primary": "primary80",
-  "scrim": "neutral0", "shadow": "neutral0",
-  "background": "neutral98", "on-background": "neutral10",
-  "surface-variant": "neutral-variant90", "surface-tint": "primary40"
+  "scrim": "neutral0", "shadow": "neutral0"
 ) !default;
 
 $sys-dark: (
@@ -112,9 +110,7 @@ $sys-dark: (
   "outline": "neutral-variant60", "outline-variant": "neutral-variant30",
   "inverse-surface": "neutral90", "inverse-on-surface": "neutral10",
   "inverse-primary": "primary40",
-  "scrim": "neutral0", "shadow": "neutral0",
-  "background": "neutral6", "on-background": "neutral90",
-  "surface-variant": "neutral-variant30", "surface-tint": "primary80"
+  "scrim": "neutral0", "shadow": "neutral0"
 ) !default;
 
 :root, :host {

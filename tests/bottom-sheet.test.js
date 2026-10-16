@@ -25,7 +25,6 @@ describe('Bottom sheet CSS', () => {
 
   test('only the modal variant paints a scrim', () => {
     assert.match(css, /dialog\.bottom-sheet:not\(:modal\)::backdrop/);
-    assert.match(css, /dialog\.bottom:not\(:modal\)::backdrop/);
   });
 });
 
@@ -105,6 +104,19 @@ describe('Bottom sheet drag', () => {
     tap(dialog, 'pointerup', { x: 180, y: 640 });
     assert.equal(dialog.open, true);
   });
+
+  test('a drag that starts on a .drag-handle below the top strip dismisses', () => {
+    const dialog = openSheet();
+    const handle = document.createElement('span');
+    handle.className = 'drag-handle';
+    handle.setAttribute('aria-hidden', 'true');
+    dialog.querySelector('p').after(handle);
+    // 100px down: outside the top 48px strip, so only the handle can start it.
+    tap(handle, 'pointerdown', { x: 180, y: 500 });
+    tap(handle, 'pointermove', { x: 180, y: 640 });
+    tap(handle, 'pointerup', { x: 180, y: 640 });
+    assert.equal(dialog.open, false);
+  });
 });
 
 // Dragging is a pointer gesture, so a handle that only answers a drag puts
@@ -140,12 +152,6 @@ describe('Bottom sheet handle button', () => {
   test('a keyboard activation dismisses', () => {
     const dialog = openSheet();
     activate(dialog.querySelector('.drag-handle'));
-    assert.equal(dialog.open, false);
-  });
-
-  test('the pre-1.0 .handle spelling is the same control', () => {
-    const dialog = openSheet('<button type="button" class="handle" aria-label="Dismiss"></button>');
-    activate(dialog.querySelector('.handle'));
     assert.equal(dialog.open, false);
   });
 

@@ -41,13 +41,13 @@ const S = defineSections([
           Use <code>.start-align</code> and <code>.end-align</code> to follow the
           text direction. The left and right classes stay physical and do not mirror in RTL.
         </p>
-        <article class="surface-variant">
+        <article class="surface-container-highest">
           <h5 class="left-align">This should be left aligned</h5>
         </article>
-        <article class="surface-variant">
+        <article class="surface-container-highest">
           <h5 class="right-align">This should be right aligned</h5>
         </article>
-        <article class="surface-variant">
+        <article class="surface-container-highest">
           <h5 class="center-align">This should be center aligned</h5>
         </article>
 <Code code={`
@@ -221,10 +221,6 @@ const S = defineSections([
             </tr>
           </tbody>
         </table>
-        <p>
-          Legacy <code>small</code>, <code>med</code>, and <code>xxl</code>
-          utility names remain aliases for compatibility.
-        </p>
         <h5>Usage</h5>
 <Code code={`
 <div class="hide-on-compact-only"></div>
@@ -630,7 +626,7 @@ const S = defineSections([
 `} />
   </Section>
   <Section {...S.formatting}>
-        <p>These classes handle truncation, text wrapping, spacing resets, selection and hover effects.</p>
+        <p>These classes handle truncation, text wrapping and hover effects.</p>
 
         <h5>Truncation</h5>
         <p>
@@ -660,15 +656,6 @@ const S = defineSections([
         </table>
         <p>Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.</p>
 
-        <h5>Block, padding and selection</h5>
-        <table class="striped">
-          <thead><tr><th>Class</th><th>Use</th></tr></thead>
-          <tbody>
-            <tr><td><code>.center-block</code></td><td><code>display: block</code> with auto inline margins centers an element that has a width.</td></tr>
-            <tr><td><code>.no-padding</code></td><td><code>padding: 0 !important</code> removes a component's own padding.</td></tr>
-            <tr><td><code>.no-select</code></td><td><code>user-select: none</code> stops text selection on a control that is dragged or pressed repeatedly. Leave content people may want to copy selectable.</td></tr>
-          </tbody>
-        </table>
 
         <h5>Hover</h5>
         <p>

@@ -30,7 +30,7 @@
 [icon-style="sharp"],
 :host([icon-style="sharp"]) { --md-icon-font: var(--md-icon-font-sharp); }
 
-$_icon: ".material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons";
+$_icon: ".material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp";
 
 #{$_icon} {
   display: inline-block;

@@ -102,17 +102,9 @@ describe('Decorative and interactive are told apart by the element', () => {
 describe('It composes with the bottom sheet', () => {
   const sheetRules = rules.filter((r) => /dialog\.bottom-sheet/.test(r.selector));
 
-  test('the sheet styles .drag-handle wherever it styles .handle', () => {
-    const mentions = sheetRules.filter((r) => /\.handle(?![\w-])/.test(r.selector));
-    assert.ok(mentions.length, 'the sheet no longer has a handle slot');
-
-    for (const rule of mentions) {
-      assert.match(
-        rule.selector,
-        /\.drag-handle/,
-        `${rule.selector} reaches .handle but not the M3 name`
-      );
-    }
+  test('the sheet has a .drag-handle slot and no pre-1.0 .handle one', () => {
+    assert.ok(sheetRules.some((r) => /\.drag-handle/.test(r.selector)), 'the sheet no longer has a handle slot');
+    assert.equal(sheetRules.some((r) => /(?<![\w-])\.handle(?![\w-])/.test(r.selector)), false, 'the sheet still styles .handle');
   });
 
   test('the sheet suppresses the vertical bar it would otherwise print across', () => {
@@ -122,7 +114,7 @@ describe('It composes with the bottom sheet', () => {
   });
 
   test('an author-supplied handle still hides the sheet own ::before', () => {
-    const guard = sheetRules.find((r) => /:has\(> :is\(\.handle, \.drag-handle\)\)/.test(r.selector));
+    const guard = sheetRules.find((r) => /:has\(> \.drag-handle\)/.test(r.selector));
     assert.ok(guard, 'the sheet would draw its grabber under the author own handle');
     assert.match(guard.body, /content: none/);
   });

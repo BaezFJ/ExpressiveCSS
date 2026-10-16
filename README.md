@@ -199,9 +199,8 @@ The existing single-file IIFE and CommonJS builds remain available.
 | Bottom-sheet drag dismissal | Call `BottomSheets.Init()` once; add `Dialogs.Init()` for light dismissal |
 | Side-sheet drag dismissal | Call `SideSheets.Init()` once; add `Dialogs.Init()` for light dismissal |
 
-`Range` retains its Slider alias. Component initializers include internal
-dependencies such as Menu in FormSelect, FormSelect in Datepicker, and Carousel in
-swipeable Tabs. Do not initialize those instances separately. Document behaviors
+Component initializers include internal
+dependencies such as Menu in FormSelect and FormSelect in Datepicker. Do not initialize those instances separately. Document behaviors
 apply to the whole page, so do not repeat their `.Init()` calls on route changes or
 alongside the root entry.
 
@@ -210,7 +209,7 @@ compile using `sass --pkg-importer=node app.scss app.css`:
 
 ```scss
 @use "pkg:@expressivecss/expressive/scss/custom" with (
-  $components: ("icons-material-design", "tabs", "carousel"),
+  $components: ("icons-material-design", "tabs"),
   $utilities: ()
 );
 ```
@@ -257,7 +256,7 @@ a subset with your own font tooling and turn off the bundled font declarations:
 
 ```scss
 @use "pkg:@expressivecss/expressive/scss/custom" with (
-  $components: ("icons-material-design", "tabs", "carousel"),
+  $components: ("icons-material-design", "tabs"),
   $utilities: (),
   $expressive-include-fonts: false
 );

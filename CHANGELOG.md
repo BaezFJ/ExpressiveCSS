@@ -82,8 +82,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `onOpen` and `onClose` callbacks of cards and expanding cards, the
   timepicker's `dialRadius`, `outerRadius`, `innerRadius` and `tickRadius`
   options, `PaneResize.width()` and `PaneResize.setWidth()`,
-  `Copy.textFor()`, and the `.overline`, `.center-block`, `.no-padding` and
-  `.no-select` helpers.
+  `Copy.textFor()`, and the `.overline` helper.
 - A JavaScript tooltip whose trigger sits in a shadow root now starts hidden
   and absolutely positioned. The tooltip goes into that shadow root, where
   neither `body > .tooltip` nor `:not(body) > .tooltip` matched it, so it
@@ -92,9 +91,28 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - A tap on a menu item after scrolling the menu by touch closes the menu
   again. The scroll flag was cleared only by a click, and a touch scroll
   ends without one, so the next tap was ignored as part of the scroll.
+- Datepicker's previous and next month buttons have accessible names. The
+  `previousMonth` and `nextMonth` i18n strings were never read; they now label
+  the buttons and default to `'Previous month'` and `'Next month'`.
+- A drag that starts on a bottom sheet's `.drag-handle` now moves the sheet
+  wherever the handle sits. The drag check looked only for the pre-1.0
+  `.handle` class.
 
 ### Removed
 
+- **Breaking (1.0).** Most names kept for markup written before 0.8.0 are
+  gone. Each one has a replacement that has been documented since 0.8.0;
+  see Migration below. A few stay: `.breadcrumb` and `.breadcrumb-wrapper`,
+  a bare `ul.pagination`, and checkbox `input + span`, which multiple Select
+  still emits.
+- **Breaking (1.0).** The remaining compatibility paths are gone too: the
+  `.range` and `.range-field` slider hosts, a switch whose `.switch` class
+  sits on a wrapper around the label, the `.extra` size on a common button,
+  radio `input + span` and switch `input + span` / `.lever` drawing, the
+  `li.tab` wrapper, a chip's `.active`, Carousel's `.flat` layout, `fullWidth`
+  option and `.carousel-fixed-item`, and the `background`, `on-background`,
+  `surface-variant` and `surface-tint` color roles with their `-light`/`-dark`
+  pairs and utility classes.
 - Selectors and code that never matched or never ran. The date and time
   picker rules no longer carry hyphenated twins of their generated parts,
   such as `.date-picker-container`; the script only ever emitted the
@@ -108,6 +126,80 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Datepicker's `startRange` and `endRange` options. Nothing set them, and the
   `is-startrange`, `is-endrange` and `is-inrange` classes they produced had
   no styles. Use `isDateRange` for range selection.
+
+### Changed
+
+- Snackbar's generated close button holds its icon in a
+  `<span class="material-symbols">` instead of an `<i>`. Styles that targeted
+  `.snackbar i` need `.snackbar .material-symbols`.
+- Swipeable tabs no longer use Carousel. The panels move into a full-width
+  `.tabs-content` scroll-snap track, so touch and trackpad swipes are native
+  scrolling. Only the shown panel is reachable by keyboard; the others are
+  `inert`. The track re-aligns when its width changes, so a tab bar started
+  in a closed dialog or sheet shows the current panel once opened. Dragging
+  the panels with a mouse no longer switches tabs; click the tab instead.
+- Components that read `surface-variant` now read
+  `surface-container-highest`, as Material 3 maps it: the unselected switch
+  track, the time picker's clock face and hour and minute inputs, the date
+  picker's header rule and focused month and year field, and disabled cards.
+  In dark mode those surfaces are a little darker and more neutral. Rules
+  that read `background` or `on-background` now read `surface` and
+  `on-surface`, which resolve to the same colors.
+
+### Migration
+
+- Icons: write `<span class="material-symbols" aria-hidden="true">`. A bare
+  `<i>` is no longer treated as an icon inside buttons, lists, menus, chips,
+  bars or fields, and `.material-icons` is gone; use `.material-symbols`
+  (or the `-outlined`, `-rounded` and `-sharp` variants).
+- Field icons: name the side with `.prefix` or `.suffix`. The positional
+  `i:first-of-type` / `i:last-of-type` fallback is gone.
+- Visibility helpers: replace `.hide-on-small-only` and
+  `.hide-on-small-and-down` with `.hide-on-compact-only`, `.hide-on-med-only`
+  with `.hide-on-medium-only`, `.hide-on-xxl-only` with
+  `.hide-on-extra-large-only`, `.show-on-small` with `.show-on-compact`, and
+  `.show-on-xxl` with `.show-on-extra-large`.
+- Replace `.no-padding` with `.p-0` and `.center-block` with `.mx-auto` plus a
+  `display: block` of your own. `.no-select` has no replacement class; set
+  `user-select: none` in your own CSS.
+- Progress: replace `.preloader` with `.progress.circular`.
+- Date and time pickers: AutoInit starts `.date-picker` and `.time-picker`
+  only. Rename `class="datepicker"` and `class="timepicker"` on the inputs.
+- Search: replace `.searchbar` with `.search-bar`.
+- Sheets: replace `dialog.bottom` with `dialog.bottom-sheet`, and the sheet's
+  `.handle` with `.drag-handle`. Replace side sheet `dialog.right` and
+  `dialog.right-sheet` with `dialog.side-sheet`, and `dialog.left` and
+  `dialog.left-sheet` with `dialog.side-sheet.start`.
+- Toolbar: replace host `.max` with `.docked` and host `.filled` with
+  `.vibrant`. A `.filled` action and a `.max` spacer inside the bar are
+  unchanged.
+- Tooltip: replace `.tooltip.max` with `.tooltip.rich`.
+- Menus: replace a bare `<hr>` between items with
+  `<li class="divider" role="separator">`.
+- File input: the trigger is a `<label class="button">` wrapping the
+  `<input type="file">`. A `<button>` or `.btn` trigger is no longer styled.
+- Script: replace `Expressive.Range` with `Expressive.Slider`.
+- Buttons: replace `class="button extra"` on a common button with
+  `class="button medium"`. Its label grows from `label-large` (14px) to
+  `title-medium` (16px). `circle extra` is still the FAB. A navigation
+  rail FAB is a plain `.button`.
+- Radios and switches: drop the `<span>` or `.lever` after the input; the
+  input draws the control and the label text sits beside it. Put `.switch`
+  on the `<label>` itself: `<div class="switch"><label>` now draws a
+  checkbox.
+- Sliders: replace a `.range` or `.range-field` host with `.slider`, or wrap
+  the input in a `<label>`.
+- Tabs: put the `<a>` links directly in `nav.tabs`, without `ul` and
+  `li.tab`.
+- Chips: replace `.active` with `.selected`.
+- Carousel: replace `.flat` or `fullWidth: true` with an M3 layout such as
+  `.hero` or `.uncontained`. A `.carousel-fixed-item` child is now an
+  ordinary item; position a fixed overlay in your own CSS.
+- Color: replace `--md-sys-color-background` with `surface`, `on-background`
+  with `on-surface`, `surface-variant` with `surface-container-highest` and
+  `surface-tint` with `primary`, in variables and in the `.x` / `.x-text`
+  utility classes. Overrides of the `-light`/`-dark` pairs move the same
+  way.
 
 ## [0.15.0] - 2026-10-14
 

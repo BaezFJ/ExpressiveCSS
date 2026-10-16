@@ -46,12 +46,12 @@ describe('Toolbar CSS', () => {
   });
 
   test('docked is full width, square, no lift, 16dp insets', () => {
-    const rule = ruleWith('.toolbar', ':is(.docked');
+    const rule = ruleWith('.toolbar.docked');
     assert.ok(rule, 'no .toolbar.docked rule');
     assert.match(rule[2], /--md-comp-toolbar-container-shape:\s*0/);
     assert.match(rule[2], /--md-comp-toolbar-leading-space:\s*16px/);
     assert.match(rule[2], /box-shadow:\s*none/);
-    assert.match(rule[1], /\.max/, '.max stays the alias');
+    assert.doesNotMatch(css, /\.toolbar[^{,]*\.max(?![\w-])[^{]*\{[^}]*container-shape/, 'the pre-1.0 .max host alias is gone');
   });
 
   test('.standard is in the sheet too', () => {
@@ -61,7 +61,7 @@ describe('Toolbar CSS', () => {
   });
 
   test('vibrant is primary-container, and leaves [vibrant] to the foundation', () => {
-    const rule = ruleWith('.toolbar', ':is(.vibrant');
+    const rule = ruleWith('.toolbar.vibrant');
     assert.ok(rule, 'no .toolbar.vibrant rule');
     assert.match(rule[2], /--md-comp-toolbar-container-color:\s*var\(--md-sys-color-primary-container\)/);
     assert.match(rule[2], /--md-comp-toolbar-color:\s*var\(--md-sys-color-on-primary-container\)/);

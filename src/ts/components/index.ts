@@ -41,12 +41,3 @@ export { Tabs } from "./tabs";
 export { Timepicker } from "./timepicker";
 export { Snackbar } from "./snackbar";
 export { Tooltip } from "./tooltip";
-
-// Names retired in 0.8.0, kept so existing imports keep resolving.
-//
-// `Range` simply moved to the name M3 uses for the component: Slider. `Slider`
-// itself held the image slideshow until 0.8.0 - the one rename in the set that
-// changed an existing name's *meaning* rather than adding a second one, so it
-// was called out in the changelog rather than aliased. The slideshow is gone in
-// 0.8.0; Carousel covers the case.
-export { Slider as Range } from "./slider";

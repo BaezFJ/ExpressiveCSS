@@ -27,6 +27,42 @@ test('migration skill searches find legacy names and pass the bundled templates'
   }
 });
 
+test('the step 6 search finds every alias 1.0 removes and leaves their replacements', () => {
+  const step6 = searches[4];
+  for (const line of [
+    '<span class="material-icons">add</span>',
+    '<button><i>add</i></button>',
+    '<div class="range"><input type="range"></div>',
+    '<input class=\'timepicker\'>',
+    '<input class="datepicker validate">',
+    '<span class="handle"></span>',
+    '<dialog class="bottom">',
+    '<dialog class="right-sheet">',
+    '<div class="toolbar filled">',
+    '<div class="max toolbar">',
+    '<span class="chip active">',
+    '<div class="tooltip max">',
+    '<ul class="tabs"><li class="tab"><a>',
+    '<div class="switch"><label>',
+    '<a class="button extra" href="#">',
+    'Datepicker.init(el, { startRange: d })',
+    '<div class="background-text">',
+    'Expressive.Range',
+  ]) assert.match(line, step6, `step 6 search misses ${line}`);
+  for (const line of [
+    '<dialog class="bottom-sheet">',
+    '<button class="button circle extra">+</button>',
+    '<div class="datepicker-container"></div>',
+    '<div class="toolbar-group">',
+    '<div class="toolbar docked vibrant"><button class="filled">',
+    '<span class="chip selected">',
+    '<label class="switch"><input type="checkbox"></label>',
+    '<nav class="tabs"><a class="active">',
+    '<span class="drag-handle"></span>',
+    '<input type="range" class="slider-input">',
+  ]) assert.doesNotMatch(line, step6, `step 6 search flags ${line}`);
+});
+
 test('migration skill is self-contained', () => {
   assert.match(skill, /^---\nname: expressivecss-migration\n/);
   assert.doesNotMatch(skill, /\]\((?!https:\/\/)/, 'links must be absolute so the skill installs on its own');

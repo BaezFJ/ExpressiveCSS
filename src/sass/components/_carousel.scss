@@ -10,9 +10,6 @@
 //   .hero.center-aligned     one centered large item and two small previews
 //   .full-screen             vertical, edge-to-edge, mandatory snap
 //
-// `.flat` remains a full-width compatibility layout for swipeable tabs and
-// older integrations.
-//
 // Material measurements:
 //   inline padding      16dp (0 for full-screen)
 //   block padding        8dp (0 for full-screen)
@@ -277,8 +274,8 @@
 
 // Contained layouts keep every visible item complete. These surface guards
 // reserve the 16dp edge padding so the following item cannot peek through it.
-.carousel:not(.uncontained, .full-screen, .flat)::before,
-.carousel:not(.uncontained, .full-screen, .flat)::after,
+.carousel:not(.uncontained, .full-screen)::before,
+.carousel:not(.uncontained, .full-screen)::after,
 .carousel.full-screen-horizontal::before,
 .carousel.full-screen-horizontal::after {
   content: "";
@@ -290,12 +287,12 @@
   pointer-events: none;
 }
 
-.carousel:not(.uncontained, .full-screen, .flat)::before,
+.carousel:not(.uncontained, .full-screen)::before,
 .carousel.full-screen-horizontal::before {
   inset-inline-start: 0;
 }
 
-.carousel:not(.uncontained, .full-screen, .flat)::after,
+.carousel:not(.uncontained, .full-screen)::after,
 .carousel.full-screen-horizontal::after {
   inset-inline-end: 0;
 }
@@ -539,30 +536,6 @@
 
   .carousel.dragging .carousel-item {
     pointer-events: none;
-  }
-}
-
-// Full-width compatibility mode for tabs and existing integrations.
-.carousel.flat {
-  --md-comp-carousel-gap: 0px;
-  --md-comp-carousel-inline-padding: 0px;
-  --md-comp-carousel-block-padding: 0px;
-  --md-comp-carousel-shape: 0px;
-
-  .carousel-track > .carousel-item {
-    flex: 0 0 100%;
-    width: 100%;
-    height: 100%;
-  }
-
-  .carousel-fixed-item {
-    position: absolute;
-    inset: auto 0 20px;
-    z-index: 4;
-
-    &.with-indicators {
-      bottom: 68px;
-    }
   }
 }
 

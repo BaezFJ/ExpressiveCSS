@@ -61,11 +61,11 @@ decided where its CSS landed in the output. Use a mixin instead:
 ```scss
 // no
 @extend .z-depth-1;
-@extend .surface-variant;
+@extend .surface-container-highest;
 
 // yes
 @include z-depth("1");
-background-color: var(--md-sys-color-surface-variant);
+background-color: var(--md-sys-color-surface-container-highest);
 ```
 
 `@extend` within a single file (placeholders, `.btn-large { @extend .btn; }`) is
@@ -124,10 +124,10 @@ so they stay. Consume the live name:
 
 ```scss
 // no - locks the rule to one theme
-border-bottom: 1px solid var(--md-sys-color-surface-variant-light);
+border-bottom: 1px solid var(--md-sys-color-outline-variant-light);
 
 // yes
-border-bottom: 1px solid var(--md-sys-color-surface-variant);
+border-bottom: 1px solid var(--md-sys-color-outline-variant);
 ```
 
 `light-dark()` resolves against the element's used `color-scheme` at the point
@@ -251,4 +251,4 @@ job is to be unconditional (`.hide`, `.m-3`) keep it.
 
 A few rules in `components/` still use `!important` for UA resets
 (modal float, staggered-list transitions, textarea padding), not for
-JS-driven geometry. Tap target and the preloader no longer need the flag.
+JS-driven geometry. Tap target and the circular progress indicator no longer need the flag.

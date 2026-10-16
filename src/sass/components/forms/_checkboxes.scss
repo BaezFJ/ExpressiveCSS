@@ -188,10 +188,10 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
 }
 
 // Legacy / Select / Autocomplete: input + span draws the same
-// 18dp anatomy. Exclude .switch — that file paints the track on a span.
+// 18dp anatomy. Exclude .switch, which paints its own track.
 // $state is appended to the checkbox, e.g. ":checked" or ".invalid".
 @function _cb-span($state: "") {
-  @return "*:not(.switch) > [type='checkbox']#{$state} + span:not(.lever, .supporting-text, .character-counter, .file-path)";
+  @return "*:not(.switch) > [type='checkbox']#{$state} + span:not(.supporting-text, .character-counter, .file-path)";
 }
 
 // inline-block, not inline-flex: a flex span turns each text run and link

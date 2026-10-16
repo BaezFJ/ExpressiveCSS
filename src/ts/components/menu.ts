@@ -697,9 +697,8 @@ export class Menu extends Component<MenuOptions> implements Openable {
     // Focus moves directly to menu items; the surface itself is not a stop.
     this.menuEl.tabIndex = -1;
     // Only set tabindex if it hasn't been set by user
-    this.menuEl.querySelectorAll(':scope li, :scope > hr').forEach((el) => {
+    this.menuEl.querySelectorAll(':scope li').forEach((el) => {
       if (
-        el instanceof HTMLHRElement ||
         el.classList.contains('divider') ||
         el.classList.contains('gap') ||
         el.classList.contains('label') ||

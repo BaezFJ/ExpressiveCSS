@@ -81,7 +81,9 @@ describe('Grid CSS', () => {
       css,
       /@media\s*\(1200px\s*<=\s*width\s*<\s*1600px\)[\s\S]*?\.hide-on-large-only/
     );
-    assert.match(css, /\.hide-on-extra-large-only[\s\S]*?\.hide-on-xxl-only/);
-    assert.match(css, /\.show-on-extra-large[\s\S]*?\.show-on-xxl/);
+    assert.match(css, /\.hide-on-extra-large-only/);
+    assert.match(css, /\.show-on-extra-large/);
+    // The pre-1.0 small/med/xxl aliases were removed in 1.0.
+    assert.doesNotMatch(css, /\.(hide-on-(small-only|small-and-down|med-only|xxl-only)|show-on-(small|xxl))(?![\w-])/);
   });
 });

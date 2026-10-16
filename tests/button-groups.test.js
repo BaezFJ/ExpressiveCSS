@@ -216,7 +216,7 @@ describe('Button group shape morph', () => {
       '.button-group > :is(button:not(.icon-button), a.button):where(.filled, :not(.elevated, .filled, .tonal, .outlined, .text))[aria-pressed=true]'
     );
     const icon = ruleFor(
-      '.button-group > :is(button, a.button)[aria-pressed=true] > :is(i, .material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons)'
+      '.button-group > :is(button, a.button)[aria-pressed=true] > :is(.material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp)'
     );
     assert.match(unselected, /--_toggle-container-color:\s*var\(--md-sys-color-surface-container\)/);
     assert.match(unselected, /color:\s*var\(--md-sys-color-on-surface-variant\)/);

@@ -92,10 +92,10 @@ describe('layout reads per frame and resize', () => {
 
   test('Tabs re-measures at most once per burst of resize events', async () => {
     document.body.innerHTML = `
-      <ul class="tabs">
-        <li class="tab"><a class="active" href="#t1">1</a></li>
-        <li class="tab"><a href="#t2">2</a></li>
-      </ul>
+      <nav class="tabs" aria-label="Tabs">
+        <a class="active" href="#t1">1</a>
+        <a href="#t2">2</a>
+      </nav>
       <div id="t1">one</div><div id="t2">two</div>`;
     const el = document.querySelector('.tabs');
     const counter = { reads: 0 };
@@ -118,7 +118,7 @@ describe('throttled resize after a clock change', () => {
   beforeEach(resetBody);
 
   test('a backwards clock jump does not hold the trailing call', async () => {
-    document.body.innerHTML = `<ul class="tabs"><li class="tab"><a class="active" href="#t1">1</a></li></ul><div id="t1"></div>`;
+    document.body.innerHTML = `<nav class="tabs" aria-label="Tabs"><a class="active" href="#t1">1</a></nav><div id="t1"></div>`;
     const el = document.querySelector('.tabs');
     const counter = { reads: 0 };
     stubRect(el, counter);
@@ -188,7 +188,7 @@ describe('Datepicker redraws', () => {
    */
   function withDrawCounter(html, options, fn) {
     document.body.innerHTML = html;
-    const input = document.querySelector('.datepicker');
+    const input = document.querySelector('.date-picker');
     const counter = { draws: 0 };
     const instance = Expressive.Datepicker.init(input, {
       ...options,
@@ -204,7 +204,7 @@ describe('Datepicker redraws', () => {
 
   test('clicking the input draws once, not three times', () => {
     withDrawCounter(
-      `<input type="text" class="datepicker" value="Jan 15, 2024">`,
+      `<input type="text" class="date-picker" value="Jan 15, 2024">`,
       {},
       (input, instance, counter) => {
         input.dispatchEvent(
@@ -220,7 +220,7 @@ describe('Datepicker redraws', () => {
 
   test('arrow keys inside the shown month move focus without a redraw', () => {
     withDrawCounter(
-      `<input type="text" class="datepicker" value="Jan 15, 2024">`,
+      `<input type="text" class="date-picker" value="Jan 15, 2024">`,
       {},
       (input, instance, counter) => {
         const day = (n, m = 0) => instance.calendarEl.querySelector(
@@ -239,9 +239,9 @@ describe('Datepicker redraws', () => {
   });
 
   test('the calendar is rendered synchronously, before init() returns', () => {
-    document.body.innerHTML = `<input type="text" class="datepicker">`;
+    document.body.innerHTML = `<input type="text" class="date-picker">`;
 
-    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'));
+    const instance = Expressive.Datepicker.init(document.querySelector('.date-picker'));
 
     try {
       // Batching must not defer: callers read calendarEl straight after init.
@@ -256,7 +256,7 @@ describe('Datepicker redraws', () => {
 
   test('a draw still happens when the input holds no parseable date', () => {
     withDrawCounter(
-      `<input type="text" class="datepicker" value="not a date">`,
+      `<input type="text" class="date-picker" value="not a date">`,
       {},
       (input, instance, counter) => {
         input.dispatchEvent(
@@ -271,7 +271,7 @@ describe('Datepicker redraws', () => {
   });
 
   test('paging within a year keeps the month and year selects alive', () => {
-    withDrawCounter(`<input type="text" class="datepicker">`, {}, (input, instance) => {
+    withDrawCounter(`<input type="text" class="date-picker">`, {}, (input, instance) => {
       const before = instance.calendarEl.querySelector('.orig-select-month');
       const yearBefore = instance.calendarEl.querySelector('.orig-select-year');
       const startMonth = instance.calendars[0].month;
@@ -294,7 +294,7 @@ describe('Datepicker redraws', () => {
   });
 
   test('crossing a year boundary rebuilds them, since the year list re-centres', () => {
-    withDrawCounter(`<input type="text" class="datepicker">`, {}, (input, instance) => {
+    withDrawCounter(`<input type="text" class="date-picker">`, {}, (input, instance) => {
       instance.gotoDate(new Date(2024, 11, 1)); // December
       const before = instance.calendarEl.querySelector('.orig-select-year');
 
@@ -310,7 +310,7 @@ describe('Datepicker redraws', () => {
   });
 
   test('rebuilding the selects does not leak Menu instances', () => {
-    withDrawCounter(`<input type="text" class="datepicker">`, {}, (input, instance) => {
+    withDrawCounter(`<input type="text" class="date-picker">`, {}, (input, instance) => {
       const before = Expressive.Menu._menus.length;
 
       for (let i = 0; i < 14; i++) instance.nextMonth(); // crosses a year boundary
@@ -337,8 +337,8 @@ describe('Timepicker dial construction', () => {
   });
 
   test('a docked picker builds only its shell up front', () => {
-    document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
-    const instance = Expressive.Timepicker.init(document.querySelector('.timepicker'), {
+    document.body.innerHTML = `<input type="text" class="time-picker" value="03:45 PM">`;
+    const instance = Expressive.Timepicker.init(document.querySelector('.time-picker'), {
       displayPlugin: 'docked'
     });
 
@@ -352,8 +352,8 @@ describe('Timepicker dial construction', () => {
   });
 
   test('clicking the input builds the dial', () => {
-    document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
-    const input = document.querySelector('.timepicker');
+    document.body.innerHTML = `<input type="text" class="time-picker" value="03:45 PM">`;
+    const input = document.querySelector('.time-picker');
     const instance = Expressive.Timepicker.init(input, { displayPlugin: 'docked' });
 
     try {
@@ -371,8 +371,8 @@ describe('Timepicker dial construction', () => {
   });
 
   test('the time read from the input survives the deferred build', () => {
-    document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
-    const input = document.querySelector('.timepicker');
+    document.body.innerHTML = `<input type="text" class="time-picker" value="03:45 PM">`;
+    const input = document.querySelector('.time-picker');
     const instance = Expressive.Timepicker.init(input, { displayPlugin: 'docked' });
 
     try {
@@ -395,8 +395,8 @@ describe('Timepicker dial construction', () => {
   });
 
   test('Enter opens the dial and digital keyboard edits update the time', () => {
-    document.body.innerHTML = '<input type="text" class="timepicker" value="03:45 PM">';
-    const input = document.querySelector('.timepicker');
+    document.body.innerHTML = '<input type="text" class="time-picker" value="03:45 PM">';
+    const input = document.querySelector('.time-picker');
     const instance = Expressive.Timepicker.init(input, { displayPlugin: 'docked' });
     try {
       const enter = new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
@@ -417,8 +417,8 @@ describe('Timepicker dial construction', () => {
   });
 
   test('without a display plugin the dial is built at init', () => {
-    document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
-    const instance = Expressive.Timepicker.init(document.querySelector('.timepicker'));
+    document.body.innerHTML = `<input type="text" class="time-picker" value="03:45 PM">`;
+    const instance = Expressive.Timepicker.init(document.querySelector('.time-picker'));
 
     try {
       // No plugin means the container is on screen from the start, so
@@ -432,14 +432,14 @@ describe('Timepicker dial construction', () => {
   });
 
   test('destroying before the dial is built does not throw', () => {
-    document.body.innerHTML = `<input type="text" class="timepicker">`;
-    const instance = Expressive.Timepicker.init(document.querySelector('.timepicker'), {
+    document.body.innerHTML = `<input type="text" class="time-picker">`;
+    const instance = Expressive.Timepicker.init(document.querySelector('.time-picker'), {
       displayPlugin: 'docked'
     });
 
     instance.destroy();
 
-    assert.equal(Expressive.Timepicker.getInstance(document.querySelector('.timepicker')), undefined);
+    assert.equal(Expressive.Timepicker.getInstance(document.querySelector('.time-picker')), undefined);
   });
 });
 

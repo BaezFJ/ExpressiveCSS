@@ -978,6 +978,98 @@ const transport = new StdioClientTransport({
   const cardContent = lint([cardContentMarkup]);
   assert.equal(cardContent.stdout.match(/legacy-card-content/gu)?.length, 1, cardContent.stdout);
   assert.match(cardContent.stdout, /card-content\.html:3:\d+ legacy-card-content/u);
+  // The rules for names 1.0 removed, one by one and in process: the lint CLI
+  // rewrites className= to class= before inspecting, so it cannot test JSX.
+  // Each rule lists markup it must flag and current markup that only shares a
+  // name with it, and every legacy rule must have such a list.
+  const { inspectAuthoringRules, authoringRules } = await import(path.join(packageDir, 'server.js'));
+  inspectAuthoringRules('<p></p>'); // loads jsdom before anything below is timed
+  const legacyCases = {
+    'legacy-material-icons': {
+      flag: ['<span class="material-icons">add</span>', '.material-icons { font-size: 20px }'],
+      pass: ['<span class="material-symbols" aria-hidden="true">add</span>'],
+    },
+    'legacy-i-icon': {
+      flag: ['<button><i>add</i></button>', '<li>\n  <i>home</i> Home</li>'],
+      pass: ['<p><i>sic</i> as written</p>', '<td><i>pending</i></td>', '<button><i class="material-symbols">add</i></button>'],
+    },
+    'legacy-visibility-alias': {
+      flag: ['<div class="hide-on-small-only"></div>', '<div class="show-on-xxl"></div>'],
+      pass: ['<div class="hide-on-med-and-down show-on-compact"></div>'],
+    },
+    'legacy-helper-class': {
+      flag: ['<div class="no-padding"></div>', '<div class="center-block"></div>', '<p class="no-select"></p>'],
+      pass: ['<div class="p-0 mx-auto"></div>'],
+    },
+    'legacy-renamed-component': {
+      flag: ['<div class="preloader"></div>', '<search class="searchbar"></search>', '<div class="range-field"></div>', '<div class="range">\n  <input type="range"></div>', '<div className="range"><input type=range></div>'],
+      pass: ['<input id="searchbar" type="search">', '<span class="range">Jan 1 to Jan 5</span>', '<div class="slider"><input type="range"></div>', '<div class="progress circular"></div>'],
+    },
+    'legacy-picker-root': {
+      flag: ['<input class="datepicker">', "<input class='timepicker validate'>", '<input className="datepicker">'],
+      pass: ['<input class="date-picker">', '<div class="datepicker-container"></div>'],
+    },
+    'legacy-sheet-class': {
+      flag: ['<dialog class="bottom"></dialog>', '<dialog class="right-sheet"></dialog>', '<dialog className="left"></dialog>', '<dialog class="bottom-sheet"><span class="handle"></span></dialog>'],
+      pass: ['<dialog class="bottom-sheet"><span class="drag-handle"></span></dialog>', '<dialog class="side-sheet start"></dialog>', '<dialog data-class="left" class="side-sheet"></dialog>', '<ul class="sortable"><li><span class="handle"></span></li></ul>', '<dialog class="no-bottom-sheet"><span class="handle"></span></dialog>'],
+    },
+    'legacy-variant-alias': {
+      flag: ['<div class="tooltip max"></div>', '<div class="toolbar filled"></div>', '<span class="chip active"></span>', '<div class="max toolbar"></div>', '<div className={"tooltip max"}></div>', '<div className={`chip active ${x}`}></div>'],
+      pass: ['<div class="tooltip rich"></div>', '<div class="toolbar docked vibrant"><button class="filled">Go</button><span class="max"></span></div>', '<span class="chip selected"></span>', '<button class="chip active:scale-95"></button>', '<nav class="tabs max"></nav>', '<div class="toolbar-group active"></div>'],
+    },
+    'legacy-markup-path': {
+      flag: ['<ul class="tabs"><li class="tab"><a href="#a">A</a></li></ul>', '<div class="switch"><label><input type="checkbox">Wifi</label></div>', '<button class="extra">Compose</button>', '<a class="button extra" href="/c">C</a>', '<span class="button extra">C</span>', '<button className="extra">C</button>'],
+      pass: ['<label class="switch"><input type="checkbox">Wifi</label>', '<button class="circle extra">+</button>', '<button class="extra circle large">+</button>', '<div class="extra">Notes</div>', '<td class="extra">1</td>'],
+    },
+    'legacy-carousel-flat': {
+      flag: ['<div class="carousel flat"></div>', 'Carousel.init(el, { fullWidth: true });', '<div class="carousel-fixed-item"></div>', '<div className={"carousel flat"}></div>'],
+      pass: ['<div class="carousel hero"></div>', '<div class="flat"></div>', 'Carousel.init(el, { fullWidth: false });'],
+    },
+    'legacy-color-role': {
+      flag: ['<p style="color: var(--md-sys-color-surface-variant)"></p>', ':root { --md-sys-color-background-dark: #000; }', '<p class="on-background-text"></p>', '<div class="surface-tint"></div>', '<p class="background-text"></p>'],
+      pass: ['<img class="background" src="hero.jpg" alt="">', '<p style="background: var(--md-sys-color-surface)"></p>', '<p class="on-surface-variant-text"></p>'],
+    },
+    'legacy-selector': {
+      flag: ['.preloader { color: red }', '.toolbar.max .item {}', '.chip.active {}', 'document.querySelector(".datepicker");', '.on-background-text {}'],
+      pass: ['this.preloader = loader;', 'import "./preloader.css";', '.datepicker-container {}', '.toolbar.docked {}', '.date-picker {}'],
+    },
+    'legacy-datepicker-range': {
+      flag: ['Datepicker.init(el, { startRange: start });', 'const options = { "endRange": end };', "init(el, { format: 'iso',\n  'startRange': start });"],
+      pass: ['const edge = isStart ? startRange : endRange;', 'selection.startRange'],
+    },
+    'legacy-range-export': {
+      flag: ['Expressive.Range.init(el);'],
+      pass: ['Expressive.Slider.init(el);', 'const range = new Range();'],
+    },
+  };
+  const legacyIds = authoringRules.map((rule) => rule.id).filter((id) => /^legacy-/.test(id) && !['legacy-btn-class', 'legacy-card-content', 'legacy-nav-wrapper', 'legacy-brand-logo', 'legacy-lever', 'legacy-filled-in', 'legacy-materialized-name', 'legacy-input-field', 'legacy-materialize-textarea'].includes(id));
+  assert.deepEqual(Object.keys(legacyCases).sort(), [...legacyIds].sort(), 'every 1.0 legacy rule needs cases, and every case a rule');
+  const idsFor = (snippet) => inspectAuthoringRules(snippet).map((issue) => issue.id);
+  for (const [id, { flag, pass }] of Object.entries(legacyCases)) {
+    for (const snippet of flag) assert.ok(idsFor(snippet).includes(id), `${id} misses ${JSON.stringify(snippet)}`);
+    for (const snippet of pass) assert.ok(!idsFor(snippet).includes(id), `${id} flags ${JSON.stringify(snippet)}`);
+  }
+  // Each pattern alone, against inputs built to make it backtrack. Every shape
+  // here once took seconds against some version of these patterns.
+  const fill = (text) => text.repeat(Math.ceil(200_000 / text.length));
+  const adversarial = [
+    fill('<input type="radio" '), fill('<i '), fill('<li '), fill('<dialog class="x '), fill('<dialog class="bottom-sheet">'),
+    '<dialog ' + fill('bottom-sheet '), '<a' + fill('-a'), fill('<a-'), '<div class="' + fill('a '), fill('<div class="'),
+    '<span>' + fill(' ') + '<i>add</i>', fill('<button><i>'), 'className={`' + fill('chip '), fill('<a class="button extra '),
+    '<div class="range">' + fill(' ') + '<input', fill(', startRange '), '<dialog class="bottom-sheet">' + fill('<span '), fill('.chip'),
+    // An attribute with no opening quote: two optional whitespace runs that
+    // can split the same spaces between them are quadratic.
+    'class=' + fill(' '), 'className={' + fill(' '), '{' + fill(' '),
+  ];
+  for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id))) {
+    const regex = new RegExp(rule.pattern.source, rule.pattern.flags);
+    for (const input of adversarial) {
+      regex.lastIndex = 0;
+      const start = performance.now();
+      while (regex.exec(input) !== null) if (regex.lastIndex === 0) break;
+      assert.ok(performance.now() - start < 250, `${rule.id} backtracks on ${JSON.stringify(input.slice(0, 30))}`);
+    }
+  }
   // Files the bounded reader refuses, and inspections that stop early, fail instead of passing silently.
   const linkedMarkup = path.join(outsideDir, 'linked.html');
   const crowdedMarkup = path.join(outsideDir, 'crowded.html');

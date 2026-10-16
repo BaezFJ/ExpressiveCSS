@@ -89,7 +89,7 @@
 .datepicker-date-display {
   flex: 1 auto;
   padding: 20px 22px;
-  border-bottom: 1px solid var(--md-sys-color-surface-variant);
+  border-bottom: 1px solid var(--md-sys-color-surface-container-highest);
   font-weight: 500;
 
   .date-text {
@@ -137,7 +137,7 @@
 
   .datepicker-day {
     padding: 0;
-    color: var(--md-sys-color-on-background);
+    color: var(--md-sys-color-on-surface);
 
     &.is-today {
       color: var(--md-sys-color-primary);
@@ -197,7 +197,7 @@
     color: var(--md-sys-color-on-primary);
 
     &:focus {
-      background-color: var(--md-sys-color-surface-variant);
+      background-color: var(--md-sys-color-surface-container-highest);
       color: var(--md-sys-color-primary);
     }
   }

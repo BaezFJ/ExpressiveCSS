@@ -180,9 +180,9 @@ describe('Carousel', () => {
     instance.destroy();
   });
 
-  test('flat mode keeps indicators outside the scroll track', () => {
+  test('indicators stay outside the scroll track', () => {
     document.body.innerHTML = `
-      <div class="carousel flat">
+      <div class="carousel uncontained">
         <div class="carousel-item">one</div>
         <div class="carousel-item">two</div>
       </div>`;
@@ -247,9 +247,9 @@ describe('Datepicker month arrows', () => {
 
   test('the previous arrow is disabled at the start of the allowed range', () => {
     const now = new Date();
-    document.body.innerHTML = `<input type="text" class="datepicker">`;
+    document.body.innerHTML = `<input type="text" class="date-picker">`;
 
-    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = Expressive.Datepicker.init(document.querySelector('.date-picker'), {
       minYear: now.getFullYear(),
       minMonth: now.getMonth()
     });
@@ -269,9 +269,9 @@ describe('Datepicker month arrows', () => {
   });
 
   test('a cloned range input does not duplicate the id', () => {
-    document.body.innerHTML = `<div><input type="text" id="range-start" class="datepicker"></div>`;
+    document.body.innerHTML = `<div><input type="text" id="range-start" class="date-picker"></div>`;
 
-    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = Expressive.Datepicker.init(document.querySelector('.date-picker'), {
       isDateRange: true
     });
 
@@ -784,11 +784,12 @@ describe('FAB container shape', () => {
 describe('Text field icon selectors', () => {
   test('trailing icons are selected by .suffix, not only :last-child', () => {
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-    // Documented markup puts both icons before the input, so
-    // `> i:last-child` never matches the trailing icon and it
-    // sits in flow above the well.
-    assert.match(css, /\.field\s*>\s*i\.suffix/);
-    assert.match(css, /\.field\s*>\s*i\.prefix/);
+    // Documented markup puts both icons before the input, so a
+    // `:last-child` rule never matches the trailing icon and it
+    // sits in flow above the well. 1.0 drops the positional <i> path.
+    assert.match(css, /\.field\s*>\s*\.suffix/);
+    assert.match(css, /\.field\s*>\s*\.prefix/);
+    assert.doesNotMatch(css, /\.field\s*>\s*i:(first|last)-of-type/);
   });
 });
 
@@ -894,7 +895,7 @@ describe('App bar icon actions', () => {
       .filter((r) => /header:has\(>/.test(r.sel) && /a:not\(:has\(>/.test(r.sel));
     assert.ok(destination.length > 0, 'no app bar text-destination rule');
     for (const rule of destination) {
-      assert.match(rule.sel, /a:not\(:has\(>\s*:is\(i, \.material-symbols/);
+      assert.match(rule.sel, /a:not\(:has\(>\s*:is\(\.material-symbols/);
     }
   });
 });
@@ -1689,7 +1690,7 @@ describe('Icon selectors keyed on <i>, second sweep', () => {
   test('the slider inset icon sits in the active track', () => {
     assertIconIsAClass(
       'slider inset icon',
-      /\.slider\b|\.range\b/,
+      /\.slider\b/,
       /font-size:\s*var\(--md-comp-slider-icon-size\)/
     );
   });
@@ -1807,7 +1808,7 @@ describe('A cancelled pointer drag is not a completed one', () => {
   });
 
   function dragClock(endWith) {
-    document.body.innerHTML = '<input type="text" class="timepicker">';
+    document.body.innerHTML = '<input type="text" class="time-picker">';
     const picker = Expressive.Timepicker.init(document.querySelector('input'));
     const selected = [];
     picker.options.onSelect = (h, m) => selected.push([h, m]);

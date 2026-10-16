@@ -96,6 +96,16 @@ const SKIP_FLAGS = {
   qualityInspector: 'SKIP_QUALITY_INSPECTOR',
 };
 
+// Class-attribute matching for the legacy rules. CLASS_OPEN is the start of a
+// class attribute's value in HTML or JSX: class="…", className="…",
+// className={"…"} or className={`…`}. CLASS_CHARS runs to its end. A class
+// token is a whole name: not part of a longer one, and not a Tailwind-style
+// `name:` prefix.
+const CLASS_OPEN = String.raw`(?<![-\w])class(?:Name)?\s*=\s*(?:\{\s*)?["'\`]`;
+const CLASS_CHARS = String.raw`[^"'\`]*`;
+const classToken = (names) => String.raw`(?<![-\w:])(?:${names})(?![-\w:])`;
+const inClass = (names) => CLASS_OPEN + CLASS_CHARS + classToken(names);
+
 const LegacyPatternList = [
   {
     id: 'legacy-btn-class',
@@ -150,6 +160,107 @@ const LegacyPatternList = [
     severity: 'high',
     description: '`.materialize-textarea` is retired; use `.expressive-textarea`.',
     pattern: /\bmaterialize-textarea\b/g,
+  },
+  // Names removed in 1.0. Each description gives the replacement; the
+  // framework CHANGELOG's 1.0 migration notes list them together. Class names
+  // are matched as whole tokens inside a class attribute (see inClass), so an
+  // id or a word in prose that shares a name is not flagged. Tag patterns
+  // stop at `<` so unclosed markup cannot make them backtrack.
+  {
+    id: 'legacy-material-icons',
+    severity: 'high',
+    description: '`.material-icons` was removed in 1.0; use `.material-symbols` (or `-outlined`, `-rounded`, `-sharp`).',
+    pattern: /(?<![-\w])material-icons(?![-\w])/g,
+  },
+  {
+    id: 'legacy-i-icon',
+    severity: 'medium',
+    description: 'A bare `<i>` holding an icon name is italic text in 1.0, not an icon; write `<span class="material-symbols" aria-hidden="true">`. Only an `<i>` that opens a button, link, list item, label or similar host is checked; if it is italic prose, ignore this.',
+    // The host tag is part of the match, not a lookbehind: Node 22's V8 runs a
+    // variable-length lookbehind at every position, which is quadratic.
+    pattern: /<(?:a|button|label|li|span|div|nav|header|footer|menu|summary)\b[^<>]*>\s*<i(?:\s(?![^<>]*material-symbols)[^<>]*)?>\s*[a-z][a-z0-9]*(?:_[a-z0-9]+)*\s*<\/i>/g,
+  },
+  {
+    id: 'legacy-visibility-alias',
+    severity: 'high',
+    description: 'The small/med/xxl visibility aliases were removed in 1.0; use `.hide-on-compact-only`, `.hide-on-medium-only`, `.hide-on-extra-large-only`, `.show-on-compact` or `.show-on-extra-large`.',
+    pattern: /(?<![-\w])(?:hide-on-(?:small-only|small-and-down|med-only|xxl-only)|show-on-(?:small|xxl))(?![-\w])/g,
+  },
+  {
+    id: 'legacy-helper-class',
+    severity: 'medium',
+    description: '`.no-padding`, `.center-block` and `.no-select` were removed in 1.0; use `.p-0`, `.mx-auto` with `display: block`, or `user-select: none` in your own CSS.',
+    pattern: /(?<![-\w])(?:no-padding|center-block|no-select)(?![-\w])/g,
+  },
+  {
+    id: 'legacy-renamed-component',
+    severity: 'high',
+    description: '`.preloader`, `.searchbar` and the `.range` / `.range-field` slider hosts were removed in 1.0; use `.progress.circular`, `.search-bar` and `.slider`.',
+    // A `.range` host is only flagged where it wraps a range input: the name is
+    // too common to flag on its own.
+    pattern: new RegExp(`${inClass('preloader|searchbar|range-field')}|${CLASS_OPEN}(?=${CLASS_CHARS}${classToken('range')})${CLASS_CHARS}["'\`][^<>]*>\\s*<input\\b[^<>]*\\btype\\s*=\\s*["']?range(?![-\\w])`, 'g'),
+  },
+  {
+    id: 'legacy-picker-root',
+    severity: 'high',
+    description: 'AutoInit starts `.date-picker` and `.time-picker` in 1.0; rename `class="datepicker"` and `class="timepicker"`.',
+    pattern: new RegExp(inClass('datepicker|timepicker'), 'g'),
+  },
+  {
+    id: 'legacy-sheet-class',
+    severity: 'high',
+    description: 'Sheet aliases were removed in 1.0; use `dialog.bottom-sheet` with `.drag-handle`, and `dialog.side-sheet` (add `.start` for the start edge).',
+    pattern: new RegExp(`<dialog\\b[^<>]*${inClass('bottom|right|left|right-sheet|left-sheet')}|<dialog\\b(?=[^<>]*${classToken('bottom-sheet')})[^<>]*>(?:(?!<\\/dialog>|<\\/DIALOG>)[^]){0,4000}?${inClass('handle')}`, 'g'),
+  },
+  {
+    id: 'legacy-variant-alias',
+    severity: 'high',
+    description: 'Variant aliases were removed in 1.0: use `.tooltip.rich` for `.tooltip.max`, `.toolbar.docked` for a `.max` bar and `.toolbar.vibrant` for a `.filled` bar, and `.selected` for a chip\'s `.active`.',
+    pattern: new RegExp(`${CLASS_OPEN}(?=${CLASS_CHARS}${classToken('tooltip|toolbar|chip')})(?=${CLASS_CHARS}${classToken('max|filled|active')})${CLASS_CHARS}["'\`]`, 'g'),
+  },
+  {
+    id: 'legacy-markup-path',
+    severity: 'high',
+    description: 'Pre-1.0 markup paths were removed in 1.0: put tab links directly in `nav.tabs` (no `li.tab`), put `.switch` on the `<label>` that wraps the checkbox, use `.medium` for a 56dp common button, and a plain `.button` for a navigation rail FAB (`.extra` only marks `circle extra` FABs).',
+    pattern: new RegExp([
+      `<(?!label\\b)[a-z][\\w-]*(?![\\w-])[^<>]*${inClass('switch')}`,
+      `<li\\b[^<>]*${inClass('tab')}`,
+      // `.extra` sized a common button: a <button> or <a>, or anything with `.button`.
+      `<(?:a|button)\\b[^<>]*${CLASS_OPEN}(?!${CLASS_CHARS}${classToken('circle')})${CLASS_CHARS}${classToken('extra')}`,
+      `${CLASS_OPEN}(?!${CLASS_CHARS}${classToken('circle')})(?=${CLASS_CHARS}${classToken('button')})${CLASS_CHARS}${classToken('extra')}`,
+    ].join('|'), 'g'),
+  },
+  {
+    id: 'legacy-carousel-flat',
+    severity: 'medium',
+    description: 'Carousel `.flat`, the `fullWidth` option and `.carousel-fixed-item` were removed in 1.0; choose an M3 layout such as `.hero` or `.uncontained`.',
+    pattern: new RegExp(`${CLASS_OPEN}(?=${CLASS_CHARS}${classToken('carousel')})${CLASS_CHARS}${classToken('flat')}|\\bfullWidth\\s*:\\s*true\\b|(?<![-\\w])carousel-fixed-item(?![-\\w])`, 'g'),
+  },
+  {
+    id: 'legacy-color-role',
+    severity: 'high',
+    description: 'The legacy color roles were removed in 1.0, with their `-light`/`-dark` pairs and classes; use `surface` for `background`, `on-surface` for `on-background`, `surface-container-highest` for `surface-variant` and `primary` for `surface-tint`.',
+    // A bare `background` class is a common name of a page's own, so only the
+    // role's `-text` class is flagged.
+    pattern: new RegExp(`--md-sys-color-(?:background|on-background|surface-variant|surface-tint)(?:-light|-dark)?(?![-\\w])|${inClass('background-text|(?:on-background|surface-variant|surface-tint)(?:-text)?')}`, 'g'),
+  },
+  {
+    id: 'legacy-selector',
+    severity: 'high',
+    description: 'A CSS selector or query names a class 1.0 removed: `.preloader`, `.searchbar`, `.range-field`, `.datepicker` / `.timepicker` (now `.date-picker` / `.time-picker`), `.toolbar.max` / `.toolbar.filled`, `.tooltip.max`, `.chip.active`, `.carousel.flat` or a legacy color role class. See the replacements in the other `legacy-*` rules.',
+    pattern: /(?<![\w$)\]-])\.(?:preloader|searchbar|range-field|(?:date|time)picker|(?:toolbar|tooltip)\.(?:max|filled)|chip\.active|carousel\.flat|(?:on-background|surface-variant|surface-tint)(?:-text)?|background-text)(?![-\w])/g,
+  },
+  {
+    id: 'legacy-datepicker-range',
+    severity: 'high',
+    description: 'Datepicker `startRange` and `endRange` were removed in 1.0; use `isDateRange` for range selection.',
+    pattern: /[{,]\s*(["']?)\b(?:startRange|endRange)\1\s*:/g,
+  },
+  {
+    id: 'legacy-range-export',
+    severity: 'high',
+    description: '`Expressive.Range` was removed in 1.0; use `Expressive.Slider`.',
+    pattern: /\bExpressive\.Range\b/g,
   },
   {
     id: 'raw-color-in-component-style',
@@ -1172,6 +1283,9 @@ function lineForMatch(text, index) {
   const col = prefix.length - prefix.lastIndexOf('\n');
   return { line, column: col };
 }
+
+// The legacy and retired-markup rules, for tests that check each one alone.
+export const authoringRules = LegacyPatternList;
 
 export function inspectAuthoringRules(
   snippet,

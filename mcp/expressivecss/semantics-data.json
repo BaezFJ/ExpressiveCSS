@@ -8,7 +8,7 @@
     "rules": [
       "Static semantics are the page author's; dynamic state is the framework's. See CONTEXT.md for both terms.",
       "A component may declare a composite role only if its keyboard contract is implemented and tested. Tabs do not qualify: they are navigation (`<nav>` + anchors + `aria-current`), not a `tablist`. Carousel is a different case - its keyboard contract is implemented, and it rejects `tablist` because it follows the ARIA carousel pattern instead.",
-      "Icons are `<span class=\"material-symbols\" aria-hidden=\"true\">`. `<i>` keeps working but is undocumented.",
+      "Icons are `<span class=\"material-symbols\" aria-hidden=\"true\">`. A bare `<i>` gets no icon styling.",
       "`<nav>` is for genuine navigation only, and every one carries a required `aria-label`. Card action rows and toolbars are not navigation.",
       "Every user-facing string the framework generates has an `i18n` option."
     ],
@@ -128,7 +128,7 @@
           {
             "id": "fab-no-surface-color",
             "kind": "forbid",
-            "selector": ":is(button, a.button, label.button):is(.circle.extra, .circle.large, .extend):is(.surface, .surface-dim, .surface-bright, .surface-variant, .surface-container, .surface-container-lowest, .surface-container-low, .surface-container-high, .surface-container-highest)",
+            "selector": ":is(button, a.button, label.button):is(.circle.extra, .circle.large, .extend):is(.surface, .surface-dim, .surface-bright, .surface-container, .surface-container-lowest, .surface-container-low, .surface-container-high, .surface-container-highest)",
             "fragmentSafe": true,
             "message": "Use a primary, secondary or tertiary container color for a FAB instead of a surface color."
           }
@@ -460,7 +460,7 @@
           {
             "id": "chip-icon-hidden",
             "kind": "require-attr",
-            "selector": ".chip :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+            "selector": ".chip :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp)",
             "attr": "aria-hidden",
             "equals": "true",
             "message": "A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden."
@@ -499,25 +499,25 @@
       },
       "drag-handle": {
         "status": "enforced",
-        "note": "The affordance that says a thing can be dragged, added with the drag handle component (#34). Which element it is *is* the whole semantic: a <span aria-hidden=\"true\"> when it is decoration - the usual case, and what a bottom sheet wants, since Escape already dismisses the sheet and the drag is a pointer nicety on top - and a <button> with a name when something is genuinely wired to it. The two rules below hold that split, and the sheet leans on it: `button.drag-handle` is where every interactive state in the partial is scoped, which is only correct because nothing else can be interactive. What no rule can check is the thing this component is most likely to be misused for. Dragging is a pointer gesture, so any outcome reachable only by dragging is unreachable without one; the Sortable behavior, the one reordering the framework ships, pairs a decorative handle with Move up and Move down buttons, and a page that builds its own owes it a keyboard path too. The docs say so plainly rather than implying the handle supplies it. Every selector below names `.handle` beside `.drag-handle`: the bottom sheet styles the pre-1.0 spelling too, and an alias the framework blesses is an alias these rules have to reach. The first rule is deliberately not fragmentSafe - what it detects is a *missing* aria-hidden, and a fragment omits by nature.",
+        "note": "The affordance that says a thing can be dragged, added with the drag handle component (#34). Which element it is *is* the whole semantic: a <span aria-hidden=\"true\"> when it is decoration - the usual case, and what a bottom sheet wants, since Escape already dismisses the sheet and the drag is a pointer nicety on top - and a <button> with a name when something is genuinely wired to it. The two rules below hold that split, and the sheet leans on it: `button.drag-handle` is where every interactive state in the partial is scoped, which is only correct because nothing else can be interactive. What no rule can check is the thing this component is most likely to be misused for. Dragging is a pointer gesture, so any outcome reachable only by dragging is unreachable without one; the Sortable behavior, the one reordering the framework ships, pairs a decorative handle with Move up and Move down buttons, and a page that builds its own owes it a keyboard path too. The docs say so plainly rather than implying the handle supplies it. The first rule is deliberately not fragmentSafe - what it detects is a *missing* aria-hidden, and a fragment omits by nature.",
         "rules": [
           {
             "id": "drag-handle-is-hidden-or-a-control",
             "kind": "forbid",
-            "selector": ":is(.handle, .drag-handle):not(button):not([aria-hidden=\"true\"])",
+            "selector": ".drag-handle:not(button):not([aria-hidden=\"true\"])",
             "message": "A drag handle has no text and reports nothing, so on any element but a <button> it is decoration and needs aria-hidden=\"true\". Left exposed it arrives as an unlabelled blank in the reading order. Make it a <button> with a name if it is meant to be operated."
           },
           {
             "id": "drag-handle-button-is-not-hidden",
             "kind": "forbid",
-            "selector": "button:is(.handle, .drag-handle)[aria-hidden=\"true\"]",
+            "selector": "button.drag-handle[aria-hidden=\"true\"]",
             "fragmentSafe": true,
             "message": "aria-hidden on a <button> hides it from assistive technology without taking it out of the tab order, so keyboard focus lands on something that is not there. Decoration is a <span>; a control stays exposed."
           },
           {
             "id": "drag-handle-button-is-named",
             "kind": "require-accessible-name",
-            "selector": "button:is(.handle, .drag-handle)",
+            "selector": "button.drag-handle",
             "message": "The handle is a bar drawn in CSS - there is no text inside it to be named by. A handle worth making a control is worth an aria-label saying what it moves."
           }
         ]
@@ -649,7 +649,7 @@
           {
             "id": "field-icon-hidden",
             "kind": "require-attr",
-            "selector": ".field .material-symbols, .field .material-symbols-outlined, .field .material-symbols-rounded, .field .material-symbols-sharp, .field .material-icons",
+            "selector": ".field .material-symbols, .field .material-symbols-outlined, .field .material-symbols-rounded, .field .material-symbols-sharp",
             "attr": "aria-hidden",
             "equals": "true",
             "message": "The ligature is read aloud. A field icon is decoration; the label names the control."
@@ -657,8 +657,8 @@
           {
             "id": "field-icon-side",
             "kind": "forbid",
-            "selector": ".field > :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons):not(.prefix):not(.suffix)",
-            "message": "A field icon must name its side with .prefix or .suffix. The positional fallback counts elements of the same *type*, which only ever worked for <i>."
+            "selector": ".field > :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp):not(.prefix):not(.suffix)",
+            "message": "A field icon must name its side with .prefix or .suffix. Fields have no positional fallback."
           },
           {
             "id": "field-label-for",
@@ -751,7 +751,7 @@
             "kind": "forbid",
             "selector": "fieldset.rating [type=\"radio\"] + span",
             "fragmentSafe": true,
-            "message": "Put a star's visually hidden text before its radio. A span after the radio is the older input + span pattern, which hides the radio and with it the star."
+            "message": "Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 1.0 no longer draws."
           }
         ]
       },
@@ -769,7 +769,7 @@
       },
       "forms/slider": {
         "status": "enforced",
-        "note": "Swept 0.8.0. Renamed from range to the name M3 uses; `.range` stays as an alias.",
+        "note": "Swept 0.8.0. Renamed from range to the name M3 uses; 1.0 removed the `.range` and `.range-field` hosts.",
         "rules": [
           {
             "id": "range-labelled",
@@ -793,7 +793,7 @@
           {
             "id": "switch-decorative-text-hidden",
             "kind": "require-attr",
-            "selector": ".switch > span:not(.lever)",
+            "selector": ".switch > span",
             "attr": "aria-hidden",
             "equals": "true",
             "message": "On/off captions inside the label are folded into the accessible name, which then reads \"Off On\". Hide them and let the label text name the switch."
@@ -821,7 +821,7 @@
           {
             "id": "icon-button-icon-hidden",
             "kind": "require-attr",
-            "selector": ".icon-button :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+            "selector": ".icon-button :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp)",
             "attr": "aria-hidden",
             "equals": "true",
             "message": "The ligature is real text and is read out verbatim. The icon in an icon button is decoration - the control carries the name - so it is aria-hidden=\"true\"."
@@ -841,14 +841,14 @@
           {
             "id": "icon-not-i-element",
             "kind": "forbid",
-            "selector": "i.material-symbols, i.material-symbols-outlined, i.material-symbols-rounded, i.material-symbols-sharp, i.material-icons",
+            "selector": "i.material-symbols, i.material-symbols-outlined, i.material-symbols-rounded, i.material-symbols-sharp",
             "message": "<i> means idiomatic text. The canonical icon element is <span class=\"material-symbols\">.",
             "fragmentSafe": true
           },
           {
             "id": "icon-hidden-or-labelled",
             "kind": "forbid",
-            "selector": ".material-symbols:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-outlined:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-rounded:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-sharp:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-icons:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby])",
+            "selector": ".material-symbols:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-outlined:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-rounded:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-sharp:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]):not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby])",
             "message": "The ligature is real text and is read out verbatim. An icon is either decoration - aria-hidden=\"true\", with the enclosing control carrying the name - or an image in its own right, role=\"img\" with a label. It is never left as bare text."
           }
         ]
@@ -1836,7 +1836,7 @@
             "kind": "forbid",
             "selector": ".search-bar input:not([type=\"search\"])",
             "fragmentSafe": true,
-            "message": "The bar's control is a search input. `type=\"search\"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it. The selector names `.search-bar` and deliberately not the `.searchbar` alias: pre-1.0 markup of that shape predates the requirement, and holding old markup to a rule it could not have known is how a promise of an additive rename gets broken."
+            "message": "The bar's control is a search input. `type=\"search\"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it."
           }
         ]
       },
@@ -1924,7 +1924,7 @@
           {
             "id": "split-button-trailing-icon-hidden",
             "kind": "require-attr",
-            "selector": ".split-button > .menu-trigger :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+            "selector": ".split-button > .menu-trigger :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp)",
             "attr": "aria-hidden",
             "equals": "true",
             "message": "The ligature is real text and is read out verbatim, so an unhidden chevron names the trailing half \"arrow_drop_down\". It is decoration - the control carries the name - so it is aria-hidden=\"true\", and `icon-only-control-is-named` then requires the aria-label."

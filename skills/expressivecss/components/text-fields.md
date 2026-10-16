@@ -9,7 +9,7 @@ Component ID: `text-fields`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6c74a70f67d0a02a0e88e7ffae6cdea4722301373ca61b757e2f63ab3ab6d299`
+Contract SHA-256: `5142eada64c94b5649e21327b89746025f64f1ffd15082356e3c6f0fc13e4191`
 
 #### Selection and adaptation
 
@@ -37,7 +37,7 @@ A `.field` is the container. The `<label>` after the control is the floating lab
 
 `.input-field` is **not** the container and never was — the only rule matching it in the sheet is `.chips.input-field`.
 
-Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fields/specs). Height is 56dp. Filled is a `surface-variant` well with 4dp top corners and a 1dp / 2dp bottom indicator. Outlined is a 1dp / 2dp `outline` at 4dp. The label is `body-large` at rest and `body-small` floated. Input text is `body-large` / `on-surface`. Icons are 24dp, 12dp from the edge.
+Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fields/specs). Height is 56dp. Filled is a `surface-container-highest` well with 4dp top corners and a 1dp / 2dp bottom indicator. Outlined is a 1dp / 2dp `outline` at 4dp. The label is `body-large` at rest and `body-small` floated. Input text is `body-large` / `on-surface`. Icons are 24dp, 12dp from the edge.
 
 #### Syntax
 
@@ -70,7 +70,7 @@ The Text Inputs section of the [API reference](https://www.expressivecss.com/llm
 - `field-container-class`: The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.
 - `field-icon-not-i`: <i> means idiomatic text, not icon. Use <span class="material-symbols">.
 - `field-icon-hidden`: The ligature is read aloud. A field icon is decoration; the label names the control.
-- `field-icon-side`: A field icon must name its side with .prefix or .suffix. The positional fallback counts elements of the same *type*, which only ever worked for <i>.
+- `field-icon-side`: A field icon must name its side with .prefix or .suffix. Fields have no positional fallback.
 - `field-label-for`: A label that does not wrap its control has to name it. The floating label sits *after* the control and cannot wrap it, so it always needs `for`; a label that does wrap its control (the file input trigger) does not.
 - `field-control-id`: Without an id the label has nothing to point at.
 - `field-supporting-text-id`: Supporting and error text has to be referenceable to be announced with the control.

@@ -1,7 +1,7 @@
 // M3 Expressive Slider: sizes, centered, dual-handle.
 //
 // Named Range until 0.8.0, when the component took M3's name for it. The
-// old export is still here as an alias and is exercised below.
+// Range export was removed in 1.0.
 
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -25,10 +25,12 @@ describe('Slider CSS', () => {
     // A literal-selector regex has now broken on four separate renames.
     // Not a `:is\(([^)]*)\)` capture: the list holds `label:has(...)`, whose
     // own parenthesis ends the character class. Take the selector text.
-    const hosts = css.match(/([^{}]*\.range-field[^{}]*)\{/)[1];
-    for (const h of ['.range', '.range-field', '.slider']) {
+    const hosts = css.match(/([^{}]*\.slider[^{}]*label:has\(> \[type=['"]?range['"]?\]\)[^{}]*)\{/)[1];
+    for (const h of ['.slider', 'label:has(']) {
       assert.ok(hosts.includes(h), `host list is missing ${h}: ${hosts}`);
     }
+    // The pre-0.8.0 .range and .range-field hosts were removed in 1.0.
+    assert.doesNotMatch(css, /\.range(-field)?(?![\w-])/);
     assert.match(css, /--md-comp-slider-track-height:\s*24px/);
     assert.match(css, /--md-comp-slider-track-height:\s*40px/);
     assert.match(css, /--md-comp-slider-track-height:\s*56px/);
@@ -48,13 +50,13 @@ describe('Slider CSS', () => {
   });
 });
 
-describe('Range plugin', () => {
+describe('Slider plugin', () => {
   beforeEach(resetBody);
 
   test('sets the active fraction from the value', () => {
-    document.body.innerHTML = `<div class="range"><input type="range" min="0" max="100" value="40"></div>`;
+    document.body.innerHTML = `<div class="slider"><input type="range" min="0" max="100" value="40"></div>`;
     const input = document.querySelector('input');
-    const instance = Expressive.Range.init(input);
+    const instance = Expressive.Slider.init(input);
     try {
       assert.equal(input.style.getPropertyValue('--md-comp-slider-active-fraction'), '40%');
     } finally {
@@ -64,15 +66,15 @@ describe('Range plugin', () => {
 
   test('a dual-handle host gets start and end fractions', () => {
     document.body.innerHTML = `
-      <div class="range">
+      <div class="slider">
         <input type="range" min="0" max="100" value="25" aria-label="start">
         <input type="range" min="0" max="100" value="75" aria-label="end">
       </div>`;
     const [start, end] = document.querySelectorAll('input');
-    const a = Expressive.Range.init(start);
-    const b = Expressive.Range.init(end);
+    const a = Expressive.Slider.init(start);
+    const b = Expressive.Slider.init(end);
     try {
-      const host = document.querySelector('.range');
+      const host = document.querySelector('.slider');
       assert.equal(host.style.getPropertyValue('--md-comp-slider-start-fraction'), '25%');
       assert.equal(host.style.getPropertyValue('--md-comp-slider-end-fraction'), '75%');
     } finally {
@@ -82,12 +84,12 @@ describe('Range plugin', () => {
   });
 
   test('stops writes the tick count from step', () => {
-    document.body.innerHTML = `<div class="range stops"><input type="range" min="0" max="100" step="20" value="40"></div>`;
+    document.body.innerHTML = `<div class="slider stops"><input type="range" min="0" max="100" step="20" value="40"></div>`;
     const input = document.querySelector('input');
-    const instance = Expressive.Range.init(input);
+    const instance = Expressive.Slider.init(input);
     try {
       assert.equal(
-        document.querySelector('.range').style.getPropertyValue('--md-comp-slider-stop-count'),
+        document.querySelector('.slider').style.getPropertyValue('--md-comp-slider-stop-count'),
         '6'
       );
     } finally {

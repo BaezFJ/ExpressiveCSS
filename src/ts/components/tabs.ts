@@ -1,4 +1,3 @@
-import { Carousel } from './carousel';
 import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 import { Utils } from '../core/utils';
 
@@ -14,7 +13,8 @@ export interface TabsOptions extends BaseOptions {
    */
   onShow: (newContent: Element) => void;
   /**
-   * Set to true to enable swipeable tabs.
+   * Set to true to swipe between panels. The panels move into a full-width
+   * scroll-snap track, so touch and trackpad swipes are native scrolling.
    * This also uses the responsiveThreshold option.
    * @default false
    */
@@ -40,10 +40,17 @@ export class Tabs extends Component<TabsOptions> {
   _indicator: HTMLElement;
   _tabWidth: number;
   _tabsWidth: number;
-  _tabsCarousel: Carousel;
+  _track: HTMLElement;
+  private _panels: HTMLElement[] = [];
+  // The panel a programmatic scroll is heading for. Scroll events on the way
+  // there pass over other panels and must not select them.
+  private _scrollTarget: number | null = null;
+  private _scrollTimer: ReturnType<typeof setTimeout>;
+  private _trackObserver: ResizeObserver | null = null;
+  private _trackWidth = -1;
   _activeTabLink: HTMLAnchorElement;
   _content: HTMLElement;
-  private _originalPanels = new Map<HTMLElement, { display: string; priority: string; active: boolean; carousel: boolean; marker?: Comment }>();
+  private _originalPanels = new Map<HTMLElement, { display: string; priority: string; active: boolean; inert: boolean; marker?: Comment }>();
   private _originalLinks = new Map<HTMLAnchorElement, { active: boolean; current: string | null }>();
 
   constructor(el: HTMLElement, options: Partial<TabsOptions>) {
@@ -57,7 +64,7 @@ export class Tabs extends Component<TabsOptions> {
 
     this._tabLinks = this._queryTabLinks();
     if (!this._tabLinks.length) {
-      console.error('Tabs: no tab links (an <a> child, or one inside .tab) to show');
+      console.error('Tabs: no tab links (an <a> child) to show');
       return;
     }
     this._tabLinks.forEach(link => {
@@ -65,7 +72,7 @@ export class Tabs extends Component<TabsOptions> {
       const panel = this._panelFor(link);
       if (panel) this._originalPanels.set(panel, {
         display: panel.style.display, priority: panel.style.getPropertyPriority('display'),
-        active: panel.classList.contains('active'), carousel: panel.classList.contains('carousel-item')
+        active: panel.classList.contains('active'), inert: panel.inert
       });
     });
     // Swiping needs at least one panel the links resolve to.
@@ -123,13 +130,13 @@ export class Tabs extends Component<TabsOptions> {
   destroy() {
     this._removeEventHandlers();
     this._indicator?.remove();
-    if (this._tabsCarousel) {
+    if (this._track) {
       this._teardownSwipeableTabs();
     }
     this._originalPanels.forEach((original, panel) => {
       panel.style.setProperty('display', original.display, original.priority);
       panel.classList.toggle('active', original.active);
-      panel.classList.toggle('carousel-item', original.carousel);
+      panel.inert = original.inert;
       if (!panel.className) panel.removeAttribute('class');
     });
     this._originalLinks.forEach((original, link) => {
@@ -165,9 +172,7 @@ export class Tabs extends Component<TabsOptions> {
   }, 200);
 
   _queryTabLinks() {
-    return this.el.querySelectorAll<HTMLAnchorElement>(
-      ':scope > a, :scope > .tab > a'
-    );
+    return this.el.querySelectorAll<HTMLAnchorElement>(':scope > a');
   }
 
   _handleTabClick = (e: MouseEvent) => {
@@ -176,11 +181,9 @@ export class Tabs extends Component<TabsOptions> {
     const tabLink = target.closest('a');
     if (!tabLink || !Array.from(this._tabLinks).includes(tabLink)) return;
 
-    const tab = tabLink.parentElement;
     const disabled =
       tabLink.classList.contains('disabled') ||
-      tabLink.getAttribute('aria-disabled') === 'true' ||
-      tab?.classList.contains('disabled');
+      tabLink.getAttribute('aria-disabled') === 'true';
     if (disabled) {
       e.preventDefault();
       return;
@@ -188,9 +191,11 @@ export class Tabs extends Component<TabsOptions> {
     // Act as regular link if target attribute is specified.
     if (tabLink.hasAttribute('target')) return;
     if (this.options.swipeable) {
-      const index = this._tabsCarousel.images.indexOf(this._panelFor(tabLink));
-      if (index >= 0) this._tabsCarousel.set(index);
       e.preventDefault();
+      if (!this._panels.includes(this._panelFor(tabLink))) return;
+      if (tabLink !== this._activeTabLink) this._showPanel(tabLink);
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      this._scrollToActivePanel(reduce ? 'instant' : 'smooth');
       return;
     }
     const _oldContent = this._content;
@@ -218,8 +223,7 @@ export class Tabs extends Component<TabsOptions> {
   };
 
   _createIndicator() {
-    const tag = this.el.tagName === 'UL' || this.el.tagName === 'OL' ? 'li' : 'span';
-    const indicator = document.createElement(tag);
+    const indicator = document.createElement('span');
     indicator.classList.add('indicator');
     this.el.appendChild(indicator);
     this._indicator = indicator;
@@ -276,48 +280,114 @@ export class Tabs extends Component<TabsOptions> {
   }
 
   _setupSwipeableTabs() {
-    const tabsContent = [];
-    this._tabLinks.forEach((a) => {
-      const currContent = this._panelFor(a);
-      if (!currContent) return;
-      currContent.classList.add('carousel-item');
-      tabsContent.push(currContent);
-    });
-
-    // Create Carousel-Wrapper around Tab-Contents
-    const tabsWrapper = document.createElement('div');
-    tabsWrapper.classList.add('tabs-content', 'carousel', 'flat');
-
-    // Wrap around
-    tabsContent[0].parentElement.insertBefore(tabsWrapper, tabsContent[0]);
-    tabsContent.forEach((tabContent) => {
+    this._panels = [...new Set(Array.from(this._tabLinks, (a) => this._panelFor(a)).filter(Boolean))];
+    const track = document.createElement('div');
+    track.classList.add('tabs-content');
+    this._panels[0].before(track);
+    this._panels.forEach((panel) => {
       const marker = document.createComment('');
-      tabContent.before(marker);
-      this._originalPanels.get(tabContent).marker = marker;
-      tabsWrapper.appendChild(tabContent);
-      tabContent.style.display = '';
+      panel.before(marker);
+      this._originalPanels.get(panel).marker = marker;
+      track.appendChild(panel);
+      panel.style.display = '';
     });
-
-    this._tabsCarousel = Carousel.init(tabsWrapper, {
-      fullWidth: true,
-      noWrap: true,
-      duration: this.options.duration,
-      onCycleTo: (item) => {
-        const prevIndex = this._index;
-        this._setActiveTabLink(Array.from(this._tabLinks).find(a => !a.hasAttribute('target') && a.hash === '#' + item.id));
-        this._setTabsAndTabWidth();
-        this._animateIndicator(prevIndex);
-        if (typeof this.options.onShow === 'function')
-          this.options.onShow.call(this, this._content);
-      }
-    });
+    this._track = track;
+    this._syncPanels();
+    track.addEventListener('scroll', this._handleTrackScroll, { passive: true });
+    // A swipe or wheel that interrupts a programmatic scroll takes over from it.
+    track.addEventListener('pointerdown', this._releaseScrollTarget, { passive: true });
+    track.addEventListener('wheel', this._releaseScrollTarget, { passive: true });
+    // A track that starts hidden (in a closed dialog or sheet) is 0px wide, so
+    // the scroll below cannot reach the active panel. Re-align whenever the
+    // track's width changes, which also covers window resizes. Only the width:
+    // a panel growing taller mid-swipe must not pull the track back.
+    if (typeof ResizeObserver !== 'undefined') {
+      this._trackObserver = new ResizeObserver(() => {
+        if (track.clientWidth === this._trackWidth) return;
+        this._trackWidth = track.clientWidth;
+        this._scrollToActivePanel('instant');
+      });
+      this._trackObserver.observe(track);
+    }
+    this._scrollToActivePanel('instant');
   }
 
   _teardownSwipeableTabs() {
-    const tabsWrapper = this._tabsCarousel.el;
-    this._tabsCarousel.destroy();
+    const track = this._track;
+    this._trackObserver?.disconnect();
+    this._trackObserver = null;
+    this._releaseScrollTarget();
+    track.removeEventListener('scroll', this._handleTrackScroll);
+    track.removeEventListener('pointerdown', this._releaseScrollTarget);
+    track.removeEventListener('wheel', this._releaseScrollTarget);
     this._originalPanels.forEach((original, panel) => original.marker?.replaceWith(panel));
-    tabsWrapper.remove();
+    track.remove();
+    this._track = undefined;
+  }
+
+  /** Only the shown panel is reachable; the others are off to the side. */
+  private _syncPanels() {
+    this._panels.forEach((panel) => {
+      panel.classList.toggle('active', panel === this._content);
+      panel.inert = panel !== this._content;
+    });
+  }
+
+  /** The panel the track is mostly showing. Panels are exactly one track wide. */
+  private _trackIndex() {
+    return Math.round(Math.abs(this._track.scrollLeft) / (this._track.clientWidth || 1));
+  }
+
+  private _scrollToActivePanel(behavior: ScrollBehavior) {
+    const index = this._panels.indexOf(this._content);
+    // scrollLeft runs negative in a right-to-left track.
+    const sign = getComputedStyle(this._track).direction === 'rtl' ? -1 : 1;
+    const left = sign * index * this._track.clientWidth;
+    // Compare positions, not rounded indexes: a scroll still on its way to
+    // another panel can already round to this one.
+    if (index < 0 || Math.abs(this._track.scrollLeft - left) < 1) return;
+    this._scrollTarget = index;
+    this._waitForScroll();
+    this._track.scrollTo({ left, behavior });
+  }
+
+  // A smooth scroll that something cut short never arrives, and on a busy page
+  // one can also take a while to start. Once the track has been still for half
+  // a second, jump to the selected panel. The selection stands: a swipe or
+  // wheel that took over has already released the target, so the scroll
+  // events that follow choose the panel. Every scroll event restarts the wait.
+  private _waitForScroll() {
+    clearTimeout(this._scrollTimer);
+    this._scrollTimer = setTimeout(() => {
+      this._releaseScrollTarget();
+      this._scrollToActivePanel('instant');
+    }, 500);
+  }
+
+  _releaseScrollTarget = () => {
+    clearTimeout(this._scrollTimer);
+    this._scrollTarget = null;
+  };
+
+  _handleTrackScroll = () => {
+    const index = this._trackIndex();
+    if (this._scrollTarget !== null) {
+      if (index === this._scrollTarget) this._releaseScrollTarget();
+      else this._waitForScroll();
+      return;
+    }
+    const panel = this._panels[index];
+    if (!panel || panel === this._content) return;
+    this._showPanel(Array.from(this._tabLinks).find((a) => this._panelFor(a) === panel));
+  };
+
+  private _showPanel(tabLink: HTMLAnchorElement) {
+    const prevIndex = this._index;
+    this._setActiveTabLink(tabLink);
+    this._syncPanels();
+    this._setTabsAndTabWidth();
+    this._animateIndicator(prevIndex);
+    if (typeof this.options.onShow === 'function') this.options.onShow.call(this, this._content);
   }
 
   _setupNormalTabs() {

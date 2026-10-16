@@ -324,7 +324,7 @@ const tabs = Tabs.init(document.querySelector('.tabs'));`} />
     <p>Select Sass partials with the custom entry. With Sass's Node package importer,
       compile using <code>sass --pkg-importer=node app.scss app.css</code>.</p>
     <Code code={`@use "pkg:@expressivecss/expressive/scss/custom" with (
-  $components: ("icons-material-design", "tabs", "carousel"),
+  $components: ("icons-material-design", "tabs"),
   $utilities: ()
 );`} />
     <p>Tokens and base styles stay included. Lists load in the order written;

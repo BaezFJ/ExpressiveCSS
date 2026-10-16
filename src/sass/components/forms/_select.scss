@@ -150,7 +150,7 @@ select.browser-default {
     line-height: normal;
   }
 
-  &:has(> i:first-of-type:not(.suffix):not(:last-child), > i.prefix, > .prefix) > label {
+  &:has(> .prefix) > label {
     padding-left: 52px;
   }
 

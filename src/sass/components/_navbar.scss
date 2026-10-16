@@ -51,7 +51,7 @@
 $_bar: ":is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)";
 $_heading: ":is(h1, h2, h3, h4, h5, h6)";
 $_title: ":is(#{$_heading}, hgroup)";
-$_search: ":is(.search-bar, .searchbar)";
+$_search: ".search-bar";
 
 header:has(> #{$_bar}) {
   --md-comp-top-app-bar-container-color: var(--md-sys-color-surface);

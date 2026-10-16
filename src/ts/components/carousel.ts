@@ -19,12 +19,6 @@ export interface CarouselOptions extends BaseOptions {
    */
   duration: number;
   /**
-   * Full-width compatibility track. Material 3 layouts are already linear.
-   * Also implied by `.flat`.
-   * @default false
-   */
-  fullWidth: boolean;
-  /**
    * Show paging dots. Only drawn when there is more than one item.
    * @default false
    */
@@ -67,7 +61,6 @@ export interface CarouselOptions extends BaseOptions {
 
 const _defaults: CarouselOptions = {
   duration: 200,
-  fullWidth: false,
   indicators: false,
   noWrap: false,
   interval: 0,
@@ -159,10 +152,6 @@ export class Carousel extends Component<CarouselOptions> {
       this.options.i18n = { ...Carousel.defaults.i18n, ...options.i18n };
     }
 
-    if (this.options.fullWidth || this.el.classList.contains('flat')) {
-      this.el.classList.add('flat');
-      this.options.fullWidth = true;
-    }
     this._vertical = this.el.classList.contains('full-screen');
 
     this.pressed = false;
@@ -244,7 +233,7 @@ export class Carousel extends Component<CarouselOptions> {
     if (explicit.length) return explicit;
     return Array.from(this.el.children).filter((el): el is HTMLElement => {
       if (!(el instanceof HTMLElement)) return false;
-      if (el.classList.contains('indicators') || el.classList.contains('carousel-fixed-item')) {
+      if (el.classList.contains('indicators')) {
         return false;
       }
       return el.tagName !== 'NAV';
@@ -306,7 +295,6 @@ export class Carousel extends Component<CarouselOptions> {
     });
 
     if (this._ownIndicators) this.el.appendChild(this._indicators);
-    this.el.querySelector('.carousel-fixed-item')?.classList.add('with-indicators');
   }
 
   _setupEventHandlers() {
@@ -678,7 +666,6 @@ export class Carousel extends Component<CarouselOptions> {
     };
 
     if (
-      this.el.classList.contains('flat') ||
       this.el.classList.contains('uncontained') ||
       (this.el.classList.contains('full-screen') && this._vertical)
     ) {

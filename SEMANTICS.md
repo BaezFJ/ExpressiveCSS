@@ -10,7 +10,7 @@ Element choice, landmark structure, and the ARIA that element choice implies. Ke
 
 1. Static semantics are the page author's; dynamic state is the framework's. See CONTEXT.md for both terms.
 2. A component may declare a composite role only if its keyboard contract is implemented and tested. Tabs do not qualify: they are navigation (`<nav>` + anchors + `aria-current`), not a `tablist`. Carousel is a different case - its keyboard contract is implemented, and it rejects `tablist` because it follows the ARIA carousel pattern instead.
-3. Icons are `<span class="material-symbols" aria-hidden="true">`. `<i>` keeps working but is undocumented.
+3. Icons are `<span class="material-symbols" aria-hidden="true">`. A bare `<i>` gets no icon styling.
 4. `<nav>` is for genuine navigation only, and every one carries a required `aria-label`. Card action rows and toolbars are not navigation.
 5. Every user-facing string the framework generates has an `i18n` option.
 
@@ -204,7 +204,7 @@ Icon-only controls need accessible names.
 | `icon-only-control-is-named` | require-accessible-name | `:is(a, button):has([aria-hidden="true"])` | must end up with an accessible name |
 | `fab-no-small-variant` | forbid | `:is(button, a.button, label.button).circle:is(.extra, .large).small` | must not match |
 | `extended-fab-requires-size` | forbid | `:is(button, a.button, label.button).extend:not(.small, .medium, .large)` | must not match |
-| `fab-no-surface-color` | forbid | `:is(button, a.button, label.button):is(.circle.extra, .circle.large, .extend):is(.surface, .surface-dim, .surface-bright, .surface-variant, .surface-container, .surface-container-lowest, .surface-container-low, .surface-container-high, .surface-container-highest)` | must not match |
+| `fab-no-surface-color` | forbid | `:is(button, a.button, label.button):is(.circle.extra, .circle.large, .extend):is(.surface, .surface-dim, .surface-bright, .surface-container, .surface-container-lowest, .surface-container-low, .surface-container-high, .surface-container-highest)` | must not match |
 
 - **icon-only-control-is-named** - Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
 - **fab-no-small-variant** - The 40dp small FAB has been removed. Use circle extra for a 56dp FAB.
@@ -299,7 +299,7 @@ Swept 0.8.0. The four Material 3 chip types plus a non-interactive display chip,
 | `chip-close-type-button` | require-attr | `.chip button.close` | must have `type` = `button` |
 | `chip-close-has-label` | require-attr | `.chip button.close` | must have `aria-label` |
 | `chip-no-i-element` | forbid | `.chip i` | must not match |
-| `chip-icon-hidden` | require-attr | `.chip :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)` | must have `aria-hidden` = `true` |
+| `chip-icon-hidden` | require-attr | `.chip :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp)` | must have `aria-hidden` = `true` |
 | `filter-chip-label-for` | require-attr | `label.chip` | must have `for` |
 
 - **chip-root-element** - A chip is <span> (display), <button> (assist/suggestion/input), or <label> (filter). Never <div>.
@@ -415,13 +415,13 @@ Swept 0.8.0. A behavior, not a component: the picker plugins generate this posit
 
 ### drag-handle
 
-The affordance that says a thing can be dragged, added with the drag handle component (#34). Which element it is *is* the whole semantic: a <span aria-hidden="true"> when it is decoration - the usual case, and what a bottom sheet wants, since Escape already dismisses the sheet and the drag is a pointer nicety on top - and a <button> with a name when something is genuinely wired to it. The two rules below hold that split, and the sheet leans on it: `button.drag-handle` is where every interactive state in the partial is scoped, which is only correct because nothing else can be interactive. What no rule can check is the thing this component is most likely to be misused for. Dragging is a pointer gesture, so any outcome reachable only by dragging is unreachable without one; the Sortable behavior, the one reordering the framework ships, pairs a decorative handle with Move up and Move down buttons, and a page that builds its own owes it a keyboard path too. The docs say so plainly rather than implying the handle supplies it. Every selector below names `.handle` beside `.drag-handle`: the bottom sheet styles the pre-1.0 spelling too, and an alias the framework blesses is an alias these rules have to reach. The first rule is deliberately not fragmentSafe - what it detects is a *missing* aria-hidden, and a fragment omits by nature.
+The affordance that says a thing can be dragged, added with the drag handle component (#34). Which element it is *is* the whole semantic: a <span aria-hidden="true"> when it is decoration - the usual case, and what a bottom sheet wants, since Escape already dismisses the sheet and the drag is a pointer nicety on top - and a <button> with a name when something is genuinely wired to it. The two rules below hold that split, and the sheet leans on it: `button.drag-handle` is where every interactive state in the partial is scoped, which is only correct because nothing else can be interactive. What no rule can check is the thing this component is most likely to be misused for. Dragging is a pointer gesture, so any outcome reachable only by dragging is unreachable without one; the Sortable behavior, the one reordering the framework ships, pairs a decorative handle with Move up and Move down buttons, and a page that builds its own owes it a keyboard path too. The docs say so plainly rather than implying the handle supplies it. The first rule is deliberately not fragmentSafe - what it detects is a *missing* aria-hidden, and a fragment omits by nature.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `drag-handle-is-hidden-or-a-control` | forbid | `:is(.handle, .drag-handle):not(button):not([aria-hidden="true"])` | must not match |
-| `drag-handle-button-is-not-hidden` | forbid | `button:is(.handle, .drag-handle)[aria-hidden="true"]` | must not match |
-| `drag-handle-button-is-named` | require-accessible-name | `button:is(.handle, .drag-handle)` | must end up with an accessible name |
+| `drag-handle-is-hidden-or-a-control` | forbid | `.drag-handle:not(button):not([aria-hidden="true"])` | must not match |
+| `drag-handle-button-is-not-hidden` | forbid | `button.drag-handle[aria-hidden="true"]` | must not match |
+| `drag-handle-button-is-named` | require-accessible-name | `button.drag-handle` | must end up with an accessible name |
 
 - **drag-handle-is-hidden-or-a-control** - A drag handle has no text and reports nothing, so on any element but a <button> it is decoration and needs aria-hidden="true". Left exposed it arrives as an unlabelled blank in the reading order. Make it a <button> with a name if it is meant to be operated.
 - **drag-handle-button-is-not-hidden** - aria-hidden on a <button> hides it from assistive technology without taking it out of the tab order, so keyboard focus lands on something that is not there. Decoration is a <span>; a control stays exposed.
@@ -515,8 +515,8 @@ Swept 0.8.0. .field is the container; icons name their side and are hidden; supp
 | --- | --- | --- | --- |
 | `field-container-class` | forbid | `.input-field:not(.chips)` | must not match |
 | `field-icon-not-i` | forbid | `.field i` | must not match |
-| `field-icon-hidden` | require-attr | `.field .material-symbols, .field .material-symbols-outlined, .field .material-symbols-rounded, .field .material-symbols-sharp, .field .material-icons` | must have `aria-hidden` = `true` |
-| `field-icon-side` | forbid | `.field > :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons):not(.prefix):not(.suffix)` | must not match |
+| `field-icon-hidden` | require-attr | `.field .material-symbols, .field .material-symbols-outlined, .field .material-symbols-rounded, .field .material-symbols-sharp` | must have `aria-hidden` = `true` |
+| `field-icon-side` | forbid | `.field > :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp):not(.prefix):not(.suffix)` | must not match |
 | `field-label-for` | require-attr | `.field > label:not(:has(input, select, textarea))` | must have `for` |
 | `field-control-id` | require-attr | `.field > :is(input, textarea, select)` | must have `id` |
 | `field-supporting-text-id` | require-attr | `.field > small` | must have `id` |
@@ -528,7 +528,7 @@ Swept 0.8.0. .field is the container; icons name their side and are hidden; supp
 - **field-container-class** - The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.
 - **field-icon-not-i** - <i> means idiomatic text, not icon. Use <span class="material-symbols">.
 - **field-icon-hidden** - The ligature is read aloud. A field icon is decoration; the label names the control.
-- **field-icon-side** - A field icon must name its side with .prefix or .suffix. The positional fallback counts elements of the same *type*, which only ever worked for <i>.
+- **field-icon-side** - A field icon must name its side with .prefix or .suffix. Fields have no positional fallback.
 - **field-label-for** - A label that does not wrap its control has to name it. The floating label sits *after* the control and cannot wrap it, so it always needs `for`; a label that does wrap its control (the file input trigger) does not.
 - **field-control-id** - Without an id the label has nothing to point at.
 - **field-supporting-text-id** - Supporting and error text has to be referenceable to be announced with the control.
@@ -561,7 +561,7 @@ Added with the rating component. The input is a fieldset of native radios drawn 
 
 - **rating-is-a-fieldset-or-an-image** - A .rating is either a <fieldset> of radios, for input, or an element with role="img" and a name, for display. Anything else draws stars that say nothing.
 - **rating-display-is-named** - Name a rating display with the value, such as aria-label="Rated 4.5 out of 5".
-- **rating-label-text-precedes-the-radio** - Put a star's visually hidden text before its radio. A span after the radio is the older input + span pattern, which hides the radio and with it the star.
+- **rating-label-text-precedes-the-radio** - Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 1.0 no longer draws.
 
 ### forms/select
 
@@ -575,7 +575,7 @@ Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select
 
 ### forms/slider
 
-Swept 0.8.0. Renamed from range to the name M3 uses; `.range` stays as an alias.
+Swept 0.8.0. Renamed from range to the name M3 uses; 1.0 removed the `.range` and `.range-field` hosts.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
@@ -590,7 +590,7 @@ Swept 0.8.0.
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `switch-is-label` | forbid | `.switch:not(label)` | must not match |
-| `switch-decorative-text-hidden` | require-attr | `.switch > span:not(.lever)` | must have `aria-hidden` = `true` |
+| `switch-decorative-text-hidden` | require-attr | `.switch > span` | must have `aria-hidden` = `true` |
 
 - **switch-is-label** - A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name.
 - **switch-decorative-text-hidden** - On/off captions inside the label are folded into the accessible name, which then reads "Off On". Hide them and let the label text name the switch.
@@ -615,7 +615,7 @@ Added with the icon button component (#22). An icon button is the case rule 3 ex
 | --- | --- | --- | --- |
 | `icon-button-is-a-control` | forbid | `.icon-button:not(button):not(a[href])` | must not match |
 | `icon-button-link-is-not-fake-disabled` | forbid | `a[href].icon-button:is(.disabled, [aria-disabled="true"])` | must not match |
-| `icon-button-icon-hidden` | require-attr | `.icon-button :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)` | must have `aria-hidden` = `true` |
+| `icon-button-icon-hidden` | require-attr | `.icon-button :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp)` | must have `aria-hidden` = `true` |
 | `icon-button-is-named` | require-accessible-name | `.icon-button` | must end up with an accessible name |
 
 - **icon-button-is-a-control** - An icon button is a control: <button>, or <a href> when it navigates. A <div>, or an anchor with no href, is neither focusable nor announced.
@@ -629,8 +629,8 @@ Swept 0.8.0. The canonical icon is <span class="material-symbols">, and an icon 
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `icon-not-i-element` | forbid | `i.material-symbols, i.material-symbols-outlined, i.material-symbols-rounded, i.material-symbols-sharp, i.material-icons` | must not match |
-| `icon-hidden-or-labelled` | forbid | `.material-symbols:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby]), .material-symbols-outlined:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby]), .material-symbols-rounded:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby]), .material-symbols-sharp:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby]), .material-icons:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby])` | must not match |
+| `icon-not-i-element` | forbid | `i.material-symbols, i.material-symbols-outlined, i.material-symbols-rounded, i.material-symbols-sharp` | must not match |
+| `icon-hidden-or-labelled` | forbid | `.material-symbols:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby]), .material-symbols-outlined:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby]), .material-symbols-rounded:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby]), .material-symbols-sharp:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby]):not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby])` | must not match |
 
 - **icon-not-i-element** - <i> means idiomatic text. The canonical icon element is <span class="material-symbols">.
 - **icon-hidden-or-labelled** - The ligature is real text and is read out verbatim. An icon is either decoration - aria-hidden="true", with the enclosing control carrying the name - or an image in its own right, role="img" with a label. It is never left as bare text.
@@ -1017,7 +1017,7 @@ The bar is a `<search>` landmark holding an `<input type="search">`; the view is
 | `search-bar-holds-a-search-input` | forbid | `.search-bar input:not([type="search"])` | must not match |
 
 - **search-view-not-a-composite-widget** - The search view takes no composite role. Its contents are links and buttons reached with Tab; the combobox and listbox belong to the Autocomplete on the bar's input.
-- **search-bar-holds-a-search-input** - The bar's control is a search input. `type="search"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it. The selector names `.search-bar` and deliberately not the `.searchbar` alias: pre-1.0 markup of that shape predates the requirement, and holding old markup to a rule it could not have known is how a promise of an additive rename gets broken.
+- **search-bar-holds-a-search-input** - The bar's control is a search input. `type="search"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it.
 
 ### side-sheet
 
@@ -1061,7 +1061,7 @@ Added with the split button component (#42). A lead action and a trailing half t
 | `split-button-has-a-leading-action` | forbid | `.split-button:not(:has(> :is(button, a.button):not(.menu-trigger)))` | must not match |
 | `split-button-has-a-trailing-menu-trigger` | forbid | `.split-button:not(:has(> .menu-trigger))` | must not match |
 | `split-button-trigger-names-its-menu` | forbid | `.split-button > .menu-trigger:not([data-target]):not([href])` | must not match |
-| `split-button-trailing-icon-hidden` | require-attr | `.split-button > .menu-trigger :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)` | must have `aria-hidden` = `true` |
+| `split-button-trailing-icon-hidden` | require-attr | `.split-button > .menu-trigger :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp)` | must have `aria-hidden` = `true` |
 | `split-button-expanded-is-not-authored` | forbid | `.split-button [aria-expanded]` | must not match |
 
 - **split-button-is-not-an-authored-composite-widget** - A split button takes no composite role; its two halves are reached with Tab, not arrow keys. The <menu> the trailing half opens is the composite widget here, and it carries its own role.

@@ -22,7 +22,7 @@
 #lightbox-overlay {
   position:fixed;
   inset: 0;
-  background-color: var(--md-sys-color-background);
+  background-color: var(--md-sys-color-surface);
   z-index: 1000;
   will-change: opacity;
 }
@@ -30,7 +30,7 @@
 .lightbox-caption {
   position: fixed;
   display: none;
-  color: var(--md-sys-color-on-background);
+  color: var(--md-sys-color-on-surface);
   line-height: 50px;
   bottom: 0;
   left: 0;

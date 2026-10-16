@@ -167,7 +167,6 @@ const ROLE_GROUPS: RoleGroup[] = [
             <h6>Overlay</h6>
             <div class="color-swatch scrim on-primary-text">.scrim</div>
             <div class="color-swatch shadow on-primary-text">.shadow</div>
-            <div class="color-swatch surface-tint on-primary-text">.surface-tint</div>
           </div>
         </div>
         <p>
@@ -181,13 +180,6 @@ const ROLE_GROUPS: RoleGroup[] = [
           mix resolves at the root, so overriding
           <code>--md-sys-color-scrim</code> on a subtree does not reach a scrim
           below it; override <code>--md-comp-scrim-color</code> instead.
-        </p>
-        <p>
-          <code>background</code>, <code>on-background</code>, and
-          <code>surface-variant</code> stay as aliases of
-          <code>surface</code> / <code>on-surface</code> /
-          the old neutral-variant well so existing pages do not break.
-          New work should use the surface container scale.
         </p>
   </Section>
   <Section {...S.sass}>

@@ -241,8 +241,8 @@ const _defaults: DatepickerOptions = {
     cancel: 'Cancel',
     clear: 'Clear',
     done: 'Ok',
-    previousMonth: '‹',
-    nextMonth: '›',
+    previousMonth: 'Previous month',
+    nextMonth: 'Next month',
     months: [
       'January',
       'February',
@@ -1124,10 +1124,7 @@ export class Datepicker extends Component<DatepickerOptions> {
 
     const leftArrow =
       '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/><path d="M0-.5h24v24H0z" fill="none"/></svg>';
-    html += `<button class="month-prev${
-      prev ? '' : ' is-disabled'
-      // @todo remove button class and add scss mixin, current implementation temporary for focus states
-    }" type="button">${leftArrow}</button>`;
+    html += `<button class="month-prev${prev ? '' : ' is-disabled'}" type="button" aria-label="${Datepicker._escape(opts.i18n.previousMonth)}">${leftArrow}</button>`;
 
     html += '<div class="selects-container">';
     if (opts.showMonthAfterYear) {
@@ -1139,10 +1136,7 @@ export class Datepicker extends Component<DatepickerOptions> {
 
     const rightArrow =
       '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/><path d="M0-.25h24v24H0z" fill="none"/></svg>';
-    html += `<button class="month-next${
-      next ? '' : ' is-disabled'
-      // @todo remove button class and add scss mixin, current implementation temporary for focus states
-    }" type="button">${rightArrow}</button>`;
+    html += `<button class="month-next${next ? '' : ' is-disabled'}" type="button" aria-label="${Datepicker._escape(opts.i18n.nextMonth)}">${rightArrow}</button>`;
 
     return (html += '</div>');
   }

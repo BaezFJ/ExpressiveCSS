@@ -126,7 +126,7 @@ describe('Datepicker escapes what it splices into markup', () => {
   beforeEach(resetBody);
 
   test('calendar identifiers and day values cannot inject markup', () => {
-    document.body.innerHTML = '<input class="datepicker">';
+    document.body.innerHTML = '<input class="date-picker">';
     const instance = Expressive.Datepicker.init(document.querySelector('input'));
     try {
       const host = document.createElement('div');
@@ -145,7 +145,7 @@ describe('Datepicker escapes what it splices into markup', () => {
   });
 
   test('calendar row helpers reject unsupported HTML and preserve day semantics', () => {
-    document.body.innerHTML = '<input class="datepicker">';
+    document.body.innerHTML = '<input class="date-picker">';
     const instance = Expressive.Datepicker.init(document.querySelector('input'));
     try {
       for (const cell of [
@@ -171,10 +171,10 @@ describe('Datepicker escapes what it splices into markup', () => {
   });
 
   test('translated month names cannot inject elements', () => {
-    document.body.innerHTML = `<input type="text" class="datepicker">`;
+    document.body.innerHTML = `<input type="text" class="date-picker">`;
     const months = Array.from({ length: 12 }, (_, i) => `${PAYLOAD}${i}`);
 
-    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = Expressive.Datepicker.init(document.querySelector('.date-picker'), {
       i18n: { months, monthsShort: months }
     });
 
@@ -190,10 +190,10 @@ describe('Datepicker escapes what it splices into markup', () => {
   });
 
   test('translated weekday names cannot inject through the abbr title', () => {
-    document.body.innerHTML = `<input type="text" class="datepicker">`;
+    document.body.innerHTML = `<input type="text" class="date-picker">`;
     const weekdays = Array.from({ length: 7 }, () => PAYLOAD);
 
-    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = Expressive.Datepicker.init(document.querySelector('.date-picker'), {
       i18n: { weekdays, weekdaysShort: weekdays, weekdaysAbbrev: weekdays }
     });
 
@@ -206,11 +206,11 @@ describe('Datepicker escapes what it splices into markup', () => {
   test('a function format does not spill its source into the page', () => {
     document.body.innerHTML = `
       <div class="field">
-        <input type="text" class="datepicker">
+        <input type="text" class="date-picker">
         <span class="datepicker-format"></span>
       </div>`;
 
-    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = Expressive.Datepicker.init(document.querySelector('.date-picker'), {
       format: (d) => d.toISOString()
     });
 
@@ -221,11 +221,11 @@ describe('Datepicker escapes what it splices into markup', () => {
   test('a string format is shown as the hint it is', () => {
     document.body.innerHTML = `
       <div class="field">
-        <input type="text" class="datepicker">
+        <input type="text" class="date-picker">
         <span class="datepicker-format"></span>
       </div>`;
 
-    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = Expressive.Datepicker.init(document.querySelector('.date-picker'), {
       format: 'mmm dd, yyyy'
     });
 

@@ -184,7 +184,6 @@ Material Symbols, outlined by default. The compiled sheet ships the variable fon
 - Default optical size 24 dp; buttons use 18 dp next to a label.
 - **Fill** the icon when the parent is selected (nav, rail, list). Do not swap to a different glyph to show selection.
 - Style (outlined / rounded / sharp) is the font family (`icon-style` or `--md-icon-font`). Pick one style per product.
-- `.material-icons` is a compat alias. Prefer `.material-symbols`.
 
 ## 2.7 Accessibility that affects component choice
 
@@ -726,7 +725,7 @@ Leading visual = first `i` / `img` / `input`. Trailing = last `i` / `kbd` / `but
 
 ## 6.3 Divider
 
-**M3:** Divider. **ExpressiveCSS:** `<hr>`, `.divider`, list/menu `<hr>`.
+**M3:** Divider. **ExpressiveCSS:** `<hr>`, `.divider`, list `<hr>`, menu `<li class="divider">`.
 
 Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a `.gap` is the more expressive grouping (M3 Expressive). Don't stack dividers and gaps.
 
@@ -793,7 +792,7 @@ Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a
 
 ## 7.2 Bottom sheets
 
-**M3:** Bottom sheets (standard / modal). **ExpressiveCSS:** `dialog.bottom-sheet` (alias `.bottom`). `BottomSheets.Init()` drag-dismisses from the top 48 dp handle. A named `<button>` handle also dismisses on click, tap, Enter, or Space. Verify native Escape against the opening mode, browser, and `closedby` policy.
+**M3:** Bottom sheets (standard / modal). **ExpressiveCSS:** `dialog.bottom-sheet`. `BottomSheets.Init()` drag-dismisses from the top 48 dp handle. A named `<button>` handle also dismisses on click, tap, Enter, or Space. Verify native Escape against the opening mode, browser, and `closedby` policy.
 
 **Use when** compact/medium windows need **secondary content** anchored to the bottom: extra actions, a short list, a player, filters.
 
@@ -818,7 +817,7 @@ Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a
 
 ## 7.3 Side sheets
 
-**M3:** Side sheets (standard / modal). **ExpressiveCSS:** `dialog.side-sheet` (`.right` default, `.left`). `SideSheets.Init()` drag-dismisses from the header or the inner 24 dp edge.
+**M3:** Side sheets (standard / modal). **ExpressiveCSS:** `dialog.side-sheet` (trailing edge by default, `.start` for the leading edge). `SideSheets.Init()` drag-dismisses from the header or the inner 24 dp edge.
 
 **Use when** optional content should sit **beside** the main view: inspector, filters, in-app player, thread details. The user can navigate *inside* the sheet; a back icon is that affordance.
 
@@ -874,7 +873,7 @@ Use snackbar for temporary confirmations and dialog only for blocking decisions.
 
 ## 7.6 Tooltips
 
-**M3:** Tooltips (plain / rich). **ExpressiveCSS:** child `.tooltip` (CSS on hover and keyboard focus). Placement: `top` (M3 default), `bottom`, `left`, `right`. `rich` / `max` for rich. Legacy `.tooltipped` still AutoInits.
+**M3:** Tooltips (plain / rich). **ExpressiveCSS:** child `.tooltip` (CSS on hover and keyboard focus). Placement: `top` (M3 default), `bottom`, `left`, `right`. `rich` for rich. Legacy `.tooltipped` still AutoInits.
 
 **Use when**
 
@@ -1011,7 +1010,7 @@ Three **selection controls**. They are not interchangeable.
 
 ## 8.6 Sliders
 
-**M3:** Sliders (M3 Expressive sizes and stops). **ExpressiveCSS:** `<input type="range">` in `.slider` (or a `<label>`); `.range` and `.range-field` are the older names. Plugin: `Expressive.Slider` (`Expressive.Range` is a retired alias). **Not** in `AutoInit()`; `Slider.Init()` runs at import.
+**M3:** Sliders (M3 Expressive sizes and stops). **ExpressiveCSS:** `<input type="range">` in `.slider` (or a `<label>`). Plugin: `Expressive.Slider` (`Expressive.Range` is a retired alias). **Not** in `AutoInit()`; `Slider.Init()` runs at import.
 
 **Use when** the user picks a value along a continuum (volume, brightness, price) and the result can update live.
 
@@ -1131,7 +1130,7 @@ Three **selection controls**. They are not interchangeable.
 
 ## 9.2 Carousel
 
-**M3:** Carousel (multi-browse, uncontained, hero, full-screen). **ExpressiveCSS:** `.carousel`. Default = multi-browse. Add `.uncontained`, `.hero`, `.hero.center-aligned`, or `.full-screen` for the other M3 layouts. `.flat` / `fullWidth` is retained only for full-width compatibility such as swipeable tabs. `AutoInit()`.
+**M3:** Carousel (multi-browse, uncontained, hero, full-screen). **ExpressiveCSS:** `.carousel`. Default = multi-browse. Add `.uncontained`, `.hero`, `.hero.center-aligned`, or `.full-screen` for the other M3 layouts. `AutoInit()`.
 
 **Use when** items are **visual** and the user is browsing, not searching for a specific row (that is a list).
 
@@ -1267,7 +1266,7 @@ If training data or the user says the left column, emit the right.
 | `.navbar`, `.nav-wrapper`, `.brand-logo` | `header > nav` |
 | “bottom navigation” as `.tabs` | `nav.navigation-bar` |
 | “navigation drawer” | `.navigation-rail.expanded`; split trees into peer categories and page lists |
-| `.btn`, `.btn-large`, `.btn-flat` | `<button>`, `large` / `extra`, `text` |
+| `.btn`, `.btn-large`, `.btn-flat` | `<button>`, `medium`, `text` |
 | `.btn-floating` | `circle extra` / `.fab-menu` |
 | `.card`, `.card-content`, `.card-title`, `.card-action` | `<article>`, heading, `<p>`, `.actions` |
 | `.collection` | `ul.list` |
