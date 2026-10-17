@@ -162,6 +162,37 @@ describe('Lightbox dimensions', () => {
     assert.equal(img.style.width, '100px');
     instance.destroy();
   });
+
+  test('an image with no size yet does not open into NaN', () => {
+    document.body.innerHTML = `<img class="lightboxed" src="http://localhost/1.jpg">`;
+    const img = document.querySelector('img');
+    const instance = Expressive.Lightbox.init(img);
+    try {
+      instance.open();
+      assert.equal(document.getElementById('lightbox-overlay'), null);
+      assert.equal(img.classList.contains('active'), false);
+      assert.equal(img.style.maxWidth, '');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('closing puts focus dropped on the body back on the image', () => {
+    document.body.innerHTML = `<img class="lightboxed" src="http://localhost/1.jpg">`;
+    const img = document.querySelector('img');
+    fixRect(img, 100, 50);
+    const instance = Expressive.Lightbox.init(img);
+    try {
+      img.focus();
+      instance.open();
+      // A click on the overlay, which cannot take focus, leaves it on the body.
+      img.blur();
+      document.getElementById('lightbox-overlay').click();
+      assert.equal(document.activeElement, img);
+    } finally {
+      instance.destroy();
+    }
+  });
 });
 
 describe('Carousel', () => {
