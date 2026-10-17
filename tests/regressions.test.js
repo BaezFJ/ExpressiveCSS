@@ -1236,6 +1236,116 @@ describe('Autocomplete', () => {
     await sleep(10);
     assert.equal(Expressive.Autocomplete.getInstance(el), undefined);
   });
+
+  const mountSearching = (options = {}) => {
+    document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac"></div>`;
+    const el = document.getElementById('ac');
+    const searches = [];
+    const instance = Expressive.Autocomplete.init(el, {
+      data: [{ id: 'apple', text: 'Apple' }, { id: 'apricot', text: 'Apricot' }],
+      menuOptions: { inDuration: 0, outDuration: 0 },
+      onSearch: (text, ac) => { searches.push(text); Expressive.Autocomplete.defaults.onSearch(text, ac); },
+      ...options
+    });
+    const key = (name) => {
+      const event = new window.KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true });
+      el.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+    // A real click focuses the tabindex=-1 row before the click lands.
+    const clickRow = (id) => {
+      const li = instance.container.querySelector(`li[data-id="${id}"]`);
+      li.dispatchEvent(new window.PointerEvent('pointerdown', { bubbles: true, isPrimary: true, pointerType: 'mouse', button: 0 }));
+      li.focus();
+      li.dispatchEvent(new window.PointerEvent('pointerup', { bubbles: true, isPrimary: true, pointerType: 'mouse' }));
+      fire(li, 'click');
+    };
+    return { el, instance, searches, key, clickRow };
+  };
+
+  test('toggling a multi-select option keeps the active row and does not search again', async () => {
+    const { el, instance, searches, key, clickRow } = mountSearching({ isMultiSelect: true });
+    try {
+      el.focus();
+      el.value = 'ap';
+      fire(el, 'input');
+      await sleep(10);
+      key('ArrowDown');
+      key('ArrowDown');
+      key('Enter');
+      const rows = instance.container.querySelectorAll('li');
+      assert.equal(instance.activeIndex, 1, 'Enter keeps the keyboard on the toggled row');
+      assert.equal(el.getAttribute('aria-activedescendant'), rows[1].id);
+      const before = searches.length;
+      clickRow('apple');
+      assert.equal(document.activeElement, el);
+      assert.equal(searches.length, before, 'refocusing the field is not a new query');
+      assert.equal(el.getAttribute('aria-activedescendant'), rows[1].id);
+      assert.deepEqual(instance.selectedValues.map((entry) => entry.id), ['apricot', 'apple']);
+      assert.equal(rows[0].getAttribute('aria-selected'), 'true');
+      assert.equal(rows[0].querySelector('input').checked, true);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('clicking a single-select option returns focus to the field', async () => {
+    const { el, instance, searches, clickRow } = mountSearching();
+    try {
+      el.focus();
+      el.value = 'ap';
+      fire(el, 'input');
+      await sleep(10);
+      const before = searches.length;
+      clickRow('apricot');
+      await sleep(10);
+      assert.equal(el.value, 'Apricot');
+      assert.equal(document.activeElement, el);
+      assert.equal(searches.length, before);
+      assert.equal(instance.menu.isOpen, false);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('Escape takes the key only when it closes the list, and late results stay closed', async () => {
+    const pending = [];
+    const { el, instance, key } = mountSearching({
+      onSearch: (text, ac) => pending.push(() => ac.setMenuItems([{ id: 'apple', text: 'Apple' }]))
+    });
+    try {
+      el.focus();
+      el.value = 'ap';
+      fire(el, 'input');
+      assert.equal(key('Escape'), true, 'a pending open is cancelled, so a surrounding dialog stays open');
+      assert.equal(key('Escape'), false, 'nothing left to close, so the dialog gets the key');
+      pending.shift()();
+      await sleep(10);
+      assert.equal(instance.menu.isOpen, false, 'results for a dismissed list do not reopen it');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('results set before the field is ever focused do not open the list', async () => {
+    const { instance } = mountSearching();
+    try {
+      instance.setMenuItems([{ id: 'apple', text: 'Apple' }]);
+      await sleep(10);
+      assert.equal(instance.menu.isOpen, false);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('destroy removes the combobox attributes it added', () => {
+    const { el, instance } = mountSearching();
+    instance.open();
+    instance.destroy();
+    for (const name of ['role', 'aria-autocomplete', 'aria-controls', 'data-target', 'aria-haspopup', 'aria-expanded', 'aria-activedescendant']) {
+      assert.equal(el.hasAttribute(name), false, name);
+    }
+  });
 });
 
 describe('Tabs', () => {

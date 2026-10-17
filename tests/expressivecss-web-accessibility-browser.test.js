@@ -730,7 +730,7 @@ scenario('autocomplete announces results and selection without moving focus', '<
     await expect(status).toHaveText('1 item selected.');
     await expect(page.locator('.status-info')).toHaveText('1');
     await expect(page.locator('.status-info')).toHaveAttribute('aria-hidden', 'true');
-    await page.keyboard.press('ArrowDown');
+    // The toggled row stays active, so Enter again deselects it.
     await page.keyboard.press('Enter');
     await expect(status).toHaveText('0 items selected.');
     await page.keyboard.press('Escape');
