@@ -68,7 +68,7 @@ table {
       border-bottom: none;
     }
     tbody > tr:nth-child(odd) {
-      background-color: rgba(0, 0, 0, 0.08);
+      background-color: var(--md-sys-color-surface-container-high);
     }
   }
 
@@ -76,7 +76,7 @@ table {
     transition: background-color .25s ease;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.04);
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
     }
   }
 

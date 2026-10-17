@@ -3,14 +3,14 @@
 // Shortcut x value x direction, all !important so a helper wins over the
 // component it is applied to. Edit the maps here to change the scale.
 
-$spacing-shortcuts: ("margin": "m", "padding": "p") !default;
+$spacing-shortcuts: ("margin": "m", "padding": "p");
 $spacing-directions: (
   "top": "t", "right": "r", "bottom": "b", "left": "l",
   "inline-start": "s", "inline-end": "e"
-) !default;
-$spacing-horizontal: "x" !default;
-$spacing-vertical: "y" !default;
-$spacing-values: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "5": 1.5rem, "6": 3rem, "auto": auto) !default;
+);
+$spacing-horizontal: "x";
+$spacing-vertical: "y";
+$spacing-values: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "5": 1.5rem, "6": 3rem, "auto": auto);
 
 @each $property, $shortcut in $spacing-shortcuts{
   @each $name, $value in $spacing-values{

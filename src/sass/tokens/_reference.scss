@@ -33,7 +33,7 @@ $tones: (
   40: 48.14%, 50: 56.83%, 60: 65.42%, 70: 74.04%, 80: 82.63%, 87: 88.72%,
   90: 91.33%, 92: 93.05%, 94: 94.76%, 95: 95.62%, 96: 96.50%, 98: 98.25%,
   99: 99.19%, 100: 100%
-) !default;
+);
 
 // Per-ramp hue offset from the source hue, and target chroma. Chroma is a
 // fixed per-role value, not taken from the source - that is M3's model, and it
@@ -54,7 +54,7 @@ $ramps: (
   "tertiary":        ("hue": 62,  "chroma": 0.058),
   "neutral":         ("hue": 17,  "chroma": 0.004),
   "neutral-variant": ("hue":  9,  "chroma": 0.013)
-) !default;
+);
 
 // Which ramp entry each system color resolves to, per scheme.
 $sys-light: (
@@ -82,7 +82,7 @@ $sys-light: (
   "inverse-surface": "neutral20", "inverse-on-surface": "neutral95",
   "inverse-primary": "primary80",
   "scrim": "neutral0", "shadow": "neutral0"
-) !default;
+);
 
 $sys-dark: (
   "primary": "primary80", "on-primary": "primary20",
@@ -109,7 +109,7 @@ $sys-dark: (
   "inverse-surface": "neutral90", "inverse-on-surface": "neutral10",
   "inverse-primary": "primary40",
   "scrim": "neutral0", "shadow": "neutral0"
-) !default;
+);
 
 :root, :host {
   --md-source: #{$md-source};

@@ -117,7 +117,7 @@ function parseSource() {
 }
 
 function parseTones() {
-  const block = SCSS.match(/\$tones:\s*\(([\s\S]*?)\)\s*!default/);
+  const block = SCSS.match(/\$tones:\s*\(([\s\S]*?)\)\s*;/);
   assert.ok(block, '$tones map not found');
   const tones = {};
   for (const [, tone, pct] of block[1].matchAll(/(\d+)\s*:\s*([\d.]+)%/g)) {
@@ -127,7 +127,7 @@ function parseTones() {
 }
 
 function parseRamps() {
-  const block = SCSS.match(/\$ramps:\s*\(([\s\S]*?)\n\)\s*!default/);
+  const block = SCSS.match(/\$ramps:\s*\(([\s\S]*?)\n\)\s*;/);
   assert.ok(block, '$ramps map not found');
   const ramps = {};
   const re = /"([a-z-]+)":\s*\(\s*"hue":\s*(-?[\d.]+)\s*,\s*"chroma":\s*([\d.]+)\s*\)/g;
@@ -222,7 +222,7 @@ describe('M3 ramp generation', () => {
     }
 
     for (const scheme of ['light', 'dark']) {
-      const block = SCSS.match(new RegExp(`\\$sys-${scheme}:\\s*\\(([\\s\\S]*?)\\n\\)\\s*!default`));
+      const block = SCSS.match(new RegExp(`\\$sys-${scheme}:\\s*\\(([\\s\\S]*?)\\n\\)\\s*;`));
       assert.ok(block, `$sys-${scheme} map not found`);
       const entries = [...block[1].matchAll(/"([a-z-]+)":\s*"([a-z-]+\d+)"/g)];
       assert.equal(entries.length, 45, `$sys-${scheme} should map all 45 roles`);
