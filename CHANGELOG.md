@@ -85,6 +85,56 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Static chip close buttons work again after `AutoInit()`. The fallback
+  handler stepped aside for any `.chips` with an instance, and an instance
+  without `allowUserInput` never handled the click. Chips also copy their
+  initial `data`, ignore Enter during IME composition, and mirror arrow keys
+  in right-to-left text.
+- Menu clears its old highlight when it closes or moves, so reopening no
+  longer leaves two rows active. A `.menu-trigger` whose target id does not
+  resolve now warns and stays inert instead of inserting the text "null".
+  Menubar arrow keys skip disabled items.
+- A multi-select's checkbox stays checked when the box itself is clicked, and
+  a disabled option in a single select no longer closes the menu.
+- Autocomplete keeps the active row when a multi-select option is toggled and
+  doesn't search again. It returns focus to the field after a single-select
+  click, and takes Escape only when it closes the list, so an enclosing dialog
+  stays open. Results set before the field is focused don't open the list.
+  `destroy()` removes the combobox attributes it added.
+- Datepicker sorts multiple dates the same way in every browser, puts the tab
+  stop on today when nothing is selected, keeps focus on the year or month
+  select across a redraw, and no longer changes the caller's `minDate` and
+  `maxDate`. A typed date in multiple-selection mode joins the selection.
+  `destroy()` removes the date input's painted value.
+- Tabs find panels whose ids contain non-ASCII characters or sit in a shadow
+  root, and a shown panel keeps its CSS `display` instead of becoming
+  `block`.
+- Carousel leaves Alt, Ctrl, Meta and Shift shortcuts alone, as well as arrow
+  keys aimed at sliders, menus, tab lists and media controls inside a slide.
+- A snackbar swipe made within one millisecond no longer counts as a flick.
+- A textarea hidden at load (in a closed dialog or an inactive tab) gets its
+  height when it is first focused or typed in instead of staying 0px tall. A
+  `.file-field` without a path input no longer throws.
+- Tour skips steps whose target has been removed. A side sheet starts a drag
+  only from its own header. Escape during a sortable drag no longer closes
+  the dialog around the list.
+- Lightbox returns focus to the image when it closes and doesn't open an
+  image it can't measure. Particles uses the latest visibility entry,
+  repaints still dots after a theme change, and follows reduced motion as it
+  changes. MapView skips `data-lng-lat` values with an empty part and
+  handles cluster zooms and fullscreen requests that finish after
+  `destroy()`.
+- A keypad initialized before it is in the document works once inserted. The
+  slider's value label follows its host when the host resizes.
+- RichTextEditor logs invalid toolbar `data-attributes` JSON instead of
+  throwing. A required editor blocks submit while empty and takes focus,
+  where the hidden textarea used to block it with no message.
+- The character counter shows a prefilled value's count and invalid state
+  without waiting for focus. ExpandingCard calls `onClose` when its dialog is
+  closed natively. Card reveals and the app bar's search view work inside a
+  shadow root. ExpandingCard, AppBar, the FAB menu and CharacterCounter undo
+  their ARIA and tabindex changes on `destroy()`, and an `<a>` FAB trigger
+  without `href` is focusable.
 - A navigation rail `<button>` destination is now as tall as a link
   destination instead of the default button's 40px.
 - A side panel destination that comes first in a navigation rail is laid out
