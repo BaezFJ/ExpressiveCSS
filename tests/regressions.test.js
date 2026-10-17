@@ -2005,3 +2005,92 @@ describe('A cancelled pointer drag is not a completed one', () => {
     assert.equal(selected, 0, 'a cancelled drag reported a selection');
   });
 });
+
+describe('Particles', () => {
+  beforeEach(resetBody);
+
+  // jsdom has no canvas, IntersectionObserver or media queries to flip.
+  function setup({ reduce = false } = {}) {
+    document.body.innerHTML = '<canvas class="particles"></canvas>';
+    const canvas = document.querySelector('canvas');
+    const paints = { count: 0 };
+    canvas.getContext = () => new Proxy({}, {
+      get: (target, key) => (key === 'clearRect' ? () => paints.count++ : () => {}),
+      set: () => true
+    });
+    const queries = {};
+    const matchMedia = globalThis.matchMedia;
+    globalThis.matchMedia = (query) => (queries[query] ??= {
+      matches: query.includes('reduced-motion') && reduce,
+      listeners: new Set(),
+      addEventListener(type, fn) { this.listeners.add(fn); },
+      removeEventListener(type, fn) { this.listeners.delete(fn); },
+      change(matches = this.matches) { this.matches = matches; this.listeners.forEach((fn) => fn()); }
+    });
+    let visibility;
+    globalThis.devicePixelRatio = 1;
+    globalThis.IntersectionObserver = class {
+      constructor(callback) { visibility = callback; }
+      observe() {}
+      disconnect() {}
+    };
+    const restore = () => {
+      globalThis.matchMedia = matchMedia;
+      delete globalThis.IntersectionObserver;
+      delete globalThis.devicePixelRatio;
+      document.documentElement.removeAttribute('theme');
+    };
+    try {
+      const instance = Expressive.Particles.init(canvas, { quantity: 3 });
+      return { instance, paints, visibility, restore, query: (part) => Object.entries(queries).find(([q]) => q.includes(part))[1] };
+    } catch (error) {
+      restore();
+      throw error;
+    }
+  }
+
+  test('visibility follows the newest IntersectionObserver entry', () => {
+    const { instance, visibility, restore } = setup();
+    try {
+      visibility([{ isIntersecting: true }, { isIntersecting: false }]);
+      assert.equal(instance._frame, 0, 'the oldest entry started an offscreen canvas');
+      visibility([{ isIntersecting: false }, { isIntersecting: true }]);
+      assert.notEqual(instance._frame, 0);
+    } finally {
+      instance.destroy();
+      restore();
+    }
+  });
+
+  test('still dots repaint on a theme change and follow the reduced-motion setting', async () => {
+    const { instance, paints, visibility, restore, query } = setup({ reduce: true });
+    try {
+      visibility([{ isIntersecting: true }]);
+      assert.equal(instance._frame, 0, 'reduced motion draws once');
+      let before = paints.count;
+      document.documentElement.setAttribute('theme', 'dark');
+      await sleep(0);
+      assert.ok(paints.count > before, 'a theme attribute change repaints');
+      before = paints.count;
+      query('color-scheme').change(true);
+      assert.ok(paints.count > before, 'a color-scheme change repaints');
+
+      query('reduced-motion').change(false);
+      assert.notEqual(instance._frame, 0, 'turning reduced motion off animates');
+      before = paints.count;
+      query('reduced-motion').change(true);
+      assert.equal(instance._frame, 0, 'turning it back on stops');
+      assert.ok(paints.count > before, 'and paints the dots where they are');
+
+      instance.destroy();
+      assert.equal(query('reduced-motion').listeners.size + query('color-scheme').listeners.size, 0, 'destroy removes the media listeners');
+      before = paints.count;
+      document.documentElement.setAttribute('theme', 'light');
+      await sleep(0);
+      assert.equal(paints.count, before, 'destroy stops watching the theme');
+    } finally {
+      instance.destroy();
+      restore();
+    }
+  });
+});

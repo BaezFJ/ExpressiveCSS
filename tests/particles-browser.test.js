@@ -121,6 +121,14 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       assert.ok(still.box, 'reduced motion still draws the particles');
       await page.mouse.move(100 + 50, 100 + 50);
       assert.deepEqual((await painted(20)).box, still.box, 'reduced motion keeps the particles still');
+      const theme = (value) => page.evaluate((value) => document.documentElement.setAttribute('theme', value), value);
+      await theme('light');
+      const light = (await painted(2)).color;
+      await theme('dark');
+      const dark = (await painted(2)).color;
+      assert.notDeepEqual(dark, light, 'still particles keep the old theme color');
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      assert.ok(center((await painted(40)).box).x > center(still.box).x + 5, 'turning reduced motion off does not animate');
       await page.evaluate(() => window.Expressive.Particles.getInstance(document.getElementById('particles')).destroy());
     } finally {
       await browser.close();
