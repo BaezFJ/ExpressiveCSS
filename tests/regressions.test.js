@@ -1264,7 +1264,7 @@ describe('Tabs', () => {
           nav.querySelectorAll('a')[1].click();
           assert.equal(instance._content, panel);
           assert.deepEqual(shown, [panel]);
-          assert.equal(panel.style.display, 'block');
+          assert.equal(panel.style.display, '');
           assert.equal(nav.querySelector('[aria-current="page"]').hash, '#' + id);
           assert.equal(decoy.outerHTML, decoyMarkup);
         } finally {

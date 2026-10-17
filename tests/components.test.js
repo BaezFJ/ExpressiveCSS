@@ -110,7 +110,7 @@ describe("Tabs", () => {
 
       assert.equal(
         document.getElementById("card-test-1").style.display,
-        "block",
+        "",
       );
       assert.equal(
         document.getElementById("card-test-2").style.display,

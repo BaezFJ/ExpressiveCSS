@@ -207,7 +207,9 @@ export class Tabs extends Component<TabsOptions> {
 
     // Swap content
     if (this._content) {
-      this._content.style.display = 'block';
+      // Clear the hide rather than force 'block', so a flex or grid panel
+      // keeps the display its stylesheet gives it.
+      this._content.style.display = '';
       this._content.classList.add('active');
       if (typeof this.options.onShow === 'function')
         this.options.onShow.call(this, this._content);
@@ -241,7 +243,21 @@ export class Tabs extends Component<TabsOptions> {
   /** The panel a link shows, or null for a `target` link or one without a hash. */
   private _panelFor(a: HTMLAnchorElement): HTMLElement | null {
     if (!a.hash || a.hasAttribute('target')) return null;
-    return document.getElementById(a.hash.slice(1));
+    // Looked up in the tabs' own root, so panels inside a shadow root resolve.
+    return Utils.getElementById(this.el, Tabs._decodeHash(a.hash));
+  }
+
+  /**
+   * The id a hash names. `a.hash` and `location.hash` come back
+   * percent-encoded, so a non-ASCII id would never match without this. A
+   * malformed escape throws, and is then taken as written.
+   */
+  private static _decodeHash(hash: string): string {
+    try {
+      return decodeURIComponent(hash.slice(1));
+    } catch {
+      return hash.slice(1);
+    }
   }
 
   /**
@@ -271,7 +287,7 @@ export class Tabs extends Component<TabsOptions> {
     // If the location.hash matches one of the links, use that as the active tab.
     // If no match is found, use any with class 'active', then the first link.
     this._activeTabLink =
-      Array.from(this._tabLinks).find(a => a.getAttribute('href') === location.hash) ??
+      Array.from(this._tabLinks).find(a => a.getAttribute('href') === (location.hash && '#' + Tabs._decodeHash(location.hash))) ??
       this.el.querySelector<HTMLAnchorElement>('a.active') ??
       this._tabLinks[0];
     this._setActiveTabLink(this._activeTabLink);
