@@ -264,6 +264,35 @@ describe("FormSelect", () => {
     );
     instance.destroy();
   });
+
+  test("clicking a multi-select checkbox keeps the box in step", () => {
+    document.body.innerHTML = `<select multiple><option value="1">One</option></select>`;
+    const select = document.querySelector("select");
+    const instance = Expressive.FormSelect.init(select);
+    try {
+      const box = instance.menuEl.querySelector('input[type="checkbox"]');
+      fire(box, "click");
+      assert.equal(select.options[0].selected, true);
+      assert.equal(box.checked, true);
+      fire(box, "click");
+      assert.equal(select.options[0].selected, false);
+      assert.equal(box.checked, false);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("clicking a disabled option keeps a single select open", () => {
+    document.body.innerHTML = fieldHtml;
+    const instance = Expressive.FormSelect.init(document.querySelector("select"));
+    try {
+      instance.menu.open();
+      fire(instance.menuEl.querySelector("li.disabled"), "click");
+      assert.equal(instance.menu.isOpen, true);
+    } finally {
+      instance.destroy();
+    }
+  });
 });
 
 describe("Menu nested menus", () => {

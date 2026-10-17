@@ -248,7 +248,9 @@ export class FormSelect extends Component<FormSelectOptions> {
   };
 
   _handleOptionClick = (e: MouseEvent | KeyboardEvent) => {
-    e.preventDefault();
+    // Canceling a click on the multi-select checkbox itself reverts the box
+    // after _selectValue has set it, leaving it out of step with the option.
+    if (!(e.target as Element).matches('input[type="checkbox"]')) e.preventDefault();
     const virtualOption = (e.target as HTMLLIElement).closest('li');
     this._selectOptionElement(virtualOption);
     e.stopPropagation();
@@ -291,8 +293,9 @@ export class FormSelect extends Component<FormSelectOptions> {
         this.el.dispatchEvent(
           new Event('change', { bubbles: true, cancelable: true, composed: true })
         );
+      // Only a real selection closes; a disabled option is inert.
+      if (!this.isMultiple) this.menu?.close();
     }
-    if (!this.isMultiple) this.menu?.close();
   }
 
   _handleInputClick = () => {
