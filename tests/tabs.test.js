@@ -32,6 +32,20 @@ describe('Tabs', () => {
     }
   });
 
+  test('location.hash deep-links a link whose href is written percent-encoded', () => {
+    document.body.innerHTML = markup.replace('href="#café"', 'href="#caf%C3%A9"');
+    const nav = document.querySelector('nav');
+    let instance;
+    try {
+      window.location.hash = '#café';
+      instance = Expressive.Tabs.init(nav);
+      assert.equal(instance._content, document.getElementById('café'));
+    } finally {
+      instance?.destroy();
+      window.location.hash = '';
+    }
+  });
+
   test('panels inside a shadow root resolve', () => {
     document.body.innerHTML = '<div id="host"></div>';
     const shadow = document.getElementById('host').attachShadow({ mode: 'open' });

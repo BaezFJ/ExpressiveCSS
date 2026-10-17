@@ -146,7 +146,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed navigation rail side panels opening on hover, pinning on click and closing on Escape: 70,556 gzip bytes (+426).
   // Reviewed a side panel destination never becoming the rail's menu toggle: 70,562 gzip bytes (+6).
   // Reviewed the src/ts review fixes across 23 components and behaviors: 72,163 gzip bytes (+1,601).
-  assert.ok(sizes(js).gzip <= 72163, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Tabs decoding the href too when matching location.hash: 72,173 gzip bytes (+10).
+  assert.ok(sizes(js).gzip <= 72173, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

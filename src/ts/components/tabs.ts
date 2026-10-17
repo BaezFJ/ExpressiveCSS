@@ -286,8 +286,10 @@ export class Tabs extends Component<TabsOptions> {
   _setupActiveTabLink() {
     // If the location.hash matches one of the links, use that as the active tab.
     // If no match is found, use any with class 'active', then the first link.
+    // Both sides decoded: an href may be written with or without escapes.
+    const hash = location.hash && Tabs._decodeHash(location.hash);
     this._activeTabLink =
-      Array.from(this._tabLinks).find(a => a.getAttribute('href') === (location.hash && '#' + Tabs._decodeHash(location.hash))) ??
+      Array.from(this._tabLinks).find(a => hash && Tabs._decodeHash(a.getAttribute('href') ?? '') === hash) ??
       this.el.querySelector<HTMLAnchorElement>('a.active') ??
       this._tabLinks[0];
     this._setActiveTabLink(this._activeTabLink);
