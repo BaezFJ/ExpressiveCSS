@@ -254,6 +254,8 @@ unlayered declaration. Drop the flag from `.hide` and it stops beating a
 consumer's own `display` — silently, and in the common case. Classes whose whole
 job is to be unconditional (`.hide`, `.m-3`) keep it.
 
-A few rules in `components/` still use `!important` for UA resets
-(modal float, staggered-list transitions, textarea padding), not for
-JS-driven geometry. Tap target and the circular progress indicator no longer need the flag.
+A few rules in `components/` still use `!important`: reduced-motion resets,
+`.scale-transition` (it must replace the transition of whatever component it
+is added to), and the map's overrides of MapLibre's own `!important` styles.
+None of them is for JS-driven geometry. Tap target, the circular progress
+indicator and `.expressive-textarea` padding no longer need the flag.

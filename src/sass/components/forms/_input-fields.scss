@@ -313,6 +313,16 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
         box-shadow: none;
       }
     }
+
+    // A textarea's text starts at the top instead of centering, so pad its
+    // first line to the input's 28px midline: border + padding + half of 24px.
+    > textarea.expressive-textarea {
+      padding-block: 15px;
+
+      &:focus {
+        padding-block: 14px;
+      }
+    }
   }
 }
 
@@ -326,8 +336,10 @@ textarea {
   background-color: transparent;
 
   &.expressive-textarea {
-    padding-top: 24px !important;
-    padding-bottom: 8px !important;
+    // No !important: source order beats `.field textarea`, and the outlined
+    // and :focus rules outrank this one, as they must.
+    padding-top: 24px;
+    padding-bottom: 8px;
     line-height: 24px;
     overflow-y: hidden;
     resize: none;
