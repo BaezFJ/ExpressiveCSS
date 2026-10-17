@@ -1,9 +1,11 @@
 // M3 Expressive vertical menu (md.comp.menus, not baseline md.comp.menu):
 // 16dp surface, 4dp items, 12dp end items, tertiary selected.
 
-import { test, describe } from "node:test";
+import { test, describe, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+
+import { Expressive, resetBody, window } from "./setup.js";
 
 const css = readFileSync(
   new URL("../dist/css/expressive.css", import.meta.url),
@@ -154,5 +156,91 @@ describe("Menu", () => {
       /menu\[id\]\.grouped > li[^{]*first-child[^{]*\{[^}]*border-start-start-radius:\s*var\(--md-comp-menu-group-shape\)/s,
     );
     assert.match(css, /menu\[id\]\.grouped > li:not\([^}]+:has\(\+ li\.gap\)/s);
+  });
+});
+
+const key = (el, k) =>
+  el.dispatchEvent(new window.KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true }));
+const tick = () => new Promise((resolve) => setTimeout(resolve, 5));
+
+describe("Menu behaviour", () => {
+  beforeEach(resetBody);
+
+  test("keeps one .active row across close and reopen", async () => {
+    document.body.innerHTML = `
+      <button type="button" class="menu-trigger" data-target="m">Drop</button>
+      <menu id="m"><li>One</li><li>Two</li><li>Three</li></menu>`;
+    const trigger = document.querySelector(".menu-trigger");
+    const instance = Expressive.Menu.init(trigger, { inDuration: 0, outDuration: 0 });
+    const active = () => [...document.querySelectorAll("#m > li.active")].map((li) => li.textContent);
+    try {
+      key(trigger, "ArrowDown");
+      await tick();
+      key(document.activeElement, "ArrowDown");
+      key(document.activeElement, "ArrowDown");
+      assert.deepEqual(active(), ["Three"]);
+      key(document.activeElement, "Escape");
+      assert.deepEqual(active(), [], "close leaves no highlight behind");
+      key(trigger, "ArrowDown");
+      await tick();
+      key(document.activeElement, "ArrowDown");
+      assert.deepEqual(active(), ["Two"]);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("a trigger whose target does not resolve stays inert", () => {
+    document.body.innerHTML = `<div><button type="button" class="menu-trigger" data-target="missing">Drop</button></div>`;
+    const trigger = document.querySelector(".menu-trigger");
+    const warn = console.warn;
+    let warnings = 0;
+    console.warn = () => warnings++;
+    const instances = [];
+    try {
+      instances.push(Expressive.Menu.init(trigger, { hover: true }));
+      instances.push(Expressive.Menu.init(trigger));
+      assert.equal(trigger.parentElement.childNodes.length, 1, "no stray text node");
+      instances[1].open();
+      assert.equal(instances[1].isOpen, false);
+      assert.equal(warnings, 2, "one warning per instance");
+    } finally {
+      console.warn = warn;
+      instances.forEach((instance) => instance.destroy());
+    }
+  });
+});
+
+describe("Menubar", () => {
+  beforeEach(resetBody);
+
+  test("arrow keys skip disabled items", () => {
+    document.body.innerHTML = `
+      <div class="menubar">
+        <button type="button" class="menu-trigger" data-target="f">File</button>
+        <button type="button" class="menu-trigger" data-target="e" disabled>Edit</button>
+        <button type="button" class="menu-trigger" data-target="v" aria-disabled="true">View</button>
+        <button type="button" class="menu-trigger" data-target="h">Help</button>
+      </div>
+      <menu id="f"><li>New</li></menu><menu id="e"><li>Undo</li></menu>
+      <menu id="v"><li>Zoom</li></menu><menu id="h"><li>About</li></menu>`;
+    const bar = Expressive.Menubar.init(document.querySelector(".menubar"));
+    const [file, edit, , help] = document.querySelectorAll(".menu-trigger");
+    try {
+      file.focus();
+      key(file, "ArrowRight");
+      assert.equal(document.activeElement.textContent, "Help");
+      key(document.activeElement, "ArrowRight");
+      assert.equal(document.activeElement, file, "wraps past the disabled items");
+      key(file, "End");
+      assert.equal(document.activeElement.textContent, "Help");
+      // From inside an open menu the neighbour's menu opens, not a disabled one's.
+      Expressive.Menu.getInstance(file).open();
+      key(document.querySelector("#f > li"), "ArrowRight");
+      assert.equal(Expressive.Menu.getInstance(edit).isOpen, false);
+      assert.equal(Expressive.Menu.getInstance(help).isOpen, true);
+    } finally {
+      bar.destroy();
+    }
   });
 });

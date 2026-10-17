@@ -113,8 +113,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   declare el: HTMLInputElement;
   /** If the autocomplete is open. */
   isOpen: boolean;
-  /** Whether the user left the field since the last search, so late results must not reopen it. */
-  private _left = false;
+  /**
+   * Whether the user left or dismissed the field since the last search, so
+   * late results must not reopen it. A field nobody has focused yet counts.
+   */
+  private _left = true;
   /** Number of matching autocomplete options. */
   count: number;
   /** Index of the current selected option. */
@@ -244,6 +247,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.menu.destroy();
     this.isOpen = false;
     this._removeMenu();
+    for (const name of ['role', 'aria-autocomplete', 'aria-controls', 'data-target', 'aria-haspopup', 'aria-expanded', 'aria-activedescendant']) {
+      this.el.removeAttribute(name);
+    }
     this._statusInfo.remove();
     this._announcer.remove();
     this.el['Expressive_Autocomplete'] = undefined;
@@ -419,8 +425,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   _handleInputKeydown = (e: KeyboardEvent) => {
     Autocomplete._keydown = true;
     if (e.key === Utils.keys.ESC || e.key === 'Tab') {
-      this.close();
-      this._resetCurrentElementPosition();
+      this._dismiss(e);
       return;
     }
     // Arrow keys and enter key usage
@@ -457,6 +462,17 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       }
     }
   };
+
+  private _dismiss(e: KeyboardEvent) {
+    if (e.key === Utils.keys.ESC) {
+      // Take the key only when it closes something, or a surrounding <dialog>
+      // would cancel too. A dismissed list stays shut for late results.
+      if (this.menu.isOpen || this._openTimer !== undefined) e.preventDefault();
+      this._left = true;
+    }
+    this.close();
+    this._resetCurrentElementPosition();
+  }
 
   _handleInputClick = () => {
     this.open();
@@ -718,6 +734,35 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (selected) this._triggerChanged();
   }
 
+  private _toggleOption(entry: AutocompleteData) {
+    const selected = !this.selectedValues.some((selectedEntry) => selectedEntry.id === entry.id);
+    if (selected) this.selectedValues.push(entry);
+    else this.selectedValues = this.selectedValues.filter((selectedEntry) => selectedEntry.id !== entry.id);
+    // Update the row in place. Re-rendering the list dropped the active row,
+    // and its reset of oldVal made the refocus below run a new search.
+    const row = Array.from(this.container.children).find((li) => li.getAttribute('data-id') === String(entry.id));
+    if (row) {
+      row.setAttribute('aria-selected', String(selected));
+      row.querySelector('input').checked = selected;
+    }
+    this.el.focus();
+  }
+
+  private _selectSingle(entry: AutocompleteData) {
+    // A click focuses the row, and removing it would drop focus to <body>.
+    // A selection made from code leaves focus where it is.
+    const refocus = Utils.focusIsIn(this.container);
+    this.selectedValues = [entry];
+    this._refreshInputText();
+    this._resetAutocomplete();
+    this.close();
+    if (refocus) {
+      // The field already shows the choice, so returning to it is not a new search.
+      this.oldVal = this.el.value.toLocaleLowerCase();
+      this.el.focus();
+    }
+  }
+
   /**
    * Select a specific autocomplete option via id-property.
    * @param id The id of a data-entry.
@@ -725,21 +770,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   selectOption(id: number | string) {
     const entry = this.menuItems.find((item) => item.id == id);
     if (!entry) return;
-    if (this.options.isMultiSelect) {
-      if (!this.selectedValues.some((selectedEntry) => selectedEntry.id === entry.id))
-        this.selectedValues.push(entry);
-      else this.selectedValues = this.selectedValues.filter(
-        (selectedEntry) => selectedEntry.id !== entry.id
-      );
-      this._renderMenu();
-      this.el.focus();
-    } else {
-      // Single-Select
-      this.selectedValues = [entry];
-      this._refreshInputText();
-      this._resetAutocomplete();
-      this.close();
-    }
+    if (this.options.isMultiSelect) this._toggleOption(entry);
+    else this._selectSingle(entry);
     this._updateSelectedInfo();
     if (this.options.isMultiSelect) this._announce(this.options.i18n.selected(this.selectedValues.length));
     this._triggerChanged();

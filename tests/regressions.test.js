@@ -162,6 +162,37 @@ describe('Lightbox dimensions', () => {
     assert.equal(img.style.width, '100px');
     instance.destroy();
   });
+
+  test('an image with no size yet does not open into NaN', () => {
+    document.body.innerHTML = `<img class="lightboxed" src="http://localhost/1.jpg">`;
+    const img = document.querySelector('img');
+    const instance = Expressive.Lightbox.init(img);
+    try {
+      instance.open();
+      assert.equal(document.getElementById('lightbox-overlay'), null);
+      assert.equal(img.classList.contains('active'), false);
+      assert.equal(img.style.maxWidth, '');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('closing puts focus dropped on the body back on the image', () => {
+    document.body.innerHTML = `<img class="lightboxed" src="http://localhost/1.jpg">`;
+    const img = document.querySelector('img');
+    fixRect(img, 100, 50);
+    const instance = Expressive.Lightbox.init(img);
+    try {
+      img.focus();
+      instance.open();
+      // A click on the overlay, which cannot take focus, leaves it on the body.
+      img.blur();
+      document.getElementById('lightbox-overlay').click();
+      assert.equal(document.activeElement, img);
+    } finally {
+      instance.destroy();
+    }
+  });
 });
 
 describe('Carousel', () => {
@@ -489,6 +520,21 @@ describe('optional markup does not crash a component', () => {
 
     assert.equal(instance.isOpen, false);
     instance.destroy();
+  });
+
+  test('a file field with no path input', () => {
+    document.body.innerHTML = `<div class="file-field"><input type="file"></div>`;
+    const input = document.querySelector('input');
+    Expressive.Forms.InitFileInputPath(input);
+    const errors = [];
+    const record = (e) => errors.push(e.error);
+    window.addEventListener('error', record);
+    try {
+      input.dispatchEvent(new window.Event('change', { bubbles: true }));
+    } finally {
+      window.removeEventListener('error', record);
+    }
+    assert.deepEqual(errors, []);
   });
 });
 
@@ -1236,6 +1282,116 @@ describe('Autocomplete', () => {
     await sleep(10);
     assert.equal(Expressive.Autocomplete.getInstance(el), undefined);
   });
+
+  const mountSearching = (options = {}) => {
+    document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac"></div>`;
+    const el = document.getElementById('ac');
+    const searches = [];
+    const instance = Expressive.Autocomplete.init(el, {
+      data: [{ id: 'apple', text: 'Apple' }, { id: 'apricot', text: 'Apricot' }],
+      menuOptions: { inDuration: 0, outDuration: 0 },
+      onSearch: (text, ac) => { searches.push(text); Expressive.Autocomplete.defaults.onSearch(text, ac); },
+      ...options
+    });
+    const key = (name) => {
+      const event = new window.KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true });
+      el.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+    // A real click focuses the tabindex=-1 row before the click lands.
+    const clickRow = (id) => {
+      const li = instance.container.querySelector(`li[data-id="${id}"]`);
+      li.dispatchEvent(new window.PointerEvent('pointerdown', { bubbles: true, isPrimary: true, pointerType: 'mouse', button: 0 }));
+      li.focus();
+      li.dispatchEvent(new window.PointerEvent('pointerup', { bubbles: true, isPrimary: true, pointerType: 'mouse' }));
+      fire(li, 'click');
+    };
+    return { el, instance, searches, key, clickRow };
+  };
+
+  test('toggling a multi-select option keeps the active row and does not search again', async () => {
+    const { el, instance, searches, key, clickRow } = mountSearching({ isMultiSelect: true });
+    try {
+      el.focus();
+      el.value = 'ap';
+      fire(el, 'input');
+      await sleep(10);
+      key('ArrowDown');
+      key('ArrowDown');
+      key('Enter');
+      const rows = instance.container.querySelectorAll('li');
+      assert.equal(instance.activeIndex, 1, 'Enter keeps the keyboard on the toggled row');
+      assert.equal(el.getAttribute('aria-activedescendant'), rows[1].id);
+      const before = searches.length;
+      clickRow('apple');
+      assert.equal(document.activeElement, el);
+      assert.equal(searches.length, before, 'refocusing the field is not a new query');
+      assert.equal(el.getAttribute('aria-activedescendant'), rows[1].id);
+      assert.deepEqual(instance.selectedValues.map((entry) => entry.id), ['apricot', 'apple']);
+      assert.equal(rows[0].getAttribute('aria-selected'), 'true');
+      assert.equal(rows[0].querySelector('input').checked, true);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('clicking a single-select option returns focus to the field', async () => {
+    const { el, instance, searches, clickRow } = mountSearching();
+    try {
+      el.focus();
+      el.value = 'ap';
+      fire(el, 'input');
+      await sleep(10);
+      const before = searches.length;
+      clickRow('apricot');
+      await sleep(10);
+      assert.equal(el.value, 'Apricot');
+      assert.equal(document.activeElement, el);
+      assert.equal(searches.length, before);
+      assert.equal(instance.menu.isOpen, false);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('Escape takes the key only when it closes the list, and late results stay closed', async () => {
+    const pending = [];
+    const { el, instance, key } = mountSearching({
+      onSearch: (text, ac) => pending.push(() => ac.setMenuItems([{ id: 'apple', text: 'Apple' }]))
+    });
+    try {
+      el.focus();
+      el.value = 'ap';
+      fire(el, 'input');
+      assert.equal(key('Escape'), true, 'a pending open is cancelled, so a surrounding dialog stays open');
+      assert.equal(key('Escape'), false, 'nothing left to close, so the dialog gets the key');
+      pending.shift()();
+      await sleep(10);
+      assert.equal(instance.menu.isOpen, false, 'results for a dismissed list do not reopen it');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('results set before the field is ever focused do not open the list', async () => {
+    const { instance } = mountSearching();
+    try {
+      instance.setMenuItems([{ id: 'apple', text: 'Apple' }]);
+      await sleep(10);
+      assert.equal(instance.menu.isOpen, false);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('destroy removes the combobox attributes it added', () => {
+    const { el, instance } = mountSearching();
+    instance.open();
+    instance.destroy();
+    for (const name of ['role', 'aria-autocomplete', 'aria-controls', 'data-target', 'aria-haspopup', 'aria-expanded', 'aria-activedescendant']) {
+      assert.equal(el.hasAttribute(name), false, name);
+    }
+  });
 });
 
 describe('Tabs', () => {
@@ -1264,7 +1420,7 @@ describe('Tabs', () => {
           nav.querySelectorAll('a')[1].click();
           assert.equal(instance._content, panel);
           assert.deepEqual(shown, [panel]);
-          assert.equal(panel.style.display, 'block');
+          assert.equal(panel.style.display, '');
           assert.equal(nav.querySelector('[aria-current="page"]').hash, '#' + id);
           assert.equal(decoy.outerHTML, decoyMarkup);
         } finally {
@@ -1847,5 +2003,94 @@ describe('A cancelled pointer drag is not a completed one', () => {
     const { view, selected } = dragClock('pointercancel');
     assert.equal(view, 'hours', 'a cancelled drag advanced hours to minutes');
     assert.equal(selected, 0, 'a cancelled drag reported a selection');
+  });
+});
+
+describe('Particles', () => {
+  beforeEach(resetBody);
+
+  // jsdom has no canvas, IntersectionObserver or media queries to flip.
+  function setup({ reduce = false } = {}) {
+    document.body.innerHTML = '<canvas class="particles"></canvas>';
+    const canvas = document.querySelector('canvas');
+    const paints = { count: 0 };
+    canvas.getContext = () => new Proxy({}, {
+      get: (target, key) => (key === 'clearRect' ? () => paints.count++ : () => {}),
+      set: () => true
+    });
+    const queries = {};
+    const matchMedia = globalThis.matchMedia;
+    globalThis.matchMedia = (query) => (queries[query] ??= {
+      matches: query.includes('reduced-motion') && reduce,
+      listeners: new Set(),
+      addEventListener(type, fn) { this.listeners.add(fn); },
+      removeEventListener(type, fn) { this.listeners.delete(fn); },
+      change(matches = this.matches) { this.matches = matches; this.listeners.forEach((fn) => fn()); }
+    });
+    let visibility;
+    globalThis.devicePixelRatio = 1;
+    globalThis.IntersectionObserver = class {
+      constructor(callback) { visibility = callback; }
+      observe() {}
+      disconnect() {}
+    };
+    const restore = () => {
+      globalThis.matchMedia = matchMedia;
+      delete globalThis.IntersectionObserver;
+      delete globalThis.devicePixelRatio;
+      document.documentElement.removeAttribute('theme');
+    };
+    try {
+      const instance = Expressive.Particles.init(canvas, { quantity: 3 });
+      return { instance, paints, visibility, restore, query: (part) => Object.entries(queries).find(([q]) => q.includes(part))[1] };
+    } catch (error) {
+      restore();
+      throw error;
+    }
+  }
+
+  test('visibility follows the newest IntersectionObserver entry', () => {
+    const { instance, visibility, restore } = setup();
+    try {
+      visibility([{ isIntersecting: true }, { isIntersecting: false }]);
+      assert.equal(instance._frame, 0, 'the oldest entry started an offscreen canvas');
+      visibility([{ isIntersecting: false }, { isIntersecting: true }]);
+      assert.notEqual(instance._frame, 0);
+    } finally {
+      instance.destroy();
+      restore();
+    }
+  });
+
+  test('still dots repaint on a theme change and follow the reduced-motion setting', async () => {
+    const { instance, paints, visibility, restore, query } = setup({ reduce: true });
+    try {
+      visibility([{ isIntersecting: true }]);
+      assert.equal(instance._frame, 0, 'reduced motion draws once');
+      let before = paints.count;
+      document.documentElement.setAttribute('theme', 'dark');
+      await sleep(0);
+      assert.ok(paints.count > before, 'a theme attribute change repaints');
+      before = paints.count;
+      query('color-scheme').change(true);
+      assert.ok(paints.count > before, 'a color-scheme change repaints');
+
+      query('reduced-motion').change(false);
+      assert.notEqual(instance._frame, 0, 'turning reduced motion off animates');
+      before = paints.count;
+      query('reduced-motion').change(true);
+      assert.equal(instance._frame, 0, 'turning it back on stops');
+      assert.ok(paints.count > before, 'and paints the dots where they are');
+
+      instance.destroy();
+      assert.equal(query('reduced-motion').listeners.size + query('color-scheme').listeners.size, 0, 'destroy removes the media listeners');
+      before = paints.count;
+      document.documentElement.setAttribute('theme', 'light');
+      await sleep(0);
+      assert.equal(paints.count, before, 'destroy stops watching the theme');
+    } finally {
+      instance.destroy();
+      restore();
+    }
   });
 });

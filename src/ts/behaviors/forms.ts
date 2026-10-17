@@ -53,9 +53,8 @@ export class Forms {
     // the text on every keystroke, plus getComputedStyle and seven style
     // writes, run twice per keystroke because it was bound to keydown and
     // keyup both.
-    if (!textarea.hasAttribute('original-height')) {
-      textarea.setAttribute('original-height', textarea.getBoundingClientRect().height.toString());
-    }
+    if (!textarea.hasAttribute('original-height')) Forms._measureTextarea(textarea);
+    // Not measured yet when it was hidden.
     const originalHeight = parseInt(textarea.getAttribute('original-height'));
     if (isNaN(originalHeight)) return;
 
@@ -64,6 +63,13 @@ export class Forms {
     const borders = textarea.offsetHeight - textarea.clientHeight;
     const contentHeight = textarea.scrollHeight + borders;
     textarea.style.height = Math.max(originalHeight, contentHeight) + 'px';
+  }
+
+  // A hidden textarea (closed dialog, inactive tab) measures 0. Storing that
+  // would pin it collapsed, so it waits for a focus or input to measure.
+  private static _measureTextarea(textarea: HTMLTextAreaElement) {
+    const height = textarea.getBoundingClientRect().height;
+    if (height) textarea.setAttribute('original-height', height.toString());
   }
 
   private static _initialized = false;
@@ -257,19 +263,24 @@ export class Forms {
   }
 
   static InitTextarea(textarea: HTMLTextAreaElement) {
-    // Save Data in Element
-    textarea.setAttribute('original-height', textarea.getBoundingClientRect().height.toString());
+    // Measured afresh by textareaAutoResize, which skips a hidden textarea.
+    textarea.removeAttribute('original-height');
     Forms.textareaAutoResize(textarea);
     // `input` rather than keydown + keyup: it fires once per actual value
     // change and also covers paste, drag-drop and IME composition, which the
     // key events missed.
     textarea.addEventListener('input', (e) => Forms.textareaAutoResize(e.target));
+    // One that was hidden at init gets its first measurement once shown.
+    textarea.addEventListener('focus', () => {
+      if (!textarea.hasAttribute('original-height')) Forms.textareaAutoResize(textarea);
+    });
   }
 
   static InitFileInputPath(fileInput: HTMLInputElement) {
     fileInput.addEventListener('change', () => {
       const fileField = fileInput.closest('.file-field');
-      const pathInput = <HTMLInputElement>fileField.querySelector('input.file-path');
+      const pathInput = fileField?.querySelector<HTMLInputElement>('input.file-path');
+      if (!pathInput) return;
       pathInput.value = Array.from(fileInput.files, (f) => f.name).join(', ');
       pathInput.dispatchEvent(
         new Event('change', { bubbles: true, cancelable: true, composed: true })

@@ -449,6 +449,7 @@ describe('textarea auto-resize', () => {
   test('measures the textarea itself, with no mirror div', () => {
     document.body.innerHTML = `<textarea class="expressive-textarea"></textarea>`;
     const textarea = document.querySelector('textarea');
+    stubRect(textarea, { reads: 0 }, { top: 0, left: 0, width: 200, height: 40 });
 
     Expressive.Forms.InitTextarea(textarea);
     textarea.value = 'one\ntwo\nthree';
@@ -465,5 +466,20 @@ describe('textarea auto-resize', () => {
       null,
       'previous-length is obsolete; the height is clamped against original-height now'
     );
+  });
+
+  test('a textarea hidden at init is measured when shown, not pinned at 0px', () => {
+    document.body.innerHTML = `<textarea class="expressive-textarea"></textarea>`;
+    const textarea = document.querySelector('textarea');
+
+    // jsdom measures everything as 0, as a browser does a display:none textarea.
+    Expressive.Forms.InitTextarea(textarea);
+    assert.equal(textarea.style.height, '', 'a hidden textarea got an inline height');
+    assert.equal(textarea.getAttribute('original-height'), null);
+
+    stubRect(textarea, { reads: 0 }, { top: 0, left: 0, width: 200, height: 40 });
+    textarea.focus();
+    assert.equal(textarea.getAttribute('original-height'), '40');
+    assert.equal(textarea.style.height, '40px');
   });
 });

@@ -82,7 +82,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Command palette](#command-palette) | implemented | source-reviewed | needs-rerun | 0 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | needs-rerun | 0 |
 | [Text fields](#text-fields) | unassessed | needs-review | needs-rerun | 0 |
-| [Rich text editor](#rich-text-editor) | implemented | source-reviewed | needs-rerun | 0 |
+| [Rich text editor](#rich-text-editor) | unassessed | needs-review | needs-rerun | 0 |
 | [Drop zone](#drop-zone) | unassessed | needs-review | needs-rerun | 0 |
 | [Select](#select) | unassessed | needs-review | needs-rerun | 0 |
 | [Checkboxes](#checkboxes) | unassessed | needs-review | needs-rerun | 0 |
@@ -1271,9 +1271,9 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 ## Rich text editor
 
-**implemented within the stated scope.** A Tiptap editor mounted from a textarea, toolbar buttons that run Tiptap commands with JSON arguments, pressed and disabled button state, form submission through the textarea, label naming and read-only textareas.
+**unassessed within the stated scope.** A Tiptap editor mounted from a textarea, toolbar buttons that run Tiptap commands with JSON arguments, pressed and disabled button state, form submission through the textarea, label naming and read-only textareas.
 
-Source review: source-reviewed, 2026-10-08. [src/sass/components/_rich-text-editor.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/src/sass/components/_rich-text-editor.scss), [src/ts/components/richTextEditor.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/src/ts/components/richTextEditor.ts).
+Source review: needs-review, 2026-10-08. [src/sass/components/_rich-text-editor.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/src/sass/components/_rich-text-editor.scss), [src/ts/components/richTextEditor.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/src/ts/components/richTextEditor.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
 

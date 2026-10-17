@@ -146,7 +146,9 @@ export class Chips extends Component<ChipsOptions> {
 
     // Render initial chips
     if (this.options.data.length) {
-      this.chipsData = this.options.data;
+      // A copy: adding or deleting a chip would otherwise edit the caller's
+      // array, and a batch init would have every instance share one list.
+      this.chipsData = [...this.options.data];
       this._renderChips();
     }
 
@@ -253,6 +255,19 @@ export class Chips extends Component<ChipsOptions> {
     }
   };
 
+  /** The arrow that points back towards the first chip, which in RTL is Right. */
+  private static _backKey(el: Element) {
+    return getComputedStyle(el).direction === 'rtl' ? Utils.keys.ARROW_RIGHT : Utils.keys.ARROW_LEFT;
+  }
+
+  /**
+   * Enter that confirms an IME composition is not a request to add a chip.
+   * keyCode 229 covers browsers that end composition before the keydown.
+   */
+  private static _isComposing(e: KeyboardEvent) {
+    return e.isComposing || e.keyCode === 229;
+  }
+
   static _handleChipsKeydown(e: KeyboardEvent) {
     const chips = (<HTMLElement>e.target).closest('.chips');
 
@@ -273,7 +288,7 @@ export class Chips extends Component<ChipsOptions> {
       const current = (e.target as HTMLElement).closest<HTMLElement>('.chip') ?? currChips._selectedChip;
       const index = currChips._chips.indexOf(current);
       if (index < 0) return;
-      if (e.key === Utils.keys.ARROW_LEFT) {
+      if (e.key === Chips._backKey(chips)) {
         if (index > 0) currChips.selectChip(index - 1);
       } else {
         const selectIndex = index + 1;
@@ -308,6 +323,7 @@ export class Chips extends Component<ChipsOptions> {
   };
 
   _handleInputKeydown = (e: KeyboardEvent) => {
+    if (Chips._isComposing(e)) return;
     if (e.key === Utils.keys.ENTER) {
       // Override enter if autocompleting.
       if (this.hasAutocomplete && this.autocomplete?.isOpen &&
@@ -320,9 +336,9 @@ export class Chips extends Component<ChipsOptions> {
       }
       this._input.value = '';
     } else if (
-      (e.key === Utils.keys.BACKSPACE || e.key === Utils.keys.ARROW_LEFT) &&
       this._input.value === '' &&
-      this.chipsData.length
+      this.chipsData.length &&
+      [Utils.keys.BACKSPACE, Chips._backKey(this.el)].includes(e.key)
     ) {
       e.preventDefault();
       this.selectChip(this.chipsData.length - 1);
@@ -496,21 +512,21 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   static Init() {
-    // Handle removal of static chips - markup written by hand, with no Chips
-    // instance behind it. Where there *is* an instance, _handleChipClick owns
-    // the close button: removing the node here as well left chipsData holding
-    // an entry whose element was gone.
+    // Handle removal of static chips - markup written by hand, which no Chips
+    // instance tracks even when one sits on the container (AutoInit gives every
+    // .chips one, usually without allowUserInput and so without a click
+    // handler). A chip the instance rendered belongs to _handleChipClick:
+    // removing the node here as well left chipsData holding an entry whose
+    // element was gone.
     Utils.onDocumentReady(() => {
       const chips = document.querySelectorAll('.chips');
       chips.forEach((el) => {
         el.addEventListener('click', (e) => {
-          if (el['Expressive_Chips']) return;
           // closest: the close button wraps an icon span, so a click on the
           // glyph reports the span.
-          if ((<HTMLElement>e.target).closest('.close')) {
-            const chip = (<HTMLElement>e.target).closest('.chip');
-            if (chip) chip.remove();
-          }
+          if (!(<HTMLElement>e.target).closest('.close')) return;
+          const chip = (<HTMLElement>e.target).closest<HTMLElement>('.chip');
+          if (chip && !(el['Expressive_Chips'] as Chips | undefined)?._chips.includes(chip)) chip.remove();
         });
       });
     });

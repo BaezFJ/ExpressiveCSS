@@ -336,9 +336,11 @@ export class Datepicker extends Component<DatepickerOptions> {
       this.options.i18n = { ...Datepicker.defaults.i18n, ...options.i18n };
     }
 
-    // Remove time component from minDate and maxDate options
-    if (this.options.minDate) this.options.minDate.setHours(0, 0, 0, 0);
-    if (this.options.maxDate) this.options.maxDate.setHours(0, 0, 0, 0);
+    // Remove time component from minDate and maxDate options, on copies: the
+    // caller's Date objects are theirs.
+    const { minDate, maxDate } = this.options;
+    if (minDate) this.options.minDate = new Date(new Date(minDate.getTime()).setHours(0, 0, 0, 0));
+    if (maxDate) this.options.maxDate = new Date(new Date(maxDate.getTime()).setHours(0, 0, 0, 0));
 
     this.id = Utils.guid();
     if (this.options.isMultipleSelection) {
@@ -513,18 +515,19 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.displayPlugin?.destroy();
     this.containerEl.remove();
     this.destroySelects();
+    this._removeDateOverlay();
     this.el['Expressive_Datepicker'] = undefined;
   }
 
+  // CSS paints data-date over a native date input's own text.
+  private _removeDateOverlay() {
+    this.el.classList.remove('datepicker-date-input');
+    for (const input of [this.el, this.endDateEl]) if (input?.type === 'date') input.removeAttribute('data-date');
+  }
+
   destroySelects() {
-    const oldYearSelect = this.calendarEl.querySelector('.orig-select-year');
-    if (oldYearSelect) {
-      FormSelect.getInstance(oldYearSelect as HTMLElement).destroy();
-    }
-    const oldMonthSelect = this.calendarEl.querySelector('.orig-select-month');
-    if (oldMonthSelect) {
-      FormSelect.getInstance(oldMonthSelect as HTMLElement).destroy();
-    }
+    this._formSelect('.orig-select-year')?.destroy();
+    this._formSelect('.orig-select-month')?.destroy();
   }
 
   _insertHTMLIntoDOM() {
@@ -634,7 +637,18 @@ export class Datepicker extends Component<DatepickerOptions> {
       this.setInputValue(el, this._selectedDateFor(el));
       return;
     }
+    this._selectTypedMultiDate(el, date);
     this.setDate(date, false, isEndDate, true);
+  }
+
+  // setDate does not toggle a typed date into a multiple selection, so it goes
+  // in here, in place of the date its input showed. Re-reading an input on
+  // click leaves the selection as it was.
+  private _selectTypedMultiDate(el: HTMLInputElement, date: Date) {
+    if (!this.options.isMultipleSelection) return;
+    const shown = this._selectedDateFor(el);
+    this.dates = this.dates.filter((day) => day !== shown && day.getTime() !== date.getTime());
+    this.setMultiDate(date);
   }
 
   /**
@@ -747,7 +761,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     } else {
       this.dates.splice(index, 1);
     }
-    this.dates.sort((a: Date, b: Date) => (a.getTime() < b.getTime() ? -1 : 0));
+    this.dates.sort((a: Date, b: Date) => a.getTime() - b.getTime());
   }
 
   /**
@@ -1236,6 +1250,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     const restoreDayFocus = active?.matches('.datepicker-day-button') && this.calendarEl.contains(active);
     const restoreArrow = this.calendarEl.contains(active) && active?.matches('.month-prev, .month-next')
       ? active.classList.contains('month-prev') ? '.month-prev' : '.month-next' : null;
+    const restoreSelect = this._selectFocusRestorer(active);
     const year = this.calendars[0].year;
     const month = this.calendars[0].month;
 
@@ -1258,10 +1273,30 @@ export class Datepicker extends Component<DatepickerOptions> {
     this._renderCalendarTable(year, month);
     this._syncCalendarFocus(!!restoreDayFocus);
     if (restoreArrow) this.calendarEl.querySelector<HTMLButtonElement>(restoreArrow)?.focus();
+    restoreSelect();
 
     if (typeof this.options.onDraw === 'function') {
       this.options.onDraw.call(this);
     }
+  }
+
+  private _formSelect(selector: string): FormSelect | undefined {
+    const el = this.calendarEl.querySelector<HTMLElement>(selector);
+    return el ? FormSelect.getInstance(el) : undefined;
+  }
+
+  /**
+   * Picking a year rebuilds both selects under the focus, which is on the old
+   * input or in its menu. The returned callback, run after the redraw, gives
+   * focus to the matching new input if the old one went with the rebuild.
+   */
+  private _selectFocusRestorer(active: Element | null) {
+    const holdsFocus = (select?: FormSelect) =>
+      !!select && (select.input === active || !!select.menuEl?.contains(active));
+    const selector = ['.orig-select-year', '.orig-select-month'].find((s) => holdsFocus(this._formSelect(s)));
+    return () => {
+      if (selector && !active.isConnected) this._formSelect(selector)?.input.focus();
+    };
   }
 
   /** Tear down the two FormSelects and render the controls from scratch. */
@@ -1434,7 +1469,8 @@ export class Datepicker extends Component<DatepickerOptions> {
   private _syncCalendarFocus(restore = false) {
     const buttons = [...this.calendarEl.querySelectorAll<HTMLButtonElement>('.datepicker-day-button')];
     const current = buttons.filter(button => !button.parentElement.classList.contains('is-selection-disabled'));
-    const preferred = this._focusedDate || this.date || new Date();
+    // Today at midnight: day buttons compare by exact time.
+    const preferred = this._focusedDate || this.date || new Date(new Date().setHours(0, 0, 0, 0));
     const target = current.find(button => Datepicker._compareDates(this._dayDate(button), preferred))
       || current.find(button => button.parentElement.classList.contains('is-selected'))
       || current.find(button => !button.parentElement.classList.contains('is-disabled')) || current[0];

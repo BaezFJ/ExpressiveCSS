@@ -80,6 +80,10 @@ export class Particles extends Component<ParticlesOptions> {
   // Pointer offset from the canvas center, kept from its last move inside.
   private _mouse = { x: 0, y: 0 };
   private _still = false;
+  private _visible = true;
+  private _motion: MediaQueryList | null = null;
+  private _scheme: MediaQueryList | null = null;
+  private _theme: MutationObserver | null = null;
   private _resizeObserver: ResizeObserver | null = null;
   private _visibility: IntersectionObserver | null = null;
 
@@ -90,7 +94,17 @@ export class Particles extends Component<ParticlesOptions> {
     this._ctx = this.el.getContext('2d');
     if (!this._ctx) return;
     this._style = getComputedStyle(this.el);
-    this._still = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (typeof matchMedia === 'function') {
+      this._motion = matchMedia('(prefers-reduced-motion: reduce)');
+      this._motion.addEventListener('change', this._onMotion);
+      // Still dots are painted once, so a theme or color-scheme change
+      // repaints them. Moving ones read the color every frame anyway.
+      this._scheme = matchMedia('(prefers-color-scheme: dark)');
+      this._scheme.addEventListener('change', this._repaint);
+    }
+    this._theme = new MutationObserver(this._repaint);
+    this._theme.observe(document.documentElement, { attributes: true, attributeFilter: ['theme'], subtree: true });
+    this._still = !!this._motion?.matches;
     this._reset();
     if (typeof ResizeObserver !== 'undefined') {
       this._resizeObserver = new ResizeObserver(() => {
@@ -98,14 +112,17 @@ export class Particles extends Component<ParticlesOptions> {
       });
       this._resizeObserver.observe(this.el);
     }
-    if (this._still) return;
     if (typeof IntersectionObserver === 'undefined') {
-      this._start();
+      this._animate();
       return;
     }
     // Animates only while on screen. A canvas scrolled away, hidden or
     // removed without destroy() stops drawing and following the pointer.
-    this._visibility = new IntersectionObserver(([entry]) => entry.isIntersecting ? this._start() : this._stop());
+    // Entries arrive oldest first, so the last one is the current state.
+    this._visibility = new IntersectionObserver((entries) => {
+      this._visible = entries[entries.length - 1].isIntersecting;
+      this._animate();
+    });
     this._visibility.observe(this.el);
   }
 
@@ -128,6 +145,9 @@ export class Particles extends Component<ParticlesOptions> {
 
   destroy() {
     this._stop();
+    this._motion?.removeEventListener('change', this._onMotion);
+    this._scheme?.removeEventListener('change', this._repaint);
+    this._theme?.disconnect();
     this._resizeObserver?.disconnect();
     this._visibility?.disconnect();
     if (this._ctx) {
@@ -136,6 +156,24 @@ export class Particles extends Component<ParticlesOptions> {
     }
     this.el['Expressive_Particles'] = undefined;
   }
+
+  private _animate() {
+    if (this._visible && !this._still) this._start();
+    else this._stop();
+  }
+
+  private _onMotion = () => {
+    this._still = this._motion.matches;
+    if (this._still) {
+      for (const p of this._particles) p.alpha = p.targetAlpha;
+      this._paint();
+    }
+    this._animate();
+  };
+
+  private _repaint = () => {
+    if (this._still) this._paint();
+  };
 
   private _start() {
     if (this._frame) return;

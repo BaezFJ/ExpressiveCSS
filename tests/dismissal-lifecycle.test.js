@@ -10,6 +10,58 @@ import { Expressive, resetBody, window } from './setup.js';
 const sleep = (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms));
 const click = (el) => el.dispatchEvent(new window.MouseEvent('click', { bubbles: true, composed: true, cancelable: true }));
 
+// jsdom has no popovers or checkVisibility. Returns a function that undoes this.
+function shimPopovers() {
+  const proto = window.HTMLElement.prototype;
+  const saved = ['checkVisibility', 'showPopover', 'hidePopover'].map((name) => [name, Object.getOwnPropertyDescriptor(proto, name)]);
+  const matches = window.Element.prototype.matches;
+  proto.checkVisibility = () => true;
+  proto.showPopover = function () { this.setAttribute('data-open', ''); };
+  proto.hidePopover = function () { this.removeAttribute('data-open'); };
+  window.Element.prototype.matches = function (selector) {
+    return selector === ':popover-open' ? this.hasAttribute('data-open') : matches.call(this, selector);
+  };
+  return () => {
+    for (const [name, descriptor] of saved) {
+      if (descriptor) Object.defineProperty(proto, name, descriptor);
+      else delete proto[name];
+    }
+    window.Element.prototype.matches = matches;
+  };
+}
+
+// Enough of MapLibre for the constructor, with its LngLat validation.
+function fakeMapLibre(counts = {}) {
+  return {
+    Map: class {
+      constructor() { counts.created = (counts.created ?? 0) + 1; this.handlers = []; }
+      on(...args) { this.handlers.push(args); }
+      off() {}
+      getZoom() { return 1; } getMaxZoom() { return 22; } getMinZoom() { return 0; } getBearing() { return 0; }
+      remove() { counts.removed = (counts.removed ?? 0) + 1; }
+    },
+    Marker: class {
+      constructor(options) { this.options = options; }
+      setLngLat([lng, lat]) {
+        if (!Number.isFinite(lng) || !Number.isFinite(lat) || Math.abs(lat) > 90) throw new Error('Invalid LngLat');
+        return this;
+      }
+      addTo() { return this; } on() {} remove() {} getElement() { return this.options.element; }
+    },
+    Popup: class { setDOMContent() { return this; } on() {} setLngLat() { return this; } addTo() { return this; } remove() {} }
+  };
+}
+
+// The theme colour probe paints into a canvas, which jsdom does not implement.
+function shimCanvas() {
+  const getContext = window.HTMLCanvasElement.prototype.getContext;
+  window.HTMLCanvasElement.prototype.getContext = () => new Proxy(
+    { getImageData: () => ({ data: [0, 0, 0, 255] }) },
+    { get: (target, key) => (key in target ? target[key] : () => {}), set: () => true }
+  );
+  return () => { window.HTMLCanvasElement.prototype.getContext = getContext; };
+}
+
 describe('Dismissal and lifecycle', () => {
   beforeEach(resetBody);
 
@@ -47,59 +99,74 @@ describe('Dismissal and lifecycle', () => {
   });
 
   test('MapView skips a marker with a bad coordinate instead of throwing', () => {
-    let created = 0;
-    let removed = 0;
-    // Enough of MapLibre for the constructor, with its LngLat validation.
-    const maplibregl = {
-      Map: class { constructor() { created++; } on() {} getZoom() { return 1; } getMaxZoom() { return 22; } getMinZoom() { return 0; } getBearing() { return 0; } remove() { removed++; } },
-      Marker: class {
-        constructor(options) { this.options = options; }
-        setLngLat([lng, lat]) {
-          if (!Number.isFinite(lng) || !Number.isFinite(lat) || Math.abs(lat) > 90) throw new Error('Invalid LngLat');
-          return this;
-        }
-        addTo() { return this; } on() {} remove() {} getElement() { return this.options.element; }
-      },
-      Popup: class { setDOMContent() { return this; } on() {} setLngLat() { return this; } addTo() { return this; } remove() {} }
-    };
+    const counts = {};
+    const maplibregl = fakeMapLibre(counts);
     document.body.innerHTML = `
-      <div class="map"><button class="map-marker" data-lng-lat="-33.87,151.21">Sydney, lat first</button><button class="map-marker" data-lng-lat="Paris">Paris</button></div>
+      <div class="map"><button class="map-marker" data-lng-lat="-33.87,151.21">Sydney, lat first</button><button class="map-marker" data-lng-lat="Paris">Paris</button><button class="map-marker" data-lng-lat="12.5,">No latitude</button></div>
       <div class="map"><button class="map-marker" data-lng-lat="2.35,48.85">Paris</button></div>`;
     const warn = console.warn;
     const warnings = [];
     console.warn = (message) => warnings.push(message);
-    // The theme colour probe paints into a canvas, which jsdom does not implement.
-    const getContext = window.HTMLCanvasElement.prototype.getContext;
-    window.HTMLCanvasElement.prototype.getContext = () => new Proxy(
-      { getImageData: () => ({ data: [0, 0, 0, 255] }) },
-      { get: (target, key) => (key in target ? target[key] : () => {}), set: () => true }
-    );
+    const restoreCanvas = shimCanvas();
     let maps = [];
     try {
       maps = Expressive.MapView.init(document.querySelectorAll('.map'), { maplibregl });
       assert.equal(maps.length, 2, 'every map initializes');
-      assert.equal(created, 2);
+      assert.equal(counts.created, 2);
       assert.deepEqual(maps.map((map) => map.markers.length), [0, 1], 'only the valid marker is placed');
-      assert.equal(warnings.length, 2, 'each skipped marker is reported');
+      assert.equal(warnings.length, 3, 'each skipped marker is reported, an empty latitude too');
     } finally {
       console.warn = warn;
-      window.HTMLCanvasElement.prototype.getContext = getContext;
+      restoreCanvas();
       maps.forEach((map) => map.destroy());
     }
-    assert.equal(removed, 2, 'no map is left behind');
+    assert.equal(counts.removed, 2, 'no map is left behind');
+  });
+
+  test('MapView ignores a cluster zoom that resolves after destroy', async () => {
+    document.body.innerHTML = '<div class="map"></div>';
+    const restoreCanvas = shimCanvas();
+    let map;
+    try {
+      map = Expressive.MapView.init(document.querySelector('.map'), { maplibregl: fakeMapLibre() });
+      let resolveZoom;
+      map.map.getSource = () => ({ getClusterExpansionZoom: () => new Promise((resolve) => { resolveZoom = resolve; }) });
+      map.map.easeTo = () => {};
+      map.addClusters('stores', { type: 'FeatureCollection', features: [] });
+      const [, , zoomIn] = map.map.handlers.find(([type, layer]) => type === 'click' && layer === 'stores-clusters');
+      const zooming = zoomIn({ features: [{ properties: { cluster_id: 1 }, geometry: { coordinates: [0, 0] } }] });
+      map.destroy();
+      resolveZoom(12);
+      await assert.doesNotReject(zooming);
+    } finally {
+      restoreCanvas();
+      map?.destroy();
+    }
+  });
+
+  test('MapView handles a refused fullscreen request', async () => {
+    document.body.innerHTML = '<div class="map"><div class="map-controls"><button type="button" data-action="fullscreen">Full screen</button></div></div>';
+    const el = document.querySelector('.map');
+    const restoreCanvas = shimCanvas();
+    const rejections = [];
+    const record = (reason) => rejections.push(reason);
+    process.on('unhandledRejection', record);
+    let map;
+    try {
+      map = Expressive.MapView.init(el, { maplibregl: fakeMapLibre() });
+      el.requestFullscreen = () => Promise.reject(new Error('Permissions check failed'));
+      click(el.querySelector('[data-action="fullscreen"]'));
+      await sleep();
+      assert.deepEqual(rejections, []);
+    } finally {
+      process.off('unhandledRejection', record);
+      restoreCanvas();
+      map?.destroy();
+    }
   });
 
   test('restarting a running Tour releases the step it was showing', () => {
-    const proto = window.HTMLElement.prototype;
-    const saved = ['checkVisibility', 'showPopover', 'hidePopover'].map((name) => [name, Object.getOwnPropertyDescriptor(proto, name)]);
-    const matches = window.Element.prototype.matches;
-    // jsdom has no popovers or checkVisibility.
-    proto.checkVisibility = () => true;
-    proto.showPopover = function () { this.setAttribute('data-open', ''); };
-    proto.hidePopover = function () { this.removeAttribute('data-open'); };
-    window.Element.prototype.matches = function (selector) {
-      return selector === ':popover-open' ? this.hasAttribute('data-open') : matches.call(this, selector);
-    };
+    const restore = shimPopovers();
     document.body.innerHTML = `<div id="a">A</div><div id="b">B</div>
       <button data-tour-start="t">Start</button>
       <div class="tour" id="t" popover="manual">
@@ -119,12 +186,51 @@ describe('Dismissal and lifecycle', () => {
       assert.deepEqual(highlighted(), [], 'ending releases every target');
     } finally {
       Expressive.Tour.end(tour);
-      for (const [name, descriptor] of saved) {
-        if (descriptor) Object.defineProperty(proto, name, descriptor);
-        else delete proto[name];
-      }
-      window.Element.prototype.matches = matches;
+      restore();
     }
+  });
+
+  test('a Tour passes over a step whose target was removed, and ends when none is left', () => {
+    const restore = shimPopovers();
+    document.body.innerHTML = `<div id="a">A</div><div id="b">B</div><div id="c">C</div>
+      <button data-tour-start="t">Start</button>
+      <div class="tour" id="t" popover="manual">
+        <section data-tour-target="a"><h2>A</h2></section>
+        <section data-tour-target="b"><h2>B</h2></section>
+        <section data-tour-target="c"><h2>C</h2></section>
+        <button data-tour-back>Back</button><button data-tour-next>Next</button>
+      </div>`;
+    const tour = document.getElementById('t');
+    const highlighted = () => [...document.querySelectorAll('.tour-target')].map((el) => el.id);
+    try {
+      click(document.querySelector('[data-tour-start]'));
+      document.getElementById('b').remove();
+      click(tour.querySelector('[data-tour-next]'));
+      assert.deepEqual(highlighted(), ['c'], 'Next skips the removed target');
+      assert.equal(tour.querySelector('[data-tour-target="c"]').hidden, false);
+      document.getElementById('a').remove();
+      click(tour.querySelector('[data-tour-back]'));
+      assert.equal(tour.hasAttribute('data-open'), false, 'with nothing left behind it, Back ends the tour');
+      assert.deepEqual(highlighted(), []);
+    } finally {
+      Expressive.Tour.end(tour);
+      restore();
+    }
+  });
+
+  test('Escape that cancels a Sortable drag is not also a dialog close request', () => {
+    document.body.innerHTML = `<ul class="sortable"><li><span class="drag-handle"></span>A</li><li>B</li></ul>`;
+    const item = document.querySelector('li');
+    const escape = () => {
+      const event = new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+      document.body.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+    item.querySelector('.drag-handle').dispatchEvent(new window.PointerEvent('pointerdown', { bubbles: true, cancelable: true, button: 0, pointerId: 1 }));
+    assert.equal(item.classList.contains('dragged'), true);
+    assert.equal(escape(), true, 'Escape during a drag went on to close the dialog');
+    assert.equal(item.classList.contains('dragged'), false, 'Escape cancels the drag');
+    assert.equal(escape(), false, 'Escape with no drag is left alone');
   });
 
   test('a modal NavigationRail collapses on its scrim, not on blank space inside it', () => {

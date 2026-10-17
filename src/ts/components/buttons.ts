@@ -13,6 +13,8 @@ export class FloatingActionButton
   private _anchor: HTMLElement | null;
   private _list: HTMLElement | null;
   private _listWasInert: boolean;
+  private _addedExpanded = false;
+  private _anchorTabIndex: string | null | undefined;
 
   constructor(el: HTMLElement, options: Partial<FloatingActionButtonOptions>) {
     super(el, options, FloatingActionButton);
@@ -24,9 +26,15 @@ export class FloatingActionButton
     this._listWasInert = this._list?.inert ?? false;
     this.el.classList.remove('active');
     if (this._list) this._list.inert = true;
+    this._addedExpanded = !!this._anchor && !this._anchor.hasAttribute('aria-expanded');
     this._anchor?.setAttribute('aria-expanded', 'false');
     if (this._anchor instanceof HTMLAnchorElement && !this._anchor.hasAttribute('href')) {
-      if (this._anchor.tabIndex < 0) this._anchor.tabIndex = 0;
+      // An <a> reports tabIndex 0 with or without href, but it only takes focus
+      // without href once it has the attribute.
+      if (!this._anchor.hasAttribute('tabindex') || this._anchor.tabIndex < 0) {
+        this._anchorTabIndex = this._anchor.getAttribute('tabindex');
+        this._anchor.tabIndex = 0;
+      }
       this._anchor.addEventListener('keydown', this._handleAnchorKeydown);
     }
     this.el.addEventListener('click', this._handleFABClick);
@@ -54,6 +62,9 @@ export class FloatingActionButton
     if (this._list) this._list.inert = this._listWasInert;
     this.el.removeEventListener('click', this._handleFABClick);
     this._anchor?.removeEventListener('keydown', this._handleAnchorKeydown);
+    if (this._addedExpanded) this._anchor.removeAttribute('aria-expanded');
+    if (this._anchorTabIndex === null) this._anchor.removeAttribute('tabindex');
+    else if (this._anchorTabIndex !== undefined) this._anchor.setAttribute('tabindex', this._anchorTabIndex);
     this.el['Expressive_FloatingActionButton'] = undefined;
   }
 

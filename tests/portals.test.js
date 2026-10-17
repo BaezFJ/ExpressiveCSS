@@ -73,6 +73,8 @@ describe('Portals inside a shadow root stay in that root', () => {
     const { root, el } = shadowHost(
       '<img class="lightboxed" src="a.png" data-caption="A caption">'
     );
+    // jsdom has no layout, and a lightbox with no size does not open.
+    el.getBoundingClientRect = () => ({ top: 0, left: 0, right: 100, bottom: 50, width: 100, height: 50 });
     const instance = Expressive.Lightbox.init(el);
     try {
       instance.open();
@@ -164,7 +166,9 @@ describe('Lightbox puts back the overflow it found', () => {
     wrapper.style.overflow = 'hidden';
     wrapper.innerHTML = '<img class="lightboxed" src="a.png">';
     document.body.appendChild(wrapper);
-    const instance = Expressive.Lightbox.init(wrapper.querySelector('img'));
+    const img = wrapper.querySelector('img');
+    img.getBoundingClientRect = () => ({ top: 0, left: 0, right: 100, bottom: 50, width: 100, height: 50 });
+    const instance = Expressive.Lightbox.init(img);
     try {
       instance.open();
       assert.equal(wrapper.style.overflow, 'visible', 'cleared while open');

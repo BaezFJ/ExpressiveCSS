@@ -71,8 +71,17 @@ export class Tour {
     const state = states.get(tour);
     if (!state) return;
     Tour._release(state.steps[state.index]);
-    state.index = Math.min(Math.max(index, 0), state.steps.length - 1);
-    const step = state.steps[state.index];
+    index = Math.min(Math.max(index, 0), state.steps.length - 1);
+    // A target removed since start() is passed over in the direction of
+    // travel; with none left that way the tour ends.
+    const travel = index < state.index ? -1 : 1;
+    while (state.steps[index] && !Tour._target(state.steps[index])) index += travel;
+    const step = state.steps[index];
+    if (!step) {
+      Tour.end(tour);
+      return;
+    }
+    state.index = index;
     const last = state.index === state.steps.length - 1;
     tour.querySelectorAll<HTMLElement>(':scope > section[data-tour-target]').forEach((section) => {
       section.hidden = section !== step;

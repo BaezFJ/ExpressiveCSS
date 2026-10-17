@@ -64,4 +64,30 @@ for (const [name, engine] of engines) {
       await browser.close();
     }
   });
+
+  test(`${name}: Escape that cancels a drag in a modal dialog leaves the dialog open`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 600, height: 700 } });
+      await page.setContent(markup);
+      await page.evaluate(() => {
+        const dialog = document.createElement('dialog');
+        dialog.append(document.getElementById('list'));
+        document.body.append(dialog);
+        dialog.showModal();
+      });
+      const handle = await page.locator('#item-2 .drag-handle').boundingBox();
+      await page.mouse.move(handle.x + handle.width / 2, handle.y + handle.height / 2);
+      await page.mouse.down();
+      await page.keyboard.press('Escape');
+      await page.mouse.up();
+      assert.equal(await page.locator('#item-2').evaluate((el) => el.classList.contains('dragged')), false, 'Escape cancels the drag');
+      assert.equal(await page.locator('dialog').evaluate((el) => el.open), true, 'Escape also closed the dialog');
+      await page.keyboard.press('Escape');
+      assert.equal(await page.locator('dialog').evaluate((el) => el.open), false, 'with no drag, Escape closes the dialog');
+    } finally {
+      await browser.close();
+    }
+  });
 }

@@ -38,6 +38,21 @@ describe("FloatingActionButton", () => {
     }
   });
 
+  test("destroy removes the aria-expanded and tabindex it added", () => {
+    document.body.innerHTML = `
+      <div class="fab-menu">
+        <a class="button extra circle" aria-label="Create">+</a>
+        <ul><li><button type="button">Compose</button></li></ul>
+      </div>`;
+    const anchor = document.querySelector(".fab-menu > a");
+    const instance = Expressive.FloatingActionButton.init(document.querySelector(".fab-menu"));
+
+    assert.equal(anchor.getAttribute("tabindex"), "0");
+    instance.destroy();
+    assert.equal(anchor.hasAttribute("aria-expanded"), false);
+    assert.equal(anchor.hasAttribute("tabindex"), false);
+  });
+
   test("no composite role is promised without the keyboard model", () => {
     // SEMANTICS rule 2. The list used to be given role="menu" and the trigger
     // aria-haspopup="menu", neither of which this component earns: there is no
@@ -110,7 +125,7 @@ describe("Tabs", () => {
 
       assert.equal(
         document.getElementById("card-test-1").style.display,
-        "block",
+        "",
       );
       assert.equal(
         document.getElementById("card-test-2").style.display,
@@ -263,6 +278,35 @@ describe("FormSelect", () => {
       instance.menuEl.querySelector("li.selected")?.textContent.includes("Two"),
     );
     instance.destroy();
+  });
+
+  test("clicking a multi-select checkbox keeps the box in step", () => {
+    document.body.innerHTML = `<select multiple><option value="1">One</option></select>`;
+    const select = document.querySelector("select");
+    const instance = Expressive.FormSelect.init(select);
+    try {
+      const box = instance.menuEl.querySelector('input[type="checkbox"]');
+      fire(box, "click");
+      assert.equal(select.options[0].selected, true);
+      assert.equal(box.checked, true);
+      fire(box, "click");
+      assert.equal(select.options[0].selected, false);
+      assert.equal(box.checked, false);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("clicking a disabled option keeps a single select open", () => {
+    document.body.innerHTML = fieldHtml;
+    const instance = Expressive.FormSelect.init(document.querySelector("select"));
+    try {
+      instance.menu.open();
+      fire(instance.menuEl.querySelector("li.disabled"), "click");
+      assert.equal(instance.menu.isOpen, true);
+    } finally {
+      instance.destroy();
+    }
   });
 });
 
@@ -646,7 +690,8 @@ describe("ExpandingCard", () => {
     assert.equal(instance.isOpen, true);
     assert.equal(dialog.open, true);
     assert.equal(dialog.classList.contains("expanded"), true);
-    assert.equal(dialog.getAttribute("aria-expanded"), "true");
+    // aria-expanded belongs on the trigger; it is not valid on a dialog.
+    assert.equal(dialog.hasAttribute("aria-expanded"), false);
     assert.equal(trigger.getAttribute("aria-expanded"), "true");
     assert.equal(trigger.getAttribute("aria-controls"), "album-detail");
     instance.destroy();
@@ -674,10 +719,54 @@ describe("ExpandingCard", () => {
       instance.destroy();
     }
   });
+
+  test("a native close reports onClose", () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector(".expanding-card");
+    const dialog = el.querySelector(".expanding-card-dialog");
+    let closed = 0;
+    const instance = Expressive.ExpandingCard.init(el, { onClose: () => closed++ });
+
+    try {
+      instance.open();
+      dialog.close();
+      assert.equal(instance.isOpen, false);
+      assert.equal(closed, 1);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("destroy restores the trigger it made a button", () => {
+    document.body.innerHTML = html.replace(
+      '<button type="button" class="expanding-card-trigger">Open album</button>',
+      '<div class="expanding-card-trigger">Open album</div>',
+    );
+    const el = document.querySelector(".expanding-card");
+    const trigger = el.querySelector(".expanding-card-trigger");
+    const instance = Expressive.ExpandingCard.init(el);
+
+    assert.equal(trigger.getAttribute("role"), "button");
+    instance.destroy();
+    for (const name of ["aria-expanded", "aria-controls", "tabindex", "role"]) {
+      assert.equal(trigger.hasAttribute(name), false, name);
+    }
+  });
 });
 
 describe("CharacterCounter", () => {
   beforeEach(resetBody);
+
+  test("counts a prefilled value and clears its own invalid class on destroy", () => {
+    document.body.innerHTML = `<div class="field"><input id="t" type="text" maxlength="3" value="abcd"></div>`;
+    const input = document.querySelector("#t");
+    const instance = Expressive.CharacterCounter.init(input);
+
+    assert.equal(document.querySelector(".character-counter").textContent, "4/3");
+    assert.equal(input.classList.contains("invalid"), true);
+    instance.destroy();
+    assert.equal(input.classList.contains("invalid"), false);
+  });
 
   test("counts input against maxlength and flags overflow", () => {
     document.body.innerHTML = `<div class="field"><input id="t" type="text" maxlength="5"></div>`;

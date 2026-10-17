@@ -99,7 +99,8 @@ const isLngLat = (value: number[]): value is LngLat =>
 // the map and stopped every later element in the same init(). A value that
 // is not "lng,lat", such as Google's lat,lng order past 90, is skipped.
 const lngLat = (el: HTMLElement): LngLat | null => {
-  const value = el.dataset.lngLat.split(',').map(Number);
+  // Number('') is 0, so an empty part ("12.5,") becomes NaN and fails.
+  const value = el.dataset.lngLat.split(',').map((part) => (part.trim() ? Number(part) : NaN));
   if (isLngLat(value)) return value;
   console.warn(`MapView skipped data-lng-lat="${el.dataset.lngLat}": expected "longitude,latitude".`, el);
   return null;
@@ -295,7 +296,8 @@ export class MapView extends Component<MapViewOptions> {
     const zoomIn = async (e: any) => {
       const [feature] = e.features;
       const zoom = await this.map.getSource(id).getClusterExpansionZoom(feature.properties.cluster_id);
-      this.map.easeTo({ center: feature.geometry.coordinates, zoom });
+      // destroy() may have run while the zoom was looked up.
+      this.map?.easeTo({ center: feature.geometry.coordinates, zoom });
     };
     const pointer = () => { this.map.getCanvas().style.cursor = 'pointer'; };
     const reset = () => { this.map.getCanvas().style.cursor = ''; };
@@ -515,8 +517,10 @@ export class MapView extends Component<MapViewOptions> {
     else if (action === 'compass') this.map.resetNorthPitch();
     else if (action === 'locate') this._locate(button);
     else if (action === 'fullscreen') {
-      if (document.fullscreenElement === this.el) document.exitFullscreen();
-      else this.el.requestFullscreen();
+      // Either can be refused (an iframe without allowfullscreen, say). The
+      // button state follows fullscreenchange, so there is nothing to undo.
+      const request = document.fullscreenElement === this.el ? document.exitFullscreen() : this.el.requestFullscreen();
+      request.catch(() => {});
     } else {
       const marker = target.closest<HTMLElement>('.map-marker');
       if (this._markerPopups.has(marker)) this._toggle(marker);

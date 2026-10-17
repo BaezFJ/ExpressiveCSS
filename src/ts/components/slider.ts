@@ -35,6 +35,9 @@ export class Slider extends Component<SliderOptions> {
     if (typeof ResizeObserver !== 'undefined') {
       this._resizeObserver = new ResizeObserver(() => this._sync());
       this._resizeObserver.observe(this.el);
+      // The bubble and stop row are placed from the input's offsets, which
+      // move when the host resizes around an input that keeps its size.
+      if (this.el.parentElement) this._resizeObserver.observe(this.el.parentElement);
     }
   }
 
