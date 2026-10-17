@@ -675,7 +675,8 @@ describe("ExpandingCard", () => {
     assert.equal(instance.isOpen, true);
     assert.equal(dialog.open, true);
     assert.equal(dialog.classList.contains("expanded"), true);
-    assert.equal(dialog.getAttribute("aria-expanded"), "true");
+    // aria-expanded belongs on the trigger; it is not valid on a dialog.
+    assert.equal(dialog.hasAttribute("aria-expanded"), false);
     assert.equal(trigger.getAttribute("aria-expanded"), "true");
     assert.equal(trigger.getAttribute("aria-controls"), "album-detail");
     instance.destroy();
@@ -701,6 +702,39 @@ describe("ExpandingCard", () => {
     } finally {
       window.matchMedia = originalMatchMedia;
       instance.destroy();
+    }
+  });
+
+  test("a native close reports onClose", () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector(".expanding-card");
+    const dialog = el.querySelector(".expanding-card-dialog");
+    let closed = 0;
+    const instance = Expressive.ExpandingCard.init(el, { onClose: () => closed++ });
+
+    try {
+      instance.open();
+      dialog.close();
+      assert.equal(instance.isOpen, false);
+      assert.equal(closed, 1);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("destroy restores the trigger it made a button", () => {
+    document.body.innerHTML = html.replace(
+      '<button type="button" class="expanding-card-trigger">Open album</button>',
+      '<div class="expanding-card-trigger">Open album</div>',
+    );
+    const el = document.querySelector(".expanding-card");
+    const trigger = el.querySelector(".expanding-card-trigger");
+    const instance = Expressive.ExpandingCard.init(el);
+
+    assert.equal(trigger.getAttribute("role"), "button");
+    instance.destroy();
+    for (const name of ["aria-expanded", "aria-controls", "tabindex", "role"]) {
+      assert.equal(trigger.hasAttribute(name), false, name);
     }
   });
 });

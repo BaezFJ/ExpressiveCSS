@@ -32,6 +32,8 @@ export class ExpandingCard
   private readonly dialog: HTMLDialogElement | null;
   private readonly closeButton: HTMLElement | null;
   private closeGeneration = 0;
+  // Trigger attributes as they were before init, so destroy() can restore them.
+  private _initialTrigger: Record<string, string | null> = {};
 
   constructor(el: HTMLElement, options: Partial<ExpandingCardOptions>) {
     super(el, options, ExpandingCard);
@@ -52,6 +54,8 @@ export class ExpandingCard
       this.dialog?.querySelector(".expanding-card-close") ?? null;
 
     if (this.trigger && this.dialog) {
+      for (const name of ["aria-expanded", "aria-controls", "tabindex", "role"])
+        this._initialTrigger[name] = this.trigger.getAttribute(name);
       this.trigger.ariaExpanded = "false";
       if (this.dialog.id)
         this.trigger.setAttribute("aria-controls", this.dialog.id);
@@ -59,7 +63,6 @@ export class ExpandingCard
         this.trigger.tabIndex = 0;
         this.trigger.setAttribute("role", "button");
       }
-      this.dialog.ariaExpanded = "false";
       this._setupEventHandlers();
     }
   }
@@ -91,6 +94,10 @@ export class ExpandingCard
     this._removeEventHandlers();
     this._collapse();
     if (this.dialog?.open) this.dialog.close();
+    for (const [name, value] of Object.entries(this._initialTrigger)) {
+      if (value === null) this.trigger.removeAttribute(name);
+      else this.trigger.setAttribute(name, value);
+    }
     this.el["Expressive_ExpandingCard"] = undefined;
   }
 
@@ -125,7 +132,12 @@ export class ExpandingCard
   private _handleNativeClose = () => {
     // A queued close event can arrive after a caller has reopened the dialog.
     if (this.dialog.open) return;
+    // dialog.close() and <form method="dialog"> bypass close(), so report here.
+    const wasOpen = this.isOpen;
     this._collapse();
+    if (wasOpen && typeof this.options.onClose === "function") {
+      this.options.onClose.call(this, this.el);
+    }
   };
 
   /** Marks the card closed and invalidates any pending close. */
@@ -133,10 +145,7 @@ export class ExpandingCard
     this.closeGeneration++;
     this.isOpen = false;
     if (this.trigger) this.trigger.ariaExpanded = "false";
-    if (this.dialog) {
-      this.dialog.ariaExpanded = "false";
-      this.dialog.classList.remove("expanded");
-    }
+    this.dialog?.classList.remove("expanded");
   }
 
   private _setTransitionOrigin = () => {
@@ -166,7 +175,6 @@ export class ExpandingCard
     this._setTransitionOrigin();
     this.isOpen = true;
     this.trigger.ariaExpanded = "true";
-    this.dialog.ariaExpanded = "true";
     this.dialog.showModal();
     // Commit the clipped start frame before asking CSS to expand it.
     void this.dialog.offsetWidth;
