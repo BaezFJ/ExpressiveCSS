@@ -107,8 +107,12 @@ export class Sortable {
     if (e.pointerId === Sortable._drag?.pointerId) Sortable._finish(e.type === 'pointercancel');
   }
 
+  // Listening only while a drag is active. preventDefault keeps the Escape
+  // from also closing a modal <dialog> the list sits in.
   private static _onKeyDown(e: KeyboardEvent) {
-    if (e.key === 'Escape') Sortable._finish(true);
+    if (e.key !== 'Escape') return;
+    e.preventDefault();
+    Sortable._finish(true);
   }
 
   private static _finish(cancel: boolean) {
