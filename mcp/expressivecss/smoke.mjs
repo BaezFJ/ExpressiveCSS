@@ -1076,7 +1076,8 @@ const transport = new StdioClientTransport({
   for (const deep of ['<div aria-hidden="true">'.repeat(3_990) + '<a href=x>', '<nav aria-label=x>'.repeat(3_990), `<nav><template>${'<div>'.repeat(3_500)}</template></nav>`]) {
     const start = performance.now();
     assert.equal(inspectAuthoringRules(deep).truncatedReason, 'markup nesting limit reached');
-    assert.ok(performance.now() - start < 1_000, `deep markup took ${Math.round(performance.now() - start)} ms`);
+    // Parsing 4,000 nested tags takes about a second on CI runners; the rules alone took 20 s before the cap.
+    assert.ok(performance.now() - start < 3_000, `deep markup took ${Math.round(performance.now() - start)} ms`);
   }
   // Vue puts `template` inside SVG; there it is a foreign element with no content fragment.
   assert.equal(inspectAuthoringRules('<svg><template v-for="item in items"><circle /></template></svg>').truncatedReason, undefined);
