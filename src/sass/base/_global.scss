@@ -73,7 +73,7 @@ table {
   }
 
   &.highlight > tbody > tr {
-    transition: background-color .25s ease;
+    transition: background-color 0.25s ease;
 
     &:hover {
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
@@ -121,7 +121,7 @@ td, th {
     thead {
       display: block;
       float: left;
-      /* sort out borders */
+      // sort out borders
       border: 0;
       border-right: 1px solid var(--md-sys-color-outline-variant);
 

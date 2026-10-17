@@ -9,7 +9,7 @@ Component ID: `alert`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `ca282044a5f26b8a49139cc842a7e6c7fb8d8126fcab91648f49e10b92c5b948`
+Contract SHA-256: `910f0905619f1110827dea4b8f22f3f8bca714bfbc4b8219bd04889d5f527acd`
 
 #### Selection and adaptation
 

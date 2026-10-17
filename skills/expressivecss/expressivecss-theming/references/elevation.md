@@ -46,7 +46,7 @@ The framework does not publish CSS custom-property elevation levels. Use one hel
 ## States and motion
 
 - Keep resting and interaction-state elevation changes tied to an actual affordance.
-- `.hoverable` is a separate helper with one fixed hover shadow; it is not a configurable elevation level and does not add keyboard-focus behavior. Its fixed shadow can lower an element that already has a higher elevation.
+- `.hoverable` is a separate helper with one fixed hover shadow, the `.z-depth-3` value. It is not configurable and does not add keyboard-focus behavior. Its fixed shadow can lower an element that already has a higher elevation.
 - Do not rely on shadow alone to indicate focus, selection, disabled state, or drag state.
 - Avoid large elevation jumps on hover. Respect reduced-motion settings when elevation changes are animated.
 

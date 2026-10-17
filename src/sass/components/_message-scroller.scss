@@ -51,11 +51,11 @@
   width: fit-content;
   margin-inline: auto;
   @include z-depth("2");
-  transition: opacity .15s ease-out, scale .15s ease-out;
+  transition: opacity 0.15s ease-out, scale 0.15s ease-out;
 
   &[inert] {
     opacity: 0;
-    scale: .8;
+    scale: 0.8;
   }
 }
 

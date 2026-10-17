@@ -4,7 +4,7 @@
   display: block;
   cursor: zoom-in;
   position: relative;
-  transition: opacity .4s;
+  transition: opacity 0.4s;
   backface-visibility: hidden;
   // Same 12px as .responsive-img. Exclude .circle so a disc stays a disc.
   &:not(.circle) {
@@ -12,7 +12,7 @@
   }
 
   &:hover:not(.active) {
-    opacity: .8;
+    opacity: 0.8;
   }
   &.active {
     cursor: zoom-out;
@@ -36,7 +36,7 @@
   left: 0;
   width: 100%;
   text-align: center;
-  padding: 0% 15%;
+  padding: 0 15%;
   height: 50px;
   z-index: 1000;
   -webkit-font-smoothing: antialiased;

@@ -8,11 +8,11 @@
   background-color: var(--md-sys-color-inverse-on-surface);
 }
 
-/* Clock Digital Display */
+// Clock Digital Display
 .timepicker-digital-display {
   width: auto;
   flex: 1 auto;
-  padding: 2rem .67rem .67rem .67rem;
+  padding: 2rem 0.67rem 0.67rem 0.67rem;
   font-weight: 300;
 }
 
@@ -28,7 +28,7 @@
   input[type=text]{
     height: 4rem;
     color: var(--md-sys-color-secondary);
-    border-bottom: 0px;
+    border-bottom: 0;
     font-size: 4rem;
     direction: ltr;
   }
@@ -58,7 +58,7 @@
 input[type=text].timepicker-input-hours,
 input[type=text].timepicker-input-minutes {
   height: 100%;
-  padding: 1.33rem .8rem;
+  padding: 1.33rem 0.8rem;
   border: 0;
   text-align: center;
   color: var(--md-sys-color-on-surface);
@@ -110,10 +110,10 @@ input[type=text].timepicker-input-minutes {
   border-top-right-radius: 0;
 }
 
-/* Analog Clock Display */
+// Analog Clock Display
 .timepicker-analog-display {
   flex: 2.5 auto;
-  padding: .67rem;
+  padding: 0.67rem;
 }
 
 .timepicker-plate {
@@ -175,7 +175,7 @@ input[type=text].timepicker-input-minutes {
   }
 
   &.timepicker-minutes {
-    transform: scale(.8, .8);
+    transform: scale(0.8, 0.8);
   }
 }
 
@@ -204,7 +204,7 @@ input[type=text].timepicker-input-minutes {
 }
 
 
-/* Footer */
+// Footer
 .timepicker-footer {
   margin: 0 auto;
   padding: 5px 1rem;
@@ -217,7 +217,7 @@ input[type=text].timepicker-input-minutes {
   padding: 0 20px;
 }
 
-/* Media Queries */
+// Media Queries
 @include bp-up("expanded") {
   .timepicker-container {
     width: auto;
@@ -226,7 +226,7 @@ input[type=text].timepicker-input-minutes {
   }
 
   .timepicker-digital-display {
-    padding: .67rem;
+    padding: 0.67rem;
   }
 
   .timepicker-text-container {

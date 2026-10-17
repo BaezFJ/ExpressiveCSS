@@ -2363,7 +2363,7 @@
         "sources": [
           {
             "path": "src/sass/components/_message-scroller.scss",
-            "sha256": "c535f903268ac93bff12aa12dc647bdb9cc3dde34062a8a7ff850dc95ab06e6d"
+            "sha256": "88924d7853d749831ff9fa63beb018a1e6799a48da0b88beb993bd2c2b49eb1e"
           },
           {
             "path": "src/ts/components/messageScroller.ts",
