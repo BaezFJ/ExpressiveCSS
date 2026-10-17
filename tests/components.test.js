@@ -708,6 +708,17 @@ describe("ExpandingCard", () => {
 describe("CharacterCounter", () => {
   beforeEach(resetBody);
 
+  test("counts a prefilled value and clears its own invalid class on destroy", () => {
+    document.body.innerHTML = `<div class="field"><input id="t" type="text" maxlength="3" value="abcd"></div>`;
+    const input = document.querySelector("#t");
+    const instance = Expressive.CharacterCounter.init(input);
+
+    assert.equal(document.querySelector(".character-counter").textContent, "4/3");
+    assert.equal(input.classList.contains("invalid"), true);
+    instance.destroy();
+    assert.equal(input.classList.contains("invalid"), false);
+  });
+
   test("counts input against maxlength and flags overflow", () => {
     document.body.innerHTML = `<div class="field"><input id="t" type="text" maxlength="5"></div>`;
     const input = document.querySelector("#t");
