@@ -23,12 +23,14 @@ describe('Snackbar', () => {
     assert.match(css, /#snackbar-container\s*\{[^}]*pointer-events:\s*none/s);
   });
 
-  for (const [label, distance, pause, dismissed] of [
+  for (const [label, distance, pause, dismissed, moveAfter = 10] of [
     ['a paused short drag snaps back', 50, 2000, false],
     ['an immediate flick dismisses', 50, 0, true],
     ['a paused long drag dismisses by distance', 250, 2000, true],
     ['a 99ms-old flick still dismisses', 50, 99, true],
     ['a 100ms-old flick has expired', 50, 100, false],
+    // Used to divide by zero: an infinite velocity that always dismissed.
+    ['a 1px move in the same millisecond is not a flick', 1, 0, false, 0],
   ]) {
     test(`release: ${label}`, t => {
       resetBody();
@@ -47,7 +49,7 @@ describe('Snackbar', () => {
         Object.defineProperty(snackbar.el, 'offsetWidth', { value: 300 });
         t.mock.timers.tick(1);
         pointer('pointerdown', 0);
-        now += 10;
+        now += moveAfter;
         pointer('pointermove', distance);
         now += pause;
         pointer('pointerup', distance);
