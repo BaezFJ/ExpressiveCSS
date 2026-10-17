@@ -2,19 +2,20 @@ import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit, expect } from '@playwright/test';
+import { leaseBrowser } from './browser.js';
 import utilsBundle from 'playwright-core/lib/utilsBundle';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 
-// Every test launches and closes its own browser, so they can overlap.
+// Every test opens its own context in the shared browser, so they can overlap.
 describe('menu field and navigation surfaces', { concurrency: 4 }, () => {
 
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
   browserTest(`AppBar documentation demos leave site controls reachable (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     try {
       const page = await browser.newPage({ viewport: { width: 375, height: 600 } });
       const docsCss = readFileSync(new URL('../docs/static/docs.css', import.meta.url), 'utf8');
@@ -34,7 +35,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     } finally { await browser.close(); }
   });
   for (const scenario of ['disabled', 'reset', 'refresh', 'interaction']) browserTest(`Select native form synchronization: ${scenario} (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -230,7 +231,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
   browserTest(`Panes use the nearest available width at layout boundaries (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     try {
       const page = await browser.newPage();
       await page.setContent(`<style>${css}</style><div id="outer" style="container-type:inline-size"><div id="host"><div id="layout"><section class="list-pane">List</section><section class="detail-pane">Detail</section><section class="supporting-pane">Supporting</section></div></div></div>`);
@@ -276,7 +277,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Panes preserve footer icon-button geometry (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     try {
       const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
       const sizes = { xsmall: 32, small: 40, medium: 56, large: 96, xlarge: 136 };
@@ -292,7 +293,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Panes preserve compact selection and independent scrolling (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     try {
       const page = await browser.newPage({ viewport: { width: 1440, height: 800 } });
       for (const direction of ['ltr', 'rtl']) for (const motion of ['reduce', 'no-preference']) {
@@ -340,7 +341,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
   browserTest(`AppBar focus ownership and teardown (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -400,7 +401,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`AppBar collapsed actions remain reachable (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     const fontCss = css.replace('../fonts/material-symbols-outlined.woff2', `data:font/woff2;base64,${readFileSync(new URL('../dist/fonts/material-symbols-outlined.woff2', import.meta.url)).toString('base64')}`);
     let page;
     try {
@@ -432,7 +433,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`AppBar native search dismissal and reopening (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -507,7 +508,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
   browserTest(`Side sheet rendered docking and drag direction (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 700 } });
       for (const direction of ['ltr', 'rtl']) for (const variant of ['side-sheet', 'side-sheet end', 'side-sheet start']) for (const modal of [false, true]) for (const motion of ['reduce', 'no-preference']) {
@@ -566,7 +567,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Sheets distinguish recent flicks from pauses and reversals (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage({ viewport: { width: 800, height: 700 } });
@@ -605,7 +606,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Sheets cancel only the active pointer and clean interrupted drags (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     try {
       const page = await browser.newPage();
       const failures = [];
@@ -664,7 +665,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Side sheet translated content and close actions remain reachable (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     try {
       const page = await browser.newPage();
       for (const width of [360, 1280]) for (const direction of ['ltr', 'rtl']) for (const modal of [false, true]) for (const motion of ['reduce', 'no-preference']) {
@@ -702,7 +703,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Bottom sheets keep long content and actions reachable at compact widths (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     try {
       const page = await browser.newPage();
       const variant = 'bottom-sheet';
@@ -756,7 +757,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Carousel navigation scrolls and focuses logical items (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage({ viewport: { width: 600, height: 900 } });
@@ -867,7 +868,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Carousel ignores stale scrollend during a newer navigation (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage({ reducedMotion: 'no-preference' });
@@ -895,7 +896,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Carousel destroys pending scroll completion work (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -919,7 +920,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Carousel mounted motion changes preserve explicit pause (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage({ reducedMotion: 'reduce' });
@@ -982,7 +983,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Carousel focus and visibility suspension survive teardown (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage({ reducedMotion: 'no-preference' });
@@ -1021,7 +1022,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Slider labels follow native handles through direction and resize (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage({ viewport: { width: 700, height: 600 } });
@@ -1060,7 +1061,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Slider input events and paired ranges retain native interaction (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1126,7 +1127,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Slider forced colors preserve tracks and handles (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage({ forcedColors: 'active', colorScheme: 'light' });
@@ -1158,7 +1159,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`select and calendar treat external values as data (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1201,7 +1202,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Menu cancels superseded callbacks and teardown work (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1272,7 +1273,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`NavigationRail dismisses a nested menu before handling Escape (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1307,7 +1308,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`NavigationRail preserves callback focus inside child shadow roots (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1342,7 +1343,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Menu click containment follows closeOnClick inside shadow roots (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1392,7 +1393,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Menu dismissal preserves outside input and callback focus (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1432,7 +1433,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Menu excludes closing content and preserves callback focus (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1476,7 +1477,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Menu scopes nested keys and mirrors flyouts in RTL (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage({ viewport: { width: 900, height: 700 }, reducedMotion: 'reduce' });
@@ -1554,7 +1555,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Menu consumers keep values and focus through closing (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1591,7 +1592,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`enhanced select keeps enlarged multiline labels clear of values (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage({ viewport: { width: 375, height: 900 }, reducedMotion: 'reduce' });
@@ -1633,7 +1634,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Chips deletion targets and focus recovery (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1680,7 +1681,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Chips callbacks and instance teardown preserve focus (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1748,7 +1749,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Chips wrapped labels keep separate actions reachable (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage({ viewport: { width: 320, height: 600 } });
@@ -1812,7 +1813,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
   browserTest(`Tabs synchronize swipe selection and callbacks (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1841,7 +1842,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Tabs resolve literal panel IDs in normal and swipeable modes (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1889,7 +1890,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Tabs restore panels on teardown and remount (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1906,7 +1907,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Tabs keep a clicked tab when the scroll is slow to start (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1933,7 +1934,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Tabs started while hidden show the current panel once visible (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -1958,7 +1959,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Tabs threshold keeps native links and ordinary panels (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage({ viewport: { width: 900, height: 700 } });
@@ -1988,7 +1989,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 
   browserTest(`Tabs hash selection, native swiping and overflow geometry (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage({ viewport: { width: 800, height: 700 } });

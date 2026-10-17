@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
@@ -38,7 +39,7 @@ const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><styl
 for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
   test(`${name}: data table keeps table semantics, sticks its header and draws sort and selection`, { timeout: 30000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 900 } });
       for (const dir of ['ltr', 'rtl']) {
@@ -88,7 +89,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
 
   test(`${name}: data table joins a bulk-action bar and expands detail rows`, { timeout: 30000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 700 } });
       await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>

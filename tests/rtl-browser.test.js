@@ -13,6 +13,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 
@@ -27,7 +28,7 @@ const field = (inputDir) => `<div class="field" style="width:320px">
 for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
   test(`${name}: field icons and input padding share the field's direction`, { timeout: 30000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
       for (const [pageDir, inputDir] of [['ltr', ''], ['ltr', 'rtl'], ['ltr', 'auto'], ['rtl', ''], ['rtl', 'ltr']]) {
@@ -71,7 +72,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
 for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
   test(`${name}: a date range band faces the rest of the range`, { timeout: 30000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 900, height: 800 } });
       for (const [dir, isRTL] of [['ltr', false], ['rtl', false]]) {

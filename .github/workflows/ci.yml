@@ -8,13 +8,16 @@ on:
 permissions:
   contents: read
 
+# A newer push supersedes a PR run. Each master commit keeps its own run, so
+# merging several PRs in a row still shows which commit broke master.
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -70,6 +73,7 @@ jobs:
 
   mcp:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     strategy:
       matrix:
         # Exercise the supported Node 22/24 floors and the current Node 26 release.
@@ -114,6 +118,7 @@ jobs:
   # three times to learn the same thing helps nobody.
   docs:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -141,6 +146,7 @@ jobs:
 
   generated:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -153,17 +159,25 @@ jobs:
       - run: npm run build
       - run: npm run check:generated
 
-  # One leg per engine: each test launches its own browser and node:test runs a
-  # file's tests in sequence, so a single job spent ~8 minutes on the two
-  # largest files. Chromium-only files skip themselves in the other legs.
+  # One leg per engine: node:test runs a file's tests in sequence, so a single
+  # job spent ~8 minutes on the two largest files. Chromium-only files skip
+  # themselves in the other legs. Firefox is the slowest engine even with one
+  # shared browser per file (tests/browser.js), so it runs in two shards.
   browser:
+    name: browser (${{ matrix.engine }} ${{ matrix.shard }}/${{ matrix.shards }})
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        engine: [chromium, firefox, webkit]
+        include:
+          - { engine: chromium, shard: 1, shards: 1 }
+          - { engine: firefox, shard: 1, shards: 2 }
+          - { engine: firefox, shard: 2, shards: 2 }
+          - { engine: webkit, shard: 1, shards: 1 }
     env:
       EXPRESSIVECSS_TEST_BROWSER: ${{ matrix.engine }}
+      EXPRESSIVECSS_TEST_SHARD: ${{ matrix.shard }}/${{ matrix.shards }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -174,9 +188,12 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm run test:docker
+      # The critical-flow file runs in shard 1 and is the only test that writes
+      # reports, so other shards have nothing to check or upload.
       - run: node scripts/check-container-reports.mjs
+        if: matrix.shard == 1
       - name: Retain critical-flow results and failure traces
-        if: always()
+        if: always() && matrix.shard == 1
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: browser-critical-flows-${{ matrix.engine }}
@@ -187,6 +204,7 @@ jobs:
 
   dependency-review:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5
         if: github.event_name == 'pull_request'
@@ -200,6 +218,7 @@ jobs:
 
   codeql:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       security-events: write
@@ -224,6 +243,7 @@ jobs:
     if: always()
     needs: [build, mcp, docs, generated, browser, dependency-review, codeql]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Require every prerequisite to succeed
         env:

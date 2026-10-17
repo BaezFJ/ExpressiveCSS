@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit, expect } from '@playwright/test';
+import { leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -10,7 +11,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
   browserTest(`Docked Timepicker preserves edits during the clock transition (${engine})`, async () => {
-    const browser = await type.launch();
+    const browser = await leaseBrowser(type);
     let page;
     try {
       page = await browser.newPage();
@@ -43,7 +44,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
   for (const component of ['Datepicker', 'Timepicker']) {
     browserTest(`Docked ${component} follows its input across containing blocks (${engine})`, async () => {
-      const browser = await type.launch();
+      const browser = await leaseBrowser(type);
       let page;
       try {
         page = await browser.newPage({ viewport: { width: 1280, height: 1200 } });

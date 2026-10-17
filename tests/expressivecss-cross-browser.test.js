@@ -7,6 +7,7 @@ import path from 'node:path';
 import { chromium, firefox, webkit, expect } from '@playwright/test';
 import { materializeProjectFixture } from '../scripts/eval-expressivecss-skill.mjs';
 import { startFixtureServer, createRestrictedFixturePage } from '../scripts/expressivecss-eval-browser.mjs';
+import { leaseBrowser } from './browser.js';
 
 const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 const engines = { chromium, firefox, webkit };
@@ -66,7 +67,7 @@ for (const [engineName, engine] of Object.entries(engines).filter(([name]) => !r
         report.hashes = await inputHashes();
         await writeFile(path.join(project, 'src/index.html'), fixture);
         server = await startFixtureServer(project);
-        browser = await engine.launch({ headless: true });
+        browser = await leaseBrowser(engine);
         t.signal.throwIfAborted();
         report.version = browser.version();
         report.node = process.version;

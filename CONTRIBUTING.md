@@ -122,7 +122,10 @@ checks that tracked files and host dependency directories remain untouched.
 The PR browser job requires passing reports for both profiles in Chromium,
 Firefox and WebKit. Both workflows retain exported reports for seven days,
 including when tests fail. Build and command durations appear separately in the
-run summary. Inspect a run and download its reports with:
+run summary. In CI, each failing Node and browser test is also reported as an
+error annotation with its file, line and assertion message. `gh run view <run-id>`
+lists these annotations, so you can read the failure there before opening the
+log. Inspect a run and download its reports with:
 
 ```sh
 gh run list --workflow container-validation.yml

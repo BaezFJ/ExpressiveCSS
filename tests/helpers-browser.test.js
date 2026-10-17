@@ -2,12 +2,13 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
 
 browserTest('visually-hidden text is off screen but still names its link', async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await leaseBrowser(chromium);
   try {
     const page = await browser.newPage();
     // An unlayered consumer rule beats every layered declaration unless it is
@@ -27,7 +28,7 @@ browserTest('visually-hidden text is off screen but still names its link', async
 });
 
 browserTest('a plain fieldset drops its container and puts the legend at the content start', async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await leaseBrowser(chromium);
   try {
     const page = await browser.newPage();
     await page.setContent(`<style>${css}</style>
@@ -72,7 +73,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
   const utilityTest = existsSync(browserType.executablePath()) ? test : test.skip;
 
   utilityTest(`sizing helpers let nested flex and grid content shrink and scroll (${engine})`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       await page.setContent(`<style>${css}
@@ -109,7 +110,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
   });
 
   utilityTest(`logical spacing and alignment follow LTR and RTL (${engine})`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       await page.setContent(`<style>${css} html { font-size: 16px; } .consumer { margin: 0; padding: 0; }</style>
@@ -141,7 +142,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
   });
 
   utilityTest(`text helpers wrap long values without clipping and restore inherited wrapping (${engine})`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       const value = 'unbrokenvalue'.repeat(12);
@@ -159,7 +160,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
   });
 
   utilityTest(`focusable hidden content reveals for keyboard and descendant focus (${engine})`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       await page.setContent(`<style>${css} .note { display: block; position: relative; padding: 8px; }</style>

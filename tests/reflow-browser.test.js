@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
@@ -35,7 +36,7 @@ const measure = (page) => page.evaluate(() => Object.fromEntries(
 ));
 
 browserTest('a short button label keeps every size at its container height', async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await leaseBrowser(chromium);
   try {
     const page = await browser.newPage({ viewport: { width: 900, height: 900 } });
     const sizes = { xsmall: 32, small: 40, medium: 56, large: 96, xlarge: 136 };
@@ -59,7 +60,7 @@ browserTest('a short button label keeps every size at its container height', asy
 });
 
 browserTest('a long button label wraps, grows and stays inside a narrow parent', async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await leaseBrowser(chromium);
   try {
     const page = await browser.newPage({ viewport: { width: 320, height: 900 } });
     await page.setContent(`<style>${css}</style>
@@ -95,7 +96,7 @@ browserTest('a long button label wraps, grows and stays inside a narrow parent',
 });
 
 browserTest('enlarged text grows a button instead of overflowing it', async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await leaseBrowser(chromium);
   try {
     const page = await browser.newPage({ viewport: { width: 400, height: 900 } });
     await page.setContent(`<style>${css} html { font-size: 32px; }</style>
@@ -113,7 +114,7 @@ for (const engine of [chromium, firefox, webkit]) {
 if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine.name()) continue;
 const fileTest = existsSync(engine.executablePath()) ? test : test.skip;
 fileTest(`file triggers reserve space for selected filenames (${engine.name()})`, async () => {
-  const browser = await engine.launch({ headless: true });
+  const browser = await leaseBrowser(engine);
   try {
     const page = await browser.newPage({ viewport: { width: 320, height: 900 } });
     await page.setContent(`<style>${css}</style>
@@ -129,7 +130,7 @@ fileTest(`file triggers reserve space for selected filenames (${engine.name()})`
 }
 
 browserTest('fixed-geometry buttons and one-line hosts keep one line at a fixed height', async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await leaseBrowser(chromium);
   try {
     const page = await browser.newPage({ viewport: { width: 600, height: 900 } });
     await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -164,7 +165,7 @@ browserTest('fixed-geometry buttons and one-line hosts keep one line at a fixed 
 });
 
 browserTest('a chip keeps 32dp for a short label and wraps with an inset for a long one', async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await leaseBrowser(chromium);
   try {
     const page = await browser.newPage({ viewport: { width: 320, height: 900 } });
     await page.setContent(`<style>${css}</style>

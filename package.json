@@ -100,7 +100,7 @@
     "test:visual:docker": "node scripts/run-docker.mjs --visual",
     "test:packages:docker": "node scripts/run-docker.mjs sh -c 'npm ci --prefix mcp/expressivecss && npm test --prefix mcp/expressivecss && npm run verify:packages'",
     "test:browser:critical": "node scripts/check-browser.mjs && node --test tests/expressivecss-cross-browser.test.js",
-    "test:browser:run": "node scripts/check-browser.mjs && node --test tests/*-browser.test.js",
+    "test:browser:run": "node scripts/check-browser.mjs && node scripts/run-node-tests.mjs --browser",
     "test:watch": "node --test --watch",
     "test:visual": "node visual/run.mjs",
     "test:visual:report": "playwright show-report visual/report",
