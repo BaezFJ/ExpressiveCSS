@@ -1,0 +1,187 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "overview", label: "Overview", heading: false },
+  { id: "usage", label: "Turn it on" },
+  { id: "settings", label: "Settings" },
+  { id: "sass", label: "Sass defaults" },
+  { id: "surfaces", label: "Surfaces" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "caveats", label: "Caveats" },
+  { id: "preview", label: "Preview this site" },
+]);
+
+const demos = [
+  { label: "Solid", setting: "--expressive-glass: false" },
+  { label: "Default glass", setting: "--expressive-glass: true" },
+  { label: "Custom glass", setting: "--expressive-glass: true; --expressive-glass-blur: 4px; --expressive-glass-opacity: 40%" },
+];
+---
+<DocsLayout page="glass">
+<PageBody sections={S}>
+  <Section {...S.overview}>
+    <p class="flow-text">
+      Floating surfaces can show the page behind them through a frosted,
+      translucent container. The effect is off by default. One custom property
+      turns it on for a page or a region, without JavaScript.
+    </p>
+    <div class="row py-4">
+      {demos.map(({ label, setting }) => (
+        <figure class="s12 m4 glass-demo-figure">
+          <div class="glass-demo" style={setting}>
+            <div class="toolbar" role="group" aria-label={`${label} toolbar`}>
+              <button type="button" aria-label="Edit"><span class="material-symbols" aria-hidden="true">edit</span></button>
+              <button type="button" class="active" aria-label="Share"><span class="material-symbols" aria-hidden="true">share</span></button>
+              <button type="button" aria-label="Delete"><span class="material-symbols" aria-hidden="true">delete</span></button>
+            </div>
+          </div>
+          <figcaption>{label}</figcaption>
+        </figure>
+      ))}
+    </div>
+    <p>
+      The three toolbars differ only in their wrapper's settings: off, the
+      defaults, and a 4px blur at 40% opacity. Glass frosts whatever sits behind
+      a surface. Over a flat page color it looks almost solid, so the demos sit
+      on a striped backdrop.
+    </p>
+  </Section>
+
+  <Section {...S.usage}>
+    <p>Set <code>--expressive-glass: true</code> on <code>:root</code> to turn it on for the whole page:</p>
+<Code code={`
+:root {
+  --expressive-glass: true;
+}
+`} />
+    <p>
+      Or set it on an element that contains the surfaces to turn it on for that
+      region only. <code>--expressive-glass: false</code> turns it off again
+      inside a region.
+    </p>
+<Code code={`
+<main style="--expressive-glass: true">
+  <div class="toolbar">...</div>  <!-- glass -->
+  <section style="--expressive-glass: false">
+    <div class="toolbar">...</div>  <!-- solid -->
+  </section>
+</main>
+`} />
+    <p>
+      The browser reads the value from the surface's parent, so setting
+      <code>--expressive-glass</code> on the surface itself has no effect. Put it on
+      <code>:root</code> or on a wrapper.
+    </p>
+  </Section>
+
+  <Section {...S.settings}>
+    <p>Three custom properties control the effect. Each works on <code>:root</code> or on a wrapper, and the closest one wins.</p>
+    <div class="docs-table-scroll">
+      <table class="striped">
+        <thead>
+          <tr><th>Property</th><th>Default</th><th>Effect</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>--expressive-glass</code></td><td>unset (off)</td><td><code>true</code> turns glass on and <code>false</code> turns it off. In the default build, only <code>true</code> turns it on.</td></tr>
+          <tr><td><code>--expressive-glass-blur</code></td><td><code>16px</code></td><td>Blur radius of the backdrop. Higher values frost more.</td></tr>
+          <tr><td><code>--expressive-glass-opacity</code></td><td><code>72%</code></td><td>How much of the surface color stays. <code>100%</code> is solid, and lower values let more of the page through. Use a percentage.</td></tr>
+        </tbody>
+      </table>
+    </div>
+<Code code={`
+:root {
+  --expressive-glass: true;
+  --expressive-glass-blur: 16px;    /* frost thickness */
+  --expressive-glass-opacity: 72%;  /* share of the surface color kept; 100% is solid */
+}
+`} />
+    <p>
+      Each surface mixes its own container color with transparency, so theme
+      and component color tokens still apply.
+    </p>
+  </Section>
+
+  <Section {...S.sass}>
+    <p>
+      Sass builds can turn glass on by default and change the default blur and
+      opacity. The custom properties still override these settings at runtime.
+    </p>
+    <div class="docs-table-scroll">
+      <table class="striped">
+        <thead>
+          <tr><th>Variable</th><th>Default</th><th>Effect</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>$expressive-glass</code></td><td><code>false</code></td><td><code>true</code> makes glass the default, and only <code>--expressive-glass: false</code> turns it off.</td></tr>
+          <tr><td><code>$expressive-glass-blur</code></td><td><code>16px</code></td><td>Fallback for <code>--expressive-glass-blur</code>.</td></tr>
+          <tr><td><code>$expressive-glass-opacity</code></td><td><code>72%</code></td><td>Fallback for <code>--expressive-glass-opacity</code>. The build fails if it is not a percentage.</td></tr>
+        </tbody>
+      </table>
+    </div>
+<Code code={`
+@use "@expressivecss/expressive/src/sass/expressive" with (
+  $expressive-glass: true,
+  $expressive-glass-blur: 16px,
+  $expressive-glass-opacity: 72%
+);
+`} />
+  </Section>
+
+  <Section {...S.surfaces}>
+    <p>The effect applies to these surfaces:</p>
+    <ul>
+      <li><a href="/menu.html">Menus</a>, <a href="/tooltips.html">tooltips</a> and <a href="/popover.html">popovers</a></li>
+      <li><a href="/dialogs.html">Dialogs</a>, the <a href="/command-palette.html">command palette</a>, <a href="/bottom-sheet.html">bottom sheets</a> and <a href="/side-sheet.html">side sheets</a></li>
+      <li>The <a href="/snackbar.html">snackbar</a></li>
+      <li>The <a href="/navigation-bar.html">navigation bar</a> and <a href="/navigation-rail.html">navigation rail</a></li>
+      <li><a href="/toolbars.html">Toolbars</a> and the <a href="/search.html">search view</a></li>
+    </ul>
+    <p>
+      Grouped menus and a modal navigation rail keep a solid surface. The modal
+      rail would otherwise clip its own scrim.
+    </p>
+  </Section>
+
+  <Section {...S.accessibility}>
+    <p>
+      Users who ask for reduced transparency or more contrast in their system
+      settings see solid surfaces. The framework checks
+      <code>prefers-reduced-transparency: reduce</code> and
+      <code>prefers-contrast: more</code>, so you do not need to.
+    </p>
+    <p>
+      Text on a glass surface sits over whatever the page shows behind it. Over
+      busy images or saturated colors, keep <code>--expressive-glass-opacity</code>
+      high enough that labels still meet contrast requirements.
+    </p>
+  </Section>
+
+  <Section {...S.caveats}>
+    <ul>
+      <li>
+        The switch uses CSS style queries. Browsers without them show solid
+        surfaces.
+      </li>
+      <li>
+        <code>backdrop-filter</code> makes a surface the containing block for its
+        <code>position: fixed</code> descendants. A fixed element inside a glass
+        surface is placed relative to the surface, not the viewport.
+      </li>
+    </ul>
+  </Section>
+
+  <Section {...S.preview}>
+    <p>
+      The <strong>Frosted glass</strong> button in this site's app bar sets
+      <code>--expressive-glass: true</code> on <code>:root</code> for every page.
+      It also tints the page background so the effect shows behind the
+      surfaces. The choice is saved in this browser.
+    </p>
+  </Section>
+</PageBody>
+</DocsLayout>

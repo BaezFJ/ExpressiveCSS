@@ -521,6 +521,46 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   color: var(--md-sys-color-primary);
 }
 
+/* Glass toggle: filled pressed state so the app bar shows the effect is on. */
+#glass-toggle[aria-pressed="true"] {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+/* Glass frosts whatever sits behind a surface, so over the flat page color it
+   is invisible. With the toggle on, wash the page in the scheme's accents. */
+@container style(--expressive-glass: true) {
+  body.docs {
+    background-image:
+      radial-gradient(circle at 10% 15%, color-mix(in oklab, var(--md-sys-color-primary) 40%, transparent), transparent 35%),
+      radial-gradient(circle at 90% 45%, color-mix(in oklab, var(--md-sys-color-tertiary) 40%, transparent), transparent 40%),
+      radial-gradient(circle at 35% 90%, color-mix(in oklab, var(--md-sys-color-secondary) 40%, transparent), transparent 40%);
+    background-attachment: fixed;
+  }
+}
+
+/* Glass page demos: a sharp striped backdrop so the blur is visible. */
+.glass-demo-figure {
+  margin: 0;
+}
+
+.glass-demo {
+  display: grid;
+  place-items: center;
+  min-height: 9rem;
+  border-radius: 16px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--md-sys-color-primary) 0 12px,
+    var(--md-sys-color-tertiary-container) 12px 24px
+  );
+}
+
+.glass-demo-figure > figcaption {
+  margin-top: 8px;
+  text-align: center;
+}
+
 /* Source-color dialog: preset grid, custom picker, and live role chips. */
 #source-color-dialog {
   max-height: min(90vh, calc(100% - 48px));

@@ -1,6 +1,30 @@
 // Docs-site glue. The framework bundle only self-initializes Forms, Chips,
 // Slider, Cards, ExpandingCard, Dialogs, BottomSheets and SideSheets; everything
 // else needs an explicit AutoInit pass.
+
+// Frosted glass preview: --expressive-glass on :root reaches every floating
+// surface. The head script restores the stored choice before first paint.
+function initGlassToggle(toggle) {
+  if (!toggle) return;
+  const root = document.documentElement;
+  toggle.setAttribute(
+    "aria-pressed",
+    String(root.style.getPropertyValue("--expressive-glass") === "true"),
+  );
+  toggle.addEventListener("click", () => {
+    const on = toggle.getAttribute("aria-pressed") !== "true";
+    toggle.setAttribute("aria-pressed", String(on));
+    if (on) root.style.setProperty("--expressive-glass", "true");
+    else root.style.removeProperty("--expressive-glass");
+    try {
+      if (on) localStorage.setItem("glass", "true");
+      else localStorage.removeItem("glass");
+    } catch {
+      // private mode / blocked storage
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   Expressive.AutoInit();
 
@@ -97,6 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
       applyTheme(item.getAttribute("data-theme"));
     });
+
+  initGlassToggle(document.getElementById("glass-toggle"));
 
   const DEFAULT_SOURCE = "#c6a0f6";
   const HEX = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;

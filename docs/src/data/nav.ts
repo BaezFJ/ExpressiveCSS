@@ -123,6 +123,13 @@ export const NAV: DocsGroup[] = [
           "Raise or flatten an element with the z-depth elevation classes.",
       },
       {
+        id: "glass",
+        label: "Frosted glass",
+        route: "/glass.html",
+        description:
+          "Blur the page behind floating surfaces with one custom property.",
+      },
+      {
         id: "grid",
         label: "Grid",
         route: "/grid.html",

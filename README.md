@@ -355,8 +355,9 @@ properties still override these settings:
 );
 ```
 
-The effect applies to menus, tooltips, dialogs, bottom and side sheets, the
-snackbar, the navigation bar and rail, toolbars, and the search view. Grouped menus
+The effect applies to menus, tooltips, popovers, dialogs, the command palette,
+bottom and side sheets, the snackbar, the navigation bar and rail, toolbars, and
+the search view. Grouped menus
 and a modal navigation rail keep a solid surface. The rail would otherwise clip its
 own scrim. Users who request reduced transparency or more contrast in their system
 settings see solid surfaces. The switch uses CSS style queries.
