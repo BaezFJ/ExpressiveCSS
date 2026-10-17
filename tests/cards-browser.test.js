@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 const chromiumRun = !process.env.EXPRESSIVECSS_TEST_BROWSER || process.env.EXPRESSIVECSS_TEST_BROWSER === 'chromium';
 const browserTest = chromiumRun && existsSync(chromium.executablePath()) ? test : test.skip;
 
@@ -140,6 +141,33 @@ browserTest('directly actionable horizontal cards use intrinsic or fixed heights
     const compact = await heights();
     assert.ok(compact.intrinsic < 900, `intrinsic compact height was ${compact.intrinsic}`);
     assert.ok(compact.fixed < 300, `fixed compact height was ${compact.fixed}`);
+  } finally {
+    await browser.close();
+  }
+});
+
+browserTest('closing a reveal inside a shadow root returns focus to its trigger', async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.setContent('<div id="host"></div>');
+    await page.addScriptTag({ content: js });
+    const focused = await page.evaluate(() => {
+      const root = document.getElementById('host').attachShadow({ mode: 'open' });
+      root.innerHTML = `
+        <article>
+          <button type="button" class="card-reveal-trigger" aria-label="Show details"></button>
+          <aside id="details"><a href="#more">More</a></aside>
+        </article>`;
+      const instance = window.Expressive.Cards.init(root.querySelector('article'));
+      instance.open();
+      root.querySelector('aside a').focus();
+      instance.close();
+      const id = root.activeElement?.className;
+      instance.destroy();
+      return id;
+    });
+    assert.equal(focused, 'card-reveal-trigger');
   } finally {
     await browser.close();
   }
