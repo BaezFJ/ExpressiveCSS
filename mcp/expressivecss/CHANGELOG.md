@@ -12,6 +12,17 @@
   literals; `legacy-selector` covers CSS selectors and query strings.
 - The three drag-handle rules select `.drag-handle` only; `.handle` is a
   removed name that `legacy-sheet-class` reports inside a bottom sheet.
+- Static inspection no longer stalls the server on adversarial markup. An
+  unclosed class value full of `btn` took 30 s to check and now takes about
+  100 ms. Markup nested deeper than 256 elements stops early with
+  `markup nesting limit reached`; 4,000 nested `aria-hidden` elements took
+  20 s before.
+- Reading a FIFO inside the project fails at once instead of hanging the call.
+- `quality_inspector` stops its typecheck or test command when the call is
+  cancelled or the client closes the session. Before, the command kept
+  running after the server exited.
+- The lint hook exits 2 when inspection throws, so a crash blocks the edit
+  instead of letting the file through unlinted.
 
 ## 0.4.1 - 2026-10-14
 
