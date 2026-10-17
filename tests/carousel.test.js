@@ -346,6 +346,41 @@ describe('Material 3 Carousel behavior', () => {
     }
   });
 
+  test('arrows leave modified keys and nested widgets alone', () => {
+    document.body.innerHTML = `
+      <div class="carousel" aria-label="Featured places">
+        <div class="carousel-item"><div role="slider" tabindex="0" aria-label="Volume"></div></div>
+        <a class="carousel-item" href="#two">Two</a>
+        <a class="carousel-item" href="#three">Three</a>
+      </div>`;
+    const el = document.querySelector('.carousel');
+    const instance = Expressive.Carousel.init(el);
+    const press = (target, init) => target.dispatchEvent(
+      new window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true, ...init })
+    );
+    try {
+      const slider = el.querySelector('[role="slider"]');
+      press(slider);
+      assert.equal(instance.center, 0, 'the slider owns its arrows');
+
+      const first = el.querySelector('.carousel-item');
+      for (const modifier of ['altKey', 'ctrlKey', 'metaKey', 'shiftKey']) {
+        press(first, { [modifier]: true });
+        assert.equal(instance.center, 0, `${modifier} is a shortcut, not navigation`);
+      }
+
+      const handled = new window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true });
+      handled.preventDefault();
+      first.dispatchEvent(handled);
+      assert.equal(instance.center, 0, 'a key something else handled is left alone');
+
+      press(first);
+      assert.equal(instance.center, 1);
+    } finally {
+      instance.destroy();
+    }
+  });
+
   test('full-screen falls back to a horizontal hero in expanded containers', () => {
     document.body.innerHTML = markup('full-screen');
     const el = document.querySelector('.carousel');
