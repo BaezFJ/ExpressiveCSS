@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -25,7 +26,7 @@ const many = (count) => Array.from({ length: count }, (_, i) => message(i + 1)).
 for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
   test(`${name}: message scroller follows output, keeps its place on prepend and anchors new turns`, { timeout: 60000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 700 } });
       await page.setContent(markup(many(30)));
@@ -153,7 +154,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
 
   test(`${name}: message scroller opens saved transcripts at the requested position`, { timeout: 30000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 700 } });
       const open = async (items, options) => {
@@ -188,7 +189,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
 
   test(`${name}: message scroller jumps to a message inside a shadow root`, { timeout: 30000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 700 } });
       await page.setContent('<!doctype html><html lang="en"><body><div id="host"></div></body></html>');

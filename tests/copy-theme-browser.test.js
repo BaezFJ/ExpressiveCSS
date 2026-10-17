@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -40,7 +41,7 @@ const open = async (page) => {
 for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
   test(`${name}: copy buttons write the clipboard and confirm with a snackbar`, { timeout: 30000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       await page.addInitScript(() => {
@@ -78,7 +79,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
 
   test(`${name}: theme controls write the theme, save it and mark the current choice`, { timeout: 30000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       await open(page);

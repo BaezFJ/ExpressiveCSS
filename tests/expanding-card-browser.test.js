@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -11,7 +12,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(browserType.executablePath()) ? test : test.skip;
   browserTest(`expanding-card completion follows CSS and survives interruption (${engine})`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     let page;
     try {
       page = await browser.newPage({ reducedMotion: 'no-preference' });
@@ -105,7 +106,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
   });
 
   browserTest(`scale and expanding cards respect changing motion preferences (${engine})`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     let page;
     try {
       page = await browser.newPage({ reducedMotion: 'no-preference' });

@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -20,7 +21,7 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
 for (const [name, engine] of engines) {
   test(`${name}: a sortable list reorders by move buttons and by dragging its handles`, { timeout: 30000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 600, height: 700 } });
       await page.setContent(markup);
@@ -67,7 +68,7 @@ for (const [name, engine] of engines) {
 
   test(`${name}: Escape that cancels a drag in a modal dialog leaves the dialog open`, { timeout: 30000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 600, height: 700 } });
       await page.setContent(markup);

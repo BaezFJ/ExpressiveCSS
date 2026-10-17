@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -29,7 +30,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
   const browserTest = existsSync(browserType.executablePath()) ? test : test.skip;
 
   browserTest(`${engine}: line chart draws its table, keeps it readable and restores it on destroy`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       await page.setContent(html);
@@ -96,7 +97,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
   });
 
   browserTest(`${engine}: line chart tooltip follows the pointer and the arrow keys`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       await page.setContent(html);
@@ -136,7 +137,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
     }
   });
   browserTest(`${engine}: line chart handles cards, headerless tables, RTL, strict values and forced colors`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       const rows = [['Jan', '1'], ['Feb', '5'], ['Mar', '3']];

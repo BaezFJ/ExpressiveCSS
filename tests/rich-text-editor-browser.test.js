@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -37,7 +38,7 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
 for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
   test(`${name}: rich text editor formats text, reflects state and keeps the textarea in sync`, { timeout: 60000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       await page.setContent(markup);
@@ -112,7 +113,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
 
   test(`${name}: rich text editor follows a disabled textarea`, { timeout: 60000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       await page.setContent(markup.replace('<textarea', '<textarea disabled'));

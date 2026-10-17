@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { rm, writeFile } from 'node:fs/promises';
 import { chromium, firefox, webkit, expect } from '@playwright/test';
+import { leaseBrowser } from './browser.js';
 import utilsBundle from 'playwright-core/lib/utilsBundle';
 import { materializeProjectFixture } from '../scripts/eval-expressivecss-skill.mjs';
 import { startFixtureServer, createRestrictedFixturePage } from '../scripts/expressivecss-eval-browser.mjs';
@@ -14,7 +15,7 @@ browserTest('web accessibility fixture exposes target geometry, keyboard reorder
   let browser, server;
   try {
     server = await startFixtureServer(project);
-    browser = await chromium.launch({ headless: true });
+    browser = await leaseBrowser(chromium);
     const { page, errors } = await createRestrictedFixturePage(browser, server.origin);
     await page.goto(`${server.origin}/dashboard`);
     const geometry = await page.evaluate(() => [...document.querySelectorAll('.tiny, #medium-target')].map(el => { const r = el.getBoundingClientRect(); return { width: r.width, height: r.height, x: r.x }; }));
@@ -50,7 +51,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     try {
       await writeFile(path.join(project, 'src/index.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Accessible controls</title><link rel="stylesheet" href="/node_modules/@expressivecss/expressive/dist/css/expressive.css"><style>main{padding:8rem 2rem;max-width:45rem;margin:auto}.tooltip-hosts{display:flex;gap:5rem;margin:3rem}header{position:sticky;top:0;background:var(--md-sys-color-surface)}input{max-width:100%}</style></head><body><header><h1>Preferences</h1></header><main><p id="instructions">Choose when to receive workspace updates. Save your delivery preference below.</p><form id="preferences"><button id="before" type="button">Before group</button><fieldset><legend>Delivery</legend><label><input id="daily" type="radio" name="delivery" value="daily" checked>Daily</label><label><input id="weekly" type="radio" name="delivery" value="weekly">Weekly</label></fieldset><button id="save">Save</button><output id="status" role="status" aria-live="polite" aria-atomic="true"></output></form><div class="tooltip-hosts"><button id="runtime" class="tooltipped" data-tooltip="Changes stay in this workspace" type="button">Runtime</button><button id="child" aria-describedby="child-tip" type="button">CSS child<span id="child-tip" class="tooltip bottom">Persistent help</span></button></div></main><script src="/node_modules/@expressivecss/expressive/dist/js/expressive.js"></script><script>window.tip=Expressive.Tooltip.init(document.querySelector('#runtime'),{enterDelay:0,exitDelay:0,inDuration:160,outDuration:80,position:'bottom'});let count=0;document.querySelector('form').onsubmit=e=>{e.preventDefault();document.querySelector('#status').textContent=new FormData(e.target).get('delivery')+' saved '+ ++count;};</script></body></html>`);
       server = await startFixtureServer(project);
-      browser = await engine.launch({ headless: true });
+      browser = await leaseBrowser(engine);
       ({ page } = await createRestrictedFixturePage(browser, server.origin, { reducedMotion: 'no-preference', viewport: { width: 1000, height: 900 } }));
       page.setDefaultTimeout(5000);
       await page.goto(`${server.origin}/dashboard`);
@@ -161,7 +162,7 @@ function scenario(name, markup, check, timezoneId) {
   for (const [engine, type] of Object.entries(engines).filter(([name]) => !requested || requested === name)) {
     test(`${engine}: ${name}`, { timeout: 30000 }, async t => {
       if (!existsSync(type.executablePath())) { t.skip(`${engine} is not installed`); return; }
-      const browser = await type.launch();
+      const browser = await leaseBrowser(type);
       const page = await browser.newPage({ viewport: { width: 1000, height: 900 }, reducedMotion: 'reduce', timezoneId });
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));

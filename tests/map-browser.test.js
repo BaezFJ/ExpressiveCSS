@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 const root = new URL('..', import.meta.url);
@@ -73,7 +74,7 @@ test.after(() => server.close());
 for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
   test(`${name}: map places markers and popups, runs controls, themes overlays and restores its markup`, { timeout: 60000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       const errors = [];
@@ -189,7 +190,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
 
   test(`${name}: a map in a shadow root opens its marker popup`, { timeout: 60000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       await page.goto(origin);

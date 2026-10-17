@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -33,7 +34,7 @@ for (const [name, engine] of engines) {
   for (const dir of ['ltr', 'rtl']) {
     test(`${name} ${dir}: a rail destination opens a docked side panel on hover and click`, { timeout: 30000 }, async (t) => {
       if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-      const browser = await engine.launch({ headless: true });
+      const browser = await leaseBrowser(engine);
       try {
         const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
         await page.setContent(markup(dir));
@@ -129,7 +130,7 @@ for (const [name, engine] of engines) {
 
   test(`${name}: a rail that starts with a panel destination has no menu toggle`, { timeout: 30000 }, async (t) => {
     if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
       await page.setContent(`<!doctype html><html lang="en" theme="light"><head><style>${css}</style></head><body style="margin:0">

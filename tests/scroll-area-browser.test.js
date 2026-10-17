@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 
@@ -10,7 +11,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
   const browserTest = existsSync(browserType.executablePath()) ? test : test.skip;
 
   browserTest(`scroll area keeps both axes and keyboard scrolling native (${engine})`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       await page.setContent(`<style>${css}</style>
@@ -43,7 +44,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
   });
 
   browserTest(`scroll area on html themes the page scrollbar and keeps page scrolling (${engine})`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
       await page.setContent(`<html class="scroll-area"><head><style>${css}</style></head>
@@ -69,7 +70,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
   });
 
   browserTest(`scroll area follows themes, custom colors, and forced colors (${engine})`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       await page.setContent(`<style>${css}</style>
