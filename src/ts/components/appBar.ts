@@ -1,4 +1,5 @@
 import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Utils } from '../core/utils';
 
 const _defaults: BaseOptions = {};
 
@@ -15,6 +16,8 @@ export class AppBar extends Component<BaseOptions> {
   private _input: HTMLInputElement | null = null;
   private _view: HTMLElement | null = null;
   private _searchOpen = false;
+  // The docked view's state before the first open, for destroy() to restore.
+  private _restore: { hidden: HTMLElement['hidden']; expanded: string | null } | null = null;
 
   constructor(el: HTMLElement, options: Partial<BaseOptions>) {
     super(el, options, AppBar);
@@ -49,6 +52,13 @@ export class AppBar extends Component<BaseOptions> {
     this._input?.removeEventListener('focus', this._onSearchFocus);
     this._input?.removeEventListener('click', this._onSearchFocus);
     this._view?.removeEventListener('close', this._onSearchViewClose);
+    if (this._restore) {
+      this._view.hidden = this._restore.hidden;
+      if (this._restore.expanded === null) this._input.removeAttribute('aria-expanded');
+      else this._input.setAttribute('aria-expanded', this._restore.expanded);
+      this._restore = null;
+    }
+    this._searchOpen = false;
     this.el.classList.remove('collapsed');
     this.el['Expressive_AppBar'] = undefined;
   }
@@ -92,7 +102,7 @@ export class AppBar extends Component<BaseOptions> {
     if (!this._input) return;
 
     const id = this._input.getAttribute('aria-controls');
-    this._view = (id && document.getElementById(id)) || this.el.querySelector('.search-view');
+    this._view = (id && Utils.getElementById(this.el, id)) || this.el.querySelector('.search-view');
     if (!this._view) return;
 
     this._input.addEventListener('focus', this._onSearchFocus);
@@ -113,7 +123,8 @@ export class AppBar extends Component<BaseOptions> {
       if (!this._view.open) this._view.showModal();
       return;
     }
+    this._restore ??= { hidden: this._view.hidden, expanded: this._input.getAttribute('aria-expanded') };
     this._view.hidden = false;
-    this._input?.setAttribute('aria-expanded', 'true');
+    this._input.setAttribute('aria-expanded', 'true');
   };
 }

@@ -119,6 +119,51 @@ describe('AppBar search view', () => {
     instance.destroy();
   });
 
+  test('destroy hides the docked view it showed and restores aria-expanded', () => {
+    document.body.innerHTML = `
+      <header>
+        <nav aria-label="Main">
+          <search class="search-bar" aria-label="Search">
+            <input type="search" aria-label="Search recipes" aria-controls="results">
+            <div class="search-view" id="results" hidden></div>
+          </search>
+        </nav>
+      </header>`;
+    const header = document.querySelector('header');
+    const input = header.querySelector('input');
+    const view = document.getElementById('results');
+    const instance = Expressive.AppBar.init(header);
+    input.dispatchEvent(new window.Event('focus', { bubbles: true }));
+    assert.equal(view.hidden, false);
+    instance.destroy();
+    assert.equal(view.hidden, true);
+    assert.equal(input.hasAttribute('aria-expanded'), false);
+  });
+
+  test('finds the view by id inside a shadow root', () => {
+    const host = document.createElement('div');
+    document.body.append(host);
+    const root = host.attachShadow({ mode: 'open' });
+    root.innerHTML = `
+      <header>
+        <nav aria-label="Main">
+          <search class="search-bar" aria-label="Search">
+            <input type="search" aria-label="Search" aria-controls="shadow-results">
+          </search>
+        </nav>
+      </header>
+      <div class="search-view" id="shadow-results" hidden></div>`;
+    const header = root.querySelector('header');
+    const view = root.getElementById('shadow-results');
+    const instance = Expressive.AppBar.init(header);
+    try {
+      header.querySelector('input').dispatchEvent(new window.Event('focus', { bubbles: true }));
+      assert.equal(view.hidden, false);
+    } finally {
+      instance.destroy();
+    }
+  });
+
   test('focusing the search field opens a full-screen dialog view', () => {
     document.body.innerHTML = `
       <header>
