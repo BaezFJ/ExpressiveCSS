@@ -49,7 +49,7 @@ Importing the JavaScript bundle installs shared behaviors but does not call `Aut
 @use "@expressivecss/expressive/src/sass/expressive";
 ```
 
-The package also exports `@expressivecss/expressive/scss` and individual `scss/*` paths. Follow the target version's documented Sass resolution for the consuming build tool.
+The package also exports `@expressivecss/expressive/scss` and individual `scss/*` paths. Follow the target version's documented Sass resolution for the consuming build tool. For Sass mechanics such as `@use ... with`, selective `custom.scss` builds, and deprecation warnings, also load the `scss-architecture` skill when it is installed.
 
 ### Browser build
 
