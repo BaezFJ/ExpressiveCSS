@@ -38,6 +38,21 @@ describe("FloatingActionButton", () => {
     }
   });
 
+  test("destroy removes the aria-expanded and tabindex it added", () => {
+    document.body.innerHTML = `
+      <div class="fab-menu">
+        <a class="button extra circle" aria-label="Create">+</a>
+        <ul><li><button type="button">Compose</button></li></ul>
+      </div>`;
+    const anchor = document.querySelector(".fab-menu > a");
+    const instance = Expressive.FloatingActionButton.init(document.querySelector(".fab-menu"));
+
+    assert.equal(anchor.getAttribute("tabindex"), "0");
+    instance.destroy();
+    assert.equal(anchor.hasAttribute("aria-expanded"), false);
+    assert.equal(anchor.hasAttribute("tabindex"), false);
+  });
+
   test("no composite role is promised without the keyboard model", () => {
     // SEMANTICS rule 2. The list used to be given role="menu" and the trigger
     // aria-haspopup="menu", neither of which this component earns: there is no

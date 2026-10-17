@@ -344,7 +344,8 @@ browserTest('FAB menu preserves keyboard, dismissal and responsive behavior', as
     assert.equal(await page.evaluate(() => document.activeElement.id), 'trigger');
     assert.equal(await page.locator('ul').evaluate(el => el.inert), false);
     await page.locator('#trigger').click();
-    assert.equal(await page.locator('#trigger').getAttribute('aria-expanded'), 'false');
+    // destroy() removed the aria-expanded it added, and the click did not reopen.
+    assert.equal(await page.locator('#trigger').getAttribute('aria-expanded'), null);
     for (const inert of [false, true]) {
       for (const open of [false, true]) {
         assert.equal(await page.evaluate(({ inert, open }) => {
