@@ -96,7 +96,8 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         document.querySelector('#outside').focus();
       });
       await page.waitForTimeout(100);
-      assert.deepEqual(await page.evaluate(() => [dialog.open, instance.isOpen, trigger.ariaExpanded, document.activeElement.id]), [false, false, 'false', 'outside']);
+      // destroy() hands the trigger back without the aria-expanded it added.
+      assert.deepEqual(await page.evaluate(() => [dialog.open, instance.isOpen, trigger.ariaExpanded, document.activeElement.id]), [false, false, null, 'outside']);
     } finally {
       await page?.evaluate(() => window.instance?.destroy()).catch(() => {});
       await browser.close();

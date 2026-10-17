@@ -226,7 +226,9 @@ export class Snackbar {
       const snackbar = Snackbar._draggedSnackbar;
       snackbar.deltaX = Math.abs(snackbar.xPos - e.clientX);
       snackbar.xPos = e.clientX;
-      snackbar.velocityX = snackbar.deltaX / (Date.now() - snackbar.time);
+      // Two moves in the same millisecond would divide by zero, and an
+      // infinite velocity dismisses on release.
+      snackbar.velocityX = snackbar.deltaX / Math.max(1, Date.now() - snackbar.time);
       snackbar.time = Date.now();
 
       const totalDeltaX = snackbar.xPos - snackbar.startingXPos;

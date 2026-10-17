@@ -148,7 +148,6 @@ export class Menu extends Component<MenuOptions> implements Openable {
     Menu._menus.push(this);
     this.id = Utils.getIdFromTrigger(el);
     this.menuEl = Utils.getElementById(el, this.id);
-    this._originalInert = this.menuEl?.getAttribute('inert') ?? null;
 
     this.options = {
       ...Menu.defaults,
@@ -170,6 +169,13 @@ export class Menu extends Component<MenuOptions> implements Openable {
         this.el.setAttribute('aria-controls', this.id);
     }
 
+    // Without a menu, moving it inserts a literal "null" text node and the
+    // trigger's handlers would cancel its own clicks and keys to open nothing.
+    if (!this.menuEl) {
+      console.warn(`Menu skipped: no element matches target "${this.id}".`, el);
+      return;
+    }
+    this._originalInert = this.menuEl.getAttribute('inert');
     // Keep the menu next to the trigger so positioning stays local.
     this._moveMenuToElement();
     this._setupAccessibility();
@@ -612,10 +618,9 @@ export class Menu extends Component<MenuOptions> implements Openable {
       } while (newFocusedIndex < list.children.length && newFocusedIndex >= 0);
 
       if (hasFoundNewIndex) {
-        if (this.focusedIndex >= 0) list.children[this.focusedIndex]?.classList.remove('active');
         const item = list.children[newFocusedIndex] as HTMLElement;
-        item.classList.add('active');
         this._focusRow(item);
+        item.classList.add('active');
       }
     }
     // SPACE OR ENTER selects the focused item.
@@ -687,7 +692,14 @@ export class Menu extends Component<MenuOptions> implements Openable {
     else this.menuEl?.setAttribute('inert', this._originalInert);
   }
 
+  // focusedIndex is reset on close and only covers one list, so clearing by
+  // index left an old highlight behind after reopening or a typeahead jump.
+  private _clearActive() {
+    this.menuEl?.querySelectorAll('li.active').forEach((li) => li.classList.remove('active'));
+  }
+
   private _focusRow(item: HTMLElement) {
+    this._clearActive();
     this.focusedIndex = Array.from(item.parentElement.children).indexOf(item);
     item.focus({ preventScroll: true });
     item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
@@ -748,6 +760,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       (child) => child instanceof HTMLElement && child.tabIndex !== -1
     ) as HTMLElement | undefined;
     if (!first) return;
+    this._clearActive();
     this.focusedIndex = Array.from(this.menuEl.children).indexOf(first);
     first.focus({ preventScroll: true });
   }
@@ -1036,11 +1049,16 @@ export class Menu extends Component<MenuOptions> implements Openable {
     if (!this.options.contextMenu) this.el.ariaExpanded = String(expanded);
   }
 
+  // A trigger whose target never resolved has no menu to open.
+  private get _canOpen() {
+    return !this.isOpen && !!this.menuEl && this.el['Expressive_Menu'] === this;
+  }
+
   /**
    * Open menu.
    */
   open = () => {
-    if (this.isOpen || this.el['Expressive_Menu'] !== this) return;
+    if (!this._canOpen) return;
     const transition = this._clearPendingTimers();
     this.isOpen = true;
     // onOpenStart callback
@@ -1075,6 +1093,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     clearTimeout(this.filterTimeout);
     this._resetFilterQuery();
     this.focusedIndex = -1;
+    this._clearActive();
     this._closeSubmenus();
     // onCloseStart callback
     if (typeof this.options.onCloseStart === 'function') {

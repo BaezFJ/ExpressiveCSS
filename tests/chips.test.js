@@ -13,7 +13,7 @@ import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { Expressive, resetBody, fire } from './setup.js';
+import { Expressive, resetBody, fire, window } from './setup.js';
 
 const CHIP_RULES = JSON.parse(
   readFileSync(new URL('../semantics.json', import.meta.url), 'utf8')
@@ -268,6 +268,91 @@ describe('Chips selection', () => {
       chips.selectChip(0);
       chips.deleteChip(0);
       assert.equal(el.querySelector('.chip.selected'), null);
+    } finally {
+      chips.destroy();
+    }
+  });
+});
+
+describe('Chips input and data', () => {
+  beforeEach(resetBody);
+
+  const key = (target, key, init = {}) =>
+    target.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...init }));
+
+  test('the initial data is copied, not shared with the caller or other instances', () => {
+    document.body.innerHTML = `<div class="chips"></div><div class="chips"></div>`;
+    const data = [{ id: 'Apple' }];
+    const [first, second] = Expressive.Chips.init(document.querySelectorAll('.chips'), { allowUserInput: true, data });
+    try {
+      first.addChip({ id: 'Pear' });
+      assert.deepEqual(data, [{ id: 'Apple' }]);
+      assert.deepEqual(second.getData().map((c) => c.id), ['Apple']);
+    } finally {
+      first.destroy();
+      second.destroy();
+    }
+  });
+
+  test('Enter that ends an IME composition does not add a chip', () => {
+    const [el, chips] = mount();
+    try {
+      const input = el.querySelector('input');
+      input.value = 'にほん';
+      key(input, 'Enter', { isComposing: true });
+      assert.deepEqual(chips.getData(), []);
+      assert.equal(input.value, 'にほん');
+    } finally {
+      chips.destroy();
+    }
+  });
+
+  test('arrow keys follow the reading direction in RTL', () => {
+    const [el, chips] = mount({ data: [{ id: 'A' }, { id: 'B' }, { id: 'C' }] });
+    el.style.direction = 'rtl';
+    try {
+      // Right points back towards the chips from the input in RTL.
+      key(el.querySelector('input'), 'ArrowRight');
+      assert.equal(el.querySelector('.chip.selected').textContent.startsWith('C'), true);
+      key(document.activeElement, 'ArrowRight');
+      assert.equal(el.querySelector('.chip.selected').textContent.startsWith('B'), true);
+      key(document.activeElement, 'ArrowLeft');
+      assert.equal(el.querySelector('.chip.selected').textContent.startsWith('C'), true);
+    } finally {
+      chips.destroy();
+    }
+  });
+});
+
+describe('Chips static markup', () => {
+  beforeEach(resetBody);
+
+  test('a hand-written close button works under an instance without allowUserInput', () => {
+    // AutoInit gives every .chips an instance, and one without allowUserInput
+    // has no click handler, so the static fallback must not stand down for it.
+    document.body.innerHTML = `<div class="chips">
+      <span class="chip">Tag<button type="button" class="close"><span class="material-symbols">close</span></button></span>
+    </div>`;
+    const el = document.querySelector('.chips');
+    Expressive.Chips.Init();
+    const chips = Expressive.Chips.init(el);
+    try {
+      fire(el.querySelector('.close .material-symbols'), 'click');
+      assert.equal(el.querySelector('.chip'), null);
+    } finally {
+      chips.destroy();
+    }
+  });
+
+  test('the fallback leaves chips the instance rendered to the instance', () => {
+    document.body.innerHTML = `<div class="chips"></div>`;
+    const el = document.querySelector('.chips');
+    Expressive.Chips.Init();
+    const chips = Expressive.Chips.init(el, { allowUserInput: true, data: [{ id: 'Apple' }, { id: 'Pear' }] });
+    try {
+      fire(el.querySelector('.chip .close'), 'click');
+      assert.deepEqual(chips.getData().map((c) => c.id), ['Pear']);
+      assert.equal(el.querySelectorAll('.chip').length, 1);
     } finally {
       chips.destroy();
     }

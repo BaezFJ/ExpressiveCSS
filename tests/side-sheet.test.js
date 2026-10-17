@@ -111,6 +111,25 @@ describe('Side sheet drag', () => {
     assert.equal(dialog.open, true);
   });
 
+  test('dragging the sheet header dismisses', () => {
+    const dialog = openSheet();
+    const header = dialog.querySelector('header');
+    tap(header, 'pointerdown', { x: 500, y: 20 });
+    tap(header, 'pointermove', { x: 700, y: 20 });
+    tap(header, 'pointerup', { x: 700, y: 20 });
+    assert.equal(dialog.open, false);
+  });
+
+  test('a header inside the content is not a drag handle', () => {
+    const dialog = openSheet();
+    dialog.querySelector('div').innerHTML = '<article><header>Post title</header></article>';
+    const header = dialog.querySelector('article header');
+    tap(header, 'pointerdown', { x: 500, y: 200 });
+    tap(header, 'pointermove', { x: 700, y: 200 });
+    tap(header, 'pointerup', { x: 700, y: 200 });
+    assert.equal(dialog.open, true, 'selecting text in a content header dismissed the sheet');
+  });
+
   // A start-docked sheet leaves toward the start edge, so its dismissal
   // direction is the negative one and its handle is the *right* 24dp. That
   // flip is the one thing behaviors/sheetDrag.ts parameterises which the

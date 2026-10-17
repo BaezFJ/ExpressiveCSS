@@ -91,9 +91,16 @@ export class Menubar extends Component<MenubarOptions> {
     return null;
   }
 
-  private _focusItem(index: number, open: boolean) {
+  /** Focuses the first enabled item after `index` in the `step` direction, wrapping. */
+  private _focusItem(index: number, step: number, open: boolean) {
     const items = this._items;
-    const item = items[(index + items.length) % items.length];
+    const n = items.length;
+    // focus() on a disabled button does nothing, which stranded every item
+    // past it, and opening its menu would bypass the disabled state.
+    const item = items
+      .map((_, i) => items[(((index + step * (i + 1)) % n) + n) % n])
+      .find((candidate) => !candidate.matches(':disabled, [aria-disabled="true"]'));
+    if (!item) return;
     items.forEach((other) => {
       const menu = Menu.getInstance(other);
       if (other !== item && menu?.isOpen) menu.close();
@@ -114,13 +121,12 @@ export class Menubar extends Component<MenubarOptions> {
     const index = items.indexOf(e.target as HTMLElement);
     if (index < 0) return;
     const step = this._step(e.key);
-    let next: number;
-    if (step) next = index + step;
-    else if (e.key === 'Home') next = 0;
-    else if (e.key === 'End') next = items.length - 1;
+    // Home and End search from just outside the ends of the bar.
+    if (step) this._focusItem(index, step, false);
+    else if (e.key === 'Home') this._focusItem(-1, 1, false);
+    else if (e.key === 'End') this._focusItem(items.length, -1, false);
     else return;
     e.preventDefault();
-    this._focusItem(next, false);
   };
 
   // Inside an open menu, Menu handles every key first and takes Left and
@@ -136,6 +142,6 @@ export class Menubar extends Component<MenubarOptions> {
     });
     if (index < 0) return;
     e.preventDefault();
-    this._focusItem(index + step, true);
+    this._focusItem(index, step, true);
   };
 }

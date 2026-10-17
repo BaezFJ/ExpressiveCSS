@@ -581,9 +581,21 @@ export class Carousel extends Component<CarouselOptions> {
     this._cycleTo(index);
   };
 
-  _handleKeydown = (e: KeyboardEvent) => {
+  /**
+   * Keys the carousel leaves alone. Modified keys are shortcuts (Alt+Left is
+   * Back), and a nested widget that reads arrows itself - a field, a slider,
+   * tabs, a menu, media controls - keeps them.
+   */
+  private _keyBelongsElsewhere(e: KeyboardEvent) {
     const target = e.target as HTMLElement;
-    if (target.isContentEditable || target.closest('input, textarea, select')) return;
+    return [e.defaultPrevented, e.altKey, e.ctrlKey, e.metaKey, e.shiftKey, target.isContentEditable].some(Boolean) ||
+      this.el.contains(target.closest(
+        'input, textarea, select, video[controls], audio[controls], [role="slider"], [role="tablist"], [role="menu"]'
+      ));
+  }
+
+  _handleKeydown = (e: KeyboardEvent) => {
+    if (this._keyBelongsElsewhere(e)) return;
     const rtl = getComputedStyle(this._scroller).direction === 'rtl';
     const forward = this._vertical ? e.key === 'ArrowDown' : e.key === (rtl ? Utils.keys.ARROW_LEFT : Utils.keys.ARROW_RIGHT);
     const backward = this._vertical ? e.key === 'ArrowUp' : e.key === (rtl ? Utils.keys.ARROW_RIGHT : Utils.keys.ARROW_LEFT);

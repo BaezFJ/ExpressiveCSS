@@ -27,6 +27,8 @@ export class CharacterCounter extends Component<BaseOptions> {
 
     this._setupCounter();
     this._setupEventHandlers();
+    // A prefilled field shows its count and over-length state before focus.
+    this.updateCounter();
   }
 
   static get defaults(): BaseOptions {
@@ -68,6 +70,7 @@ export class CharacterCounter extends Component<BaseOptions> {
     this._removeEventHandlers();
     this.el['Expressive_CharacterCounter'] = undefined;
     this._removeCounter();
+    if (this.isInvalid) this.el.classList.remove('invalid');
   }
 
   _setupEventHandlers() {

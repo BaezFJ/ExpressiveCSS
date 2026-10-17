@@ -136,18 +136,24 @@ export class Lightbox extends Component<LightboxOptions> {
   destroy() {
     if (this._destroyed) return;
     this._destroyed = true;
-    const root = this.el.getRootNode() as Document | ShadowRoot;
-    const focused = root.activeElement === this.el;
+    const focused = (this.el.getRootNode() as Document | ShadowRoot).activeElement === this.el;
     this._removeEventHandlers();
     this._cancel();
     this._reset();
     this.placeholder.replaceWith(this.el);
-    let active = document.activeElement;
-    while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
-    if (focused && (active === document.body || active === (root as ShadowRoot).host)) this._trigger.focus();
+    if (focused) this._restoreFocus();
     if (this._tabindex === null) this.el.removeAttribute('tabindex');
     else this.el.setAttribute('tabindex', this._tabindex);
     this.el['Expressive_Lightbox'] = undefined;
+  }
+
+  // Back to the trigger when focus fell to the body (or the shadow host), as
+  // a click on the overlay, which cannot take focus, leaves it.
+  private _restoreFocus() {
+    const root = this.el.getRootNode() as Document | ShadowRoot;
+    let active = document.activeElement;
+    while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
+    if ([document.body, (root as ShadowRoot).host].includes(active)) this._trigger.focus({ preventScroll: true });
   }
 
   private _reset() {
@@ -388,12 +394,15 @@ export class Lightbox extends Component<LightboxOptions> {
     if (this._destroyed || this._isOpen) return;
     const revision = this._cancel();
     if (this.overlayActive) this._reset();
-    this._isOpen = true;
     this._updateVars();
     // Both rects are read up front: measuring the placeholder after writing
     // its width forced a second layout for the height.
     const originRect = this.el.getBoundingClientRect();
     const placeholderRect = this.placeholder.getBoundingClientRect();
+    // An image not yet loaded, or hidden, has no size to zoom from; the
+    // ratios below would be 0 / 0.
+    if (!originRect.width || !originRect.height) return;
+    this._isOpen = true;
     this.originalWidth = originRect.width;
     this.originalHeight = originRect.height;
     // Set states
@@ -466,6 +475,7 @@ export class Lightbox extends Component<LightboxOptions> {
     window.removeEventListener('scroll', this._handleWindowChange);
     window.removeEventListener('resize', this._handleWindowChange);
     window.removeEventListener('keyup', this._handleWindowEscape);
+    this._restoreFocus();
     if (this._overlay) this._fadeOut(this._overlay);
     if (this._photoCaption) this._fadeOut(this._photoCaption);
     this._animateImageOut();

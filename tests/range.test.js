@@ -7,7 +7,7 @@ import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { Expressive, resetBody } from './setup.js';
+import { Expressive, resetBody, window } from './setup.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 
@@ -134,5 +134,37 @@ describe('Slider stops and destroy', () => {
     } finally {
       for (const instance of instances) if (Expressive.Slider.getInstance(instance.el) === instance) instance.destroy();
     }
+  });
+});
+
+describe('Slider layout', () => {
+  beforeEach(resetBody);
+
+  test('a host resize moves the bubble even when the input keeps its size', () => {
+    document.body.innerHTML = '<div class="slider"><input type="range" min="0" max="100" value="50"></div>';
+    const input = document.querySelector('input');
+    const host = document.querySelector('.slider');
+    const observed = [];
+    let resized;
+    let disconnected = false;
+    const OriginalResizeObserver = globalThis.ResizeObserver;
+    class TestResizeObserver {
+      constructor(callback) { resized = callback; }
+      observe(target) { observed.push(target); }
+      disconnect() { disconnected = true; }
+    }
+    globalThis.ResizeObserver = window.ResizeObserver = TestResizeObserver;
+    const instance = Expressive.Slider.init(input);
+    try {
+      assert.deepEqual(observed, [input, host]);
+      // jsdom has no layout: stand in for the input moving down its host.
+      Object.defineProperty(input, 'offsetTop', { configurable: true, value: 30 });
+      resized([{ target: host }]);
+      assert.equal(instance.thumb.style.top, '30px');
+    } finally {
+      instance.destroy();
+      globalThis.ResizeObserver = window.ResizeObserver = OriginalResizeObserver;
+    }
+    assert.equal(disconnected, true);
   });
 });

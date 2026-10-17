@@ -221,7 +221,9 @@ export class Cards extends Component<CardsOptions> implements Openable {
   close: () => void = () => {
     if (!this.isOpen || !this.cardReveal) return;
 
-    const focusWasInside = this.cardReveal.contains(document.activeElement);
+    // In a shadow root document.activeElement is the host, never the reveal.
+    const focused = (this.el.getRootNode() as Document | ShadowRoot).activeElement;
+    const focusWasInside = this.cardReveal.contains(focused);
     this.isOpen = false;
     this.cardReveal.classList.remove('open');
     this.cardReveal.inert = true;
