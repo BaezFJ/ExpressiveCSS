@@ -490,6 +490,21 @@ describe('optional markup does not crash a component', () => {
     assert.equal(instance.isOpen, false);
     instance.destroy();
   });
+
+  test('a file field with no path input', () => {
+    document.body.innerHTML = `<div class="file-field"><input type="file"></div>`;
+    const input = document.querySelector('input');
+    Expressive.Forms.InitFileInputPath(input);
+    const errors = [];
+    const record = (e) => errors.push(e.error);
+    window.addEventListener('error', record);
+    try {
+      input.dispatchEvent(new window.Event('change', { bubbles: true }));
+    } finally {
+      window.removeEventListener('error', record);
+    }
+    assert.deepEqual(errors, []);
+  });
 });
 
 describe('Menu width against a narrow trigger', () => {
