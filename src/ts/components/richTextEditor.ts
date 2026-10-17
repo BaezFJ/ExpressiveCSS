@@ -62,6 +62,8 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
   content: HTMLElement | null = null;
   private _actions = new Map<HTMLButtonElement, Action>();
   private _label: HTMLLabelElement | null = null;
+  private _required = false;
+  private _form: HTMLFormElement | null = null;
 
   constructor(el: HTMLElement, options: Partial<RichTextEditorOptions>) {
     super(el, options, RichTextEditor);
@@ -78,7 +80,13 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
 
     for (const button of el.querySelectorAll<HTMLButtonElement>('button[data-command]')) {
       const command = button.dataset.command;
-      const attributes = button.dataset.attributes ? JSON.parse(button.dataset.attributes) : undefined;
+      let attributes: object | undefined;
+      try {
+        attributes = button.dataset.attributes ? JSON.parse(button.dataset.attributes) : undefined;
+      } catch {
+        // One bad button must not stop the editor, or later elements, mounting.
+        console.warn('RichTextEditor ignored invalid JSON in data-attributes:', button.dataset.attributes);
+      }
       // toggleBulletList is active while the selection is in a bulletList.
       const active = command.startsWith('toggle') ? command[6].toLowerCase() + command.slice(7) : undefined;
       this._actions.set(button, { command, attributes, active });
@@ -96,6 +104,16 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
       if (!this._label.id) this._label.id = `rich-text-editor-label-${Utils.guid()}`;
       attributes['aria-labelledby'] = this._label.id;
       this._label.addEventListener('click', this._handleLabelClick);
+    }
+    // A hidden required textarea blocks submit with no message, because the
+    // browser cannot focus it to report. The editor takes over: it carries
+    // aria-required, and an empty editor cancels submit and takes focus.
+    this._required = this.textarea.required;
+    if (this._required) {
+      attributes['aria-required'] = 'true';
+      this.textarea.required = false;
+      this._form = this.textarea.form;
+      this._form?.addEventListener('submit', this._handleSubmit, true);
     }
 
     this.content = document.createElement('div');
@@ -161,6 +179,8 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
     this.editor = null;
     this.content.remove();
     this.textarea.hidden = false;
+    this.textarea.required = this._required;
+    this._form?.removeEventListener('submit', this._handleSubmit, true);
     for (const button of this._actions.keys()) {
       button.disabled = false;
       button.classList.remove('active');
@@ -175,6 +195,17 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
   };
 
   private _handleLabelClick = () => {
+    this.editor.chain().focus().run();
+  };
+
+  private _skipsValidation(e: SubmitEvent) {
+    return this._form.noValidate || !!(e.submitter as HTMLButtonElement | null)?.formNoValidate;
+  }
+
+  private _handleSubmit = (e: SubmitEvent) => {
+    if (this._skipsValidation(e) || !this.editor.isEditable || !this.editor.isEmpty) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
     this.editor.chain().focus().run();
   };
 
