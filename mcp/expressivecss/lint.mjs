@@ -28,7 +28,12 @@ export async function lintFile(file) {
     return [problem('file-not-inspected', `Skipped: ${error.message}. Files must be regular, inside the working directory, and at most ${MAX_BYTES} bytes.`)];
   }
   // ponytail: JSX/Astro/Vue are parsed as HTML after `className` -> `class`; expression-heavy markup can hide from selector rules.
-  const issues = inspectAuthoringRules(text.replace(/\bclassName=/gu, 'class='));
+  let issues;
+  try {
+    issues = inspectAuthoringRules(text.replace(/\bclassName=/gu, 'class='));
+  } catch (error) {
+    return [problem('file-not-inspected', `Static inspection failed: ${error.message}.`)];
+  }
   if (issues.truncatedReason) issues.push(problem('inspection-truncated', `Static inspection stopped early: ${issues.truncatedReason}. Split the file or reduce its markup.`));
   return issues;
 }

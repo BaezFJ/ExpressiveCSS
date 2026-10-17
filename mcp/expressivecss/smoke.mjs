@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { access, copyFile, mkdir, mkdtemp, readFile, rm, symlink, truncate, writeFile } from 'node:fs/promises';
+import { access, copyFile, mkdir, mkdtemp, readFile, realpath, rm, symlink, truncate, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -1060,8 +1060,10 @@ const transport = new StdioClientTransport({
     // An attribute with no opening quote: two optional whitespace runs that
     // can split the same spaces between them are quadratic.
     'class=' + fill(' '), 'className={' + fill(' '), '{' + fill(' '),
+    // An unclosed class value: requiring the closing quote retried it once per `btn`.
+    'class="' + fill('btn '),
   ];
-  for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id))) {
+  for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id) || entry.id === 'legacy-btn-class')) {
     const regex = new RegExp(rule.pattern.source, rule.pattern.flags);
     for (const input of adversarial) {
       regex.lastIndex = 0;
@@ -1070,6 +1072,19 @@ const transport = new StdioClientTransport({
       assert.ok(performance.now() - start < 250, `${rule.id} backtracks on ${JSON.stringify(input.slice(0, 30))}`);
     }
   }
+  // Deep nesting makes `:has()` rules quadratic and overflows `outerHTML`; it stops early instead.
+  for (const deep of ['<div aria-hidden="true">'.repeat(3_990) + '<a href=x>', '<nav aria-label=x>'.repeat(3_990), `<nav><template>${'<div>'.repeat(3_500)}</template></nav>`]) {
+    const start = performance.now();
+    assert.equal(inspectAuthoringRules(deep).truncatedReason, 'markup nesting limit reached');
+    assert.ok(performance.now() - start < 1_000, `deep markup took ${Math.round(performance.now() - start)} ms`);
+  }
+  // Vue puts `template` inside SVG; there it is a foreign element with no content fragment.
+  assert.equal(inspectAuthoringRules('<svg><template v-for="item in items"><circle /></template></svg>').truncatedReason, undefined);
+  const deepMarkup = path.join(outsideDir, 'deep.html');
+  await writeFile(deepMarkup, '<nav aria-label=x>'.repeat(3_990));
+  const deepHook = lint(['--hook'], JSON.stringify({ tool_input: { file_path: deepMarkup } }));
+  assert.equal(deepHook.status, 2, deepHook.stderr);
+  assert.match(deepHook.stderr, /inspection-truncated/u);
   // Files the bounded reader refuses, and inspections that stop early, fail instead of passing silently.
   const linkedMarkup = path.join(outsideDir, 'linked.html');
   const crowdedMarkup = path.join(outsideDir, 'crowded.html');
@@ -1103,6 +1118,14 @@ const transport = new StdioClientTransport({
   if (process.platform === 'linux') {
     // procfs reports size 0 for files with content. A size-bound read must fail, not return a truncated file.
     await assert.rejects(readInspectionFile('/proc/self/status', '/proc', 1024 * 1024), /changed while reading/u);
+  }
+  if (process.platform !== 'win32') {
+    // Opening a FIFO with no writer blocks; the reader must refuse it instead.
+    const fifo = path.join(outsideDir, 'pipe.html');
+    execFileSync('mkfifo', [fifo]);
+    const hung = new Promise((_, reject) => setTimeout(() => reject(new Error('FIFO read hung')), 2_000).unref());
+    await assert.rejects(Promise.race([readInspectionFile(fifo, outsideDir, 1024), hung]), /not a regular file/u);
+    await rm(fifo);
   }
 }
 
@@ -2399,6 +2422,52 @@ try {
     assert.notEqual(timedOut.structuredContent.status, 'pass');
   } finally {
     await timeoutClient.close();
+  }
+
+  // Commands run in their own process group, so neither a cancelled call nor a closed
+  // session may leave one running.
+  for (const stop of ['cancel', 'close']) {
+    const lingerDir = path.join(outsideDir, `linger-${stop}`);
+    await mkdir(lingerDir);
+    await writeFile(path.join(lingerDir, 'package-lock.json'), '{}');
+    await writeFile(path.join(lingerDir, 'package.json'), JSON.stringify({
+      scripts: { typecheck: "node -e \"const fs = require('node:fs'); fs.writeFileSync('started.txt', ''); setTimeout(() => fs.writeFileSync('survived.txt', 'yes'), 1500);\"" },
+    }));
+    const lingerClient = new Client({ name: `expressivecss-mcp-${stop}-smoke`, version: '0.1.0' });
+    await lingerClient.connect(new StdioClientTransport({
+      command: process.execPath,
+      args: [path.join(packageDir, 'server.js')],
+      cwd: packageDir,
+      stderr: 'pipe',
+      env: { ...process.env, EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS: lingerDir },
+    }));
+    const controller = new AbortController();
+    const call = lingerClient.callTool({
+      name: 'quality_inspector',
+      arguments: { projectRoot: lingerDir, files: [], runType: 'standard', runCommands: true },
+    }, undefined, { signal: controller.signal }).catch(() => {});
+    for (let waited = 0; await access(path.join(lingerDir, 'started.txt')).then(() => false, () => true); waited += 50) {
+      assert.ok(waited < 10_000, `${stop}: command never started`);
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+    if (stop === 'cancel') controller.abort();
+    else await lingerClient.close();
+    await call;
+    await new Promise((resolve) => setTimeout(resolve, 2_000));
+    await assert.rejects(access(path.join(lingerDir, 'survived.txt')), { code: 'ENOENT' }, `${stop} left the command running`);
+    if (stop === 'cancel') await lingerClient.close();
+  }
+  {
+    // A cancel that lands while the source pins are being checked must stop the command from starting.
+    const { runQualityCommands } = await import('./server.js');
+    const lingerDir = await realpath(path.join(outsideDir, 'linger-cancel'));
+    await rm(path.join(lingerDir, 'started.txt'));
+    const controller = new AbortController();
+    const run = runQualityCommands(lingerDir, ['typecheck'], 'npm', [], controller.signal);
+    controller.abort();
+    await assert.rejects(run, { name: 'AbortError' });
+    await new Promise((resolve) => setTimeout(resolve, 2_000));
+    await assert.rejects(access(path.join(lingerDir, 'started.txt')), { code: 'ENOENT' }, 'a command started after cancellation');
   }
 
   const rootsClient = new Client({ name: 'expressivecss-mcp-project-roots-smoke', version: '0.1.0' });

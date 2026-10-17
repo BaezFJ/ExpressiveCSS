@@ -33,6 +33,12 @@ const DEFAULT_QA_MAX_TOTAL_MB = 16;
 const MAX_STATIC_ISSUES = 200;
 const MAX_STATIC_ISSUES_PER_REQUEST = 1_000;
 const MAX_STATIC_MARKUP_DELIMITERS = 4_000;
+// `:has()` selectors visit every descendant of every candidate, so deep nesting is quadratic
+// (1,024 levels take over a second), and `outerHTML` overflows the stack past about 2,200.
+const MAX_STATIC_MARKUP_DEPTH = 256;
+// Opening a FIFO with no writer would otherwise block a libuv thread forever; the readers'
+// regular-file checks then reject it. Regular files ignore the flag.
+const O_NONBLOCK = fsConstants.O_NONBLOCK ?? 0;
 // Source locations make parse5 copy a parent's children for each text run, so the cost grows with
 // characters times tags. Past this product, semantics findings report 1:1 to stay within the budget.
 const MAX_LOCATED_MARKUP_WORK = 100_000_000;
@@ -111,7 +117,9 @@ const LegacyPatternList = [
     id: 'legacy-btn-class',
     severity: 'high',
     description: 'Replace `.btn` with the ExpressiveCSS button contract (`<button>`, `.button`, or component-specific button classes).',
-    pattern: /\bclass(?:Name)?\s*=\s*(?:"[^"]*\bbtn\b[^"]*"|'[^']*\bbtn\b[^']*'|`[^`]*\bbtn\b[^`]*`|\{\s*(?:"[^"]*\bbtn\b[^"]*"|'[^']*\bbtn\b[^']*'|`[^`]*\bbtn\b[^`]*`)\s*\}|btn(?=[\s>]))/gu,
+    // The match ends at `btn`: requiring the closing quote too backtracks once per
+    // `btn` in an unclosed value, which is quadratic.
+    pattern: /\bclass(?:Name)?\s*=\s*(?:\{\s*)?(?:"[^"]*\bbtn\b|'[^']*\bbtn\b|`[^`]*\bbtn\b|btn(?=[\s>]))/gu,
   },
   {
     id: 'legacy-card-content',
@@ -822,7 +830,7 @@ async function verifyLocalContractProvenance(projectRoot, contract, canonicalSou
   const hash = createHash('sha256');
   aggregateBytes = 0;
   for (const { source, sourcePath, sourceStat } of validatedSources) {
-    const handle = await open(sourcePath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW).catch(() => null);
+    const handle = await open(sourcePath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW | O_NONBLOCK).catch(() => null);
     if (!handle) {
       return { status: 'invalid', expectedHash: contract.sourceHash, computedHash: null, missingSources };
     }
@@ -1192,15 +1200,41 @@ function markupStructureExceedsLimit(snippet) {
   return false;
 }
 
-function inspectSemanticRules(snippet, maxIssues = MAX_STATIC_ISSUES, deadline = Infinity) {
-  const { semantics, frameworkVersion } = loadSemanticsContract();
-  if (maxIssues <= 0) return markInspectionTruncated([], 'issue limit reached');
-  if (markupStructureExceedsLimit(snippet)) return markInspectionTruncated([], 'markup structure limit reached');
-  const prefix = '<!doctype html><body>';
-  const includeNodeLocations = snippet.length * (snippet.split('<').length - 1) <= MAX_LOCATED_MARKUP_WORK;
+// An HTML template's parsed markup lives in its content fragment, which outerHTML still
+// serializes. A `template` inside SVG or MathML (Vue's v-for) is an ordinary element.
+function childElements(element) {
+  return element.localName === 'template' && element.content
+    ? [...element.children, ...element.content.children]
+    : element.children;
+}
+
+function markupNestingExceedsLimit(root) {
+  const stack = [[root, 0]];
+  while (stack.length) {
+    const [element, depth] = stack.pop();
+    if (depth > MAX_STATIC_MARKUP_DEPTH) return true;
+    for (const child of childElements(element)) stack.push([child, depth + 1]);
+  }
+  return false;
+}
+
+// Parses a snippet, or names the limit that stops it: tag count before parsing, depth after.
+function parseInspectableMarkup(snippet, prefix, includeNodeLocations) {
+  if (markupStructureExceedsLimit(snippet)) return { reason: 'markup structure limit reached' };
   // Loaded on first use: jsdom takes ~0.3 s to load, and most server starts never inspect markup.
   const { JSDOM } = createRequire(import.meta.url)('jsdom');
   const dom = new JSDOM(`${prefix}${snippet}</body>`, { includeNodeLocations });
+  if (markupNestingExceedsLimit(dom.window.document.body)) return { reason: 'markup nesting limit reached' };
+  return { dom };
+}
+
+function inspectSemanticRules(snippet, maxIssues = MAX_STATIC_ISSUES, deadline = Infinity) {
+  const { semantics, frameworkVersion } = loadSemanticsContract();
+  if (maxIssues <= 0) return markInspectionTruncated([], 'issue limit reached');
+  const prefix = '<!doctype html><body>';
+  const includeNodeLocations = snippet.length * (snippet.split('<').length - 1) <= MAX_LOCATED_MARKUP_WORK;
+  const { dom, reason } = parseInspectableMarkup(snippet, prefix, includeNodeLocations);
+  if (reason) return markInspectionTruncated([], reason);
   const { document } = dom.window;
   // Elements the parser creates without a start tag have no source offset, so they report the start.
   const locate = (element) => {
@@ -1708,6 +1742,10 @@ function commandEnvironment(projectRoot) {
   return env;
 }
 
+// Commands run in their own process group, so a signal to the server does not reach them.
+// startServer kills these on shutdown.
+const liveCommands = new Set();
+
 function stopProcessTree(proc, signal) {
   if (!proc.pid) return;
   if (process.platform === 'win32') {
@@ -1750,7 +1788,7 @@ export function redactSensitiveText(value) {
 export async function readInspectionFile(filePath, projectRoot, byteLimit) {
   const resolvedRoot = await realpath(projectRoot);
   const noFollow = Number.isInteger(fsConstants.O_NOFOLLOW) ? fsConstants.O_NOFOLLOW : 0;
-  const handle = await open(filePath, fsConstants.O_RDONLY | noFollow);
+  const handle = await open(filePath, fsConstants.O_RDONLY | noFollow | O_NONBLOCK);
   try {
     const before = await handle.stat({ bigint: true });
     const pathBefore = await lstat(filePath, { bigint: true });
@@ -1862,7 +1900,7 @@ async function findFileViolations(fileInfoList, projectRoot) {
   return { findings, inspected, uninspected, sourcePins };
 }
 
-async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEFAULT_COMMAND_TIMEOUT_MS) {
+async function runCommandInProject(projectRoot, manager, script, timeoutMs, signal) {
   const args = ['run', script];
   const command = `${manager} ${args.join(' ')}`;
   const configuredTimeout = Number.isFinite(SETTINGS.commandTimeoutMs) && SETTINGS.commandTimeoutMs > 0
@@ -1906,6 +1944,9 @@ async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEF
       env: commandEnvironment(projectRoot),
     });
     closeSync(directoryFd);
+    liveCommands.add(proc);
+    const abort = () => stopProcessTree(proc, 'SIGKILL');
+    signal.addEventListener('abort', abort, { once: true });
 
     let stdout = '';
     let stderr = '';
@@ -1916,6 +1957,7 @@ async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEF
       if (settled) return;
       settled = true;
       clearTimeout(timer);
+      signal.removeEventListener('abort', abort);
       if (!timedOut) clearTimeout(forceKillTimer);
       resolve(result);
     };
@@ -1952,6 +1994,7 @@ async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEF
 
     proc.on('close', (code) => {
       stopProcessTree(proc, 'SIGKILL'); // Stop descendants before checking the resulting source state.
+      liveCommands.delete(proc);
       const output = redactSensitiveText(`${stdout}\n${stderr}`);
       finish({
         manager,
@@ -1966,6 +2009,7 @@ async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEF
     });
 
     proc.on('error', (error) => {
+      liveCommands.delete(proc);
       finish({
         manager,
         command,
@@ -1995,13 +2039,17 @@ async function pinsUnchanged(projectRoot, pins) {
   return true;
 }
 
-async function runQualityCommands(projectRoot, commands, packageManager, pins) {
+// Exported for the smoke test, which cancels a run while the source pins are being checked.
+export async function runQualityCommands(projectRoot, commands, packageManager, pins, signal) {
   const results = [];
   let unchanged = true;
   for (const script of commands) {
     unchanged = await pinsUnchanged(projectRoot, pins);
+    // Checked after the await, with nothing awaited before the spawn: an abort listener added
+    // to a signal that is already aborted never fires. The SDK drops a cancelled call's result.
+    signal.throwIfAborted();
     if (!unchanged) break;
-    const result = await runCommandInProject(projectRoot, packageManager, script, script === 'typecheck' ? 180_000 : 360_000);
+    const result = await runCommandInProject(projectRoot, packageManager, script, script === 'typecheck' ? 180_000 : 360_000, signal);
     results.push(result);
     unchanged = await pinsUnchanged(projectRoot, pins);
     if (!unchanged || !result.completed || result.exitStatus !== 0) break;
@@ -2548,7 +2596,7 @@ function buildCatalogPayload(catalog, version, parsed) {
   }, parsed.workflowId);
 }
 
-async function qualityInspectorHandler(args) {
+async function qualityInspectorHandler(args, extra) {
   if (skipTool('qualityInspector')) {
     return skippedStage('quality_inspector', 'SKIP_QUALITY_INSPECTOR', args?.workflowId);
   }
@@ -2590,7 +2638,7 @@ async function qualityInspectorHandler(args) {
   }
   let inputsUnchanged = await pinsUnchanged(projectRoot, pins);
   if (commandsRequested && !commandRootBlocked && !commandScopeBlocked && !packageManagerBlocked && !manifestBlocked && expectedMatched !== false && inputsUnchanged) {
-    const run = await runQualityCommands(executionPolicy.projectRoot, commands, version.packageManager, pins);
+    const run = await runQualityCommands(executionPolicy.projectRoot, commands, version.packageManager, pins, extra.signal);
     commandChecks.push(...run.results);
     inputsUnchanged = run.unchanged;
   }
@@ -2954,6 +3002,14 @@ async function startServer() {
   const close = transport.close.bind(transport);
   transport.close = async () => { try { await close(); } finally { scopedRequests.clear(); } };
   await server.connect(transport);
+  // The client closing stdin or signalling the server ends the session; take running commands with it.
+  const shutdown = () => {
+    for (const proc of liveCommands) stopProcessTree(proc, 'SIGKILL');
+    process.exit();
+  };
+  process.once('SIGINT', shutdown);
+  process.once('SIGTERM', shutdown);
+  process.stdin.once('end', shutdown);
   console.error('ExpressiveCSS MCP server running on stdio transport.');
 }
 
