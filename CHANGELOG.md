@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- A "Frosted glass" documentation page at `/glass.html` covers the
+  `--expressive-glass`, `-blur` and `-opacity` properties, the Sass defaults,
+  the surfaces that frost, and the reduced-transparency fallback, with live
+  demos. A button in the docs app bar turns glass on across the site.
 - A navigation rail destination can open a `.navigation-rail-panel` side
   panel of more links. Make the destination a `<button popovertarget>` and
   put the panel popover right after it. The panel docks beside the rail at

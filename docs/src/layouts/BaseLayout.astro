@@ -80,6 +80,9 @@ const canonical = new URL(path, Astro.site).href;
                 if (c && /^#[0-9A-Fa-f]{6}$/.test(c)) {
                     document.documentElement.style.setProperty('--md-source', c);
                 }
+                if (localStorage.getItem('glass') === 'true') {
+                    document.documentElement.style.setProperty('--expressive-glass', 'true');
+                }
             } catch (e) {
             }
         })();

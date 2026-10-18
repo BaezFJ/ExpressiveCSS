@@ -229,8 +229,8 @@ and expandable navigation rail summaries use `expand_more`. The README includes 
 declarations and the full initialization table. Full fonts remain available.
 
 Frosted glass is off by default. `--expressive-glass: true` on `:root` or an
-ancestor frosts menus, tooltips, dialogs, sheets, the snackbar, navigation bar and
-rail, toolbars, and the search view; it has no effect on the surface itself.
+ancestor frosts menus, tooltips, popovers, dialogs, the command palette, sheets,
+the snackbar, navigation bar and rail, toolbars, and the search view; it has no effect on the surface itself.
 `--expressive-glass-blur` (16px) and `--expressive-glass-opacity` (72%) tune it, and
 `false` turns it off in a region. Sass `$expressive-glass`, `-blur`, and
 `-opacity` set the defaults. Reduced-transparency and more-contrast preferences
