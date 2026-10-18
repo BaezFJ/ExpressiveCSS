@@ -3,7 +3,8 @@
 //
 // Lowest to highest: fixed toolbars, top app bars and fixed navigation bars,
 // the modal navigation rail, non-modal sheets, the lightbox, tooltips, menus
-// and pickers, then snackbars. Dialogs, modal sheets and open popovers sit in
+// and pickers, snackbars, then the confetti overlay where it cannot use the
+// top layer. Dialogs, modal sheets and open popovers sit in
 // the top layer, above all of these, whatever their z-index.
 //
 // Override one to slot an application layer between two of them:
@@ -22,4 +23,5 @@
   --expressive-z-tooltip: 2000;
   --expressive-z-menu: 9999;
   --expressive-z-snackbar: 10000;
+  --expressive-z-confetti: 10001;
 }

@@ -1175,7 +1175,7 @@ One class per declaration, applied to the container. Row direction and start ali
 
 ### Window-size prefixes
 
-The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`) and `.gap-*` classes also come with a window-size prefix. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
+The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`), `.gap-*`, margin and padding classes, and `.hide`, also come with a window-size prefix. Prefixed margin and padding cover all sides, `x`, `y`, top, bottom, start and end; use start and end rather than left and right. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
 
 | Prefix | Applies from |
 | --- | --- |
@@ -1192,7 +1192,7 @@ The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.sta
 </div>
 ```
 
-In a Sass selector, escape the colon: `.expanded\:flex-row`. To hide something at a size, use the hide and show classes; they are `!important`, so a prefixed display class does not undo them.
+In a Sass selector, escape the colon: `.expanded\:flex-row`. `.medium:hide` hides from Medium up. To show something only from a size up, use the hide-on classes; they are `!important`, so a prefixed display class does not undo them.
 
 ### Sizing and overflow
 
@@ -1611,6 +1611,7 @@ A shadow does not decide what sits on top. Surfaces that float over the page tak
 | `--expressive-z-tooltip` | 2000 | Tooltips. |
 | `--expressive-z-menu` | 9999 | Menus and the docked date and time pickers. |
 | `--expressive-z-snackbar` | 10000 | Snackbars. |
+| `--expressive-z-confetti` | 10001 | The confetti overlay, in browsers without popovers. |
 
 ```css
 .site-banner { position: sticky; top: 0; z-index: calc(var(--expressive-z-app-bar) + 1); }

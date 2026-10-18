@@ -183,7 +183,7 @@ Components that already lay out their children (app bars, toolbars, card `.actio
 
 ## Window-size prefixes
 
-Display, flex direction and wrap, `justify-*`, `align-*`, `.start-align`, `.center-align`, `.end-align` and `.gap-*` also take a `medium:`, `expanded:`, `large:` or `extra-large:` prefix. The prefixed class applies from that size class up (600, 840, 1200 and 1600px) and overrides the unprefixed one, like the grid's `m6` and `l4`.
+Display, flex direction and wrap, `justify-*`, `align-*`, `.start-align`, `.center-align`, `.end-align`, `.gap-*`, margin and padding (all sides, `x`, `y`, `t`, `b`, `s`, `e`; not `l` or `r`) and `.hide` also take a `medium:`, `expanded:`, `large:` or `extra-large:` prefix. The prefixed class applies from that size class up (600, 840, 1200 and 1600px) and overrides the unprefixed one, like the grid's `m6` and `l4`.
 
 ```html
 <div class="flex flex-column gap-2 expanded:flex-row expanded:align-center expanded:justify-between">
@@ -192,7 +192,7 @@ Display, flex direction and wrap, `justify-*`, `align-*`, `.start-align`, `.cent
 </div>
 ```
 
-Prefixes are mobile first; there is no max-width form. To hide content at a size, use the `.hide-on-*` classes, which are `!important`. Escape the colon in Sass or CSS selectors: `.expanded\:flex-row`. Margin and padding helpers have no prefixed form.
+Prefixes are mobile first; there is no max-width form. To hide content at a size, use the `.hide-on-*` classes, which are `!important`. Escape the colon in Sass or CSS selectors: `.expanded\:flex-row`. `.medium:hide` hides from Medium up.
 
 ## Sizing and overflow
 

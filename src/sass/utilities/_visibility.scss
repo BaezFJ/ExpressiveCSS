@@ -5,6 +5,14 @@
 
 .hide { display: none !important; }
 
+// .hide from a window size up, like the other prefixed helpers. Mobile first,
+// so there is no prefixed show: pair it with a hide-on-* class instead.
+@each $size in ("medium", "expanded", "large", "extra-large") {
+  .#{$size}\:hide {
+    @include bp-up($size) { display: none !important; }
+  }
+}
+
 // Print. .hide-on-print drops a screen-only control from paper; .print-only
 // is the reverse, for a printed footer or a QR code beside a link.
 .hide-on-print {
