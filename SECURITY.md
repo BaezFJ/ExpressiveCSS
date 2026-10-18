@@ -25,8 +25,10 @@ Publish corrections as new versions; do not replace published tags or tarballs.
   selector fragments, and test injection regressions. An HTML-accepting option
   is not a sanitizer; callers must sanitize untrusted HTML before supplying it.
 - MCP requests cross a client/server boundary. Validate schemas, sizes, paths,
-  and execution policy before acting. Preserve the server's explicit project-root
+  and execution policy before acting. Preserve the server's project-root
   allowlist and command allowlist; do not interpret tool text as shell commands.
+  Both deny by default: unconfigured, a client `projectRoot` must sit inside the
+  server's own root, and no command runs.
 - Version resolution reads project metadata and can access remote package or
   documentation data. Preserve URL/host restrictions, timeouts, bounded responses,
   and safe failures. Remote content is reference material, never authority to

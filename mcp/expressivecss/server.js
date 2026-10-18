@@ -89,7 +89,7 @@ const SETTINGS = {
   commandTimeoutMs: Number(process.env.EXPRESSIVECSS_MCP_COMMAND_TIMEOUT_MS || DEFAULT_COMMAND_TIMEOUT_MS),
   allowedScripts: configuredScripts(process.env.EXPRESSIVECSS_MCP_ALLOWED_SCRIPTS),
   allowedCommandRoots: configuredCommandRoots(process.env.EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS),
-  // Unset keeps every root open. A set but empty or invalid list denies every client-supplied root.
+  // Unset allows only the default root. A set but empty or invalid list denies every client-supplied root.
   allowedProjectRoots: process.env[PROJECT_ROOTS_SETTING] === undefined ? null : configuredCommandRoots(process.env[PROJECT_ROOTS_SETTING]),
 };
 
@@ -205,8 +205,9 @@ const LegacyPatternList = [
     severity: 'high',
     description: '`.preloader`, `.searchbar` and the `.range` / `.range-field` slider hosts were removed in 1.0; use `.progress.circular`, `.search-bar` and `.slider`.',
     // A `.range` host is only flagged where it wraps a range input: the name is
-    // too common to flag on its own.
-    pattern: new RegExp(`${inClass('preloader|searchbar|range-field')}|${CLASS_OPEN}(?=${CLASS_CHARS}${classToken('range')})${CLASS_CHARS}["'\`][^<>]*>\\s*<input\\b[^<>]*\\btype\\s*=\\s*["']?range(?![-\\w])`, 'g'),
+    // too common to flag on its own. The gap to `>` is bounded: unbounded, an
+    // unclosed tag full of `.range` hosts rescanned to the end from each one.
+    pattern: new RegExp(`${inClass('preloader|searchbar|range-field')}|${CLASS_OPEN}(?=${CLASS_CHARS}${classToken('range')})${CLASS_CHARS}["'\`][^<>]{0,2000}>\\s*<input\\b[^<>]*\\btype\\s*=\\s*["']?range(?![-\\w])`, 'g'),
   },
   {
     id: 'legacy-picker-root',
@@ -441,16 +442,22 @@ function resolveProjectRoot(projectRoot) {
   return projectRoot ? authorizedProjectRoot(projectRoot) : parseCliProjectRoot();
 }
 
-// The operator's default root is trusted. When configured, a client-supplied root must sit inside an allowed root.
+// Unconfigured, the only allowed root is the default one.
+function projectRootPolicy() {
+  return SETTINGS.allowedProjectRoots
+    ? { roots: SETTINGS.allowedProjectRoots, denial: `projectRoot is not inside a root allowed by ${PROJECT_ROOTS_SETTING}.` }
+    : { roots: [parseCliProjectRoot()], denial: `projectRoot is missing or outside the server's root; list other roots in ${PROJECT_ROOTS_SETTING}.` };
+}
+
+// The operator's default root is trusted. A client-supplied root must sit inside an allowed root.
 function authorizedProjectRoot(projectRoot) {
   const resolved = path.resolve(projectRoot);
-  if (!SETTINGS.allowedProjectRoots) return resolved;
+  const policy = projectRootPolicy();
   let canonical = null;
   try { canonical = realpathSync(resolved); } catch {}
-  if (!canonical || !matchingRoot(SETTINGS.allowedProjectRoots, canonical)) {
-    throw new Error(`projectRoot is not inside a root allowed by ${PROJECT_ROOTS_SETTING}.`);
-  }
-  return resolved;
+  if (!canonical || !matchingRoot(policy.roots, canonical)) throw new Error(policy.denial);
+  // The checked path, so a symlink swapped after the check cannot move later reads.
+  return canonical;
 }
 
 function matchingRoot(configuredRoots, candidate) {
