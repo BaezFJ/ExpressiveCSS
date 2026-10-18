@@ -51,7 +51,7 @@ $_sheet: "dialog.side-sheet";
   @include glass(var(--md-comp-side-sheet-container-color));
 
   &:not(:modal) {
-    z-index: 1100;
+    z-index: var(--expressive-z-sheet);
     border-radius: 0;
     box-shadow: none;
     // Standard: attached to the page, inner edge is a divider.

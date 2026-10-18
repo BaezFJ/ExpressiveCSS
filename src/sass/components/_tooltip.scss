@@ -41,7 +41,7 @@
   white-space: normal;
   overflow-wrap: anywhere;
   pointer-events: auto;
-  z-index: 2000;
+  z-index: var(--expressive-z-tooltip);
   @include glass(var(--md-comp-plain-tooltip-container-color));
 }
 

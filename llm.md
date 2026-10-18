@@ -1484,6 +1484,26 @@ The class list is generated from the same map as the mixin, so they cannot drift
 
 There is also `z-depth-1-half`, an in-between level from the same elevation map.
 
+
+#### Stacking order
+
+A shadow does not decide what sits on top. Surfaces that float over the page take their `z-index` from these properties, lowest first. Dialogs, modal sheets and open popovers are in the browser's top layer, above all of them.
+
+| Property | Value | Used by |
+| --- | --- | --- |
+| `--expressive-z-toolbar` | 996 | A fixed toolbar. |
+| `--expressive-z-app-bar` | 997 | A pinned top app bar and a fixed navigation bar. |
+| `--expressive-z-modal-rail` | 998 | An expanded navigation rail over the page. |
+| `--expressive-z-sheet` | 1100 | A bottom or side sheet opened without `showModal()`. |
+| `--expressive-z-lightbox` | 1200 | The lightbox overlay and its zoomed image. |
+| `--expressive-z-tooltip` | 2000 | Tooltips. |
+| `--expressive-z-menu` | 9999 | Menus and the docked date and time pickers. |
+| `--expressive-z-snackbar` | 10000 | Snackbars. |
+
+```css
+.site-banner { position: sticky; top: 0; z-index: calc(var(--expressive-z-app-bar) + 1); }
+```
+
 ---
 
 ## Table

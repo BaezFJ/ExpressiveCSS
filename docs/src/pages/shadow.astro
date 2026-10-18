@@ -7,7 +7,18 @@ import { defineSections } from "../lib/sections";
 
 const S = defineSections([
   { id: "shadow", label: "Shadows", heading: false },
+  { id: "stacking", label: "Stacking order" },
 ]);
+const layers = [
+  ["toolbar", "996", "A fixed toolbar."],
+  ["app-bar", "997", "A pinned top app bar and a fixed navigation bar."],
+  ["modal-rail", "998", "An expanded navigation rail over the page."],
+  ["sheet", "1100", "A bottom or side sheet opened without showModal()."],
+  ["lightbox", "1200", "The lightbox overlay and its zoomed image."],
+  ["tooltip", "2000", "Tooltips."],
+  ["menu", "9999", "Menus and the docked date and time pickers."],
+  ["snackbar", "10000", "Snackbars."],
+];
 ---
 <DocsLayout page="shadow">
 <PageBody sections={S}>
@@ -79,6 +90,28 @@ const S = defineSections([
         <p>
           There is also <code>z-depth-1-half</code>, an in-between level from the same elevation map.
         </p>
+  </Section>
+  <Section {...S.stacking}>
+    <p>
+      A shadow does not decide what sits on top. Surfaces that float over the page take their
+      <code>z-index</code> from these properties, lowest first. Dialogs, modal sheets and open
+      popovers are in the browser's top layer, above all of them.
+    </p>
+    <table class="striped">
+      <thead><tr><th>Property</th><th>Value</th><th>Used by</th></tr></thead>
+      <tbody>
+        {layers.map(([name, value, use]) => (
+          <tr><td><code>--expressive-z-{name}</code></td><td>{value}</td><td>{use}</td></tr>
+        ))}
+      </tbody>
+    </table>
+<Code code={`
+<style>
+  /* A site banner that should cover the app bar but stay under sheets. */
+  :root { --site-banner-z: calc(var(--expressive-z-app-bar) + 1); }
+  .site-banner { position: sticky; top: 0; z-index: var(--site-banner-z); }
+</style>
+`} />
   </Section>
 </PageBody>
 </DocsLayout>

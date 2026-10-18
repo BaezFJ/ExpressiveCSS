@@ -457,7 +457,7 @@ menu[id] {
   inset: auto;
   left: 0;
   top: 0;
-  z-index: 9999;
+  z-index: var(--expressive-z-menu);
   overflow-y: auto;
   opacity: 0;
   user-select: none;

@@ -4939,7 +4939,7 @@
         },
         {
           "path": "src/sass/components/_docked-display.scss",
-          "sha256": "39107a3b4cde4c0763fff6c077fd7ebf7b964d5312f2435c9786e22c018709a5"
+          "sha256": "057e12b802c9cf30fdea364b609f9b0fa9378028667af22f4df34f5b890d59a6"
         },
         {
           "path": "src/ts/components/datepicker.ts",
@@ -5042,7 +5042,7 @@
         },
         {
           "path": "src/sass/components/_docked-display.scss",
-          "sha256": "39107a3b4cde4c0763fff6c077fd7ebf7b964d5312f2435c9786e22c018709a5"
+          "sha256": "057e12b802c9cf30fdea364b609f9b0fa9378028667af22f4df34f5b890d59a6"
         },
         {
           "path": "src/ts/components/timepicker.ts",

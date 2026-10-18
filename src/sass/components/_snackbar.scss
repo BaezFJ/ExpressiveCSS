@@ -35,7 +35,7 @@ $_bar: ".snackbar";
   align-items: stretch;
   gap: 8px;
   position: fixed;
-  z-index: 10000;
+  z-index: var(--expressive-z-snackbar);
   inset-block: auto max(var(--md-comp-snackbar-container-margin-bottom), env(safe-area-inset-bottom, 0px));
   inset-inline: var(--md-comp-snackbar-container-margin-leading) var(--md-comp-snackbar-container-margin-trailing);
   width: auto;
@@ -235,7 +235,7 @@ $_bar: ".snackbar";
 // Default: bottom of the UI, centered from the Medium breakpoint.
 #{$_bar}.active {
   position: fixed;
-  z-index: 10000;
+  z-index: var(--expressive-z-snackbar);
   left: 50%;
   right: auto;
   bottom: 24px;

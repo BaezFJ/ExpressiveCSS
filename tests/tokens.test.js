@@ -134,3 +134,13 @@ describe('Shape tokens', () => {
     assert.match(css, /--md-comp-card-container-shape:\s*var\(--md-sys-shape-corner-medium\)/);
   });
 });
+
+describe('Stacking tokens', () => {
+  test('floating surfaces read the stacking scale, which rises in the documented order', () => {
+    assert.doesNotMatch(css, /z-index:\s*\d{3,}/, 'a floating surface hard-codes its z-index');
+    const order = ['toolbar', 'app-bar', 'modal-rail', 'sheet', 'lightbox', 'tooltip', 'menu', 'snackbar'];
+    const values = order.map((name) => Number(css.match(new RegExp(`--expressive-z-${name}:\\s*(\\d+)`))?.[1]));
+    assert.ok(values.every(Number.isFinite), `missing a stacking token: ${values}`);
+    assert.deepEqual(values, [...values].sort((a, b) => a - b));
+  });
+});

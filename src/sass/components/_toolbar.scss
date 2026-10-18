@@ -359,7 +359,7 @@ $_vibrant: "#{$_toolbar}.vibrant";
 // has no rule - a bar naming it falls through to the one above.
 #{$_toolbar}.fixed {
   position: fixed;
-  z-index: 996;
+  z-index: var(--expressive-z-toolbar);
   inset: auto auto var(--md-comp-toolbar-external-space) 50%;
   transform: translateX(-50%);
 }

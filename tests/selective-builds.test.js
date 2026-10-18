@@ -148,7 +148,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the src/ts review fixes across 23 components and behaviors: 72,163 gzip bytes (+1,601).
   // Reviewed Tabs decoding the href too when matching location.hash: 72,173 gzip bytes (+10).
   // Reviewed swipeable Tabs holding a scroll target until the track arrives: 72,196 gzip bytes (+23).
-  assert.ok(sizes(js).gzip <= 72196, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the lightbox image reading --expressive-z-lightbox: 72,205 gzip bytes (+9).
+  assert.ok(sizes(js).gzip <= 72205, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -203,5 +204,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed side panel destinations laid out as destinations when they come first, at full height: 70,787 gzip bytes (+28).
   // Reviewed md.sys.motion tokens read by every on-scale component transition: 71,199 gzip bytes (+412).
   // Reviewed md.sys.shape.corner tokens read by component shape tokens: 71,539 gzip bytes (+340).
-  assert.ok(sizes(css).gzip <= 71539, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the --expressive-z-* stacking scale: 71,661 gzip bytes (+122).
+  assert.ok(sizes(css).gzip <= 71661, `CSS gzip: ${sizes(css).gzip}`);
 });
