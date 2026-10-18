@@ -141,6 +141,7 @@ Never use display hiding as the only way to provide required content or actions.
 | `.right-align` | Right-aligns text. | Physical alignment does not mirror in RTL. |
 | `.start-align`, `.end-align` | `text-align: start` or `text-align: end`. | Follow text direction and mirror in RTL. |
 | `.center-align` | Centers text. | Use on the text container. `.center` is not the canonical helper. |
+| `.query-container` | `container-type: inline-size`. Horizontal cards and description lists inside it stack below 600px of container width. | Put it on a wrapper that fills its parent; inline-size containment stops the element sizing itself from its content. |
 | `.relative`, `.sticky-top` | `position: relative`; `position: sticky; top: 0`. | A sticky element stops at an ancestor with `overflow: hidden`. |
 | `.block`, `.inline-block`, `.grid`, `.inline-grid`, `.contents` | The matching `display`. | There is no `display: inline` class; `.inline` is the checkbox and radio row. Keep `.contents` off buttons, lists, tables and headings. |
 | `.divider` | Draws a 1px `outline-variant` divider. | Keep decorative dividers out of the accessibility tree; use semantic grouping or headings for real structure. |

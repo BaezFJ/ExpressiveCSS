@@ -2728,7 +2728,7 @@
         "sources": [
           {
             "path": "src/sass/components/_description-list.scss",
-            "sha256": "deae3f67f9dfa6bee0464bd3b64d0df58d6b0bcf1a4d352d364f70ac9167f9b3"
+            "sha256": "d989d090fccadc4ef1ab8ec1ef84237ad9ce552508135c6a5ad9b3acae99d77f"
           }
         ],
         "gaps": [

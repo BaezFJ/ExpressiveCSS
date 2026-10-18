@@ -536,7 +536,9 @@ article.horizontal:is(.small, .medium, .large) > .primary-action {
 
 // Compact windows use the vertical spelling. This keeps media and controls
 // large enough to scan and operate without changing their source order.
-@include bp-down("medium") {
+// A query container narrower than Compact does the same, so a horizontal
+// card in a narrow pane or sidebar stacks even on a wide window.
+@mixin _stacked-horizontal {
   article.horizontal,
   article.horizontal.small,
   article.horizontal.medium,
@@ -555,6 +557,9 @@ article.horizontal:is(.small, .medium, .large) > .primary-action {
     min-height: auto;
   }
 }
+
+@include bp-down("medium") { @include _stacked-horizontal; }
+@container (width < 600px) { @include _stacked-horizontal; }
 
 // Reveal panel. Panels stay available until Cards confirms the disclosure
 // contract and adds its runtime marker. The summary and media remain in place

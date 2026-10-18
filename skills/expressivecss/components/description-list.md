@@ -9,7 +9,7 @@ Component ID: `description-list`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `0f0006455dabf1df3bafdb362d6b9ae9330b94313c5e8937ffd1aefed3204e59`
+Contract SHA-256: `ac04da60fb8faf4176ad37ec517974e7c3dd69c2770d8dfab3d8a306bd3c601d`
 
 #### Selection and adaptation
 
@@ -35,7 +35,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A `dl.description-list` pairs each `<dt>` label with the `<dd>` values after it. Labels take the first column from Medium widths up, with a divider above each pair; at Compact widths each label sits above its value. A `<div>` may wrap each pair and adds no box. Several `<dd>` elements under one label stack without a divider. Use stat tiles for big numbers instead. CSS only; there is no JavaScript.
+A `dl.description-list` pairs each `<dt>` label with the `<dd>` values after it. Labels take the first column from Medium widths up, with a divider above each pair; at Compact widths, and inside a `.query-container` narrower than 600px, each label sits above its value. A `<div>` may wrap each pair and adds no box. Several `<dd>` elements under one label stack without a divider. Use stat tiles for big numbers instead. CSS only; there is no JavaScript.
 
 #### Syntax
 

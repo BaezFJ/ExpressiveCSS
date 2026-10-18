@@ -1095,8 +1095,9 @@ To center text on mobile only, add `center-on-small-only`.
 | `.contents` | `display: contents`; the element's box goes away and its children join the parent's layout |
 | `.relative` | `position: relative` |
 | `.sticky-top` | `position: sticky; top: 0` |
+| `.query-container` | `container-type: inline-size`. Horizontal cards and description lists inside it stack when it is narrower than 600px, on any window. |
 
-`.inline` is the row of checkboxes or radios, so there is no `display: inline` class. A `.sticky-top` element sticks inside its nearest scrolling ancestor; an ancestor with `overflow: hidden` stops it. Browsers have dropped the semantics of elements with `display: contents`, so put `.contents` on plain wrappers, not on buttons, lists, tables or headings.
+`.inline` is the row of checkboxes or radios, so there is no `display: inline` class. A `.sticky-top` element sticks inside its nearest scrolling ancestor; an ancestor with `overflow: hidden` stops it. Browsers have dropped the semantics of elements with `display: contents`, so put `.contents` on plain wrappers, not on buttons, lists, tables or headings. A `.query-container` can no longer size itself from its content, so put it on a wrapper that fills its parent, such as a sidebar column, not on an inline or shrink-to-fit box.
 
 ### Flex
 
@@ -2359,7 +2360,7 @@ Height, the leading half's outer inset, the outline width and every colour come 
 
 Material Design 3 cards, from the HTML.
 
-An `<article>` is an elevated card. Any heading is the headline, `<p class="subhead">` is the optional subhead, a `<p>` is supporting copy, direct `<img>`, `<picture>`, or `<figure>` is media, and direct `<div class="actions">` is the action row. Include only the slots the content needs. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class—the element is the component, and the action row is not a `<nav>`. Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs): all variants use 12dp corners; elevated rests at level 1, filled and outlined at level 0. A directly actionable card wraps its primary content in one direct `a.primary-action[href]` and has no second link or control. Horizontal cards preserve that source order, use content height with a 240px minimum unless a size helper fixes the expanded height, and stack below 600px with fixed heights reset to content. During reordering, `.dragged` or `.picked-up` preserves the 16% state layer and dragged elevation while the primary action remains hovered or pressed.
+An `<article>` is an elevated card. Any heading is the headline, `<p class="subhead">` is the optional subhead, a `<p>` is supporting copy, direct `<img>`, `<picture>`, or `<figure>` is media, and direct `<div class="actions">` is the action row. Include only the slots the content needs. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class—the element is the component, and the action row is not a `<nav>`. Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs): all variants use 12dp corners; elevated rests at level 1, filled and outlined at level 0. A directly actionable card wraps its primary content in one direct `a.primary-action[href]` and has no second link or control. Horizontal cards preserve that source order, use content height with a 240px minimum unless a size helper fixes the expanded height, and stack below 600px, or in a `.query-container` narrower than 600px, with fixed heights reset to content. During reordering, `.dragged` or `.picked-up` preserves the 16% state layer and dragged elevation while the primary action remains hovered or pressed.
 
 A Card reveal is a disclosure with exactly one identified direct `<aside>` and an enabled, accessibly named `button.card-reveal-trigger[type="button"]` outside that panel. Its `aria-controls` must resolve to the panel, and its closest `<article>` owns it—even when a complete nested card sits inside an outer reveal panel. After accepting the contract, Cards writes `aria-expanded`, marks the closed panel `inert`, closes it with Escape, and returns focus from the panel to the trigger. Rejected, disabled-only, unidentified, and multi-panel disclosures remain visible and unmanaged.
 
@@ -2459,7 +2460,7 @@ A direct `<img>` is full-bleed across the top and its media surface has rounded 
 
 ### Horizontal
 
-The same card can use two orientations without changing its content order. Add `horizontal` to move the media to the start and stack the headline, supporting text, and action beside it. A direct `.primary-action` link can wrap those same slots when the whole horizontal card is one destination. Without a size helper, its height follows content with a 240px minimum; `small`, `medium`, and `large` provide fixed expanded heights. Below 600px, both forms return to the vertical layout and fixed heights reset to content.
+The same card can use two orientations without changing its content order. Add `horizontal` to move the media to the start and stack the headline, supporting text, and action beside it. A direct `.primary-action` link can wrap those same slots when the whole horizontal card is one destination. Without a size helper, its height follows content with a 240px minimum; `small`, `medium`, and `large` provide fixed expanded heights. Below 600px, both forms return to the vertical layout and fixed heights reset to content. Inside a `.query-container` narrower than 600px they do the same on any window, so a horizontal card in a sidebar stacks too.
 
 ```html
 <!-- Vertical -->
@@ -4791,7 +4792,7 @@ Add `up` or `down` to `.stat-change` for an arrow, and `negative` when the chang
 
 A record's details as label and value pairs, in two columns that stack on compact screens.
 
-A `dl.description-list` pairs each `<dt>` label with the `<dd>` values after it. Labels take the first column from Medium widths up, with a divider above each pair; at Compact widths each label sits above its value. A `<div>` may wrap each pair and adds no box. Several `<dd>` elements under one label stack without a divider. Use stat tiles for big numbers instead. CSS only; there is no JavaScript.
+A `dl.description-list` pairs each `<dt>` label with the `<dd>` values after it. Labels take the first column from Medium widths up, with a divider above each pair; at Compact widths, and inside a `.query-container` narrower than 600px, each label sits above its value. A `<div>` may wrap each pair and adds no box. Several `<dd>` elements under one label stack without a divider. Use stat tiles for big numbers instead. CSS only; there is no JavaScript.
 
 ```html
 <dl class="description-list">

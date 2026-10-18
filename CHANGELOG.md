@@ -42,6 +42,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   and headings, and a surface for inline code and `<pre>`. It only touches
   elements without a class and sits in the base layer, so components inside
   it keep their own look.
+- `.query-container` makes an element a query container. Horizontal cards
+  and description lists inside one stack when it is narrower than 600px, so
+  they adapt to a sidebar or pane on a wide window.
 - A "Frosted glass" documentation page at `/glass.html` covers the
   `--expressive-glass`, `-blur` and `-opacity` properties, the Sass defaults,
   the surfaces that frost, and the reduced-transparency fallback, with live

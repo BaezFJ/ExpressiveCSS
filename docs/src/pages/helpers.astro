@@ -78,6 +78,7 @@ const S = defineSections([
             <tr><td><code>.contents</code></td><td><code>display: contents</code>; the element's box goes away and its children join the parent's layout</td></tr>
             <tr><td><code>.relative</code></td><td><code>position: relative</code></td></tr>
             <tr><td><code>.sticky-top</code></td><td><code>position: sticky; top: 0</code></td></tr>
+            <tr><td><code>.query-container</code></td><td><code>container-type: inline-size</code>. Horizontal cards and description lists inside it stack when it is narrower than 600px, on any window.</td></tr>
           </tbody>
         </table>
         <p>
@@ -86,6 +87,9 @@ const S = defineSections([
           nearest scrolling ancestor; an ancestor with <code>overflow: hidden</code> stops it.
           Browsers have dropped the semantics of elements with <code>display: contents</code>, so
           put <code>.contents</code> on plain wrappers, not on buttons, lists, tables or headings.
+          A <code>.query-container</code> can no longer size itself from its content, so put it on
+          a wrapper that fills its parent, such as a sidebar column, not on an inline or
+          shrink-to-fit box.
         </p>
   </Section>
   <Section {...S.flex}>

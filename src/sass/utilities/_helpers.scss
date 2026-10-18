@@ -72,6 +72,13 @@ $_layout: (
 .min-w-0 { min-width: 0; }
 .min-h-0 { min-height: 0; }
 
+// Make the element a query container. Horizontal cards and description lists
+// inside it stack when it is narrower than 600px, whatever the window size.
+// Inline-size containment stops the element's width depending on its
+// content, so use it on a wrapper that fills its parent, not on a
+// shrink-to-fit box.
+.query-container { container-type: inline-size; }
+
 // Fill the containing block, or never overflow it.
 .w-full { width: 100%; }
 .h-full { height: 100%; }

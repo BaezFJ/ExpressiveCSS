@@ -9,7 +9,7 @@ Component ID: `fieldsets`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `0f0006455dabf1df3bafdb362d6b9ae9330b94313c5e8937ffd1aefed3204e59`
+Contract SHA-256: `ac04da60fb8faf4176ad37ec517974e7c3dd69c2770d8dfab3d8a306bd3c601d`
 
 #### Selection and adaptation
 

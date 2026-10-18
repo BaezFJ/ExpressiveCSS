@@ -294,3 +294,28 @@ browserTest('prose styles bare content and leaves components alone', async () =>
     await browser.close();
   }
 });
+
+browserTest('a narrow query container stacks horizontal cards and description lists on a wide window', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+    const markup = `<article class="horizontal"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt=""><div class="content">Text</div></article>
+      <dl class="description-list"><dt>Status</dt><dd>Paid</dd></dl>`;
+    await page.setContent(`<style>${css}</style>
+      <div id="narrow" class="query-container" style="width: 400px">${markup}</div>
+      <div id="wide" class="query-container" style="width: 900px">${markup}</div>
+      <div id="none" style="width: 400px">${markup}</div>`);
+    const read = (id) => page.evaluate((id) => {
+      const root = document.getElementById(id);
+      return [
+        getComputedStyle(root.querySelector('article')).flexDirection,
+        getComputedStyle(root.querySelector('dl')).gridTemplateColumns.split(' ').length,
+      ];
+    }, id);
+    assert.deepEqual(await read('narrow'), ['column', 1]);
+    assert.notDeepEqual(await read('wide'), ['column', 1]);
+    assert.notDeepEqual(await read('none'), ['column', 1], 'without a query container the window decides');
+  } finally {
+    await browser.close();
+  }
+});
