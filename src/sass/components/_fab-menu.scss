@@ -113,12 +113,12 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
       cursor: pointer;
       appearance: none;
       opacity: 0;
-      transform: scale(.8) translateY(1rem);
+      transform: scale(0.8) translateY(1rem);
       transition:
         opacity var(--md-comp-fab-menu-duration) var(--md-comp-fab-menu-easing),
         transform var(--md-comp-fab-menu-duration) var(--md-comp-fab-menu-easing),
-        background-color .2s ease-out,
-        box-shadow .2s ease-out;
+        background-color 0.2s ease-out,
+        box-shadow 0.2s ease-out;
       @include typescale("title-medium");
       @include focus-visible;
 

@@ -77,7 +77,7 @@ label:has(> [type="checkbox"]):not(.switch) > [type="checkbox"],
   border-radius: var(--md-comp-checkbox-container-shape);
   background-color: transparent;
   cursor: pointer;
-  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 
   &:checked,
   &:indeterminate {
@@ -225,7 +225,7 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
 #{_cb-span()}::before {
   border: 2px solid var(--md-sys-color-on-surface-variant);
   background-color: transparent;
-  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 #{_cb-span()}::after {

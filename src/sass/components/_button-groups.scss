@@ -72,7 +72,7 @@ $_connected-corners: (
   --md-comp-button-group-pressed-item-shape: 8px;
   // M3 states this as a percentage of the item's own width. CSS cannot
   // multiply a length by one, so it is the same figure as a ratio.
-  --md-comp-button-group-pressed-item-width-multiplier: .15;
+  --md-comp-button-group-pressed-item-width-multiplier: 0.15;
   // Material's fast-spatial spring, so width and corner motion use the
   // published dynamics.
   --md-comp-button-group-motion: #{$motion-fast-spatial};

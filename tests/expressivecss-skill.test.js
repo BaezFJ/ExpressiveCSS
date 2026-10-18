@@ -465,8 +465,9 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
     }
     assert.match(globalSass, /@include bp-down\("expanded"\)[\s\S]*table\.responsive-table/);
-    assert.match(globalSass, /tbody > tr:nth-child\(odd\)[\s\S]*rgba\(0, 0, 0, 0\.08\)/);
-    assert.match(globalSass, /&\.highlight > tbody > tr[\s\S]*&:hover[\s\S]*rgba\(0, 0, 0, 0\.04\)/);
+    assert.match(globalSass, /tbody > tr:nth-child\(odd\)\s*\{\s*background-color:\s*var\(--md-sys-color-surface-container-high\)/);
+    assert.match(globalSass, /&\.highlight > tbody > tr[\s\S]*&:hover[\s\S]*var\(--md-sys-color-on-surface\) state-opacity\("hover"\)/);
+    assert.match(references.table, /`--md-sys-color-surface-container-high`[\s\S]*on-surface hover state layer/i);
     assert.match(globalSass, /&\.centered\s*\{[\s\S]*thead tr th, tbody tr td\s*\{[\s\S]*text-align:\s*center/);
     assert.match(references.table, /`\.centered` \| Centers column headers and body data cells\.[\s\S]*Body row headers[\s\S]*remain left-aligned/i);
     assert.doesNotMatch(references.table, /Centers all header and body cell text/i);
@@ -474,14 +475,13 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(references.table, /`<caption>`[\s\S]*scope="col"[\s\S]*do not use a table for page layout/i);
     assert.match(references.table, /keeps the header cells in one fixed column[\s\S]*scrolls the body rows horizontally/i);
     assert.match(references.table, /physical floats, padding, borders, and text alignment[\s\S]*RTL/i);
-    assert.match(references.table, /hard-coded black alpha colors[\s\S]*light and dark/i);
 
     for (const className of ['scale-transition', 'scale-out', 'scale-in']) {
       assert.ok(references.transitions.includes(`\`.${className}\``), `transitions reference omits .${className}`);
       assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
     }
-    assert.match(transitionsSass, /transition:\s*transform \.3s cubic-bezier\(0\.53, 0\.01, 0\.36, 1\.63\) !important/);
-    assert.match(transitionsSass, /&\.scale-out[\s\S]*transform:\s*scale\(0\)[\s\S]*transition:\s*transform \.2s !important/);
+    assert.match(transitionsSass, /transition:\s*transform 0\.3s cubic-bezier\(0\.53, 0\.01, 0\.36, 1\.63\) !important/);
+    assert.match(transitionsSass, /&\.scale-out[\s\S]*transform:\s*scale\(0\)[\s\S]*transition:\s*transform 0\.2s !important/);
     assert.match(transitionsSass, /&\.scale-in[\s\S]*transform:\s*scale\(1\)/);
     assert.match(references.transitions, /`\.scale-out`[\s\S]*does not remove[\s\S]*layout[\s\S]*accessibility tree[\s\S]*tab order/i);
     assert.match(references.transitions, /framework sets.*transition: none !important.*prefers-reduced-motion: reduce/i);
@@ -569,7 +569,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(iconSass, /&\.left[\s\S]*margin-left:\s*-8px/);
     assert.match(references.icons, /`\.left`[\s\S]*`margin-left: -8px`/);
 
-    const typeRoleBlock = typescaleSass.match(/\$typescale-roles:\s*\(([\s\S]*?)\)\s*!default;/)?.[1] ?? '';
+    const typeRoleBlock = typescaleSass.match(/\$typescale-roles:\s*\(([\s\S]*?)\)\s*;/)?.[1] ?? '';
     const typeRoles = [...typeRoleBlock.matchAll(/"([a-z-]+)"/g)].map((match) => match[1]);
     assert.equal(typeRoles.length, 15);
     for (const role of typeRoles) {

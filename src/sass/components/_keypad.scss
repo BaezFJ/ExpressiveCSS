@@ -102,7 +102,7 @@ $_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
     > small {
       @include typescale("label-small");
       color: inherit;
-      opacity: .78;
+      opacity: 0.78;
     }
   }
 }
@@ -143,7 +143,7 @@ $_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
     @include typescale("title-medium");
 
     &[data-key] {
-      flex-basis: calc(1.5 * var(--_unit) + .5 * var(--md-comp-keyboard-gap));
+      flex-basis: calc(1.5 * var(--_unit) + 0.5 * var(--md-comp-keyboard-gap));
     }
 
     &[value=" "] {

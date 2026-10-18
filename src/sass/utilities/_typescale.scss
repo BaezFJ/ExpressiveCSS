@@ -20,7 +20,7 @@ $typescale-roles: (
   "body-large", "body-medium", "body-small",
   "label-large", "label-medium", "label-small",
   "title-large", "title-medium", "title-small"
-) !default;
+);
 
 @each $role in $typescale-roles {
   .#{$role} {

@@ -60,7 +60,7 @@ $_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-
   color: var(--md-sys-color-on-surface);
   border-radius: var(--md-comp-card-container-shape);
   overflow: hidden;
-  transition: background-color .2s ease-out, box-shadow .2s ease-out;
+  transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 
 // M3 state layers belong only to an interactive card. A direct
@@ -75,7 +75,7 @@ $_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-
   background-color: var(--md-comp-card-state-layer-color);
   opacity: 0;
   pointer-events: none;
-  transition: opacity .2s ease-out;
+  transition: opacity 0.2s ease-out;
 }
 
 :where(#{$_card}) > .primary-action {
