@@ -749,6 +749,13 @@ export const NAV: DocsGroup[] = [
           "Pick one color from a preset palette, on native radio buttons.",
       },
       {
+        id: "color-picker",
+        label: "Color picker",
+        route: "/color-picker.html",
+        description:
+          "Choose any color with a saturation and brightness area, a hue slider and a hex field, over a native color input.",
+      },
+      {
         id: "switches",
         label: "Switches",
         route: "/switches.html",

@@ -52,6 +52,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   labels with visually hidden names, each drawn as a round chip of the color
   set in `--md-comp-color-swatch-color`, with a ring around the checked one.
   An `<input type="color">` at the end adds a custom value. CSS only.
+- Color picker component: `ColorPicker` enhances a `.color-picker` around an
+  `<input type="color">` with a saturation and brightness area, the
+  framework's slider as a hue control, and a hex field. The native input stays
+  the form value and fires `input` and `change`. The area is a keyboard
+  slider with a spoken value. AutoInit starts it.
 - A "Frosted glass" documentation page at `/glass.html` covers the
   `--expressive-glass`, `-blur` and `-opacity` properties, the Sass defaults,
   the surfaces that frost, and the reduced-transparency fallback, with live

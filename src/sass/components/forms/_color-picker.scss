@@ -1,0 +1,130 @@
+@use "../../abstracts" as *;
+
+// Color picker. A .color-picker holding an <input type="color"> works as the
+// native swatch without JavaScript. ColorPicker adds a saturation and
+// brightness area, a hue slider and a hex field around that input, which
+// stays the form value and the preview.
+//
+//   <div class="color-picker" role="group" aria-label="Accent">
+//     <input type="color" name="accent" value="#6750a4" aria-label="Accent">
+//   </div>
+//
+// The hue slider is the framework's range input, so it keeps the M3 handle
+// and states; only its track becomes the hue gradient. The area and the hue
+// track are the color itself, so they keep their colors under forced colors
+// and do not mirror in RTL.
+//
+// Tokens:
+//   --md-comp-color-picker-width        280px
+//   --md-comp-color-picker-area-height  160px
+//   --md-comp-color-picker-area-shape   corner.medium
+//   --md-comp-color-picker-thumb-size   24px
+//   --md-comp-color-picker-field-shape  corner.extra-small
+
+$_hue-gradient: linear-gradient(
+  to right,
+  hsl(0 100% 50%), hsl(60 100% 50%), hsl(120 100% 50%), hsl(180 100% 50%),
+  hsl(240 100% 50%), hsl(300 100% 50%), hsl(360 100% 50%)
+);
+
+.color-picker {
+  --md-comp-color-picker-width: 280px;
+  --md-comp-color-picker-area-height: 160px;
+  --md-comp-color-picker-area-shape: var(--md-sys-shape-corner-medium);
+  --md-comp-color-picker-thumb-size: 24px;
+  --md-comp-color-picker-field-shape: var(--md-sys-shape-corner-extra-small);
+
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px 12px;
+  inline-size: min(100%, var(--md-comp-color-picker-width));
+
+  > .color-picker-area,
+  > .color-picker-hue {
+    grid-column: 1 / -1;
+  }
+
+  > .color-picker-hue {
+    --md-comp-slider-handle-color: var(--md-sys-color-on-surface);
+    direction: ltr;
+    margin: 0;
+    forced-color-adjust: none;
+  }
+}
+
+.color-picker-area {
+  position: relative;
+  block-size: var(--md-comp-color-picker-area-height);
+  border-radius: var(--md-comp-color-picker-area-shape);
+  background:
+    linear-gradient(to top, #000, transparent),
+    linear-gradient(to right, #fff, transparent),
+    hsl(var(--_color-picker-hue, 0) 100% 50%);
+  cursor: crosshair;
+  touch-action: none;
+  forced-color-adjust: none;
+}
+
+// White ring plus a dark edge, so the thumb shows on every color.
+.color-picker-thumb {
+  position: absolute;
+  top: calc(var(--_color-picker-y, 0) * 100%);
+  left: calc(var(--_color-picker-x, 0) * 100%);
+  box-sizing: border-box;
+  inline-size: var(--md-comp-color-picker-thumb-size);
+  block-size: var(--md-comp-color-picker-thumb-size);
+  border: 3px solid #fff;
+  border-radius: var(--md-sys-shape-corner-full);
+  background-color: var(--_color-picker-color, transparent);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.5), inset 0 0 0 1px rgb(0 0 0 / 0.3);
+  translate: -50% -50%;
+  @include focus-visible;
+}
+
+// One rule per engine: a browser drops a whole rule with a pseudo-element it
+// does not know.
+@each $track in ("::-webkit-slider-runnable-track", "::-moz-range-track") {
+  .color-picker > .color-picker-hue#{$track} {
+    background: $_hue-gradient;
+  }
+}
+
+.color-picker-hex {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  block-size: 40px;
+  margin: 0;
+  padding-inline: 12px;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-comp-color-picker-field-shape);
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  font-family: $font-stack;
+  @include typescale("body-large");
+
+  &:focus {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: -2px;
+  }
+
+  &:disabled {
+    opacity: 0.38;
+  }
+}
+
+.color-picker:has(> input[type="color"]:disabled) > .color-picker-area {
+  cursor: default;
+  opacity: 0.38;
+}
+
+@media (forced-colors: active) {
+  .color-picker-thumb {
+    border-color: Canvas;
+    box-shadow: 0 0 0 2px CanvasText;
+  }
+
+  .color-picker-hex {
+    border-color: CanvasText;
+  }
+}

@@ -774,6 +774,25 @@
           }
         ]
       },
+      "forms/color-picker": {
+        "status": "enforced",
+        "note": "Added with the color picker component. A named group around a native color input, which stays the form value; the component adds a saturation and brightness slider, a hue range and a hex field at runtime.",
+        "rules": [
+          {
+            "id": "color-picker-wraps-a-color-input",
+            "kind": "forbid",
+            "selector": ".color-picker:not(:has(> input[type=\"color\"]))",
+            "fragmentSafe": true,
+            "message": "A .color-picker holds an <input type=\"color\"> as a direct child. It is the form value, the preview and the picker without JavaScript."
+          },
+          {
+            "id": "color-picker-is-a-named-group",
+            "kind": "require-accessible-name",
+            "selector": ".color-picker",
+            "message": "Give the .color-picker role=\"group\" and a name, such as aria-label=\"Accent\", so its sliders and hex field read as one control."
+          }
+        ]
+      },
       "forms/select": {
         "status": "enforced",
         "note": "Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select.test.js.",

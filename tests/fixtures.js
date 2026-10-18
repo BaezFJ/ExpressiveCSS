@@ -32,6 +32,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<input id="fixture-pin" inputmode="none" aria-label="PIN"><div class="keypad" role="group" aria-label="PIN keypad" aria-controls="fixture-pin"><button type="button" value="1">1</button><button type="button" data-key="Backspace" aria-label="Delete">D</button></div>`,
   },
   {
+    name: "ColorPicker",
+    selector: ".color-picker",
+    html: `<div class="color-picker" role="group" aria-label="Accent"><input type="color" value="#6750a4" aria-label="Accent"></div>`,
+  },
+  {
     name: "ButtonGroup",
     selector: ".button-group",
     html: `<div class="button-group connected" data-selection="single" role="group" aria-label="View"><button type="button" aria-pressed="true">Day</button><button type="button" aria-pressed="false">Week</button></div>`,

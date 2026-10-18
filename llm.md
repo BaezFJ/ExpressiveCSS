@@ -307,6 +307,7 @@ Opt an element out when it needs manual options:
 | `Confetti` | `.confetti` |
 | `Particles` | `canvas.particles` |
 | `Keypad` | `.keypad, .keyboard` |
+| `ColorPicker` | `.color-picker` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
 | `HeatmapChart` | `.heatmap-chart` |
@@ -5405,6 +5406,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Confetti` | `.confetti` |
 | `Particles` | `canvas.particles` |
 | `Keypad` | `.keypad, .keyboard` |
+| `ColorPicker` | `.color-picker` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
 | `HeatmapChart` | `.heatmap-chart` |
@@ -7739,6 +7741,57 @@ A `<fieldset class="color-swatches">` holds a `<legend>` and one radio per color
 | `--md-comp-color-swatches-size` | 40px |
 | `--md-comp-color-swatches-outline-color` | `outline` |
 | `--md-comp-color-swatches-selected-color` | `on-surface` |
+
+---
+
+## Color picker
+
+Choose any color with a saturation and brightness area, a hue slider and a hex field, over a native color input.
+
+Write a `.color-picker` with `role="group"` and a name around an `<input type="color">`. Without JavaScript that is the native swatch and the browser's picker. `ColorPicker`, which AutoInit starts, adds three controls around the input: a saturation and brightness area, a hue slider and a hex field. The native input stays the form value and the preview, and the browser's picker still opens from it. Every change writes the input and fires its `input` event, and a committed change (a released drag, a key press, a released hue, an applied hex value) also fires `change`, so existing listeners keep working.
+
+The area is a `role="slider"` with `aria-valuetext` such as "Saturation 60%, brightness 80%". Left and Right change saturation, Up and Down brightness, Shift takes steps of 10%, Page Up and Page Down change brightness by 10%, and Home and End go to no and full saturation. The area and the hue track are the color itself, so they do not mirror in right-to-left pages and keep their colors under forced colors. The hue slider is the framework's range input. In the hex field, Enter applies the value instead of submitting the form, and an invalid value goes back to the current color. The browser's color input only holds `#rrggbb`, so there is no alpha.
+
+```html
+<div class="color-picker" role="group" aria-label="Accent color">
+  <input type="color" name="accent" value="#6750a4" aria-label="Accent color">
+</div>
+```
+
+```js
+const picker = Expressive.ColorPicker.init(el, {
+  onChange: (value) => console.log(value), // '#6750a4'
+});
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-color-picker-width` | 280px |
+| `--md-comp-color-picker-area-height` | 160px |
+| `--md-comp-color-picker-area-shape` | `corner.medium` (12px) |
+| `--md-comp-color-picker-thumb-size` | 24px |
+| `--md-comp-color-picker-field-shape` | `corner.extra-small` (4px) |
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `onChange` | Function | `null` | Called with the new `#rrggbb` value when a change is committed. For live updates, listen for `input` on the native input. |
+
+### Methods
+
+#### .destroy()
+
+Removes the area, the hue slider and the hex field. The native color input stays with its current value.
+
+### Properties
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `input` | Element | The native color input. |
+| `value` | String | The current `#rrggbb` color. Setting it updates the picker and the input without firing events, as setting a native input does. |
 
 ---
 

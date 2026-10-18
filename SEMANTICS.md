@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**91 of 91 rows enforced; 0 remaining.**
+**92 of 92 rows enforced; 0 remaining.**
 
-87 of those rows are components - a part of the framework an author writes markup for.
+88 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 87 components declare conformance debt.**
+**3 of 88 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -472,6 +472,18 @@ Swept 0.8.0.
 | `checkbox-labelled` | forbid | `input[type="checkbox"]:not([id]):not(label *):not(.chip-input)` | must not match |
 
 - **checkbox-labelled** - A checkbox must be inside its <label> or carry an id a label points at.
+
+### forms/color-picker
+
+Added with the color picker component. A named group around a native color input, which stays the form value; the component adds a saturation and brightness slider, a hue range and a hex field at runtime.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `color-picker-wraps-a-color-input` | forbid | `.color-picker:not(:has(> input[type="color"]))` | must not match |
+| `color-picker-is-a-named-group` | require-accessible-name | `.color-picker` | must end up with an accessible name |
+
+- **color-picker-wraps-a-color-input** - A .color-picker holds an <input type="color"> as a direct child. It is the form value, the preview and the picker without JavaScript.
+- **color-picker-is-a-named-group** - Give the .color-picker role="group" and a name, such as aria-label="Accent", so its sliders and hex field read as one control.
 
 ### forms/color-swatches
 

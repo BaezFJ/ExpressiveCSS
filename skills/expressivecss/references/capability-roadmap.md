@@ -89,6 +89,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Radio buttons](#radio-buttons) | unassessed | needs-review | needs-rerun | 0 |
 | [Rating](#rating) | implemented | source-reviewed | needs-rerun | 0 |
 | [Color swatches](#color-swatches) | implemented | source-reviewed | incomplete | 0 |
+| [Color picker](#color-picker) | implemented | source-reviewed | incomplete | 0 |
 | [Switches](#switches) | unassessed | needs-review | needs-rerun | 1 |
 | [Slider](#slider) | unassessed | needs-review | needs-rerun | 0 |
 | [Chips](#chips) | unassessed | needs-review | needs-rerun | 0 |
@@ -1387,6 +1388,22 @@ Web adaptation: Native radios keep one Tab stop, arrow keys and form submission;
 - verification: Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified. Next: Choose a swatch with a keyboard and a screen reader in Firefox and Safari, and confirm each color name and the checked state are announced; check 200% text.
 
 - not-recorded: [tests/color-swatches-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/e71b657ae11bdc010c1869c06d0c2a3c4a4e0245/tests/color-swatches-browser.test.js): `chromium: color swatches draw each radio as its color and keep native radio behavior`. Swatch color, 40px round shape and checked ring, the named group, arrow keys moving the choice, the form value, the focus ring after arrow keys and the swatch color under forced colors. No spoken-output assertion.
+
+<a id="color-picker"></a>
+
+## Color picker
+
+**implemented within the stated scope.** A saturation and brightness area as a keyboard slider, a hue range on the framework slider, a hex field and the native color input as form value and preview, with input, change and onChange events.
+
+Source review: source-reviewed, 2026-10-18. [src/sass/components/forms/_color-picker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/e71b657ae11bdc010c1869c06d0c2a3c4a4e0245/src/sass/components/forms/_color-picker.scss), [src/ts/components/colorPicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/e71b657ae11bdc010c1869c06d0c2a3c4a4e0245/src/ts/components/colorPicker.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-18); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: Progressive enhancement of <input type="color">: without JavaScript the native picker remains, and the browser picker still opens from the input after enhancement.
+
+- verification: Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified. Next: Pick a color with a screen reader and with touch in each engine, and confirm the area valuetext and the hex field are announced; check forced colors and 200% text.
+
+- not-recorded: [tests/color-picker-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/e71b657ae11bdc010c1869c06d0c2a3c4a4e0245/tests/color-picker-browser.test.js): `chromium: color picker drives the native input from the area, hue and hex field`. Group and control names, Down and Shift+Left steps with valuetext, input, change and onChange order, a press and a drag past the corner in an RTL page, hue changes keeping saturation and brightness, hex Enter without form submission, an invalid hex reverting, the silent value setter, a native input event updating the hue, one submitted field and destroy leaving only the native input. No spoken-output assertion.
 
 <a id="switches"></a>
 
