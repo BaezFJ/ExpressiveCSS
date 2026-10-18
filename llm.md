@@ -1086,20 +1086,35 @@ These classes are for horizontally aligning content: `.left-align`, `.right-alig
 
 To center text on mobile only, add `center-on-small-only`.
 
+### Display and position
+
+| Class | Declaration |
+| --- | --- |
+| `.block`, `.inline-block` | `display: block`, `display: inline-block` |
+| `.grid`, `.inline-grid` | `display: grid`, `display: inline-grid` |
+| `.contents` | `display: contents`; the element's box goes away and its children join the parent's layout |
+| `.relative` | `position: relative` |
+| `.sticky-top` | `position: sticky; top: 0` |
+
+`.inline` is the row of checkboxes or radios, so there is no `display: inline` class. A `.sticky-top` element sticks inside its nearest scrolling ancestor; an ancestor with `overflow: hidden` stops it. Browsers have dropped the semantics of elements with `display: contents`, so put `.contents` on plain wrappers, not on buttons, lists, tables or headings.
+
 ### Flex
 
-One class per declaration, applied to the container. Row direction and start alignment are the flex defaults, so only the overrides have a class.
+One class per declaration, applied to the container. Row direction and start alignment are the flex defaults, but `.flex-row` and `.flex-nowrap` exist so a window-size prefix can switch back to them.
 
 | Class | Declaration |
 | --- | --- |
 | `.flex` | `display: flex` |
 | `.inline-flex` | `display: inline-flex` |
-| `.flex-column` | `flex-direction: column` |
-| `.flex-wrap` | `flex-wrap: wrap` |
-| `.justify-start`, `.justify-center`, `.justify-end`, `.justify-between` | `justify-content` |
-| `.align-start`, `.align-center`, `.align-end`, `.align-stretch` | `align-items` |
+| `.flex-row`, `.flex-column` | `flex-direction` |
+| `.flex-wrap`, `.flex-nowrap` | `flex-wrap` |
+| `.justify-start`, `.justify-center`, `.justify-end`, `.justify-between`, `.justify-around`, `.justify-evenly` | `justify-content` |
+| `.align-start`, `.align-center`, `.align-end`, `.align-stretch`, `.align-baseline` | `align-items` |
 | `.flex-1` | `flex: 1 1 0` on a child, so it takes the remaining space |
 | `.flex-none` | `flex: none` on a child, so it keeps its content size |
+| `.shrink-0` | `flex-shrink: 0` on a child, so it never gets narrower than its basis |
+| `.self-start`, `.self-center`, `.self-end`, `.self-stretch` | `align-self` on a child |
+| `.order-first`, `.order-last` | `order: -1`, `order: 1` on a child. Visual order only: keyboard and screen reader order still follow the source. |
 | `.gap-0` to `.gap-6` | `gap` on the spacing scale, `!important`; also works on grid containers |
 
 ```html
@@ -1116,6 +1131,27 @@ One class per declaration, applied to the container. Row direction and start ali
 
 `justify-*` and `align-*` use `flex-start` and `flex-end`, so they follow the writing direction and mirror in RTL. Components that already lay out their children (app bars, toolbars, card `.actions`, button groups) do not need these classes.
 
+### Window-size prefixes
+
+The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`) and `.gap-*` classes also come with a window-size prefix. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
+
+| Prefix | Applies from |
+| --- | --- |
+| `medium:` | Medium, 600px |
+| `expanded:` | Expanded, 840px |
+| `large:` | Large, 1200px |
+| `extra-large:` | Extra-large, 1600px |
+
+```html
+<!-- Stacked on Compact and Medium, one row from Expanded up. -->
+<div class="flex flex-column gap-2 expanded:flex-row expanded:align-center expanded:justify-between">
+  <h2 class="title-medium my-0">Members</h2>
+  <button class="tonal">Invite</button>
+</div>
+```
+
+In a Sass selector, escape the colon: `.expanded\:flex-row`. To hide something at a size, use the hide and show classes; they are `!important`, so a prefixed display class does not undo them.
+
 ### Sizing and overflow
 
 Flex and grid children can retain a minimum size based on their content. Clear that minimum when a child needs to shrink, truncate, or scroll.
@@ -1124,6 +1160,10 @@ Flex and grid children can retain a minimum size based on their content. Clear t
 | --- | --- |
 | `.min-w-0` | `min-width: 0` |
 | `.min-h-0` | `min-height: 0` |
+| `.w-full`, `.h-full` | `width: 100%`, `height: 100%` |
+| `.max-w-full` | `max-width: 100%` |
+| `.aspect-1x1`, `.aspect-4x3`, `.aspect-16x9` | `aspect-ratio`; the height follows the width |
+| `.object-cover`, `.object-contain` | `object-fit` on an `<img>` or `<video>` with a set ratio |
 | `.overflow-x-auto` | `overflow-x: auto` |
 | `.overflow-y-auto` | `overflow-y: auto` |
 | `.overflow-hidden` | `overflow: hidden` |
@@ -1146,6 +1186,22 @@ Flex and grid children can retain a minimum size based on their content. Clear t
 ```
 
 Scrolling needs a bounded size. Use `.overflow-x-auto` for wide tables or action rows. Give a generic scroll region `tabindex="0"` and an accessible name when keyboard users cannot otherwise focus and scroll it. Leave padding for child focus rings, such as `.p-2`. `.overflow-hidden` clips content and focus rings, so use it only when the clipped content is intentionally unavailable visually.
+
+### Borders and corners
+
+| Class | Declaration |
+| --- | --- |
+| `.bordered` | A 1px `outline-variant` border on every side |
+| `.border-top`, `.border-bottom` | The same border on one side |
+| `.border-start`, `.border-end` | The same border on the inline start or end, which mirrors in RTL |
+| `.corner-none`, `.corner-extra-small`, `.corner-small`, `.corner-medium`, `.corner-large`, `.corner-extra-large`, `.corner-full` | `border-radius` from the matching `--md-sys-shape-corner-*` token |
+
+```html
+<div class="bordered corner-large aspect-16x9">16:9</div>
+<img class="corner-medium aspect-1x1 object-cover" src="..." alt="..." width="160">
+```
+
+`.border` is the outlined card variant and `.rounded` is the pill button, which is why these use other names. On a component, a corner class replaces the component's own shape, including its pressed and selected corner changes.
 
 ### Scroll area
 
@@ -1346,6 +1402,8 @@ To truncate long lines of text in an ellipsis, add the class `truncate` to the t
 | `.break-words` | `overflow-wrap: anywhere` lets long URLs or identifiers wrap within their container. |
 | `.text-nowrap` | `white-space: nowrap` keeps text on one line without clipping or ellipsis. |
 | `.text-wrap` | `white-space: normal` restores ordinary wrapping. |
+| `.text-balance` | `text-wrap: balance` evens out the line lengths of a short block, such as a card title. |
+| `.text-pretty` | `text-wrap: pretty` avoids a single short word on the last line of a paragraph. |
 
 Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.
 

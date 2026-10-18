@@ -1,3 +1,5 @@
+@use "../abstracts" as *;
+
 // Small single-purpose classes a page author applies deliberately.
 //
 // Anything here must be one job, one class, and independent of any component.
@@ -6,46 +8,111 @@
 
 // Positioning
 .valign-wrapper { display: flex; align-items: center; }
+.relative { position: relative; }
+.sticky-top { position: sticky; top: 0; }
 
-// Flex layout. One declaration each; combine on the container, and pair with
-// .gap-* from _spacing.scss for the space between items. Row direction and
-// start alignment are the flex defaults, so only the overrides get a class.
-.flex { display: flex; }
-.inline-flex { display: inline-flex; }
-.flex-column { flex-direction: column; }
-.flex-wrap { flex-wrap: wrap; }
-.justify-start { justify-content: flex-start; }
-.justify-center { justify-content: center; }
-.justify-end { justify-content: flex-end; }
-.justify-between { justify-content: space-between; }
-.align-start { align-items: flex-start; }
-.align-center { align-items: center; }
-.align-end { align-items: flex-end; }
-.align-stretch { align-items: stretch; }
+// Display and flex layout. One declaration each; combine on the container,
+// and pair with .gap-* from _spacing.scss for the space between items.
+//
+// Every class in this map also comes with a window-size prefix, emitted at
+// the end of this file: `.expanded:flex-row` applies from Expanded up, the
+// way the grid's `l6` does. `.inline` is the checkbox and radio row, so the
+// display utility for it is missing on purpose.
+$_layout: (
+  "block": (display: block),
+  "inline-block": (display: inline-block),
+  "flex": (display: flex),
+  "inline-flex": (display: inline-flex),
+  "grid": (display: grid),
+  "flex-row": (flex-direction: row),
+  "flex-column": (flex-direction: column),
+  "flex-wrap": (flex-wrap: wrap),
+  "flex-nowrap": (flex-wrap: nowrap),
+  "justify-start": (justify-content: flex-start),
+  "justify-center": (justify-content: center),
+  "justify-end": (justify-content: flex-end),
+  "justify-between": (justify-content: space-between),
+  "justify-around": (justify-content: space-around),
+  "justify-evenly": (justify-content: space-evenly),
+  "align-start": (align-items: flex-start),
+  "align-center": (align-items: center),
+  "align-end": (align-items: flex-end),
+  "align-stretch": (align-items: stretch),
+  "align-baseline": (align-items: baseline),
+  "start-align": (text-align: start),
+  "center-align": (text-align: center),
+  "end-align": (text-align: end),
+);
+
+@mixin _declarations($map) {
+  @each $property, $value in $map {
+    #{$property}: $value;
+  }
+}
+
+@each $name, $declarations in $_layout {
+  .#{$name} { @include _declarations($declarations); }
+}
+
+.inline-grid { display: inline-grid; }
+.contents { display: contents; }
+
+// On a flex or grid child.
 .flex-1 { flex: 1 1 0; }
 .flex-none { flex: none; }
+.shrink-0 { flex-shrink: 0; }
+.self-start { align-self: flex-start; }
+.self-center { align-self: center; }
+.self-end { align-self: flex-end; }
+.self-stretch { align-self: stretch; }
+.order-first { order: -1; }
+.order-last { order: 1; }
 
 // Allow flex and grid children to shrink around their content.
 .min-w-0 { min-width: 0; }
 .min-h-0 { min-height: 0; }
+
+// Fill the containing block, or never overflow it.
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.max-w-full { max-width: 100%; }
+
+// Fixed proportions. With an explicit width the height follows; on an <img>
+// or <video>, pair with .object-cover or .object-contain.
+.aspect-1x1 { aspect-ratio: 1; }
+.aspect-4x3 { aspect-ratio: 4 / 3; }
+.aspect-16x9 { aspect-ratio: 16 / 9; }
+.object-cover { object-fit: cover; }
+.object-contain { object-fit: contain; }
 
 // Scrolling and clipping without changing the element's display or size.
 .overflow-x-auto { overflow-x: auto; }
 .overflow-y-auto { overflow-y: auto; }
 .overflow-hidden { overflow: hidden; }
 
-// Text alignment
+// Text alignment. start, center and end are in $_layout above; the physical
+// pair stays for text that must not mirror.
 .left-align { text-align: left; }
 .right-align { text-align: right }
-.center-align { text-align: center; }
-.start-align { text-align: start; }
-.end-align { text-align: end; }
 
 // Dividers
 .divider {
   height: 1px;
   overflow: hidden;
   background-color: var(--md-sys-color-outline-variant);
+}
+
+// Borders and corners. `.border` and `.rounded` are card and button variants,
+// so the all-sides border is `.bordered` and the corner classes use the M3
+// corner names. Sides are logical, so start and end mirror in RTL.
+.bordered { border: 1px solid var(--md-sys-color-outline-variant); }
+.border-top { border-top: 1px solid var(--md-sys-color-outline-variant); }
+.border-bottom { border-bottom: 1px solid var(--md-sys-color-outline-variant); }
+.border-start { border-inline-start: 1px solid var(--md-sys-color-outline-variant); }
+.border-end { border-inline-end: 1px solid var(--md-sys-color-outline-variant); }
+
+@each $step in ("none", "extra-small", "small", "medium", "large", "extra-large", "full") {
+  .corner-#{$step} { border-radius: var(--md-sys-shape-corner-#{$step}); }
 }
 
 // Shape and text behaviour
@@ -57,6 +124,8 @@
 .break-words { overflow-wrap: anywhere; }
 .text-nowrap { white-space: nowrap; }
 .text-wrap { white-space: normal; }
+.text-balance { text-wrap: balance; }
+.text-pretty { text-wrap: pretty; }
 .truncate { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 // Responsive media
@@ -86,5 +155,16 @@ video.responsive-video {
     width: 100%;
     height: 100%;
     border: 0;
+  }
+}
+
+// Window-size prefixes for $_layout, mobile first: each applies from that
+// size class up and wins over the unprefixed class, because it comes later
+// in the same layer.
+@each $size in ("medium", "expanded", "large", "extra-large") {
+  @include bp-up($size) {
+    @each $name, $declarations in $_layout {
+      .#{$size}\:#{$name} { @include _declarations($declarations); }
+    }
   }
 }

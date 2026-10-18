@@ -20,6 +20,19 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `--expressive-z-*` properties name the stacking order of fixed and floating
   surfaces, from `toolbar` (996) to `snackbar` (10000). Components read them
   instead of literal `z-index` values, and the Shadow page lists them.
+- Layout helpers take a window-size prefix: `.medium:`, `.expanded:`,
+  `.large:` and `.extra-large:` versions of the display, flex direction and
+  wrap, `justify-*`, `align-*`, text alignment and `.gap-*` classes apply from
+  that size class up, so `flex flex-column expanded:flex-row` stacks until
+  Expanded.
+- More helpers: `.block`, `.inline-block`, `.grid`, `.inline-grid`,
+  `.contents`, `.relative`, `.sticky-top`, `.flex-row`, `.flex-nowrap`,
+  `.justify-around`, `.justify-evenly`, `.align-baseline`, `.self-*`,
+  `.order-first`, `.order-last`, `.shrink-0`, `.w-full`, `.h-full`,
+  `.max-w-full`, `.aspect-1x1`, `.aspect-4x3`, `.aspect-16x9`,
+  `.object-cover`, `.object-contain`, `.bordered`, `.border-top`,
+  `.border-bottom`, `.border-start`, `.border-end`, `.corner-none` to
+  `.corner-full`, `.text-balance` and `.text-pretty`.
 - A "Frosted glass" documentation page at `/glass.html` covers the
   `--expressive-glass`, `-blur` and `-opacity` properties, the Sass defaults,
   the surfaces that frost, and the reduced-transparency fallback, with live

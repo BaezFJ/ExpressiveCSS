@@ -194,3 +194,37 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
     }
   });
 }
+
+browserTest('window-size prefixes switch layout from their size class up', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style>
+      <div id="stack" class="flex flex-column gap-2 expanded:flex-row expanded:gap-5">
+        <span id="a" class="w-full">A</span><span>B</span>
+      </div>
+      <p id="text" class="center-align medium:start-align">Text</p>
+      <div id="box" class="bordered corner-medium aspect-16x9" style="width: 160px"></div>`);
+    const read = () => page.evaluate(() => {
+      const stack = getComputedStyle(document.querySelector('#stack'));
+      const box = document.querySelector('#box');
+      return {
+        direction: stack.flexDirection,
+        gap: stack.rowGap,
+        align: getComputedStyle(document.querySelector('#text')).textAlign,
+        radius: getComputedStyle(box).borderTopLeftRadius,
+        height: box.getBoundingClientRect().height,
+      };
+    });
+    await page.setViewportSize({ width: 599, height: 600 });
+    assert.deepEqual(await read(), { direction: 'column', gap: '8px', align: 'center', radius: '12px', height: 90 });
+    await page.setViewportSize({ width: 600, height: 600 });
+    assert.equal((await read()).align, 'start');
+    await page.setViewportSize({ width: 839, height: 600 });
+    assert.equal((await read()).direction, 'column');
+    await page.setViewportSize({ width: 840, height: 600 });
+    assert.deepEqual(await read(), { direction: 'row', gap: '24px', align: 'start', radius: '12px', height: 90 });
+  } finally {
+    await browser.close();
+  }
+});
