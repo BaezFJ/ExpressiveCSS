@@ -48,8 +48,11 @@ jobs:
       - name: Select and validate the release package
         id: package
         run: node scripts/release.mjs
-      - run: npm ci
-      - run: npm ci --prefix mcp/expressivecss
+      # This job packs the tarball that gets published, so dependency install
+      # scripts must not run here. esbuild and @parcel/watcher load their
+      # prebuilt platform packages without them.
+      - run: npm ci --ignore-scripts
+      - run: npm ci --prefix mcp/expressivecss --ignore-scripts
       - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run verify
       - run: npm test --prefix mcp/expressivecss

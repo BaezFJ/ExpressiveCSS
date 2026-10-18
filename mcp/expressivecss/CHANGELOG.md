@@ -17,6 +17,19 @@
   100 ms. Markup nested deeper than 256 elements stops early with
   `markup nesting limit reached`; 4,000 nested `aria-hidden` elements took
   20 s before.
+- `legacy-renamed-component` no longer stalls on an unclosed tag that
+  repeats `class="range`. A 500,000-character snippet blocked the server
+  for about 10 s.
+- Breaking: with `EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS` unset, a client
+  `projectRoot` must now sit inside the server's default root, from
+  `--project-root` or the working directory. Before, any directory was
+  accepted, so a prompt-injected call such as `quality_inspector` with
+  `projectRoot: "/"` could report whether a file like `~/.ssh/id_rsa`
+  existed, with its size and SHA-256. A missing `projectRoot` is now an
+  error instead of an `unresolved` result. To pass other projects, list
+  them in `EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS`.
+- A client `projectRoot` resolves to the real path that passed the root
+  check, so swapping a symlink after the check cannot redirect later reads.
 - Reading a FIFO inside the project fails at once instead of hanging the call.
 - `quality_inspector` stops its typecheck or test command when the call is
   cancelled or the client closes the session. Before, the command kept

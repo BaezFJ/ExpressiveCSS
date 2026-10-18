@@ -643,7 +643,7 @@ EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS=["/srv/projects/site-a","/srv/projects/s
 
 The real `projectRoot` must equal or be contained by one of those roots. A tool caller cannot expand this policy. Allowed commands receive only the executable path, system/temp/locale variables, `CI=1`, `NO_COLOR=1`, and `HOME`/`USERPROFILE` reset to the project root. API keys, tokens, passwords, cloud credentials, SSH agent variables, and other MCP-process environment values are not forwarded.
 
-Any tool accepts a `projectRoot` by default, and `quality_inspector` reports the existence, size and SHA-256 of files under it. To limit which directories a caller can name, set `EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS` in the same format. A `projectRoot` whose real path is outside every listed root fails with a tool error. An empty or invalid value denies every caller-supplied root. The default root, from `--project-root` or the working directory, is not checked.
+A tool's `projectRoot` must sit inside the default root, from `--project-root` or the working directory, because `quality_inspector` reports the existence, size and SHA-256 of files under it. To let a caller name other directories, set `EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS` in the same format; the listed roots then replace the default root as the allowlist. A `projectRoot` that is missing, or whose real path is outside every allowed root, fails with a tool error. An empty or invalid value denies every caller-supplied root. Calls without a `projectRoot` use the default root, which is not checked.
 
 ## Sample client configuration
 

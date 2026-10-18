@@ -12,6 +12,8 @@ import { AjvJsonSchemaValidator } from '@modelcontextprotocol/sdk/validation/ajv
 import { ReadResourceResultSchema } from '@modelcontextprotocol/sdk/types.js';
 
 const packageDir = path.dirname(fileURLToPath(import.meta.url));
+// Fixtures live in temp directories outside the server's default root, which is all an unset allowlist admits.
+process.env.EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS ??= JSON.stringify([packageDir, os.tmpdir()]);
 const require = createRequire(import.meta.url);
 const packageManifest = JSON.parse(await readFile(path.join(packageDir, 'package.json'), 'utf8'));
 const jsdomManifest = JSON.parse(await readFile(require.resolve('jsdom/package.json'), 'utf8'));
@@ -1062,6 +1064,8 @@ const transport = new StdioClientTransport({
     'class=' + fill(' '), 'className={' + fill(' '), '{' + fill(' '),
     // An unclosed class value: requiring the closing quote retried it once per `btn`.
     'class="' + fill('btn '),
+    // A `.range` host with no `>` after it: an unbounded gap rescanned to the end from every host.
+    fill('class="range '),
   ];
   for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id) || entry.id === 'legacy-btn-class')) {
     const regex = new RegExp(rule.pattern.source, rule.pattern.flags);
@@ -1282,7 +1286,6 @@ try {
     [tamperedGuideDir, 'match', 'divergent'],
     [symlinkSourceDir, 'unresolved', 'invalid'],
     [oversizedSourceDir, 'unresolved', 'invalid'],
-    [path.join(outsideDir, 'nonexistent-project'), 'unresolved', 'bundled-verified'],
   ]) {
     const result = await client.callTool({ name: 'component_catalog', arguments: { projectRoot } });
     assertScopedResult(result, 'target component_catalog');
@@ -2515,6 +2518,24 @@ try {
     } finally {
       await closedClient.close();
     }
+  }
+
+  // Unset, the allowlist is the default root: a client cannot name `/` and hash files outside it.
+  const unsetEnv = { ...process.env };
+  delete unsetEnv.EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS;
+  const unsetClient = new Client({ name: 'expressivecss-mcp-unset-roots-smoke', version: '0.1.0' });
+  try {
+    await unsetClient.connect(new StdioClientTransport({ command: process.execPath, args: [path.join(packageDir, 'server.js')], cwd: packageDir, stderr: 'pipe', env: unsetEnv }));
+    for (const projectRoot of [outsideDir, path.parse(outsideDir).root, path.join(packageDir, 'nonexistent-project')]) {
+      const denied = await unsetClient.callTool({ name: 'quality_inspector', arguments: { projectRoot, files: [outsideFile] } });
+      assert.equal(denied.isError, true, `an unset allowlist accepted ${projectRoot}`);
+      assert.match(denied.content[0].text, /EXPRESSIVECSS_MCP_ALLOWED_PROJECT_ROOTS/u);
+      assert.equal(JSON.stringify(denied).includes('sha256'), false);
+    }
+    const inside = await unsetClient.callTool({ name: 'quality_inspector', arguments: { projectRoot: packageDir, files: [] } });
+    assert.notEqual(inside.isError, true, inside.content[0].text);
+  } finally {
+    await unsetClient.close();
   }
 
   const trapTransport = new StdioClientTransport({
