@@ -150,7 +150,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed swipeable Tabs holding a scroll target until the track arrives: 72,196 gzip bytes (+23).
   // Reviewed the lightbox image reading --expressive-z-lightbox: 72,205 gzip bytes (+9).
   // Reviewed the color picker: 73,629 gzip bytes (+1,424).
-  assert.ok(sizes(js).gzip <= 73629, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the number stepper in the Forms behavior: 73,769 gzip bytes (+140).
+  assert.ok(sizes(js).gzip <= 73769, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -217,5 +218,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the color swatches component: 73,556 gzip bytes (+256).
   // Reviewed the color picker: 73,988 gzip bytes (+432).
   // Reviewed elevation tokens and the medium and high contrast schemes: 74,095 gzip bytes (+107).
-  assert.ok(sizes(css).gzip <= 74095, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the number stepper field: 74,167 gzip bytes (+72).
+  assert.ok(sizes(css).gzip <= 74167, `CSS gzip: ${sizes(css).gzip}`);
 });

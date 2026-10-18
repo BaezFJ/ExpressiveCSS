@@ -10,6 +10,7 @@ const S = defineSections([
   { id: "types", label: "Input types" },
   { id: "inline", label: "Inline" },
   { id: "password-visibility", label: "Password visibility" },
+  { id: "number-stepper", label: "Number stepper" },
   { id: "otp", label: "One-time code" },
   { id: "textarea", label: "Textarea" },
   { id: "file", label: "File input" },
@@ -185,6 +186,38 @@ This is an inline input field:
           aria-label="Show password" aria-pressed="false">
     <span class="material-symbols" aria-hidden="true">visibility</span>
     <span class="material-symbols" aria-hidden="true">visibility_off</span>
+  </button>
+</div>
+`} />
+  </Section>
+  <Section {...S["number-stepper"]}>
+        <p>
+          Two trailing icon buttons with <code>data-step="down"</code> and
+          <code>data-step="up"</code> step a number input, within its <code>min</code>,
+          <code>max</code> and <code>step</code>, the way the arrow keys do. Each press fires
+          <code>input</code> and <code>change</code>. The browser's own spin buttons are hidden, and a
+          disabled, read-only or <code>step="any"</code> input is left alone. The Forms behavior does
+          the stepping. Name each button with what it changes.
+        </p>
+        <div class="field">
+          <input id="demo-quantity" type="number" placeholder=" " value="1" min="1" max="10">
+          <label for="demo-quantity">Quantity</label>
+          <button type="button" class="icon-button suffix" data-step="down" aria-label="Decrease quantity">
+            <span class="material-symbols" aria-hidden="true">remove</span>
+          </button>
+          <button type="button" class="icon-button suffix" data-step="up" aria-label="Increase quantity">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+        </div>
+<Code code={`
+<div class="field">
+  <input id="quantity" type="number" placeholder=" " value="1" min="1" max="10">
+  <label for="quantity">Quantity</label>
+  <button type="button" class="icon-button suffix" data-step="down" aria-label="Decrease quantity">
+    <span class="material-symbols" aria-hidden="true">remove</span>
+  </button>
+  <button type="button" class="icon-button suffix" data-step="up" aria-label="Increase quantity">
+    <span class="material-symbols" aria-hidden="true">add</span>
   </button>
 </div>
 `} />

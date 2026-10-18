@@ -59,6 +59,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   labels with visually hidden names, each drawn as a round chip of the color
   set in `--md-comp-color-swatch-color`, with a ring around the checked one.
   An `<input type="color">` at the end adds a custom value. CSS only.
+- Number stepper: two trailing `.icon-button.suffix` buttons with
+  `data-step="down"` and `data-step="up"` in a `.field` step its
+  `<input type="number">` within `min`, `max` and `step`, and fire `input`
+  and `change`. The browser's spin buttons are hidden. The Forms behavior
+  handles it, so there is nothing to initialize.
 - Color picker component: `ColorPicker` enhances a `.color-picker` around an
   `<input type="color">` with a saturation and brightness area, the
   framework's slider as a hue control, and a hex field. The native input stays

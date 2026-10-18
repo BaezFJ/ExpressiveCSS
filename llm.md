@@ -7348,6 +7348,23 @@ Add `password-toggle` to a trailing icon button with two icons and `aria-pressed
 </div>
 ```
 
+### Number stepper
+
+Two trailing icon buttons with `data-step="down"` and `data-step="up"` step a number input, within its `min`, `max` and `step`, the way the arrow keys do. Each press fires `input` and `change`. The browser's own spin buttons are hidden, and a disabled, read-only or `step="any"` input is left alone. The Forms behavior does the stepping. Name each button with what it changes.
+
+```html
+<div class="field">
+  <input id="quantity" type="number" placeholder=" " value="1" min="1" max="10">
+  <label for="quantity">Quantity</label>
+  <button type="button" class="icon-button suffix" data-step="down" aria-label="Decrease quantity">
+    <span class="material-symbols" aria-hidden="true">remove</span>
+  </button>
+  <button type="button" class="icon-button suffix" data-step="up" aria-label="Increase quantity">
+    <span class="material-symbols" aria-hidden="true">add</span>
+  </button>
+</div>
+```
+
 ### One-time code
 
 `input.otp` draws one native input as a row of six cells, so paste, autofill and undo keep working and a screen reader hears one field. Use `type="text"` with `inputmode="numeric"`, `autocomplete="one-time-code"` and a `maxlength` equal to the cell count, and label it outside any `.field`. Set `--md-comp-otp-length` for another length. Digits read left to right in every language.
