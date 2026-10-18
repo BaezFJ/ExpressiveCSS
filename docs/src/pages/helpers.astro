@@ -145,8 +145,10 @@ const S = defineSections([
   <Section {...S.prefixes}>
         <p>
           The display, flex direction, wrap, <code>justify-*</code>, <code>align-*</code>, text
-          alignment (<code>.start-align</code>, <code>.center-align</code>, <code>.end-align</code>)
-          and <code>.gap-*</code> classes also come with a window-size prefix. A prefixed class
+          alignment (<code>.start-align</code>, <code>.center-align</code>, <code>.end-align</code>),
+          <code>.gap-*</code>, margin and padding classes, and <code>.hide</code>, also come with a
+          window-size prefix. Prefixed margin and padding cover all sides, <code>x</code>,
+          <code>y</code>, top, bottom, start and end; use start and end rather than left and right. A prefixed class
           applies from that size class up and overrides the unprefixed one, the same way the grid's
           <code>m6</code> and <code>l4</code> do.
         </p>
@@ -171,9 +173,10 @@ const S = defineSections([
 </div>
 `} />
         <p>
-          In a Sass selector, escape the colon: <code>.expanded\:flex-row</code>. To hide
-          something at a size, use the <a href="#hiding">hide and show classes</a>; they are
-          <code>!important</code>, so a prefixed display class does not undo them.
+          In a Sass selector, escape the colon: <code>.expanded\:flex-row</code>.
+          <code>.medium:hide</code> hides from Medium up. To show something only from a size up,
+          use the <a href="#hiding">hide-on classes</a>; they are <code>!important</code>, so a
+          prefixed display class does not undo them.
         </p>
   </Section>
   <Section {...S.overflow}>

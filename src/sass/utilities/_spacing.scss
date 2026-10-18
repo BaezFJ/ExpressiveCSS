@@ -14,37 +14,47 @@ $spacing-horizontal: "x";
 $spacing-vertical: "y";
 $spacing-values: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "5": 1.5rem, "6": 3rem, "auto": auto);
 
-@each $property, $shortcut in $spacing-shortcuts{
-  @each $name, $value in $spacing-values{
-    // CSS accepts auto margins, but not auto padding.
-    @if $property != "padding" or $value != auto {
-      // All direction spacing
-      .#{$shortcut}-#{$name}{
-        #{$property}: $value !important;
-      }
-      // Physical and logical side spacing
-      @each $direction, $suffix in $spacing-directions{
-        .#{$shortcut}#{$suffix}-#{$name}{
-          #{$property}-#{$direction}: $value !important
+// $prefix is "" for the base classes, or an escaped window size such as
+// medium\: for the prefixed ones at the end of this file.
+@mixin _margin-and-padding($prefix: "") {
+  @each $property, $shortcut in $spacing-shortcuts{
+    @each $name, $value in $spacing-values{
+      // CSS accepts auto margins, but not auto padding.
+      @if $property != "padding" or $value != auto {
+        // All direction spacing
+        .#{$prefix}#{$shortcut}-#{$name}{
+          #{$property}: $value !important;
         }
-      }
-      // x spacing
-      @if $spacing-horizontal != null{
-         .#{$shortcut}#{$spacing-horizontal}-#{$name}{
-           #{$property}-left: $value !important;
-           #{$property}-right: $value !important;
-         }
-      }
-      // y spacing
-      @if $spacing-vertical != null{
-        .#{$shortcut}#{$spacing-vertical}-#{$name}{
-          #{$property}-top: $value !important;
-          #{$property}-bottom: $value !important;
+        // Physical and logical side spacing
+        @each $direction, $suffix in $spacing-directions{
+          // The prefixed sets skip physical left and right; start and end
+          // cover them and mirror in RTL.
+          @if $prefix == "" or ($direction != "left" and $direction != "right") {
+            .#{$prefix}#{$shortcut}#{$suffix}-#{$name}{
+              #{$property}-#{$direction}: $value !important
+            }
+          }
+        }
+        // x spacing
+        @if $spacing-horizontal != null{
+           .#{$prefix}#{$shortcut}#{$spacing-horizontal}-#{$name}{
+             #{$property}-left: $value !important;
+             #{$property}-right: $value !important;
+           }
+        }
+        // y spacing
+        @if $spacing-vertical != null{
+          .#{$prefix}#{$shortcut}#{$spacing-vertical}-#{$name}{
+            #{$property}-top: $value !important;
+            #{$property}-bottom: $value !important;
+          }
         }
       }
     }
   }
 }
+
+@include _margin-and-padding;
 
 // Gap on the same scale for flex and grid containers: .gap-0 ... .gap-6.
 @each $name, $value in $spacing-values {
@@ -53,10 +63,13 @@ $spacing-values: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "5
   }
 }
 
-// The gap scale with window-size prefixes, like the layout classes in
-// _helpers.scss: .expanded:gap-5 applies from Expanded up.
+// The margin, padding and gap scales with window-size prefixes, like the
+// layout classes in _helpers.scss: .expanded:p-5 and .expanded:gap-5 apply
+// from Expanded up. Later in the sheet than the base classes, and every one
+// is !important, so the prefixed class wins from its size class up.
 @each $size in ("medium", "expanded", "large", "extra-large") {
   @include bp-up($size) {
+    @include _margin-and-padding("#{$size}\\:");
     @each $name, $value in $spacing-values {
       @if $name != "auto" {
         .#{$size}\:gap-#{$name} { gap: $value !important; }

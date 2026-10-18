@@ -399,8 +399,11 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
   </Section>
   <Section {...S.contrast}>
     <p>
-      When the user asks for more contrast (<code>prefers-contrast: more</code>), <code>--md-sys-color-outline-variant</code> takes the value of <code>--md-sys-color-outline</code>. Dividers, outlined cards, field borders and every other line drawn in outline-variant then hold 3:1 against the surfaces. Text and fill roles are unchanged. Override the token inside your own <code>@media (prefers-contrast: more)</code> block to choose a different line color.
+      Material 3 has three contrast levels. Put <code>contrast="medium"</code> or <code>contrast="high"</code> on the root or on any subtree to use the medium or high scheme there. The accent roles, their containers, <code>on-surface-variant</code> and the outlines move to darker tones in the light scheme and lighter ones in the dark scheme, taken from the same ramps, so a runtime <code>--md-source</code> change still reaches them. Surfaces stay put. Medium brings accents to about 4.5:1 against the surface and high to 7:1, with outlines at 3:1 or more. When the user asks for more contrast (<code>prefers-contrast: more</code>), the page uses the high scheme unless a <code>contrast</code> attribute says otherwise; <code>contrast="standard"</code> opts a page or subtree out. The tones approximate Material's contrast curves rather than reproducing its color solver. A page that re-themes through the <code>-light</code> and <code>-dark</code> pairs should repeat those overrides inside its own <code>[contrast]</code> rule.
     </p>
+<Code code={`
+<html contrast="high">
+`} />
   </Section>
 </PageBody>
 </DocsLayout>

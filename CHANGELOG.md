@@ -7,6 +7,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Emphasized type roles from Material 3 Expressive: `.{role}-emphasized`
+  classes for all fifteen roles and
+  `--md-sys-typescale-emphasized-{role}-font-weight` tokens, at `500` for
+  display, headline, title-large and body and `700` for title-medium,
+  title-small and label. Roboto and Noto Sans now ship a `700` face, fetched
+  only when a page renders that weight.
+- A "Design tokens" documentation page at `/tokens.html` lists every token
+  family, its prefix and the page that documents it, with an override
+  example.
 - Material 3 motion tokens: `--md-sys-motion-easing-*` for the standard,
   emphasized and linear curves and `--md-sys-motion-duration-short1` to
   `extra-long4`. Components now read them wherever they used an on-scale
@@ -17,14 +26,18 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `extra-extra-large` steps. Component shape tokens on the scale read them,
   so `:root { --md-sys-shape-corner-medium: 8px; }` squares off every medium
   corner. Computed values are unchanged.
+- Elevation tokens: `--md-sys-elevation-level0` to `level5` and
+  `level1-half`, generated from the `$elevations` map. The `z-depth()`
+  mixin, the `.z-depth-*` classes and every component read them, so a theme
+  can change a shadow level at runtime. Computed values are unchanged.
 - `--expressive-z-*` properties name the stacking order of fixed and floating
-  surfaces, from `toolbar` (996) to `snackbar` (10000). Components read them
+  surfaces, from `toolbar` (996) to `confetti` (10001). Components read them
   instead of literal `z-index` values, and the Shadow page lists them.
 - Layout helpers take a window-size prefix: `.medium:`, `.expanded:`,
   `.large:` and `.extra-large:` versions of the display, flex direction and
-  wrap, `justify-*`, `align-*`, text alignment and `.gap-*` classes apply from
-  that size class up, so `flex flex-column expanded:flex-row` stacks until
-  Expanded.
+  wrap, `justify-*`, `align-*`, text alignment, `.gap-*`, margin and padding
+  classes, and `.hide`, apply from that size class up, so
+  `flex flex-column expanded:flex-row` stacks until Expanded.
 - More helpers: `.block`, `.inline-block`, `.grid`, `.inline-grid`,
   `.contents`, `.relative`, `.sticky-top`, `.flex-row`, `.flex-nowrap`,
   `.justify-around`, `.justify-evenly`, `.align-baseline`, `.self-*`,
@@ -45,13 +58,21 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `.query-container` makes an element a query container. Horizontal cards
   and description lists inside one stack when it is narrower than 600px, so
   they adapt to a sidebar or pane on a wide window.
-- With `prefers-contrast: more`, `--md-sys-color-outline-variant` takes the
-  outline role, so dividers, outlined cards and field borders hold 3:1
-  against their surfaces.
+- Contrast levels: `contrast="medium"` and `contrast="high"` on the root or
+  a subtree select M3's medium and high contrast schemes. Accents, their
+  containers, `on-surface-variant` and outlines move to tones that reach
+  about 4.5:1 and 7:1 against the surface. `prefers-contrast: more` applies
+  the high scheme unless a `contrast` attribute is set, and
+  `contrast="standard"` opts out.
 - Color swatches component: a `fieldset.color-swatches` of radios in
   labels with visually hidden names, each drawn as a round chip of the color
   set in `--md-comp-color-swatch-color`, with a ring around the checked one.
   An `<input type="color">` at the end adds a custom value. CSS only.
+- Number stepper: two trailing `.icon-button.suffix` buttons with
+  `data-step="down"` and `data-step="up"` in a `.field` step its
+  `<input type="number">` within `min`, `max` and `step`, and fire `input`
+  and `change`. The browser's spin buttons are hidden. The Forms behavior
+  handles it, so there is nothing to initialize.
 - Color picker component: `ColorPicker` enhances a `.color-picker` around an
   `<input type="color">` with a saturation and brightness area, the
   framework's slider as a hue control, and a hex field. The native input stays

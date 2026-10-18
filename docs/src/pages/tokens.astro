@@ -1,0 +1,56 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "about", label: "About", heading: false },
+  { id: "families", label: "Token families" },
+  { id: "overriding", label: "Overriding" },
+]);
+---
+<DocsLayout page="tokens">
+<PageBody sections={S}>
+  <Section {...S.about}>
+        <p class="flow-text">
+          Every design decision the framework makes is a CSS custom property you can override at runtime, with no rebuild. The system tokens follow Material 3 names (<code>--md-sys-*</code> and <code>--md-ref-*</code>); components read them through their own <code>--md-comp-*</code> tokens, which change one component at a time.
+        </p>
+  </Section>
+  <Section {...S.families}>
+        <div class="docs-table-scroll">
+        <table class="striped">
+          <thead><tr><th>Family</th><th>Prefix</th><th>What it holds</th><th>Details</th></tr></thead>
+          <tbody>
+            <tr><td>Color roles</td><td><code>--md-sys-color-*</code></td><td><code>primary</code>, <code>on-surface</code>, <code>outline-variant</code>: 45 roles, each with a <code>-light</code> and <code>-dark</code> pair</td><td><a href="/color.html">Color</a></td></tr>
+            <tr><td>Tonal palettes</td><td><code>--md-ref-palette-*</code></td><td>Tones 0 to 100 of the primary, secondary, tertiary, neutral, neutral-variant and error ramps, generated from <code>--md-source</code></td><td><a href="/themes.html">Themes</a></td></tr>
+            <tr><td>Contrast levels</td><td><code>contrast="medium" | "high"</code></td><td>An attribute, not a token: moves accents, outlines and <code>on-surface-variant</code> to higher-contrast tones</td><td><a href="/themes.html#contrast">Themes</a></td></tr>
+            <tr><td>Type scale</td><td><code>--md-sys-typescale-*</code></td><td>Font, size, weight, line height and tracking for the fifteen roles, and <code>--md-ref-typeface-*</code></td><td><a href="/typography.html">Typography</a></td></tr>
+            <tr><td>State layers</td><td><code>--md-sys-state-*</code></td><td>Hover, focus, pressed and dragged opacities</td><td><a href="/state-layers.html">State layers</a></td></tr>
+            <tr><td>Motion</td><td><code>--md-sys-motion-*</code></td><td>Seven easing curves and sixteen durations, <code>short1</code> to <code>extra-long4</code></td><td><a href="/css-transitions.html#motion-tokens">Transitions</a></td></tr>
+            <tr><td>Shape</td><td><code>--md-sys-shape-corner-*</code></td><td>The corner scale from <code>none</code> to <code>full</code></td><td><a href="/shapes.html#corner-scale">Shapes</a></td></tr>
+            <tr><td>Elevation</td><td><code>--md-sys-elevation-level*</code></td><td>Shadows for levels 0 to 5 and 1-half</td><td><a href="/shadow.html">Elevation</a></td></tr>
+            <tr><td>Stacking</td><td><code>--expressive-z-*</code></td><td>The z-index order of fixed and floating surfaces</td><td><a href="/shadow.html#stacking">Elevation</a></td></tr>
+          </tbody>
+        </table>
+        </div>
+  </Section>
+  <Section {...S.overriding}>
+        <p>
+          Set a system token on <code>:root</code> to change every component, or on any element to change only what is inside it. Each token is declared on <code>:root</code> and <code>:host</code>, so the same overrides work when the stylesheet is adopted by a shadow root.
+        </p>
+<Code code={`
+<style>
+  :root {
+    --md-source: #006495;                   /* re-themes every color role */
+    --md-sys-shape-corner-medium: 8px;      /* squarer cards and menus */
+    --md-sys-motion-duration-short4: 150ms; /* faster 200ms transitions */
+  }
+  .dense-panel { --md-sys-elevation-level1: none; }
+  .my-card { --md-comp-card-container-shape: 0; }  /* one component */
+</style>
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>

@@ -731,7 +731,11 @@ The elevation ladder collapses — every `surface-container` rung resolves to th
 
 ### More contrast
 
-When the user asks for more contrast (`prefers-contrast: more`), `--md-sys-color-outline-variant` takes the value of `--md-sys-color-outline`. Dividers, outlined cards, field borders and every other line drawn in outline-variant then hold 3:1 against the surfaces. Text and fill roles are unchanged. Override the token inside your own `@media (prefers-contrast: more)` block to choose a different line color.
+Material 3 has three contrast levels. Put `contrast="medium"` or `contrast="high"` on the root or on any subtree to use the medium or high scheme there. The accent roles, their containers, `on-surface-variant` and the outlines move to darker tones in the light scheme and lighter ones in the dark scheme, taken from the same ramps, so a runtime `--md-source` change still reaches them. Surfaces stay put. Medium brings accents to about 4.5:1 against the surface and high to 7:1, with outlines at 3:1 or more. When the user asks for more contrast (`prefers-contrast: more`), the page uses the high scheme unless a `contrast` attribute says otherwise; `contrast="standard"` opts a page or subtree out. The tones approximate Material's contrast curves rather than reproducing its color solver. A page that re-themes through the `-light` and `-dark` pairs should repeat those overrides inside its own `[contrast]` rule.
+
+```html
+<html contrast="high">
+```
 
 ### Corner scale
 
@@ -752,6 +756,38 @@ Component shape tokens on the Material 3 corner scale read the `md.sys.shape.cor
 
 ```css
 :root { --md-sys-shape-corner-medium: 8px; } /* cards, menu items and other medium corners */
+```
+
+---
+
+## Design tokens
+
+Every token family in one place: color, type, state, motion, shape, elevation and stacking.
+
+Every design decision the framework makes is a CSS custom property you can override at runtime, with no rebuild. The system tokens follow Material 3 names (`--md-sys-*` and `--md-ref-*`); components read them through their own `--md-comp-*` tokens, which change one component at a time.
+
+| Family | Prefix | What it holds | Details |
+| --- | --- | --- | --- |
+| Color roles | `--md-sys-color-*` | `primary`, `on-surface`, `outline-variant`: 45 roles, each with a `-light` and `-dark` pair | [Color](https://www.expressivecss.com/color.html) |
+| Tonal palettes | `--md-ref-palette-*` | Tones 0 to 100 of the primary, secondary, tertiary, neutral, neutral-variant and error ramps, generated from `--md-source` | [Themes](https://www.expressivecss.com/themes.html) |
+| Contrast levels | `contrast="medium" | "high"` | An attribute, not a token: moves accents, outlines and `on-surface-variant` to higher-contrast tones | [Themes](https://www.expressivecss.com/themes.html#contrast) |
+| Type scale | `--md-sys-typescale-*` | Font, size, weight, line height and tracking for the fifteen roles, and `--md-ref-typeface-*` | [Typography](https://www.expressivecss.com/typography.html) |
+| State layers | `--md-sys-state-*` | Hover, focus, pressed and dragged opacities | [State layers](https://www.expressivecss.com/state-layers.html) |
+| Motion | `--md-sys-motion-*` | Seven easing curves and sixteen durations, `short1` to `extra-long4` | [Transitions](https://www.expressivecss.com/css-transitions.html#motion-tokens) |
+| Shape | `--md-sys-shape-corner-*` | The corner scale from `none` to `full` | [Shapes](https://www.expressivecss.com/shapes.html#corner-scale) |
+| Elevation | `--md-sys-elevation-level*` | Shadows for levels 0 to 5 and 1-half | [Elevation](https://www.expressivecss.com/shadow.html) |
+| Stacking | `--expressive-z-*` | The z-index order of fixed and floating surfaces | [Elevation](https://www.expressivecss.com/shadow.html#stacking) |
+
+Set a system token on `:root` to change every component, or on any element to change only what is inside it. Each token is declared on `:root` and `:host`, so the same overrides work when the stylesheet is adopted by a shadow root.
+
+```css
+:root {
+  --md-source: #006495;                   /* re-themes every color role */
+  --md-sys-shape-corner-medium: 8px;      /* squarer cards and menus */
+  --md-sys-motion-duration-short4: 150ms; /* faster 200ms transitions */
+}
+.dense-panel { --md-sys-elevation-level1: none; }
+.my-card { --md-comp-card-container-shape: 0; }  /* one component */
 ```
 
 ---
@@ -1139,7 +1175,7 @@ One class per declaration, applied to the container. Row direction and start ali
 
 ### Window-size prefixes
 
-The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`) and `.gap-*` classes also come with a window-size prefix. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
+The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`), `.gap-*`, margin and padding classes, and `.hide`, also come with a window-size prefix. Prefixed margin and padding cover all sides, `x`, `y`, top, bottom, start and end; use start and end rather than left and right. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
 
 | Prefix | Applies from |
 | --- | --- |
@@ -1156,7 +1192,7 @@ The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.sta
 </div>
 ```
 
-In a Sass selector, escape the colon: `.expanded\:flex-row`. To hide something at a size, use the hide and show classes; they are `!important`, so a prefixed display class does not undo them.
+In a Sass selector, escape the colon: `.expanded\:flex-row`. `.medium:hide` hides from Medium up. To show something only from a size up, use the hide-on classes; they are `!important`, so a prefixed display class does not undo them.
 
 ### Sizing and overflow
 
@@ -1553,6 +1589,14 @@ The class list is generated from the same map as the mixin, so they cannot drift
 There is also `z-depth-1-half`, an in-between level from the same elevation map.
 
 
+#### Elevation tokens
+
+Each level is also a custom property, `--md-sys-elevation-level0` to `--md-sys-elevation-level5` plus `--md-sys-elevation-level1-half`. The classes, the mixin and every component read them, so a theme can soften or deepen a level at runtime.
+
+```css
+:root { --md-sys-elevation-level1: 0 1px 3px rgb(0 0 0 / 0.3); }
+```
+
 #### Stacking order
 
 A shadow does not decide what sits on top. Surfaces that float over the page take their `z-index` from these properties, lowest first. Dialogs, modal sheets and open popovers are in the browser's top layer, above all of them.
@@ -1567,6 +1611,7 @@ A shadow does not decide what sits on top. Surfaces that float over the page tak
 | `--expressive-z-tooltip` | 2000 | Tooltips. |
 | `--expressive-z-menu` | 9999 | Menus and the docked date and time pickers. |
 | `--expressive-z-snackbar` | 10000 | Snackbars. |
+| `--expressive-z-confetti` | 10001 | The confetti overlay, in browsers without popovers. |
 
 ```css
 .site-banner { position: sticky; top: 0; z-index: calc(var(--expressive-z-app-bar) + 1); }
@@ -1778,6 +1823,12 @@ When the tag cannot say the role, use the class. Display-large and display-mediu
 
 `body-large`, `body-medium`, and `body-small` apply the three body roles to an element that is not a `<p>` or `<small>`.
 
+Each of the fifteen roles has an emphasized counterpart from Material 3 Expressive: the same family, size and spacing, heavier. Add `-emphasized` to the role class, such as `.label-large-emphasized` or `.headline-small-emphasized`. Display, headline, title-large and body roles go to `500`; title-medium, title-small and label roles go to `700`. The weight is a token, `--md-sys-typescale-emphasized-{role}-font-weight`. Roboto and Noto Sans are bundled at `700` and load only when a page uses it.
+
+```html
+<h2 class="headline-small-emphasized">Account security</h2>
+<span class="label-large-emphasized">Selected</span>
+```
 ### Links
 
 Links use the primary color. A link without a class inside a paragraph, a `<dd>`, a blockquote, a figure caption or a table cell is also underlined, because color alone does not mark a link for everyone. Links elsewhere, and any link with a class, have no underline, so navigation lists, menus, tabs and buttons made from `<a>` keep their own look.
@@ -7332,6 +7383,23 @@ Add `password-toggle` to a trailing icon button with two icons and `aria-pressed
   <button type="button" class="icon-button suffix password-toggle" aria-label="Show password" aria-pressed="false">
     <span class="material-symbols" aria-hidden="true">visibility</span>
     <span class="material-symbols" aria-hidden="true">visibility_off</span>
+  </button>
+</div>
+```
+
+### Number stepper
+
+Two trailing icon buttons with `data-step="down"` and `data-step="up"` step a number input, within its `min`, `max` and `step`, the way the arrow keys do. Each press fires `input` and `change`. The browser's own spin buttons are hidden, and a disabled, read-only or `step="any"` input is left alone. The Forms behavior does the stepping. Name each button with what it changes.
+
+```html
+<div class="field">
+  <input id="quantity" type="number" placeholder=" " value="1" min="1" max="10">
+  <label for="quantity">Quantity</label>
+  <button type="button" class="icon-button suffix" data-step="down" aria-label="Decrease quantity">
+    <span class="material-symbols" aria-hidden="true">remove</span>
+  </button>
+  <button type="button" class="icon-button suffix" data-step="up" aria-label="Increase quantity">
+    <span class="material-symbols" aria-hidden="true">add</span>
   </button>
 </div>
 ```

@@ -319,3 +319,43 @@ browserTest('a narrow query container stacks horizontal cards and description li
     await browser.close();
   }
 });
+
+browserTest('emphasized type roles keep the role metrics and take the emphasized weight', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style>
+      <span id="label" class="label-large">a</span><span id="label-e" class="label-large-emphasized">a</span>
+      <span id="body" class="body-large">a</span><span id="body-e" class="body-large-emphasized">a</span>`);
+    const read = await page.evaluate(() => Object.fromEntries(['label', 'label-e', 'body', 'body-e'].map((id) => {
+      const s = getComputedStyle(document.getElementById(id));
+      return [id, [s.fontWeight, s.fontSize, s.lineHeight]];
+    })));
+    assert.deepEqual(read['label-e'], ['700', ...read.label.slice(1)]);
+    assert.deepEqual(read['body-e'], ['500', ...read.body.slice(1)]);
+  } finally {
+    await browser.close();
+  }
+});
+
+browserTest('prefixed spacing and hide apply from their size class up', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style>
+      <div id="box" class="p-2 mt-1 expanded:p-5 expanded:mt-6">x</div>
+      <div id="gone" class="flex medium:hide">y</div>`);
+    const read = () => page.evaluate(() => {
+      const box = getComputedStyle(document.getElementById('box'));
+      return [box.paddingLeft, box.marginTop, getComputedStyle(document.getElementById('gone')).display];
+    });
+    await page.setViewportSize({ width: 599, height: 600 });
+    assert.deepEqual(await read(), ['8px', '4px', 'flex']);
+    await page.setViewportSize({ width: 600, height: 600 });
+    assert.deepEqual(await read(), ['8px', '4px', 'none']);
+    await page.setViewportSize({ width: 840, height: 600 });
+    assert.deepEqual(await read(), ['24px', '48px', 'none']);
+  } finally {
+    await browser.close();
+  }
+});

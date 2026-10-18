@@ -202,10 +202,15 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 
 // M3 type role. Every property must name a token tokens/_reference.scss
 // actually defines — a missing var() drops the whole declaration.
-@mixin typescale($role) {
+// $emphasized takes the role's M3 Expressive emphasized weight.
+@mixin typescale($role, $emphasized: false) {
   font-family: var(--md-sys-typescale-#{$role}-font-family-name);
   font-size: var(--md-sys-typescale-#{$role}-font-size);
-  font-weight: var(--md-sys-typescale-#{$role}-font-weight);
+  @if $emphasized {
+    font-weight: var(--md-sys-typescale-emphasized-#{$role}-font-weight);
+  } @else {
+    font-weight: var(--md-sys-typescale-#{$role}-font-weight);
+  }
   line-height: var(--md-sys-typescale-#{$role}-line-height);
   letter-spacing: var(--md-sys-typescale-#{$role}-letter-spacing);
 }

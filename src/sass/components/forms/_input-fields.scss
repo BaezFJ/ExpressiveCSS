@@ -256,6 +256,28 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     }
   }
 
+  // Number stepper: data-step="down" sits one button in from the end, before
+  // data-step="up". The Forms behavior does the stepping.
+  > .icon-button.suffix[data-step="down"] {
+    right: 48px;
+
+    &:dir(rtl) {
+      right: auto;
+      left: 48px;
+    }
+  }
+
+  // The browser's spin buttons go when the field draws its own.
+  &:has(> [data-step]) > input[type="number"] {
+    appearance: textfield;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      appearance: none;
+      margin: 0;
+    }
+  }
+
   // The label reads --_field-start too, so it indents with the input.
   &:has(> .prefix) {
     --_field-start: 52px;
@@ -263,6 +285,10 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
 
   &:has(> .suffix) {
     --_field-end: 52px;
+  }
+
+  &:has(> [data-step]) {
+    --_field-end: 96px;
   }
 
   &.outlined {

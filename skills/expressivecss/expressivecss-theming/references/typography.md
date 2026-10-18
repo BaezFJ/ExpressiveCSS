@@ -59,26 +59,19 @@ Every role exposes `--md-sys-typescale-{role}-font-family-name`, `-font-family-s
 
 Google's [typography guidance](https://m3.material.io/styles/typography/overview) and [Android typography implementation](https://github.com/material-components/material-components-android/blob/master/docs/theming/Typography.md) include an emphasized counterpart for each baseline role. They use stronger weight to distinguish selected content, actions, headlines, and editorial hierarchy. Reviewed 2026-09-07. The Android style names are design evidence, not CSS classes.
 
-| Roles | Google emphasized weight | ExpressiveCSS application path |
+| Roles | Emphasized weight | Token |
 | --- | --- | --- |
-| Display, headline, title-large, body | Medium, conventionally `500` | Scope the existing role's `-font-weight` token to the intended element. Bundled fonts supply `500`. |
-| Title-medium, title-small, label | Bold, conventionally `700` | Supply a real `700` face or a variable font covering it, then scope the existing role token. Bundled fonts do not supply `700`. |
+| Display, headline, title-large, body | Medium, `500` | `--md-sys-typescale-emphasized-{role}-font-weight` |
+| Title-medium, title-small, label | Bold, `700` | `--md-sys-typescale-emphasized-{role}-font-weight` |
 
-ExpressiveCSS emits only the 15 baseline roles above. It has no emphasized type-role utility or `--md-sys-typescale-emphasized-*` token family.
-
-For a selected headline treatment, this is an application-owned override of an existing token:
-
-```css
-.account-heading {
-  --md-sys-typescale-headline-small-font-weight: 500;
-}
-```
+Each role has an emphasized class, `.{role}-emphasized` such as `.label-large-emphasized` or `.headline-small-emphasized`. It applies the role's family, size, line height and tracking with the emphasized weight. The `--md-sys-typescale-emphasized-*` tokens hold only the weight; everything else is the baseline role's. The package bundles Roboto and Noto Sans at `400`, `500` and `700`, and the browser fetches the `700` faces only when a page renders that weight.
 
 ```html
-<h2 class="headline-small account-heading">Account security</h2>
+<h2 class="headline-small-emphasized">Account security</h2>
+<span class="label-large-emphasized">Selected</span>
 ```
 
-Scope emphasis to the text or intended subtree. Changing all weights at `:root` would erase the contrast between ordinary and emphasized text. Keep the role's size, line height, and spacing unless the brand requires a tested adjustment. `.bold` means `500` in this framework, so it cannot stand in for the `700` emphasized label treatment. Do not invent `.label-large-emphasized` or imply that heavier text changes selection semantics.
+Scope emphasis to the text that needs it. `.bold` means `500` in this framework, so it is not the `700` emphasized label treatment; use the emphasized class. Heavier text does not change selection semantics, so keep `aria-selected`, `aria-current` or the native state as the source of truth.
 
 Use emphasis sparingly around the task's important action or content. Keep ordinary prose comfortable to read; use semantic `<strong>` when the text itself has greater importance. Verify the actual loaded font face and weight, text wrapping, fallback scripts, and zoom. A font-family declaration alone does not load a font, and synthetic bold is not proof that the requested face exists.
 
@@ -94,7 +87,7 @@ Override the reference tokens rather than all 15 roles:
 }
 ```
 
-The defaults are Roboto for `--md-ref-typeface-brand` and `--md-ref-typeface-plain`, followed by `--md-ref-typeface-fallback`. The package bundles Roboto 400/500 and Noto Sans 400/500. If a replacement family does not provide the weights used by the scale, browsers may synthesize them.
+The defaults are Roboto for `--md-ref-typeface-brand` and `--md-ref-typeface-plain`, followed by `--md-ref-typeface-fallback`. The package bundles Roboto and Noto Sans at 400, 500 and 700. If a replacement family does not provide the weights used by the scale, browsers may synthesize them.
 
 ## Element defaults
 

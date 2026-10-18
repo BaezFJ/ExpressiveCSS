@@ -45,6 +45,15 @@
     src: url("#{$expressive-font-path}/roboto-latin-500.woff2") format("woff2");
   }
 
+  // 700 is only fetched when a page renders it, such as an emphasized label.
+  @font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("#{$expressive-font-path}/roboto-latin-700.woff2") format("woff2");
+  }
+
   @font-face {
     font-family: "Noto Sans";
     font-style: normal;
@@ -59,5 +68,14 @@
     font-weight: 500;
     font-display: swap;
     src: url("#{$expressive-font-path}/noto-sans-latin-500.woff2") format("woff2");
+  }
+
+  // 700 is only fetched when a page renders it, such as an emphasized label.
+  @font-face {
+    font-family: "Noto Sans";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("#{$expressive-font-path}/noto-sans-latin-700.woff2") format("woff2");
   }
 }

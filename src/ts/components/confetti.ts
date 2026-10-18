@@ -301,7 +301,8 @@ function viewportCanvas(): HTMLCanvasElement {
   // Inline, so the overlay works even where the stylesheet does not reach.
   Object.assign(overlay.style, {
     position: 'fixed', inset: '0', width: '100%', height: '100%', margin: '0', padding: '0',
-    border: '0', background: 'transparent', pointerEvents: 'none', zIndex: '10001'
+    // The fallback keeps the order where the sheet, and so the token, is absent.
+    border: '0', background: 'transparent', pointerEvents: 'none', zIndex: 'var(--expressive-z-confetti, 10001)'
   });
   document.body.append(overlay);
   if (typeof overlay.showPopover === 'function') {

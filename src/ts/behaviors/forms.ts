@@ -97,6 +97,7 @@ export class Forms {
       });
 
       document.addEventListener('click', Forms.togglePassword);
+      document.addEventListener('click', Forms.stepNumber);
       // Capture, so the password is hidden again before any submit handler
       // reads the form or the browser offers to save it.
       document.addEventListener('submit', Forms.resetFormExtras, true);
@@ -136,6 +137,23 @@ export class Forms {
     input.toggleAttribute('data-password', show);
     input.type = show ? 'text' : 'password';
     button.setAttribute('aria-pressed', String(show));
+  }
+
+  /**
+   * A [data-step="up"] or [data-step="down"] button in a .field steps the
+   * field's number input as the arrow keys would, within min, max and step,
+   * and fires input and change. A disabled, read-only or step="any" input
+   * is left alone; stepUp() would throw on step="any".
+   */
+  static stepNumber(e: MouseEvent) {
+    const button = Utils.closestInPath(e, '.field > [data-step]:not(:disabled)') as HTMLElement | null;
+    const input = button?.parentElement!.querySelector<HTMLInputElement>(
+      ':scope > input[type="number"]:not(:disabled, [readonly], [step="any"])'
+    );
+    if (!input) return;
+    input[button!.dataset.step === 'down' ? 'stepDown' : 'stepUp']();
+    input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
   /**

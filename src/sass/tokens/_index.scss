@@ -4,7 +4,9 @@
 @forward "reference";  // raw ramps + resolved light/dark pairs
 @forward "theme";      // maps the pairs onto the live --md-sys-color-* names
 @forward "vibrant";    // [vibrant] remaps the surface family onto an accent
+@forward "contrast";   // [contrast] medium and high schemes, and prefers-contrast: more
 @forward "state";      // md.sys.state.* state layer opacities
 @forward "motion";     // md.sys.motion.* easing curves and durations
 @forward "shape";      // md.sys.shape.corner.* corner scale
+@forward "elevation";  // md.sys.elevation.level* shadows
 @forward "stacking";   // z-index order for fixed and floating surfaces

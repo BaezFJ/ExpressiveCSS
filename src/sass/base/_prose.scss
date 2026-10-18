@@ -5,7 +5,7 @@
 // <div>, <section> or <main>: every <article> is already a card.
 //
 // It lives in the base layer, not with the components, so any component
-// dropped into an article still wins over it. The element lists sit in
+// placed inside the content still wins over it. The element lists sit in
 // :where(), so a rule weighs `.prose` plus `:not([class])`: enough to beat
 // the element defaults beside it. Elements that carry a class are a
 // component or a deliberate style and are left alone.

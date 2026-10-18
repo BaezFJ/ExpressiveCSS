@@ -28,6 +28,13 @@ $typescale-roles: (
   }
 }
 
+// The emphasized counterpart of each role: the same type, heavier.
+@each $role in $typescale-roles {
+  .#{$role}-emphasized {
+    @include typescale($role, $emphasized: true);
+  }
+}
+
 // Emphasis and case. One job each, independent of the type role.
 .italic { font-style: italic; }
 .bold { font-weight: 500; }

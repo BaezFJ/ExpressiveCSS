@@ -110,7 +110,8 @@ describe("Menu", () => {
     // rather than a hand-copied shadow is what keeps it from drifting.
     const level2 = ELEVATIONS.match(/"2":\s*\(([^)]*)\)/)[1].trim();
     const menu = css.match(/menu\[id\]\s*\{[^}]*\}/)[0];
-    assert.match(menu, new RegExp("box-shadow:\\s*" + escapeRe(level2)));
+    assert.match(menu, /box-shadow:\s*var\(--md-sys-elevation-level2\)/);
+    assert.match(css, new RegExp("--md-sys-elevation-level2:\\s*" + escapeRe(level2)));
   });
 
   test("supports supporting text, badges, and reduced motion", () => {
@@ -142,7 +143,7 @@ describe("Menu", () => {
   test("supports standard and grouped menu layouts", () => {
     assert.match(
       css,
-      /menu\[id\]\.grouped\s*\{[^}]*padding:\s*0;[^}]*background-color:\s*transparent;[^}]*box-shadow:\s*none;[^}]*filter:\s*drop-shadow/s,
+      /menu\[id\]\.grouped\s*\{[^}]*padding:\s*0;[^}]*background-color:\s*transparent;[^}]*box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\));[^}]*filter:\s*drop-shadow/s,
     );
     assert.match(
       css,

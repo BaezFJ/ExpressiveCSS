@@ -165,7 +165,7 @@ describe('Disabled buttons and consumer overrides', () => {
   // give a text button or a docked toolbar a shadow. Only the utility keeps it.
   test('only the .z-depth-0 utility cancels a shadow with !important', () => {
     const important = rules
-      .filter((r) => /box-shadow:\s*none\s*!important/.test(r.body))
+      .filter((r) => /box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\))\s*!important/.test(r.body))
       .flatMap((r) => r.selectors)
       .filter((s) => !s.startsWith('.z-depth-'));
     assert.deepEqual(important, []);
@@ -176,7 +176,7 @@ describe('Disabled buttons and consumer overrides', () => {
   test('a focused disabled button keeps the disabled look', () => {
     const body = ruleFor((selector) => /:is\(:disabled, \[disabled\], \.disabled\):is\(:hover, :active, :focus\)/.test(selector));
     assert.ok(body, 'no state arm on the disabled rule');
-    assert.match(body, /box-shadow:\s*none/);
+    assert.match(body, /box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\))/);
     assert.match(body, /pointer-events:\s*none/);
   });
 
@@ -185,6 +185,6 @@ describe('Disabled buttons and consumer overrides', () => {
   test('a disabled FAB takes the disabled look', () => {
     const body = ruleFor((selector) => /:is\(\.extra, \.large\)\.circle:is\(:disabled, \[disabled\], \.disabled\)/.test(selector));
     assert.ok(body, 'no FAB arm on the disabled rule');
-    assert.match(body, /box-shadow:\s*none/);
+    assert.match(body, /box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\))/);
   });
 });

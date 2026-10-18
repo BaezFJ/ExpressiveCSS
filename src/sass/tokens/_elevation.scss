@@ -1,0 +1,16 @@
+@use "../abstracts" as *;
+
+// Elevation tokens: one --md-sys-elevation-level<N> shadow per key of
+// $elevations in abstracts/_elevation.scss. The z-depth() mixin and the
+// .z-depth-* classes read these, so a theme can change a level at runtime:
+//
+//   :root { --md-sys-elevation-level1: 0 1px 3px rgb(0 0 0 / 0.3); }
+//
+// Level 0 is `none`, which cancels a shadow.
+
+:root,
+:host {
+  @each $level, $shadow in $elevations {
+    --md-sys-elevation-level#{$level}: #{$shadow};
+  }
+}

@@ -209,48 +209,48 @@ describe('Cards CSS', () => {
   test('uses each variant’s specified hover and dragged elevation', () => {
     assert.match(
       css,
-      /:not\(\.filled, \.outlined, \.border\):has\(> \.primary-action:hover\)\s*\{[^}]*box-shadow:\s*0 4px 5px/s
+      /:not\(\.filled, \.outlined, \.border\):has\(> \.primary-action:hover\)\s*\{[^}]*box-shadow:\s*var\(--md-sys-elevation-level2\)/s
     );
     assert.match(
       css,
-      /:is\(\.filled, \.outlined, \.border\):has\(> \.primary-action:hover\)\s*\{[^}]*box-shadow:\s*0 2px 2px/s
+      /:is\(\.filled, \.outlined, \.border\):has\(> \.primary-action:hover\)\s*\{[^}]*box-shadow:\s*var\(--md-sys-elevation-level1\)/s
     );
     assert.match(
       css,
-      /:not\(\.filled, \.outlined, \.border\):is\(\.dragged, \.picked-up\)\s*\{[^}]*z-index:\s*4[^}]*box-shadow:\s*0 16px 24px/s
+      /:not\(\.filled, \.outlined, \.border\):is\(\.dragged, \.picked-up\)\s*\{[^}]*z-index:\s*4[^}]*box-shadow:\s*var\(--md-sys-elevation-level4\)/s
     );
     assert.match(
       css,
-      /:is\(\.filled, \.outlined, \.border\):is\(\.dragged, \.picked-up\)\s*\{[^}]*box-shadow:\s*0 8px 17px/s
+      /:is\(\.filled, \.outlined, \.border\):is\(\.dragged, \.picked-up\)\s*\{[^}]*box-shadow:\s*var\(--md-sys-elevation-level3\)/s
     );
   });
 
   test('keeps level-zero bases overridable by hover and dragged states', () => {
     assert.doesNotMatch(
       css,
-      /:where\(article\)\.filled\s*\{[^}]*box-shadow:\s*none\s*!important/s
+      /:where\(article\)\.filled\s*\{[^}]*box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\))\s*!important/s
     );
     assert.doesNotMatch(
       css,
-      /:where\(article\):is\(\.outlined, \.border\)\s*\{[^}]*box-shadow:\s*none\s*!important/s
+      /:where\(article\):is\(\.outlined, \.border\)\s*\{[^}]*box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\))\s*!important/s
     );
   });
 
   test('uses each variant’s specified pressed elevation even while hovered', () => {
     assert.match(
       css,
-      /:not\(\.filled, \.outlined, \.border\):has\(> \.primary-action:active\)\s*\{[^}]*box-shadow:\s*0 2px 2px/s
+      /:not\(\.filled, \.outlined, \.border\):has\(> \.primary-action:active\)\s*\{[^}]*box-shadow:\s*var\(--md-sys-elevation-level1\)/s
     );
     assert.match(
       css,
-      /:is\(\.filled, \.outlined, \.border\):has\(> \.primary-action:active\)\s*\{[^}]*box-shadow:\s*none;/s
+      /:is\(\.filled, \.outlined, \.border\):has\(> \.primary-action:active\)\s*\{[^}]*box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\));/s
     );
   });
 
   test('keeps disabled elevation and container color variant-specific', () => {
     assert.match(
       css,
-      /:not\(\.filled, \.outlined, \.border\):is\(\.disabled, \[aria-disabled=true\]\)[^{]*\{[^}]*box-shadow:\s*0 2px 2px/s
+      /:not\(\.filled, \.outlined, \.border\):is\(\.disabled, \[aria-disabled=true\]\)[^{]*\{[^}]*box-shadow:\s*var\(--md-sys-elevation-level1\)/s
     );
     assert.match(
       css,
@@ -258,7 +258,7 @@ describe('Cards CSS', () => {
     );
     assert.match(
       css,
-      /\.filled:is\(\.disabled, \[aria-disabled=true\]\)[^{]*\{[^}]*box-shadow:\s*none;[^}]*var\(--md-sys-color-surface-container-highest\) var\(--md-comp-card-disabled-container-opacity\)/s
+      /\.filled:is\(\.disabled, \[aria-disabled=true\]\)[^{]*\{[^}]*box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\));[^}]*var\(--md-sys-color-surface-container-highest\) var\(--md-comp-card-disabled-container-opacity\)/s
     );
   });
 
