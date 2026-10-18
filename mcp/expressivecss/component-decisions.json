@@ -7226,6 +7226,93 @@
       }
     },
     {
+      "slug": "color-swatches",
+      "title": "Color swatches",
+      "aliases": [
+        "color picker",
+        "colour picker",
+        "swatch picker",
+        "palette picker",
+        "color chooser"
+      ],
+      "guideSource": {
+        "pageId": "color-swatches",
+        "heading": "Color swatches",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/color-swatches"
+        ]
+      },
+      "jobs": [
+        "Pick one color from a preset palette, on native radio buttons."
+      ],
+      "useWhen": [
+        "Offer a short fixed set of colors, such as a label, theme or calendar color, with an optional custom value."
+      ],
+      "avoidWhen": [
+        "Any color at all needs the native color input on its own; choosing between named options that are not colors needs radio buttons or chips."
+      ],
+      "alternatives": [
+        "radio-buttons",
+        "chips",
+        "text-fields"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/color-swatches.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#color-swatches",
+          "reviewedOn": "2026-10-18",
+          "documentedSupport": "A fieldset of native radios drawn as round chips of their colors, a ring around the checked one, the shared focus ring, a 48px target and an optional native color input for a custom value.",
+          "webAdaptation": "Native radios keep one Tab stop, arrow keys and form submission; each swatch is named by visually hidden text in its label.",
+          "limitations": [
+            "Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-18",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep a native radio group with a legend and a name for every swatch, mark the choice by shape as well as color, show focus and keep the swatch colors under forced colors."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Eight label colors for a calendar are color swatches. Any brand color a designer types in is the native color input.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-18",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_color-swatches.scss",
+            "sha256": "a45b847c14a7bc29c916350e9250fec3f7487eeae32bcd2d27e586aeea2771e0"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified.",
+            "nextStep": "Choose a swatch with a keyboard and a screen reader in Firefox and Safari, and confirm each color name and the checked state are announced; check 200% text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/color-swatches-browser.test.js",
+            "name": "chromium: color swatches draw each radio as its color and keep native radio behavior",
+            "scope": "Swatch color, 40px round shape and checked ring, the named group, arrow keys moving the choice, the form value, the focus ring after arrow keys and the swatch color under forced colors. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "switches",
       "title": "Switches",
       "aliases": [

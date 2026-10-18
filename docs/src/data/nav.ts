@@ -742,6 +742,13 @@ export const NAV: DocsGroup[] = [
           "Stars for choosing or showing a score, on native radio buttons.",
       },
       {
+        id: "color-swatches",
+        label: "Color swatches",
+        route: "/color-swatches.html",
+        description:
+          "Pick one color from a preset palette, on native radio buttons.",
+      },
+      {
         id: "switches",
         label: "Switches",
         route: "/switches.html",

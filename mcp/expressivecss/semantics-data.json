@@ -755,6 +755,25 @@
           }
         ]
       },
+      "forms/color-swatches": {
+        "status": "enforced",
+        "note": "Added with the color swatches component. A fieldset of native radios in labels with visually hidden names, drawn as round chips of their colors, with an optional native color input for a custom value.",
+        "rules": [
+          {
+            "id": "color-swatches-is-a-fieldset",
+            "kind": "forbid",
+            "selector": ".color-swatches:not(fieldset)",
+            "fragmentSafe": true,
+            "message": "A .color-swatches is a <fieldset> with a <legend>, so the radios read as one named group."
+          },
+          {
+            "id": "color-swatch-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".color-swatches > [type=\"radio\"]",
+            "message": "A swatch shows no text, so name each radio with visually hidden text in its label, such as \"Purple\"."
+          }
+        ]
+      },
       "forms/select": {
         "status": "enforced",
         "note": "Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select.test.js.",

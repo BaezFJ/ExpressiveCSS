@@ -88,6 +88,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Checkboxes](#checkboxes) | unassessed | needs-review | needs-rerun | 0 |
 | [Radio buttons](#radio-buttons) | unassessed | needs-review | needs-rerun | 0 |
 | [Rating](#rating) | implemented | source-reviewed | needs-rerun | 0 |
+| [Color swatches](#color-swatches) | implemented | source-reviewed | incomplete | 0 |
 | [Switches](#switches) | unassessed | needs-review | needs-rerun | 1 |
 | [Slider](#slider) | unassessed | needs-review | needs-rerun | 0 |
 | [Chips](#chips) | unassessed | needs-review | needs-rerun | 0 |
@@ -1370,6 +1371,22 @@ Web adaptation: Native radios keep keyboard, form and naming behavior; the displ
 - verification: Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified. Next: Rate with a keyboard and a screen reader in each engine, including Safari, and confirm the focus ring follows the arrows and each star is announced.
 
 - stale: [tests/rating-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/tests/rating-browser.test.js): `chromium: rating fills stars up to the choice, previews on hover and keeps native radios`. Visible 24px masked radios, fill up to the checked star, Tab entry and arrow keys, focus ring on entry, hover preview, form value, display width and fill direction in LTR and RTL, and the group, radio and image names. No spoken-output assertion.
+
+<a id="color-swatches"></a>
+
+## Color swatches
+
+**implemented within the stated scope.** A fieldset of native radios drawn as round chips of their colors, a ring around the checked one, the shared focus ring, a 48px target and an optional native color input for a custom value.
+
+Source review: source-reviewed, 2026-10-18. [src/sass/components/forms/_color-swatches.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/src/sass/components/forms/_color-swatches.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-18); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: Native radios keep one Tab stop, arrow keys and form submission; each swatch is named by visually hidden text in its label.
+
+- verification: Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified. Next: Choose a swatch with a keyboard and a screen reader in Firefox and Safari, and confirm each color name and the checked state are announced; check 200% text.
+
+- not-recorded: [tests/color-swatches-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/tests/color-swatches-browser.test.js): `chromium: color swatches draw each radio as its color and keep native radio behavior`. Swatch color, 40px round shape and checked ring, the named group, arrow keys moving the choice, the form value, the focus ring after arrow keys and the swatch color under forced colors. No spoken-output assertion.
 
 <a id="switches"></a>
 

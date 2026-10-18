@@ -48,6 +48,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - With `prefers-contrast: more`, `--md-sys-color-outline-variant` takes the
   outline role, so dividers, outlined cards and field borders hold 3:1
   against their surfaces.
+- Color swatches component: a `fieldset.color-swatches` of radios in
+  labels with visually hidden names, each drawn as a round chip of the color
+  set in `--md-comp-color-swatch-color`, with a ring around the checked one.
+  An `<input type="color">` at the end adds a custom value. CSS only.
 - A "Frosted glass" documentation page at `/glass.html` covers the
   `--expressive-glass`, `-blur` and `-opacity` properties, the Sass defaults,
   the surfaces that frost, and the reduced-transparency fallback, with live

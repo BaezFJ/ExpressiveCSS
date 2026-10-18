@@ -213,5 +213,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed .prose for bare long-form HTML: 73,237 gzip bytes (+236).
   // Reviewed .query-container and container-width stacking for horizontal cards and description lists: 73,274 gzip bytes (+37).
   // Reviewed the prefers-contrast: more outline mapping: 73,300 gzip bytes (+26).
-  assert.ok(sizes(css).gzip <= 73300, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the color swatches component: 73,556 gzip bytes (+256).
+  assert.ok(sizes(css).gzip <= 73556, `CSS gzip: ${sizes(css).gzip}`);
 });

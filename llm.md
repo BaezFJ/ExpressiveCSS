@@ -7715,6 +7715,33 @@ To show a score, give an element `class="rating"`, `role="img"`, a name with the
 
 ---
 
+## Color swatches
+
+Pick one color from a preset palette, on native radio buttons.
+
+A `<fieldset class="color-swatches">` holds a `<legend>` and one radio per color, each in a `<label>` whose visually hidden text ("Purple") comes before the radio, with `--md-comp-color-swatch-color` set on the radio. The radio is drawn as a 40px round chip of that color with a 48px target, and the checked one gets a ring, so the choice is marked by shape as well as color. Tab, the arrow keys and form submission stay native. Add an `<input type="color">` in a label of its own at the end for a custom value; it is already drawn as a matching round swatch. Under forced colors the swatches keep their colors and the checked one gets a `Highlight` outline. CSS only; there is no JavaScript.
+
+```html
+<fieldset class="color-swatches">
+  <legend>Label color</legend>
+  <label><span class="visually-hidden">Purple</span><input type="radio" name="label-color" value="#6750a4" style="--md-comp-color-swatch-color: #6750a4" checked></label>
+  <label><span class="visually-hidden">Green</span><input type="radio" name="label-color" value="#386a20" style="--md-comp-color-swatch-color: #386a20"></label>
+  <label><span class="visually-hidden">Red</span><input type="radio" name="label-color" value="#b3261e" style="--md-comp-color-swatch-color: #b3261e"></label>
+  <label><span class="visually-hidden">Custom color</span><input type="color" name="label-color-custom" value="#ff8800"></label>
+</fieldset>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-color-swatch-color` | transparent; set it on each radio |
+| `--md-comp-color-swatches-size` | 40px |
+| `--md-comp-color-swatches-outline-color` | `outline` |
+| `--md-comp-color-swatches-selected-color` | `on-surface` |
+
+---
+
 ## Switches
 
 Material Design 3 switches, from the HTML.
