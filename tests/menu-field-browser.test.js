@@ -1841,6 +1841,41 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     }
   });
 
+  browserTest(`Tabs hold a scroll target until the track arrives (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page = await browser.newPage();
+      for (const direction of ['ltr', 'rtl']) {
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+        await fixture(page, { swipeable: true, direction });
+        // A smooth scroll still heading back to "two" passes the point where the
+        // track already rounds to "three", the new target. Snapping is off so
+        // the positions stay where they are put.
+        await page.evaluate(async () => {
+          const track = document.querySelector('.tabs-content');
+          track.style.scrollSnapType = 'none';
+          const sign = getComputedStyle(track).direction === 'rtl' ? -1 : 1;
+          const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          // Let the resize observer's first alignment run before the click.
+          await frame();
+          document.querySelector('a[href="#three"]').click();
+          for (const at of [1.54, 1.46]) {
+            track.scrollLeft = sign * at * track.clientWidth;
+            await frame();
+          }
+        });
+        assert.deepEqual(await page.evaluate(() => shown), ['three']);
+        await page.waitForFunction(() => tabs._scrollTarget === null);
+        await expect(page.locator('a[href="#three"]')).toHaveAttribute('aria-current', 'page');
+        assert.deepEqual(await page.evaluate(() => ({ shown, panel: tabs._content.id })), { shown: ['three'], panel: 'three' });
+        await page.evaluate(() => tabs.destroy());
+      }
+    } finally {
+      try { await page?.evaluate(() => window.tabs && Expressive.Tabs.getInstance(tabs.el)?.destroy()); } finally { await browser.close(); }
+    }
+  });
+
   browserTest(`Tabs resolve literal panel IDs in normal and swipeable modes (${engine})`, async () => {
     const browser = await leaseBrowser(type);
     let page;

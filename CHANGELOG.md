@@ -85,6 +85,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Swipeable tabs no longer jump back to the previous panel when you pick a
+  new one while the last scroll is still running. The track released its
+  target as soon as its position rounded to the new panel, so the rest of
+  the old scroll selected the panel it was heading to and fired `onShow`
+  for it. The target now holds until the track arrives.
 - Static chip close buttons work again after `AutoInit()`. The fallback
   handler stepped aside for any `.chips` with an instance, and an instance
   without `allowUserInput` never handled the click. Chips also copy their

@@ -356,14 +356,22 @@ export class Tabs extends Component<TabsOptions> {
     return Math.round(Math.abs(this._track.scrollLeft) / (this._track.clientWidth || 1));
   }
 
+  /**
+   * Whether panel `index` fills the track. Compare positions, not rounded
+   * indexes: a scroll still on its way to another panel can already round to
+   * this one. Measured rather than computed from clientWidth, which rounds a
+   * fractional track width, while the mandatory snap lands on the real edge.
+   */
+  private _trackAt(index: number) {
+    return Math.abs(this._panels[index].getBoundingClientRect().left - this._track.getBoundingClientRect().left) < 1;
+  }
+
   private _scrollToActivePanel(behavior: ScrollBehavior) {
     const index = this._panels.indexOf(this._content);
+    if (index < 0 || this._trackAt(index)) return;
     // scrollLeft runs negative in a right-to-left track.
     const sign = getComputedStyle(this._track).direction === 'rtl' ? -1 : 1;
     const left = sign * index * this._track.clientWidth;
-    // Compare positions, not rounded indexes: a scroll still on its way to
-    // another panel can already round to this one.
-    if (index < 0 || Math.abs(this._track.scrollLeft - left) < 1) return;
     this._scrollTarget = index;
     this._waitForScroll();
     this._track.scrollTo({ left, behavior });
@@ -388,13 +396,15 @@ export class Tabs extends Component<TabsOptions> {
   };
 
   _handleTrackScroll = () => {
-    const index = this._trackIndex();
     if (this._scrollTarget !== null) {
-      if (index === this._scrollTarget) this._releaseScrollTarget();
+      // Release on arrival. A smooth scroll still heading to the previous
+      // selection rounds to the new target on its way past, and releasing
+      // there let the rest of that scroll select the panel it was heading to.
+      if (this._trackAt(this._scrollTarget)) this._releaseScrollTarget();
       else this._waitForScroll();
       return;
     }
-    const panel = this._panels[index];
+    const panel = this._panels[this._trackIndex()];
     if (!panel || panel === this._content) return;
     this._showPanel(Array.from(this._tabLinks).find((a) => this._panelFor(a) === panel));
   };
