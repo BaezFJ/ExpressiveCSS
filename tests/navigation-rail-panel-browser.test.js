@@ -117,6 +117,8 @@ for (const [name, engine] of engines) {
         await page.setViewportSize({ width: 400, height: 700 });
         await page.locator('nav').evaluate((el) => el.classList.add('expanded'));
         await page.click('#components');
+        // Expanding animates the rail's width; measure once it settles.
+        await page.locator('nav').evaluate((el) => Promise.all(el.getAnimations().map((a) => a.finished)));
         const compactRail = await page.locator('nav').boundingBox();
         const compact = await panel.boundingBox();
         const compactEdge = dir === 'ltr' ? compact.x - (compactRail.x + compactRail.width) : compactRail.x - (compact.x + compact.width);
