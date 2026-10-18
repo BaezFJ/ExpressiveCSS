@@ -98,7 +98,7 @@ The defaults are Roboto for `--md-ref-typeface-brand` and `--md-ref-typeface-pla
 
 ## Element defaults
 
-Without role classes, `body` uses body-medium. Headings remain semantic and receive framework defaults: `h1` uses display-small; `h2` headline-large; `h3` headline-medium; `h4` headline-small; `h5` title-large; and `h6` title-medium. Paragraphs use body-large with normal vertical rhythm; `small` and `figcaption` use body-small. Links use the primary role and remove text decoration by default; add an underline or another non-color affordance when context alone does not make a link recognizable. Do not add a type class solely to reproduce an existing element default.
+Without role classes, `body` uses body-medium. Headings remain semantic and receive framework defaults: `h1` uses display-small; `h2` headline-large; `h3` headline-medium; `h4` headline-small; `h5` title-large; and `h6` title-medium. Paragraphs use body-large with normal vertical rhythm; `small` and `figcaption` use body-small. Links use the primary role and remove text decoration by default, except a link without a class inside a `p`, `dd`, `blockquote`, `figcaption` or `td`, which keeps an underline because it sits in running text. Elsewhere, add an underline or another non-color affordance when context alone does not make a link recognizable. Do not add a type class solely to reproduce an existing element default.
 
 ## Text helpers
 

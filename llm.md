@@ -1768,6 +1768,15 @@ When the tag cannot say the role, use the class. Display-large and display-mediu
 
 `body-large`, `body-medium`, and `body-small` apply the three body roles to an element that is not a `<p>` or `<small>`.
 
+### Links
+
+Links use the primary color. A link without a class inside a paragraph, a `<dd>`, a blockquote, a figure caption or a table cell is also underlined, because color alone does not mark a link for everyone. Links elsewhere, and any link with a class, have no underline, so navigation lists, menus, tabs and buttons made from `<a>` keep their own look.
+
+```html
+<p>Read the <a href="/themes.html">theme guide</a> first.</p>  <!-- underlined -->
+<a class="button tonal" href="/themes.html">Themes</a>         <!-- styled by its class -->
+```
+
 ### Blockquotes
 
 Blockquotes emphasize a quote or citation. The left bar uses `--md-sys-color-primary`.

@@ -9,6 +9,7 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "typescale", label: "Type scale", heading: "The fifteen roles" },
   { id: "emphasis", label: "Emphasis" },
+  { id: "links", label: "Links" },
   { id: "blockquote", label: "Blockquotes" },
   { id: "keyboard-keys", label: "Keyboard keys" },
   { id: "highlight", label: "Highlighted text" },
@@ -168,6 +169,19 @@ const S = defineSections([
           <code>body-small</code> apply the three body roles to an element
           that is not a <code>&lt;p&gt;</code> or <code>&lt;small&gt;</code>.
         </p>
+  </Section>
+  <Section {...S.links}>
+        <p>
+          Links use the primary color. A link without a class inside a paragraph, a
+          <code>&lt;dd&gt;</code>, a blockquote, a figure caption or a table cell is also
+          underlined, because color alone does not mark a link for everyone. Links elsewhere, and
+          any link with a class, have no underline, so navigation lists, menus, tabs and buttons
+          made from <code>&lt;a&gt;</code> keep their own look.
+        </p>
+<Code code={`
+<p>Read the <a href="/themes.html">theme guide</a> first.</p>  <!-- underlined -->
+<a class="button tonal" href="/themes.html">Themes</a>         <!-- styled by its class -->
+`} />
   </Section>
   <Section {...S.blockquote}>
         <p>

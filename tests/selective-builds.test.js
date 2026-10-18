@@ -206,5 +206,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed md.sys.shape.corner tokens read by component shape tokens: 71,539 gzip bytes (+340).
   // Reviewed the --expressive-z-* stacking scale: 71,661 gzip bytes (+122).
   // Reviewed the window-size layout prefixes and the display, sizing, border and corner helpers: 72,680 gzip bytes (+1,019).
-  assert.ok(sizes(css).gzip <= 72680, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed underlined links in running text: 72,725 gzip bytes (+45).
+  assert.ok(sizes(css).gzip <= 72725, `CSS gzip: ${sizes(css).gzip}`);
 });

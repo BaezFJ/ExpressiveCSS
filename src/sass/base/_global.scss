@@ -40,6 +40,15 @@ a {
   -webkit-tap-highlight-color: transparent; // Gets rid of tap active state
 }
 
+// A link inside running text needs a cue besides its color (WCAG 1.4.1), so
+// it keeps the underline. A link with a class is a component or a deliberate
+// style and stays bare; so does every link outside these text containers,
+// which is where navigation lists, menus and tabs put theirs.
+:where(p, dd, blockquote, figcaption, td) a:not([class]) {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 //  Blockquote
 blockquote { margin: 20px 0; padding-left: 1.5rem; border-left: 5px solid var(--md-sys-color-primary); }
 

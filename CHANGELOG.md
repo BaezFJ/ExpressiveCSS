@@ -359,6 +359,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- A link without a class inside a `p`, `dd`, `blockquote`, `figcaption` or
+  `td` is underlined, so links in running text no longer rely on color alone
+  (WCAG 1.4.1). Links with a class, and links in lists, menus and navigation,
+  are unchanged.
 - The documentation's category rail opens each group's pages in a side
   panel on hover or click, with each section as a dropdown. The section
   holding the current page starts open. The panel replaces the page list that

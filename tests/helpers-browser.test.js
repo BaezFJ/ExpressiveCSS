@@ -228,3 +228,18 @@ browserTest('window-size prefixes switch layout from their size class up', async
     await browser.close();
   }
 });
+
+browserTest('links in running text are underlined and component links are not', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style>
+      <p>Read the <a id="prose" href="#">guide</a>.</p>
+      <p><a id="button" class="button tonal" href="#">Guide</a></p>
+      <ul><li><a id="nav" href="#">Home</a></li></ul>`);
+    const line = (id) => page.locator(`#${id}`).evaluate((el) => getComputedStyle(el).textDecorationLine);
+    assert.deepEqual([await line('prose'), await line('button'), await line('nav')], ['underline', 'none', 'none']);
+  } finally {
+    await browser.close();
+  }
+});
