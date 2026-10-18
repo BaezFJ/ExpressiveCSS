@@ -45,3 +45,19 @@ browserTest('print is light, hides screen-only surfaces and shows link targets',
     await browser.close();
   }
 });
+
+browserTest('more contrast draws outline-variant borders in the outline role', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style><div id="d" class="bordered">x</div><div id="o" style="border: 1px solid var(--md-sys-color-outline)">y</div>`);
+    const colors = () => page.evaluate(() => ['d', 'o'].map((id) => getComputedStyle(document.getElementById(id)).borderTopColor));
+    const [before, outline] = await colors();
+    assert.notEqual(before, outline);
+    await page.emulateMedia({ contrast: 'more' });
+    const [after, outlineAfter] = await colors();
+    assert.equal(after, outlineAfter);
+  } finally {
+    await browser.close();
+  }
+});

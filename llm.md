@@ -728,6 +728,10 @@ There is one ramp, tertiary — M3's for this axis. Pointing the surfaces at pri
 
 The elevation ladder collapses — every `surface-container` rung resolves to the one container color, which is what a vibrant surface is in Material, and `on-surface-variant` collapses onto `on-surface` for the same reason — so put the attribute on the component you want emphasized, not on the page. Menus and toolbars also carry a `.vibrant` class; those are Material's own per-component token sets, and the attribute is the general axis. A menu inside a vibrant subtree adopts its vibrant mapping automatically — a selected item is filled with `tertiary-container`, the colour the attribute paints the menu with, so M3 moves selection to solid `tertiary`. `:host([vibrant])` is matched alongside `[vibrant]`, so a shadow-DOM host can carry it.
 
+### More contrast
+
+When the user asks for more contrast (`prefers-contrast: more`), `--md-sys-color-outline-variant` takes the value of `--md-sys-color-outline`. Dividers, outlined cards, field borders and every other line drawn in outline-variant then hold 3:1 against the surfaces. Text and fill roles are unchanged. Override the token inside your own `@media (prefers-contrast: more)` block to choose a different line color.
+
 ### Corner scale
 
 Component shape tokens on the Material 3 corner scale read the `md.sys.shape.corner` tokens, so one override changes the corners of every component on that step. A component token such as `--md-comp-card-container-shape` still overrides one component. Off-scale corners stay literal.
