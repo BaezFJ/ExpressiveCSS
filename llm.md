@@ -760,6 +760,38 @@ Component shape tokens on the Material 3 corner scale read the `md.sys.shape.cor
 
 ---
 
+## Design tokens
+
+Every token family in one place: color, type, state, motion, shape, elevation and stacking.
+
+Every design decision the framework makes is a CSS custom property you can override at runtime, with no rebuild. The system tokens follow Material 3 names (`--md-sys-*` and `--md-ref-*`); components read them through their own `--md-comp-*` tokens, which change one component at a time.
+
+| Family | Prefix | What it holds | Details |
+| --- | --- | --- | --- |
+| Color roles | `--md-sys-color-*` | `primary`, `on-surface`, `outline-variant`: 45 roles, each with a `-light` and `-dark` pair | [Color](https://www.expressivecss.com/color.html) |
+| Tonal palettes | `--md-ref-palette-*` | Tones 0 to 100 of the primary, secondary, tertiary, neutral, neutral-variant and error ramps, generated from `--md-source` | [Themes](https://www.expressivecss.com/themes.html) |
+| Contrast levels | `contrast="medium" | "high"` | An attribute, not a token: moves accents, outlines and `on-surface-variant` to higher-contrast tones | [Themes](https://www.expressivecss.com/themes.html#contrast) |
+| Type scale | `--md-sys-typescale-*` | Font, size, weight, line height and tracking for the fifteen roles, and `--md-ref-typeface-*` | [Typography](https://www.expressivecss.com/typography.html) |
+| State layers | `--md-sys-state-*` | Hover, focus, pressed and dragged opacities | [State layers](https://www.expressivecss.com/state-layers.html) |
+| Motion | `--md-sys-motion-*` | Seven easing curves and sixteen durations, `short1` to `extra-long4` | [Transitions](https://www.expressivecss.com/css-transitions.html#motion-tokens) |
+| Shape | `--md-sys-shape-corner-*` | The corner scale from `none` to `full` | [Shapes](https://www.expressivecss.com/shapes.html#corner-scale) |
+| Elevation | `--md-sys-elevation-level*` | Shadows for levels 0 to 5 and 1-half | [Elevation](https://www.expressivecss.com/shadow.html) |
+| Stacking | `--expressive-z-*` | The z-index order of fixed and floating surfaces | [Elevation](https://www.expressivecss.com/shadow.html#stacking) |
+
+Set a system token on `:root` to change every component, or on any element to change only what is inside it. Each token is declared on `:root` and `:host`, so the same overrides work when the stylesheet is adopted by a shadow root.
+
+```css
+:root {
+  --md-source: #006495;                   /* re-themes every color role */
+  --md-sys-shape-corner-medium: 8px;      /* squarer cards and menus */
+  --md-sys-motion-duration-short4: 150ms; /* faster 200ms transitions */
+}
+.dense-panel { --md-sys-elevation-level1: none; }
+.my-card { --md-comp-card-container-shape: 0; }  /* one component */
+```
+
+---
+
 ## Color
 
 One system: the Material Design 3 theme tokens.

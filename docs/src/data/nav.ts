@@ -101,6 +101,13 @@ export const NAV: DocsGroup[] = [
           "Light and dark schemes, the theme attribute, and custom tokens.",
       },
       {
+        id: "tokens",
+        label: "Design tokens",
+        route: "/tokens.html",
+        description:
+          "Every token family in one place: color, type, state, motion, shape, elevation and stacking.",
+      },
+      {
         id: "typography",
         label: "Typography",
         route: "/typography.html",

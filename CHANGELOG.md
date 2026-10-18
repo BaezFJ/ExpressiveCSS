@@ -7,6 +7,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- A "Design tokens" documentation page at `/tokens.html` lists every token
+  family, its prefix and the page that documents it, with an override
+  example.
 - Material 3 motion tokens: `--md-sys-motion-easing-*` for the standard,
   emphasized and linear curves and `--md-sys-motion-duration-short1` to
   `extra-long4`. Components now read them wherever they used an on-scale
