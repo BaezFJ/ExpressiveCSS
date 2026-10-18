@@ -1,0 +1,23 @@
+@use "../abstracts" as *;
+
+// Paper defaults, element level only. Components that only make sense on a
+// screen (navigation, snackbars, tooltips, the FAB menu) hide themselves in
+// their own partials; .hide-on-print and .print-only are in
+// utilities/_visibility.scss. The light scheme for print is in
+// tokens/_theme.scss, which owns color-scheme.
+@media print {
+  // Paper cannot follow a link, so print where it goes. Only external links
+  // in running text: the same set base/_global.scss underlines.
+  :where(p, dd, blockquote, figcaption, td) a[href^="http"]:not([class])::after {
+    content: " (" attr(href) ")";
+    overflow-wrap: anywhere;
+  }
+
+  // Keep a heading with what follows it, and keep small blocks whole.
+  :is(h1, h2, h3, h4, h5, h6) { break-after: avoid; }
+  :is(pre, blockquote, figure, img, video, tr, li, dt, dd) { break-inside: avoid; }
+  :is(p, h2, h3) { orphans: 3; widows: 3; }
+
+  // Repeat a table's header row on every page it spans.
+  thead { display: table-header-group; }
+}

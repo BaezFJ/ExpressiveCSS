@@ -105,6 +105,8 @@ Use a targeted media rule for display requirements the existing hide ranges cann
 | `.show-on-medium-and-up` | 600px and above. |
 | `.show-on-medium-and-down` | Below 840px. |
 
+`.hide-on-print` hides an element on paper and `.print-only` shows it only on paper. Print also forces the light scheme, hides navigation rails, navigation bars, the FAB menu, snackbars and tooltips, and prints the URL after external links in running text. Use `.hide-on-print` for other screen-only controls instead of a page-level print sheet.
+
 `.center-on-small-only` centers text below 600px and leaves alignment unchanged at wider widths.
 
 The two `med-and-*` hide classes in the table are public helpers, not aliases for nonexistent `.hide-on-medium-and-down` or `.hide-on-medium-and-up` classes.

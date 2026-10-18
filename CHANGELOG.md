@@ -33,6 +33,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `.object-cover`, `.object-contain`, `.bordered`, `.border-top`,
   `.border-bottom`, `.border-start`, `.border-end`, `.corner-none` to
   `.corner-full`, `.text-balance` and `.text-pretty`.
+- Print styles. Paper uses the light scheme and hides navigation rails,
+  navigation bars, the FAB menu, snackbars and tooltips. External links in running text print their address, headings
+  stay with what follows, and table headers repeat on each page.
+  `.hide-on-print` and `.print-only` cover the rest.
 - A "Frosted glass" documentation page at `/glass.html` covers the
   `--expressive-glass`, `-blur` and `-opacity` properties, the Sass defaults,
   the surfaces that frost, and the reduced-transparency fallback, with live

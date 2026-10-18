@@ -1257,6 +1257,10 @@ We provide easy to use classes to hide/show content on specific screen sizes.
 | `.show-on-extra-large` | Shown on Extra-large (`>= 1600px`) |
 | `.show-on-medium-and-up` | Shown from Medium (`>= 600px`) |
 | `.show-on-medium-and-down` | Shown on Compact and Medium (`< 840px`) |
+| `.hide-on-print` | Hidden on paper |
+| `.print-only` | Hidden on screen, shown on paper |
+
+Printing also uses the light scheme, hides navigation rails, navigation bars, the FAB menu, snackbars and tooltips, prints the address after each external link in running text, and keeps headings with the content that follows them.
 
 #### Usage
 

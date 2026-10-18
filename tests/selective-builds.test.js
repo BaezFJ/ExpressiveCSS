@@ -207,5 +207,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the --expressive-z-* stacking scale: 71,661 gzip bytes (+122).
   // Reviewed the window-size layout prefixes and the display, sizing, border and corner helpers: 72,680 gzip bytes (+1,019).
   // Reviewed underlined links in running text: 72,725 gzip bytes (+45).
-  assert.ok(sizes(css).gzip <= 72725, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed print styles and the print visibility helpers: 72,957 gzip bytes (+232).
+  assert.ok(sizes(css).gzip <= 72957, `CSS gzip: ${sizes(css).gzip}`);
 });

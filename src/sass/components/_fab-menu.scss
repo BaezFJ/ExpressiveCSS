@@ -247,3 +247,9 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
     --md-comp-fab-menu-stagger: 0s;
   }
 }
+
+// A floating menu would print over the content. Important so a size or state rule that sets
+// `display` cannot bring it back; see base/_print.scss for the page itself.
+@media print {
+  .fab-menu { display: none !important; }
+}

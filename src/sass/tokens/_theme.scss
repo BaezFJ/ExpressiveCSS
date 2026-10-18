@@ -42,3 +42,9 @@
 :host([theme='dark']) { color-scheme: dark; }
 :root[theme='auto'],
 :host([theme='auto']) { color-scheme: light dark; }
+
+// Paper is white, and browsers drop backgrounds when printing by default, so
+// a dark scheme prints light text on nothing. Print is always light.
+@media print {
+  :root, :root[theme], :host, :host([theme]) { color-scheme: light; }
+}
