@@ -4,7 +4,7 @@
   display: block;
   cursor: zoom-in;
   position: relative;
-  transition: opacity 0.4s;
+  transition: opacity var(--md-sys-motion-duration-medium4);
   backface-visibility: hidden;
   // Same 12px as .responsive-img. Exclude .circle so a disc stays a disc.
   &:not(.circle) {

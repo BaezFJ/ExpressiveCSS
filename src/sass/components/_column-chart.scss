@@ -67,7 +67,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     > div > span {
-      transition: clip-path 400ms cubic-bezier(0.2, 0, 0, 1);
+      transition: clip-path var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard);
 
       @starting-style {
         clip-path: inset(var(--zero, 100%) 0 calc(100% - var(--zero, 100%)) round var(--column-chart-ends));

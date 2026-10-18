@@ -201,5 +201,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the organization chart on top of the #315 review commits: 70,262 gzip bytes (+561).
   // Reviewed navigation rail side panels with grouped links: 70,759 gzip bytes (+497).
   // Reviewed side panel destinations laid out as destinations when they come first, at full height: 70,787 gzip bytes (+28).
-  assert.ok(sizes(css).gzip <= 70787, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed md.sys.motion tokens read by every on-scale component transition: 71,199 gzip bytes (+412).
+  assert.ok(sizes(css).gzip <= 71199, `CSS gzip: ${sizes(css).gzip}`);
 });

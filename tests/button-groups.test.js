@@ -320,8 +320,8 @@ describe('Button group shape morph', () => {
     const group = ruleFor('.button-group');
     const itemRule = ruleFor(`.button-group > ${item}`);
     assert.match(group, /--md-comp-button-group-motion:\s*linear\(/);
-    assert.match(itemRule, /width 200ms var\(--md-comp-button-group-motion\)/);
-    assert.match(itemRule, /border-radius 200ms var\(--md-comp-button-group-motion\)/);
+    assert.match(itemRule, /width var\(--md-sys-motion-duration-short4\) var\(--md-comp-button-group-motion\)/);
+    assert.match(itemRule, /border-radius var\(--md-sys-motion-duration-short4\) var\(--md-comp-button-group-motion\)/);
   });
 
   test('the motion is dropped when the user asked for no motion', () => {

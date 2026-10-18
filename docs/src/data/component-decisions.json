@@ -1320,7 +1320,7 @@
         "sources": [
           {
             "path": "src/sass/components/_tree.scss",
-            "sha256": "3d290dec16e25b71a3e06cbd5fafd3340253659fbf9d95953193dab29b10aa21"
+            "sha256": "c0813fb14f6e247f97a55b86284d584e8c08d1b3469323a82d0739f8c1722604"
           }
         ],
         "gaps": [
@@ -2363,7 +2363,7 @@
         "sources": [
           {
             "path": "src/sass/components/_message-scroller.scss",
-            "sha256": "88924d7853d749831ff9fa63beb018a1e6799a48da0b88beb993bd2c2b49eb1e"
+            "sha256": "5b0f79f866d59b6d54966cde45e95fbc3370cec79685ed43fe527cb7ea9a71bb"
           },
           {
             "path": "src/ts/components/messageScroller.ts",
@@ -2464,7 +2464,7 @@
         "sources": [
           {
             "path": "src/sass/components/_accordion.scss",
-            "sha256": "cd9c2657f1f840f721575335ffd05d8cd176b2f94c37637341121485901833ee"
+            "sha256": "d0a82b56979d8bdd32fdcf6aa53e9bc69d41b2947853355ba278a63bce037d57"
           }
         ],
         "gaps": [
@@ -2900,7 +2900,7 @@
         "sources": [
           {
             "path": "src/sass/components/_countdown.scss",
-            "sha256": "74330fcc3e02b6462f40019d7cd37c680e8a71bf54d7a0be0e7fe3ffaa733d05"
+            "sha256": "2918d1710b0858696b359789273316fe9fd9b3ed9023b606c6f4b2a90b878357"
           }
         ],
         "gaps": [
@@ -3331,7 +3331,7 @@
           },
           {
             "path": "src/sass/components/_pie-chart.scss",
-            "sha256": "ea811ee29aff2b8e8407ed419d13491b6b1eb639e28669cdd8c5de512b1dd87e"
+            "sha256": "e3e659c3bfdf871899a745aa285ebdba023fae5d43c58e4612cb66ce27cf7b21"
           },
           {
             "path": "src/ts/components/lineChart.ts",
@@ -3552,7 +3552,7 @@
           },
           {
             "path": "src/sass/components/_radar-chart.scss",
-            "sha256": "a5f8e6984dfc02b0c7fb2a23f6c1311f733de6b853e0b675c95a58d18da05006"
+            "sha256": "32e7d3cc1886b1f396244cf102f2537c9e57c096909f9dd4990fcde046f20ab7"
           },
           {
             "path": "src/ts/components/lineChart.ts",
@@ -3663,7 +3663,7 @@
           },
           {
             "path": "src/sass/components/_radial-chart.scss",
-            "sha256": "4ebff333a3820b516fac11c5be053041d0d5c8a9841b579f35ef47e6cdc247fb"
+            "sha256": "13415ef4cf4893485d99c637c95e75456ad0c0224ca9861d699c6a6dec7da180"
           },
           {
             "path": "src/ts/components/lineChart.ts",
@@ -4648,7 +4648,7 @@
         "sources": [
           {
             "path": "src/sass/components/_org-chart.scss",
-            "sha256": "dcd58be2c6dda140491a82a05a70dd98c9bed3e56713bcf9fedc8ed298d81903"
+            "sha256": "622297d4084b23dae4ce7043284f4c351e41a832e5a275470a114fc436aba34f"
           }
         ],
         "gaps": [
@@ -4825,7 +4825,7 @@
         "sources": [
           {
             "path": "src/sass/components/_popover.scss",
-            "sha256": "62b149ae34e4e786a1a02a4a12e2208eaff63c08e54fe0a090397b6dd24e4437"
+            "sha256": "5e9f398636fd6db16dbc3ae2062a4d9b11e5eb1788a983ba1fa8baf858dcd98a"
           }
         ],
         "gaps": [
@@ -6789,7 +6789,7 @@
         "sources": [
           {
             "path": "src/sass/components/forms/_drop-zone.scss",
-            "sha256": "dcc9dc0e721c0057266092591634249620143d8b7350ff867651806c59ad10b1"
+            "sha256": "fdd85c6e34e8f5c1a04927ddbeffb32a0511b5739b0b8f18f53a3d7c52f9b340"
           },
           {
             "path": "src/ts/behaviors/forms.ts",
@@ -7205,7 +7205,7 @@
         "sources": [
           {
             "path": "src/sass/components/forms/_rating.scss",
-            "sha256": "8b0c0e77791f4e88681a12ff2c78758be20d5ece7129c914e4cf6881a6b61300"
+            "sha256": "f3bc6bb0e0459b685ee4f269d65e1f7dbcfb0bb7a26c456495d01f2dcad32d1b"
           }
         ],
         "gaps": [
@@ -8262,7 +8262,7 @@
           "scope": "android-foundation-reviewed; full web specification unassessed"
         },
         "implementation": {
-          "documentedSupport": "Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.",
+          "documentedSupport": "Shared md.sys.motion easing and duration tokens, which components read for on-scale curves and times. Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.",
           "webAdaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only."
         }
       },
@@ -8295,8 +8295,8 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "No shared md-sys-motion token family, general spring solver, or unified motion-theme selector.",
-            "nextStep": "Define shared semantic timing/spring roles only after mapping existing component needs; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver."
+            "description": "No general spring solver or unified motion-theme selector; the Expressive spring tokens exist only as one sampled fast-spatial curve.",
+            "nextStep": "Map remaining component springs before adding spring roles; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver."
           }
         ],
         "browserChecks": [

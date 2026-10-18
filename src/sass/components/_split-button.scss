@@ -128,8 +128,8 @@ $_sizes: (
     // property list replaces it wholesale, so both have to be named again or
     // an `.elevated` split button snaps its shadow where every other elevated
     // button eases it.
-    transition: border-radius 0.2s ease-out, background-color 0.2s ease-out,
-      box-shadow 0.2s ease-out;
+    transition: border-radius var(--md-sys-motion-duration-short4) ease-out, background-color var(--md-sys-motion-duration-short4) ease-out,
+      box-shadow var(--md-sys-motion-duration-short4) ease-out;
 
     // M3 gives hovered and pressed the same swollen corner.
     &:hover,
@@ -178,7 +178,7 @@ $_sizes: (
     }
 
     > #{$icon} {
-      transition: transform 0.2s ease-out;
+      transition: transform var(--md-sys-motion-duration-short4) ease-out;
     }
 
     &[aria-expanded="true"] > #{$icon} {

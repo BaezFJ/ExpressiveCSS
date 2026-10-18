@@ -56,7 +56,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   user-select: none;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out;
+  transition: background-color var(--md-sys-motion-duration-short4) ease-out, box-shadow var(--md-sys-motion-duration-short4) ease-out;
 }
 
 // State layers mix the on-color into the container in oklab; the opacities come

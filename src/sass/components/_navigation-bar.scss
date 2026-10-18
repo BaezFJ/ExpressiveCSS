@@ -81,7 +81,7 @@
       border-radius: var(--md-comp-nav-bar-indicator-shape);
       font-size: var(--md-comp-nav-bar-icon-size);
       color: inherit;
-      transition: background-color 0.2s ease-out;
+      transition: background-color var(--md-sys-motion-duration-short4) ease-out;
     }
 
     &:hover:not(.active, [aria-current]) > #{$icon} {

@@ -65,7 +65,7 @@ label:has(> [type="radio"]) > [type="radio"],
   border-radius: 50%;
   background-color: transparent;
   cursor: pointer;
-  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color var(--md-sys-motion-duration-short4) ease, background-color var(--md-sys-motion-duration-short4) ease, box-shadow var(--md-sys-motion-duration-short4) ease;
 
   &:checked {
     border-color: var(--md-sys-color-primary);

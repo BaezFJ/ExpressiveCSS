@@ -49,9 +49,9 @@
 
   opacity: 0;
   transition:
-    opacity 150ms ease-out,
-    display 150ms allow-discrete,
-    overlay 150ms allow-discrete;
+    opacity var(--md-sys-motion-duration-short3) ease-out,
+    display var(--md-sys-motion-duration-short3) allow-discrete,
+    overlay var(--md-sys-motion-duration-short3) allow-discrete;
   @include glass(var(--md-comp-popover-container-color));
 
   &:popover-open {

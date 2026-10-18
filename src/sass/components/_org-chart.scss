@@ -151,7 +151,7 @@
       margin-block: -8px;
       background-color: currentColor;
       mask: $caret-down center / 24px no-repeat;
-      transition: rotate 150ms ease-out;
+      transition: rotate var(--md-sys-motion-duration-short3) ease-out;
 
       @media (prefers-reduced-motion: reduce) {
         transition: none;

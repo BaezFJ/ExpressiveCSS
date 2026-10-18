@@ -5,3 +5,4 @@
 @forward "theme";      // maps the pairs onto the live --md-sys-color-* names
 @forward "vibrant";    // [vibrant] remaps the surface family onto an accent
 @forward "state";      // md.sys.state.* state layer opacities
+@forward "motion";     // md.sys.motion.* easing curves and durations

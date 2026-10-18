@@ -92,7 +92,7 @@ progress.progress {
   inset-inline: 0 auto;
   width: var(--md-comp-progress-value, 0%);
   background-color: var(--md-comp-progress-indicator);
-  transition: width 0.3s linear;
+  transition: width var(--md-sys-motion-duration-medium2) linear;
 }
 
 // Bare div.progress with a value token, no child. :not(.circular) because a
@@ -109,7 +109,7 @@ $_bare: ".progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > 
     inset-inline: 0 auto;
     width: var(--md-comp-progress-value, 0%);
     background-color: var(--md-comp-progress-indicator);
-    transition: width 0.3s linear;
+    transition: width var(--md-sys-motion-duration-medium2) linear;
   }
 
   &:not([style*="--md-comp-progress-value"])::after {

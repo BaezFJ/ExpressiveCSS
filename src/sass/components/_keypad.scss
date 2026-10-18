@@ -37,8 +37,8 @@ $_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
     min-width: 0;
     padding: 0;
     transition:
-      border-radius 200ms var(--md-comp-keypad-motion),
-      background-color 200ms ease-out;
+      border-radius var(--md-sys-motion-duration-short4) var(--md-comp-keypad-motion),
+      background-color var(--md-sys-motion-duration-short4) ease-out;
 
     &[data-key] {
       --_color: var(--md-comp-keypad-function-key-color);

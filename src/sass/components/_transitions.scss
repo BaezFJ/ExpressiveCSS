@@ -3,11 +3,11 @@
 // !important because the class must replace the transition of whatever
 // component it is added to (.button, .fab, ...), at any specificity.
 .scale-transition {
-  transition: transform 0.3s cubic-bezier(0.53, 0.01, 0.36, 1.63) !important;
+  transition: transform var(--md-sys-motion-duration-medium2) cubic-bezier(0.53, 0.01, 0.36, 1.63) !important;
 
   &.scale-out {
     transform: scale(0);
-    transition: transform 0.2s !important;
+    transition: transform var(--md-sys-motion-duration-short4) !important;
   }
 
   &.scale-in {

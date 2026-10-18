@@ -63,7 +63,7 @@
     block-size: 18px;
     background-color: currentColor;
     mask: $caret-down center / 18px no-repeat;
-    transition: transform 150ms ease-out;
+    transition: transform var(--md-sys-motion-duration-short3) ease-out;
   }
 
   > button:has(+ .mega-menu-panel:popover-open)::after {

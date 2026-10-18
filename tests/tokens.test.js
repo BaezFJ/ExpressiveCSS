@@ -111,3 +111,12 @@ describe('Custom properties', () => {
     );
   });
 });
+
+describe('Motion tokens', () => {
+  test('the standard curve is written once per token, and components read the token', () => {
+    const literals = [...css.matchAll(/([^;{\s]+):[^;{}]*cubic-bezier\(0\.2, 0, 0, 1\)/g)].map((match) => match[1]);
+    assert.deepEqual(literals, ['--md-sys-motion-easing-standard', '--md-sys-motion-easing-emphasized']);
+    assert.match(css, /--md-sys-motion-duration-short4:\s*200ms/);
+    assert.match(css, /--md-sys-motion-duration-extra-long4:\s*1000ms/);
+  });
+});

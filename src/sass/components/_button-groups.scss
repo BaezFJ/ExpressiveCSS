@@ -127,9 +127,9 @@ $_connected-corners: (
   > #{$_item} {
     position: relative;
     transition:
-      width 200ms var(--md-comp-button-group-motion),
-      border-radius 200ms var(--md-comp-button-group-motion),
-      background-color 200ms ease-out;
+      width var(--md-sys-motion-duration-short4) var(--md-comp-button-group-motion),
+      border-radius var(--md-sys-motion-duration-short4) var(--md-comp-button-group-motion),
+      background-color var(--md-sys-motion-duration-short4) ease-out;
   }
 
   // Every item owns a centered 48dp minimum hit target. For M/L/XL this is a

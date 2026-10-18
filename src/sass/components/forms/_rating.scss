@@ -74,7 +74,7 @@ fieldset.rating {
     box-shadow: none;
     mask: $_rating-star center / 100% no-repeat;
     outline: 0;
-    transition: background-color 0.15s ease-out;
+    transition: background-color var(--md-sys-motion-duration-short3) ease-out;
 
     // The base radio draws its dot in :checked, :hover and the disabled
     // states, some at a higher weight; the star mask would show it.

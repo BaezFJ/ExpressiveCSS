@@ -51,7 +51,7 @@
     border-radius: var(--md-comp-list-item-shape);
     background-color: var(--md-comp-list-item-container-color);
     color: inherit;
-    transition: background-color 0.2s ease-out;
+    transition: background-color var(--md-sys-motion-duration-short4) ease-out;
   }
 
   // The row grid lives on the item, or on a wrapping <a>/<label>.

@@ -99,7 +99,7 @@ select.browser-default {
     pointer-events: none;
     background-color: var(--md-comp-filled-select-trailing-icon-color);
     mask: $caret-down center / 24px no-repeat;
-    transition: transform 0.2s ease;
+    transition: transform var(--md-sys-motion-duration-short4) ease;
   }
 
   &:has(> input[aria-expanded="true"]) .caret,

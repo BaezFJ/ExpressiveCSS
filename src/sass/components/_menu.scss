@@ -84,7 +84,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
   border-radius: var(--md-comp-menu-container-shape);
   color: var(--md-comp-menu-item-label-text-color);
   @include z-depth("2");
-  transition: border-radius 200ms ease;
+  transition: border-radius var(--md-sys-motion-duration-short4) ease;
   @include glass(var(--md-comp-menu-container-color));
 
   // The [vibrant] arms are not a second mapping - they are the statement that
@@ -497,7 +497,7 @@ menu[id] li > menu {
     opacity 180ms ease,
     transform 180ms ease,
     visibility 180ms ease,
-    border-radius 200ms ease;
+    border-radius var(--md-sys-motion-duration-short4) ease;
 
   // The flyout opens toward inline-end, so it slides in from the other side.
   &:dir(rtl) {

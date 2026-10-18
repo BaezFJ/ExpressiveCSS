@@ -1572,6 +1572,28 @@ With reduced motion requested, scale state changes happen immediately. Scaling o
 <button id="scale-demo" type="button" class="button circle extra scale-transition scale-out" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
 ```
 
+#### Motion tokens
+
+Components take their easing curves and on-scale durations from the Material 3 `md.sys.motion` tokens. Override one on `:root` to change every component that uses it, or on a subtree to change only what is inside it. Off-scale times, such as the 2.1s progress loop, stay literal.
+
+| Token | Value |
+| --- | --- |
+| `--md-sys-motion-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)` |
+| `--md-sys-motion-easing-standard-accelerate` | `cubic-bezier(0.3, 0, 1, 1)` |
+| `--md-sys-motion-easing-standard-decelerate` | `cubic-bezier(0, 0, 0, 1)` |
+| `--md-sys-motion-easing-emphasized` | `cubic-bezier(0.2, 0, 0, 1)` (CSS cannot draw the emphasized path) |
+| `--md-sys-motion-easing-emphasized-accelerate` | `cubic-bezier(0.3, 0, 0.8, 0.15)` |
+| `--md-sys-motion-easing-emphasized-decelerate` | `cubic-bezier(0.05, 0.7, 0.1, 1)` |
+| `--md-sys-motion-easing-linear` | `cubic-bezier(0, 0, 1, 1)` |
+| `--md-sys-motion-duration-short1` to `short4` | 50, 100, 150, 200ms |
+| `--md-sys-motion-duration-medium1` to `medium4` | 250, 300, 350, 400ms |
+| `--md-sys-motion-duration-long1` to `long4` | 450, 500, 550, 600ms |
+| `--md-sys-motion-duration-extra-long1` to `extra-long4` | 700, 800, 900, 1000ms |
+
+```css
+:root { --md-sys-motion-duration-short4: 150ms; } /* every 200ms transition runs at 150ms */
+```
+
 ---
 
 ## Typography

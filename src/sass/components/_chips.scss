@@ -145,7 +145,7 @@
   margin: 0 0 8px 0;
   padding: 4px;
   outline: none;
-  transition: border-color 0.3s, border-width 0.3s, box-shadow 0.3s;
+  transition: border-color var(--md-sys-motion-duration-medium2), border-width var(--md-sys-motion-duration-medium2), box-shadow var(--md-sys-motion-duration-medium2);
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;

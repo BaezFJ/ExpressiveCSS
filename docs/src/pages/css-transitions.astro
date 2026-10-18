@@ -7,6 +7,7 @@ import { defineSections } from "../lib/sections";
 
 const S = defineSections([
   { id: "scale", label: "Scale", heading: false },
+  { id: "motion-tokens", label: "Motion tokens" },
 ]);
 ---
 <DocsLayout page="css_transitions">
@@ -36,6 +37,40 @@ const S = defineSections([
 <button id="scale-demo" type="button" class="button extra circle scale-transition" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
 <!-- Scaled out -->
 <button id="scale-demo" type="button" class="button extra circle scale-transition scale-out" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+`} />
+  </Section>
+  <Section {...S["motion-tokens"]}>
+    <p>
+      Components take their easing curves and on-scale durations from the Material 3
+      <code>md.sys.motion</code> tokens. Override one on <code>:root</code> to change every
+      component that uses it, or on a subtree to change only what is inside it. Off-scale times,
+      such as the 2.1s progress loop, stay literal.
+    </p>
+    <table class="striped">
+      <thead><tr><th>Token</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td><code>--md-sys-motion-easing-standard</code></td><td><code>cubic-bezier(0.2, 0, 0, 1)</code></td></tr>
+        <tr><td><code>--md-sys-motion-easing-standard-accelerate</code></td><td><code>cubic-bezier(0.3, 0, 1, 1)</code></td></tr>
+        <tr><td><code>--md-sys-motion-easing-standard-decelerate</code></td><td><code>cubic-bezier(0, 0, 0, 1)</code></td></tr>
+        <tr><td><code>--md-sys-motion-easing-emphasized</code></td><td><code>cubic-bezier(0.2, 0, 0, 1)</code></td></tr>
+        <tr><td><code>--md-sys-motion-easing-emphasized-accelerate</code></td><td><code>cubic-bezier(0.3, 0, 0.8, 0.15)</code></td></tr>
+        <tr><td><code>--md-sys-motion-easing-emphasized-decelerate</code></td><td><code>cubic-bezier(0.05, 0.7, 0.1, 1)</code></td></tr>
+        <tr><td><code>--md-sys-motion-easing-linear</code></td><td><code>cubic-bezier(0, 0, 1, 1)</code></td></tr>
+        <tr><td><code>--md-sys-motion-duration-short1</code> to <code>short4</code></td><td>50, 100, 150, 200ms</td></tr>
+        <tr><td><code>--md-sys-motion-duration-medium1</code> to <code>medium4</code></td><td>250, 300, 350, 400ms</td></tr>
+        <tr><td><code>--md-sys-motion-duration-long1</code> to <code>long4</code></td><td>450, 500, 550, 600ms</td></tr>
+        <tr><td><code>--md-sys-motion-duration-extra-long1</code> to <code>extra-long4</code></td><td>700, 800, 900, 1000ms</td></tr>
+      </tbody>
+    </table>
+    <p>
+      CSS cannot draw Material's emphasized path, so <code>emphasized</code> uses the standard
+      curve, as Material's own web components do.
+    </p>
+<Code code={`
+<style>
+  /* Every 200ms transition runs at 150ms instead. */
+  :root { --md-sys-motion-duration-short4: 150ms; }
+</style>
 `} />
   </Section>
 </PageBody>

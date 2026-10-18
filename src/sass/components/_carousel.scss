@@ -102,9 +102,9 @@
     scroll-snap-align: start;
     scroll-snap-stop: always;
     transition:
-      flex-basis 300ms cubic-bezier(0.2, 0, 0, 1),
-      width 300ms cubic-bezier(0.2, 0, 0, 1),
-      border-radius 200ms cubic-bezier(0.2, 0, 0, 1);
+      flex-basis var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+      width var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+      border-radius var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
 
     &[data-carousel-size="medium"] {
       flex-basis: var(--md-comp-carousel-medium-item-width);
@@ -134,7 +134,7 @@
       height: 100%;
       object-fit: cover;
       transform: translateX(var(--md-comp-carousel-item-parallax, 0px));
-      transition: transform 100ms linear;
+      transition: transform var(--md-sys-motion-duration-short2) linear;
     }
 
     > .carousel-item-content {
@@ -179,7 +179,7 @@
       background-color: var(--md-comp-carousel-state-layer-color);
       opacity: 0;
       pointer-events: none;
-      transition: opacity 200ms ease-out;
+      transition: opacity var(--md-sys-motion-duration-short4) ease-out;
     }
 
     &:not(article):hover::after {
@@ -243,7 +243,7 @@
         transparent
       );
       cursor: pointer;
-      transition: background-color 200ms ease-out;
+      transition: background-color var(--md-sys-motion-duration-short4) ease-out;
 
       @include forced-colors-fill(GrayText);
 

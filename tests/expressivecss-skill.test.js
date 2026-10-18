@@ -480,8 +480,8 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.ok(references.transitions.includes(`\`.${className}\``), `transitions reference omits .${className}`);
       assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
     }
-    assert.match(transitionsSass, /transition:\s*transform 0\.3s cubic-bezier\(0\.53, 0\.01, 0\.36, 1\.63\) !important/);
-    assert.match(transitionsSass, /&\.scale-out[\s\S]*transform:\s*scale\(0\)[\s\S]*transition:\s*transform 0\.2s !important/);
+    assert.match(transitionsSass, /transition:\s*transform var\(--md-sys-motion-duration-medium2\) cubic-bezier\(0\.53, 0\.01, 0\.36, 1\.63\) !important/);
+    assert.match(transitionsSass, /&\.scale-out[\s\S]*transform:\s*scale\(0\)[\s\S]*transition:\s*transform var\(--md-sys-motion-duration-short4\) !important/);
     assert.match(transitionsSass, /&\.scale-in[\s\S]*transform:\s*scale\(1\)/);
     assert.match(references.transitions, /`\.scale-out`[\s\S]*does not remove[\s\S]*layout[\s\S]*accessibility tree[\s\S]*tab order/i);
     assert.match(references.transitions, /framework sets.*transition: none !important.*prefers-reduced-motion: reduce/i);
@@ -637,14 +637,16 @@ describe('the ExpressiveCSS agent skill', () => {
     }
 
     // These gaps describe compiled capabilities, not speculative CSS APIs.
-    for (const prefix of ['--md-sys-shape-', '--md-sys-motion-', '--md-sys-typescale-emphasized-']) {
+    for (const prefix of ['--md-sys-shape-', '--md-sys-typescale-emphasized-']) {
       assert.ok(!compiledCss.includes(prefix), `${prefix} support changed; revise the documented gap`);
       assert.ok(Object.values(references).some((reference) => reference.includes(`${prefix}*`)), `${prefix} gap is undocumented`);
     }
     assert.doesNotMatch(compiledCss, /\.(?:display|headline|title|body|label)-(?:large|medium|small)-emphasized\b/);
     assert.match(compiledCss, /--md-comp-filled-button-container-shape:\s*9999px/);
     assert.match(compiledCss, /--md-comp-button-group-motion:\s*linear\(/);
-    assert.match(compiledCss, /border-radius 200ms var\(--md-comp-button-group-motion\)/);
+    assert.match(compiledCss, /border-radius var\(--md-sys-motion-duration-short4\) var\(--md-comp-button-group-motion\)/);
+    assert.match(compiledCss, /--md-sys-motion-duration-short4:\s*200ms/);
+    assert.match(references.motion, /`--md-sys-motion-easing-\*` and `--md-sys-motion-duration-\*`/);
     assert.match(references.typography, /Bundled fonts do not supply `700`/);
     assert.match(references.typography, /\.bold` means `500`/);
     const fontFaces = [...compiledCss.matchAll(/@font-face\s*\{([^}]+)\}/g)]

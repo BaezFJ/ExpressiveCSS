@@ -51,7 +51,7 @@
   width: fit-content;
   margin-inline: auto;
   @include z-depth("2");
-  transition: opacity 0.15s ease-out, scale 0.15s ease-out;
+  transition: opacity var(--md-sys-motion-duration-short3) ease-out, scale var(--md-sys-motion-duration-short3) ease-out;
 
   &[inert] {
     opacity: 0;

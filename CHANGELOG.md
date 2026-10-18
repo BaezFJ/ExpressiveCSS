@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Material 3 motion tokens: `--md-sys-motion-easing-*` for the standard,
+  emphasized and linear curves and `--md-sys-motion-duration-short1` to
+  `extra-long4`. Components now read them wherever they used an on-scale
+  curve or time, so `:root { --md-sys-motion-duration-short4: 150ms; }`
+  speeds up every 200ms transition. Computed values are unchanged.
 - A "Frosted glass" documentation page at `/glass.html` covers the
   `--expressive-glass`, `-blur` and `-opacity` properties, the Sass defaults,
   the surfaces that frost, and the reduced-transparency fallback, with live

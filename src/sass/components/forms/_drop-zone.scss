@@ -36,7 +36,7 @@
     text-align: center;
     color: var(--md-sys-color-on-surface-variant);
     cursor: pointer;
-    transition: background-color 0.2s ease-out, border-color 0.2s ease-out;
+    transition: background-color var(--md-sys-motion-duration-short4) ease-out, border-color var(--md-sys-motion-duration-short4) ease-out;
     @include typescale("body-large");
 
     > #{$icon} {

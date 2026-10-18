@@ -251,7 +251,7 @@ $_active-pos: var(--md-comp-slider-active-position, var(--md-comp-slider-active-
   background: var(--md-comp-slider-handle-color);
   box-shadow: none;
   cursor: grab;
-  transition: box-shadow 0.2s ease, width 0.15s ease, height 0.15s ease;
+  transition: box-shadow var(--md-sys-motion-duration-short4) ease, width var(--md-sys-motion-duration-short3) ease, height var(--md-sys-motion-duration-short3) ease;
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
@@ -479,7 +479,7 @@ input[type="range"] + .thumb {
   opacity: 0;
   transform: translate(-50%, calc(-100% - 4px)) scale(0.9);
   transform-origin: center bottom;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: opacity var(--md-sys-motion-duration-short3) ease, transform var(--md-sys-motion-duration-short3) ease;
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;

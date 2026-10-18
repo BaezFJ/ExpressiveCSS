@@ -1560,7 +1560,7 @@ Web adaptation: Use supported web component and application overrides; Android a
 
 ## Motion
 
-**unassessed within the stated scope.** Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.
+**unassessed within the stated scope.** Shared md.sys.motion easing and duration tokens, which components read for on-scale curves and times. Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.
 
 Source review: needs-review, 2026-09-12. [src/sass/components/_button-groups.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/src/ts/components/buttonGroup.ts), [src/sass/components/_expanding-card.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/src/sass/components/_expanding-card.scss), [src/ts/components/expandingCard.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/src/ts/components/expandingCard.ts), [src/sass/components/_transitions.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/src/sass/components/_transitions.scss).
 
@@ -1568,7 +1568,7 @@ Google relationship: foundation. Upstream review: android-foundation-reviewed; f
 
 Web adaptation: Use supported web component and application overrides; Android attributes and APIs are design references only.
 
-- feature: No shared md-sys-motion token family, general spring solver, or unified motion-theme selector. Next: Define shared semantic timing/spring roles only after mapping existing component needs; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver.
+- feature: No general spring solver or unified motion-theme selector; the Expressive spring tokens exist only as one sampled fast-spatial curve. Next: Map remaining component springs before adding spring roles; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver.
 
 - stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/tests/button-groups-browser.test.js): `standard press redistribution keeps its rendered width stable`. Post-transition standard-group growth/release preserves total rendered width; not spring-curve fidelity.
 - stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/89bcc94d98d65cbbbfac3fe2765a9943ee9d63be/tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Connected group's transition duration is zero under emulated reduced motion.

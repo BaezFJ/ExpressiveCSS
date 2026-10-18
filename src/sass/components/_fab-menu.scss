@@ -37,7 +37,7 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
   );
   --md-comp-fab-menu-offset: 16px;
   --md-comp-fab-menu-z: 997;
-  --md-comp-fab-menu-duration: 200ms;
+  --md-comp-fab-menu-duration: var(--md-sys-motion-duration-short4);
   --md-comp-fab-menu-stagger: 40ms;
   --md-comp-fab-menu-easing: cubic-bezier(0.65, 0, 0.35, 1);
 
@@ -117,8 +117,8 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
       transition:
         opacity var(--md-comp-fab-menu-duration) var(--md-comp-fab-menu-easing),
         transform var(--md-comp-fab-menu-duration) var(--md-comp-fab-menu-easing),
-        background-color 0.2s ease-out,
-        box-shadow 0.2s ease-out;
+        background-color var(--md-sys-motion-duration-short4) ease-out,
+        box-shadow var(--md-sys-motion-duration-short4) ease-out;
       @include typescale("title-medium");
       @include focus-visible;
 

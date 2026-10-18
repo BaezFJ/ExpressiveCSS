@@ -14,7 +14,8 @@ Google's [motion guidance](https://m3.material.io/styles/motion/overview) and [A
 | Sampled spatial spring | Button groups expose `--md-comp-button-group-motion`, a CSS `linear()` curve sampled from Google's fast spatial spring. Width and radius use it at `200ms`; this is not a general spring solver. |
 | Expanding-card timing | CSS exposes `--md-comp-expanding-card-motion-duration` and `--md-comp-expanding-card-motion-easing`; runtime close cleanup follows the actual CSS clip transition, including cancellation. Zero duration and reduced motion close immediately. |
 | Generic scale entrance/exit | `.scale-transition` and its state classes; these only change visual transforms and do not provide disclosure semantics. |
-| Global motion theme | No `--md-sys-motion-*` token family is emitted. There is no general public spring runtime or theme switch selecting Google's motion systems. |
+| Motion tokens | `--md-sys-motion-easing-*` and `--md-sys-motion-duration-*` (short1 to extra-long4) on `:root` and `:host`. Components read them for on-scale curves and times, so one override changes every component using that step. Off-scale times stay literal. |
+| Global motion theme | There is no general public spring runtime or theme switch selecting Google's motion systems. |
 
 The inspected implementation is `src/sass/components/_button-groups.scss`, `_expanding-card.scss`, `_transitions.scss`, and `src/ts/components/buttonGroup.ts` and `expandingCard.ts`. Reduced-motion behavior is component-specific; the scale utility suppresses transitions under reduced motion while retaining its final transform. Do not infer complete motion coverage from one component's media query.
 

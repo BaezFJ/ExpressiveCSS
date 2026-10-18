@@ -60,7 +60,7 @@ $_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-
   color: var(--md-sys-color-on-surface);
   border-radius: var(--md-comp-card-container-shape);
   overflow: hidden;
-  transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out;
+  transition: background-color var(--md-sys-motion-duration-short4) ease-out, box-shadow var(--md-sys-motion-duration-short4) ease-out;
 }
 
 // M3 state layers belong only to an interactive card. A direct
@@ -75,7 +75,7 @@ $_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-
   background-color: var(--md-comp-card-state-layer-color);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease-out;
+  transition: opacity var(--md-sys-motion-duration-short4) ease-out;
 }
 
 :where(#{$_card}) > .primary-action {
@@ -566,8 +566,8 @@ article.horizontal:is(.small, .medium, .large) > .primary-action {
 }
 
 article.card-reveal-initialized > aside {
-  --md-comp-card-reveal-duration: 500ms;
-  --md-comp-card-reveal-easing: cubic-bezier(0.2, 0, 0, 1);
+  --md-comp-card-reveal-duration: var(--md-sys-motion-duration-long2);
+  --md-comp-card-reveal-easing: var(--md-sys-motion-easing-standard);
 
   position: relative;
   inset: auto;
@@ -585,7 +585,7 @@ article.card-reveal-initialized > aside {
   transition:
     height var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing),
     padding-block var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing),
-    opacity 150ms ease-out,
+    opacity var(--md-sys-motion-duration-short3) ease-out,
     visibility 0s var(--md-comp-card-reveal-duration);
 }
 
@@ -598,7 +598,7 @@ article.card-reveal-initialized > aside.open {
   transition:
     height var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing),
     padding-block var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing),
-    opacity 200ms 100ms ease-out,
+    opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-duration-short2) ease-out,
     visibility 0s;
 }
 

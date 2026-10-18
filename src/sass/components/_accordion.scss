@@ -40,7 +40,7 @@ $_accordion-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
     // Invisible until forced colors paint it, so the tiles stay apart there.
     outline: 1px solid transparent;
     outline-offset: -1px;
-    transition: border-radius 200ms ease-out;
+    transition: border-radius var(--md-sys-motion-duration-short4) ease-out;
 
     &:first-child {
       border-start-start-radius: var(--md-comp-accordion-shape);
@@ -85,7 +85,7 @@ $_accordion-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
       margin-inline-start: auto;
       background-color: var(--md-sys-color-on-surface-variant);
       mask: $_accordion-chevron center / 24px no-repeat;
-      transition: transform 200ms ease-out;
+      transition: transform var(--md-sys-motion-duration-short4) ease-out;
     }
 
     &:hover {
@@ -130,8 +130,8 @@ $_accordion-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
       block-size: 0;
       overflow: clip;
       transition:
-        block-size 250ms cubic-bezier(0.2, 0, 0, 1),
-        content-visibility 250ms allow-discrete;
+        block-size var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-standard),
+        content-visibility var(--md-sys-motion-duration-medium1) allow-discrete;
     }
 
     &[open]::details-content {

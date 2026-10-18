@@ -9,8 +9,8 @@
 article.expanding-card {
   --md-comp-expanding-card-container-color: var(--md-sys-color-surface);
   --md-comp-expanding-card-expanded-shape: 0;
-  --md-comp-expanding-card-motion-duration: 500ms;
-  --md-comp-expanding-card-motion-easing: cubic-bezier(0.2, 0, 0, 1);
+  --md-comp-expanding-card-motion-duration: var(--md-sys-motion-duration-long2);
+  --md-comp-expanding-card-motion-easing: var(--md-sys-motion-easing-standard);
   --md-comp-expanding-card-content-padding: 16px;
   --md-comp-expanding-card-expanded-media-height: min(56dvh, 560px);
 }
@@ -116,14 +116,14 @@ dialog.expanding-card-dialog > .expanding-card-close {
   opacity: 0;
   transform: scale(0.8);
   transition:
-    opacity 150ms ease-out,
-    transform 300ms var(--md-comp-expanding-card-motion-easing);
+    opacity var(--md-sys-motion-duration-short3) ease-out,
+    transform var(--md-sys-motion-duration-medium2) var(--md-comp-expanding-card-motion-easing);
 }
 
 dialog.expanding-card-dialog.expanded > .expanding-card-close {
   opacity: 1;
   transform: scale(1);
-  transition-delay: 150ms;
+  transition-delay: var(--md-sys-motion-duration-short3);
 }
 
 dialog.expanding-card-dialog > .expanding-card-content {
@@ -136,8 +136,8 @@ dialog.expanding-card-dialog > .expanding-card-content {
   opacity: 0;
   transform: translateY(16px);
   transition:
-    opacity 150ms ease-out,
-    transform 300ms var(--md-comp-expanding-card-motion-easing);
+    opacity var(--md-sys-motion-duration-short3) ease-out,
+    transform var(--md-sys-motion-duration-medium2) var(--md-comp-expanding-card-motion-easing);
 }
 
 dialog.expanding-card-dialog.expanded > .expanding-card-content {
