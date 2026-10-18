@@ -208,5 +208,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the window-size layout prefixes and the display, sizing, border and corner helpers: 72,680 gzip bytes (+1,019).
   // Reviewed underlined links in running text: 72,725 gzip bytes (+45).
   // Reviewed print styles and the print visibility helpers: 72,957 gzip bytes (+232).
-  assert.ok(sizes(css).gzip <= 72957, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed logical properties for blockquotes and table cells: 72,975 gzip bytes (+18).
+  assert.ok(sizes(css).gzip <= 72975, `CSS gzip: ${sizes(css).gzip}`);
 });

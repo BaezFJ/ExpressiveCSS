@@ -119,6 +119,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Blockquotes, table cells and the stacked `.responsive-table` header use
+  logical properties, so the quote bar, cell alignment and header border
+  mirror in a right-to-left page.
 - The lightbox opens above a non-modal bottom or side sheet. Its overlay and
   zoomed image were at `z-index: 1000`, under the sheets' 1100; they now use
   `--expressive-z-lightbox` (1200).

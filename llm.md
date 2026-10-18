@@ -1783,7 +1783,7 @@ Links use the primary color. A link without a class inside a paragraph, a `<dd>`
 
 ### Blockquotes
 
-Blockquotes emphasize a quote or citation. The left bar uses `--md-sys-color-primary`.
+Blockquotes emphasize a quote or citation. The bar on the start side uses `--md-sys-color-primary`.
 
 ```html
 <blockquote>

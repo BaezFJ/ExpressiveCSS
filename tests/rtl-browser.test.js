@@ -106,3 +106,25 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     }
   });
 }
+
+test('chromium: blockquote bars and table cells mirror in a right-to-left page', { timeout: 30000 }, async (t) => {
+  if (!existsSync(chromium.executablePath())) { t.skip('chromium is not installed'); return; }
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<html dir="rtl"><head><style>${css}</style></head><body>
+      <blockquote id="quote">اقتباس</blockquote>
+      <table><tr><th id="th">عنوان</th><td id="td">قيمة</td></tr></table></body></html>`);
+    const read = await page.evaluate(() => {
+      const quote = getComputedStyle(document.getElementById('quote'));
+      return {
+        right: quote.borderRightWidth, left: quote.borderLeftWidth, padding: quote.paddingRight,
+        th: getComputedStyle(document.getElementById('th')).textAlign,
+        td: getComputedStyle(document.getElementById('td')).textAlign,
+      };
+    });
+    assert.deepEqual(read, { right: '5px', left: '0px', padding: '24px', th: 'start', td: 'start' });
+  } finally {
+    await browser.close();
+  }
+});

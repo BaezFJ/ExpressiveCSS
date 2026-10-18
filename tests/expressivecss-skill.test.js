@@ -469,7 +469,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(globalSass, /&\.highlight > tbody > tr[\s\S]*&:hover[\s\S]*var\(--md-sys-color-on-surface\) state-opacity\("hover"\)/);
     assert.match(references.table, /`--md-sys-color-surface-container-high`[\s\S]*on-surface hover state layer/i);
     assert.match(globalSass, /&\.centered\s*\{[\s\S]*thead tr th, tbody tr td\s*\{[\s\S]*text-align:\s*center/);
-    assert.match(references.table, /`\.centered` \| Centers column headers and body data cells\.[\s\S]*Body row headers[\s\S]*remain left-aligned/i);
+    assert.match(references.table, /`\.centered` \| Centers column headers and body data cells\.[\s\S]*Body row headers[\s\S]*stay start-aligned/i);
     assert.doesNotMatch(references.table, /Centers all header and body cell text/i);
     assert.match(references.table, /below `840px`/i);
     assert.match(references.table, /`<caption>`[\s\S]*scope="col"[\s\S]*do not use a table for page layout/i);
