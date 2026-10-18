@@ -219,5 +219,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the color picker: 73,988 gzip bytes (+432).
   // Reviewed elevation tokens and the medium and high contrast schemes: 74,095 gzip bytes (+107).
   // Reviewed the number stepper field: 74,167 gzip bytes (+72).
-  assert.ok(sizes(css).gzip <= 74167, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the fifteen emphasized type roles, their weight tokens and the 700 faces: 74,518 gzip bytes (+351).
+  assert.ok(sizes(css).gzip <= 74518, `CSS gzip: ${sizes(css).gzip}`);
 });

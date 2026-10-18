@@ -35,8 +35,10 @@ const copies = [
   ],
   ['@fontsource/roboto', 'files/roboto-latin-400-normal.woff2', 'roboto-latin-400.woff2'],
   ['@fontsource/roboto', 'files/roboto-latin-500-normal.woff2', 'roboto-latin-500.woff2'],
+  ['@fontsource/roboto', 'files/roboto-latin-700-normal.woff2', 'roboto-latin-700.woff2'],
   ['@fontsource/noto-sans', 'files/noto-sans-latin-400-normal.woff2', 'noto-sans-latin-400.woff2'],
   ['@fontsource/noto-sans', 'files/noto-sans-latin-500-normal.woff2', 'noto-sans-latin-500.woff2'],
+  ['@fontsource/noto-sans', 'files/noto-sans-latin-700-normal.woff2', 'noto-sans-latin-700.woff2'],
 ];
 
 const licenses = [

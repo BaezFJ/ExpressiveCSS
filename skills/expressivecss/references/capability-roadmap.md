@@ -98,7 +98,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Time picker](#time-picker) | unassessed | needs-review | needs-rerun | 2 |
 | [Keypad and Keyboard](#keypad) | unassessed | needs-review | incomplete | 1 |
 | [Questionnaire](#questionnaire) | unassessed | needs-review | needs-rerun | 1 |
-| [Typography](#typography) | unassessed | needs-review | needs-rerun | 2 |
+| [Typography](#typography) | unassessed | needs-review | needs-rerun | 1 |
 | [Shape](#shape) | unassessed | needs-review | needs-rerun | 1 |
 | [Motion](#motion) | unassessed | needs-review | needs-rerun | 1 |
 
@@ -1558,7 +1558,7 @@ Web adaptation: Each question is a native fieldset named by its legend; the brow
 
 ## Typography
 
-**unassessed within the stated scope.** Fifteen baseline type-role utilities and rem-based tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Latin Roboto and Noto Sans 400/500. Existing role-weight tokens permit scoped application emphasis.
+**unassessed within the stated scope.** Fifteen baseline type-role utilities and rem-based tokens, and their M3 Expressive emphasized counterparts as .{role}-emphasized classes and emphasized weight tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Latin Roboto and Noto Sans 400/500/700.
 
 Source review: needs-review, 2026-09-12. [src/sass/tokens/_reference.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/e2a53e815af54aa0a46d5ffc033957df58788353/src/sass/tokens/_reference.scss), [src/sass/utilities/_typescale.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/e2a53e815af54aa0a46d5ffc033957df58788353/src/sass/utilities/_typescale.scss), [src/sass/base/_typography.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/e2a53e815af54aa0a46d5ffc033957df58788353/src/sass/base/_typography.scss), [src/sass/base/_fonts.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/e2a53e815af54aa0a46d5ffc033957df58788353/src/sass/base/_fonts.scss).
 
@@ -1566,8 +1566,8 @@ Google relationship: foundation. Upstream review: android-foundation-reviewed; f
 
 Web adaptation: Use supported web component and application overrides; Android attributes and APIs are design references only.
 
-- feature: No emphasized role utilities or emphasized token family; emphasized labels and smaller titles requiring 700 need an application-supplied real face. Next: Define an additive emphasized-scale contract and a font-loading policy before implementing public names.
-- feature: Bundled text fonts cover Latin and 400/500 only; a Noto Sans fallback declaration does not establish non-Latin coverage. Next: Add browser checks for actual rendered font faces/weights, representative scripts, and all type-role metrics; retain native zoom/assistive review separately.
+- verification: Emphasized roles change only the weight; rendered 700 faces are not yet checked in a browser against loaded font files. Next: Load the packaged fonts in a browser check and confirm the emphasized label and title roles render the bundled 700 face rather than a synthetic bold.
+- feature: Bundled text fonts cover Latin and 400/500/700 only; a Noto Sans fallback declaration does not establish non-Latin coverage. Next: Add browser checks for actual rendered font faces/weights, representative scripts, and all type-role metrics; retain native zoom/assistive review separately.
 
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/e2a53e815af54aa0a46d5ffc033957df58788353/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. 32px/28px example headline sizes, responsive overflow and doubled root text size; does not prove font identity or full scale parity.
 - stale: [tests/expressivecss-material-quality.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/e2a53e815af54aa0a46d5ffc033957df58788353/tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-scoped headline size, line-height and 500 weight repair is accepted while qualitative judgment stays pending; no synthesized-font detection.

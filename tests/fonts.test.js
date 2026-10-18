@@ -16,8 +16,10 @@ const FONT_FILES = {
   'material-symbols-sharp.woff2': 'Material Symbols Sharp',
   'roboto-latin-400.woff2': 'Roboto',
   'roboto-latin-500.woff2': 'Roboto',
+  'roboto-latin-700.woff2': 'Roboto',
   'noto-sans-latin-400.woff2': 'Noto Sans',
   'noto-sans-latin-500.woff2': 'Noto Sans',
+  'noto-sans-latin-700.woff2': 'Noto Sans',
 };
 
 function readCss() {

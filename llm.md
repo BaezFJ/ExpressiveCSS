@@ -1822,6 +1822,12 @@ When the tag cannot say the role, use the class. Display-large and display-mediu
 
 `body-large`, `body-medium`, and `body-small` apply the three body roles to an element that is not a `<p>` or `<small>`.
 
+Each of the fifteen roles has an emphasized counterpart from Material 3 Expressive: the same family, size and spacing, heavier. Add `-emphasized` to the role class, such as `.label-large-emphasized` or `.headline-small-emphasized`. Display, headline, title-large and body roles go to `500`; title-medium, title-small and label roles go to `700`. The weight is a token, `--md-sys-typescale-emphasized-{role}-font-weight`. Roboto and Noto Sans are bundled at `700` and load only when a page uses it.
+
+```html
+<h2 class="headline-small-emphasized">Account security</h2>
+<span class="label-large-emphasized">Selected</span>
+```
 ### Links
 
 Links use the primary color. A link without a class inside a paragraph, a `<dd>`, a blockquote, a figure caption or a table cell is also underlined, because color alone does not mark a link for everyone. Links elsewhere, and any link with a class, have no underline, so navigation lists, menus, tabs and buttons made from `<a>` keep their own look.

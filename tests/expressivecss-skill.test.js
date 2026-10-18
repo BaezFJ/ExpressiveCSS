@@ -638,24 +638,23 @@ describe('the ExpressiveCSS agent skill', () => {
     }
 
     // These gaps describe compiled capabilities, not speculative CSS APIs.
-    for (const prefix of ['--md-sys-typescale-emphasized-']) {
-      assert.ok(!compiledCss.includes(prefix), `${prefix} support changed; revise the documented gap`);
-      assert.ok(Object.values(references).some((reference) => reference.includes(`${prefix}*`)), `${prefix} gap is undocumented`);
-    }
-    assert.doesNotMatch(compiledCss, /\.(?:display|headline|title|body|label)-(?:large|medium|small)-emphasized\b/);
+    assert.match(compiledCss, /--md-sys-typescale-emphasized-label-large-font-weight:\s*700/);
+    assert.match(compiledCss, /--md-sys-typescale-emphasized-body-large-font-weight:\s*500/);
+    assert.match(compiledCss, /\.label-large-emphasized\s*\{[^}]*font-weight:\s*var\(--md-sys-typescale-emphasized-label-large-font-weight\)/);
+    assert.match(references.typography, /`\.label-large-emphasized`/);
     assert.match(compiledCss, /--md-comp-filled-button-container-shape:\s*var\(--md-sys-shape-corner-full\)/);
     assert.match(compiledCss, /--md-sys-shape-corner-full:\s*9999px/);
     assert.match(compiledCss, /--md-comp-button-group-motion:\s*linear\(/);
     assert.match(compiledCss, /border-radius var\(--md-sys-motion-duration-short4\) var\(--md-comp-button-group-motion\)/);
     assert.match(compiledCss, /--md-sys-motion-duration-short4:\s*200ms/);
     assert.match(references.motion, /`--md-sys-motion-easing-\*` and `--md-sys-motion-duration-\*`/);
-    assert.match(references.typography, /Bundled fonts do not supply `700`/);
+    assert.match(references.typography, /bundles Roboto and Noto Sans at `400`, `500` and `700`/);
     assert.match(references.typography, /\.bold` means `500`/);
     const fontFaces = [...compiledCss.matchAll(/@font-face\s*\{([^}]+)\}/g)]
       .map(([, declarations]) => declarations)
       .filter((declarations) => /font-family:\s*["']?(?:Roboto|Noto Sans)["']?\s*;/.test(declarations));
     assert.ok(fontFaces.length >= 4, 'could not inspect bundled text font faces');
-    assert.deepEqual([...new Set(fontFaces.map((face) => face.match(/font-weight:\s*([^;]+);/)?.[1]))].sort(), ['400', '500']);
+    assert.deepEqual([...new Set(fontFaces.map((face) => face.match(/font-weight:\s*([^;]+);/)?.[1]))].sort(), ['400', '500', '700']);
 
     const expandingCard = readFileSync(new URL('../src/ts/components/expandingCard.ts', import.meta.url), 'utf8');
     assert.doesNotMatch(expandingCard, /setTimeout\(finish/);

@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Emphasized type roles from Material 3 Expressive: `.{role}-emphasized`
+  classes for all fifteen roles and
+  `--md-sys-typescale-emphasized-{role}-font-weight` tokens, at `500` for
+  display, headline, title-large and body and `700` for title-medium,
+  title-small and label. Roboto and Noto Sans now ship a `700` face, fetched
+  only when a page renders that weight.
 - A "Design tokens" documentation page at `/tokens.html` lists every token
   family, its prefix and the page that documents it, with an override
   example.

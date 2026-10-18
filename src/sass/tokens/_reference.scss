@@ -111,6 +111,17 @@ $sys-dark: (
   "scrim": "neutral0", "shadow": "neutral0"
 );
 
+// Emphasized weights, from Google's typography guidance: medium for display,
+// headline, title-large and body, bold for title-medium, title-small and
+// label. base/_fonts.scss bundles the 500 and 700 faces.
+$_emphasized-weights: (
+  "display-large": 500, "display-medium": 500, "display-small": 500,
+  "headline-large": 500, "headline-medium": 500, "headline-small": 500,
+  "title-large": 500, "title-medium": 700, "title-small": 700,
+  "body-large": 500, "body-medium": 500, "body-small": 500,
+  "label-large": 700, "label-medium": 700, "label-small": 700,
+);
+
 :root, :host {
   --md-source: #{$md-source};
 
@@ -277,4 +288,11 @@ $sys-dark: (
   --md-sys-typescale-title-small-font-size: 0.875rem;
   --md-sys-typescale-title-small-line-height: 1.25rem;
   --md-sys-typescale-title-small-letter-spacing: 0.00625rem;
+
+  // emphasized - M3 Expressive's heavier counterpart of each role. Only the
+  // weight changes; the family, size, line height and tracking are the
+  // baseline role's.
+  @each $role, $weight in $_emphasized-weights {
+    --md-sys-typescale-emphasized-#{$role}-font-weight: #{$weight};
+  }
 }

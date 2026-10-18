@@ -319,3 +319,21 @@ browserTest('a narrow query container stacks horizontal cards and description li
     await browser.close();
   }
 });
+
+browserTest('emphasized type roles keep the role metrics and take the emphasized weight', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style>
+      <span id="label" class="label-large">a</span><span id="label-e" class="label-large-emphasized">a</span>
+      <span id="body" class="body-large">a</span><span id="body-e" class="body-large-emphasized">a</span>`);
+    const read = await page.evaluate(() => Object.fromEntries(['label', 'label-e', 'body', 'body-e'].map((id) => {
+      const s = getComputedStyle(document.getElementById(id));
+      return [id, [s.fontWeight, s.fontSize, s.lineHeight]];
+    })));
+    assert.deepEqual(read['label-e'], ['700', ...read.label.slice(1)]);
+    assert.deepEqual(read['body-e'], ['500', ...read.body.slice(1)]);
+  } finally {
+    await browser.close();
+  }
+});

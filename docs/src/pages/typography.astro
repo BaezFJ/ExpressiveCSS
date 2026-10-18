@@ -170,6 +170,20 @@ const S = defineSections([
           <code>body-small</code> apply the three body roles to an element
           that is not a <code>&lt;p&gt;</code> or <code>&lt;small&gt;</code>.
         </p>
+          <p>
+          Each of the fifteen roles has an emphasized counterpart from Material 3 Expressive: the
+          same family, size and spacing, heavier. Add <code>-emphasized</code> to the role class,
+          such as <code>.label-large-emphasized</code> or <code>.headline-small-emphasized</code>.
+          Display, headline, title-large and body roles go to <code>500</code>; title-medium,
+          title-small and label roles go to <code>700</code>. The weight is a token,
+          <code>--md-sys-typescale-emphasized-{role}-font-weight</code>. Roboto and Noto Sans are
+          bundled at <code>700</code> and load only when a page uses it.
+        </p>
+        <p class="title-medium">Inbox <span class="title-medium-emphasized">Unread</span></p>
+<Code code={`
+<h2 class="headline-small-emphasized">Account security</h2>
+<span class="label-large-emphasized">Selected</span>
+`} />
   </Section>
   <Section {...S.links}>
         <p>
