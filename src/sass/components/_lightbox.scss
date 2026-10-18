@@ -8,7 +8,7 @@
   backface-visibility: hidden;
   // Same 12px as .responsive-img. Exclude .circle so a disc stays a disc.
   &:not(.circle) {
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
   }
 
   &:hover:not(.active) {

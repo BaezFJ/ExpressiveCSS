@@ -22,7 +22,7 @@ describe('Dialog CSS', () => {
       css,
       /--md-comp-basic-dialog-container-color:\s*var\(--md-sys-color-surface-container-high\)/
     );
-    assert.match(css, /--md-comp-basic-dialog-container-shape:\s*28px/);
+    assert.match(css, /--md-comp-basic-dialog-container-shape:\s*var\(--md-sys-shape-corner-extra-large\)/);
     assert.match(css, /--md-comp-basic-dialog-container-min-width:\s*280px/);
     assert.match(css, /--md-comp-basic-dialog-container-max-width:\s*560px/);
   });

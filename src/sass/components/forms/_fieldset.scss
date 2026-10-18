@@ -22,7 +22,7 @@
 
 fieldset {
   --md-comp-fieldset-container-color: transparent;
-  --md-comp-fieldset-container-shape: 4px;
+  --md-comp-fieldset-container-shape: var(--md-sys-shape-corner-extra-small);
   --md-comp-fieldset-outline-color: var(--md-sys-color-outline-variant);
   --md-comp-fieldset-outline-width: 1px;
   --md-comp-fieldset-legend-color: var(--md-sys-color-on-surface);
@@ -97,7 +97,7 @@ fieldset.border {
 }
 
 fieldset.rounded {
-  --md-comp-fieldset-container-shape: 12px;
+  --md-comp-fieldset-container-shape: var(--md-sys-shape-corner-medium);
 }
 
 // Plain groups radios or checkboxes inside a surface that already frames them,

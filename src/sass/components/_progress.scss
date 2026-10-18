@@ -23,7 +23,7 @@
   --md-comp-progress-track: var(--md-sys-color-secondary-container);
   --md-comp-progress-indicator: var(--md-sys-color-primary);
   --md-comp-progress-thickness: 4px;
-  --md-comp-progress-shape: 4px;
+  --md-comp-progress-shape: var(--md-sys-shape-corner-extra-small);
   --md-comp-progress-circular-size: 48px;
   --md-comp-progress-circular-thickness: 4px;
 }

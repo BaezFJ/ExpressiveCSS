@@ -28,7 +28,7 @@
 :root, :host {
   --md-comp-filled-button-container-color: var(--md-sys-color-primary);
   --md-comp-filled-button-label-text-color: var(--md-sys-color-on-primary);
-  --md-comp-filled-button-container-shape: 9999px;
+  --md-comp-filled-button-container-shape: var(--md-sys-shape-corner-full);
   @include button-size("small");
 }
 
@@ -139,7 +139,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 // Every size is corner.full already, so this only bites when a consumer has
 // themed the shape token to something squarer and wants one button back.
 :where(#{$_btn}).rounded {
-  border-radius: 9999px;
+  border-radius: var(--md-sys-shape-corner-full);
 }
 
 // Extended FAB: an icon plus a label, on its own size and colour axes.
@@ -251,7 +251,7 @@ $_extend-sizes: (
 :where(#{$_btn}).large.circle {
   --md-comp-fab-container-height: 56px;
   --md-comp-fab-container-width: 56px;
-  --md-comp-fab-container-shape: 16px;
+  --md-comp-fab-container-shape: var(--md-sys-shape-corner-large);
   --md-comp-fab-icon-size: 24px;
 
   display: inline-flex;
@@ -303,7 +303,7 @@ $_extend-sizes: (
   &.medium {
     --md-comp-fab-container-height: 80px;
     --md-comp-fab-container-width: 80px;
-    --md-comp-fab-container-shape: 20px;
+    --md-comp-fab-container-shape: var(--md-sys-shape-corner-large-increased);
     --md-comp-fab-icon-size: 26px;
   }
 }
@@ -318,7 +318,7 @@ $_extend-sizes: (
 :where(#{$_btn}).extra.circle.large {
   --md-comp-fab-container-height: 96px;
   --md-comp-fab-container-width: 96px;
-  --md-comp-fab-container-shape: 28px;
+  --md-comp-fab-container-shape: var(--md-sys-shape-corner-extra-large);
   --md-comp-fab-icon-size: 36px;
 }
 

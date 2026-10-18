@@ -25,7 +25,7 @@ $_sheet: "dialog.side-sheet";
 
 #{$_sheet} {
   --md-comp-side-sheet-container-color: var(--md-sys-color-surface-container-low);
-  --md-comp-side-sheet-container-shape: 28px;
+  --md-comp-side-sheet-container-shape: var(--md-sys-shape-corner-extra-large);
   --md-comp-side-sheet-container-width: 400px;
   --md-comp-side-sheet-shift: 0px;
 

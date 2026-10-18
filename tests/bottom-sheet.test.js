@@ -14,7 +14,7 @@ describe('Bottom sheet CSS', () => {
       css,
       /--md-comp-bottom-sheet-container-color:\s*var\(--md-sys-color-surface-container-low\)/
     );
-    assert.match(css, /--md-comp-bottom-sheet-container-shape:\s*28px/);
+    assert.match(css, /--md-comp-bottom-sheet-container-shape:\s*var\(--md-sys-shape-corner-extra-large\)/);
   });
 
   test('caps width at 640dp and leaves 72dp at the top', () => {

@@ -43,7 +43,7 @@
 
   --md-comp-icon-button-color: var(--md-sys-color-on-surface-variant);
   --md-comp-icon-button-container-color: transparent;
-  --md-comp-icon-button-container-shape: 9999px;
+  --md-comp-icon-button-container-shape: var(--md-sys-shape-corner-full);
 
   box-sizing: border-box;
   display: inline-flex;

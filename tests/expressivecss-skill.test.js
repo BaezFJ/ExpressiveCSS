@@ -637,12 +637,13 @@ describe('the ExpressiveCSS agent skill', () => {
     }
 
     // These gaps describe compiled capabilities, not speculative CSS APIs.
-    for (const prefix of ['--md-sys-shape-', '--md-sys-typescale-emphasized-']) {
+    for (const prefix of ['--md-sys-typescale-emphasized-']) {
       assert.ok(!compiledCss.includes(prefix), `${prefix} support changed; revise the documented gap`);
       assert.ok(Object.values(references).some((reference) => reference.includes(`${prefix}*`)), `${prefix} gap is undocumented`);
     }
     assert.doesNotMatch(compiledCss, /\.(?:display|headline|title|body|label)-(?:large|medium|small)-emphasized\b/);
-    assert.match(compiledCss, /--md-comp-filled-button-container-shape:\s*9999px/);
+    assert.match(compiledCss, /--md-comp-filled-button-container-shape:\s*var\(--md-sys-shape-corner-full\)/);
+    assert.match(compiledCss, /--md-sys-shape-corner-full:\s*9999px/);
     assert.match(compiledCss, /--md-comp-button-group-motion:\s*linear\(/);
     assert.match(compiledCss, /border-radius var\(--md-sys-motion-duration-short4\) var\(--md-comp-button-group-motion\)/);
     assert.match(compiledCss, /--md-sys-motion-duration-short4:\s*200ms/);

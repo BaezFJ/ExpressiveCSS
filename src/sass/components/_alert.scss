@@ -23,7 +23,7 @@
 .alert {
   --md-comp-alert-container-color: var(--md-sys-color-secondary-container);
   --md-comp-alert-color: var(--md-sys-color-on-secondary-container);
-  --md-comp-alert-shape: 16px;
+  --md-comp-alert-shape: var(--md-sys-shape-corner-large);
   --md-comp-alert-padding: 16px;
 
   box-sizing: border-box;

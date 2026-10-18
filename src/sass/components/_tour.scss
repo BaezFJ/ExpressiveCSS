@@ -16,7 +16,7 @@
 
 .tour {
   --md-comp-tour-container-color: var(--md-sys-color-surface-container-high);
-  --md-comp-tour-shape: 16px;
+  --md-comp-tour-shape: var(--md-sys-shape-corner-large);
   --md-comp-tour-max-width: 360px;
   --md-comp-tour-gap: 12px;
 

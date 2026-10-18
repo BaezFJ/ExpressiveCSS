@@ -97,7 +97,7 @@ $_stepper-alert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 
     > a {
       color: inherit;
-      border-radius: 4px;
+      border-radius: var(--md-sys-shape-corner-extra-small);
       text-decoration: underline;
       text-underline-offset: 2px;
       @include focus-visible;

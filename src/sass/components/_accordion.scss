@@ -22,8 +22,8 @@ $_accordion-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
 
 .accordion {
   --md-comp-accordion-container-color: var(--md-sys-color-surface-container);
-  --md-comp-accordion-shape: 20px;
-  --md-comp-accordion-grouped-shape: 4px;
+  --md-comp-accordion-shape: var(--md-sys-shape-corner-large-increased);
+  --md-comp-accordion-grouped-shape: var(--md-sys-shape-corner-extra-small);
   --md-comp-accordion-gap: 2px;
   --md-comp-accordion-header-height: 56px;
   --md-comp-accordion-padding: 16px;

@@ -16,7 +16,7 @@
 //   --md-comp-drop-zone-dragover-color             on-primary-container
 
 .drop-zone {
-  --md-comp-drop-zone-shape: 16px;
+  --md-comp-drop-zone-shape: var(--md-sys-shape-corner-large);
   --md-comp-drop-zone-outline-color: var(--md-sys-color-outline);
   --md-comp-drop-zone-dragover-container-color: var(--md-sys-color-primary-container);
   --md-comp-drop-zone-dragover-color: var(--md-sys-color-on-primary-container);
@@ -99,7 +99,7 @@
       justify-content: space-between;
       gap: 16px;
       padding: 8px 16px;
-      border-radius: 8px;
+      border-radius: var(--md-sys-shape-corner-small);
       background-color: var(--md-sys-color-surface-container);
       color: var(--md-sys-color-on-surface);
       @include typescale("body-medium");

@@ -32,7 +32,7 @@
 
 .data-table {
   --md-comp-data-table-container-color: var(--md-sys-color-surface);
-  --md-comp-data-table-shape: 12px;
+  --md-comp-data-table-shape: var(--md-sys-shape-corner-medium);
   --md-comp-data-table-outline-color: var(--md-sys-color-outline-variant);
   --md-comp-data-table-header-height: 56px;
   --md-comp-data-table-row-height: 52px;
@@ -161,7 +161,7 @@
     margin: 0;
     padding: 0;
     border: 0;
-    border-radius: 4px;
+    border-radius: var(--md-sys-shape-corner-extra-small);
     background: none;
     color: inherit;
     font: inherit;
@@ -227,7 +227,7 @@
   padding: 8px 16px;
   border: 1px solid var(--md-sys-color-outline-variant);
   border-block-end: 0;
-  border-radius: 12px 12px 0 0;
+  border-radius: var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-medium) 0 0;
   background-color: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
   transition: background-color var(--md-sys-motion-duration-short4) ease-out;

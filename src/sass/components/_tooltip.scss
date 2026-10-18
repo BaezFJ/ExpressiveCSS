@@ -20,7 +20,7 @@
 .tooltip {
   --md-comp-plain-tooltip-container-color: var(--md-sys-color-inverse-surface);
   --md-comp-plain-tooltip-supporting-text-color: var(--md-sys-color-inverse-on-surface);
-  --md-comp-plain-tooltip-container-shape: 4px;
+  --md-comp-plain-tooltip-container-shape: var(--md-sys-shape-corner-extra-small);
   --md-comp-tooltip-anchor-gap: 4px;
 
   box-sizing: border-box;
@@ -125,7 +125,7 @@ body > .tooltip,
 // Rich tooltip — title, supporting text, optional action.
 .tooltip.rich {
   --md-comp-rich-tooltip-container-color: var(--md-sys-color-surface-container);
-  --md-comp-rich-tooltip-container-shape: 12px;
+  --md-comp-rich-tooltip-container-shape: var(--md-sys-shape-corner-medium);
 
   display: flex;
   flex-direction: column;

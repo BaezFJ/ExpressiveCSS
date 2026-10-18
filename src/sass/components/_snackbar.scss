@@ -71,7 +71,7 @@ $_bar: ".snackbar";
 
 #{$_bar} {
   --md-comp-snackbar-container-color: var(--md-sys-color-inverse-surface);
-  --md-comp-snackbar-container-shape: 4px;
+  --md-comp-snackbar-container-shape: var(--md-sys-shape-corner-extra-small);
   --md-comp-snackbar-supporting-text-color: var(--md-sys-color-inverse-on-surface);
   --md-comp-snackbar-action-label-text-color: var(--md-sys-color-inverse-primary);
   --md-comp-snackbar-icon-color: var(--md-sys-color-inverse-on-surface);
@@ -158,7 +158,7 @@ $_bar: ".snackbar";
     min-width: 48px;
     padding: 0 12px;
     border: none;
-    border-radius: 20px;
+    border-radius: var(--md-sys-shape-corner-large-increased);
     background-color: transparent;
     color: var(--md-comp-snackbar-action-label-text-color);
     box-shadow: none;

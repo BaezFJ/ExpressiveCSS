@@ -33,7 +33,7 @@ const pointerEvent = (type, init = {}) => {
 
 describe('Material 3 Carousel CSS', () => {
   test('publishes the M3 container and item measurements', () => {
-    assert.match(css, /--md-comp-carousel-shape:\s*28px/);
+    assert.match(css, /--md-comp-carousel-shape:\s*var\(--md-sys-shape-corner-extra-large\)/);
     assert.match(css, /--md-comp-carousel-gap:\s*8px/);
     assert.match(css, /--md-comp-carousel-inline-padding:\s*16px/);
     assert.match(css, /--md-comp-carousel-block-padding:\s*8px/);
@@ -85,7 +85,7 @@ describe('Material 3 Carousel CSS', () => {
     );
     assert.match(
       css,
-      /\.carousel\.full-screen\.full-screen-horizontal\s*\{[^}]*--md-comp-carousel-gap:\s*8px[^}]*--md-comp-carousel-shape:\s*28px/s
+      /\.carousel\.full-screen\.full-screen-horizontal\s*\{[^}]*--md-comp-carousel-gap:\s*8px[^}]*--md-comp-carousel-shape:\s*var\(--md-sys-shape-corner-extra-large\)/s
     );
     assert.match(css, /\.carousel\.full-screen-horizontal::after\s*\{[^}]*inset-inline-end:\s*0/s);
   });

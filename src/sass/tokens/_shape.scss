@@ -1,0 +1,27 @@
+// Material Design 3 corner tokens: md.sys.shape.corner.*, including the
+// Expressive steps (large-increased, extra-large-increased,
+// extra-extra-large).
+//
+// Component shape tokens point at these, the way material-web's do, so a
+// brand that wants squarer or rounder corners overrides the scale once:
+//
+//   :root { --md-sys-shape-corner-medium: 8px; }
+//
+// A component token still wins for one component. `full` is a pill at any
+// height the framework draws; a true circle on a square box is `.circle`.
+
+@use "../abstracts" as *;
+
+:root,
+:host {
+  --md-sys-shape-corner-none: 0px;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-large-increased: 20px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-extra-large-increased: 32px;
+  --md-sys-shape-corner-extra-extra-large: 48px;
+  --md-sys-shape-corner-full: 9999px;
+}

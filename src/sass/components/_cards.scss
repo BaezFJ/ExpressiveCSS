@@ -29,11 +29,11 @@ $_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-
   --md-comp-outlined-card-outline-color: var(--md-sys-color-outline-variant);
   --md-comp-outlined-card-disabled-outline-color: var(--md-sys-color-outline);
   --md-comp-card-container-color: var(--md-comp-elevated-card-container-color);
-  --md-comp-card-container-shape: 12px;
+  --md-comp-card-container-shape: var(--md-sys-shape-corner-medium);
   --md-comp-card-media-shape: var(--md-comp-card-container-shape);
   --md-comp-card-media-overlay-container-color: var(--md-sys-color-surface);
   --md-comp-card-media-overlay-ink-color: var(--md-sys-color-on-surface);
-  --md-comp-card-media-overlay-shape: 8px;
+  --md-comp-card-media-overlay-shape: var(--md-sys-shape-corner-small);
   --md-comp-card-headline-color: var(--md-sys-color-on-surface);
   --md-comp-card-subhead-color: var(--md-sys-color-on-surface);
   --md-comp-card-supporting-text-color: var(--md-sys-color-on-surface-variant);
@@ -639,7 +639,7 @@ article > aside > .reveal-actions > .reveal-action {
   min-height: 48px;
   padding-inline: 0;
   color: var(--md-sys-color-on-surface);
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-corner-small);
   @include typescale("body-medium");
 }
 

@@ -2092,7 +2092,7 @@
         "sources": [
           {
             "path": "src/sass/components/_aura.scss",
-            "sha256": "e95db68ef71c6f5b3262379825dc52b4ef75968d621df6ae2aa441e2d4caf002"
+            "sha256": "67a0781b94946d4e15b68718179f39c5af55cde89169fe45f5f6e4f402c216da"
           }
         ],
         "gaps": [
@@ -2278,7 +2278,7 @@
         "sources": [
           {
             "path": "src/sass/components/_message.scss",
-            "sha256": "a1b7c89089ac37ccbf2127c1c7bc4f394fd1a27253ec07208caf379a2ffa8240"
+            "sha256": "6f9193eeb919d5c5420761acd5967f137574501378136c71740e6bd4ccef3a04"
           }
         ],
         "gaps": [
@@ -2465,7 +2465,7 @@
         "sources": [
           {
             "path": "src/sass/components/_accordion.scss",
-            "sha256": "d0a82b56979d8bdd32fdcf6aa53e9bc69d41b2947853355ba278a63bce037d57"
+            "sha256": "8a08c01feae12fa7d1037eedb1405be1526c0db67b304c6949e423de6e223b38"
           }
         ],
         "gaps": [
@@ -2643,7 +2643,7 @@
         "sources": [
           {
             "path": "src/sass/components/_stat.scss",
-            "sha256": "c8f50278bd01fd4ef8d38a5b26fb7b91869f30b9cfc59cef4d482651e9bae9ad"
+            "sha256": "d16e8c5dab7af93c9b9601548dc32953cc5e095a249e7c7c4e5859e3ebbc4f71"
           }
         ],
         "gaps": [
@@ -2815,7 +2815,7 @@
         "sources": [
           {
             "path": "src/sass/components/_kpi.scss",
-            "sha256": "8b54fdf69302d605376d10091bd533054030c3ddffd0384c9c7076b9bcf2c8eb"
+            "sha256": "0597d0fc81f4f1a874729e5ca7ca4e7b7cb0fbcd0de92894741e3d2ce91f4d31"
           }
         ],
         "gaps": [
@@ -3961,7 +3961,7 @@
         "sources": [
           {
             "path": "src/sass/components/_calendar.scss",
-            "sha256": "46fe1ef955fe033fa3e300bef0e2048c665a84656f4da602ad00eec4da602ec9"
+            "sha256": "f209f40beeaa9e815848dde9cd75f4ac9754de160bc050740810b1e7fc35916c"
           }
         ],
         "gaps": [
@@ -4649,7 +4649,7 @@
         "sources": [
           {
             "path": "src/sass/components/_org-chart.scss",
-            "sha256": "622297d4084b23dae4ce7043284f4c351e41a832e5a275470a114fc436aba34f"
+            "sha256": "7b342738b7029990224426661ab35b6b95215eb66ee29052439f9a4ea8d3704b"
           }
         ],
         "gaps": [
@@ -4826,7 +4826,7 @@
         "sources": [
           {
             "path": "src/sass/components/_popover.scss",
-            "sha256": "5e9f398636fd6db16dbc3ae2062a4d9b11e5eb1788a983ba1fa8baf858dcd98a"
+            "sha256": "2e53fc06eec6588276afe33f849ac6f5df5b240208870364f65bce854d2ae0c7"
           }
         ],
         "gaps": [
@@ -5301,7 +5301,7 @@
         "sources": [
           {
             "path": "src/sass/components/_skeleton.scss",
-            "sha256": "f22efd82847af981cf225a0991a471e5fd25f7cdb07c1e0ec80195e937b13818"
+            "sha256": "f3a48d490f5a43671e8d9dbeb31a5091c8b90823c6af0e7109939ef6a11a4366"
           }
         ],
         "gaps": [
@@ -5475,7 +5475,7 @@
         "sources": [
           {
             "path": "src/sass/components/_alert.scss",
-            "sha256": "67af3cb5731ec433de0af98707c9ce91445412fb132ac7324b6e83661166b0ad"
+            "sha256": "7fdd2ece700371a711c114b86d24ea6271ed61850761b775a6bfc997046e6e14"
           }
         ],
         "gaps": [
@@ -5679,7 +5679,7 @@
         "sources": [
           {
             "path": "src/sass/components/_image-compare.scss",
-            "sha256": "b1630c0d7c232fae99d3b428595c5c8680a92dffd5c2ddb07fe93334782266dd"
+            "sha256": "1dea70f8b47092f064348912efedfa0b29a52be680a7d402e4d84f883d669f8e"
           }
         ],
         "gaps": [
@@ -6420,7 +6420,7 @@
         "sources": [
           {
             "path": "src/sass/components/_command-palette.scss",
-            "sha256": "d9d4dd1fe2b3bc60aa29203a7526139e8e75e6d7b2a76bbe2dd59e671f62ed0d"
+            "sha256": "7f87348fcfaf815b695e5dd4020b565f3251ae70f5b9e8569f79010edb9a94d6"
           },
           {
             "path": "src/ts/components/commandPalette.ts",
@@ -6696,7 +6696,7 @@
         "sources": [
           {
             "path": "src/sass/components/_rich-text-editor.scss",
-            "sha256": "4ff745197d37043297861b0a4166e0bda0fd3adcdb160baed5dffb6a6821dd46"
+            "sha256": "226fa4214606a435d08a15df773dd220e9eb10b2c4e05f006e8b43c1329a360c"
           },
           {
             "path": "src/ts/components/richTextEditor.ts",
@@ -6790,7 +6790,7 @@
         "sources": [
           {
             "path": "src/sass/components/forms/_drop-zone.scss",
-            "sha256": "fdd85c6e34e8f5c1a04927ddbeffb32a0511b5739b0b8f18f53a3d7c52f9b340"
+            "sha256": "52ea5527afcb6811004e96b565a8f8fad3cc4a66f20da6c0e1ac2de20743f332"
           },
           {
             "path": "src/ts/behaviors/forms.ts",
@@ -8204,7 +8204,7 @@
           "scope": "android-foundation-reviewed; full web specification unassessed"
         },
         "implementation": {
-          "documentedSupport": "Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.",
+          "documentedSupport": "Shared md.sys.shape.corner scale from none to full, read by component shape tokens on that scale. Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.",
           "webAdaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only."
         }
       },
@@ -8229,8 +8229,8 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "No shared md-sys-shape token family or general rounded/cut-corner theming system.",
-            "nextStep": "Inventory existing component corner defaults against proposed shared roles before introducing an additive shape scale; preserve existing component overrides and state shapes."
+            "description": "No cut-corner family or general cut-corner theming system; off-scale component corners stay literal.",
+            "nextStep": "Map off-scale component corners to the nearest role only where Material names one; preserve existing component overrides and state shapes."
           }
         ],
         "browserChecks": [

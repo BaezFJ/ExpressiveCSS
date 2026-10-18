@@ -15,7 +15,7 @@ describe('Snackbar', () => {
   });
 
   test('is a 48dp bar with extra-small corners', () => {
-    assert.match(css, /--md-comp-snackbar-container-shape:\s*4px/);
+    assert.match(css, /--md-comp-snackbar-container-shape:\s*var\(--md-sys-shape-corner-extra-small\)/);
     assert.match(css, /\.snackbar\s*\{[^}]*min-height:\s*48px/s);
   });
 

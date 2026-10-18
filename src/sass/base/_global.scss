@@ -173,7 +173,7 @@ meter {
   --md-comp-meter-suboptimum: var(--md-sys-color-tertiary);
   --md-comp-meter-even-less-good: var(--md-sys-color-error);
   --md-comp-meter-thickness: 8px;
-  --md-comp-meter-shape: 4px;
+  --md-comp-meter-shape: var(--md-sys-shape-corner-extra-small);
 
   width: 100%;
   height: var(--md-comp-meter-thickness);

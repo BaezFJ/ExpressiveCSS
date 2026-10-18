@@ -103,7 +103,7 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
       padding-inline: var(--md-comp-fab-menu-menu-item-leading-space)
         var(--md-comp-fab-menu-menu-item-trailing-space);
       border: none;
-      border-radius: 9999px;
+      border-radius: var(--md-sys-shape-corner-full);
       color: var(--md-comp-fab-menu-menu-item-label-text-color);
       background-color: var(--md-comp-fab-menu-menu-item-container-color);
       white-space: normal;
@@ -189,7 +189,7 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
     --md-comp-fab-container-width: var(
       --md-comp-fab-menu-close-button-container-width
     );
-    --md-comp-fab-container-shape: 9999px;
+    --md-comp-fab-container-shape: var(--md-sys-shape-corner-full);
     --md-comp-fab-icon-size: var(--md-comp-fab-menu-close-button-icon-size);
 
     color: var(--md-comp-fab-menu-close-button-icon-color);

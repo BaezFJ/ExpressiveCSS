@@ -16,7 +16,7 @@
 
 .image-compare {
   --md-comp-image-compare-position: 50%;
-  --md-comp-image-compare-shape: 16px;
+  --md-comp-image-compare-shape: var(--md-sys-shape-corner-large);
   --md-comp-image-compare-divider-color: var(--md-sys-color-surface);
   --md-comp-image-compare-handle-size: 40px;
 

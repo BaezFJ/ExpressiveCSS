@@ -12,7 +12,7 @@
 
 .rich-text-editor {
   --md-comp-rich-text-editor-min-height: 160px;
-  --md-comp-rich-text-editor-shape: 16px;
+  --md-comp-rich-text-editor-shape: var(--md-sys-shape-corner-large);
 
   display: flex;
   flex-direction: column;
@@ -76,7 +76,7 @@
 
     :not(pre) > code,
     pre {
-      border-radius: 8px;
+      border-radius: var(--md-sys-shape-corner-small);
       background-color: var(--md-sys-color-surface-container-highest);
       font-family: ui-monospace, monospace;
     }

@@ -32,7 +32,7 @@
   // 56 here, which is the rail's value copied onto the bar.
   --md-comp-nav-bar-indicator-width: 64px;
   --md-comp-nav-bar-indicator-height: 32px;
-  --md-comp-nav-bar-indicator-shape: 16px;
+  --md-comp-nav-bar-indicator-shape: var(--md-sys-shape-corner-large);
   --md-comp-nav-bar-active-indicator-color: var(--md-sys-color-secondary-container);
   --md-comp-nav-bar-active-color: var(--md-sys-color-on-secondary-container);
 

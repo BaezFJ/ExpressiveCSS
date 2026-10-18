@@ -30,7 +30,7 @@
   font-size: var(--font-size);
   line-height: 1.5;
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-corner-small);
   align-items: center;
   user-select: none;
   vertical-align: top;
@@ -94,7 +94,7 @@
   width: 24px;
   height: 24px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: var(--md-sys-shape-corner-medium);
 }
 
 .chip > :is(.material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp) {

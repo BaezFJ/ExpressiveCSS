@@ -15,7 +15,7 @@ describe('Side sheet CSS', () => {
       /--md-comp-side-sheet-container-color:\s*var\(--md-sys-color-surface-container-low\)/
     );
     assert.match(css, /--md-comp-side-sheet-container-width:\s*400px/);
-    assert.match(css, /--md-comp-side-sheet-container-shape:\s*28px/);
+    assert.match(css, /--md-comp-side-sheet-container-shape:\s*var\(--md-sys-shape-corner-extra-large\)/);
   });
 
   test('standard has an inner divider and no scrim', () => {

@@ -22,7 +22,7 @@
 //   --md-comp-questionnaire-choice-selected-color   secondary-container
 
 .questionnaire {
-  --md-comp-questionnaire-choice-shape: 12px;
+  --md-comp-questionnaire-choice-shape: var(--md-sys-shape-corner-medium);
   --md-comp-questionnaire-choice-outline-color: var(--md-sys-color-outline-variant);
   --md-comp-questionnaire-choice-selected-color: var(--md-sys-color-secondary-container);
 

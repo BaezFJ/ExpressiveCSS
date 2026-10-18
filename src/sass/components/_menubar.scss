@@ -13,7 +13,7 @@
 
 .menubar {
   --md-comp-menubar-container-color: var(--md-sys-color-surface-container);
-  --md-comp-menubar-shape: 12px;
+  --md-comp-menubar-shape: var(--md-sys-shape-corner-medium);
   --md-comp-menubar-item-height: 40px;
 
   display: flex;
@@ -31,7 +31,7 @@
     margin: 0;
     padding: 0 12px;
     border: 0;
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     background: none;
     color: var(--md-sys-color-on-surface);
     font: inherit;

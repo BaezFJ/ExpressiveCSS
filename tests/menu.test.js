@@ -34,17 +34,17 @@ describe("Menu", () => {
   });
 
   test("uses the expressive menu shape and 44dp item geometry", () => {
-    assert.match(css, /--md-comp-menu-container-shape:\s*16px/);
-    assert.match(css, /--md-comp-menu-group-shape:\s*8px/);
+    assert.match(css, /--md-comp-menu-container-shape:\s*var\(--md-sys-shape-corner-large\)/);
+    assert.match(css, /--md-comp-menu-group-shape:\s*var\(--md-sys-shape-corner-small\)/);
     assert.match(
       css,
       /--md-comp-menu-container-inactive-shape:\s*var\(--md-comp-menu-group-shape\)/,
     );
     assert.match(css, /--md-comp-menu-group-padding:\s*2px/);
     assert.match(css, /--md-comp-menu-gap:\s*2px/);
-    assert.match(css, /--md-comp-menu-item-container-shape:\s*4px/);
-    assert.match(css, /--md-comp-menu-item-edge-shape:\s*12px/);
-    assert.match(css, /--md-comp-menu-item-selected-container-shape:\s*12px/);
+    assert.match(css, /--md-comp-menu-item-container-shape:\s*var\(--md-sys-shape-corner-extra-small\)/);
+    assert.match(css, /--md-comp-menu-item-edge-shape:\s*var\(--md-sys-shape-corner-medium\)/);
+    assert.match(css, /--md-comp-menu-item-selected-container-shape:\s*var\(--md-sys-shape-corner-medium\)/);
     assert.match(css, /--md-comp-menu-item-container-height:\s*44px/);
     assert.match(css, /--md-comp-menu-item-leading-space:\s*16px/);
     assert.match(css, /--md-comp-menu-item-trailing-space:\s*16px/);

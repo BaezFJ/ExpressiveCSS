@@ -35,7 +35,7 @@
   --md-comp-aura-color: var(--md-sys-color-primary);
   --md-comp-aura-color-2: var(--md-sys-color-tertiary);
   --md-comp-aura-width: 2px;
-  --md-comp-aura-shape: 12px;
+  --md-comp-aura-shape: var(--md-sys-shape-corner-medium);
   --md-comp-aura-duration: 4s;
 
   position: relative;
@@ -46,7 +46,7 @@
   border-radius: calc(var(--md-comp-aura-shape) + var(--md-comp-aura-width));
 
   &:has(> :is(button, .button, [role="button"])) {
-    --md-comp-aura-shape: 9999px;
+    --md-comp-aura-shape: var(--md-sys-shape-corner-full);
   }
 
   &::before {

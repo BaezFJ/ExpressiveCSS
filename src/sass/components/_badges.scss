@@ -18,7 +18,7 @@
   --md-comp-badge-label-text-color: var(--md-sys-color-on-error);
   --md-comp-badge-large-size: 16px;
   --md-comp-badge-small-size: 6px;
-  --md-comp-badge-large-shape: 8px;
+  --md-comp-badge-large-shape: var(--md-sys-shape-corner-small);
   --md-comp-badge-icon-size: 24px;
 
   box-sizing: border-box;

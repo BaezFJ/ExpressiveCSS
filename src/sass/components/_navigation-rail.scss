@@ -61,7 +61,7 @@
   --md-comp-nav-rail-icon-size: 24px;
   --md-comp-nav-rail-indicator-width: 56px;
   --md-comp-nav-rail-indicator-height: 32px;
-  --md-comp-nav-rail-indicator-shape: 16px;
+  --md-comp-nav-rail-indicator-shape: var(--md-sys-shape-corner-large);
   --md-comp-nav-rail-fab-size: 56px;
   --md-comp-nav-rail-active-indicator-color: var(--md-sys-color-secondary-container);
   --md-comp-nav-rail-active-color: var(--md-sys-color-on-secondary-container);
@@ -131,7 +131,7 @@
     margin: 4px 0 16px;
     padding: 0;
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: var(--md-sys-shape-corner-large);
     color: var(--md-sys-color-on-primary-container);
     background-color: var(--md-sys-color-primary-container);
     text-decoration: none;
@@ -228,7 +228,7 @@
 
   &.expanded {
     --md-comp-nav-rail-indicator-height: 56px;
-    --md-comp-nav-rail-indicator-shape: 28px;
+    --md-comp-nav-rail-indicator-shape: var(--md-sys-shape-corner-extra-large);
 
     align-items: stretch;
     width: clamp(220px, var(--md-comp-nav-rail-expanded-width), 360px);
@@ -349,8 +349,8 @@
   overflow: auto;
   overscroll-behavior: contain;
   border: 0;
-  border-start-end-radius: 16px;
-  border-end-end-radius: 16px;
+  border-start-end-radius: var(--md-sys-shape-corner-large);
+  border-end-end-radius: var(--md-sys-shape-corner-large);
   background-color: var(--md-sys-color-surface-container);
   color: var(--md-sys-color-on-surface-variant);
   @include z-depth("1");

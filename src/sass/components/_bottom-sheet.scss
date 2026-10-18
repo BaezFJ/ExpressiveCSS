@@ -22,7 +22,7 @@ $_handle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' widt
 
 dialog.bottom-sheet {
   --md-comp-bottom-sheet-container-color: var(--md-sys-color-surface-container-low);
-  --md-comp-bottom-sheet-container-shape: 28px;
+  --md-comp-bottom-sheet-container-shape: var(--md-sys-shape-corner-extra-large);
   --md-comp-bottom-sheet-container-max-width: 640px;
   --md-comp-bottom-sheet-margin-inline: 56px;
   --md-comp-bottom-sheet-top-inset: 72px;

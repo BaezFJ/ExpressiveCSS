@@ -24,7 +24,7 @@
 
 .mixed-chart {
   --md-comp-mixed-chart-column-width: 50%;
-  --md-comp-mixed-chart-shape: 4px;
+  --md-comp-mixed-chart-shape: var(--md-sys-shape-corner-extra-small);
   --md-comp-mixed-chart-line-width: 3px;
 
   &.sparkline {

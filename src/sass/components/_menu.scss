@@ -43,15 +43,15 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
 
 @mixin menu-surface {
   --md-comp-menu-container-color: var(--md-sys-color-surface-container-low);
-  --md-comp-menu-container-shape: 16px;
-  --md-comp-menu-group-shape: 8px;
+  --md-comp-menu-container-shape: var(--md-sys-shape-corner-large);
+  --md-comp-menu-group-shape: var(--md-sys-shape-corner-small);
   --md-comp-menu-container-inactive-shape: var(--md-comp-menu-group-shape);
   --md-comp-menu-group-padding: 2px;
   --md-comp-menu-gap: 2px;
   --md-comp-menu-item-container-height: 44px;
-  --md-comp-menu-item-container-shape: 4px;
-  --md-comp-menu-item-edge-shape: 12px;
-  --md-comp-menu-item-selected-container-shape: 12px;
+  --md-comp-menu-item-container-shape: var(--md-sys-shape-corner-extra-small);
+  --md-comp-menu-item-edge-shape: var(--md-sys-shape-corner-medium);
+  --md-comp-menu-item-selected-container-shape: var(--md-sys-shape-corner-medium);
   --md-comp-menu-item-leading-space: 16px;
   --md-comp-menu-item-trailing-space: 16px;
   --md-comp-menu-item-between-space: 12px;
@@ -512,7 +512,7 @@ menu[id] li > menu {
     opacity: 1;
     pointer-events: auto;
     transform: none;
-    --md-comp-menu-container-shape: 16px;
+    --md-comp-menu-container-shape: var(--md-sys-shape-corner-large);
   }
 }
 
@@ -521,7 +521,7 @@ menu[id] li.open > menu {
   opacity: 1;
   pointer-events: auto;
   transform: none;
-  --md-comp-menu-container-shape: 16px;
+  --md-comp-menu-container-shape: var(--md-sys-shape-corner-large);
 }
 
 menu[id] li.submenu-start > menu {

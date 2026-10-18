@@ -44,6 +44,6 @@ describe('Panes CSS', () => {
 
   test('separated / floating appearance with rounded shapes and gap', () => {
     assert.match(css, /\.panes\.separated/);
-    assert.match(css, /--md-comp-pane-container-shape:\s*16px/);
+    assert.match(css, /--md-comp-pane-container-shape:\s*var\(--md-sys-shape-corner-large\)/);
   });
 });

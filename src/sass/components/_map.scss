@@ -34,7 +34,7 @@
 
 .map {
   --md-comp-map-height: 400px;
-  --md-comp-map-shape: 16px;
+  --md-comp-map-shape: var(--md-sys-shape-corner-large);
   --md-comp-map-marker-color: var(--md-sys-color-primary);
   --md-comp-map-marker-ring-color: var(--md-sys-color-surface);
   --md-comp-map-route-color: var(--md-sys-color-primary);
@@ -94,7 +94,7 @@
   position: absolute;
   inset-block-start: calc(100% + 4px);
   padding: 2px 8px;
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-corner-small);
   background-color: var(--md-sys-color-surface-container-highest);
   color: var(--md-sys-color-on-surface);
   @include typescale("label-medium");
@@ -116,7 +116,7 @@
   .maplibregl-popup-content {
     max-inline-size: var(--md-comp-map-popup-max-width);
     padding: 12px 16px !important;
-    border-radius: 12px !important;
+    border-radius: var(--md-sys-shape-corner-medium) !important;
     background: var(--md-sys-color-surface-container-low) !important;
     color: var(--md-sys-color-on-surface);
     @include typescale("body-medium");
@@ -175,7 +175,7 @@
 
   > .icon-button,
   > .map-control-group {
-    border-radius: 9999px;
+    border-radius: var(--md-sys-shape-corner-full);
     background-color: var(--md-sys-color-surface-container-low);
     @include z-depth(2);
   }

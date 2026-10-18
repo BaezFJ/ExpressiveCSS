@@ -12,6 +12,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `extra-long4`. Components now read them wherever they used an on-scale
   curve or time, so `:root { --md-sys-motion-duration-short4: 150ms; }`
   speeds up every 200ms transition. Computed values are unchanged.
+- Material 3 corner tokens: `--md-sys-shape-corner-none` to `full`, with the
+  Expressive `large-increased`, `extra-large-increased` and
+  `extra-extra-large` steps. Component shape tokens on the scale read them,
+  so `:root { --md-sys-shape-corner-medium: 8px; }` squares off every medium
+  corner. Computed values are unchanged.
 - A "Frosted glass" documentation page at `/glass.html` covers the
   `--expressive-glass`, `-blur` and `-opacity` properties, the Sass defaults,
   the surfaces that frost, and the reduced-transparency fallback, with live

@@ -82,7 +82,7 @@ describe('Button group tokens', () => {
     const rule = ruleFor('.button-group.connected');
     assert.ok(rule, 'no .button-group.connected rule');
     assert.match(rule, /--md-comp-button-group-between-space:\s*2px/);
-    assert.match(rule, /--md-comp-button-group-container-shape:\s*9999px/);
+    assert.match(rule, /--md-comp-button-group-container-shape:\s*var\(--md-sys-shape-corner-full\)/);
     assert.match(rule, /width:\s*100%/);
 
     const items = rules.find((rule) =>

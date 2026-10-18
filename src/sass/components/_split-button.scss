@@ -92,7 +92,7 @@ $_sizes: (
 
 .split-button {
   --md-comp-split-button-between-space: 2px;
-  --md-comp-split-button-container-shape: 9999px;
+  --md-comp-split-button-container-shape: var(--md-sys-shape-corner-full);
 
   @include button-size("small");
   @include _split-size("small");

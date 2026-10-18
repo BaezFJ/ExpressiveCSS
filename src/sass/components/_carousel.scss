@@ -24,8 +24,8 @@
 
 .carousel {
   --md-comp-carousel-height: 240px;
-  --md-comp-carousel-shape: 28px;
-  --md-comp-carousel-pressed-shape: 20px;
+  --md-comp-carousel-shape: var(--md-sys-shape-corner-extra-large);
+  --md-comp-carousel-pressed-shape: var(--md-sys-shape-corner-large-increased);
   --md-comp-carousel-gap: 8px;
   --md-comp-carousel-inline-padding: 16px;
   --md-comp-carousel-block-padding: 8px;
@@ -144,7 +144,7 @@
       width: fit-content;
       max-width: calc(100% - 24px);
       padding: 8px 12px;
-      border-radius: 12px;
+      border-radius: var(--md-sys-shape-corner-medium);
       background-color: var(--md-sys-color-surface);
       color: var(--md-sys-color-on-surface);
 
@@ -478,7 +478,7 @@
   --md-comp-carousel-gap: 8px;
   --md-comp-carousel-inline-padding: 16px;
   --md-comp-carousel-block-padding: 8px;
-  --md-comp-carousel-shape: 28px;
+  --md-comp-carousel-shape: var(--md-sys-shape-corner-extra-large);
   // Fill the content box with one large item, one 8dp gap, and one 56dp
   // preview. Track padding sits outside the percentage basis.
   --md-comp-carousel-large-item-width: calc(100% - 64px);

@@ -39,7 +39,7 @@ describe('Toolbar CSS', () => {
     const rule = ruleWith('.toolbar', ':not(.docked');
     assert.ok(rule, 'no floating-scoped rule');
     assert.match(rule[1], /\.floating/, '.floating must be a spelling of it');
-    assert.match(rule[2], /--md-comp-toolbar-container-shape:\s*32px/);
+    assert.match(rule[2], /--md-comp-toolbar-container-shape:\s*var\(--md-sys-shape-corner-extra-large-increased\)/);
     assert.match(rule[2], /--md-comp-toolbar-leading-space:\s*8px/);
     // md.comp.toolbar.floating.container.elevation is level3, not level2.
     assert.match(rule[2], /box-shadow:\s*0 8px 17px 2px/);

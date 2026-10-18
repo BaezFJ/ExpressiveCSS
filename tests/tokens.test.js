@@ -120,3 +120,17 @@ describe('Motion tokens', () => {
     assert.match(css, /--md-sys-motion-duration-extra-long4:\s*1000ms/);
   });
 });
+
+describe('Shape tokens', () => {
+  test('the corner scale matches md.sys.shape.corner and components read it', () => {
+    const scale = {
+      none: '0px', 'extra-small': '4px', small: '8px', medium: '12px', large: '16px',
+      'large-increased': '20px', 'extra-large': '28px', 'extra-large-increased': '32px',
+      'extra-extra-large': '48px', full: '9999px',
+    };
+    for (const [step, value] of Object.entries(scale)) {
+      assert.match(css, new RegExp(`--md-sys-shape-corner-${step}:\\s*${value};`));
+    }
+    assert.match(css, /--md-comp-card-container-shape:\s*var\(--md-sys-shape-corner-medium\)/);
+  });
+});

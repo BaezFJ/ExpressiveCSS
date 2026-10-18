@@ -71,14 +71,14 @@ video.responsive-video {
 // element+class pair would beat `.circle` and square the disc off.
 img.responsive-img:not(.circle),
 video.responsive-video {
-  border-radius: 12px;
+  border-radius: var(--md-sys-shape-corner-medium);
 }
 
 .video-container {
   position: relative;
   aspect-ratio: 16 / 9;   // was padding-bottom: 56.25% + height: 0
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: var(--md-sys-shape-corner-medium);
 
   iframe, object, embed {
     position: absolute;
