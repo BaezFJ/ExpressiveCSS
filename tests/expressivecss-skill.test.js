@@ -537,8 +537,9 @@ describe('the ExpressiveCSS agent skill', () => {
     }
     assert.match(references.elevation, /`\.z-depth-0`[\s\S]*`!important`/);
     assert.match(references.elevation, /`@include z-depth\("2"\)`[\s\S]*not[\s\S]*`@extend/i);
-    assert.doesNotMatch(compiledCss, /--md-sys-elevation/);
-    assert.match(references.elevation, /does not publish CSS custom-property elevation levels/);
+    assert.deepEqual(elevationKeys.filter((level) => !compiledCss.includes(`--md-sys-elevation-level${level}:`)), [], 'an elevation level has no token');
+    assert.match(compiledCss, /\.z-depth-2\s*\{\s*box-shadow:\s*var\(--md-sys-elevation-level2\)/);
+    assert.match(references.elevation, /`--md-sys-elevation-level0` to `--md-sys-elevation-level5`/);
     assert.match(references.elevation, /fixed shadow can lower an element that already has a higher elevation/);
 
     for (const className of ['material-symbols', 'material-symbols-outlined', 'material-symbols-rounded', 'material-symbols-sharp', 'icon-filled']) {

@@ -90,6 +90,17 @@ const layers = [
         <p>
           There is also <code>z-depth-1-half</code>, an in-between level from the same elevation map.
         </p>
+        <p>
+          Each level is also a custom property, <code>--md-sys-elevation-level0</code> to
+          <code>--md-sys-elevation-level5</code> plus <code>--md-sys-elevation-level1-half</code>.
+          The classes, the mixin and every component read them, so a theme can soften or deepen a
+          level at runtime.
+        </p>
+<Code code={`
+<style>
+  :root { --md-sys-elevation-level1: 0 1px 3px rgb(0 0 0 / 0.3); }
+</style>
+`} />
   </Section>
   <Section {...S.stacking}>
     <p>

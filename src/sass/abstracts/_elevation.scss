@@ -6,8 +6,9 @@
 // only resolves if the extending partial loads the module that defines the
 // class, which forced every component to `@use` a CSS-emitting file and let
 // the dependency graph - not expressive.scss - decide the output order.
-// The `.z-depth-N` classes in utilities/_z-depth.scss are generated from this map,
-// so the class list and the mixin can never drift apart.
+// The `.z-depth-N` classes in utilities/_z-depth.scss and the
+// --md-sys-elevation-level* tokens in tokens/_elevation.scss are generated
+// from this map, so the classes, the tokens and the mixin cannot drift apart.
 
 $elevations: (
   "0": none,
@@ -24,7 +25,9 @@ $elevations: (
   @if not map.has-key($elevations, $key) {
     @error "Unknown elevation `#{$level}`. Available: #{map.keys($elevations)}.";
   }
-  $shadow: map.get($elevations, $key);
+  // Read the system token, so a theme can change a level at runtime;
+  // tokens/_elevation.scss emits one per key of this map.
+  $shadow: var(--md-sys-elevation-level#{$key});
   // Only the .z-depth-0 utility passes $important. Inside the components
   // layer an !important would beat every unlayered consumer rule, so a
   // component that cancels a shadow has to out-specify the rule that set it.

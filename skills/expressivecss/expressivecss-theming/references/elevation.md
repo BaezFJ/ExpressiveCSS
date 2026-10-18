@@ -1,6 +1,6 @@
 # Elevation foundation
 
-Use `src/sass/abstracts/_elevation.scss` for the shadow map and mixin, and `src/sass/utilities/_z-depth.scss` for the emitted helpers.
+Use `src/sass/abstracts/_elevation.scss` for the shadow map and mixin, `src/sass/tokens/_elevation.scss` for the emitted level properties, and `src/sass/utilities/_z-depth.scss` for the emitted helpers.
 
 ## Choose elevation deliberately
 
@@ -41,7 +41,15 @@ When compiling ExpressiveCSS Sass, include a valid map key:
 
 Use `@include z-depth("2")`, not `@extend .z-depth-2`. The mixin validates the string key at compile time and avoids coupling a component selector to utility output. Valid keys are `"0"`, `"1"`, `"1-half"`, `"2"`, `"3"`, `"4"`, and `"5"`.
 
-The framework does not publish CSS custom-property elevation levels. Use one helper class for markup or the Sass mixin for authored framework styles.
+Each level is also a CSS custom property, `--md-sys-elevation-level0` to `--md-sys-elevation-level5` plus `--md-sys-elevation-level1-half`, on `:root` and `:host`. The mixin and the helpers read them, so a theme can change a level at runtime:
+
+```css
+:root {
+  --md-sys-elevation-level1: 0 1px 3px rgb(0 0 0 / 0.3);
+}
+```
+
+Use one helper class for markup, the Sass mixin for authored framework styles, and the property for a runtime theme.
 
 ## States and motion
 

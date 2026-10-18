@@ -42,7 +42,7 @@ describe('Toolbar CSS', () => {
     assert.match(rule[2], /--md-comp-toolbar-container-shape:\s*var\(--md-sys-shape-corner-extra-large-increased\)/);
     assert.match(rule[2], /--md-comp-toolbar-leading-space:\s*8px/);
     // md.comp.toolbar.floating.container.elevation is level3, not level2.
-    assert.match(rule[2], /box-shadow:\s*0 8px 17px 2px/);
+    assert.match(rule[2], /box-shadow:\s*var\(--md-sys-elevation-level3\)/);
   });
 
   test('docked is full width, square, no lift, 16dp insets', () => {
@@ -50,7 +50,7 @@ describe('Toolbar CSS', () => {
     assert.ok(rule, 'no .toolbar.docked rule');
     assert.match(rule[2], /--md-comp-toolbar-container-shape:\s*0/);
     assert.match(rule[2], /--md-comp-toolbar-leading-space:\s*16px/);
-    assert.match(rule[2], /box-shadow:\s*none/);
+    assert.match(rule[2], /box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\))/);
     assert.doesNotMatch(css, /\.toolbar[^{,]*\.max(?![\w-])[^{]*\{[^}]*container-shape/, 'the pre-1.0 .max host alias is gone');
   });
 
@@ -89,7 +89,7 @@ describe('Toolbar CSS', () => {
     assert.ok(fab, 'no companion FAB rule');
     assert.match(fab[2], /var\(--md-comp-toolbar-floating-fab-container-color\)/);
     // The bar beside it is level 3; md.comp.toolbar.floating.fab is level 1.
-    assert.match(fab[2], /box-shadow:\s*0 2px 2px 0/);
+    assert.match(fab[2], /box-shadow:\s*var\(--md-sys-elevation-level1\)/);
 
     const vibrant = ruleWith('.toolbar-group:has(', '.extra');
     assert.ok(vibrant, 'no vibrant companion FAB rule');

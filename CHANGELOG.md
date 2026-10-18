@@ -17,6 +17,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `extra-extra-large` steps. Component shape tokens on the scale read them,
   so `:root { --md-sys-shape-corner-medium: 8px; }` squares off every medium
   corner. Computed values are unchanged.
+- Elevation tokens: `--md-sys-elevation-level0` to `level5` and
+  `level1-half`, generated from the `$elevations` map. The `z-depth()`
+  mixin, the `.z-depth-*` classes and every component read them, so a theme
+  can change a shadow level at runtime. Computed values are unchanged.
 - `--expressive-z-*` properties name the stacking order of fixed and floating
   surfaces, from `toolbar` (996) to `snackbar` (10000). Components read them
   instead of literal `z-index` values, and the Shadow page lists them.

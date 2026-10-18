@@ -1553,6 +1553,14 @@ The class list is generated from the same map as the mixin, so they cannot drift
 There is also `z-depth-1-half`, an in-between level from the same elevation map.
 
 
+#### Elevation tokens
+
+Each level is also a custom property, `--md-sys-elevation-level0` to `--md-sys-elevation-level5` plus `--md-sys-elevation-level1-half`. The classes, the mixin and every component read them, so a theme can soften or deepen a level at runtime.
+
+```css
+:root { --md-sys-elevation-level1: 0 1px 3px rgb(0 0 0 / 0.3); }
+```
+
 #### Stacking order
 
 A shadow does not decide what sits on top. Surfaces that float over the page take their `z-index` from these properties, lowest first. Dialogs, modal sheets and open popovers are in the browser's top layer, above all of them.
