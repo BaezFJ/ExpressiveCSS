@@ -234,7 +234,7 @@ Give a generic scroll region `tabindex="0"` and an accessible name when keyboard
 | `.break-words` | `overflow-wrap: anywhere`. | Lets long URLs or identifiers wrap without clipping. |
 | `.text-nowrap` | `white-space: nowrap`. | Keeps one line without clipping or ellipsis; check narrow screens. |
 | `.text-wrap` | `white-space: normal`. | Restores ordinary wrapping. |
-| `.text-balance`, `.text-pretty` | `text-wrap: balance`, `text-wrap: pretty`. | Balance short blocks such as titles; pretty avoids a one-word last line in paragraphs. |
+| `.text-balance`, `.text-pretty` | `text-wrap-style: balance`, `text-wrap-style: pretty`. | Headings already balance and paragraphs already use pretty; use these on other elements, such as a `<span>` title or a list item. |
 | `.bordered`, `.border-top`, `.border-bottom`, `.border-start`, `.border-end` | A 1px `outline-variant` border on all sides or one side. Start and end mirror in RTL. | `.border` is the outlined card variant, not this utility. |
 | `.corner-none` to `.corner-full` | `border-radius` from the matching `--md-sys-shape-corner-*` token (`none`, `extra-small`, `small`, `medium`, `large`, `extra-large`, `full`). | On a component it replaces the component's own shape and its state corner changes. `.rounded` is the pill button. |
 | `.hoverable` | Transitions to one fixed hover shadow. | That shadow can be lower than an existing high z-depth; hover must not be the only cue or interaction path. |

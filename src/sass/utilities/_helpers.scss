@@ -124,8 +124,8 @@ $_layout: (
 .break-words { overflow-wrap: anywhere; }
 .text-nowrap { white-space: nowrap; }
 .text-wrap { white-space: normal; }
-.text-balance { text-wrap: balance; }
-.text-pretty { text-wrap: pretty; }
+.text-balance { text-wrap-style: balance; }
+.text-pretty { text-wrap-style: pretty; }
 .truncate { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 // Responsive media

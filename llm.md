@@ -1406,8 +1406,8 @@ To truncate long lines of text in an ellipsis, add the class `truncate` to the t
 | `.break-words` | `overflow-wrap: anywhere` lets long URLs or identifiers wrap within their container. |
 | `.text-nowrap` | `white-space: nowrap` keeps text on one line without clipping or ellipsis. |
 | `.text-wrap` | `white-space: normal` restores ordinary wrapping. |
-| `.text-balance` | `text-wrap: balance` evens out the line lengths of a short block, such as a card title. |
-| `.text-pretty` | `text-wrap: pretty` avoids a single short word on the last line of a paragraph. |
+| `.text-balance` | `text-wrap-style: balance` evens out the line lengths of a short block, such as a card title. Headings already do this. |
+| `.text-pretty` | `text-wrap-style: pretty` avoids a single short word on the last line. Paragraphs already do this. |
 
 Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.
 

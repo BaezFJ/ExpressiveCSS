@@ -366,6 +366,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Headings balance their lines and paragraphs avoid a one-word last line
+  (`text-wrap-style: balance` and `pretty`). The longhand leaves wrapping
+  itself alone, so `.truncate` and `.text-nowrap` still work.
 - A link without a class inside a `p`, `dd`, `blockquote`, `figcaption` or
   `td` is underlined, so links in running text no longer rely on color alone
   (WCAG 1.4.1). Links with a class, and links in lists, menus and navigation,

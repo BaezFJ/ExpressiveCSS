@@ -243,3 +243,19 @@ browserTest('links in running text are underlined and component links are not', 
     await browser.close();
   }
 });
+
+browserTest('headings balance and paragraphs wrap pretty without undoing nowrap', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style>
+      <h2 id="h">A heading</h2><p id="p">A paragraph</p><h4 id="t" class="truncate">A truncated title</h4>`);
+    const read = await page.evaluate(() => ['h', 'p', 't'].map((id) => {
+      const style = getComputedStyle(document.getElementById(id));
+      return [style.textWrapStyle, style.textWrapMode];
+    }));
+    assert.deepEqual(read, [['balance', 'wrap'], ['pretty', 'wrap'], ['balance', 'nowrap']]);
+  } finally {
+    await browser.close();
+  }
+});

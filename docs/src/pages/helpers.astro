@@ -762,8 +762,8 @@ const S = defineSections([
             <tr><td><code>.break-words</code></td><td><code>overflow-wrap: anywhere</code> lets long URLs or identifiers wrap within their container.</td></tr>
             <tr><td><code>.text-nowrap</code></td><td><code>white-space: nowrap</code> keeps text on one line without clipping or ellipsis.</td></tr>
             <tr><td><code>.text-wrap</code></td><td><code>white-space: normal</code> restores ordinary wrapping.</td></tr>
-            <tr><td><code>.text-balance</code></td><td><code>text-wrap: balance</code> evens out the line lengths of a short block, such as a card title.</td></tr>
-            <tr><td><code>.text-pretty</code></td><td><code>text-wrap: pretty</code> avoids a single short word on the last line of a paragraph.</td></tr>
+            <tr><td><code>.text-balance</code></td><td><code>text-wrap-style: balance</code> evens out the line lengths of a short block, such as a card title. Headings already do this.</td></tr>
+            <tr><td><code>.text-pretty</code></td><td><code>text-wrap-style: pretty</code> avoids a single short word on the last line. Paragraphs already do this.</td></tr>
           </tbody>
         </table>
         <p>Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.</p>
