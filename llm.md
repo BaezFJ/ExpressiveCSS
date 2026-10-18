@@ -731,7 +731,11 @@ The elevation ladder collapses — every `surface-container` rung resolves to th
 
 ### More contrast
 
-When the user asks for more contrast (`prefers-contrast: more`), `--md-sys-color-outline-variant` takes the value of `--md-sys-color-outline`. Dividers, outlined cards, field borders and every other line drawn in outline-variant then hold 3:1 against the surfaces. Text and fill roles are unchanged. Override the token inside your own `@media (prefers-contrast: more)` block to choose a different line color.
+Material 3 has three contrast levels. Put `contrast="medium"` or `contrast="high"` on the root or on any subtree to use the medium or high scheme there. The accent roles, their containers, `on-surface-variant` and the outlines move to darker tones in the light scheme and lighter ones in the dark scheme, taken from the same ramps, so a runtime `--md-source` change still reaches them. Surfaces stay put. Medium brings accents to about 4.5:1 against the surface and high to 7:1, with outlines at 3:1 or more. When the user asks for more contrast (`prefers-contrast: more`), the page uses the high scheme unless a `contrast` attribute says otherwise; `contrast="standard"` opts a page or subtree out. The tones approximate Material's contrast curves rather than reproducing its color solver. A page that re-themes through the `-light` and `-dark` pairs should repeat those overrides inside its own `[contrast]` rule.
+
+```html
+<html contrast="high">
+```
 
 ### Corner scale
 

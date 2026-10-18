@@ -49,9 +49,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `.query-container` makes an element a query container. Horizontal cards
   and description lists inside one stack when it is narrower than 600px, so
   they adapt to a sidebar or pane on a wide window.
-- With `prefers-contrast: more`, `--md-sys-color-outline-variant` takes the
-  outline role, so dividers, outlined cards and field borders hold 3:1
-  against their surfaces.
+- Contrast levels: `contrast="medium"` and `contrast="high"` on the root or
+  a subtree select M3's medium and high contrast schemes. Accents, their
+  containers, `on-surface-variant` and outlines move to tones that reach
+  about 4.5:1 and 7:1 against the surface. `prefers-contrast: more` applies
+  the high scheme unless a `contrast` attribute is set, and
+  `contrast="standard"` opts out.
 - Color swatches component: a `fieldset.color-swatches` of radios in
   labels with visually hidden names, each drawn as a round chip of the color
   set in `--md-comp-color-swatch-color`, with a ring around the checked one.

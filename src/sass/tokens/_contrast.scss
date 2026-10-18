@@ -1,0 +1,94 @@
+@use "sass:list";
+@use "sass:map";
+@use "sass:string";
+@use "../abstracts" as *;
+
+// Contrast levels. M3 offers standard, medium and high contrast schemes; the
+// standard one is tokens/_theme.scss. `contrast="medium"` or
+// `contrast="high"` on the root or on any subtree moves the accent roles,
+// on-surface-variant and the outlines to darker tones in the light scheme
+// and lighter tones in the dark one, from the same ramps, so a runtime
+// --md-source change still reaches them. Surfaces stay where they are.
+//
+// The tones are picked to meet M3's contrast targets against the surfaces
+// (about 4.5:1 for accents in medium and 7:1 in high, 3:1 and more for
+// outlines). They approximate material-color-utilities' contrast curves,
+// which solve a tone per color; they are not that solver's output.
+//
+// `prefers-contrast: more` applies the high scheme unless a `contrast`
+// attribute says otherwise; `contrast="standard"` opts out.
+//
+// The live roles are redeclared here, not the -light/-dark pairs, because a
+// role resolves its pair where it is declared. A page that overrides a pair
+// to re-theme should override it inside its own [contrast] rule too.
+
+// Role name pattern ("#" is the ramp) and [light tone, dark tone].
+$_accent-tones: (
+  "medium": ("#": (30, 87), "on-#": (100, 10), "#-container": (50, 60), "on-#-container": (100, 0)),
+  "high": ("#": (20, 95), "on-#": (100, 0), "#-container": (30, 80), "on-#-container": (100, 0)),
+);
+
+// Role and [ramp, light tone, dark tone].
+$_neutral-tones: (
+  "medium": (
+    "on-surface-variant": ("neutral-variant", 25, 87),
+    "outline": ("neutral-variant", 40, 70),
+    "outline-variant": ("neutral-variant", 60, 50),
+  ),
+  "high": (
+    "on-surface": ("neutral", 0, 100),
+    "on-surface-variant": ("neutral-variant", 20, 90),
+    "outline": ("neutral-variant", 25, 80),
+    "outline-variant": ("neutral-variant", 40, 70),
+  ),
+);
+
+// The error ramp is literal hex and has no tone 87.
+@function _palette($ramp, $tone) {
+  @if $ramp == "error" and $tone == 87 { $tone: 90; }
+  @return var(--md-ref-palette-#{$ramp}#{$tone});
+}
+
+@mixin _role($role, $ramp, $light, $dark) {
+  --md-sys-color-#{$role}: light-dark(#{_palette($ramp, $light)}, #{_palette($ramp, $dark)});
+}
+
+@mixin _scheme($level) {
+  @each $ramp in ("primary", "secondary", "tertiary", "error") {
+    @each $pattern, $tones in map.get($_accent-tones, $level) {
+      $at: string.index($pattern, "#");
+      $role: string.slice($pattern, 1, $at - 1) + $ramp + string.slice($pattern, $at + 1);
+      @include _role($role, $ramp, list.nth($tones, 1), list.nth($tones, 2));
+    }
+  }
+  @each $role, $spec in map.get($_neutral-tones, $level) {
+    @include _role($role, list.nth($spec, 1), list.nth($spec, 2), list.nth($spec, 3));
+  }
+}
+
+// Back to the standard pairs, for a subtree inside a page that asked for
+// more contrast.
+[contrast='standard'],
+:host([contrast='standard']) {
+  @each $role in map.keys(map.get($_neutral-tones, "high")) {
+    --md-sys-color-#{$role}: light-dark(var(--md-sys-color-#{$role}-light), var(--md-sys-color-#{$role}-dark));
+  }
+  @each $ramp in ("primary", "secondary", "tertiary", "error") {
+    @each $pattern in map.keys(map.get($_accent-tones, "high")) {
+      $at: string.index($pattern, "#");
+      $role: string.slice($pattern, 1, $at - 1) + $ramp + string.slice($pattern, $at + 1);
+      --md-sys-color-#{$role}: light-dark(var(--md-sys-color-#{$role}-light), var(--md-sys-color-#{$role}-dark));
+    }
+  }
+}
+
+[contrast='medium'],
+:host([contrast='medium']) { @include _scheme("medium"); }
+
+[contrast='high'],
+:host([contrast='high']) { @include _scheme("high"); }
+
+@media (prefers-contrast: more) {
+  :root:not([contrast]),
+  :host(:not([contrast])) { @include _scheme("high"); }
+}

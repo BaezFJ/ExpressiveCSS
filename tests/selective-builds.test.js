@@ -216,5 +216,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the prefers-contrast: more outline mapping: 73,300 gzip bytes (+26).
   // Reviewed the color swatches component: 73,556 gzip bytes (+256).
   // Reviewed the color picker: 73,988 gzip bytes (+432).
-  assert.ok(sizes(css).gzip <= 73988, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed elevation tokens and the medium and high contrast schemes: 74,095 gzip bytes (+107).
+  assert.ok(sizes(css).gzip <= 74095, `CSS gzip: ${sizes(css).gzip}`);
 });
