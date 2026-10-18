@@ -12,6 +12,7 @@ const S = defineSections([
   { id: "changing-theme", label: "Changing theme", heading: "Changing the theme" },
   { id: "creating-theme", label: "Creating a theme" },
   { id: "vibrant", label: "Vibrant emphasis" },
+  { id: "contrast", label: "More contrast" },
 ]);
 ---
 <DocsLayout page="themes">
@@ -395,6 +396,11 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
           <code>:host([vibrant])</code> is matched alongside it. The token
           mapping carries <code>:host</code> for the same reason.
         </p>
+  </Section>
+  <Section {...S.contrast}>
+    <p>
+      When the user asks for more contrast (<code>prefers-contrast: more</code>), <code>--md-sys-color-outline-variant</code> takes the value of <code>--md-sys-color-outline</code>. Dividers, outlined cards, field borders and every other line drawn in outline-variant then hold 3:1 against the surfaces. Text and fill roles are unchanged. Override the token inside your own <code>@media (prefers-contrast: more)</code> block to choose a different line color.
+    </p>
   </Section>
 </PageBody>
 </DocsLayout>

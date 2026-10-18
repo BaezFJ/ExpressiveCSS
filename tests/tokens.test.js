@@ -111,3 +111,36 @@ describe('Custom properties', () => {
     );
   });
 });
+
+describe('Motion tokens', () => {
+  test('the standard curve is written once per token, and components read the token', () => {
+    const literals = [...css.matchAll(/([^;{\s]+):[^;{}]*cubic-bezier\(0\.2, 0, 0, 1\)/g)].map((match) => match[1]);
+    assert.deepEqual(literals, ['--md-sys-motion-easing-standard', '--md-sys-motion-easing-emphasized']);
+    assert.match(css, /--md-sys-motion-duration-short4:\s*200ms/);
+    assert.match(css, /--md-sys-motion-duration-extra-long4:\s*1000ms/);
+  });
+});
+
+describe('Shape tokens', () => {
+  test('the corner scale matches md.sys.shape.corner and components read it', () => {
+    const scale = {
+      none: '0px', 'extra-small': '4px', small: '8px', medium: '12px', large: '16px',
+      'large-increased': '20px', 'extra-large': '28px', 'extra-large-increased': '32px',
+      'extra-extra-large': '48px', full: '9999px',
+    };
+    for (const [step, value] of Object.entries(scale)) {
+      assert.match(css, new RegExp(`--md-sys-shape-corner-${step}:\\s*${value};`));
+    }
+    assert.match(css, /--md-comp-card-container-shape:\s*var\(--md-sys-shape-corner-medium\)/);
+  });
+});
+
+describe('Stacking tokens', () => {
+  test('floating surfaces read the stacking scale, which rises in the documented order', () => {
+    assert.doesNotMatch(css, /z-index:\s*\d{3,}/, 'a floating surface hard-codes its z-index');
+    const order = ['toolbar', 'app-bar', 'modal-rail', 'sheet', 'lightbox', 'tooltip', 'menu', 'snackbar'];
+    const values = order.map((name) => Number(css.match(new RegExp(`--expressive-z-${name}:\\s*(\\d+)`))?.[1]));
+    assert.ok(values.every(Number.isFinite), `missing a stacking token: ${values}`);
+    assert.deepEqual(values, [...values].sort((a, b) => a - b));
+  });
+});

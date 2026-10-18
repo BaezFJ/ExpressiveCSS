@@ -4,11 +4,11 @@
   display: block;
   cursor: zoom-in;
   position: relative;
-  transition: opacity 0.4s;
+  transition: opacity var(--md-sys-motion-duration-medium4);
   backface-visibility: hidden;
   // Same 12px as .responsive-img. Exclude .circle so a disc stays a disc.
   &:not(.circle) {
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
   }
 
   &:hover:not(.active) {
@@ -23,7 +23,7 @@
   position: fixed;
   inset: 0;
   background-color: var(--md-sys-color-surface);
-  z-index: 1000;
+  z-index: var(--expressive-z-lightbox);
   will-change: opacity;
 }
 
@@ -38,6 +38,6 @@
   text-align: center;
   padding: 0 15%;
   height: 50px;
-  z-index: 1000;
+  z-index: var(--expressive-z-lightbox);
   -webkit-font-smoothing: antialiased;
 }

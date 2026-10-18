@@ -160,7 +160,7 @@ input[type=text].timepicker-input-minutes {
 }
 
 .timepicker-dial {
-  transition: transform 350ms, opacity 350ms;
+  transition: transform var(--md-sys-motion-duration-medium3), opacity var(--md-sys-motion-duration-medium3);
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;

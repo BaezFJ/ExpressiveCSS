@@ -22,7 +22,7 @@
 //   --md-comp-countdown-duration   roll duration                       400ms
 //   --md-comp-countdown-easing     roll easing                         cubic-bezier(0.2, 0, 0, 1)
 
-$_timing: var(--md-comp-countdown-duration, 400ms) var(--md-comp-countdown-easing, cubic-bezier(0.2, 0, 0, 1));
+$_timing: var(--md-comp-countdown-duration, var(--md-sys-motion-duration-medium4)) var(--md-comp-countdown-easing, var(--md-sys-motion-easing-standard));
 $_tens: "";
 $_ones: "";
 @for $i from 0 through 99 {

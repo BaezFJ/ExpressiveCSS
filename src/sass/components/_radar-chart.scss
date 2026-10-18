@@ -91,7 +91,7 @@
   stroke-width: var(--md-comp-radar-chart-line-width);
 
   @media (prefers-reduced-motion: no-preference) {
-    transition: opacity 400ms cubic-bezier(0.2, 0, 0, 1), scale 400ms cubic-bezier(0.2, 0, 0, 1);
+    transition: opacity var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard), scale var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard);
 
     @starting-style {
       opacity: 0;

@@ -25,8 +25,8 @@
   --md-comp-message-avatar-size: 32px;
   --md-comp-message-gap: 8px;
   --md-comp-message-surface-max-width: 80%;
-  --md-comp-message-bubble-shape: 20px;
-  --md-comp-message-bubble-grouped-shape: 4px;
+  --md-comp-message-bubble-shape: var(--md-sys-shape-corner-large-increased);
+  --md-comp-message-bubble-grouped-shape: var(--md-sys-shape-corner-extra-small);
   --md-comp-message-bubble-container-color: var(--md-sys-color-surface-container-high);
   --md-comp-message-bubble-color: var(--md-sys-color-on-surface);
 

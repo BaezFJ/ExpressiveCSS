@@ -24,7 +24,9 @@ const S = defineSections([
           Each <code>&lt;dt&gt;</code> is a label and the
           <code>&lt;dd&gt;</code> after it is its value. Labels take the first
           column from Medium widths up, and a divider runs above each pair. At
-          Compact widths each label sits above its value. For big numbers in
+          Compact widths, and inside a
+          <a href="/helpers.html#display"><code>.query-container</code></a> narrower than 600px,
+          each label sits above its value. For big numbers in
           tiles, use <a href={route("stat")}>stat</a> instead.
         </p>
         <dl class="description-list mb-3">

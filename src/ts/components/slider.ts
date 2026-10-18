@@ -285,8 +285,9 @@ export class Slider extends Component<SliderOptions> {
     // Deferred like every other Init(): this ran at import time, so a bundle
     // loaded in <head> found no inputs at all.
     Utils.onDocumentReady(() => {
-      // An image compare's range is invisible and drawn by its container.
-      Slider.init(document.querySelectorAll<HTMLInputElement>('input[type=range]:not(.image-compare > input)'));
+      // An image compare's range is invisible and drawn by its container; a
+      // color picker's hue range paints its own track.
+      Slider.init(document.querySelectorAll<HTMLInputElement>('input[type=range]:not(.image-compare > input, .color-picker-hue)'));
     });
   }
 }

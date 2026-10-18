@@ -24,7 +24,7 @@ describe('List', () => {
     assert.match(css, /--md-comp-list-item-shape:\s*100px/);
     assert.match(
       css,
-      /\.list\.segmented\s*\{[^}]*--md-comp-list-item-shape:\s*20px/s
+      /\.list\.segmented\s*\{[^}]*--md-comp-list-item-shape:\s*var\(--md-sys-shape-corner-large-increased\)/s
     );
     assert.match(css, /--md-comp-list-segmented-gap:\s*2px/);
   });

@@ -9,12 +9,13 @@ Google's [shape guidance](https://m3.material.io/styles/shape/overview) and [And
 | Capability | ExpressiveCSS support |
 | --- | --- |
 | Component corners | Component `--md-comp-*` properties and documented variants; inspect the selected guide. |
-| Common button shape | `--md-comp-filled-button-container-shape` defaults to `9999px`; `.rounded` explicitly forces a pill. `.circle` also changes width and padding. |
+| Common button shape | `--md-comp-filled-button-container-shape` defaults to `var(--md-sys-shape-corner-full)`; `.rounded` explicitly forces a pill. `.circle` also changes width and padding. |
 | FAB corners | `--md-comp-fab-container-shape` and size variants; preserve the FAB's own geometry. |
 | Connected and changing shapes | Button groups own shared edges, pressed corners, and selection shapes. Their runtime also owns press growth. |
-| A global Material shape scale or cut-corner family | No `--md-sys-shape-*` token family or general cut-corner utility is emitted. |
+| Corner scale | `--md-sys-shape-corner-*` from `none` to `full` on `:root` and `:host`, including the Expressive `large-increased`, `extra-large-increased` and `extra-extra-large` steps. Component shape tokens on that scale read them, so one override changes every component on that step. |
+| Cut-corner family | No cut-corner token family or general cut-corner utility is emitted. |
 
-Local evidence is `src/sass/components/_buttons.scss`, `src/sass/abstracts/_mixins.scss`, and `src/sass/components/_button-groups.scss`. A source-supported override is not evidence that every component implements Google's complete shape system. Do not invent a shape class or translate an Android attribute into a CSS variable.
+Local evidence is `src/sass/tokens/_shape.scss`, `src/sass/components/_buttons.scss`, `src/sass/abstracts/_mixins.scss`, and `src/sass/components/_button-groups.scss`. A source-supported override is not evidence that every component implements Google's complete shape system. Do not invent a shape class or translate an Android attribute into a CSS variable.
 
 ## Override only the intended component
 
@@ -26,7 +27,15 @@ Load application CSS after ExpressiveCSS. This application selector changes comm
 }
 ```
 
-Use it on a common button, not a FAB, icon button, or connected group item. Explicit variants such as `.rounded` can override the resulting radius. Avoid blanket `border-radius` or `clip-path` rules across components. Component properties declared on the component itself may also defeat an ancestor override; check computed styles at the actual control.
+To change the scale everywhere instead, override the system token. Every component whose shape sits on that step follows:
+
+```css
+:root {
+  --md-sys-shape-corner-medium: 8px;
+}
+```
+
+Use the component override on a common button, not a FAB, icon button, or connected group item. Explicit variants such as `.rounded` can override the resulting radius. Avoid blanket `border-radius` or `clip-path` rules across components. Component properties declared on the component itself may also defeat an ancestor override; check computed styles at the actual control.
 
 Keep the component's default, pressed, selected, and disabled shapes consistent. Rounded appearance does not establish selection semantics or an accessible name. Preserve `aria-pressed`, native selection, and the component's keyboard contract independently of shape.
 

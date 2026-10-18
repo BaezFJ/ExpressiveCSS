@@ -1,0 +1,116 @@
+@use "../../abstracts" as *;
+
+// Color swatches: pick one color from a preset palette. Each swatch is a
+// native radio drawn as a round chip of its color, so the group has one Tab
+// stop, arrow keys and a checked state with no script. A native color input
+// at the end of the group offers a custom value. CSS only.
+//
+//   <fieldset class="color-swatches">
+//     <legend>Accent</legend>
+//     <label><span class="visually-hidden">Purple</span><input type="radio"
+//       name="accent" value="#6750a4" style="--md-comp-color-swatch-color: #6750a4" checked></label>
+//     <label><span class="visually-hidden">Custom accent</span><input type="color" value="#ff8800"></label>
+//   </fieldset>
+//
+// The same anatomy as Rating: the name is visually hidden text in the label,
+// before the input. Loaded after radio-buttons, so these rules match the
+// radio rules' weight and win on order.
+//
+// Tokens:
+//   --md-comp-color-swatch-color             the swatch's color, per input   transparent
+//   --md-comp-color-swatches-size            swatch diameter                 40px
+//   --md-comp-color-swatches-outline-color   edge of every swatch            outline
+//   --md-comp-color-swatches-selected-color  ring around the checked one     on-surface
+
+fieldset.color-swatches {
+  --md-comp-color-swatch-color: transparent;
+  --md-comp-color-swatches-size: 40px;
+  --md-comp-color-swatches-outline-color: var(--md-sys-color-outline);
+  --md-comp-color-swatches-selected-color: var(--md-sys-color-on-surface);
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  > legend {
+    margin-block-end: 4px;
+    padding: 0;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-medium");
+  }
+
+  // 4px of padding makes the 48px target, as it does for the color input.
+  > label {
+    display: inline-flex;
+    gap: 0;
+    min-height: 0;
+    padding: 4px;
+    border-radius: var(--md-sys-shape-corner-full);
+    cursor: pointer;
+
+    &:has(> [type="radio"]:focus-visible) {
+      @include focus-ring;
+    }
+
+    &:has(> [type="radio"]:disabled) {
+      opacity: 0.38;
+      cursor: default;
+    }
+  }
+
+  > label > [type="color"] {
+    padding: 0;
+  }
+
+  > label > [type="radio"] {
+    flex: none;
+    width: var(--md-comp-color-swatches-size);
+    height: var(--md-comp-color-swatches-size);
+    border: 1px solid var(--md-comp-color-swatches-outline-color);
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-comp-color-swatch-color);
+    background-image: none;
+    box-shadow: none;
+    outline: 0;
+    // The color is the content, so forced colors must not repaint it.
+    forced-color-adjust: none;
+
+    // The base radio draws its dot and state ring in these states, some at a
+    // higher weight; the swatch has neither.
+    &:hover,
+    &:focus-visible,
+    &:disabled,
+    &:checked:hover,
+    &:disabled:checked {
+      border-color: var(--md-comp-color-swatches-outline-color);
+      background-image: none;
+      box-shadow: none;
+    }
+
+    // A gap in the surface color, then a ring: the shape marks the choice,
+    // so it does not depend on telling two colors apart.
+    &:checked,
+    &:checked:hover {
+      border-color: var(--md-comp-color-swatches-outline-color);
+      background-image: none;
+      box-shadow:
+        0 0 0 2px var(--md-sys-color-surface),
+        0 0 0 4px var(--md-comp-color-swatches-selected-color);
+    }
+  }
+
+  @media (forced-colors: active) {
+    > label > [type="radio"] {
+      border-color: CanvasText;
+    }
+
+    > label > [type="radio"]:checked {
+      box-shadow: none;
+      outline: 3px solid Highlight;
+      outline-offset: 2px;
+    }
+  }
+}

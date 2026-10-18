@@ -5,6 +5,16 @@
 
 .hide { display: none !important; }
 
+// Print. .hide-on-print drops a screen-only control from paper; .print-only
+// is the reverse, for a printed footer or a QR code beside a link.
+.hide-on-print {
+  @media print { display: none !important; }
+}
+
+.print-only {
+  @media screen { display: none !important; }
+}
+
 // Hidden from sight, still announced: a visible label's longer twin, an
 // icon-only control's name, a live region's text. Important for the same
 // reason `.hide` is.

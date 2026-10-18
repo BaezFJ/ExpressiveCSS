@@ -1,0 +1,105 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import PropertiesTable from "../components/api/PropertiesTable.astro";
+import InstanceNote from "../components/api/InstanceNote.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "keyboard", label: "Keyboard" },
+  { id: "events", label: "Events" },
+  { id: "tokens", label: "Tokens" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "properties", label: "Properties" },
+]);
+---
+<DocsLayout page="color-picker">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          Write a <code>.color-picker</code> with <code>role="group"</code> and a name around an
+          <code>&lt;input type="color"&gt;</code>. Without JavaScript it is the native swatch.
+        </p>
+        <p>
+          <code>ColorPicker</code>, which AutoInit starts, adds a saturation and brightness area, a
+          hue slider and a hex field. The native input stays the form value and the preview, and
+          the browser's own picker still opens from it. The browser's color input only holds
+          <code>#rrggbb</code>, so there is no alpha.
+        </p>
+        <div class="color-picker mb-3" role="group" aria-label="Accent color">
+          <input type="color" name="demo-accent" value="#6750a4" aria-label="Accent color" />
+        </div>
+<Code code={`
+<div class="color-picker" role="group" aria-label="Accent color">
+  <input type="color" name="accent" value="#6750a4" aria-label="Accent color">
+</div>
+`} />
+  </Section>
+  <Section {...S.keyboard}>
+        <p>
+          The area is one slider. Its value is read out as, for example, "Saturation 60%,
+          brightness 80%". It does not mirror in right-to-left pages, because it is the color
+          itself.
+        </p>
+        <table class="striped">
+          <thead><tr><th>Key</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>Left</kbd>, <kbd>Right</kbd></td><td>Saturation down or up by 1%; with <kbd>Shift</kbd>, 10%</td></tr>
+            <tr><td><kbd>Up</kbd>, <kbd>Down</kbd></td><td>Brightness up or down by 1%; with <kbd>Shift</kbd>, 10%</td></tr>
+            <tr><td><kbd>Page Up</kbd>, <kbd>Page Down</kbd></td><td>Brightness up or down by 10%</td></tr>
+            <tr><td><kbd>Home</kbd>, <kbd>End</kbd></td><td>No saturation or full saturation</td></tr>
+          </tbody>
+        </table>
+        <p>
+          The hue slider is the framework's range input, with its usual keys. In the hex field,
+          <kbd>Enter</kbd> applies the value instead of submitting the form, and an invalid value
+          goes back to the current color.
+        </p>
+  </Section>
+  <Section {...S.events}>
+        <p>
+          Every change writes the native input and fires its <code>input</code> event. A committed
+          change, such as a released drag, a key press, a released hue or an applied hex value,
+          also fires <code>change</code>. Listeners written for the native input keep working.
+        </p>
+<Code code={`
+el.querySelector('input[type="color"]').addEventListener('input', (e) => {
+  preview.style.background = e.target.value; // live, during a drag
+});
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.color-picker</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-color-picker-width</code></td><td>280px</td></tr>
+          <tr><td><code>--md-comp-color-picker-area-height</code></td><td>160px</td></tr>
+          <tr><td><code>--md-comp-color-picker-area-shape</code></td><td><code>--md-sys-shape-corner-medium</code></td></tr>
+          <tr><td><code>--md-comp-color-picker-thumb-size</code></td><td>24px</td></tr>
+          <tr><td><code>--md-comp-color-picker-field-shape</code></td><td><code>--md-sys-shape-corner-extra-small</code></td></tr>
+        </TokenTable>
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+          <tr><td><code>onChange</code></td><td>Function</td><td><code>null</code></td><td>Called with the new <code>#rrggbb</code> value when a change is committed. For live updates, listen for <code>input</code> on the native input.</td></tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+        <InstanceNote plugin="ColorPicker" />
+<Code code={`
+instance.destroy(); // removes the area, hue slider and hex field; the native input stays
+`} />
+  </Section>
+  <Section {...S.properties}>
+        <PropertiesTable el="The <code>.color-picker</code> element.">
+          <tr><td><code>input</code></td><td>Element</td><td>The native color input.</td></tr>
+          <tr><td><code>value</code></td><td>String</td><td>The current <code>#rrggbb</code> color. Setting it updates the picker and the input without firing events.</td></tr>
+        </PropertiesTable>
+  </Section>
+</PageBody>
+</DocsLayout>

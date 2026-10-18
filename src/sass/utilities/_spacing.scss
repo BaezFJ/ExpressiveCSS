@@ -1,3 +1,5 @@
+@use "../abstracts" as *;
+
 // Margin, padding and gap scale: .m-3, .pt-2, .px-4, .ms-auto, .gap-2, ...
 //
 // Shortcut x value x direction, all !important so a helper wins over the
@@ -48,5 +50,17 @@ $spacing-values: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "5
 @each $name, $value in $spacing-values {
   @if $name != "auto" {
     .gap-#{$name} { gap: $value !important; }
+  }
+}
+
+// The gap scale with window-size prefixes, like the layout classes in
+// _helpers.scss: .expanded:gap-5 applies from Expanded up.
+@each $size in ("medium", "expanded", "large", "extra-large") {
+  @include bp-up($size) {
+    @each $name, $value in $spacing-values {
+      @if $name != "auto" {
+        .#{$size}\:gap-#{$name} { gap: $value !important; }
+      }
+    }
   }
 }

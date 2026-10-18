@@ -25,7 +25,7 @@ $_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
   --md-comp-keypad-key-label-color: var(--md-sys-color-on-surface);
   --md-comp-keypad-function-key-color: var(--md-sys-color-secondary-container);
   --md-comp-keypad-function-key-label-color: var(--md-sys-color-on-secondary-container);
-  --md-comp-keypad-key-pressed-shape: 12px;
+  --md-comp-keypad-key-pressed-shape: var(--md-sys-shape-corner-medium);
   // Material's fast-spatial spring, the curve button groups press with.
   --md-comp-keypad-motion: #{$motion-fast-spatial};
 
@@ -37,8 +37,8 @@ $_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
     min-width: 0;
     padding: 0;
     transition:
-      border-radius 200ms var(--md-comp-keypad-motion),
-      background-color 200ms ease-out;
+      border-radius var(--md-sys-motion-duration-short4) var(--md-comp-keypad-motion),
+      background-color var(--md-sys-motion-duration-short4) ease-out;
 
     &[data-key] {
       --_color: var(--md-comp-keypad-function-key-color);
@@ -117,10 +117,10 @@ $_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
   --md-comp-keyboard-gap: 6px;
   --md-comp-keyboard-key-height: 48px;
   --md-comp-keyboard-number-key-height: 40px;
-  --md-comp-keyboard-key-shape: 12px;
+  --md-comp-keyboard-key-shape: var(--md-sys-shape-corner-medium);
   --md-comp-keypad-key-pressed-shape: 6px;
   --md-comp-keyboard-container-color: var(--md-sys-color-surface-container);
-  --md-comp-keyboard-container-shape: 16px;
+  --md-comp-keyboard-container-shape: var(--md-sys-shape-corner-large);
 
   display: flex;
   flex-direction: column;

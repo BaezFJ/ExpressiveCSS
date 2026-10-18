@@ -87,7 +87,7 @@ table.calendar {
     > li {
       overflow: hidden;
       padding: 2px 6px;
-      border-radius: 4px;
+      border-radius: var(--md-sys-shape-corner-extra-small);
       background-color: var(--md-comp-calendar-event-container-color);
       color: var(--md-comp-calendar-event-color);
       white-space: nowrap;

@@ -90,7 +90,7 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    transition: stroke-dasharray 600ms cubic-bezier(0.2, 0, 0, 1), opacity 200ms cubic-bezier(0.2, 0, 0, 1);
+    transition: stroke-dasharray var(--md-sys-motion-duration-long4) var(--md-sys-motion-easing-standard), opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
 
     @starting-style {
       stroke-dasharray: 0 1000;

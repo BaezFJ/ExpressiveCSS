@@ -656,3 +656,31 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm each list's level and size and each manager's expanded state are announced; check forced colors and 200% text.
 
 Mapped browser scope: Reports side by side below their manager in order, the manager over its reports, the bar stopping at the end reports, the drop from the manager, mirrored order and bar in RTL, a narrow chart scrolling with every card's start reachable, Enter folding a team, the caret under reduced motion, the CanvasText caret in forced colors and nested lists in the accessibility tree. No spoken-output assertion.
+
+## [Color swatches](../../components/color-swatches.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep a native radio group with a legend and a name for every swatch, mark the choice by shape as well as color, show focus and keep the swatch colors under forced colors.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page writes a fieldset of named radios and sets each swatch's color; the framework draws the chips, the checked ring and the focus ring.
+
+Verification gap: Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified. Next check: Choose a swatch with a keyboard and a screen reader in Firefox and Safari, and confirm each color name and the checked state are announced; check 200% text.
+
+Mapped browser scope: Swatch color, 40px round shape and checked ring, the named group, arrow keys moving the choice, the form value, the focus ring after arrow keys and the swatch color under forced colors. No spoken-output assertion.
+
+## [Color picker](../../components/color-picker.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep a native color input as the value, name the group and each control, make every axis reachable by keyboard with its value announced, keep the colors under forced colors and keep Enter in the hex field from submitting the form.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page writes a named group around a native color input; the framework adds the area slider, the hue range and the hex field, and keeps the native input in sync.
+
+Verification gap: Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified. Next check: Pick a color with a screen reader and with touch in each engine, and confirm the area valuetext and the hex field are announced; check forced colors and 200% text.
+
+Mapped browser scope: Group and control names, Down and Shift+Left steps with valuetext, input, change and onChange order, a press and a drag past the corner in an RTL page, hue changes keeping saturation and brightness, hex Enter without form submission, an invalid hex reverting, the silent value setter, a native input event updating the hue, one submitted field and destroy leaving only the native input. No spoken-output assertion.

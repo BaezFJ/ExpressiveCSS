@@ -49,11 +49,11 @@
   --md-comp-drag-handle-container-width: 24px;
   --md-comp-drag-handle-width: 4px;
   --md-comp-drag-handle-height: 48px;
-  --md-comp-drag-handle-shape: 9999px;
+  --md-comp-drag-handle-shape: var(--md-sys-shape-corner-full);
   --md-comp-drag-handle-color: var(--md-sys-color-outline);
   --md-comp-drag-handle-pressed-width: 12px;
   --md-comp-drag-handle-pressed-height: 52px;
-  --md-comp-drag-handle-pressed-shape: 12px;
+  --md-comp-drag-handle-pressed-shape: var(--md-sys-shape-corner-medium);
   --md-comp-drag-handle-pressed-color: var(--md-sys-color-on-surface);
   --md-comp-drag-handle-state-layer-color: var(--md-sys-color-inverse-on-surface);
 
@@ -86,8 +86,8 @@
     block-size: var(--md-comp-drag-handle-height);
     border-radius: var(--md-comp-drag-handle-shape);
     background-color: var(--md-comp-drag-handle-color);
-    transition: inline-size 0.15s ease, block-size 0.15s ease, border-radius 0.15s ease,
-      background-color 0.15s ease;
+    transition: inline-size var(--md-sys-motion-duration-short3) ease, block-size var(--md-sys-motion-duration-short3) ease, border-radius var(--md-sys-motion-duration-short3) ease,
+      background-color var(--md-sys-motion-duration-short3) ease;
   }
 }
 

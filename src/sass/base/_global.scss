@@ -40,8 +40,17 @@ a {
   -webkit-tap-highlight-color: transparent; // Gets rid of tap active state
 }
 
+// A link inside running text needs a cue besides its color (WCAG 1.4.1), so
+// it keeps the underline. A link with a class is a component or a deliberate
+// style and stays bare; so does every link outside these text containers,
+// which is where navigation lists, menus and tabs put theirs.
+:where(p, dd, blockquote, figcaption, td) a:not([class]) {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 //  Blockquote
-blockquote { margin: 20px 0; padding-left: 1.5rem; border-left: 5px solid var(--md-sys-color-primary); }
+blockquote { margin: 20px 0; padding-inline-start: 1.5rem; border-inline-start: 5px solid var(--md-sys-color-primary); }
 
 // <i> as an element - italics. The icon modifiers (.left, .right, .tiny ..)
 // used to live here, keyed on `i`, which silently tied them to one element:
@@ -73,7 +82,7 @@ table {
   }
 
   &.highlight > tbody > tr {
-    transition: background-color 0.25s ease;
+    transition: background-color var(--md-sys-motion-duration-medium1) ease;
 
     &:hover {
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
@@ -98,7 +107,7 @@ tr {
 td, th {
   padding: 15px 5px;
   display: table-cell;
-  text-align: left;
+  text-align: start;
   vertical-align: middle;
   border-radius: 0;
 }
@@ -120,14 +129,15 @@ td, th {
     }
     thead {
       display: block;
-      float: left;
+      float: inline-start;
       // sort out borders
       border: 0;
-      border-right: 1px solid var(--md-sys-color-outline-variant);
+      border-inline-end: 1px solid var(--md-sys-color-outline-variant);
 
       tr {
         display: block;
-        padding: 0 10px 0 0;
+        padding-block: 0;
+        padding-inline: 0 10px;
 
         th::before {
           content: "\00a0";
@@ -148,7 +158,7 @@ td, th {
     }
     th {
       display: block;
-      text-align: right;
+      text-align: end;
     }
     td {
       display: block;
@@ -173,7 +183,7 @@ meter {
   --md-comp-meter-suboptimum: var(--md-sys-color-tertiary);
   --md-comp-meter-even-less-good: var(--md-sys-color-error);
   --md-comp-meter-thickness: 8px;
-  --md-comp-meter-shape: 4px;
+  --md-comp-meter-shape: var(--md-sys-shape-corner-extra-small);
 
   width: 100%;
   height: var(--md-comp-meter-thickness);

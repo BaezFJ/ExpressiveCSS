@@ -186,7 +186,7 @@
 .panes.floating,
 .pane-layout.separated,
 .pane-layout.floating {
-  --md-comp-pane-container-shape: 16px;
+  --md-comp-pane-container-shape: var(--md-sys-shape-corner-large);
   --md-comp-pane-container-color: transparent;
   gap: var(--md-comp-pane-gap);
   padding: var(--md-comp-pane-gap);

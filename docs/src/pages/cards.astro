@@ -322,7 +322,9 @@ const S = defineSections([
           height follows content with a 240px minimum; <code>small</code>,
           <code>medium</code>, and <code>large</code> provide fixed expanded
           heights. Below 600px, both forms return to the vertical layout and
-          fixed heights reset to content.
+          fixed heights reset to content. Inside a
+          <a href="/helpers.html#display"><code>.query-container</code></a> narrower than 600px they
+          do the same on any window, so a horizontal card in a sidebar stacks too.
         </p>
         <div class="row" data-markdown-ignore>
           <div class="s12 xxl5">

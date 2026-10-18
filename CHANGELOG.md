@@ -7,6 +7,56 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Material 3 motion tokens: `--md-sys-motion-easing-*` for the standard,
+  emphasized and linear curves and `--md-sys-motion-duration-short1` to
+  `extra-long4`. Components now read them wherever they used an on-scale
+  curve or time, so `:root { --md-sys-motion-duration-short4: 150ms; }`
+  speeds up every 200ms transition. Computed values are unchanged.
+- Material 3 corner tokens: `--md-sys-shape-corner-none` to `full`, with the
+  Expressive `large-increased`, `extra-large-increased` and
+  `extra-extra-large` steps. Component shape tokens on the scale read them,
+  so `:root { --md-sys-shape-corner-medium: 8px; }` squares off every medium
+  corner. Computed values are unchanged.
+- `--expressive-z-*` properties name the stacking order of fixed and floating
+  surfaces, from `toolbar` (996) to `snackbar` (10000). Components read them
+  instead of literal `z-index` values, and the Shadow page lists them.
+- Layout helpers take a window-size prefix: `.medium:`, `.expanded:`,
+  `.large:` and `.extra-large:` versions of the display, flex direction and
+  wrap, `justify-*`, `align-*`, text alignment and `.gap-*` classes apply from
+  that size class up, so `flex flex-column expanded:flex-row` stacks until
+  Expanded.
+- More helpers: `.block`, `.inline-block`, `.grid`, `.inline-grid`,
+  `.contents`, `.relative`, `.sticky-top`, `.flex-row`, `.flex-nowrap`,
+  `.justify-around`, `.justify-evenly`, `.align-baseline`, `.self-*`,
+  `.order-first`, `.order-last`, `.shrink-0`, `.w-full`, `.h-full`,
+  `.max-w-full`, `.aspect-1x1`, `.aspect-4x3`, `.aspect-16x9`,
+  `.object-cover`, `.object-contain`, `.bordered`, `.border-top`,
+  `.border-bottom`, `.border-start`, `.border-end`, `.corner-none` to
+  `.corner-full`, `.text-balance` and `.text-pretty`.
+- Print styles. Paper uses the light scheme and hides navigation rails,
+  navigation bars, the FAB menu, snackbars and tooltips. External links in running text print their address, headings
+  stay with what follows, and table headers repeat on each page.
+  `.hide-on-print` and `.print-only` cover the rest.
+- `.prose` styles a container of bare HTML, such as rendered Markdown: a
+  70-character measure, heading and list spacing, underlined links in lists
+  and headings, and a surface for inline code and `<pre>`. It only touches
+  elements without a class and sits in the base layer, so components inside
+  it keep their own look.
+- `.query-container` makes an element a query container. Horizontal cards
+  and description lists inside one stack when it is narrower than 600px, so
+  they adapt to a sidebar or pane on a wide window.
+- With `prefers-contrast: more`, `--md-sys-color-outline-variant` takes the
+  outline role, so dividers, outlined cards and field borders hold 3:1
+  against their surfaces.
+- Color swatches component: a `fieldset.color-swatches` of radios in
+  labels with visually hidden names, each drawn as a round chip of the color
+  set in `--md-comp-color-swatch-color`, with a ring around the checked one.
+  An `<input type="color">` at the end adds a custom value. CSS only.
+- Color picker component: `ColorPicker` enhances a `.color-picker` around an
+  `<input type="color">` with a saturation and brightness area, the
+  framework's slider as a hue control, and a hex field. The native input stays
+  the form value and fires `input` and `change`. The area is a keyboard
+  slider with a spoken value. AutoInit starts it.
 - A "Frosted glass" documentation page at `/glass.html` covers the
   `--expressive-glass`, `-blur` and `-opacity` properties, the Sass defaults,
   the surfaces that frost, and the reduced-transparency fallback, with live
@@ -89,6 +139,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Blockquotes, table cells and the stacked `.responsive-table` header use
+  logical properties, so the quote bar, cell alignment and header border
+  mirror in a right-to-left page.
+- The lightbox opens above a non-modal bottom or side sheet. Its overlay and
+  zoomed image were at `z-index: 1000`, under the sheets' 1100; they now use
+  `--expressive-z-lightbox` (1200).
 - Swipeable tabs no longer jump back to the previous panel when you pick a
   new one while the last scroll is still running. The track released its
   target as soon as its position rounded to the new panel, so the rest of
@@ -330,6 +386,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Headings balance their lines and paragraphs avoid a one-word last line
+  (`text-wrap-style: balance` and `pretty`). The longhand leaves wrapping
+  itself alone, so `.truncate` and `.text-nowrap` still work.
+- A link without a class inside a `p`, `dd`, `blockquote`, `figcaption` or
+  `td` is underlined, so links in running text no longer rely on color alone
+  (WCAG 1.4.1). Links with a class, and links in lists, menus and navigation,
+  are unchanged.
 - The documentation's category rail opens each group's pages in a side
   panel on hover or click, with each section as a dropdown. The section
   holding the current page starts open. The panel replaces the page list that

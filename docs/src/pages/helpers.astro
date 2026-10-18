@@ -7,8 +7,11 @@ import { defineSections } from "../lib/sections";
 
 const S = defineSections([
   { id: "valign", label: "Alignment" },
+  { id: "display", label: "Display and position" },
   { id: "flex", label: "Flex" },
+  { id: "prefixes", label: "Window-size prefixes" },
   { id: "overflow", label: "Sizing and overflow" },
+  { id: "borders", label: "Borders and corners" },
   { id: "hiding", label: "Hiding and showing content" },
   { id: "spacing", label: "Spacing content", heading: "Spacing" },
   { id: "formatting", label: "Formatting" },
@@ -66,10 +69,34 @@ const S = defineSections([
           To center text on mobile only, add <code>center-on-small-only</code>.
         </p>
   </Section>
+  <Section {...S.display}>
+        <table class="striped">
+          <thead><tr><th>Class</th><th>Declaration</th></tr></thead>
+          <tbody>
+            <tr><td><code>.block</code>, <code>.inline-block</code></td><td><code>display: block</code>, <code>display: inline-block</code></td></tr>
+            <tr><td><code>.grid</code>, <code>.inline-grid</code></td><td><code>display: grid</code>, <code>display: inline-grid</code></td></tr>
+            <tr><td><code>.contents</code></td><td><code>display: contents</code>; the element's box goes away and its children join the parent's layout</td></tr>
+            <tr><td><code>.relative</code></td><td><code>position: relative</code></td></tr>
+            <tr><td><code>.sticky-top</code></td><td><code>position: sticky; top: 0</code></td></tr>
+            <tr><td><code>.query-container</code></td><td><code>container-type: inline-size</code>. Horizontal cards and description lists inside it stack when it is narrower than 600px, on any window.</td></tr>
+          </tbody>
+        </table>
+        <p>
+          <code>.inline</code> is the row of checkboxes or radios, so there is no
+          <code>display: inline</code> class. A <code>.sticky-top</code> element sticks inside its
+          nearest scrolling ancestor; an ancestor with <code>overflow: hidden</code> stops it.
+          Browsers have dropped the semantics of elements with <code>display: contents</code>, so
+          put <code>.contents</code> on plain wrappers, not on buttons, lists, tables or headings.
+          A <code>.query-container</code> can no longer size itself from its content, so put it on
+          a wrapper that fills its parent, such as a sidebar column, not on an inline or
+          shrink-to-fit box.
+        </p>
+  </Section>
   <Section {...S.flex}>
         <p>
           Each class sets one declaration, usually on the container. Row direction and start
-          alignment are the flex defaults, so only the overrides have a class.
+          alignment are the flex defaults, but <code>.flex-row</code> and <code>.flex-nowrap</code>
+          exist so a window-size prefix can switch back to them.
         </p>
         <table class="striped">
           <thead>
@@ -81,12 +108,15 @@ const S = defineSections([
           <tbody>
             <tr><td><code>.flex</code></td><td><code>display: flex</code></td></tr>
             <tr><td><code>.inline-flex</code></td><td><code>display: inline-flex</code></td></tr>
-            <tr><td><code>.flex-column</code></td><td><code>flex-direction: column</code></td></tr>
-            <tr><td><code>.flex-wrap</code></td><td><code>flex-wrap: wrap</code></td></tr>
-            <tr><td><code>.justify-start</code>, <code>.justify-center</code>, <code>.justify-end</code>, <code>.justify-between</code></td><td><code>justify-content</code></td></tr>
-            <tr><td><code>.align-start</code>, <code>.align-center</code>, <code>.align-end</code>, <code>.align-stretch</code></td><td><code>align-items</code></td></tr>
+            <tr><td><code>.flex-row</code>, <code>.flex-column</code></td><td><code>flex-direction</code></td></tr>
+            <tr><td><code>.flex-wrap</code>, <code>.flex-nowrap</code></td><td><code>flex-wrap</code></td></tr>
+            <tr><td><code>.justify-start</code>, <code>.justify-center</code>, <code>.justify-end</code>, <code>.justify-between</code>, <code>.justify-around</code>, <code>.justify-evenly</code></td><td><code>justify-content</code></td></tr>
+            <tr><td><code>.align-start</code>, <code>.align-center</code>, <code>.align-end</code>, <code>.align-stretch</code>, <code>.align-baseline</code></td><td><code>align-items</code></td></tr>
             <tr><td><code>.flex-1</code></td><td><code>flex: 1 1 0</code> on a child, so it takes the remaining space</td></tr>
             <tr><td><code>.flex-none</code></td><td><code>flex: none</code> on a child, so it keeps its content size</td></tr>
+            <tr><td><code>.shrink-0</code></td><td><code>flex-shrink: 0</code> on a child, so it never gets narrower than its basis</td></tr>
+            <tr><td><code>.self-start</code>, <code>.self-center</code>, <code>.self-end</code>, <code>.self-stretch</code></td><td><code>align-self</code> on a child</td></tr>
+            <tr><td><code>.order-first</code>, <code>.order-last</code></td><td><code>order: -1</code>, <code>order: 1</code> on a child. Visual order only: keyboard and screen reader order still follow the source.</td></tr>
             <tr><td><code>.gap-0</code> to <code>.gap-6</code></td><td><code>gap</code> on the spacing scale, <code>!important</code>; also works on grid containers</td></tr>
           </tbody>
         </table>
@@ -112,6 +142,40 @@ const S = defineSections([
           button groups) do not need these classes.
         </p>
   </Section>
+  <Section {...S.prefixes}>
+        <p>
+          The display, flex direction, wrap, <code>justify-*</code>, <code>align-*</code>, text
+          alignment (<code>.start-align</code>, <code>.center-align</code>, <code>.end-align</code>)
+          and <code>.gap-*</code> classes also come with a window-size prefix. A prefixed class
+          applies from that size class up and overrides the unprefixed one, the same way the grid's
+          <code>m6</code> and <code>l4</code> do.
+        </p>
+        <table class="striped">
+          <thead><tr><th>Prefix</th><th>Applies from</th></tr></thead>
+          <tbody>
+            <tr><td><code>medium:</code></td><td>Medium, 600px</td></tr>
+            <tr><td><code>expanded:</code></td><td>Expanded, 840px</td></tr>
+            <tr><td><code>large:</code></td><td>Large, 1200px</td></tr>
+            <tr><td><code>extra-large:</code></td><td>Extra-large, 1600px</td></tr>
+          </tbody>
+        </table>
+        <div class="flex flex-column gap-2 expanded:flex-row expanded:align-center expanded:justify-between surface-container p-4">
+          <h5 class="title-medium my-0">Members</h5>
+          <button type="button" class="tonal">Invite</button>
+        </div>
+<Code code={`
+<!-- Stacked on Compact and Medium, one row from Expanded up. -->
+<div class="flex flex-column gap-2 expanded:flex-row expanded:align-center expanded:justify-between">
+  <h2 class="title-medium my-0">Members</h2>
+  <button class="tonal">Invite</button>
+</div>
+`} />
+        <p>
+          In a Sass selector, escape the colon: <code>.expanded\:flex-row</code>. To hide
+          something at a size, use the <a href="#hiding">hide and show classes</a>; they are
+          <code>!important</code>, so a prefixed display class does not undo them.
+        </p>
+  </Section>
   <Section {...S.overflow}>
         <p>
           Flex and grid children can retain a minimum size based on their content.
@@ -122,6 +186,10 @@ const S = defineSections([
           <tbody>
             <tr><td><code>.min-w-0</code></td><td><code>min-width: 0</code></td></tr>
             <tr><td><code>.min-h-0</code></td><td><code>min-height: 0</code></td></tr>
+            <tr><td><code>.w-full</code>, <code>.h-full</code></td><td><code>width: 100%</code>, <code>height: 100%</code></td></tr>
+            <tr><td><code>.max-w-full</code></td><td><code>max-width: 100%</code></td></tr>
+            <tr><td><code>.aspect-1x1</code>, <code>.aspect-4x3</code>, <code>.aspect-16x9</code></td><td><code>aspect-ratio</code>; the height follows the width</td></tr>
+            <tr><td><code>.object-cover</code>, <code>.object-contain</code></td><td><code>object-fit</code> on an <code>&lt;img&gt;</code> or <code>&lt;video&gt;</code> with a set ratio</td></tr>
             <tr><td><code>.overflow-x-auto</code></td><td><code>overflow-x: auto</code></td></tr>
             <tr><td><code>.overflow-y-auto</code></td><td><code>overflow-y: auto</code></td></tr>
             <tr><td><code>.overflow-hidden</code></td><td><code>overflow: hidden</code></td></tr>
@@ -152,6 +220,27 @@ const S = defineSections([
           when you mean to hide the clipped content.
         </p>
         <p>Use <a href="/scroll-area.html">scroll area</a> for a native scroll container with themed scrollbars.</p>
+  </Section>
+  <Section {...S.borders}>
+        <table class="striped">
+          <thead><tr><th>Class</th><th>Declaration</th></tr></thead>
+          <tbody>
+            <tr><td><code>.bordered</code></td><td>A 1px <code>outline-variant</code> border on every side</td></tr>
+            <tr><td><code>.border-top</code>, <code>.border-bottom</code></td><td>The same border on one side</td></tr>
+            <tr><td><code>.border-start</code>, <code>.border-end</code></td><td>The same border on the inline start or end, which mirrors in RTL</td></tr>
+            <tr><td><code>.corner-none</code>, <code>.corner-extra-small</code>, <code>.corner-small</code>, <code>.corner-medium</code>, <code>.corner-large</code>, <code>.corner-extra-large</code>, <code>.corner-full</code></td><td><code>border-radius</code> from the matching <a href="/shapes.html#corner-scale"><code>--md-sys-shape-corner-*</code></a> token</td></tr>
+          </tbody>
+        </table>
+        <div class="bordered corner-large aspect-16x9 flex align-center justify-center" style="max-width: 20rem">16:9</div>
+<Code code={`
+<div class="bordered corner-large aspect-16x9">16:9</div>
+<img class="corner-medium aspect-1x1 object-cover" src="..." alt="..." width="160">
+`} />
+        <p>
+          <code>.border</code> is the outlined card variant and <code>.rounded</code> is the pill
+          button, which is why these use other names. On a component, a corner class replaces the
+          component's own shape, including its pressed and selected corner changes.
+        </p>
   </Section>
   <Section {...S.hiding}>
         <p>These classes hide or show content at specific screen sizes.</p>
@@ -233,6 +322,19 @@ const S = defineSections([
             </tr>
           </tbody>
         </table>
+        <h5>Print</h5>
+        <table class="striped">
+          <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code><strong>.hide-on-print</strong></code></td><td>Hidden on paper</td></tr>
+            <tr><td><code><strong>.print-only</strong></code></td><td>Hidden on screen, shown on paper</td></tr>
+          </tbody>
+        </table>
+        <p>
+          Printing also uses the light scheme, hides navigation rails,
+          navigation bars, the FAB menu, snackbars and tooltips, prints the address after each
+          external link in running text, and keeps headings with the content that follows them.
+        </p>
         <h5>Usage</h5>
 <Code code={`
 <div class="hide-on-compact-only"></div>
@@ -664,6 +766,8 @@ const S = defineSections([
             <tr><td><code>.break-words</code></td><td><code>overflow-wrap: anywhere</code> lets long URLs or identifiers wrap within their container.</td></tr>
             <tr><td><code>.text-nowrap</code></td><td><code>white-space: nowrap</code> keeps text on one line without clipping or ellipsis.</td></tr>
             <tr><td><code>.text-wrap</code></td><td><code>white-space: normal</code> restores ordinary wrapping.</td></tr>
+            <tr><td><code>.text-balance</code></td><td><code>text-wrap-style: balance</code> evens out the line lengths of a short block, such as a card title. Headings already do this.</td></tr>
+            <tr><td><code>.text-pretty</code></td><td><code>text-wrap-style: pretty</code> avoids a single short word on the last line. Paragraphs already do this.</td></tr>
           </tbody>
         </table>
         <p>Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.</p>

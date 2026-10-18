@@ -98,7 +98,7 @@ $_tree-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
       background-color: currentColor;
       mask: $_tree-chevron center / 20px no-repeat;
       transform: rotate(-90deg);
-      transition: transform 150ms ease-out;
+      transition: transform var(--md-sys-motion-duration-short3) ease-out;
     }
 
     &:dir(rtl)::before {

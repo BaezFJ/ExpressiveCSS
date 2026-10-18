@@ -25,7 +25,7 @@ $_sheet: "dialog.side-sheet";
 
 #{$_sheet} {
   --md-comp-side-sheet-container-color: var(--md-sys-color-surface-container-low);
-  --md-comp-side-sheet-container-shape: 28px;
+  --md-comp-side-sheet-container-shape: var(--md-sys-shape-corner-extra-large);
   --md-comp-side-sheet-container-width: 400px;
   --md-comp-side-sheet-shift: 0px;
 
@@ -47,11 +47,11 @@ $_sheet: "dialog.side-sheet";
   color: var(--md-sys-color-on-surface);
   outline: none;
   translate: var(--md-comp-side-sheet-shift) 0;
-  transition: translate 280ms ease, border-radius 200ms ease;
+  transition: translate 280ms ease, border-radius var(--md-sys-motion-duration-short4) ease;
   @include glass(var(--md-comp-side-sheet-container-color));
 
   &:not(:modal) {
-    z-index: 1100;
+    z-index: var(--expressive-z-sheet);
     border-radius: 0;
     box-shadow: none;
     // Standard: attached to the page, inner edge is a divider.

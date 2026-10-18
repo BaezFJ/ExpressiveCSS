@@ -256,6 +256,7 @@ job is to be unconditional (`.hide`, `.m-3`) keep it.
 
 A few rules in `components/` still use `!important`: reduced-motion resets,
 `.scale-transition` (it must replace the transition of whatever component it
-is added to), and the map's overrides of MapLibre's own `!important` styles.
+is added to), the map's overrides of MapLibre's own `!important` styles, and
+the print rules that hide navigation, snackbars, tooltips and the FAB menu.
 None of them is for JS-driven geometry. Tap target, the circular progress
 indicator and `.expressive-textarea` padding no longer need the flag.

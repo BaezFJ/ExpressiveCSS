@@ -170,7 +170,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     pointer-events: none;
     @include typescale("body-large");
     // left and right: the logical inset moves on `right` in a right-to-left field.
-    transition: left 0.2s ease-out, right 0.2s ease-out, top 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out;
+    transition: left var(--md-sys-motion-duration-short4) ease-out, right var(--md-sys-motion-duration-short4) ease-out, top var(--md-sys-motion-duration-short4) ease-out, transform var(--md-sys-motion-duration-short4) ease-out, color var(--md-sys-motion-duration-short4) ease-out;
 
     &:dir(rtl) {
       left: auto;

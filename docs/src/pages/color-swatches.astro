@@ -1,0 +1,89 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "custom", label: "Custom color" },
+  { id: "tokens", label: "Tokens" },
+]);
+const colors = [
+  ["Purple", "#6750a4"], ["Green", "#386a20"], ["Red", "#b3261e"],
+  ["Blue", "#0061a4"], ["Amber", "#7c5800"],
+];
+---
+<DocsLayout page="color-swatches">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;fieldset class="color-swatches"&gt;</code> holds one radio per
+          color. Each radio is drawn as a round chip of its color, so Tab, the arrow
+          keys and form submission stay native.
+        </p>
+        <p>
+          Put each radio in a <code>&lt;label&gt;</code> whose visually hidden text,
+          such as "Purple", comes before the radio, and set
+          <code>--md-comp-color-swatch-color</code> on the radio. The checked swatch
+          gets a ring, so the choice does not depend on telling two colors apart.
+        </p>
+        <fieldset class="color-swatches mb-3">
+          <legend>Label color</legend>
+          {colors.map(([name, value], i) => (
+            <label><span class="visually-hidden">{name}</span><input type="radio" name="demo-swatch" value={value}
+                   style={`--md-comp-color-swatch-color: ${value}`} checked={i === 0} /></label>
+          ))}
+        </fieldset>
+<Code code={`
+<fieldset class="color-swatches">
+  <legend>Label color</legend>
+  <label><span class="visually-hidden">Purple</span><input type="radio" name="label-color"
+    value="#6750a4" style="--md-comp-color-swatch-color: #6750a4" checked></label>
+  <label><span class="visually-hidden">Green</span><input type="radio" name="label-color"
+    value="#386a20" style="--md-comp-color-swatch-color: #386a20"></label>
+  <label><span class="visually-hidden">Red</span><input type="radio" name="label-color"
+    value="#b3261e" style="--md-comp-color-swatch-color: #b3261e"></label>
+</fieldset>
+`} />
+  </Section>
+  <Section {...S.custom}>
+        <p>
+          Add an <code>&lt;input type="color"&gt;</code> at the end of the group for a
+          value outside the palette. It opens the browser's own picker and is already
+          drawn as a matching round swatch. Give it its own <code>name</code> and its
+          own label.
+        </p>
+        <fieldset class="color-swatches mb-3">
+          <legend>Theme color</legend>
+          {colors.slice(0, 3).map(([name, value], i) => (
+            <label><span class="visually-hidden">{name}</span><input type="radio" name="demo-theme" value={value}
+                   style={`--md-comp-color-swatch-color: ${value}`} checked={i === 0} /></label>
+          ))}
+          <label><span class="visually-hidden">Custom color</span><input type="color" name="demo-theme-custom" value="#ff8800" /></label>
+        </fieldset>
+<Code code={`
+<fieldset class="color-swatches">
+  <legend>Theme color</legend>
+  <label><span class="visually-hidden">Purple</span><input type="radio" name="theme"
+    value="#6750a4" style="--md-comp-color-swatch-color: #6750a4" checked></label>
+  <label><span class="visually-hidden">Green</span><input type="radio" name="theme"
+    value="#386a20" style="--md-comp-color-swatch-color: #386a20"></label>
+  <label><span class="visually-hidden">Custom color</span><input type="color" name="theme-custom"
+    value="#ff8800"></label>
+</fieldset>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.color-swatches</code>; set the swatch color on each radio.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-color-swatch-color</code></td><td>transparent; set it on each radio</td></tr>
+          <tr><td><code>--md-comp-color-swatches-size</code></td><td>40px</td></tr>
+          <tr><td><code>--md-comp-color-swatches-outline-color</code></td><td><code>--md-sys-color-outline</code></td></tr>
+          <tr><td><code>--md-comp-color-swatches-selected-color</code></td><td><code>--md-sys-color-on-surface</code></td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

@@ -44,7 +44,7 @@
   margin: 0;
   padding: 0;
   border: 2px solid var(--md-sys-color-outline);
-  border-radius: 16px;
+  border-radius: var(--md-sys-shape-corner-large);
   background-color: var(--md-sys-color-surface-container-highest);
   // Size the image to the handle. A 100% gradient keeps the circle in
   // the middle of the track, so background-position cannot put off on
@@ -62,8 +62,8 @@
   // thumb on the start and it only grows.
   background-position: 6px 50%;
   cursor: pointer;
-  transition: background-color 0.2s ease, background-position 0.2s ease,
-    background-size 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color var(--md-sys-motion-duration-short4) ease, background-position var(--md-sys-motion-duration-short4) ease,
+    background-size var(--md-sys-motion-duration-short4) ease, border-color var(--md-sys-motion-duration-short4) ease, box-shadow var(--md-sys-motion-duration-short4) ease;
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;

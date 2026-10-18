@@ -422,7 +422,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this._makeAncestorsOverflowVisible();
     // Set css on origin
     this.el.style.position = 'absolute';
-    this.el.style.zIndex = '1000';
+    this.el.style.zIndex = 'var(--expressive-z-lightbox)';
     this.el.style.willChange = 'left, top, width, height';
     // Change from width or height attribute to css
     this.attrWidth = this.el.getAttribute('width');

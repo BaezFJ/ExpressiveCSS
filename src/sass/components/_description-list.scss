@@ -6,12 +6,31 @@
 // HTML allows; it takes no box of its own.
 //
 // Two columns from Medium up, labels in the first; at Compact widths each
-// label sits above its values. A divider runs above every group.
+// label sits above its values, as it does in a .query-container narrower
+// than 600px. A divider runs above every group.
 //
 // Tokens:
 //   --md-comp-description-list-label-width   minmax(8rem, 33%)
 //   --md-comp-description-list-divider-color outline-variant
 //   --md-comp-description-list-padding       12px (block, per row)
+
+@mixin _stacked {
+  grid-template-columns: minmax(0, 1fr);
+
+  dt,
+  dd {
+    grid-column: 1;
+  }
+
+  dt {
+    padding-block-end: 0;
+  }
+
+  dt + dd {
+    padding-block-start: 4px;
+    border-block-start: 0;
+  }
+}
 
 dl.description-list {
   --md-comp-description-list-label-width: minmax(8rem, 33%);
@@ -59,21 +78,8 @@ dl.description-list {
     padding-block-start: 0;
   }
 
-  @include bp-down("medium") {
-    grid-template-columns: minmax(0, 1fr);
-
-    dt,
-    dd {
-      grid-column: 1;
-    }
-
-    dt {
-      padding-block-end: 0;
-    }
-
-    dt + dd {
-      padding-block-start: 4px;
-      border-block-start: 0;
-    }
-  }
+  // One column on Compact windows, and in a query container narrower than
+  // Compact, so a list in a sidebar stacks on a wide window too.
+  @include bp-down("medium") { @include _stacked; }
+  @container (width < 600px) { @include _stacked; }
 }

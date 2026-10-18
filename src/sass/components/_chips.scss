@@ -30,7 +30,7 @@
   font-size: var(--font-size);
   line-height: 1.5;
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-corner-small);
   align-items: center;
   user-select: none;
   vertical-align: top;
@@ -94,7 +94,7 @@
   width: 24px;
   height: 24px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: var(--md-sys-shape-corner-medium);
 }
 
 .chip > :is(.material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp) {
@@ -145,7 +145,7 @@
   margin: 0 0 8px 0;
   padding: 4px;
   outline: none;
-  transition: border-color 0.3s, border-width 0.3s, box-shadow 0.3s;
+  transition: border-color var(--md-sys-motion-duration-medium2), border-width var(--md-sys-motion-duration-medium2), box-shadow var(--md-sys-motion-duration-medium2);
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;

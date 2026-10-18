@@ -16,7 +16,7 @@
 
 .stats {
   --md-comp-stat-container-color: var(--md-sys-color-surface-container-low);
-  --md-comp-stat-shape: 16px;
+  --md-comp-stat-shape: var(--md-sys-shape-corner-large);
   --md-comp-stat-min-width: 160px;
 
   display: grid;

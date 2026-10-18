@@ -29,7 +29,7 @@ describe('Cards CSS', () => {
   });
 
   test('uses 12dp shape, 16dp content padding, 8dp collection spacing, and 24dp icons', () => {
-    assert.match(css, /--md-comp-card-container-shape:\s*12px/);
+    assert.match(css, /--md-comp-card-container-shape:\s*var\(--md-sys-shape-corner-medium\)/);
     assert.match(
       css,
       /--md-comp-card-media-shape:\s*var\(--md-comp-card-container-shape\)/

@@ -755,6 +755,44 @@
           }
         ]
       },
+      "forms/color-swatches": {
+        "status": "enforced",
+        "note": "Added with the color swatches component. A fieldset of native radios in labels with visually hidden names, drawn as round chips of their colors, with an optional native color input for a custom value.",
+        "rules": [
+          {
+            "id": "color-swatches-is-a-fieldset",
+            "kind": "forbid",
+            "selector": ".color-swatches:not(fieldset)",
+            "fragmentSafe": true,
+            "message": "A .color-swatches is a <fieldset> with a <legend>, so the radios read as one named group."
+          },
+          {
+            "id": "color-swatch-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".color-swatches > [type=\"radio\"]",
+            "message": "A swatch shows no text, so name each radio with visually hidden text in its label, such as \"Purple\"."
+          }
+        ]
+      },
+      "forms/color-picker": {
+        "status": "enforced",
+        "note": "Added with the color picker component. A named group around a native color input, which stays the form value; the component adds a saturation and brightness slider, a hue range and a hex field at runtime.",
+        "rules": [
+          {
+            "id": "color-picker-wraps-a-color-input",
+            "kind": "forbid",
+            "selector": ".color-picker:not(:has(> input[type=\"color\"]))",
+            "fragmentSafe": true,
+            "message": "A .color-picker holds an <input type=\"color\"> as a direct child. It is the form value, the preview and the picker without JavaScript."
+          },
+          {
+            "id": "color-picker-is-a-named-group",
+            "kind": "require-accessible-name",
+            "selector": ".color-picker",
+            "message": "Give the .color-picker role=\"group\" and a name, such as aria-label=\"Accent\", so its sliders and hex field read as one control."
+          }
+        ]
+      },
       "forms/select": {
         "status": "enforced",
         "note": "Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select.test.js.",

@@ -51,7 +51,7 @@ $_bar: ".search-bar";
 #{$_bar} {
   --md-comp-search-bar-container-color: var(--md-sys-color-surface-container-high);
   --md-comp-search-bar-container-height: 56px;
-  --md-comp-search-bar-container-shape: 9999px;
+  --md-comp-search-bar-container-shape: var(--md-sys-shape-corner-full);
   --md-comp-search-bar-leading-space: 16px;
   --md-comp-search-bar-trailing-space: 16px;
   --md-comp-search-bar-icon-label-space: 16px;
@@ -155,7 +155,7 @@ $_bar: ".search-bar";
 
 .search-view {
   --md-comp-search-view-container-color: var(--md-sys-color-surface-container-high);
-  --md-comp-search-view-container-shape: 12px;
+  --md-comp-search-view-container-shape: var(--md-sys-shape-corner-medium);
   --md-comp-search-view-header-height: 56px;
   --md-comp-search-view-divider-color: var(--md-sys-color-outline);
   --md-comp-search-view-bar-results-gap: 2px;

@@ -9,6 +9,7 @@ Read this after the Usage guide when a task needs spacing, flex layout, alignmen
 - Visibility helpers: hide classes, show classes, screen-reader-only text, reveal on focus
 - Alignment and layout helpers
 - Flex helpers
+- Window-size prefixes
 - Sizing and overflow
 - Shape and text helpers
 - Shadow and elevation
@@ -104,6 +105,8 @@ Use a targeted media rule for display requirements the existing hide ranges cann
 | `.show-on-medium-and-up` | 600px and above. |
 | `.show-on-medium-and-down` | Below 840px. |
 
+`.hide-on-print` hides an element on paper and `.print-only` shows it only on paper. Print also forces the light scheme, hides navigation rails, navigation bars, the FAB menu, snackbars and tooltips, and prints the URL after external links in running text. Use `.hide-on-print` for other screen-only controls instead of a page-level print sheet.
+
 `.center-on-small-only` centers text below 600px and leaves alignment unchanged at wider widths.
 
 The two `med-and-*` hide classes in the table are public helpers, not aliases for nonexistent `.hide-on-medium-and-down` or `.hide-on-medium-and-up` classes.
@@ -138,6 +141,9 @@ Never use display hiding as the only way to provide required content or actions.
 | `.right-align` | Right-aligns text. | Physical alignment does not mirror in RTL. |
 | `.start-align`, `.end-align` | `text-align: start` or `text-align: end`. | Follow text direction and mirror in RTL. |
 | `.center-align` | Centers text. | Use on the text container. `.center` is not the canonical helper. |
+| `.query-container` | `container-type: inline-size`. Horizontal cards and description lists inside it stack below 600px of container width. | Put it on a wrapper that fills its parent; inline-size containment stops the element sizing itself from its content. |
+| `.relative`, `.sticky-top` | `position: relative`; `position: sticky; top: 0`. | A sticky element stops at an ancestor with `overflow: hidden`. |
+| `.block`, `.inline-block`, `.grid`, `.inline-grid`, `.contents` | The matching `display`. | There is no `display: inline` class; `.inline` is the checkbox and radio row. Keep `.contents` off buttons, lists, tables and headings. |
 | `.divider` | Draws a 1px `outline-variant` divider. | Keep decorative dividers out of the accessibility tree; use semantic grouping or headings for real structure. |
 
 ```html
@@ -149,18 +155,21 @@ Never use display hiding as the only way to provide required content or actions.
 
 ## Flex helpers
 
-Apply one class per declaration to the container. Row direction and start alignment are the flex defaults and have no class. `.flex-1` and `.flex-none` go on a child.
+Apply one class per declaration to the container. `.flex-row` and `.flex-nowrap` restate the defaults so a window-size prefix can switch back to them. `.flex-1`, `.flex-none`, `.shrink-0`, `.self-*` and `.order-*` go on a child.
 
 | Class | Declaration | Use carefully |
 | --- | --- | --- |
 | `.flex` | `display: flex` | Changes the container's display; children lose block margins collapsing. |
 | `.inline-flex` | `display: inline-flex` | For a control-sized container inside text. |
-| `.flex-column` | `flex-direction: column` | Vertical stacks; `.justify-*` then works on the vertical axis. |
-| `.flex-wrap` | `flex-wrap: wrap` | Required for chip sets and action rows that must reflow on Compact. |
-| `.justify-start`, `.justify-center`, `.justify-end`, `.justify-between` | `justify-content` | `flex-start`/`flex-end` follow writing direction and mirror in RTL. |
-| `.align-start`, `.align-center`, `.align-end`, `.align-stretch` | `align-items` | `.align-center` on the container is the same as `.valign-wrapper`. |
+| `.flex-row`, `.flex-column` | `flex-direction` | Vertical stacks; `.justify-*` then works on the vertical axis. |
+| `.flex-wrap`, `.flex-nowrap` | `flex-wrap` | Wrap is required for chip sets and action rows that must reflow on Compact. |
+| `.justify-start`, `.justify-center`, `.justify-end`, `.justify-between`, `.justify-around`, `.justify-evenly` | `justify-content` | `flex-start`/`flex-end` follow writing direction and mirror in RTL. |
+| `.align-start`, `.align-center`, `.align-end`, `.align-stretch`, `.align-baseline` | `align-items` | `.align-center` on the container is the same as `.valign-wrapper`. |
 | `.flex-1` | `flex: 1 1 0` | The child takes remaining space; add `.min-w-0` if its text must truncate. |
 | `.flex-none` | `flex: none` | The child keeps its content size. |
+| `.shrink-0` | `flex-shrink: 0` | Keeps an icon or avatar from squeezing. |
+| `.self-start`, `.self-center`, `.self-end`, `.self-stretch` | `align-self` | One child out of line with the rest. |
+| `.order-first`, `.order-last` | `order: -1`, `order: 1` | Visual only; keyboard and reading order follow the source, so do not reorder meaningful content. |
 | `.gap-0` to `.gap-6` | `gap`, `!important` | Spacing scale above; use `.g-*` on `.row` instead. |
 
 ```html
@@ -172,12 +181,28 @@ Apply one class per declaration to the container. Row direction and start alignm
 
 Components that already lay out their children (app bars, toolbars, card `.actions`, button groups, navigation bars) do not need these classes. Reach for `.row` and column spans when the layout has more than one line of content; use flex helpers for one line of controls or a stack.
 
+## Window-size prefixes
+
+Display, flex direction and wrap, `justify-*`, `align-*`, `.start-align`, `.center-align`, `.end-align` and `.gap-*` also take a `medium:`, `expanded:`, `large:` or `extra-large:` prefix. The prefixed class applies from that size class up (600, 840, 1200 and 1600px) and overrides the unprefixed one, like the grid's `m6` and `l4`.
+
+```html
+<div class="flex flex-column gap-2 expanded:flex-row expanded:align-center expanded:justify-between">
+  <h2 class="title-medium my-0">Members</h2>
+  <button type="button" class="tonal">Invite</button>
+</div>
+```
+
+Prefixes are mobile first; there is no max-width form. To hide content at a size, use the `.hide-on-*` classes, which are `!important`. Escape the colon in Sass or CSS selectors: `.expanded\:flex-row`. Margin and padding helpers have no prefixed form.
+
 ## Sizing and overflow
 
 | Class | Declaration | Use carefully |
 | --- | --- | --- |
 | `.min-w-0` | `min-width: 0` | Lets a flex or grid child shrink below its content's minimum width. |
 | `.min-h-0` | `min-height: 0` | Lets a child shrink inside a bounded column before its content scrolls. |
+| `.w-full`, `.h-full`, `.max-w-full` | `width: 100%`, `height: 100%`, `max-width: 100%` | `.h-full` needs a parent with a definite height. |
+| `.aspect-1x1`, `.aspect-4x3`, `.aspect-16x9` | `aspect-ratio` | The height follows the width; an explicit height wins over the ratio. |
+| `.object-cover`, `.object-contain` | `object-fit` | On an `<img>` or `<video>` with a set ratio; keep intrinsic `width` and `height` attributes. |
 | `.overflow-x-auto` | `overflow-x: auto` | For wide tables or action rows in a bounded container. |
 | `.overflow-y-auto` | `overflow-y: auto` | Needs a bounded height to scroll. |
 | `.overflow-hidden` | `overflow: hidden` | Clips content and focus rings; avoid hiding required content. |
@@ -210,6 +235,9 @@ Give a generic scroll region `tabindex="0"` and an accessible name when keyboard
 | `.break-words` | `overflow-wrap: anywhere`. | Lets long URLs or identifiers wrap without clipping. |
 | `.text-nowrap` | `white-space: nowrap`. | Keeps one line without clipping or ellipsis; check narrow screens. |
 | `.text-wrap` | `white-space: normal`. | Restores ordinary wrapping. |
+| `.text-balance`, `.text-pretty` | `text-wrap-style: balance`, `text-wrap-style: pretty`. | Headings already balance and paragraphs already use pretty; use these on other elements, such as a `<span>` title or a list item. |
+| `.bordered`, `.border-top`, `.border-bottom`, `.border-start`, `.border-end` | A 1px `outline-variant` border on all sides or one side. Start and end mirror in RTL. | `.border` is the outlined card variant, not this utility. |
+| `.corner-none` to `.corner-full` | `border-radius` from the matching `--md-sys-shape-corner-*` token (`none`, `extra-small`, `small`, `medium`, `large`, `extra-large`, `full`). | On a component it replaces the component's own shape and its state corner changes. `.rounded` is the pill button. |
 | `.hoverable` | Transitions to one fixed hover shadow. | That shadow can be lower than an existing high z-depth; hover must not be the only cue or interaction path. |
 
 ```html

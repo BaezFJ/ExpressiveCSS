@@ -14,7 +14,7 @@
 // A disabled element does not lift. Utilities outrank components, so the
 // disabled card and button rules cannot cancel this shadow themselves.
 .hoverable {
-  transition: box-shadow 0.25s;
+  transition: box-shadow var(--md-sys-motion-duration-medium1);
   &:hover:not(:where(#{$expressive-disabled}, :has(> .primary-action[aria-disabled="true"]))) {
     @include z-depth("3");
   }

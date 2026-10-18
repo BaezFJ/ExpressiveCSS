@@ -25,7 +25,7 @@
 
 .popover {
   --md-comp-popover-container-color: var(--md-sys-color-surface-container);
-  --md-comp-popover-shape: 12px;
+  --md-comp-popover-shape: var(--md-sys-shape-corner-medium);
   --md-comp-popover-padding: 12px 16px;
   --md-comp-popover-max-width: 320px;
   --md-comp-popover-gap: 4px;
@@ -49,9 +49,9 @@
 
   opacity: 0;
   transition:
-    opacity 150ms ease-out,
-    display 150ms allow-discrete,
-    overlay 150ms allow-discrete;
+    opacity var(--md-sys-motion-duration-short3) ease-out,
+    display var(--md-sys-motion-duration-short3) allow-discrete,
+    overlay var(--md-sys-motion-duration-short3) allow-discrete;
   @include glass(var(--md-comp-popover-container-color));
 
   &:popover-open {

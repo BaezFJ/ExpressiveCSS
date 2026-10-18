@@ -20,7 +20,7 @@
 .tooltip {
   --md-comp-plain-tooltip-container-color: var(--md-sys-color-inverse-surface);
   --md-comp-plain-tooltip-supporting-text-color: var(--md-sys-color-inverse-on-surface);
-  --md-comp-plain-tooltip-container-shape: 4px;
+  --md-comp-plain-tooltip-container-shape: var(--md-sys-shape-corner-extra-small);
   --md-comp-tooltip-anchor-gap: 4px;
 
   box-sizing: border-box;
@@ -41,7 +41,7 @@
   white-space: normal;
   overflow-wrap: anywhere;
   pointer-events: auto;
-  z-index: 2000;
+  z-index: var(--expressive-z-tooltip);
   @include glass(var(--md-comp-plain-tooltip-container-color));
 }
 
@@ -63,7 +63,7 @@
   opacity: 0;
   inset: 0 auto auto 50%;
   transform: translate(-50%, calc(-100% - var(--md-comp-tooltip-anchor-gap))) scale(0.96);
-  transition: opacity 0.15s ease-out, transform 0.15s ease-out, visibility 0s linear 0.15s;
+  transition: opacity var(--md-sys-motion-duration-short3) ease-out, transform var(--md-sys-motion-duration-short3) ease-out, visibility 0s linear var(--md-sys-motion-duration-short3);
 }
 
 :not(body) > .tooltip.bottom {
@@ -125,7 +125,7 @@ body > .tooltip,
 // Rich tooltip — title, supporting text, optional action.
 .tooltip.rich {
   --md-comp-rich-tooltip-container-color: var(--md-sys-color-surface-container);
-  --md-comp-rich-tooltip-container-shape: 12px;
+  --md-comp-rich-tooltip-container-shape: var(--md-sys-shape-corner-medium);
 
   display: flex;
   flex-direction: column;
@@ -181,4 +181,10 @@ body > .tooltip,
 
 .tooltip-content {
   min-width: 0;
+}
+
+// Transient messages are not part of the page. Important so a size or state rule that sets
+// `display` cannot bring it back; see base/_print.scss for the page itself.
+@media print {
+  .tooltip { display: none !important; }
 }

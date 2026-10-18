@@ -465,7 +465,7 @@ header.large.collapsed:has(> #{$_bar}) > #{$_bar} {
 header:has(> #{$_bar}) {
   position: sticky;
   top: 0;
-  z-index: 997;
+  z-index: var(--expressive-z-app-bar);
 
   @supports (animation-timeline: scroll()) {
     animation: top-app-bar-scroll linear both;

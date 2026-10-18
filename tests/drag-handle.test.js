@@ -22,17 +22,17 @@ const rules = parseRules(css);
 const ruleFor = (selector) => rules.find((r) => r.selector === selector)?.body;
 
 describe('Drag handle tokens', () => {
-  // md.comp.drag-handle.*, DSP 34.0.21. corner.full is 9999px and
-  // corner.medium is 12px, the same spellings the rest of the sheet uses.
+  // md.comp.drag-handle.*, DSP 34.0.21. The shapes read corner.full and
+  // corner.medium from the md.sys.shape scale, as the rest of the sheet does.
   const TOKENS = {
     'container-width': '24px',
     width: '4px',
     height: '48px',
-    shape: '9999px',
+    shape: 'var(--md-sys-shape-corner-full)',
     color: 'var(--md-sys-color-outline)',
     'pressed-width': '12px',
     'pressed-height': '52px',
-    'pressed-shape': '12px',
+    'pressed-shape': 'var(--md-sys-shape-corner-medium)',
     'pressed-color': 'var(--md-sys-color-on-surface)',
     'state-layer-color': 'var(--md-sys-color-inverse-on-surface)'
   };

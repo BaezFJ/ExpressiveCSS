@@ -6,6 +6,6 @@
 .display-docked {
   position: absolute;
   opacity: 0;
-  z-index: 9999;
+  z-index: var(--expressive-z-menu);
   visibility: hidden;
 }

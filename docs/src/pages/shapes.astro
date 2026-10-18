@@ -10,7 +10,13 @@ const S = defineSections([
   { id: "media", label: "Images and videos" },
   { id: "buttons", label: "Buttons" },
   { id: "notes", label: "Notes" },
+  { id: "corner-scale", label: "Corner scale" },
 ]);
+const corners = [
+  ["none", "0px"], ["extra-small", "4px"], ["small", "8px"], ["medium", "12px"],
+  ["large", "16px"], ["large-increased", "20px"], ["extra-large", "28px"],
+  ["extra-large-increased", "32px"], ["extra-extra-large", "48px"], ["full", "9999px"],
+];
 const shapes = [
   "pebble", "bean", "peak", "dart", "slice",
   "kite", "cell", "crest", "facet", "spark",
@@ -78,6 +84,28 @@ const shapes = [
       borders are cut with the rest of the element. Wrap the element if it needs a shadow
       that follows the shape, and apply <code>filter: drop-shadow()</code> to the wrapper.</p>
     <p>For a selective Sass build, include <code>"shapes"</code> in <code>$utilities</code>.</p>
+  </Section>
+  <Section {...S["corner-scale"]}>
+    <p>
+      Rounded corners come from the Material 3 <code>md.sys.shape.corner</code> scale. Component
+      shape tokens on that scale read these, so one override changes every component on that
+      step. A component token, such as <code>--md-comp-card-container-shape</code>, still
+      changes one component. Off-scale corners stay literal.
+    </p>
+    <table class="striped">
+      <thead><tr><th>Token</th><th>Value</th></tr></thead>
+      <tbody>
+        {corners.map(([name, value]) => (
+          <tr><td><code>--md-sys-shape-corner-{name}</code></td><td>{value}</td></tr>
+        ))}
+      </tbody>
+    </table>
+<Code code={`
+<style>
+  /* Cards, menu items and every other medium corner become 8px. */
+  :root { --md-sys-shape-corner-medium: 8px; }
+</style>
+`} />
   </Section>
 </PageBody>
 </DocsLayout>

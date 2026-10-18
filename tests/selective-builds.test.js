@@ -148,7 +148,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the src/ts review fixes across 23 components and behaviors: 72,163 gzip bytes (+1,601).
   // Reviewed Tabs decoding the href too when matching location.hash: 72,173 gzip bytes (+10).
   // Reviewed swipeable Tabs holding a scroll target until the track arrives: 72,196 gzip bytes (+23).
-  assert.ok(sizes(js).gzip <= 72196, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the lightbox image reading --expressive-z-lightbox: 72,205 gzip bytes (+9).
+  // Reviewed the color picker: 73,629 gzip bytes (+1,424).
+  assert.ok(sizes(js).gzip <= 73629, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -201,5 +203,18 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the organization chart on top of the #315 review commits: 70,262 gzip bytes (+561).
   // Reviewed navigation rail side panels with grouped links: 70,759 gzip bytes (+497).
   // Reviewed side panel destinations laid out as destinations when they come first, at full height: 70,787 gzip bytes (+28).
-  assert.ok(sizes(css).gzip <= 70787, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed md.sys.motion tokens read by every on-scale component transition: 71,199 gzip bytes (+412).
+  // Reviewed md.sys.shape.corner tokens read by component shape tokens: 71,539 gzip bytes (+340).
+  // Reviewed the --expressive-z-* stacking scale: 71,661 gzip bytes (+122).
+  // Reviewed the window-size layout prefixes and the display, sizing, border and corner helpers: 72,680 gzip bytes (+1,019).
+  // Reviewed underlined links in running text: 72,725 gzip bytes (+45).
+  // Reviewed print styles and the print visibility helpers: 72,957 gzip bytes (+232).
+  // Reviewed logical properties for blockquotes and table cells: 72,975 gzip bytes (+18).
+  // Reviewed balanced headings and pretty paragraphs: 73,001 gzip bytes (+26).
+  // Reviewed .prose for bare long-form HTML: 73,237 gzip bytes (+236).
+  // Reviewed .query-container and container-width stacking for horizontal cards and description lists: 73,274 gzip bytes (+37).
+  // Reviewed the prefers-contrast: more outline mapping: 73,300 gzip bytes (+26).
+  // Reviewed the color swatches component: 73,556 gzip bytes (+256).
+  // Reviewed the color picker: 73,988 gzip bytes (+432).
+  assert.ok(sizes(css).gzip <= 73988, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -25,7 +25,7 @@
 .heatmap-chart {
   --md-comp-heatmap-chart-row-height: 32px;
   --md-comp-heatmap-chart-gap: 3px;
-  --md-comp-heatmap-chart-shape: 4px;
+  --md-comp-heatmap-chart-shape: var(--md-sys-shape-corner-extra-small);
   --md-comp-heatmap-chart-color: var(--md-sys-color-primary);
   --md-comp-heatmap-chart-empty-color: var(--md-sys-color-surface-container-highest);
 }
@@ -134,7 +134,7 @@
 .heatmap-chart-scale {
   width: 96px;
   height: 8px;
-  border-radius: 4px;
+  border-radius: var(--md-sys-shape-corner-extra-small);
   // From the lowest cell's shade to the highest's, set by HeatmapChart.
   background: linear-gradient(
     in oklab to var(--heatmap-chart-to, right),

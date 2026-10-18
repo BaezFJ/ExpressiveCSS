@@ -307,6 +307,7 @@ Opt an element out when it needs manual options:
 | `Confetti` | `.confetti` |
 | `Particles` | `canvas.particles` |
 | `Keypad` | `.keypad, .keyboard` |
+| `ColorPicker` | `.color-picker` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
 | `HeatmapChart` | `.heatmap-chart` |
@@ -728,6 +729,31 @@ There is one ramp, tertiary — M3's for this axis. Pointing the surfaces at pri
 
 The elevation ladder collapses — every `surface-container` rung resolves to the one container color, which is what a vibrant surface is in Material, and `on-surface-variant` collapses onto `on-surface` for the same reason — so put the attribute on the component you want emphasized, not on the page. Menus and toolbars also carry a `.vibrant` class; those are Material's own per-component token sets, and the attribute is the general axis. A menu inside a vibrant subtree adopts its vibrant mapping automatically — a selected item is filled with `tertiary-container`, the colour the attribute paints the menu with, so M3 moves selection to solid `tertiary`. `:host([vibrant])` is matched alongside `[vibrant]`, so a shadow-DOM host can carry it.
 
+### More contrast
+
+When the user asks for more contrast (`prefers-contrast: more`), `--md-sys-color-outline-variant` takes the value of `--md-sys-color-outline`. Dividers, outlined cards, field borders and every other line drawn in outline-variant then hold 3:1 against the surfaces. Text and fill roles are unchanged. Override the token inside your own `@media (prefers-contrast: more)` block to choose a different line color.
+
+### Corner scale
+
+Component shape tokens on the Material 3 corner scale read the `md.sys.shape.corner` tokens, so one override changes the corners of every component on that step. A component token such as `--md-comp-card-container-shape` still overrides one component. Off-scale corners stay literal.
+
+| Token | Value |
+| --- | --- |
+| `--md-sys-shape-corner-none` | 0px |
+| `--md-sys-shape-corner-extra-small` | 4px |
+| `--md-sys-shape-corner-small` | 8px |
+| `--md-sys-shape-corner-medium` | 12px |
+| `--md-sys-shape-corner-large` | 16px |
+| `--md-sys-shape-corner-large-increased` | 20px |
+| `--md-sys-shape-corner-extra-large` | 28px |
+| `--md-sys-shape-corner-extra-large-increased` | 32px |
+| `--md-sys-shape-corner-extra-extra-large` | 48px |
+| `--md-sys-shape-corner-full` | 9999px |
+
+```css
+:root { --md-sys-shape-corner-medium: 8px; } /* cards, menu items and other medium corners */
+```
+
 ---
 
 ## Color
@@ -1065,20 +1091,36 @@ These classes are for horizontally aligning content: `.left-align`, `.right-alig
 
 To center text on mobile only, add `center-on-small-only`.
 
+### Display and position
+
+| Class | Declaration |
+| --- | --- |
+| `.block`, `.inline-block` | `display: block`, `display: inline-block` |
+| `.grid`, `.inline-grid` | `display: grid`, `display: inline-grid` |
+| `.contents` | `display: contents`; the element's box goes away and its children join the parent's layout |
+| `.relative` | `position: relative` |
+| `.sticky-top` | `position: sticky; top: 0` |
+| `.query-container` | `container-type: inline-size`. Horizontal cards and description lists inside it stack when it is narrower than 600px, on any window. |
+
+`.inline` is the row of checkboxes or radios, so there is no `display: inline` class. A `.sticky-top` element sticks inside its nearest scrolling ancestor; an ancestor with `overflow: hidden` stops it. Browsers have dropped the semantics of elements with `display: contents`, so put `.contents` on plain wrappers, not on buttons, lists, tables or headings. A `.query-container` can no longer size itself from its content, so put it on a wrapper that fills its parent, such as a sidebar column, not on an inline or shrink-to-fit box.
+
 ### Flex
 
-One class per declaration, applied to the container. Row direction and start alignment are the flex defaults, so only the overrides have a class.
+One class per declaration, applied to the container. Row direction and start alignment are the flex defaults, but `.flex-row` and `.flex-nowrap` exist so a window-size prefix can switch back to them.
 
 | Class | Declaration |
 | --- | --- |
 | `.flex` | `display: flex` |
 | `.inline-flex` | `display: inline-flex` |
-| `.flex-column` | `flex-direction: column` |
-| `.flex-wrap` | `flex-wrap: wrap` |
-| `.justify-start`, `.justify-center`, `.justify-end`, `.justify-between` | `justify-content` |
-| `.align-start`, `.align-center`, `.align-end`, `.align-stretch` | `align-items` |
+| `.flex-row`, `.flex-column` | `flex-direction` |
+| `.flex-wrap`, `.flex-nowrap` | `flex-wrap` |
+| `.justify-start`, `.justify-center`, `.justify-end`, `.justify-between`, `.justify-around`, `.justify-evenly` | `justify-content` |
+| `.align-start`, `.align-center`, `.align-end`, `.align-stretch`, `.align-baseline` | `align-items` |
 | `.flex-1` | `flex: 1 1 0` on a child, so it takes the remaining space |
 | `.flex-none` | `flex: none` on a child, so it keeps its content size |
+| `.shrink-0` | `flex-shrink: 0` on a child, so it never gets narrower than its basis |
+| `.self-start`, `.self-center`, `.self-end`, `.self-stretch` | `align-self` on a child |
+| `.order-first`, `.order-last` | `order: -1`, `order: 1` on a child. Visual order only: keyboard and screen reader order still follow the source. |
 | `.gap-0` to `.gap-6` | `gap` on the spacing scale, `!important`; also works on grid containers |
 
 ```html
@@ -1095,6 +1137,27 @@ One class per declaration, applied to the container. Row direction and start ali
 
 `justify-*` and `align-*` use `flex-start` and `flex-end`, so they follow the writing direction and mirror in RTL. Components that already lay out their children (app bars, toolbars, card `.actions`, button groups) do not need these classes.
 
+### Window-size prefixes
+
+The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`) and `.gap-*` classes also come with a window-size prefix. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
+
+| Prefix | Applies from |
+| --- | --- |
+| `medium:` | Medium, 600px |
+| `expanded:` | Expanded, 840px |
+| `large:` | Large, 1200px |
+| `extra-large:` | Extra-large, 1600px |
+
+```html
+<!-- Stacked on Compact and Medium, one row from Expanded up. -->
+<div class="flex flex-column gap-2 expanded:flex-row expanded:align-center expanded:justify-between">
+  <h2 class="title-medium my-0">Members</h2>
+  <button class="tonal">Invite</button>
+</div>
+```
+
+In a Sass selector, escape the colon: `.expanded\:flex-row`. To hide something at a size, use the hide and show classes; they are `!important`, so a prefixed display class does not undo them.
+
 ### Sizing and overflow
 
 Flex and grid children can retain a minimum size based on their content. Clear that minimum when a child needs to shrink, truncate, or scroll.
@@ -1103,6 +1166,10 @@ Flex and grid children can retain a minimum size based on their content. Clear t
 | --- | --- |
 | `.min-w-0` | `min-width: 0` |
 | `.min-h-0` | `min-height: 0` |
+| `.w-full`, `.h-full` | `width: 100%`, `height: 100%` |
+| `.max-w-full` | `max-width: 100%` |
+| `.aspect-1x1`, `.aspect-4x3`, `.aspect-16x9` | `aspect-ratio`; the height follows the width |
+| `.object-cover`, `.object-contain` | `object-fit` on an `<img>` or `<video>` with a set ratio |
 | `.overflow-x-auto` | `overflow-x: auto` |
 | `.overflow-y-auto` | `overflow-y: auto` |
 | `.overflow-hidden` | `overflow: hidden` |
@@ -1125,6 +1192,22 @@ Flex and grid children can retain a minimum size based on their content. Clear t
 ```
 
 Scrolling needs a bounded size. Use `.overflow-x-auto` for wide tables or action rows. Give a generic scroll region `tabindex="0"` and an accessible name when keyboard users cannot otherwise focus and scroll it. Leave padding for child focus rings, such as `.p-2`. `.overflow-hidden` clips content and focus rings, so use it only when the clipped content is intentionally unavailable visually.
+
+### Borders and corners
+
+| Class | Declaration |
+| --- | --- |
+| `.bordered` | A 1px `outline-variant` border on every side |
+| `.border-top`, `.border-bottom` | The same border on one side |
+| `.border-start`, `.border-end` | The same border on the inline start or end, which mirrors in RTL |
+| `.corner-none`, `.corner-extra-small`, `.corner-small`, `.corner-medium`, `.corner-large`, `.corner-extra-large`, `.corner-full` | `border-radius` from the matching `--md-sys-shape-corner-*` token |
+
+```html
+<div class="bordered corner-large aspect-16x9">16:9</div>
+<img class="corner-medium aspect-1x1 object-cover" src="..." alt="..." width="160">
+```
+
+`.border` is the outlined card variant and `.rounded` is the pill button, which is why these use other names. On a component, a corner class replaces the component's own shape, including its pressed and selected corner changes.
 
 ### Scroll area
 
@@ -1180,6 +1263,10 @@ We provide easy to use classes to hide/show content on specific screen sizes.
 | `.show-on-extra-large` | Shown on Extra-large (`>= 1600px`) |
 | `.show-on-medium-and-up` | Shown from Medium (`>= 600px`) |
 | `.show-on-medium-and-down` | Shown on Compact and Medium (`< 840px`) |
+| `.hide-on-print` | Hidden on paper |
+| `.print-only` | Hidden on screen, shown on paper |
+
+Printing also uses the light scheme, hides navigation rails, navigation bars, the FAB menu, snackbars and tooltips, prints the address after each external link in running text, and keeps headings with the content that follows them.
 
 #### Usage
 
@@ -1325,6 +1412,8 @@ To truncate long lines of text in an ellipsis, add the class `truncate` to the t
 | `.break-words` | `overflow-wrap: anywhere` lets long URLs or identifiers wrap within their container. |
 | `.text-nowrap` | `white-space: nowrap` keeps text on one line without clipping or ellipsis. |
 | `.text-wrap` | `white-space: normal` restores ordinary wrapping. |
+| `.text-balance` | `text-wrap-style: balance` evens out the line lengths of a short block, such as a card title. Headings already do this. |
+| `.text-pretty` | `text-wrap-style: pretty` avoids a single short word on the last line. Paragraphs already do this. |
 
 Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.
 
@@ -1463,6 +1552,26 @@ The class list is generated from the same map as the mixin, so they cannot drift
 
 There is also `z-depth-1-half`, an in-between level from the same elevation map.
 
+
+#### Stacking order
+
+A shadow does not decide what sits on top. Surfaces that float over the page take their `z-index` from these properties, lowest first. Dialogs, modal sheets and open popovers are in the browser's top layer, above all of them.
+
+| Property | Value | Used by |
+| --- | --- | --- |
+| `--expressive-z-toolbar` | 996 | A fixed toolbar. |
+| `--expressive-z-app-bar` | 997 | A pinned top app bar and a fixed navigation bar. |
+| `--expressive-z-modal-rail` | 998 | An expanded navigation rail over the page. |
+| `--expressive-z-sheet` | 1100 | A bottom or side sheet opened without `showModal()`. |
+| `--expressive-z-lightbox` | 1200 | The lightbox overlay and its zoomed image. |
+| `--expressive-z-tooltip` | 2000 | Tooltips. |
+| `--expressive-z-menu` | 9999 | Menus and the docked date and time pickers. |
+| `--expressive-z-snackbar` | 10000 | Snackbars. |
+
+```css
+.site-banner { position: sticky; top: 0; z-index: calc(var(--expressive-z-app-bar) + 1); }
+```
+
 ---
 
 ## Table
@@ -1572,6 +1681,28 @@ With reduced motion requested, scale state changes happen immediately. Scaling o
 <button id="scale-demo" type="button" class="button circle extra scale-transition scale-out" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
 ```
 
+#### Motion tokens
+
+Components take their easing curves and on-scale durations from the Material 3 `md.sys.motion` tokens. Override one on `:root` to change every component that uses it, or on a subtree to change only what is inside it. Off-scale times, such as the 2.1s progress loop, stay literal.
+
+| Token | Value |
+| --- | --- |
+| `--md-sys-motion-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)` |
+| `--md-sys-motion-easing-standard-accelerate` | `cubic-bezier(0.3, 0, 1, 1)` |
+| `--md-sys-motion-easing-standard-decelerate` | `cubic-bezier(0, 0, 0, 1)` |
+| `--md-sys-motion-easing-emphasized` | `cubic-bezier(0.2, 0, 0, 1)` (CSS cannot draw the emphasized path) |
+| `--md-sys-motion-easing-emphasized-accelerate` | `cubic-bezier(0.3, 0, 0.8, 0.15)` |
+| `--md-sys-motion-easing-emphasized-decelerate` | `cubic-bezier(0.05, 0.7, 0.1, 1)` |
+| `--md-sys-motion-easing-linear` | `cubic-bezier(0, 0, 1, 1)` |
+| `--md-sys-motion-duration-short1` to `short4` | 50, 100, 150, 200ms |
+| `--md-sys-motion-duration-medium1` to `medium4` | 250, 300, 350, 400ms |
+| `--md-sys-motion-duration-long1` to `long4` | 450, 500, 550, 600ms |
+| `--md-sys-motion-duration-extra-long1` to `extra-long4` | 700, 800, 900, 1000ms |
+
+```css
+:root { --md-sys-motion-duration-short4: 150ms; } /* every 200ms transition runs at 150ms */
+```
+
 ---
 
 ## Typography
@@ -1647,9 +1778,18 @@ When the tag cannot say the role, use the class. Display-large and display-mediu
 
 `body-large`, `body-medium`, and `body-small` apply the three body roles to an element that is not a `<p>` or `<small>`.
 
+### Links
+
+Links use the primary color. A link without a class inside a paragraph, a `<dd>`, a blockquote, a figure caption or a table cell is also underlined, because color alone does not mark a link for everyone. Links elsewhere, and any link with a class, have no underline, so navigation lists, menus, tabs and buttons made from `<a>` keep their own look.
+
+```html
+<p>Read the <a href="/themes.html">theme guide</a> first.</p>  <!-- underlined -->
+<a class="button tonal" href="/themes.html">Themes</a>         <!-- styled by its class -->
+```
+
 ### Blockquotes
 
-Blockquotes emphasize a quote or citation. The left bar uses `--md-sys-color-primary`.
+Blockquotes emphasize a quote or citation. The bar on the start side uses `--md-sys-color-primary`.
 
 ```html
 <blockquote>
@@ -1672,6 +1812,23 @@ Blockquotes emphasize a quote or citation. The left bar uses `--md-sys-color-pri
 ```html
 <p class="flow-text">I am Flow Text</p>
 ```
+
+### Prose
+
+Add `.prose` to a container of bare HTML, such as rendered Markdown or CMS output. It caps the line length at 70 characters, spaces out headings, indents lists, underlines links in lists and headings, and gives inline `<code>` and `<pre>` blocks a surface. Only elements without a class are styled, so a button or chip inside the content keeps its own look.
+
+```html
+<div class="prose">
+  <h2>Release notes</h2>
+  <p>Run <code>npm ci</code>, then rebuild.</p>
+  <ul>
+    <li><a href="/helpers.html">Helpers</a></li>
+  </ul>
+  <pre><code>npm run build</code></pre>
+</div>
+```
+
+Put `.prose` on a `<div>`, `<section>` or `<main>`. Every `<article>` is a card, so an article with `.prose` would be drawn as one.
 
 ### Typeface tokens
 
@@ -2208,7 +2365,7 @@ Height, the leading half's outer inset, the outline width and every colour come 
 
 Material Design 3 cards, from the HTML.
 
-An `<article>` is an elevated card. Any heading is the headline, `<p class="subhead">` is the optional subhead, a `<p>` is supporting copy, direct `<img>`, `<picture>`, or `<figure>` is media, and direct `<div class="actions">` is the action row. Include only the slots the content needs. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class—the element is the component, and the action row is not a `<nav>`. Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs): all variants use 12dp corners; elevated rests at level 1, filled and outlined at level 0. A directly actionable card wraps its primary content in one direct `a.primary-action[href]` and has no second link or control. Horizontal cards preserve that source order, use content height with a 240px minimum unless a size helper fixes the expanded height, and stack below 600px with fixed heights reset to content. During reordering, `.dragged` or `.picked-up` preserves the 16% state layer and dragged elevation while the primary action remains hovered or pressed.
+An `<article>` is an elevated card. Any heading is the headline, `<p class="subhead">` is the optional subhead, a `<p>` is supporting copy, direct `<img>`, `<picture>`, or `<figure>` is media, and direct `<div class="actions">` is the action row. Include only the slots the content needs. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class—the element is the component, and the action row is not a `<nav>`. Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs): all variants use 12dp corners; elevated rests at level 1, filled and outlined at level 0. A directly actionable card wraps its primary content in one direct `a.primary-action[href]` and has no second link or control. Horizontal cards preserve that source order, use content height with a 240px minimum unless a size helper fixes the expanded height, and stack below 600px, or in a `.query-container` narrower than 600px, with fixed heights reset to content. During reordering, `.dragged` or `.picked-up` preserves the 16% state layer and dragged elevation while the primary action remains hovered or pressed.
 
 A Card reveal is a disclosure with exactly one identified direct `<aside>` and an enabled, accessibly named `button.card-reveal-trigger[type="button"]` outside that panel. Its `aria-controls` must resolve to the panel, and its closest `<article>` owns it—even when a complete nested card sits inside an outer reveal panel. After accepting the contract, Cards writes `aria-expanded`, marks the closed panel `inert`, closes it with Escape, and returns focus from the panel to the trigger. Rejected, disabled-only, unidentified, and multi-panel disclosures remain visible and unmanaged.
 
@@ -2308,7 +2465,7 @@ A direct `<img>` is full-bleed across the top and its media surface has rounded 
 
 ### Horizontal
 
-The same card can use two orientations without changing its content order. Add `horizontal` to move the media to the start and stack the headline, supporting text, and action beside it. A direct `.primary-action` link can wrap those same slots when the whole horizontal card is one destination. Without a size helper, its height follows content with a 240px minimum; `small`, `medium`, and `large` provide fixed expanded heights. Below 600px, both forms return to the vertical layout and fixed heights reset to content.
+The same card can use two orientations without changing its content order. Add `horizontal` to move the media to the start and stack the headline, supporting text, and action beside it. A direct `.primary-action` link can wrap those same slots when the whole horizontal card is one destination. Without a size helper, its height follows content with a 240px minimum; `small`, `medium`, and `large` provide fixed expanded heights. Below 600px, both forms return to the vertical layout and fixed heights reset to content. Inside a `.query-container` narrower than 600px they do the same on any window, so a horizontal card in a sidebar stacks too.
 
 ```html
 <!-- Vertical -->
@@ -4640,7 +4797,7 @@ Add `up` or `down` to `.stat-change` for an arrow, and `negative` when the chang
 
 A record's details as label and value pairs, in two columns that stack on compact screens.
 
-A `dl.description-list` pairs each `<dt>` label with the `<dd>` values after it. Labels take the first column from Medium widths up, with a divider above each pair; at Compact widths each label sits above its value. A `<div>` may wrap each pair and adds no box. Several `<dd>` elements under one label stack without a divider. Use stat tiles for big numbers instead. CSS only; there is no JavaScript.
+A `dl.description-list` pairs each `<dt>` label with the `<dd>` values after it. Labels take the first column from Medium widths up, with a divider above each pair; at Compact widths, and inside a `.query-container` narrower than 600px, each label sits above its value. A `<div>` may wrap each pair and adds no box. Several `<dd>` elements under one label stack without a divider. Use stat tiles for big numbers instead. CSS only; there is no JavaScript.
 
 ```html
 <dl class="description-list">
@@ -5249,6 +5406,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Confetti` | `.confetti` |
 | `Particles` | `canvas.particles` |
 | `Keypad` | `.keypad, .keyboard` |
+| `ColorPicker` | `.color-picker` |
 | `BarChart` | `.bar-chart` |
 | `PieChart` | `.pie-chart` |
 | `HeatmapChart` | `.heatmap-chart` |
@@ -7556,6 +7714,84 @@ To show a score, give an element `class="rating"`, `role="img"`, a name with the
 | `--md-comp-rating-empty-color` | `outline-variant` |
 | `--md-comp-rating-value` | 0 (display) |
 | `--md-comp-rating-max` | 5 (display) |
+
+---
+
+## Color swatches
+
+Pick one color from a preset palette, on native radio buttons.
+
+A `<fieldset class="color-swatches">` holds a `<legend>` and one radio per color, each in a `<label>` whose visually hidden text ("Purple") comes before the radio, with `--md-comp-color-swatch-color` set on the radio. The radio is drawn as a 40px round chip of that color with a 48px target, and the checked one gets a ring, so the choice is marked by shape as well as color. Tab, the arrow keys and form submission stay native. Add an `<input type="color">` in a label of its own at the end for a custom value; it is already drawn as a matching round swatch. Under forced colors the swatches keep their colors and the checked one gets a `Highlight` outline. CSS only; there is no JavaScript.
+
+```html
+<fieldset class="color-swatches">
+  <legend>Label color</legend>
+  <label><span class="visually-hidden">Purple</span><input type="radio" name="label-color" value="#6750a4" style="--md-comp-color-swatch-color: #6750a4" checked></label>
+  <label><span class="visually-hidden">Green</span><input type="radio" name="label-color" value="#386a20" style="--md-comp-color-swatch-color: #386a20"></label>
+  <label><span class="visually-hidden">Red</span><input type="radio" name="label-color" value="#b3261e" style="--md-comp-color-swatch-color: #b3261e"></label>
+  <label><span class="visually-hidden">Custom color</span><input type="color" name="label-color-custom" value="#ff8800"></label>
+</fieldset>
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-color-swatch-color` | transparent; set it on each radio |
+| `--md-comp-color-swatches-size` | 40px |
+| `--md-comp-color-swatches-outline-color` | `outline` |
+| `--md-comp-color-swatches-selected-color` | `on-surface` |
+
+---
+
+## Color picker
+
+Choose any color with a saturation and brightness area, a hue slider and a hex field, over a native color input.
+
+Write a `.color-picker` with `role="group"` and a name around an `<input type="color">`. Without JavaScript that is the native swatch and the browser's picker. `ColorPicker`, which AutoInit starts, adds three controls around the input: a saturation and brightness area, a hue slider and a hex field. The native input stays the form value and the preview, and the browser's picker still opens from it. Every change writes the input and fires its `input` event, and a committed change (a released drag, a key press, a released hue, an applied hex value) also fires `change`, so existing listeners keep working.
+
+The area is a `role="slider"` with `aria-valuetext` such as "Saturation 60%, brightness 80%". Left and Right change saturation, Up and Down brightness, Shift takes steps of 10%, Page Up and Page Down change brightness by 10%, and Home and End go to no and full saturation. The area and the hue track are the color itself, so they do not mirror in right-to-left pages and keep their colors under forced colors. The hue slider is the framework's range input. In the hex field, Enter applies the value instead of submitting the form, and an invalid value goes back to the current color. The browser's color input only holds `#rrggbb`, so there is no alpha.
+
+```html
+<div class="color-picker" role="group" aria-label="Accent color">
+  <input type="color" name="accent" value="#6750a4" aria-label="Accent color">
+</div>
+```
+
+```js
+const picker = Expressive.ColorPicker.init(el, {
+  onChange: (value) => console.log(value), // '#6750a4'
+});
+```
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-color-picker-width` | 280px |
+| `--md-comp-color-picker-area-height` | 160px |
+| `--md-comp-color-picker-area-shape` | `corner.medium` (12px) |
+| `--md-comp-color-picker-thumb-size` | 24px |
+| `--md-comp-color-picker-field-shape` | `corner.extra-small` (4px) |
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `onChange` | Function | `null` | Called with the new `#rrggbb` value when a change is committed. For live updates, listen for `input` on the native input. |
+
+### Methods
+
+#### .destroy()
+
+Removes the area, the hue slider and the hex field. The native color input stays with its current value.
+
+### Properties
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `input` | Element | The native color input. |
+| `value` | String | The current `#rrggbb` color. Setting it updates the picker and the input without firing events, as setting a native input does. |
 
 ---
 

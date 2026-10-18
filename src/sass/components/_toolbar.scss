@@ -158,7 +158,7 @@ $_vibrant: "#{$_toolbar}.vibrant";
   > :is(a, button).filled:not(.extra, .icon-button) {
     background-color: var(--md-sys-color-primary);
     color: var(--md-sys-color-on-primary);
-    border-radius: 16px;
+    border-radius: var(--md-sys-shape-corner-large);
     box-shadow: none;
 
     &:hover {
@@ -182,7 +182,7 @@ $_vibrant: "#{$_toolbar}.vibrant";
     height: 40px;
     min-height: 40px;
     padding: 0 24px;
-    border-radius: 20px;
+    border-radius: var(--md-sys-shape-corner-large-increased);
     width: auto;
   }
 
@@ -208,7 +208,7 @@ $_vibrant: "#{$_toolbar}.vibrant";
 // vertical bar the container is 64dp wide and arbitrarily tall, where 9999px
 // would round the long edge into an oval.
 #{$_floating} {
-  --md-comp-toolbar-container-shape: 32px;
+  --md-comp-toolbar-container-shape: var(--md-sys-shape-corner-extra-large-increased);
   --md-comp-toolbar-leading-space: 8px;
   --md-comp-toolbar-trailing-space: 8px;
   --md-comp-toolbar-external-space: 16px;
@@ -359,7 +359,7 @@ $_vibrant: "#{$_toolbar}.vibrant";
 // has no rule - a bar naming it falls through to the one above.
 #{$_toolbar}.fixed {
   position: fixed;
-  z-index: 996;
+  z-index: var(--expressive-z-toolbar);
   inset: auto auto var(--md-comp-toolbar-external-space) 50%;
   transform: translateX(-50%);
 }

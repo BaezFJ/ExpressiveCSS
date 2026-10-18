@@ -51,7 +51,7 @@
     border-radius: var(--md-comp-list-item-shape);
     background-color: var(--md-comp-list-item-container-color);
     color: inherit;
-    transition: background-color 0.2s ease-out;
+    transition: background-color var(--md-sys-motion-duration-short4) ease-out;
   }
 
   // The row grid lives on the item, or on a wrapping <a>/<label>.
@@ -85,7 +85,7 @@
       width: var(--md-comp-list-image-size);
       height: var(--md-comp-list-image-size);
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: var(--md-sys-shape-corner-small);
     }
 
     > :is(img, #{$icon}).circle {
@@ -248,7 +248,7 @@
       var(--md-sys-color-on-surface) 8%,
       var(--md-sys-color-surface)
     );
-    --md-comp-list-item-shape: 20px;
+    --md-comp-list-item-shape: var(--md-sys-shape-corner-large-increased);
 
     display: flex;
     flex-direction: column;

@@ -22,7 +22,7 @@ test('top app bars are pinned without a fixed class', () => {
   );
   assert.ok(pinned, 'top app bars are not pinned by default');
   assert.match(pinned.body, /top:\s*0/);
-  assert.match(pinned.body, /z-index:\s*997/);
+  assert.match(pinned.body, /z-index:\s*var\(--expressive-z-app-bar\)/);
   assert.doesNotMatch(pinned.body, /animation/, 'the scroll fill must not run outside @supports');
   // Firefox drops animation-timeline and would run a 0s animation that holds
   // the scrolled keyframe at rest, so the whole animation sits behind @supports.

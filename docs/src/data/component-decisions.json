@@ -1320,7 +1320,7 @@
         "sources": [
           {
             "path": "src/sass/components/_tree.scss",
-            "sha256": "3d290dec16e25b71a3e06cbd5fafd3340253659fbf9d95953193dab29b10aa21"
+            "sha256": "c0813fb14f6e247f97a55b86284d584e8c08d1b3469323a82d0739f8c1722604"
           }
         ],
         "gaps": [
@@ -2091,7 +2091,7 @@
         "sources": [
           {
             "path": "src/sass/components/_aura.scss",
-            "sha256": "e95db68ef71c6f5b3262379825dc52b4ef75968d621df6ae2aa441e2d4caf002"
+            "sha256": "67a0781b94946d4e15b68718179f39c5af55cde89169fe45f5f6e4f402c216da"
           }
         ],
         "gaps": [
@@ -2277,7 +2277,7 @@
         "sources": [
           {
             "path": "src/sass/components/_message.scss",
-            "sha256": "a1b7c89089ac37ccbf2127c1c7bc4f394fd1a27253ec07208caf379a2ffa8240"
+            "sha256": "6f9193eeb919d5c5420761acd5967f137574501378136c71740e6bd4ccef3a04"
           }
         ],
         "gaps": [
@@ -2363,7 +2363,7 @@
         "sources": [
           {
             "path": "src/sass/components/_message-scroller.scss",
-            "sha256": "88924d7853d749831ff9fa63beb018a1e6799a48da0b88beb993bd2c2b49eb1e"
+            "sha256": "5b0f79f866d59b6d54966cde45e95fbc3370cec79685ed43fe527cb7ea9a71bb"
           },
           {
             "path": "src/ts/components/messageScroller.ts",
@@ -2464,7 +2464,7 @@
         "sources": [
           {
             "path": "src/sass/components/_accordion.scss",
-            "sha256": "cd9c2657f1f840f721575335ffd05d8cd176b2f94c37637341121485901833ee"
+            "sha256": "8a08c01feae12fa7d1037eedb1405be1526c0db67b304c6949e423de6e223b38"
           }
         ],
         "gaps": [
@@ -2642,7 +2642,7 @@
         "sources": [
           {
             "path": "src/sass/components/_stat.scss",
-            "sha256": "c8f50278bd01fd4ef8d38a5b26fb7b91869f30b9cfc59cef4d482651e9bae9ad"
+            "sha256": "d16e8c5dab7af93c9b9601548dc32953cc5e095a249e7c7c4e5859e3ebbc4f71"
           }
         ],
         "gaps": [
@@ -2728,7 +2728,7 @@
         "sources": [
           {
             "path": "src/sass/components/_description-list.scss",
-            "sha256": "deae3f67f9dfa6bee0464bd3b64d0df58d6b0bcf1a4d352d364f70ac9167f9b3"
+            "sha256": "d989d090fccadc4ef1ab8ec1ef84237ad9ce552508135c6a5ad9b3acae99d77f"
           }
         ],
         "gaps": [
@@ -2814,7 +2814,7 @@
         "sources": [
           {
             "path": "src/sass/components/_kpi.scss",
-            "sha256": "8b54fdf69302d605376d10091bd533054030c3ddffd0384c9c7076b9bcf2c8eb"
+            "sha256": "0597d0fc81f4f1a874729e5ca7ca4e7b7cb0fbcd0de92894741e3d2ce91f4d31"
           }
         ],
         "gaps": [
@@ -2900,7 +2900,7 @@
         "sources": [
           {
             "path": "src/sass/components/_countdown.scss",
-            "sha256": "74330fcc3e02b6462f40019d7cd37c680e8a71bf54d7a0be0e7fe3ffaa733d05"
+            "sha256": "2918d1710b0858696b359789273316fe9fd9b3ed9023b606c6f4b2a90b878357"
           }
         ],
         "gaps": [
@@ -3331,7 +3331,7 @@
           },
           {
             "path": "src/sass/components/_pie-chart.scss",
-            "sha256": "ea811ee29aff2b8e8407ed419d13491b6b1eb639e28669cdd8c5de512b1dd87e"
+            "sha256": "e3e659c3bfdf871899a745aa285ebdba023fae5d43c58e4612cb66ce27cf7b21"
           },
           {
             "path": "src/ts/components/lineChart.ts",
@@ -3552,7 +3552,7 @@
           },
           {
             "path": "src/sass/components/_radar-chart.scss",
-            "sha256": "a5f8e6984dfc02b0c7fb2a23f6c1311f733de6b853e0b675c95a58d18da05006"
+            "sha256": "32e7d3cc1886b1f396244cf102f2537c9e57c096909f9dd4990fcde046f20ab7"
           },
           {
             "path": "src/ts/components/lineChart.ts",
@@ -3663,7 +3663,7 @@
           },
           {
             "path": "src/sass/components/_radial-chart.scss",
-            "sha256": "4ebff333a3820b516fac11c5be053041d0d5c8a9841b579f35ef47e6cdc247fb"
+            "sha256": "13415ef4cf4893485d99c637c95e75456ad0c0224ca9861d699c6a6dec7da180"
           },
           {
             "path": "src/ts/components/lineChart.ts",
@@ -3960,7 +3960,7 @@
         "sources": [
           {
             "path": "src/sass/components/_calendar.scss",
-            "sha256": "46fe1ef955fe033fa3e300bef0e2048c665a84656f4da602ad00eec4da602ec9"
+            "sha256": "f209f40beeaa9e815848dde9cd75f4ac9754de160bc050740810b1e7fc35916c"
           }
         ],
         "gaps": [
@@ -4648,7 +4648,7 @@
         "sources": [
           {
             "path": "src/sass/components/_org-chart.scss",
-            "sha256": "dcd58be2c6dda140491a82a05a70dd98c9bed3e56713bcf9fedc8ed298d81903"
+            "sha256": "7b342738b7029990224426661ab35b6b95215eb66ee29052439f9a4ea8d3704b"
           }
         ],
         "gaps": [
@@ -4825,7 +4825,7 @@
         "sources": [
           {
             "path": "src/sass/components/_popover.scss",
-            "sha256": "62b149ae34e4e786a1a02a4a12e2208eaff63c08e54fe0a090397b6dd24e4437"
+            "sha256": "2e53fc06eec6588276afe33f849ac6f5df5b240208870364f65bce854d2ae0c7"
           }
         ],
         "gaps": [
@@ -5300,7 +5300,7 @@
         "sources": [
           {
             "path": "src/sass/components/_skeleton.scss",
-            "sha256": "f22efd82847af981cf225a0991a471e5fd25f7cdb07c1e0ec80195e937b13818"
+            "sha256": "f3a48d490f5a43671e8d9dbeb31a5091c8b90823c6af0e7109939ef6a11a4366"
           }
         ],
         "gaps": [
@@ -5474,7 +5474,7 @@
         "sources": [
           {
             "path": "src/sass/components/_alert.scss",
-            "sha256": "67af3cb5731ec433de0af98707c9ce91445412fb132ac7324b6e83661166b0ad"
+            "sha256": "7fdd2ece700371a711c114b86d24ea6271ed61850761b775a6bfc997046e6e14"
           }
         ],
         "gaps": [
@@ -5678,7 +5678,7 @@
         "sources": [
           {
             "path": "src/sass/components/_image-compare.scss",
-            "sha256": "b1630c0d7c232fae99d3b428595c5c8680a92dffd5c2ddb07fe93334782266dd"
+            "sha256": "1dea70f8b47092f064348912efedfa0b29a52be680a7d402e4d84f883d669f8e"
           }
         ],
         "gaps": [
@@ -6419,7 +6419,7 @@
         "sources": [
           {
             "path": "src/sass/components/_command-palette.scss",
-            "sha256": "d9d4dd1fe2b3bc60aa29203a7526139e8e75e6d7b2a76bbe2dd59e671f62ed0d"
+            "sha256": "7f87348fcfaf815b695e5dd4020b565f3251ae70f5b9e8569f79010edb9a94d6"
           },
           {
             "path": "src/ts/components/commandPalette.ts",
@@ -6695,7 +6695,7 @@
         "sources": [
           {
             "path": "src/sass/components/_rich-text-editor.scss",
-            "sha256": "4ff745197d37043297861b0a4166e0bda0fd3adcdb160baed5dffb6a6821dd46"
+            "sha256": "226fa4214606a435d08a15df773dd220e9eb10b2c4e05f006e8b43c1329a360c"
           },
           {
             "path": "src/ts/components/richTextEditor.ts",
@@ -6789,7 +6789,7 @@
         "sources": [
           {
             "path": "src/sass/components/forms/_drop-zone.scss",
-            "sha256": "dcc9dc0e721c0057266092591634249620143d8b7350ff867651806c59ad10b1"
+            "sha256": "52ea5527afcb6811004e96b565a8f8fad3cc4a66f20da6c0e1ac2de20743f332"
           },
           {
             "path": "src/ts/behaviors/forms.ts",
@@ -7205,7 +7205,7 @@
         "sources": [
           {
             "path": "src/sass/components/forms/_rating.scss",
-            "sha256": "8b0c0e77791f4e88681a12ff2c78758be20d5ece7129c914e4cf6881a6b61300"
+            "sha256": "f3bc6bb0e0459b685ee4f269d65e1f7dbcfb0bb7a26c456495d01f2dcad32d1b"
           }
         ],
         "gaps": [
@@ -7220,6 +7220,184 @@
             "file": "tests/rating-browser.test.js",
             "name": "chromium: rating fills stars up to the choice, previews on hover and keeps native radios",
             "scope": "Visible 24px masked radios, fill up to the checked star, Tab entry and arrow keys, focus ring on entry, hover preview, form value, display width and fill direction in LTR and RTL, and the group, radio and image names. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "color-swatches",
+      "title": "Color swatches",
+      "aliases": [
+        "color picker",
+        "colour picker",
+        "swatch picker",
+        "palette picker",
+        "color chooser"
+      ],
+      "guideSource": {
+        "pageId": "color-swatches",
+        "heading": "Color swatches",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/color-swatches"
+        ]
+      },
+      "jobs": [
+        "Pick one color from a preset palette, on native radio buttons."
+      ],
+      "useWhen": [
+        "Offer a short fixed set of colors, such as a label, theme or calendar color, with an optional custom value."
+      ],
+      "avoidWhen": [
+        "Any color at all needs the native color input on its own; choosing between named options that are not colors needs radio buttons or chips."
+      ],
+      "alternatives": [
+        "radio-buttons",
+        "chips",
+        "text-fields"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/color-swatches.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#color-swatches",
+          "reviewedOn": "2026-10-18",
+          "documentedSupport": "A fieldset of native radios drawn as round chips of their colors, a ring around the checked one, the shared focus ring, a 48px target and an optional native color input for a custom value.",
+          "webAdaptation": "Native radios keep one Tab stop, arrow keys and form submission; each swatch is named by visually hidden text in its label.",
+          "limitations": [
+            "Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-18",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep a native radio group with a legend and a name for every swatch, mark the choice by shape as well as color, show focus and keep the swatch colors under forced colors."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Eight label colors for a calendar are color swatches. Any brand color a designer types in is the native color input.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-18",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_color-swatches.scss",
+            "sha256": "a45b847c14a7bc29c916350e9250fec3f7487eeae32bcd2d27e586aeea2771e0"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified.",
+            "nextStep": "Choose a swatch with a keyboard and a screen reader in Firefox and Safari, and confirm each color name and the checked state are announced; check 200% text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/color-swatches-browser.test.js",
+            "name": "chromium: color swatches draw each radio as its color and keep native radio behavior",
+            "scope": "Swatch color, 40px round shape and checked ring, the named group, arrow keys moving the choice, the form value, the focus ring after arrow keys and the swatch color under forced colors. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "color-picker",
+      "title": "Color picker",
+      "aliases": [
+        "colour picker",
+        "hsv picker",
+        "color chooser",
+        "hue picker",
+        "hex picker"
+      ],
+      "guideSource": {
+        "pageId": "color-picker",
+        "heading": "Color picker",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/color-picker"
+        ]
+      },
+      "jobs": [
+        "Choose any color with a saturation and brightness area, a hue slider and a hex field, over a native color input."
+      ],
+      "useWhen": [
+        "Let someone choose an arbitrary color in the page, such as a brand or highlight color, with keyboard and pointer."
+      ],
+      "avoidWhen": [
+        "A short fixed palette needs color swatches; a form that only needs a value can keep the native color input alone."
+      ],
+      "alternatives": [
+        "color-swatches",
+        "text-fields",
+        "slider"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/color-picker.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#color-picker",
+          "reviewedOn": "2026-10-18",
+          "documentedSupport": "A saturation and brightness area as a keyboard slider, a hue range on the framework slider, a hex field and the native color input as form value and preview, with input, change and onChange events.",
+          "webAdaptation": "Progressive enhancement of <input type=\"color\">: without JavaScript the native picker remains, and the browser picker still opens from the input after enhancement.",
+          "limitations": [
+            "Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-18",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep a native color input as the value, name the group and each control, make every axis reachable by keyboard with its value announced, keep the colors under forced colors and keep Enter in the hex field from submitting the form."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A theme builder where any brand color is allowed is a color picker. Eight calendar label colors are color swatches.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-18",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_color-picker.scss",
+            "sha256": "d4bff9e9896e104ae3842e94155d23591bd29c3741e4c66cfeb299f52f126d8c"
+          },
+          {
+            "path": "src/ts/components/colorPicker.ts",
+            "sha256": "1117dcd0d6f9848b0e766e98144f64841c0376f83bf7d6722f597f75f9060014"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified.",
+            "nextStep": "Pick a color with a screen reader and with touch in each engine, and confirm the area valuetext and the hex field are announced; check forced colors and 200% text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/color-picker-browser.test.js",
+            "name": "chromium: color picker drives the native input from the area, hue and hex field",
+            "scope": "Group and control names, Down and Shift+Left steps with valuetext, input, change and onChange order, a press and a drag past the corner in an RTL page, hue changes keeping saturation and brightness, hex Enter without form submission, an invalid hex reverting, the silent value setter, a native input event updating the hue, one submitted field and destroy leaving only the native input. No spoken-output assertion."
           }
         ]
       }
@@ -7737,7 +7915,7 @@
           },
           {
             "path": "src/sass/components/_docked-display.scss",
-            "sha256": "39107a3b4cde4c0763fff6c077fd7ebf7b964d5312f2435c9786e22c018709a5"
+            "sha256": "057e12b802c9cf30fdea364b609f9b0fa9378028667af22f4df34f5b890d59a6"
           },
           {
             "path": "src/ts/components/datepicker.ts",
@@ -7872,7 +8050,7 @@
           },
           {
             "path": "src/sass/components/_docked-display.scss",
-            "sha256": "39107a3b4cde4c0763fff6c077fd7ebf7b964d5312f2435c9786e22c018709a5"
+            "sha256": "057e12b802c9cf30fdea364b609f9b0fa9378028667af22f4df34f5b890d59a6"
           },
           {
             "path": "src/ts/components/timepicker.ts",
@@ -8203,7 +8381,7 @@
           "scope": "android-foundation-reviewed; full web specification unassessed"
         },
         "implementation": {
-          "documentedSupport": "Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.",
+          "documentedSupport": "Shared md.sys.shape.corner scale from none to full, read by component shape tokens on that scale. Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.",
           "webAdaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only."
         }
       },
@@ -8228,8 +8406,8 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "No shared md-sys-shape token family or general rounded/cut-corner theming system.",
-            "nextStep": "Inventory existing component corner defaults against proposed shared roles before introducing an additive shape scale; preserve existing component overrides and state shapes."
+            "description": "No cut-corner family or general cut-corner theming system; off-scale component corners stay literal.",
+            "nextStep": "Map off-scale component corners to the nearest role only where Material names one; preserve existing component overrides and state shapes."
           }
         ],
         "browserChecks": [
@@ -8262,7 +8440,7 @@
           "scope": "android-foundation-reviewed; full web specification unassessed"
         },
         "implementation": {
-          "documentedSupport": "Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.",
+          "documentedSupport": "Shared md.sys.motion easing and duration tokens, which components read for on-scale curves and times. Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.",
           "webAdaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only."
         }
       },
@@ -8295,8 +8473,8 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "No shared md-sys-motion token family, general spring solver, or unified motion-theme selector.",
-            "nextStep": "Define shared semantic timing/spring roles only after mapping existing component needs; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver."
+            "description": "No general spring solver or unified motion-theme selector; the Expressive spring tokens exist only as one sampled fast-spatial curve.",
+            "nextStep": "Map remaining component springs before adding spring roles; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver."
           }
         ],
         "browserChecks": [
@@ -12020,5 +12198,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "89bcc94d98d65cbbbfac3fe2765a9943ee9d63be"
+  "sourceRevision": "e2a53e815af54aa0a46d5ffc033957df58788353"
 }

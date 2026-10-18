@@ -9,10 +9,12 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "typescale", label: "Type scale", heading: "The fifteen roles" },
   { id: "emphasis", label: "Emphasis" },
+  { id: "links", label: "Links" },
   { id: "blockquote", label: "Blockquotes" },
   { id: "keyboard-keys", label: "Keyboard keys" },
   { id: "highlight", label: "Highlighted text" },
   { id: "flow", label: "Flow text" },
+  { id: "prose", label: "Prose" },
   { id: "fontstack", label: "Typeface tokens" },
 ]);
 ---
@@ -169,9 +171,22 @@ const S = defineSections([
           that is not a <code>&lt;p&gt;</code> or <code>&lt;small&gt;</code>.
         </p>
   </Section>
+  <Section {...S.links}>
+        <p>
+          Links use the primary color. A link without a class inside a paragraph, a
+          <code>&lt;dd&gt;</code>, a blockquote, a figure caption or a table cell is also
+          underlined, because color alone does not mark a link for everyone. Links elsewhere, and
+          any link with a class, have no underline, so navigation lists, menus, tabs and buttons
+          made from <code>&lt;a&gt;</code> keep their own look.
+        </p>
+<Code code={`
+<p>Read the <a href="/themes.html">theme guide</a> first.</p>  <!-- underlined -->
+<a class="button tonal" href="/themes.html">Themes</a>         <!-- styled by its class -->
+`} />
+  </Section>
   <Section {...S.blockquote}>
         <p>
-          Blockquotes emphasize a quote or citation. The left bar uses
+          Blockquotes emphasize a quote or citation. The bar on the start side uses
           <code>--md-sys-color-primary</code>.
         </p>
         <blockquote>
@@ -231,6 +246,39 @@ CSS.highlights.set("mark", new Highlight(range));
 <Code code={`
 <p class="flow-text">I am Flow Text</p>
 `} />
+  </Section>
+  <Section {...S.prose}>
+        <p>
+          Add <code>.prose</code> to a container of bare HTML, such as rendered Markdown or CMS
+          output. It caps the line length at 70 characters, spaces out headings, indents lists,
+          underlines links in lists and headings, and gives inline <code>&lt;code&gt;</code> and
+          <code>&lt;pre&gt;</code> blocks a surface. Only elements without a class are styled, so a
+          button or chip inside the content keeps its own look.
+        </p>
+        <div class="prose surface-container-low p-4 corner-large">
+          <h3>Release notes</h3>
+          <p>Run <code>npm ci</code>, then rebuild. See the <a href="/themes.html">theme guide</a> for colors.</p>
+          <ul>
+            <li>Motion and corner tokens</li>
+            <li><a href="/helpers.html#prefixes">Window-size prefixes</a> for layout helpers</li>
+          </ul>
+          <pre><code>npm run build</code></pre>
+        </div>
+<Code code={`
+<div class="prose">
+  <h2>Release notes</h2>
+  <p>Run <code>npm ci</code>, then rebuild.</p>
+  <ul>
+    <li><a href="/helpers.html">Helpers</a></li>
+  </ul>
+  <pre><code>npm run build</code></pre>
+</div>
+`} />
+        <p>
+          Put <code>.prose</code> on a <code>&lt;div&gt;</code>, <code>&lt;section&gt;</code> or
+          <code>&lt;main&gt;</code>. Every <code>&lt;article&gt;</code> is a card, so an article with
+          <code>.prose</code> would be drawn as one.
+        </p>
   </Section>
   <Section {...S.fontstack}>
         <p>

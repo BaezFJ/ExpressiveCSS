@@ -1,0 +1,70 @@
+@use "../abstracts" as *;
+
+// .prose: long-form content written as bare HTML, such as Markdown or CMS
+// output, where the author cannot add a class to each element. Put it on a
+// <div>, <section> or <main>: every <article> is already a card.
+//
+// It lives in the base layer, not with the components, so any component
+// dropped into an article still wins over it. The element lists sit in
+// :where(), so a rule weighs `.prose` plus `:not([class])`: enough to beat
+// the element defaults beside it. Elements that carry a class are a
+// component or a deliberate style and are left alone.
+
+.prose {
+  max-inline-size: 70ch;
+
+  > :first-child { margin-block-start: 0; }
+  > :last-child { margin-block-end: 0; }
+
+  :where(h2, h3, h4, h5, h6):not([class], :first-child) { margin-block-start: 1.6em; }
+
+  :where(ul, ol):not([class]) {
+    margin-block: 0 1em;
+    padding-inline-start: 1.5em;
+  }
+
+  :where(li):not([class]) + li { margin-block-start: 0.375em; }
+  :where(li > ul, li > ol):not([class]) { margin-block: 0.375em 0; }
+
+  // base/_global.scss underlines links in paragraphs; lists and headings
+  // inside an article are running text too.
+  :where(li, h2, h3, h4, h5, h6) a:not([class]) {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  // <kbd> keeps its keycap from base/_typography.scss.
+  :where(code, samp):not([class]) { font-size: 0.875em; }
+
+  :where(code):not([class]) {
+    padding: 0.125em 0.375em;
+    border-radius: var(--md-sys-shape-corner-extra-small);
+    background-color: var(--md-sys-color-surface-container-high);
+  }
+
+  :where(pre):not([class]) {
+    margin-block: 0 1em;
+    padding: 1rem;
+    overflow-x: auto;
+    border-radius: var(--md-sys-shape-corner-medium);
+    background-color: var(--md-sys-color-surface-container);
+
+    > code { padding: 0; background: none; font-size: inherit; }
+  }
+
+  :where(img, video):not([class]) {
+    max-inline-size: 100%;
+    block-size: auto;
+    border-radius: var(--md-sys-shape-corner-medium);
+  }
+
+  :where(figure):not([class]) { margin: 0 0 1em; }
+
+  :where(hr):not([class]) {
+    margin-block: 2em;
+    border: 0;
+    border-block-start: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  :where(table):not([class]) { margin-block: 0 1em; }
+}

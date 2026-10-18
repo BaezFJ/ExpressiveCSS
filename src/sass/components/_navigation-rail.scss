@@ -40,7 +40,7 @@
   position: fixed;
   inset-block: 0;
   inset-inline: 0 auto;
-  z-index: 998;
+  z-index: var(--expressive-z-modal-rail);
   @include z-depth("1");
 
   // A blurred rail would become the containing block of the fixed scrim
@@ -61,11 +61,11 @@
   --md-comp-nav-rail-icon-size: 24px;
   --md-comp-nav-rail-indicator-width: 56px;
   --md-comp-nav-rail-indicator-height: 32px;
-  --md-comp-nav-rail-indicator-shape: 16px;
+  --md-comp-nav-rail-indicator-shape: var(--md-sys-shape-corner-large);
   --md-comp-nav-rail-fab-size: 56px;
   --md-comp-nav-rail-active-indicator-color: var(--md-sys-color-secondary-container);
   --md-comp-nav-rail-active-color: var(--md-sys-color-on-secondary-container);
-  --md-comp-nav-rail-duration: 250ms;
+  --md-comp-nav-rail-duration: var(--md-sys-motion-duration-medium1);
 
   box-sizing: border-box;
   display: flex;
@@ -131,7 +131,7 @@
     margin: 4px 0 16px;
     padding: 0;
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: var(--md-sys-shape-corner-large);
     color: var(--md-sys-color-on-primary-container);
     background-color: var(--md-sys-color-primary-container);
     text-decoration: none;
@@ -228,7 +228,7 @@
 
   &.expanded {
     --md-comp-nav-rail-indicator-height: 56px;
-    --md-comp-nav-rail-indicator-shape: 28px;
+    --md-comp-nav-rail-indicator-shape: var(--md-sys-shape-corner-extra-large);
 
     align-items: stretch;
     width: clamp(220px, var(--md-comp-nav-rail-expanded-width), 360px);
@@ -349,8 +349,8 @@
   overflow: auto;
   overscroll-behavior: contain;
   border: 0;
-  border-start-end-radius: 16px;
-  border-end-end-radius: 16px;
+  border-start-end-radius: var(--md-sys-shape-corner-large);
+  border-end-end-radius: var(--md-sys-shape-corner-large);
   background-color: var(--md-sys-color-surface-container);
   color: var(--md-sys-color-on-surface-variant);
   @include z-depth("1");
@@ -407,7 +407,7 @@
       margin-inline-start: auto;
       background-color: currentColor;
       mask: $caret-down center / 18px no-repeat;
-      transition: transform 150ms ease-out;
+      transition: transform var(--md-sys-motion-duration-short3) ease-out;
     }
   }
 
@@ -435,4 +435,10 @@
   .navigation-rail {
     transition: none;
   }
+}
+
+// Navigation does nothing on paper. Important so a size or state rule that sets
+// `display` cannot bring it back; see base/_print.scss for the page itself.
+@media print {
+  .navigation-rail { display: none !important; }
 }

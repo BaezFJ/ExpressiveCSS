@@ -29,11 +29,11 @@ $_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-
   --md-comp-outlined-card-outline-color: var(--md-sys-color-outline-variant);
   --md-comp-outlined-card-disabled-outline-color: var(--md-sys-color-outline);
   --md-comp-card-container-color: var(--md-comp-elevated-card-container-color);
-  --md-comp-card-container-shape: 12px;
+  --md-comp-card-container-shape: var(--md-sys-shape-corner-medium);
   --md-comp-card-media-shape: var(--md-comp-card-container-shape);
   --md-comp-card-media-overlay-container-color: var(--md-sys-color-surface);
   --md-comp-card-media-overlay-ink-color: var(--md-sys-color-on-surface);
-  --md-comp-card-media-overlay-shape: 8px;
+  --md-comp-card-media-overlay-shape: var(--md-sys-shape-corner-small);
   --md-comp-card-headline-color: var(--md-sys-color-on-surface);
   --md-comp-card-subhead-color: var(--md-sys-color-on-surface);
   --md-comp-card-supporting-text-color: var(--md-sys-color-on-surface-variant);
@@ -60,7 +60,7 @@ $_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-
   color: var(--md-sys-color-on-surface);
   border-radius: var(--md-comp-card-container-shape);
   overflow: hidden;
-  transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out;
+  transition: background-color var(--md-sys-motion-duration-short4) ease-out, box-shadow var(--md-sys-motion-duration-short4) ease-out;
 }
 
 // M3 state layers belong only to an interactive card. A direct
@@ -75,7 +75,7 @@ $_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-
   background-color: var(--md-comp-card-state-layer-color);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease-out;
+  transition: opacity var(--md-sys-motion-duration-short4) ease-out;
 }
 
 :where(#{$_card}) > .primary-action {
@@ -536,7 +536,9 @@ article.horizontal:is(.small, .medium, .large) > .primary-action {
 
 // Compact windows use the vertical spelling. This keeps media and controls
 // large enough to scan and operate without changing their source order.
-@include bp-down("medium") {
+// A query container narrower than Compact does the same, so a horizontal
+// card in a narrow pane or sidebar stacks even on a wide window.
+@mixin _stacked-horizontal {
   article.horizontal,
   article.horizontal.small,
   article.horizontal.medium,
@@ -556,6 +558,9 @@ article.horizontal:is(.small, .medium, .large) > .primary-action {
   }
 }
 
+@include bp-down("medium") { @include _stacked-horizontal; }
+@container (width < 600px) { @include _stacked-horizontal; }
+
 // Reveal panel. Panels stay available until Cards confirms the disclosure
 // contract and adds its runtime marker. The summary and media remain in place
 // while the initialized card grows downward to expose additional actions.
@@ -566,8 +571,8 @@ article.horizontal:is(.small, .medium, .large) > .primary-action {
 }
 
 article.card-reveal-initialized > aside {
-  --md-comp-card-reveal-duration: 500ms;
-  --md-comp-card-reveal-easing: cubic-bezier(0.2, 0, 0, 1);
+  --md-comp-card-reveal-duration: var(--md-sys-motion-duration-long2);
+  --md-comp-card-reveal-easing: var(--md-sys-motion-easing-standard);
 
   position: relative;
   inset: auto;
@@ -585,7 +590,7 @@ article.card-reveal-initialized > aside {
   transition:
     height var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing),
     padding-block var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing),
-    opacity 150ms ease-out,
+    opacity var(--md-sys-motion-duration-short3) ease-out,
     visibility 0s var(--md-comp-card-reveal-duration);
 }
 
@@ -598,7 +603,7 @@ article.card-reveal-initialized > aside.open {
   transition:
     height var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing),
     padding-block var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing),
-    opacity 200ms 100ms ease-out,
+    opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-duration-short2) ease-out,
     visibility 0s;
 }
 
@@ -639,7 +644,7 @@ article > aside > .reveal-actions > .reveal-action {
   min-height: 48px;
   padding-inline: 0;
   color: var(--md-sys-color-on-surface);
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-corner-small);
   @include typescale("body-medium");
 }
 

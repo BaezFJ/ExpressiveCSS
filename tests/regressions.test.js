@@ -674,13 +674,13 @@ describe('FAB container shape', () => {
     const medium = size('medium');
     assert.match(medium, /--md-comp-fab-container-height:\s*80px/);
     assert.match(medium, /--md-comp-fab-container-width:\s*80px/);
-    assert.match(medium, /--md-comp-fab-container-shape:\s*20px/);
+    assert.match(medium, /--md-comp-fab-container-shape:\s*var\(--md-sys-shape-corner-large-increased\)/);
     assert.match(medium, /--md-comp-fab-icon-size:\s*26px/);
 
     const large = size('large');
     assert.match(large, /--md-comp-fab-container-height:\s*96px/);
     assert.match(large, /--md-comp-fab-container-width:\s*96px/);
-    assert.match(large, /--md-comp-fab-container-shape:\s*28px/);
+    assert.match(large, /--md-comp-fab-container-shape:\s*var\(--md-sys-shape-corner-extra-large\)/);
     assert.match(large, /--md-comp-fab-icon-size:\s*36px/);
   });
 
@@ -835,7 +835,7 @@ describe('FAB container shape', () => {
   test('the FAB states its container and icon size as tokens', () => {
     assert.match(css, /--md-comp-fab-container-height:\s*56px/);
     assert.match(css, /--md-comp-fab-container-width:\s*56px/);
-    assert.match(css, /--md-comp-fab-container-shape:\s*16px/);
+    assert.match(css, /--md-comp-fab-container-shape:\s*var\(--md-sys-shape-corner-large\)/);
     assert.match(css, /--md-comp-fab-icon-size:\s*24px/);
     assert.match(css, /border-radius:\s*var\(--md-comp-fab-container-shape\)/);
     assert.match(css, /width:\s*var\(--md-comp-fab-container-width\)/);
@@ -1595,7 +1595,7 @@ describe('Icon selectors keyed on the <i> element', () => {
     assertIconIsAClass(
       'dialog header text button',
       /^dialog\b.*header.*:not\(:has\(/,
-      /border-radius:\s*20px/
+      /border-radius:\s*var\(--md-sys-shape-corner-large-increased\)/
     );
     assertIconIsAClass(
       'dialog leading icon',
