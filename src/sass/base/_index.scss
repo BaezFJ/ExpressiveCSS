@@ -4,4 +4,5 @@
 @forward "global";      // element defaults: links, blockquotes, tables
 @forward "typography";
 @forward "grid";        // .container, .row, .s1–.s12 … .xxl1–.xxl12
-@forward "print";       // paper defaults: no shadows, link targets, page breaks
+@forward "prose";       // .prose: long-form content written as bare HTML
+@forward "print";       // paper defaults: light scheme, link targets, page breaks

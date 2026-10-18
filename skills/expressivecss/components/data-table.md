@@ -9,7 +9,7 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `1df0cc7ff21a5b12e1e57e758254a7b98b8fcff34dd0087a5332a6287d782bc6`
+Contract SHA-256: `0f0006455dabf1df3bafdb362d6b9ae9330b94313c5e8937ffd1aefed3204e59`
 
 #### Selection and adaptation
 

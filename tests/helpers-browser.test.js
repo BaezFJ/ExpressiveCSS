@@ -259,3 +259,38 @@ browserTest('headings balance and paragraphs wrap pretty without undoing nowrap'
     await browser.close();
   }
 });
+
+browserTest('prose styles bare content and leaves components alone', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style>
+      <div class="prose">
+        <h2 id="first">Intro</h2>
+        <p>Text with <code id="code">npm ci</code>.</p>
+        <h2 id="second">Next</h2>
+        <ul id="list"><li><a id="link" href="#">A link</a></li><li>Two</li></ul>
+        <pre id="pre"><code id="block">npm test</code></pre>
+        <a id="button" class="button tonal" href="#">Button</a>
+      </div>`);
+    const read = await page.evaluate(() => {
+      const s = (id) => getComputedStyle(document.getElementById(id));
+      return {
+        first: s('first').marginTop,
+        second: s('second').marginTop !== '0px',
+        list: parseFloat(s('list').paddingInlineStart) / parseFloat(s('list').fontSize),
+        link: s('link').textDecorationLine,
+        code: s('code').backgroundColor !== 'rgba(0, 0, 0, 0)',
+        block: s('block').backgroundColor,
+        pre: s('pre').overflowX,
+        button: s('button').textDecorationLine,
+      };
+    });
+    assert.deepEqual(read, {
+      first: '0px', second: true, list: 1.5, link: 'underline', code: true,
+      block: 'rgba(0, 0, 0, 0)', pre: 'auto', button: 'none',
+    });
+  } finally {
+    await browser.close();
+  }
+});

@@ -1807,6 +1807,23 @@ Blockquotes emphasize a quote or citation. The bar on the start side uses `--md-
 <p class="flow-text">I am Flow Text</p>
 ```
 
+### Prose
+
+Add `.prose` to a container of bare HTML, such as rendered Markdown or CMS output. It caps the line length at 70 characters, spaces out headings, indents lists, underlines links in lists and headings, and gives inline `<code>` and `<pre>` blocks a surface. Only elements without a class are styled, so a button or chip inside the content keeps its own look.
+
+```html
+<div class="prose">
+  <h2>Release notes</h2>
+  <p>Run <code>npm ci</code>, then rebuild.</p>
+  <ul>
+    <li><a href="/helpers.html">Helpers</a></li>
+  </ul>
+  <pre><code>npm run build</code></pre>
+</div>
+```
+
+Put `.prose` on a `<div>`, `<section>` or `<main>`. Every `<article>` is a card, so an article with `.prose` would be drawn as one.
+
 ### Typeface tokens
 
 Override the brand and plain reference tokens to customize the scale while preserving each role's M3 size, weight, line height, and tracking:

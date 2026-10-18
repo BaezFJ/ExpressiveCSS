@@ -210,5 +210,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed print styles and the print visibility helpers: 72,957 gzip bytes (+232).
   // Reviewed logical properties for blockquotes and table cells: 72,975 gzip bytes (+18).
   // Reviewed balanced headings and pretty paragraphs: 73,001 gzip bytes (+26).
-  assert.ok(sizes(css).gzip <= 73001, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed .prose for bare long-form HTML: 73,237 gzip bytes (+236).
+  assert.ok(sizes(css).gzip <= 73237, `CSS gzip: ${sizes(css).gzip}`);
 });
