@@ -9,7 +9,7 @@ Component ID: `bottom-sheet`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `deb6febc3df304646795d5df8ab867d706f176d2880e936718314e1d884bf33c`
+Contract SHA-256: `a872d2f7429e6946a3b6f9c670de649096adce718f18c2e418e40bbcb4741903`
 
 #### Selection and adaptation
 
@@ -29,11 +29,11 @@ Requirements and boundaries: design reference layout-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/bottom-sheets/guidelines).
 
-Support (2026-09-18, `llm.md#bottom-sheet`): Standard and modal bottom sheets.
+Support (2026-09-18, `llm.md#bottom-sheet`): Standard and modal bottom sheets, with partial and full heights for .expandable sheets.
 
 Web adaptation: Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.
 
-Known boundary: The shared handle dismisses rather than cycling sheet heights. Long-content scrolling and enlarged-text action access are checked; native zoom and physical touch remain unverified.
+Known boundary: An .expandable sheet has a partial and a full height and no others. Long-content scrolling and enlarged-text action access are checked; native zoom and physical touch remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#bottom-sheet).
 

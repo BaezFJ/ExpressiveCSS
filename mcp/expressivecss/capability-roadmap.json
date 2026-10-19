@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.15.0",
-  "sourceRevision": "67ebf6846ec33d922feaf8619ec830cba6bce075",
+  "sourceRevision": "714964353dc0c6a61fa870884d45a705c85239b3",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-10",
@@ -346,8 +346,8 @@
       "gaps": [
         {
           "kind": "integration",
-          "description": "Native links use Tab and aria-current; runtime does not implement composite tab arrow keys.",
-          "nextStep": "Retain native anchor semantics. Rendered selection, overflow geometry and teardown are covered; verify spoken current-state output and physical touch manually."
+          "description": "Native links keep Tab and aria-current; Left, Right, Home and End move focus between them as a shortcut, without the selection model a tablist would announce.",
+          "nextStep": "Retain native anchor semantics. Rendered selection, arrow focus, overflow geometry and teardown are covered; verify spoken current-state output and physical touch manually."
         }
       ],
       "browserChecks": [
@@ -380,6 +380,12 @@
           "name": "Tabs hash selection, native dragging and overflow geometry (chromium)",
           "scope": "Initial hash overrides stale authored panel state without initialization callbacks and restores it on teardown; actual pointer dragging, RTL overflow indicator geometry and initialization-only threshold; no physical touch or native zoom claim.",
           "state": "stale"
+        },
+        {
+          "file": "tests/arrow-keys-browser.test.js",
+          "name": "chromium: arrow keys move focus between tabs and between list rows",
+          "scope": "Right and Left move focus, skip a disabled tab and wrap; Home and End reach the ends; RTL swaps the arrows; focus does not change the selection until Enter; a modified arrow is left to the browser. Runs in all three engines.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -1419,8 +1425,8 @@
       "gaps": [
         {
           "kind": "integration",
-          "description": "Ordinary native lists and child controls do not implement Google composite arrow navigation.",
-          "nextStep": "Retain native semantics unless a complete composite is supplied; test row control names and selection meaning."
+          "description": "Lists of single link or button rows move focus with Up, Down, Home and End as a shortcut; rows stay Tab stops, and lists with several controls per row, selection lists and listbox semantics are not provided.",
+          "nextStep": "Add a listbox only with a complete selection contract; test row control names and selection meaning."
         }
       ],
       "browserChecks": [
@@ -1435,6 +1441,12 @@
           "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
           "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
           "state": "stale"
+        },
+        {
+          "file": "tests/arrow-keys-browser.test.js",
+          "name": "chromium: arrow keys move focus between tabs and between list rows",
+          "scope": "Up and Down move focus between single-control rows, skip a disabled row and stop at the ends; Home and End reach the ends; rows with several controls keep native keys. Runs in all three engines.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -1874,7 +1886,7 @@
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-10-06",
-      "scope": "Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip.",
+      "scope": "Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip.",
       "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.",
       "upstream": {
         "source": "https://m3.material.io/components",
@@ -1907,11 +1919,6 @@
           "kind": "verification",
           "description": "Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified.",
           "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; test enlarged text."
-        },
-        {
-          "kind": "feature",
-          "description": "There are no y axis value labels; the grid lines carry no numbers.",
-          "nextStep": "Add optional y labels if charts need values readable without the tooltip."
         }
       ],
       "browserChecks": [
@@ -1932,6 +1939,12 @@
           "name": "chromium: line chart handles cards, headerless tables, RTL, strict values and forced colors",
           "scope": "A chart in a sized card and in a primary action keeps its own layout and caption, a header row without <thead> is not data, the RTL axis matches its labels and arrow keys, ambiguous cell text is a gap, show() is safe without data and skips a repeated row, stacked bands fill down to the series below or the plot bottom with cursor points on the totals and each cell in the tooltip, a stacked gap breaks the series above it, the stacked range keeps 10% headroom above zero, and swatches keep their series colors in forced colors.",
           "state": "stale"
+        },
+        {
+          "file": "tests/chart-axis-browser.test.js",
+          "name": "chromium: .axis labels chart scales at round values on their grid lines",
+          "scope": "Labels widen the scale to round values, repeat the cells' currency sign, sit beside the plot with a grid line each, and leave author-set ends in place. No rendering comparison.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -1949,7 +1962,7 @@
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-10-07",
-      "scope": "Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip with a highlight band.",
+      "scope": "Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.",
       "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
       "upstream": {
         "source": "https://m3.material.io/components",
@@ -1989,8 +2002,8 @@
         },
         {
           "kind": "feature",
-          "description": "There are no y axis value labels or range columns.",
-          "nextStep": "Add optional y labels if charts need values readable without the tooltip; add range columns when a page needs them."
+          "description": "There are no range columns.",
+          "nextStep": "Add range columns when a page needs them."
         }
       ],
       "browserChecks": [
@@ -2005,6 +2018,12 @@
           "name": "chromium: column chart tooltip and band follow the pointer and the arrow keys",
           "scope": "Pointer position to row, tooltip text without empty cells, no cursor points, the band's width and position, hiding on leave, focus, End and Escape, and the first row on the right in RTL. No spoken-output assertion.",
           "state": "stale"
+        },
+        {
+          "file": "tests/chart-axis-browser.test.js",
+          "name": "chromium: .axis labels chart scales at round values on their grid lines",
+          "scope": "Shares the line chart's axis code; the line, mixed and bar cases cover it. No column-specific rendering comparison.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -2022,7 +2041,7 @@
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-10-07",
-      "scope": "Horizontal bars drawn from zero from a figure's data table, grouped by row or stacked, with split, track, values and sparkline modifiers, negative values, gaps, a fixed value range, row labels, a legend, and a pointer and keyboard tooltip with a highlight band.",
+      "scope": "Horizontal bars drawn from zero from a figure's data table, grouped by row or stacked, with split, track, values and sparkline modifiers, negative values, gaps, a fixed value range, row labels, round value axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.",
       "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the bars and their values are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
       "upstream": {
         "source": "https://m3.material.io/components",
@@ -2063,11 +2082,6 @@
           "kind": "verification",
           "description": "Drawing, the hidden table, grouped, stacked and split geometry, values, gaps, negative values, the value range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
           "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-        },
-        {
-          "kind": "feature",
-          "description": "There are no value axis labels.",
-          "nextStep": "Add optional value labels if charts need numbers readable without the tooltip."
         }
       ],
       "browserChecks": [
@@ -2082,6 +2096,12 @@
           "name": "chromium: bar chart tooltip and band follow the pointer and the up and down arrows",
           "scope": "Pointer height to row, tooltip text, the band's height and position, flipping above the row in the lower half, hiding on leave, focus, arrows, End and Escape, the first row at the top in RTL, and a touch tap showing the tapped row in bar and column charts, kept on lift and hidden on pointer cancel. No spoken-output assertion.",
           "state": "stale"
+        },
+        {
+          "file": "tests/chart-axis-browser.test.js",
+          "name": "chromium: .axis labels chart scales at round values on their grid lines",
+          "scope": "Labels sit under the plot at round values from zero, mirrored in RTL. No rendering comparison.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -2245,7 +2265,7 @@
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-10-07",
-      "scope": "Spokes drawn clockwise from the top from a figure's data table, one shape per series from zero in the middle to the scale's top at the rim, row labels past each spoke, a legend for several series, area, points, dashed and sparkline modifiers, data-min and data-max, and a pointer and keyboard tooltip with a cursor spoke.",
+      "scope": "Spokes drawn clockwise from the top from a figure's data table, one shape per series from zero in the middle to the scale's top at the rim, row labels past each spoke, a legend for several series, area, points, dashed and sparkline modifiers, data-min and data-max, round labelled rings with .axis, and a pointer and keyboard tooltip with a cursor spoke.",
       "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, shapes, labels and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
       "upstream": {
         "source": "https://m3.material.io/components",
@@ -2285,8 +2305,8 @@
         },
         {
           "kind": "feature",
-          "description": "A gap joins the spokes either side of it rather than breaking the shape, the rings have no value labels, and series past four reuse the colors.",
-          "nextStep": "Mark gaps and label the rings if charts need them; keep to three series meanwhile."
+          "description": "A gap joins the spokes either side of it rather than breaking the shape, and series past four reuse the colors.",
+          "nextStep": "Mark gaps if charts need them; keep to three series meanwhile."
         }
       ],
       "browserChecks": [
@@ -2301,6 +2321,12 @@
           "name": "chromium: radar chart tooltip follows the pointer round the spokes and the arrow keys",
           "scope": "Nearest spoke by pointer angle inside and past the rim, tooltip text without gaps, opening leftwards on the right half, the cursor spoke and its points, focus, all four arrows, wrapping past either end, End and Escape, and clockwise spokes and arrows in RTL. No spoken-output assertion.",
           "state": "stale"
+        },
+        {
+          "file": "tests/chart-axis-browser.test.js",
+          "name": "chromium: .axis labels chart scales at round values on their grid lines",
+          "scope": "Rings and labels fall at round values with zero unlabelled. No rendering comparison.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -2391,7 +2417,7 @@
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-10-07",
-      "scope": "Columns, smooth lines and areas drawn per series from a figure's data table by header class, with dashed lines, a second scale for end series with its own fixed range, x labels, a legend, a sparkline modifier, and a pointer and keyboard tooltip with points on the lines.",
+      "scope": "Columns, smooth lines and areas drawn per series from a figure's data table by header class, with dashed lines, a second scale for end series with its own fixed range, x labels, round labels for both scales with .axis, aligned to shared grid lines, a legend, a sparkline modifier, and a pointer and keyboard tooltip with points on the lines.",
       "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns and SVG are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
       "upstream": {
         "source": "https://m3.material.io/components",
@@ -2435,8 +2461,8 @@
         },
         {
           "kind": "feature",
-          "description": "There are no y axis labels for either scale, no always-on line markers, no stacked columns and no straight-line option.",
-          "nextStep": "Add y axis labels to the shared chart parts if charts need them; name the units in the caption meanwhile."
+          "description": "There are no always-on line markers, no stacked columns and no straight-line option.",
+          "nextStep": "Add markers, stacked columns or straight lines when a page needs them."
         }
       ],
       "browserChecks": [
@@ -2445,6 +2471,12 @@
           "name": "chromium: mixed chart draws columns, areas and lines on two scales",
           "scope": "Hidden table, the named plot and its role description, column positions on the start scale with an empty slot for a gap, area and dashed line classes and colors, an area fill only on area series, a fixed end scale, a fitted end scale shared by two series, legend order, separate instances from column charts, a chart of gaps showing its table, and the tooltip and cursor points from the keyboard. No spoken-output assertion.",
           "state": "stale"
+        },
+        {
+          "file": "tests/chart-axis-browser.test.js",
+          "name": "chromium: .axis labels chart scales at round values on their grid lines",
+          "scope": "The end scale stretches to the start scale's steps so both label sets share the grid lines, each with its own percent sign. No rendering comparison.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -2598,7 +2630,7 @@
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-09-18",
-      "scope": "Standard and modal bottom sheets.",
+      "scope": "Standard and modal bottom sheets, with partial and full heights for .expandable sheets.",
       "adaptation": "Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.",
       "upstream": {
         "source": "https://m3.material.io/components/bottom-sheets/overview",
@@ -2645,7 +2677,7 @@
       "gaps": [
         {
           "kind": "integration",
-          "description": "The shared handle dismisses rather than cycling sheet heights. Interrupted-drag cleanup, long-content scrolling and enlarged-text action access have rendered coverage; application-owned height changes, native zoom and physical touch remain pending.",
+          "description": "An .expandable sheet switches between a partial and a full height by drag or handle; there are only those two heights, and an application that sets the height itself owns it. Interrupted-drag cleanup, long-content scrolling and enlarged-text action access have rendered coverage; application-owned height changes, native zoom and physical touch remain pending.",
           "nextStep": "Use explicit close controls; verify application-owned height changes, native zoom and physical touch separately."
         }
       ],
@@ -2667,6 +2699,12 @@
           "name": "Bottom sheets keep long content and actions reachable at compact widths (chromium)",
           "scope": "Bottom sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.",
           "state": "stale"
+        },
+        {
+          "file": "tests/bottom-sheet-expand-browser.test.js",
+          "name": "chromium: an expandable bottom sheet switches between two heights by handle and by drag",
+          "scope": "The handle button switches heights with Enter and Space and keeps aria-expanded current, a drag up expands without the ending click switching back, a drag down collapses from expanded and dismisses from partial, and closing resets to partial. Runs in all three engines. No physical touch.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -5017,8 +5055,8 @@
       "lastReviewedSupport": "partial",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-09-17",
-      "scope": "Inline single-date, range, and multiple-date calendar.",
-      "adaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
+      "scope": "Inline single-date, range, and multiple-date calendar, with an optional modal dialog.",
+      "adaptation": "Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.",
       "upstream": {
         "source": "https://m3.material.io/components/date-pickers/overview",
         "reviewedOn": "2026-09-13",
@@ -5060,14 +5098,9 @@
       ],
       "gaps": [
         {
-          "kind": "feature",
-          "description": "Modal picker parity is not provided by the documented inline API.",
-          "nextStep": "Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs."
-        },
-        {
           "kind": "verification",
           "description": "Range-end typing and keyboard selection, multiple-date defaults, shrink/regrow/clear, form values and generated-input teardown have rendered coverage. Custom parsing, range constraints through typed input and spoken calendar context need further review.",
-          "nextStep": "Complete the manual picker checklist and separately verify custom parsing and typed range constraints. Do not infer modal or complete accessibility parity."
+          "nextStep": "Complete the manual picker checklist and separately verify custom parsing and typed range constraints. Do not infer complete accessibility parity."
         }
       ],
       "browserChecks": [
@@ -5100,6 +5133,12 @@
           "name": "chromium: date picker selection lifecycle: clear",
           "scope": "Clearing a native date input resets its value and data-date without throwing.",
           "state": "stale"
+        },
+        {
+          "file": "tests/modal-picker-browser.test.js",
+          "name": "chromium: a modal date picker writes the input on Ok and nothing on Cancel, Escape or the scrim",
+          "scope": "The dialog is modal and named by the input label, focus moves to the selected day and back to the input, Ok writes the date, and Cancel, Escape and a scrim press leave it and call onCancel. Runs in all three engines. No screen reader output.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -5117,8 +5156,8 @@
       "lastReviewedSupport": "partial",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-09-18",
-      "scope": "Inline clock and digital input; 12-hour and 24-hour formats.",
-      "adaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
+      "scope": "Inline clock and digital input; 12-hour and 24-hour formats, with an optional modal dialog.",
+      "adaptation": "Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.",
       "upstream": {
         "source": "https://m3.material.io/components/time-pickers/overview",
         "reviewedOn": "2026-09-13",
@@ -5160,13 +5199,8 @@
       "gaps": [
         {
           "kind": "feature",
-          "description": "Modal picker parity is not provided by the documented inline API.",
-          "nextStep": "Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs."
-        },
-        {
-          "kind": "feature",
-          "description": "Version 0.10.0 names hour/minute inputs and exposes AM/PM button state. Clock-dial arrow navigation and modal keyboard behavior remain unimplemented.",
-          "nextStep": "Use the digital inputs for keyboard entry; separately assess dial navigation and modal focus before claiming complete keyboard parity."
+          "description": "The hour and minute fields step with the arrow keys as spin buttons and move the hand; the dial itself takes pointer input only, and stepping the hour does not change AM or PM.",
+          "nextStep": "Assess whether a focusable dial adds anything over the spin buttons before adding one."
         }
       ],
       "browserChecks": [
@@ -5193,6 +5227,12 @@
           "name": "chromium: time picker digital values: boundaries",
           "scope": "Reinitialization from midnight, noon, late-night 24-hour strings and lowercase AM/PM preserves twelve-hour display and period state.",
           "state": "stale"
+        },
+        {
+          "file": "tests/modal-picker-browser.test.js",
+          "name": "chromium: a modal time picker steps its fields with the arrow keys and writes the time on Enter",
+          "scope": "The fields are spin buttons with their range, Up, Down and Page Up step and wrap them, the hand follows, Enter writes the time and closes the dialog, and Escape closes it without a change. Runs in all three engines. No screen reader output.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",

@@ -22,6 +22,7 @@ import { PaneResize } from "./behaviors/paneResize";
 import { ImageCompare } from "./behaviors/imageCompare";
 import { Tour } from "./behaviors/tour";
 import { Sortable } from "./behaviors/sortable";
+import { Lists } from "./behaviors/lists";
 
 export * from './modular';
 
@@ -48,3 +49,4 @@ PaneResize.Init();
 ImageCompare.Init();
 Tour.Init();
 Sortable.Init();
+Lists.Init();

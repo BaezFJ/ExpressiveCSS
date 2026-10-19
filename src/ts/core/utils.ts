@@ -102,6 +102,33 @@ export class Utils {
     return target instanceof Element ? target : null;
   }
 
+  /** Whether a key was pressed without Alt, Ctrl or Meta, which belong to the browser and the system. */
+  static plainKey(e: KeyboardEvent): boolean {
+    return !(e.altKey || e.ctrlKey || e.metaKey);
+  }
+
+  /** Where a key moves from `index` among `count` items: by `steps`, or to an end for Home and End. NaN for any other key. */
+  private static _keyIndex(key: string, index: number, count: number, steps: Record<string, number>) {
+    if (key === 'Home') return 0;
+    if (key === 'End') return count - 1;
+    return index + (steps[key] ?? NaN);
+  }
+
+  /**
+   * The item a key moves focus to, from the focused one among `items`: by
+   * the offset `steps` gives the key, or to the first or last for Home and
+   * End. Disabled items are skipped. Undefined for other keys, for a key
+   * with a modifier, when focus is on none of the items, and past either end
+   * unless `wrap`.
+   */
+  static focusTarget(items: HTMLElement[], e: KeyboardEvent, steps: Record<string, number>, wrap = false): HTMLElement | undefined {
+    const enabled = items.filter((item) => !item.matches(':disabled, [aria-disabled="true"], .disabled'));
+    const index = enabled.indexOf(Utils.eventTarget(e) as HTMLElement);
+    if (index < 0 || !Utils.plainKey(e)) return undefined;
+    const to = Utils._keyIndex(e.key, index, enabled.length, steps);
+    return enabled[wrap ? (to + enabled.length) % enabled.length : to];
+  }
+
   /**
    * Whether focus is on or inside any of `els`, read from each element's own
    * root. A document listener cannot tell from `composedPath()` when the

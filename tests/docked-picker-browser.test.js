@@ -29,9 +29,9 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       await page.locator('#time').click();
       await page.locator('.timepicker-hours .timepicker-tick').getByText('9', { exact: true }).click();
       assert.equal(await page.evaluate(() => picker.currentView), 'minutes');
-      await page.getByRole('textbox', { name: 'Hours', exact: true }).fill('04');
+      await page.getByRole('spinbutton', { name: 'Hours', exact: true }).fill('04');
       await page.clock.runFor(200);
-      await expect(page.getByRole('textbox', { name: 'Hours', exact: true })).toHaveValue('04');
+      await expect(page.getByRole('spinbutton', { name: 'Hours', exact: true })).toHaveValue('04');
       await page.getByRole('button', { name: 'Ok', exact: true }).click();
       await expect(page.locator('#time')).toHaveValue('04:30 AM');
     } finally {

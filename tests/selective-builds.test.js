@@ -155,7 +155,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the tabs indicator reading the spring tokens: 73,840 gzip bytes (+52).
   // Reviewed tooltips anchored with CSS anchor positioning where supported: 74,099 gzip bytes (+259).
   // Reviewed trigger-opened menus anchored with CSS anchor positioning where supported: 74,386 gzip bytes (+287).
-  assert.ok(sizes(js).gzip <= 74386, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed value axes for the line, column, bar, mixed and radar charts: 75,139 gzip bytes (+753).
+  // Reviewed modal date and time pickers and spin-button time fields: 75,723 gzip bytes (+584).
+  // Reviewed arrow keys for tabs and for lists of link or button rows: 76,142 gzip bytes (+419).
+  // Reviewed expandable bottom sheets switching heights by drag and handle: 76,397 gzip bytes (+255).
+  assert.ok(sizes(js).gzip <= 76397, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -237,5 +241,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed every motion duration token set to 0s under reduced motion: 79,004 gzip bytes (+114).
   // Reviewed button groups and the keypad on the spring tokens, dropping two copies of the sampled curve: 78,791 gzip bytes (-213).
   // Reviewed the tabs indicator, switch handle and chip set on springs: 78,870 gzip bytes (+79).
-  assert.ok(sizes(css).gzip <= 78870, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed value axes for the line, column, bar, mixed and radar charts: 79,449 gzip bytes (+579).
+  // Reviewed the modal picker dialog fit: 79,497 gzip bytes (+48).
+  // Reviewed the expandable bottom sheet's two heights and fallbacks for the chart axis --at: 79,548 gzip bytes (+51).
+  assert.ok(sizes(css).gzip <= 79548, `CSS gzip: ${sizes(css).gzip}`);
 });

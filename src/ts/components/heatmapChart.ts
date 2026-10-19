@@ -27,6 +27,11 @@ export class HeatmapChart extends LineChart {
     return 'heatmap-chart';
   }
 
+  /** Color carries the value, so there is no value axis. */
+  protected get _axis() {
+    return false;
+  }
+
   protected get _key() {
     return 'Expressive_HeatmapChart';
   }

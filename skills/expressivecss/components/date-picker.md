@@ -9,7 +9,7 @@ Component ID: `date-picker`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `deb6febc3df304646795d5df8ab867d706f176d2880e936718314e1d884bf33c`
+Contract SHA-256: `a872d2f7429e6946a3b6f9c670de649096adce718f18c2e418e40bbcb4741903`
 
 #### Selection and adaptation
 
@@ -29,9 +29,9 @@ Requirements and boundaries: design reference inputs-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/date-pickers/guidelines).
 
-Support (2026-09-17, `llm.md#date-picker`): Inline single-date, range, and multiple-date calendar.
+Support (2026-09-17, `llm.md#date-picker`): Inline single-date, range, and multiple-date calendar, with an optional modal dialog.
 
-Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
+Web adaptation: Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.
 
 Known boundary: Modal picker parity is not provided by the documented inline API.
 
@@ -88,8 +88,8 @@ The calendar is inline, not a modal. `open()` and `close()` are not provided. Wi
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
 | `onConfirm` | Function | `null` | Called once when Ok is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
 | `onCancel` | Function | `null` | Called once when Cancel is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
-| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. Pair with `openByDefault: true`. |
-| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
+| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover, paired with `openByDefault: true`, or `'modal'` for a dialog with Cancel and Ok. |
+| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. The modal plugin takes none. |
 
 #### Methods
 
@@ -97,7 +97,7 @@ The calendar is inline, not a modal. `open()` and `close()` are not provided. Wi
 - `.setDate()`: Select a date and move the calendar to it.
 - `.gotoDate()`: Change the visible month without changing the selection.
 - `.destroy()`: Destroy the plugin instance, remove the calendar, and tear down its event handlers.
-- `.open(); / .close()`: These methods are not provided. The calendar defaults to inline presentation; `displayPlugin: 'docked'` enables docking. Both require `openByDefault: true` to show the calendar. No modal implementation is available.
+- `.open(); / .close()`: These methods are not provided. The calendar defaults to inline presentation; `displayPlugin: 'docked'` enables docking and needs `openByDefault: true` to show the calendar. `displayPlugin: 'modal'` opens it in a dialog from the input.
 
 #### Also documented
 

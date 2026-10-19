@@ -12,7 +12,8 @@
 // the cursor spoke and the tooltip are HTML placed by the --turn RadarChart
 // sets, a fraction of a turn clockwise from the top.
 //
-// Modifiers: .area fills each shape, .points marks each value, .sparkline
+// Modifiers: .area fills each shape, .points marks each value, .axis
+// rings the grid at round values and labels the rings, .sparkline
 // is a small chart with no labels, legend or tooltip.
 // A series header cell's classes reach its shape: <th class="dashed">.
 //
@@ -25,6 +26,7 @@
 //                                       on-surface-variant
 
 @include chart("radar-chart");
+@include chart-axis("radar-chart", $beside: false);
 
 .radar-chart {
   --md-comp-radar-chart-line-width: 2px;
@@ -56,6 +58,26 @@
   border: 0;
   border-radius: 50%;
   background: none;
+}
+
+// .axis rings the grid at round values and labels each ring up the top
+// spoke. Zero, the middle, goes unlabelled.
+.radar-chart-axis > li {
+  inset-inline: auto;
+  left: 50%;
+  top: calc(var(--at, 0%) / 2);
+  border: 0;
+
+  &:first-child {
+    display: none;
+  }
+}
+
+.radar-chart-axis > li > span {
+  inset: auto auto auto 4px;
+  width: auto;
+  padding: 0;
+  overflow: visible;
 }
 
 .radar-chart-web {

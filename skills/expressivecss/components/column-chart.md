@@ -9,7 +9,7 @@ Component ID: `column-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `deb6febc3df304646795d5df8ab867d706f176d2880e936718314e1d884bf33c`
+Contract SHA-256: `a872d2f7429e6946a3b6f9c670de649096adce718f18c2e418e40bbcb4741903`
 
 #### Selection and adaptation
 
@@ -25,7 +25,7 @@ Upstream: web-extension-inventory-reviewed (2026-10-07); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-07, `llm.md#column-chart`): Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, a legend, and a pointer and keyboard tooltip with a highlight band.
+Support (2026-10-07, `llm.md#column-chart`): Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 

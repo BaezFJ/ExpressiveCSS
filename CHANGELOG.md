@@ -7,6 +7,29 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Expandable bottom sheets: `dialog.bottom-sheet.expandable` opens at
+  `--md-comp-bottom-sheet-partial-height` (50% of the viewport) and
+  `.expanded` grows it to the full height. A drag up expands it, a drag
+  down collapses it before it dismisses, and a handle `<button>` switches
+  between the heights with `aria-expanded` kept current.
+- Arrow keys for tabs and lists: Left, Right, Home and End move focus
+  between tabs, wrapping and skipping disabled ones, and Up, Down, Home and
+  End move it between the rows of a `.list` whose rows are each one link or
+  button. Tabs and rows stay links and Tab stops; focus moves without
+  choosing. The list keys come from the new `Lists` behavior.
+- Modal date and time pickers: `displayPlugin: 'modal'` opens the picker in
+  a modal `<dialog class="display-modal">` drawn as a basic dialog, named by
+  the input's label. Ok writes the input; Cancel, Escape and a press on the
+  scrim close it without a change and call `onCancel`. Focus moves into the
+  dialog and back to the input. Selective Sass builds add `"dialog"` and
+  `"modal-display"`.
+- Value axes for charts: `.axis` on a line, column, bar or mixed chart
+  labels its value scale at round values, with a grid line at each, and
+  widens an end the chart chose to the next round value. The labels repeat
+  the cells' currency or percent sign and shorten large numbers. A mixed
+  chart labels its `end` scale on the far side and stretches it so both
+  label sets share the grid lines. On a radar chart, `.axis` rings the grid
+  at round values and labels the rings.
 - Non-Latin text faces: Roboto and Noto Sans now ship Latin Extended,
   Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese subsets,
   and Noto Sans adds Devanagari, at 400, 500 and 700. Each face has a
@@ -422,6 +445,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- A sheet drag that moves against the dismissing direction now counts as
+  a drag, so the click that ends it no longer activates a handle button.
+- The time picker's hour and minute fields are spin buttons
+  (`role="spinbutton"` with their range). Up and Down step them by one and
+  Page Up and Page Down by five, wrapping round the dial, and the clock hand
+  follows. Code that found them by the `textbox` role needs `spinbutton`.
 - The `Tooltip` plugin anchors its bubble with CSS anchor positioning where
   the browser supports it: the tooltip stays beside its activator through
   page and container scrolling and flips at the viewport edge. Anchored

@@ -1053,8 +1053,8 @@ for (const action of ['input', 'empty', 'boundaries']) scenario(`time picker dig
       }, { twelveHour, docked });
       await page.locator('#time').focus();
       await page.keyboard.press('Enter');
-      const hours = page.getByRole('textbox', { name: 'Hours', exact: true });
-      const minutes = page.getByRole('textbox', { name: 'Minutes', exact: true });
+      const hours = page.getByRole('spinbutton', { name: 'Hours', exact: true });
+      const minutes = page.getByRole('spinbutton', { name: 'Minutes', exact: true });
       if (action === 'input') {
         await hours.fill(twelveHour ? '02' : '00');
         await minutes.fill('19');
@@ -1135,11 +1135,11 @@ scenario('time picker exposes named keyboard controls in inline and docked modes
         }, { docked, twelveHour });
         await page.locator('#appointment').focus();
         await page.keyboard.press('Enter');
-        await expect(page.getByRole('textbox', { name: 'Horas', exact: true })).toBeFocused();
+        await expect(page.getByRole('spinbutton', { name: 'Horas', exact: true })).toBeFocused();
         await page.keyboard.press('ControlOrMeta+A');
         await page.keyboard.type(twelveHour ? '11' : '00');
         await page.keyboard.press('Tab');
-        await expect(page.getByRole('textbox', { name: 'Minutes', exact: true })).toBeFocused();
+        await expect(page.getByRole('spinbutton', { name: 'Minutes', exact: true })).toBeFocused();
         await page.keyboard.press('ControlOrMeta+A');
         await page.keyboard.type('25');
         await page.keyboard.press('Tab');

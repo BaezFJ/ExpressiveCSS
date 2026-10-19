@@ -25,10 +25,10 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**92 of 92 rows enforced; 0 remaining.**
+**93 of 93 rows enforced; 0 remaining.**
 
 88 of those rows are components - a part of the framework an author writes markup for.
-The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
+The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
 
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 88 components declare conformance debt.**
+**2 of 88 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -851,6 +851,16 @@ Added with the mixed chart component. The <table> is the chart's text alternativ
 - **mixed-chart-is-a-figure-with-a-table** - Write .mixed-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
 - **mixed-chart-has-a-caption** - Name a .mixed-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
+### modal-display
+
+**Kind:** behavior.
+
+Added with the modal date and time pickers. A behavior, not a component: the picker plugins generate this <dialog>, named by the input's label, so there is no element an author writes to get one.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
+
 ### navbar
 
 Swept 0.8.0. The bar is <header> whose child is <nav>; the landmark rules carry it.
@@ -1143,9 +1153,9 @@ Added with the stepper component. The ordered list carries the step count and po
 
 ### tabs
 
-Swept 0.8.0. Anchor navigation, not a tablist - see rule 2.
+Swept 0.8.0. Anchor navigation, not a tablist - see rule 2. Left, Right, Home and End move focus between the links as a shortcut; each link stays a Tab stop.
 
-**Conformance debt:** `tablist` is withheld pending keyboard model, and `tabs-not-a-tablist` enforces that.
+**Rejected role:** `tablist` is not withheld but declined - the tabs are links to sections inside a nav landmark, with aria-current marking the one shown - the arrow keys only move focus between them, every link stays a Tab stop, and Enter follows it as a link, so there is no selection model for tab and tabpanel roles to announce. `tabs-not-a-tablist` enforces that.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |

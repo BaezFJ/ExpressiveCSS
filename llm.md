@@ -219,7 +219,7 @@ Use `@use "pkg:@expressivecss/expressive/scss/custom" with ($components:
 Node package importer. Tokens and base remain included. Lists preserve the given
 order; `null` includes a whole group and `()` omits it. For FormSelect and
 Datepicker use `("icons-material-design", "buttons", "menu", "forms", "datepicker")`.
-Add `"docked-display"` before `"forms"` for the optional docked picker.
+Add `"docked-display"` before `"forms"` for the optional docked picker, or `"dialog"` and `"modal-display"` for the modal one.
 
 `$expressive-include-fonts: false` lets consumers supply subset font faces, but
 also removes the text font declarations. Restore Roboto and Noto Sans 400/500/700
@@ -3133,7 +3133,7 @@ Tokens are `--md-comp-drag-handle-{container-width,width,height,shape,color}` an
 
 ## Lists
 
-Continuous, vertical indexes of text and images. Use a list so people can find an item and act on it. There is no JavaScript — the HTML is the component.
+Continuous, vertical indexes of text and images. Use a list so people can find an item and act on it. The HTML is the component; the script only adds arrow keys to lists of link or button rows.
 
 The leading visual is the first icon, `<img>`, or `<input>`. The trailing action is the last icon, `<kbd>`, `<button>`, `<time>`, or `.meta`. A following `<p>` is supporting text. Mark the current row with `active` or `selected` — **not** `aria-selected`, which is not valid on a plain `listitem` and needs a role (`option`, `tab`, `row`, `treeitem`) that brings a keyboard contract with it.
 
@@ -3200,6 +3200,8 @@ A leading icon is a quick visual cue for the label. A trailing icon is status or
 ### Links
 
 Wrap the row in an `<a>` or `<label>` to make the whole item the target. `aria-current` on the link, or a checked radio inside the label, paints the selected pill.
+
+In a list whose rows are each a single link or button, Up and Down move focus to the row before or after, and Home and End to the first and last, skipping disabled rows and stopping at the ends. Every row stays a Tab stop, so the keys are a shortcut that needs the script; rows with more than one control, and radio rows, which the browser already moves with the arrows, keep their native keys.
 
 ```html
 <li>
@@ -5031,6 +5033,7 @@ A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The firs
 - Series take `primary`, `tertiary`, `secondary` and `on-surface-variant` in turn.
 - A cell's number is its text without currency signs, percent signs or grouping commas. Text that is not a single number (`4.4k`, `(1,200)`) is a gap, as is an empty cell. Put the number in `data-value` for those, and for `4.400 €`, which would read as 4.4. The tooltip shows the cell text as written.
 - The y axis spans the data with 10% to spare. `data-min` and `data-max` on the figure, or the `min` and `max` options, fix either end.
+- `axis` labels the y axis at round values beside the plot, with a grid line at each, and widens an end the chart chose to the next round value. The labels repeat the cells' currency or percent sign and shorten large numbers (`$1.5K`); an end set by `data-min` or `data-max` stays put. They are `aria-hidden`; the table carries the values. `--md-comp-line-chart-axis-width` (48px) is the room they take.
 - The plot is one Tab stop named by the caption. Left and Right move between rows, Home and End jump to the ends, Escape hides the tooltip. In a right-to-left context the x axis runs right to left and the arrows follow it. The tooltip is a polite live region. Hide a redundant caption with `.visually-hidden` rather than removing it.
 - A direct `<figure>` in a card is normally media with an overlaid caption; a `.line-chart` keeps its own layout there.
 - After changing the table, call `Expressive.LineChart.init(el)` again to redraw. `show(index)` highlights a row (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
@@ -5042,6 +5045,7 @@ A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The firs
 | `--md-comp-line-chart-height` | 240px (sparkline 48px) |
 | `--md-comp-line-chart-line-width` | 3px (sparkline 2px) |
 | `--md-comp-line-chart-grid-color` | `outline-variant` |
+| `--md-comp-line-chart-axis-width` | 48px, room for `axis` labels |
 | `--md-comp-line-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
 
 ---
@@ -5073,6 +5077,7 @@ A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as
 - Series take `primary`, `tertiary`, `secondary` and `on-surface-variant` in turn. A series header cell's classes reach its columns as hooks for your own styles; `dashed` has no column style.
 - Cells read as in a line chart: currency signs, percent signs and grouping commas are ignored, other text is a gap, and `data-value` gives the number. In a grouped chart a gap leaves an empty slot.
 - The y axis always includes zero, with 10% of the span to spare above and, with negative values, below. Negative columns hang from zero and round their lower end. `data-min` and `data-max` on the figure, or the `min` and `max` options, fix either end; when zero is off the scale, columns start at the plot's bottom.
+- `axis` labels the y axis at round values beside the plot, with a grid line at each, and widens an end the chart chose to the next round value. The labels repeat the cells' currency or percent sign and shorten large numbers (`$1.5K`); an end set by `data-min` or `data-max` stays put. They are `aria-hidden`; the table carries the values. `--md-comp-column-chart-axis-width` (48px) is the room they take.
 - Keyboard, RTL, the live tooltip and cards behave as for the line chart: the plot is one Tab stop named by the caption, and a `.column-chart` in a card keeps its own layout.
 - After changing the table, call `Expressive.ColumnChart.init(el)` again to redraw. `show(index)` highlights a group (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
 
@@ -5085,6 +5090,7 @@ A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as
 | `--md-comp-column-chart-shape` | 4px |
 | `--md-comp-column-chart-track-color` | `surface-container-highest` |
 | `--md-comp-column-chart-grid-color` | `outline-variant` |
+| `--md-comp-column-chart-axis-width` | 48px, room for `axis` labels |
 | `--md-comp-column-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
 
 ---
@@ -5115,6 +5121,7 @@ A `<figure class="bar-chart">` takes the same `<figcaption>` and `<table>` as a 
 - `stacked` draws one bar per row with each series after the total of the ones before it; only the last segment rounds its end. `split` separates stacked segments with a gap and rounds them at each joint. With `track` and `data-max` set to a budget, one stacked row is a meter of what is spent and what is left.
 - `track` draws a full-width track behind each row and rounds both ends of its bars. `values` writes each cell's text from its bar's base, in the series' on-color over the bar; a value longer than a short bar runs on past its end in the label color, and a stacked segment cuts what does not fit. `sparkline` drops the labels, grid, legend and tooltip and is not focusable.
 - Cells, series colors, `data-min`, `data-max`, negative values and gaps work as in the column chart; negative bars grow toward the inline start.
+- `axis` labels the value axis at round values under the plot, with a grid line up from each, as in the column chart.
 - The plot is one Tab stop named by the caption. Up and down arrows move between rows, Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped row. In a right-to-left page, set by `dir` or CSS `direction`, the bars grow leftwards and the labels sit on the right; rows keep their order.
 - After changing the table, call `Expressive.BarChart.init(el)` again to redraw. It takes the column chart's options and methods.
 
@@ -5243,6 +5250,7 @@ A `<figure class="radar-chart">` takes the same `<figcaption>` and `<table>` as 
 - The plot is a square as wide as `--md-comp-radar-chart-height`, centered with `--md-comp-radar-chart-label-room` on each side for the labels. Four grid rings split the scale evenly.
 - `area` fills each shape, `points` marks each value, and `class="dashed"` on a header cell dashes that series' outline. `sparkline` is a 48px chart with no labels, legend or tooltip and is not focusable.
 - Cells read as in the line chart. A non-numeric cell is a gap: the shape joins the spokes either side and the tooltip leaves it out. The middle is zero, or below the lowest value if one is negative; the rim is the highest value plus a tenth of the range. `data-min` and `data-max`, or the `min` and `max` options, fix the scale; values past the rim stop at it. Series take four colors.
+- `axis` draws the grid rings at round values instead of quarters and labels each ring up the top spoke, leaving zero unlabelled; the rim widens to the next round value unless `data-max` sets it.
 - The plot is one Tab stop named by the caption. Right and down arrows move to the next row, left and up to the one before, wrapping between the last row and the first; Home and End jump to the ends and Escape hides the tooltip; the pointer or a tap shows the nearest spoke. In a right-to-left page the spokes and the arrows still run clockwise.
 - After changing the table, call `Expressive.RadarChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`.
 
@@ -5326,7 +5334,8 @@ A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as 
 </figure>
 ```
 
-- Series share one scale. A series whose header has `end` is drawn against a second scale fitted to the `end` series, or fixed by `data-end-min` and `data-end-max` on the figure, as `data-min` and `data-max` fix the first. A scale with columns always includes zero. There is no y axis, so name the units in the caption or headers.
+- Series share one scale. A series whose header has `end` is drawn against a second scale fitted to the `end` series, or fixed by `data-end-min` and `data-end-max` on the figure, as `data-min` and `data-max` fix the first. A scale with columns always includes zero. Without `axis` there is no y axis, so name the units in the caption or headers.
+- `axis` labels the first scale beside the plot's start, with grid lines, and the `end` scale along its end. When neither scale has a set end, the `end` scale stretches to as many round steps as the first so its labels share the grid lines. Each scale's labels repeat its cells' currency or percent sign.
 - Cells read as in the line chart; a suffix such as `K` makes a cell a gap, so use `data-value` or put the unit in the header. A gap breaks a line and leaves a column's slot empty. Series take four colors in column order, whatever their kind, then repeat.
 - The cursor bands the highlighted row and puts a point on each line and area. The plot is one Tab stop named by the caption; left and right move between rows, Home and End jump to the ends and Escape hides the tooltip. `sparkline` is a 48px chart with no grid, labels, legend or tooltip and is not focusable.
 - After changing the table, call `Expressive.MixedChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale. `stacked` is not supported.
@@ -5340,6 +5349,7 @@ A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as 
 | `--md-comp-mixed-chart-shape` | 4px, the column's end radius |
 | `--md-comp-mixed-chart-line-width` | 3px (sparkline 2px) |
 | `--md-comp-mixed-chart-grid-color` | `outline-variant` |
+| `--md-comp-mixed-chart-axis-width` | 48px, room on each side for `axis` labels |
 | `--md-comp-mixed-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
 
 ---
@@ -5965,6 +5975,17 @@ document.getElementById('sheet').showModal(); // modal, with scrim
 document.getElementById('sheet').show();      // standard, no scrim
 ```
 
+`expandable` gives the sheet two heights. It opens partly expanded, at `--md-comp-bottom-sheet-partial-height` (50% of the viewport), and `.expanded` grows it to the full height, 72dp short of the top. A drag up on the handle, or a flick up, expands it; a drag down from expanded collapses it, and a drag down from the partial height dismisses as usual. A handle `<button>` switches between the heights instead of closing, and the component keeps its `aria-expanded` current, so name it for the height, not for dismissal. Closing the sheet puts it back to partial. The height moves on the sheet's spring. Give an expandable sheet an explicit close control, since the handle no longer closes it.
+
+```html
+<dialog class="bottom-sheet expandable" aria-labelledby="filters-title">
+  <button type="button" class="drag-handle" aria-label="Sheet height" aria-expanded="false"></button>
+  <h2 id="filters-title">Filters</h2>
+  <div>…</div>
+  <form method="dialog"><button type="submit" class="text">Done</button></form>
+</dialog>
+```
+
 The sheet slides in, and snaps back after a short drag, on the default spatial spring: `--md-comp-bottom-sheet-motion` and `--md-comp-bottom-sheet-motion-duration` read `--md-sys-motion-spring-default-spatial` and its `-duration` token, so `motion="expressive"` gives it a slight bounce. The sheet runs on 24px below the viewport, so the bounce never uncovers the page under it. With reduced motion requested it appears without moving.
 
 ### Side sheet
@@ -6152,6 +6173,8 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 ```
 
 Add `disabled` on the `<a>` to make it inaccessible. Tabs become scrollable when there are too many to fit.
+
+Each tab is a link and a Tab stop. When one has focus, Left and Right move focus to the next or previous tab, wrapping at the ends, and Home and End to the first and last; disabled tabs are skipped. In a right-to-left page the arrows still move the way they point. Moving focus does not switch the panel: Enter follows the link. The tabs keep their link semantics and `aria-current`, so they are not a `tablist`.
 
 ### Secondary
 
@@ -6858,7 +6881,7 @@ Expressive.AutoInit(document.body, {
 
 ### Display
 
-The calendar is a `.datepicker-container` in the page. There is no overlay and no `autoClose` option.
+The calendar is a `.datepicker-container` in the page, unless `displayPlugin: 'modal'` puts it in a dialog. There is no `autoClose` option.
 
 #### Always visible
 
@@ -6878,6 +6901,16 @@ Expressive.Datepicker.init(elem, {
 The popover stays inside the input’s parent and accounts for its positioning and scroll offsets. Positioned wrappers such as `.field` can be used directly.
 
 Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `duration` (`250`), and `align` (`'left'`).
+
+#### Modal dialog
+
+`displayPlugin: 'modal'` opens the calendar in a modal `<dialog class="display-modal">`, drawn as a basic dialog over a scrim, when the input is clicked or focused with Enter. The dialog takes the input's label as its name and focus moves to the selected day. Picking a day writes nothing until Ok; Cancel, Escape or a press on the scrim close it without changing the input and call `onCancel`. Focus then returns to the input. A modal calendar always shows Cancel and Ok, so it sets `openByDefault: true` and `autoSubmit: false` for you.
+
+```js
+Expressive.Datepicker.init(elem, {
+  displayPlugin: 'modal'
+});
+```
 
 `container` renders the calendar into a specific element and does not hide it. Use a selector or a DOM node.
 
@@ -6915,8 +6948,8 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
 | `onConfirm` | Function | `null` | Called once when Ok is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
 | `onCancel` | Function | `null` | Called once when Cancel is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
-| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. Pair with `openByDefault: true`. |
-| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
+| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover, paired with `openByDefault: true`, or `'modal'` for a dialog with Cancel and Ok. |
+| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. The modal plugin takes none. |
 
 ### Date format options
 
@@ -6962,7 +6995,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 
 ### Calendar keyboard navigation
 
-The inline and docked calendars support keyboard navigation. Enter on a date input focuses the calendar. Tab enters or leaves its single day stop; arrow keys move by day or week. Left/Right follow `isRTL`. Home/End move to the first/last day of the week using `firstDay`. PageUp/PageDown change month, and Shift changes year, clamping to the last day of shorter months. Enter or Space selects an enabled day. Disabled dates remain focusable with `aria-disabled` but cannot be selected. A typed date that is outside the bounds, a disabled weekend or refused by `disableDayFn` puts the input back to the selected date. An input's initial value is the selection, and a form reset reads the selection back from the reset values. Navigation respects date and year/month bounds and restores day focus after redraws without moving focus from outside the calendar. No modal picker is added.
+The inline and docked calendars support keyboard navigation. Enter on a date input focuses the calendar. Tab enters or leaves its single day stop; arrow keys move by day or week. Left/Right follow `isRTL`. Home/End move to the first/last day of the week using `firstDay`. PageUp/PageDown change month, and Shift changes year, clamping to the last day of shorter months. Enter or Space selects an enabled day. Disabled dates remain focusable with `aria-disabled` but cannot be selected. A typed date that is outside the bounds, a disabled weekend or refused by `disableDayFn` puts the input back to the selected date. An input's initial value is the selection, and a form reset reads the selection back from the reset values. Navigation respects date and year/month bounds and restores day focus after redraws without moving focus from outside the calendar. A modal calendar moves focus to the selected day when it opens and back to the input when it closes.
 
 ### Date range
 
@@ -7052,7 +7085,7 @@ instance.destroy();
 
 #### .open(); / .close();
 
-These methods are not provided. The calendar defaults to inline presentation; `displayPlugin: 'docked'` enables docking. Both require `openByDefault: true` to show the calendar. No modal implementation is available.
+These methods are not provided. The calendar defaults to inline presentation; `displayPlugin: 'docked'` enables docking and needs `openByDefault: true` to show the calendar. `displayPlugin: 'modal'` opens it in a dialog from the input.
 
 ### Properties
 
@@ -7117,7 +7150,7 @@ Expressive.AutoInit(document.body, {
 
 ### Display
 
-The clock is a `.timepicker-container` in the page. There is no overlay and no `autoClose` option.
+The clock is a `.timepicker-container` in the page, unless `displayPlugin: 'modal'` puts it in a dialog. There is no `autoClose` option.
 
 `container` renders the clock into a specific element instead of the input’s parent. Pass a selector or a DOM node.
 
@@ -7134,6 +7167,16 @@ Expressive.Timepicker.init(elem, {
 The popover stays inside the input’s parent and accounts for its positioning and scroll offsets. Positioned wrappers such as `.field` can be used directly.
 
 Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `duration` (`250`), and `align` (`'left'`).
+
+#### Modal dialog
+
+`displayPlugin: 'modal'` opens the clock in a modal `<dialog class="display-modal">`, drawn as a basic dialog over a scrim, when the input is clicked or confirmed with Enter. The dialog takes the input's label as its name and focus moves to the hour field. The time is written on Ok or on Enter in a field; Cancel, Escape or a press on the scrim close it without changing the input and call `onCancel`. Focus then returns to the input. A modal clock always shows Cancel and Ok, so it sets `autoSubmit: false` for you.
+
+```js
+Expressive.Timepicker.init(elem, {
+  displayPlugin: 'modal'
+});
+```
 
 ### Options
 
@@ -7152,8 +7195,8 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
 | `onDone` | Function | `null` | Called once when Ok is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
 | `onCancel` | Function | `null` | Called once when Cancel is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
-| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. |
-| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
+| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover, or `'modal'` for a dialog with Cancel and Ok. |
+| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. The modal plugin takes none. |
 
 ### Internationalization
 
@@ -7165,7 +7208,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 | `clear` | `'Clear'` |
 | `done` | `'Ok'` |
 
-`i18n.hours` and `i18n.minutes` default to `Hours` and `Minutes` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. Tab moves between controls; the dial does not implement arrow-key navigation.
+`i18n.hours` and `i18n.minutes` default to `Hours` and `Minutes` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Stepping the hour leaves AM and PM as they are. Tab moves between controls; the dial itself takes pointer input only.
 
 ### 12-hour and 24-hour
 
@@ -7222,7 +7265,7 @@ instance.destroy();
 
 #### .open(); / .close();
 
-These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking. No modal implementation is available.
+These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking and `displayPlugin: 'modal'` opens it in a dialog from the input.
 
 ### Properties
 

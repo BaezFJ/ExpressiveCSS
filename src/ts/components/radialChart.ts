@@ -31,6 +31,11 @@ export class RadialChart extends LineChart {
     return 'radial-chart';
   }
 
+  /** The rings fill to data-max, so there is no value axis. */
+  protected get _axis() {
+    return false;
+  }
+
   protected get _key() {
     return 'Expressive_RadialChart';
   }

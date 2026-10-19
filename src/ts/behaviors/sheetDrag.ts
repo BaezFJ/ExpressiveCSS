@@ -34,16 +34,43 @@ export interface SheetDragConfig {
   onPress?: () => void;
   /** Called when a drag ends, with whether the pointer actually moved. */
   onRelease?: (dragged: boolean) => void;
+  /**
+   * Called when a drag that moved ends on an open sheet, before it can
+   * dismiss, with how far the pointer travelled along the axis (either way,
+   * unlike the dismissing shift) and its flick velocity. Returns whether the
+   * drag did something else, such as resizing the sheet, so it does not also
+   * dismiss it.
+   */
+  release?: (dialog: HTMLDialogElement, delta: number, velocity: number) => boolean;
 }
 
 /** Past this the sheet dismisses rather than snapping back, in pixels. */
-const DISMISS_DISTANCE = 96;
+export const DISMISS_DISTANCE = 96;
 /** Past this a flick dismisses whatever the distance, in pixels per millisecond. */
-const DISMISS_VELOCITY = 0.5;
+export const DISMISS_VELOCITY = 0.5;
 /** Ignore a flick after the pointer has rested for this many milliseconds. */
 const FLICK_TIMEOUT = 100;
 /** Past this the pointer was dragging, not tapping. Hand jitter, in pixels. */
 const DRAG_SLOP = 4;
+
+/** One drag in flight. */
+interface Drag {
+  dialog: HTMLDialogElement;
+  pointerId: number;
+  direction: 1 | -1;
+  start: number;
+  last: number;
+  lastT: number;
+  velocity: number;
+  shift: number;
+}
+
+/** The pointer's velocity at release, or 0 once it has rested past the flick window. */
+const flickVelocity = (held: Drag) => (Date.now() - held.lastT < FLICK_TIMEOUT ? held.velocity : 0);
+
+/** Whether the drag went past the dismissal distance, or flicked, toward the sheet's edge. */
+const dismisses = (held: Drag, velocity: number) =>
+  held.shift * held.direction > DISMISS_DISTANCE || velocity * held.direction > DISMISS_VELOCITY;
 
 /** Selectors whose drag is already installed, so a second `Init()` is a no-op. */
 const installed = new Set<string>();
@@ -58,16 +85,7 @@ export function installSheetDrag(config: SheetDragConfig): void {
   const coord = (event: PointerEvent) => (config.axis === 'x' ? event.clientX : event.clientY);
   let observer: MutationObserver;
 
-  let drag: {
-    dialog: HTMLDialogElement;
-    pointerId: number;
-    direction: 1 | -1;
-    start: number;
-    last: number;
-    lastT: number;
-    velocity: number;
-    shift: number;
-  } | null = null;
+  let drag: Drag | null = null;
 
   const sheetFor = (event: Event): HTMLDialogElement | null => {
     const dialog = Utils.closestInPath(event, config.selector);
@@ -144,21 +162,28 @@ export function installSheetDrag(config: SheetDragConfig): void {
     // so the dismissal animates; the shift has to clear after, or a snap-back
     // would jump to zero before the transition could carry it there.
     held.dialog.style.transition = '';
-    const velocity = Date.now() - held.lastT < FLICK_TIMEOUT ? held.velocity : 0;
-    const dragged = Math.abs(held.shift) > DRAG_SLOP;
-    config.onRelease?.(dragged);
-    const dismiss = dragged &&
-      (held.direction === 1
-        ? held.shift > DISMISS_DISTANCE || velocity > DISMISS_VELOCITY
-        : held.shift < -DISMISS_DISTANCE || velocity < -DISMISS_VELOCITY);
-    if (dismiss && held.dialog.open) held.dialog.close();
+    settle(held);
     held.dialog.style.setProperty(config.property, '0px');
+  };
+
+  const onRelease = config.onRelease ?? (() => {});
+  const release = config.release ?? (() => false);
+
+  /** A drag that moved resizes the sheet, if the sheet handles that, or else dismisses it past the distance or a flick. */
+  const settle = (held: Drag) => {
+    const velocity = flickVelocity(held);
+    const delta = held.last - held.start;
+    // Movement either way is a drag, so the click that ends it is not a tap.
+    const dragged = Math.abs(delta) > DRAG_SLOP;
+    onRelease(dragged);
+    const handled = !dragged || release(held.dialog, delta, velocity);
+    if (!handled && dismisses(held, velocity)) held.dialog.close();
   };
 
   const onCancel = (event?: PointerEvent) => {
     if (event && drag?.pointerId !== event.pointerId) return;
     observer.disconnect();
-    config.onRelease?.(false);
+    onRelease(false);
     const held = drag;
     drag = null;
     if (held) reset(held.dialog);

@@ -13,7 +13,8 @@
 // Modifiers: .stacked draws one bar per row with each series after the
 // ones before it, .split separates stacked segments and rounds each one,
 // .track draws a full-width track behind each row's bars, .values writes
-// each cell's text from its bar's base, .sparkline is a small chart with
+// each cell's text from its bar's base, .axis labels the value axis under
+// the plot at round values, .sparkline is a small chart with
 // no labels, grid, legend or tooltip.
 //
 // Tokens:
@@ -28,6 +29,7 @@
 //                                      on-secondary, surface; .values text
 
 @include chart("bar-chart");
+@include chart-axis("bar-chart", $beside: false);
 
 .bar-chart {
   --md-comp-bar-chart-row-height: 40px;
@@ -85,6 +87,27 @@
   border-block-end: 0;
   border-right: 1px solid var(--md-comp-bar-chart-grid-color);
   background: linear-gradient(to right, var(--md-comp-bar-chart-grid-color) 1px, transparent 0) 0 0 / 25% 100%;
+}
+
+// .axis labels the value axis under the plot, with a grid line up from
+// each label. The row labels keep the plot's height.
+.bar-chart.axis > :is(.bar-chart-plot, .bar-chart-labels) {
+  margin-block-end: 24px;
+}
+
+.bar-chart-axis > li {
+  inset: 0 auto;
+  inset-inline-start: calc(100% - var(--at, 0%));
+  border-block-start: 0;
+  border-inline-start: 1px solid var(--md-comp-bar-chart-grid-color);
+}
+
+.bar-chart-axis > li > span {
+  inset: 100% auto auto 0;
+  width: auto;
+  padding: 4px 0 0;
+  overflow: visible;
+  translate: -50% 0;
 }
 
 .bar-chart-labels {

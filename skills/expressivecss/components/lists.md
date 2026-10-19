@@ -9,7 +9,7 @@ Component ID: `lists`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `deb6febc3df304646795d5df8ab867d706f176d2880e936718314e1d884bf33c`
+Contract SHA-256: `a872d2f7429e6946a3b6f9c670de649096adce718f18c2e418e40bbcb4741903`
 
 #### Selection and adaptation
 
@@ -33,13 +33,13 @@ Support (2026-09-13, `llm.md#lists`): Standard and segmented lists.
 
 Web adaptation: Native list semantics; visual selection alone does not justify aria-selected.
 
-Known boundary: Ordinary native lists and child controls do not implement Google composite arrow navigation.
+Known boundary: Lists of single link or button rows move focus with Up, Down, Home and End as a shortcut; rows stay Tab stops, and lists with several controls per row, selection lists and listbox semantics are not provided.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#lists).
 
 #### Contract
 
-Continuous, vertical indexes of text and images. Use a list so people can find an item and act on it. There is no JavaScript — the HTML is the component.
+Continuous, vertical indexes of text and images. Use a list so people can find an item and act on it. The HTML is the component; the script only adds arrow keys to lists of link or button rows.
 
 The leading visual is the first icon, `<img>`, or `<input>`. The trailing action is the last icon, `<kbd>`, `<button>`, `<time>`, or `.meta`. A following `<p>` is supporting text. Mark the current row with `active` or `selected` — **not** `aria-selected`, which is not valid on a plain `listitem` and needs a role (`option`, `tab`, `row`, `treeitem`) that brings a keyboard contract with it.
 
