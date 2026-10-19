@@ -13,7 +13,7 @@ Google's [shape guidance](https://m3.material.io/styles/shape/overview) and [And
 | FAB corners | `--md-comp-fab-container-shape` and size variants; preserve the FAB's own geometry. |
 | Connected and changing shapes | Button groups own shared edges, pressed corners, and selection shapes. Their runtime also owns press growth. |
 | Corner scale | `--md-sys-shape-corner-*` from `none` to `full` on `:root` and `:host`, including the Expressive `large-increased`, `extra-large-increased` and `extra-extra-large` steps. Component shape tokens on that scale read them, so one override changes every component on that step. |
-| Cut-corner family | No cut-corner token family or general cut-corner utility is emitted. |
+| Cut-corner family | `--md-sys-shape-corner-family` is `round` or `bevel`. `corners="cut"` on the root or a subtree cuts the corners of cards, dialogs, sheets, menus, fieldsets, buttons, chips, alerts, snackbars, tooltips, popovers and outlined fields; `corners="round"` restores them. `.corner-cut` cuts one element. Round indicators and `.circle` stay round. It relies on CSS `corner-shape`, so browsers without it (Firefox 157) keep rounded corners. |
 
 Local evidence is `src/sass/tokens/_shape.scss`, `src/sass/components/_buttons.scss`, `src/sass/abstracts/_mixins.scss`, and `src/sass/components/_button-groups.scss`. A source-supported override is not evidence that every component implements Google's complete shape system. Do not invent a shape class or translate an Android attribute into a CSS variable.
 

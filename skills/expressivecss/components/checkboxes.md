@@ -9,7 +9,7 @@ Component ID: `checkboxes`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `8c11255bb9634993b5d14a5a953294839f52765f05f1a3990c03ae3d27b2873b`
+Contract SHA-256: `41e40ceb0d7b4ab67ddd24337219016081d06275119cef6447d054977188e1fd`
 
 #### Selection and adaptation
 

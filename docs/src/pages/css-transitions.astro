@@ -8,6 +8,7 @@ import { defineSections } from "../lib/sections";
 const S = defineSections([
   { id: "scale", label: "Scale", heading: false },
   { id: "motion-tokens", label: "Motion tokens" },
+  { id: "springs", label: "Springs" },
 ]);
 ---
 <DocsLayout page="css_transitions">
@@ -71,6 +72,40 @@ const S = defineSections([
   /* Every 200ms transition runs at 150ms instead. */
   :root { --md-sys-motion-duration-short4: 150ms; }
 </style>
+`} />
+  </Section>
+  <Section {...S.springs}>
+    <p>
+      Material 3 Expressive describes motion as springs: a damping ratio and a stiffness. CSS has no spring timing function, so the framework solves each spring when the sheet is compiled and samples it into a <code>linear()</code> easing that runs for the time the spring takes to settle. Every spring has an easing token and a <code>-duration</code> token. Use the two together.
+    </p>
+    <table class="striped">
+      <thead><tr><th>Token</th><th>Standard (damping, stiffness)</th><th>Expressive</th></tr></thead>
+      <tbody>
+        <tr><td><code>--md-sys-motion-spring-fast-spatial</code></td><td>0.9, 1400</td><td>0.6, 800</td></tr>
+        <tr><td><code>--md-sys-motion-spring-default-spatial</code></td><td>0.9, 700</td><td>0.8, 380</td></tr>
+        <tr><td><code>--md-sys-motion-spring-slow-spatial</code></td><td>0.9, 300</td><td>0.8, 200</td></tr>
+        <tr><td><code>--md-sys-motion-spring-fast-effects</code></td><td>1, 3800</td><td>same</td></tr>
+        <tr><td><code>--md-sys-motion-spring-default-effects</code></td><td>1, 1600</td><td>same</td></tr>
+        <tr><td><code>--md-sys-motion-spring-slow-effects</code></td><td>1, 800</td><td>same</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The standard motion scheme is the default. <code>motion="expressive"</code> on the root or on any subtree switches the spatial springs to the bouncier expressive ones; <code>motion="standard"</code> switches a subtree back. Effects springs, for color and opacity, never overshoot and are the same in both schemes.
+    </p>
+<Code code={`
+<style>
+.panel {
+  transition: translate var(--md-sys-motion-spring-default-spatial-duration)
+    var(--md-sys-motion-spring-default-spatial);
+}
+</style>
+<main motion="expressive">…</main>
+`} />
+    <p>In Sass, <code>spring($damping, $stiffness)</code> and <code>spring-duration($damping, $stiffness)</code> turn any spring into the same pair.</p>
+<Code code={`
+.drawer {
+  transition: translate spring-duration(0.8, 380) spring(0.8, 380);
+}
 `} />
   </Section>
 </PageBody>

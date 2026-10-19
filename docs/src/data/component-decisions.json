@@ -8318,7 +8318,7 @@
           "scope": "android-foundation-reviewed; full web specification unassessed"
         },
         "implementation": {
-          "documentedSupport": "Fifteen baseline type-role utilities and rem-based tokens, and their M3 Expressive emphasized counterparts as .{role}-emphasized classes and emphasized weight tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Latin Roboto and Noto Sans 400/500/700.",
+          "documentedSupport": "Fifteen baseline type-role utilities and rem-based tokens, and their M3 Expressive emphasized counterparts as .{role}-emphasized classes and emphasized weight tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Roboto and Noto Sans 400/500/700 in Latin, Latin Extended, Cyrillic, Greek and Vietnamese subsets, plus Devanagari for Noto Sans, each gated by unicode-range.",
           "webAdaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only."
         }
       },
@@ -8340,20 +8340,15 @@
           },
           {
             "path": "src/sass/base/_fonts.scss",
-            "sha256": "9c31579639658044d5b8b81769ed33f3dabe36ab05f6fedaae8f705fa53c206b"
+            "sha256": "e73570f6975bb197d4bdfe0cb813bb2d0ee505ba21f60c498b661daa6e49f247"
           }
         ],
         "inventorySha256": "e5c204f237fac5230a627d290306cb010616d7413f369b5e10ff18708179a0bd",
         "gaps": [
           {
-            "kind": "verification",
-            "description": "Emphasized roles change only the weight; rendered 700 faces are not yet checked in a browser against loaded font files.",
-            "nextStep": "Load the packaged fonts in a browser check and confirm the emphasized label and title roles render the bundled 700 face rather than a synthetic bold."
-          },
-          {
             "kind": "feature",
-            "description": "Bundled text fonts cover Latin and 400/500/700 only; a Noto Sans fallback declaration does not establish non-Latin coverage.",
-            "nextStep": "Add browser checks for actual rendered font faces/weights, representative scripts, and all type-role metrics; retain native zoom/assistive review separately."
+            "description": "Arabic, Hebrew, CJK, Thai and other scripts outside the bundled subsets need an application-supplied family in --md-ref-typeface-fallback.",
+            "nextStep": "Decide whether to bundle Noto families for right-to-left and CJK scripts, weighing package size against the documented fallback recipe."
           }
         ],
         "browserChecks": [
@@ -8366,6 +8361,11 @@
             "file": "tests/expressivecss-material-quality.test.js",
             "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
             "scope": "Application-scoped headline size, line-height and 500 weight repair is accepted while qualitative judgment stays pending; no synthesized-font detection."
+          },
+          {
+            "file": "tests/font-subsets-browser.test.js",
+            "name": "chromium: the browser fetches only the font subsets and weights a page renders",
+            "scope": "Latin and Cyrillic text fetch their two Roboto subsets, an emphasized label fetches the bundled 700 face rather than synthesizing it, and unused Greek, Devanagari and Vietnamese subsets are not fetched. No rendering comparison of glyphs."
           }
         ]
       }
@@ -8381,7 +8381,7 @@
           "scope": "android-foundation-reviewed; full web specification unassessed"
         },
         "implementation": {
-          "documentedSupport": "Shared md.sys.shape.corner scale from none to full, read by component shape tokens on that scale. Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.",
+          "documentedSupport": "Shared md.sys.shape.corner scale from none to full, read by component shape tokens on that scale, and a corner family token (round or bevel) that a corners attribute switches for container surfaces, with a .corner-cut utility. Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.",
           "webAdaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only."
         }
       },
@@ -8406,8 +8406,8 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "No cut-corner family or general cut-corner theming system; off-scale component corners stay literal.",
-            "nextStep": "Map off-scale component corners to the nearest role only where Material names one; preserve existing component overrides and state shapes."
+            "description": "Cut corners rely on CSS corner-shape, which Firefox 157 lacks, so they stay rounded there; off-scale component corners stay literal.",
+            "nextStep": "Re-check corner-shape support in Firefox each release and remove the caveat once it ships; map off-scale corners only where Material names a role."
           }
         ],
         "browserChecks": [
@@ -8440,7 +8440,7 @@
           "scope": "android-foundation-reviewed; full web specification unassessed"
         },
         "implementation": {
-          "documentedSupport": "Shared md.sys.motion easing and duration tokens, which components read for on-scale curves and times. Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.",
+          "documentedSupport": "Shared md.sys.motion easing and duration tokens; M3 Expressive spring tokens for the standard and expressive schemes, solved at compile time into linear() easings with settle durations, a motion attribute that selects the scheme, and public Sass spring() and spring-duration() functions. Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion.",
           "webAdaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only."
         }
       },
@@ -8473,8 +8473,8 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "No general spring solver or unified motion-theme selector; the Expressive spring tokens exist only as one sampled fast-spatial curve.",
-            "nextStep": "Map remaining component springs before adding spring roles; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver."
+            "description": "Springs are sampled at compile time; there is no runtime solver, so an interrupted spring restarts without carrying velocity, and components other than button groups and the keypad do not use spring tokens yet.",
+            "nextStep": "Move component spatial transitions onto the spring tokens one component at a time, with browser checks of the settled state and reduced motion."
           }
         ],
         "browserChecks": [
@@ -12198,5 +12198,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "d6b985ccf325606ed303e0fccfbf74524e0131ef"
+  "sourceRevision": "766131c21086cddc5712c4f5ac28e6d44fae2f4e"
 }

@@ -17,6 +17,11 @@ function pkgPath(specifier, ...parts) {
   return join(dirname(require.resolve(`${specifier}/package.json`)), ...parts);
 }
 
+function textFaces(pkg, name, subsets) {
+  return subsets.flatMap((subset) => [400, 500, 700].map((weight) =>
+    [pkg, `files/${name}-${subset}-${weight}-normal.woff2`, `${name}-${subset}-${weight}.woff2`]));
+}
+
 const copies = [
   [
     '@fontsource-variable/material-symbols-outlined',
@@ -33,12 +38,9 @@ const copies = [
     'files/material-symbols-sharp-latin-full-normal.woff2',
     'material-symbols-sharp.woff2',
   ],
-  ['@fontsource/roboto', 'files/roboto-latin-400-normal.woff2', 'roboto-latin-400.woff2'],
-  ['@fontsource/roboto', 'files/roboto-latin-500-normal.woff2', 'roboto-latin-500.woff2'],
-  ['@fontsource/roboto', 'files/roboto-latin-700-normal.woff2', 'roboto-latin-700.woff2'],
-  ['@fontsource/noto-sans', 'files/noto-sans-latin-400-normal.woff2', 'noto-sans-latin-400.woff2'],
-  ['@fontsource/noto-sans', 'files/noto-sans-latin-500-normal.woff2', 'noto-sans-latin-500.woff2'],
-  ['@fontsource/noto-sans', 'files/noto-sans-latin-700-normal.woff2', 'noto-sans-latin-700.woff2'],
+  // Text faces: every subset base/_fonts.scss declares, at 400, 500 and 700.
+  ...textFaces('@fontsource/roboto', 'roboto', ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext', 'greek', 'greek-ext', 'vietnamese']),
+  ...textFaces('@fontsource/noto-sans', 'noto-sans', ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext', 'greek', 'greek-ext', 'vietnamese', 'devanagari']),
 ];
 
 const licenses = [

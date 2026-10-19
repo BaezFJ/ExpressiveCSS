@@ -87,7 +87,7 @@ Override the reference tokens rather than all 15 roles:
 }
 ```
 
-The defaults are Roboto for `--md-ref-typeface-brand` and `--md-ref-typeface-plain`, followed by `--md-ref-typeface-fallback`. The package bundles Roboto and Noto Sans at 400, 500 and 700. If a replacement family does not provide the weights used by the scale, browsers may synthesize them.
+The defaults are Roboto for `--md-ref-typeface-brand` and `--md-ref-typeface-plain`, followed by `--md-ref-typeface-fallback`. The package bundles Roboto and Noto Sans at 400, 500 and 700. Roboto ships Latin, Latin Extended, Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese, and Noto Sans adds Devanagari, each at 400, 500 and 700. Every subset is its own face with a `unicode-range`, so the browser downloads only the scripts and weights the page renders. Arabic, Hebrew, CJK, Thai and other scripts need their own family, such as Noto Sans Arabic; load it and add it to `--md-ref-typeface-fallback`. If a replacement family does not provide the weights used by the scale, browsers may synthesize them.
 
 ## Element defaults
 
@@ -108,7 +108,7 @@ Without role classes, `body` uses body-medium. Headings remain semantic and rece
 | `.capitalize` | capitalize transform |
 | `.flow-text` | fluid type from `1.2rem` to `1.68rem` across `360px`–`960px` |
 
-These helpers can override role weight or decoration. Combine them only when that override is intentional. The bundled Roboto and Noto Sans faces include 400 and 500 only, so `.light` and `.thin` may be synthesized unless the application supplies 300 and 200 faces. Text-transform classes change visual presentation, not the accessible/source text.
+These helpers can override role weight or decoration. Combine them only when that override is intentional. The bundled Roboto and Noto Sans faces include 400, 500 and 700 only, so `.light` and `.thin` may be synthesized unless the application supplies 300 and 200 faces. Text-transform classes change visual presentation, not the accessible/source text.
 
 `.flow-text` emits `clamp(1.2rem, 0.912rem + 1.28vw, 1.68rem)`. Do not combine it with a type-role utility; the later utility layer wins on `font-size`.
 

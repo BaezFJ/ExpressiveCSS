@@ -7,6 +7,21 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Non-Latin text faces: Roboto and Noto Sans now ship Latin Extended,
+  Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese subsets,
+  and Noto Sans adds Devanagari, at 400, 500 and 700. Each face has a
+  `unicode-range`, so a browser downloads only the scripts a page renders.
+- Cut corners: `--md-sys-shape-corner-family` (`round` or `bevel`), a
+  `corners="cut"` switch that cuts the corners of cards, dialogs, sheets,
+  menus, fieldsets, buttons, chips, alerts, snackbars, tooltips, popovers and
+  outlined fields, and a `.corner-cut` utility. Built on CSS `corner-shape`;
+  browsers without it keep rounded corners.
+- Spring motion tokens from Material 3 Expressive:
+  `--md-sys-motion-spring-{fast,default,slow}-{spatial,effects}` with a
+  `-duration` token each, solved at compile time into `linear()` easings.
+  `motion="expressive"` on the root or a subtree selects the expressive
+  spatial springs. The Sass `spring($damping, $stiffness)` and
+  `spring-duration()` functions build custom ones.
 - Emphasized type roles from Material 3 Expressive: `.{role}-emphasized`
   classes for all fifteen roles and
   `--md-sys-typescale-emphasized-{role}-font-weight` tokens, at `500` for

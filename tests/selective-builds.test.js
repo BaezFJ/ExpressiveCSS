@@ -222,5 +222,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the number stepper field: 74,167 gzip bytes (+72).
   // Reviewed the fifteen emphasized type roles, their weight tokens and the 700 faces: 74,518 gzip bytes (+351).
   // Reviewed window-size prefixes for margin, padding and .hide, without physical left and right: 76,799 gzip bytes (+2,281).
-  assert.ok(sizes(css).gzip <= 76799, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the standard and expressive spring tokens, nine 24-sample linear() curves: 77,624 gzip bytes (+825).
+  // Reviewed the cut corner family, the corners switch and .corner-cut: 77,790 gzip bytes (+166).
+  // Reviewed the Latin Extended, Cyrillic, Greek, Vietnamese and Devanagari text faces at 400, 500 and 700: 78,604 gzip bytes (+814).
+  assert.ok(sizes(css).gzip <= 78604, `CSS gzip: ${sizes(css).gzip}`);
 });

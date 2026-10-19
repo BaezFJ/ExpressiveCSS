@@ -191,7 +191,7 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 </html>
 ```
 
-The IIFE bundle exposes the global `Expressive` object. The compiled stylesheet ships `@font-face` rules for variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes), Roboto 400 / 500, and the Noto Sans fallback. Keep `dist/fonts/` next to `dist/css/` so the relative font URLs resolve. Override the brand/plain tokens when the page uses different typefaces. Do not load the older Material Icons stylesheet; use `.material-symbols`.
+The IIFE bundle exposes the global `Expressive` object. The compiled stylesheet ships `@font-face` rules for variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes), Roboto and the Noto Sans fallback at 400 / 500 / 700 in Latin, Cyrillic, Greek, Vietnamese and (Noto Sans) Devanagari subsets. Keep `dist/fonts/` next to `dist/css/` so the relative font URLs resolve. Override the brand/plain tokens when the page uses different typefaces. Do not load the older Material Icons stylesheet; use `.material-symbols`.
 
 ## ES module setup
 
@@ -222,7 +222,7 @@ Datepicker use `("icons-material-design", "buttons", "menu", "forms", "datepicke
 Add `"docked-display"` before `"forms"` for the optional docked picker.
 
 `$expressive-include-fonts: false` lets consumers supply subset font faces, but
-also removes the text font declarations. Restore Roboto and Noto Sans 400/500
+also removes the text font declarations. Restore Roboto and Noto Sans 400/500/700
 or explicitly choose alternative typefaces. Retain icon ligatures and variable
 axes, and include dynamic icons: Chips and dismissible Snackbar use `close`,
 and expandable navigation rail summaries use `expand_more`. The README includes font
@@ -758,6 +758,15 @@ Component shape tokens on the Material 3 corner scale read the `md.sys.shape.cor
 :root { --md-sys-shape-corner-medium: 8px; } /* cards, menu items and other medium corners */
 ```
 
+#### Cut corners
+
+Material shapes come in a rounded and a cut family. `corners="cut"` on the root or on any subtree turns the corners of cards, dialogs, sheets, menus, fieldsets, buttons, chips, alerts, snackbars, tooltips, popovers and outlined fields into straight bevels of the same size; `corners="round"` puts a subtree back. The switch sets `--md-sys-shape-corner-family` to `bevel` or `round`. `.corner-cut` cuts a single element, together with its own radius or a `.corner-*` class. Round indicators such as radios, switches, avatars and `.circle` stay round, because a cut 50% radius is a diamond. Cut corners use CSS `corner-shape`. Browsers without it, including Firefox 157, keep rounded corners.
+
+```html
+<main corners="cut">…</main>
+<div class="bordered corner-large corner-cut">One cut panel</div>
+```
+
 ---
 
 ## Design tokens
@@ -1237,6 +1246,7 @@ Scrolling needs a bounded size. Use `.overflow-x-auto` for wide tables or action
 | `.border-top`, `.border-bottom` | The same border on one side |
 | `.border-start`, `.border-end` | The same border on the inline start or end, which mirrors in RTL |
 | `.corner-none`, `.corner-extra-small`, `.corner-small`, `.corner-medium`, `.corner-large`, `.corner-extra-large`, `.corner-full` | `border-radius` from the matching `--md-sys-shape-corner-*` token |
+| `.corner-cut` | `corner-shape: bevel`: the element's corners become straight cuts of the same size. Rounded in browsers without `corner-shape`. |
 
 ```html
 <div class="bordered corner-large aspect-16x9">16:9</div>
@@ -1748,6 +1758,36 @@ Components take their easing curves and on-scale durations from the Material 3 `
 :root { --md-sys-motion-duration-short4: 150ms; } /* every 200ms transition runs at 150ms */
 ```
 
+#### Springs
+
+Material 3 Expressive describes motion as springs: a damping ratio and a stiffness. CSS has no spring timing function, so the framework solves each spring when the sheet is compiled and samples it into a `linear()` easing that runs for the time the spring takes to settle. Every spring has an easing token and a `-duration` token. Use the two together.
+
+| Token | Standard (damping, stiffness) | Expressive |
+| --- | --- | --- |
+| `--md-sys-motion-spring-fast-spatial` | 0.9, 1400 | 0.6, 800 |
+| `--md-sys-motion-spring-default-spatial` | 0.9, 700 | 0.8, 380 |
+| `--md-sys-motion-spring-slow-spatial` | 0.9, 300 | 0.8, 200 |
+| `--md-sys-motion-spring-fast-effects` | 1, 3800 | same |
+| `--md-sys-motion-spring-default-effects` | 1, 1600 | same |
+| `--md-sys-motion-spring-slow-effects` | 1, 800 | same |
+
+The standard motion scheme is the default. `motion="expressive"` on the root or on any subtree switches the spatial springs to the bouncier expressive ones; `motion="standard"` switches a subtree back. Effects springs, for color and opacity, never overshoot and are the same in both schemes.
+
+```css
+.panel {
+  transition: translate var(--md-sys-motion-spring-default-spatial-duration)
+    var(--md-sys-motion-spring-default-spatial);
+}
+```
+
+In Sass, `spring($damping, $stiffness)` and `spring-duration($damping, $stiffness)` turn any spring into the same pair.
+
+```scss
+.drawer {
+  transition: translate spring-duration(0.8, 380) spring(0.8, 380);
+}
+```
+
 ---
 
 ## Typography
@@ -1758,7 +1798,7 @@ The type scale is the HTML. `<h1>`–`<h6>` are display and headline roles, `<p>
 
 Tokens follow the [M3 type system](https://m3.material.io/styles/typography/overview). Each role sets family, size, weight, line-height, and letter-spacing from `--md-sys-typescale-*`. They do not set `font-style` — the token named `-font-family-style` holds “Regular” / “Medium”, which are weights, not CSS `font-style` keywords.
 
-M3's `--md-ref-typeface-brand` and `--md-ref-typeface-plain` tokens both default to Roboto. Large display, headline, and title-large roles use brand; smaller title, body, and label roles use plain. Noto Sans is the fallback for characters Roboto cannot cover. The compiled stylesheet ships Latin Roboto and Noto Sans at 400 and 500. Override the reference tokens to use a different family.
+M3's `--md-ref-typeface-brand` and `--md-ref-typeface-plain` tokens both default to Roboto. Large display, headline, and title-large roles use brand; smaller title, body, and label roles use plain. Noto Sans is the fallback for characters Roboto cannot cover. Roboto ships Latin, Latin Extended, Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese, and Noto Sans adds Devanagari, each at 400, 500 and 700. Every subset is its own face with a `unicode-range`, so the browser downloads only the scripts and weights the page renders. Arabic, Hebrew, CJK, Thai and other scripts need their own family, such as Noto Sans Arabic; load it and add it to `--md-ref-typeface-fallback`. Override the reference tokens to use a different family.
 
 ### Semantic map
 
@@ -1892,7 +1932,11 @@ Override the brand and plain reference tokens to customize the scale while prese
 }
 ```
 
-The default order is Roboto, Noto Sans, then the generic sans-serif family. ExpressiveCSS leaves the root font size to the browser and expresses the M3 scale in rem using the standard 16px conversion, so browser text-size preferences continue to work.
+The default order is Roboto, Noto Sans, then the generic sans-serif family. For a script neither bundles, put its family before the generic one:
+
+```css
+:root { --md-ref-typeface-fallback: "Noto Sans", "Noto Sans Arabic", sans-serif; }
+``` ExpressiveCSS leaves the root font size to the browser and expresses the M3 scale in rem using the standard 16px conversion, so browser text-size preferences continue to work.
 
 ---
 

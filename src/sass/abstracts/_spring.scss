@@ -1,0 +1,63 @@
+@use "sass:list";
+@use "sass:math";
+@use "sass:string";
+
+// Springs, solved at compile time. M3 Expressive describes motion as springs
+// (a damping ratio and a stiffness, mass 1) rather than as curves and
+// durations. CSS has no spring timing function, so spring() samples the
+// spring's position from rest to the target into a `linear()` easing, and
+// spring-duration() returns how long it takes to settle. Use them together:
+//
+//   transition: translate spring-duration(0.8, 380) spring(0.8, 380);
+//
+// tokens/_motion.scss emits M3's six standard and expressive springs as
+// --md-sys-motion-spring-* tokens from these.
+
+// Settled once within this fraction of the distance, about a pixel on a
+// 200px move.
+$_settle: 0.005;
+$_samples: 24;
+
+// Position at $t seconds, from 0 to 1, for a spring released at rest.
+@function _position($t, $damping, $stiffness) {
+  $w: math.sqrt($stiffness);
+  @if $damping < 1 {
+    $wd: $w * math.sqrt(1 - $damping * $damping);
+    $decay: math.pow(math.$e, -$damping * $w * $t);
+    @return 1 - $decay * (math.cos($wd * $t) + math.div($damping * $w, $wd) * math.sin($wd * $t));
+  }
+  // Critically damped (M3's effects springs). Overdamped springs are not used.
+  @return 1 - math.pow(math.$e, -$w * $t) * (1 + $w * $t);
+}
+
+// Seconds until the spring stays within $_settle of the target. An
+// underdamped spring settles when its envelope does; a critically damped one
+// is stepped forward a millisecond at a time.
+@function _settle-time($damping, $stiffness) {
+  $w: math.sqrt($stiffness);
+  @if $damping < 1 {
+    @return math.div(math.log(math.div(1, $_settle * math.sqrt(1 - $damping * $damping))), $damping * $w);
+  }
+  $t: 0;
+  @while 1 - _position($t, $damping, $stiffness) > $_settle {
+    $t: $t + 0.001;
+  }
+  @return $t;
+}
+
+/// How long the spring takes to settle, in milliseconds.
+@function spring-duration($damping, $stiffness) {
+  @return math.round(_settle-time($damping, $stiffness) * 1000) * 1ms;
+}
+
+/// The spring as a `linear()` easing over spring-duration().
+@function spring($damping, $stiffness) {
+  $end: _settle-time($damping, $stiffness);
+  $points: (0,);
+  @for $i from 1 to $_samples {
+    $x: _position($end * math.div($i, $_samples), $damping, $stiffness);
+    $points: list.append($points, string.unquote("#{math.div(math.round($x * 10000), 10000)} #{math.div(math.round(math.div($i, $_samples) * 1000), 10)}%"), comma);
+  }
+  $points: list.append($points, 1, comma);
+  @return string.unquote("linear(#{$points})");
+}
