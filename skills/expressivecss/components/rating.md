@@ -9,7 +9,7 @@ Component ID: `rating`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `f6e44a978d0bf7ed413a1cf3b2614879f122bb342d2e99f3ee08f725899d21e5`
+Contract SHA-256: `61c6653c323fd0eca19289f95ec22e5f8a19b81a20c8d1490d2b505f1346212a`
 
 #### Selection and adaptation
 

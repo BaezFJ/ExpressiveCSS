@@ -427,6 +427,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   page and container scrolling and flips at the viewport edge. Anchored
   tooltips fade in without sliding, and `transitionMovement` joins the gap.
   Other browsers keep the measured position.
+- Menus opened from a trigger, including Select, Autocomplete, the menubar
+  and the date picker's menus, anchor with CSS anchor positioning where
+  supported: they follow the trigger through scrolling, flip at the viewport
+  edge and scroll when taller than the room on that side. Context menus and
+  `coverTrigger: true` keep the measured placement.
 - The tabs indicator moves on the default spatial spring
   (`--md-comp-tabs-indicator-easing` and `-duration`), and now stops under
   reduced motion. The `Tabs` `duration` option defaults to `null`; a number

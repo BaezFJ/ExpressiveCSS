@@ -1,6 +1,15 @@
 import { Utils } from '../core/utils';
 import { Component, BaseOptions, InitElements, InitElement, Openable } from '../core/component';
 
+// CSS anchor positioning, where the browser has it. A menu opened from its
+// trigger is anchored there and flips at the viewport edges in CSS; context
+// menus open at a point and cover-trigger menus overlap their trigger, so
+// both keep the measured placement, as does every browser without anchors.
+const anchorSupported = typeof CSS !== 'undefined' && !!CSS.supports?.('anchor-name: --a');
+
+// The anchored inline properties, cleared together when the menu is reset.
+const ANCHOR_STYLES = ['position', 'inset', 'max-height', 'position-anchor', 'position-area', 'position-try-fallbacks'];
+
 export interface MenuOptions extends BaseOptions {
   /**
    * Defines the edge the menu is aligned to.
@@ -220,6 +229,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this._clearPendingTimers();
     this.isOpen = false;
     this._setExpanded(false);
+    this.el.style.removeProperty('anchor-name');
     clearTimeout(this.filterTimeout);
     this._resetMenuStyles();
     this._restoreInert();
@@ -720,6 +730,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.menuEl.style.left = '';
     this.menuEl.style.top = '';
     this.menuEl.style.transformOrigin = '';
+    for (const property of ANCHOR_STYLES) this.menuEl.style.removeProperty(property);
   }
 
   _moveMenuToElement(containerEl: HTMLElement = null) {
@@ -979,6 +990,29 @@ export class Menu extends Component<MenuOptions> implements Openable {
       return;
     }
 
+    if (anchorSupported && !this.options.coverTrigger) this._anchorMenu();
+    else this._placeByCoordinates(closestOverflowParent);
+  }
+
+  // Below the trigger, starting at its left edge for alignment 'left' or its
+  // right edge for 'right', with the flips position-try-fallbacks offers.
+  // The height is capped to the room on the chosen side, so a long menu
+  // scrolls there, as in the measured path.
+  private _anchorMenu() {
+    const name = `--menu-${this.menuEl.id}`;
+    this.el.style.setProperty('anchor-name', name);
+    const style = this.menuEl.style;
+    style.position = 'fixed';
+    style.inset = 'auto';
+    style.maxHeight = '100%';
+    style.setProperty('position-anchor', name);
+    style.setProperty('position-area', this.options.alignment === 'right' ? 'bottom span-left' : 'bottom span-right');
+    style.setProperty('position-try-fallbacks', 'flip-block, flip-inline, flip-block flip-inline');
+    style.transformOrigin = this.options.alignment === 'right' ? '100% 0' : '0 0';
+    this.isScrollable = this.menuEl.scrollHeight > this.menuEl.clientHeight;
+  }
+
+  private _placeByCoordinates(closestOverflowParent: HTMLElement) {
     const positionInfo = this._getMenuPosition(closestOverflowParent);
     this.menuEl.style.left = positionInfo.x + 'px';
     this.menuEl.style.top = positionInfo.y + 'px';

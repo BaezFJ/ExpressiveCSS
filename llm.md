@@ -5558,7 +5558,7 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
 
 This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https://m3.material.io/components/menus/specs). The container is `surface-container-low`, large (16dp) corners, elevation 2, 2dp group padding, 112–280dp wide. Items are 44dp with extra-small (4dp) corners, `label-large` / `on-surface`; the first and last item round their outer corners to 12dp. Icons are 20dp `on-surface-variant`. Selected items use medium (12dp) corners and `tertiary-container` / `on-tertiary-container`. Hover is an 8% state layer, focus and press 10%, none of which span the container. Dividers are inset. Add `.vibrant` for the tertiary mapping. Submenus fade and scale in; the open flyout rounds up and the parent rounds down.
 
-`AutoInit()` starts every `.menu-trigger` except those marked `no-autoinit`. Menus open on click, below the trigger. Pass `coverTrigger: true` to cover the trigger. Pass `constrainWidth: false` so the menu sizes independently of the trigger.
+`AutoInit()` starts every `.menu-trigger` except those marked `no-autoinit`. Menus open on click, below the trigger. Pass `coverTrigger: true` to cover the trigger. Pass `constrainWidth: false` so the menu sizes independently of the trigger. In browsers with CSS anchor positioning, a menu opened from its trigger is anchored there in CSS: it stays under the trigger while the page or a container scrolls, flips above it or to the other side at the viewport edge, and scrolls when it is taller than the room on that side. Context menus and `coverTrigger: true` keep the measured placement, as do browsers without anchor positioning.
 
 ```html
 <button class="menu-trigger" data-target="menu1">Drop me</button>

@@ -103,7 +103,7 @@ const S = defineSections([
         </p>
         <p>
           The component repositions a menu when its preferred edge would be
-          clipped. Nested menus open beside their parent item and switch sides
+          clipped. In browsers with CSS anchor positioning, a menu opened from its trigger is anchored there in CSS: it stays under the trigger while the page or a container scrolls, flips above it or to the other side at the viewport edge, and scrolls when it is taller than the room on that side. Context menus and <code>coverTrigger: true</code> keep the measured placement, as do browsers without anchor positioning. Nested menus open beside their parent item and switch sides
           near the viewport edge. Use dividers in scrollable menus; don't use
           gaps there. Keep each row to one action, and keep icons decorative
           when the visible label already names the action.
