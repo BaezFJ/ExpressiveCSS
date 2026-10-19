@@ -12,12 +12,14 @@
 // --turn PieChart sets, a fraction of a turn clockwise from the top.
 //
 // Modifiers: .donut cuts a hole and shows a <tfoot> total in it, .values
-// writes each slice's share on it, .sparkline is a small pie with no
-// legend or tooltip.
+// writes each slice's share on it, .labels writes each slice's name
+// outside it, .sparkline is a small pie with no legend, tooltip or names.
 //
 // Tokens:
 //   --md-comp-pie-chart-height       240px, the pie's diameter (sparkline 48px)
 //   --md-comp-pie-chart-hole         0.6, the donut hole's share of the diameter
+//   --md-comp-pie-chart-label-width  96px, the room each side of the pie for
+//                                    .labels, at most a quarter of the figure
 //   --md-comp-pie-chart-gap          1.5, the gap between slices in hundredths
 //                                    of the plot's width
 //   --md-comp-pie-chart-color-1..6   primary, tertiary, secondary,
@@ -44,6 +46,10 @@
   --pie-chart-label-at: 0.62;
 
   gap: 16px;
+
+  &.labels {
+    --md-comp-pie-chart-label-width: 96px;
+  }
 
   &.donut {
     // The middle of the ring.
@@ -125,6 +131,35 @@
   @include typescale("label-medium");
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+.pie-chart.labels:not(.sparkline) .pie-chart-plot {
+  // A narrow figure keeps at least half its width for the pie.
+  width: min(100% - 2 * min(var(--md-comp-pie-chart-label-width), 25%), var(--md-comp-pie-chart-height));
+  margin-block: 24px;
+}
+
+// PieChart sets each name's top, pushed apart from its neighbours.
+.pie-chart-names > span {
+  // The middle of the name's near edge, 8px past the grown active slice.
+  --pie-chart-name-at: calc(50% + 8px);
+  --pie-chart-name-step: 1.25lh;
+
+  position: absolute;
+  left: calc(50% + sin(var(--turn, 0) * 1turn) * var(--pie-chart-name-at));
+  // No wider than the room beside the pie, which is at least half the pie's
+  // width when the plot rule above caps it at a quarter of the figure.
+  max-width: calc(min(var(--md-comp-pie-chart-label-width), 50%) - 8px);
+  overflow: hidden;
+  translate: 0 -50%;
+  color: var(--md-sys-color-on-surface-variant);
+  @include typescale("label-medium");
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &.end {
+    translate: -100% -50%;
+  }
 }
 
 .pie-chart-tooltip {

@@ -5165,7 +5165,7 @@ A `<figure class="pie-chart">` takes the same `<figcaption>` and `<table>` as a 
 ```
 
 - The plot is a square as wide as `--md-comp-pie-chart-height`, centered in the figure; the legend lists the rows below it. Shares are whole percentages, with a tenth below 10%, in the page's `lang`.
-- `donut` cuts a hole sized by `--md-comp-pie-chart-hole`. A `<tfoot>` row is the total: its value and label show in the hole, and it is not a slice. `values` writes each share on its slice in the slice's on-color; slices under 5% get no label. `sparkline` is a 48px pie with no legend or tooltip and is not focusable.
+- `donut` cuts a hole sized by `--md-comp-pie-chart-hole`. A `<tfoot>` row is the total: its value and label show in the hole, and it is not a slice. `values` writes each share on its slice in the slice's on-color; slices under 5% get no label. `labels` writes each slice's row name outside it, running away from the pie; names that would touch move apart up or down their side, and the pie shrinks to leave `--md-comp-pie-chart-label-width`, or a quarter of a narrow figure, on each side. `sparkline` is a 48px pie with no legend, tooltip or names and is not focusable.
 - Cells read as in the column chart. Zero, negative and non-numeric cells draw no slice and have no share; their rows stay in the legend and tooltip. Further value columns add lines to the tooltip. Slices take six colors; a seventh row takes the second color so it does not match the first beside it.
 - The plot is one Tab stop named by the caption. Right and down arrows move to the next row, left and up to the one before, Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped slice. In a right-to-left page, set by `dir` or CSS `direction`, the slices still run clockwise and left and right swap.
 - After changing the table, call `Expressive.PieChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options do not apply.
@@ -5176,6 +5176,7 @@ A `<figure class="pie-chart">` takes the same `<figcaption>` and `<table>` as a 
 | --- | --- |
 | `--md-comp-pie-chart-height` | 240px, the diameter (sparkline 48px) |
 | `--md-comp-pie-chart-hole` | 0.6 of the diameter |
+| `--md-comp-pie-chart-label-width` | 96px on each side, for `labels`; at most a quarter of the figure |
 | `--md-comp-pie-chart-gap` | 1.5, in hundredths of the plot's width |
 | `--md-comp-pie-chart-color-1` … `-6` | `primary`, `tertiary`, `secondary`, `on-surface-variant`, `primary-container`, `tertiary-container` |
 | `--md-comp-pie-chart-on-color-1` … `-6` | `on-primary`, `on-tertiary`, `on-secondary`, `surface`, `on-primary-container`, `on-tertiary-container` |

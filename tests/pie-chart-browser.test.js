@@ -217,4 +217,67 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: pie chart .labels writes each slice's name outside it`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(`<style>${css}</style>
+        <div style="width: 400px">
+          ${chart('class="pie-chart labels" id="named"', 'Named', '<th>V</th>', [
+            ['Big', '46'], ['B', '1'], ['C', '1'], ['D', '1'], ['E', '1'], ['None', '0'], ['Half', '50']])}
+          ${chart('class="pie-chart labels" id="middle"', 'Middle', '<th>V</th>', [['A', '24'], ['B', '1'], ['C', '1'], ['D', '74']])}
+          ${chart('class="pie-chart labels sparkline" id="small"', 'Small', '<th>V</th>', [['A', '1'], ['B', '2']])}
+        </div>
+        <div style="width: 160px">
+          ${chart('class="pie-chart labels" id="narrow"', 'Narrow', '<th>V</th>', [['Alpha', '2'], ['Beta', '1']])}
+        </div>
+        <script>${js}</script>`);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      const measure = (el) => {
+        const pie = el.querySelector('.pie-chart-pie').getBoundingClientRect();
+        const [cx, cy, radius] = [pie.left + pie.width / 2, pie.top + pie.height / 2, pie.width * 0.46 * 1.06];
+        const names = [...el.querySelectorAll('.pie-chart-names > span')].map((span) => {
+          const box = span.getBoundingClientRect();
+          // The nearest point of the name's box to the pie's middle.
+          const near = Math.hypot(
+            Math.max(box.left - cx, 0, cx - box.right),
+            Math.max(box.top - cy, 0, cy - box.bottom));
+          return { text: span.textContent, series: span.dataset.series, end: span.classList.contains('end'), box, outside: near > radius };
+        });
+        const overlaps = names.flatMap((a, i) => names.slice(i + 1).filter((b) =>
+          a.box.left < b.box.right && b.box.left < a.box.right && a.box.top < b.box.bottom && b.box.top < a.box.bottom)
+          .map((b) => `${a.text}/${b.text}`));
+        return {
+          names: names.map(({ text, series, end }) => [text, series, end]),
+          outside: names.filter((name) => !name.outside).map((name) => name.text),
+          sides: names.every(({ end, box }) => (end ? box.right <= cx : box.left >= cx)),
+          overlaps,
+          hidden: el.querySelector('.pie-chart-names').closest('[aria-hidden="true"]') !== null,
+          plot: el.querySelector('.pie-chart-plot').offsetWidth,
+          inside: names.every(({ box }) => box.left >= el.getBoundingClientRect().left - 1 && box.right <= el.getBoundingClientRect().right + 1),
+        };
+      };
+      const named = await page.locator('#named').evaluate(measure);
+      assert.deepEqual(named.names, [
+        ['Big', '1', false], ['B', '2', false], ['C', '3', false], ['D', '4', false], ['E', '5', false], ['Half', '6', true]],
+      'every drawn slice is named, in its color, and the zero row is not');
+      assert.deepEqual(named.outside, [], 'the names sit outside the grown pie');
+      assert.ok(named.sides, 'names on the right run rightwards and those on the left run leftwards');
+      assert.deepEqual(named.overlaps, [], 'the thin slices push their names apart');
+      assert.ok(named.hidden, 'the names are aria-hidden with the pie');
+      assert.equal(await page.locator('#small .pie-chart-names').count(), 0, 'a sparkline has no names');
+
+      const middle = await page.locator('#middle').evaluate(measure);
+      assert.deepEqual(middle.overlaps, [], 'names either side of the middle line keep apart');
+
+      const narrow = await page.locator('#narrow').evaluate(measure);
+      assert.ok(narrow.plot >= 80, `a 160px figure keeps half its width for the pie: ${narrow.plot}`);
+      assert.ok(narrow.inside, 'the names stay inside a narrow figure');
+    } finally {
+      await browser.close();
+    }
+  });
 }
