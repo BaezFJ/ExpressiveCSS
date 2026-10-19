@@ -216,7 +216,10 @@ dialog.close();
         </p>
   </Section>
   <Section {...S.tokens}>
-        <p>Override these on the <code>&lt;dialog&gt;</code> if you need a different surface or width.</p>
+        <p>Override these on the <code>&lt;dialog&gt;</code> if you need a different surface or width.
+          A basic dialog fades in and grows from 96% on springs, so <code>motion="expressive"</code>
+          reaches it; it closes at once, and opens without moving when reduced motion is requested.
+          Full-screen dialogs and sheets keep their own motion.</p>
         <TokenTable>            <tr>
               <td><code>--md-comp-basic-dialog-container-color</code></td>
               <td><code>--md-sys-color-surface-container-high</code></td>
@@ -236,6 +239,14 @@ dialog.close();
             <tr>
               <td><code>--md-comp-basic-dialog-scrim-blur</code></td>
               <td>12px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-basic-dialog-easing</code>, <code>--md-comp-basic-dialog-duration</code></td>
+              <td>The default spatial spring: the dialog grows from 96% as it opens</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-basic-dialog-effects-easing</code>, <code>--md-comp-basic-dialog-effects-duration</code></td>
+              <td>The fast effects spring: the fade-in</td>
             </tr>
             <tr>
               <td><code>--md-comp-scrim-color</code></td>

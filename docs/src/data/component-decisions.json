@@ -8473,7 +8473,7 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "Springs are sampled at compile time; there is no runtime solver, so an interrupted spring restarts without carrying velocity. Bottom and side sheets and the navigation rail run on the default spatial spring and FAB menu actions on the fast springs; other components keep their own curves.",
+            "description": "Springs are sampled at compile time; there is no runtime solver, so an interrupted spring restarts without carrying velocity. Bottom and side sheets and the navigation rail run on the default spatial spring FAB menu actions on the fast springs, and basic dialogs on the default spatial and fast effects springs; other components keep their own curves.",
             "nextStep": "Move component spatial transitions onto the spring tokens one component at a time, with browser checks of the settled state and reduced motion."
           }
         ],

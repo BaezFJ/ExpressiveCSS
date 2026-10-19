@@ -46,6 +46,37 @@ dialog {
   }
 }
 
+// Basic dialogs fade in on the fast effects spring and grow from 96% on the
+// default spatial spring, so motion="expressive" reaches them. Entry only:
+// close() takes the dialog out of the top layer at once, as the sheets do.
+// Sheets, full-screen dialogs and the expanding card's dialog move their
+// own way.
+$_basic: "dialog:not(.bottom-sheet, .side-sheet, .max, .expanding-card-dialog)";
+
+#{$_basic} {
+  --md-comp-basic-dialog-easing: var(--md-sys-motion-spring-default-spatial);
+  --md-comp-basic-dialog-duration: var(--md-sys-motion-spring-default-spatial-duration);
+  --md-comp-basic-dialog-effects-easing: var(--md-sys-motion-spring-fast-effects);
+  --md-comp-basic-dialog-effects-duration: var(--md-sys-motion-spring-fast-effects-duration);
+
+  transition:
+    opacity var(--md-comp-basic-dialog-effects-duration) var(--md-comp-basic-dialog-effects-easing),
+    scale var(--md-comp-basic-dialog-duration) var(--md-comp-basic-dialog-easing);
+}
+
+@starting-style {
+  :is(#{$_basic})[open] {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #{$_basic} {
+    transition: none;
+  }
+}
+
 // showModal() puts the dialog in the top layer but does not lock the
 // document scroller. :modal is the modal-only match — a modeless
 // dialog.show() must not freeze the page.

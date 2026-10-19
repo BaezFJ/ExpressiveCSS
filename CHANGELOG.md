@@ -436,6 +436,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   effects spring. `--md-comp-fab-menu-easing` and `-duration` now default to
   the spatial spring, and the new `--md-comp-fab-menu-effects-easing` and
   `-effects-duration` time the fade.
+- Basic dialogs now animate in: they fade on the fast effects spring and grow
+  from 96% on the default spatial spring (`--md-comp-basic-dialog-easing`,
+  `-duration`, `-effects-easing` and `-effects-duration`). They still close
+  at once. Sheets, `dialog.max` and the expanding card's dialog are
+  unchanged, and reduced motion opens without moving.
 - Headings balance their lines and paragraphs avoid a one-word last line
   (`text-wrap-style: balance` and `pretty`). The longhand leaves wrapping
   itself alone, so `.truncate` and `.text-nowrap` still work.

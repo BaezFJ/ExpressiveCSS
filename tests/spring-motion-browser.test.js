@@ -147,4 +147,33 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await browser.close();
     }
   });
+
+  test(`${name}: a basic dialog fades and grows in on springs, and other dialogs keep their own motion`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        <dialog id="basic" aria-label="Basic"><h2>Discard draft?</h2></dialog>
+        <dialog id="max" class="max" aria-label="Full"><h2>Full</h2></dialog>
+        <dialog id="sheet" class="bottom-sheet" aria-label="Sheet"><h2>Sheet</h2></dialog></body></html>`);
+      const open = (id) => page.evaluate((id) => {
+        const dialog = document.getElementById(id);
+        dialog.showModal();
+        const animations = dialog.getAnimations().map((a) => a.transitionProperty).sort();
+        const style = getComputedStyle(dialog);
+        dialog.close();
+        return { animations, easing: style.transitionTimingFunction };
+      }, id);
+      const basic = await open('basic');
+      assert.deepEqual(basic.animations, ['opacity', 'scale']);
+      assert.match(basic.easing, /^linear\(/);
+      assert.deepEqual((await open('max')).animations, []);
+      assert.deepEqual((await open('sheet')).animations, ['translate']);
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      assert.deepEqual((await open('basic')).animations, [], 'reduced motion opens without moving');
+    } finally {
+      await browser.close();
+    }
+  });
 }
