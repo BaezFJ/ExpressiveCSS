@@ -1558,7 +1558,7 @@ Web adaptation: Each question is a native fieldset named by its legend; the brow
 
 ## Typography
 
-**unassessed within the stated scope.** Fifteen baseline type-role utilities and rem-based tokens, and their M3 Expressive emphasized counterparts as .{role}-emphasized classes and emphasized weight tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Latin Roboto and Noto Sans 400/500/700.
+**unassessed within the stated scope.** Fifteen baseline type-role utilities and rem-based tokens, and their M3 Expressive emphasized counterparts as .{role}-emphasized classes and emphasized weight tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Roboto and Noto Sans 400/500/700 in Latin, Latin Extended, Cyrillic, Greek and Vietnamese subsets, plus Devanagari for Noto Sans, each gated by unicode-range.
 
 Source review: needs-review, 2026-09-12. [src/sass/tokens/_reference.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/3a81abd30b3bcbb4c916a4824ff894c4cf3dec70/src/sass/tokens/_reference.scss), [src/sass/utilities/_typescale.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/3a81abd30b3bcbb4c916a4824ff894c4cf3dec70/src/sass/utilities/_typescale.scss), [src/sass/base/_typography.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/3a81abd30b3bcbb4c916a4824ff894c4cf3dec70/src/sass/base/_typography.scss), [src/sass/base/_fonts.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/3a81abd30b3bcbb4c916a4824ff894c4cf3dec70/src/sass/base/_fonts.scss).
 
@@ -1566,11 +1566,11 @@ Google relationship: foundation. Upstream review: android-foundation-reviewed; f
 
 Web adaptation: Use supported web component and application overrides; Android attributes and APIs are design references only.
 
-- verification: Emphasized roles change only the weight; rendered 700 faces are not yet checked in a browser against loaded font files. Next: Load the packaged fonts in a browser check and confirm the emphasized label and title roles render the bundled 700 face rather than a synthetic bold.
-- feature: Bundled text fonts cover Latin and 400/500/700 only; a Noto Sans fallback declaration does not establish non-Latin coverage. Next: Add browser checks for actual rendered font faces/weights, representative scripts, and all type-role metrics; retain native zoom/assistive review separately.
+- feature: Arabic, Hebrew, CJK, Thai and other scripts outside the bundled subsets need an application-supplied family in --md-ref-typeface-fallback. Next: Decide whether to bundle Noto families for right-to-left and CJK scripts, weighing package size against the documented fallback recipe.
 
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/3a81abd30b3bcbb4c916a4824ff894c4cf3dec70/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. 32px/28px example headline sizes, responsive overflow and doubled root text size; does not prove font identity or full scale parity.
 - stale: [tests/expressivecss-material-quality.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/3a81abd30b3bcbb4c916a4824ff894c4cf3dec70/tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-scoped headline size, line-height and 500 weight repair is accepted while qualitative judgment stays pending; no synthesized-font detection.
+- not-recorded: [tests/font-subsets-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/3a81abd30b3bcbb4c916a4824ff894c4cf3dec70/tests/font-subsets-browser.test.js): `chromium: the browser fetches only the font subsets and weights a page renders`. Latin and Cyrillic text fetch their two Roboto subsets, an emphasized label fetches the bundled 700 face rather than synthesizing it, and unused Greek, Devanagari and Vietnamese subsets are not fetched. No rendering comparison of glyphs.
 
 <a id="shape"></a>
 

@@ -43,9 +43,8 @@ const S = defineSections([
           <code>--md-ref-typeface-plain</code> tokens both default to Roboto.
           Large display, headline, and title-large roles use brand; smaller
           title, body, and label roles use plain. Noto Sans is the fallback
-          for characters Roboto cannot cover. The compiled stylesheet ships
-          Latin Roboto and Noto Sans at 400 and 500. Override the reference
-          tokens to use a different family.
+          for characters Roboto cannot cover. Roboto ships Latin, Latin Extended, Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese, and Noto Sans adds Devanagari, each at 400, 500 and 700. Every subset is its own face with a <code>unicode-range</code>, so the browser downloads only the scripts and weights the page renders. Arabic, Hebrew, CJK, Thai and other scripts need their own family, such as Noto Sans Arabic; load it and add it to <code>--md-ref-typeface-fallback</code>.
+          Override the reference tokens to use a different family.
         </p>
 
         <h3>Semantic map</h3>

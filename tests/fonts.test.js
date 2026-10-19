@@ -10,16 +10,20 @@ const minCssPath = join(root, 'dist/css/expressive.min.css');
 const fontsDir = join(root, 'dist/fonts');
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 
+// Every text subset and weight the sheet declares, listed here rather than
+// read from scripts/copy-fonts.mjs, so a dropped subset fails.
+const TEXT_SUBSETS = {
+  roboto: ['Roboto', ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext', 'greek', 'greek-ext', 'vietnamese']],
+  'noto-sans': ['Noto Sans', ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext', 'greek', 'greek-ext', 'vietnamese', 'devanagari']],
+};
+const textFiles = Object.entries(TEXT_SUBSETS).flatMap(([file, [family, subsets]]) =>
+  subsets.flatMap((subset) => [400, 500, 700].map((weight) => [`${file}-${subset}-${weight}.woff2`, family])));
+
 const FONT_FILES = {
   'material-symbols-outlined.woff2': 'Material Symbols Outlined',
   'material-symbols-rounded.woff2': 'Material Symbols Rounded',
   'material-symbols-sharp.woff2': 'Material Symbols Sharp',
-  'roboto-latin-400.woff2': 'Roboto',
-  'roboto-latin-500.woff2': 'Roboto',
-  'roboto-latin-700.woff2': 'Roboto',
-  'noto-sans-latin-400.woff2': 'Noto Sans',
-  'noto-sans-latin-500.woff2': 'Noto Sans',
-  'noto-sans-latin-700.woff2': 'Noto Sans',
+  ...Object.fromEntries(textFiles),
 };
 
 function readCss() {
@@ -94,5 +98,13 @@ describe('self-hosted fonts', () => {
   test('package exports the font files next to the compiled CSS', () => {
     assert.equal(pkg.exports['./fonts/*'], './dist/fonts/*');
     assert.ok(pkg.files.includes('dist'));
+  });
+
+  test('each text subset face carries its unicode-range, so only the scripts in use load', () => {
+    const faces = [...facesFor(readCss(), 'Roboto'), ...facesFor(readCss(), 'Noto Sans')];
+    assert.equal(faces.length, textFiles.length);
+    assert.deepEqual(faces.filter((face) => !/unicode-range:\s*U\+/.test(face)), []);
+    const cyrillic = faces.find((face) => face.includes('roboto-cyrillic-400.woff2'));
+    assert.match(cyrillic, /U\+0400-045F/);
   });
 });

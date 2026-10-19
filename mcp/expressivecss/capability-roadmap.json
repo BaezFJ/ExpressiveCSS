@@ -5334,7 +5334,7 @@
       "lastReviewedSupport": "partial",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
-      "scope": "Fifteen baseline type-role utilities and rem-based tokens, and their M3 Expressive emphasized counterparts as .{role}-emphasized classes and emphasized weight tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Latin Roboto and Noto Sans 400/500/700.",
+      "scope": "Fifteen baseline type-role utilities and rem-based tokens, and their M3 Expressive emphasized counterparts as .{role}-emphasized classes and emphasized weight tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Roboto and Noto Sans 400/500/700 in Latin, Latin Extended, Cyrillic, Greek and Vietnamese subsets, plus Devanagari for Noto Sans, each gated by unicode-range.",
       "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
       "upstream": {
         "source": "https://github.com/material-components/material-components-android/blob/master/docs/theming/Typography.md",
@@ -5357,19 +5357,14 @@
         },
         {
           "path": "src/sass/base/_fonts.scss",
-          "sha256": "9c31579639658044d5b8b81769ed33f3dabe36ab05f6fedaae8f705fa53c206b"
+          "sha256": "e73570f6975bb197d4bdfe0cb813bb2d0ee505ba21f60c498b661daa6e49f247"
         }
       ],
       "gaps": [
         {
-          "kind": "verification",
-          "description": "Emphasized roles change only the weight; rendered 700 faces are not yet checked in a browser against loaded font files.",
-          "nextStep": "Load the packaged fonts in a browser check and confirm the emphasized label and title roles render the bundled 700 face rather than a synthetic bold."
-        },
-        {
           "kind": "feature",
-          "description": "Bundled text fonts cover Latin and 400/500/700 only; a Noto Sans fallback declaration does not establish non-Latin coverage.",
-          "nextStep": "Add browser checks for actual rendered font faces/weights, representative scripts, and all type-role metrics; retain native zoom/assistive review separately."
+          "description": "Arabic, Hebrew, CJK, Thai and other scripts outside the bundled subsets need an application-supplied family in --md-ref-typeface-fallback.",
+          "nextStep": "Decide whether to bundle Noto families for right-to-left and CJK scripts, weighing package size against the documented fallback recipe."
         }
       ],
       "browserChecks": [
@@ -5384,6 +5379,12 @@
           "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
           "scope": "Application-scoped headline size, line-height and 500 weight repair is accepted while qualitative judgment stays pending; no synthesized-font detection.",
           "state": "stale"
+        },
+        {
+          "file": "tests/font-subsets-browser.test.js",
+          "name": "chromium: the browser fetches only the font subsets and weights a page renders",
+          "scope": "Latin and Cyrillic text fetch their two Roboto subsets, an emphasized label fetches the bundled 700 face rather than synthesizing it, and unused Greek, Devanagari and Vietnamese subsets are not fetched. No rendering comparison of glyphs.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",

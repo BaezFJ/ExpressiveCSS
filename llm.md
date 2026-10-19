@@ -191,7 +191,7 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 </html>
 ```
 
-The IIFE bundle exposes the global `Expressive` object. The compiled stylesheet ships `@font-face` rules for variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes), Roboto 400 / 500, and the Noto Sans fallback. Keep `dist/fonts/` next to `dist/css/` so the relative font URLs resolve. Override the brand/plain tokens when the page uses different typefaces. Do not load the older Material Icons stylesheet; use `.material-symbols`.
+The IIFE bundle exposes the global `Expressive` object. The compiled stylesheet ships `@font-face` rules for variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes), Roboto and the Noto Sans fallback at 400 / 500 / 700 in Latin, Cyrillic, Greek, Vietnamese and (Noto Sans) Devanagari subsets. Keep `dist/fonts/` next to `dist/css/` so the relative font URLs resolve. Override the brand/plain tokens when the page uses different typefaces. Do not load the older Material Icons stylesheet; use `.material-symbols`.
 
 ## ES module setup
 
@@ -222,7 +222,7 @@ Datepicker use `("icons-material-design", "buttons", "menu", "forms", "datepicke
 Add `"docked-display"` before `"forms"` for the optional docked picker.
 
 `$expressive-include-fonts: false` lets consumers supply subset font faces, but
-also removes the text font declarations. Restore Roboto and Noto Sans 400/500
+also removes the text font declarations. Restore Roboto and Noto Sans 400/500/700
 or explicitly choose alternative typefaces. Retain icon ligatures and variable
 axes, and include dynamic icons: Chips and dismissible Snackbar use `close`,
 and expandable navigation rail summaries use `expand_more`. The README includes font
@@ -1798,7 +1798,7 @@ The type scale is the HTML. `<h1>`–`<h6>` are display and headline roles, `<p>
 
 Tokens follow the [M3 type system](https://m3.material.io/styles/typography/overview). Each role sets family, size, weight, line-height, and letter-spacing from `--md-sys-typescale-*`. They do not set `font-style` — the token named `-font-family-style` holds “Regular” / “Medium”, which are weights, not CSS `font-style` keywords.
 
-M3's `--md-ref-typeface-brand` and `--md-ref-typeface-plain` tokens both default to Roboto. Large display, headline, and title-large roles use brand; smaller title, body, and label roles use plain. Noto Sans is the fallback for characters Roboto cannot cover. The compiled stylesheet ships Latin Roboto and Noto Sans at 400 and 500. Override the reference tokens to use a different family.
+M3's `--md-ref-typeface-brand` and `--md-ref-typeface-plain` tokens both default to Roboto. Large display, headline, and title-large roles use brand; smaller title, body, and label roles use plain. Noto Sans is the fallback for characters Roboto cannot cover. Roboto ships Latin, Latin Extended, Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese, and Noto Sans adds Devanagari, each at 400, 500 and 700. Every subset is its own face with a `unicode-range`, so the browser downloads only the scripts and weights the page renders. Arabic, Hebrew, CJK, Thai and other scripts need their own family, such as Noto Sans Arabic; load it and add it to `--md-ref-typeface-fallback`. Override the reference tokens to use a different family.
 
 ### Semantic map
 
@@ -1932,7 +1932,11 @@ Override the brand and plain reference tokens to customize the scale while prese
 }
 ```
 
-The default order is Roboto, Noto Sans, then the generic sans-serif family. ExpressiveCSS leaves the root font size to the browser and expresses the M3 scale in rem using the standard 16px conversion, so browser text-size preferences continue to work.
+The default order is Roboto, Noto Sans, then the generic sans-serif family. For a script neither bundles, put its family before the generic one:
+
+```css
+:root { --md-ref-typeface-fallback: "Noto Sans", "Noto Sans Arabic", sans-serif; }
+``` ExpressiveCSS leaves the root font size to the browser and expresses the M3 scale in rem using the standard 16px conversion, so browser text-size preferences continue to work.
 
 ---
 

@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Non-Latin text faces: Roboto and Noto Sans now ship Latin Extended,
+  Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese subsets,
+  and Noto Sans adds Devanagari, at 400, 500 and 700. Each face has a
+  `unicode-range`, so a browser downloads only the scripts a page renders.
 - Cut corners: `--md-sys-shape-corner-family` (`round` or `bevel`), a
   `corners="cut"` switch that cuts the corners of cards, dialogs, sheets,
   menus, fieldsets, buttons, chips, alerts, snackbars, tooltips, popovers and

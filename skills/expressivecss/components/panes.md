@@ -9,7 +9,7 @@ Component ID: `panes`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `b33f55a952df30081532c0381a09218d5b37e3c4df5aab8bd38a3c03f1e82d1f`
+Contract SHA-256: `f65588e803cbe0a2eeaf1258c7ab47341d870a405a4d8338fe1de2f08e3a7ea4`
 
 #### Selection and adaptation
 
