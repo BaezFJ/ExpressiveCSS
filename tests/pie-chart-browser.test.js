@@ -245,7 +245,18 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
           const near = Math.hypot(
             Math.max(box.left - cx, 0, cx - box.right),
             Math.max(box.top - cy, 0, cy - box.bottom));
-          return { text: span.textContent, series: span.dataset.series, end: span.classList.contains('end'), box, outside: near > radius };
+          // The leader line runs from 4px before the name to its slice's edge.
+          const line = getComputedStyle(span, '::before');
+          const angle = (parseFloat(line.rotate) * Math.PI) / 180;
+          const [x, y] = [span.classList.contains('end') ? box.right + 4 : box.left - 4, (box.top + box.bottom) / 2];
+          const [sx, sy] = [x + parseFloat(line.width) * Math.cos(angle) - cx, y + parseFloat(line.width) * Math.sin(angle) - cy];
+          const turn = parseFloat(span.style.getPropertyValue('--turn'));
+          const leader = Math.abs(Math.hypot(sx, sy) - pie.width * 0.46) < 1
+            && Math.abs(((Math.atan2(sx, -sy) / (2 * Math.PI) + 1) % 1) - turn) < 0.005;
+          return {
+            text: span.textContent, series: span.dataset.series, end: span.classList.contains('end'), box, outside: near > radius,
+            leader, length: parseFloat(line.width),
+          };
         });
         const overlaps = names.flatMap((a, i) => names.slice(i + 1).filter((b) =>
           a.box.left < b.box.right && b.box.left < a.box.right && a.box.top < b.box.bottom && b.box.top < a.box.bottom)
@@ -253,6 +264,8 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         return {
           names: names.map(({ text, series, end }) => [text, series, end]),
           outside: names.filter((name) => !name.outside).map((name) => name.text),
+          leaders: names.filter((name) => !name.leader).map((name) => name.text),
+          lengths: Object.fromEntries(names.map((name) => [name.text, name.length])),
           sides: names.every(({ end, box }) => (end ? box.right <= cx : box.left >= cx)),
           overlaps,
           hidden: el.querySelector('.pie-chart-names').closest('[aria-hidden="true"]') !== null,
@@ -265,6 +278,8 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         ['Big', '1', false], ['B', '2', false], ['C', '3', false], ['D', '4', false], ['E', '5', false], ['Half', '6', true]],
       'every drawn slice is named, in its color, and the zero row is not');
       assert.deepEqual(named.outside, [], 'the names sit outside the grown pie');
+      assert.deepEqual(named.leaders, [], 'each leader line runs from its name to the middle of its slice\'s edge');
+      assert.ok(named.lengths.E > 3 * named.lengths.Big, `a pushed name's line reaches back to its slice: ${JSON.stringify(named.lengths)}`);
       assert.ok(named.sides, 'names on the right run rightwards and those on the left run leftwards');
       assert.deepEqual(named.overlaps, [], 'the thin slices push their names apart');
       assert.ok(named.hidden, 'the names are aria-hidden with the pie');
@@ -272,6 +287,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
 
       const middle = await page.locator('#middle').evaluate(measure);
       assert.deepEqual(middle.overlaps, [], 'names either side of the middle line keep apart');
+      assert.deepEqual(middle.leaders, [], 'leader lines reach slices on both sides of the middle line');
 
       const narrow = await page.locator('#narrow').evaluate(measure);
       assert.ok(narrow.plot >= 80, `a 160px figure keeps half its width for the pie: ${narrow.plot}`);

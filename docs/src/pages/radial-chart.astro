@@ -141,7 +141,7 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
           of the way round, from the top to the left, and each name sits in
           the empty top left quarter, ending beside its ring's start. Names
           shrink to fit between crowded rings, and long ones end in an
-          ellipsis. A gauge and a sparkline ignore <code>labels</code>.
+          ellipsis. A sparkline ignores <code>labels</code>.
         </p>
         <figure class="radial-chart labels" data-markdown-ignore>
           <figcaption>Website visitors by source</figcaption>
@@ -162,6 +162,30 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
       <tr><th>Direct</th><td>75%</td></tr>
       <!-- One row per source -->
     </tbody>
+  </table>
+</figure>
+`} />
+        <p>
+          A gauge keeps its half circles and hangs the names under its base
+          line, a row for each ring with the innermost on top. Each name
+          follows a line down from its ring's start.
+        </p>
+        <figure class="radial-chart gauge labels" data-max="25" data-markdown-ignore>
+          <figcaption>Team capacity</figcaption>
+          <table>
+            <thead><tr><th>Seats</th><th>Count</th></tr></thead>
+            <tbody>
+              <tr><th>Filled</th><td>18</td></tr>
+              <tr><th>Offered</th><td>21</td></tr>
+            </tbody>
+            <tfoot><tr><th>Total seats</th><td>25</td></tr></tfoot>
+          </table>
+        </figure>
+<Code code={`
+<figure class="radial-chart gauge labels" data-max="25">
+  <figcaption>Team capacity</figcaption>
+  <table>
+    <!-- The same table as the gauge above -->
   </table>
 </figure>
 `} />

@@ -13,7 +13,7 @@
 //
 // Modifiers: .gauge draws half circles over the middle, .labels draws
 // three-quarter rings and names each one in the empty top left quarter,
-// .sparkline is a small chart with no legend, tooltip or names. A <tfoot>
+// or under the base line of a gauge, .sparkline is a small chart with no legend, tooltip or names. A <tfoot>
 // row shows in the middle.
 //
 // Tokens:
@@ -106,12 +106,13 @@
   container-type: size;
 }
 
-// RadialChart sets each name's top to its ring's top. Names end at the
-// middle line, beside the start of their ring, and shrink to fit between
-// crowded rings: one unit of the SVG's 100-unit box is 1cqw. They stay in a
-// text color, since a ring color token may be too light to read.
+// RadialChart sets each name's --radial-chart-at to its ring's top. Names
+// end at the middle line, beside the start of their ring, and shrink to fit
+// between crowded rings: one unit of the SVG's 100-unit box is 1cqw. They
+// stay in a text color, since a ring color token may be too light to read.
 .radial-chart-names > span {
   position: absolute;
+  top: var(--radial-chart-at, 50%);
   right: calc(50% + 4px);
   max-width: calc(50% - 8px);
   overflow: hidden;
@@ -122,6 +123,27 @@
   line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+// A gauge's names hang under its base line, a row each with the innermost
+// ring's on top. Each starts at its ring's start, after a line down from
+// it, and every line passes left of the names above it.
+.radial-chart.gauge.labels:not(.sparkline) .radial-chart-plot {
+  margin-block-end: calc(var(--radial-chart-rows, 0) * var(--md-sys-typescale-label-medium-line-height) + 4px);
+}
+
+.radial-chart.gauge .radial-chart-names > span {
+  top: calc(100% + 4px);
+  right: 0;
+  left: var(--radial-chart-at, 0);
+  max-width: none;
+  padding: calc(var(--radial-chart-row, 0) * var(--md-sys-typescale-label-medium-line-height)) 0 0 4px;
+  border-left: 1px solid var(--md-sys-color-outline-variant);
+  translate: none;
+  // The rings do not mirror in RTL, so each name stays beside its line.
+  text-align: left;
+  font-size: var(--md-sys-typescale-label-medium-font-size);
+  line-height: var(--md-sys-typescale-label-medium-line-height);
 }
 
 .radial-chart-tooltip {

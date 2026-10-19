@@ -13,7 +13,8 @@
 //
 // Modifiers: .donut cuts a hole and shows a <tfoot> total in it, .values
 // writes each slice's share on it, .labels writes each slice's name
-// outside it, .sparkline is a small pie with no legend, tooltip or names.
+// outside it with a leader line, .sparkline is a small pie with no
+// legend, tooltip or names.
 //
 // Tokens:
 //   --md-comp-pie-chart-height       240px, the pie's diameter (sparkline 48px)
@@ -139,26 +140,66 @@
   margin-block: 24px;
 }
 
-// PieChart sets each name's top, pushed apart from its neighbours.
+// One unit of the names' places is 1cqw, a hundredth of the pie, so the
+// leader lines can measure from it as well as the names.
+.pie-chart.labels .pie-chart-pie {
+  container-type: size;
+}
+
+// PieChart sets each name's --pie-chart-name-top, pushed apart from its
+// neighbours.
 .pie-chart-names > span {
   // The middle of the name's near edge, 8px past the grown active slice.
-  --pie-chart-name-at: calc(50% + 8px);
+  --pie-chart-name-at: calc(50cqw + 8px);
   --pie-chart-name-step: 1.25lh;
+  --pie-chart-angle: calc(var(--turn, 0) * 1turn);
+  // 1 for a name running rightwards, -1 for one running leftwards.
+  --pie-chart-side: 1;
 
   position: absolute;
-  left: calc(50% + sin(var(--turn, 0) * 1turn) * var(--pie-chart-name-at));
-  // No wider than the room beside the pie, which is at least half the pie's
-  // width when the plot rule above caps it at a quarter of the figure.
-  max-width: calc(min(var(--md-comp-pie-chart-label-width), 50%) - 8px);
-  overflow: hidden;
+  left: calc(50cqw + sin(var(--pie-chart-angle)) * var(--pie-chart-name-at));
+  top: var(--pie-chart-name-top, 50cqw);
   translate: 0 -50%;
   color: var(--md-sys-color-on-surface-variant);
   @include typescale("label-medium");
-  text-overflow: ellipsis;
   white-space: nowrap;
 
   &.end {
+    --pie-chart-side: -1;
+
     translate: -100% -50%;
+  }
+
+  // No wider than the room beside the pie, which is at least half the pie's
+  // width when the plot rule above caps it at a quarter of the figure.
+  > span {
+    display: block;
+    max-width: calc(min(var(--md-comp-pie-chart-label-width), 50cqw) - 8px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // The leader line runs from 4px before the name to the slice's edge on its
+  // middle, so a name pushed up or down still points at its slice. The drop
+  // is how far the name sits below that edge; it adds the top because
+  // Chromium gets x - max(…) wrong when max() has one argument.
+  &::before {
+    --pie-chart-dx: calc(sin(var(--pie-chart-angle)) * (46cqw - var(--pie-chart-name-at)) + var(--pie-chart-side) * 4px);
+    --pie-chart-drop: calc(var(--pie-chart-name-top, 50cqw) + cos(var(--pie-chart-angle)) * 46cqw - 50cqw);
+
+    content: "";
+    position: absolute;
+    top: calc(50% - 0.5px);
+    left: -4px;
+    width: hypot(var(--pie-chart-dx), var(--pie-chart-drop));
+    height: 1px;
+    transform-origin: 0 50%;
+    rotate: calc(-1 * atan2(var(--pie-chart-drop), var(--pie-chart-dx)));
+    background: var(--md-sys-color-outline-variant);
+  }
+
+  &.end::before {
+    left: calc(100% + 4px);
   }
 }
 
