@@ -175,3 +175,13 @@ describe('Spring tokens', () => {
     assert.match(css, /--md-sys-motion-spring-slow-effects-duration:\s*\d+ms/);
   });
 });
+
+describe('Reduced motion tokens', () => {
+  test('every motion duration token, scale step and spring alike, is zeroed under reduced motion', () => {
+    const declared = new Set([...css.matchAll(/(--md-sys-motion-(?:duration-[\w-]+|spring-[\w-]+-duration)):\s*(?!0s)/g)].map((m) => m[1]));
+    const block = css.slice(css.lastIndexOf('@media (prefers-reduced-motion: reduce)', css.indexOf('--md-sys-motion-duration-short1: 0s')));
+    const zeroed = new Set([...block.matchAll(/(--md-sys-motion-[\w-]+):\s*0s/g)].map((m) => m[1]));
+    assert.ok(declared.size >= 22, `found ${declared.size} duration tokens`);
+    assert.deepEqual([...declared].filter((token) => !zeroed.has(token)), []);
+  });
+});

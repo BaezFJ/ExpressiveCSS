@@ -81,3 +81,26 @@ $_springs: (
 :host([motion='expressive']) {
   @include _springs("expressive");
 }
+
+// Reduced motion, once for every component that reads these tokens: every
+// duration, scale step and spring alike, becomes 0s, so the change lands
+// without moving. No !important, so a page can still opt an element back in
+// for motion it needs. Off-scale literal times, such as the 2.1s progress
+// loop, are not tokens; their components cancel them in their own
+// reduced-motion rules.
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  :host,
+  [motion],
+  :host([motion]) {
+    @each $step in ("short", "medium", "long", "extra-long") {
+      @for $i from 1 through 4 {
+        --md-sys-motion-duration-#{$step}#{$i}: 0s;
+      }
+    }
+    @each $name in map.keys(map.get($_springs, "standard")) {
+      --md-sys-motion-spring-#{$name}-duration: 0s;
+    }
+  }
+}
+

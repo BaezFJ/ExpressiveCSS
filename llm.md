@@ -1758,6 +1758,8 @@ Components take their easing curves and on-scale durations from the Material 3 `
 :root { --md-sys-motion-duration-short4: 150ms; } /* every 200ms transition runs at 150ms */
 ```
 
+When the user asks for reduced motion, every duration token and every spring `-duration` token becomes `0s`, so each component that reads them changes state without moving. There is no `!important`, so a page can opt an element back in. Off-scale literal times are not tokens; their components cancel them in their own reduced-motion rules.
+
 #### Springs
 
 Material 3 Expressive describes motion as springs: a damping ratio and a stiffness. CSS has no spring timing function, so the framework solves each spring when the sheet is compiled and samples it into a `linear()` easing that runs for the time the spring takes to settle. Every spring has an easing token and a `-duration` token. Use the two together.

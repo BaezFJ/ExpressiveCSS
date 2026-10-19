@@ -67,6 +67,9 @@ const S = defineSections([
       CSS cannot draw Material's emphasized path, so <code>emphasized</code> uses the standard
       curve, as Material's own web components do.
     </p>
+    <p>
+      When the user asks for reduced motion, every duration token and every spring <code>-duration</code> token becomes <code>0s</code>, so each component that reads them changes state without moving. There is no <code>!important</code>, so a page can opt an element back in. Off-scale literal times are not tokens; their components cancel them in their own reduced-motion rules.
+    </p>
 <Code code={`
 <style>
   /* Every 200ms transition runs at 150ms instead. */

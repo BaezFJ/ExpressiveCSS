@@ -422,6 +422,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Reduced motion now reaches every component through the tokens: under
+  `prefers-reduced-motion: reduce`, all `--md-sys-motion-duration-*` and
+  spring `-duration` tokens are `0s`. Lists, the data table, the navigation
+  bar, the mega menu, checkboxes, radios, pagination, tabs, the
+  questionnaire and the lightbox had no rule of their own and animated
+  before. No `!important`, so a page can opt an element back in.
 - Bottom and side sheets slide in and snap back on the default spatial
   spring (`--md-comp-bottom-sheet-motion`, `--md-comp-side-sheet-motion` and
   their `-motion-duration` tokens) instead of a 280ms ease, so

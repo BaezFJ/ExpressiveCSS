@@ -5466,7 +5466,7 @@
       "lastReviewedSupport": "partial",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
-      "scope": "Shared md.sys.motion easing and duration tokens; M3 Expressive spring tokens for the standard and expressive schemes, solved at compile time into linear() easings with settle durations, a motion attribute that selects the scheme, and public Sass spring() and spring-duration() functions. Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion.",
+      "scope": "Shared md.sys.motion easing and duration tokens; M3 Expressive spring tokens for the standard and expressive schemes, solved at compile time into linear() easings with settle durations, a motion attribute that selects the scheme, every duration token set to 0s under reduced motion, and public Sass spring() and spring-duration() functions. Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion.",
       "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
       "upstream": {
         "source": "https://github.com/material-components/material-components-android/blob/master/docs/theming/Motion.md",

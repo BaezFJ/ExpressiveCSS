@@ -106,3 +106,24 @@ browserTest('prefers-contrast: more applies the high scheme unless contrast says
     await browser.close();
   }
 });
+
+browserTest('reduced motion zeroes every motion token, which stops components without their own rule', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style>
+      <label><input id="radio" type="radio" name="r"> Option</label>`);
+    const read = () => page.evaluate(() => ({
+      radio: getComputedStyle(document.getElementById('radio')).transitionDuration.split(', '),
+      token: getComputedStyle(document.documentElement).getPropertyValue('--md-sys-motion-spring-default-spatial-duration').trim(),
+    }));
+    const before = await read();
+    assert.ok(before.radio.some((d) => d !== '0s'), 'the radio animates by default');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    const after = await read();
+    assert.deepEqual([...new Set(after.radio)], ['0s'], 'the radio has no per-component rule; the tokens stop it');
+    assert.equal(after.token, '0s');
+  } finally {
+    await browser.close();
+  }
+});
