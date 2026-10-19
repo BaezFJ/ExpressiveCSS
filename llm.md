@@ -3133,7 +3133,7 @@ Tokens are `--md-comp-drag-handle-{container-width,width,height,shape,color}` an
 
 ## Lists
 
-Continuous, vertical indexes of text and images. Use a list so people can find an item and act on it. There is no JavaScript — the HTML is the component.
+Continuous, vertical indexes of text and images. Use a list so people can find an item and act on it. The HTML is the component; the script only adds arrow keys to lists of link or button rows.
 
 The leading visual is the first icon, `<img>`, or `<input>`. The trailing action is the last icon, `<kbd>`, `<button>`, `<time>`, or `.meta`. A following `<p>` is supporting text. Mark the current row with `active` or `selected` — **not** `aria-selected`, which is not valid on a plain `listitem` and needs a role (`option`, `tab`, `row`, `treeitem`) that brings a keyboard contract with it.
 
@@ -3200,6 +3200,8 @@ A leading icon is a quick visual cue for the label. A trailing icon is status or
 ### Links
 
 Wrap the row in an `<a>` or `<label>` to make the whole item the target. `aria-current` on the link, or a checked radio inside the label, paints the selected pill.
+
+In a list whose rows are each a single link or button, Up and Down move focus to the row before or after, and Home and End to the first and last, skipping disabled rows and stopping at the ends. Every row stays a Tab stop, so the keys are a shortcut that needs the script; rows with more than one control, and radio rows, which the browser already moves with the arrows, keep their native keys.
 
 ```html
 <li>
@@ -6160,6 +6162,8 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 ```
 
 Add `disabled` on the `<a>` to make it inaccessible. Tabs become scrollable when there are too many to fit.
+
+Each tab is a link and a Tab stop. When one has focus, Left and Right move focus to the next or previous tab, wrapping at the ends, and Home and End to the first and last; disabled tabs are skipped. In a right-to-left page the arrows still move the way they point. Moving focus does not switch the panel: Enter follows the link. The tabs keep their link semantics and `aria-current`, so they are not a `tablist`.
 
 ### Secondary
 

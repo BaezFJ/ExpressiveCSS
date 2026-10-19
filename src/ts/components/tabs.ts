@@ -29,6 +29,9 @@ export interface TabsOptions extends BaseOptions {
   responsiveThreshold: number;
 }
 
+/** Left and Right move between tabs the way they point, so they swap in RTL. */
+const STEPS = { ltr: { ArrowLeft: -1, ArrowRight: 1 }, rtl: { ArrowLeft: 1, ArrowRight: -1 } };
+
 const _defaults: TabsOptions = {
   duration: null,
   onShow: null,
@@ -159,12 +162,29 @@ export class Tabs extends Component<TabsOptions> {
   _setupEventHandlers() {
     window.addEventListener('resize', this._handleWindowResize);
     this.el.addEventListener('click', this._handleTabClick);
+    this.el.addEventListener('keydown', this._handleKeydown);
   }
 
   _removeEventHandlers() {
     window.removeEventListener('resize', this._handleWindowResize);
     this.el.removeEventListener('click', this._handleTabClick);
+    this.el.removeEventListener('keydown', this._handleKeydown);
   }
+
+  /**
+   * Left and Right move focus to the next tab, wrapping at the ends, and
+   * Home and End to the first and last; disabled tabs are skipped. Focus
+   * moves without choosing: Enter follows the link as before. Each tab
+   * stays a Tab stop and a link, so the keys add a shortcut rather than a
+   * composite the markup would have to announce.
+   */
+  _handleKeydown = (e: KeyboardEvent) => {
+    const steps = STEPS[getComputedStyle(this.el).direction === 'rtl' ? 'rtl' : 'ltr'];
+    const target = Utils.focusTarget(Array.from(this._tabLinks), e, steps, true);
+    if (!target) return;
+    e.preventDefault();
+    target.focus();
+  };
 
   // Throttled like Carousel's: every bar re-measures on resize, and the left
   // and right positions are both read before either is written.

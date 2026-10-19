@@ -200,13 +200,14 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 
 Web adaptation: Links target panels; use the shipped runtime keyboard contract.
 
-- integration: Native links use Tab and aria-current; runtime does not implement composite tab arrow keys. Next: Retain native anchor semantics. Rendered selection, overflow geometry and teardown are covered; verify spoken current-state output and physical touch manually.
+- integration: Native links keep Tab and aria-current; Left, Right, Home and End move focus between them as a shortcut, without the selection model a tablist would announce. Next: Retain native anchor semantics. Rendered selection, arrow focus, overflow geometry and teardown are covered; verify spoken current-state output and physical touch manually.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining suggestions and section links preserve selection and dismissal`. Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/menu-field-browser.test.js): `Tabs synchronize swipe selection and callbacks (chromium)`. LTR/RTL and ordinary/reduced motion selection state and single callbacks.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/menu-field-browser.test.js): `Tabs restore panels on teardown and remount (chromium)`. Panel order, owned styles and semantics, wrapper cleanup and remount.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/menu-field-browser.test.js): `Tabs threshold keeps native links and ordinary panels (chromium)`. Above-threshold ordinary panels, native Tab/Enter, disabled and external-target links.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/menu-field-browser.test.js): `Tabs hash selection, native dragging and overflow geometry (chromium)`. Initial hash overrides stale authored panel state without initialization callbacks and restores it on teardown; actual pointer dragging, RTL overflow indicator geometry and initialization-only threshold; no physical touch or native zoom claim.
+- not-recorded: [tests/arrow-keys-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/arrow-keys-browser.test.js): `chromium: arrow keys move focus between tabs and between list rows`. Right and Left move focus, skip a disabled tab and wrap; Home and End reach the ends; RTL swaps the arrows; focus does not change the selection until Enter; a modified arrow is left to the browser. Runs in all three engines.
 
 <a id="breadcrumbs"></a>
 
@@ -482,10 +483,11 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 
 Web adaptation: Native list semantics; visual selection alone does not justify aria-selected.
 
-- integration: Ordinary native lists and child controls do not implement Google composite arrow navigation. Next: Retain native semantics unless a complete composite is supplied; test row control names and selection meaning.
+- integration: Lists of single link or button rows move focus with Up, Down, Home and End as a shortcut; rows stay Tab stops, and lists with several controls per row, selection lists and listbox semantics are not provided. Next: Add a listbox only with a complete selection contract; test row control names and selection meaning.
 
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+- not-recorded: [tests/arrow-keys-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/arrow-keys-browser.test.js): `chromium: arrow keys move focus between tabs and between list rows`. Up and Down move focus between single-control rows, skip a disabled row and stop at the ends; Home and End reach the ends; rows with several controls keep native keys. Runs in all three engines.
 
 <a id="message"></a>
 

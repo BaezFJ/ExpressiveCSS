@@ -38,6 +38,9 @@ const S = defineSections([
           those marked <code>no-autoinit</code>.
         </p>
         <p>
+          Each tab is a link and a Tab stop. When one has focus, Left and Right move focus to the next or previous tab, wrapping at the ends, and Home and End to the first and last; disabled tabs are skipped. In a right-to-left page the arrows still move the way they point. Moving focus does not switch the panel: Enter follows the link. The tabs keep their link semantics and <code>aria-current</code>, so they are not a <code>tablist</code>.
+        </p>
+        <p>
           Tokens follow the
           <a href="https://m3.material.io/components/tabs/specs">M3 tabs spec</a>.
           Primary tabs sit on <code>surface</code>, 48dp (64dp with a

@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Arrow keys for tabs and lists: Left, Right, Home and End move focus
+  between tabs, wrapping and skipping disabled ones, and Up, Down, Home and
+  End move it between the rows of a `.list` whose rows are each one link or
+  button. Tabs and rows stay links and Tab stops; focus moves without
+  choosing. The list keys come from the new `Lists` behavior.
 - Modal date and time pickers: `displayPlugin: 'modal'` opens the picker in
   a modal `<dialog class="display-modal">` drawn as a basic dialog, named by
   the input's label. Ok writes the input; Cancel, Escape and a press on the

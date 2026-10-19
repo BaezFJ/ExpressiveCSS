@@ -2017,10 +2017,10 @@
     },
     "tabs": {
       "status": "enforced",
-      "note": "Swept 0.8.0. Anchor navigation, not a tablist - see rule 2.",
-      "conformance": {
-        "withheld_role": "tablist",
-        "blocked_on": "keyboard model",
+      "note": "Swept 0.8.0. Anchor navigation, not a tablist - see rule 2. Left, Right, Home and End move focus between the links as a shortcut; each link stays a Tab stop.",
+      "rejects": {
+        "rejected_role": "tablist",
+        "because": "the tabs are links to sections inside a nav landmark, with aria-current marking the one shown - the arrow keys only move focus between them, every link stays a Tab stop, and Enter follows it as a link, so there is no selection model for tab and tabpanel roles to announce",
         "rule": "tabs-not-a-tablist"
       },
       "rules": [

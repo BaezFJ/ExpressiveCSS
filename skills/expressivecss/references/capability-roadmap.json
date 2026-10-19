@@ -346,8 +346,8 @@
       "gaps": [
         {
           "kind": "integration",
-          "description": "Native links use Tab and aria-current; runtime does not implement composite tab arrow keys.",
-          "nextStep": "Retain native anchor semantics. Rendered selection, overflow geometry and teardown are covered; verify spoken current-state output and physical touch manually."
+          "description": "Native links keep Tab and aria-current; Left, Right, Home and End move focus between them as a shortcut, without the selection model a tablist would announce.",
+          "nextStep": "Retain native anchor semantics. Rendered selection, arrow focus, overflow geometry and teardown are covered; verify spoken current-state output and physical touch manually."
         }
       ],
       "browserChecks": [
@@ -380,6 +380,12 @@
           "name": "Tabs hash selection, native dragging and overflow geometry (chromium)",
           "scope": "Initial hash overrides stale authored panel state without initialization callbacks and restores it on teardown; actual pointer dragging, RTL overflow indicator geometry and initialization-only threshold; no physical touch or native zoom claim.",
           "state": "stale"
+        },
+        {
+          "file": "tests/arrow-keys-browser.test.js",
+          "name": "chromium: arrow keys move focus between tabs and between list rows",
+          "scope": "Right and Left move focus, skip a disabled tab and wrap; Home and End reach the ends; RTL swaps the arrows; focus does not change the selection until Enter; a modified arrow is left to the browser. Runs in all three engines.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -1419,8 +1425,8 @@
       "gaps": [
         {
           "kind": "integration",
-          "description": "Ordinary native lists and child controls do not implement Google composite arrow navigation.",
-          "nextStep": "Retain native semantics unless a complete composite is supplied; test row control names and selection meaning."
+          "description": "Lists of single link or button rows move focus with Up, Down, Home and End as a shortcut; rows stay Tab stops, and lists with several controls per row, selection lists and listbox semantics are not provided.",
+          "nextStep": "Add a listbox only with a complete selection contract; test row control names and selection meaning."
         }
       ],
       "browserChecks": [
@@ -1435,6 +1441,12 @@
           "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
           "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
           "state": "stale"
+        },
+        {
+          "file": "tests/arrow-keys-browser.test.js",
+          "name": "chromium: arrow keys move focus between tabs and between list rows",
+          "scope": "Up and Down move focus between single-control rows, skip a disabled row and stop at the ends; Home and End reach the ends; rows with several controls keep native keys. Runs in all three engines.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",

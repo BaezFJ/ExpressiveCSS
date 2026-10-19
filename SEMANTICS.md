@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**3 of 88 components declare conformance debt.**
+**2 of 88 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -1153,9 +1153,9 @@ Added with the stepper component. The ordered list carries the step count and po
 
 ### tabs
 
-Swept 0.8.0. Anchor navigation, not a tablist - see rule 2.
+Swept 0.8.0. Anchor navigation, not a tablist - see rule 2. Left, Right, Home and End move focus between the links as a shortcut; each link stays a Tab stop.
 
-**Conformance debt:** `tablist` is withheld pending keyboard model, and `tabs-not-a-tablist` enforces that.
+**Rejected role:** `tablist` is not withheld but declined - the tabs are links to sections inside a nav landmark, with aria-current marking the one shown - the arrow keys only move focus between them, every link stays a Tab stop, and Enter follows it as a link, so there is no selection model for tab and tabpanel roles to announce. `tabs-not-a-tablist` enforces that.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |

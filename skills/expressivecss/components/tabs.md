@@ -9,7 +9,7 @@ Component ID: `tabs`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `b381fb04d82c6c959107a6a0ec42a3edc8a3edc88052eb8af9e03300d5dd7f5a`
+Contract SHA-256: `4c43d46e24c7066d609562335ab9b0a9ce64ab23cbb74f3249e76f711fb83441`
 
 #### Selection and adaptation
 
@@ -33,7 +33,7 @@ Support (2026-09-13, `llm.md#tabs`): Primary and secondary tabs; stacked and hor
 
 Web adaptation: Links target panels; use the shipped runtime keyboard contract.
 
-Known boundary: Native links use Tab and aria-current; runtime does not implement composite tab arrow keys.
+Known boundary: Native links keep Tab and aria-current; Left, Right, Home and End move focus between them as a shortcut, without the selection model a tablist would announce.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#tabs).
 

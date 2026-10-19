@@ -9,6 +9,7 @@ export { PaneResize } from './behaviors/paneResize';
 export { ImageCompare } from './behaviors/imageCompare';
 export { Tour } from './behaviors/tour';
 export { Sortable } from './behaviors/sortable';
+export { Lists } from './behaviors/lists';
 export { AutoInit } from './components/registry';
 export type { AutoInitOptions } from './components/registry';
 
