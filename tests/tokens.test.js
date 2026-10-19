@@ -46,6 +46,16 @@ const withoutFallback = new Set(
 // so a token that gets wired up cannot be left listed here.
 const UNREAD_ALLOWED = new Map([
   [
+    '--md-comp-tabs-indicator-duration',
+    'read by Tabs, which writes the sliding indicator transition inline with ' +
+      'var() so the spring follows motion="expressive" and reduced motion.',
+  ],
+  [
+    '--md-comp-tabs-indicator-easing',
+    'read by Tabs alongside --md-comp-tabs-indicator-duration, in the same ' +
+      'inline transition.',
+  ],
+  [
     '--md-comp-button-group-pressed-item-width-multiplier',
     'read at runtime by ButtonGroup because CSS cannot multiply a measured ' +
       'item width or redistribute it to adjacent items. It remains a public ' +

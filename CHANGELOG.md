@@ -422,6 +422,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The tabs indicator moves on the default spatial spring
+  (`--md-comp-tabs-indicator-easing` and `-duration`), and now stops under
+  reduced motion. The `Tabs` `duration` option defaults to `null`; a number
+  keeps the old ease-out timing for that instance. Switch handles slide on
+  the fast spatial spring (`--md-comp-switch-motion` and `-motion-duration`),
+  and the chip set's border and shadow change on the fast effects spring.
 - Button groups and the keypad press on the fast spatial spring tokens
   instead of the hand-sampled `$motion-fast-spatial` curve, through
   `--md-comp-button-group-motion` and `--md-comp-keypad-motion` with new

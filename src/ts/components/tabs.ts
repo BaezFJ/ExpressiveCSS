@@ -3,10 +3,12 @@ import { Utils } from '../core/utils';
 
 export interface TabsOptions extends BaseOptions {
   /**
-   * Transition duration in milliseconds.
-   * @default 300
+   * Indicator transition duration in milliseconds, on an ease-out curve. The
+   * default, null, follows the --md-comp-tabs-indicator-duration and
+   * --md-comp-tabs-indicator-easing spring tokens instead.
+   * @default null
    */
-  duration: number;
+  duration: number | null;
   /**
    * Callback for when a new tab content is shown.
    * @default null
@@ -28,7 +30,7 @@ export interface TabsOptions extends BaseOptions {
 }
 
 const _defaults: TabsOptions = {
-  duration: 300,
+  duration: null,
   onShow: null,
   swipeable: false,
   responsiveThreshold: Infinity // breakpoint for swipeable
@@ -450,17 +452,15 @@ export class Tabs extends Component<TabsOptions> {
   }
 
   _animateIndicator(prevIndex) {
-    let leftDelay = 0,
-      rightDelay = 0;
-
-    const isMovingLeftOrStaying = this._index - prevIndex >= 0;
-    if (isMovingLeftOrStaying) leftDelay = 90;
-    else rightDelay = 90;
-
-    // in v1: easeOutQuad
-    this._indicator.style.transition = `
-      left ${this.options.duration}ms ease-out ${leftDelay}ms,
-      right ${this.options.duration}ms ease-out ${rightDelay}ms`;
+    // The trailing edge waits 30% of the move, so the bar stretches toward
+    // the new tab before it shrinks. On the spring tokens that delay scales
+    // with the spring and drops to 0 with it under reduced motion.
+    const ms = this.options.duration;
+    const timing = ms == null
+      ? ['var(--md-comp-tabs-indicator-duration) var(--md-comp-tabs-indicator-easing)', 'calc(var(--md-comp-tabs-indicator-duration) * 0.3)']
+      : [`${ms}ms ease-out`, `${ms * 0.3}ms`];
+    const [leftDelay, rightDelay] = this._index - prevIndex >= 0 ? [timing[1], '0s'] : ['0s', timing[1]];
+    this._indicator.style.transition = `left ${timing[0]} ${leftDelay}, right ${timing[0]} ${rightDelay}`;
 
     this._positionIndicator();
   }

@@ -6178,7 +6178,7 @@ The IIFE bundle exposes `Expressive.Tabs`. Call `init` yourself when you need op
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.tabs');
   const instances = Expressive.Tabs.init(elems, {
-    duration: 300
+    swipeable: false
   });
 });
 ```
@@ -6187,7 +6187,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `duration` | Number | `300` | Indicator transition duration, in milliseconds. |
+| `duration` | Number | `null` | Indicator transition duration in milliseconds, on an ease-out curve. The default, `null`, moves the indicator on the default spatial spring (`--md-comp-tabs-indicator-easing` and `--md-comp-tabs-indicator-duration`), which follows `motion="expressive"` and stops under reduced motion. |
 | `onShow` | Function | `null` | Called when a new tab panel is shown. Receives the panel element. |
 | `swipeable` | Boolean | `false` | Enable swipeable tabs. Uses `responsiveThreshold`. Moves the panels into a scroll-snap track. |
 | `responsiveThreshold` | Number | `Infinity` | Maximum viewport width, in pixels, at which swipeable mode starts. Wider viewports stay non-swipeable. |

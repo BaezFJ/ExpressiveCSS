@@ -152,7 +152,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the color picker: 73,629 gzip bytes (+1,424).
   // Reviewed the number stepper in the Forms behavior: 73,769 gzip bytes (+140).
   // Reviewed the confetti overlay reading --expressive-z-confetti: 73,788 gzip bytes (+19).
-  assert.ok(sizes(js).gzip <= 73788, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the tabs indicator reading the spring tokens: 73,840 gzip bytes (+52).
+  assert.ok(sizes(js).gzip <= 73840, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -233,5 +234,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the expanding card on the slow spatial, default spatial and fast effects springs: 78,890 gzip bytes (+27).
   // Reviewed every motion duration token set to 0s under reduced motion: 79,004 gzip bytes (+114).
   // Reviewed button groups and the keypad on the spring tokens, dropping two copies of the sampled curve: 78,791 gzip bytes (-213).
-  assert.ok(sizes(css).gzip <= 78791, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the tabs indicator, switch handle and chip set on springs: 78,870 gzip bytes (+79).
+  assert.ok(sizes(css).gzip <= 78870, `CSS gzip: ${sizes(css).gzip}`);
 });

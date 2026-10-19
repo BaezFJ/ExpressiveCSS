@@ -9,7 +9,7 @@ Component ID: `autocomplete`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `51801266df712c1480020df8710816a553b6a9a09fe37f5695529f8f199b619f`
+Contract SHA-256: `5eb11bac70ca93bbfa2a0dda0a593b9bc9599a82c9567c0c5363004f51c32331`
 
 #### Selection and adaptation
 

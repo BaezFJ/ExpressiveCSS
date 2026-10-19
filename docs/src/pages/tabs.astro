@@ -144,7 +144,7 @@ const S = defineSections([
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.tabs');
   const instances = Expressive.Tabs.init(elems, {
-    duration: 300
+    swipeable: false
   });
 });
 `} />
@@ -154,8 +154,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <tr>
               <td><code>duration</code></td>
               <td>Number</td>
-              <td><code>300</code></td>
-              <td>Indicator transition duration, in milliseconds.</td>
+              <td><code>null</code></td>
+              <td>Indicator transition duration in milliseconds, on an ease-out curve. The default, <code>null</code>, moves the indicator on the default spatial spring (<code>--md-comp-tabs-indicator-easing</code> and <code>--md-comp-tabs-indicator-duration</code>), which follows <code>motion="expressive"</code> and stops under reduced motion.</td>
             </tr>
             <tr>
               <td><code>onShow</code></td>
