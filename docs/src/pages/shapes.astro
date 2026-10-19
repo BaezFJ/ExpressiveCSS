@@ -11,6 +11,7 @@ const S = defineSections([
   { id: "buttons", label: "Buttons" },
   { id: "notes", label: "Notes" },
   { id: "corner-scale", label: "Corner scale" },
+  { id: "cut-corners", label: "Cut corners" },
 ]);
 const corners = [
   ["none", "0px"], ["extra-small", "4px"], ["small", "8px"], ["medium", "12px"],
@@ -105,6 +106,19 @@ const shapes = [
   /* Cards, menu items and every other medium corner become 8px. */
   :root { --md-sys-shape-corner-medium: 8px; }
 </style>
+`} />
+  </Section>
+  <Section {...S["cut-corners"]}>
+    <p>
+      Material shapes come in a rounded and a cut family. <code>corners="cut"</code> on the root or on any subtree turns the corners of cards, dialogs, sheets, menus, fieldsets, buttons, chips, alerts, snackbars, tooltips, popovers and outlined fields into straight bevels of the same size; <code>corners="round"</code> puts a subtree back. The switch sets <code>--md-sys-shape-corner-family</code> to <code>bevel</code> or <code>round</code>. <code>.corner-cut</code> cuts a single element, together with its own radius or a <code>.corner-*</code> class. Round indicators such as radios, switches, avatars and <code>.circle</code> stay round, because a cut 50% radius is a diamond. Cut corners use CSS <code>corner-shape</code>. Browsers without it, including Firefox 157, keep rounded corners.
+    </p>
+    <div corners="cut" class="flex gap-3 align-center mb-3">
+      <article class="outlined p-4">A cut card</article>
+      <button type="button" class="button tonal">Cut button</button>
+    </div>
+<Code code={`
+<main corners="cut">…</main>
+<div class="bordered corner-large corner-cut">One cut panel</div>
 `} />
   </Section>
 </PageBody>

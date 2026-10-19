@@ -8381,7 +8381,7 @@
           "scope": "android-foundation-reviewed; full web specification unassessed"
         },
         "implementation": {
-          "documentedSupport": "Shared md.sys.shape.corner scale from none to full, read by component shape tokens on that scale. Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.",
+          "documentedSupport": "Shared md.sys.shape.corner scale from none to full, read by component shape tokens on that scale, and a corner family token (round or bevel) that a corners attribute switches for container surfaces, with a .corner-cut utility. Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.",
           "webAdaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only."
         }
       },
@@ -8406,8 +8406,8 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "No cut-corner family or general cut-corner theming system; off-scale component corners stay literal.",
-            "nextStep": "Map off-scale component corners to the nearest role only where Material names one; preserve existing component overrides and state shapes."
+            "description": "Cut corners rely on CSS corner-shape, which Firefox 157 lacks, so they stay rounded there; off-scale component corners stay literal.",
+            "nextStep": "Re-check corner-shape support in Firefox each release and remove the caveat once it ships; map off-scale corners only where Material names a role."
           }
         ],
         "browserChecks": [

@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Cut corners: `--md-sys-shape-corner-family` (`round` or `bevel`), a
+  `corners="cut"` switch that cuts the corners of cards, dialogs, sheets,
+  menus, fieldsets, buttons, chips, alerts, snackbars, tooltips, popovers and
+  outlined fields, and a `.corner-cut` utility. Built on CSS `corner-shape`;
+  browsers without it keep rounded corners.
 - Spring motion tokens from Material 3 Expressive:
   `--md-sys-motion-spring-{fast,default,slow}-{spatial,effects}` with a
   `-duration` token each, solved at compile time into `linear()` easings.

@@ -9,7 +9,7 @@ Component ID: `empty-state`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6f15044a17c930afd9ee0e9dacec6342f5a5061c7c1dbdfeba0c876bc39fd830`
+Contract SHA-256: `b33f55a952df30081532c0381a09218d5b37e3c4df5aab8bd38a3c03f1e82d1f`
 
 #### Selection and adaptation
 

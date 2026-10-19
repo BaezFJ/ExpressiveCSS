@@ -232,6 +232,7 @@ const S = defineSections([
             <tr><td><code>.border-top</code>, <code>.border-bottom</code></td><td>The same border on one side</td></tr>
             <tr><td><code>.border-start</code>, <code>.border-end</code></td><td>The same border on the inline start or end, which mirrors in RTL</td></tr>
             <tr><td><code>.corner-none</code>, <code>.corner-extra-small</code>, <code>.corner-small</code>, <code>.corner-medium</code>, <code>.corner-large</code>, <code>.corner-extra-large</code>, <code>.corner-full</code></td><td><code>border-radius</code> from the matching <a href="/shapes.html#corner-scale"><code>--md-sys-shape-corner-*</code></a> token</td></tr>
+            <tr><td><code>.corner-cut</code></td><td><code>corner-shape: bevel</code>: the element's corners become <a href="/shapes.html#cut-corners">straight cuts</a> of the same size. Rounded in browsers without <code>corner-shape</code>.</td></tr>
           </tbody>
         </table>
         <div class="bordered corner-large aspect-16x9 flex align-center justify-center" style="max-width: 20rem">16:9</div>

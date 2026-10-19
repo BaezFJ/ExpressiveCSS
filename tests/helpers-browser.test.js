@@ -359,3 +359,23 @@ browserTest('prefixed spacing and hide apply from their size class up', async ()
     await browser.close();
   }
 });
+
+browserTest('corners="cut" bevels container surfaces and leaves round indicators round', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style>
+      <div corners="cut"><article id="card" class="outlined">x</article><button id="fab" class="button extra circle">f</button>
+        <div corners="round"><article id="back">y</article></div></div>
+      <article id="plain">z</article><span id="one" class="corner-cut corner-medium">w</span>`);
+    const shape = (id) => page.locator(`#${id}`).evaluate((el) => getComputedStyle(el).getPropertyValue('corner-top-left-shape'));
+    const cut = 'superellipse(0)';
+    assert.deepEqual(
+      [await shape('card'), await shape('one')],
+      [cut, cut]
+    );
+    for (const id of ['fab', 'back', 'plain']) assert.notEqual(await shape(id), cut, `${id} is cut`);
+  } finally {
+    await browser.close();
+  }
+});

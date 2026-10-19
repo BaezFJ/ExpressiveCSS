@@ -758,6 +758,15 @@ Component shape tokens on the Material 3 corner scale read the `md.sys.shape.cor
 :root { --md-sys-shape-corner-medium: 8px; } /* cards, menu items and other medium corners */
 ```
 
+#### Cut corners
+
+Material shapes come in a rounded and a cut family. `corners="cut"` on the root or on any subtree turns the corners of cards, dialogs, sheets, menus, fieldsets, buttons, chips, alerts, snackbars, tooltips, popovers and outlined fields into straight bevels of the same size; `corners="round"` puts a subtree back. The switch sets `--md-sys-shape-corner-family` to `bevel` or `round`. `.corner-cut` cuts a single element, together with its own radius or a `.corner-*` class. Round indicators such as radios, switches, avatars and `.circle` stay round, because a cut 50% radius is a diamond. Cut corners use CSS `corner-shape`. Browsers without it, including Firefox 157, keep rounded corners.
+
+```html
+<main corners="cut">…</main>
+<div class="bordered corner-large corner-cut">One cut panel</div>
+```
+
 ---
 
 ## Design tokens
@@ -1237,6 +1246,7 @@ Scrolling needs a bounded size. Use `.overflow-x-auto` for wide tables or action
 | `.border-top`, `.border-bottom` | The same border on one side |
 | `.border-start`, `.border-end` | The same border on the inline start or end, which mirrors in RTL |
 | `.corner-none`, `.corner-extra-small`, `.corner-small`, `.corner-medium`, `.corner-large`, `.corner-extra-large`, `.corner-full` | `border-radius` from the matching `--md-sys-shape-corner-*` token |
+| `.corner-cut` | `corner-shape: bevel`: the element's corners become straight cuts of the same size. Rounded in browsers without `corner-shape`. |
 
 ```html
 <div class="bordered corner-large aspect-16x9">16:9</div>

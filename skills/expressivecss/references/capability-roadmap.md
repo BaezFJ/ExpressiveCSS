@@ -1576,7 +1576,7 @@ Web adaptation: Use supported web component and application overrides; Android a
 
 ## Shape
 
-**unassessed within the stated scope.** Shared md.sys.shape.corner scale from none to full, read by component shape tokens on that scale. Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.
+**unassessed within the stated scope.** Shared md.sys.shape.corner scale from none to full, read by component shape tokens on that scale, and a corner family token (round or bevel) that a corners attribute switches for container surfaces, with a .corner-cut utility. Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.
 
 Source review: needs-review, 2026-09-12. [src/sass/components/_buttons.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/3a81abd30b3bcbb4c916a4824ff894c4cf3dec70/src/sass/components/_buttons.scss), [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/3a81abd30b3bcbb4c916a4824ff894c4cf3dec70/src/sass/abstracts/_mixins.scss), [src/sass/components/_button-groups.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/3a81abd30b3bcbb4c916a4824ff894c4cf3dec70/src/sass/components/_button-groups.scss).
 
@@ -1584,7 +1584,7 @@ Google relationship: foundation. Upstream review: android-foundation-reviewed; f
 
 Web adaptation: Use supported web component and application overrides; Android attributes and APIs are design references only.
 
-- feature: No cut-corner family or general cut-corner theming system; off-scale component corners stay literal. Next: Map off-scale component corners to the nearest role only where Material names one; preserve existing component overrides and state shapes.
+- feature: Cut corners rely on CSS corner-shape, which Firefox 157 lacks, so they stay rounded there; off-scale component corners stay literal. Next: Re-check corner-shape support in Firefox each release and remove the caveat once it ships; map off-scale corners only where Material names a role.
 
 - stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/3a81abd30b3bcbb4c916a4824ff894c4cf3dec70/tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Selected small/xlarge corners, connected XS RTL outer/inner corners, target geometry; reduced-motion transition duration is zero.
 - stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/3a81abd30b3bcbb4c916a4824ff894c4cf3dec70/tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Standard and connected button-group pressed corner changes and release with keyboard activation.

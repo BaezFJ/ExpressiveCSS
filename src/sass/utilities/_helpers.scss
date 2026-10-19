@@ -122,6 +122,22 @@ $_layout: (
   .corner-#{$step} { border-radius: var(--md-sys-shape-corner-#{$step}); }
 }
 
+// Cut corners: the corner's radius becomes a straight bevel of the same
+// size. .corner-cut cuts one element; the container surfaces below follow
+// --md-sys-shape-corner-family, which corners="cut" switches for a subtree.
+// Round indicators (radios, switches, avatars, .circle) stay round, since
+// a cut 50% radius is a diamond. Browsers without `corner-shape` (Firefox
+// 157) keep rounded corners; a clip-path fallback would cut focus rings and
+// shadows too.
+.corner-cut { corner-shape: bevel; }
+
+:where(
+  article, dialog, menu[id], fieldset, .button:not(.circle), .chip, .alert,
+  .snackbar, .tooltip, .popover, .field.outlined > :is(input, textarea)
+) {
+  corner-shape: var(--md-sys-shape-corner-family);
+}
+
 // Shape and text behaviour
 // A FAB is `circle extra` / `circle large`, and its container shape is
 // 16dp rounded corners, not a full round - so the utility skips it. Layer

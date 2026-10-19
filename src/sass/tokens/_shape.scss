@@ -24,4 +24,17 @@
   --md-sys-shape-corner-extra-large-increased: 32px;
   --md-sys-shape-corner-extra-extra-large: 48px;
   --md-sys-shape-corner-full: 9999px;
+
+  // The corner family: `round`, or `bevel` for M3's cut corners. Read by
+  // the container surfaces listed in utilities/_helpers.scss.
+  --md-sys-shape-corner-family: round;
 }
+
+// corners="cut" on the root or a subtree cuts its surfaces' corners;
+// corners="round" puts them back. Browsers without `corner-shape` keep
+// rounded corners.
+[corners='cut'],
+:host([corners='cut']) { --md-sys-shape-corner-family: bevel; }
+
+[corners='round'],
+:host([corners='round']) { --md-sys-shape-corner-family: round; }
