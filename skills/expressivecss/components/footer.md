@@ -9,7 +9,7 @@ Component ID: `footer`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `0400ea61cae3984bf2e06fde606bab5c156ae523d5a01661032e1bfef382877c`
+Contract SHA-256: `d115e8968a556ad30fdbb1afefc3b7f8807236e92907158e85fd8867645b880a`
 
 #### Selection and adaptation
 
