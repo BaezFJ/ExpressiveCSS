@@ -142,7 +142,9 @@ const revenue = money(sum(plans.map(([, value]) => value)));
           <code>labels</code> writes each slice's name outside it, so a reader
           can match slices to parts without the legend. Names on the right
           half run rightwards and those on the left run leftwards. Neighbours
-          that would touch move apart, away from the middle. The pie shrinks to
+          that would touch move apart, away from the middle, and a line from
+          each name back to its slice shows which slice a moved name belongs
+          to. The pie shrinks to
           leave <code>--md-comp-pie-chart-label-width</code> on each side, or a
           quarter of a narrow figure, and longer names are cut short with an
           ellipsis. Combine it with

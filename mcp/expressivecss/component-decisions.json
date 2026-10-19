@@ -3319,7 +3319,7 @@
           "documentedSupport": "Slices drawn clockwise from the top from a figure's data table, with a legend of each row's cell and share, donut, values and sparkline modifiers, a <tfoot> total in the donut hole, labels with each slice's name outside it, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the slice.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the slices, values, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values have no slice. The .labels names only move up or down their side, so many thin slices near the top or bottom can run into the caption or legend."
+            "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values have no slice. The .labels names only move up or down their side, so many thin slices near the top or bottom can run into the caption or legend."
           ]
         },
         "relationship": "none",
@@ -3347,7 +3347,7 @@
           },
           {
             "path": "src/sass/components/_pie-chart.scss",
-            "sha256": "2f159f74ebe1df537f943f5d559c6422c4a217b6a92e552a49015d53b87a1858"
+            "sha256": "e8af880485cebacccd8a23b7387f675cf1f54e58e913bc7314f9fe41b10bd690"
           },
           {
             "path": "src/ts/components/lineChart.ts",
@@ -3361,13 +3361,13 @@
         "gaps": [
           {
             "kind": "verification",
-            "description": "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+            "description": "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
             "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
           },
           {
             "kind": "feature",
-            "description": "Rows past six reuse the colors, and .labels names have no leader lines and only move up or down their side.",
-            "nextStep": "Group small parts into an Other row; add leader lines if pushed names drift too far from their slices."
+            "description": "Rows past six reuse the colors, and .labels names only move up or down their side, so many thin slices at the top or bottom push names into the caption or legend.",
+            "nextStep": "Group small parts into an Other row."
           }
         ],
         "browserChecks": [
@@ -3661,7 +3661,7 @@
           "documentedSupport": "Rings drawn clockwise from the top from a figure's data table as a share of data-max, with tracks, a legend of each row's cell for more than one row, gauge, labels and sparkline modifiers, a <tfoot> total in the middle, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the ring.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rings, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values leave only the track. The .labels names can run into a crowded middle total, and a gauge has no names."
+            "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values leave only the track. The .labels names can run into a crowded middle total."
           ]
         },
         "relationship": "none",
@@ -3703,13 +3703,13 @@
         "gaps": [
           {
             "kind": "verification",
-            "description": "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+            "description": "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
             "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
           },
           {
             "kind": "feature",
-            "description": "A gauge has no ring names, there are no gradient or segmented fills, and rings past four reuse the colors.",
-            "nextStep": "Name gauge rings under the base line if gauges need them; keep to four rings and use the legend meanwhile."
+            "description": "There are no gradient or segmented fills, and rings past four reuse the colors.",
+            "nextStep": "Keep to four rings and use the legend for more."
           }
         ],
         "browserChecks": [

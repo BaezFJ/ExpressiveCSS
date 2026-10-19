@@ -238,8 +238,9 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         <div style="width: 400px">
           ${chart('class="radial-chart labels" id="named"', 'Named', '<th>V</th>', [['Sales', '100'], ['Marketing', '64'], ['Support', '38']])}
           ${chart('class="radial-chart labels" id="crowd"', 'Crowd', '<th>V</th>', Array.from({ length: 8 }, (_, i) => [`Team ${i + 1}`, '50']))}
-          ${chart('class="radial-chart labels gauge" id="half"', 'Half', '<th>V</th>', [['A', '50']])}
+          ${chart('class="radial-chart labels gauge" id="half"', 'Half', '<th>V</th>', [['Filled', '50'], ['Offered', '40'], ['Waitlisted', '30']])}
           ${chart('class="radial-chart labels sparkline" id="tiny"', 'Tiny', '<th>V</th>', [['A', '50']])}
+          <div dir="rtl">${chart('class="radial-chart labels gauge" id="rtl-half"', 'RTL', '<th>V</th>', [['Filled', '50'], ['Offered', '40'], ['Waitlisted', '30']])}</div>
         </div>
         <script>${js}</script>`);
       await page.evaluate(() => Expressive.AutoInit());
@@ -295,8 +296,42 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       assert.equal(crowd.overlaps, 0, 'names shrink to fit crowded rings');
       assert.ok(Math.max(...crowd.sizes) < Math.max(...named.sizes), `crowded names are smaller: ${crowd.sizes[0]} vs ${named.sizes[0]}`);
 
-      const half = await page.locator('#half').evaluate(measure);
-      assert.deepEqual([half.names, half.span], [[], 0.5], 'a gauge has no names and keeps its half circle');
+      const gauge = (el) => {
+        const plot = el.querySelector('.radial-chart-plot').getBoundingClientRect();
+        const rings = [...el.querySelectorAll('.radial-chart-ring')];
+        const names = [...el.querySelectorAll('.radial-chart-names > span')].map((span, i) => {
+          const range = document.createRange();
+          range.selectNodeContents(span);
+          const text = range.getBoundingClientRect();
+          // The ring's start on the base line, in pixels.
+          const start = plot.left + plot.width / 2 - (parseFloat(rings[i].getAttribute('r')) / 100) * plot.width;
+          return { name: span.textContent, text, box: span.getBoundingClientRect(), start };
+        });
+        const track = el.querySelector('.radial-chart-track');
+        const dash = parseFloat(track.style.getPropertyValue('--radial-chart-dash'));
+        const width = parseFloat(track.getAttribute('stroke-width'));
+        return {
+          names: names.map(({ name }) => name),
+          atStart: names.every(({ box, start }) => Math.abs(box.left - start) <= 1),
+          below: names.every(({ box }) => box.top >= plot.bottom),
+          lines: names.every(({ box }) => box.top - plot.bottom <= 8 && box.bottom >= box.top + 1),
+          rows: names.map(({ text }) => Math.round(text.top - plot.bottom)),
+          // The text starts past the 1px line and its 4px padding.
+          afterLine: names.every(({ text, start }) => Math.abs(text.left - start - 5) <= 1),
+          legend: el.querySelector('.radial-chart-legend').getBoundingClientRect().top >= Math.max(...names.map(({ box }) => box.bottom)),
+          span: Math.round(((dash + width) / (2 * Math.PI * parseFloat(track.getAttribute('r')))) * 100) / 100,
+        };
+      };
+      const half = await page.locator('#half').evaluate(gauge);
+      assert.deepEqual(half.names, ['Filled', 'Offered', 'Waitlisted'], 'a gauge names each ring too');
+      assert.equal(half.span, 0.5, 'a gauge keeps its half circle');
+      assert.ok(half.atStart, 'each name\'s line drops from its ring\'s start');
+      assert.ok(half.below && half.lines, 'the names hang just under the base line');
+      assert.ok(half.rows[2] < half.rows[1] && half.rows[1] < half.rows[0], `the innermost name is the top row: ${half.rows}`);
+      assert.ok(half.afterLine, 'each name starts after its line');
+      assert.ok(half.legend, 'the plot leaves room for the names above the legend');
+      const rtl = await page.locator('#rtl-half').evaluate(gauge);
+      assert.ok(rtl.atStart && rtl.afterLine, 'in RTL each name still starts beside its line');
       const tiny = await page.locator('#tiny').evaluate(measure);
       assert.deepEqual([tiny.names, tiny.span, tiny.round], [[], 1, 'butt'], 'a sparkline has no names and whole tracks');
 
@@ -320,6 +355,31 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         ]);
         assert.deepEqual(hovered, ['Marketing', 1], `hovering ${share * 100}% across Marketing shows its ring`);
       }
+
+      // Under a gauge, the pointer on a name's text picks that name's ring.
+      await page.locator('#half').scrollIntoViewIfNeeded();
+      for (const [i, row] of ['Filled', 'Offered', 'Waitlisted'].entries()) {
+        const text = await page.locator('#half').evaluate((el, i) => {
+          const range = document.createRange();
+          range.selectNodeContents(el.querySelectorAll('.radial-chart-names > span')[i]);
+          const { x, y, width, height } = range.getBoundingClientRect();
+          return { x: x + width / 2, y: y + height / 2 };
+        }, i);
+        await page.mouse.move(text.x, text.y);
+        const hovered = await page.locator('#half').evaluate((el) => [
+          el.querySelector('.radial-chart-tooltip strong')?.textContent,
+          [...el.querySelectorAll('.radial-chart-ring')].findIndex((ring) => ring.classList.contains('active')),
+        ]);
+        assert.deepEqual(hovered, [row, i], `hovering ${row} under the gauge shows its ring`);
+      }
+      // A gauge's top left is ring, not names, so the pointer goes by distance there.
+      const ring = await page.locator('#half').evaluate((el) => {
+        const plot = el.querySelector('.radial-chart-plot').getBoundingClientRect();
+        const r = (parseFloat(el.querySelector('.radial-chart-ring').getAttribute('r')) / 100) * plot.width;
+        return { x: plot.left + plot.width / 2 - r * Math.SQRT1_2, y: plot.bottom - r * Math.SQRT1_2 };
+      });
+      await page.mouse.move(ring.x, ring.y);
+      assert.equal(await page.locator('#half .radial-chart-tooltip strong').textContent(), 'Filled', 'the outer ring is under the pointer at half past ten');
     } finally {
       await browser.close();
     }

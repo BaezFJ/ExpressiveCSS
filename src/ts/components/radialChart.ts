@@ -14,7 +14,8 @@ const FILL = 0.8;
  * the top as a share of `data-max` above zero (100 by default). With `.gauge` the rings
  * are half circles over the middle. With `.labels` they are three quarters
  * of a circle, leaving the top left quarter for each row's name at the
- * ring's start. A <tfoot> row shows in the middle, and
+ * ring's start; a gauge's names hang under its base line instead. A <tfoot>
+ * row shows in the middle, and
  * a legend lists the rows when there is more than one. Further columns show
  * in the tooltip.
  *
@@ -54,10 +55,10 @@ export class RadialChart extends LineChart {
     return this.el.classList.contains('gauge');
   }
 
-  /** Whether .labels names the rings, which a gauge or sparkline never does. */
+  /** Whether .labels names the rings, which a sparkline never does. */
   private get _labeled() {
     const list = this.el.classList;
-    return list.contains('labels') && !list.contains('gauge') && !list.contains('sparkline');
+    return list.contains('labels') && !list.contains('sparkline');
   }
 
   /** How much of a circle a full ring spans. */
@@ -139,7 +140,7 @@ export class RadialChart extends LineChart {
     const box = this._plot.getBoundingClientRect();
     // The middle is half the width down in both shapes.
     const [x, y] = [e.clientX - box.left - box.width / 2, e.clientY - box.top - box.width / 2];
-    if (this._gauge && y > 0) return -1;
+    if (this._gauge && y > 0) return this._nameAt(e);
     // A gap belongs to a ring beside it.
     const distance = this._distance(x, y, box.width);
     return this._radii.findIndex((r) => Math.abs(distance - r) <= this._step / 2);
@@ -151,22 +152,36 @@ export class RadialChart extends LineChart {
    * so only the height counts and a name picks its own ring.
    */
   private _distance(x: number, y: number, width: number) {
-    if (this._labeled && x < 0 && y < 0) return (-y / width) * 100;
+    // Only three-quarter rings leave that quarter empty.
+    if (this._span === 0.75 && x < 0 && y < 0) return (-y / width) * 100;
     return (Math.hypot(x, y) / width) * 100;
+  }
+
+  /** Under a gauge's base line, the ring whose name is under the pointer, or -1. */
+  private _nameAt(e: PointerEvent) {
+    const name = (e.target as Element).closest('.radial-chart-names > span');
+    return name ? [...name.parentElement!.children].indexOf(name) : -1;
   }
 
   /**
    * With .labels, each row's name left of its ring's start at the top,
    * ending at the middle line. CSS shrinks the text to fit crowded rings.
+   * A gauge's names hang under its base line in a row each, innermost
+   * first, starting below their rings' starts.
    */
   private _names(): Element[] {
     if (!this._labeled) return [];
+    const count = this._radii.length;
     const names = document.createElement('div');
     names.className = 'radial-chart-names';
     names.style.setProperty('--radial-chart-step', this._step.toFixed(3));
+    // The plot leaves room under a gauge for the rows.
+    this._plot.style.setProperty('--radial-chart-rows', String(count));
     names.append(...this._radii.map((r, i) => {
       const name = document.createElement('span');
-      name.style.top = `${(50 - r).toFixed(3)}%`;
+      // The ring's top, or a gauge ring's start along the base line.
+      name.style.setProperty('--radial-chart-at', `${(50 - r).toFixed(3)}%`);
+      name.style.setProperty('--radial-chart-row', String(count - 1 - i));
       name.textContent = this.labels[i];
       return name;
     }));

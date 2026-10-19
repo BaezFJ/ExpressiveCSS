@@ -14,7 +14,7 @@ const LABEL_SHARE = 0.05;
 let _maskId = 0;
 
 /**
- * Sets each name's top so neighbours on one side of the pie sit at least
+ * Sets each name's --pie-chart-name-top so neighbours on one side of the pie sit at least
  * --pie-chart-name-step apart, pushed away from the middle line: down below
  * it (`away` 1) and up above it (-1). Each top is the furthest of the natural
  * places of the names before it, plus a step for every name between. An
@@ -28,8 +28,8 @@ function stack(names: [number, HTMLElement][], away: number, anchor?: number) {
   const first = ys.length - names.length;
   names.forEach(([, name], k) => {
     const tops = ys.slice(0, first + k + 1).map((y, j) =>
-      `calc(50% + ${y} * var(--pie-chart-name-at) + ${(first + k - j) * away} * var(--pie-chart-name-step))`);
-    name.style.top = `${away > 0 ? 'max' : 'min'}(${tops.join(', ')})`;
+      `calc(50cqw + ${y} * var(--pie-chart-name-at) + ${(first + k - j) * away} * var(--pie-chart-name-step))`);
+    name.style.setProperty('--pie-chart-name-top', `${away > 0 ? 'max' : 'min'}(${tops.join(', ')})`);
   });
 }
 
@@ -128,8 +128,9 @@ export class PieChart extends LineChart {
   // ponytail: names only move up or down their side, so many thin slices
   // near the top or bottom run into the caption or legend; group them as "Other".
   /**
-   * Each slice's row name outside it, on the slice's middle. Names on the
-   * right half run rightwards and those on the left run leftwards.
+   * Each slice's row name outside it, on the slice's middle, with a leader
+   * line back to the slice. Names on the right half run rightwards and those
+   * on the left run leftwards.
    */
   private _names() {
     const names = document.createElement('div');
@@ -144,7 +145,10 @@ export class PieChart extends LineChart {
       name.dataset.series = this._colors[i];
       name.style.setProperty('--turn', String(turn));
       name.classList.toggle('end', turn >= 0.5);
-      name.textContent = this.labels[i];
+      // The text is cut short inside the name, which draws the leader line.
+      const text = document.createElement('span');
+      text.textContent = this.labels[i];
+      name.append(text);
       names.append(name);
       sides[(turn >= 0.5 ? 2 : 0) + Number(y >= 0)].push([y, name]);
     });

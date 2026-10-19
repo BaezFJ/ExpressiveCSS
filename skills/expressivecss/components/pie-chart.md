@@ -9,7 +9,7 @@ Component ID: `pie-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `a184b5b39af4f5b111ba89015278c3164c81a1eed5481ba785b10a9cd99e34d9`
+Contract SHA-256: `e7d558b2b23079b26b02710ad9914b566698e45f83f428383b61cceb05cdc032`
 
 #### Selection and adaptation
 
@@ -29,7 +29,7 @@ Support (2026-10-07, `llm.md#pie-chart`): Slices drawn clockwise from the top fr
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the slices, values, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values have no slice. The .labels names only move up or down their side, so many thin slices near the top or bottom can run into the caption or legend.
+Known boundary: Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values have no slice. The .labels names only move up or down their side, so many thin slices near the top or bottom can run into the caption or legend.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#pie-chart).
 
