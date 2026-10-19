@@ -422,6 +422,18 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Button groups and the keypad press on the fast spatial spring tokens
+  instead of the hand-sampled `$motion-fast-spatial` curve, through
+  `--md-comp-button-group-motion` and `--md-comp-keypad-motion` with new
+  `-motion-duration` pairs, so `motion="expressive"` reaches them. The press
+  settles in 182ms instead of a 200ms window. `$motion-fast-spatial` stays
+  for Sass that still names it.
+- Reduced motion now reaches every component through the tokens: under
+  `prefers-reduced-motion: reduce`, all `--md-sys-motion-duration-*` and
+  spring `-duration` tokens are `0s`. Lists, the data table, the navigation
+  bar, the mega menu, checkboxes, radios, pagination, tabs, the
+  questionnaire and the lightbox had no rule of their own and animated
+  before. No `!important`, so a page can opt an element back in.
 - Bottom and side sheets slide in and snap back on the default spatial
   spring (`--md-comp-bottom-sheet-motion`, `--md-comp-side-sheet-motion` and
   their `-motion-duration` tokens) instead of a 280ms ease, so

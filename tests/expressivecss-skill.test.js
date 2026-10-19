@@ -644,8 +644,8 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(references.typography, /`\.label-large-emphasized`/);
     assert.match(compiledCss, /--md-comp-filled-button-container-shape:\s*var\(--md-sys-shape-corner-full\)/);
     assert.match(compiledCss, /--md-sys-shape-corner-full:\s*9999px/);
-    assert.match(compiledCss, /--md-comp-button-group-motion:\s*linear\(/);
-    assert.match(compiledCss, /border-radius var\(--md-sys-motion-duration-short4\) var\(--md-comp-button-group-motion\)/);
+    assert.match(compiledCss, /--md-comp-button-group-motion:\s*var\(--md-sys-motion-spring-fast-spatial\)/);
+    assert.match(compiledCss, /border-radius var\(--md-comp-button-group-motion-duration\) var\(--md-comp-button-group-motion\)/);
     assert.match(compiledCss, /--md-sys-motion-duration-short4:\s*200ms/);
     assert.match(references.motion, /`--md-sys-motion-easing-\*` and `--md-sys-motion-duration-\*`/);
     assert.match(references.typography, /bundles Roboto and Noto Sans at `400`, `500` and `700`/);

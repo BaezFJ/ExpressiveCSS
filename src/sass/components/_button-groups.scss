@@ -74,8 +74,10 @@ $_connected-corners: (
   // multiply a length by one, so it is the same figure as a ratio.
   --md-comp-button-group-pressed-item-width-multiplier: 0.15;
   // Material's fast-spatial spring, so width and corner motion use the
-  // published dynamics.
-  --md-comp-button-group-motion: #{$motion-fast-spatial};
+  // published dynamics and follow motion="expressive". The easing and its
+  // duration are a pair.
+  --md-comp-button-group-motion: var(--md-sys-motion-spring-fast-spatial);
+  --md-comp-button-group-motion-duration: var(--md-sys-motion-spring-fast-spatial-duration);
 
   display: flex;
   align-items: center;
@@ -127,8 +129,8 @@ $_connected-corners: (
   > #{$_item} {
     position: relative;
     transition:
-      width var(--md-sys-motion-duration-short4) var(--md-comp-button-group-motion),
-      border-radius var(--md-sys-motion-duration-short4) var(--md-comp-button-group-motion),
+      width var(--md-comp-button-group-motion-duration) var(--md-comp-button-group-motion),
+      border-radius var(--md-comp-button-group-motion-duration) var(--md-comp-button-group-motion),
       background-color var(--md-sys-motion-duration-short4) ease-out;
   }
 
