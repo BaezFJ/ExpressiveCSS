@@ -227,5 +227,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the Latin Extended, Cyrillic, Greek, Vietnamese and Devanagari text faces at 400, 500 and 700: 78,604 gzip bytes (+814).
   // Reviewed the bottom sheet on the default spatial spring with a 24px bleed: 78,655 gzip bytes (+51).
   // Reviewed the side sheet on the default spatial spring with a 24px bleed: 78,694 gzip bytes (+39).
-  assert.ok(sizes(css).gzip <= 78694, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the navigation rail resizing on the default spatial spring: 78,746 gzip bytes (+52).
+  assert.ok(sizes(css).gzip <= 78746, `CSS gzip: ${sizes(css).gzip}`);
 });

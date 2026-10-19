@@ -88,4 +88,32 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       }
     });
   }
+
+  test(`${name}: a navigation rail expands on the spatial spring and settles at its expanded width`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 700 } });
+      await page.setContent(`<!doctype html><html lang="en" motion="expressive"><head><style>${css}</style></head><body>
+        <nav class="navigation-rail" id="rail" aria-label="Main"><a href="#" aria-current="page">Home</a></nav></body></html>`);
+      const widths = await page.evaluate(() => new Promise((resolve) => {
+        const rail = document.getElementById('rail');
+        const seen = [];
+        const start = performance.now();
+        rail.classList.add('expanded');
+        const tick = () => {
+          seen.push(rail.getBoundingClientRect().width);
+          if (performance.now() - start < 700) requestAnimationFrame(tick); else resolve(seen);
+        };
+        requestAnimationFrame(tick);
+      }));
+      const final = widths.at(-1);
+      assert.equal(Math.round(final), 280);
+      assert.ok(Math.max(...widths) > final + 1, `the expressive spring did not overshoot: ${Math.max(...widths)}`);
+      assert.ok(Math.max(...widths) < final * 1.03, `the overshoot is larger than the spring allows: ${Math.max(...widths)}`);
+      assert.match(await page.locator('#rail').evaluate((el) => getComputedStyle(el).transitionTimingFunction), /^linear\(/);
+    } finally {
+      await browser.close();
+    }
+  });
 }

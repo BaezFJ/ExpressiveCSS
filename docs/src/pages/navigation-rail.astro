@@ -105,6 +105,15 @@ const S = defineSections([
           into an extended button. Section headings show only in this
           layout.
         </p>
+        <p>
+          Expanding and collapsing run on the default spatial spring:
+          <code>--md-comp-nav-rail-motion</code> and
+          <code>--md-comp-nav-rail-motion-duration</code> read
+          <code>--md-sys-motion-spring-default-spatial</code> and its duration, so
+          <code>motion="expressive"</code> lets the rail overshoot its width slightly
+          before it settles. The rail grows from its docked edge, so nothing behind
+          it is uncovered.
+        </p>
         <div class="rail-demo mb-3">
           <nav class="navigation-rail expanded" aria-label="Main — Expanded">
             <button type="button" aria-label="Menu">

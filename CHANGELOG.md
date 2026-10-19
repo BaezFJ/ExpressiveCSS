@@ -428,6 +428,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `motion="expressive"` applies to them. Each sheet now extends 24px past its
   docked edge, with matching padding, so a spring's overshoot never uncovers
   the page.
+- The navigation rail expands and collapses on the default spatial spring
+  (`--md-comp-nav-rail-motion` and `-motion-duration`). Its width, min-width
+  and padding no longer follow `--md-comp-nav-rail-duration`, which now
+  times only the indicator color.
 - Headings balance their lines and paragraphs avoid a one-word last line
   (`text-wrap-style: balance` and `pretty`). The longhand leaves wrapping
   itself alone, so `.truncate` and `.text-nowrap` still work.
