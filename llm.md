@@ -5558,7 +5558,7 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
 
 This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https://m3.material.io/components/menus/specs). The container is `surface-container-low`, large (16dp) corners, elevation 2, 2dp group padding, 112–280dp wide. Items are 44dp with extra-small (4dp) corners, `label-large` / `on-surface`; the first and last item round their outer corners to 12dp. Icons are 20dp `on-surface-variant`. Selected items use medium (12dp) corners and `tertiary-container` / `on-tertiary-container`. Hover is an 8% state layer, focus and press 10%, none of which span the container. Dividers are inset. Add `.vibrant` for the tertiary mapping. Submenus fade and scale in; the open flyout rounds up and the parent rounds down.
 
-`AutoInit()` starts every `.menu-trigger` except those marked `no-autoinit`. Menus open on click, below the trigger. Pass `coverTrigger: true` to cover the trigger. Pass `constrainWidth: false` so the menu sizes independently of the trigger.
+`AutoInit()` starts every `.menu-trigger` except those marked `no-autoinit`. Menus open on click, below the trigger. Pass `coverTrigger: true` to cover the trigger. Pass `constrainWidth: false` so the menu sizes independently of the trigger. In browsers with CSS anchor positioning, a menu opened from its trigger is anchored there in CSS: it stays under the trigger while the page or a container scrolls, flips above it or to the other side at the viewport edge, and scrolls when it is taller than the room on that side. Context menus and `coverTrigger: true` keep the measured placement, as do browsers without anchor positioning.
 
 ```html
 <button class="menu-trigger" data-target="menu1">Drop me</button>
@@ -6178,7 +6178,7 @@ The IIFE bundle exposes `Expressive.Tabs`. Call `init` yourself when you need op
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.tabs');
   const instances = Expressive.Tabs.init(elems, {
-    duration: 300
+    swipeable: false
   });
 });
 ```
@@ -6187,7 +6187,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `duration` | Number | `300` | Indicator transition duration, in milliseconds. |
+| `duration` | Number | `null` | Indicator transition duration in milliseconds, on an ease-out curve. The default, `null`, moves the indicator on the default spatial spring (`--md-comp-tabs-indicator-easing` and `--md-comp-tabs-indicator-duration`), which follows `motion="expressive"` and stops under reduced motion. |
 | `onShow` | Function | `null` | Called when a new tab panel is shown. Receives the panel element. |
 | `swipeable` | Boolean | `false` | Enable swipeable tabs. Uses `responsiveThreshold`. Moves the panels into a scroll-snap track. |
 | `responsiveThreshold` | Number | `Infinity` | Maximum viewport width, in pixels, at which swipeable mode starts. Wider viewports stay non-swipeable. |
@@ -6536,7 +6536,7 @@ A rich tooltip with an action cannot live inside a `<button>` — that would nes
 
 ### JavaScript
 
-The CSS path does not need AutoInit. The JS plugin is still there for `data-tooltip`, delayed show/hide, and keeping the bubble inside the viewport. Add `tooltipped` to the activator. `data-tooltip` is the text; `data-position` is `top`, `right`, `bottom`, or `left`. `AutoInit()` starts every `.tooltipped` except those marked `no-autoinit`. The generated element gets `.tooltip` (plus `.rich` when `tooltipId` is set).
+The CSS path does not need AutoInit. The JS plugin is still there for `data-tooltip`, delayed show/hide, and keeping the bubble inside the viewport. Add `tooltipped` to the activator. `data-tooltip` is the text; `data-position` is `top`, `right`, `bottom`, or `left`. `AutoInit()` starts every `.tooltipped` except those marked `no-autoinit`. The generated element gets `.tooltip` (plus `.rich` when `tooltipId` is set). In browsers with CSS anchor positioning, the plugin anchors the bubble to its activator instead of measuring: it stays beside the activator while the page or a container scrolls, and flips to the opposite side at the viewport edge. An anchored tooltip fades in without sliding, because script cannot tell which side it flipped to; `transitionMovement` is added to the gap instead. Other browsers keep the measured, viewport-clamped position.
 
 ```html
 <button type="button" class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip">
@@ -6593,7 +6593,7 @@ Constructor and `init` options. `data-tooltip`, `data-position`, and `data-toolt
 | `opacity` | Number | `1` | Opacity of the tooltip when shown. |
 | `outDuration` | Number | `200` | Exit transition duration, in milliseconds. |
 | `position` | String | `'bottom'` | Direction: `'top'`, `'right'`, `'bottom'`, or `'left'`. Set by `data-position`. The CSS-only default is above. |
-| `transitionMovement` | Number | `10` | How far the tooltip moves during its transition, in pixels. |
+| `transitionMovement` | Number | `10` | How far the tooltip moves during its transition, in pixels. An anchored tooltip does not move and adds this to the gap. |
 
 ### Methods
 

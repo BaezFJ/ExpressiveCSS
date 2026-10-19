@@ -9,7 +9,7 @@ Component ID: `tabs`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `51801266df712c1480020df8710816a553b6a9a09fe37f5695529f8f199b619f`
+Contract SHA-256: `61c6653c323fd0eca19289f95ec22e5f8a19b81a20c8d1490d2b505f1346212a`
 
 #### Selection and adaptation
 
@@ -69,7 +69,7 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `duration` | Number | `300` | Indicator transition duration, in milliseconds. |
+| `duration` | Number | `null` | Indicator transition duration in milliseconds, on an ease-out curve. The default, `null`, moves the indicator on the default spatial spring (`--md-comp-tabs-indicator-easing` and `--md-comp-tabs-indicator-duration`), which follows `motion="expressive"` and stops under reduced motion. |
 | `onShow` | Function | `null` | Called when a new tab panel is shown. Receives the panel element. |
 | `swipeable` | Boolean | `false` | Enable swipeable tabs. Uses `responsiveThreshold`. Moves the panels into a scroll-snap track. |
 | `responsiveThreshold` | Number | `Infinity` | Maximum viewport width, in pixels, at which swipeable mode starts. Wider viewports stay non-swipeable. |

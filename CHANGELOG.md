@@ -422,6 +422,22 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The `Tooltip` plugin anchors its bubble with CSS anchor positioning where
+  the browser supports it: the tooltip stays beside its activator through
+  page and container scrolling and flips at the viewport edge. Anchored
+  tooltips fade in without sliding, and `transitionMovement` joins the gap.
+  Other browsers keep the measured position.
+- Menus opened from a trigger, including Select, Autocomplete, the menubar
+  and the date picker's menus, anchor with CSS anchor positioning where
+  supported: they follow the trigger through scrolling, flip at the viewport
+  edge and scroll when taller than the room on that side. Context menus and
+  `coverTrigger: true` keep the measured placement.
+- The tabs indicator moves on the default spatial spring
+  (`--md-comp-tabs-indicator-easing` and `-duration`), and now stops under
+  reduced motion. The `Tabs` `duration` option defaults to `null`; a number
+  keeps the old ease-out timing for that instance. Switch handles slide on
+  the fast spatial spring (`--md-comp-switch-motion` and `-motion-duration`),
+  and the chip set's border and shadow change on the fast effects spring.
 - Button groups and the keypad press on the fast spatial spring tokens
   instead of the hand-sampled `$motion-fast-spatial` curve, through
   `--md-comp-button-group-motion` and `--md-comp-keypad-motion` with new

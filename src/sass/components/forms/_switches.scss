@@ -17,6 +17,10 @@
 
 .switch {
   --md-comp-switch-track-width: 52px;
+  // The handle slides and grows on the fast spatial spring; colors keep
+  // their short ease.
+  --md-comp-switch-motion: var(--md-sys-motion-spring-fast-spatial);
+  --md-comp-switch-motion-duration: var(--md-sys-motion-spring-fast-spatial-duration);
   --md-comp-switch-track-height: 32px;
   --md-comp-switch-handle-unselected: 16px;
   --md-comp-switch-handle-selected: 24px;
@@ -62,8 +66,9 @@
   // thumb on the start and it only grows.
   background-position: 6px 50%;
   cursor: pointer;
-  transition: background-color var(--md-sys-motion-duration-short4) ease, background-position var(--md-sys-motion-duration-short4) ease,
-    background-size var(--md-sys-motion-duration-short4) ease, border-color var(--md-sys-motion-duration-short4) ease, box-shadow var(--md-sys-motion-duration-short4) ease;
+  transition: background-color var(--md-sys-motion-duration-short4) ease,
+    background-position var(--md-comp-switch-motion-duration) var(--md-comp-switch-motion),
+    background-size var(--md-comp-switch-motion-duration) var(--md-comp-switch-motion), border-color var(--md-sys-motion-duration-short4) ease, box-shadow var(--md-sys-motion-duration-short4) ease;
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;

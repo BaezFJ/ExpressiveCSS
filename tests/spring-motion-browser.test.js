@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([n]) => !requested || requested === n)) {
@@ -172,6 +173,46 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       assert.deepEqual((await open('sheet')).animations, ['translate']);
       await page.emulateMedia({ reducedMotion: 'reduce' });
       assert.deepEqual((await open('basic')).animations, [], 'reduced motion opens without moving');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${name}: the tabs indicator and switch handle move on springs`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      const tabs = (id) => `<nav class="tabs" id="${id}" aria-label="${id}"><a class="active" aria-current="page" href="#a-${id}">A</a><a href="#b-${id}">B</a></nav>
+        <div id="a-${id}">a</div><div id="b-${id}">b</div>`;
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        ${tabs('spring')}${tabs('fixed')}
+        <label class="switch"><input type="checkbox" id="toggle"> Wi-Fi</label>
+        <script>${js}</script>
+        <script>Expressive.Tabs.init(document.getElementById('spring')); Expressive.Tabs.init(document.getElementById('fixed'), { duration: 200 });</script></body></html>`);
+      const indicator = async (id) => {
+        await page.click(`#${id} a[href="#b-${id}"]`);
+        return page.locator(`#${id} > .indicator`).evaluate((el) => {
+          const s = getComputedStyle(el);
+          return { easing: s.transitionTimingFunction, duration: s.transitionDuration, delay: s.transitionDelay };
+        });
+      };
+      const spring = await indicator('spring');
+      assert.match(spring.easing, /^linear\(/, 'the default follows the spring tokens');
+      assert.notEqual(spring.duration.split(', ')[0], '0s');
+      const fixed = await indicator('fixed');
+      assert.equal(fixed.duration, '0.2s, 0.2s', 'an explicit duration keeps its own timing');
+      assert.match(fixed.easing, /ease-out/);
+      const handle = await page.locator('#toggle').evaluate((el) => {
+        const s = getComputedStyle(el);
+        const at = s.transitionProperty.split(', ').indexOf('background-position');
+        return s.transitionTimingFunction.split(/,\s*(?![^()]*\))/)[at];
+      });
+      assert.match(handle, /^linear\(/, 'the switch handle slides on the spring');
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.click('#spring a[href="#a-spring"]');
+      const reduced = await page.locator('#spring > .indicator').evaluate((el) => getComputedStyle(el).transitionDuration);
+      assert.deepEqual([...new Set(reduced.split(', '))], ['0s'], 'reduced motion stops the indicator');
     } finally {
       await browser.close();
     }

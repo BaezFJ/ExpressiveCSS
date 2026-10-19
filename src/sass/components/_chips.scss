@@ -145,7 +145,11 @@
   margin: 0 0 8px 0;
   padding: 4px;
   outline: none;
-  transition: border-color var(--md-sys-motion-duration-medium2), border-width var(--md-sys-motion-duration-medium2), box-shadow var(--md-sys-motion-duration-medium2);
+  // An effect, not a move: the fast effects spring, which never overshoots.
+  transition:
+    border-color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+    border-width var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+    box-shadow var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;

@@ -139,6 +139,7 @@ const S = defineSections([
           <code>.tooltipped</code> except those marked
           <code>no-autoinit</code>. The generated element gets
           <code>.tooltip</code> (plus <code>.rich</code> when <code>tooltipId</code> is set).
+          In browsers with CSS anchor positioning, the plugin anchors the bubble to its activator instead of measuring: it stays beside the activator while the page or a container scrolls, and flips to the opposite side at the viewport edge. An anchored tooltip fades in without sliding, because script cannot tell which side it flipped to; <code>transitionMovement</code> is added to the gap instead. Other browsers keep the measured, viewport-clamped position.
         </p>
         <p class="flex flex-wrap gap-2">
           <button type="button" class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip">Bottom</button>

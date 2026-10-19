@@ -29,6 +29,10 @@ $_tab: "> a";
   --md-comp-primary-tab-active-indicator-color: var(--md-sys-color-primary);
   --md-comp-primary-tab-active-indicator-height: 3px;
   --md-comp-primary-tab-active-indicator-shape: 3px 3px 0 0;
+  // The sliding indicator moves on the default spatial spring; Tabs reads
+  // these unless its duration option is set.
+  --md-comp-tabs-indicator-easing: var(--md-sys-motion-spring-default-spatial);
+  --md-comp-tabs-indicator-duration: var(--md-sys-motion-spring-default-spatial-duration);
   --md-comp-primary-tab-icon-size: 24px;
   --md-comp-primary-tab-label-text-color: var(--md-sys-color-on-surface-variant);
   --md-comp-primary-tab-active-label-text-color: var(--md-sys-color-primary);

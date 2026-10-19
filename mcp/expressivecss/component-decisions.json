@@ -8474,7 +8474,7 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "Springs are sampled at compile time; there is no runtime solver, so an interrupted spring restarts without carrying velocity. Sheets, the navigation rail, FAB menu actions, basic dialogs, the expanding card, button groups and the keypad run on spring tokens; small state changes such as switches, chips and the tabs indicator keep their own curves.",
+            "description": "Springs are sampled at compile time; there is no runtime solver, so an interrupted spring restarts without carrying velocity. Sheets, the navigation rail, FAB menu actions, basic dialogs, the expanding card, button groups, the keypad, the tabs indicator, switches and chip sets run on spring tokens.",
             "nextStep": "Move component spatial transitions onto the spring tokens one component at a time, with browser checks of the settled state and reduced motion."
           }
         ],
