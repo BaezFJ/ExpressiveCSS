@@ -11,7 +11,8 @@
 //
 // Modifiers: .stacked draws one column per row with each series on the
 // ones before it, .fade fades each column toward its base, .track draws a
-// full-height track behind each row's columns, .sparkline is a small chart
+// full-height track behind each row's columns, .axis labels the y axis at
+// round values with a grid line at each, .sparkline is a small chart
 // with no axis, grid, legend or tooltip.
 //
 // Tokens:
@@ -20,10 +21,12 @@
 //   --md-comp-column-chart-shape          4px, the column's end radius
 //   --md-comp-column-chart-track-color    surface-container-highest
 //   --md-comp-column-chart-grid-color     outline-variant
+//   --md-comp-column-chart-axis-width     48px, room for the .axis labels
 //   --md-comp-column-chart-color-1..4     primary, tertiary, secondary,
 //                                         on-surface-variant
 
 @include chart("column-chart");
+@include chart-axis("column-chart");
 
 .column-chart {
   --md-comp-column-chart-column-width: 60%;

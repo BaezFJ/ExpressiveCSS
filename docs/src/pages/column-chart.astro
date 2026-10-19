@@ -353,7 +353,16 @@ ${cardScript.replace(/^/gm, "  ")}
           <code>data-max</code> on the figure to fix either end; when zero is
           off the scale, columns start at the bottom of the plot.
         </p>
-        <figure class="column-chart" data-markdown-ignore>
+        <p>
+          <code>axis</code> labels the y axis at round values, with a grid line at each, and
+          widens an end the chart chose to the next round value, so the labels
+          start and end on the plot's edges. The labels repeat any currency or
+          percent sign the cells are written with and shorten large numbers,
+          such as <code>$1.5K</code>. An end set with <code>data-min</code> or
+          <code>data-max</code> stays where it is. The labels are hidden from
+          assistive technology; the table still carries the values.
+        </p>
+        <figure class="column-chart axis" data-markdown-ignore>
           <figcaption>Net cash flow, first half</figcaption>
           <table>
             <thead><tr><th>Month</th><th>Net</th></tr></thead>
@@ -361,7 +370,7 @@ ${cardScript.replace(/^/gm, "  ")}
           </table>
         </figure>
 <Code code={`
-<figure class="column-chart">
+<figure class="column-chart axis">
   <figcaption>Net cash flow, first half</figcaption>
   <table>
     <thead><tr><th>Month</th><th>Net</th></tr></thead>
@@ -422,6 +431,7 @@ chart.destroy(); // remove the drawing and show the table again
           <tr><td><code>--md-comp-column-chart-shape</code></td><td>4px</td></tr>
           <tr><td><code>--md-comp-column-chart-track-color</code></td><td><code>--md-sys-color-surface-container-highest</code></td></tr>
           <tr><td><code>--md-comp-column-chart-grid-color</code></td><td><code>--md-sys-color-outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-column-chart-axis-width</code></td><td>48px, the room beside the plot for <code>axis</code> labels</td></tr>
           <tr><td><code>--md-comp-column-chart-color-1</code></td><td><code>--md-sys-color-primary</code></td></tr>
           <tr><td><code>--md-comp-column-chart-color-2</code></td><td><code>--md-sys-color-tertiary</code></td></tr>
           <tr><td><code>--md-comp-column-chart-color-3</code></td><td><code>--md-sys-color-secondary</code></td></tr>

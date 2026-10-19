@@ -39,6 +39,41 @@ export function polarPoint(turn: number, r: number): string {
 export const seriesColor = (i: number) => String((i % COLORS) + 1);
 let _gradientId = 0;
 
+/** Axis steps, as multiples of a power of ten. */
+const NICE = [1, 2, 2.5, 5, 10];
+
+/** A round step that cuts `span` into at most `parts` pieces. */
+export function niceStep(span: number, parts = 4) {
+  const raw = span / parts || 1;
+  const power = 10 ** Math.floor(Math.log10(raw));
+  return power * NICE.find((multiple) => multiple * power >= raw * (1 - 1e-9))!;
+}
+
+/** The multiples of `step` from `low` to `high`, without float error. */
+export function steps(low: number, high: number, step: number) {
+  const values: number[] = [];
+  for (let i = Math.ceil(low / step - 1e-9); i * step <= high + step * 1e-9; i++) {
+    values.push(Number((i * step).toPrecision(12)));
+  }
+  return values;
+}
+
+/** A number format in the element's language, or the browser's for an invalid lang attribute. */
+export function numberFormat(el: Element, options: Intl.NumberFormatOptions) {
+  try {
+    return new Intl.NumberFormat(el.closest<HTMLElement>('[lang]')?.lang || undefined, options);
+  } catch {
+    return new Intl.NumberFormat(undefined, options);
+  }
+}
+
+/** A y scale's ends, and with .axis the values its labels mark. */
+export interface ChartScale {
+  min: number;
+  max: number;
+  ticks: number[];
+}
+
 export interface Series {
   name: string;
   /** Header cell classes, such as `dashed`. */
@@ -55,6 +90,12 @@ export interface Series {
   base?: (number | null)[];
   /** The series' y scale: a value's distance down the plot, in percent. */
   y: (value: number) => number;
+  scale: ChartScale;
+  /**
+   * The currency, percent or spacing around the first number written as
+   * cell text, such as ['$', ''], which the axis labels repeat.
+   */
+  affix: [string, string];
 }
 
 /**
@@ -71,6 +112,13 @@ function cellValue(cell: Element | undefined): number | null {
   // The pattern also lets through "e5" (NaN) and "1e400" (Infinity).
   const value = parseFloat(text.replace(/,/g, ''));
   return Number.isFinite(value) ? value : null;
+}
+
+/** The signs around the first value a column spells out in its text, as [prefix, suffix]. */
+function affix(cells: (Element | undefined)[]): [string, string] {
+  const cell = cells.find((each) => !(each as HTMLElement)?.dataset.value && cellValue(each) !== null);
+  const [, prefix, suffix] = /^([\s\p{Sc}]*)[^]*?([\s%\p{Sc}]*)$/u.exec(cell?.textContent.trim() ?? '')!;
+  return [prefix, suffix];
 }
 
 /**
@@ -152,6 +200,11 @@ export class LineChart extends Component<LineChartOptions> {
    */
   protected get _circular() {
     return false;
+  }
+
+  /** Whether .axis labels the value scale, which a sparkline never does. */
+  protected get _axis() {
+    return this.el.classList.contains('axis') && !this.el.classList.contains('sparkline');
   }
 
   /** Whether the cursor marks each series with a point. */
@@ -282,7 +335,9 @@ export class LineChart extends Component<LineChartOptions> {
         text: rows.map((row) => row.cells[i + 1]?.textContent.trim() ?? ''),
         values,
         tops: values,
-        y: undefined
+        y: undefined,
+        scale: undefined,
+        affix: affix(rows.map((row) => row.cells[i + 1]))
       };
     });
     const stacked = this.el.classList.contains('stacked');
@@ -313,6 +368,7 @@ export class LineChart extends Component<LineChartOptions> {
    * are set, and gives it to each series.
    */
   protected _scale(series: Series[], min: number | null, max: number | null, fromZero = this._fromZero) {
+    const fixed = [min !== null, max !== null] as const;
     const stacked = this.el.classList.contains('stacked');
     let [low, high] = [Infinity, -Infinity];
     for (const { tops } of series) {
@@ -336,8 +392,25 @@ export class LineChart extends Component<LineChartOptions> {
       min ??= stacked ? Math.min(0, low) : low - pad;
       max ??= high + (stacked ? (high - min) * 0.1 || 1 : pad);
     }
-    const y = (value: number) => 100 - ((value - min) / (max - min || 1)) * 100;
-    for (const each of series) each.y = y;
+    return this._apply(series, this._fit(min, max, fixed));
+  }
+
+  /**
+   * With .axis, widens each end the chart chose to a round step and lists
+   * the steps for the labels. An end set by the author stays where it is.
+   */
+  protected _fit(min: number, max: number, [fixedMin, fixedMax]: readonly boolean[]): ChartScale {
+    if (!this._axis) return { min, max, ticks: [] };
+    const step = niceStep(max - min);
+    const low = fixedMin ? min : Math.floor(min / step + 1e-9) * step;
+    const high = fixedMax ? max : Math.ceil(max / step - 1e-9) * step;
+    return { min: low, max: high, ticks: steps(low, high, step) };
+  }
+
+  /** Gives the series a scale and the y function it draws with. */
+  protected _apply(series: Series[], scale: ChartScale) {
+    const y = (value: number) => 100 - ((value - scale.min) / (scale.max - scale.min || 1)) * 100;
+    for (const each of series) Object.assign(each, { y, scale });
     return y;
   }
 
@@ -363,7 +436,7 @@ export class LineChart extends Component<LineChartOptions> {
     this._tooltip.className = `${type}-tooltip`;
     this._tooltip.hidden = true;
     this._tooltip.setAttribute('aria-live', 'polite');
-    this._plot.append(this._draw(), this._cursor, this._tooltip);
+    this._plot.append(...this._axes(), this._draw(), this._cursor, this._tooltip);
 
     this._generated = [this._plot, ...this._guides()];
     this.el.append(...this._generated);
@@ -397,6 +470,36 @@ export class LineChart extends Component<LineChartOptions> {
       labels.append(li);
     }
     return [labels, ...this._legend()];
+  }
+
+  /**
+   * With .axis, the value labels, behind the marks: the start scale's with
+   * a grid line at each, and a mixed chart's end scale on the far side.
+   */
+  protected _axes(): Element[] {
+    if (!this._axis) return [];
+    const isEnd = (series: Series) => series.className.split(/\s+/).includes('end');
+    const start = this.series.find((series) => !isEnd(series)) ?? this.series[0];
+    const end = this.series.find((series) => series.y !== start.y);
+    return [start, end].filter(Boolean).map((series, i) => this._valueAxis(series!, i > 0));
+  }
+
+  /** One scale's labels, each placed by --at, its value's distance down the plot. */
+  private _valueAxis(series: Series, end: boolean) {
+    const axis = document.createElement('ol');
+    axis.className = `${this._type}-axis${end ? ' end' : ''}`;
+    axis.setAttribute('aria-hidden', 'true');
+    const number = numberFormat(this.el, { notation: 'compact', maximumSignificantDigits: 3 });
+    const [prefix, suffix] = series.affix;
+    for (const tick of series.scale.ticks) {
+      const li = document.createElement('li');
+      const label = document.createElement('span');
+      label.textContent = number.format(tick).replace(/^[-\u2212]?/, (sign) => sign + prefix) + suffix;
+      li.style.setProperty('--at', `${series.y(tick)}%`);
+      li.append(label);
+      axis.append(li);
+    }
+    return axis;
   }
 
   /** The series legend, for more than one series. */

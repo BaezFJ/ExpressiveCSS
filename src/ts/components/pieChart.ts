@@ -1,5 +1,5 @@
 import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions, polarPoint as at, svgNode as node } from './lineChart';
+import { LineChart, LineChartOptions, numberFormat, polarPoint as at, svgNode as node } from './lineChart';
 
 export type PieChartOptions = LineChartOptions;
 
@@ -33,6 +33,11 @@ export class PieChart extends LineChart {
 
   protected get _type() {
     return 'pie-chart';
+  }
+
+  /** A pie has no value axis. */
+  protected get _axis() {
+    return false;
   }
 
   protected get _key() {
@@ -97,13 +102,7 @@ export class PieChart extends LineChart {
   }
 
   private _percent(digits: number) {
-    const options = { style: 'percent', maximumFractionDigits: digits } as const;
-    try {
-      return new Intl.NumberFormat(this.el.closest<HTMLElement>('[lang]')?.lang || undefined, options);
-    } catch {
-      // An invalid lang attribute.
-      return new Intl.NumberFormat(undefined, options);
-    }
+    return numberFormat(this.el, { style: 'percent', maximumFractionDigits: digits });
   }
 
   /** The legend: every row with its color, its cell and its share. */

@@ -204,6 +204,19 @@ const average = (values: number[]) => (values.reduce((total, value) => total + v
           <code>primary</code>, <code>tertiary</code>,
           <code>secondary</code> and <code>on-surface-variant</code> in turn.
         </p>
+        <p>
+          <code>axis</code> draws the grid rings at round values instead of
+          quarters and labels each ring up the top spoke, leaving zero in the
+          middle unlabelled. The rim widens to the next round value unless
+          <code>data-max</code> sets it. The labels are hidden from assistive
+          technology; the table still carries the values.
+        </p>
+<Code code={`
+<figure class="radar-chart axis">
+  <figcaption>Competitor benchmark</figcaption>
+  <table><!-- … --></table>
+</figure>
+`} />
   </Section>
   <Section {...S.accessibility}>
         <p>

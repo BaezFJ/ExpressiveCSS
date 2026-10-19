@@ -5031,6 +5031,7 @@ A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The firs
 - Series take `primary`, `tertiary`, `secondary` and `on-surface-variant` in turn.
 - A cell's number is its text without currency signs, percent signs or grouping commas. Text that is not a single number (`4.4k`, `(1,200)`) is a gap, as is an empty cell. Put the number in `data-value` for those, and for `4.400 €`, which would read as 4.4. The tooltip shows the cell text as written.
 - The y axis spans the data with 10% to spare. `data-min` and `data-max` on the figure, or the `min` and `max` options, fix either end.
+- `axis` labels the y axis at round values beside the plot, with a grid line at each, and widens an end the chart chose to the next round value. The labels repeat the cells' currency or percent sign and shorten large numbers (`$1.5K`); an end set by `data-min` or `data-max` stays put. They are `aria-hidden`; the table carries the values. `--md-comp-line-chart-axis-width` (48px) is the room they take.
 - The plot is one Tab stop named by the caption. Left and Right move between rows, Home and End jump to the ends, Escape hides the tooltip. In a right-to-left context the x axis runs right to left and the arrows follow it. The tooltip is a polite live region. Hide a redundant caption with `.visually-hidden` rather than removing it.
 - A direct `<figure>` in a card is normally media with an overlaid caption; a `.line-chart` keeps its own layout there.
 - After changing the table, call `Expressive.LineChart.init(el)` again to redraw. `show(index)` highlights a row (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
@@ -5042,6 +5043,7 @@ A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The firs
 | `--md-comp-line-chart-height` | 240px (sparkline 48px) |
 | `--md-comp-line-chart-line-width` | 3px (sparkline 2px) |
 | `--md-comp-line-chart-grid-color` | `outline-variant` |
+| `--md-comp-line-chart-axis-width` | 48px, room for `axis` labels |
 | `--md-comp-line-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
 
 ---
@@ -5073,6 +5075,7 @@ A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as
 - Series take `primary`, `tertiary`, `secondary` and `on-surface-variant` in turn. A series header cell's classes reach its columns as hooks for your own styles; `dashed` has no column style.
 - Cells read as in a line chart: currency signs, percent signs and grouping commas are ignored, other text is a gap, and `data-value` gives the number. In a grouped chart a gap leaves an empty slot.
 - The y axis always includes zero, with 10% of the span to spare above and, with negative values, below. Negative columns hang from zero and round their lower end. `data-min` and `data-max` on the figure, or the `min` and `max` options, fix either end; when zero is off the scale, columns start at the plot's bottom.
+- `axis` labels the y axis at round values beside the plot, with a grid line at each, and widens an end the chart chose to the next round value. The labels repeat the cells' currency or percent sign and shorten large numbers (`$1.5K`); an end set by `data-min` or `data-max` stays put. They are `aria-hidden`; the table carries the values. `--md-comp-column-chart-axis-width` (48px) is the room they take.
 - Keyboard, RTL, the live tooltip and cards behave as for the line chart: the plot is one Tab stop named by the caption, and a `.column-chart` in a card keeps its own layout.
 - After changing the table, call `Expressive.ColumnChart.init(el)` again to redraw. `show(index)` highlights a group (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
 
@@ -5085,6 +5088,7 @@ A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as
 | `--md-comp-column-chart-shape` | 4px |
 | `--md-comp-column-chart-track-color` | `surface-container-highest` |
 | `--md-comp-column-chart-grid-color` | `outline-variant` |
+| `--md-comp-column-chart-axis-width` | 48px, room for `axis` labels |
 | `--md-comp-column-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
 
 ---
@@ -5115,6 +5119,7 @@ A `<figure class="bar-chart">` takes the same `<figcaption>` and `<table>` as a 
 - `stacked` draws one bar per row with each series after the total of the ones before it; only the last segment rounds its end. `split` separates stacked segments with a gap and rounds them at each joint. With `track` and `data-max` set to a budget, one stacked row is a meter of what is spent and what is left.
 - `track` draws a full-width track behind each row and rounds both ends of its bars. `values` writes each cell's text from its bar's base, in the series' on-color over the bar; a value longer than a short bar runs on past its end in the label color, and a stacked segment cuts what does not fit. `sparkline` drops the labels, grid, legend and tooltip and is not focusable.
 - Cells, series colors, `data-min`, `data-max`, negative values and gaps work as in the column chart; negative bars grow toward the inline start.
+- `axis` labels the value axis at round values under the plot, with a grid line up from each, as in the column chart.
 - The plot is one Tab stop named by the caption. Up and down arrows move between rows, Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped row. In a right-to-left page, set by `dir` or CSS `direction`, the bars grow leftwards and the labels sit on the right; rows keep their order.
 - After changing the table, call `Expressive.BarChart.init(el)` again to redraw. It takes the column chart's options and methods.
 
@@ -5243,6 +5248,7 @@ A `<figure class="radar-chart">` takes the same `<figcaption>` and `<table>` as 
 - The plot is a square as wide as `--md-comp-radar-chart-height`, centered with `--md-comp-radar-chart-label-room` on each side for the labels. Four grid rings split the scale evenly.
 - `area` fills each shape, `points` marks each value, and `class="dashed"` on a header cell dashes that series' outline. `sparkline` is a 48px chart with no labels, legend or tooltip and is not focusable.
 - Cells read as in the line chart. A non-numeric cell is a gap: the shape joins the spokes either side and the tooltip leaves it out. The middle is zero, or below the lowest value if one is negative; the rim is the highest value plus a tenth of the range. `data-min` and `data-max`, or the `min` and `max` options, fix the scale; values past the rim stop at it. Series take four colors.
+- `axis` draws the grid rings at round values instead of quarters and labels each ring up the top spoke, leaving zero unlabelled; the rim widens to the next round value unless `data-max` sets it.
 - The plot is one Tab stop named by the caption. Right and down arrows move to the next row, left and up to the one before, wrapping between the last row and the first; Home and End jump to the ends and Escape hides the tooltip; the pointer or a tap shows the nearest spoke. In a right-to-left page the spokes and the arrows still run clockwise.
 - After changing the table, call `Expressive.RadarChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`.
 
@@ -5326,7 +5332,8 @@ A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as 
 </figure>
 ```
 
-- Series share one scale. A series whose header has `end` is drawn against a second scale fitted to the `end` series, or fixed by `data-end-min` and `data-end-max` on the figure, as `data-min` and `data-max` fix the first. A scale with columns always includes zero. There is no y axis, so name the units in the caption or headers.
+- Series share one scale. A series whose header has `end` is drawn against a second scale fitted to the `end` series, or fixed by `data-end-min` and `data-end-max` on the figure, as `data-min` and `data-max` fix the first. A scale with columns always includes zero. Without `axis` there is no y axis, so name the units in the caption or headers.
+- `axis` labels the first scale beside the plot's start, with grid lines, and the `end` scale along its end. When neither scale has a set end, the `end` scale stretches to as many round steps as the first so its labels share the grid lines. Each scale's labels repeat its cells' currency or percent sign.
 - Cells read as in the line chart; a suffix such as `K` makes a cell a gap, so use `data-value` or put the unit in the header. A gap breaks a line and leaves a column's slot empty. Series take four colors in column order, whatever their kind, then repeat.
 - The cursor bands the highlighted row and puts a point on each line and area. The plot is one Tab stop named by the caption; left and right move between rows, Home and End jump to the ends and Escape hides the tooltip. `sparkline` is a 48px chart with no grid, labels, legend or tooltip and is not focusable.
 - After changing the table, call `Expressive.MixedChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale. `stacked` is not supported.
@@ -5340,6 +5347,7 @@ A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as 
 | `--md-comp-mixed-chart-shape` | 4px, the column's end radius |
 | `--md-comp-mixed-chart-line-width` | 3px (sparkline 2px) |
 | `--md-comp-mixed-chart-grid-color` | `outline-variant` |
+| `--md-comp-mixed-chart-axis-width` | 48px, room on each side for `axis` labels |
 | `--md-comp-mixed-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
 
 ---

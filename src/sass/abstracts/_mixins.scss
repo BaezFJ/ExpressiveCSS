@@ -521,3 +521,78 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
     }
   }
 }
+
+// The value labels LineChart draws for .axis: an .#{$name}-axis list in the
+// plot, behind the marks, with each label's distance down the plot in --at.
+// A label sits beside the plot with a grid line across it at its value; a
+// mixed chart's end scale gets a second list, .end, on the far side, whose
+// labels share those lines. With $beside the plot and row labels make room
+// at the inline start (and end, for .end) for
+// --md-comp-#{$name}-axis-width, 48px. Without it the component places the
+// labels itself.
+@mixin chart-axis($name, $beside: true) {
+  .#{$name}.axis {
+    --md-comp-#{$name}-axis-width: 48px;
+
+    > .#{$name}-plot {
+      background: none;
+    }
+  }
+
+  @if $beside {
+    // Room for the top label's upper half.
+    .#{$name}.axis > .#{$name}-plot {
+      margin-block-start: 8px;
+    }
+
+    .#{$name}.axis > :is(.#{$name}-plot, .#{$name}-labels) {
+      margin-inline-start: var(--md-comp-#{$name}-axis-width);
+    }
+
+    .#{$name}.axis:has(.#{$name}-axis.end) > :is(.#{$name}-plot, .#{$name}-labels) {
+      margin-inline-end: var(--md-comp-#{$name}-axis-width);
+    }
+  }
+
+  .#{$name}-axis {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-small");
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+
+    > li {
+      position: absolute;
+      inset-inline: 0;
+      top: var(--at);
+      border-block-start: 1px solid var(--md-comp-#{$name}-grid-color);
+    }
+
+    > li > span {
+      position: absolute;
+      inset-inline-end: 100%;
+      box-sizing: border-box;
+      width: var(--md-comp-#{$name}-axis-width);
+      padding-inline-end: 8px;
+      overflow: hidden;
+      text-align: end;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      translate: 0 -50%;
+    }
+
+    &.end > li {
+      border: 0;
+    }
+
+    &.end > li > span {
+      inset-inline: 100% auto;
+      padding-inline: 8px 0;
+      text-align: start;
+    }
+  }
+}

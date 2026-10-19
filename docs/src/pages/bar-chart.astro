@@ -254,7 +254,16 @@ const spent = sum(spending.map(([, value]) => value));
           end. Set <code>data-min</code> or <code>data-max</code> on the
           figure to fix either end.
         </p>
-        <figure class="bar-chart values" data-markdown-ignore>
+        <p>
+          <code>axis</code> labels the value axis at round values, under the plot with a grid line up from each, and
+          widens an end the chart chose to the next round value, so the labels
+          start and end on the plot's edges. The labels repeat any currency or
+          percent sign the cells are written with and shorten large numbers,
+          such as <code>$1.5K</code>. An end set with <code>data-min</code> or
+          <code>data-max</code> stays where it is. The labels are hidden from
+          assistive technology; the table still carries the values.
+        </p>
+        <figure class="bar-chart axis" data-markdown-ignore>
           <figcaption>Net cash flow, first half</figcaption>
           <table>
             <thead><tr><th>Month</th><th>Net</th></tr></thead>
@@ -262,7 +271,7 @@ const spent = sum(spending.map(([, value]) => value));
           </table>
         </figure>
 <Code code={`
-<figure class="bar-chart values">
+<figure class="bar-chart axis">
   <figcaption>Net cash flow, first half</figcaption>
   <table>
     <thead><tr><th>Month</th><th>Net</th></tr></thead>

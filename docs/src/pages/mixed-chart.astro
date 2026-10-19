@@ -78,10 +78,18 @@ const growth = [4, 5, 6, 5, 7, 8, 7, 9, 10, 9, 11, 13];
           so a series in other units or of another size still fills the plot.
           Set <code>data-end-min</code> and <code>data-end-max</code> on the
           figure to fix that scale, as <code>data-min</code> and
-          <code>data-max</code> fix the first. The chart draws no y axis, so
-          name both units in the caption or the headers.
+          <code>data-max</code> fix the first.
         </p>
-        <figure class="mixed-chart" data-markdown-ignore>
+        <p>
+          <code>axis</code> labels both scales at round values: the first
+          beside the plot's start with a grid line at each, the second along
+          its end. When no end of either scale is set, the second scale
+          stretches to as many steps as the first, so its labels share the
+          same grid lines. The labels repeat each scale's currency or percent
+          sign and are hidden from assistive technology. Without
+          <code>axis</code>, name both units in the caption or the headers.
+        </p>
+        <figure class="mixed-chart axis" data-markdown-ignore>
           <figcaption>Ad spend ($K) and conversions</figcaption>
           <table>
             <thead><tr><th>Month</th><th class="column">Spend</th><th class="end">Conversions</th></tr></thead>
@@ -89,7 +97,7 @@ const growth = [4, 5, 6, 5, 7, 8, 7, 9, 10, 9, 11, 13];
           </table>
         </figure>
 <Code code={`
-<figure class="mixed-chart">
+<figure class="mixed-chart axis">
   <figcaption>Ad spend ($K) and conversions</figcaption>
   <table>
     <thead>
@@ -258,6 +266,7 @@ chart.destroy(); // remove the drawing and show the table again
           <tr><td><code>--md-comp-mixed-chart-shape</code></td><td>4px, a column's end radius</td></tr>
           <tr><td><code>--md-comp-mixed-chart-line-width</code></td><td>3px; 2px for a sparkline</td></tr>
           <tr><td><code>--md-comp-mixed-chart-grid-color</code></td><td><code>outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-mixed-chart-axis-width</code></td><td>48px, the room on each side of the plot for <code>axis</code> labels</td></tr>
           <tr><td><code>--md-comp-mixed-chart-color-1</code> … <code>-4</code></td><td><code>primary</code>, <code>tertiary</code>, <code>secondary</code>, <code>on-surface-variant</code></td></tr>
         </TokenTable>
         <p>For a selective Sass build, include <code>"mixed-chart"</code> in <code>$components</code>.</p>

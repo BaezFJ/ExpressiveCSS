@@ -13,6 +13,7 @@
 //
 // Modifiers: .area fills under each line, .stacked stacks each series on
 // the ones before it and fills between them, .fade fades the line ends,
+// .axis labels the y axis at round values with a grid line at each,
 // .sparkline is a small chart with no axis, grid, legend or tooltip.
 // A series header cell's classes reach its line: <th class="dashed">.
 //
@@ -20,10 +21,12 @@
 //   --md-comp-line-chart-height       240px (sparkline 48px)
 //   --md-comp-line-chart-line-width   3px (sparkline 2px)
 //   --md-comp-line-chart-grid-color   outline-variant
+//   --md-comp-line-chart-axis-width   48px, room for the .axis labels
 //   --md-comp-line-chart-color-1..4   primary, tertiary, secondary,
 //                                     on-surface-variant
 
 @include chart("line-chart");
+@include chart-axis("line-chart");
 
 .line-chart {
   --md-comp-line-chart-line-width: 3px;

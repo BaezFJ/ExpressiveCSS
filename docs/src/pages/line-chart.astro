@@ -366,6 +366,28 @@ ${cardScript.replace(/^/gm, "  ")}
           either end, such as <code>data-min="0"</code> when the change should
           be read against zero.
         </p>
+        <p>
+          <code>axis</code> labels the y axis at round values, with a grid line at each, and
+          widens an end the chart chose to the next round value, so the labels
+          start and end on the plot's edges. The labels repeat any currency or
+          percent sign the cells are written with and shorten large numbers,
+          such as <code>$1.5K</code>. An end set with <code>data-min</code> or
+          <code>data-max</code> stays where it is. The labels are hidden from
+          assistive technology; the table still carries the values.
+        </p>
+        <figure class="line-chart axis" data-markdown-ignore>
+          <figcaption>Monthly revenue, first half</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th>Revenue</th></tr></thead>
+            <tbody>{months.slice(0, 6).map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="line-chart axis">
+  <figcaption>Monthly revenue, first half</figcaption>
+  <table><!-- … --></table>
+</figure>
+`} />
 <Code code={`
 <figure class="line-chart" data-min="0">
   <figcaption>Signups</figcaption>
@@ -422,6 +444,7 @@ chart.destroy(); // remove the drawing and show the table again
           <tr><td><code>--md-comp-line-chart-height</code></td><td>240px, 48px for a sparkline</td></tr>
           <tr><td><code>--md-comp-line-chart-line-width</code></td><td>3px, 2px for a sparkline</td></tr>
           <tr><td><code>--md-comp-line-chart-grid-color</code></td><td><code>--md-sys-color-outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-line-chart-axis-width</code></td><td>48px, the room beside the plot for <code>axis</code> labels</td></tr>
           <tr><td><code>--md-comp-line-chart-color-1</code></td><td><code>--md-sys-color-primary</code></td></tr>
           <tr><td><code>--md-comp-line-chart-color-2</code></td><td><code>--md-sys-color-tertiary</code></td></tr>
           <tr><td><code>--md-comp-line-chart-color-3</code></td><td><code>--md-sys-color-secondary</code></td></tr>

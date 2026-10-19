@@ -77,6 +77,12 @@ export class RadarChart extends LineChart {
     return Math.round(turn * this.labels.length) % this.labels.length;
   }
 
+  /** The grid rings' shares of the radius: one per .axis label above zero, or quarters. */
+  private _rings(share: (value: number) => number) {
+    if (!this._axis) return Array.from({ length: RINGS }, (_, r) => (r + 1) / RINGS);
+    return this.series[0].scale.ticks.filter((tick) => tick > 0).map(share);
+  }
+
   /**
    * An SVG in a -50 to 50 box: the rings and spokes of the grid, then each
    * series' shape, with its points for .points. The rim is the box's edge;
@@ -92,7 +98,7 @@ export class RadarChart extends LineChart {
     const svg = node('svg', { viewBox: '-50 -50 100 100', 'aria-hidden': 'true', focusable: 'false' });
     svg.append(node('path', {
       class: 'radar-chart-grid',
-      d: Array.from({ length: RINGS }, (_, r) => ring((r + 1) / RINGS)).join('')
+      d: this._rings(share).map(ring).join('')
         + rows.map((i) => `M0,0L${at(i, 1)}`).join('')
     }));
     const points = this.el.classList.contains('points');

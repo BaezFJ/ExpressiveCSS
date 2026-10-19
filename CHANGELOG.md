@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Value axes for charts: `.axis` on a line, column, bar or mixed chart
+  labels its value scale at round values, with a grid line at each, and
+  widens an end the chart chose to the next round value. The labels repeat
+  the cells' currency or percent sign and shorten large numbers. A mixed
+  chart labels its `end` scale on the far side and stretches it so both
+  label sets share the grid lines. On a radar chart, `.axis` rings the grid
+  at round values and labels the rings.
 - Non-Latin text faces: Roboto and Noto Sans now ship Latin Extended,
   Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese subsets,
   and Noto Sans adds Devanagari, at 400, 500 and 700. Each face has a

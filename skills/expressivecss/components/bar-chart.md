@@ -9,7 +9,7 @@ Component ID: `bar-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `deb6febc3df304646795d5df8ab867d706f176d2880e936718314e1d884bf33c`
+Contract SHA-256: `95a688f56077621dfbc2458bb7f28cb4d7c277cdc38d76293140286ce66a7e92`
 
 #### Selection and adaptation
 
@@ -25,7 +25,7 @@ Upstream: web-extension-inventory-reviewed (2026-10-07); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-07, `llm.md#bar-chart`): Horizontal bars drawn from zero from a figure's data table, grouped by row or stacked, with split, track, values and sparkline modifiers, negative values, gaps, a fixed value range, row labels, a legend, and a pointer and keyboard tooltip with a highlight band.
+Support (2026-10-07, `llm.md#bar-chart`): Horizontal bars drawn from zero from a figure's data table, grouped by row or stacked, with split, track, values and sparkline modifiers, negative values, gaps, a fixed value range, row labels, round value axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the bars and their values are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 

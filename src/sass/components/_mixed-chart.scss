@@ -6,6 +6,9 @@
 // else as a line. `dashed` dashes a line. A series with `end` is drawn
 // against a second scale, set by data-end-min and data-end-max on the
 // figure. The plot, tooltip, labels and legend come from chart().
+// .axis labels the start scale beside the plot at round values, with a
+// grid line at each, and an end scale on the far side, stretched so its
+// labels share those lines when neither scale's ends are set.
 //
 // Columns are full-height spans clipped to their value, as in the column
 // chart, behind an SVG of the lines and areas, as in the line chart.
@@ -17,10 +20,12 @@
 //   --md-comp-mixed-chart-shape          4px, the column's end radius
 //   --md-comp-mixed-chart-line-width     3px (sparkline 2px)
 //   --md-comp-mixed-chart-grid-color     outline-variant
+//   --md-comp-mixed-chart-axis-width     48px, room for each scale's .axis labels
 //   --md-comp-mixed-chart-color-1..4     primary, tertiary, secondary,
 //                                        on-surface-variant
 
 @include chart("mixed-chart");
+@include chart-axis("mixed-chart");
 
 .mixed-chart {
   --md-comp-mixed-chart-column-width: 50%;
