@@ -9,7 +9,7 @@ Component ID: `radio-buttons`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `41e40ceb0d7b4ab67ddd24337219016081d06275119cef6447d054977188e1fd`
+Contract SHA-256: `0ab56441f06f319815656dd07dac1be9aa4d0d43306b0e7f7936da7bf12916a5`
 
 #### Selection and adaptation
 
