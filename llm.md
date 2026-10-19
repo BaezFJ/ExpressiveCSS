@@ -2626,7 +2626,7 @@ An `<aside>` expands in normal flow below the persistent media, headline, and su
 
 An expanding card performs a shared-container transition from a compact feed item into a full-screen modal detail surface. Use an `<article class="expanding-card">` with a direct `<dialog class="expanding-card-dialog">`. Keep the same hero image in both states so the media appears to grow with the container. `ExpandingCard.Init()` and `AutoInit()` wire up the modal, measured clip origin, back action, focus return, Escape, and reduced motion.
 
-`--md-comp-expanding-card-motion-duration` controls the container transition. Close cleanup follows the actual clip transition, including cancellation, and runs immediately with zero duration or reduced motion. Reopening or destroying the instance invalidates pending cleanup. `onClose` runs when closing starts.
+The container morph and the hero run on the slow spatial spring (`--md-comp-expanding-card-motion-duration` and `-motion-easing`), the close button and detail content on the default spatial spring (`-content-duration`, `-content-easing`), and their fade on the fast effects spring (`-fade-duration`, `-fade-easing`), so `motion="expressive"` reaches all three. Override a duration together with its easing. `--md-comp-expanding-card-motion-duration` controls the container transition. Close cleanup follows the actual clip transition, including cancellation, and runs immediately with zero duration or reduced motion. Reopening or destroying the instance invalidates pending cleanup. `onClose` runs when closing starts.
 
 ```html
 <article class="outlined expanding-card">
@@ -3592,7 +3592,7 @@ The colour axis is the same three roles as the extended FAB, and one class moves
 <div class="fab-menu secondary-container">…</div>
 ```
 
-The `FloatingActionButton` runtime owns `active`, `aria-expanded` and inert closed actions. It opens upward on click. Escape, outside click and action activation close it; focus returns to the trigger only when closing would hide the focused action. Actions use ordinary Tab navigation. Beyond six actions the stagger runs out and the rest arrive together.
+The `FloatingActionButton` runtime owns `active`, `aria-expanded` and inert closed actions. It opens upward on click. Escape, outside click and action activation close it; focus returns to the trigger only when closing would hide the focused action. Actions use ordinary Tab navigation. Beyond six actions the stagger runs out and the rest arrive together. Actions move on the fast spatial spring (`--md-comp-fab-menu-easing` and `--md-comp-fab-menu-duration`) and fade on the fast effects spring (`--md-comp-fab-menu-effects-easing` and `-effects-duration`), so `motion="expressive"` gives them a small bounce while the fade never overshoots.
 
 Neither host declares `role="menu"`, and the trigger carries no `aria-haspopup`. The actions are reached with Tab, not the arrow keys, so the role is withheld rather than promised — see `SEMANTICS.md`.
 
@@ -4036,7 +4036,7 @@ Add `fixed` to stick the bar to the bottom of the viewport. Padding includes `sa
 
 Switch between UI views on mid-sized devices. A `nav.navigation-rail` holds 3–7 destinations plus an optional FAB. Put it in the same place on every screen.
 
-Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp, icon and label on one row, and an extended FAB. The menu button toggles that class (`AutoInit()` starts it). On compact windows an expanded rail is modal — a scrim, and Escape or a scrim tap collapses it. Add `modal` to keep that overlay at every breakpoint.
+Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp, icon and label on one row, and an extended FAB. The menu button toggles that class (`AutoInit()` starts it). On compact windows an expanded rail is modal — a scrim, and Escape or a scrim tap collapses it. Add `modal` to keep that overlay at every breakpoint. Expanding and collapsing run on the default spatial spring (`--md-comp-nav-rail-motion` and `--md-comp-nav-rail-motion-duration`), so `motion="expressive"` lets the rail overshoot its width slightly before it settles.
 
 Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the rail toggle, unless a close callback moves focus elsewhere.
 
@@ -5888,7 +5888,7 @@ Material Design 3 dialogs, from the HTML.
 
 A `<dialog>` is a basic dialog. A heading is the headline, a `<p>` (or a wrapping `<div>`) is supporting text, and the last child `<form method="dialog">` or `<nav>` is the action row. `dialog.max` is the full-screen variant. There are no `.modal`, `modal-header`, `modal-content`, or `modal-footer` classes — the element is the component.
 
-Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is `--md-comp-scrim-color`. Actions sit at the end with an 8dp gap.
+Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is `--md-comp-scrim-color`. Actions sit at the end with an 8dp gap. A basic dialog fades in on the fast effects spring and grows from 96% on the default spatial spring (`--md-comp-basic-dialog-effects-easing` and `-effects-duration`, `--md-comp-basic-dialog-easing` and `-duration`), so `motion="expressive"` reaches it. It closes at once and opens without moving when reduced motion is requested. `dialog.max` and sheets keep their own motion.
 
 Open it with `showModal()` and close it with `close()` — the Dialog API, not a plugin. There is no `Modal` export and nothing for `AutoInit()` to start; `Dialogs.Init()` runs at import time and only adds light-dismiss.
 
@@ -5963,6 +5963,8 @@ document.getElementById('sheet').showModal(); // modal, with scrim
 document.getElementById('sheet').show();      // standard, no scrim
 ```
 
+The sheet slides in, and snaps back after a short drag, on the default spatial spring: `--md-comp-bottom-sheet-motion` and `--md-comp-bottom-sheet-motion-duration` read `--md-sys-motion-spring-default-spatial` and its `-duration` token, so `motion="expressive"` gives it a slight bounce. The sheet runs on 24px below the viewport, so the bounce never uncovers the page under it. With reduced motion requested it appears without moving.
+
 ### Side sheet
 
 A recent flick toward the docked edge dismisses the sheet. For short drags, pausing for at least 100ms or reversing direction lets it snap back.
@@ -5989,6 +5991,8 @@ Docking is logical: `.start` uses the start edge, and the default uses the end e
 document.getElementById('sheet').show();      // standard
 document.getElementById('sheet').showModal(); // modal
 ```
+
+The sheet slides in, and snaps back after a short drag, on the default spatial spring: `--md-comp-side-sheet-motion` and `--md-comp-side-sheet-motion-duration` read `--md-sys-motion-spring-default-spatial` and its `-duration` token, so `motion="expressive"` gives it a slight bounce. The sheet runs on 24px past its docked edge, so the bounce never uncovers the page there. With reduced motion requested it appears without moving.
 
 ### Full-screen
 

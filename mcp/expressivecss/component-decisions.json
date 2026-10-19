@@ -8474,7 +8474,7 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "Springs are sampled at compile time; there is no runtime solver, so an interrupted spring restarts without carrying velocity, and components other than button groups and the keypad do not use spring tokens yet.",
+            "description": "Springs are sampled at compile time; there is no runtime solver, so an interrupted spring restarts without carrying velocity. Bottom and side sheets and the navigation rail run on the default spatial spring FAB menu actions on the fast springs, basic dialogs on the default spatial and fast effects springs, and the expanding card on the slow spatial spring; other components keep their own curves.",
             "nextStep": "Move component spatial transitions onto the spring tokens one component at a time, with browser checks of the settled state and reduced motion."
           }
         ],
@@ -12199,5 +12199,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "766131c21086cddc5712c4f5ac28e6d44fae2f4e"
+  "sourceRevision": "8f8412bb424e5c0dfc1791902d5dbbaa294da67f"
 }

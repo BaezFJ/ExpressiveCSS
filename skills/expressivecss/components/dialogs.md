@@ -9,7 +9,7 @@ Component ID: `dialogs`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `41e40ceb0d7b4ab67ddd24337219016081d06275119cef6447d054977188e1fd`
+Contract SHA-256: `0400ea61cae3984bf2e06fde606bab5c156ae523d5a01661032e1bfef382877c`
 
 #### Selection and adaptation
 
@@ -39,7 +39,7 @@ Material Design 3 dialogs, from the HTML.
 
 A `<dialog>` is a basic dialog. A heading is the headline, a `<p>` (or a wrapping `<div>`) is supporting text, and the last child `<form method="dialog">` or `<nav>` is the action row. `dialog.max` is the full-screen variant. There are no `.modal`, `modal-header`, `modal-content`, or `modal-footer` classes — the element is the component.
 
-Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is `--md-comp-scrim-color`. Actions sit at the end with an 8dp gap.
+Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is `--md-comp-scrim-color`. Actions sit at the end with an 8dp gap. A basic dialog fades in on the fast effects spring and grows from 96% on the default spatial spring (`--md-comp-basic-dialog-effects-easing` and `-effects-duration`, `--md-comp-basic-dialog-easing` and `-duration`), so `motion="expressive"` reaches it. It closes at once and opens without moving when reduced motion is requested. `dialog.max` and sheets keep their own motion.
 
 #### Syntax
 

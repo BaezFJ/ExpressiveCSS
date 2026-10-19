@@ -14,6 +14,7 @@
 //   max height   viewport minus 72dp
 //   handle       32×4dp bar in a 48dp hit target, on-surface-variant
 //   scrim        modal only (UA ::backdrop + the dialog scrim token)
+//   motion       default spatial spring; follows motion="expressive"
 //
 // Compact and medium are the intended windows. On large screens prefer a
 // side sheet or a basic dialog; the sheet still lays out (640 + 56).
@@ -32,17 +33,25 @@ dialog.bottom-sheet {
     transparent
   );
   --md-comp-bottom-sheet-shift: 0px;
+  // Entry and drag snap-back run on the default spatial spring, which follows
+  // the motion="expressive" switch.
+  --md-comp-bottom-sheet-motion: var(--md-sys-motion-spring-default-spatial);
+  --md-comp-bottom-sheet-motion-duration: var(--md-sys-motion-spring-default-spatial-duration);
+  // A spatial spring overshoots, about 1.5% of the sheet's height in the
+  // expressive scheme. The sheet runs on below the viewport by this much, so
+  // the overshoot lifts surface into view rather than a gap under it.
+  --_bleed: 24px;
 
   box-sizing: border-box;
   position: fixed;
-  inset: auto 0 0;
+  inset: auto 0 calc(-1 * var(--_bleed));
   width: 100%;
   min-width: 0;
   max-width: none;
   height: auto;
-  max-height: calc(100dvh - var(--md-comp-bottom-sheet-top-inset));
+  max-height: calc(100dvh - var(--md-comp-bottom-sheet-top-inset) + var(--_bleed));
   margin: 0;
-  padding: 0;
+  padding: 0 0 var(--_bleed);
   border: none;
   border-radius: var(--md-comp-bottom-sheet-container-shape)
     var(--md-comp-bottom-sheet-container-shape) 0 0;
@@ -51,7 +60,7 @@ dialog.bottom-sheet {
   outline: none;
   @include z-depth("1");
   translate: 0 var(--md-comp-bottom-sheet-shift);
-  transition: translate 280ms ease;
+  transition: translate var(--md-comp-bottom-sheet-motion-duration) var(--md-comp-bottom-sheet-motion);
   @include glass(var(--md-comp-bottom-sheet-container-color));
 
   // Non-modal `show()` is not in the top layer — sit above page content

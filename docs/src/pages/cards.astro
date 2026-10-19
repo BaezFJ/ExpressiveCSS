@@ -467,8 +467,13 @@ const S = defineSections([
           back action, focus return, Escape, and reduced motion.
         </p>
         <p>
-          Override <code>--md-comp-expanding-card-motion-duration</code> to change
-          container timing. Closing waits for the actual clip transition, including
+          The container morph and the hero run on the slow spatial spring, the
+          close button and detail content on the default spatial spring, and their
+          fade on the fast effects spring, so <code>motion="expressive"</code> reaches
+          all three. Override <code>--md-comp-expanding-card-motion-duration</code>
+          and <code>--md-comp-expanding-card-motion-easing</code> together to change
+          container timing; a spring easing over another duration is no longer that
+          spring. Closing waits for the actual clip transition, including
           cancellation; zero duration and reduced motion close immediately.
           Reopening or destroying the instance invalidates pending close cleanup.
           <code>ExpandingCard.init(el, options)</code> takes two callbacks, both

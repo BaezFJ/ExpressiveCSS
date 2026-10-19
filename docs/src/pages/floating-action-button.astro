@@ -270,6 +270,13 @@ const S = defineSections([
         <p>
           After six actions, the stagger ends and the remaining actions
           appear together. Material 3 does not recommend more than six.
+          Actions move on the fast spatial spring and fade on the fast effects
+          spring, so <code>motion="expressive"</code> gives them a small bounce
+          while the fade never overshoots. Override
+          <code>--md-comp-fab-menu-easing</code> and
+          <code>--md-comp-fab-menu-duration</code> for the move, and
+          <code>--md-comp-fab-menu-effects-easing</code> and
+          <code>--md-comp-fab-menu-effects-duration</code> for the fade.
         </p>
         <div class="docs-table-scroll">
         <TokenTable>

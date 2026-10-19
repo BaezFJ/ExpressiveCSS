@@ -225,5 +225,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the standard and expressive spring tokens, nine 24-sample linear() curves: 77,624 gzip bytes (+825).
   // Reviewed the cut corner family, the corners switch and .corner-cut: 77,790 gzip bytes (+166).
   // Reviewed the Latin Extended, Cyrillic, Greek, Vietnamese and Devanagari text faces at 400, 500 and 700: 78,604 gzip bytes (+814).
-  assert.ok(sizes(css).gzip <= 78604, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the bottom sheet on the default spatial spring with a 24px bleed: 78,655 gzip bytes (+51).
+  // Reviewed the side sheet on the default spatial spring with a 24px bleed: 78,694 gzip bytes (+39).
+  // Reviewed the navigation rail resizing on the default spatial spring: 78,746 gzip bytes (+52).
+  // Reviewed FAB menu actions on the fast spatial and effects springs: 78,769 gzip bytes (+23).
+  // Reviewed the basic dialog entry on the default spatial and fast effects springs: 78,863 gzip bytes (+94).
+  // Reviewed the expanding card on the slow spatial, default spatial and fast effects springs: 78,890 gzip bytes (+27).
+  assert.ok(sizes(css).gzip <= 78890, `CSS gzip: ${sizes(css).gzip}`);
 });

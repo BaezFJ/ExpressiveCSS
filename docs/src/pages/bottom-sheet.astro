@@ -153,6 +153,9 @@ const S = defineSections([
           or a basic dialog is usually a better fit; the bottom sheet still
           lays out if you open one.
         </p>
+        <p>
+          The sheet slides in, and snaps back after a short drag, on the default spatial spring: <code>--md-comp-bottom-sheet-motion</code> and <code>--md-comp-bottom-sheet-motion-duration</code> read <code>--md-sys-motion-spring-default-spatial</code> and its <code>-duration</code> token, so <code>motion="expressive"</code> gives it a slight bounce. The sheet runs on 24px below the viewport, so the bounce never uncovers the page under it. With reduced motion requested it appears without moving.
+        </p>
   </Section>
 </PageBody>
 </DocsLayout>
