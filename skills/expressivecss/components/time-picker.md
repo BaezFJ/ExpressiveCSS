@@ -9,7 +9,7 @@ Component ID: `time-picker`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `61c6653c323fd0eca19289f95ec22e5f8a19b81a20c8d1490d2b505f1346212a`
+Contract SHA-256: `deb6febc3df304646795d5df8ab867d706f176d2880e936718314e1d884bf33c`
 
 #### Selection and adaptation
 
