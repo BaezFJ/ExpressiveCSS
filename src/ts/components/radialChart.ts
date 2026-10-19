@@ -12,7 +12,9 @@ const FILL = 0.8;
  * Radial chart. It reads its <table> like LineChart, but draws each row of
  * the first value column as a ring, outermost first, filled clockwise from
  * the top as a share of `data-max` above zero (100 by default). With `.gauge` the rings
- * are half circles over the middle. A <tfoot> row shows in the middle, and
+ * are half circles over the middle. With `.labels` they are three quarters
+ * of a circle, leaving the top left quarter for each row's name at the
+ * ring's start. A <tfoot> row shows in the middle, and
  * a legend lists the rows when there is more than one. Further columns show
  * in the tooltip.
  *
@@ -50,6 +52,23 @@ export class RadialChart extends LineChart {
 
   private get _gauge() {
     return this.el.classList.contains('gauge');
+  }
+
+  /** Whether .labels names the rings, which a gauge or sparkline never does. */
+  private get _labeled() {
+    const list = this.el.classList;
+    return list.contains('labels') && !list.contains('gauge') && !list.contains('sparkline');
+  }
+
+  /** How much of a circle a full ring spans. */
+  private get _span() {
+    if (this._gauge) return 0.5;
+    return this._labeled ? 0.75 : 1;
+  }
+
+  /** The distance between rings' middles, or one ring's width. */
+  private get _step() {
+    return this._radii.length > 1 ? this._radii[0] - this._radii[1] : this._width;
   }
 
   static init(el: HTMLElement, options?: Partial<RadialChartOptions>): RadialChart;
@@ -90,7 +109,8 @@ export class RadialChart extends LineChart {
 
   /** A fraction of the ring as a turn clockwise from the top. */
   private _turn(fraction: number) {
-    return this._gauge ? fraction / 2 - 0.25 : fraction;
+    // A gauge starts at nine o'clock.
+    return fraction * this._span - (this._gauge ? 0.25 : 0);
   }
 
   /** For more than one row, a legend of every row with its color and cell. */
@@ -120,10 +140,37 @@ export class RadialChart extends LineChart {
     // The middle is half the width down in both shapes.
     const [x, y] = [e.clientX - box.left - box.width / 2, e.clientY - box.top - box.width / 2];
     if (this._gauge && y > 0) return -1;
-    // The distance in the SVG's 100-unit box; a gap belongs to a ring beside it.
-    const distance = (Math.hypot(x, y) / box.width) * 100;
-    const step = this._radii.length > 1 ? this._radii[0] - this._radii[1] : this._width;
-    return this._radii.findIndex((r) => Math.abs(distance - r) <= step / 2);
+    // A gap belongs to a ring beside it.
+    const distance = this._distance(x, y, box.width);
+    return this._radii.findIndex((r) => Math.abs(distance - r) <= this._step / 2);
+  }
+
+  /**
+   * How far a point is from the middle in the SVG's 100-unit box. In the
+   * top left quarter .labels leaves empty, the names run straight across,
+   * so only the height counts and a name picks its own ring.
+   */
+  private _distance(x: number, y: number, width: number) {
+    if (this._labeled && x < 0 && y < 0) return (-y / width) * 100;
+    return (Math.hypot(x, y) / width) * 100;
+  }
+
+  /**
+   * With .labels, each row's name left of its ring's start at the top,
+   * ending at the middle line. CSS shrinks the text to fit crowded rings.
+   */
+  private _names(): Element[] {
+    if (!this._labeled) return [];
+    const names = document.createElement('div');
+    names.className = 'radial-chart-names';
+    names.style.setProperty('--radial-chart-step', this._step.toFixed(3));
+    names.append(...this._radii.map((r, i) => {
+      const name = document.createElement('span');
+      name.style.top = `${(50 - r).toFixed(3)}%`;
+      name.textContent = this.labels[i];
+      return name;
+    }));
+    return [names];
   }
 
   /**
@@ -153,7 +200,7 @@ export class RadialChart extends LineChart {
     const svg = node('svg', { viewBox: gauge ? '-50 -50 100 50' : '-50 -50 100 100', focusable: 'false' });
     // A circle starts at three o'clock; turn it to the top, or to nine for a gauge.
     const transform = gauge ? 'rotate(180)' : 'rotate(-90)';
-    const span = gauge ? 0.5 : 1;
+    const span = this._span;
     this._rings = this._radii.map((r, i) => {
       const length = 2 * Math.PI * r;
       // Round caps reach half the width past each end of a dash, so a capped
@@ -163,15 +210,18 @@ export class RadialChart extends LineChart {
         const ring = node('circle', { class: name, r: r.toFixed(3), transform, 'stroke-width': width.toFixed(3) });
         const dash = Math.max(0.001, fraction * span * length - (capped ? width : 0));
         ring.style.setProperty('--radial-chart-dash', `${dash.toFixed(3)} ${length.toFixed(3)}`);
-        if (capped) ring.style.setProperty('--radial-chart-offset', (-width / 2).toFixed(3));
+        if (capped) {
+          ring.style.setProperty('--radial-chart-offset', (-width / 2).toFixed(3));
+          ring.classList.add('capped');
+        }
         return ring;
       };
       const ring = circle('radial-chart-ring', this._fractions[i], true) as SVGCircleElement;
       ring.dataset.series = seriesColor(i);
       // An empty ring would still draw its round cap.
       if (!this._fractions[i]) ring.classList.add('empty');
-      // Only a gauge's track has ends to round.
-      svg.append(circle('radial-chart-track', 1, gauge), ring);
+      // Only a track short of a whole circle has ends to round.
+      svg.append(circle('radial-chart-track', 1, span < 1), ring);
       return ring;
     });
 
@@ -179,7 +229,7 @@ export class RadialChart extends LineChart {
     rings.className = 'radial-chart-rings';
     rings.setAttribute('aria-hidden', 'true');
     rings.style.setProperty('--radial-chart-middle', `${(this._radii[count - 1] - this._width / 2) * 2}%`);
-    rings.append(svg);
+    rings.append(svg, ...this._names());
 
     const total = this._total('radial-chart-total');
     if (total) rings.append(total);

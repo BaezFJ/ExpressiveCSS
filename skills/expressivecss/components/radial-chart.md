@@ -9,7 +9,7 @@ Component ID: `radial-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `ea1ee07db7b6e17459be7b02c766b86432a5bb7eb9672784e2eb87f46b7d7aa9`
+Contract SHA-256: `a184b5b39af4f5b111ba89015278c3164c81a1eed5481ba785b10a9cd99e34d9`
 
 #### Selection and adaptation
 
@@ -25,11 +25,11 @@ Upstream: web-extension-inventory-reviewed (2026-10-07); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-07, `llm.md#radial-chart`): Rings drawn clockwise from the top from a figure's data table as a share of data-max, with tracks, a legend of each row's cell for more than one row, gauge and sparkline modifiers, a <tfoot> total in the middle, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the ring.
+Support (2026-10-07, `llm.md#radial-chart`): Rings drawn clockwise from the top from a figure's data table as a share of data-max, with tracks, a legend of each row's cell for more than one row, gauge, labels and sparkline modifiers, a <tfoot> total in the middle, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the ring.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rings, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values leave only the track; there are no labels on the rings.
+Known boundary: Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values leave only the track. The .labels names can run into a crowded middle total, and a gauge has no names.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#radial-chart).
 

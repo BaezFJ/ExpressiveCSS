@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Radial chart names: `.labels` draws the rings three quarters of the way
+  round and writes each row's name in the empty top left quarter, beside
+  its ring's start. Names shrink to fit crowded rings. A gauge or sparkline
+  ignores it.
 - Pie chart names: `.labels` writes each slice's row name outside the pie,
   beside its slice. Names that would touch move apart along their side, and
   the pie shrinks to leave `--md-comp-pie-chart-label-width` (96px), or a
