@@ -9,8 +9,18 @@
 article.expanding-card {
   --md-comp-expanding-card-container-color: var(--md-sys-color-surface);
   --md-comp-expanding-card-expanded-shape: 0;
-  --md-comp-expanding-card-motion-duration: var(--md-sys-motion-duration-long2);
-  --md-comp-expanding-card-motion-easing: var(--md-sys-motion-easing-standard);
+  // The container morph and the hero height run on the slow spatial spring,
+  // M3's choice for a full-screen move; the close button and the detail
+  // content arrive on the default spatial spring and fade on the fast
+  // effects spring. All follow motion="expressive". Each easing is paired
+  // with its own duration: a spring played over another duration is no
+  // longer that spring.
+  --md-comp-expanding-card-motion-duration: var(--md-sys-motion-spring-slow-spatial-duration);
+  --md-comp-expanding-card-motion-easing: var(--md-sys-motion-spring-slow-spatial);
+  --md-comp-expanding-card-content-duration: var(--md-sys-motion-spring-default-spatial-duration);
+  --md-comp-expanding-card-content-easing: var(--md-sys-motion-spring-default-spatial);
+  --md-comp-expanding-card-fade-duration: var(--md-sys-motion-spring-fast-effects-duration);
+  --md-comp-expanding-card-fade-easing: var(--md-sys-motion-spring-fast-effects);
   --md-comp-expanding-card-content-padding: 16px;
   --md-comp-expanding-card-expanded-media-height: min(56dvh, 560px);
 }
@@ -116,8 +126,8 @@ dialog.expanding-card-dialog > .expanding-card-close {
   opacity: 0;
   transform: scale(0.8);
   transition:
-    opacity var(--md-sys-motion-duration-short3) ease-out,
-    transform var(--md-sys-motion-duration-medium2) var(--md-comp-expanding-card-motion-easing);
+    opacity var(--md-comp-expanding-card-fade-duration) var(--md-comp-expanding-card-fade-easing),
+    transform var(--md-comp-expanding-card-content-duration) var(--md-comp-expanding-card-content-easing);
 }
 
 dialog.expanding-card-dialog.expanded > .expanding-card-close {
@@ -136,8 +146,8 @@ dialog.expanding-card-dialog > .expanding-card-content {
   opacity: 0;
   transform: translateY(16px);
   transition:
-    opacity var(--md-sys-motion-duration-short3) ease-out,
-    transform var(--md-sys-motion-duration-medium2) var(--md-comp-expanding-card-motion-easing);
+    opacity var(--md-comp-expanding-card-fade-duration) var(--md-comp-expanding-card-fade-easing),
+    transform var(--md-comp-expanding-card-content-duration) var(--md-comp-expanding-card-content-easing);
 }
 
 dialog.expanding-card-dialog.expanded > .expanding-card-content {

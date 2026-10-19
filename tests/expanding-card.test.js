@@ -9,14 +9,11 @@ const css = readFileSync(
 );
 
 describe("Expanding card CSS", () => {
-  test("publishes the default 500ms container timing", () => {
-    assert.match(css, /--md-comp-expanding-card-motion-duration:\s*var\(--md-sys-motion-duration-long2\)/);
-    assert.match(
-      css,
-      /--md-comp-expanding-card-motion-easing:\s*var\(--md-sys-motion-easing-standard\)/,
-    );
-    assert.match(css, /--md-sys-motion-duration-long2:\s*500ms/);
-    assert.match(css, /--md-sys-motion-easing-standard:\s*cubic-bezier\(0\.2, 0, 0, 1\)/);
+  test("publishes the slow spatial spring as the container timing", () => {
+    assert.match(css, /--md-comp-expanding-card-motion-duration:\s*var\(--md-sys-motion-spring-slow-spatial-duration\)/);
+    assert.match(css, /--md-comp-expanding-card-motion-easing:\s*var\(--md-sys-motion-spring-slow-spatial\)/);
+    assert.match(css, /--md-comp-expanding-card-content-easing:\s*var\(--md-sys-motion-spring-default-spatial\)/);
+    assert.match(css, /--md-comp-expanding-card-fade-easing:\s*var\(--md-sys-motion-spring-fast-effects\)/);
   });
 
   test("clips a full-screen dialog to the measured card before expansion", () => {

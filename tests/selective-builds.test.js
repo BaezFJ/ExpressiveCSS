@@ -230,5 +230,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the navigation rail resizing on the default spatial spring: 78,746 gzip bytes (+52).
   // Reviewed FAB menu actions on the fast spatial and effects springs: 78,769 gzip bytes (+23).
   // Reviewed the basic dialog entry on the default spatial and fast effects springs: 78,863 gzip bytes (+94).
-  assert.ok(sizes(css).gzip <= 78863, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the expanding card on the slow spatial, default spatial and fast effects springs: 78,890 gzip bytes (+27).
+  assert.ok(sizes(css).gzip <= 78890, `CSS gzip: ${sizes(css).gzip}`);
 });

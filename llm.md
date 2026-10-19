@@ -2626,7 +2626,7 @@ An `<aside>` expands in normal flow below the persistent media, headline, and su
 
 An expanding card performs a shared-container transition from a compact feed item into a full-screen modal detail surface. Use an `<article class="expanding-card">` with a direct `<dialog class="expanding-card-dialog">`. Keep the same hero image in both states so the media appears to grow with the container. `ExpandingCard.Init()` and `AutoInit()` wire up the modal, measured clip origin, back action, focus return, Escape, and reduced motion.
 
-`--md-comp-expanding-card-motion-duration` controls the container transition. Close cleanup follows the actual clip transition, including cancellation, and runs immediately with zero duration or reduced motion. Reopening or destroying the instance invalidates pending cleanup. `onClose` runs when closing starts.
+The container morph and the hero run on the slow spatial spring (`--md-comp-expanding-card-motion-duration` and `-motion-easing`), the close button and detail content on the default spatial spring (`-content-duration`, `-content-easing`), and their fade on the fast effects spring (`-fade-duration`, `-fade-easing`), so `motion="expressive"` reaches all three. Override a duration together with its easing. `--md-comp-expanding-card-motion-duration` controls the container transition. Close cleanup follows the actual clip transition, including cancellation, and runs immediately with zero duration or reduced motion. Reopening or destroying the instance invalidates pending cleanup. `onClose` runs when closing starts.
 
 ```html
 <article class="outlined expanding-card">

@@ -441,6 +441,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `-duration`, `-effects-easing` and `-effects-duration`). They still close
   at once. Sheets, `dialog.max` and the expanding card's dialog are
   unchanged, and reduced motion opens without moving.
+- The expanding card morphs on the slow spatial spring:
+  `--md-comp-expanding-card-motion-duration` and `-motion-easing` now default
+  to it instead of 500ms on the standard curve. New `-content-duration`,
+  `-content-easing`, `-fade-duration` and `-fade-easing` tokens time the close
+  button and detail content. Close cleanup still follows the actual clip
+  transition.
 - Headings balance their lines and paragraphs avoid a one-word last line
   (`text-wrap-style: balance` and `pretty`). The longhand leaves wrapping
   itself alone, so `.truncate` and `.text-nowrap` still work.
