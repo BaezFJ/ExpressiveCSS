@@ -319,9 +319,10 @@ describe('Button group shape morph', () => {
   test('width and corner motion uses the fast-spatial spring approximation', () => {
     const group = ruleFor('.button-group');
     const itemRule = ruleFor(`.button-group > ${item}`);
-    assert.match(group, /--md-comp-button-group-motion:\s*linear\(/);
-    assert.match(itemRule, /width var\(--md-sys-motion-duration-short4\) var\(--md-comp-button-group-motion\)/);
-    assert.match(itemRule, /border-radius var\(--md-sys-motion-duration-short4\) var\(--md-comp-button-group-motion\)/);
+    assert.match(group, /--md-comp-button-group-motion:\s*var\(--md-sys-motion-spring-fast-spatial\)/);
+    assert.match(group, /--md-comp-button-group-motion-duration:\s*var\(--md-sys-motion-spring-fast-spatial-duration\)/);
+    assert.match(itemRule, /width var\(--md-comp-button-group-motion-duration\) var\(--md-comp-button-group-motion\)/);
+    assert.match(itemRule, /border-radius var\(--md-comp-button-group-motion-duration\) var\(--md-comp-button-group-motion\)/);
   });
 
   test('the motion is dropped when the user asked for no motion', () => {

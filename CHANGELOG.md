@@ -422,6 +422,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Button groups and the keypad press on the fast spatial spring tokens
+  instead of the hand-sampled `$motion-fast-spatial` curve, through
+  `--md-comp-button-group-motion` and `--md-comp-keypad-motion` with new
+  `-motion-duration` pairs, so `motion="expressive"` reaches them. The press
+  settles in 182ms instead of a 200ms window. `$motion-fast-spatial` stays
+  for Sass that still names it.
 - Reduced motion now reaches every component through the tokens: under
   `prefers-reduced-motion: reduce`, all `--md-sys-motion-duration-*` and
   spring `-duration` tokens are `0s`. Lists, the data table, the navigation

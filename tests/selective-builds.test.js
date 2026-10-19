@@ -232,5 +232,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the basic dialog entry on the default spatial and fast effects springs: 78,863 gzip bytes (+94).
   // Reviewed the expanding card on the slow spatial, default spatial and fast effects springs: 78,890 gzip bytes (+27).
   // Reviewed every motion duration token set to 0s under reduced motion: 79,004 gzip bytes (+114).
-  assert.ok(sizes(css).gzip <= 79004, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed button groups and the keypad on the spring tokens, dropping two copies of the sampled curve: 78,791 gzip bytes (-213).
+  assert.ok(sizes(css).gzip <= 78791, `CSS gzip: ${sizes(css).gzip}`);
 });

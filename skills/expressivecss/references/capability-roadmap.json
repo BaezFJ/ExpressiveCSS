@@ -5466,7 +5466,7 @@
       "lastReviewedSupport": "partial",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
-      "scope": "Shared md.sys.motion easing and duration tokens; M3 Expressive spring tokens for the standard and expressive schemes, solved at compile time into linear() easings with settle durations, a motion attribute that selects the scheme, every duration token set to 0s under reduced motion, and public Sass spring() and spring-duration() functions. Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion.",
+      "scope": "Shared md.sys.motion easing and duration tokens; M3 Expressive spring tokens for the standard and expressive schemes, solved at compile time into linear() easings with settle durations, a motion attribute that selects the scheme, every duration token set to 0s under reduced motion, and public Sass spring() and spring-duration() functions. Button groups and the keypad press on the fast spatial spring tokens; component-owned CSS/runtime motion for the expanding-card container transition and the scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion.",
       "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
       "upstream": {
         "source": "https://github.com/material-components/material-components-android/blob/master/docs/theming/Motion.md",
@@ -5499,7 +5499,7 @@
       "gaps": [
         {
           "kind": "feature",
-          "description": "Springs are sampled at compile time; there is no runtime solver, so an interrupted spring restarts without carrying velocity. Bottom and side sheets and the navigation rail run on the default spatial spring FAB menu actions on the fast springs, basic dialogs on the default spatial and fast effects springs, and the expanding card on the slow spatial spring; other components keep their own curves.",
+          "description": "Springs are sampled at compile time; there is no runtime solver, so an interrupted spring restarts without carrying velocity. Sheets, the navigation rail, FAB menu actions, basic dialogs, the expanding card, button groups and the keypad run on spring tokens; small state changes such as switches, chips and the tabs indicator keep their own curves.",
           "nextStep": "Move component spatial transitions onto the spring tokens one component at a time, with browser checks of the settled state and reduced motion."
         }
       ],

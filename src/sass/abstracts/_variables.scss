@@ -156,8 +156,9 @@ $icon-button-sizes: (
 );
 
 // Material's fast-spatial spring (damping .9, stiffness 1400), sampled into a
-// CSS linear easing. Button groups and keypads both press with it, so the
-// curve lives here once.
+// CSS linear easing over a fixed window. Superseded by spring(0.9, 1400) and
+// the --md-sys-motion-spring-fast-spatial token, which button groups and the
+// keypad now read; kept so Sass that still names it compiles.
 $motion-fast-spatial: linear(
   0, 0.056 5%, 0.1796 10%, 0.3252 15%, 0.4675 20%, 0.5936 25%,
   0.6988 30%, 0.7828 35%, 0.8475 40%, 0.8959 45%, 0.931 50%,
