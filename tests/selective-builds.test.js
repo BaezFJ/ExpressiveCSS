@@ -225,5 +225,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the standard and expressive spring tokens, nine 24-sample linear() curves: 77,624 gzip bytes (+825).
   // Reviewed the cut corner family, the corners switch and .corner-cut: 77,790 gzip bytes (+166).
   // Reviewed the Latin Extended, Cyrillic, Greek, Vietnamese and Devanagari text faces at 400, 500 and 700: 78,604 gzip bytes (+814).
-  assert.ok(sizes(css).gzip <= 78604, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the bottom sheet on the default spatial spring with a 24px bleed: 78,655 gzip bytes (+51).
+  assert.ok(sizes(css).gzip <= 78655, `CSS gzip: ${sizes(css).gzip}`);
 });

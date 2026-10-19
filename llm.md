@@ -5963,6 +5963,8 @@ document.getElementById('sheet').showModal(); // modal, with scrim
 document.getElementById('sheet').show();      // standard, no scrim
 ```
 
+The sheet slides in, and snaps back after a short drag, on the default spatial spring: `--md-comp-bottom-sheet-motion` and `--md-comp-bottom-sheet-motion-duration` read `--md-sys-motion-spring-default-spatial` and its `-duration` token, so `motion="expressive"` gives it a slight bounce. The sheet runs on 24px below the viewport, so the bounce never uncovers the page under it. With reduced motion requested it appears without moving.
+
 ### Side sheet
 
 A recent flick toward the docked edge dismisses the sheet. For short drags, pausing for at least 100ms or reversing direction lets it snap back.

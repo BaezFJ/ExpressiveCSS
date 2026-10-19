@@ -422,6 +422,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Bottom sheets slide in and snap back on the default spatial spring
+  (`--md-comp-bottom-sheet-motion` and `-motion-duration`) instead of a
+  280ms ease, so `motion="expressive"` applies to them. The sheet now extends
+  24px below the viewport, with matching bottom padding, so a spring's
+  overshoot never uncovers the page.
 - Headings balance their lines and paragraphs avoid a one-word last line
   (`text-wrap-style: balance` and `pretty`). The longhand leaves wrapping
   itself alone, so `.truncate` and `.text-nowrap` still work.
