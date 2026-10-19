@@ -219,7 +219,7 @@ Use `@use "pkg:@expressivecss/expressive/scss/custom" with ($components:
 Node package importer. Tokens and base remain included. Lists preserve the given
 order; `null` includes a whole group and `()` omits it. For FormSelect and
 Datepicker use `("icons-material-design", "buttons", "menu", "forms", "datepicker")`.
-Add `"docked-display"` before `"forms"` for the optional docked picker.
+Add `"docked-display"` before `"forms"` for the optional docked picker, or `"dialog"` and `"modal-display"` for the modal one.
 
 `$expressive-include-fonts: false` lets consumers supply subset font faces, but
 also removes the text font declarations. Restore Roboto and Noto Sans 400/500/700
@@ -6866,7 +6866,7 @@ Expressive.AutoInit(document.body, {
 
 ### Display
 
-The calendar is a `.datepicker-container` in the page. There is no overlay and no `autoClose` option.
+The calendar is a `.datepicker-container` in the page, unless `displayPlugin: 'modal'` puts it in a dialog. There is no `autoClose` option.
 
 #### Always visible
 
@@ -6886,6 +6886,16 @@ Expressive.Datepicker.init(elem, {
 The popover stays inside the input’s parent and accounts for its positioning and scroll offsets. Positioned wrappers such as `.field` can be used directly.
 
 Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `duration` (`250`), and `align` (`'left'`).
+
+#### Modal dialog
+
+`displayPlugin: 'modal'` opens the calendar in a modal `<dialog class="display-modal">`, drawn as a basic dialog over a scrim, when the input is clicked or focused with Enter. The dialog takes the input's label as its name and focus moves to the selected day. Picking a day writes nothing until Ok; Cancel, Escape or a press on the scrim close it without changing the input and call `onCancel`. Focus then returns to the input. A modal calendar always shows Cancel and Ok, so it sets `openByDefault: true` and `autoSubmit: false` for you.
+
+```js
+Expressive.Datepicker.init(elem, {
+  displayPlugin: 'modal'
+});
+```
 
 `container` renders the calendar into a specific element and does not hide it. Use a selector or a DOM node.
 
@@ -6923,8 +6933,8 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
 | `onConfirm` | Function | `null` | Called once when Ok is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
 | `onCancel` | Function | `null` | Called once when Cancel is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
-| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. Pair with `openByDefault: true`. |
-| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
+| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover, paired with `openByDefault: true`, or `'modal'` for a dialog with Cancel and Ok. |
+| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. The modal plugin takes none. |
 
 ### Date format options
 
@@ -6970,7 +6980,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 
 ### Calendar keyboard navigation
 
-The inline and docked calendars support keyboard navigation. Enter on a date input focuses the calendar. Tab enters or leaves its single day stop; arrow keys move by day or week. Left/Right follow `isRTL`. Home/End move to the first/last day of the week using `firstDay`. PageUp/PageDown change month, and Shift changes year, clamping to the last day of shorter months. Enter or Space selects an enabled day. Disabled dates remain focusable with `aria-disabled` but cannot be selected. A typed date that is outside the bounds, a disabled weekend or refused by `disableDayFn` puts the input back to the selected date. An input's initial value is the selection, and a form reset reads the selection back from the reset values. Navigation respects date and year/month bounds and restores day focus after redraws without moving focus from outside the calendar. No modal picker is added.
+The inline and docked calendars support keyboard navigation. Enter on a date input focuses the calendar. Tab enters or leaves its single day stop; arrow keys move by day or week. Left/Right follow `isRTL`. Home/End move to the first/last day of the week using `firstDay`. PageUp/PageDown change month, and Shift changes year, clamping to the last day of shorter months. Enter or Space selects an enabled day. Disabled dates remain focusable with `aria-disabled` but cannot be selected. A typed date that is outside the bounds, a disabled weekend or refused by `disableDayFn` puts the input back to the selected date. An input's initial value is the selection, and a form reset reads the selection back from the reset values. Navigation respects date and year/month bounds and restores day focus after redraws without moving focus from outside the calendar. A modal calendar moves focus to the selected day when it opens and back to the input when it closes.
 
 ### Date range
 
@@ -7060,7 +7070,7 @@ instance.destroy();
 
 #### .open(); / .close();
 
-These methods are not provided. The calendar defaults to inline presentation; `displayPlugin: 'docked'` enables docking. Both require `openByDefault: true` to show the calendar. No modal implementation is available.
+These methods are not provided. The calendar defaults to inline presentation; `displayPlugin: 'docked'` enables docking and needs `openByDefault: true` to show the calendar. `displayPlugin: 'modal'` opens it in a dialog from the input.
 
 ### Properties
 
@@ -7125,7 +7135,7 @@ Expressive.AutoInit(document.body, {
 
 ### Display
 
-The clock is a `.timepicker-container` in the page. There is no overlay and no `autoClose` option.
+The clock is a `.timepicker-container` in the page, unless `displayPlugin: 'modal'` puts it in a dialog. There is no `autoClose` option.
 
 `container` renders the clock into a specific element instead of the input’s parent. Pass a selector or a DOM node.
 
@@ -7142,6 +7152,16 @@ Expressive.Timepicker.init(elem, {
 The popover stays inside the input’s parent and accounts for its positioning and scroll offsets. Positioned wrappers such as `.field` can be used directly.
 
 Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `duration` (`250`), and `align` (`'left'`).
+
+#### Modal dialog
+
+`displayPlugin: 'modal'` opens the clock in a modal `<dialog class="display-modal">`, drawn as a basic dialog over a scrim, when the input is clicked or confirmed with Enter. The dialog takes the input's label as its name and focus moves to the hour field. The time is written on Ok or on Enter in a field; Cancel, Escape or a press on the scrim close it without changing the input and call `onCancel`. Focus then returns to the input. A modal clock always shows Cancel and Ok, so it sets `autoSubmit: false` for you.
+
+```js
+Expressive.Timepicker.init(elem, {
+  displayPlugin: 'modal'
+});
+```
 
 ### Options
 
@@ -7160,8 +7180,8 @@ Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `d
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
 | `onDone` | Function | `null` | Called once when Ok is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
 | `onCancel` | Function | `null` | Called once when Cancel is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
-| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. |
-| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
+| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover, or `'modal'` for a dialog with Cancel and Ok. |
+| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. The modal plugin takes none. |
 
 ### Internationalization
 
@@ -7173,7 +7193,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 | `clear` | `'Clear'` |
 | `done` | `'Ok'` |
 
-`i18n.hours` and `i18n.minutes` default to `Hours` and `Minutes` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. Tab moves between controls; the dial does not implement arrow-key navigation.
+`i18n.hours` and `i18n.minutes` default to `Hours` and `Minutes` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Stepping the hour leaves AM and PM as they are. Tab moves between controls; the dial itself takes pointer input only.
 
 ### 12-hour and 24-hour
 
@@ -7230,7 +7250,7 @@ instance.destroy();
 
 #### .open(); / .close();
 
-These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking. No modal implementation is available.
+These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking and `displayPlugin: 'modal'` opens it in a dialog from the input.
 
 ### Properties
 

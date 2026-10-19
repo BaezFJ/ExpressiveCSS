@@ -9,7 +9,7 @@ Component ID: `time-picker`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `95a688f56077621dfbc2458bb7f28cb4d7c277cdc38d76293140286ce66a7e92`
+Contract SHA-256: `b381fb04d82c6c959107a6a0ec42a3edc8a3edc88052eb8af9e03300d5dd7f5a`
 
 #### Selection and adaptation
 
@@ -29,13 +29,13 @@ Requirements and boundaries: design reference inputs-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/time-pickers/guidelines).
 
-Support (2026-09-18, `llm.md#time-picker`): Inline clock and digital input; 12-hour and 24-hour formats.
+Support (2026-09-18, `llm.md#time-picker`): Inline clock and digital input; 12-hour and 24-hour formats, with an optional modal dialog.
 
-Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
+Web adaptation: Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.
 
 Known boundary: Modal picker parity is not provided by the documented inline API.
 
-Known boundary: Named digital inputs, AM/PM state and input-event synchronization have browser coverage. Modal and clock-dial keyboard behavior remain incomplete.
+Known boundary: Named digital inputs as spin buttons, AM/PM state, input-event synchronization and the modal dialog have browser coverage. The dial itself takes pointer input only.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#time-picker).
 
@@ -71,8 +71,8 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
 | `onDone` | Function | `null` | Called once when Ok is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
 | `onCancel` | Function | `null` | Called once when Cancel is activated by click, Enter or Space. The button is created when `autoSubmit` is false. |
-| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover. |
-| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. |
+| `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover, or `'modal'` for a dialog with Cancel and Ok. |
+| `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. The modal plugin takes none. |
 
 #### Methods
 
@@ -80,7 +80,7 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 - `.done()`: Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.
 - `.clear()`: Clear the input. Same as `done(true)`.
 - `.destroy()`: Destroy the plugin instance, remove the clock, and tear down its event handlers. Pending automatic submission and clock updates are cancelled, so the destroyed instance cannot write to the input.
-- `.open(); / .close()`: These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking. No modal implementation is available.
+- `.open(); / .close()`: These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking and `displayPlugin: 'modal'` opens it in a dialog from the input.
 
 #### Also documented
 

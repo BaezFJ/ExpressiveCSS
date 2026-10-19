@@ -1,8 +1,11 @@
 import { Utils } from '../core/utils';
 import { Component, BaseOptions, InitElements, InitElement, I18nOptions } from '../core/component';
-import { DockedDisplayPlugin } from '../plugins/dockedDisplayPlugin';
+import { DisplayPlugin, createDisplayPlugin, hideModal } from '../plugins/modalDisplayPlugin';
 
 export type Views = 'hours' | 'minutes';
+
+/** How far each key moves the hour or minute field, wrapping round the dial. */
+const STEPS: Record<string, number> = { ArrowUp: 1, ArrowDown: -1, PageUp: 5, PageDown: -5 };
 
 export interface TimepickerOptions extends BaseOptions {
   /**
@@ -91,7 +94,9 @@ export interface TimepickerOptions extends BaseOptions {
    */
   onCancel: (() => void) | null;
   /**
-   * Display plugin
+   * Display plugin: 'docked' for a popover under the input, or 'modal' for a
+   * dialog with Cancel and Ok. A modal picker writes the input only on Ok,
+   * so it clears `autoSubmit`.
    */
   displayPlugin: string;
   /**
@@ -176,7 +181,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   vibrateTimer: ReturnType<typeof setTimeout>;
   private _autoSubmitTimer: ReturnType<typeof setTimeout>;
   private _clockResetTimer: ReturnType<typeof setTimeout>;
-  private displayPlugin: DockedDisplayPlugin;
+  private displayPlugin: DisplayPlugin;
   /** Whether the dial (ticks + SVG + AM/PM buttons) has been built yet. */
   private _clockBuilt = false;
 
@@ -188,6 +193,8 @@ export class Timepicker extends Component<TimepickerOptions> {
       ...options,
       i18n: { ...Timepicker.defaults.i18n, ...options?.i18n }
     };
+    // A modal clock writes on Ok, so it has the buttons.
+    this.options.autoSubmit &&= this.options.displayPlugin !== 'modal';
     this.id = Utils.guid();
     this._insertHTMLIntoDOM();
     this._setupVariables();
@@ -197,9 +204,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     // than here - see _pickerSetup for when that first happens.
     this._pickerSetup();
 
-    if (this.options.displayPlugin === 'docked') {
-      this.displayPlugin = DockedDisplayPlugin.init(this.el, this.containerEl, this.options.displayPluginOptions);
-    }
+    this.displayPlugin = createDisplayPlugin(this.options.displayPlugin, this.el, this.containerEl, this.options.displayPluginOptions, this.cancel);
   }
 
   static get defaults(): TimepickerOptions {
@@ -409,6 +414,13 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.inputMinutes = this.containerEl.querySelector('.timepicker-input-minutes');
     this.inputHours.setAttribute('aria-label', this.options.i18n.hours);
     this.inputMinutes.setAttribute('aria-label', this.options.i18n.minutes);
+    // The fields are spin buttons: the arrows step them and move the hand.
+    for (const isHours of [true, false]) {
+      const [min, max] = this._range(isHours);
+      const input = isHours ? this.inputHours : this.inputMinutes;
+      Object.entries({ role: 'spinbutton', 'aria-valuemin': min, 'aria-valuemax': max })
+        .forEach(([name, value]) => input.setAttribute(name, String(value)));
+    }
     this.spanAmPm = this.containerEl.querySelector('.timepicker-span-am-pm');
     this.footer = this.containerEl.querySelector('.timepicker-footer');
     this.amOrPm = 'PM';
@@ -665,6 +677,7 @@ export class Timepicker extends Component<TimepickerOptions> {
    * listener's column holds only the two fields; AM/PM is a separate column.
    */
   _handleDigitalKeydown = (event: KeyboardEvent) => {
+    if (event.key in STEPS) return this._step(event);
     if (event.key !== Utils.keys.ENTER) return;
     event.preventDefault();
     // Normalize first, as leaving the field would: an emptied field takes its
@@ -675,14 +688,39 @@ export class Timepicker extends Component<TimepickerOptions> {
     else this.confirm();
   };
 
+  /** The lowest and highest value of the hour or minute field. */
+  private _range(isHours: boolean): [number, number] {
+    if (!isHours) return [0, 59];
+    return this.options.twelveHour ? [1, 12] : [0, 23];
+  }
+
+  /**
+   * Up and Down step a field by one, Page Up and Page Down by five, round
+   * the dial: past 59 minutes comes 00. The hand follows. AM and PM stay as
+   * they are.
+   */
+  private _step(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+    const isHours = input === this.inputHours;
+    if (!isHours && input !== this.inputMinutes) return;
+    event.preventDefault();
+    const [min, max] = this._range(isHours);
+    const span = max - min + 1;
+    const unit = isHours ? 'hours' : 'minutes';
+    const value = min + ((((this[unit] - min + STEPS[event.key]) % span) + span) % span);
+    this[unit] = value;
+    input.value = Timepicker._addLeadingZero(value);
+    this._cancelClockReset();
+    this.drawClockFromTimeInput(value, isHours);
+  }
+
   _inputFromTextField = (event: Event) => {
     const input = event.target as HTMLInputElement;
     const isHours = input === this.inputHours;
     if (!isHours && input !== this.inputMinutes) return;
     this._cancelClockReset();
     const value = Number(input.value);
-    const min = isHours && this.options.twelveHour ? 1 : 0;
-    const max = isHours ? (this.options.twelveHour ? 12 : 23) : 59;
+    const [min, max] = this._range(isHours);
     if (!input.value.trim() || !Number.isInteger(value) || value < min || value > max) return;
     this[isHours ? 'hours' : 'minutes'] = value;
     this.drawClockFromTimeInput(value, isHours);
@@ -800,11 +838,13 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   confirm = () => {
     this.done();
+    hideModal(this.displayPlugin);
     if (typeof this.options.onDone === 'function') this.options.onDone.call(this);
   }
 
   cancel = () => {
     // Cancel keeps the previously submitted value in the input.
+    hideModal(this.displayPlugin);
     if (typeof this.options.onCancel === 'function') this.options.onCancel.call(this);
   }
 

@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Modal date and time pickers: `displayPlugin: 'modal'` opens the picker in
+  a modal `<dialog class="display-modal">` drawn as a basic dialog, named by
+  the input's label. Ok writes the input; Cancel, Escape and a press on the
+  scrim close it without a change and call `onCancel`. Focus moves into the
+  dialog and back to the input. Selective Sass builds add `"dialog"` and
+  `"modal-display"`.
 - Value axes for charts: `.axis` on a line, column, bar or mixed chart
   labels its value scale at round values, with a grid line at each, and
   widens an end the chart chose to the next round value. The labels repeat
@@ -429,6 +435,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The time picker's hour and minute fields are spin buttons
+  (`role="spinbutton"` with their range). Up and Down step them by one and
+  Page Up and Page Down by five, wrapping round the dial, and the clock hand
+  follows. Code that found them by the `textbox` role needs `spinbutton`.
 - The `Tooltip` plugin anchors its bubble with CSS anchor positioning where
   the browser supports it: the tooltip stays beside its activator through
   page and container scrolling and flips at the viewport edge. Anchored

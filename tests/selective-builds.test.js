@@ -156,7 +156,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed tooltips anchored with CSS anchor positioning where supported: 74,099 gzip bytes (+259).
   // Reviewed trigger-opened menus anchored with CSS anchor positioning where supported: 74,386 gzip bytes (+287).
   // Reviewed value axes for the line, column, bar, mixed and radar charts: 75,139 gzip bytes (+753).
-  assert.ok(sizes(js).gzip <= 75139, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed modal date and time pickers and spin-button time fields: 75,723 gzip bytes (+584).
+  assert.ok(sizes(js).gzip <= 75723, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -239,5 +240,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed button groups and the keypad on the spring tokens, dropping two copies of the sampled curve: 78,791 gzip bytes (-213).
   // Reviewed the tabs indicator, switch handle and chip set on springs: 78,870 gzip bytes (+79).
   // Reviewed value axes for the line, column, bar, mixed and radar charts: 79,449 gzip bytes (+579).
-  assert.ok(sizes(css).gzip <= 79449, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the modal picker dialog fit: 79,497 gzip bytes (+48).
+  assert.ok(sizes(css).gzip <= 79497, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -81,12 +81,34 @@ Expressive.AutoInit(document.body, {
 
   <Section {...S.display}>
         <p>
-          The clock is a <code>.timepicker-container</code> in the page. There is no overlay
-          and no <code>autoClose</code> option.
+          The clock is a <code>.timepicker-container</code> in the page, unless
+          <code>displayPlugin: 'modal'</code> puts it in a dialog. There is no
+          <code>autoClose</code> option.
         </p>
         <p>
           <code>container</code> renders the clock into a specific element instead of the
           input's parent. Pass a selector or a DOM node.
+        </p>
+        <h5 class="light">Modal dialog</h5>
+        <p>
+          <code>displayPlugin: 'modal'</code> opens the clock in a modal
+          <code>&lt;dialog class="display-modal"&gt;</code>, drawn as a basic
+          dialog over a scrim, when the input is clicked or confirmed with
+          Enter. The dialog takes the input's label as its name and focus moves
+          to the hour field. The time is written on Ok or on Enter in a field;
+          Cancel, Escape or a press on the scrim close it without changing the
+          input and call <code>onCancel</code>. Focus then goes back to the
+          input. A modal clock always shows Cancel and Ok, so it sets
+          <code>autoSubmit: false</code> for you.
+        </p>
+<Code code={`
+Expressive.Timepicker.init(elem, {
+  displayPlugin: 'modal'
+});
+`} />
+        <p>
+          A selective Sass build needs <code>"dialog"</code> and
+          <code>"modal-display"</code> in <code>$components</code>.
         </p>
         <h5 class="light">Docked popover</h5>
         <p>
@@ -196,13 +218,13 @@ Expressive.Timepicker.init(elem, {
               <td><code>displayPlugin</code></td>
               <td>String</td>
               <td><code>null</code></td>
-              <td>Set to <code>'docked'</code> for a click-to-open popover.</td>
+              <td>Set to <code>'docked'</code> for a click-to-open popover, or <code>'modal'</code> for a dialog with Cancel and Ok.</td>
             </tr>
             <tr>
               <td><code>displayPluginOptions</code></td>
               <td>Object</td>
               <td><code>null</code></td>
-              <td>Options for the docked plugin: <code>margin</code>, <code>transition</code>, <code>duration</code>, <code>align</code>.</td>
+              <td>Options for the docked plugin: <code>margin</code>, <code>transition</code>, <code>duration</code>, <code>align</code>. The modal plugin takes none.</td>
             </tr>
             <tr>
               <td><code>dialRadius</code></td>
@@ -232,7 +254,7 @@ Expressive.Timepicker.init(elem, {
   </Section>
 
   <Section {...S.internationalization}>
-        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults. The <code>hours</code> and <code>minutes</code> keys provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. Use Tab to move between controls; the dial does not implement arrow-key navigation.</p>
+        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults. The <code>hours</code> and <code>minutes</code> keys provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Stepping the hour leaves AM and PM as they are. Tab moves between the fields, the AM/PM buttons and the footer; the dial itself takes pointer input only.</p>
         <table class="striped">
           <thead>
             <tr>

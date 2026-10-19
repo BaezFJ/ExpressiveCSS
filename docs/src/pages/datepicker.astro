@@ -23,7 +23,7 @@ const S = defineSections([
 ---
 <DocsLayout page="datepicker">
 <PageBody sections={S}>
-<p>The inline and docked calendars support keyboard navigation. Enter on the date input focuses a day. Tab enters or leaves the grid; arrow keys move by day or week. Home and End follow <code>firstDay</code>, and Left and Right follow <code>isRTL</code>. PageUp and PageDown change the month; hold Shift to change the year. Enter or Space selects an enabled day. Disabled dates remain focusable and are announced as unavailable. A typed date that is outside the bounds, a disabled weekend or refused by <code>disableDayFn</code> puts the input back to the selected date. An input's initial value is the selection, and a form reset reads the selection back from the reset values. Navigation respects configured bounds and preserves focus after redraws. This does not apply to modal pickers.</p>
+<p>The inline and docked calendars support keyboard navigation. Enter on the date input focuses a day. Tab enters or leaves the grid; arrow keys move by day or week. Home and End follow <code>firstDay</code>, and Left and Right follow <code>isRTL</code>. PageUp and PageDown change the month; hold Shift to change the year. Enter or Space selects an enabled day. Disabled dates remain focusable and are announced as unavailable. A typed date that is outside the bounds, a disabled weekend or refused by <code>disableDayFn</code> puts the input back to the selected date. An input's initial value is the selection, and a form reset reads the selection back from the reset values. Navigation respects configured bounds and preserves focus after redraws. A modal calendar moves focus to the selected day when it opens and back to the input when it closes.</p>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>date-picker</code> to a text input. <code>AutoInit()</code> starts every
@@ -82,8 +82,9 @@ Expressive.AutoInit(document.body, {
 
   <Section {...S.display}>
         <p>
-          The calendar is a <code>.datepicker-container</code> in the page. There is no overlay
-          and no <code>autoClose</code> option.
+          The calendar is a <code>.datepicker-container</code> in the page, unless
+          <code>displayPlugin: 'modal'</code> puts it in a dialog. There is no
+          <code>autoClose</code> option.
         </p>
         <h5 class="light">Always visible</h5>
         <p>
@@ -114,6 +115,28 @@ Expressive.Datepicker.init(elem, {
           <code>5</code>), <code>transition</code> (<code>10</code>),
           <code>duration</code> (<code>250</code>), and <code>align</code>
           (<code>'left'</code>).
+        </p>
+        <h5 class="light">Modal dialog</h5>
+        <p>
+          <code>displayPlugin: 'modal'</code> opens the calendar in a modal
+          <code>&lt;dialog class="display-modal"&gt;</code>, drawn as a basic
+          dialog over a scrim, when the input is clicked or focused with Enter.
+          The dialog takes the input's label as its name and focus moves to the
+          selected day. Picking a day writes nothing until Ok; Cancel, Escape
+          or a press on the scrim close it without changing the input and call
+          <code>onCancel</code>. Focus then goes back to the input. A modal
+          calendar always shows Cancel and Ok, so it sets
+          <code>openByDefault: true</code> and <code>autoSubmit: false</code>
+          for you.
+        </p>
+<Code code={`
+Expressive.Datepicker.init(elem, {
+  displayPlugin: 'modal'
+});
+`} />
+        <p>
+          A selective Sass build needs <code>"dialog"</code> and
+          <code>"modal-display"</code> in <code>$components</code>.
         </p>
         <p>
           <code>container</code> renders the calendar into a specific element and does not
@@ -307,13 +330,13 @@ Expressive.Datepicker.init(elem, {
               <td><code>displayPlugin</code></td>
               <td>String</td>
               <td><code>null</code></td>
-              <td>Set to <code>'docked'</code> for a click-to-open popover. Pair with <code>openByDefault: true</code>.</td>
+              <td>Set to <code>'docked'</code> for a click-to-open popover, paired with <code>openByDefault: true</code>, or <code>'modal'</code> for a dialog with Cancel and Ok.</td>
             </tr>
             <tr>
               <td><code>displayPluginOptions</code></td>
               <td>Object</td>
               <td><code>null</code></td>
-              <td>Options for the docked plugin: <code>margin</code>, <code>transition</code>, <code>duration</code>, <code>align</code>.</td>
+              <td>Options for the docked plugin: <code>margin</code>, <code>transition</code>, <code>duration</code>, <code>align</code>. The modal plugin takes none.</td>
             </tr>
         </OptionsTable>
   </Section>

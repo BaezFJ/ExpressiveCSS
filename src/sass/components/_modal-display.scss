@@ -1,0 +1,23 @@
+@use "../abstracts" as *;
+
+// Dialog created by src/ts/plugins/modalDisplayPlugin.ts for a modal date or
+// time picker. The dialog partial draws it as a basic dialog over a scrim,
+// so a selective build needs "dialog" too; this only fits it to the picker,
+// which scrolls inside it on a short screen.
+
+dialog.display-modal {
+  width: auto;
+  min-width: 0;
+  max-height: calc(100% - 48px);
+
+  > :is(.datepicker-container, .timepicker-container) {
+    flex: 1 1 auto;
+    min-height: 0;
+    // The dialog sizes to the picker, so the time picker's AM and PM
+    // buttons, which run past its 325px, stay inside.
+    max-width: none;
+    padding: 0;
+    overflow: auto;
+    background-color: transparent;
+  }
+}

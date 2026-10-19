@@ -94,8 +94,8 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Slider](#slider) | unassessed | needs-review | needs-rerun | 0 |
 | [Chips](#chips) | unassessed | needs-review | needs-rerun | 0 |
 | [Autocomplete](#autocomplete) | unassessed | needs-review | needs-rerun | 1 |
-| [Date picker](#date-picker) | unassessed | needs-review | needs-rerun | 1 |
-| [Time picker](#time-picker) | unassessed | needs-review | needs-rerun | 2 |
+| [Date picker](#date-picker) | unassessed | needs-review | needs-rerun | 0 |
+| [Time picker](#time-picker) | unassessed | needs-review | needs-rerun | 1 |
 | [Keypad and Keyboard](#keypad) | unassessed | needs-review | incomplete | 1 |
 | [Questionnaire](#questionnaire) | unassessed | needs-review | needs-rerun | 1 |
 | [Typography](#typography) | unassessed | needs-review | needs-rerun | 1 |
@@ -1485,42 +1485,42 @@ Web adaptation: Runtime combobox behavior attached to a text field; no standalon
 
 ## Date picker
 
-**unassessed within the stated scope.** Inline single-date, range, and multiple-date calendar.
+**unassessed within the stated scope.** Inline single-date, range, and multiple-date calendar, with an optional modal dialog.
 
 Source review: needs-review, 2026-09-17. [src/sass/components/_datepicker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/sass/components/_datepicker.scss), [src/sass/components/_docked-display.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/sass/components/_docked-display.scss), [src/ts/components/datepicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/ts/components/datepicker.ts), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/ts/components/select.ts), [src/ts/plugins/dockedDisplayPlugin.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/ts/plugins/dockedDisplayPlugin.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/date-pickers/overview).
 
-Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
+Web adaptation: Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.
 
-- feature: Modal picker parity is not provided by the documented inline API. Next: Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs.
-- verification: Range-end typing and keyboard selection, multiple-date defaults, shrink/regrow/clear, form values and generated-input teardown have rendered coverage. Custom parsing, range constraints through typed input and spoken calendar context need further review. Next: Complete the manual picker checklist and separately verify custom parsing and typed range constraints. Do not infer modal or complete accessibility parity.
+- verification: Range-end typing and keyboard selection, multiple-date defaults, shrink/regrow/clear, form values and generated-input teardown have rendered coverage. Custom parsing, range constraints through typed input and spoken calendar context need further review. Next: Complete the manual picker checklist and separately verify custom parsing and typed range constraints. Do not infer complete accessibility parity.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker supports calendar keyboard navigation and redraw focus`. Inline and docked calendar day/week/month/year navigation, leap-year clamping, disabled-date selection prevention, RTL, configured bounds and redraw focus. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker selection lifecycle: default`. Multiple-date initialization and same-day normalization with nonmidnight defaults.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker selection lifecycle: multiple`. Pointer and keyboard add/remove, disabled day, form values, shrink/regrow/clear, preservation of the original input, generated-field teardown and focus recovery.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker selection lifecycle: range`. Authored end-input typing, Enter-to-calendar, RTL keyboard end selection, rejection of an earlier calendar end and listener cleanup.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-web-accessibility-browser.test.js): `chromium: date picker selection lifecycle: clear`. Clearing a native date input resets its value and data-date without throwing.
+- not-recorded: [tests/modal-picker-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/modal-picker-browser.test.js): `chromium: a modal date picker writes the input on Ok and nothing on Cancel, Escape or the scrim`. The dialog is modal and named by the input label, focus moves to the selected day and back to the input, Ok writes the date, and Cancel, Escape and a scrim press leave it and call onCancel. Runs in all three engines. No screen reader output.
 
 <a id="time-picker"></a>
 
 ## Time picker
 
-**unassessed within the stated scope.** Inline clock and digital input; 12-hour and 24-hour formats.
+**unassessed within the stated scope.** Inline clock and digital input; 12-hour and 24-hour formats, with an optional modal dialog.
 
 Source review: needs-review, 2026-09-18. [src/sass/components/_timepicker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/sass/components/_timepicker.scss), [src/sass/components/_docked-display.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/sass/components/_docked-display.scss), [src/ts/components/timepicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/ts/components/timepicker.ts), [src/ts/plugins/dockedDisplayPlugin.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/ts/plugins/dockedDisplayPlugin.ts).
 
 Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/time-pickers/overview).
 
-Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
+Web adaptation: Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.
 
-- feature: Modal picker parity is not provided by the documented inline API. Next: Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs.
-- feature: Version 0.10.0 names hour/minute inputs and exposes AM/PM button state. Clock-dial arrow navigation and modal keyboard behavior remain unimplemented. Next: Use the digital inputs for keyboard entry; separately assess dial navigation and modal focus before claiming complete keyboard parity.
+- feature: The hour and minute fields step with the arrow keys as spin buttons and move the hand; the dial itself takes pointer input only, and stepping the hour does not change AM or PM. Next: Assess whether a focusable dial adds anything over the spin buttons before adding one.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker exposes named keyboard controls in inline and docked modes`. Localized hour name and fallback minute name, native AM/PM keyboard activation and selected state, no form submission, docked opening focus, and 12/24-hour digital entry including midnight. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker digital values: input`. Input-only edits, invalid-value recovery, confirmation change counts and form values in 12/24-hour, inline/docked, LTR/RTL and ordinary/reduced motion fixtures. Physical keyboard and clipboard checks remain pending.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker digital values: empty`. Empty hour/minute fallback display and submitted values agree, including twelve-hour midnight normalization and retained AM/PM state.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker digital values: boundaries`. Reinitialization from midnight, noon, late-night 24-hour strings and lowercase AM/PM preserves twelve-hour display and period state.
+- not-recorded: [tests/modal-picker-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/modal-picker-browser.test.js): `chromium: a modal time picker steps its fields with the arrow keys and writes the time on Enter`. The fields are spin buttons with their range, Up, Down and Page Up step and wrap them, the hand follows, Enter writes the time and closes the dialog, and Escape closes it without a change. Runs in all three engines. No screen reader output.
 
 <a id="keypad"></a>
 

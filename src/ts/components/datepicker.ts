@@ -1,7 +1,7 @@
 import { Utils } from '../core/utils';
 import { FormSelect } from './select';
 import { BaseOptions, Component, I18nOptions, InitElements, InitElement } from '../core/component';
-import { DockedDisplayPlugin } from '../plugins/dockedDisplayPlugin';
+import { DisplayPlugin, ModalDisplayPlugin, createDisplayPlugin, hideModal } from '../plugins/modalDisplayPlugin';
 
 export interface DateI18nOptions extends I18nOptions {
   previousMonth: string;
@@ -179,7 +179,10 @@ export interface DatepickerOptions extends BaseOptions {
   /** Field used for internal calculations DO NOT CHANGE IT */
   maxMonth?: number;
   /**
-   * Display plugin
+   * Display plugin: 'docked' for a popover under the input, or 'modal' for a
+   * dialog with Cancel and Ok. A modal picker is always open inside its
+   * dialog and writes the input only on Ok, so it sets `openByDefault` and
+   * clears `autoSubmit`.
    */
   displayPlugin: string;
   /**
@@ -302,7 +305,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   dates: Date[];
   formats: object;
   calendars: [{ month: number; year: number }];
-  private displayPlugin: DockedDisplayPlugin;
+  private displayPlugin: DisplayPlugin;
   /** What setInputValue last wrote, so reading it back does not depend on the parser. */
   private _writtenInputs = new WeakMap<HTMLInputElement, { value: string; date: Date | null }>();
   private _form: HTMLFormElement | null = null;
@@ -335,6 +338,9 @@ export class Datepicker extends Component<DatepickerOptions> {
     if (!!options && options.hasOwnProperty('i18n') && typeof options.i18n === 'object') {
       this.options.i18n = { ...Datepicker.defaults.i18n, ...options.i18n };
     }
+
+    // A modal calendar is always open in its dialog and writes on Ok.
+    if (this.options.displayPlugin === 'modal') Object.assign(this.options, { openByDefault: true, autoSubmit: false });
 
     // Remove time component from minDate and maxDate options, on copies: the
     // caller's Date objects are theirs.
@@ -383,10 +389,8 @@ export class Datepicker extends Component<DatepickerOptions> {
         }
       }
     }
-    if (this.options.displayPlugin === 'docked') {
-      this.displayPlugin = DockedDisplayPlugin.init(this.el, this.containerEl, this.options.displayPluginOptions);
-      if (this.endDateEl) this.displayPlugin.triggers.push(this.endDateEl);
-    }
+    this.displayPlugin = createDisplayPlugin(this.options.displayPlugin, this.el, this.containerEl, this.options.displayPluginOptions, this._cancel);
+    if (this.endDateEl) this.displayPlugin?.triggers.push(this.endDateEl);
     // A form reset brings back these texts long after the cache of written
     // values has moved on, so keep the dates they stood for.
     for (const input of [this.el, this.endDateEl]) this._rememberResetDate(input);
@@ -1441,9 +1445,15 @@ export class Datepicker extends Component<DatepickerOptions> {
       this.draw();
       this.gotoDate(<HTMLElement>e.target === this.el ? this.date : this.endDate);
     });
-    if (this.displayPlugin) this.displayPlugin.show();
+    this._showDisplay();
     if (this.options.onInputInteraction) this.options.onInputInteraction.call(this);
   };
+
+  /** Shows a docked or modal calendar. A modal takes focus from the input, so the selected day gets it. */
+  private _showDisplay() {
+    this.displayPlugin?.show();
+    if (this.displayPlugin instanceof ModalDisplayPlugin) this._syncCalendarFocus(true);
+  }
 
   _handleInputKeydown = (e: KeyboardEvent) => {
     if (e.key === Utils.keys.ENTER) {
@@ -1670,10 +1680,12 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   _confirm = () => {
     this._finishSelection();
+    hideModal(this.displayPlugin);
     if (typeof this.options.onConfirm === 'function') this.options.onConfirm.call(this);
   }
 
   _cancel = () => {
+    hideModal(this.displayPlugin);
     if (typeof this.options.onCancel === 'function') this.options.onCancel.call(this);
   };
 

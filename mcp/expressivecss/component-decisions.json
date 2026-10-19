@@ -7893,8 +7893,8 @@
         "implementation": {
           "source": "llm.md#date-picker",
           "reviewedOn": "2026-09-17",
-          "documentedSupport": "Inline single-date, range, and multiple-date calendar.",
-          "webAdaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
+          "documentedSupport": "Inline single-date, range, and multiple-date calendar, with an optional modal dialog.",
+          "webAdaptation": "Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.",
           "limitations": [
             "Modal picker parity is not provided by the documented inline API.",
             "Calendar keyboard navigation and range/multiple selection lifecycle have browser coverage. Spoken calendar context, native zoom and physical devices remain unverified."
@@ -7948,14 +7948,9 @@
         ],
         "gaps": [
           {
-            "kind": "feature",
-            "description": "Modal picker parity is not provided by the documented inline API.",
-            "nextStep": "Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs."
-          },
-          {
             "kind": "verification",
             "description": "Range-end typing and keyboard selection, multiple-date defaults, shrink/regrow/clear, form values and generated-input teardown have rendered coverage. Custom parsing, range constraints through typed input and spoken calendar context need further review.",
-            "nextStep": "Complete the manual picker checklist and separately verify custom parsing and typed range constraints. Do not infer modal or complete accessibility parity."
+            "nextStep": "Complete the manual picker checklist and separately verify custom parsing and typed range constraints. Do not infer complete accessibility parity."
           }
         ],
         "browserChecks": [
@@ -7983,6 +7978,11 @@
             "file": "tests/expressivecss-web-accessibility-browser.test.js",
             "name": "chromium: date picker selection lifecycle: clear",
             "scope": "Clearing a native date input resets its value and data-date without throwing."
+          },
+          {
+            "file": "tests/modal-picker-browser.test.js",
+            "name": "chromium: a modal date picker writes the input on Ok and nothing on Cancel, Escape or the scrim",
+            "scope": "The dialog is modal and named by the input label, focus moves to the selected day and back to the input, Ok writes the date, and Cancel, Escape and a scrim press leave it and call onCancel. Runs in all three engines. No screen reader output."
           }
         ],
         "inventorySha256": "73dfbba1ba5e037d42b8c354021ac69e264a6d5f6c11905a3122f1cf5dd8ef01"
@@ -8025,11 +8025,11 @@
         "implementation": {
           "source": "llm.md#time-picker",
           "reviewedOn": "2026-09-18",
-          "documentedSupport": "Inline clock and digital input; 12-hour and 24-hour formats.",
-          "webAdaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
+          "documentedSupport": "Inline clock and digital input; 12-hour and 24-hour formats, with an optional modal dialog.",
+          "webAdaptation": "Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.",
           "limitations": [
             "Modal picker parity is not provided by the documented inline API.",
-            "Named digital inputs, AM/PM state and input-event synchronization have browser coverage. Modal and clock-dial keyboard behavior remain incomplete."
+            "Named digital inputs as spin buttons, AM/PM state, input-event synchronization and the modal dialog have browser coverage. The dial itself takes pointer input only."
           ]
         },
         "relationship": "component",
@@ -8080,13 +8080,8 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "Modal picker parity is not provided by the documented inline API.",
-            "nextStep": "Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs."
-          },
-          {
-            "kind": "feature",
-            "description": "Version 0.10.0 names hour/minute inputs and exposes AM/PM button state. Clock-dial arrow navigation and modal keyboard behavior remain unimplemented.",
-            "nextStep": "Use the digital inputs for keyboard entry; separately assess dial navigation and modal focus before claiming complete keyboard parity."
+            "description": "The hour and minute fields step with the arrow keys as spin buttons and move the hand; the dial itself takes pointer input only, and stepping the hour does not change AM or PM.",
+            "nextStep": "Assess whether a focusable dial adds anything over the spin buttons before adding one."
           }
         ],
         "browserChecks": [
@@ -8109,6 +8104,11 @@
             "file": "tests/expressivecss-web-accessibility-browser.test.js",
             "name": "chromium: time picker digital values: boundaries",
             "scope": "Reinitialization from midnight, noon, late-night 24-hour strings and lowercase AM/PM preserves twelve-hour display and period state."
+          },
+          {
+            "file": "tests/modal-picker-browser.test.js",
+            "name": "chromium: a modal time picker steps its fields with the arrow keys and writes the time on Enter",
+            "scope": "The fields are spin buttons with their range, Up, Down and Page Up step and wrap them, the hand follows, Enter writes the time and closes the dialog, and Escape closes it without a change. Runs in all three engines. No screen reader output."
           }
         ],
         "inventorySha256": "84c3f0e8819a2d6d186a29cbd2aa7addfe02b901b38f109bec7e3b79f48f7c13"
