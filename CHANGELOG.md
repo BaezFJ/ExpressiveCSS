@@ -422,6 +422,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The `Tooltip` plugin anchors its bubble with CSS anchor positioning where
+  the browser supports it: the tooltip stays beside its activator through
+  page and container scrolling and flips at the viewport edge. Anchored
+  tooltips fade in without sliding, and `transitionMovement` joins the gap.
+  Other browsers keep the measured position.
 - The tabs indicator moves on the default spatial spring
   (`--md-comp-tabs-indicator-easing` and `-duration`), and now stops under
   reduced motion. The `Tabs` `duration` option defaults to `null`; a number

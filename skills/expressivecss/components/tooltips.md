@@ -9,7 +9,7 @@ Component ID: `tooltips`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `5eb11bac70ca93bbfa2a0dda0a593b9bc9599a82c9567c0c5363004f51c32331`
+Contract SHA-256: `f6e44a978d0bf7ed413a1cf3b2614879f122bb342d2e99f3ee08f725899d21e5`
 
 #### Selection and adaptation
 
@@ -68,7 +68,7 @@ Inside a `<button>` the bubble has to be a `<span>` — a `<div>` is not phrasin
 | `opacity` | Number | `1` | Opacity of the tooltip when shown. |
 | `outDuration` | Number | `200` | Exit transition duration, in milliseconds. |
 | `position` | String | `'bottom'` | Direction: `'top'`, `'right'`, `'bottom'`, or `'left'`. Set by `data-position`. The CSS-only default is above. |
-| `transitionMovement` | Number | `10` | How far the tooltip moves during its transition, in pixels. |
+| `transitionMovement` | Number | `10` | How far the tooltip moves during its transition, in pixels. An anchored tooltip does not move and adds this to the gap. |
 
 #### Methods
 

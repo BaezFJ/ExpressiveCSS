@@ -3,6 +3,21 @@ import { Component, BaseOptions, InitElements, InitElement } from '../core/compo
 
 export type TooltipPosition = 'top' | 'right' | 'bottom' | 'left';
 
+
+// CSS anchor positioning, where the browser has it: the tooltip follows its
+// trigger through scrolling and flips at the viewport edge without script
+// measuring anything. Elsewhere the coordinate path below still runs.
+const anchorSupported = typeof CSS !== 'undefined' && !!CSS.supports?.('anchor-name: --a');
+
+// Per position: the position-area and the self-alignment that centers the
+// tooltip on its trigger.
+const ANCHOR_PLACEMENT: Record<string, [string, string]> = {
+  top: ['top', 'justify-self'],
+  right: ['right', 'align-self'],
+  left: ['left', 'align-self'],
+  bottom: ['bottom', 'justify-self'],
+};
+
 export interface TooltipOptions extends BaseOptions {
   /**
    * Delay time before tooltip disappears.
@@ -170,6 +185,7 @@ export class Tooltip extends Component<TooltipOptions> {
       this._originalContent = null;
     }
     this.tooltipEl.remove();
+    this.el.style.removeProperty('anchor-name');
     this._removeEventHandlers();
     this.el['Expressive_Tooltip'] = undefined;
   }
@@ -325,6 +341,32 @@ export class Tooltip extends Component<TooltipOptions> {
     Utils._placeInOffsetParent(tooltip, newCoordinates);
   }
 
+  _place() {
+    if (anchorSupported) this._anchorTooltip();
+    else this._positionTooltip();
+  }
+
+  // Anchored to the trigger in CSS: position-area places the tooltip on the
+  // chosen side, centered, and position-try-fallbacks flips it to the other
+  // side when that one would leave the viewport. Script cannot tell which
+  // side won, so an anchored tooltip fades in without sliding, and the
+  // slide's distance joins the gap instead.
+  _anchorTooltip() {
+    const [area, alignment] = ANCHOR_PLACEMENT[this.options.position] ?? ANCHOR_PLACEMENT.bottom;
+    const name = `--${this.tooltipEl.id}`;
+    this.xMovement = 0;
+    this.yMovement = 0;
+    this.el.style.setProperty('anchor-name', name);
+    const style = this.tooltipEl.style;
+    style.position = 'fixed';
+    style.inset = 'auto';
+    style.margin = `${Math.max(0, this.options.margin) + Math.abs(this.options.transitionMovement)}px`;
+    style.setProperty('position-anchor', name);
+    style.setProperty('position-area', area);
+    style.setProperty(alignment, 'anchor-center');
+    style.setProperty('position-try-fallbacks', 'flip-block, flip-inline');
+  }
+
   _repositionWithinScreen(x: number, y: number, width: number, height: number) {
     return Utils._repositionWithinScreen(
       x, y, width, height, this.options.margin, this.options.transitionMovement, 'center'
@@ -340,7 +382,7 @@ export class Tooltip extends Component<TooltipOptions> {
     const reduce = this.el.ownerDocument.defaultView.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const duration = reduce ? 0 : show ? this.options.inDuration : this.options.outDuration;
     if (show) {
-      this._positionTooltip();
+      this._place();
       style.visibility = 'visible';
       style.overflow = 'visible';
     }

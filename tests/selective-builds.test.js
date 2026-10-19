@@ -153,7 +153,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the number stepper in the Forms behavior: 73,769 gzip bytes (+140).
   // Reviewed the confetti overlay reading --expressive-z-confetti: 73,788 gzip bytes (+19).
   // Reviewed the tabs indicator reading the spring tokens: 73,840 gzip bytes (+52).
-  assert.ok(sizes(js).gzip <= 73840, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed tooltips anchored with CSS anchor positioning where supported: 74,099 gzip bytes (+259).
+  assert.ok(sizes(js).gzip <= 74099, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

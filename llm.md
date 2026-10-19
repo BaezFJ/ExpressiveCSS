@@ -6536,7 +6536,7 @@ A rich tooltip with an action cannot live inside a `<button>` — that would nes
 
 ### JavaScript
 
-The CSS path does not need AutoInit. The JS plugin is still there for `data-tooltip`, delayed show/hide, and keeping the bubble inside the viewport. Add `tooltipped` to the activator. `data-tooltip` is the text; `data-position` is `top`, `right`, `bottom`, or `left`. `AutoInit()` starts every `.tooltipped` except those marked `no-autoinit`. The generated element gets `.tooltip` (plus `.rich` when `tooltipId` is set).
+The CSS path does not need AutoInit. The JS plugin is still there for `data-tooltip`, delayed show/hide, and keeping the bubble inside the viewport. Add `tooltipped` to the activator. `data-tooltip` is the text; `data-position` is `top`, `right`, `bottom`, or `left`. `AutoInit()` starts every `.tooltipped` except those marked `no-autoinit`. The generated element gets `.tooltip` (plus `.rich` when `tooltipId` is set). In browsers with CSS anchor positioning, the plugin anchors the bubble to its activator instead of measuring: it stays beside the activator while the page or a container scrolls, and flips to the opposite side at the viewport edge. An anchored tooltip fades in without sliding, because script cannot tell which side it flipped to; `transitionMovement` is added to the gap instead. Other browsers keep the measured, viewport-clamped position.
 
 ```html
 <button type="button" class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip">
@@ -6593,7 +6593,7 @@ Constructor and `init` options. `data-tooltip`, `data-position`, and `data-toolt
 | `opacity` | Number | `1` | Opacity of the tooltip when shown. |
 | `outDuration` | Number | `200` | Exit transition duration, in milliseconds. |
 | `position` | String | `'bottom'` | Direction: `'top'`, `'right'`, `'bottom'`, or `'left'`. Set by `data-position`. The CSS-only default is above. |
-| `transitionMovement` | Number | `10` | How far the tooltip moves during its transition, in pixels. |
+| `transitionMovement` | Number | `10` | How far the tooltip moves during its transition, in pixels. An anchored tooltip does not move and adds this to the gap. |
 
 ### Methods
 
