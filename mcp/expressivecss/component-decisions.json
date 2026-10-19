@@ -3658,10 +3658,10 @@
         "implementation": {
           "source": "llm.md#radial-chart",
           "reviewedOn": "2026-10-07",
-          "documentedSupport": "Rings drawn clockwise from the top from a figure's data table as a share of data-max, with tracks, a legend of each row's cell for more than one row, gauge and sparkline modifiers, a <tfoot> total in the middle, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the ring.",
+          "documentedSupport": "Rings drawn clockwise from the top from a figure's data table as a share of data-max, with tracks, a legend of each row's cell for more than one row, gauge, labels and sparkline modifiers, a <tfoot> total in the middle, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the ring.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rings, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values leave only the track; there are no labels on the rings."
+            "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values leave only the track. The .labels names can run into a crowded middle total, and a gauge has no names."
           ]
         },
         "relationship": "none",
@@ -3689,7 +3689,7 @@
           },
           {
             "path": "src/sass/components/_radial-chart.scss",
-            "sha256": "13415ef4cf4893485d99c637c95e75456ad0c0224ca9861d699c6a6dec7da180"
+            "sha256": "7bbf15655da199f7ea4c87245dd0bc644fa36f5fbc12fbde959cac940347cd18"
           },
           {
             "path": "src/ts/components/lineChart.ts",
@@ -3703,13 +3703,13 @@
         "gaps": [
           {
             "kind": "verification",
-            "description": "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+            "description": "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
             "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
           },
           {
             "kind": "feature",
-            "description": "There are no labels on the rings, no gradient or segmented fills, and rings past four reuse the colors.",
-            "nextStep": "Add ring-start labels if charts need names on the rings; keep to four rings and use the legend meanwhile."
+            "description": "A gauge has no ring names, there are no gradient or segmented fills, and rings past four reuse the colors.",
+            "nextStep": "Name gauge rings under the base line if gauges need them; keep to four rings and use the legend meanwhile."
           }
         ],
         "browserChecks": [
@@ -3722,6 +3722,11 @@
             "file": "tests/radial-chart-browser.test.js",
             "name": "chromium: radial chart tooltip follows the pointer across the rings and the arrow keys",
             "scope": "Pointer distance to ring, gaps split between rings, the active ring, tooltip text with further columns, swatches in the ring color, opening direction, hiding in the middle, off the rings and below a gauge's base line, focus, all four arrows, End and Escape, and clockwise rings with swapped arrows in RTL. No spoken-output assertion."
+          },
+          {
+            "file": "tests/radial-chart-browser.test.js",
+            "name": "chromium: radial chart .labels names each ring at its start",
+            "scope": "A name per ring in on-surface-variant, centred on its ring's top and inside the top left quarter, no overlaps, smaller names for eight crowded rings, three-quarter tracks with round ends, the tooltip at a full ring's end, hovering across a name picking its own ring, the names aria-hidden, and none on a gauge or sparkline, which keep their half and whole tracks. No rendering comparison."
           }
         ]
       }

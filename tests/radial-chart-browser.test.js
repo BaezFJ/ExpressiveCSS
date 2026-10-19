@@ -228,4 +228,100 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: radial chart .labels names each ring at its start`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(`<style>${css}</style>
+        <div style="width: 400px">
+          ${chart('class="radial-chart labels" id="named"', 'Named', '<th>V</th>', [['Sales', '100'], ['Marketing', '64'], ['Support', '38']])}
+          ${chart('class="radial-chart labels" id="crowd"', 'Crowd', '<th>V</th>', Array.from({ length: 8 }, (_, i) => [`Team ${i + 1}`, '50']))}
+          ${chart('class="radial-chart labels gauge" id="half"', 'Half', '<th>V</th>', [['A', '50']])}
+          ${chart('class="radial-chart labels sparkline" id="tiny"', 'Tiny', '<th>V</th>', [['A', '50']])}
+        </div>
+        <script>${js}</script>`);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      const measure = (el) => {
+        const plot = el.querySelector('.radial-chart-plot').getBoundingClientRect();
+        const [cx, cy] = [plot.left + plot.width / 2, plot.top + plot.width / 2];
+        const rings = [...el.querySelectorAll('.radial-chart-ring')];
+        const names = [...el.querySelectorAll('.radial-chart-names > span')].map((span, i) => {
+          const box = span.getBoundingClientRect();
+          // The ring's top, in pixels from the plot's top.
+          const top = cy - (parseFloat(rings[i].getAttribute('r')) / 100) * plot.width;
+          return {
+            text: span.textContent,
+            box,
+            onRing: Math.abs((box.top + box.bottom) / 2 - top) <= 1,
+            quarter: box.right <= cx && box.left >= plot.left - 1 && box.bottom <= cy,
+            size: parseFloat(getComputedStyle(span).fontSize),
+            color: getComputedStyle(span).color,
+          };
+        });
+        const track = el.querySelector('.radial-chart-track');
+        const width = parseFloat(track.getAttribute('stroke-width'));
+        const length = 2 * Math.PI * parseFloat(track.getAttribute('r'));
+        const dash = parseFloat(track.style.getPropertyValue('--radial-chart-dash'));
+        const round = getComputedStyle(track).strokeLinecap;
+        return {
+          names: names.map(({ text }) => text),
+          color: names.every(({ color }) => color === getComputedStyle(el.querySelector('figcaption')).color),
+          onRing: names.every((name) => name.onRing),
+          quarter: names.every((name) => name.quarter),
+          overlaps: names.filter((a, i) => names.slice(i + 1).some((b) => a.box.bottom > b.box.top && b.box.bottom > a.box.top)).length,
+          sizes: names.map((name) => name.size),
+          // A round-capped dash is one width shorter than its share.
+          span: Math.round(((dash + (round === 'round' ? width : 0)) / length) * 100) / 100,
+          round,
+          hidden: names.length ? el.querySelector('.radial-chart-names').closest('[aria-hidden="true"]') !== null : null,
+        };
+      };
+
+      const named = await page.locator('#named').evaluate(measure);
+      assert.deepEqual(named.names, ['Sales', 'Marketing', 'Support'], 'each ring is named, outermost first');
+      assert.ok(named.color, 'the names are in the caption\'s on-surface-variant, readable whatever the ring colors');
+      assert.ok(named.onRing, 'each name is centred on its ring at the top');
+      assert.ok(named.quarter, 'the names sit in the top left quarter, ending at the middle line');
+      assert.equal(named.overlaps, 0, 'the names do not overlap');
+      assert.equal(named.span, 0.75, 'the track runs three quarters of the circle');
+      assert.equal(named.round, 'round', 'the track has round ends');
+      assert.ok(named.hidden, 'the names are aria-hidden with the rings');
+
+      const crowd = await page.locator('#crowd').evaluate(measure);
+      assert.equal(crowd.names.length, 8);
+      assert.equal(crowd.overlaps, 0, 'names shrink to fit crowded rings');
+      assert.ok(Math.max(...crowd.sizes) < Math.max(...named.sizes), `crowded names are smaller: ${crowd.sizes[0]} vs ${named.sizes[0]}`);
+
+      const half = await page.locator('#half').evaluate(measure);
+      assert.deepEqual([half.names, half.span], [[], 0.5], 'a gauge has no names and keeps its half circle');
+      const tiny = await page.locator('#tiny').evaluate(measure);
+      assert.deepEqual([tiny.names, tiny.span, tiny.round], [[], 1, 'butt'], 'a sparkline has no names and whole tracks');
+
+      // A full ring's tooltip sits at nine o'clock, where the fill ends.
+      const tip = await page.locator('#named').evaluate((el) => {
+        Expressive.RadialChart.getInstance(el).show(0);
+        const tooltip = el.querySelector('.radial-chart-tooltip');
+        const r = parseFloat(el.querySelector('.radial-chart-ring').getAttribute('r'));
+        return [Math.abs(parseFloat(tooltip.style.left) - (50 - r)) < 0.01, Math.abs(parseFloat(tooltip.style.top) - 50) < 0.01];
+      });
+      assert.deepEqual(tip, [true, true], 'the tooltip follows the three-quarter fill');
+
+      // Across the whole of a name, the pointer picks that name's ring.
+      await page.evaluate(() => Expressive.RadialChart.getInstance(document.querySelector('#named')).show(-1));
+      const name = await page.locator('#named .radial-chart-names > span').nth(1).boundingBox();
+      for (const share of [0.05, 0.5, 0.95]) {
+        await page.mouse.move(name.x + name.width * share, name.y + name.height / 2);
+        const hovered = await page.locator('#named').evaluate((el) => [
+          el.querySelector('.radial-chart-tooltip strong')?.textContent,
+          [...el.querySelectorAll('.radial-chart-ring')].findIndex((ring) => ring.classList.contains('active')),
+        ]);
+        assert.deepEqual(hovered, ['Marketing', 1], `hovering ${share * 100}% across Marketing shows its ring`);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
 }

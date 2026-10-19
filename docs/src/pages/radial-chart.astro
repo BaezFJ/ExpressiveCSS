@@ -10,6 +10,7 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "total", label: "Total" },
   { id: "gauge", label: "Gauge" },
+  { id: "labels", label: "Labels" },
   { id: "rings", label: "Ring size and tracks" },
   { id: "cards", label: "Chart cards" },
   { id: "data", label: "Values and colors" },
@@ -129,6 +130,38 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
     <tfoot>
       <tr><th>Total seats</th><td>25</td></tr>
     </tfoot>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.labels}>
+        <p>
+          <code>labels</code> names each ring at its start, so a reader can
+          match rings to rows without the legend. The rings run three quarters
+          of the way round, from the top to the left, and each name sits in
+          the empty top left quarter, ending beside its ring's start. Names
+          shrink to fit between crowded rings, and long ones end in an
+          ellipsis. A gauge and a sparkline ignore <code>labels</code>.
+        </p>
+        <figure class="radial-chart labels" data-markdown-ignore>
+          <figcaption>Website visitors by source</figcaption>
+          <table>
+            <thead><tr><th>Source</th><th>Share</th></tr></thead>
+            <tbody>{visitors.map(([source, value]) => <tr><th>{source}</th><td>{value}%</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="radial-chart labels">
+  <figcaption>Website visitors by source</figcaption>
+  <table>
+    <thead>
+      <tr><th>Source</th><th>Share</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Organic</th><td>80%</td></tr>
+      <tr><th>Direct</th><td>75%</td></tr>
+      <!-- One row per source -->
+    </tbody>
   </table>
 </figure>
 `} />

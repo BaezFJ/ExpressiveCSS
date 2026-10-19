@@ -160,7 +160,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed arrow keys for tabs and for lists of link or button rows: 76,142 gzip bytes (+419).
   // Reviewed expandable bottom sheets switching heights by drag and handle: 76,397 gzip bytes (+255).
   // Reviewed pie chart names outside the slices: 76,703 gzip bytes (+306).
-  assert.ok(sizes(js).gzip <= 76703, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed radial chart ring names at each ring's start: 76,892 gzip bytes (+189).
+  assert.ok(sizes(js).gzip <= 76892, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -246,5 +247,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the modal picker dialog fit: 79,497 gzip bytes (+48).
   // Reviewed the expandable bottom sheet's two heights and fallbacks for the chart axis --at: 79,548 gzip bytes (+51).
   // Reviewed pie chart names outside the slices: 79,675 gzip bytes (+127).
-  assert.ok(sizes(css).gzip <= 79675, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed radial chart ring names at each ring's start: 79,745 gzip bytes (+70).
+  assert.ok(sizes(css).gzip <= 79745, `CSS gzip: ${sizes(css).gzip}`);
 });
