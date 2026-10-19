@@ -14,6 +14,26 @@ const LABEL_SHARE = 0.05;
 let _maskId = 0;
 
 /**
+ * Sets each name's top so neighbours on one side of the pie sit at least
+ * --pie-chart-name-step apart, pushed away from the middle line: down below
+ * it (`away` 1) and up above it (-1). Each top is the furthest of the natural
+ * places of the names before it, plus a step for every name between. An
+ * `anchor` is a fixed place before the first name, the unmoved innermost
+ * name across the middle line.
+ */
+function stack(names: [number, HTMLElement][], away: number, anchor?: number) {
+  names.sort(([a], [b]) => (a - b) * away);
+  const ys = names.map(([y]) => y);
+  if (anchor !== undefined) ys.unshift(anchor);
+  const first = ys.length - names.length;
+  names.forEach(([, name], k) => {
+    const tops = ys.slice(0, first + k + 1).map((y, j) =>
+      `calc(50% + ${y} * var(--pie-chart-name-at) + ${(first + k - j) * away} * var(--pie-chart-name-step))`);
+    name.style.top = `${away > 0 ? 'max' : 'min'}(${tops.join(', ')})`;
+  });
+}
+
+/**
  * Pie chart. It reads its <table> like LineChart, but draws each row of the
  * first value column as a slice of the whole, clockwise from the top, with
  * a legend of every row and its share. With `.donut`, a <tfoot> row is the
@@ -105,6 +125,37 @@ export class PieChart extends LineChart {
     return numberFormat(this.el, { style: 'percent', maximumFractionDigits: digits });
   }
 
+  // ponytail: names only move up or down their side, so many thin slices
+  // near the top or bottom run into the caption or legend; group them as "Other".
+  /**
+   * Each slice's row name outside it, on the slice's middle. Names on the
+   * right half run rightwards and those on the left run leftwards.
+   */
+  private _names() {
+    const names = document.createElement('div');
+    names.className = 'pie-chart-names';
+    // Right above, right below, left above and left below the middle line.
+    const sides: [number, HTMLElement][][] = [[], [], [], []];
+    this._turns.forEach(([start, end], i) => {
+      if (end <= start) return;
+      const turn = (start + end) / 2;
+      const y = -Math.cos(turn * 2 * Math.PI);
+      const name = document.createElement('span');
+      name.dataset.series = this._colors[i];
+      name.style.setProperty('--turn', String(turn));
+      name.classList.toggle('end', turn >= 0.5);
+      name.textContent = this.labels[i];
+      names.append(name);
+      sides[(turn >= 0.5 ? 2 : 0) + Number(y >= 0)].push([y, name]);
+    });
+    // Names below the line start a step under the innermost name above it.
+    for (const i of [0, 2]) {
+      stack(sides[i], -1);
+      stack(sides[i + 1], 1, sides[i][0]?.[0]);
+    }
+    return names;
+  }
+
   /** The legend: every row with its color, its cell and its share. */
   protected _guides(): Element[] {
     // A redraw picks up a changed lang attribute.
@@ -193,24 +244,33 @@ export class PieChart extends LineChart {
       return slice;
     });
     svg.append(mask, slices);
-    pie.append(svg);
-
-    if (this.el.classList.contains('values')) {
-      const labels = document.createElement('div');
-      labels.className = 'pie-chart-values';
-      this._turns.forEach(([start, end], i) => {
-        if (end - start < LABEL_SHARE) return;
-        const label = document.createElement('span');
-        label.dataset.series = this._colors[i];
-        label.style.setProperty('--turn', String((start + end) / 2));
-        label.textContent = this._share(i);
-        labels.append(label);
-      });
-      pie.append(labels);
-    }
+    pie.append(svg, ...this._texts());
 
     const middle = this._total('pie-chart-total');
     if (middle) pie.append(middle);
     return pie;
+  }
+
+  /** The .values shares on the slices and the .labels names outside them. */
+  private _texts(): Element[] {
+    const texts: Element[] = [];
+    if (this.el.classList.contains('values')) texts.push(this._values());
+    if (this.el.classList.contains('labels') && !this.el.classList.contains('sparkline')) texts.push(this._names());
+    return texts;
+  }
+
+  /** Each slice's share on it, except on slices too thin to hold it. */
+  private _values() {
+    const labels = document.createElement('div');
+    labels.className = 'pie-chart-values';
+    this._turns.forEach(([start, end], i) => {
+      if (end - start < LABEL_SHARE) return;
+      const label = document.createElement('span');
+      label.dataset.series = this._colors[i];
+      label.style.setProperty('--turn', String((start + end) / 2));
+      label.textContent = this._share(i);
+      labels.append(label);
+    });
+    return labels;
   }
 }

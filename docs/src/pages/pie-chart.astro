@@ -10,6 +10,7 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "donut", label: "Donut" },
   { id: "values", label: "Values" },
+  { id: "labels", label: "Labels" },
   { id: "columns", label: "More columns" },
   { id: "cards", label: "Chart cards" },
   { id: "data", label: "Values and colors" },
@@ -132,6 +133,34 @@ const revenue = money(sum(plans.map(([, value]) => value)));
     <tfoot>
       <tr><th>Total client revenue</th><td>$63.1M</td></tr>
     </tfoot>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.labels}>
+        <p>
+          <code>labels</code> writes each slice's name outside it, so a reader
+          can match slices to parts without the legend. Names on the right
+          half run rightwards and those on the left run leftwards. Neighbours
+          that would touch move apart, away from the middle. The pie shrinks to
+          leave <code>--md-comp-pie-chart-label-width</code> on each side, or a
+          quarter of a narrow figure, and longer names are cut short with an
+          ellipsis. Combine it with
+          <code>values</code> to show the shares too.
+        </p>
+        <figure class="pie-chart donut values labels" data-markdown-ignore>
+          <figcaption>Leads by source</figcaption>
+          <table>
+            <thead><tr><th>Source</th><th>Leads</th></tr></thead>
+            <tbody>{leads.map(([source, value]) => <tr><th>{source}</th><td>{value}</td></tr>)}</tbody>
+            <tfoot><tr><th>Total leads</th><td>1,240</td></tr></tfoot>
+          </table>
+        </figure>
+<Code code={`
+<figure class="pie-chart donut values labels">
+  <figcaption>Leads by source</figcaption>
+  <table>
+    <!-- The same table as above -->
   </table>
 </figure>
 `} />
@@ -259,6 +288,7 @@ chart.destroy(); // remove the drawing and show the table again
         <TokenTable>
           <tr><td><code>--md-comp-pie-chart-height</code></td><td>240px, the pie's diameter; 48px for a sparkline</td></tr>
           <tr><td><code>--md-comp-pie-chart-hole</code></td><td>0.6, the donut hole's share of the diameter</td></tr>
+          <tr><td><code>--md-comp-pie-chart-label-width</code></td><td>96px, the room on each side of the pie for <code>labels</code>, at most a quarter of the figure's width</td></tr>
           <tr><td><code>--md-comp-pie-chart-gap</code></td><td>1.5, the gap between slices in hundredths of the plot's width</td></tr>
           <tr><td><code>--md-comp-pie-chart-color-1</code> … <code>-4</code></td><td><code>primary</code>, <code>tertiary</code>, <code>secondary</code>, <code>on-surface-variant</code></td></tr>
           <tr><td><code>--md-comp-pie-chart-color-5</code>, <code>-6</code></td><td><code>primary-container</code>, <code>tertiary-container</code></td></tr>

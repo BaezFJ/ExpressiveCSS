@@ -3316,10 +3316,10 @@
         "implementation": {
           "source": "llm.md#pie-chart",
           "reviewedOn": "2026-10-07",
-          "documentedSupport": "Slices drawn clockwise from the top from a figure's data table, with a legend of each row's cell and share, donut, values and sparkline modifiers, a <tfoot> total in the donut hole, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the slice.",
+          "documentedSupport": "Slices drawn clockwise from the top from a figure's data table, with a legend of each row's cell and share, donut, values and sparkline modifiers, a <tfoot> total in the donut hole, labels with each slice's name outside it, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the slice.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the slices, values, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values have no slice; there are no slice labels outside the pie."
+            "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values have no slice. The .labels names only move up or down their side, so many thin slices near the top or bottom can run into the caption or legend."
           ]
         },
         "relationship": "none",
@@ -3347,7 +3347,7 @@
           },
           {
             "path": "src/sass/components/_pie-chart.scss",
-            "sha256": "e3e659c3bfdf871899a745aa285ebdba023fae5d43c58e4612cb66ce27cf7b21"
+            "sha256": "2f159f74ebe1df537f943f5d559c6422c4a217b6a92e552a49015d53b87a1858"
           },
           {
             "path": "src/ts/components/lineChart.ts",
@@ -3361,13 +3361,13 @@
         "gaps": [
           {
             "kind": "verification",
-            "description": "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+            "description": "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
             "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
           },
           {
             "kind": "feature",
-            "description": "There are no labels outside the pie, and rows past six reuse the colors.",
-            "nextStep": "Add outside labels with leader lines if charts need names on the pie; group small parts into an Other row meanwhile."
+            "description": "Rows past six reuse the colors, and .labels names have no leader lines and only move up or down their side.",
+            "nextStep": "Group small parts into an Other row; add leader lines if pushed names drift too far from their slices."
           }
         ],
         "browserChecks": [
@@ -3380,6 +3380,11 @@
             "file": "tests/pie-chart-browser.test.js",
             "name": "chromium: pie chart tooltip follows the pointer round the pie and the arrow keys",
             "scope": "Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, wrapping past either end, End and Escape, and clockwise slices and arrows in RTL. No spoken-output assertion."
+          },
+          {
+            "file": "tests/pie-chart-browser.test.js",
+            "name": "chromium: pie chart .labels writes each slice's name outside it",
+            "scope": "A name for every drawn slice in its color and none for a zero row, every name outside the grown pie, right-half names running rightwards and left-half names leftwards, four thin neighbouring slices pushed apart without overlap, names either side of the middle line kept apart, a 160px figure keeping half its width for the pie with the names inside it, the names aria-hidden, and none on a sparkline. No rendering comparison."
           }
         ]
       }

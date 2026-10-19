@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Pie chart names: `.labels` writes each slice's row name outside the pie,
+  beside its slice. Names that would touch move apart along their side, and
+  the pie shrinks to leave `--md-comp-pie-chart-label-width` (96px), or a
+  quarter of a narrow figure, on each side.
 - Expandable bottom sheets: `dialog.bottom-sheet.expandable` opens at
   `--md-comp-bottom-sheet-partial-height` (50% of the viewport) and
   `.expanded` grows it to the full height. A drag up expands it, a drag
