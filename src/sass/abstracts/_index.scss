@@ -5,3 +5,4 @@
 @forward "breakpoints";  // $breakpoints map + bp-up()/bp-down()/bp-between()
 @forward "variables";    // Sass-time knobs: grid, font sizes, flow text
 @forward "mixins";       // btn-*, focus-visible, chart()
+@forward "spring";       // spring(), spring-duration(): M3 springs as linear() easings

@@ -12,6 +12,8 @@
 //
 // Off-scale times (a 2.1s indeterminate loop, a 180ms tooltip) stay literal.
 
+@use "sass:list";
+@use "sass:map";
 @use "../abstracts" as *;
 
 :root,
@@ -40,4 +42,42 @@
   --md-sys-motion-duration-extra-long2: 800ms;
   --md-sys-motion-duration-extra-long3: 900ms;
   --md-sys-motion-duration-extra-long4: 1000ms;
+}
+
+// M3 Expressive springs: [damping ratio, stiffness] per speed and kind.
+// Spatial springs move and resize things; effects springs change color and
+// opacity and never overshoot. The expressive scheme only changes the
+// spatial ones. Values from Material's MotionScheme (standard and
+// expressive). Each becomes an easing token and a -duration token.
+$_springs: (
+  "standard": (
+    "fast-spatial": (0.9, 1400), "default-spatial": (0.9, 700), "slow-spatial": (0.9, 300),
+    "fast-effects": (1, 3800), "default-effects": (1, 1600), "slow-effects": (1, 800),
+  ),
+  "expressive": (
+    "fast-spatial": (0.6, 800), "default-spatial": (0.8, 380), "slow-spatial": (0.8, 200),
+  ),
+);
+
+@mixin _springs($scheme) {
+  @each $name, $spring in map.get($_springs, $scheme) {
+    $damping: list.nth($spring, 1);
+    $stiffness: list.nth($spring, 2);
+    --md-sys-motion-spring-#{$name}: #{spring($damping, $stiffness)};
+    --md-sys-motion-spring-#{$name}-duration: #{spring-duration($damping, $stiffness)};
+  }
+}
+
+// Standard is the default; motion="expressive" on the root or a subtree
+// switches the spatial springs, and motion="standard" switches them back.
+:root,
+:host,
+[motion='standard'],
+:host([motion='standard']) {
+  @include _springs("standard");
+}
+
+[motion='expressive'],
+:host([motion='expressive']) {
+  @include _springs("expressive");
 }

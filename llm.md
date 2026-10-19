@@ -1748,6 +1748,36 @@ Components take their easing curves and on-scale durations from the Material 3 `
 :root { --md-sys-motion-duration-short4: 150ms; } /* every 200ms transition runs at 150ms */
 ```
 
+#### Springs
+
+Material 3 Expressive describes motion as springs: a damping ratio and a stiffness. CSS has no spring timing function, so the framework solves each spring when the sheet is compiled and samples it into a `linear()` easing that runs for the time the spring takes to settle. Every spring has an easing token and a `-duration` token. Use the two together.
+
+| Token | Standard (damping, stiffness) | Expressive |
+| --- | --- | --- |
+| `--md-sys-motion-spring-fast-spatial` | 0.9, 1400 | 0.6, 800 |
+| `--md-sys-motion-spring-default-spatial` | 0.9, 700 | 0.8, 380 |
+| `--md-sys-motion-spring-slow-spatial` | 0.9, 300 | 0.8, 200 |
+| `--md-sys-motion-spring-fast-effects` | 1, 3800 | same |
+| `--md-sys-motion-spring-default-effects` | 1, 1600 | same |
+| `--md-sys-motion-spring-slow-effects` | 1, 800 | same |
+
+The standard motion scheme is the default. `motion="expressive"` on the root or on any subtree switches the spatial springs to the bouncier expressive ones; `motion="standard"` switches a subtree back. Effects springs, for color and opacity, never overshoot and are the same in both schemes.
+
+```css
+.panel {
+  transition: translate var(--md-sys-motion-spring-default-spatial-duration)
+    var(--md-sys-motion-spring-default-spatial);
+}
+```
+
+In Sass, `spring($damping, $stiffness)` and `spring-duration($damping, $stiffness)` turn any spring into the same pair.
+
+```scss
+.drawer {
+  transition: translate spring-duration(0.8, 380) spring(0.8, 380);
+}
+```
+
 ---
 
 ## Typography

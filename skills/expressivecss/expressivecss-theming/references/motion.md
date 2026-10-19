@@ -15,7 +15,7 @@ Google's [motion guidance](https://m3.material.io/styles/motion/overview) and [A
 | Expanding-card timing | CSS exposes `--md-comp-expanding-card-motion-duration` and `--md-comp-expanding-card-motion-easing`; runtime close cleanup follows the actual CSS clip transition, including cancellation. Zero duration and reduced motion close immediately. |
 | Generic scale entrance/exit | `.scale-transition` and its state classes; these only change visual transforms and do not provide disclosure semantics. |
 | Motion tokens | `--md-sys-motion-easing-*` and `--md-sys-motion-duration-*` (short1 to extra-long4) on `:root` and `:host`. Components read them for on-scale curves and times, so one override changes every component using that step. Off-scale times stay literal. |
-| Global motion theme | There is no general public spring runtime or theme switch selecting Google's motion systems. |
+| Springs | `--md-sys-motion-spring-{fast,default,slow}-{spatial,effects}` and a `-duration` token each, solved at compile time into `linear()` easings. `motion="expressive"` on the root or a subtree selects the expressive spatial springs; `motion="standard"` switches back. Sass `spring($damping, $stiffness)` and `spring-duration()` build custom ones. There is no runtime spring solver: a spring interrupted mid-flight restarts from its current value with a fresh curve, without carrying velocity. |
 
 The inspected implementation is `src/sass/components/_button-groups.scss`, `_expanding-card.scss`, `_transitions.scss`, and `src/ts/components/buttonGroup.ts` and `expandingCard.ts`. Reduced-motion behavior is component-specific; the scale utility suppresses transitions under reduced motion while retaining its final transform. Do not infer complete motion coverage from one component's media query.
 
@@ -29,4 +29,4 @@ The inspected implementation is `src/sass/components/_button-groups.scss`, `_exp
 
 ## Verification
 
-Exercise entry, exit, rapid reversal, removal during motion, and remounts with both motion preferences. Confirm focus, final visibility, announcements, and resource cleanup. Use browser evidence for timing and interruptions; source presence alone does not prove them. Treat a reusable spring system and unified reduced-motion coverage as framework gaps, not features to simulate with invented tokens.
+Exercise entry, exit, rapid reversal, removal during motion, and remounts with both motion preferences. Confirm focus, final visibility, announcements, and resource cleanup. Use browser evidence for timing and interruptions; source presence alone does not prove them. Pair each spring easing token with its own `-duration` token; a spring curve played over another duration is no longer that spring. Unified reduced-motion coverage remains a framework gap.

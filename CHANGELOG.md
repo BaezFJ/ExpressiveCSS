@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Spring motion tokens from Material 3 Expressive:
+  `--md-sys-motion-spring-{fast,default,slow}-{spatial,effects}` with a
+  `-duration` token each, solved at compile time into `linear()` easings.
+  `motion="expressive"` on the root or a subtree selects the expressive
+  spatial springs. The Sass `spring($damping, $stiffness)` and
+  `spring-duration()` functions build custom ones.
 - Emphasized type roles from Material 3 Expressive: `.{role}-emphasized`
   classes for all fifteen roles and
   `--md-sys-typescale-emphasized-{role}-font-weight` tokens, at `500` for

@@ -144,3 +144,34 @@ describe('Stacking tokens', () => {
     assert.deepEqual(values, [...values].sort((a, b) => a - b));
   });
 });
+
+describe('Spring tokens', () => {
+  // The closed-form position of a mass-1 spring released at rest, and the time
+  // its envelope stays within 0.5% of the target, as abstracts/_spring.scss solves them.
+  const position = (t, z, k) => {
+    const w = Math.sqrt(k);
+    const wd = w * Math.sqrt(1 - z * z);
+    return z < 1
+      ? 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + ((z * w) / wd) * Math.sin(wd * t))
+      : 1 - Math.exp(-w * t) * (1 + w * t);
+  };
+  const settle = (z, k) => Math.log(1 / (0.005 * Math.sqrt(1 - z * z))) / (z * Math.sqrt(k));
+  const token = (name, scope) => css.slice(css.indexOf(scope)).match(new RegExp(`--md-sys-motion-spring-${name}:\\s*([^;]+);`))[1];
+
+  test('each spring samples the solved position over its settle time', () => {
+    const springs = [['fast-spatial', 0.9, 1400, ':root'], ['default-spatial', 0.8, 380, "[motion=expressive]"]];
+    for (const [name, z, k, scope] of springs) {
+      const end = settle(z, k);
+      assert.equal(token(`${name}-duration`, scope), `${Math.round(end * 1000)}ms`, name);
+      const at50 = Number(token(name, scope).match(/([\d.]+) 50%/)[1]);
+      assert.ok(Math.abs(at50 - position(end / 2, z, k)) < 1e-4, `${name} at 50%: ${at50}`);
+    }
+  });
+
+  test('effects springs never overshoot and expressive spatial springs do', () => {
+    const values = (name, scope) => token(name, scope).match(/[\d.]+(?= [\d.]+%)/g).map(Number);
+    assert.ok(Math.max(...values('default-effects', ':root')) <= 1, 'effects overshoot');
+    assert.ok(Math.max(...values('fast-spatial', '[motion=expressive]')) > 1.05, 'expressive fast spatial does not overshoot');
+    assert.match(css, /--md-sys-motion-spring-slow-effects-duration:\s*\d+ms/);
+  });
+});

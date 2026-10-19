@@ -8440,7 +8440,7 @@
           "scope": "android-foundation-reviewed; full web specification unassessed"
         },
         "implementation": {
-          "documentedSupport": "Shared md.sys.motion easing and duration tokens, which components read for on-scale curves and times. Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.",
+          "documentedSupport": "Shared md.sys.motion easing and duration tokens; M3 Expressive spring tokens for the standard and expressive schemes, solved at compile time into linear() easings with settle durations, a motion attribute that selects the scheme, and public Sass spring() and spring-duration() functions. Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion.",
           "webAdaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only."
         }
       },
@@ -8473,8 +8473,8 @@
         "gaps": [
           {
             "kind": "feature",
-            "description": "No general spring solver or unified motion-theme selector; the Expressive spring tokens exist only as one sampled fast-spatial curve.",
-            "nextStep": "Map remaining component springs before adding spring roles; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver."
+            "description": "Springs are sampled at compile time; there is no runtime solver, so an interrupted spring restarts without carrying velocity, and components other than button groups and the keypad do not use spring tokens yet.",
+            "nextStep": "Move component spatial transitions onto the spring tokens one component at a time, with browser checks of the settled state and reduced motion."
           }
         ],
         "browserChecks": [
