@@ -16,6 +16,10 @@
 //   scrim        modal only (UA ::backdrop + the dialog scrim token)
 //   motion       default spatial spring; follows motion="expressive"
 //
+// .expandable opens at --md-comp-bottom-sheet-partial-height (50% of the
+// viewport) and grows to the full height with .expanded, which a drag up or
+// the handle button sets. The height moves on the same spring.
+//
 // Compact and medium are the intended windows. On large screens prefer a
 // side sheet or a basic dialog; the sheet still lays out (640 + 56).
 
@@ -140,6 +144,19 @@ dialog.bottom-sheet {
 dialog.bottom-sheet[open] {
   display: flex;
   flex-direction: column;
+}
+
+dialog.bottom-sheet.expandable {
+  --md-comp-bottom-sheet-partial-height: 50dvh;
+
+  height: calc(var(--md-comp-bottom-sheet-partial-height) + var(--_bleed));
+  transition:
+    translate var(--md-comp-bottom-sheet-motion-duration) var(--md-comp-bottom-sheet-motion),
+    height var(--md-comp-bottom-sheet-motion-duration) var(--md-comp-bottom-sheet-motion);
+
+  &.expanded {
+    height: calc(100dvh - var(--md-comp-bottom-sheet-top-inset) + var(--_bleed));
+  }
 }
 
 @starting-style {

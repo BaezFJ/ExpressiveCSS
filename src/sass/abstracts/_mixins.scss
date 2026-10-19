@@ -568,7 +568,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
     > li {
       position: absolute;
       inset-inline: 0;
-      top: var(--at);
+      top: var(--at, 0%);
       border-block-start: 1px solid var(--md-comp-#{$name}-grid-color);
     }
 

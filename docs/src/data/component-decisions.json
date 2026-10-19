@@ -4121,10 +4121,10 @@
         "implementation": {
           "source": "llm.md#bottom-sheet",
           "reviewedOn": "2026-09-18",
-          "documentedSupport": "Standard and modal bottom sheets.",
+          "documentedSupport": "Standard and modal bottom sheets, with partial and full heights for .expandable sheets.",
           "webAdaptation": "Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.",
           "limitations": [
-            "The shared handle dismisses rather than cycling sheet heights. Long-content scrolling and enlarged-text action access are checked; native zoom and physical touch remain unverified."
+            "An .expandable sheet has a partial and a full height and no others. Long-content scrolling and enlarged-text action access are checked; native zoom and physical touch remain unverified."
           ]
         },
         "relationship": "component",
@@ -4178,7 +4178,7 @@
         "gaps": [
           {
             "kind": "integration",
-            "description": "The shared handle dismisses rather than cycling sheet heights. Interrupted-drag cleanup, long-content scrolling and enlarged-text action access have rendered coverage; application-owned height changes, native zoom and physical touch remain pending.",
+            "description": "An .expandable sheet switches between a partial and a full height by drag or handle; there are only those two heights, and an application that sets the height itself owns it. Interrupted-drag cleanup, long-content scrolling and enlarged-text action access have rendered coverage; application-owned height changes, native zoom and physical touch remain pending.",
             "nextStep": "Use explicit close controls; verify application-owned height changes, native zoom and physical touch separately."
           }
         ],
@@ -4197,6 +4197,11 @@
             "file": "tests/menu-field-browser.test.js",
             "name": "Bottom sheets keep long content and actions reachable at compact widths (chromium)",
             "scope": "Bottom sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom."
+          },
+          {
+            "file": "tests/bottom-sheet-expand-browser.test.js",
+            "name": "chromium: an expandable bottom sheet switches between two heights by handle and by drag",
+            "scope": "The handle button switches heights with Enter and Space and keeps aria-expanded current, a drag up expands without the ending click switching back, a drag down collapses from expanded and dismisses from partial, and closing resets to partial. Runs in all three engines. No physical touch."
           }
         ],
         "inventorySha256": "30c2d8a43f4b66e3350bfdc07e1f8e7231cd36ef6a7ac3dfc992963ce1486492"

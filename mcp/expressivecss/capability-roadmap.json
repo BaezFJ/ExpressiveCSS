@@ -2630,7 +2630,7 @@
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-09-18",
-      "scope": "Standard and modal bottom sheets.",
+      "scope": "Standard and modal bottom sheets, with partial and full heights for .expandable sheets.",
       "adaptation": "Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.",
       "upstream": {
         "source": "https://m3.material.io/components/bottom-sheets/overview",
@@ -2677,7 +2677,7 @@
       "gaps": [
         {
           "kind": "integration",
-          "description": "The shared handle dismisses rather than cycling sheet heights. Interrupted-drag cleanup, long-content scrolling and enlarged-text action access have rendered coverage; application-owned height changes, native zoom and physical touch remain pending.",
+          "description": "An .expandable sheet switches between a partial and a full height by drag or handle; there are only those two heights, and an application that sets the height itself owns it. Interrupted-drag cleanup, long-content scrolling and enlarged-text action access have rendered coverage; application-owned height changes, native zoom and physical touch remain pending.",
           "nextStep": "Use explicit close controls; verify application-owned height changes, native zoom and physical touch separately."
         }
       ],
@@ -2699,6 +2699,12 @@
           "name": "Bottom sheets keep long content and actions reachable at compact widths (chromium)",
           "scope": "Bottom sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.",
           "state": "stale"
+        },
+        {
+          "file": "tests/bottom-sheet-expand-browser.test.js",
+          "name": "chromium: an expandable bottom sheet switches between two heights by handle and by drag",
+          "scope": "The handle button switches heights with Enter and Space and keeps aria-expanded current, a drag up expands without the ending click switching back, a drag down collapses from expanded and dismisses from partial, and closing resets to partial. Runs in all three engines. No physical touch.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",

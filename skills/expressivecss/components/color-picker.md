@@ -9,7 +9,7 @@ Component ID: `color-picker`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `4c43d46e24c7066d609562335ab9b0a9ce64ab23cbb74f3249e76f711fb83441`
+Contract SHA-256: `1e4ed58ab779744df59a8b346585155537b5535ca3c3fb0814ef659b91743898`
 
 #### Selection and adaptation
 

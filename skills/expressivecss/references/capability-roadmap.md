@@ -819,7 +819,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 ## Bottom sheet
 
-**unassessed within the stated scope.** Standard and modal bottom sheets.
+**unassessed within the stated scope.** Standard and modal bottom sheets, with partial and full heights for .expandable sheets.
 
 Source review: needs-review, 2026-09-18. [src/sass/components/_bottom-sheet.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/sass/components/_bottom-sheet.scss), [src/sass/components/_dialog.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/ts/behaviors/dialogs.ts), [src/ts/behaviors/bottomSheets.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/ts/behaviors/bottomSheets.ts), [src/ts/behaviors/sheetDrag.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/src/ts/behaviors/sheetDrag.ts).
 
@@ -827,11 +827,12 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 
 Web adaptation: Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.
 
-- integration: The shared handle dismisses rather than cycling sheet heights. Interrupted-drag cleanup, long-content scrolling and enlarged-text action access have rendered coverage; application-owned height changes, native zoom and physical touch remain pending. Next: Use explicit close controls; verify application-owned height changes, native zoom and physical touch separately.
+- integration: An .expandable sheet switches between a partial and a full height by drag or handle; there are only those two heights, and an application that sets the height itself owns it. Interrupted-drag cleanup, long-content scrolling and enlarged-text action access have rendered coverage; application-owned height changes, native zoom and physical touch remain pending. Next: Use explicit close controls; verify application-owned height changes, native zoom and physical touch separately.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/menu-field-browser.test.js): `Sheets cancel only the active pointer and clean interrupted drags (chromium)`. Rendered bottom and side sheets with synthetic primary/secondary pointers, cancellation, closing, removal, same-task reopen/reattach, ancestor reattachment and a new primary press outside. Unrelated mutations preserve active drags. Physical touch review remains pending.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/menu-field-browser.test.js): `Bottom sheets keep long content and actions reachable at compact widths (chromium)`. Bottom sheets at 320px and 599px, modal and nonmodal, with 200% root text size, long-body scrolling, horizontal-overflow checks, wrapped headings and action labels, unobscured actions, keyboard dismissal and preserved icon-button/FAB geometry. Root text enlargement is not native browser zoom.
+- not-recorded: [tests/bottom-sheet-expand-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/67ebf6846ec33d922feaf8619ec830cba6bce075/tests/bottom-sheet-expand-browser.test.js): `chromium: an expandable bottom sheet switches between two heights by handle and by drag`. The handle button switches heights with Enter and Space and keeps aria-expanded current, a drag up expands without the ending click switching back, a drag down collapses from expanded and dismisses from partial, and closing resets to partial. Runs in all three engines. No physical touch.
 
 <a id="side-sheet"></a>
 

@@ -5975,6 +5975,17 @@ document.getElementById('sheet').showModal(); // modal, with scrim
 document.getElementById('sheet').show();      // standard, no scrim
 ```
 
+`expandable` gives the sheet two heights. It opens partly expanded, at `--md-comp-bottom-sheet-partial-height` (50% of the viewport), and `.expanded` grows it to the full height, 72dp short of the top. A drag up on the handle, or a flick up, expands it; a drag down from expanded collapses it, and a drag down from the partial height dismisses as usual. A handle `<button>` switches between the heights instead of closing, and the component keeps its `aria-expanded` current, so name it for the height, not for dismissal. Closing the sheet puts it back to partial. The height moves on the sheet's spring. Give an expandable sheet an explicit close control, since the handle no longer closes it.
+
+```html
+<dialog class="bottom-sheet expandable" aria-labelledby="filters-title">
+  <button type="button" class="drag-handle" aria-label="Sheet height" aria-expanded="false"></button>
+  <h2 id="filters-title">Filters</h2>
+  <div>…</div>
+  <form method="dialog"><button type="submit" class="text">Done</button></form>
+</dialog>
+```
+
 The sheet slides in, and snaps back after a short drag, on the default spatial spring: `--md-comp-bottom-sheet-motion` and `--md-comp-bottom-sheet-motion-duration` read `--md-sys-motion-spring-default-spatial` and its `-duration` token, so `motion="expressive"` gives it a slight bounce. The sheet runs on 24px below the viewport, so the bounce never uncovers the page under it. With reduced motion requested it appears without moving.
 
 ### Side sheet

@@ -65,7 +65,7 @@
 .radar-chart-axis > li {
   inset-inline: auto;
   left: 50%;
-  top: calc(var(--at) / 2);
+  top: calc(var(--at, 0%) / 2);
   border: 0;
 
   &:first-child {

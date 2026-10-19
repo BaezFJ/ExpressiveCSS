@@ -97,7 +97,7 @@
 
 .bar-chart-axis > li {
   inset: 0 auto;
-  inset-inline-start: calc(100% - var(--at));
+  inset-inline-start: calc(100% - var(--at, 0%));
   border-block-start: 0;
   border-inline-start: 1px solid var(--md-comp-bar-chart-grid-color);
 }

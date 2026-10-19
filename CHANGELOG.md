@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Expandable bottom sheets: `dialog.bottom-sheet.expandable` opens at
+  `--md-comp-bottom-sheet-partial-height` (50% of the viewport) and
+  `.expanded` grows it to the full height. A drag up expands it, a drag
+  down collapses it before it dismisses, and a handle `<button>` switches
+  between the heights with `aria-expanded` kept current.
 - Arrow keys for tabs and lists: Left, Right, Home and End move focus
   between tabs, wrapping and skipping disabled ones, and Up, Down, Home and
   End move it between the rows of a `.list` whose rows are each one link or
@@ -440,6 +445,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- A sheet drag that moves against the dismissing direction now counts as
+  a drag, so the click that ends it no longer activates a handle button.
 - The time picker's hour and minute fields are spin buttons
   (`role="spinbutton"` with their range). Up and Down step them by one and
   Page Up and Page Down by five, wrapping round the dial, and the clock hand
