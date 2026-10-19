@@ -9,7 +9,7 @@ Component ID: `fab`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `8c11255bb9634993b5d14a5a953294839f52765f05f1a3990c03ae3d27b2873b`
+Contract SHA-256: `e274efaace6e10167e4bde23ed09f834331a327c6d827868cae859b71b8594e0`
 
 #### Selection and adaptation
 
