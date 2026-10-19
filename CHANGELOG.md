@@ -432,6 +432,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   (`--md-comp-nav-rail-motion` and `-motion-duration`). Its width, min-width
   and padding no longer follow `--md-comp-nav-rail-duration`, which now
   times only the indicator color.
+- FAB menu actions move on the fast spatial spring and fade on the fast
+  effects spring. `--md-comp-fab-menu-easing` and `-duration` now default to
+  the spatial spring, and the new `--md-comp-fab-menu-effects-easing` and
+  `-effects-duration` time the fade.
 - Headings balance their lines and paragraphs avoid a one-word last line
   (`text-wrap-style: balance` and `pretty`). The longhand leaves wrapping
   itself alone, so `.truncate` and `.text-nowrap` still work.

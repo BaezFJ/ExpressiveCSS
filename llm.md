@@ -3592,7 +3592,7 @@ The colour axis is the same three roles as the extended FAB, and one class moves
 <div class="fab-menu secondary-container">…</div>
 ```
 
-The `FloatingActionButton` runtime owns `active`, `aria-expanded` and inert closed actions. It opens upward on click. Escape, outside click and action activation close it; focus returns to the trigger only when closing would hide the focused action. Actions use ordinary Tab navigation. Beyond six actions the stagger runs out and the rest arrive together.
+The `FloatingActionButton` runtime owns `active`, `aria-expanded` and inert closed actions. It opens upward on click. Escape, outside click and action activation close it; focus returns to the trigger only when closing would hide the focused action. Actions use ordinary Tab navigation. Beyond six actions the stagger runs out and the rest arrive together. Actions move on the fast spatial spring (`--md-comp-fab-menu-easing` and `--md-comp-fab-menu-duration`) and fade on the fast effects spring (`--md-comp-fab-menu-effects-easing` and `-effects-duration`), so `motion="expressive"` gives them a small bounce while the fade never overshoots.
 
 Neither host declares `role="menu"`, and the trigger carries no `aria-haspopup`. The actions are reached with Tab, not the arrow keys, so the role is withheld rather than promised — see `SEMANTICS.md`.
 

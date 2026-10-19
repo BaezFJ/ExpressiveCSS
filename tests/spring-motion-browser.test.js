@@ -116,4 +116,35 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await browser.close();
     }
   });
+
+  test(`${name}: FAB menu items move on the fast spatial spring and fade on the effects spring`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        <div class="fab-menu" id="menu"><button type="button" class="button extra circle" aria-label="Create">+</button>
+        <ul><li><button type="button" id="item">Compose</button></li></ul></div></body></html>`);
+      const read = () => page.locator('#item').evaluate((el) => {
+        const s = getComputedStyle(el);
+        const pick = (property) => {
+          const at = s.transitionProperty.split(', ').indexOf(property);
+          return [s.transitionDuration.split(', ')[at], s.transitionTimingFunction.split(/,\s*(?![^()]*\))/)[at]];
+        };
+        return { transform: pick('transform'), opacity: pick('opacity') };
+      });
+      const motion = await read();
+      assert.match(motion.transform[1], /^linear\(/, 'transform easing');
+      assert.match(motion.opacity[1], /^linear\(/, 'opacity easing');
+      assert.ok(parseFloat(motion.transform[0]) > parseFloat(motion.opacity[0]), 'the fade settles before the move');
+      await page.locator('#menu').evaluate((el) => el.classList.add('active'));
+      await page.locator('#item').evaluate((el) => Promise.all(el.getAnimations().map((a) => a.finished)));
+      assert.deepEqual(await page.locator('#item').evaluate((el) => [getComputedStyle(el).opacity, getComputedStyle(el).transform]), ['1', 'none']);
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      const reduced = await read();
+      assert.deepEqual([reduced.transform[0], reduced.opacity[0]], ['0s', '0s'], 'reduced motion drops both springs');
+    } finally {
+      await browser.close();
+    }
+  });
 }

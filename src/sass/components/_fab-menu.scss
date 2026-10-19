@@ -37,9 +37,15 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
   );
   --md-comp-fab-menu-offset: 16px;
   --md-comp-fab-menu-z: 997;
-  --md-comp-fab-menu-duration: var(--md-sys-motion-duration-short4);
+  // Items move on the fast spatial spring and fade on the fast effects
+  // spring, so motion="expressive" gives them a small bounce while the fade
+  // never overshoots. The spatial duration is the longer of the two, so it
+  // also times the list's visibility on close.
+  --md-comp-fab-menu-duration: var(--md-sys-motion-spring-fast-spatial-duration);
   --md-comp-fab-menu-stagger: 40ms;
-  --md-comp-fab-menu-easing: cubic-bezier(0.65, 0, 0.35, 1);
+  --md-comp-fab-menu-easing: var(--md-sys-motion-spring-fast-spatial);
+  --md-comp-fab-menu-effects-duration: var(--md-sys-motion-spring-fast-effects-duration);
+  --md-comp-fab-menu-effects-easing: var(--md-sys-motion-spring-fast-effects);
 
   position: fixed;
   inset-inline-end: var(--md-comp-fab-menu-offset);
@@ -115,7 +121,7 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
       opacity: 0;
       transform: scale(0.8) translateY(1rem);
       transition:
-        opacity var(--md-comp-fab-menu-duration) var(--md-comp-fab-menu-easing),
+        opacity var(--md-comp-fab-menu-effects-duration) var(--md-comp-fab-menu-effects-easing),
         transform var(--md-comp-fab-menu-duration) var(--md-comp-fab-menu-easing),
         background-color var(--md-sys-motion-duration-short4) ease-out,
         box-shadow var(--md-sys-motion-duration-short4) ease-out;
@@ -244,6 +250,7 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
 @media (prefers-reduced-motion: reduce) {
   .fab-menu {
     --md-comp-fab-menu-duration: 0s;
+    --md-comp-fab-menu-effects-duration: 0s;
     --md-comp-fab-menu-stagger: 0s;
   }
 }
