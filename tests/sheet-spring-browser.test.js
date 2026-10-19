@@ -48,4 +48,44 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await browser.close();
     }
   });
+
+  // A side sheet slides in from its docked edge. Its outer edge, the physical
+  // right for an end sheet in LTR, must never come inside the viewport.
+  for (const [label, dir, cls, outer] of [
+    ['end, ltr', 'ltr', '', 'right'],
+    ['start, ltr', 'ltr', 'start', 'left'],
+    ['end, rtl', 'rtl', '', 'left'],
+  ]) {
+    test(`${name}: a side sheet (${label}) opens on the spatial spring without uncovering its edge`, { timeout: 30000 }, async (t) => {
+      if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+      const browser = await engine.launch({ headless: true });
+      try {
+        const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
+        await page.setContent(`<!doctype html><html lang="en" dir="${dir}" motion="expressive"><head><style>${css}</style></head><body>
+          <dialog class="side-sheet ${cls}" id="sheet" aria-label="Details"><header><h2>Details</h2></header><p id="body">Body</p></dialog></body></html>`);
+        const edges = await page.evaluate((outer) => new Promise((resolve) => {
+          const sheet = document.getElementById('sheet');
+          const seen = [];
+          const start = performance.now();
+          sheet.showModal();
+          const tick = () => {
+            seen.push(sheet.getBoundingClientRect()[outer]);
+            if (performance.now() - start < 700) requestAnimationFrame(tick); else resolve(seen);
+          };
+          requestAnimationFrame(tick);
+        }, outer));
+        const inside = outer === 'right' ? Math.min(...edges) < 1000 : Math.max(...edges) > 0;
+        assert.equal(inside, false, `the ${outer} edge came into view: ${outer === 'right' ? Math.min(...edges) : Math.max(...edges)}`);
+        const settled = await page.evaluate((outer) => {
+          const body = document.getElementById('body').getBoundingClientRect();
+          const sheet = document.getElementById('sheet').getBoundingClientRect();
+          return { body: Math.round(body[outer]), sheet: Math.round(sheet[outer]) };
+        }, outer);
+        assert.equal(settled.sheet, outer === 'right' ? 1024 : -24, 'the bleed sits past the viewport edge');
+        assert.equal(settled.body, outer === 'right' ? 1000 : 0, 'content ends at the viewport edge');
+      } finally {
+        await browser.close();
+      }
+    });
+  }
 }

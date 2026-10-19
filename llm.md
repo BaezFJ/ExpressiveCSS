@@ -5992,6 +5992,8 @@ document.getElementById('sheet').show();      // standard
 document.getElementById('sheet').showModal(); // modal
 ```
 
+The sheet slides in, and snaps back after a short drag, on the default spatial spring: `--md-comp-side-sheet-motion` and `--md-comp-side-sheet-motion-duration` read `--md-sys-motion-spring-default-spatial` and its `-duration` token, so `motion="expressive"` gives it a slight bounce. The sheet runs on 24px past its docked edge, so the bounce never uncovers the page there. With reduced motion requested it appears without moving.
+
 ### Full-screen
 
 Add `max` for a full-viewport dialog with no corners. That is the M3 full-screen dialog, typically used on small screens.

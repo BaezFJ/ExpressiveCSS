@@ -28,26 +28,34 @@ $_sheet: "dialog.side-sheet";
   --md-comp-side-sheet-container-shape: var(--md-sys-shape-corner-extra-large);
   --md-comp-side-sheet-container-width: 400px;
   --md-comp-side-sheet-shift: 0px;
+  // Entry and drag snap-back run on the default spatial spring, which follows
+  // the motion="expressive" switch.
+  --md-comp-side-sheet-motion: var(--md-sys-motion-spring-default-spatial);
+  --md-comp-side-sheet-motion-duration: var(--md-sys-motion-spring-default-spatial-duration);
+  // A spatial spring overshoots, so the sheet runs on past its docked edge by
+  // this much, padded, and the overshoot never uncovers the page there.
+  --_bleed: 24px;
 
   box-sizing: border-box;
   position: fixed;
   inset-block: 0;
   inset-inline-start: auto;
-  inset-inline-end: 0;
-  width: min(var(--md-comp-side-sheet-container-width), 85%);
-  max-width: var(--md-comp-side-sheet-container-width);
+  inset-inline-end: calc(-1 * var(--_bleed));
+  width: calc(min(var(--md-comp-side-sheet-container-width), 85%) + var(--_bleed));
+  max-width: calc(var(--md-comp-side-sheet-container-width) + var(--_bleed));
   height: auto;
   max-height: none;
   min-width: 0;
   min-height: 0;
   margin: 0;
   padding: 0;
+  padding-inline-end: var(--_bleed);
   border: none;
   background-color: var(--md-comp-side-sheet-container-color);
   color: var(--md-sys-color-on-surface);
   outline: none;
   translate: var(--md-comp-side-sheet-shift) 0;
-  transition: translate 280ms ease, border-radius var(--md-sys-motion-duration-short4) ease;
+  transition: translate var(--md-comp-side-sheet-motion-duration) var(--md-comp-side-sheet-motion), border-radius var(--md-sys-motion-duration-short4) ease;
   @include glass(var(--md-comp-side-sheet-container-color));
 
   &:not(:modal) {
@@ -72,8 +80,9 @@ $_sheet: "dialog.side-sheet";
 
   // Leading-edge dock.
   &.start {
-    inset-inline-start: 0;
+    inset-inline-start: calc(-1 * var(--_bleed));
     inset-inline-end: auto;
+    padding-inline: var(--_bleed) 0;
 
     &:not(:modal) {
       border-inline-start: 0;

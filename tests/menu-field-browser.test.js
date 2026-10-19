@@ -542,7 +542,8 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
           } finally { Date.now = originalNow; }
         }, { left, motion });
         const label = `${variant} ${direction} ${modal} ${motion}`;
-        assert.ok(Math.abs(result.edge) <= 1, `${label} docked edge`);
+        // The sheet runs 24px past its docked edge, so a spring overshoot never uncovers the page.
+        assert.ok(Math.abs(result.edge + 24) <= 1, `${label} docked edge`);
         assert.equal(result.inward, '0px', `${label} ignores inward drag`);
         assert.equal(result.shift, `${left ? -30 : 30}px`, `${label} inner-edge drag`);
         assert.ok(Math.abs(result.translated - (left ? -30 : 30)) <= 1, `${label} rendered translation`);
