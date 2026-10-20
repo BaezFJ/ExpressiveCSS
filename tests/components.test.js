@@ -862,8 +862,12 @@ describe("Snackbar", () => {
     const second = new Expressive.Snackbar({ text: "Second", displayLength: Infinity, replace: true });
     try {
       assert.equal(first.el.isConnected, false);
-      assert.equal(second.el.textContent.trim(), "Second");
-      assert.equal(document.querySelectorAll("#snackbar-container .snackbar").length, 1);
+      // The message, not the whole bar: a bar that never times out has a close icon too.
+      assert.equal(second.el.querySelector("p").textContent.trim(), "Second");
+      assert.equal(
+        document.querySelectorAll("#snackbar-container .snackbar").length,
+        1,
+      );
     } finally {
       second.dismiss();
     }
@@ -883,7 +887,7 @@ describe("Snackbar", () => {
 
   test("a queued snackbar fires expressive:open when it shows, not when it is made", async () => {
     const opened = [];
-    const record = (e) => opened.push(e.target.textContent.trim());
+    const record = (e) => opened.push(e.target.querySelector("p").textContent.trim());
     document.addEventListener("expressive:open", record);
     try {
       const first = new Expressive.Snackbar({ text: "First", displayLength: Infinity, outDuration: 0 });

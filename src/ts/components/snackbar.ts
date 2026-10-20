@@ -137,6 +137,15 @@ export class Snackbar {
   /** Which pointer owns the drag in flight; a second finger is ignored. */
   static _dragPointerId: number | null = null;
 
+  /**
+   * Whether a bar gets its close button when the page does not say. One with
+   * an action waits for it, and one that never times out waits for the
+   * reader; either way, swiping must not be the only way to send it off.
+   */
+  private static _needsClose(options: SnackbarOptions): boolean {
+    return !!options.action || options.displayLength === Infinity;
+  }
+
   constructor(options: Partial<SnackbarOptions> = {}) {
     this.options = {
       ...Snackbar.defaults,
@@ -145,7 +154,7 @@ export class Snackbar {
     if (options.displayLength === undefined && this.options.action) {
       this.options.displayLength = Infinity;
     }
-    if (options.dismissible === undefined && this.options.action) this.options.dismissible = true;
+    if (options.dismissible === undefined) this.options.dismissible = Snackbar._needsClose(this.options);
     this.message = this.options.text;
     this.panning = false;
     this.timeRemaining = this.options.displayLength;

@@ -296,6 +296,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A dot map marker takes taps in a 48dp circle around its 16dp dot. It was
+  a 16px target on a map that is itself a target, under WCAG 2.5.8's 24px
+  minimum.
+- A snackbar with `displayLength: Infinity` gets its close button by
+  default, as one with an action does. Without an action it could otherwise
+  only be swiped away. An explicit `dismissible: false` is kept.
 - A `nowrap` breadcrumb scrolls sideways as documented. Its crumbs used to
   shrink below their text, so each separator sat on the last letter of the
   crumb before it.
