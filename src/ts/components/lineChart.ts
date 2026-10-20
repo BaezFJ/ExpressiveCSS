@@ -170,7 +170,7 @@ function monotonePath(points: [number, number][]): string {
  * with x labels, a legend for more than one series, and a cursor and tooltip
  * that follow the pointer or the arrow keys. Styling is CSS.
  *
- * Re-run `LineChart.init(el)` after changing the table.
+ * Call `update()` after changing the table.
  */
 export class LineChart extends Component<LineChartOptions> {
   /** The values' x positions and series, read from the table. */
@@ -228,6 +228,11 @@ export class LineChart extends Component<LineChartOptions> {
     return true;
   }
 
+  /** How many rows `show()` can highlight. */
+  protected get _count() {
+    return this.labels.length;
+  }
+
   protected get _key() {
     return 'Expressive_LineChart';
   }
@@ -241,12 +246,26 @@ export class LineChart extends Component<LineChartOptions> {
       ...options
     };
 
+    this._build();
+    this._listen();
+  }
+
+  /** Reads the table and draws it, when it has data. */
+  private _build() {
     this._read();
     if (!this.labels.length || !this.series.length) return;
     this._reversed = !this._horizontal && getComputedStyle(this.el).direction === 'rtl';
     this._render();
-    if (!this.el.classList.contains('sparkline')) {
-      this._plot.tabIndex = 0;
+  }
+
+  /** Whether the pointer and keys pick rows, which a sparkline's do not. */
+  private get _interactive() {
+    return !this.el.classList.contains('sparkline');
+  }
+
+  /** Lets the pointer and keys pick rows on the plot. */
+  private _listen() {
+    if (this._plot && this._interactive) {
       // A tap has no move before it, so the press picks the row too.
       this._plot.addEventListener('pointerdown', this._onPointerMove);
       this._plot.addEventListener('pointermove', this._onPointerMove);
@@ -280,6 +299,28 @@ export class LineChart extends Component<LineChartOptions> {
     this._generated.forEach((node) => node.remove());
     this._generated = [];
     this.el[this._key] = undefined;
+  }
+
+  /**
+   * Redraws the chart from its table as it is now. Keyboard focus stays on
+   * the chart, and the highlighted row stays where the table still has it.
+   */
+  update() {
+    if (this.el[this._key] !== this) return;
+    const old = this._generated;
+    // Inside a shadow root, the document's active element is the host.
+    const active = (this.el.getRootNode() as Document | ShadowRoot).activeElement;
+    const [index, focused] = [this.activeIndex, old.some((node) => node.contains(active))];
+    this._generated = [];
+    this.activeIndex = -1;
+    this._plot = this._cursor = this._tooltip = undefined;
+    this._build();
+    // Focus moves before the old plot goes, so a keyboard focus ring carries
+    // over, and before the listeners, so focusing picks no row of its own.
+    if (focused) this._plot?.focus({ preventScroll: true });
+    old.forEach((node) => node.remove());
+    this._listen();
+    this.show(Math.min(index, this._count - 1));
   }
 
   /**
@@ -455,6 +496,7 @@ export class LineChart extends Component<LineChartOptions> {
     this._plot.setAttribute('role', 'group');
     this._plot.setAttribute('aria-roledescription', type.replace(/-/g, ' '));
     if (caption) this._plot.setAttribute('aria-label', caption);
+    if (this._interactive) this._plot.tabIndex = 0;
 
     this._cursor = document.createElement('div');
     this._cursor.className = `${type}-cursor`;
