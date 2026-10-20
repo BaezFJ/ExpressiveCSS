@@ -296,4 +296,80 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: pie chart data-other groups the small rows into one slice`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      const rows = [['Search', '$420', '+4%'], ['Email', '$12', '0%'], ['Referral', '$310', '+1%'], ['Print', '$6', '−1%'],
+        ['Missing', '', ''], ['Social', '$262', '−2%'], ['Radio', '$0', '0%']];
+      await page.setContent(`<style>${css}</style>
+        <div style="width: 400px">
+          ${chart('class="pie-chart labels" data-other="5" id="other"', 'Other', '<th>Leads</th><th>Change</th>', rows)}
+          ${chart('class="pie-chart" data-other="5" data-other-label="Autres" id="autres"', 'Autres', '<th>Leads</th>', rows.map((row) => row.slice(0, 2)))}
+          ${chart('class="pie-chart" data-other="1" id="one"', 'One', '<th>Leads</th>', rows.slice(0, 6).map((row) => row.slice(0, 2)))}
+          ${chart('class="pie-chart" id="none"', 'None', '<th>Leads</th>', rows.map((row) => row.slice(0, 2)))}
+          ${chart('class="pie-chart" data-other="5" id="spaced"', 'Spaced', '<th>V</th>', [['B', `1${'\t'.repeat(100000)}1`], ['A', '$900'], ['C', `1${'\t'.repeat(100000)}2`]])}
+          ${chart('class="pie-chart" data-other="5" id="exact"', 'Exact', '<th>Cost</th>', [['A', '$0.54'], ['B', '$0.03'], ['C', '$0.03']])}
+          ${chart('class="pie-chart" data-other="5" id="fine"', 'Fine', '<th>Dose</th>', [['A', '0.01'], ['B', '0.0001'], ['C', '0.0002']])}
+          ${chart('class="pie-chart" data-other="5" id="exponent"', 'Exponent', '<th>Dose</th>', [['A', '0.01'], ['B', '1e-4'], ['C', '2e-4']])}
+          ${chart('class="pie-chart" data-other="5" id="tiny"', 'Tiny', '<th>Dose</th>', [['A', '1'], ['B', `0.${'0'.repeat(104)}1`], ['C', `0.${'0'.repeat(104)}2`]])}
+          <figure class="pie-chart" data-other="5" id="valued">
+            <figcaption>Valued</figcaption>
+            <table>
+              <thead><tr><th>Client</th><th>Revenue</th></tr></thead>
+              <tbody>
+                <tr><th>A</th><td data-value="980000000">$980M</td></tr>
+                <tr><th>B</th><td data-value="12000000">$12M</td></tr>
+                <tr><th>C</th><td data-value="8000000">$8M</td></tr>
+              </tbody>
+            </table>
+          </figure>
+        </div>
+        <script>${js}</script>`);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      const measure = (el) => ({
+        legend: [...el.querySelectorAll('.pie-chart-legend li')].map((li) => [...li.children].map((span) => span.textContent)),
+        slices: el.querySelectorAll('.pie-chart-slice').length,
+        names: [...el.querySelectorAll('.pie-chart-names > span')].map((span) => span.textContent),
+        table: el.querySelectorAll('table tbody tr').length,
+      });
+      const other = await page.locator('#other').evaluate(measure);
+      assert.deepEqual(other.legend, [
+        ['Search', '$420', '42%'], ['Referral', '$310', '31%'], ['Missing', '', ''], ['Social', '$262', '26%'], ['Other', '$18', '1.8%']],
+      'rows under 5% become one last row with their sum and share; a row with no value keeps its place');
+      assert.equal(other.slices, 4);
+      assert.deepEqual(other.names, ['Search', 'Referral', 'Social', 'Other'], 'the group is named like any slice');
+      assert.equal(other.table, 7, 'the table keeps every row for screen readers');
+
+      // The group's tooltip has its sum and share, and no line for the column that does not add up.
+      const tip = await page.locator('#other').evaluate((el) => {
+        Expressive.PieChart.getInstance(el).show(4);
+        return [...el.querySelectorAll('.pie-chart-tooltip > *')].map((node) => node.textContent);
+      });
+      assert.deepEqual(tip, ['Other', 'Leads', '$18 (1.8%)']);
+
+      assert.equal((await page.locator('#autres').evaluate(measure)).legend.at(-1)[0], 'Autres', 'data-other-label names the group');
+      assert.deepEqual((await page.locator('#one').evaluate(measure)).legend.map(([name]) => name),
+        ['Search', 'Email', 'Referral', 'Print', 'Missing', 'Social'], 'one small row keeps its own name');
+      assert.equal((await page.locator('#none').evaluate(measure)).legend.length, 7, 'without data-other every row stays');
+      assert.equal((await page.locator('#exact').evaluate(measure)).legend.length, 3, 'a row at exactly the percentage stays');
+      // Reading a cell's signs stays linear on a long run of tabs; a backtracking pattern took seconds.
+      const spaced = await page.locator('#spaced').evaluate((el) => {
+        const start = performance.now();
+        Expressive.PieChart.init(el);
+        return [performance.now() - start, el.querySelectorAll('.pie-chart-legend li').length];
+      });
+      assert.ok(spaced[0] < 1000 && spaced[1] === 2, `a cell padded with tabs draws quickly: ${spaced}`);
+      assert.deepEqual((await page.locator('#fine').evaluate(measure)).legend.at(-1), ['Other', '0.0003', '2.9%'], 'the sum keeps the cells\' decimals');
+      assert.deepEqual((await page.locator('#exponent').evaluate(measure)).legend.at(-1), ['Other', '0.0003', '2.9%'], 'an exponent counts towards the decimals');
+      const tiny = (await page.locator('#tiny').evaluate(measure)).legend.at(-1);
+      assert.match(tiny[1], /^0\.0{104}3$/, `past 20 decimals the sum keeps its first digits: ${tiny}`);
+      assert.deepEqual((await page.locator('#valued').evaluate(measure)).legend.at(-1), ['Other', '$20M', '2%'], 'behind data-value the sum is compact, with the cells\' currency');
+    } finally {
+      await browser.close();
+    }
+  });
 }
