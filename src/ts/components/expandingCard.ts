@@ -135,7 +135,7 @@ export class ExpandingCard
     // dialog.close() and <form method="dialog"> bypass close(), so report here.
     const wasOpen = this.isOpen;
     this._collapse();
-    if (wasOpen) this._notify('close', this.options.onClose, () => !this.isOpen);
+    if (wasOpen) this._notify('close', this.options.onClose, { current: () => !this.isOpen });
   };
 
   /** Marks the card closed and invalidates any pending close. */
@@ -179,7 +179,7 @@ export class ExpandingCard
     this.dialog.classList.add("expanded");
     this.closeButton?.focus();
 
-    this._notify('open', this.options.onOpen, () => this.isOpen);
+    this._notify('open', this.options.onOpen, { current: () => this.isOpen });
   };
 
   close: () => void = () => {
@@ -188,7 +188,7 @@ export class ExpandingCard
     this._collapse();
     const generation = this.closeGeneration;
 
-    this._notify('close', this.options.onClose, () => !this.isOpen);
+    this._notify('close', this.options.onClose, { current: () => !this.isOpen });
 
     const finish = () => {
       if (generation !== this.closeGeneration || this.isOpen || !this.dialog.open) return;

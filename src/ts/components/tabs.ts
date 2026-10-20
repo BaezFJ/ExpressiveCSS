@@ -39,6 +39,9 @@ const _defaults: TabsOptions = {
   responsiveThreshold: Infinity // breakpoint for swipeable
 };
 
+const scrollBehavior = (): ScrollBehavior =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+
 export class Tabs extends Component<TabsOptions> {
   _tabLinks: NodeListOf<HTMLAnchorElement>;
   _index: number;
@@ -212,39 +215,44 @@ export class Tabs extends Component<TabsOptions> {
     }
     // Act as regular link if target attribute is specified.
     if (tabLink.hasAttribute('target')) return;
-    if (this.options.swipeable) {
-      e.preventDefault();
-      if (!this._panels.includes(this._panelFor(tabLink))) return;
-      if (tabLink !== this._activeTabLink) this._showPanel(tabLink);
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      this._scrollToActivePanel(reduce ? 'instant' : 'smooth');
-      return;
-    }
-    const _oldContent = this._content;
+    e.preventDefault();
+    if (this.options.swipeable) this._clickSwipeable(tabLink);
+    else this._clickTab(tabLink);
+  };
+
+  private _clickSwipeable(tabLink: HTMLAnchorElement) {
+    if (!this._panels.includes(this._panelFor(tabLink))) return;
+    // A listener may destroy the tabs or pick another one.
+    if (tabLink !== this._activeTabLink && !this._showPanel(tabLink)) return;
+    this._scrollToActivePanel(scrollBehavior());
+  }
+
+  private _clickTab(tabLink: HTMLAnchorElement) {
+    const oldContent = this._content;
     this._tabLinks = this._queryTabLinks();
     // Moves the class and aria-current together, off the old tab and onto this
     // one - they used to be able to disagree.
     const prevIndex = this._index;
     this._setActiveTabLink(tabLink);
-
-    // Swap content
-    if (this._content) {
-      // Clear the hide rather than force 'block', so a flex or grid panel
-      // keeps the display its stylesheet gives it.
-      this._content.style.display = '';
-      this._content.classList.add('active');
-      if (typeof this.options.onShow === 'function')
-        this.options.onShow.call(this, this._content);
-      if (_oldContent && _oldContent !== this._content) {
-        _oldContent.style.display = 'none';
-        _oldContent.classList.remove('active');
-      }
-    }
+    // A listener may destroy the tabs or pick another one.
+    if (this._content && !this._swapPanels(oldContent)) return;
     // Update widths after content is swapped (scrollbar bugfix)
     this._setTabsAndTabWidth();
     this._animateIndicator(prevIndex);
-    e.preventDefault();
-  };
+  }
+
+  /** Shows the active panel, hides the old one, then reports the change. */
+  private _swapPanels(oldContent: HTMLElement | null): boolean {
+    // Clear the hide rather than force 'block', so a flex or grid panel
+    // keeps the display its stylesheet gives it.
+    this._content.style.display = '';
+    this._content.classList.add('active');
+    if (oldContent && oldContent !== this._content) {
+      oldContent.style.display = 'none';
+      oldContent.classList.remove('active');
+    }
+    return this._notifyShow();
+  }
 
   _createIndicator() {
     const indicator = document.createElement('span');
@@ -431,13 +439,19 @@ export class Tabs extends Component<TabsOptions> {
     this._showPanel(Array.from(this._tabLinks).find((a) => this._panelFor(a) === panel));
   };
 
-  private _showPanel(tabLink: HTMLAnchorElement) {
+  private _showPanel(tabLink: HTMLAnchorElement): boolean {
     const prevIndex = this._index;
     this._setActiveTabLink(tabLink);
     this._syncPanels();
     this._setTabsAndTabWidth();
     this._animateIndicator(prevIndex);
-    if (typeof this.options.onShow === 'function') this.options.onShow.call(this, this._content);
+    return this._notifyShow();
+  }
+
+  // After the old panel is hidden, so a listener sees one active panel.
+  private _notifyShow(): boolean {
+    const panel = this._content;
+    return this._notify('change', this.options.onShow, { args: [panel], detail: { panel }, current: () => this._content === panel });
   }
 
   _setupNormalTabs() {

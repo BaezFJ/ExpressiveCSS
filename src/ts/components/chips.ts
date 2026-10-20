@@ -453,10 +453,7 @@ export class Chips extends Component<ChipsOptions> {
     if (this._input) this._input.before(renderedChip);
     else this.el.append(renderedChip);
     this._setPlaceholder();
-    // fire chipAdd callback
-    if (typeof this.options.onChipAdd === 'function') {
-      this.options.onChipAdd(this.el, renderedChip);
-    }
+    this._notify('chip-add', this.options.onChipAdd, { args: [this.el, renderedChip], detail: { chip: renderedChip }, current: () => this._chips.includes(renderedChip) });
   }
 
   /**
@@ -482,10 +479,7 @@ export class Chips extends Component<ChipsOptions> {
       focusPath.push({ root, element: root.activeElement });
       root = 'host' in root ? root.host.getRootNode() as Document | ShadowRoot : null;
     }
-    // fire chipDelete callback
-    if (typeof this.options.onChipDelete === 'function') {
-      this.options.onChipDelete(this.el, chip);
-    }
+    this._notify('chip-delete', this.options.onChipDelete, { args: [this.el, chip], detail: { chip }, current: () => !this._chips.includes(chip) });
     if (!focus || focusPath.some(({ root, element }) => root.activeElement !== element) || this.el['Expressive_Chips'] !== this) return;
     if (focus === 'previous' && this._chips.length) this.selectChip(Math.max(chipIndex - 1, 0));
     else {
@@ -505,10 +499,7 @@ export class Chips extends Component<ChipsOptions> {
     // The chip is not a control any more, so focus goes to the one thing in it
     // that is - the delete button.
     (chip.querySelector('.close') as HTMLElement | null)?.focus();
-    // fire chipSelect callback
-    if (typeof this.options.onChipSelect === 'function') {
-      this.options.onChipSelect(this.el, chip);
-    }
+    this._notify('chip-select', this.options.onChipSelect, { args: [this.el, chip], detail: { chip }, current: () => this._selectedChip === chip });
   }
 
   static Init() {

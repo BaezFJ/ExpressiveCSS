@@ -367,9 +367,8 @@ export class Timepicker extends Component<TimepickerOptions> {
       }, this.options.duration / 2);
     }
 
-    if (typeof this.options.onSelect === 'function') {
-      this.options.onSelect.call(this, this.hours, this.minutes);
-    }
+    const { hours, minutes } = this;
+    this._notify('select', this.options.onSelect, { args: [hours, minutes], detail: { hours, minutes }, current: () => this.hours === hours && this.minutes === minutes });
   };
 
   /**
@@ -861,13 +860,13 @@ export class Timepicker extends Component<TimepickerOptions> {
   confirm = () => {
     this.done();
     hideModal(this.displayPlugin);
-    if (typeof this.options.onDone === 'function') this.options.onDone.call(this);
+    this._notify('confirm', this.options.onDone, { args: [] });
   }
 
   cancel = () => {
     // Cancel keeps the previously submitted value in the input.
     hideModal(this.displayPlugin);
-    if (typeof this.options.onCancel === 'function') this.options.onCancel.call(this);
+    this._notify('cancel', this.options.onCancel, { args: [] });
   }
 
   clear = () => {

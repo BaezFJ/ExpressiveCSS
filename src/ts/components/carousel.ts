@@ -651,20 +651,21 @@ export class Carousel extends Component<CarouselOptions> {
     });
   }
 
-  private _syncActive(index: number, dragged: boolean) {
+  /** Whether `index` is still the active item once its change is reported. */
+  private _syncActive(index: number, dragged: boolean): boolean {
     const prev = this.center;
     this.center = index;
     this.images.forEach((el, i) => el.classList.toggle('active', i === index));
     this._paintIndicators(index);
     this._syncLayoutRoles(index);
     const curr = this.images[index];
-    if (prev !== index && typeof this.options.onCycleTo === 'function') {
-      this.options.onCycleTo.call(this, curr, dragged);
-    }
+    const detail = { item: curr, dragged };
+    if (prev !== index && !this._notify('change', this.options.onCycleTo, { args: [curr, dragged], detail, current: () => this.center === index })) return false;
     if (typeof this.oneTimeCallback === 'function') {
       this.oneTimeCallback.call(this, curr, dragged);
       this.oneTimeCallback = null;
     }
+    return true;
   }
 
   private _syncLayoutRoles(index: number) {
@@ -847,8 +848,9 @@ export class Carousel extends Component<CarouselOptions> {
   _cycleTo(n: number, callback: CarouselOptions['onCycleTo'] = null) {
     this._alignAfterResize = true;
     if (typeof callback === 'function') this.oneTimeCallback = callback;
-    this._syncActive(n, false);
-    this._scrollToIndex(n);
+    // A listener that moved to another item, or destroyed the carousel, has
+    // already scrolled where it wanted.
+    if (this._syncActive(n, false)) this._scrollToIndex(n);
   }
 
   /**

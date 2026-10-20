@@ -321,7 +321,7 @@ export class Lightbox extends Component<LightboxOptions> {
 
     this._schedule(() => {
       this.doneAnimating = true;
-      this._notify('opened', this.options.onOpenEnd, () => phase === this._phase);
+      this._notify('opened', this.options.onOpenEnd, { current: () => phase === this._phase });
     }, duration);
 
   }
@@ -342,7 +342,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this._schedule(() => {
       this._reset();
       // onCloseEnd callback
-      this._notify('closed', this.options.onCloseEnd, () => phase === this._phase);
+      this._notify('closed', this.options.onCloseEnd, { current: () => phase === this._phase });
     }, duration);
   }
 
@@ -422,7 +422,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this.el.classList.add('active');
     this.overlayActive = true;
     // onOpenStart callback
-    if (!this._notify('open', this.options.onOpenStart, () => revision === this._revision)) return;
+    if (!this._notify('open', this.options.onOpenStart, { current: () => revision === this._revision })) return;
     // Set positioning for placeholder
     this.placeholder.style.width = placeholderRect.width + 'px';
     this.placeholder.style.height = placeholderRect.height + 'px';
@@ -480,7 +480,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this._isOpen = false;
     this.doneAnimating = false;
     // onCloseStart callback
-    if (!this._notify('close', this.options.onCloseStart, () => revision === this._revision)) return;
+    if (!this._notify('close', this.options.onCloseStart, { current: () => revision === this._revision })) return;
     // disable exit handlers
     window.removeEventListener('scroll', this._handleWindowChange);
     window.removeEventListener('resize', this._handleWindowChange);

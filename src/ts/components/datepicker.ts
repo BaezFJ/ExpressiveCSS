@@ -310,6 +310,8 @@ export class Datepicker extends Component<DatepickerOptions> {
   private _writtenInputs = new WeakMap<HTMLInputElement, { value: string; date: Date | null }>();
   private _form: HTMLFormElement | null = null;
   private _resetDates = new WeakMap<HTMLInputElement, { value: string; date: Date | null }>();
+  // Counts selections, so a callback that selects again silences the stale event.
+  private _selection = 0;
   private _resetTimer: ReturnType<typeof setTimeout>;
   /** Rows renderRow has already checked, so renderBody does not parse them again. */
   private _checkedRows = new Set<string>();
@@ -673,12 +675,13 @@ export class Datepicker extends Component<DatepickerOptions> {
       return;
     }
     Datepicker._setToStartOfDay(selectedDate);
+    // Silent updates count too: they replace whatever an outer call reports.
+    const selection = ++this._selection;
     if (!this.options.isMultipleSelection) this.setSingleDate(selectedDate, isEndDate);
     else if (!fromUserInput) this.setMultiDate(selectedDate);
     this.gotoDate(selectedDate);
-    if (!preventOnSelect && typeof this.options.onSelect === 'function') {
-      this.options.onSelect.call(this, selectedDate);
-    }
+    if (preventOnSelect) return;
+    this._notify('select', this.options.onSelect, { args: [selectedDate], detail: { date: selectedDate }, current: () => selection === this._selection });
   }
 
   validateDate(date: Date) {
@@ -1681,12 +1684,12 @@ export class Datepicker extends Component<DatepickerOptions> {
   _confirm = () => {
     this._finishSelection();
     hideModal(this.displayPlugin);
-    if (typeof this.options.onConfirm === 'function') this.options.onConfirm.call(this);
+    this._notify('confirm', this.options.onConfirm, { args: [] });
   }
 
   _cancel = () => {
     hideModal(this.displayPlugin);
-    if (typeof this.options.onCancel === 'function') this.options.onCancel.call(this);
+    this._notify('cancel', this.options.onCancel, { args: [] });
   };
 
   static {

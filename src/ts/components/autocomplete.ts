@@ -130,6 +130,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   private _openTimer: ReturnType<typeof setTimeout> | undefined;
   /** Aborts the running search when a newer one starts. */
   private _searchAbort: AbortController | undefined;
+  // Counts selections, so a callback that selects again silences the stale event.
+  private _selection = 0;
   private _statusInfo: HTMLElement;
   private _announcer: HTMLElement;
 
@@ -675,10 +677,12 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   _triggerChanged() {
+    // Counted before the native change, whose listeners may select again.
+    const values = this.selectedValues;
+    const selection = ++this._selection;
     this.el.dispatchEvent(new Event('change', { bubbles: true, cancelable: true, composed: true }));
-    // Trigger Autocomplete Event
-    if (typeof this.options.onAutocomplete === 'function')
-      this.options.onAutocomplete.call(this, this.selectedValues);
+    if (selection !== this._selection) return;
+    this._notify('autocomplete', this.options.onAutocomplete, { args: [values], detail: { values }, current: () => selection === this._selection });
   }
 
   /**

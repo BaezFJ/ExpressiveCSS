@@ -1372,15 +1372,16 @@ scenario('Lightbox reports opened and closed when reduced motion cuts a transiti
     window.events = [];
     const photo = document.querySelector('#photo');
     for (const type of ['open', 'opened', 'close', 'closed']) photo.addEventListener(`expressive:${type}`, () => window.events.push(type));
-    window.box = Expressive.Lightbox.init(photo, { inDuration: 5000, outDuration: 5000 });
+    // Far longer than the waits below, so only the reduced-motion flush can end them.
+    window.box = Expressive.Lightbox.init(photo, { inDuration: 30000, outDuration: 30000 });
     window.box.open();
   });
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await expect.poll(() => page.evaluate(() => window.events.join()), { timeout: 1000 }).toBe('open,opened');
+  await expect.poll(() => page.evaluate(() => window.events.join()), { timeout: 5000 }).toBe('open,opened');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.evaluate(() => window.box.close());
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await expect.poll(() => page.evaluate(() => window.events.join()), { timeout: 1000 }).toBe('open,opened,close,closed');
+  await expect.poll(() => page.evaluate(() => window.events.join()), { timeout: 5000 }).toBe('open,opened,close,closed');
   await expect(page.locator('#lightbox-overlay')).toHaveCount(0);
 });
 
