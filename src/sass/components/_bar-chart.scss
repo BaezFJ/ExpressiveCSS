@@ -171,7 +171,7 @@
     }
 
     // A range floats, so both its ends are tips.
-    &.range {
+    &.floating {
       --bar-chart-base: var(--bar-chart-tip);
     }
   }

@@ -394,6 +394,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         <div style="width: 240px">
           ${chart('class="radial-chart" data-segments="4" id="segments"', 'Segments', '<th>V</th>', [['A', '60'], ['B', '10'], ['C', '100']])}
           ${chart('class="radial-chart gauge gradient" id="gradient"', 'Gradient', '<th>V</th>', [['A', '100']])}
+          ${chart('class="radial-chart gauge" data-segments="10" id="small"', 'Small', '<th>V</th>', [['A', '100'], ['B', '100'], ['C', '50']])}
         </div>
         <script>${js}</script>`);
       await page.evaluate(() => Expressive.AutoInit());
@@ -433,6 +434,15 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         return { id: !!id, stops, unturned: el.querySelector('.radial-chart-gradient').getAttribute('gradientTransform') };
       });
       assert.ok(gradient.id, 'the fill is painted with a gradient');
+
+      // On a small inner ring a dash and its gap still make one segment, so the fill keeps its share.
+      const small = await page.locator('#small').evaluate((el) => [...el.querySelectorAll('.radial-chart-ring, .radial-chart-track')].map((node) => {
+        const dash = node.style.getPropertyValue('--radial-chart-dash').split(' ').map(Number);
+        const half = Math.PI * parseFloat(node.getAttribute('r'));
+        const drawn = dash.slice(0, -1).reduce((sum, part) => sum + part, 0) + (dash.length > 2 ? half / 10 - dash.at(-2) : 0);
+        return Math.round((drawn / half) * 100) / 100;
+      }));
+      assert.deepEqual(small, [1, 1, 1, 1, 1, 0.5], `each ring fills its share of the half circle: ${small}`);
       assert.notEqual(gradient.stops[0], gradient.stops[1], 'from a tint to the full color');
       assert.equal(gradient.unturned, 'rotate(-180)', 'the gradient turns back with the gauge, so it runs left to right');
     } finally {

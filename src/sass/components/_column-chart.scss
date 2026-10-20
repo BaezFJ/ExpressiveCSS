@@ -69,7 +69,7 @@
     }
 
     // A range floats, so both its ends are tips.
-    &.range {
+    &.floating {
       --column-chart-base: var(--column-chart-tip);
     }
   }

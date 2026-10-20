@@ -81,8 +81,21 @@ export class HeatmapChart extends LineChart {
    */
   private _box(cell: HTMLElement) {
     if (this._plot.matches(':focus-visible')) cell.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    return this._measure(cell);
+  }
+
+  private _measure(cell: HTMLElement) {
     const [box, plot] = [cell.getBoundingClientRect(), this._plot.getBoundingClientRect()];
     return [box.left - plot.left, box.top - plot.top, box.width, this._plot.clientWidth];
+  }
+
+  /** Keeps the tooltip on its cell as the grid scrolls, and hides it once the cell scrolls out. */
+  private _follow(scroll: HTMLElement) {
+    const cell = this._cells[this.activeIndex];
+    if (!cell) return;
+    const [view, box] = [scroll.getBoundingClientRect(), cell.getBoundingClientRect()];
+    if (box.right <= view.left || box.left >= view.right) this.show(-1);
+    else this._position(this._measure(cell));
   }
 
   /** Marks the cell and fills the tooltip beside it, on the side with more room. */
@@ -99,7 +112,10 @@ export class HeatmapChart extends LineChart {
     else name.style.setProperty('--level', String(this._levels[index]));
     text.textContent = series.text[row];
     this._tooltip.replaceChildren(title, name, text);
+    this._position([left, top, width, plotWidth]);
+  }
 
+  private _position([left, top, width, plotWidth]: number[]) {
     const end = left + width / 2 > plotWidth / 2;
     this._tooltip.classList.toggle('end', end);
     this._tooltip.style.left = `${left + (end ? 0 : width)}px`;
@@ -164,8 +180,9 @@ export class HeatmapChart extends LineChart {
     const [from, to] = this._endLevels;
     scale.style.setProperty('--low', String(from));
     scale.style.setProperty('--high', String(to));
-    // On a diverging scale the gradient passes the midpoint's empty color.
-    scale.style.setProperty('--mid', `${Math.min(1, Math.max(0, -from / (to - from || 1))) * 100}%`);
+    // A diverging scale whose data crosses the midpoint passes its empty color.
+    scale.classList.toggle('diverging', from < 0 && to > 0);
+    scale.style.setProperty('--mid', `${(-from / (to - from || 1)) * 100}%`);
     scale.append(...this._bands().filter((level) => level >= from && level <= to).map((level) => {
       const swatch = document.createElement('span');
       swatch.style.setProperty('--level', String(level));
@@ -199,7 +216,7 @@ export class HeatmapChart extends LineChart {
     const clamp = (value: number, floor: number) => Math.min(1, Math.max(floor, value));
     const level = mid === null
       ? (value: number) => clamp((value - min) / (max - min || 1), 0)
-      : (value: number) => clamp((value - mid) / (Math.max(max - mid, mid - min) || 1), -1);
+      : (value: number) => clamp((Math.min(max, Math.max(min, value)) - mid) / (Math.max(max - mid, mid - min) || 1), -1);
     const steps = this._steps;
     return steps ? (value: number) => band(level(value), steps) : level;
   }
@@ -270,6 +287,7 @@ export class HeatmapChart extends LineChart {
     scroll.className = 'heatmap-chart-scroll';
     scroll.tabIndex = -1;
     scroll.addEventListener('focus', () => this._plot.focus());
+    scroll.addEventListener('scroll', () => this._follow(scroll), { passive: true });
     scroll.append(grid);
     return scroll;
   }

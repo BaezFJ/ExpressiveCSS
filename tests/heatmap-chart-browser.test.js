@@ -299,6 +299,8 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
           ${chart('class="heatmap-chart" data-mid="0" id="diverging" style="--md-comp-heatmap-chart-low-color: rgb(255, 0, 0); --md-comp-heatmap-chart-color: rgb(0, 0, 255); --md-comp-heatmap-chart-empty-color: rgb(255, 255, 255)"', 'Diverging', header, rows)}
           ${chart('class="heatmap-chart" data-steps="4" id="stepped"', 'Stepped', header, [['<th>North</th>', '0', '10', '20', '21', '30']])}
           ${chart('class="heatmap-chart" data-mid="0" data-steps="3" id="both"', 'Both', header, rows)}
+          ${chart('class="heatmap-chart" data-mid="0" data-min="-10" data-max="20" id="bounded"', 'Bounded', header, [['<th>North</th>', '-20', '-10', '0', '10', '30']])}
+          ${chart('class="heatmap-chart" data-mid="0" id="above"', 'Above', header, [['<th>North</th>', '10', '12', '14', '16', '20']])}
         </div>
         <div style="width: 320px">
           ${chart('class="heatmap-chart" id="wide"', 'Wide', many, [['<th>Monday</th>', ...Array.from({ length: 52 }, (_, i) => String(i))]])}
@@ -317,6 +319,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         }),
         swatches: [...el.querySelectorAll('.heatmap-chart-scale > span')].map((span) => span.style.getPropertyValue('--level')),
         mid: el.querySelector('.heatmap-chart-scale').style.getPropertyValue('--mid'),
+        diverging: el.querySelector('.heatmap-chart-scale').classList.contains('diverging'),
       });
       // Either side of data-mid, as far as the further end: -10 is half of 20.
       const diverging = await page.locator('#diverging').evaluate(read);
@@ -333,6 +336,13 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       const stepped = await page.locator('#stepped').evaluate(read);
       assert.deepEqual(stepped.levels.map(Number), [0, 1 / 3, 2 / 3, 2 / 3, 1]);
       assert.deepEqual(stepped.swatches.map(Number), [0, 1 / 3, 2 / 3, 1], 'the legend is a swatch per band');
+
+      assert.ok(diverging.diverging, 'data either side of the midpoint shows it on the scale');
+      // Values past a fixed end take that end's shade.
+      const bounded = await page.locator('#bounded').evaluate(read);
+      assert.deepEqual(bounded.levels, ['-0.5', '-0.5', '0', '0.5', '1']);
+      const above = await page.locator('#above').evaluate(read);
+      assert.equal(above.diverging, false, 'data all above the midpoint leaves it off the scale');
 
       const both = await page.locator('#both').evaluate(read);
       assert.deepEqual(both.levels.map(Number), [-0.5, 0, 0, 0, 1], 'near the midpoint is the empty band');
@@ -368,6 +378,20 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         };
       });
       assert.deepEqual(end, { scrolled: true, visible: true, beside: true, text: '51' });
+
+      // Scrolling keeps the tooltip on its cell, and hides it once the cell scrolls out.
+      const follow = await page.locator('#wide').evaluate(async (el) => {
+        const scroll = el.querySelector('.heatmap-chart-scroll');
+        const [tooltip, cell] = [el.querySelector('.heatmap-chart-tooltip'), el.querySelectorAll('.heatmap-chart-cell')[51]];
+        const frame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        scroll.scrollLeft -= 20;
+        await frame();
+        const beside = Math.abs(tooltip.getBoundingClientRect().right + 8 - cell.getBoundingClientRect().left) < 2;
+        scroll.scrollLeft = 0;
+        await frame();
+        return [beside, tooltip.hidden];
+      });
+      assert.deepEqual(follow, [true, true]);
 
       // Tab leaves the chart from the plot, and a press in the grid focuses the plot.
       await page.keyboard.press('Tab');

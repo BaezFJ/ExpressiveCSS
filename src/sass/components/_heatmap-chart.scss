@@ -186,8 +186,8 @@
   }
 }
 
-// A diverging scale passes the midpoint's empty color on the way.
-.heatmap-chart[data-mid] .heatmap-chart-scale {
+// A diverging scale whose data crosses the midpoint passes its empty color.
+.heatmap-chart-scale.diverging {
   background: linear-gradient(
     in oklab to var(--heatmap-chart-to, right),
     #{shade(var(--low, 0))},

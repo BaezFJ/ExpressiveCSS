@@ -82,7 +82,7 @@
     }
 
     // A range floats, so both its ends are rounded.
-    &.range {
+    &.floating {
       --mixed-chart-ends: var(--md-comp-mixed-chart-shape);
     }
   }

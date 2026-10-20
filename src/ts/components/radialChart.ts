@@ -95,8 +95,11 @@ export class RadialChart extends LineChart {
   private _dash(fraction: number, length: number, capped: boolean) {
     const [cap, segments, span] = [capped ? this._width : 0, this._segments, this._span * length];
     if (!segments) return `${Math.max(0.001, fraction * span - cap).toFixed(3)} ${length.toFixed(3)}`;
-    const dash = Math.max(0.001, span / segments - this._gap - cap).toFixed(3);
-    const lit = Array.from({ length: Math.round(fraction * segments) }, () => `${dash} ${(this._gap + cap).toFixed(3)}`);
+    // A dash and its gap make one segment, even where a small ring leaves
+    // too little room for the gap and the caps.
+    const size = span / segments;
+    const dash = Math.max(0.001, size - this._gap - cap);
+    const lit = Array.from({ length: Math.round(fraction * segments) }, () => `${dash.toFixed(3)} ${(size - dash).toFixed(3)}`);
     return `${lit.join(' ').replace(/ [\d.]+$/, '') || 0} ${length.toFixed(3)}`;
   }
 

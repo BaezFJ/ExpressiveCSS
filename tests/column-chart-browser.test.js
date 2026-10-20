@@ -193,6 +193,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         <div style="width: 400px">
           ${chart('class="column-chart" id="ranges" data-max="40"', 'Ranges', '<th class="range">Range</th><th>Mean</th>', [
             ['Jan', '−10 – 10', '0'], ['Feb', '$5–$15', '10'], ['Mar', '30 to 20', '25'], ['Apr', 'n/a', '30'], ['May', '<span>5</span>', '5']])}
+          ${chart('class="column-chart stacked" id="stacked-range"', 'Stacked', '<th class="range">Range</th><th>A</th><th>B</th>', [['Jan', '10–20', '5', '5']])}
           <figure class="bar-chart" id="bars"><figcaption>Bars</figcaption><table>
             <thead><tr><th>Month</th><th class="range">Range</th></tr></thead>
             <tbody><tr><th>Jan</th><td data-value="2 8">two to eight</td></tr><tr><th>Feb</th><td>4–6</td></tr></tbody>
@@ -225,6 +226,9 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       assert.ok(top > 0 && bottom > 0 && top + bottom < 100, `a range floats off zero: ${ranges.spans[1]}`);
       assert.equal(new Set(ranges.ends).size, 1, `both ends of a range are rounded: ${ranges.ends}`);
       assert.deepEqual(ranges.tooltip, ['Range', '−10 – 10', 'Mean', '0'], 'the tooltip shows the cell as written');
+
+      const stackedRange = await page.locator('#stacked-range').evaluate((el) => Expressive.ColumnChart.getInstance(el).series.map((series) => [series.base, series.tops]));
+      assert.deepEqual(stackedRange, [[[10], [20]], [[0], [5]], [[5], [10]]], 'with .stacked a range keeps its ends, and only the other series stack');
 
       const bars = await page.locator('#bars').evaluate((el) => Expressive.BarChart.getInstance(el).series[0].base);
       assert.deepEqual(bars, [2, 4], 'data-value gives the two ends as numbers');

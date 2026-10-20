@@ -225,7 +225,7 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
         </p>
         <figure class="heatmap-chart values" data-mid="0" data-markdown-ignore>
           <figcaption>Sales change on last year, in percent</figcaption>
-          <table set:html={table("Region", months, change)} />
+          <table set:html={table("Region", months, change)}></table>
         </figure>
 <Code code={`
 <figure class="heatmap-chart values" data-mid="0">
@@ -248,11 +248,19 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
         </p>
         <figure class="heatmap-chart" data-steps="4" data-markdown-ignore>
           <figcaption>Tasks closed per day</figcaption>
-          <table set:html={table("Day", weeks, daily)} />
+          <table set:html={table("Day", weeks, daily)}></table>
         </figure>
 <Code code={`
 <figure class="heatmap-chart" data-steps="4">
-  <!-- The same caption and table -->
+  <figcaption>Tasks closed per day</figcaption>
+  <table>
+    <thead>
+      <tr><th>Day</th><th>Week 1</th><th>Week 2</th><!-- … --></tr>
+    </thead>
+    <tbody>
+      <tr><th>Mon</th><td>2</td><td>5</td><!-- … --></tr>
+    </tbody>
+  </table>
 </figure>
 `} />
   </Section>

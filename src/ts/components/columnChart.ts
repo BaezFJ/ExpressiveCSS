@@ -32,6 +32,10 @@ function rangeParts(cell: HTMLTableCellElement | undefined): string[] {
  * Re-run `ColumnChart.init(el)` after changing the table.
  */
 export class ColumnChart extends LineChart {
+  // No initializers: LineChart's constructor draws before they would run.
+  /** The `range` series, whose columns float. */
+  private _ranges: Series[];
+
   protected get _type() {
     return 'column-chart';
   }
@@ -61,15 +65,16 @@ export class ColumnChart extends LineChart {
     return el['Expressive_ColumnChart'];
   }
 
-  /** A `range` series' low ends become its base, before any stacking. */
+  /** A `range` series' low ends become its base; ranges do not stack. */
   protected _arrange(series: Series[]) {
-    series.forEach((each, i) => {
-      if (!each.className.split(/\s+/).includes('range')) return;
+    const ranges = (this._ranges = series.filter((each) => each.className.split(/\s+/).includes('range')));
+    for (const range of ranges) {
+      const i = series.indexOf(range);
       const ends = this._rows.map((row) => rangeValue(row.cells[i + 1]));
-      each.base = ends.map(([low]) => low);
-      each.values = each.tops = ends.map(([, high]) => high);
-    });
-    super._arrange(series);
+      range.base = ends.map(([low]) => low);
+      range.values = range.tops = ends.map(([, high]) => high);
+    }
+    super._arrange(series.filter((each) => !ranges.includes(each)));
   }
 
   protected _draw(drawn = this.series): Element {
@@ -96,6 +101,7 @@ export class ColumnChart extends LineChart {
           column.dataset.series = seriesColor(this.series.indexOf(series));
           // A stacked segment never hangs from zero, so it keeps the top rounding.
           column.classList.toggle('negative', !series.base && to < from);
+          column.classList.toggle('floating', this._ranges.includes(series));
           column.style.setProperty('--top', `${clamp(Math.max(from, to), series.y)}%`);
           column.style.setProperty('--bottom', `${100 - clamp(Math.min(from, to), series.y)}%`);
           // The cell text, which a bar chart with .values writes along its bar.
