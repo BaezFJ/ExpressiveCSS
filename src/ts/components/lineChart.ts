@@ -116,8 +116,10 @@ function cellValue(cell: Element | undefined): number | null {
 
 /** The currency, percent and spacing around a cell's number, as [prefix, suffix]. */
 export function signs(text: string): [string, string] {
-  const [, prefix, suffix] = /^([\s\p{Sc}]*)[^]*?([\s%\p{Sc}]*)$/u.exec(text)!;
-  return [prefix, suffix];
+  // Each end is read from its own side, so a long run of spaces stays linear.
+  const prefix = /^[\s\p{Sc}]*/u.exec(text)![0];
+  const end = (chars: string) => [...chars].reverse().join('');
+  return [prefix, end(/^[\s%\p{Sc}]*/u.exec(end(text.slice(prefix.length)))![0])];
 }
 
 /** The signs around the first value a column spells out in its text. */

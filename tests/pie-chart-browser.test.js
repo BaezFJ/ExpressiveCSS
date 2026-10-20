@@ -310,6 +310,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
           ${chart('class="pie-chart" data-other="5" data-other-label="Autres" id="autres"', 'Autres', '<th>Leads</th>', rows.map((row) => row.slice(0, 2)))}
           ${chart('class="pie-chart" data-other="1" id="one"', 'One', '<th>Leads</th>', rows.slice(0, 6).map((row) => row.slice(0, 2)))}
           ${chart('class="pie-chart" id="none"', 'None', '<th>Leads</th>', rows.map((row) => row.slice(0, 2)))}
+          ${chart('class="pie-chart" data-other="5" id="spaced"', 'Spaced', '<th>V</th>', [['B', `1${'\t'.repeat(100000)}1`], ['A', '$900'], ['C', `1${'\t'.repeat(100000)}2`]])}
           ${chart('class="pie-chart" data-other="5" id="exact"', 'Exact', '<th>Cost</th>', [['A', '$0.54'], ['B', '$0.03'], ['C', '$0.03']])}
           ${chart('class="pie-chart" data-other="5" id="fine"', 'Fine', '<th>Dose</th>', [['A', '0.01'], ['B', '0.0001'], ['C', '0.0002']])}
           ${chart('class="pie-chart" data-other="5" id="exponent"', 'Exponent', '<th>Dose</th>', [['A', '0.01'], ['B', '1e-4'], ['C', '2e-4']])}
@@ -355,6 +356,13 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         ['Search', 'Email', 'Referral', 'Print', 'Missing', 'Social'], 'one small row keeps its own name');
       assert.equal((await page.locator('#none').evaluate(measure)).legend.length, 7, 'without data-other every row stays');
       assert.equal((await page.locator('#exact').evaluate(measure)).legend.length, 3, 'a row at exactly the percentage stays');
+      // Reading a cell's signs stays linear on a long run of tabs; a backtracking pattern took seconds.
+      const spaced = await page.locator('#spaced').evaluate((el) => {
+        const start = performance.now();
+        Expressive.PieChart.init(el);
+        return [performance.now() - start, el.querySelectorAll('.pie-chart-legend li').length];
+      });
+      assert.ok(spaced[0] < 1000 && spaced[1] === 2, `a cell padded with tabs draws quickly: ${spaced}`);
       assert.deepEqual((await page.locator('#fine').evaluate(measure)).legend.at(-1), ['Other', '0.0003', '2.9%'], 'the sum keeps the cells\' decimals');
       assert.deepEqual((await page.locator('#exponent').evaluate(measure)).legend.at(-1), ['Other', '0.0003', '2.9%'], 'an exponent counts towards the decimals');
       const tiny = (await page.locator('#tiny').evaluate(measure)).legend.at(-1);

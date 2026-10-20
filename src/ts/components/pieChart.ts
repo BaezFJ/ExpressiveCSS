@@ -15,7 +15,8 @@ let _maskId = 0;
 
 /** How many decimals a cell's number has, counting an exponent: "2.5e-3" has 4. */
 function decimals(text: string) {
-  const [, fraction = '', exponent = '0'] = /(?:\.(\d+))?(?:e([+-]?\d+))?\D*$/i.exec(text)!;
+  // Keeping only the number's characters first keeps the match linear.
+  const [, fraction = '', exponent = '0'] = /(?:\.(\d+))?(?:e([+-]?\d+))?$/i.exec(text.replace(/[^\d.e+-]/gi, ''))!;
   return Math.max(0, fraction.length - Number(exponent));
 }
 
