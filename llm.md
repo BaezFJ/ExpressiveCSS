@@ -5028,7 +5028,7 @@ A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The firs
 </figure>
 ```
 
-- `area` fills under each line with a gradient; `stacked` draws each series on the total of the ones before it and fills the band between, with the y axis from zero (keep values positive; an empty cell leaves the total unknown, so that series and the ones above it break at that row, and the tooltip still shows each cell); `fade` fades the line ends; `sparkline` is a 48px chart with no grid, labels, legend or tooltip, and is not focusable.
+- `area` fills under each line with a gradient; `stacked` draws each series on the total of the ones before it and fills the band between, with the y axis from zero (keep values positive; an empty cell leaves the total unknown, so that series and the ones above it break at that row, and the tooltip still shows each cell); `points` marks every value with a dot three line widths across; `straight` draws straight lines between the values instead of a smooth curve; `fade` fades the line ends; `sparkline` is a 48px chart with no grid, labels, legend or tooltip, and is not focusable.
 - A series header cell's classes reach its line. `<th class="dashed">` draws a dotted line for a target or forecast.
 - Series take `primary`, `tertiary`, `secondary` and `on-surface-variant` in turn.
 - A cell's number is its text without currency signs, percent signs or grouping commas. Text that is not a single number (`4.4k`, `(1,200)`) is a gap, as is an empty cell. Put the number in `data-value` for those, and for `4.400 €`, which would read as 4.4. The tooltip shows the cell text as written.
@@ -5342,7 +5342,8 @@ A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as 
 - `axis` labels the first scale beside the plot's start, with grid lines, and the `end` scale along its end. When neither scale has a set end, the `end` scale stretches to as many round steps as the first so its labels share the grid lines. Each scale's labels repeat its cells' currency or percent sign.
 - Cells read as in the line chart; a suffix such as `K` makes a cell a gap, so use `data-value` or put the unit in the header. A gap breaks a line and leaves a column's slot empty. Series take four colors in column order, whatever their kind, then repeat.
 - The cursor bands the highlighted row and puts a point on each line and area. The plot is one Tab stop named by the caption; left and right move between rows, Home and End jump to the ends and Escape hides the tooltip. `sparkline` is a 48px chart with no grid, labels, legend or tooltip and is not focusable.
-- After changing the table, call `Expressive.MixedChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale. `stacked` is not supported.
+- After changing the table, call `Expressive.MixedChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale.
+- `stacked` stacks the column series into one column per row; the `end` series' columns stack in their own column beside it, so list them after the others. Lines and areas keep their own values, and the tooltip shows each cell. `points` marks every value on the lines and areas with a dot, and `straight` draws straight lines instead of curves.
 
 ### Tokens
 

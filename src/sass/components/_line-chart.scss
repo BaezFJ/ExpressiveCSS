@@ -12,9 +12,10 @@
 // and the tooltip are HTML positioned in percentages for the same reason.
 //
 // Modifiers: .area fills under each line, .stacked stacks each series on
-// the ones before it and fills between them, .fade fades the line ends,
-// .axis labels the y axis at round values with a grid line at each,
-// .sparkline is a small chart with no axis, grid, legend or tooltip.
+// the ones before it and fills between them, .points marks each value with
+// a dot, .straight draws straight lines between values, .fade fades the
+// line ends, .axis labels the y axis at round values with a grid line at
+// each, .sparkline is a small chart with no axis, grid, legend or tooltip.
 // A series header cell's classes reach its line: <th class="dashed">.
 //
 // Tokens:
@@ -55,6 +56,15 @@
 
 .line-chart-series.dashed .line-chart-line {
   stroke-dasharray: 2 8;
+}
+
+// Round caps on zero-length lines: dots that keep their size at any scale.
+.line-chart-points {
+  fill: none;
+  stroke: var(--line-chart-color);
+  stroke-width: calc(var(--md-comp-line-chart-line-width) * 3);
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
 }
 
 .line-chart-area {

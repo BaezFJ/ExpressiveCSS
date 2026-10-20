@@ -88,4 +88,52 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: mixed chart stacks its columns and marks straight lines`, async () => {
+    const browser = await browserType.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(`<style>${css}</style>
+        <div style="width: 400px">
+          ${chart('class="mixed-chart stacked points straight" id="stacked" data-max="100"',
+            '<th class="column">Online</th><th class="column">Store</th><th>Target</th><th class="column end">Returns</th>',
+            [['Jan', '40', '20', '50', '5'], ['Feb', '', '30', '60', '10'], ['Mar', '30', '30', '', '15']])}
+          ${chart('class="mixed-chart" id="smooth"', '<th>Target</th>', [['Jan', '40'], ['Feb', '60'], ['Mar', '50']])}
+        </div>
+        <script>${js}</script>`);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      const stacked = await page.locator('#stacked').evaluate((el) => {
+        const chart = Expressive.MixedChart.getInstance(el);
+        const rows = [...el.querySelectorAll('.mixed-chart-columns > div')];
+        return {
+          tops: chart.series.map((series) => series.tops),
+          spans: rows.map((row) => [...row.children].map((span) => [span.style.getPropertyValue('--top'), span.style.getPropertyValue('--bottom')])),
+          columns: [...rows[0].children].map((span) => getComputedStyle(span).gridColumnStart),
+          rounded: [...rows[0].children].map((span) => getComputedStyle(span).getPropertyValue('--mixed-chart-ends').trim() !== '0'),
+          line: el.querySelector('.mixed-chart-line').getAttribute('d'),
+          points: [...el.querySelectorAll('.mixed-chart-points')].map((path) => path.getAttribute('d')),
+          dot: getComputedStyle(el.querySelector('.mixed-chart-points')).strokeLinecap,
+          tooltip: (chart.show(0), [...el.querySelectorAll('.mixed-chart-tooltip span')].map((span) => span.textContent)),
+        };
+      });
+      // The columns on each scale stack; Store sits on Online, and Returns, on the end scale, on nothing.
+      // Online's gap in Feb leaves Store's base there unknown, so the segment is left out.
+      assert.deepEqual(stacked.tops, [[40, null, 30], [60, null, 60], [50, 60, null], [5, 10, 15]]);
+      assert.deepEqual(stacked.spans[0].slice(0, 2), [['60%', '0%'], ['40%', '40%']], 'Jan: Online 0-40, Store 40-60 on a 0-100 scale');
+      assert.deepEqual(stacked.columns, ['1', '1', '2'], 'the stack shares one column, and the end scale\'s stands beside it');
+      assert.deepEqual(stacked.rounded, [false, true, true], 'only the top of each stack is rounded');
+      assert.equal(stacked.line, 'M16.666666666666664,50L50,40', 'a line keeps its own values, straight, and breaks at its gap');
+      assert.deepEqual(stacked.points, ['M16.666666666666664,50h0M50,40h0'], 'points mark each value of each line');
+      assert.equal(stacked.dot, 'round');
+      assert.deepEqual(stacked.tooltip, ['Online', '40', 'Store', '20', 'Target', '50', 'Returns', '5'], 'the tooltip shows the values, not the totals');
+
+      const smooth = await page.locator('#smooth').evaluate((el) => [el.querySelector('.mixed-chart-line').getAttribute('d'), el.querySelectorAll('.mixed-chart-points').length]);
+      assert.match(smooth[0], /C/, 'lines are smooth without .straight');
+      assert.equal(smooth[1], 0, 'no dots without .points');
+    } finally {
+      await browser.close();
+    }
+  });
 }

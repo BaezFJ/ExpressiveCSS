@@ -3775,7 +3775,7 @@
           "documentedSupport": "Columns, smooth lines and areas drawn per series from a figure's data table by header class, with dashed lines, a second scale for end series with its own fixed range, x labels, round labels for both scales with .axis, aligned to shared grid lines, a legend, a sparkline modifier, and a pointer and keyboard tooltip with points on the lines.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns and SVG are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, both scales, gaps, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There is no y axis labelling for either scale, no always-on markers and no stacking."
+            "Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified."
           ]
         },
         "relationship": "none",
@@ -3821,13 +3821,8 @@
         "gaps": [
           {
             "kind": "verification",
-            "description": "Drawing, the hidden table, both scales, gaps, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+            "description": "Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
             "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-          },
-          {
-            "kind": "feature",
-            "description": "There are no always-on line markers, no stacked columns and no straight-line option.",
-            "nextStep": "Add markers, stacked columns or straight lines when a page needs them."
           }
         ],
         "browserChecks": [

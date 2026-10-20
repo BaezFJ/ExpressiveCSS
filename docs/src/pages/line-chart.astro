@@ -10,6 +10,7 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "area", label: "Area" },
   { id: "series", label: "Several series" },
+  { id: "points", label: "Points and straight lines" },
   { id: "stacked", label: "Stacked" },
   { id: "sparkline", label: "Sparkline" },
   { id: "cards", label: "Chart cards" },
@@ -140,6 +141,35 @@ card.querySelectorAll('[data-period]').forEach((button) => {
     <tbody>
       <tr><th>Jan</th><td>$4,400</td><td>$4,000</td><td>$5,200</td></tr>
       <!-- One row per month -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.points}>
+        <p>
+          <code>points</code> marks every value with a dot, so a reader can
+          see where the measurements are, and <code>straight</code> draws
+          straight lines between them instead of a smooth curve. Both suit
+          a few values read one by one, such as a week of visits.
+        </p>
+        <figure class="line-chart axis points straight" data-markdown-ignore>
+          <figcaption>Visitors this week</figcaption>
+          <table>
+            <thead><tr><th>Day</th><th>Visitors</th></tr></thead>
+            <tbody>{days.map((day, i) => <tr><th>{day}</th><td>{visitors[i].toLocaleString("en-US")}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="line-chart axis points straight">
+  <figcaption>Visitors this week</figcaption>
+  <table>
+    <thead>
+      <tr><th>Day</th><th>Visitors</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Mon</th><td>8,200</td></tr>
+      <!-- … -->
     </tbody>
   </table>
 </figure>

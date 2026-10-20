@@ -51,7 +51,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Heatmap chart](#heatmap-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Radar chart](#radar-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Radial chart](#radial-chart) | unassessed | needs-review | needs-rerun | 1 |
-| [Mixed chart](#mixed-chart) | unassessed | needs-review | needs-rerun | 1 |
+| [Mixed chart](#mixed-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Timeline](#timeline) | implemented | source-reviewed | needs-rerun | 0 |
 | [Calendar](#calendar) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
@@ -763,8 +763,7 @@ Google relationship: none. Upstream review: web-extension-inventory-reviewed (20
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns and SVG are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-- verification: Drawing, the hidden table, both scales, gaps, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
-- feature: There are no always-on line markers, no stacked columns and no straight-line option. Next: Add markers, stacked columns or straight lines when a page needs them.
+- verification: Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 
 - stale: [tests/mixed-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/mixed-chart-browser.test.js): `chromium: mixed chart draws columns, areas and lines on two scales`. Hidden table, the named plot and its role description, column positions on the start scale with an empty slot for a gap, area and dashed line classes and colors, an area fill only on area series, a fixed end scale, a fitted end scale shared by two series, legend order, separate instances from column charts, a chart of gaps showing its table, and the tooltip and cursor points from the keyboard. No spoken-output assertion.
 - not-recorded: [tests/chart-axis-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/chart-axis-browser.test.js): `chromium: .axis labels chart scales at round values on their grid lines`. The end scale stretches to the start scale's steps so both label sets share the grid lines, each with its own percent sign. No rendering comparison.

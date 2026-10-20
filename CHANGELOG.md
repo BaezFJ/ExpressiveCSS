@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Mixed chart stacking: `.stacked` stacks the column series into one
+  column per row, with the `end` scale's columns in their own column
+  beside it. Lines and areas keep their own values.
+- Line and mixed chart `.points` marks every value on a line with a dot,
+  and `.straight` draws straight lines between values instead of a curve.
+
 - Heatmap scales: `data-mid` makes the scale diverge from that value, with
   values below it shading towards the new
   `--md-comp-heatmap-chart-low-color` (`tertiary`), and `data-steps` groups

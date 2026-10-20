@@ -21,6 +21,8 @@ const has = (series: Series, name: string) => series.className.split(/\s+/).incl
  * line with a fill under it, and anything else as a line. Series with
  * `end` are drawn against a second scale, set by `data-end-min` and
  * `data-end-max`, so values of different sizes or units share the plot.
+ * With `stacked` the columns stack; `points` and `straight` apply to the
+ * lines as in LineChart.
  *
  * Re-run `MixedChart.init(el)` after changing the table.
  */
@@ -48,6 +50,16 @@ export class MixedChart extends ColumnChart {
 
   static getInstance(el: HTMLElement): MixedChart {
     return el['Expressive_MixedChart'];
+  }
+
+  /**
+   * With .stacked, the columns on each scale stack on the ones before them;
+   * the lines and areas keep their own values.
+   */
+  protected _stack(series: Series[]) {
+    const columns = series.filter((each) => has(each, 'column'));
+    super._stack(columns.filter((each) => !has(each, 'end')));
+    super._stack(columns.filter((each) => has(each, 'end')));
   }
 
   /** The start scale, then the end scale; each includes zero if it has columns. */

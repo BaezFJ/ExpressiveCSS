@@ -272,4 +272,32 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: line chart .points marks each value and .straight draws straight lines`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css}</style>
+        <div style="width: 400px">
+          ${chart('class="line-chart stacked area points straight" id="marked" data-min="0" data-max="100"', 'Marked', '<th>A</th><th>B</th>', [
+            ['Jan', '10', '20'], ['Feb', '30', ''], ['Mar', '20', '40']])}
+        </div>
+        <script>${js}</script>`);
+      await page.evaluate(() => Expressive.AutoInit());
+      const marked = await page.locator('#marked').evaluate((el) => ({
+        lines: [...el.querySelectorAll('.line-chart-line')].map((path) => path.getAttribute('d')),
+        areas: [...el.querySelectorAll('.line-chart-area')].map((path) => path.getAttribute('d')),
+        points: [...el.querySelectorAll('.line-chart-points')].map((path) => path.getAttribute('d')),
+        dot: [getComputedStyle(el.querySelector('.line-chart-points')).strokeLinecap, getComputedStyle(el.querySelector('.line-chart-points')).strokeWidth],
+      }));
+      assert.deepEqual(marked.lines, ['M16.666666666666664,90L50,70L83.33333333333334,80', 'M16.666666666666664,70h0M83.33333333333334,40h0'],
+        'straight segments; B stacks on A and its gap leaves a dot');
+      assert.equal(marked.areas[1], 'M16.666666666666664,70h0L16.666666666666664,90h0ZM83.33333333333334,40h0L83.33333333333334,80h0Z',
+        'a stacked area runs straight back along the series below');
+      assert.deepEqual(marked.points, ['M16.666666666666664,90h0M50,70h0M83.33333333333334,80h0', 'M16.666666666666664,70h0M83.33333333333334,40h0']);
+      assert.deepEqual(marked.dot, ['round', '9px'], 'a dot is three line widths across');
+    } finally {
+      await browser.close();
+    }
+  });
 }
