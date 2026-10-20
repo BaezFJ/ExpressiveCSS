@@ -222,7 +222,7 @@ export class RadialChart extends LineChart {
     const sweep = document.createElement('div');
     sweep.className = 'radial-chart-sweep';
     sweep.dataset.series = seriesColor(i);
-    sweep.style.maskImage = `url("data:image/svg+xml,${encodeURIComponent(image)}")`;
+    sweep.style.setProperty('--radial-chart-shape', `url("data:image/svg+xml,${encodeURIComponent(image)}")`);
     sweep.style.setProperty('--radial-chart-from', `${this._turn(0)}turn`);
     sweep.style.setProperty('--radial-chart-to', `${fraction * this._span}turn`);
     return sweep;

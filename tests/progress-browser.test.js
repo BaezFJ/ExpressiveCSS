@@ -68,6 +68,10 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       assert.deepEqual(circle, { own: ['none', 'none', 'visible'], wave: true, track: true, spinner: [true, 'none'] },
         'the wave and the track are the pseudo-elements; a spinner has no track');
       assert.notEqual(await shot('circle-wavy'), await shot('circle'), 'the wavy ring is drawn');
+      await page.emulateMedia({ forcedColors: 'active' });
+      assert.equal(await page.locator('#circle-wavy').evaluate((el) => getComputedStyle(el).backgroundImage), 'none',
+        'in forced colors a wavy ring still draws only on its pseudo-elements, with no disk behind');
+      await page.emulateMedia({ forcedColors: 'none' });
 
       // Drawn: the stop and the wave change the bar.
       const [plain, stop, wavy] = [await shot('plain'), await shot('stop'), await shot('wavy')];

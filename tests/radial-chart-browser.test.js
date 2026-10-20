@@ -435,14 +435,16 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         return {
           series: list.map((sweep) => sweep.dataset.series),
           turns: list.map((sweep) => [sweep.style.getPropertyValue('--radial-chart-from'), sweep.style.getPropertyValue('--radial-chart-to')]),
-          masked: list.every((sweep) => getComputedStyle(sweep).maskImage.startsWith('url(')),
+          masked: list.every((sweep) => /^url\(.*\), conic-gradient\(/.test(getComputedStyle(sweep).maskImage)),
+          composite: list.map((sweep) => getComputedStyle(sweep).maskComposite),
           conic: list.every((sweep) => getComputedStyle(sweep).backgroundImage.startsWith('conic-gradient')),
           stroke: getComputedStyle(el.querySelector('.radial-chart-ring')).stroke,
         };
       };
       const gauge = await page.locator('#gradient').evaluate(sweeps);
       assert.deepEqual(gauge.turns, [['-0.25turn', '0.5turn']], 'a gauge sweeps from nine o\'clock over its half circle');
-      assert.ok(gauge.masked && gauge.conic, 'each sweep is a conic gradient masked to its ring');
+      assert.ok(gauge.masked && gauge.conic, 'each sweep is a conic gradient masked to its ring and to a reveal that grows it in');
+      assert.match(gauge.composite[0], /^intersect(, intersect)?$/);
       assert.match(gauge.stroke, /rgba\(0, 0, 0, 0\)|transparent/, 'the SVG fill under it drops its colour');
       const rings = await page.locator('#rings').evaluate(sweeps);
       assert.deepEqual(rings.series, ['1', '3'], 'an empty ring has no sweep');

@@ -360,6 +360,11 @@ progress.progress:indeterminate {
       );
     }
   }
+
+  // A wavy ring draws on its pseudo-elements, so the element stays empty here too.
+  .progress.circular.wavy {
+    background: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
