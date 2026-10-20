@@ -475,12 +475,15 @@ $_shaped: ":where(#{$_btn}):where(:not(#{$_fixed}))";
 // without moving the layout, and lets the focus ring replace it; a pressed
 // toggle takes the Highlight fill Windows gives a selected control.
 //
-// Only a button that names its container gets the edge. A plain <button> is
-// filled too, but the hosts that restyle plain buttons as bare icons and
-// labels (app bars, toolbars, rails, snackbars) leave nothing to outline; the
-// components whose plain buttons are containers opt in where they are styled.
+// Only a button that names its container gets the edge: a style, or a class
+// the hosts step aside for (`.button`, and the FAB's `.extra`, `.extend` and
+// `.large.circle`). A plain <button> is filled too, but the hosts that restyle
+// plain buttons as bare icons and labels (app bars, toolbars, rails,
+// snackbars) leave nothing to outline; the components whose plain buttons are
+// containers opt in where they are styled. The selector stays at one class so
+// the focus ring still outranks the edge.
 @media (forced-colors: active) {
-  :where(#{$_btn}):is(.filled, .tonal, .elevated),
+  :where(#{$_btn}):is(.filled, .tonal, .elevated, .button, .extra, .extend, :where(.large.circle)):where(:not(.outlined, .text)),
   .icon-button:is(.filled, .tonal) {
     outline: 1px solid ButtonText;
     outline-offset: -1px;

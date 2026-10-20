@@ -127,4 +127,9 @@ $_hue-gradient: linear-gradient(
   .color-picker-hex {
     border-color: CanvasText;
   }
+
+  // The area keeps its colors, and its dark edge meets a dark Canvas.
+  .color-picker-area {
+    outline: 1px solid CanvasText;
+  }
 }
