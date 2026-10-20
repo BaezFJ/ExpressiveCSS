@@ -43,6 +43,22 @@ const controls = `
     <button type="button" class="icon-button" data-action="fullscreen" aria-label="Full screen">
       <span class="material-symbols" aria-hidden="true">fullscreen</span>
     </button>
+  </div>
+  <div class="map-controls bottom-left">
+    <div class="map-control-group">
+      <button type="button" class="icon-button" data-action="pan-left" aria-label="Pan left">
+        <span class="material-symbols" aria-hidden="true">arrow_back</span>
+      </button>
+      <button type="button" class="icon-button" data-action="pan-up" aria-label="Pan up">
+        <span class="material-symbols" aria-hidden="true">arrow_upward</span>
+      </button>
+      <button type="button" class="icon-button" data-action="pan-down" aria-label="Pan down">
+        <span class="material-symbols" aria-hidden="true">arrow_downward</span>
+      </button>
+      <button type="button" class="icon-button" data-action="pan-right" aria-label="Pan right">
+        <span class="material-symbols" aria-hidden="true">arrow_forward</span>
+      </button>
+    </div>
   </div>`;
 ---
 <DocsLayout page="map">
@@ -164,14 +180,18 @@ MapView.init(el, {
           no marker opens when the map starts.
         </p>
         <p>
-          <code>data-draggable</code> lets the reader drag a marker. When the
-          drag ends, the marker's <code>data-lng-lat</code> holds the new
-          position and it fires <code>change</code>.
+          <code>data-draggable</code> lets the reader drag a marker. A drag
+          is not the only way: a tap picks the marker up and sets
+          <code>aria-pressed="true"</code>, the next tap on the map drops it
+          there, and <kbd>Escape</kbd> or a second tap on it puts it back.
+          The arrow keys nudge a focused one. Each move leaves the new
+          position in its <code>data-lng-lat</code> and fires
+          <code>change</code>. Make it a named <code>&lt;button&gt;</code>.
         </p>
 <Code code={`
-<span class="map-marker" data-lng-lat="-87.62,41.88" data-draggable>
+<button type="button" class="map-marker" data-lng-lat="-87.62,41.88" data-draggable aria-label="Drop-off point">
   <span class="map-marker-label top">Drop-off</span>
-</span>
+</button>
 <div class="map-popup" data-lng-lat="-87.70,41.85">Depot</div>
 
 <script>
@@ -236,6 +256,7 @@ instance.map.on('click', 'stores-points', (event) => {
           <li><code>compass</code> turns the map back to north; its icon points north as the map rotates.</li>
           <li><code>locate</code> centers the map on the reader's location and marks it. It is disabled if the reader refuses.</li>
           <li><code>fullscreen</code> shows the map full screen and sets <code>aria-pressed</code>. It is hidden where full screen is unavailable.</li>
+          <li><code>pan-up</code>, <code>pan-down</code>, <code>pan-left</code> and <code>pan-right</code> move the view a third of the map's size, so it pans without a drag.</li>
         </ul>
   </Section>
   <Section {...S.accessibility}>

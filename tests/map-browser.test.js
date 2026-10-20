@@ -36,6 +36,7 @@ const page = `<!doctype html><html lang="en" theme="light"><head>
     </div>
     <button type="button" class="icon-button" data-action="compass" aria-label="Reset north"><span class="material-symbols" aria-hidden="true">navigation</span></button>
     <button type="button" class="icon-button" data-action="locate" aria-label="Show my location"><span class="material-symbols" aria-hidden="true">my_location</span></button>
+    <button type="button" class="icon-button" data-action="pan-right" aria-label="Pan right"><span class="material-symbols" aria-hidden="true">arrow_forward</span></button>
   </div>
 </div>
 <script type="module">
@@ -183,6 +184,68 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       assert.equal(await page.locator('[data-action="zoom-out"]').evaluate((el) => el.disabled), false, 'destroy re-enables the controls');
       assert.equal(await page.locator('.map canvas').count(), 0);
       assert.deepEqual(errors, []);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${name}: a draggable marker moves by tap and by arrow key, and a pan button moves the view`, { timeout: 60000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await leaseBrowser(engine);
+    try {
+      const page = await browser.newPage();
+      await page.goto(origin);
+      if (await noWebGL(page)) { t.skip(`${name} has no WebGL2 here`); return; }
+      await page.waitForFunction(() => window.loaded);
+      await page.evaluate(() => {
+        window.changes = 0;
+        document.querySelector('.map').addEventListener('change', () => window.changes++);
+      });
+      const dot = page.locator('.map-marker[data-draggable]');
+      const at = () => dot.getAttribute('data-lng-lat');
+      const center = () => page.evaluate(() => window.instance.map.getCenter().lng);
+      const idle = () => page.evaluate(() => new Promise((resolve) => {
+        const { map } = window.instance;
+        if (!map.isMoving()) resolve(); else map.once('moveend', resolve);
+      }));
+
+      assert.equal(await dot.getAttribute('role'), 'button', 'a span marker becomes a control');
+      assert.equal(await dot.getAttribute('tabindex'), '0');
+      assert.equal(await dot.getAttribute('aria-pressed'), 'false');
+
+      // Tap to pick up, tap the map to drop.
+      const start = await at();
+      await dot.click();
+      assert.equal(await dot.getAttribute('aria-pressed'), 'true', 'a tap picks it up');
+      await page.locator('.map canvas').click({ position: { x: 80, y: 80 } });
+      assert.equal(await dot.getAttribute('aria-pressed'), 'false', 'the next tap on the map drops it');
+      const dropped = await at();
+      assert.notEqual(dropped, start);
+      const expected = await page.evaluate(() => window.instance.map.unproject([80, 80]));
+      const [lng, lat] = dropped.split(',').map(Number);
+      assert.ok(Math.abs(lng - expected.lng) < 1e-3 && Math.abs(lat - expected.lat) < 1e-3, `it lands where the map was tapped: ${dropped}`);
+      assert.equal(await page.evaluate(() => window.changes), 1, 'the move fires change');
+
+      // Escape puts it down where it is.
+      await dot.click();
+      await page.keyboard.press('Escape');
+      assert.equal(await dot.getAttribute('aria-pressed'), 'false', 'Escape cancels the pick-up');
+      assert.equal(await at(), dropped);
+
+      // Arrow keys nudge the marker and leave the map where it is.
+      const view = await center();
+      await dot.focus();
+      await page.keyboard.press('ArrowRight');
+      assert.ok(Number((await at()).split(',')[0]) > lng, 'ArrowRight moves it east');
+      assert.equal(await center(), view, 'the map does not pan as well');
+
+      await page.getByRole('button', { name: 'Pan right' }).click();
+      await idle();
+      assert.ok((await center()) > view, 'Pan right moves the view east');
+
+      await page.evaluate(() => window.instance.destroy());
+      assert.equal(await dot.getAttribute('role'), null, 'destroy takes the added role back off');
+      assert.equal(await dot.getAttribute('aria-pressed'), null);
     } finally {
       await browser.close();
     }

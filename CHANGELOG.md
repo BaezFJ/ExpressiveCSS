@@ -7,6 +7,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap
+  picks it up and sets `aria-pressed`, and the next tap on the map drops it
+  there. `Escape` or a second tap puts it back, and the arrow keys nudge a
+  focused one. A marker that is not a `<button>` gets `role="button"` and
+  `tabindex="0"` while the map runs.
+- Map controls take `pan-up`, `pan-down`, `pan-left` and `pan-right` actions,
+  which move the view a third of the map's size, so it pans without a drag.
+
 - Menu, Lightbox, NavigationRail, Cards and ExpandingCard fire
   `expressive:open` and `expressive:close` DOM events from the element
   they were initialized on. Menu, Lightbox and NavigationRail then fire
