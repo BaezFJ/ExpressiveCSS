@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- The Auto Init page documents Alpine.js. A short `x-expressive` directive
+  starts a component each time Alpine renders its element, including inside
+  `x-if` and `x-for`, and destroys it when Alpine removes the element. The
+  page also shows how to keep a Select in sync with `x-model` by calling
+  `refresh()`. A browser test runs the directive against Alpine in Chromium,
+  Firefox and WebKit.
+
 - Charts have `update()`, which redraws a chart from its changed table in
   place. Before, the way to redraw was to call `init()` again, which dropped
   keyboard focus and the highlighted row. Now focus stays on the chart, the

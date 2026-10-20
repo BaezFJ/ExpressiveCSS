@@ -136,6 +136,7 @@
     "@tiptap/core": "^3.31.4",
     "@tiptap/pm": "^3.31.4",
     "@tiptap/starter-kit": "^3.31.4",
+    "alpinejs": "^3.17.5",
     "astro": "^7.2.8",
     "esbuild": "^0.28.2",
     "fallow": "^3.33.1",

@@ -13,6 +13,7 @@ const S = defineSections([
   { id: "components", label: "Components" },
   { id: "ignoring", label: "Ignoring elements" },
   { id: "events", label: "Events" },
+  { id: "alpine", label: "Alpine.js" },
 ]);
 ---
 <DocsLayout page="auto_init">
@@ -200,6 +201,55 @@ document.addEventListener('expressive:open', (event) => {
           actually shows and hides, after its delays. A snackbar fires its events from the
           snackbar itself; <code>expressive:closed</code> comes just before it leaves the page.
           Tour's <code>expressive:close</code> says whether the Done button finished it.
+        </p>
+  </Section>
+  <Section {...S.alpine}>
+        <p>
+          <code>AutoInit()</code> scans the page once, so it misses anything Alpine renders later with
+          <code>x-if</code> or <code>x-for</code>. Register a directive instead. Alpine runs it each time it
+          creates the element and calls <code>cleanup</code> when it removes it, so every instance gets
+          destroyed with its element.
+        </p>
+<Code code={`
+document.addEventListener('alpine:init', () => {
+  Alpine.directive('expressive', (el, { value, expression }, { evaluate, cleanup }) => {
+    // HTML lowercases attribute names, so match the export name the same way.
+    const name = Object.keys(Expressive).find((key) => key.toLowerCase() === value);
+    const instance = Expressive[name].init(el, expression ? evaluate(expression) : {});
+    cleanup(() => instance.destroy());
+  });
+});
+`} />
+        <p>
+          Write the component name after the colon and pass options as the expression. Add
+          <code>no-autoinit</code> so a later <code>AutoInit()</code> call leaves the element alone.
+        </p>
+<Code code={`
+<a class="button tooltipped no-autoinit" data-tooltip="Hi"
+   x-expressive:tooltip="{ position: 'top' }">Hover</a>
+`} />
+        <p>
+          Select, Autocomplete and Datepicker fire a native <code>change</code> event when the user picks a
+          value, so <code>x-model</code> picks it up. When your code sets the value, the visible field stays
+          stale until you call <code>refresh()</code>. Do the same after adding or removing options.
+          Put the select in its own <code>.field</code> so the template root stays the element Alpine created.
+        </p>
+<Code code={`
+<template x-if="open">
+  <div class="field">
+    <select id="letter" class="no-autoinit" x-model="letter" x-expressive:formselect
+      x-effect="letter; $nextTick(() => $el.Expressive_FormSelect?.refresh())">
+      <option value="a">Alpha</option>
+      <option value="b">Beta</option>
+    </select>
+    <label for="letter">Letter</label>
+  </div>
+</template>
+`} />
+        <p>
+          Component events bubble, so Alpine listens to them like any other:
+          <code>@expressive:change="tab = $event.detail.panel.id"</code>. Dialogs and sheets are native
+          <code>&lt;dialog&gt;</code> elements; open one with <code>$refs.dialog.showModal()</code>.
         </p>
   </Section>
 </PageBody>
