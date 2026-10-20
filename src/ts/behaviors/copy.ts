@@ -49,5 +49,6 @@ export class Copy {
         : button.getAttribute('data-copy-error') || Copy.i18n.failed,
       root: button as HTMLElement
     });
+    Utils.emit(button, 'copy', { text, copied });
   }
 }

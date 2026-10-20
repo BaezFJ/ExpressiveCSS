@@ -162,6 +162,7 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
       });
     }
     item.setAttribute("aria-pressed", willSelect ? "true" : "false");
+    this._notify("change", null, { detail: { button: item, pressed: willSelect } });
   };
 
   private _rememberPressed(item: HTMLButtonElement) {

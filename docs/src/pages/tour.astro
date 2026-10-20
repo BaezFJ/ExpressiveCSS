@@ -67,7 +67,10 @@ const S = defineSections([
         </p>
         <p>
           <code>Expressive.Tour.start(el, index)</code>,
-          <code>go(el, index)</code> and <code>end(el)</code> work from script,
+          <code>go(el, index)</code> and <code>end(el, completed)</code> work from script.
+          The tour fires <code>expressive:open</code>, <code>expressive:change</code> with
+          <code>{"{ step, index }"}</code>, and <code>expressive:close</code> with
+          <code>{"{ completed }"}</code>, true when Done ended it;
           and <code>Expressive.Tour.i18n.progress</code> holds the
           <code>{"Step {current} of {total}"}</code> text. The root bundle starts the
           behavior on load; with the modular entry, call

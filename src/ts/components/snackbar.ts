@@ -161,6 +161,7 @@ export class Snackbar {
     Snackbar._snackbars.push(this);
     this._animateIn();
     this._setTimer();
+    Utils.emit(this.el, 'open');
   }
 
   static get defaults(): SnackbarOptions {
@@ -362,6 +363,7 @@ export class Snackbar {
         if (this._dismissed) return;
         try {
           if (typeof this.options.onAction === 'function') this.options.onAction();
+          Utils.emit(this.el, 'action');
         } finally {
           this.dismiss();
         }
@@ -468,6 +470,7 @@ export class Snackbar {
     this.counterTimeout = null;
     this._restoreFocus();
     if (this._events.signal.aborted) return;
+    Utils.emit(this.el, 'close');
     const duration = this.options.outDuration;
     const transitions = [`margin ${duration}ms ease`, `opacity ${duration}ms ease`];
 
@@ -488,6 +491,8 @@ export class Snackbar {
     }, 1);
 
     this._dismissTimer = setTimeout(() => {
+      // While the snackbar is still in the page, so the event reaches the document.
+      Utils.emit(this.el, 'closed');
       this._remove();
       // Call the optional callback
       if (typeof this.options.completeCallback === 'function') {
