@@ -183,8 +183,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed change, select, confirm, cancel, autocomplete and chip events: 82,098 gzip bytes (+317).
   // Reviewed Tooltip, Snackbar, ButtonGroup, ScrollSpy, Tour and Copy events: 82,285 gzip bytes (+187).
   // Reviewed touch: map marker hit area and the snackbar close default: 82,319 gzip bytes (+34).
-  // Reviewed the snackbar queue and replace option: 82,658 gzip bytes (+339).
-  assert.ok(sizes(js).gzip <= 82658, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed map tap-to-move markers, arrow nudge and pan actions: 82,916 gzip bytes (+597).
+  // Reviewed the snackbar queue and replace option: 83,253 gzip bytes (+337).
+  assert.ok(sizes(js).gzip <= 83253, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -294,5 +295,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed rem sizes for controls that hold text or icons: 83,140 gzip bytes (+145).
   // Reviewed rem sizes for charts, cards, stat, KPI and the org chart: 83,153 gzip bytes (+13).
   // Reviewed touch: map marker hit area and the snackbar close default: 83,168 gzip bytes (+15).
-  assert.ok(sizes(css).gzip <= 83168, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed map tap-to-move markers, arrow nudge and pan actions: 83,204 gzip bytes (+36).
+  assert.ok(sizes(css).gzip <= 83204, `CSS gzip: ${sizes(css).gzip}`);
 });
