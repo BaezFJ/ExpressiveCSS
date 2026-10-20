@@ -20,7 +20,7 @@ function band(level: number, steps: number) {
  * `data-mid` the scale diverges either side of that value, and with
  * `data-steps` the shades fall into that many bands.
  *
- * Re-run `HeatmapChart.init(el)` after changing the table.
+ * Call `update()` after changing the table.
  */
 export class HeatmapChart extends LineChart {
   // No initializers: LineChart's constructor draws before they would run.
@@ -59,6 +59,17 @@ export class HeatmapChart extends LineChart {
 
   static getInstance(el: HTMLElement): HeatmapChart {
     return el['Expressive_HeatmapChart'];
+  }
+
+  protected get _count() {
+    return this.labels.length * this.series.length;
+  }
+
+  /** Redraws the grid, scrolled where it was. */
+  update() {
+    const left = this._scroll?.scrollLeft;
+    super.update();
+    if (this._scroll && left) this._scroll.scrollLeft = left;
   }
 
   /** Highlights one cell, numbered row by row. Pass -1 to hide the tooltip. */

@@ -24,7 +24,7 @@ const has = (series: Series, name: string) => series.className.split(/\s+/).incl
  * With `stacked` the columns stack; `points` and `straight` apply to the
  * lines as in LineChart.
  *
- * Re-run `MixedChart.init(el)` after changing the table.
+ * Call `update()` after changing the table.
  */
 export class MixedChart extends ColumnChart {
   protected get _type() {

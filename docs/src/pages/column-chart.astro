@@ -47,7 +47,7 @@ card.querySelectorAll('[data-period]').forEach((button) => {
     body.replaceChildren(...rows.slice(-Number(button.dataset.period)));
     card.querySelector('.stats dd').textContent = button.dataset.total;
     card.querySelector('.stat-change').textContent = button.dataset.change;
-    Expressive.ColumnChart.init(figure);
+    Expressive.ColumnChart.getInstance(figure).update();
   });
 });`;
 ---
@@ -262,7 +262,7 @@ card.querySelectorAll('[data-period]').forEach((button) => {
         <p>
           A chart goes in a card with the figures it explains. Put the period
           switch beside the stat; on a change, update the stat, swap the table
-          rows and call <code>ColumnChart.init</code> to redraw. The card adds
+          rows and call <code>update()</code> to redraw. The card adds
           no chart styles; size a chart with its tokens.
         </p>
         <article class="outlined" id="profit-card" data-markdown-ignore>
@@ -438,8 +438,8 @@ ${cardScript.replace(/^/gm, "  ")}
   <Section {...S.javascript}>
         <p>
           <code>AutoInit()</code> starts every <code>.column-chart</code>. To
-          start one yourself, or to redraw a chart after changing its table,
-          call <code>ColumnChart.init</code> again. It takes the line chart's
+          start one yourself, call <code>ColumnChart.init</code>. After changing its
+          table, call <code>update()</code> to redraw it in place. It takes the line chart's
           options and methods.
         </p>
 <Code code={`
@@ -447,6 +447,7 @@ const chart = Expressive.ColumnChart.init(document.querySelector('.column-chart'
   max: 10000
 });
 chart.show(2);   // highlight the third group; -1 hides the tooltip
+chart.update();  // redraw from the table; focus and the highlighted row stay
 chart.destroy(); // remove the drawing and show the table again
 `} />
         <table>

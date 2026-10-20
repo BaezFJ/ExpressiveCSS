@@ -29,7 +29,7 @@ const wedge = (corners: string[]) => `M0,0L${corners.join('L')}Z`;
  * shape joining its values on the spokes, from zero in the middle to the
  * scale's top at the rim. The row labels sit round the rim.
  *
- * Re-run `RadarChart.init(el)` after changing the table.
+ * Call `update()` after changing the table.
  */
 export class RadarChart extends LineChart {
   protected get _type() {

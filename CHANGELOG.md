@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Charts have `update()`, which redraws a chart from its changed table in
+  place. Before, the way to redraw was to call `init()` again, which dropped
+  keyboard focus and the highlighted row. Now focus stays on the chart, the
+  highlighted row stays where the table still has it, and a scrolled heatmap
+  stays scrolled. A chart set up with an empty table draws once it has rows.
 - Tabs can be a tablist. A strip the page writes as `role="tablist"`, with
   `role="tab"` links naming their panel in `aria-controls`, gets the ARIA
   tabs pattern: Tabs keeps `aria-selected` and a roving `tabindex`, so the

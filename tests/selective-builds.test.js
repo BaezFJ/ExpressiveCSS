@@ -186,7 +186,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed map tap-to-move markers, arrow nudge and pan actions: 82,916 gzip bytes (+597).
   // Reviewed the snackbar queue and replace option: 83,253 gzip bytes (+337).
   // Reviewed the opt-in tablist and revealing the selected tab: 83,734 gzip bytes (+481).
-  assert.ok(sizes(js).gzip <= 83734, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed chart update(): 83,906 gzip bytes (+172).
+  assert.ok(sizes(js).gzip <= 83906, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

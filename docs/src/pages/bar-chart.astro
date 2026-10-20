@@ -305,8 +305,8 @@ const spent = sum(spending.map(([, value]) => value));
   <Section {...S.javascript}>
         <p>
           <code>AutoInit()</code> starts every <code>.bar-chart</code>. To
-          start one yourself, or to redraw a chart after changing its table,
-          call <code>BarChart.init</code> again. It takes the column chart's
+          start one yourself, call <code>BarChart.init</code>. After changing its
+          table, call <code>update()</code> to redraw it in place. It takes the column chart's
           options and methods.
         </p>
 <Code code={`
@@ -314,6 +314,7 @@ const chart = Expressive.BarChart.init(document.querySelector('.bar-chart'), {
   max: 10000
 });
 chart.show(2);   // highlight the third row; -1 hides the tooltip
+chart.update();  // redraw from the table; focus and the highlighted row stay
 chart.destroy(); // remove the drawing and show the table again
 `} />
         <table>

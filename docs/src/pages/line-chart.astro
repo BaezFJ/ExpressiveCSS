@@ -47,7 +47,7 @@ card.querySelectorAll('[data-period]').forEach((button) => {
     body.replaceChildren(...rows.slice(-Number(button.dataset.period)));
     card.querySelector('.stats dd').textContent = button.dataset.total;
     card.querySelector('.stat-change').textContent = button.dataset.change;
-    Expressive.LineChart.init(figure);
+    Expressive.LineChart.getInstance(figure).update();
   });
 });`;
 ---
@@ -258,7 +258,7 @@ card.querySelectorAll('[data-period]').forEach((button) => {
         <p>
           A chart goes in a card with the figures it explains. Put the period
           switch beside the stat; on a change, update the stat, swap the table
-          rows and call <code>LineChart.init</code> to redraw. The card adds no
+          rows and call <code>update()</code> to redraw. The card adds no
           chart styles; size a chart with its tokens. A card pads only its
           headings and paragraphs, so wrap the stat and chart in
           <code>&lt;div class="p-4"&gt;</code> to keep them off the border.
@@ -450,14 +450,15 @@ ${cardScript.replace(/^/gm, "  ")}
   <Section {...S.javascript}>
         <p>
           <code>AutoInit()</code> starts every <code>.line-chart</code>. To
-          start one yourself, or to redraw a chart after changing its table,
-          call <code>LineChart.init</code> again.
+          start one yourself, call <code>LineChart.init</code>. After changing its
+          table, call <code>update()</code> to redraw it in place.
         </p>
 <Code code={`
 const chart = Expressive.LineChart.init(document.querySelector('.line-chart'), {
   min: 0
 });
 chart.show(2);   // highlight the third row; -1 hides the tooltip
+chart.update();  // redraw from the table; focus and the highlighted row stay
 chart.destroy(); // remove the drawing and show the table again
 `} />
         <table>
