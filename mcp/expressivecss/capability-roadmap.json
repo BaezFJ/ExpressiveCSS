@@ -2233,13 +2233,13 @@
       "gaps": [
         {
           "kind": "verification",
-          "description": "Drawing, the hidden table, cell shades and gaps, the fixed scale, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified.",
+          "description": "Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified.",
           "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
         },
         {
           "kind": "feature",
-          "description": "A wide grid narrows its cells to fit instead of scrolling, and the scale is one color with no diverging or stepped option.",
-          "nextStep": "Add a scrolling layout that keeps the tooltip visible if year-long grids must work on phones, and a diverging scale if charts need a midpoint."
+          "description": "In a grid wide enough to scroll, the row labels scroll away with the cells.",
+          "nextStep": "Pin the row labels if wide grids need them in view."
         }
       ],
       "browserChecks": [

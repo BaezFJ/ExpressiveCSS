@@ -7,6 +7,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Heatmap scales: `data-mid` makes the scale diverge from that value, with
+  values below it shading towards the new
+  `--md-comp-heatmap-chart-low-color` (`tertiary`), and `data-steps` groups
+  the shades into bands, with a swatch per band under the grid.
+- Wide heatmaps scroll: cells keep `--md-comp-heatmap-chart-cell-min-width`
+  (12px), and a grid too wide for its figure scrolls sideways instead of
+  narrowing them. The arrow keys scroll the cell they move to into view.
+
 - Pie chart grouping: `data-other="5"` turns every row under 5% of the
   whole into one last slice with their sum and share, named by
   `data-other-label` ("Other" by default). The table keeps every row.

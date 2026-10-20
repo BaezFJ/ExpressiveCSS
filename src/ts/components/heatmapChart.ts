@@ -4,11 +4,21 @@ import { LineChart, LineChartOptions } from './lineChart';
 export type HeatmapChartOptions = LineChartOptions;
 
 /**
+ * A shade in one of `steps` bands, each side of zero on a diverging scale:
+ * the lowest band is the empty color, and the highest is the full color.
+ */
+function band(level: number, steps: number) {
+  return (Math.sign(level) * Math.min(steps - 1, Math.floor(Math.abs(level) * steps))) / (steps - 1);
+}
+
+/**
  * Heatmap chart. It reads its <table> like LineChart, but draws every cell
  * as a square of the grid, shaded from the lowest value to the highest, with
  * the row headers beside it and the column headers below. A `data-label` on
  * a header cell replaces its text on the grid; an empty one hides it. The
- * tooltip shows one cell, and the arrow keys move round the grid.
+ * tooltip shows one cell, and the arrow keys move round the grid. With
+ * `data-mid` the scale diverges either side of that value, and with
+ * `data-steps` the shades fall into that many bands.
  *
  * Re-run `HeatmapChart.init(el)` after changing the table.
  */
@@ -16,7 +26,7 @@ export class HeatmapChart extends LineChart {
   // No initializers: LineChart's constructor draws before they would run.
   /** Every cell, row by row. */
   private _cells: HTMLElement[];
-  /** Each cell's shade from 0 to 1, or null for a gap. */
+  /** Each cell's shade from 0 to 1, or -1 to 1 on a diverging scale, or null for a gap. */
   private _levels: (number | null)[];
   /** The text of the lowest and highest cells, for the legend. */
   private _ends: [string, string];
@@ -52,17 +62,32 @@ export class HeatmapChart extends LineChart {
   /** Highlights one cell, numbered row by row. Pass -1 to hide the tooltip. */
   show(index: number) {
     if (!this._tooltip || index === this.activeIndex) return;
-    const cell = this._cells[index];
+    this._activate(this._cells[index], index);
+  }
+
+  private _activate(cell: HTMLElement | undefined, index: number) {
     // Measure before the writes below, which would otherwise force a layout.
-    const [left, top, width, plotWidth] = cell
-      ? [cell.offsetLeft, cell.offsetTop, cell.offsetWidth, this._plot.clientWidth]
-      : [];
+    const box = cell ? this._box(cell) : null;
     this._cells[this.activeIndex]?.classList.remove('active');
     this.activeIndex = index;
-    this._tooltip.hidden = !cell;
-    if (!cell) return;
-    cell.classList.add('active');
+    this._tooltip.hidden = !box;
+    if (box) this._fill(cell!, index, box);
+  }
 
+  /**
+   * A cell's left, top and width in the plot, past any scrolling of the
+   * grid, and the plot's width. A key can move to a cell scrolled out of a
+   * wide grid, so it scrolls into view first.
+   */
+  private _box(cell: HTMLElement) {
+    if (this._plot.matches(':focus-visible')) cell.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    const [box, plot] = [cell.getBoundingClientRect(), this._plot.getBoundingClientRect()];
+    return [box.left - plot.left, box.top - plot.top, box.width, this._plot.clientWidth];
+  }
+
+  /** Marks the cell and fills the tooltip beside it, on the side with more room. */
+  private _fill(cell: HTMLElement, index: number, [left, top, width, plotWidth]: number[]) {
+    cell.classList.add('active');
     const columns = this.series.length;
     const [row, series] = [Math.floor(index / columns), this.series[index % columns]];
     const title = document.createElement('strong');
@@ -75,7 +100,6 @@ export class HeatmapChart extends LineChart {
     text.textContent = series.text[row];
     this._tooltip.replaceChildren(title, name, text);
 
-    // Beside the cell, on the side with more room.
     const end = left + width / 2 > plotWidth / 2;
     this._tooltip.classList.toggle('end', end);
     this._tooltip.style.left = `${left + (end ? 0 : width)}px`;
@@ -137,10 +161,47 @@ export class HeatmapChart extends LineChart {
     [low.textContent, high.textContent] = this._ends;
     scale.className = 'heatmap-chart-scale';
     if (this._reversed) scale.style.setProperty('--heatmap-chart-to', 'left');
-    scale.style.setProperty('--low', String(this._endLevels[0]));
-    scale.style.setProperty('--high', String(this._endLevels[1]));
+    const [from, to] = this._endLevels;
+    scale.style.setProperty('--low', String(from));
+    scale.style.setProperty('--high', String(to));
+    // On a diverging scale the gradient passes the midpoint's empty color.
+    scale.style.setProperty('--mid', `${Math.min(1, Math.max(0, -from / (to - from || 1))) * 100}%`);
+    scale.append(...this._bands().filter((level) => level >= from && level <= to).map((level) => {
+      const swatch = document.createElement('span');
+      swatch.style.setProperty('--level', String(level));
+      return swatch;
+    }));
     legend.append(low, scale, high);
     return [legend];
+  }
+
+  /** With data-steps, every band's shade from the lowest to the highest; otherwise none. */
+  private _bands() {
+    const steps = this._steps;
+    if (!steps) return [];
+    return Array.from({ length: 2 * steps - 1 }, (_, k) => (k - steps + 1) / (steps - 1));
+  }
+
+  /** The number of bands data-steps asks for, or 0 for a smooth scale. */
+  private get _steps() {
+    const steps = Math.round(this._number('steps') ?? 0);
+    return steps > 1 ? steps : 0;
+  }
+
+  /**
+   * How a value shades its cell: from 0 at the scale's low end to 1 at its
+   * high end, or with data-mid from -1 to 1 either side of that midpoint,
+   * as far as the further end. With data-steps the shades fall into bands.
+   */
+  private _shade(low: number, high: number) {
+    const option = (name: 'min' | 'max', fallback: number) => this._number(name) ?? this.options[name] ?? fallback;
+    const [min, max, mid] = [option('min', low), option('max', high), this._number('mid')];
+    const clamp = (value: number, floor: number) => Math.min(1, Math.max(floor, value));
+    const level = mid === null
+      ? (value: number) => clamp((value - min) / (max - min || 1), 0)
+      : (value: number) => clamp((value - mid) / (Math.max(max - mid, mid - min) || 1), -1);
+    const steps = this._steps;
+    return steps ? (value: number) => band(level(value), steps) : level;
   }
 
   /**
@@ -156,9 +217,7 @@ export class HeatmapChart extends LineChart {
       if (value < low) [low, this._ends[0]] = [value, series.text[row]];
       if (value > high) [high, this._ends[1]] = [value, series.text[row]];
     }));
-    const option = (name: 'min' | 'max') => this._number(name) ?? this.options[name];
-    const [min, max] = [option('min') ?? low, option('max') ?? high];
-    const shade = (value: number) => Math.min(1, Math.max(0, (value - min) / (max - min || 1)));
+    const shade = this._shade(low, high);
     this._endLevels = [shade(low), shade(high)];
 
     const grid = document.createElement('div');
@@ -203,6 +262,15 @@ export class HeatmapChart extends LineChart {
       element.style.gridArea = `${this.labels.length + 1} / ${column + 2} / auto / ${end + 2}`;
       grid.append(element);
     });
-    return grid;
+
+    // The grid scrolls sideways when its cells would be too narrow. The
+    // plot is the one Tab stop, so the scroll box is not another, and a
+    // press that focuses it hands focus on to the plot.
+    const scroll = document.createElement('div');
+    scroll.className = 'heatmap-chart-scroll';
+    scroll.tabIndex = -1;
+    scroll.addEventListener('focus', () => this._plot.focus());
+    scroll.append(grid);
+    return scroll;
   }
 }

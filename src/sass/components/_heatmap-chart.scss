@@ -7,23 +7,47 @@
 // its rows, so --md-comp-heatmap-chart-height does not apply.
 //
 // Each cell carries --level, 0 for the lowest value and 1 for the highest,
-// and mixes the color into the empty color by that much. A .gap cell has no
-// value and draws no fill. Value text is black or white, whichever
-// contrasts more with the cell's mix, in any theme.
+// and mixes the color into the empty color by that much. On a diverging
+// scale (data-mid) a level below 0 mixes in the low color instead. A .gap
+// cell has no value and draws no fill. Value text is black or white,
+// whichever contrasts more with the cell's mix, in any theme.
+//
+// Cells keep --md-comp-heatmap-chart-cell-min-width, and a grid too wide
+// for its figure scrolls sideways.
 //
 // Modifiers: .values writes each cell's text on it.
 //
 // Tokens:
-//   --md-comp-heatmap-chart-row-height   32px
-//   --md-comp-heatmap-chart-gap          3px between cells
-//   --md-comp-heatmap-chart-shape        4px, the cell's corner radius
-//   --md-comp-heatmap-chart-color        primary, the highest value
-//   --md-comp-heatmap-chart-empty-color  surface-container-highest, the lowest
+//   --md-comp-heatmap-chart-row-height      32px
+//   --md-comp-heatmap-chart-cell-min-width  12px, below which the grid scrolls
+//   --md-comp-heatmap-chart-gap             3px between cells
+//   --md-comp-heatmap-chart-shape           4px, the cell's corner radius
+//   --md-comp-heatmap-chart-color           primary, the highest value
+//   --md-comp-heatmap-chart-low-color       tertiary, the lowest value on a
+//                                           diverging scale
+//   --md-comp-heatmap-chart-empty-color     surface-container-highest, the
+//                                           lowest, or the midpoint
 
 @include chart("heatmap-chart");
 
+// A level's color: the color above 0, the low color below it, both mixed
+// into the empty color, so one formula serves both kinds of scale.
+@function shade($level) {
+  @return color-mix(
+    in oklab,
+    var(--md-comp-heatmap-chart-color) calc(max(#{$level}, 0) * 100%),
+    color-mix(
+      in oklab,
+      var(--md-comp-heatmap-chart-low-color) calc(max(-1 * #{$level}, 0) * 100%),
+      var(--md-comp-heatmap-chart-empty-color)
+    )
+  );
+}
+
 .heatmap-chart {
   --md-comp-heatmap-chart-row-height: 32px;
+  --md-comp-heatmap-chart-cell-min-width: 12px;
+  --md-comp-heatmap-chart-low-color: var(--md-sys-color-tertiary);
   --md-comp-heatmap-chart-gap: 3px;
   --md-comp-heatmap-chart-shape: var(--md-sys-shape-corner-extra-small);
   --md-comp-heatmap-chart-color: var(--md-sys-color-primary);
@@ -33,11 +57,7 @@
 // The cells and the tooltip swatch share the mix.
 .heatmap-chart-cell,
 .heatmap-chart-tooltip > span {
-  --heatmap-chart-color: color-mix(
-    in oklab,
-    var(--md-comp-heatmap-chart-color) calc(var(--level, 0) * 100%),
-    var(--md-comp-heatmap-chart-empty-color)
-  );
+  --heatmap-chart-color: #{shade(var(--level, 0))};
 }
 
 .heatmap-chart-plot {
@@ -46,12 +66,23 @@
   background: none;
 }
 
+// ponytail: the row labels scroll away with the cells; pin them if wide grids need it.
+.heatmap-chart-scroll {
+  overflow-x: auto;
+  // Room for the active cell's outline, which the scrolling would clip.
+  margin: -3px;
+  padding: 3px;
+}
+
 .heatmap-chart-grid {
   display: grid;
   // Row labels take up to 40% of the width and end in an ellipsis past it.
   grid-template-columns: fit-content(40%) repeat(var(--columns, 1), minmax(0, 1fr));
   grid-template-rows: repeat(var(--rows, 1), var(--md-comp-heatmap-chart-row-height));
   gap: var(--md-comp-heatmap-chart-gap);
+  // Wide enough for every cell to keep its minimum width in the 60% the row
+  // labels leave at least; past the figure's width the scroll box scrolls.
+  width: max(100%, var(--columns, 1) * (var(--md-comp-heatmap-chart-cell-min-width) + var(--md-comp-heatmap-chart-gap)) / 0.6);
   color: var(--md-sys-color-on-surface-variant);
   @include typescale("body-small");
 }
@@ -138,8 +169,30 @@
   // From the lowest cell's shade to the highest's, set by HeatmapChart.
   background: linear-gradient(
     in oklab to var(--heatmap-chart-to, right),
-    color-mix(in oklab, var(--md-comp-heatmap-chart-color) calc(var(--low, 0) * 100%), var(--md-comp-heatmap-chart-empty-color)),
-    color-mix(in oklab, var(--md-comp-heatmap-chart-color) calc(var(--high, 1) * 100%), var(--md-comp-heatmap-chart-empty-color))
+    #{shade(var(--low, 0))},
+    #{shade(var(--high, 1))}
+  );
+
+  // A stepped scale is a swatch per band, which HeatmapChart writes.
+  &:has(> span) {
+    display: flex;
+    overflow: hidden;
+    background: none;
+  }
+
+  > span {
+    flex: 1;
+    background: #{shade(var(--level, 0))};
+  }
+}
+
+// A diverging scale passes the midpoint's empty color on the way.
+.heatmap-chart[data-mid] .heatmap-chart-scale {
+  background: linear-gradient(
+    in oklab to var(--heatmap-chart-to, right),
+    #{shade(var(--low, 0))},
+    var(--md-comp-heatmap-chart-empty-color) var(--mid, 0%),
+    #{shade(var(--high, 1))}
   );
 }
 

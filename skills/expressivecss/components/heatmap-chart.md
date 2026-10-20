@@ -9,7 +9,7 @@ Component ID: `heatmap-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6693c9015432bbce8240a591fef594a7080916003b8f2746abec8762fd494e93`
+Contract SHA-256: `bd72b065d1e8d02ce95a2ee7c8c62d210b8e9f13ad6a087292b7b31dc524545e`
 
 #### Selection and adaptation
 
@@ -29,7 +29,7 @@ Support (2026-10-07, `llm.md#heatmap-chart`): Every body cell of a figure's data
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, labels and scale are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, cell shades and gaps, the fixed scale, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified. A wide grid narrows its cells rather than scrolling.
+Known boundary: Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified. In a wide grid the row labels scroll away with the cells.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#heatmap-chart).
 

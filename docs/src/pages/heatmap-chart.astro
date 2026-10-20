@@ -26,6 +26,12 @@ const tasks = [
 ];
 const weeks = Array.from({ length: 12 }, (_, i) => `Week ${i + 1}`);
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+const change: [string, number[]][] = [["North", [-12, -5, 0, 4, 9, 15]], ["South", [-20, -8, -2, 3, 6, 11]], ["East", [-3, 1, 5, 10, 18, 25]]];
+const daily: [string, number[]][] = days.map((day, i) => [day, tasks[i]]);
+// A table's head and body as HTML, for the examples that only differ in data.
+const table = (corner: string, columns: string[], rows: [string, number[]][]) =>
+  `<thead><tr><th>${corner}</th>${columns.map((column) => `<th>${column}</th>`).join("")}</tr></thead>`
+  + `<tbody>${rows.map(([label, values]) => `<tr><th>${label}</th>${values.map((value) => `<td>${value}</td>`).join("")}</tr>`).join("")}</tbody>`;
 const sales: [string, number[]][] = [
   ["Priya", [45, 58, 85, 41, 47, 58]], ["Daniel", [88, 34, 45, 91, 52, 40]], ["Amara", [60, 48, 65, 58, 62, 70]],
   ["Leo", [85, 72, 78, 80, 50, 98]], ["Wei", [35, 71, 30, 44, 88, 90]],
@@ -179,6 +185,12 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
           end's shade. The scale under the grid still runs from the lowest
           cell to the highest, over only the shades they use.
         </p>
+        <p>
+          Cells are at least <code>--md-comp-heatmap-chart-cell-min-width</code>
+          wide, 12px by default. A grid with too many columns for its figure
+          scrolls sideways instead of narrowing them, and the arrow keys
+          scroll the cell they move to into view.
+        </p>
         <figure class="heatmap-chart values" data-min="0" data-max="100" style="--md-comp-heatmap-chart-row-height: 56px; --md-comp-heatmap-chart-gap: 4px; --md-comp-heatmap-chart-shape: 12px" data-markdown-ignore>
           <figcaption>Channel score, paid and organic</figcaption>
           <table>
@@ -201,6 +213,46 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
       <tr><th>Organic</th><td>68</td><td>55</td><td>90</td></tr>
     </tbody>
   </table>
+</figure>
+`} />
+        <p>
+          <code>data-mid</code> makes the scale diverge from that value, such
+          as 0 for a change. The midpoint is the empty color, values above it
+          shade towards <code>--md-comp-heatmap-chart-color</code> and values
+          below towards <code>--md-comp-heatmap-chart-low-color</code>, both as
+          far as the end further from the midpoint, so equal distances get
+          equal shades.
+        </p>
+        <figure class="heatmap-chart values" data-mid="0" data-markdown-ignore>
+          <figcaption>Sales change on last year, in percent</figcaption>
+          <table set:html={table("Region", months, change)} />
+        </figure>
+<Code code={`
+<figure class="heatmap-chart values" data-mid="0">
+  <figcaption>Sales change on last year, in percent</figcaption>
+  <table>
+    <thead>
+      <tr><th>Region</th><th>Jan</th><th>Feb</th><!-- … --></tr>
+    </thead>
+    <tbody>
+      <tr><th>North</th><td>-12</td><td>-5</td><!-- … --></tr>
+    </tbody>
+  </table>
+</figure>
+`} />
+        <p>
+          <code>data-steps</code> groups the shades into that many bands, the
+          lowest band in the empty color, and the scale under the grid shows
+          a swatch per band. On a diverging scale each side gets that many
+          bands, and the band nearest the midpoint is the empty color.
+        </p>
+        <figure class="heatmap-chart" data-steps="4" data-markdown-ignore>
+          <figcaption>Tasks closed per day</figcaption>
+          <table set:html={table("Day", weeks, daily)} />
+        </figure>
+<Code code={`
+<figure class="heatmap-chart" data-steps="4">
+  <!-- The same caption and table -->
 </figure>
 `} />
   </Section>
@@ -290,10 +342,12 @@ chart.destroy(); // remove the drawing and show the table again
         <p>Override these on the <code>.heatmap-chart</code>.</p>
         <TokenTable>
           <tr><td><code>--md-comp-heatmap-chart-row-height</code></td><td>32px</td></tr>
+          <tr><td><code>--md-comp-heatmap-chart-cell-min-width</code></td><td>12px; below it a wide grid scrolls</td></tr>
           <tr><td><code>--md-comp-heatmap-chart-gap</code></td><td>3px between cells</td></tr>
           <tr><td><code>--md-comp-heatmap-chart-shape</code></td><td>4px, the cell's corner radius</td></tr>
           <tr><td><code>--md-comp-heatmap-chart-color</code></td><td><code>primary</code>, the highest value's shade</td></tr>
-          <tr><td><code>--md-comp-heatmap-chart-empty-color</code></td><td><code>surface-container-highest</code>, the lowest value's shade</td></tr>
+          <tr><td><code>--md-comp-heatmap-chart-low-color</code></td><td><code>tertiary</code>, the lowest value's shade on a diverging scale</td></tr>
+          <tr><td><code>--md-comp-heatmap-chart-empty-color</code></td><td><code>surface-container-highest</code>, the lowest value's shade, or the midpoint's</td></tr>
           <tr><td><code>--md-comp-heatmap-chart-grid-color</code></td><td><code>outline-variant</code>, a gap's outline</td></tr>
         </TokenTable>
         <p>For a selective Sass build, include <code>"heatmap-chart"</code> in <code>$components</code>.</p>
