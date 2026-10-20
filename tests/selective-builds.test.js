@@ -171,7 +171,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed chart review fixes: segment sizes, stacked ranges, diverging bounds and scrolling tooltips: 78,612 gzip bytes (+177).
   // Reviewed keypad caps lock, layers, hardware key highlight and minlength: 78,993 gzip bytes (+381).
   // Reviewed questionnaire shortcuts, review step and saved progress: 80,137 gzip bytes (+1,144).
-  assert.ok(sizes(js).gzip <= 80137, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed time picker hours stepping round the day: 80,229 gzip bytes (+92).
+  assert.ok(sizes(js).gzip <= 80229, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

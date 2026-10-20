@@ -254,7 +254,7 @@ Expressive.Timepicker.init(elem, {
   </Section>
 
   <Section {...S.internationalization}>
-        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults. The <code>hours</code> and <code>minutes</code> keys provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Stepping the hour leaves AM and PM as they are. Tab moves between the fields, the AM/PM buttons and the footer; the dial itself takes pointer input only.</p>
+        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults. The <code>hours</code> and <code>minutes</code> keys provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between the fields, the AM/PM buttons and the footer. The dial itself takes pointer input only: the spin buttons set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.</p>
         <table class="striped">
           <thead>
             <tr>

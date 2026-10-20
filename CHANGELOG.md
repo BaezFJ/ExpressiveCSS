@@ -492,6 +492,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Time picker hours step round the day: in 12-hour time, Up from 11 AM
+  gives 12 PM and Down from 12 PM gives 11 AM, so AM and PM follow the
+  hour.
 - Radar chart gaps: a missing value breaks the outline instead of joining
   the spokes either side, as a line chart's does. With `.area`, each
   unbroken run fills as a wedge from the middle, drawn by a new

@@ -7216,7 +7216,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 | `clear` | `'Clear'` |
 | `done` | `'Ok'` |
 
-`i18n.hours` and `i18n.minutes` default to `Hours` and `Minutes` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Stepping the hour leaves AM and PM as they are. Tab moves between controls; the dial itself takes pointer input only.
+`i18n.hours` and `i18n.minutes` default to `Hours` and `Minutes` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between controls. The dial itself takes pointer input only: the spin buttons already set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.
 
 ### 12-hour and 24-hour
 
