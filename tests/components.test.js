@@ -835,25 +835,149 @@ describe("Snackbar", () => {
     }
   });
 
-  test("a new snackbar replaces the one that is showing", () => {
-    const first = new Expressive.Snackbar({
-      text: "First",
-      displayLength: Infinity,
-    });
-    const second = new Expressive.Snackbar({
-      text: "Second",
-      displayLength: Infinity,
-    });
+  test("a new snackbar waits for the one on screen, then shows", async () => {
+    const shown = [];
+    const first = new Expressive.Snackbar({ text: "First", displayLength: Infinity, outDuration: 0 });
+    const second = new Expressive.Snackbar({ text: "Second", displayLength: Infinity, outDuration: 0, completeCallback: () => shown.push("second done") });
+    const third = new Expressive.Snackbar({ text: "Third", displayLength: Infinity, outDuration: 0, completeCallback: () => shown.push("third done") });
+    try {
+      assert.equal(first.el.isConnected, true);
+      assert.equal(second.el.isConnected, false, "the second waits");
+      third.dismiss();
+      assert.deepEqual(shown, ["third done"], "a queued snackbar can be dismissed before it shows");
+      first.dismiss();
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      assert.equal(first.el.isConnected, false);
+      assert.equal(second.el.isConnected, true, "the second shows once the first has gone");
+      assert.equal(document.querySelectorAll("#snackbar-container .snackbar").length, 1);
+      assert.equal(third.el.isConnected, false, "a dismissed queued snackbar never shows");
+    } finally {
+      Expressive.Snackbar.dismissAll();
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
+  });
+
+  test("replace: true takes the place of the one on screen at once", () => {
+    const first = new Expressive.Snackbar({ text: "First", displayLength: Infinity });
+    const second = new Expressive.Snackbar({ text: "Second", displayLength: Infinity, replace: true });
     try {
       assert.equal(first.el.isConnected, false);
       assert.equal(second.el.textContent.trim(), "Second");
-      assert.equal(
-        document.querySelectorAll("#snackbar-container .snackbar").length,
-        1,
-      );
+      assert.equal(document.querySelectorAll("#snackbar-container .snackbar").length, 1);
     } finally {
       second.dismiss();
     }
+  });
+
+  test("a persistent snackbar a re-render removed does not hold the queue", () => {
+    const stuck = new Expressive.Snackbar({ text: "Stuck", displayLength: Infinity });
+    document.getElementById("snackbar-container").remove();
+    const next = new Expressive.Snackbar({ text: "Next", displayLength: Infinity });
+    try {
+      assert.equal(next.el.isConnected, true);
+      assert.equal(Expressive.Snackbar.getInstance(stuck.el), undefined, "the removed one is let go");
+    } finally {
+      next.dismiss();
+    }
+  });
+
+  test("a queued snackbar fires expressive:open when it shows, not when it is made", async () => {
+    const opened = [];
+    const record = (e) => opened.push(e.target.textContent.trim());
+    document.addEventListener("expressive:open", record);
+    try {
+      const first = new Expressive.Snackbar({ text: "First", displayLength: Infinity, outDuration: 0 });
+      new Expressive.Snackbar({ text: "Second", displayLength: Infinity, outDuration: 0 });
+      assert.deepEqual(opened, ["First"]);
+      first.dismiss();
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      assert.deepEqual(opened, ["First", "Second"]);
+    } finally {
+      document.removeEventListener("expressive:open", record);
+      Expressive.Snackbar.dismissAll();
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
+  });
+
+  test("a queued snackbar whose template went away is skipped, and the queue goes on", async () => {
+    const holder = document.createElement("div");
+    holder.innerHTML = '<template id="queued-body"><div><p>From template</p></div></template>';
+    document.body.append(holder);
+    const done = [];
+    const first = new Expressive.Snackbar({ text: "First", displayLength: Infinity, outDuration: 0 });
+    new Expressive.Snackbar({ snackbarId: "queued-body", displayLength: Infinity, outDuration: 0, completeCallback: () => done.push("template") });
+    const third = new Expressive.Snackbar({ text: "Third", displayLength: Infinity, outDuration: 0 });
+    try {
+      holder.remove();
+      first.dismiss();
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      assert.deepEqual(done, ["template"], "the skipped one still completes");
+      assert.equal(third.el.isConnected, true, "the next one shows");
+    } finally {
+      Expressive.Snackbar.dismissAll();
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
+  });
+
+  test("after a re-render removes the container, the oldest waiting snackbar shows first", () => {
+    new Expressive.Snackbar({ text: "Shown", displayLength: Infinity });
+    const older = new Expressive.Snackbar({ text: "Older", displayLength: Infinity });
+    document.getElementById("snackbar-container").remove();
+    const newer = new Expressive.Snackbar({ text: "Newer", displayLength: Infinity });
+    try {
+      assert.equal(older.el.isConnected, true, "the one that waited longest shows");
+      assert.equal(newer.el.isConnected, false, "the new one waits its turn");
+    } finally {
+      Expressive.Snackbar.dismissAll();
+    }
+  });
+
+  test("a copy button inside a template snackbar still gets its confirmation", async () => {
+    const holder = document.createElement("div");
+    holder.innerHTML = '<template id="copy-body"><div><p>Code</p><button data-copy="abc123">Copy</button></div></template>';
+    document.body.append(holder);
+    const clipboard = Object.getOwnPropertyDescriptor(window.navigator, "clipboard");
+    Object.defineProperty(window.navigator, "clipboard", { configurable: true, value: { writeText: async () => {} } });
+    const outer = new Expressive.Snackbar({ snackbarId: "copy-body", displayLength: Infinity, outDuration: 0 });
+    try {
+      outer.el.querySelector("[data-copy]").click();
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      const shown = [...document.querySelectorAll("#snackbar-container .snackbar")];
+      assert.deepEqual(shown.map((el) => el.textContent.trim()), ["Copied"]);
+    } finally {
+      if (clipboard) Object.defineProperty(window.navigator, "clipboard", clipboard);
+      else delete window.navigator.clipboard;
+      Expressive.Snackbar.dismissAll();
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      holder.remove();
+    }
+  });
+
+  test("an authored snackbar reopens after a re-render removed its container", () => {
+    const holder = document.createElement("div");
+    holder.innerHTML = '<div id="authored-body" style="display:none"><p>Saved</p></div>';
+    document.body.append(holder);
+    new Expressive.Snackbar({ snackbarId: "authored-body", displayLength: Infinity });
+    document.getElementById("snackbar-container").remove();
+    try {
+      const again = new Expressive.Snackbar({ snackbarId: "authored-body", displayLength: Infinity });
+      assert.equal(again.el, document.getElementById("authored-body"));
+      assert.equal(again.el.isConnected, true);
+    } finally {
+      Expressive.Snackbar.dismissAll();
+      holder.remove();
+    }
+  });
+
+  test("dismissAll clears the queue as well as the screen", async () => {
+    const shown = [];
+    new Expressive.Snackbar({ text: "First", displayLength: Infinity, outDuration: 0 });
+    const queued = new Expressive.Snackbar({ text: "Second", displayLength: Infinity, outDuration: 0, completeCallback: () => shown.push("second") });
+    Expressive.Snackbar.dismissAll();
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    assert.equal(queued.el.isConnected, false);
+    assert.deepEqual(shown, ["second"]);
+    assert.equal(document.querySelectorAll("#snackbar-container .snackbar").length, 0);
   });
 
   test("an action snackbar persists with a close control by default", () => {

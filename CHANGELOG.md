@@ -596,6 +596,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Snackbars queue. A new snackbar waits until the one on screen is dismissed,
+  then shows, as Material asks, instead of replacing it at once. Migration:
+  pass `replace: true` where a snackbar should still take over immediately,
+  as copy buttons now do. A queued snackbar fires `expressive:open` and
+  captures focus when it appears, `dismissAll()` clears the queue too, and a
+  snackbar built from `snackbarId` has no `el` until it shows. A persistent
+  snackbar whose container a re-render removed no longer blocks the next.
+
 - Time picker hours step round the day: in 12-hour time, Up from 11 AM
   gives 12 PM and Down from 12 PM gives 11 AM, so AM and PM follow the
   hour.

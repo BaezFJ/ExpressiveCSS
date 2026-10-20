@@ -68,6 +68,12 @@ export interface SnackbarOptions extends BaseOptions {
    * @default null
    */
   root: HTMLElement;
+  /**
+   * Show at once, dismissing the snackbar on screen without its exit
+   * animation, instead of waiting in the queue behind it.
+   * @default false
+   */
+  replace: boolean;
 }
 
 const _defaults: SnackbarOptions = {
@@ -81,7 +87,8 @@ const _defaults: SnackbarOptions = {
   classes: '',
   completeCallback: null,
   activationPercent: 0.8,
-  root: null
+  root: null,
+  replace: false
 };
 
 export class Snackbar {
@@ -111,13 +118,20 @@ export class Snackbar {
   private _activationDistance: number;
   private _dismissed = false;
   private _returnFocus: HTMLElement | null = null;
+  /** The document body or shadow root the snackbar renders into. */
+  private _portal: HTMLElement | ShadowRoot;
   private _events: AbortController;
   private _restoreElement: (() => void) | null = null;
   private _transitionTimer: ReturnType<typeof setTimeout>;
   private _dismissTimer: ReturnType<typeof setTimeout>;
   private _focusTimer: ReturnType<typeof setTimeout>;
 
+  /** The snackbar on screen, kept until its exit animation finishes. */
   static _snackbars: Snackbar[];
+  /** Snackbars waiting for the one on screen to leave, oldest first. */
+  static _queue: Snackbar[];
+  /** Set while a replacement clears the screen; the queue waits for it. */
+  private static _replacing = false;
   static _container: HTMLElement;
   static _draggedSnackbar: Snackbar;
   /** Which pointer owns the drag in flight; a second finger is ignored. */
@@ -135,33 +149,98 @@ export class Snackbar {
     this.message = this.options.text;
     this.panning = false;
     this.timeRemaining = this.options.displayLength;
-    // One snackbar at a time so a new update does not stack over the page.
-    while (Snackbar._snackbars.length > 0) {
-      const snackbar = Snackbar._snackbars.shift();
+    // Worked out now: `root` may be inside the snackbar this one replaces,
+    // and gone by the time it shows.
+    this._portal = Utils.portalRoot(this.options.root ?? document.body);
+    // First, so an authored body a re-render orphaned is back in its place.
+    Snackbar._dropDetached();
+    // An authored body is taken when the snackbar shows: one waiting in the
+    // queue must not claim the element the snackbar on screen is using.
+    if (this.options.snackbarId) this._requireBody();
+    else this._build();
+    // One snackbar at a time, as Material asks. Everything goes through the
+    // queue, so arrivals show in order; a replacement goes to its front once
+    // the screen is cleared.
+    if (this.options.replace) Snackbar._replaceShown(this);
+    else Snackbar._queue.push(this);
+    Snackbar._advance();
+  }
+
+  /**
+   * Lets go of snackbars a re-render took out of the page. A persistent one
+   * would otherwise hold the queue for good.
+   */
+  private static _dropDetached() {
+    for (const snackbar of Snackbar._snackbars.filter((shown) => !shown.el.isConnected)) {
       snackbar._dismissed = true;
-      snackbar._restoreFocus(true);
+      snackbar._remove(false);
     }
-    let focused = document.activeElement;
-    while (focused?.shadowRoot?.activeElement) focused = focused.shadowRoot.activeElement;
-    this._returnFocus = focused instanceof HTMLElement ? focused : null;
+  }
+
+  /** Throws now, rather than when the snackbar shows, if `snackbarId` names nothing. */
+  private _requireBody() {
+    if (!this._hasBody()) throw new Error('Snackbar body not found');
+  }
+
+  /** Whether the body a snackbar shows is still there: its own, or `snackbarId`'s. */
+  private _hasBody(): boolean {
+    return !this.options.snackbarId || !!Utils.getElementById(this._portal, this.options.snackbarId);
+  }
+
+  private _build() {
     this.el = this._createSnackbar();
-    // One container serves every snackbar, and only one snackbar shows at a
-    // time — so it is moved rather than duplicated when the root changes.
-    const root = Utils.portalRoot(this.options.root ?? document.body);
-    if (
-      !Snackbar._container ||
-      !Snackbar._container.isConnected ||
-      Snackbar._container.parentNode !== root
-    ) {
-      if (Snackbar._container) Snackbar._removeContainer();
-      Snackbar._createContainer(root);
-    }
-    Snackbar._container.appendChild(this.el);
     this.el['Expressive_Snackbar'] = this;
+  }
+
+  /**
+   * Takes the snackbar on screen down at once, without starting the queue.
+   * Restoring focus can open another, which goes too.
+   */
+  private static _replaceShown(replacement: Snackbar) {
+    // A snackbar opened by the focus restore below must not start the queue,
+    // or the next waiting one would show only to be cut short here.
+    Snackbar._replacing = true;
+    try {
+      while (Snackbar._snackbars.length) {
+        for (const snackbar of Snackbar._snackbars.splice(0)) {
+          snackbar._dismissed = true;
+          snackbar._restoreFocus(true);
+        }
+      }
+    } finally {
+      Snackbar._replacing = false;
+    }
+    Snackbar._queue.unshift(replacement);
+  }
+
+  /** Puts the snackbar on screen and starts its countdown. */
+  private _show() {
+    if (!this.el) this._build();
+    this._returnFocus = Snackbar._focused();
+    Snackbar._containerIn(this._portal).appendChild(this.el);
     Snackbar._snackbars.push(this);
     this._animateIn();
     this._setTimer();
     Utils.emit(this.el, 'open');
+  }
+
+  /** The focused element, looking inside open shadow roots. */
+  private static _focused(): HTMLElement | null {
+    let focused = document.activeElement;
+    while (focused?.shadowRoot?.activeElement) focused = focused.shadowRoot.activeElement;
+    return focused instanceof HTMLElement ? focused : null;
+  }
+
+  /**
+   * One container serves every snackbar, and only one snackbar shows at a
+   * time — so it is moved rather than duplicated when the root changes.
+   */
+  private static _containerIn(root: HTMLElement | ShadowRoot): HTMLElement {
+    const container = Snackbar._container;
+    if (container?.isConnected && container.parentNode === root) return container;
+    Snackbar._removeContainer();
+    Snackbar._createContainer(root);
+    return Snackbar._container;
   }
 
   static get defaults(): SnackbarOptions {
@@ -192,7 +271,7 @@ export class Snackbar {
     document.removeEventListener('pointermove', Snackbar._onDragMove);
     document.removeEventListener('pointerup', Snackbar._onDragEnd);
     document.removeEventListener('pointercancel', Snackbar._onDragCancel);
-    Snackbar._container.remove();
+    Snackbar._container?.remove();
     Snackbar._container = null;
   }
 
@@ -291,15 +370,37 @@ export class Snackbar {
    * dismiss all snackbars.
    */
   static dismissAll() {
-    // Copy first: dismiss() splices the list it is iterating.
-    for (const snackbar of [...Snackbar._snackbars]) {
+    // The queue first, so the one on screen does not hand over to it. Copy
+    // first: dismiss() splices the lists it is iterating.
+    for (const snackbar of [...Snackbar._queue, ...Snackbar._snackbars]) {
       snackbar.dismiss();
     }
   }
 
+  /**
+   * Whether dismiss() is done already: the snackbar was dismissed before, or
+   * never showed and is dropped from the queue. A dropped one reports through
+   * completeCallback but fires no events, never having been in the page.
+   */
+  private _leaveQueue(): boolean {
+    if (this._dismissed) return true;
+    const index = Snackbar._queue.indexOf(this);
+    if (index < 0) return false;
+    Snackbar._queue.splice(index, 1);
+    this._drop();
+    return true;
+  }
+
+  private _drop() {
+    this._dismissed = true;
+    // An authored body was never taken, so there is nothing to give back.
+    if (this.el) this._remove(false);
+    this.options.completeCallback?.();
+  }
+
   _createSnackbar() {
     let snackbar: HTMLElement = this.options.snackbarId
-      ? Utils.getElementById(this.options.root ?? document.body, this.options.snackbarId)
+      ? Utils.getElementById(this._portal, this.options.snackbarId)
       : document.createElement('div');
     if (snackbar instanceof HTMLTemplateElement) {
       const node = snackbar.content.cloneNode(true);
@@ -389,7 +490,7 @@ export class Snackbar {
     return snackbar;
   }
 
-  private _remove() {
+  private _remove(advance = true) {
     if (this._events.signal.aborted) return;
     this._events.abort();
     clearTimeout(this.counterTimeout);
@@ -406,9 +507,36 @@ export class Snackbar {
     else this.el.remove();
     const index = Snackbar._snackbars.indexOf(this);
     if (index >= 0) Snackbar._snackbars.splice(index, 1);
-    if (!Snackbar._snackbars.length && Snackbar._container?.childElementCount === 0) {
-      Snackbar._removeContainer();
+    if (advance) Snackbar._advance();
+  }
+
+  /** Shows the next queued snackbar once the screen is clear, or tidies up. */
+  private static _advance() {
+    while (!Snackbar._replacing && !Snackbar._snackbars.length) {
+      const next = Snackbar._queue.shift();
+      if (!next) return Snackbar._tidy();
+      Snackbar._showOrDrop(next);
     }
+  }
+
+  /**
+   * A queued snackbar completes without showing when the page it was for has
+   * gone: its `root`, such as a removed shadow host, or its authored body.
+   * Shown there, nothing could reach it to dismiss it, and the queue would stall.
+   */
+  private static _showOrDrop(next: Snackbar) {
+    if (Snackbar._canShow(next)) next._show();
+    else next._drop();
+  }
+
+  private static _canShow(next: Snackbar): boolean {
+    if (!next._portal.isConnected) return false;
+    return !!next.el || next._hasBody();
+  }
+
+  /** Removes the container once nothing is left in it. */
+  private static _tidy() {
+    if (Snackbar._container?.childElementCount === 0) Snackbar._removeContainer();
   }
 
   _animateIn() {
@@ -456,7 +584,7 @@ export class Snackbar {
     const focused = (this.el.getRootNode() as Document | ShadowRoot).activeElement;
     const returnFocus = focused && this.el.contains(focused) ? this._returnFocus : null;
     this.el.inert = true;
-    if (remove) this._remove();
+    if (remove) this._remove(false);
     if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
   }
 
@@ -464,7 +592,7 @@ export class Snackbar {
    * Dismiss snackbar with animation.
    */
   dismiss() {
-    if (this._dismissed) return;
+    if (this._leaveQueue()) return;
     this._dismissed = true;
     clearTimeout(this.counterTimeout);
     this.counterTimeout = null;
@@ -503,6 +631,7 @@ export class Snackbar {
 
   static {
     Snackbar._snackbars = [];
+    Snackbar._queue = [];
     Snackbar._container = null;
     Snackbar._draggedSnackbar = null;
   }

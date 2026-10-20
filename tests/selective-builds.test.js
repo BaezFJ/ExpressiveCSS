@@ -182,7 +182,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed expressive:* open and close events with state guards: 81,781 gzip bytes (+144).
   // Reviewed change, select, confirm, cancel, autocomplete and chip events: 82,098 gzip bytes (+317).
   // Reviewed Tooltip, Snackbar, ButtonGroup, ScrollSpy, Tour and Copy events: 82,285 gzip bytes (+187).
-  assert.ok(sizes(js).gzip <= 82285, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the snackbar queue and replace option: 82,646 gzip bytes (+361).
+  assert.ok(sizes(js).gzip <= 82646, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

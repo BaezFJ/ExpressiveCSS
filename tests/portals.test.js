@@ -141,11 +141,32 @@ describe('Portals inside a shadow root stay in that root', () => {
     }
   });
 
-  test('a snackbar for a different root moves the container rather than orphaning it', () => {
+  test('a queued snackbar whose shadow host was removed is skipped, so the queue goes on', async () => {
+    const { el } = shadowHost('<div></div>');
+    const done = [];
+    const first = new Expressive.Snackbar({ text: 'First', displayLength: Infinity, outDuration: 0 });
+    new Expressive.Snackbar({ text: 'In the shadow', action: 'Undo', root: el, outDuration: 0, completeCallback: () => done.push('shadow') });
+    const last = new Expressive.Snackbar({ text: 'Last', displayLength: Infinity, outDuration: 0 });
+    try {
+      el.getRootNode().host.remove();
+      first.dismiss();
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      assert.deepEqual(done, ['shadow'], 'the skipped one still completes');
+      assert.equal(last.el.isConnected, true, 'the next one shows');
+    } finally {
+      Expressive.Snackbar.dismissAll();
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      Expressive.Snackbar._removeContainer?.();
+    }
+  });
+
+  test('a snackbar for a different root moves the container rather than orphaning it', async () => {
     const { root, el } = shadowHost('<div></div>');
-    const first = new Expressive.Snackbar({ text: 'One', root: el });
+    const first = new Expressive.Snackbar({ text: 'One', root: el, outDuration: 0 });
     first.dismiss();
+    // It waits for the first to leave, then moves the container as it shows.
     const second = new Expressive.Snackbar({ text: 'Two' });
+    await new Promise((resolve) => setTimeout(resolve, 10));
     try {
       assert.equal(root.querySelector('#snackbar-container'), null);
       assert.equal(document.getElementById('snackbar-container').parentNode, document.body);

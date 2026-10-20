@@ -6478,6 +6478,9 @@ You can customize each snackbar with these options.
 | `completeCallback` | Function | `null` | Called when the snackbar is dismissed. |
 | `activationPercent` | Number | `0.8` | Fraction of the snackbar’s width a drag must travel to dismiss it. |
 | `root` | Element | `null` | Any element in the tree the snackbar should render into. Pass one when the page lives in a shadow root, so the container is appended there rather than to `document.body`. |
+| `replace` | Boolean | `false` | Show at once, cutting the snackbar on screen short, instead of waiting behind it. Copy buttons use this so a second copy answers right away. |
+
+One snackbar shows at a time. A new one waits until the one on screen is dismissed, then shows, so updates appear in order. A queued snackbar captures focus and fires `expressive:open` when it appears; one dismissed while still waiting runs `completeCallback` and never shows. A snackbar built from `snackbarId` takes its element when it shows, so its `el` is unset while it waits.
 
 ### Methods
 
@@ -6497,7 +6500,7 @@ instance.dismiss();
 
 #### Snackbar.dismissAll();
 
-Dismiss every snackbar that is currently showing.
+Dismiss the snackbar on screen and every one waiting behind it.
 
 ```js
 Expressive.Snackbar.dismissAll();

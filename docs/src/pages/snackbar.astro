@@ -234,7 +234,24 @@ document.getElementById('snackbar-basic').addEventListener('click', function() {
                 there rather than to <code>document.body</code>.
               </td>
             </tr>
-  </OptionsTable>  </Section>
+            <tr>
+              <td><code>replace</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>
+                Show at once, cutting the snackbar on screen short, instead of waiting
+                behind it. Copy buttons use this so a second copy answers right away.
+              </td>
+            </tr>
+  </OptionsTable>
+        <p>
+          One snackbar shows at a time. A new one waits until the one on screen is
+          dismissed, then shows, so updates appear in order. A queued snackbar
+          captures focus and fires <code>expressive:open</code> when it appears;
+          one dismissed while still waiting runs <code>completeCallback</code> and
+          never shows. A snackbar built from <code>snackbarId</code> takes its
+          element when it shows, so its <code>el</code> is unset while it waits.
+        </p>  </Section>
   <Section {...S.methods}>
         <InstanceNote plugin="Snackbar" lead="Instance methods are called on the snackbar. You can get the instance like this:" />
 
@@ -245,7 +262,7 @@ instance.dismiss();
 `} />
 
         <h5 class="light">Snackbar.dismissAll();</h5>
-        <p>Dismiss every snackbar that is currently showing.</p>
+        <p>Dismiss the snackbar on screen and every one waiting behind it.</p>
 <Code code={`
 Expressive.Snackbar.dismissAll();
 `} />

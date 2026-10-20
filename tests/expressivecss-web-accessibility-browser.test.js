@@ -1189,7 +1189,7 @@ for (const operation of ['dismiss', 'replace']) scenario(`authored snackbar surv
         firstSnack.dismiss();
         window.currentSnack = nestedSnack;
       } else {
-        window.currentSnack = new Expressive.Snackbar(options);
+        window.currentSnack = new Expressive.Snackbar({ ...options, replace: true });
       }
     }, operation);
     // The old dismissal must not hide or disable the replacement after its timer expires.
@@ -1202,7 +1202,9 @@ for (const operation of ['dismiss', 'replace']) scenario(`authored snackbar surv
       opacity: authoredNotice.style.opacity,
       margin: authoredNotice.style.marginTop,
       completions: oldCompletions
-    })), { sameSource: true, registered: true, instances: 1, inert: false, opacity: '1', margin: '', completions: 0 });
+      // A dismissed snackbar finishes before the queued one takes its body; a
+      // replaced one is cut short without completing.
+    })), { sameSource: true, registered: true, instances: 1, inert: false, opacity: '1', margin: '', completions: operation === 'dismiss' ? 1 : 0 });
     await expect(page.locator('#notice')).toHaveCount(1);
     await expect(page.locator('#notice button')).toHaveCount(3);
     const action = page.getByRole('button', { name: 'Use replacement', exact: true });
@@ -1210,6 +1212,11 @@ for (const operation of ['dismiss', 'replace']) scenario(`authored snackbar surv
     await expect(action).toBeFocused();
     await page.keyboard.press('Enter');
     assert.equal(await page.evaluate(() => replacementActions), 1);
+    if (operation === 'replace') {
+      // The snackbar the focus restore opened waited behind the replacement.
+      await expect.poll(() => page.evaluate(() => Expressive.Snackbar.getInstance(authoredNotice) === nestedSnack)).toBe(true);
+      await page.evaluate(() => nestedSnack.dismiss());
+    }
     await expect(page.locator('#snackbar-container')).toHaveCount(0);
     assert.equal(await page.locator('#source > #notice').evaluate(el => el === authoredNotice && el.outerHTML === originalNotice), true);
     assert.equal(await page.evaluate(() => Expressive.Snackbar.getInstance(authoredNotice)), undefined);
@@ -1257,7 +1264,7 @@ scenario('actionable snackbar persists and restores focus on keyboard dismissal'
 
     await page.evaluate(() => { window.snack = new Expressive.Snackbar({ text: 'Archived', action: 'Undo', inDuration: 0, outDuration: 0 }); });
     await page.getByRole('button', { name: 'Undo', exact: true }).focus();
-    await page.evaluate(() => new Expressive.Snackbar({ text: 'Replacement', action: 'Review', inDuration: 0, outDuration: 0 }));
+    await page.evaluate(() => new Expressive.Snackbar({ text: 'Replacement', action: 'Review', inDuration: 0, outDuration: 0, replace: true }));
     await expect(page.locator('#next')).toBeFocused();
     await page.getByRole('button', { name: 'Dismiss', exact: true }).click();
     await expect(page.locator('#next')).toBeFocused();
@@ -1269,7 +1276,7 @@ scenario('actionable snackbar persists and restores focus on keyboard dismissal'
       document.querySelector('#next').addEventListener('focus', () => {
         window.nestedSnack = new Expressive.Snackbar({ text: 'Nested', action: 'Undo', inDuration: 0, outDuration: 0 });
       }, { once: true });
-      window.snack = new Expressive.Snackbar({ text: 'After reentry', action: 'Review', inDuration: 0, outDuration: 0 });
+      window.snack = new Expressive.Snackbar({ text: 'After reentry', action: 'Review', inDuration: 0, outDuration: 0, replace: true });
     });
     await expect(page.locator('.snackbar')).toHaveCount(1);
     await expect(page.getByRole('status')).toContainText('After reentry');
