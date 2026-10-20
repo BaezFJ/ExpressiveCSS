@@ -19,6 +19,12 @@ export interface SheetDragConfig {
   /** The custom property carrying the live drag offset. */
   property: string;
   /**
+   * The sheet's motion easing token; `-duration` names its duration. While
+   * both are the default spatial spring's, a snap-back solves that spring
+   * at run time; an override keeps the CSS transition it asks for.
+   */
+  motion: string;
+  /**
    * `1` when the sheet dismisses toward increasing coordinates (downward, or
    * rightward for an end-docked side sheet), `-1` when it dismisses toward
    * decreasing ones. A function rather than a constant because a side sheet's
@@ -44,6 +50,8 @@ export interface SheetDragConfig {
    */
   release?: (dialog: HTMLDialogElement, delta: number, velocity: number) => boolean;
 }
+
+const REDUCED = '(prefers-reduced-motion: reduce)';
 
 /** Past this the sheet dismisses rather than snapping back, in pixels. */
 export const DISMISS_DISTANCE = 96;
@@ -73,19 +81,21 @@ const flickVelocity = (held: Drag) => (Date.now() - held.lastT < FLICK_TIMEOUT ?
 const dismisses = (held: Drag, velocity: number) =>
   held.shift * held.direction > DISMISS_DISTANCE || velocity * held.direction > DISMISS_VELOCITY;
 
-/** Each sheet's snap-back spring while it runs, so a press can catch it. */
-const springs = new WeakMap<HTMLDialogElement, Animation>();
+/**
+ * Each sheet's snap-back spring while it runs, as the function that ends
+ * it, restoring the CSS transition or, for a drag that caught it, not.
+ */
+const springs = new WeakMap<HTMLDialogElement, (restore: boolean) => void>();
 
 /**
  * Stops a sheet's snap-back where it is and returns how far off its edge
  * that is, so a drag carries on from there instead of jumping.
  */
 function catchSpring(dialog: HTMLDialogElement, axis: 'x' | 'y') {
-  const running = springs.get(dialog);
-  if (!running) return 0;
+  const end = springs.get(dialog);
+  if (!end) return 0;
   const [x, y = '0'] = getComputedStyle(dialog).translate.split(' ');
-  running.cancel();
-  springs.delete(dialog);
+  end(false);
   return parseFloat(axis === 'x' ? x : y) || 0;
 }
 
@@ -205,10 +215,21 @@ export function installSheetDrag(config: SheetDragConfig): void {
     if (spring) springBack(held, spring);
   };
 
-  /** The spring a released sheet snaps back on, or null for the CSS snap: no shift, no token, or reduced motion. */
+  /**
+   * The spring a released sheet snaps back on, or null for the CSS snap:
+   * no shift, reduced motion, or motion tokens the page overrode.
+   */
   const springFor = (held: Drag) => {
-    if (!held.shift || matchMedia('(prefers-reduced-motion: reduce)').matches) return null;
+    if (!held.shift || matchMedia(REDUCED).matches || !onSpring(held.dialog)) return null;
     return springToken(held.dialog, 'default-spatial');
+  };
+
+  /** Whether the sheet's motion tokens are still the default spatial spring's. */
+  const onSpring = (dialog: HTMLDialogElement) => {
+    const style = getComputedStyle(dialog);
+    const read = (name: string) => style.getPropertyValue(name).trim();
+    const spring = '--md-sys-motion-spring-default-spatial';
+    return read(config.motion) === read(spring) && read(`${config.motion}-duration`) === read(`${spring}-duration`);
   };
 
   /**
@@ -216,13 +237,27 @@ export function installSheetDrag(config: SheetDragConfig): void {
    * finger's speed, instead of the CSS spring that starts from rest.
    */
   const springBack = (held: Drag, spring: Spring) => {
+    const dialog = held.dialog;
     const write = config.axis === 'x' ? (value: number) => `${value}px 0` : (value: number) => `0 ${value}px`;
-    const running = animatePath(held.dialog, 'translate', springPath(held.shift, 0, flickVelocity(held), spring), write);
-    springs.set(held.dialog, running);
-    running.onfinish = () => {
-      springs.delete(held.dialog);
-      held.dialog.style.transition = '';
+    const running = animatePath(dialog, 'translate', springPath(held.shift, 0, flickVelocity(held), spring), write);
+    // It ends when it settles, and early when the sheet closes or the reader
+    // asks for reduced motion, so neither inherits a stale spring or a
+    // transition left off.
+    const reduced = matchMedia(REDUCED);
+    const closing = new MutationObserver(() => dialog.open || end(true));
+    const end = (restore: boolean) => {
+      springs.delete(dialog);
+      closing.disconnect();
+      reduced.removeEventListener('change', stop);
+      running.onfinish = null;
+      running.cancel();
+      if (restore) dialog.style.transition = '';
     };
+    const stop = () => end(true);
+    springs.set(dialog, end);
+    running.onfinish = stop;
+    reduced.addEventListener('change', stop);
+    closing.observe(dialog, { attributes: true, attributeFilter: ['open'] });
   };
 
   const onRelease = config.onRelease ?? (() => {});

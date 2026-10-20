@@ -105,4 +105,57 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: a sheet's spring ends when it closes, when motion is reduced, and gives way to overridden tokens`, async () => {
+    const browser = await browserType.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 400, height: 800 } });
+      await page.setContent(html);
+      const open = async () => {
+        await page.evaluate(() => document.getElementById('sheet').showModal());
+        await page.waitForTimeout(700);
+      };
+      const release = async () => {
+        const box = await page.locator('#sheet .drag-handle').boundingBox();
+        const [x, y] = [box.x + box.width / 2, box.y + box.height / 2];
+        await page.mouse.move(x, y);
+        await page.mouse.down();
+        for (let i = 1; i <= 6; i++) {
+          await page.mouse.move(x, y + i * 10);
+          await page.waitForTimeout(30);
+        }
+        await page.mouse.up();
+      };
+      const state = () => page.evaluate(() => {
+        const sheet = document.getElementById('sheet');
+        return [sheet.getAnimations().filter((animation) => animation.effect.getKeyframes()[0]?.translate).length, sheet.style.transition];
+      });
+
+      // Closed mid-spring, the spring stops and the transition comes back, so the close animates.
+      await open();
+      await release();
+      assert.equal((await state())[0], 1);
+      await page.evaluate(() => document.getElementById('sheet').close());
+      await page.evaluate(() => new Promise((resolve) => setTimeout(resolve)));
+      assert.deepEqual(await state(), [0, ''], 'closing ends the spring');
+
+      // Reduced motion asked for mid-spring stops it there.
+      await open();
+      await release();
+      assert.equal((await state())[0], 1);
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.evaluate(() => new Promise((resolve) => setTimeout(resolve, 50)));
+      assert.deepEqual(await state(), [0, ''], 'reduced motion ends the spring');
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await page.evaluate(() => document.getElementById('sheet').close());
+
+      // A page that sets the sheet's motion duration keeps its CSS transition.
+      await page.evaluate(() => document.getElementById('sheet').style.setProperty('--md-comp-bottom-sheet-motion-duration', '0s'));
+      await open();
+      await release();
+      assert.equal((await state())[0], 0, 'an overridden duration keeps the CSS snap');
+    } finally {
+      await browser.close();
+    }
+  });
 }

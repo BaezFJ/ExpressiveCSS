@@ -1790,7 +1790,7 @@ In Sass, `spring($damping, $stiffness)` and `spring-duration($damping, $stiffnes
 }
 ```
 
-A `linear()` easing always starts from rest, so a transition interrupted part way restarts without the speed it had. A dragged bottom or side sheet solves its spring at run time instead: released short of dismissing, it springs back on the default spatial spring from where the finger left it at the finger's speed, and a press while it moves catches it where it is. Reduced motion keeps the instant snap. Each spring also has `--md-sys-motion-spring-*-damping` and `-stiffness` tokens with its two numbers, following `motion`, for scripts that solve a spring themselves.
+A `linear()` easing always starts from rest, so a transition interrupted part way restarts without the speed it had. A dragged bottom or side sheet solves its spring at run time instead: released short of dismissing, it springs back on the default spatial spring from where the finger left it at the finger's speed, and a press while it moves catches it where it is. Reduced motion keeps the instant snap, and a sheet whose `--md-comp-bottom-sheet-motion` or `--md-comp-side-sheet-motion` tokens a page overrode keeps the CSS transition those ask for. The spring ends early if the sheet closes or reduced motion is turned on. Each spring also has `--md-sys-motion-spring-*-damping` and `-stiffness` tokens with its two numbers, following `motion`, for scripts that solve a spring themselves.
 
 ---
 
