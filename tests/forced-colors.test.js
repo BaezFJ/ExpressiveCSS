@@ -52,3 +52,43 @@ describe('Forced colors', () => {
     assert.ok(rule, 'no focus ring on .tabs > a:focus-visible');
   });
 });
+
+// Shapes drawn only by a fill: forced colors paint them as Canvas on Canvas.
+describe('Forced colors edges and glyphs', () => {
+  const EDGE = /outline:\s*1px solid (ButtonText|CanvasText);\s*outline-offset:\s*-1px/;
+  const GLYPH = /forced-color-adjust:\s*none;\s*background-color:\s*CanvasText/;
+  const cases = {
+    'filled, tonal and elevated button': [/^:where\(button:not\(.*\), a\.button, label\.button\):is\(\.filled, \.tonal, \.elevated\)$/, EDGE],
+    'filled and tonal icon button': [/^\.icon-button:is\(\.filled, \.tonal\)$/, EDGE],
+    'pressed toggle': [/^:where\(.*\.icon-button\)\[aria-pressed=true\]:not\(:disabled/, /background-color:\s*Highlight !important;\s*color:\s*HighlightText !important/],
+    'keypad key': [/^:is\(\.keypad, \.keyboard\) button$/, EDGE],
+    'keyboard container': [/^\.keyboard$/, EDGE],
+    'questionnaire footer button': [/^:where\(\.questionnaire > footer\) > button:not\(\.outlined, \.text\)$/, EDGE],
+    'bar chart track': [/^\.bar-chart\.track \.bar-chart-bars > div$/, EDGE],
+    'search bar': [/^:is\(\.search-bar\):not\(\.search-view \*\)$/, /outline:\s*1px solid CanvasText/],
+    'select caret': [/\.caret$/, GLYPH],
+    'select check': [/^menu\[role=listbox\]:not\(\.multiple-select-menu\) > li\.selected:not\(\.disabled, \.optgroup\)::after$/, GLYPH],
+    'submenu chevron': [/li:has\(> menu\) > :is\(a, button, .*\)::after$/, GLYPH],
+    'bottom sheet handle': [/^dialog\.bottom-sheet::before$/, GLYPH],
+    'slider stops': [/\.stops::after$/, /--_stop:\s*HighlightText;\s*forced-color-adjust:\s*none/],
+  };
+  for (const [name, [selector, body]] of Object.entries(cases)) {
+    test(`draws the ${name}`, () => assert.ok(has(selector, body), name));
+  }
+
+  // GrayText is the disabled color, so nothing enabled may be painted with it.
+  test('an enabled slider track is not GrayText', () => {
+    assert.ok(has(/^input\[type=range\]$/, /--md-comp-slider-inactive-track-color:\s*CanvasText/));
+    assert.ok(has(/^input\[type=range\]:disabled$/, /--md-comp-slider-active-track-color:\s*GrayText/));
+  });
+
+  for (const [name, selector] of Object.entries({
+    checkbox: /^label:has\(> \[type=checkbox\]:disabled\):not\(\.switch\)$/,
+    radio: /^label:has\(> \[type=radio\]:disabled\)$/,
+  })) {
+    test(`grays a disabled ${name} and its label`, () => {
+      assert.ok(has(selector, /color:\s*GrayText/), `${name} label`);
+      assert.ok(has(new RegExp(`> \\[type=${name}\\]:disabled$`), /border-color:\s*GrayText/), `${name} box`);
+    });
+  }
+});

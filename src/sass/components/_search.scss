@@ -243,3 +243,17 @@ $_bar: ".search-bar";
     backdrop-filter: none;
   }
 }
+
+// Both surfaces are fills and shadows, which forced colors paint as Canvas and
+// drop. A bar inside the view is part of the view's surface.
+@media (forced-colors: active) {
+  :is(#{$_bar}):not(.search-view *),
+  .search-view {
+    outline: 1px solid CanvasText;
+  }
+
+  // The input inside clears its own focus ring.
+  :is(#{$_bar}):not(.search-view *):has(input:focus-visible) {
+    outline: 2px solid Highlight;
+  }
+}

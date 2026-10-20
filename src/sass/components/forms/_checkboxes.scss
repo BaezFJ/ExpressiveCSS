@@ -312,10 +312,19 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
       background-color: Highlight;
     }
 
-    &:disabled:is(:checked, :indeterminate) {
+    &:disabled {
       border-color: GrayText;
+    }
+
+    &:disabled:is(:checked, :indeterminate) {
       background-color: GrayText;
     }
+  }
+
+  // Forced colors repaint the dimmed label as CanvasText, like an enabled one.
+  label:has(> [type="checkbox"]:disabled):not(.switch),
+  .checkbox:has([type="checkbox"]:disabled) {
+    color: GrayText;
   }
 
   label:has(> [type="checkbox"]):not(.switch):not(:has(> [type="checkbox"] + span)),

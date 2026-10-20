@@ -282,5 +282,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed radial gradient reveal and wavy forced colors fixes: 82,210 gzip bytes (+78).
   // Reviewed Noto Sans Arabic, Hebrew and Thai faces: 82,506 gzip bytes (+296).
   // Reviewed runtime spring snap-back for dragged sheets: 82,608 gzip bytes (+102).
-  assert.ok(sizes(css).gzip <= 82608, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed forced-colors edges, glyphs and disabled states: 82,931 gzip bytes (+323).
+  assert.ok(sizes(css).gzip <= 82931, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -310,4 +310,10 @@
   .bar-chart-cursor {
     outline: 1px solid CanvasText;
   }
+
+  // The track is a fill, which forced colors paint as Canvas.
+  .bar-chart.track .bar-chart-bars > div {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
 }

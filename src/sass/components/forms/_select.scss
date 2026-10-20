@@ -99,6 +99,7 @@ select.browser-default {
     pointer-events: none;
     background-color: var(--md-comp-filled-select-trailing-icon-color);
     mask: $caret-down center / 24px no-repeat;
+    @include forced-colors-fill;
     transition: transform var(--md-sys-motion-duration-short4) ease;
   }
 
@@ -210,6 +211,7 @@ menu[role="listbox"]:not(.multiple-select-menu) > li.selected:not(.disabled, .op
   margin-inline-end: 8px;
   background-color: var(--md-comp-menu-item-selected-leading-icon-color, var(--md-sys-color-on-tertiary-container));
   mask: $_select-check center / 20px no-repeat;
+  @include forced-colors-fill;
 }
 
 menu[role="listbox"] li img {

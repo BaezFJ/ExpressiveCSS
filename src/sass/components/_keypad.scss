@@ -164,3 +164,12 @@ $_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
     text-transform: uppercase;
   }
 }
+
+// Forced colors paint the keys and the keyboard's container as Canvas.
+@media (forced-colors: active) {
+  :is(.keypad, .keyboard) button,
+  .keyboard {
+    outline: 1px solid ButtonText;
+    outline-offset: -1px;
+  }
+}

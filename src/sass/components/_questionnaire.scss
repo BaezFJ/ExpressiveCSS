@@ -203,3 +203,13 @@
     display: none;
   }
 }
+
+// The footer's plain buttons are filled ones, which forced colors paint as
+// Canvas; the button styles outline only a named container. `:where()` keeps
+// the focus ring ahead of it.
+@media (forced-colors: active) {
+  :where(.questionnaire > footer) > button:not(.outlined, .text) {
+    outline: 1px solid ButtonText;
+    outline-offset: -1px;
+  }
+}

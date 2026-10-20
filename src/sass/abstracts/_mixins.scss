@@ -184,8 +184,8 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 // Forced colors repaint every background as Canvas and drop box-shadow, so a
 // state shown only by a fill or a ring disappears. forced-colors-selected marks
 // a selected item with a Highlight outline. forced-colors-fill keeps a drawn
-// shape (an indicator bar, a dot) by opting it out and painting it with a
-// system color.
+// shape (an indicator bar, a dot, a glyph drawn as a mask) by opting it out
+// and painting it with a system color.
 @mixin forced-colors-selected {
   @media (forced-colors: active) {
     outline: 2px solid Highlight;

@@ -126,9 +126,18 @@ label:has(> [type="radio"]:disabled),
       background-image: radial-gradient(circle at center, Highlight 0 5px, transparent 5.5px);
     }
 
-    &:disabled:checked {
+    &:disabled {
       border-color: GrayText;
+    }
+
+    &:disabled:checked {
       background-image: radial-gradient(circle at center, GrayText 0 5px, transparent 5.5px);
     }
+  }
+
+  // Forced colors repaint the dimmed label as CanvasText, like an enabled one.
+  label:has(> [type="radio"]:disabled),
+  .radio:has([type="radio"]:disabled) {
+    color: GrayText;
   }
 }
