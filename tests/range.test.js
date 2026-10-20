@@ -32,10 +32,10 @@ describe('Slider CSS', () => {
     // The pre-0.8.0 .range and .range-field hosts were removed in 1.0.
     assert.doesNotMatch(css, /\.range(-field)?(?![\w-])/);
     assert.match(css, /--md-comp-slider-track-height:\s*24px/);
-    assert.match(css, /--md-comp-slider-track-height:\s*40px/);
-    assert.match(css, /--md-comp-slider-track-height:\s*56px/);
-    assert.match(css, /--md-comp-slider-track-height:\s*96px/);
-    assert.match(css, /--md-comp-slider-handle-height:\s*108px/);
+    assert.match(css, /--md-comp-slider-track-height:\s*2\.5rem/);
+    assert.match(css, /--md-comp-slider-track-height:\s*3\.5rem/);
+    assert.match(css, /--md-comp-slider-track-height:\s*6rem/);
+    assert.match(css, /--md-comp-slider-handle-height:\s*6\.75rem/);
   });
 
   test('centered and dual-handle fills are in the sheet', () => {

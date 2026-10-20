@@ -697,16 +697,16 @@ describe('FAB container shape', () => {
     assert.equal(size('small'), '');
 
     const medium = size('medium');
-    assert.match(medium, /--md-comp-fab-container-height:\s*80px/);
-    assert.match(medium, /--md-comp-fab-container-width:\s*80px/);
+    assert.match(medium, /--md-comp-fab-container-height:\s*5rem/);
+    assert.match(medium, /--md-comp-fab-container-width:\s*5rem/);
     assert.match(medium, /--md-comp-fab-container-shape:\s*var\(--md-sys-shape-corner-large-increased\)/);
-    assert.match(medium, /--md-comp-fab-icon-size:\s*26px/);
+    assert.match(medium, /--md-comp-fab-icon-size:\s*1\.625rem/);
 
     const large = size('large');
-    assert.match(large, /--md-comp-fab-container-height:\s*96px/);
-    assert.match(large, /--md-comp-fab-container-width:\s*96px/);
+    assert.match(large, /--md-comp-fab-container-height:\s*6rem/);
+    assert.match(large, /--md-comp-fab-container-width:\s*6rem/);
     assert.match(large, /--md-comp-fab-container-shape:\s*var\(--md-sys-shape-corner-extra-large\)/);
-    assert.match(large, /--md-comp-fab-icon-size:\s*36px/);
+    assert.match(large, /--md-comp-fab-icon-size:\s*2\.25rem/);
   });
 
   test('the large size does not resize a FAB written as `circle large`', () => {
@@ -715,7 +715,7 @@ describe('FAB container shape', () => {
     // aliased 56dp FAB to 96dp. The size has to name `.extra`.
     const rules = css
       .split('}')
-      .filter((rule) => /--md-comp-fab-container-height:\s*96px/.test(rule));
+      .filter((rule) => /--md-comp-fab-container-height:\s*6rem/.test(rule));
     assert.ok(rules.length > 0, 'no rule sizes the large FAB');
     for (const rule of rules) {
       // Everything between the enclosing layer's brace and this rule's own.
@@ -753,9 +753,9 @@ describe('FAB container shape', () => {
     );
 
     const small = /\.extend\.small[^{]*\{([^}]*)\}/.exec(css)?.[1] ?? '';
-    assert.match(small, /--md-comp-extended-fab-container-height:\s*56px/);
+    assert.match(small, /--md-comp-extended-fab-container-height:\s*3\.5rem/);
     assert.match(small, /--md-comp-extended-fab-container-shape:\s*16px/);
-    assert.match(small, /--md-comp-extended-fab-icon-size:\s*24px/);
+    assert.match(small, /--md-comp-extended-fab-icon-size:\s*1\.5rem/);
     assert.match(small, /--md-comp-extended-fab-leading-space:\s*16px/);
     assert.match(small, /--md-comp-extended-fab-icon-label-space:\s*8px/);
     assert.match(small, /--md-comp-extended-fab-trailing-space:\s*16px/);
@@ -780,7 +780,8 @@ describe('FAB container shape', () => {
         ['icon-label-space', spec.gap],
         ['trailing-space', spec.space]
       ]) {
-        assert.match(rule, new RegExp(`--md-comp-extended-fab-${token}:\\s*${value}px`));
+        const written = ['container-height', 'icon-size'].includes(token) ? `${value / 16}rem` : `${value}px`;
+        assert.match(rule, new RegExp(`--md-comp-extended-fab-${token}:\\s*${written}`));
       }
       // The label grows with the size, and the size class is the same one
       // class the extended FAB's own rule is - so it has to restate the role
@@ -858,10 +859,10 @@ describe('FAB container shape', () => {
     assert.deepEqual([...declared].filter((p) => !read.has(p)), []);
   });
   test('the FAB states its container and icon size as tokens', () => {
-    assert.match(css, /--md-comp-fab-container-height:\s*56px/);
-    assert.match(css, /--md-comp-fab-container-width:\s*56px/);
+    assert.match(css, /--md-comp-fab-container-height:\s*3\.5rem/);
+    assert.match(css, /--md-comp-fab-container-width:\s*3\.5rem/);
     assert.match(css, /--md-comp-fab-container-shape:\s*var\(--md-sys-shape-corner-large\)/);
-    assert.match(css, /--md-comp-fab-icon-size:\s*24px/);
+    assert.match(css, /--md-comp-fab-icon-size:\s*1\.5rem/);
     assert.match(css, /border-radius:\s*var\(--md-comp-fab-container-shape\)/);
     assert.match(css, /width:\s*var\(--md-comp-fab-container-width\)/);
     assert.match(css, /height:\s*var\(--md-comp-fab-container-height\)/);
@@ -972,8 +973,8 @@ describe('App bar icon actions', () => {
       );
     assert.equal(iconAction.length, 1, 'exactly one app bar icon-action rule');
     assert.match(iconAction[0].sel, /\.material-symbols/);
-    assert.match(iconAction[0].body, /width:\s*48px/);
-    assert.match(iconAction[0].body, /height:\s*48px/);
+    assert.match(iconAction[0].body, /width:\s*3rem/);
+    assert.match(iconAction[0].body, /height:\s*3rem/);
 
     // ...and the destination rule has to exclude the same set, or an
     // icon-only link matches both.
@@ -1038,7 +1039,7 @@ describe('App bar medium and large geometry', () => {
     // spacer gives the icon row a height of its own; the headline's basis
     // has to exceed the line or it fits beside that zero-width spacer.
     const spacer = bodyOf((sel) => /header\.medium\b/.test(sel) && /::before/.test(sel));
-    assert.ok(spacer.some((b) => /height:\s*48px/.test(b)), 'no 48dp top-row spacer');
+    assert.ok(spacer.some((b) => /height:\s*3rem/.test(b)), 'no 48dp top-row spacer');
     const headline = bodyOf(
       (sel) => /header\.medium\b/.test(sel) && /h1, h2/.test(sel) && !/\+ \*/.test(sel)
     );
@@ -1854,7 +1855,7 @@ describe('Icon selectors keyed on <i>, second sweep', () => {
     // Both selectors carry a class, so they tie on specificity and source
     // order alone decides. With icons forwarded 4th, `buttons` lost the tie
     // and a button rendered an 18px box around a 24px glyph.
-    const base = css.search(/\.material-symbols[^{]*\{[^}]*font-size:\s*24px/);
+    const base = css.search(/\.material-symbols[^{]*\{[^}]*font-size:\s*1\.5rem/);
     const btn = css.search(/font-size:\s*var\(--md-comp-filled-button-icon-size\)/);
     assert.ok(base > -1 && btn > -1, 'probe is stale - one of the rules is gone');
     assert.ok(

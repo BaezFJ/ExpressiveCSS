@@ -214,9 +214,9 @@ $_extend-sizes: (
   // the geometry is written once, above, against those tokens.
   @each $name, $s in $_extend-sizes {
     &.#{$name} {
-      --md-comp-extended-fab-container-height: #{map.get($s, height)};
+      --md-comp-extended-fab-container-height: #{rem(map.get($s, height))};
       --md-comp-extended-fab-container-shape: #{map.get($s, shape)};
-      --md-comp-extended-fab-icon-size: #{map.get($s, icon)};
+      --md-comp-extended-fab-icon-size: #{rem(map.get($s, icon))};
       --md-comp-extended-fab-leading-space: #{map.get($s, space)};
       --md-comp-extended-fab-icon-label-space: #{map.get($s, gap)};
       --md-comp-extended-fab-trailing-space: #{map.get($s, space)};
@@ -249,10 +249,10 @@ $_extend-sizes: (
 // by size.
 :where(#{$_btn}).extra.circle,
 :where(#{$_btn}).large.circle {
-  --md-comp-fab-container-height: 56px;
-  --md-comp-fab-container-width: 56px;
+  --md-comp-fab-container-height: #{rem(56px)};
+  --md-comp-fab-container-width: #{rem(56px)};
   --md-comp-fab-container-shape: var(--md-sys-shape-corner-large);
-  --md-comp-fab-icon-size: 24px;
+  --md-comp-fab-icon-size: #{rem(24px)};
 
   display: inline-flex;
   flex: none;
@@ -301,10 +301,10 @@ $_extend-sizes: (
   // Medium FAB: 80dp container, 26dp icon. The corner continues the size
   // ladder - 16dp default, 20dp here (corner.large-increased).
   &.medium {
-    --md-comp-fab-container-height: 80px;
-    --md-comp-fab-container-width: 80px;
+    --md-comp-fab-container-height: #{rem(80px)};
+    --md-comp-fab-container-width: #{rem(80px)};
     --md-comp-fab-container-shape: var(--md-sys-shape-corner-large-increased);
-    --md-comp-fab-icon-size: 26px;
+    --md-comp-fab-icon-size: #{rem(26px)};
   }
 }
 
@@ -316,10 +316,10 @@ $_extend-sizes: (
 // would compile `.large.circle.large` as well, and every aliased 56dp FAB on
 // a page would silently grow to 96dp.
 :where(#{$_btn}).extra.circle.large {
-  --md-comp-fab-container-height: 96px;
-  --md-comp-fab-container-width: 96px;
+  --md-comp-fab-container-height: #{rem(96px)};
+  --md-comp-fab-container-width: #{rem(96px)};
   --md-comp-fab-container-shape: var(--md-sys-shape-corner-extra-large);
-  --md-comp-fab-icon-size: 36px;
+  --md-comp-fab-icon-size: #{rem(36px)};
 }
 
 // The second arm matters for a focusable disabled control (`a.button.disabled`

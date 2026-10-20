@@ -294,6 +294,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - A list row's trailing `span.badge` or `span.meta` stays in the last
   column. The label rule matched it and outranked the trailing rule, so a
   bare-text label like "Inbox" was pushed after the badge.
+- Controls grow with their text. Type is set in `rem`, but buttons, icon
+  buttons, FABs, badges, avatars, keypad keys, text fields, selects, the
+  app bar, the search bar and the slider's inset icon used `px` boxes. With
+  a larger browser font size or 200% text-only zoom, their labels and icons
+  spilled out or were cut, and a field's floating label sat on its value.
+  Those sizes are now `rem` (a new `rem()` Sass function), so pages render
+  the same at the default 16px. A field's clearance for its prefix, suffix,
+  password toggle and number stepper grows with them.
 - A trigger with both a Tooltip and a Menu keeps both anchors. Each wrote
   the whole `anchor-name` property, so the second replaced the first, and
   destroying either removed the other's. Tour targets share the same list.
