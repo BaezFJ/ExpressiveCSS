@@ -14,6 +14,9 @@ const html = `<style>${css}</style><body style="margin: 0; padding: 8px; width: 
   <div id="bare-wavy" class="progress wavy" style="--md-comp-progress-value: 70%"></div>
   <div dir="rtl"><div id="rtl" class="progress stop"><div class="determinate" style="width: 30%"></div></div></div>
   <div id="indeterminate-wavy" class="progress wavy"><div class="indeterminate"></div></div>
+  <span id="circle" class="progress circular determinate" style="--md-comp-progress-value: 65%"></span>
+  <span id="circle-wavy" class="progress circular wavy determinate" style="--md-comp-progress-value: 65%"></span>
+  <span id="spinner-wavy" class="progress circular wavy" role="status"></span>
 </body>`;
 
 for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit })) {
@@ -50,6 +53,21 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       assert.match(styles.bareMask, /^url\(/, 'a bare bar is masked to the wave');
       assert.match(styles.track, /radial-gradient.*linear-gradient/s, 'a wavy track keeps the stop over its stripe');
       assert.deepEqual([styles.wrapper, /^url\(/.test(styles.moving)], ['none', true], 'an indeterminate bar masks its moving bars, not its empty wrapper');
+
+      // A wavy circle draws its indicator as a wave round the ring and its
+      // track as a thin plain ring; the element itself draws nothing.
+      const circle = await page.evaluate(() => {
+        const style = (id, pseudo) => getComputedStyle(document.getElementById(id), pseudo);
+        return {
+          own: [style('circle-wavy').backgroundImage, style('circle-wavy').maskImage, style('circle-wavy').overflow],
+          wave: /^url\(/.test(style('circle-wavy', '::before').maskImage),
+          track: style('circle-wavy', '::after').maskImage.startsWith('radial-gradient'),
+          spinner: [/^url\(/.test(style('spinner-wavy', '::before').maskImage), style('spinner-wavy', '::after').backgroundImage],
+        };
+      });
+      assert.deepEqual(circle, { own: ['none', 'none', 'visible'], wave: true, track: true, spinner: [true, 'none'] },
+        'the wave and the track are the pseudo-elements; a spinner has no track');
+      assert.notEqual(await shot('circle-wavy'), await shot('circle'), 'the wavy ring is drawn');
 
       // Drawn: the stop and the wave change the bar.
       const [plain, stop, wavy] = [await shot('plain'), await shot('stop'), await shot('wavy')];

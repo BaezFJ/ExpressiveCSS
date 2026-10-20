@@ -65,7 +65,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Popover](#popover) | implemented | source-reviewed | needs-rerun | 0 |
 | [Tour](#tour) | unassessed | needs-review | incomplete | 0 |
 | [Snackbar](#snackbar) | unassessed | needs-review | needs-rerun | 0 |
-| [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 1 |
+| [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 0 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | needs-rerun | 1 |
 | [Skeleton](#skeleton) | implemented | source-reviewed | needs-rerun | 0 |
 | [Empty state](#empty-state) | implemented | source-reviewed | needs-rerun | 0 |
@@ -997,7 +997,6 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 Web adaptation: Prefer native progress where applicable; supply accessible state for custom hosts.
 
 - verification: Forced-colors rendering is checked in browser emulation; Windows high-contrast and spoken output still require manual review. Next: Verify native and custom indicators with Windows contrast themes and screen readers before claiming platform-wide support.
-- feature: Linear progress has the Expressive end stop and wavy indicator; a circular indicator has no wavy form. Next: Add a wavy circular indicator if pages need one, from a generated wave ring mask.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining progress and loading variants stop spatial motion`. Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-web-accessibility-browser.test.js): `chromium: linear progress follows inherited and overridden RTL direction`. Custom child and token fills at 0/25/100 percent, inherited and overridden direction, mirrored indeterminate animation samples, RTL reduced-motion geometry, unchanged native value and absence of circular linear fill. Firefox and WebKit variants run in the browser suite.

@@ -3271,11 +3271,6 @@
           "kind": "verification",
           "description": "Forced-colors rendering is checked in browser emulation; Windows high-contrast and spoken output still require manual review.",
           "nextStep": "Verify native and custom indicators with Windows contrast themes and screen readers before claiming platform-wide support."
-        },
-        {
-          "kind": "feature",
-          "description": "Linear progress has the Expressive end stop and wavy indicator; a circular indicator has no wavy form.",
-          "nextStep": "Add a wavy circular indicator if pages need one, from a generated wave ring mask."
         }
       ],
       "browserChecks": [

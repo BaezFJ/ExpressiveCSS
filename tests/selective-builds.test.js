@@ -276,5 +276,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed linear progress end stop and wavy indicator: 81,405 gzip bytes (+404).
   // Reviewed heatmap row labels kept in view beside scrolling cells: 81,429 gzip bytes (+24).
   // Reviewed radial gradients that follow the ring: 81,497 gzip bytes (+68).
-  assert.ok(sizes(css).gzip <= 81497, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed wavy circular progress: 82,132 gzip bytes (+635).
+  assert.ok(sizes(css).gzip <= 82132, `CSS gzip: ${sizes(css).gzip}`);
 });
