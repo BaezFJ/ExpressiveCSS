@@ -34,7 +34,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Split button](#split-button) | unassessed | needs-review | needs-rerun | 0 |
 | [Floating action button](#fab) | unassessed | needs-review | needs-rerun | 0 |
 | [Cards](#cards) | unassessed | needs-review | needs-rerun | 0 |
-| [Aura](#aura) | implemented | source-reviewed | needs-rerun | 0 |
+| [Aura](#aura) | unassessed | needs-review | needs-rerun | 0 |
 | [Lists](#lists) | unassessed | needs-review | needs-rerun | 1 |
 | [Message](#message) | implemented | source-reviewed | needs-rerun | 0 |
 | [Message scroller](#message-scroller) | implemented | source-reviewed | needs-rerun | 0 |
@@ -89,7 +89,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Radio buttons](#radio-buttons) | unassessed | needs-review | needs-rerun | 0 |
 | [Rating](#rating) | implemented | source-reviewed | needs-rerun | 0 |
 | [Color swatches](#color-swatches) | implemented | source-reviewed | incomplete | 0 |
-| [Color picker](#color-picker) | implemented | source-reviewed | incomplete | 0 |
+| [Color picker](#color-picker) | unassessed | needs-review | incomplete | 0 |
 | [Switches](#switches) | unassessed | needs-review | needs-rerun | 1 |
 | [Slider](#slider) | unassessed | needs-review | needs-rerun | 0 |
 | [Chips](#chips) | unassessed | needs-review | needs-rerun | 0 |
@@ -459,9 +459,9 @@ Web adaptation: Native article anatomy; primary-action links preserve navigation
 
 ## Aura
 
-**implemented within the stated scope.** A turning light on a ring around one wrapped element, with dual, rainbow and glow styles, token color, width, corner and speed, a reversed turn in RTL, a static ring under reduced motion and a Highlight ring in forced colors.
+**unassessed within the stated scope.** A turning light on a ring around one wrapped element, with dual, rainbow and glow styles, token color, width, corner and speed, a reversed turn in RTL, a static ring under reduced motion and a Highlight ring in forced colors.
 
-Source review: source-reviewed, 2026-10-08. [src/sass/components/_aura.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_aura.scss).
+Source review: needs-review, 2026-10-08. [src/sass/components/_aura.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_aura.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
 
@@ -1397,9 +1397,9 @@ Web adaptation: Native radios keep one Tab stop, arrow keys and form submission;
 
 ## Color picker
 
-**implemented within the stated scope.** A saturation and brightness area as a keyboard slider, a hue range on the framework slider, a hex field and the native color input as form value and preview, with input, change and onChange events.
+**unassessed within the stated scope.** A saturation and brightness area as a keyboard slider, a hue range on the framework slider, a hex field and the native color input as form value and preview, with input, change and onChange events.
 
-Source review: source-reviewed, 2026-10-18. [src/sass/components/forms/_color-picker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/forms/_color-picker.scss), [src/ts/components/colorPicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/ts/components/colorPicker.ts).
+Source review: needs-review, 2026-10-18. [src/sass/components/forms/_color-picker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/forms/_color-picker.scss), [src/ts/components/colorPicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/ts/components/colorPicker.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-18); [reviewed source](https://m3.material.io/components).
 

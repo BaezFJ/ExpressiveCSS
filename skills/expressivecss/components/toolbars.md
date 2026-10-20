@@ -9,7 +9,7 @@ Component ID: `toolbars`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `b6bf9ba07d054aa8536994f13210f81749690d0ffb21412a05a71dea65e7349b`
+Contract SHA-256: `dc6a25f6dad188de7f65f7d5a04a2120de9b3ef5ec7796cdaa807f05acad0b35`
 
 #### Selection and adaptation
 

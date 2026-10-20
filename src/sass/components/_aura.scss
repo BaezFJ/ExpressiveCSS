@@ -101,10 +101,15 @@
     }
   }
 
+  // Doubled to outrank the variants, so a rainbow or a glow is the same
+  // solid ring.
   @media (forced-colors: active) {
-    &::before {
+    &.aura::before {
       forced-color-adjust: none;
       background: Highlight;
+      mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+      filter: none;
+      opacity: 1;
     }
   }
 }
