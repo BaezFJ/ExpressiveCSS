@@ -48,7 +48,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Column chart](#column-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Bar chart](#bar-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Pie chart](#pie-chart) | unassessed | needs-review | needs-rerun | 1 |
-| [Heatmap chart](#heatmap-chart) | unassessed | needs-review | needs-rerun | 1 |
+| [Heatmap chart](#heatmap-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Radar chart](#radar-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Radial chart](#radial-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Mixed chart](#mixed-chart) | unassessed | needs-review | needs-rerun | 0 |
@@ -65,7 +65,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Popover](#popover) | implemented | source-reviewed | needs-rerun | 0 |
 | [Tour](#tour) | unassessed | needs-review | incomplete | 0 |
 | [Snackbar](#snackbar) | unassessed | needs-review | needs-rerun | 0 |
-| [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 1 |
+| [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 0 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | needs-rerun | 1 |
 | [Skeleton](#skeleton) | implemented | source-reviewed | needs-rerun | 0 |
 | [Empty state](#empty-state) | implemented | source-reviewed | needs-rerun | 0 |
@@ -707,7 +707,6 @@ Google relationship: none. Upstream review: web-extension-inventory-reviewed (20
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, labels and scale are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
 - verification: Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
-- feature: In a grid wide enough to scroll, the row labels scroll away with the cells. Next: Pin the row labels if wide grids need them in view.
 
 - stale: [tests/heatmap-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/heatmap-chart-browser.test.js): `chromium: heatmap chart draws a shaded grid and a scale from its table`. Hidden table in the accessibility tree, the named plot and its role description, aria-hidden grid and scale, cell levels and fills, gaps, the row height, row and column labels, empty and running data-labels, the scale ends, data-min and data-max clamping, values, text that takes the higher-contrast of black and white on saturated and near-threshold colors, the legend over a fixed scale, long row labels capped at 40% of the width, no page overflow from a wide table, a table of gaps left undrawn, separate instances from line charts, and destroy restoring the table.
 - stale: [tests/heatmap-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/heatmap-chart-browser.test.js): `chromium: heatmap chart tooltip follows the pointer and the arrow keys round the grid`. Pointer to cell by position, the space between cells, a touch drag that keeps its first target, the active cell, tooltip text for cells and gaps, the swatch shade and the outlined gap swatch, a press on a label focusing without a tooltip, opening leftwards on the right half, hiding off the cells, focus, all four arrows stopping at the edges, Home, End and Escape, Escape left uncancelled once the tooltip is hidden, and right-to-left columns with swapped arrows and scale. No spoken-output assertion.
@@ -744,7 +743,7 @@ Google relationship: none. Upstream review: web-extension-inventory-reviewed (20
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rings, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
 - verification: Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, segments, gradient fills, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
-- feature: A gradient fill runs across the plot, so it follows only a gauge's arc, and rings past four reuse the colors. Next: Draw gradients along each ring if full rings need them; keep to four rings and use the legend for more.
+- feature: Rings past four reuse the colors. Next: Keep to four rings and use the legend for more.
 
 - stale: [tests/radial-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/radial-chart-browser.test.js): `chromium: radial chart draws rings, a legend and a total from its table`. Hidden table in the accessibility tree, the named plot and its role description, the square plot, ring radii, widths, colors and dash shares, tracks, an empty ring for a missing value, legend cells, separate instances from line charts, the gauge's box, half-circle dash, round track caps and <tfoot> total, no legend for one ring, thinner crowded rings, a value past the maximum, the sparkline size and focus in a flex row, and destroy restoring the table.
 - stale: [tests/radial-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/radial-chart-browser.test.js): `chromium: radial chart tooltip follows the pointer across the rings and the arrow keys`. Pointer distance to ring, gaps split between rings, the active ring, tooltip text with further columns, swatches in the ring color, opening direction, hiding in the middle, off the rings and below a gauge's base line, focus, all four arrows, End and Escape, and clockwise rings with swapped arrows in RTL. No spoken-output assertion.
@@ -998,7 +997,6 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 Web adaptation: Prefer native progress where applicable; supply accessible state for custom hosts.
 
 - verification: Forced-colors rendering is checked in browser emulation; Windows high-contrast and spoken output still require manual review. Next: Verify native and custom indicators with Windows contrast themes and screen readers before claiming platform-wide support.
-- feature: Linear progress has the Expressive end stop and wavy indicator; a circular indicator has no wavy form. Next: Add a wavy circular indicator if pages need one, from a generated wave ring mask.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining progress and loading variants stop spatial motion`. Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-web-accessibility-browser.test.js): `chromium: linear progress follows inherited and overridden RTL direction`. Custom child and token fills at 0/25/100 percent, inherited and overridden direction, mirrored indeterminate animation samples, RTL reduced-motion geometry, unchanged native value and absence of circular linear fill. Firefox and WebKit variants run in the browser suite.

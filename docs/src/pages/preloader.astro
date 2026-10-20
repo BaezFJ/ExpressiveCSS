@@ -132,6 +132,23 @@ const S = defineSections([
       aria-valuemin="0" aria-valuemax="100"
       aria-label="Loading"></span>
 `} />
+        <p>
+          <code>wavy</code> draws the indicator as a wave round the ring, the
+          M3 Expressive look for a longer wait. A determinate wavy ring keeps
+          a thin plain track after the wave; a wavy spinner has none.
+        </p>
+        <p>
+          <span class="progress circular wavy" role="status" aria-label="Loading"></span>
+          <span class="progress circular wavy determinate" style="--md-comp-progress-value: 65%" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" aria-label="Uploading"></span>
+        </p>
+<Code code={`
+<span class="progress circular wavy" role="status" aria-label="Loading"></span>
+<span class="progress circular wavy determinate"
+      style="--md-comp-progress-value: 65%"
+      role="progressbar" aria-valuenow="65"
+      aria-valuemin="0" aria-valuemax="100"
+      aria-label="Uploading"></span>
+`} />
   </Section>
   <Section {...S.meter}>
         <p>

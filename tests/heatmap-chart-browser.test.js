@@ -152,7 +152,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       }));
       assert.deepEqual(weeksLabels.rows, ['Mon', ''], 'an empty data-label hides a row label');
       assert.equal(weeksLabels.columns.length, 10, 'empty data-labels draw no column label');
-      assert.deepEqual(weeksLabels.columns[0], ['M1', '2 / 6', true], 'a label runs on over the empty ones after it');
+      assert.deepEqual(weeksLabels.columns[0], ['M1', '1 / 5', true], 'a label runs on over the empty ones after it');
       assert.equal(sales.overflow, true, 'a wide hidden table does not widen the page');
 
       assert.equal(await page.locator('#empty .heatmap-chart-plot').count(), 0, 'a table with no numbers stays a table');
@@ -384,7 +384,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         const scroll = el.querySelector('.heatmap-chart-scroll');
         const [tooltip, cell] = [el.querySelector('.heatmap-chart-tooltip'), el.querySelectorAll('.heatmap-chart-cell')[51]];
         const frame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-        scroll.scrollLeft -= 20;
+        scroll.scrollLeft -= 5;
         await frame();
         const beside = Math.abs(tooltip.getBoundingClientRect().right + 8 - cell.getBoundingClientRect().left) < 2;
         scroll.scrollLeft = 0;
@@ -392,6 +392,23 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         return [beside, tooltip.hidden];
       });
       assert.deepEqual(follow, [true, true]);
+
+      // The row label stays in view beside the scrolled cells, on the same row.
+      await page.locator('#wide .heatmap-chart-scroll').evaluate((el) => { el.scrollLeft = 200; });
+      const pinned = await page.locator('#wide').evaluate((el) => {
+        const [label, scroll, cell] = ['row', 'scroll', 'cell'].map((name) => el.querySelector(`.heatmap-chart-${name}`).getBoundingClientRect());
+        const plot = el.querySelector('.heatmap-chart-plot').getBoundingClientRect();
+        return {
+          inView: label.left >= plot.left - 1 && label.right <= scroll.left + 3,
+          row: Math.abs((label.top + label.bottom) / 2 - (cell.top + cell.bottom) / 2) < 1,
+        };
+      });
+      assert.deepEqual(pinned, { inView: true, row: true });
+      // The pointer on the label, over cells scrolled out of view, picks no cell.
+      await page.locator('#wide .heatmap-chart-scroll').evaluate((el) => { el.scrollLeft = el.scrollWidth; });
+      const label = await page.locator('#wide .heatmap-chart-row').boundingBox();
+      await page.mouse.move(label.x + label.width / 2, label.y + label.height / 2);
+      assert.equal(await page.locator('#wide').evaluate((el) => Expressive.HeatmapChart.getInstance(el).activeIndex), -1);
 
       // Tab leaves the chart from the plot, and a press in the grid focuses the plot.
       await page.keyboard.press('Tab');

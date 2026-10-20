@@ -13,7 +13,7 @@
 // whichever contrasts more with the cell's mix, in any theme.
 //
 // Cells keep --md-comp-heatmap-chart-cell-min-width, and a grid too wide
-// for its figure scrolls sideways.
+// for its figure scrolls its cells sideways beside the row labels.
 //
 // Modifiers: .values writes each cell's text on it.
 //
@@ -66,7 +66,30 @@
   background: none;
 }
 
-// ponytail: the row labels scroll away with the cells; pin them if wide grids need it.
+// The row labels, then the cells beside them. Row labels take up to 40% of
+// the width and end in an ellipsis past it; the cells take the rest and
+// scroll sideways when their minimum width would not fit, while the row
+// labels stay in view. Both sides use the same fixed row height, so the
+// rows line up.
+.heatmap-chart-grid {
+  display: grid;
+  grid-template-columns: fit-content(40%) minmax(0, 1fr);
+  column-gap: var(--md-comp-heatmap-chart-gap);
+  color: var(--md-sys-color-on-surface-variant);
+  @include typescale("body-small");
+}
+
+.heatmap-chart-rows,
+.heatmap-chart-cells {
+  display: grid;
+  grid-template-rows: repeat(var(--rows, 1), var(--md-comp-heatmap-chart-row-height)) auto;
+  gap: var(--md-comp-heatmap-chart-gap);
+}
+
+.heatmap-chart-rows {
+  min-width: 0;
+}
+
 .heatmap-chart-scroll {
   overflow-x: auto;
   // Room for the active cell's outline, which the scrolling would clip.
@@ -74,17 +97,9 @@
   padding: 3px;
 }
 
-.heatmap-chart-grid {
-  display: grid;
-  // Row labels take up to 40% of the width and end in an ellipsis past it.
-  grid-template-columns: fit-content(40%) repeat(var(--columns, 1), minmax(0, 1fr));
-  grid-template-rows: repeat(var(--rows, 1), var(--md-comp-heatmap-chart-row-height));
-  gap: var(--md-comp-heatmap-chart-gap);
-  // Wide enough for every cell to keep its minimum width in the 60% the row
-  // labels leave at least; past the figure's width the scroll box scrolls.
-  width: max(100%, var(--columns, 1) * (var(--md-comp-heatmap-chart-cell-min-width) + var(--md-comp-heatmap-chart-gap)) / 0.6);
-  color: var(--md-sys-color-on-surface-variant);
-  @include typescale("body-small");
+.heatmap-chart-cells {
+  grid-template-columns: repeat(var(--columns, 1), minmax(var(--md-comp-heatmap-chart-cell-min-width), 1fr));
+  width: max(100%, var(--columns, 1) * (var(--md-comp-heatmap-chart-cell-min-width) + var(--md-comp-heatmap-chart-gap)) - var(--md-comp-heatmap-chart-gap));
 }
 
 .heatmap-chart-row,

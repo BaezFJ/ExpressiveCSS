@@ -15,8 +15,8 @@
 // filled whole, with the ring gap between them.
 //
 // Modifiers: .gauge draws half circles over the middle, .gradient shades
-// each fill from a light tint at the plot's left to its full color at the
-// right, along a gauge's arc, .labels draws
+// each fill along its ring, from a light tint at the start to the full
+// color at the end, .labels draws
 // three-quarter rings and names each one in the empty top left quarter,
 // or under the base line of a gauge, .sparkline is a small chart with no legend, tooltip or names. A <tfoot>
 // row shows in the middle.
@@ -85,8 +85,7 @@
 }
 
 .radial-chart-ring {
-  // RadialChart sets --radial-chart-paint to a gradient with .gradient.
-  stroke: var(--radial-chart-paint, var(--radial-chart-color));
+  stroke: var(--radial-chart-color);
   stroke-linecap: round;
 
   &.empty {
@@ -107,12 +106,58 @@
   }
 }
 
-// From a tint of the ring's color to the color itself.
-.radial-chart-gradient > stop {
-  stop-color: var(--radial-chart-color);
+// .gradient draws each fill again in HTML: a conic gradient round the
+// ring's middle, masked by RadialChart to the fill's own dash, from a tint
+// of the ring's color to the color itself where the fill ends. The SVG fill
+// under it keeps its shape for the cap and the hover, and drops its color.
+// A second mask, a conic reveal, grows the fill in as the SVG dash does. A
+// shadow root ignores @property, so the reveal falls back to the whole turn
+// there and the fill appears without growing.
+@property --radial-chart-reveal {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 360deg;
+}
 
-  &:first-child {
-    stop-color: color-mix(in oklab, var(--radial-chart-color) 35%, var(--md-sys-color-surface));
+.radial-chart.gradient .radial-chart-ring {
+  stroke: transparent;
+}
+
+.radial-chart-sweep {
+  // The rings' middle: the box's, or for a gauge the middle of its base line.
+  --radial-chart-at: 50% 50%;
+
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(
+    from var(--radial-chart-from, 0turn) at var(--radial-chart-at),
+    color-mix(in oklab, var(--radial-chart-color) 35%, var(--md-sys-color-surface)),
+    var(--radial-chart-color) var(--radial-chart-to, 1turn)
+  );
+  mask-image:
+    var(--radial-chart-shape, none),
+    conic-gradient(from var(--radial-chart-from, 0turn) at var(--radial-chart-at), #000 var(--radial-chart-reveal, 360deg), transparent 0);
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-composite: intersect;
+  pointer-events: none;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      --radial-chart-reveal var(--md-sys-motion-duration-long4) var(--md-sys-motion-easing-standard),
+      opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+
+    @starting-style {
+      --radial-chart-reveal: 0deg;
+    }
+  }
+
+  .radial-chart.gauge & {
+    --radial-chart-at: 50% 100%;
+  }
+
+  .radial-chart-rings:has(.active) &:not(.active) {
+    opacity: 0.38;
   }
 }
 

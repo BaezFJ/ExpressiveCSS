@@ -13,7 +13,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Linear progress `.stop` puts a dot in the indicator colour at the
   track's end, and `.wavy` draws the indicator as a wave over a thin track,
-  on `<progress>`, `.determinate` and bare bars. New tokens:
+  on `<progress>`, `.determinate` and bare bars, and a circular indicator
+  takes `.wavy` too: a wave round the ring over a thin track. New tokens:
   `--md-comp-progress-stop-size` and `--md-comp-progress-wavelength`.
 
 - Common button shapes: `square` takes the size's squared corner, every
@@ -35,8 +36,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `i18n.tooShort` message.
 
 - Radial chart fills: `data-segments` splits each ring into segments filled
-  whole, and `.gradient` shades each fill from a light tint to its full
-  color across the plot, along a gauge's arc.
+  whole, and `.gradient` shades each fill along its ring, from a light
+  tint at the start to its full color where the fill ends.
 
 - Range columns and bars: a series header with the class `range` reads
   cells such as `120–480`, `3 to 14` or `data-value="120 480"` and floats a
@@ -53,8 +54,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `--md-comp-heatmap-chart-low-color` (`tertiary`), and `data-steps` groups
   the shades into bands, with a swatch per band under the grid.
 - Wide heatmaps scroll: cells keep `--md-comp-heatmap-chart-cell-min-width`
-  (12px), and a grid too wide for its figure scrolls sideways instead of
-  narrowing them. The arrow keys scroll the cell they move to into view.
+  (12px), and a grid too wide for its figure scrolls its cells sideways
+  instead of narrowing them, while the row labels stay in view. The arrow
+  keys scroll the cell they move to into view.
 
 - Pie chart grouping: `data-other="5"` turns every row under 5% of the
   whole into one last slice with their sum and share, named by

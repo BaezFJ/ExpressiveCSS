@@ -394,6 +394,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         <div style="width: 240px">
           ${chart('class="radial-chart" data-segments="4" id="segments"', 'Segments', '<th>V</th>', [['A', '60'], ['B', '10'], ['C', '100']])}
           ${chart('class="radial-chart gauge gradient" id="gradient"', 'Gradient', '<th>V</th>', [['A', '100']])}
+          ${chart('class="radial-chart gradient" id="rings"', 'Rings', '<th>V</th>', [['A', '50'], ['B', '0'], ['C', '25']])}
           ${chart('class="radial-chart gauge" data-segments="10" id="small"', 'Small', '<th>V</th>', [['A', '100'], ['B', '100'], ['C', '50']])}
         </div>
         <script>${js}</script>`);
@@ -427,13 +428,32 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       const [left, top] = segments.tooltip;
       assert.ok(Math.abs(left - 50) < 0.01 && Math.abs(top - (50 + segments.r)) < 0.01, `the tooltip sits at the end of the lit segments, half way round: ${segments.tooltip}`);
 
-      const gradient = await page.locator('#gradient').evaluate((el) => {
-        const ring = el.querySelector('.radial-chart-ring');
-        const id = /url\(["']?#([^"')]+)/.exec(getComputedStyle(ring).stroke)?.[1];
-        const stops = [...el.querySelectorAll(`#${id} stop`)].map((stop) => getComputedStyle(stop).stopColor);
-        return { id: !!id, stops, unturned: el.querySelector('.radial-chart-gradient').getAttribute('gradientTransform') };
+      // A gradient follows the ring: a conic gradient from the ring's start,
+      // masked to the fill's own dash, over a fill that drops its colour.
+      const sweeps = (el) => {
+        const list = [...el.querySelectorAll('.radial-chart-sweep')];
+        return {
+          series: list.map((sweep) => sweep.dataset.series),
+          turns: list.map((sweep) => [sweep.style.getPropertyValue('--radial-chart-from'), sweep.style.getPropertyValue('--radial-chart-to')]),
+          masked: list.every((sweep) => /^url\(.*\), conic-gradient\(/.test(getComputedStyle(sweep).maskImage)),
+          composite: list.map((sweep) => getComputedStyle(sweep).maskComposite),
+          conic: list.every((sweep) => getComputedStyle(sweep).backgroundImage.startsWith('conic-gradient')),
+          stroke: getComputedStyle(el.querySelector('.radial-chart-ring')).stroke,
+        };
+      };
+      const gauge = await page.locator('#gradient').evaluate(sweeps);
+      assert.deepEqual(gauge.turns, [['-0.25turn', '0.5turn']], 'a gauge sweeps from nine o\'clock over its half circle');
+      assert.ok(gauge.masked && gauge.conic, 'each sweep is a conic gradient masked to its ring and to a reveal that grows it in');
+      assert.match(gauge.composite[0], /^intersect(, intersect)?$/);
+      assert.match(gauge.stroke, /rgba\(0, 0, 0, 0\)|transparent/, 'the SVG fill under it drops its colour');
+      const rings = await page.locator('#rings').evaluate(sweeps);
+      assert.deepEqual(rings.series, ['1', '3'], 'an empty ring has no sweep');
+      assert.deepEqual(rings.turns, [['0turn', '0.5turn'], ['0turn', '0.25turn']], 'full rings sweep from the top as far as their fill');
+      const faded = await page.locator('#rings').evaluate((el) => {
+        Expressive.RadialChart.getInstance(el).show(0);
+        return [...el.querySelectorAll('.radial-chart-sweep')].map((sweep) => getComputedStyle(sweep).opacity);
       });
-      assert.ok(gradient.id, 'the fill is painted with a gradient');
+      assert.deepEqual(faded, ['1', '0.38'], 'the sweeps beside the shown ring fade with it');
 
       // On a small inner ring a dash and its gap still make one segment, so the fill keeps its share.
       const small = await page.locator('#small').evaluate((el) => [...el.querySelectorAll('.radial-chart-ring, .radial-chart-track')].map((node) => {
@@ -443,8 +463,6 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         return Math.round((drawn / half) * 100) / 100;
       }));
       assert.deepEqual(small, [1, 1, 1, 1, 1, 0.5], `each ring fills its share of the half circle: ${small}`);
-      assert.notEqual(gradient.stops[0], gradient.stops[1], 'from a tint to the full color');
-      assert.equal(gradient.unturned, 'rotate(-180)', 'the gradient turns back with the gauge, so it runs left to right');
     } finally {
       await browser.close();
     }

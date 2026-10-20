@@ -7,7 +7,6 @@ export type RadialChartOptions = LineChartOptions;
 const RADIUS = 46;
 /** The rings never fill more of the radius than this, leaving a middle. */
 const FILL = 0.8;
-let _gradientId = 0;
 
 /**
  * Radial chart. It reads its <table> like LineChart, but draws each row of
@@ -17,8 +16,8 @@ let _gradientId = 0;
  * of a circle, leaving the top left quarter for each row's name at the
  * ring's start; a gauge's names hang under its base line instead.
  * `data-segments` splits each ring into that many segments, filled whole,
- * and `.gradient` shades each fill from a light tint at the plot's left to
- * its full color at the right. A <tfoot>
+ * and `.gradient` shades each fill along the ring, from a light tint at its
+ * start to its full color at its end. A <tfoot>
  * row shows in the middle, and
  * a legend lists the rows when there is more than one. Further columns show
  * in the tooltip.
@@ -35,6 +34,8 @@ export class RadialChart extends LineChart {
   /** Each row's share of the maximum, from 0 to 1. */
   private _fractions: number[];
   private _rings: SVGCircleElement[];
+  /** With .gradient, each ring's fill drawn again as a conic gradient, or null for none. */
+  private _sweeps: (HTMLElement | null)[];
 
   protected get _type() {
     return 'radial-chart';
@@ -125,6 +126,7 @@ export class RadialChart extends LineChart {
     if (!this._tooltip || index === this.activeIndex) return;
     super.show(index);
     this._rings.forEach((ring, i) => ring.classList.toggle('active', i === index));
+    this._sweeps.forEach((sweep, i) => sweep?.classList.toggle('active', i === index));
     // LineChart hides the tooltip for -1 and for an index past the last row.
     if (this._tooltip.hidden) return;
     const color = seriesColor(index);
@@ -199,29 +201,31 @@ export class RadialChart extends LineChart {
     return name ? [...name.parentElement!.children].indexOf(name) : -1;
   }
 
+  /** The rings' turn, from three o'clock to the top or, for a gauge, to nine, and the SVG's box. */
+  private get _frame(): [transform: string, viewBox: string] {
+    return this._gauge ? ['rotate(180)', '-50 -50 100 50'] : ['rotate(-90)', '-50 -50 100 100'];
+  }
+
   /**
-   * With .gradient, paints a ring's fill with a gradient from a light tint
-   * of its color at the plot's left to the full color at its right, which
-   * follows a gauge's arc. `unturn` undoes the ring's turn.
+   * With .gradient, a ring's fill drawn again in HTML: a conic gradient from
+   * a tint of its colour at the ring's start to the full colour where the
+   * fill ends, masked to the fill's own dash, so it follows the ring round.
+   * An SVG stroke takes no conic gradient.
    */
-  private _shade(ring: SVGElement, i: number, unturn: string) {
-    if (!this.el.classList.contains('gradient')) return;
-    const id = `radial-chart-gradient-${++_gradientId}`;
-    // The gradient is in the turned ring's space, so it turns back first.
-    const gradient = node('linearGradient', {
-      id,
-      class: 'radial-chart-gradient',
-      'data-series': seriesColor(i),
-      gradientUnits: 'userSpaceOnUse',
-      gradientTransform: unturn,
-      x1: '-50',
-      x2: '50',
-      y1: '0',
-      y2: '0'
-    });
-    gradient.append(node('stop'), node('stop', { offset: '1' }));
-    ring.before(gradient);
-    ring.style.setProperty('--radial-chart-paint', `url(#${id})`);
+  private _sweep(r: number, i: number, length: number) {
+    const fraction = this._fractions[i];
+    if (!fraction || !this.el.classList.contains('gradient')) return null;
+    const [transform, viewBox] = this._frame;
+    const width = this._width.toFixed(3);
+    const dash = this._dash(fraction, length, true);
+    const image = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='${viewBox}'><circle r='${r.toFixed(3)}' stroke-width='${width}' transform='${transform}' stroke-dasharray='${dash}' stroke-dashoffset='${(-this._width / 2).toFixed(3)}' stroke-linecap='round' fill='none' stroke='black'/></svg>`;
+    const sweep = document.createElement('div');
+    sweep.className = 'radial-chart-sweep';
+    sweep.dataset.series = seriesColor(i);
+    sweep.style.setProperty('--radial-chart-shape', `url("data:image/svg+xml,${encodeURIComponent(image)}")`);
+    sweep.style.setProperty('--radial-chart-from', `${this._turn(0)}turn`);
+    sweep.style.setProperty('--radial-chart-to', `${fraction * this._span}turn`);
+    return sweep;
   }
 
   /**
@@ -272,11 +276,10 @@ export class RadialChart extends LineChart {
     const max = [parseFloat(this.el.dataset.max ?? ''), this.options.max ?? NaN, 100].find((value) => value > 0)!;
     this._fractions = this.series[0].values.map((value) => this._lit(Math.min(1, Math.max(0, (value ?? 0) / max))));
 
-    const gauge = this._gauge;
-    const svg = node('svg', { viewBox: gauge ? '-50 -50 100 50' : '-50 -50 100 100', focusable: 'false' });
-    // A circle starts at three o'clock; turn it to the top, or to nine for a gauge.
-    const transform = gauge ? 'rotate(180)' : 'rotate(-90)';
+    const [transform, viewBox] = this._frame;
+    const svg = node('svg', { viewBox, focusable: 'false' });
     const span = this._span;
+    this._sweeps = [];
     this._rings = this._radii.map((r, i) => {
       const length = 2 * Math.PI * r;
       // A capped dash starts half a width in, where its round cap ends.
@@ -295,7 +298,7 @@ export class RadialChart extends LineChart {
       if (!this._fractions[i]) ring.classList.add('empty');
       // Only a track short of a whole circle, or in segments, has ends to round.
       svg.append(circle('radial-chart-track', 1, span < 1 || !!this._segments), ring);
-      this._shade(ring, i, gauge ? 'rotate(-180)' : 'rotate(90)');
+      this._sweeps.push(this._sweep(r, i, length));
       return ring;
     });
 
@@ -303,7 +306,7 @@ export class RadialChart extends LineChart {
     rings.className = 'radial-chart-rings';
     rings.setAttribute('aria-hidden', 'true');
     rings.style.setProperty('--radial-chart-middle', `${(this._radii[count - 1] - this._width / 2) * 2}%`);
-    rings.append(svg, ...this._names());
+    rings.append(svg, ...this._sweeps.filter((sweep) => sweep !== null), ...this._names());
 
     const total = this._total('radial-chart-total');
     if (total) rings.append(total);

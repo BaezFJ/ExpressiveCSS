@@ -1,3 +1,4 @@
+@use "sass:math";
 @use "../abstracts" as *;
 
 // Progress. Anatomy is the HTML:
@@ -11,7 +12,7 @@
 // Linear modifiers, from M3 Expressive: .stop puts a dot in the indicator
 // colour at the track's end, so the end still reads where the track's own
 // contrast falls short; .wavy draws the indicator as a wave over a thin
-// track.
+// track. A circular indicator takes .wavy too.
 //
 // Tokens:
 //   --md-comp-progress-track
@@ -249,6 +250,60 @@ progress.progress:indeterminate {
   }
 }
 
+// Wavy circular: the indicator is a wave round the ring, 10 waves of 1.5
+// units in a 48-unit box, over a thin plain track. The element draws
+// nothing itself; ::before is the indicator and ::after the determinate
+// track, each masked to its own ring.
+@function _wave-ring($waves: 10, $amplitude: 1.5, $radius: 20, $steps: 80) {
+  $path: "";
+  @for $i from 0 through $steps {
+    $angle: math.div($i, $steps) * 2 * math.$pi;
+    $r: $radius + $amplitude * math.sin($waves * $angle);
+    $x: math.div(math.round((24 + $r * math.cos($angle)) * 10), 10);
+    $y: math.div(math.round((24 + $r * math.sin($angle)) * 10), 10);
+    $command: "L";
+    @if $i == 0 {
+      $command: "M";
+    }
+    $path: "#{$path}#{$command}#{$x} #{$y}";
+  }
+  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='#{$path}Z' fill='none' stroke='%23000' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.progress.circular.wavy {
+  position: relative;
+  // The pseudo-elements carry their own masks; a rounded clip as well
+  // leaves a hairline at the edge in WebKit.
+  overflow: visible;
+  background: none;
+  mask: none;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  &::before {
+    background: conic-gradient(var(--md-comp-progress-indicator) 0 90deg, transparent 0);
+    mask: _wave-ring() center / 100% 100% no-repeat;
+  }
+
+  &.determinate::before {
+    background: conic-gradient(var(--md-comp-progress-indicator) 0 var(--md-comp-progress-value, 0%), transparent 0);
+  }
+
+  // The track: a 2-unit ring through the middle of the wave, after the fill.
+  &.determinate::after {
+    background: conic-gradient(
+      transparent 0 var(--md-comp-progress-value, 0%),
+      color-mix(in oklab, var(--md-comp-progress-indicator) 20%, transparent) 0
+    );
+    mask: radial-gradient(farthest-side, transparent 79%, #000 79.5% 87%, transparent 87.5% 100%);
+  }
+}
+
 @keyframes preloader-rotate {
   to { transform: rotate(1turn); }
 }
@@ -283,6 +338,18 @@ progress.progress:indeterminate {
     animation: none;
   }
 
+  .progress.circular.wavy::before {
+    background: conic-gradient(CanvasText 0 90deg, transparent 0);
+  }
+
+  .progress.circular.wavy.determinate::before {
+    background: conic-gradient(CanvasText 0 var(--md-comp-progress-value, 0%), transparent 0);
+  }
+
+  .progress.circular.wavy.determinate::after {
+    background: conic-gradient(transparent 0 var(--md-comp-progress-value, 0%), GrayText 0);
+  }
+
   .progress.circular {
     background: conic-gradient(CanvasText 0 90deg, transparent 90deg 360deg);
 
@@ -292,6 +359,11 @@ progress.progress:indeterminate {
         GrayText var(--md-comp-progress-value, 0%)
       );
     }
+  }
+
+  // A wavy ring draws on its pseudo-elements, so the element stays empty here too.
+  .progress.circular.wavy {
+    background: none;
   }
 }
 
