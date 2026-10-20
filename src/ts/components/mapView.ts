@@ -123,6 +123,10 @@ function arc([x0, y0]: LngLat, [x2, y2]: LngLat, steps = 32): LngLat[] {
   });
 }
 
+// How far each arrow key nudges a focused draggable marker, in steps.
+const ARROWS: Record<string, [number, number]> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+const plainArrow = (e: KeyboardEvent) => (e.altKey || e.ctrlKey || e.metaKey ? undefined : ARROWS[e.key]);
+
 /**
  * An interactive map built on MapLibre: a `.map` holding `.map-marker`,
  * `.map-popup` and `.map-controls` children.
@@ -130,8 +134,10 @@ function arc([x0, y0]: LngLat, [x2, y2]: LngLat, steps = 32): LngLat[] {
  * Each marker sits at its `data-lng-lat`. A marker button with
  * `aria-controls` opens the `.map-popup` it names; a popup with its own
  * `data-lng-lat` and no marker opens at init. Buttons in `.map-controls`
- * run their `data-action`: `zoom-in`, `zoom-out`, `compass`, `locate` or
- * `fullscreen`. Routes, arcs and clusters are data, so they are added from
+ * run their `data-action`: `zoom-in`, `zoom-out`, `compass`, `locate`,
+ * `fullscreen` or `pan-up`, `pan-down`, `pan-left` and `pan-right`. A
+ * `data-draggable` marker moves without a drag too: a tap picks it up and
+ * the next tap on the map drops it, and the arrow keys nudge it. Routes, arcs and clusters are data, so they are added from
  * script. The default style follows the page's light or dark theme, and
  * line and cluster colors come from the theme.
  *
@@ -155,6 +161,24 @@ export class MapView extends Component<MapViewOptions> {
   // Looked up once: `move` fires every frame of a pan or zoom.
   private _zoomIn: HTMLButtonElement[] = [];
   private _zoomOut: HTMLButtonElement[] = [];
+  // The draggable marker a tap picked up, waiting for the tap that drops it.
+  private _picked: HTMLElement | null = null;
+  // The marker whose drag just ended, so the click that follows does not pick it up.
+  private _dragged: HTMLElement | null = null;
+  // Undoes what the map added to the page's markup, for destroy().
+  private _restore: (() => void)[] = [];
+  private _abort = new AbortController();
+  private _actions: Record<string, (button: HTMLButtonElement) => void> = {
+    'zoom-in': () => this.map.zoomIn(),
+    'zoom-out': () => this.map.zoomOut(),
+    compass: () => this.map.resetNorthPitch(),
+    locate: (button) => this._locate(button),
+    fullscreen: () => this._toggleFullscreen(),
+    'pan-up': () => this._pan(0, -1),
+    'pan-down': () => this._pan(0, 1),
+    'pan-left': () => this._pan(-1, 0),
+    'pan-right': () => this._pan(1, 0)
+  };
 
   constructor(el: HTMLElement, options: Partial<MapViewOptions>) {
     super(el, options, MapView);
@@ -246,6 +270,7 @@ export class MapView extends Component<MapViewOptions> {
     if (!this.map) return;
     this.el.removeEventListener('click', this._handleClick);
     this.el.removeEventListener('keydown', this._handleKeydown);
+    this._releaseMarkers();
     document.removeEventListener('fullscreenchange', this._handleFullscreen);
     this._media?.removeEventListener('change', this._handleScheme);
     this._observer?.disconnect();
@@ -402,11 +427,8 @@ export class MapView extends Component<MapViewOptions> {
       element,
       draggable: element.hasAttribute('data-draggable')
     }).setLngLat(at).addTo(this.map);
-    marker.on('dragend', () => {
-      const { lng, lat } = marker.getLngLat();
-      element.dataset.lngLat = `${lng},${lat}`;
-      element.dispatchEvent(new Event('change', { bubbles: true }));
-    });
+    marker.on('dragend', () => this._moved(marker));
+    if (element.hasAttribute('data-draggable')) this._makeMovable(element, marker);
     this.markers.push(marker);
     if (!content) return;
     element.setAttribute('aria-expanded', 'false');
@@ -417,6 +439,77 @@ export class MapView extends Component<MapViewOptions> {
       if (!document.activeElement || document.activeElement === document.body) element.focus();
     });
     this._markerPopups.set(element, popup);
+  }
+
+  /** A marker moved: its `data-lng-lat` holds the new place, and it fires `change`. */
+  private _moved(marker: any) {
+    const element: HTMLElement = marker.getElement();
+    const { lng, lat } = marker.getLngLat();
+    element.dataset.lngLat = `${lng},${lat}`;
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  // A drag is not the only way to move it (WCAG 2.5.7): a tap picks it up,
+  // and the arrow keys nudge it. A button is already a control; anything
+  // else becomes one, and destroy() takes that back off.
+  private _makeMovable(element: HTMLElement, marker: any) {
+    const added = element instanceof HTMLButtonElement ? [] : ['role', 'tabindex'].filter((name) => !element.hasAttribute(name));
+    if (added.includes('role')) element.setAttribute('role', 'button');
+    if (added.includes('tabindex')) element.tabIndex = 0;
+    element.setAttribute('aria-pressed', 'false');
+    this._restore.push(() => ['aria-pressed', ...added].forEach((name) => element.removeAttribute(name)));
+    element.addEventListener('keydown', (e) => this._nudge(e, marker), { signal: this._abort.signal });
+    marker.on('dragstart', () => (this._dragged = element));
+    marker.on('dragend', () => setTimeout(() => (this._dragged = null)));
+  }
+
+  /** Takes back the listeners and attributes `_makeMovable()` added. */
+  private _releaseMarkers() {
+    this._abort.abort();
+    this._restore.splice(0).forEach((undo) => undo());
+    this._picked = null;
+  }
+
+  /** The arrow keys move a focused draggable marker 10px, and the map stays put. */
+  private _nudge(e: KeyboardEvent, marker: any) {
+    const step = plainArrow(e);
+    if (!step) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const at = this.map.project(marker.getLngLat());
+    marker.setLngLat(this.map.unproject([at.x + step[0] * 10, at.y + step[1] * 10]));
+    this._moved(marker);
+  }
+
+  /** Picks a marker up, or puts down the one already picked up. */
+  private _pick(element: HTMLElement | null) {
+    this._picked?.setAttribute('aria-pressed', 'false');
+    this._picked = element;
+    element?.setAttribute('aria-pressed', 'true');
+  }
+
+  // A tap on a draggable marker picks it up, or puts it back down; the click
+  // that ends a drag does neither.
+  private _tapMarker(element: HTMLElement | null) {
+    if (element?.hasAttribute('data-draggable')) this._tapMovable(element);
+    else if (this._markerPopups.has(element)) this._toggle(element);
+  }
+
+  private _tapMovable(element: HTMLElement) {
+    if (this._dragged !== element) this._pick(this._picked === element ? null : element);
+  }
+
+  /** A third of the map's width or height in a direction. */
+  private _pan(x: number, y: number) {
+    const { width, height } = this.el.getBoundingClientRect();
+    this.map.panBy([(x * width) / 3, (y * height) / 3]);
+  }
+
+  // Either can be refused (an iframe without allowfullscreen, say). The
+  // button state follows fullscreenchange, so there is nothing to undo.
+  private _toggleFullscreen() {
+    const request = document.fullscreenElement === this.el ? document.exitFullscreen() : this.el.requestFullscreen();
+    request.catch(() => {});
   }
 
   private _popup(content: HTMLElement, offset: number) {
@@ -511,37 +604,44 @@ export class MapView extends Component<MapViewOptions> {
   private _handleClick = (e: MouseEvent) => {
     const target = e.target as Element;
     const button = target.closest<HTMLButtonElement>('.map-controls [data-action]');
-    const action = button?.dataset.action;
-    if (action === 'zoom-in') this.map.zoomIn();
-    else if (action === 'zoom-out') this.map.zoomOut();
-    else if (action === 'compass') this.map.resetNorthPitch();
-    else if (action === 'locate') this._locate(button);
-    else if (action === 'fullscreen') {
-      // Either can be refused (an iframe without allowfullscreen, say). The
-      // button state follows fullscreenchange, so there is nothing to undo.
-      const request = document.fullscreenElement === this.el ? document.exitFullscreen() : this.el.requestFullscreen();
-      request.catch(() => {});
-    } else {
-      const marker = target.closest<HTMLElement>('.map-marker');
-      if (this._markerPopups.has(marker)) this._toggle(marker);
-    }
+    if (button) this._actions[button.dataset.action]?.(button);
+    else this._tapMarker(target.closest<HTMLElement>('.map-marker'));
   };
 
   // A click on the map closes marker popups, but not the one being toggled.
   private _handleMapClick = (e: any) => {
     const target = e.originalEvent.target as Node;
+    this._drop(target, e.lngLat);
     for (const [marker, popup] of this._markerPopups) {
       if (!marker.contains(target) && !popup.getElement()?.contains(target)) popup.remove();
     }
   };
 
+  // A tap on the map, not on a marker, puts a picked-up marker there.
+  private _drop(target: Node, at: any) {
+    if (!this._picked || (target as Element).closest?.('.map-marker')) return;
+    const marker = this.markers.find((m) => m.getElement() === this._picked);
+    marker.setLngLat(at);
+    this._moved(marker);
+    this._pick(null);
+  }
+
   private _handleKeydown = (e: KeyboardEvent) => {
-    if (e.key !== 'Escape') return;
+    if (e.key === 'Escape') this._escape(e);
+  };
+
+  // Escape puts down a picked-up marker first, then closes a popup.
+  private _escape(e: KeyboardEvent) {
+    if (this._picked) {
+      e.preventDefault();
+      this._pick(null);
+      return;
+    }
     for (const popup of this._popups) {
       if (popup.getElement()?.contains(e.target as Node)) {
         e.preventDefault();
         popup.remove();
       }
     }
-  };
+  }
 }
