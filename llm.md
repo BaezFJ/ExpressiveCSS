@@ -4355,6 +4355,15 @@ percentage.
 </div>
 ```
 
+#### End stop and wave
+
+`stop` puts a dot, `--md-comp-progress-stop-size` (4px) across, in the indicator colour at the track's inline end, so the end reads when the track's contrast falls short. `wavy` draws the indicator as a 4px wave, 3px either side of a thin track, by masking it; the bar is 14px tall and `--md-comp-progress-wavelength` (40px) sets the period. Both work on `<progress>`, a `.determinate` child and a bare bar, and `wavy` also on an indeterminate bar. A circular indicator has no wavy form.
+
+```html
+<progress class="progress stop" value="40" max="100"></progress>
+<progress class="progress wavy stop" value="60" max="100"></progress>
+```
+
 ### Circular
 
 A circular indicator is a single `<span class="progress circular">`. There is no wrapper,

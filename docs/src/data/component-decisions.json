@@ -5141,8 +5141,8 @@
           },
           {
             "kind": "feature",
-            "description": "Version 0.10.0 mirrors custom linear fill and motion in RTL. End-stop and wavy Expressive variants remain unverified.",
-            "nextStep": "Assess an end stop for insufficient track contrast and review wavy variants before claiming current variant parity."
+            "description": "Linear progress has the Expressive end stop and wavy indicator; a circular indicator has no wavy form.",
+            "nextStep": "Add a wavy circular indicator if pages need one, from a generated wave ring mask."
           }
         ],
         "browserChecks": [

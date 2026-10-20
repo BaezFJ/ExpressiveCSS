@@ -1,0 +1,58 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { existsSync, readFileSync } from 'node:fs';
+import { chromium, firefox, webkit } from 'playwright';
+import { leaseBrowser } from './browser.js';
+
+const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+
+const html = `<style>${css}</style><body style="margin: 0; padding: 8px; width: 300px">
+  <progress id="plain" class="progress" value="60" max="100"></progress>
+  <progress id="stop" class="progress stop" value="60" max="100"></progress>
+  <progress id="wavy" class="progress wavy" value="60" max="100"></progress>
+  <div id="div-wavy" class="progress wavy stop"><div class="determinate" style="width: 40%"></div></div>
+  <div id="bare-wavy" class="progress wavy" style="--md-comp-progress-value: 70%"></div>
+  <div dir="rtl"><div id="rtl" class="progress stop"><div class="determinate" style="width: 30%"></div></div></div>
+</body>`;
+
+for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit })) {
+  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
+  const browserTest = existsSync(browserType.executablePath()) ? test : test.skip;
+
+  browserTest(`${engine}: linear progress .stop marks the track's end and .wavy draws a wave`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(html);
+      const shot = async (id) => (await page.locator(`#${id}`).screenshot()).toString('base64');
+
+      const styles = await page.evaluate(() => {
+        const style = (id, pseudo) => getComputedStyle(document.getElementById(id), pseudo);
+        return {
+          stop: style('stop').backgroundImage,
+          rtl: style('rtl').backgroundImage,
+          wavyHeight: style('wavy').height,
+          plainHeight: style('plain').height,
+          divMask: getComputedStyle(document.querySelector('#div-wavy > .determinate')).maskImage,
+          bareMask: style('bare-wavy', '::after').maskImage,
+          track: style('div-wavy').backgroundImage,
+        };
+      });
+      assert.match(styles.stop, /radial-gradient/, 'the stop is a dot on the track');
+      assert.match(styles.stop, /calc\(100% - 2px\)|98%|calc\(-2px \+ 100%\)/, `the dot sits at the inline end: ${styles.stop}`);
+      assert.match(styles.rtl, /radial-gradient\(circle at 2px/, `in RTL the dot sits at the left: ${styles.rtl}`);
+      assert.deepEqual([styles.plainHeight, styles.wavyHeight], ['4px', '14px'], 'a wavy bar is tall enough for its wave');
+      assert.match(styles.divMask, /^url\(/, 'a determinate child is masked to the wave');
+      assert.match(styles.bareMask, /^url\(/, 'a bare bar is masked to the wave');
+      assert.match(styles.track, /radial-gradient.*linear-gradient/s, 'a wavy track keeps the stop over its stripe');
+
+      // Drawn: the stop and the wave change the bar.
+      const [plain, stop, wavy] = [await shot('plain'), await shot('stop'), await shot('wavy')];
+      assert.notEqual(stop, plain, 'the stop dot is drawn');
+      assert.notEqual(wavy, plain, 'the wave is drawn');
+    } finally {
+      await browser.close();
+    }
+  });
+}

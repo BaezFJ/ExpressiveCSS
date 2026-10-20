@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Linear progress `.stop` puts a dot in the indicator colour at the
+  track's end, and `.wavy` draws the indicator as a wave over a thin track,
+  on `<progress>`, `.determinate` and bare bars. New tokens:
+  `--md-comp-progress-stop-size` and `--md-comp-progress-wavelength`.
+
 - Common button shapes: `square` takes the size's squared corner, every
   common button morphs to its size's pressed corner while pressed, and
   `aria-pressed` makes a button a toggle that swaps round and square when
