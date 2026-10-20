@@ -105,6 +105,14 @@ export class Utils {
   }
 
   /**
+   * Fires `expressive:<type>` from `el`. It bubbles and crosses shadow roots,
+   * so a page can listen on the element, an ancestor or the document.
+   */
+  static emit(el: Element, type: string, detail?: unknown) {
+    el.dispatchEvent(new CustomEvent(`expressive:${type}`, { bubbles: true, composed: true, detail }));
+  }
+
+  /**
    * The element an event really started on, for a listener on the document.
    * There `event.target` is retargeted to the shadow host, so delegation that
    * reads it never sees anything inside an open shadow root. A closed root

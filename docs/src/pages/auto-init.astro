@@ -12,6 +12,7 @@ const S = defineSections([
   { id: "options", label: "Options" },
   { id: "components", label: "Components" },
   { id: "ignoring", label: "Ignoring elements" },
+  { id: "events", label: "Events" },
 ]);
 ---
 <DocsLayout page="auto_init">
@@ -148,6 +149,27 @@ Expressive.Tooltip.init(
   document.querySelector('.tooltipped.no-autoinit'),
   { position: 'top' }
 );
+`} />
+  </Section>
+  <Section {...S.events}>
+        <p>
+          Menu, Lightbox, NavigationRail, Cards and ExpandingCard fire DOM events from the
+          element they were initialized on. <code>expressive:open</code> and
+          <code>expressive:close</code> fire when the state changes, and
+          <code>expressive:opened</code> and <code>expressive:closed</code> when the motion
+          ends. Cards and ExpandingCard fire only <code>expressive:open</code> and
+          <code>expressive:close</code>.
+        </p>
+        <p>
+          Each event comes right after the matching <code>on…</code> callback, which still
+          works. The events bubble and cross shadow roots, so one listener on the document
+          sees every component. Nested components bubble too: check <code>event.target</code>.
+          Closing a Menu or Lightbox from its <code>expressive:open</code> listener stops it opening.
+        </p>
+<Code code={`
+document.addEventListener('expressive:open', (event) => {
+  if (event.target.matches('.menu-trigger')) analytics.track('menu-open');
+});
 `} />
   </Section>
 </PageBody>

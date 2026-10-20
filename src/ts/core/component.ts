@@ -1,3 +1,5 @@
+import { Utils } from './utils';
+
 /**
  * Base options for component initialization.
  */
@@ -111,6 +113,23 @@ export class Component<O extends BaseOptions> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static getInstance(el: HTMLElement): Component<BaseOptions> {
     throw new Error('This method must be implemented.');
+  }
+
+  /**
+   * Runs an `on…` option callback with the element, then fires
+   * `expressive:<type>` from it, so pages can listen instead of passing options.
+   *
+   * A callback or listener may close, reopen or destroy the component. Pass
+   * `current` to tell whether the state `type` names still holds; the event
+   * is skipped once it does not, or once the instance is destroyed, and the
+   * result says whether to carry on.
+   */
+  protected _notify(type: string, callback?: ((el: HTMLElement) => void) | null, current = () => true): boolean {
+    const live = () => (this.constructor as typeof Component).getInstance(this.el) === this && current();
+    if (typeof callback === 'function') callback.call(this, this.el);
+    if (!live()) return false;
+    Utils.emit(this.el, type);
+    return live();
   }
 
   /**

@@ -179,7 +179,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed runtime spring snap-back for dragged sheets: 81,309 gzip bytes (+610).
   // Reviewed sheet springs ending on close, reduced motion and token overrides: 81,465 gzip bytes (+156).
   // Reviewed shared anchor names, 24-hour time inputs and Tab closing the lightbox: 81,637 gzip bytes (+172).
-  assert.ok(sizes(js).gzip <= 81637, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed expressive:* open and close events with state guards: 81,781 gzip bytes (+144).
+  assert.ok(sizes(js).gzip <= 81781, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

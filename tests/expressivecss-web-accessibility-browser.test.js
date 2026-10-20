@@ -1364,6 +1364,26 @@ scenario('remaining web navigation, badges and list controls expose their meanin
   await expect(page.getByRole('link',{name:'Privacy'})).toBeFocused();
 });
 
+// Reduced motion flushes a running transition, which must still report its end.
+scenario('Lightbox reports opened and closed when reduced motion cuts a transition short', `
+<img id="photo" class="lightboxed" width="120" height="80" tabindex="0" role="button" alt="Lake">`, async page => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.evaluate(() => {
+    window.events = [];
+    const photo = document.querySelector('#photo');
+    for (const type of ['open', 'opened', 'close', 'closed']) photo.addEventListener(`expressive:${type}`, () => window.events.push(type));
+    window.box = Expressive.Lightbox.init(photo, { inDuration: 5000, outDuration: 5000 });
+    window.box.open();
+  });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => page.evaluate(() => window.events.join()), { timeout: 1000 }).toBe('open,opened');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.evaluate(() => window.box.close());
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => page.evaluate(() => window.events.join()), { timeout: 1000 }).toBe('open,opened,close,closed');
+  await expect(page.locator('#lightbox-overlay')).toHaveCount(0);
+});
+
 // The image zooms in place, so Tab used to reach the page behind the overlay.
 scenario('Lightbox closes on Tab', `
 <img id="photo" class="lightboxed" width="120" height="80" style="border-radius:4px" tabindex="0" role="button" alt="Lake"><button id="next" type="button">Next</button>`, async page => {
