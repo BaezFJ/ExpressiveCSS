@@ -183,3 +183,52 @@ browserTest('a chip keeps 32dp for a short label and wraps with an inset for a l
     await browser.close();
   }
 });
+
+browserTest('a nowrap breadcrumb scrolls instead of shrinking its crumbs under the separators', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage({ viewport: { width: 320, height: 600 } });
+    await page.setContent(`<style>${css}</style>
+      <nav id="trail" class="nowrap" aria-label="Breadcrumb" style="max-width: 16rem">
+        <ol>
+          <li><a href="#">Home</a></li><li><a href="#">Library</a></li><li><a href="#">Collections</a></li>
+          <li><a href="#">Winter</a></li><li><a href="#" aria-current="page">Catalog</a></li>
+        </ol>
+      </nav>`);
+    const result = await page.evaluate(() => {
+      const trail = document.getElementById('trail');
+      return {
+        scrolls: trail.scrollWidth > trail.clientWidth,
+        crumbsFit: [...trail.querySelectorAll('li')].every((li) => li.scrollWidth <= li.clientWidth + 1),
+      };
+    });
+    assert.ok(result.scrolls, 'the trail scrolls sideways');
+    assert.ok(result.crumbsFit, 'no crumb is narrower than its text');
+  } finally {
+    await browser.close();
+  }
+});
+
+browserTest('a list row keeps a bare-text label before a trailing badge or meta span', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage({ viewport: { width: 320, height: 600 } });
+    await page.setContent(`<style>${css}</style>
+      <ul class="list">
+        <li id="badge"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox<span class="badge">3</span></li>
+        <li id="meta"><span class="material-symbols" aria-hidden="true">mail</span>Drafts<span class="meta">2 min</span></li>
+      </ul>`);
+    for (const id of ['badge', 'meta']) {
+      const order = await page.evaluate((id) => {
+        const li = document.getElementById(id);
+        const range = document.createRange();
+        range.selectNodeContents([...li.childNodes].find((n) => n.nodeType === 3));
+        return { label: range.getBoundingClientRect().left, trailing: li.lastElementChild.getBoundingClientRect().left, column: getComputedStyle(li.lastElementChild).gridColumnStart };
+      }, id);
+      assert.ok(order.label < order.trailing, `${id}: the label comes first`);
+      assert.equal(order.column, '3', `${id}: the trailing item takes the last column`);
+    }
+  } finally {
+    await browser.close();
+  }
+});

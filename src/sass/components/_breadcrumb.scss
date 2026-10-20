@@ -29,9 +29,16 @@ nav:has(> .breadcrumb),
   color: var(--md-comp-breadcrumb-label-color);
   @include typescale("body-small");
 
+  // A crumb that shrank in one row ran its text under the next separator;
+  // in nowrap the trail scrolls instead.
   &.nowrap {
     flex-wrap: nowrap;
     overflow-x: auto;
+
+    > ol > li {
+      flex-shrink: 0;
+    }
+
     scrollbar-width: none;
 
     &::-webkit-scrollbar {

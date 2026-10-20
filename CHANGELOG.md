@@ -288,6 +288,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A `nowrap` breadcrumb scrolls sideways as documented. Its crumbs used to
+  shrink below their text, so each separator sat on the last letter of the
+  crumb before it.
+- A list row's trailing `span.badge` or `span.meta` stays in the last
+  column. The label rule matched it and outranked the trailing rule, so a
+  bare-text label like "Inbox" was pushed after the badge.
 - A trigger with both a Tooltip and a Menu keeps both anchors. Each wrote
   the whole `anchor-name` property, so the second replaced the first, and
   destroying either removed the other's. Tour targets share the same list.

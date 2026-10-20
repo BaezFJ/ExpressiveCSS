@@ -108,8 +108,11 @@
     // $icon-label, not a bare `span`: the canonical icon is a <span> too, so
     // this rule used to pull the leading icon out of column 1 and into the
     // text column - the icon rules above went dead and this one over-matched.
+    // A trailing span.badge or span.meta is not a label either: this rule
+    // outranks the trailing one, so it took column 2 and pushed a bare-text
+    // label past it into column 3.
     > div:not(.meta),
-    > #{$icon-label}:not(.drag-handle, .sortable-actions) {
+    > #{$icon-label}:not(.drag-handle, .sortable-actions, .badge, .meta) {
       grid-column: 2;
       min-width: 0;
     }
