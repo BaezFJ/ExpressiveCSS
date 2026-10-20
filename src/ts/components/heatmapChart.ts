@@ -32,6 +32,8 @@ export class HeatmapChart extends LineChart {
   private _ends: [string, string];
   /** The shades of the lowest and highest cells, where the legend's gradient runs. */
   private _endLevels: [number, number];
+  /** The box the cells scroll in, beside the row labels. */
+  private _scroll: HTMLElement;
 
   protected get _type() {
     return 'heatmap-chart';
@@ -157,11 +159,17 @@ export class HeatmapChart extends LineChart {
     const last = this._cells[this._cells.length - 1].getBoundingClientRect();
     const [left, right] = [Math.min(first.left, last.left), Math.max(first.right, last.right)];
     const [x, y] = [e.clientX, e.clientY];
-    if (x < left || x > right || y < first.top || y > last.bottom) return -1;
+    if (this._off(x, y, [left, right, first.top, last.bottom])) return -1;
     const band = (offset: number, size: number, count: number) =>
       Math.min(count - 1, Math.floor((offset / (size || 1)) * count));
     const column = band(x - left, right - left, columns);
     return band(y - first.top, last.bottom - first.top, rows) * columns + (this._reversed ? columns - 1 - column : column);
+  }
+
+  /** Whether a point is off the cells, or on cells scrolled out of view under the row labels. */
+  private _off(x: number, y: number, [left, right, top, bottom]: number[]) {
+    const view = this._scroll.getBoundingClientRect();
+    return x < Math.max(left, view.left) || x > Math.min(right, view.right) || y < top || y > bottom;
   }
 
   /**
@@ -254,8 +262,12 @@ export class HeatmapChart extends LineChart {
 
     this._cells = [];
     this._levels = [];
+    // The row labels stay put beside the cells, which scroll when they are too narrow.
+    const [rows, cells] = [document.createElement('div'), document.createElement('div')];
+    rows.className = 'heatmap-chart-rows';
+    cells.className = 'heatmap-chart-cells';
     this.labels.forEach((_, row) => {
-      grid.append(span('heatmap-chart-row', label(this._rows[row].cells[0])));
+      rows.append(span('heatmap-chart-row', label(this._rows[row].cells[0])));
       this.series.forEach((series) => {
         const value = series.values[row];
         const level = value === null ? null : shade(value);
@@ -264,7 +276,7 @@ export class HeatmapChart extends LineChart {
         else cell.style.setProperty('--level', String(level));
         this._cells.push(cell);
         this._levels.push(level);
-        grid.append(cell);
+        cells.append(cell);
       });
     });
 
@@ -276,19 +288,19 @@ export class HeatmapChart extends LineChart {
       while (end < columns && !labels[end]) end++;
       const element = span('heatmap-chart-column', text);
       element.classList.toggle('run', end > column + 1);
-      element.style.gridArea = `${this.labels.length + 1} / ${column + 2} / auto / ${end + 2}`;
-      grid.append(element);
+      element.style.gridArea = `${this.labels.length + 1} / ${column + 1} / auto / ${end + 1}`;
+      cells.append(element);
     });
 
-    // The grid scrolls sideways when its cells would be too narrow. The
-    // plot is the one Tab stop, so the scroll box is not another, and a
+    // The plot is the one Tab stop, so the scroll box is not another, and a
     // press that focuses it hands focus on to the plot.
-    const scroll = document.createElement('div');
+    const scroll = (this._scroll = document.createElement('div'));
     scroll.className = 'heatmap-chart-scroll';
     scroll.tabIndex = -1;
     scroll.addEventListener('focus', () => this._plot.focus());
     scroll.addEventListener('scroll', () => this._follow(scroll), { passive: true });
-    scroll.append(grid);
-    return scroll;
+    scroll.append(cells);
+    grid.append(rows, scroll);
+    return grid;
   }
 }

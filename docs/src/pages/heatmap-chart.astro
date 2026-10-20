@@ -188,7 +188,8 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
         <p>
           Cells are at least <code>--md-comp-heatmap-chart-cell-min-width</code>
           wide, 12px by default. A grid with too many columns for its figure
-          scrolls sideways instead of narrowing them, and the arrow keys
+          scrolls its cells sideways instead of narrowing them, with the row
+          labels kept in view, and the arrow keys
           scroll the cell they move to into view.
         </p>
         <figure class="heatmap-chart values" data-min="0" data-max="100" style="--md-comp-heatmap-chart-row-height: 56px; --md-comp-heatmap-chart-gap: 4px; --md-comp-heatmap-chart-shape: 12px" data-markdown-ignore>

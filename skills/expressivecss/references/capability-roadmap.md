@@ -48,7 +48,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Column chart](#column-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Bar chart](#bar-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Pie chart](#pie-chart) | unassessed | needs-review | needs-rerun | 1 |
-| [Heatmap chart](#heatmap-chart) | unassessed | needs-review | needs-rerun | 1 |
+| [Heatmap chart](#heatmap-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Radar chart](#radar-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Radial chart](#radial-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Mixed chart](#mixed-chart) | unassessed | needs-review | needs-rerun | 0 |
@@ -707,7 +707,6 @@ Google relationship: none. Upstream review: web-extension-inventory-reviewed (20
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, labels and scale are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
 - verification: Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
-- feature: In a grid wide enough to scroll, the row labels scroll away with the cells. Next: Pin the row labels if wide grids need them in view.
 
 - stale: [tests/heatmap-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/heatmap-chart-browser.test.js): `chromium: heatmap chart draws a shaded grid and a scale from its table`. Hidden table in the accessibility tree, the named plot and its role description, aria-hidden grid and scale, cell levels and fills, gaps, the row height, row and column labels, empty and running data-labels, the scale ends, data-min and data-max clamping, values, text that takes the higher-contrast of black and white on saturated and near-threshold colors, the legend over a fixed scale, long row labels capped at 40% of the width, no page overflow from a wide table, a table of gaps left undrawn, separate instances from line charts, and destroy restoring the table.
 - stale: [tests/heatmap-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/heatmap-chart-browser.test.js): `chromium: heatmap chart tooltip follows the pointer and the arrow keys round the grid`. Pointer to cell by position, the space between cells, a touch drag that keeps its first target, the active cell, tooltip text for cells and gaps, the swatch shade and the outlined gap swatch, a press on a label focusing without a tooltip, opening leftwards on the right half, hiding off the cells, focus, all four arrows stopping at the edges, Home, End and Escape, Escape left uncancelled once the tooltip is hidden, and right-to-left columns with swapped arrows and scale. No spoken-output assertion.

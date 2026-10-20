@@ -3424,7 +3424,7 @@
           "documentedSupport": "Every body cell of a figure's data table drawn as a shaded grid cell, with row headers beside the grid, column headers below, a scale naming the lowest and highest cells, values, data-label short or hidden labels, data-min and data-max, gaps, and a pointer and keyboard tooltip that moves cell by cell.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, labels and scale are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified. In a wide grid the row labels scroll away with the cells."
+            "Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified."
           ]
         },
         "relationship": "none",
@@ -3468,11 +3468,6 @@
             "kind": "verification",
             "description": "Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified.",
             "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-          },
-          {
-            "kind": "feature",
-            "description": "In a grid wide enough to scroll, the row labels scroll away with the cells.",
-            "nextStep": "Pin the row labels if wide grids need them in view."
           }
         ],
         "browserChecks": [
