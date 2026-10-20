@@ -1,5 +1,5 @@
 import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions, numberValue, Series, seriesColor } from './lineChart';
+import { LineChart, LineChartOptions, numberValue, Series } from './lineChart';
 
 export type ColumnChartOptions = LineChartOptions;
 
@@ -69,8 +69,7 @@ export class ColumnChart extends LineChart {
   protected _arrange(series: Series[]) {
     const ranges = (this._ranges = series.filter((each) => each.className.split(/\s+/).includes('range')));
     for (const range of ranges) {
-      const i = series.indexOf(range);
-      const ends = this._rows.map((row) => rangeValue(row.cells[i + 1]));
+      const ends = this._rows.map((row) => rangeValue(row.cells[range.column]));
       range.base = ends.map(([low]) => low);
       range.values = range.tops = ends.map(([, high]) => high);
     }
@@ -98,7 +97,7 @@ export class ColumnChart extends LineChart {
         // A gap in a grouped row keeps its empty slot, so the series stay aligned.
         if (to !== null) {
           column.className = series.className;
-          column.dataset.series = seriesColor(this.series.indexOf(series));
+          column.dataset.series = series.color;
           // A stacked segment never hangs from zero, so it keeps the top rounding.
           column.classList.toggle('negative', !series.base && to < from);
           column.classList.toggle('floating', this._ranges.includes(series));

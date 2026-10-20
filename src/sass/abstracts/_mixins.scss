@@ -342,12 +342,68 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   }
 }
 
+// The .toggle legend button is the same in every chart, so chart() writes
+// it once, with the first chart in the build.
+$_chart-toggle-written: false;
+
+// With .toggle, a button shows or hides each series. It covers its legend
+// item, swatch included, and a hidden series is struck through with a
+// hollow swatch, so the state does not rest on color. The class keeps it
+// out of the button styles, in _buttons.scss.
+@mixin _chart-toggle {
+  .chart-toggle {
+    min-height: rem(48px);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 4px;
+    }
+
+    &:focus-visible {
+      outline: none;
+
+      &::after {
+        @include focus-ring();
+      }
+    }
+
+    &:hover {
+      color: var(--md-sys-color-on-surface);
+    }
+
+    &[aria-pressed="false"] {
+      text-decoration: line-through;
+    }
+
+    &[aria-disabled="true"] {
+      cursor: default;
+    }
+  }
+
+  li:has(> .chart-toggle[aria-pressed="false"])::before {
+    mask: radial-gradient(closest-side, transparent 50%, #000 calc(50% + 0.5px));
+  }
+}
+
 // The parts LineChart draws for every chart type, prefixed with the
 // component's name: .#{$name}-plot, -cursor, -tooltip, -labels and -legend.
 // Defines the --md-comp-#{$name}-height, -grid-color and -color-1..4 tokens,
 // and --#{$name}-color on each [data-series]. Include it at the root of the
 // component's partial; the component adds its own marks and cursor look.
 @mixin chart($name) {
+  @if not $_chart-toggle-written {
+    $_chart-toggle-written: true !global;
+    @include _chart-toggle;
+  }
+
   .#{$name} {
     --md-comp-#{$name}-height: #{rem(240px)};
     --md-comp-#{$name}-grid-color: var(--md-sys-color-outline-variant);
@@ -483,6 +539,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
     gap: 4px 16px;
 
     > li {
+      position: relative;
       display: flex;
       align-items: center;
       gap: 8px;

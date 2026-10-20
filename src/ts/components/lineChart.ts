@@ -39,6 +39,15 @@ export function polarPoint(turn: number, r: number): string {
 export const seriesColor = (i: number) => String((i % COLORS) + 1);
 let _gradientId = 0;
 
+/** The buttons in a chart's generated parts, such as a .toggle legend's. */
+const buttons = (nodes: Element[]) => nodes.flatMap((node) => Array.from(node.querySelectorAll('button')));
+
+/**
+ * Whether a series has data. Its values, not its tops: stacked over another
+ * series' gaps a series can have no top, yet still draws once that one hides.
+ */
+const drawable = (series: Series) => series.values.some((value) => value !== null);
+
 /** Axis steps, as multiples of a power of ten. */
 const NICE = [1, 2, 2.5, 5, 10];
 
@@ -78,6 +87,10 @@ export interface Series {
   name: string;
   /** Header cell classes, such as `dashed`. */
   className: string;
+  /** The series' column in the table, from 1, which tells apart two of one name. */
+  column: number;
+  /** The `data-series` color number, by its column, so hiding a series shifts none. */
+  color: string;
   /** Cell text, shown in the tooltip as the author formatted it. */
   text: string[];
   values: (number | null)[];
@@ -179,6 +192,10 @@ export class LineChart extends Component<LineChartOptions> {
   /** The highlighted row, or -1. */
   activeIndex = -1;
   private _generated: Element[] = [];
+  /** Every series in the table, shown or not, as the legend lists them. */
+  protected _all: Series[] = [];
+  /** The columns of the series a .toggle legend hid, kept through update(). */
+  private _hidden = new Set<number>();
   /** The table's header cells and body rows, as read. */
   protected _header: HTMLTableCellElement[] = [];
   protected _rows: HTMLTableRowElement[] = [];
@@ -302,8 +319,9 @@ export class LineChart extends Component<LineChartOptions> {
   }
 
   /**
-   * Redraws the chart from its table as it is now. Keyboard focus stays on
-   * the chart, and the highlighted row stays where the table still has it.
+   * Redraws the chart from its table as it is now. Focus stays on the chart,
+   * on the same legend button when one had it, and the highlighted row stays
+   * where the table still has it.
    */
   update() {
     if (this.el[this._key] !== this) return;
@@ -311,13 +329,14 @@ export class LineChart extends Component<LineChartOptions> {
     // Inside a shadow root, the document's active element is the host.
     const active = (this.el.getRootNode() as Document | ShadowRoot).activeElement;
     const [index, focused] = [this.activeIndex, old.some((node) => node.contains(active))];
+    const button = buttons(old).indexOf(active as HTMLButtonElement);
     this._generated = [];
     this.activeIndex = -1;
     this._plot = this._cursor = this._tooltip = undefined;
     this._build();
     // Focus moves before the old plot goes, so a keyboard focus ring carries
     // over, and before the listeners, so focusing picks no row of its own.
-    if (focused) this._plot?.focus({ preventScroll: true });
+    if (focused) (buttons(this._generated)[button] ?? this._plot)?.focus({ preventScroll: true });
     old.forEach((node) => node.remove());
     this._listen();
     this.show(Math.min(index, this._count - 1));
@@ -340,10 +359,10 @@ export class LineChart extends Component<LineChartOptions> {
     title.textContent = this.labels[index];
     this._tooltip.replaceChildren(title);
 
-    this.series.forEach((series, i) => {
+    this.series.forEach((series) => {
       const value = series.values[index];
       if (value === null) return;
-      const color = seriesColor(i);
+      const color = series.color;
       const top = series.tops[index];
       if (top !== null && this._points) {
         const dot = document.createElement('span');
@@ -389,6 +408,8 @@ export class LineChart extends Component<LineChartOptions> {
       return {
         name: cell.textContent.trim(),
         className: cell.className,
+        column: i + 1,
+        color: seriesColor(i),
         text: rows.map((row) => row.cells[i + 1]?.textContent.trim() ?? ''),
         values,
         tops: values,
@@ -397,11 +418,25 @@ export class LineChart extends Component<LineChartOptions> {
         affix: affix(rows.map((row) => row.cells[i + 1]))
       };
     });
-    this._arrange(this.series);
-
-    if (this.series.every((series) => series.tops.every((value) => value === null))) this.series = [];
+    this._all = this.series;
+    this.series = this._shown(this._all);
     const option = (name: 'min' | 'max') => this._number(name) ?? this.options[name];
     this._y = this._scale(this.series, option('min'), option('max'));
+  }
+
+  /**
+   * The series to draw, arranged: those the legend has not hidden, or none
+   * without data. When the ones shown hold no data, as after the table
+   * changed, the hidden ones come back, so the legend never hides the only
+   * data there is.
+   */
+  private _shown(all: Series[]): Series[] {
+    const shown = all.filter((series) => !this._hidden.has(series.column));
+    this._arrange(shown);
+    if (shown.some(drawable)) return shown;
+    if (!this._hidden.size) return [];
+    this._hidden.clear();
+    return this._shown(all);
   }
 
   /** Turns the values read into what is drawn: with .stacked, running totals. */
@@ -571,19 +606,42 @@ export class LineChart extends Component<LineChartOptions> {
     return axis;
   }
 
-  /** The series legend, for more than one series. */
+  /**
+   * The series legend, for more than one series. With .toggle each item is
+   * a button that shows or hides its series, and the scale refits.
+   */
   protected _legend(): Element[] {
-    if (this.series.length < 2) return [];
+    if (this._all.length < 2) return [];
+    const toggle = this.el.classList.contains('toggle');
     const legend = document.createElement('ul');
     legend.className = `${this._type}-legend`;
-    legend.setAttribute('aria-hidden', 'true');
-    legend.append(...this.series.map((series, i) => {
+    if (!toggle) legend.setAttribute('aria-hidden', 'true');
+    legend.append(...this._all.map((series) => {
       const li = document.createElement('li');
-      li.dataset.series = seriesColor(i);
-      li.textContent = series.name;
+      li.dataset.series = series.color;
+      li.append(toggle ? this._toggle(series) : series.name);
       return li;
     }));
     return [legend];
+  }
+
+  /** A button that shows or hides a series, though never the last one shown. */
+  private _toggle(series: Series) {
+    const button = document.createElement('button');
+    const shown = this.series.includes(series);
+    button.type = 'button';
+    button.className = 'chart-toggle';
+    button.textContent = series.name;
+    button.setAttribute('aria-pressed', String(shown));
+    // The last series shown with data stays, so the chart never empties.
+    if (shown && drawable(series) && this.series.filter(drawable).length < 2) button.setAttribute('aria-disabled', 'true');
+    button.addEventListener('click', () => {
+      if (button.hasAttribute('aria-disabled')) return;
+      if (shown) this._hidden.add(series.column);
+      else this._hidden.delete(series.column);
+      this.update();
+    });
+    return button;
   }
 
   /** Draws the series, which fill the plot. */
@@ -606,7 +664,7 @@ export class LineChart extends Component<LineChartOptions> {
   private _line(series: Series) {
     const group = svgNode('g', {
       class: `${this._type}-series ${series.className}`.trim(),
-      'data-series': seriesColor(this.series.indexOf(series))
+      'data-series': series.color
     });
 
     // A gap in the data breaks the line into runs of row indexes.

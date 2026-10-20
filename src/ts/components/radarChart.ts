@@ -1,5 +1,5 @@
 import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions, polarPoint, Series, seriesColor, svgNode as node } from './lineChart';
+import { LineChart, LineChartOptions, polarPoint, Series, svgNode as node } from './lineChart';
 
 export type RadarChartOptions = LineChartOptions;
 
@@ -104,10 +104,10 @@ export class RadarChart extends LineChart {
    * One series' group: its outline, broken at a gap like a line chart's,
    * its .area fill and its .points.
    */
-  private _series(series: Series, s: number, corner: (index: number) => string) {
+  private _series(series: Series, corner: (index: number) => string) {
     const group = node('g', {
       class: `radar-chart-series ${series.className}`.trim(),
-      'data-series': seriesColor(s)
+      'data-series': series.color
     });
     const lines = runs(series.values).map((run) => run.map(corner));
     const [outline, fill] = series.values.includes(null) ? [open, wedge] : [closed, closed];
@@ -137,7 +137,7 @@ export class RadarChart extends LineChart {
       d: this._rings(share).map(ring).join('')
         + rows.map((i) => `M0,0L${at(i, 1)}`).join('')
     }));
-    this.series.forEach((series, s) => svg.append(this._series(series, s, (i) => at(i, share(series.values[i]!)))));
+    this.series.forEach((series) => svg.append(this._series(series, (i) => at(i, share(series.values[i]!)))));
 
     const labels = document.createElement('ol');
     labels.className = 'radar-chart-axes';
