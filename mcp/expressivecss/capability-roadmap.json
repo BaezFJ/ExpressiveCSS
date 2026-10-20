@@ -2380,13 +2380,13 @@
       "gaps": [
         {
           "kind": "verification",
-          "description": "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "description": "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, segments, gradient fills, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
           "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
         },
         {
           "kind": "feature",
-          "description": "There are no gradient or segmented fills, and rings past four reuse the colors.",
-          "nextStep": "Keep to four rings and use the legend for more."
+          "description": "A gradient fill runs across the plot, so it follows only a gauge's arc, and rings past four reuse the colors.",
+          "nextStep": "Draw gradients along each ring if full rings need them; keep to four rings and use the legend for more."
         }
       ],
       "browserChecks": [

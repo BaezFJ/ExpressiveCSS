@@ -384,4 +384,59 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: radial chart segments and gradient fills`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(`<style>${css}</style>
+        <div style="width: 240px">
+          ${chart('class="radial-chart" data-segments="4" id="segments"', 'Segments', '<th>V</th>', [['A', '60'], ['B', '10'], ['C', '100']])}
+          ${chart('class="radial-chart gauge gradient" id="gradient"', 'Gradient', '<th>V</th>', [['A', '100']])}
+        </div>
+        <script>${js}</script>`);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      const segments = await page.locator('#segments').evaluate((el) => {
+        const dash = (node) => node.style.getPropertyValue('--radial-chart-dash').split(' ').map(Number);
+        const rings = [...el.querySelectorAll('.radial-chart-ring')];
+        const track = el.querySelector('.radial-chart-track');
+        return {
+          fills: rings.map((ring) => dash(ring).length),
+          empty: rings.map((ring) => ring.classList.contains('empty')),
+          track: [dash(track).length, track.classList.contains('capped')],
+          // Each lit segment and its gap span a quarter of the circle.
+          quarter: (() => {
+            const [d, g] = dash(rings[0]);
+            const r = parseFloat(rings[0].getAttribute('r'));
+            const width = parseFloat(rings[0].getAttribute('stroke-width'));
+            return Math.abs(d + g - (2 * Math.PI * r) / 4) < 0.01 && Math.abs(g - width - 2 * (width / 8)) < 0.01;
+          })(),
+          tooltip: (Expressive.RadialChart.getInstance(el).show(0), ['left', 'top'].map((side) => parseFloat(el.querySelector('.radial-chart-tooltip').style[side]))),
+          r: parseFloat(rings[0].getAttribute('r')),
+        };
+      });
+      // 60% of four segments rounds to two, 10% to none and 100% to all four;
+      // the last gap runs out the circle, so no stray dot follows.
+      assert.deepEqual(segments.fills, [4, 2, 8]);
+      assert.deepEqual(segments.empty, [false, true, false], 'a ring with no whole segment draws nothing');
+      assert.deepEqual(segments.track, [8, true], 'the track shows every segment, with round ends');
+      assert.ok(segments.quarter, 'each segment and its gap take a quarter of the ring');
+      const [left, top] = segments.tooltip;
+      assert.ok(Math.abs(left - 50) < 0.01 && Math.abs(top - (50 + segments.r)) < 0.01, `the tooltip sits at the end of the lit segments, half way round: ${segments.tooltip}`);
+
+      const gradient = await page.locator('#gradient').evaluate((el) => {
+        const ring = el.querySelector('.radial-chart-ring');
+        const id = /url\(["']?#([^"')]+)/.exec(getComputedStyle(ring).stroke)?.[1];
+        const stops = [...el.querySelectorAll(`#${id} stop`)].map((stop) => getComputedStyle(stop).stopColor);
+        return { id: !!id, stops, unturned: el.querySelector('.radial-chart-gradient').getAttribute('gradientTransform') };
+      });
+      assert.ok(gradient.id, 'the fill is painted with a gradient');
+      assert.notEqual(gradient.stops[0], gradient.stops[1], 'from a tint to the full color');
+      assert.equal(gradient.unturned, 'rotate(-180)', 'the gradient turns back with the gauge, so it runs left to right');
+    } finally {
+      await browser.close();
+    }
+  });
 }
