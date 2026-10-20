@@ -444,6 +444,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     margin-inline-start: auto;
     background-color: var(--md-comp-menu-item-trailing-icon-color);
     mask: $_menu-chevron center / 20px no-repeat;
+    @include forced-colors-fill;
   }
 }
 

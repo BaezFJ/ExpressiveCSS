@@ -430,7 +430,7 @@ $_active-pos: var(--md-comp-slider-active-position, var(--md-comp-slider-active-
   pointer-events: none;
   background: radial-gradient(
       circle var(--md-comp-slider-stop-size) at var(--_dot) 50%,
-      var(--md-sys-color-on-primary) 99%,
+      var(--_stop, var(--md-sys-color-on-primary)) 99%,
       transparent
     )
     0 0 / var(--md-comp-slider-stop-spacing, 0px) 100% repeat-x;
@@ -507,16 +507,30 @@ input[type="range"] + .thumb {
   }
 }
 
+// GrayText is the disabled color here, so the inactive track is CanvasText
+// and a disabled slider is GrayText throughout. The stops are a gradient,
+// which forced colors drop unless the layer opts out.
 @media (forced-colors: active) {
   :is(#{$_host}), input[type="range"] {
     --md-comp-slider-active-track-color: Highlight;
-    --md-comp-slider-inactive-track-color: GrayText;
+    --md-comp-slider-inactive-track-color: CanvasText;
     --md-comp-slider-handle-color: CanvasText;
-    --md-comp-slider-stop-color: CanvasText;
+    --md-comp-slider-stop-color: Canvas;
+  }
+
+  :is(#{$_host}):has(> [type="range"]:disabled),
+  input[type="range"]:disabled {
+    --md-comp-slider-active-track-color: GrayText;
+    --md-comp-slider-inactive-track-color: GrayText;
   }
 
   input[type="range"],
   :is(#{$_host})::before {
+    forced-color-adjust: none;
+  }
+
+  :is(#{$_host}).stops::after {
+    --_stop: HighlightText;
     forced-color-adjust: none;
   }
 

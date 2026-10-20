@@ -468,3 +468,32 @@ $_shaped: ":where(#{$_btn}):where(:not(#{$_fixed}))";
     background-color: color-mix(in oklab, var(--_toggle-state) state-opacity("focus"), var(--_toggle-container));
   }
 }
+
+// Forced colors paint every container as Canvas and drop every shadow, so a
+// filled, tonal or elevated button was a bare label and a pressed toggle, only
+// a fill, looked like an unpressed one. An outline draws the container back
+// without moving the layout, and lets the focus ring replace it; a pressed
+// toggle takes the Highlight fill Windows gives a selected control.
+//
+// Only a button that names its container gets the edge. A plain <button> is
+// filled too, but the hosts that restyle plain buttons as bare icons and
+// labels (app bars, toolbars, rails, snackbars) leave nothing to outline; the
+// components whose plain buttons are containers opt in where they are styled.
+@media (forced-colors: active) {
+  :where(#{$_btn}):is(.filled, .tonal, .elevated),
+  .icon-button:is(.filled, .tonal) {
+    outline: 1px solid ButtonText;
+    outline-offset: -1px;
+  }
+
+  :where(#{$_btn}):is(:disabled, [disabled], .disabled) {
+    outline-color: GrayText;
+  }
+
+  :where(#{$_btn}, .icon-button)[aria-pressed="true"]:not(:disabled, [disabled], .disabled) {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background-color: Highlight !important;
+    color: HighlightText !important;
+  }
+}

@@ -271,6 +271,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Forced colors (Windows contrast themes) paint every fill as Canvas, and a
+  few controls drew nothing else:
+  - Filled, tonal and elevated buttons, filled and tonal icon buttons,
+    keypad keys, the keyboard, the questionnaire's footer buttons, the bar
+    chart track and the search bar now get an outline.
+  - A pressed toggle takes the Highlight fill.
+  - The select caret and check, the submenu chevron and the bottom sheet
+    handle, all glyphs masked from a fill, paint in CanvasText.
+  - Slider stops come back, and the inactive track is CanvasText, so
+    GrayText now means only disabled.
+  - Disabled checkboxes, radios and their labels turn GrayText.
 - Blockquotes, table cells and the stacked `.responsive-table` header use
   logical properties, so the quote bar, cell alignment and header border
   mirror in a right-to-left page.

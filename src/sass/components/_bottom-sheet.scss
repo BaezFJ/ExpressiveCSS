@@ -100,6 +100,7 @@ dialog.bottom-sheet {
     padding: 0;
     background-color: var(--md-comp-bottom-sheet-drag-handle-color);
     mask: $_handle center / 32px 4px no-repeat;
+    @include forced-colors-fill;
     pointer-events: none;
   }
 
@@ -120,6 +121,7 @@ dialog.bottom-sheet {
     border-radius: 0;
     background-color: var(--md-comp-bottom-sheet-drag-handle-color);
     mask: $_handle center / 32px 4px no-repeat;
+    @include forced-colors-fill;
     cursor: grab;
     appearance: none;
     // The drag is pointer events. With the default touch-action the browser
