@@ -52,18 +52,28 @@ export class Tour {
       Tour._target(step)?.checkVisibility()
     );
     if (!steps.length) return;
-    const root = tour.getRootNode() as Document | ShadowRoot;
     const previous = states.get(tour);
     // Restarting a running tour: let go of the step it was showing, or two
     // targets carry the highlight and the card's anchor name.
     if (previous) Tour._release(previous.steps[previous.index]);
-    states.set(tour, {
-      steps,
-      index: 0,
-      opener: previous?.opener ?? (root.activeElement instanceof HTMLElement ? root.activeElement : null)
-    });
+    const state: TourState = { steps, index: 0, opener: Tour._opener(tour, previous) };
+    states.set(tour, state);
+    Tour._show(tour, !previous);
+    // An open listener may have ended or restarted the tour.
+    if (states.get(tour) === state) Tour.go(tour, index);
+  }
+
+  /** Where focus returns at the end: the first start's focus, kept across restarts. */
+  private static _opener(tour: HTMLElement, previous: TourState | undefined): HTMLElement | null {
+    if (previous?.opener) return previous.opener;
+    const active = (tour.getRootNode() as Document | ShadowRoot).activeElement;
+    return active instanceof HTMLElement ? active : null;
+  }
+
+  /** Shows the card, and reports the start of a tour that was not running. */
+  private static _show(tour: HTMLElement, opening: boolean) {
     if (!tour.matches(':popover-open')) tour.showPopover();
-    Tour.go(tour, index);
+    if (opening) Utils.emit(tour, 'open');
   }
 
   /** Shows step `index` of a running tour. */
@@ -110,16 +120,21 @@ export class Tour {
     target.scrollIntoView({ block: 'center', behavior: smooth ? 'smooth' : 'auto' });
     if (!tour.hasAttribute('tabindex')) tour.tabIndex = -1;
     tour.focus({ preventScroll: true });
+    Utils.emit(tour, 'change', { step, index: state.index });
   }
 
-  /** Ends a running tour and returns focus to where it was. */
-  static end(tour: HTMLElement) {
+  /**
+   * Ends a running tour and returns focus to where it was. `completed` says
+   * the user finished it, as the done button does, rather than dismissed it.
+   */
+  static end(tour: HTMLElement, completed = false) {
     const state = states.get(tour);
     if (!state) return;
     Tour._release(state.steps[state.index]);
     states.delete(tour);
     if (tour.matches(':popover-open')) tour.hidePopover();
     state.opener?.focus();
+    Utils.emit(tour, 'close', { completed });
   }
 
   private static _target(step: HTMLElement): HTMLElement | null {
@@ -148,6 +163,6 @@ export class Tour {
     if (!state) return;
     if (control.hasAttribute('data-tour-back')) Tour.go(tour, state.index - 1);
     else if (control.hasAttribute('data-tour-next')) Tour.go(tour, state.index + 1);
-    else Tour.end(tour);
+    else Tour.end(tour, control.hasAttribute('data-tour-done'));
   }
 }

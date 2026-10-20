@@ -101,6 +101,8 @@ export class Tooltip extends Component<TooltipOptions> {
   private _exitDelayTimeout: ReturnType<typeof setTimeout>;
   private _enterDelayTimeout: ReturnType<typeof setTimeout>;
   private _animationTimeout: ReturnType<typeof setTimeout>;
+  // Whether the last animation showed the tooltip, so each change is reported once.
+  private _shown = false;
   private _originalContent: {
     el: HTMLElement;
     marker: Comment;
@@ -396,6 +398,13 @@ export class Tooltip extends Component<TooltipOptions> {
         style.overflow = '';
       }, duration);
     }, 1);
+    this._reportShown(show);
+  }
+
+  private _reportShown(show: boolean) {
+    if (show === this._shown) return;
+    this._shown = show;
+    this._notify(show ? 'open' : 'close');
   }
 
   _handleMouseEnter = () => {

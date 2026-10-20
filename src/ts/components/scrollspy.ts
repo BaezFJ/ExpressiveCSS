@@ -138,6 +138,7 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     next.setAttribute('aria-current', 'true');
     best._link = next;
     ScrollSpy._active.set(resolver, best);
+    best._notify('change', null, { detail: { link: next } });
   }
 
   private static _nearestAbove(elements: ScrollSpy[]): ScrollSpy | null {

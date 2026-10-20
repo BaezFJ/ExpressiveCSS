@@ -181,6 +181,10 @@ document.addEventListener('expressive:open', (event) => {
             <tr><td><code>expressive:confirm</code>, <code>expressive:cancel</code></td><td>Datepicker, Timepicker</td><td>none</td></tr>
             <tr><td><code>expressive:autocomplete</code></td><td>Autocomplete</td><td><code>{"{ values }"}</code></td></tr>
             <tr><td><code>expressive:chip-add</code>, <code>chip-select</code>, <code>chip-delete</code></td><td>Chips</td><td><code>{"{ chip }"}</code></td></tr>
+            <tr><td><code>expressive:change</code></td><td>ButtonGroup, ScrollSpy (from the section), Tour</td><td><code>{"{ button, pressed }"}</code>, <code>{"{ link }"}</code>, <code>{"{ step, index }"}</code></td></tr>
+            <tr><td><code>expressive:open</code>, <code>expressive:close</code></td><td>Tooltip, Snackbar, Tour</td><td>Tour's close: <code>{"{ completed }"}</code></td></tr>
+            <tr><td><code>expressive:action</code>, <code>expressive:closed</code></td><td>Snackbar</td><td>none</td></tr>
+            <tr><td><code>expressive:copy</code></td><td>Copy buttons</td><td><code>{"{ text, copied }"}</code></td></tr>
           </tbody>
         </table>
         </div>
@@ -190,6 +194,12 @@ document.addEventListener('expressive:open', (event) => {
           <code>expressive:select</code>. A callback that changes the choice again, such as
           an <code>onShow</code> that selects another tab, leaves only the event for the
           final choice.
+        </p>
+        <p>
+          Tooltip fires <code>expressive:open</code> and <code>expressive:close</code> when it
+          actually shows and hides, after its delays. A snackbar fires its events from the
+          snackbar itself; <code>expressive:closed</code> comes just before it leaves the page.
+          Tour's <code>expressive:close</code> says whether the Done button finished it.
         </p>
   </Section>
 </PageBody>

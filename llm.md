@@ -363,8 +363,14 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:confirm`, `expressive:cancel` | Datepicker, Timepicker | none |
 | `expressive:autocomplete` | Autocomplete | `{ values }` |
 | `expressive:chip-add`, `chip-select`, `chip-delete` | Chips | `{ chip }` |
+| `expressive:change` | ButtonGroup, ScrollSpy (from the section), Tour | `{ button, pressed }`, `{ link }`, `{ step, index }` |
+| `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour | Tour's close: `{ completed }` |
+| `expressive:action`, `expressive:closed` | Snackbar | none |
+| `expressive:copy` | Copy buttons | `{ text, copied }` |
 
 An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
+
+Tooltip fires `expressive:open` and `expressive:close` when it actually shows and hides, after its delays. A snackbar fires its events from the snackbar itself; `expressive:closed` comes just before it leaves the page. Tour's `expressive:close` says whether the Done button finished it.
 
 ## Public JavaScript surface
 
@@ -5829,7 +5835,7 @@ Tokens: `--md-comp-menubar-container-color` (`surface-container`), `--md-comp-me
 
 A card that walks people through an interface one step at a time, beside each element it explains.
 
-A `.tour` is a `popover="manual"` element with `role="dialog"`, holding one `<section>` per step. Each section's `data-tour-target` names the id of the element it explains. Add a `.tour-progress` line, a `.tour-actions` row with `[data-tour-back]`, `[data-tour-next]` and `[data-tour-done]` buttons, and a `[data-tour-close]` button; a `[data-tour-start="tour-id"]` button starts it. The `Tour` behavior shows one step at a time below its target (above when there is no room), rings the target with `.tour-target` and scrolls it into view, and skips steps whose target is missing or hidden. Back hides on the first step, Next on the last, and Done shows only on the last. The card is named by the step heading and takes focus. Escape, Done or close end the tour and return focus; the card's `toggle` event reports it. `Expressive.Tour.start(el, index)`, `go(el, index)` and `end(el)` work from script, and `Expressive.Tour.i18n.progress` holds "Step {current} of {total}". The root bundle starts the behavior on load; with the modular entry, call `Tour.Init()`.
+A `.tour` is a `popover="manual"` element with `role="dialog"`, holding one `<section>` per step. Each section's `data-tour-target` names the id of the element it explains. Add a `.tour-progress` line, a `.tour-actions` row with `[data-tour-back]`, `[data-tour-next]` and `[data-tour-done]` buttons, and a `[data-tour-close]` button; a `[data-tour-start="tour-id"]` button starts it. The `Tour` behavior shows one step at a time below its target (above when there is no room), rings the target with `.tour-target` and scrolls it into view, and skips steps whose target is missing or hidden. Back hides on the first step, Next on the last, and Done shows only on the last. The card is named by the step heading and takes focus. Escape, Done or close end the tour and return focus; the card's `toggle` event reports it. `Expressive.Tour.start(el, index)`, `go(el, index)` and `end(el, completed)` work from script, and the tour fires `expressive:open`, `expressive:change` (`{ step, index }`) and `expressive:close` (`{ completed }`), and `Expressive.Tour.i18n.progress` holds "Step {current} of {total}". The root bundle starts the behavior on load; with the modular entry, call `Tour.Init()`.
 
 ```html
 <button type="button" data-tour-start="welcome">Take the tour</button>

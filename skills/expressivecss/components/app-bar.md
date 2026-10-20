@@ -9,7 +9,7 @@ Component ID: `app-bar`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `c28aa4952f919c04fdbe4ba2c916886d5a7857dd1e19cfa1cf969f1fa4995855`
+Contract SHA-256: `a56021881e853e84b3973df7ea92764e9e0c9b3708c2b8265235b5ad54fd0242`
 
 #### Selection and adaptation
 

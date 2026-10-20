@@ -24,6 +24,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `onShow` after hiding the old panel, and Chips callbacks get the instance
   as `this`, as every other component's do.
 
+- The rest report too: Tooltip fires `expressive:open` and
+  `expressive:close` when it shows and hides; Snackbar fires `open`,
+  `action`, `close` and `closed`; ButtonGroup fires `change` with
+  `{ button, pressed }`; ScrollSpy fires `change` from the section with
+  `{ link }`; Tour fires `open`, `change` with `{ step, index }` and `close`
+  with `{ completed }`; and copy buttons fire `expressive:copy` with
+  `{ text, copied }`. `Tour.end(el, completed)` takes the flag from script.
+
 - Sheets spring back with the finger's speed: a bottom or side sheet
   released short of dismissing solves its spring at run time from where
   it is and how fast it moves, and a press while it springs catches it in
