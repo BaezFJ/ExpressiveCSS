@@ -27,11 +27,11 @@ const ruleFor = (selector) => rules.find((r) => r.selector === selector)?.body;
 
 // md.comp.button-group.standard.<size>.{between-space, container.height}
 const STANDARD = {
-  xsmall: { space: '18px', height: '32px' },
-  small: { space: '12px', height: '40px' },
-  medium: { space: '8px', height: '56px' },
-  large: { space: '8px', height: '96px' },
-  xlarge: { space: '8px', height: '136px' }
+  xsmall: { space: '18px', height: '2rem' },
+  small: { space: '12px', height: '2.5rem' },
+  medium: { space: '8px', height: '3.5rem' },
+  large: { space: '8px', height: '6rem' },
+  xlarge: { space: '8px', height: '8.5rem' }
 };
 
 // md.comp.button-group.connected.<size>.{inner-corner, pressed.inner-corner}
@@ -269,7 +269,7 @@ describe('Button group shape morph', () => {
     // overrode it back; #72 removed the pin, so nothing stands between the
     // group's token and the item any more.
     assert.match(ruleFor('.button-group.medium'),
-      /--md-comp-filled-button-icon-size:\s*24px/);
+      /--md-comp-filled-button-icon-size:\s*1\.5rem/);
     assert.equal(rules.filter((r) => r.selector === `.button-group.medium > ${item}`).length, 0);
   });
 
@@ -293,8 +293,8 @@ describe('Button group shape morph', () => {
     const sized = ':not(.xsmall, .small, .medium, .large, .xlarge)';
     const icon = ruleFor(`.button-group.medium > .icon-button${sized}`);
     assert.ok(icon, 'the group does not size icon-button items');
-    assert.match(icon, /--md-comp-icon-button-container-height:\s*56px/);
-    assert.match(icon, /--md-comp-icon-button-icon-size:\s*24px/);
+    assert.match(icon, /--md-comp-icon-button-container-height:\s*3\.5rem/);
+    assert.match(icon, /--md-comp-icon-button-icon-size:\s*1\.5rem/);
 
     for (const [size, spaces] of Object.entries(ICON_WIDTH_SPACES)) {
       for (const [width, space] of Object.entries(spaces)) {

@@ -50,13 +50,13 @@ $_bar: ".search-bar";
 
 #{$_bar} {
   --md-comp-search-bar-container-color: var(--md-sys-color-surface-container-high);
-  --md-comp-search-bar-container-height: 56px;
+  --md-comp-search-bar-container-height: #{rem(56px)};
   --md-comp-search-bar-container-shape: var(--md-sys-shape-corner-full);
   --md-comp-search-bar-leading-space: 16px;
   --md-comp-search-bar-trailing-space: 16px;
   --md-comp-search-bar-icon-label-space: 16px;
-  --md-comp-search-bar-icon-size: 24px;
-  --md-comp-search-bar-avatar-size: 30px;
+  --md-comp-search-bar-icon-size: #{rem(24px)};
+  --md-comp-search-bar-avatar-size: #{rem(30px)};
 
   position: relative;
   box-sizing: border-box;

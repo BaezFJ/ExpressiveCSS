@@ -40,11 +40,11 @@ const TRAIL = '.split-button > .menu-trigger:not(.icon-button)';
 // is asserted here because the split families restate it - if the two ever
 // disagree, this catches it.
 const SIZES = {
-  xsmall: { height: '32px', leadEnd: '10px', trailSpace: '13px', trailIcon: '22px', inner: '4px', pressed: '8px' },
-  small: { height: '40px', leadEnd: '12px', trailSpace: '13px', trailIcon: '22px', inner: '4px', pressed: '12px' },
-  medium: { height: '56px', leadEnd: '24px', trailSpace: '15px', trailIcon: '26px', inner: '4px', pressed: '12px' },
-  large: { height: '96px', leadEnd: '48px', trailSpace: '29px', trailIcon: '38px', inner: '8px', pressed: '20px' },
-  xlarge: { height: '136px', leadEnd: '64px', trailSpace: '43px', trailIcon: '50px', inner: '12px', pressed: '20px' }
+  xsmall: { height: '2rem', leadEnd: '10px', trailSpace: '13px', trailIcon: '1.375rem', inner: '4px', pressed: '8px' },
+  small: { height: '2.5rem', leadEnd: '12px', trailSpace: '13px', trailIcon: '1.375rem', inner: '4px', pressed: '12px' },
+  medium: { height: '3.5rem', leadEnd: '24px', trailSpace: '15px', trailIcon: '1.625rem', inner: '4px', pressed: '12px' },
+  large: { height: '6rem', leadEnd: '48px', trailSpace: '29px', trailIcon: '2.375rem', inner: '8px', pressed: '20px' },
+  xlarge: { height: '8.5rem', leadEnd: '64px', trailSpace: '43px', trailIcon: '3.125rem', inner: '12px', pressed: '20px' }
 };
 
 describe('Split button tokens', () => {
@@ -53,7 +53,7 @@ describe('Split button tokens', () => {
     assert.ok(rule, 'no .split-button rule in the sheet');
     assert.match(rule, /--md-comp-split-button-between-space:\s*2px/);
     assert.match(rule, /gap:\s*var\(--md-comp-split-button-between-space\)/);
-    assert.match(rule, /--md-comp-filled-button-container-height:\s*40px/);
+    assert.match(rule, /--md-comp-filled-button-container-height:\s*2\.5rem/);
     for (const [token, value] of Object.entries({
       'leading-button-trailing-space': SIZES.small.leadEnd,
       'trailing-button-space': SIZES.small.trailSpace,

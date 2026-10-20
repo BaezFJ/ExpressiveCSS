@@ -24,7 +24,7 @@ describe('Badge', () => {
   });
 
   test('large is 16dp; small empty is 6dp', () => {
-    assert.match(css, /--md-comp-badge-large-size:\s*16px/);
+    assert.match(css, /--md-comp-badge-large-size:\s*1rem/);
     assert.match(css, /--md-comp-badge-small-size:\s*6px/);
     assert.match(css, /badge:empty\s*\{/);
   });

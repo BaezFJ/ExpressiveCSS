@@ -3,6 +3,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
+import { rem } from './css.js';
 
 const root = new URL('../', import.meta.url);
 const css = readFileSync(new URL('dist/css/expressive.css', root), 'utf8');
@@ -41,8 +42,8 @@ describe('Icon button CSS', () => {
     test(`${size} is ${spec.height}dp with a ${spec.icon}dp icon`, () => {
       const rule = ruleFor((s) => s === selector);
       assert.ok(rule, `no ${selector} rule`);
-      assert.match(rule, new RegExp(`--md-comp-icon-button-container-height:\\s*${spec.height}px`));
-      assert.match(rule, new RegExp(`--md-comp-icon-button-icon-size:\\s*${spec.icon}px`));
+      assert.match(rule, new RegExp(`--md-comp-icon-button-container-height:\\s*${rem(spec.height)}`));
+      assert.match(rule, new RegExp(`--md-comp-icon-button-icon-size:\\s*${rem(spec.icon)}`));
       assert.match(rule, new RegExp(`--md-comp-icon-button-leading-space:\\s*${spec.space}px`));
       assert.match(rule, new RegExp(`--md-comp-icon-button-trailing-space:\\s*${spec.space}px`));
     });

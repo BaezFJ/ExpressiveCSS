@@ -49,7 +49,7 @@
   gap: 16px;
 
   &.labels {
-    --md-comp-pie-chart-label-width: 96px;
+    --md-comp-pie-chart-label-width: #{rem(96px)};
   }
 
   &.donut {

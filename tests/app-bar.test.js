@@ -36,7 +36,7 @@ test('top app bars are pinned without a fixed class', () => {
 describe('App bar M3 Expressive types', () => {
   test('medium flexible is 112dp with a headline-medium title', () => {
     const height = rules.find(
-      (r) => r.selector.includes('header.medium') && /min-height:\s*112px/.test(r.body),
+      (r) => r.selector.includes('header.medium') && /min-height:\s*7rem/.test(r.body),
     );
     assert.ok(height, 'medium bar is not 112dp');
 
@@ -52,7 +52,7 @@ describe('App bar M3 Expressive types', () => {
 
   test('large flexible is 120dp with a display-small title', () => {
     const height = rules.find(
-      (r) => r.selector.includes('header.large') && /min-height:\s*120px/.test(r.body),
+      (r) => r.selector.includes('header.large') && /min-height:\s*7\.5rem/.test(r.body),
     );
     assert.ok(height, 'large bar is not 120dp');
     assert.match(
@@ -63,7 +63,7 @@ describe('App bar M3 Expressive types', () => {
     const withoutSubtitle = rules.filter(
       (r) =>
         r.selector.includes('header.large') &&
-        /min-height:\s*152px/.test(r.body) &&
+        /min-height:\s*9\.5rem/.test(r.body) &&
         !r.selector.includes('hgroup'),
     );
     assert.deepEqual(withoutSubtitle, [], 'large still uses 152dp without a subtitle');
@@ -97,7 +97,7 @@ describe('App bar M3 Expressive types', () => {
       (r) =>
         r.selector.includes('header.medium') &&
         r.selector.includes('hgroup') &&
-        /min-height:\s*136px/.test(r.body),
+        /min-height:\s*8\.5rem/.test(r.body),
     );
     assert.ok(height, 'medium + subtitle is not 136dp');
 
@@ -115,7 +115,7 @@ describe('App bar M3 Expressive types', () => {
       (r) =>
         r.selector.includes('header.large') &&
         r.selector.includes('hgroup') &&
-        /min-height:\s*152px/.test(r.body),
+        /min-height:\s*9\.5rem/.test(r.body),
     );
     assert.ok(height, 'large + subtitle is not 152dp');
     assert.match(
@@ -212,7 +212,7 @@ describe('Collapsed flexible app bar', () => {
         (/header\.medium/.test(r.selector) || /header\.large/.test(r.selector)),
     );
     assert.ok(
-      collapsed.some((r) => /min-height:\s*64px/.test(r.body)),
+      collapsed.some((r) => /min-height:\s*4rem/.test(r.body)),
       'collapsed flexible bar is not 64dp',
     );
     assert.ok(

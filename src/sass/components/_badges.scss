@@ -16,10 +16,10 @@
 .badge {
   --md-comp-badge-color: var(--md-sys-color-error);
   --md-comp-badge-label-text-color: var(--md-sys-color-on-error);
-  --md-comp-badge-large-size: 16px;
+  --md-comp-badge-large-size: #{rem(16px)};
   --md-comp-badge-small-size: 6px;
   --md-comp-badge-large-shape: var(--md-sys-shape-corner-small);
-  --md-comp-badge-icon-size: 24px;
+  --md-comp-badge-icon-size: #{rem(24px)};
 
   box-sizing: border-box;
   display: inline-flex;
@@ -28,7 +28,7 @@
   justify-content: center;
   min-width: var(--md-comp-badge-large-size);
   height: var(--md-comp-badge-large-size);
-  max-width: calc(4ch + 8px);
+  max-width: calc(4ch + #{rem(8px)});
   margin: 0;
   padding: 0 4px;
   overflow: hidden;

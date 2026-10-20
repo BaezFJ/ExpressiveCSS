@@ -15,7 +15,7 @@
 //   --md-comp-avatar-group-ring-color  surface
 
 .avatar {
-  --md-comp-avatar-size: 40px;
+  --md-comp-avatar-size: #{rem(40px)};
   --md-comp-avatar-container-color: var(--md-sys-color-secondary-container);
   --md-comp-avatar-color: var(--md-sys-color-on-secondary-container);
 
@@ -42,11 +42,11 @@
   user-select: none;
 
   &.small {
-    --md-comp-avatar-size: 32px;
+    --md-comp-avatar-size: #{rem(32px)};
   }
 
   &.large {
-    --md-comp-avatar-size: 56px;
+    --md-comp-avatar-size: #{rem(56px)};
   }
 
   > img {
