@@ -13,6 +13,7 @@ const html = `<style>${css}</style><body style="margin: 0; padding: 8px; width: 
   <div id="div-wavy" class="progress wavy stop"><div class="determinate" style="width: 40%"></div></div>
   <div id="bare-wavy" class="progress wavy" style="--md-comp-progress-value: 70%"></div>
   <div dir="rtl"><div id="rtl" class="progress stop"><div class="determinate" style="width: 30%"></div></div></div>
+  <div id="indeterminate-wavy" class="progress wavy"><div class="indeterminate"></div></div>
 </body>`;
 
 for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit })) {
@@ -37,6 +38,8 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
           divMask: getComputedStyle(document.querySelector('#div-wavy > .determinate')).maskImage,
           bareMask: style('bare-wavy', '::after').maskImage,
           track: style('div-wavy').backgroundImage,
+          wrapper: getComputedStyle(document.querySelector('#indeterminate-wavy > .indeterminate')).maskImage,
+          moving: getComputedStyle(document.querySelector('#indeterminate-wavy > .indeterminate'), '::before').maskImage,
         };
       });
       assert.match(styles.stop, /radial-gradient/, 'the stop is a dot on the track');
@@ -46,6 +49,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       assert.match(styles.divMask, /^url\(/, 'a determinate child is masked to the wave');
       assert.match(styles.bareMask, /^url\(/, 'a bare bar is masked to the wave');
       assert.match(styles.track, /radial-gradient.*linear-gradient/s, 'a wavy track keeps the stop over its stripe');
+      assert.deepEqual([styles.wrapper, /^url\(/.test(styles.moving)], ['none', true], 'an indeterminate bar masks its moving bars, not its empty wrapper');
 
       // Drawn: the stop and the wave change the bar.
       const [plain, stop, wavy] = [await shot('plain'), await shot('stop'), await shot('wavy')];

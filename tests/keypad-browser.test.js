@@ -360,6 +360,29 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
         return { short, long, again: field.validity.valid };
       });
       assert.deepEqual(length, { short: [false, 'Use at least 3 characters.'], long: true, again: false });
+
+      // The keypad clears only its own message; a reset and destroy take it away.
+      const own = await page.evaluate(() => {
+        const field = document.querySelector('#code');
+        const press = (selector) => document.querySelector(`#kb ${selector}`).click();
+        field.value = 'abc';
+        field.setCustomValidity('Unavailable');
+        press('[value="a"]');
+        const kept = field.validationMessage;
+        field.value = '';
+        press('[value="a"]');
+        const keptShort = field.validationMessage;
+        field.setCustomValidity('');
+        field.value = '';
+        press('[value="a"]');
+        const short = field.validity.valid;
+        document.querySelector('#form').reset();
+        const reset = field.validity.valid;
+        press('[value="a"]');
+        Expressive.Keypad.getInstance(document.querySelector('#kb')).destroy();
+        return { kept, keptShort, short, reset, destroyed: field.validity.valid };
+      });
+      assert.deepEqual(own, { kept: 'Unavailable', keptShort: 'Unavailable', short: false, reset: true, destroyed: true });
     } finally {
       await browser.close();
     }

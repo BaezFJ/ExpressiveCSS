@@ -118,7 +118,7 @@ $_wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width=
   border-radius: 0;
 }
 
-.progress.wavy:not(.circular) > :is(.determinate, .indeterminate),
+.progress.wavy:not(.circular) > .determinate,
 .progress.wavy:not(.circular) > .indeterminate::before,
 .progress.wavy:not(.circular) > .indeterminate::after,
 progress.progress.wavy::-webkit-progress-value,

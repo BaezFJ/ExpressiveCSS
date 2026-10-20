@@ -286,7 +286,9 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await page.keyboard.press('b');
       assert.equal(await page.locator('#extra input[value="friend"]').isChecked(), true, 'b picks the second answer');
       await page.keyboard.press('3');
-      assert.equal(await page.locator('#extra input[value="other"]').isChecked(), true, '3 picks the third enabled answer');
+      assert.equal(await page.locator('#extra input[value="friend"]').isChecked(), true, '3 names the disabled third answer, so nothing changes');
+      await page.keyboard.press('4');
+      assert.equal(await page.locator('#extra input[value="other"]').isChecked(), true, '4 picks the fourth answer, as its badge says');
       const badge = await page.locator('#extra input[value="other"]').evaluate((el) => getComputedStyle(el.closest('label'), '::after').content);
       assert.match(badge, /counter\(questionnaire-choice, upper-alpha\)|"D"/);
       await page.keyboard.press('Control+b');
@@ -343,6 +345,50 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       assert.equal(await page.evaluate(() => localStorage.getItem('questionnaire:survey')), null);
       await page.evaluate(() => Expressive.Questionnaire.getInstance(document.querySelector('#extra')).destroy());
       assert.equal(await page.locator('.questionnaire-summary').count(), 0, 'destroy removes the review step');
+    } finally {
+      await browser.close();
+    }
+  });
+}
+
+for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+  test(`${name}: questionnaire restores answers safely and wakes conditional questions`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      const body = `<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        <form class="questionnaire no-autoinit" id="branch" data-save="branch">
+          <fieldset><legend>Team?</legend>
+            <label><input type="radio" name="team" value="yes"> Yes</label>
+            <label><input type="radio" name="team" value="no"> No</label></fieldset>
+          <fieldset id="size" disabled><legend>Size</legend><input name="size" aria-label="Size"></fieldset>
+          <fieldset><legend>File</legend><input type="file" name="file" aria-label="File"><select name="pick" aria-label="Pick"><option>a</option><option>b</option></select></fieldset>
+          <footer><button type="button" value="previous">Back</button><button type="button" value="next">Next</button><button type="submit">Send</button></footer>
+        </form>
+        <script>
+          // The documented branching: an answer switches the next question on.
+          document.addEventListener('change', (e) => {
+            if (e.target.name === 'team') document.querySelector('#size').disabled = e.target.value !== 'yes' || !e.target.checked;
+          });
+        </script></body></html>`;
+      await page.route('https://expressive.test/', (route) => route.fulfill({ contentType: 'text/html', body }));
+      await page.goto('https://expressive.test/');
+      await page.addScriptTag({ content: js });
+      // A store with a file name and a select answer of the wrong type must not stop init.
+      await page.evaluate(() => {
+        localStorage.setItem('questionnaire:branch', JSON.stringify({ index: 1, answers: [true, false, '4', null] }));
+      });
+      const restored = await page.evaluate(() => {
+        try {
+          const q = Expressive.Questionnaire.init(document.querySelector('#branch'));
+          return { ok: true, size: document.querySelector('[name=size]').value, enabled: !document.querySelector('#size').disabled, index: q.index, count: q.items.length };
+        } catch (error) {
+          return { ok: false, error: error.message };
+        }
+      });
+      assert.deepEqual(restored, { ok: true, size: '4', enabled: true, index: 1, count: 3 },
+        'restored answers fire change, so the branch that depends on them opens');
     } finally {
       await browser.close();
     }

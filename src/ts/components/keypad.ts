@@ -38,6 +38,22 @@ const touched = new WeakSet<Field>();
 // Fields a keypad typed into, with that keypad. A value set by script skips
 // minlength, so the keypad checks the length itself on every input.
 const typed = new WeakMap<Field, Keypad>();
+// The too-short message a keypad set on a field, so it clears only that one.
+const marked = new WeakMap<Field, string>();
+
+/** Sets the keypad's too-short message, unless the page set one; '' clears the keypad's own. */
+function markShort(field: Field, message: string) {
+  if (!message) return unmark(field);
+  if (field.validity.customError) return;
+  field.setCustomValidity(message);
+  marked.set(field, message);
+}
+
+/** Clears the keypad's message, unless the page has since put its own in its place. */
+const unmark = (field: Field) => {
+  if (marked.get(field) === field.validationMessage) field.setCustomValidity('');
+  marked.delete(field);
+};
 let segmenter: Intl.Segmenter | undefined;
 
 // One listener per document or shadow root serves every keypad in it, kept
@@ -78,6 +94,10 @@ const rootListeners: [string, EventListener][] = [
   ['input', (e) => {
     if (isField(e.target)) typed.get(e.target)?._checkLength(e.target);
   }],
+  // A reset empties the fields, so the keypad's messages go with their values.
+  ['reset', (e) => {
+    for (const el of (e.target as HTMLFormElement).elements ?? []) if (isField(el)) unmark(el);
+  }],
   // A hardware key held down in a field lights the keypad key it matches.
   ['keydown', (e) => light(e, true)],
   ['keyup', (e) => light(e, false)]
@@ -109,6 +129,8 @@ const matches = (key: HTMLButtonElement, name: string) =>
 export class Keypad extends Component<KeypadOptions> {
   /** @internal */
   _root: Root | null;
+  /** Fields this keypad typed into, whose messages it clears on destroy. */
+  private _fields = new Set<Field>();
 
   constructor(el: HTMLElement, options: Partial<KeypadOptions>) {
     super(el, options, Keypad);
@@ -163,6 +185,10 @@ export class Keypad extends Component<KeypadOptions> {
 
   destroy() {
     instances.delete(this);
+    for (const field of this._fields) {
+      unmark(field);
+      if (typed.get(field) === this) typed.delete(field);
+    }
     this._waitForInsertion(false);
     this._listen('removeEventListener');
     this.el['Expressive_Keypad'] = undefined;
@@ -254,7 +280,7 @@ export class Keypad extends Component<KeypadOptions> {
     // Without minlength a field keeps any message the page set.
     if (field.minLength < 1) return;
     const short = field.value.length > 0 && field.value.length < field.minLength;
-    field.setCustomValidity(short ? this.options.i18n.tooShort!(field.minLength) : '');
+    markShort(field, short ? this.options.i18n.tooShort!(field.minLength) : '');
   }
 
   private _edit(field: Field, text: string, inputType: string) {
@@ -284,6 +310,7 @@ export class Keypad extends Component<KeypadOptions> {
     if (field.selectionStart !== null) field.setSelectionRange(start + text.length, start + text.length);
     touched.add(field);
     typed.set(field, this);
+    this._fields.add(field);
     // Composed, so listeners outside a shadow root hear it as they do typing.
     field.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true, inputType, data: text || null }));
   }

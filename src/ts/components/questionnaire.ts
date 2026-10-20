@@ -69,11 +69,26 @@ const savedState = (control: Control): Saved => {
 const validSaved = (saved: { answers?: unknown } | null) =>
   (Array.isArray(saved?.answers) ? saved : null) as { index: number; answers: Saved[] } | null;
 
+/** Puts a saved answer back, ignoring one of the wrong type, as a hand-edited store may hold. */
 function restoreState(control: Control, saved: Saved) {
-  if (control instanceof HTMLSelectElement) {
-    for (const option of control.options) option.selected = (saved as string[]).includes(option.value);
-  } else if (isChoice(control)) control.checked = saved as boolean;
-  else control.value = saved as string;
+  if (control instanceof HTMLSelectElement) return restoreSelect(control, saved);
+  if (isChoice(control)) control.checked = saved === true;
+  else if (typeof saved === 'string') control.value = saved;
+}
+
+function restoreSelect(select: HTMLSelectElement, saved: Saved) {
+  if (!Array.isArray(saved)) return;
+  for (const option of select.options) option.selected = saved.includes(option.value);
+}
+
+/**
+ * Restores one control and fires `change` if its answer moved, so a page
+ * that switches questions on from an answer sees the restored one.
+ */
+function restoreControl(control: Control, saved: Saved) {
+  const before = JSON.stringify(savedState(control));
+  restoreState(control, saved);
+  if (JSON.stringify(savedState(control)) !== before) control.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 /**
@@ -420,9 +435,9 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
     return key ? `questionnaire:${key}` : '';
   }
 
-  /** Every answer control, in order. */
+  /** Every answer control that can be saved, in order; a file cannot be put back. */
   private _allControls() {
-    return this._fieldsets().flatMap((item) => this._controls(item));
+    return this._fieldsets().flatMap((item) => this._controls(item)).filter((control) => control.type !== 'file');
   }
 
   /** With data-save, stores the answers and the shown question. */
@@ -442,7 +457,7 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
     const saved = this._read();
     const controls = this._allControls();
     if (saved?.answers.length !== controls.length) return;
-    controls.forEach((control, i) => restoreState(control, saved!.answers[i]));
+    controls.forEach((control, i) => restoreControl(control, saved!.answers[i]));
     this._active = this.items[saved!.index] ?? this._active;
   }
 
@@ -557,8 +572,9 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
 
   private _handleShortcut(e: KeyboardEvent) {
     if (!this._shortcuts) return;
-    const choice = this._controls(this._active!).filter((control) => isChoice(control) && !control.disabled)[shortcut(e)];
-    if (!choice) return;
+    // Counted as the letters are, disabled choices included.
+    const choice = this._controls(this._active!).filter(isChoice)[shortcut(e)] as HTMLInputElement | undefined;
+    if (!choice || choice.disabled) return;
     e.preventDefault();
     choice.click();
     choice.focus();

@@ -215,7 +215,9 @@ form.addEventListener('submit', (event) => {
           <code>data-save="key"</code> keeps the answers and the shown
           question in <code>localStorage</code> under that key, restores them
           when the page comes back, and forgets them once the form is
-          submitted. Keep personal answers out of saved questionnaires on
+          submitted. A restored answer fires <code>change</code>, so
+          conditional questions open as they did, and file inputs are not
+          saved. Keep personal answers out of saved questionnaires on
           shared devices.
         </p>
         <form class="questionnaire" aria-label="Shortcut survey" data-shortcuts data-summary data-markdown-ignore>

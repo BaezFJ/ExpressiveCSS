@@ -278,7 +278,7 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
         <ul class="browser-default">
           <li>Name the group with <code>aria-label</code> and point <code>aria-controls</code> at the field. Give the field its own label.</li>
           <li>Give every key <code>type="button"</code>, or a key inside a form submits it. Name icon keys and the space bar with <code>aria-label</code>.</li>
-          <li>Browsers check <code>minlength</code> only on what a person types, and a keypad's input comes from a script, so the keypad checks it: a shorter value gets the <code>i18n.tooShort</code> message until it is long enough. <code>pattern</code> and <code>required</code> apply as usual.</li>
+          <li>Browsers check <code>minlength</code> only on what a person types, and a keypad's input comes from a script, so the keypad checks it: a shorter value gets the <code>i18n.tooShort</code> message until it is long enough. It never replaces a message the page set, and a form reset or <code>destroy()</code> clears its own. <code>pattern</code> and <code>required</code> apply as usual.</li>
           <li>Add <code>inputmode="none"</code> to the field so a phone or tablet keeps its own keyboard closed. A hardware keyboard still types into the field.</li>
           <li>A pointer press keeps focus and the caret in the field while it has focus. Keys stay native buttons, so Tab, Enter and Space reach them.</li>
           <li>Keys are 72dp on a keypad and 48dp tall on a keyboard. Keep a keyboard wide enough that a character key stays at least 24px wide.</li>
