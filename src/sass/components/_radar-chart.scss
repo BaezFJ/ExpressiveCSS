@@ -12,6 +12,9 @@
 // the cursor spoke and the tooltip are HTML placed by the --turn RadarChart
 // sets, a fraction of a turn clockwise from the top.
 //
+// A gap in a series breaks its outline; .area fills each unbroken run as a
+// wedge from the middle.
+//
 // Modifiers: .area fills each shape, .points marks each value, .axis
 // rings the grid at round values and labels the rings, .sparkline
 // is a small chart with no labels, legend or tooltip.
@@ -108,10 +111,17 @@
 }
 
 .radar-chart-shape {
-  fill: var(--radar-chart-color);
-  fill-opacity: 0;
+  fill: none;
   stroke-width: var(--md-comp-radar-chart-line-width);
+}
 
+.radar-chart-area {
+  fill: var(--radar-chart-color);
+  fill-opacity: 0.24;
+}
+
+.radar-chart-shape,
+.radar-chart-area {
   @media (prefers-reduced-motion: no-preference) {
     transition: opacity var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard), scale var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard);
 
@@ -120,10 +130,6 @@
       scale: 0.6;
     }
   }
-}
-
-.radar-chart.area .radar-chart-shape {
-  fill-opacity: 0.24;
 }
 
 .radar-chart-series.dashed .radar-chart-shape {

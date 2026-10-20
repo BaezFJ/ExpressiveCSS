@@ -457,6 +457,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Radar chart gaps: a missing value breaks the outline instead of joining
+  the spokes either side, as a line chart's does. With `.area`, each
+  unbroken run fills as a wedge from the middle, drawn by a new
+  `.radar-chart-area` path, and a value between two gaps is a dot.
 - A sheet drag that moves against the dismissing direction now counts as
   a drag, so the click that ends it no longer activates a handle button.
 - The time picker's hour and minute fields are spin buttons

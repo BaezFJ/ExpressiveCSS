@@ -20,6 +20,7 @@ const html = `<style>${css}</style>
     ${chart('class="radar-chart area points" id="skills" data-max="100"', 'Skills', '<th>Now</th><th class="dashed">Before</th>', [
       ['Design', '100', '80'], ['Code', '50', '60'], ['Support', '', '40'], ['Ops', '25', '150']])}
     ${chart('class="radar-chart" id="plain"', 'Plain', '<th>Score</th>', [['A', '10'], ['B', '20'], ['C', '30']])}
+    ${chart('class="radar-chart area points" id="lone" data-max="100"', 'Lone', '<th>Score</th>', [['A', '100'], ['B', ''], ['C', '50'], ['D', '100'], ['E', '']])}
     ${chart('class="radar-chart sparkline" id="spark"', 'Spark', '<th>V</th>', [['A', '1'], ['B', '2'], ['C', '3']])}
   </div>
   <div style="width: 320px">
@@ -51,7 +52,8 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
           series: [...el.querySelectorAll('.radar-chart-series')].map((g) => [g.dataset.series, g.getAttribute('class')]),
           shapes: [...el.querySelectorAll('.radar-chart-shape')].map((path) => path.getAttribute('d')),
           points: [...el.querySelectorAll('.radar-chart-points')].map((path) => path.getAttribute('d').split('M').length - 1),
-          fill: getComputedStyle(el.querySelector('.radar-chart-shape')).fillOpacity,
+          areas: [...el.querySelectorAll('.radar-chart-area')].map((path) => path.getAttribute('d')),
+          fill: getComputedStyle(el.querySelector('.radar-chart-area')).fillOpacity,
           axes: [...el.querySelectorAll('.radar-chart-axes li')].map((li) => [li.textContent, li.style.getPropertyValue('--turn')]),
           legend: [...el.querySelectorAll('.radar-chart-legend li')].map((li) => [li.dataset.series, li.textContent]),
           instance: [!!Expressive.RadarChart.getInstance(el), !!Expressive.LineChart.getInstance(el)],
@@ -63,9 +65,18 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       assert.deepEqual(skills.hidden, ['true', 'true'], 'the drawing and labels are hidden; the table carries the data');
       assert.equal(skills.grid, 8, 'four rings and four spokes');
       assert.deepEqual(skills.series, [['1', 'radar-chart-series'], ['2', 'radar-chart-series dashed']]);
-      // The middle is zero and the rim is data-max; the gap joins its neighbours,
-      // and a value past the rim stops at it.
-      assert.equal(skills.shapes[0], 'M0.000,-50.000L25.000,-0.000L-12.500,0.000Z');
+      // The middle is zero and the rim is data-max, and a value past the rim
+      // stops at it. The gap breaks the outline, which runs on round past
+      // the top spoke, and the fill is a wedge from the middle.
+      assert.equal(skills.shapes[0], 'M-12.500,0.000L0.000,-50.000L25.000,-0.000');
+      assert.equal(skills.areas[0], 'M0,0L-12.500,0.000L0.000,-50.000L25.000,-0.000Z');
+      assert.equal(skills.areas[1], skills.shapes[1], 'a whole shape fills its outline');
+      const lone = await page.locator('#lone').evaluate((el) => ['shape', 'area', 'points'].map((name) => el.querySelector(`.radar-chart-${name}`).getAttribute('d')));
+      assert.deepEqual(lone, [
+        'M0.000,-50.000h0M14.695,20.225L-29.389,40.451',
+        'M0,0L0.000,-50.000ZM0,0L14.695,20.225L-29.389,40.451Z',
+        'M0.000,-50.000h0M14.695,20.225h0M-29.389,40.451h0',
+      ], 'a value between gaps is a dot, and a gap on the last spoke does not join the first');
       assert.equal(skills.shapes[1], 'M0.000,-40.000L30.000,-0.000L0.000,20.000L-50.000,0.000Z');
       assert.deepEqual(skills.points, [3, 4]);
       assert.equal(skills.fill, '0.24', 'area fills the shapes');
@@ -76,11 +87,11 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         'the hidden table stays in the accessibility tree');
 
       const plain = await page.locator('#plain').evaluate((el) => ({
-        fill: getComputedStyle(el.querySelector('.radar-chart-shape')).fillOpacity,
+        fill: el.querySelectorAll('.radar-chart-area').length,
         points: el.querySelectorAll('.radar-chart-points').length,
         legend: el.querySelectorAll('.radar-chart-legend, .radar-chart-labels').length,
       }));
-      assert.deepEqual(plain, { fill: '0', points: 0, legend: 0 }, 'one series has no legend; no fill or points without modifiers');
+      assert.deepEqual(plain, { fill: 0, points: 0, legend: 0 }, 'one series has no legend; no fill or points without modifiers');
 
       // Wrapped labels stay inside the figure, below the caption and above the legend.
       const narrow = await page.locator('#narrow').evaluate((el) => {

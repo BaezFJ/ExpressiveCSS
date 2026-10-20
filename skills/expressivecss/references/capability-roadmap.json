@@ -2311,8 +2311,8 @@
         },
         {
           "kind": "feature",
-          "description": "A gap joins the spokes either side of it rather than breaking the shape, and series past four reuse the colors.",
-          "nextStep": "Mark gaps if charts need them; keep to three series meanwhile."
+          "description": "Series past four reuse the colors.",
+          "nextStep": "Keep to three series, or compare more in a line or bar chart."
         }
       ],
       "browserChecks": [

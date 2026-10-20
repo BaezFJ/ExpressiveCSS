@@ -3544,7 +3544,7 @@
           "documentedSupport": "Spokes drawn clockwise from the top from a figure's data table, one shape per series from zero in the middle to the scale's top at the rim, row labels past each spoke, a legend for several series, area, points, dashed and sparkline modifiers, data-min and data-max, round labelled rings with .axis, and a pointer and keyboard tooltip with a cursor spoke.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, shapes, labels and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. A gap joins the spokes either side of it; there are no ring value labels."
+            "Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. A gap breaks the outline; there are no ring value labels."
           ]
         },
         "relationship": "none",
@@ -3591,8 +3591,8 @@
           },
           {
             "kind": "feature",
-            "description": "A gap joins the spokes either side of it rather than breaking the shape, and series past four reuse the colors.",
-            "nextStep": "Mark gaps if charts need them; keep to three series meanwhile."
+            "description": "Series past four reuse the colors.",
+            "nextStep": "Keep to three series, or compare more in a line or bar chart."
           }
         ],
         "browserChecks": [
