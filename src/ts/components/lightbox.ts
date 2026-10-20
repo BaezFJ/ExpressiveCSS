@@ -160,6 +160,7 @@ export class Lightbox extends Component<LightboxOptions> {
     window.removeEventListener('scroll', this._handleWindowChange);
     window.removeEventListener('resize', this._handleWindowChange);
     window.removeEventListener('keyup', this._handleWindowEscape);
+    window.removeEventListener('keydown', this._handleWindowTab);
     this._overlay?.remove();
     this._photoCaption?.remove();
     for (const ancestor of this._changedAncestorList) {
@@ -237,6 +238,12 @@ export class Lightbox extends Component<LightboxOptions> {
 
   private _handleWindowEscape = (e: KeyboardEvent) => {
     if (e.key === Utils.keys.ESC) this.close();
+  };
+
+  // The image zooms in place, not in a modal, so Tab would reach the page
+  // behind the overlay. Tab closes it instead, then moves focus as usual.
+  private _handleWindowTab = (e: KeyboardEvent) => {
+    if (e.key === 'Tab') this.close();
   };
 
   private _makeAncestorsOverflowVisible() {
@@ -456,6 +463,7 @@ export class Lightbox extends Component<LightboxOptions> {
     window.addEventListener('scroll', this._handleWindowChange, { passive: true });
     window.addEventListener('resize', this._handleWindowChange, { passive: true });
     window.addEventListener('keyup', this._handleWindowEscape);
+    window.addEventListener('keydown', this._handleWindowTab);
     this._animateImageIn();
   };
 
@@ -475,6 +483,7 @@ export class Lightbox extends Component<LightboxOptions> {
     window.removeEventListener('scroll', this._handleWindowChange);
     window.removeEventListener('resize', this._handleWindowChange);
     window.removeEventListener('keyup', this._handleWindowEscape);
+    window.removeEventListener('keydown', this._handleWindowTab);
     this._restoreFocus();
     if (this._overlay) this._fadeOut(this._overlay);
     if (this._photoCaption) this._fadeOut(this._photoCaption);

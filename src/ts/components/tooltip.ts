@@ -185,7 +185,7 @@ export class Tooltip extends Component<TooltipOptions> {
       this._originalContent = null;
     }
     this.tooltipEl.remove();
-    this.el.style.removeProperty('anchor-name');
+    Utils.setAnchorName(this.el, `--${this.tooltipEl.id}`, false);
     this._removeEventHandlers();
     this.el['Expressive_Tooltip'] = undefined;
   }
@@ -356,7 +356,7 @@ export class Tooltip extends Component<TooltipOptions> {
     const name = `--${this.tooltipEl.id}`;
     this.xMovement = 0;
     this.yMovement = 0;
-    this.el.style.setProperty('anchor-name', name);
+    Utils.setAnchorName(this.el, name, true);
     const style = this.tooltipEl.style;
     style.position = 'fixed';
     style.inset = 'auto';

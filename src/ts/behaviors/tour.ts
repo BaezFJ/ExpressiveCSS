@@ -105,7 +105,7 @@ export class Tour {
 
     const target = Tour._target(step);
     target.classList.add('tour-target');
-    target.style.setProperty('anchor-name', anchor);
+    Utils.setAnchorName(target, anchor, true);
     const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
     target.scrollIntoView({ block: 'center', behavior: smooth ? 'smooth' : 'auto' });
     if (!tour.hasAttribute('tabindex')) tour.tabIndex = -1;
@@ -129,7 +129,7 @@ export class Tour {
   private static _release(step: HTMLElement | undefined) {
     const target = step && Tour._target(step);
     target?.classList.remove('tour-target');
-    target?.style.removeProperty('anchor-name');
+    if (target) Utils.setAnchorName(target, anchor, false);
   }
 
   private static _onClick(e: MouseEvent) {

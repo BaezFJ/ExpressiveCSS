@@ -122,8 +122,16 @@ document.querySelectorAll('[data-sortable] th > button').forEach((button) => {
     table.querySelectorAll('th[aria-sort]').forEach((cell) => cell.removeAttribute('aria-sort'));
     header.setAttribute('aria-sort', direction);
     const collator = new Intl.Collator(undefined, { numeric: true });
+    const numeric = body.rows[0]?.cells[column].classList.contains('numeric');
+    // data-value overrides the shown text. Numeric columns compare as numbers,
+    // so $1,200.00 sorts after $87.00 and a minus sign counts.
+    const value = (row) => {
+      const cell = row.cells[column];
+      const text = cell.dataset.value ?? cell.textContent;
+      return numeric ? parseFloat(text.replace('−', '-').replace(/[^0-9.-]/g, '')) || 0 : text;
+    };
     const rows = [...body.rows].sort((a, b) =>
-      collator.compare(a.cells[column].textContent, b.cells[column].textContent));
+      numeric ? value(a) - value(b) : collator.compare(value(a), value(b)));
     if (direction === 'descending') rows.reverse();
     body.append(...rows);
   });
@@ -320,8 +328,16 @@ document.querySelectorAll('[data-sortable] th > button').forEach((button) => {
     table.querySelectorAll('th[aria-sort]').forEach((cell) => cell.removeAttribute('aria-sort'));
     header.setAttribute('aria-sort', direction);
     const collator = new Intl.Collator(undefined, { numeric: true });
+    const numeric = body.rows[0]?.cells[column].classList.contains('numeric');
+    // data-value overrides the shown text. Numeric columns compare as numbers,
+    // so $1,200.00 sorts after $87.00 and a minus sign counts.
+    const value = (row) => {
+      const cell = row.cells[column];
+      const text = cell.dataset.value ?? cell.textContent;
+      return numeric ? parseFloat(text.replace('−', '-').replace(/[^0-9.-]/g, '')) || 0 : text;
+    };
     const rows = [...body.rows].sort((a, b) =>
-      collator.compare(a.cells[column].textContent, b.cells[column].textContent));
+      numeric ? value(a) - value(b) : collator.compare(value(a), value(b)));
     if (direction === 'descending') rows.reverse();
     body.append(...rows);
   });

@@ -1364,6 +1364,19 @@ scenario('remaining web navigation, badges and list controls expose their meanin
   await expect(page.getByRole('link',{name:'Privacy'})).toBeFocused();
 });
 
+// The image zooms in place, so Tab used to reach the page behind the overlay.
+scenario('Lightbox closes on Tab', `
+<img id="photo" class="lightboxed" width="120" height="80" style="border-radius:4px" tabindex="0" role="button" alt="Lake"><button id="next" type="button">Next</button>`, async page => {
+  await page.evaluate(() => Expressive.Lightbox.init(document.querySelector('#photo'), { inDuration: 0, outDuration: 0 }));
+  await page.locator('#photo').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#lightbox-overlay')).toHaveCount(1);
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#next')).toBeFocused();
+  await expect(page.locator('#lightbox-overlay')).toHaveCount(0);
+  await expect(page.locator('#photo')).toHaveAttribute('style', 'border-radius:4px');
+});
+
 for (const action of ['interrupt', 'reopen', 'motion', 'focus', 'isolation', 'triggers', 'callbacks', 'destroy']) scenario(`Lightbox transition reliability: ${action}`, `
 <div id="clip" style="overflow:hidden"><img id="photo" class="lightboxed" width="120" height="80" style="border-radius:4px" tabindex="0" role="button" alt="Lake" data-caption="Lake"><button id="wrapped" type="button"><img id="second" class="lightboxed" width="100" height="60" alt="Forest" data-caption="Forest"></button></div><button id="outside">Outside</button>`, async page => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
