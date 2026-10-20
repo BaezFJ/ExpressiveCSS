@@ -836,9 +836,7 @@ export class Timepicker extends Component<TimepickerOptions> {
       ? ''
       : Timepicker._addLeadingZero(this.hours) + ':' + Timepicker._addLeadingZero(this.minutes);
     this.time = value;
-    if (!clearValue && this.options.twelveHour) {
-      value = `${value} ${this.amOrPm}`;
-    }
+    if (!clearValue) value = this._inputValue(value);
     this.el.value = value;
     // Trigger change event
     if (value !== last) {
@@ -847,6 +845,18 @@ export class Timepicker extends Component<TimepickerOptions> {
       );
     }
   };
+
+  // A time input accepts only 24-hour HH:mm and empties itself on anything
+  // else, so it never gets the AM/PM a text input shows.
+  private _inputValue(time: string) {
+    if (this.el.type === 'time') return `${Timepicker._addLeadingZero(this._hours24())}:${Timepicker._addLeadingZero(this.minutes)}`;
+    return this.options.twelveHour ? `${time} ${this.amOrPm}` : time;
+  }
+
+  private _hours24() {
+    if (!this.options.twelveHour) return this.hours;
+    return (this.hours % 12) + (this.amOrPm === 'PM' ? 12 : 0);
+  }
 
   confirm = () => {
     this.done();

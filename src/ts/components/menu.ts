@@ -229,7 +229,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this._clearPendingTimers();
     this.isOpen = false;
     this._setExpanded(false);
-    this.el.style.removeProperty('anchor-name');
+    if (this.menuEl) Utils.setAnchorName(this.el, `--menu-${this.menuEl.id}`, false);
     clearTimeout(this.filterTimeout);
     this._resetMenuStyles();
     this._restoreInert();
@@ -1000,7 +1000,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
   // scrolls there, as in the measured path.
   private _anchorMenu() {
     const name = `--menu-${this.menuEl.id}`;
-    this.el.style.setProperty('anchor-name', name);
+    Utils.setAnchorName(this.el, name, true);
     const style = this.menuEl.style;
     style.position = 'fixed';
     style.inset = 'auto';

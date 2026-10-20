@@ -271,6 +271,20 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A trigger with both a Tooltip and a Menu keeps both anchors. Each wrote
+  the whole `anchor-name` property, so the second replaced the first, and
+  destroying either removed the other's. Tour targets share the same list.
+
+- Timepicker on an `<input type="time">` writes 24-hour `HH:mm`. A
+  12-hour picker wrote `02:15 PM`, which a time input rejects by emptying
+  itself.
+
+- Tab closes an open Lightbox. The image zooms in place rather than in a
+  modal, so Tab used to move focus to the page behind the overlay.
+
+- The data table page's sort script compares numeric columns as numbers
+  and reads `data-value` first, so `$1,200.00` sorts after `$87.00`.
+
 - Forced colors (Windows contrast themes) paint every fill as Canvas, and a
   few controls drew nothing else:
   - Filled, tonal and elevated buttons, filled and tonal icon buttons,

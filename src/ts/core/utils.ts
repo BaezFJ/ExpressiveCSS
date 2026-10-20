@@ -92,6 +92,19 @@ export class Utils {
   }
 
   /**
+   * Adds or removes one name in an element's inline `anchor-name` list. A
+   * trigger can anchor a Tooltip and a Menu at once, and writing the whole
+   * property let the last writer, or the first to be destroyed, wipe the other.
+   */
+  static setAnchorName(el: HTMLElement, name: string, on: boolean) {
+    const names = el.style.getPropertyValue('anchor-name').split(',').map((n) => n.trim())
+      .filter((n) => n && n !== 'none' && n !== name);
+    if (on) names.push(name);
+    if (names.length) el.style.setProperty('anchor-name', names.join(', '));
+    else el.style.removeProperty('anchor-name');
+  }
+
+  /**
    * The element an event really started on, for a listener on the document.
    * There `event.target` is retargeted to the shadow host, so delegation that
    * reads it never sees anything inside an open shadow root. A closed root

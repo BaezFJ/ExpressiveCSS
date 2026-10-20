@@ -78,3 +78,36 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     }
   });
 }
+
+for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([n]) => !requested || requested === n)) {
+  test(`${name}: a trigger with a tooltip and a menu keeps both anchor names until each is destroyed`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        <button id="trigger" data-target="trigger-menu" style="margin: 100px">Open</button>
+        <menu id="trigger-menu"><li><button>One</button></li></menu>
+        <script>${js}</script></body></html>`);
+      if (!(await page.evaluate(() => CSS.supports('anchor-name: --a')))) { t.skip(`${name} has no anchor positioning`); return; }
+      const names = () => page.evaluate(() => document.getElementById('trigger').style.getPropertyValue('anchor-name'));
+      // Each used to write the whole property, so the second replaced the first.
+      await page.evaluate(async () => {
+        const trigger = document.getElementById('trigger');
+        Expressive.Tooltip.init(trigger, { text: 'Save draft', enterDelay: 0, inDuration: 0 }).open();
+        Expressive.Menu.init(trigger, { inDuration: 0, outDuration: 0 }).open();
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      });
+      const both = (await names()).split(', ').sort();
+      assert.equal(both.length, 2, `both anchors are listed: ${both}`);
+      assert.equal(both[0], '--menu-trigger-menu');
+      assert.match(both[1], /^--tooltip-/);
+      await page.evaluate(() => Expressive.Tooltip.getInstance(document.getElementById('trigger')).destroy());
+      assert.equal(await names(), '--menu-trigger-menu', 'destroying the tooltip keeps the menu anchor');
+      await page.evaluate(() => Expressive.Menu.getInstance(document.getElementById('trigger')).destroy());
+      assert.equal(await names(), '', 'destroying the menu clears the property');
+    } finally {
+      await browser.close();
+    }
+  });
+}

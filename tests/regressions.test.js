@@ -95,6 +95,31 @@ describe('Timepicker host input', () => {
     });
   }
 
+  // A time input empties itself on "02:15 PM"; it only takes 24-hour HH:mm.
+  for (const twelveHour of [true, false]) {
+    test(`a type="time" input gets a 24-hour value from a ${twelveHour ? '12' : '24'}-hour picker`, () => {
+      document.body.innerHTML = '<input type="time" value="09:05">';
+      const input = document.querySelector('input');
+      const picker = Expressive.Timepicker.init(input, { twelveHour, duration: 0, vibrate: false });
+      try {
+        fire(input, 'click');
+        assert.equal(picker.inputHours.value, '09');
+        picker.confirm();
+        assert.equal(input.value, '09:05');
+        input.value = '14:30';
+        fire(input, 'click');
+        picker.confirm();
+        assert.equal(input.value, '14:30');
+        input.value = '00:10';
+        fire(input, 'click');
+        picker.confirm();
+        assert.equal(input.value, '00:10');
+      } finally {
+        picker.destroy();
+      }
+    });
+  }
+
   test('opening an empty input still uses the configured default time', () => {
     document.body.innerHTML = '<input type="text">';
     const input = document.querySelector('input');
