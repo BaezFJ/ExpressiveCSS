@@ -45,7 +45,7 @@
 }
 
 .heatmap-chart {
-  --md-comp-heatmap-chart-row-height: 32px;
+  --md-comp-heatmap-chart-row-height: #{rem(32px)};
   --md-comp-heatmap-chart-cell-min-width: 12px;
   --md-comp-heatmap-chart-low-color: var(--md-sys-color-tertiary);
   --md-comp-heatmap-chart-gap: 3px;

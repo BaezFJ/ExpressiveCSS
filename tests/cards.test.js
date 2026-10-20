@@ -36,7 +36,7 @@ describe('Cards CSS', () => {
     );
     assert.match(css, /--md-comp-card-content-padding:\s*16px/);
     assert.match(css, /--md-comp-card-between-space:\s*8px/);
-    assert.match(css, /--md-comp-card-icon-size:\s*24px/);
+    assert.match(css, /--md-comp-card-icon-size:\s*1\.5rem/);
     assert.match(css, /--md-comp-card-collection-gap:\s*8px/);
   });
 
@@ -107,7 +107,7 @@ describe('Cards CSS', () => {
 
   test('repositions the same direct card slots in horizontal orientation', () => {
     assert.match(css, /--md-comp-card-horizontal-media-width:\s*40%/);
-    assert.match(css, /--md-comp-card-horizontal-min-height:\s*240px/);
+    assert.match(css, /--md-comp-card-horizontal-min-height:\s*15rem/);
     assert.match(
       css,
       /article\.horizontal\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:[^}]*var\(--md-comp-card-horizontal-media-width\)/s

@@ -40,7 +40,7 @@ $_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-
   --md-comp-card-content-padding: 16px;
   --md-comp-card-between-space: 8px;
   --md-comp-card-icon-color: var(--md-sys-color-primary);
-  --md-comp-card-icon-size: 24px;
+  --md-comp-card-icon-size: #{rem(24px)};
   --md-comp-card-state-layer-color: var(--md-sys-color-on-surface);
   --md-comp-card-hover-state-layer-opacity: var(--md-sys-state-hover-state-layer-opacity);
   --md-comp-card-focus-state-layer-opacity: var(--md-sys-state-focus-state-layer-opacity);
@@ -52,7 +52,7 @@ $_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-
   --md-comp-card-focus-indicator-thickness: 3px;
   --md-comp-card-focus-indicator-offset: 2px;
   --md-comp-card-horizontal-media-width: 40%;
-  --md-comp-card-horizontal-min-height: 240px;
+  --md-comp-card-horizontal-min-height: #{rem(240px)};
 
   position: relative;
   box-sizing: border-box;
@@ -341,13 +341,13 @@ article > .primary-action > #{$_media-figure} > figcaption > svg {
 // elevation; picked-up / dragged state raises each variant above its rest.
 :where(.card-collection) {
   --md-comp-card-collection-gap: 8px;
-  --md-comp-card-collection-min-card-width: 240px;
+  --md-comp-card-collection-min-card-width: #{rem(240px)};
   --md-comp-card-collection-grid-template-columns: repeat(
     auto-fit,
     minmax(min(100%, var(--md-comp-card-collection-min-card-width)), 1fr)
   );
-  --md-comp-card-collection-mosaic-row-size: 80px;
-  --md-comp-card-collection-carousel-height: 320px;
+  --md-comp-card-collection-mosaic-row-size: #{rem(80px)};
+  --md-comp-card-collection-carousel-height: #{rem(320px)};
   --md-comp-card-collection-carousel-card-width: min(82%, 360px);
 
   display: grid;
@@ -487,9 +487,9 @@ article.horizontal > .primary-action {
 }
 
 // Fixed heights for uniform grids.
-article.small { height: 300px; }
-article.medium { height: 400px; }
-article.large { height: 500px; }
+article.small { height: rem(300px); }
+article.medium { height: rem(400px); }
+article.large { height: rem(500px); }
 
 article.small, article.medium, article.large {
   display: flex;

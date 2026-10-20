@@ -32,7 +32,7 @@
 @include chart-axis("bar-chart", $beside: false);
 
 .bar-chart {
-  --md-comp-bar-chart-row-height: 40px;
+  --md-comp-bar-chart-row-height: #{rem(40px)};
   --md-comp-bar-chart-bar-height: 60%;
   --md-comp-bar-chart-shape: var(--md-sys-shape-corner-extra-small);
   --md-comp-bar-chart-track-color: var(--md-sys-color-surface-container-highest);
@@ -63,7 +63,7 @@
   }
 
   &.sparkline {
-    --md-comp-bar-chart-row-height: 24px;
+    --md-comp-bar-chart-row-height: #{rem(24px)};
 
     display: flex;
   }

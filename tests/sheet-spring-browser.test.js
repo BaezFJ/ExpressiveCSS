@@ -21,7 +21,9 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
     const browser = await browserType.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 400, height: 800 } });
-      await page.setContent(html);
+      // A slow spring, so it is still moving when the press lands on a
+      // loaded machine. The default one settles in about a third of a second.
+      await page.setContent(html.replace('<body>', '<body style="--md-sys-motion-spring-default-spatial-stiffness: 40">'));
       await page.evaluate(() => document.getElementById('sheet').showModal());
       await page.waitForTimeout(700);
       const box = await page.locator('#sheet .drag-handle').boundingBox();
@@ -84,7 +86,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       assert.ok(Math.abs(caught.top - caught.before) < 2, `no jump: ${caught.before} then ${caught.top}`);
 
       // Once settled, the transition is back for the next open or close.
-      await page.waitForTimeout(1200);
+      await page.waitForFunction(() => document.getElementById('sheet').getAnimations().length === 0, null, { timeout: 10000 });
       assert.equal(await page.evaluate(() => document.getElementById('sheet').style.transition), '');
     } finally {
       await browser.close();

@@ -9,7 +9,7 @@ Component ID: `badges`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `8b3d0982a30263c651d838b28f05555e625df1e158480113a1c3d4afcb03ff7f`
+Contract SHA-256: `c28aa4952f919c04fdbe4ba2c916886d5a7857dd1e19cfa1cf969f1fa4995855`
 
 #### Selection and adaptation
 
