@@ -285,4 +285,121 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: heatmap chart diverges, steps and scrolls a wide grid`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      const rows = [['<th>North</th>', '-10', '-5', '0', '5', '20']];
+      const header = '<th>A</th><th>B</th><th>C</th><th>D</th><th>E</th>';
+      const many = Array.from({ length: 52 }, (_, i) => `<th>W${i + 1}</th>`).join('');
+      await page.setContent(`<style>${css}</style>
+        <div style="width: 600px">
+          ${chart('class="heatmap-chart" data-mid="0" id="diverging" style="--md-comp-heatmap-chart-low-color: rgb(255, 0, 0); --md-comp-heatmap-chart-color: rgb(0, 0, 255); --md-comp-heatmap-chart-empty-color: rgb(255, 255, 255)"', 'Diverging', header, rows)}
+          ${chart('class="heatmap-chart" data-steps="4" id="stepped"', 'Stepped', header, [['<th>North</th>', '0', '10', '20', '21', '30']])}
+          ${chart('class="heatmap-chart" data-mid="0" data-steps="3" id="both"', 'Both', header, rows)}
+          ${chart('class="heatmap-chart" data-mid="0" data-min="-10" data-max="20" id="bounded"', 'Bounded', header, [['<th>North</th>', '-20', '-10', '0', '10', '30']])}
+          ${chart('class="heatmap-chart" data-mid="0" id="above"', 'Above', header, [['<th>North</th>', '10', '12', '14', '16', '20']])}
+        </div>
+        <div style="width: 320px">
+          ${chart('class="heatmap-chart" id="wide"', 'Wide', many, [['<th>Monday</th>', ...Array.from({ length: 52 }, (_, i) => String(i))]])}
+        </div>
+        <script>${js}</script>`);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      const read = (el) => ({
+        levels: [...el.querySelectorAll('.heatmap-chart-cell')].map((cell) => cell.style.getPropertyValue('--level')),
+        // Each fill as drawn, since engines write a mixed color in different spaces.
+        fills: [...el.querySelectorAll('.heatmap-chart-cell')].map((cell) => {
+          const context = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d');
+          context.fillStyle = getComputedStyle(cell).backgroundColor;
+          context.fillRect(0, 0, 1, 1);
+          return [...context.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+        }),
+        swatches: [...el.querySelectorAll('.heatmap-chart-scale > span')].map((span) => span.style.getPropertyValue('--level')),
+        mid: el.querySelector('.heatmap-chart-scale').style.getPropertyValue('--mid'),
+        diverging: el.querySelector('.heatmap-chart-scale').classList.contains('diverging'),
+      });
+      // Either side of data-mid, as far as the further end: -10 is half of 20.
+      const diverging = await page.locator('#diverging').evaluate(read);
+      assert.deepEqual(diverging.levels, ['-0.5', '-0.25', '0', '0.25', '1']);
+      assert.ok(diverging.fills[2].every((channel) => channel >= 254), `the midpoint is the empty color: ${diverging.fills[2]}`);
+      const [r, g, b] = diverging.fills[0];
+      assert.ok(r > b + 40 && g < r, `below the midpoint mixes the low color: ${diverging.fills[0]}`);
+      const [r2, g2, b2] = diverging.fills[4];
+      assert.ok(b2 > r2 + 100 && g2 < b2, `the top is the color: ${diverging.fills[4]}`);
+      assert.deepEqual(diverging.swatches, [], 'a smooth scale has a gradient legend');
+      assert.ok(Math.abs(parseFloat(diverging.mid) - 100 / 3) < 1e-6, `the legend passes the midpoint a third of the way along: ${diverging.mid}`);
+
+      // Four bands from the lowest to the highest, the lowest the empty color.
+      const stepped = await page.locator('#stepped').evaluate(read);
+      assert.deepEqual(stepped.levels.map(Number), [0, 1 / 3, 2 / 3, 2 / 3, 1]);
+      assert.deepEqual(stepped.swatches.map(Number), [0, 1 / 3, 2 / 3, 1], 'the legend is a swatch per band');
+
+      assert.ok(diverging.diverging, 'data either side of the midpoint shows it on the scale');
+      // Values past a fixed end take that end's shade.
+      const bounded = await page.locator('#bounded').evaluate(read);
+      assert.deepEqual(bounded.levels, ['-0.5', '-0.5', '0', '0.5', '1']);
+      const above = await page.locator('#above').evaluate(read);
+      assert.equal(above.diverging, false, 'data all above the midpoint leaves it off the scale');
+
+      const both = await page.locator('#both').evaluate(read);
+      assert.deepEqual(both.levels.map(Number), [-0.5, 0, 0, 0, 1], 'near the midpoint is the empty band');
+      assert.deepEqual(both.swatches.map(Number), [-0.5, 0, 0.5, 1], 'the legend covers the bands the data uses');
+
+      // Fifty-two columns do not fit 320px, so the grid scrolls and keeps its row label.
+      const wide = await page.locator('#wide').evaluate((el) => {
+        const scroll = el.querySelector('.heatmap-chart-scroll');
+        return {
+          scrolls: scroll.scrollWidth > scroll.clientWidth,
+          cell: el.querySelector('.heatmap-chart-cell').getBoundingClientRect().width,
+          label: el.querySelector('.heatmap-chart-row').getBoundingClientRect().width,
+          tab: scroll.tabIndex,
+        };
+      });
+      assert.ok(wide.scrolls, 'a grid too wide for its figure scrolls');
+      assert.ok(wide.cell >= 12, `cells keep the minimum width: ${wide.cell}`);
+      assert.ok(wide.label > 30, `the row label keeps its width: ${wide.label}`);
+      assert.equal(wide.tab, -1, 'the scroll box is not another Tab stop');
+
+      // End scrolls the last cell into view, and the tooltip sits beside it.
+      await page.locator('#wide .heatmap-chart-plot').focus();
+      await page.keyboard.press('ArrowRight');
+      await page.keyboard.press('End');
+      const end = await page.locator('#wide').evaluate((el) => {
+        const [scroll, plot, tooltip] = ['scroll', 'plot', 'tooltip'].map((name) => el.querySelector(`.heatmap-chart-${name}`).getBoundingClientRect());
+        const cell = el.querySelectorAll('.heatmap-chart-cell')[51].getBoundingClientRect();
+        return {
+          scrolled: el.querySelector('.heatmap-chart-scroll').scrollLeft > 0,
+          visible: cell.left >= scroll.left - 1 && cell.right <= scroll.right + 1,
+          beside: Math.abs(tooltip.right + 8 - cell.left) < 2 && tooltip.left >= plot.left - 1,
+          text: el.querySelector('.heatmap-chart-tooltip span:last-child').textContent,
+        };
+      });
+      assert.deepEqual(end, { scrolled: true, visible: true, beside: true, text: '51' });
+
+      // Scrolling keeps the tooltip on its cell, and hides it once the cell scrolls out.
+      const follow = await page.locator('#wide').evaluate(async (el) => {
+        const scroll = el.querySelector('.heatmap-chart-scroll');
+        const [tooltip, cell] = [el.querySelector('.heatmap-chart-tooltip'), el.querySelectorAll('.heatmap-chart-cell')[51]];
+        const frame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        scroll.scrollLeft -= 20;
+        await frame();
+        const beside = Math.abs(tooltip.getBoundingClientRect().right + 8 - cell.getBoundingClientRect().left) < 2;
+        scroll.scrollLeft = 0;
+        await frame();
+        return [beside, tooltip.hidden];
+      });
+      assert.deepEqual(follow, [true, true]);
+
+      // Tab leaves the chart from the plot, and a press in the grid focuses the plot.
+      await page.keyboard.press('Tab');
+      assert.equal(await page.evaluate(() => !!document.activeElement.closest('.heatmap-chart-scroll')), false, 'the scroll box is not a Tab stop');
+      await page.locator('#wide .heatmap-chart-row').click();
+      assert.equal(await page.evaluate(() => document.activeElement.className), 'heatmap-chart-plot', 'a press in the grid focuses the plot');
+    } finally {
+      await browser.close();
+    }
+  });
 }

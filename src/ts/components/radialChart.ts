@@ -7,6 +7,7 @@ export type RadialChartOptions = LineChartOptions;
 const RADIUS = 46;
 /** The rings never fill more of the radius than this, leaving a middle. */
 const FILL = 0.8;
+let _gradientId = 0;
 
 /**
  * Radial chart. It reads its <table> like LineChart, but draws each row of
@@ -14,7 +15,10 @@ const FILL = 0.8;
  * the top as a share of `data-max` above zero (100 by default). With `.gauge` the rings
  * are half circles over the middle. With `.labels` they are three quarters
  * of a circle, leaving the top left quarter for each row's name at the
- * ring's start; a gauge's names hang under its base line instead. A <tfoot>
+ * ring's start; a gauge's names hang under its base line instead.
+ * `data-segments` splits each ring into that many segments, filled whole,
+ * and `.gradient` shades each fill from a light tint at the plot's left to
+ * its full color at the right. A <tfoot>
  * row shows in the middle, and
  * a legend lists the rows when there is more than one. Further columns show
  * in the tooltip.
@@ -26,6 +30,8 @@ export class RadialChart extends LineChart {
   /** Each ring's middle radius, and their shared width. */
   private _radii: number[];
   private _width: number;
+  /** The gap between rings, and between segments. */
+  private _gap: number;
   /** Each row's share of the maximum, from 0 to 1. */
   private _fractions: number[];
   private _rings: SVGCircleElement[];
@@ -65,6 +71,36 @@ export class RadialChart extends LineChart {
   private get _span() {
     if (this._gauge) return 0.5;
     return this._labeled ? 0.75 : 1;
+  }
+
+  /** The number of segments data-segments asks for, or 0 for whole rings. */
+  private get _segments() {
+    const segments = Math.round(this._number('segments') ?? 0);
+    return segments > 1 ? segments : 0;
+  }
+
+  /** A share as drawn: with segments, to the nearest whole segment. */
+  private _lit(fraction: number) {
+    const segments = this._segments;
+    return segments ? Math.round(fraction * segments) / segments : fraction;
+  }
+
+  /**
+   * A ring's dash pattern for a share of its span. Round caps reach half the
+   * width past each end of a dash, so a capped dash is one width shorter and
+   * its gap one width longer; one shorter than the width is a dot. With
+   * segments, each lit segment is a dash with the ring gap after it, and
+   * the last gap runs out the circle so the pattern does not repeat.
+   */
+  private _dash(fraction: number, length: number, capped: boolean) {
+    const [cap, segments, span] = [capped ? this._width : 0, this._segments, this._span * length];
+    if (!segments) return `${Math.max(0.001, fraction * span - cap).toFixed(3)} ${length.toFixed(3)}`;
+    // A dash and its gap make one segment, even where a small ring leaves
+    // too little room for the gap and the caps.
+    const size = span / segments;
+    const dash = Math.max(0.001, size - this._gap - cap);
+    const lit = Array.from({ length: Math.round(fraction * segments) }, () => `${dash.toFixed(3)} ${(size - dash).toFixed(3)}`);
+    return `${lit.join(' ').replace(/ [\d.]+$/, '') || 0} ${length.toFixed(3)}`;
   }
 
   /** The distance between rings' middles, or one ring's width. */
@@ -164,6 +200,31 @@ export class RadialChart extends LineChart {
   }
 
   /**
+   * With .gradient, paints a ring's fill with a gradient from a light tint
+   * of its color at the plot's left to the full color at its right, which
+   * follows a gauge's arc. `unturn` undoes the ring's turn.
+   */
+  private _shade(ring: SVGElement, i: number, unturn: string) {
+    if (!this.el.classList.contains('gradient')) return;
+    const id = `radial-chart-gradient-${++_gradientId}`;
+    // The gradient is in the turned ring's space, so it turns back first.
+    const gradient = node('linearGradient', {
+      id,
+      class: 'radial-chart-gradient',
+      'data-series': seriesColor(i),
+      gradientUnits: 'userSpaceOnUse',
+      gradientTransform: unturn,
+      x1: '-50',
+      x2: '50',
+      y1: '0',
+      y2: '0'
+    });
+    gradient.append(node('stop'), node('stop', { offset: '1' }));
+    ring.before(gradient);
+    ring.style.setProperty('--radial-chart-paint', `url(#${id})`);
+  }
+
+  /**
    * With .labels, each row's name left of its ring's start at the top,
    * ending at the middle line. CSS shrinks the text to fit crowded rings.
    * A gauge's names hang under its base line in a row each, innermost
@@ -205,11 +266,11 @@ export class RadialChart extends LineChart {
     // ponytail: past about 18 rings they are hairlines; that many values want a bar chart.
     const scale = Math.min(1, (RADIUS * FILL) / (count * width + (count - 1) * gap || 1));
     [width, gap] = [width * scale, gap * scale];
-    this._width = width;
+    [this._width, this._gap] = [width, gap];
     this._radii = this.labels.map((_, i) => RADIUS - width / 2 - i * (width + gap));
     // A maximum of zero or less means nothing, so it falls back.
     const max = [parseFloat(this.el.dataset.max ?? ''), this.options.max ?? NaN, 100].find((value) => value > 0)!;
-    this._fractions = this.series[0].values.map((value) => Math.min(1, Math.max(0, (value ?? 0) / max)));
+    this._fractions = this.series[0].values.map((value) => this._lit(Math.min(1, Math.max(0, (value ?? 0) / max))));
 
     const gauge = this._gauge;
     const svg = node('svg', { viewBox: gauge ? '-50 -50 100 50' : '-50 -50 100 100', focusable: 'false' });
@@ -218,13 +279,10 @@ export class RadialChart extends LineChart {
     const span = this._span;
     this._rings = this._radii.map((r, i) => {
       const length = 2 * Math.PI * r;
-      // Round caps reach half the width past each end of a dash, so a capped
-      // dash is one width shorter and starts half a width in. One shorter
-      // than the width is a dot at the start.
+      // A capped dash starts half a width in, where its round cap ends.
       const circle = (name: string, fraction: number, capped: boolean) => {
         const ring = node('circle', { class: name, r: r.toFixed(3), transform, 'stroke-width': width.toFixed(3) });
-        const dash = Math.max(0.001, fraction * span * length - (capped ? width : 0));
-        ring.style.setProperty('--radial-chart-dash', `${dash.toFixed(3)} ${length.toFixed(3)}`);
+        ring.style.setProperty('--radial-chart-dash', this._dash(fraction, length, capped));
         if (capped) {
           ring.style.setProperty('--radial-chart-offset', (-width / 2).toFixed(3));
           ring.classList.add('capped');
@@ -235,8 +293,9 @@ export class RadialChart extends LineChart {
       ring.dataset.series = seriesColor(i);
       // An empty ring would still draw its round cap.
       if (!this._fractions[i]) ring.classList.add('empty');
-      // Only a track short of a whole circle has ends to round.
-      svg.append(circle('radial-chart-track', 1, span < 1), ring);
+      // Only a track short of a whole circle, or in segments, has ends to round.
+      svg.append(circle('radial-chart-track', 1, span < 1 || !!this._segments), ring);
+      this._shade(ring, i, gauge ? 'rotate(-180)' : 'rotate(90)');
       return ring;
     });
 

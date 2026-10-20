@@ -169,6 +169,11 @@
     &.negative {
       --bar-chart-ends: var(--bar-chart-tip) var(--bar-chart-base) var(--bar-chart-base) var(--bar-chart-tip);
     }
+
+    // A range floats, so both its ends are tips.
+    &.floating {
+      --bar-chart-base: var(--bar-chart-tip);
+    }
   }
 
   &.rtl > div > span {

@@ -9,7 +9,7 @@ Component ID: `mixed-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `d6f0dd8ed9cfce83c37e79f3b78bfd88c739c7767c6b6d97d43b3ef9246c9b9e`
+Contract SHA-256: `2c3fbb432621e801beb46626326ac1ae58017840841ed0b0e61e03f7e2ea1f1e`
 
 #### Selection and adaptation
 
@@ -29,7 +29,7 @@ Support (2026-10-07, `llm.md#mixed-chart`): Columns, smooth lines and areas draw
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns and SVG are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, both scales, gaps, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There is no y axis labelling for either scale, no always-on markers and no stacking.
+Known boundary: Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#mixed-chart).
 

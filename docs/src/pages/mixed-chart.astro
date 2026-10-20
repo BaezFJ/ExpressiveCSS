@@ -10,6 +10,7 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "scales", label: "Second scale" },
   { id: "areas", label: "Areas" },
+  { id: "stacked", label: "Stacked columns" },
   { id: "cards", label: "Chart cards" },
   { id: "data", label: "Values and colors" },
   { id: "accessibility", label: "Accessibility" },
@@ -30,6 +31,7 @@ const hours = [5.2, 4.8, 5.5, 4.3, 4.6, 3.9];
 const yearRevenue = [420, 460, 510, 480, 560, 610, 590, 640, 700, 680, 750, 820];
 const margin = [18, 19, 21, 20, 22, 24, 23, 25, 27, 26, 28, 30];
 const growth = [4, 5, 6, 5, 7, 8, 7, 9, 10, 9, 11, 13];
+const online = [38, 44, 41, 52, 49, 58];
 ---
 <DocsLayout page="mixed-chart">
 <PageBody sections={S}>
@@ -164,6 +166,38 @@ const growth = [4, 5, 6, 5, 7, 8, 7, 9, 10, 9, 11, 13];
     </thead>
     <tbody>
       <tr><th>Jan</th><td>$420</td><td>18%</td><td>4%</td></tr>
+      <!-- … -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.stacked}>
+        <p>
+          <code>stacked</code> stacks the column series into one column per
+          row, so a reader sees both the parts and the total. Lines and areas
+          keep their own values, such as a target to compare the totals
+          with. Columns on the second scale stack in their own column beside
+          the first; list them after the others. <code>points</code> marks
+          each value on the lines with a dot, and <code>straight</code> draws
+          straight lines between them instead of a curve.
+        </p>
+        <figure class="mixed-chart axis stacked points straight" data-markdown-ignore>
+          <figcaption>Revenue by channel ($K) against target</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th class="column">Online</th><th class="column">Store</th><th class="dashed">Target</th></tr></thead>
+            <tbody>{half.map((month, i) => <tr><th>{month}</th><td>{online[i]}</td><td>{revenue[i] - online[i]}</td><td>{target[i]}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="mixed-chart axis stacked points straight">
+  <figcaption>Revenue by channel ($K) against target</figcaption>
+  <table>
+    <thead>
+      <tr><th>Month</th><th class="column">Online</th><th class="column">Store</th><th class="dashed">Target</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Jan</th><td>38</td><td>24</td><td>65</td></tr>
       <!-- … -->
     </tbody>
   </table>

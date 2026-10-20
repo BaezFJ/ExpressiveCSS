@@ -1,10 +1,27 @@
 import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions, polarPoint, seriesColor, svgNode as node } from './lineChart';
+import { LineChart, LineChartOptions, polarPoint, Series, seriesColor, svgNode as node } from './lineChart';
 
 export type RadarChartOptions = LineChartOptions;
 
 /** Grid rings, evenly spaced from the middle to the rim. */
 const RINGS = 4;
+
+/**
+ * A series' rows split at its gaps into runs, the last carrying on round
+ * past the top spoke into the first.
+ */
+function runs(values: (number | null)[]) {
+  const list: number[][] = [[]];
+  values.forEach((value, i) => (value === null ? list.push([]) : list[list.length - 1].push(i)));
+  if (list.length > 1) list[0] = [...list.pop()!, ...list[0]];
+  return list.filter((run) => run.length);
+}
+
+// A run of corners as a path: closed round a whole shape; open where a gap
+// breaks it, a dot for a lone corner; and filled as a wedge from the middle.
+const closed = (corners: string[]) => `M${corners.join('L')}Z`;
+const open = (corners: string[]) => `M${corners.join('L')}${corners.length > 1 ? '' : 'h0'}`;
+const wedge = (corners: string[]) => `M0,0L${corners.join('L')}Z`;
 
 /**
  * Radar chart. It reads its <table> like LineChart, but each row is a spoke,
@@ -84,6 +101,25 @@ export class RadarChart extends LineChart {
   }
 
   /**
+   * One series' group: its outline, broken at a gap like a line chart's,
+   * its .area fill and its .points.
+   */
+  private _series(series: Series, s: number, corner: (index: number) => string) {
+    const group = node('g', {
+      class: `radar-chart-series ${series.className}`.trim(),
+      'data-series': seriesColor(s)
+    });
+    const lines = runs(series.values).map((run) => run.map(corner));
+    const [outline, fill] = series.values.includes(null) ? [open, wedge] : [closed, closed];
+    group.append(node('path', { class: 'radar-chart-shape', d: lines.map(outline).join('') }));
+    const list = this.el.classList;
+    if (list.contains('area')) group.append(node('path', { class: 'radar-chart-area', d: lines.map(fill).join('') }));
+    // Round caps on zero-length lines, so CSS sizes the points in pixels.
+    if (list.contains('points')) group.append(node('path', { class: 'radar-chart-points', d: lines.flat().map((c) => `M${c}h0`).join('') }));
+    return group;
+  }
+
+  /**
    * An SVG in a -50 to 50 box: the rings and spokes of the grid, then each
    * series' shape, with its points for .points. The rim is the box's edge;
    * the labels round it are HTML.
@@ -101,20 +137,7 @@ export class RadarChart extends LineChart {
       d: this._rings(share).map(ring).join('')
         + rows.map((i) => `M0,0L${at(i, 1)}`).join('')
     }));
-    const points = this.el.classList.contains('points');
-    this.series.forEach((series, s) => {
-      const group = node('g', {
-        class: `radar-chart-series ${series.className}`.trim(),
-        'data-series': seriesColor(s)
-      });
-      // ponytail: a gap joins the spokes either side of it; mark gaps if charts need them.
-      const drawn = rows.filter((i) => series.values[i] !== null);
-      const corners = drawn.map((i) => at(i, share(series.values[i]!)));
-      group.append(node('path', { class: 'radar-chart-shape', d: corners.length ? `M${corners.join('L')}Z` : '' }));
-      // Round caps on zero-length lines, so CSS sizes the points in pixels.
-      if (points) group.append(node('path', { class: 'radar-chart-points', d: corners.map((c) => `M${c}h0`).join('') }));
-      svg.append(group);
-    });
+    this.series.forEach((series, s) => svg.append(this._series(series, s, (i) => at(i, share(series.values[i]!)))));
 
     const labels = document.createElement('ol');
     labels.className = 'radar-chart-axes';

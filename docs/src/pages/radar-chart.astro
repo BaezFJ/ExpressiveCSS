@@ -192,8 +192,10 @@ const average = (values: number[]) => (values.reduce((total, value) => total + v
           Cells read as in a line chart: a cell's number is its
           <code>data-value</code>, or its text without currency signs, percent
           signs or grouping commas. The tooltip shows the cell's text as
-          written. A cell that is not a number is a gap: the shape joins the
-          spokes either side of it and the tooltip leaves it out.
+          written. A cell that is not a number is a gap: the outline breaks
+          there, as a line chart's does, and the tooltip leaves it out. With
+          <code>area</code>, each unbroken run fills as a wedge from the
+          middle, and a value between two gaps is a dot.
         </p>
         <p>
           The middle is zero, or a little below the lowest value if one is

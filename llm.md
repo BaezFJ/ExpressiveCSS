@@ -5028,7 +5028,7 @@ A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The firs
 </figure>
 ```
 
-- `area` fills under each line with a gradient; `stacked` draws each series on the total of the ones before it and fills the band between, with the y axis from zero (keep values positive; an empty cell leaves the total unknown, so that series and the ones above it break at that row, and the tooltip still shows each cell); `fade` fades the line ends; `sparkline` is a 48px chart with no grid, labels, legend or tooltip, and is not focusable.
+- `area` fills under each line with a gradient; `stacked` draws each series on the total of the ones before it and fills the band between, with the y axis from zero (keep values positive; an empty cell leaves the total unknown, so that series and the ones above it break at that row, and the tooltip still shows each cell); `points` marks every value with a dot three line widths across; `straight` draws straight lines between the values instead of a smooth curve; `fade` fades the line ends; `sparkline` is a 48px chart with no grid, labels, legend or tooltip, and is not focusable.
 - A series header cell's classes reach its line. `<th class="dashed">` draws a dotted line for a target or forecast.
 - Series take `primary`, `tertiary`, `secondary` and `on-surface-variant` in turn.
 - A cell's number is its text without currency signs, percent signs or grouping commas. Text that is not a single number (`4.4k`, `(1,200)`) is a gap, as is an empty cell. Put the number in `data-value` for those, and for `4.400 €`, which would read as 4.4. The tooltip shows the cell text as written.
@@ -5073,6 +5073,7 @@ A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as
 ```
 
 - `stacked` draws one column per row with each series on the total of the ones before it; only the top segment rounds its end. Keep stacked values positive; an empty cell leaves the total unknown, so the segments above it are left out. The tooltip still shows each cell.
+- A series header with the class `range` reads each cell as two numbers, such as `120–480`, `−4 – 6` or `3 to 14`, or `data-value="120 480"`, and floats a column from the lower to the higher, rounded at both ends; the scale makes room for low ends below zero. Any other cell is a gap that keeps its slot, and the tooltip shows the cell as written. A range does not stack.
 - `fade` fades each column toward its base; `track` draws a full-height track behind each group and rounds both ends of its columns; `sparkline` is a 48px chart with no grid, labels, legend or tooltip, and is not focusable.
 - Series take `primary`, `tertiary`, `secondary` and `on-surface-variant` in turn. A series header cell's classes reach its columns as hooks for your own styles; `dashed` has no column style.
 - Cells read as in a line chart: currency signs, percent signs and grouping commas are ignored, other text is a gap, and `data-value` gives the number. In a grouped chart a gap leaves an empty slot.
@@ -5119,6 +5120,7 @@ A `<figure class="bar-chart">` takes the same `<figcaption>` and `<table>` as a 
 
 - The plot is as tall as its rows: `--md-comp-bar-chart-row-height` sets each row, so a longer table makes a taller chart. Labels take up to 40% of the width and end in an ellipsis past it.
 - `stacked` draws one bar per row with each series after the total of the ones before it; only the last segment rounds its end. `split` separates stacked segments with a gap and rounds them at each joint. With `track` and `data-max` set to a budget, one stacked row is a meter of what is spent and what is left.
+- A series header with the class `range` reads each cell as two numbers, as in the column chart, and floats a bar between them, rounded at both ends.
 - `track` draws a full-width track behind each row and rounds both ends of its bars. `values` writes each cell's text from its bar's base, in the series' on-color over the bar; a value longer than a short bar runs on past its end in the label color, and a stacked segment cuts what does not fit. `sparkline` drops the labels, grid, legend and tooltip and is not focusable.
 - Cells, series colors, `data-min`, `data-max`, negative values and gaps work as in the column chart; negative bars grow toward the inline start.
 - `axis` labels the value axis at round values under the plot, with a grid line up from each, as in the column chart.
@@ -5205,9 +5207,9 @@ A `<figure class="heatmap-chart">` takes the same `<figcaption>` and `<table>` a
 </figure>
 ```
 
-- Each row is `--md-comp-heatmap-chart-row-height` tall and the columns share the width, so a wide grid narrows its cells. Row labels take up to 40% of the width and end in an ellipsis past it. Cells mix `--md-comp-heatmap-chart-color` into `--md-comp-heatmap-chart-empty-color` by their place on the scale.
+- Each row is `--md-comp-heatmap-chart-row-height` tall and the columns share the width down to `--md-comp-heatmap-chart-cell-min-width` each; past that the grid scrolls sideways, and the arrow keys scroll the cell they move to into view. Row labels take up to 40% of the width and end in an ellipsis past it. Cells mix `--md-comp-heatmap-chart-color` into `--md-comp-heatmap-chart-empty-color` by their place on the scale.
 - `values` writes each cell's text on it, in black or white, whichever has more WCAG contrast with the shade. `data-label` on a header cell replaces its text on the grid; an empty one hides it, and a column label runs on over the empty labels after it. The table and the tooltip keep the full header.
-- The scale runs from the lowest value to the highest; `data-min` and `data-max` on the chart, or the `min` and `max` options, fix it, and values past either end take the end's shade. The scale under the grid runs from the lowest cell's shade to the highest's, labelled with their text, so a fixed scale wider than the data shows only the part it uses.
+- The scale runs from the lowest value to the highest; `data-min` and `data-max` on the chart, or the `min` and `max` options, fix it, and values past either end take the end's shade. The scale under the grid runs from the lowest cell's shade to the highest's, labelled with their text, so a fixed scale wider than the data shows only the part it uses. `data-mid="0"` makes the scale diverge from that value: the midpoint is the empty color, values above shade towards `--md-comp-heatmap-chart-color` and values below towards `--md-comp-heatmap-chart-low-color`, as far as the end further from the midpoint. `data-steps="4"` groups the shades into that many bands (each side, on a diverging scale), with the lowest band in the empty color, and the scale becomes a swatch per band.
 - Cells read as in the column chart. A non-numeric cell is a gap: outlined, with no shade, and its text still shows in the tooltip.
 - The plot is one Tab stop named by the caption. The arrow keys move one cell the way they point, Home and End jump to the ends of the row and Escape hides the tooltip; with the tooltip hidden, Escape is left to a surrounding dialog. A tap or a drag shows the cell under the finger, and the space between cells counts as the nearer cell. In a right-to-left page, set by `dir` or CSS `direction`, the columns run right to left and left and right swap. In forced colors the cells keep their shades.
 - After changing the table, call `Expressive.HeatmapChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; `show()` takes a cell, counted row by row from 0.
@@ -5217,10 +5219,12 @@ A `<figure class="heatmap-chart">` takes the same `<figcaption>` and `<table>` a
 | Token | Default |
 | --- | --- |
 | `--md-comp-heatmap-chart-row-height` | 32px |
+| `--md-comp-heatmap-chart-cell-min-width` | 12px; below it a wide grid scrolls |
 | `--md-comp-heatmap-chart-gap` | 3px between cells |
 | `--md-comp-heatmap-chart-shape` | 4px, the cell's corner radius |
 | `--md-comp-heatmap-chart-color` | `primary`, the highest value's shade |
-| `--md-comp-heatmap-chart-empty-color` | `surface-container-highest`, the lowest value's shade |
+| `--md-comp-heatmap-chart-low-color` | `tertiary`, the lowest value's shade on a diverging scale |
+| `--md-comp-heatmap-chart-empty-color` | `surface-container-highest`, the lowest value's shade, or the midpoint's |
 | `--md-comp-heatmap-chart-grid-color` | `outline-variant`, a gap's outline |
 
 ---
@@ -5251,7 +5255,7 @@ A `<figure class="radar-chart">` takes the same `<figcaption>` and `<table>` as 
 
 - The plot is a square as wide as `--md-comp-radar-chart-height`, centered with `--md-comp-radar-chart-label-room` on each side for the labels. Four grid rings split the scale evenly.
 - `area` fills each shape, `points` marks each value, and `class="dashed"` on a header cell dashes that series' outline. `sparkline` is a 48px chart with no labels, legend or tooltip and is not focusable.
-- Cells read as in the line chart. A non-numeric cell is a gap: the shape joins the spokes either side and the tooltip leaves it out. The middle is zero, or below the lowest value if one is negative; the rim is the highest value plus a tenth of the range. `data-min` and `data-max`, or the `min` and `max` options, fix the scale; values past the rim stop at it. Series take four colors.
+- Cells read as in the line chart. A non-numeric cell is a gap: the outline breaks there and the tooltip leaves it out; `area` fills each unbroken run as a wedge from the middle, and a value between two gaps is a dot. The middle is zero, or below the lowest value if one is negative; the rim is the highest value plus a tenth of the range. `data-min` and `data-max`, or the `min` and `max` options, fix the scale; values past the rim stop at it. Series take four colors.
 - `axis` draws the grid rings at round values instead of quarters and labels each ring up the top spoke, leaving zero unlabelled; the rim widens to the next round value unless `data-max` sets it.
 - The plot is one Tab stop named by the caption. Right and down arrows move to the next row, left and up to the one before, wrapping between the last row and the first; Home and End jump to the ends and Escape hides the tooltip; the pointer or a tap shows the nearest spoke. In a right-to-left page the spokes and the arrows still run clockwise.
 - After changing the table, call `Expressive.RadarChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`.
@@ -5294,6 +5298,7 @@ A `<figure class="radial-chart">` takes the same `<figcaption>` and `<table>` as
 
 - The plot is a square as wide as `--md-comp-radial-chart-height`, centered in the figure; the legend lists the rows below it. Each ring has a track behind it in `--md-comp-radial-chart-track-color`; `transparent` hides the tracks.
 - A `<tfoot>` row shows in the middle, its value over its label, and is not a ring. `gauge` draws half circles over the middle, filling from the left, with the total on the base line. `labels` draws the rings three quarters of the way round, from the top to the left, and writes each row's name in the empty top left quarter beside its ring's start; names shrink to fit crowded rings. On a gauge, the names hang under the base line, a row per ring with the innermost on top, each after a line down from its ring's start; a sparkline ignores it. `sparkline` is a 48px chart with no legend or tooltip and is not focusable.
+- `data-segments="10"` splits each ring into that many segments, with the ring gap between them, and fills whole segments to the one nearest the value; under half a segment draws none. `gradient` shades each fill from a light tint at the plot's left to the full color at its right, which follows a gauge's arc; on a full ring it sweeps across the plot rather than along the ring.
 - Cells read as in the column chart. `data-max` must be above zero; otherwise the `max` option or 100 applies. Values past it close the ring; zero, negative and non-numeric cells leave only the track, and their rows stay in the legend and tooltip. Further value columns add lines to the tooltip. Rings take four colors, then repeat. Rings and their gaps thin together when there are too many to leave a middle.
 - The plot is one Tab stop named by the caption. Down and right arrows move to the next ring inwards, up and left to the one before, wrapping between the innermost ring and the outermost; Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped ring. In a right-to-left page the rings and the arrows still run clockwise.
 - After changing the table or the ring tokens, call `Expressive.RadialChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; the `max` option is the maximum without `data-max`, and `min` does not apply.
@@ -5340,7 +5345,8 @@ A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as 
 - `axis` labels the first scale beside the plot's start, with grid lines, and the `end` scale along its end. When neither scale has a set end, the `end` scale stretches to as many round steps as the first so its labels share the grid lines. Each scale's labels repeat its cells' currency or percent sign.
 - Cells read as in the line chart; a suffix such as `K` makes a cell a gap, so use `data-value` or put the unit in the header. A gap breaks a line and leaves a column's slot empty. Series take four colors in column order, whatever their kind, then repeat.
 - The cursor bands the highlighted row and puts a point on each line and area. The plot is one Tab stop named by the caption; left and right move between rows, Home and End jump to the ends and Escape hides the tooltip. `sparkline` is a 48px chart with no grid, labels, legend or tooltip and is not focusable.
-- After changing the table, call `Expressive.MixedChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale. `stacked` is not supported.
+- After changing the table, call `Expressive.MixedChart.init(el)` again to redraw. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale.
+- `stacked` stacks the column series into one column per row; the `end` series' columns stack in their own column beside it, so list them after the others. Lines and areas keep their own values, and the tooltip shows each cell. `points` marks every value on the lines and areas with a dot, and `straight` draws straight lines instead of curves.
 
 ### Tokens
 

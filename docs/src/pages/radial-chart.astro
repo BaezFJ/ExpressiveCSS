@@ -11,6 +11,7 @@ const S = defineSections([
   { id: "total", label: "Total" },
   { id: "gauge", label: "Gauge" },
   { id: "labels", label: "Labels" },
+  { id: "fills", label: "Segments and gradients" },
   { id: "rings", label: "Ring size and tracks" },
   { id: "cards", label: "Chart cards" },
   { id: "data", label: "Values and colors" },
@@ -186,6 +187,42 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
   <figcaption>Team capacity</figcaption>
   <table>
     <!-- The same table as the gauge above -->
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.fills}>
+        <p>
+          <code>data-segments</code> splits each ring into that many
+          segments, with the ring gap between them, and fills whole segments
+          to the one nearest the value; a value under half a segment draws
+          none. The tooltip shows the value as written.
+          <code>gradient</code> shades each fill from a light tint of its
+          color at the plot's left to the full color at its right, which
+          follows a gauge's arc from start to end. On a full ring it sweeps
+          across the plot instead of along the ring.
+        </p>
+        <figure class="radial-chart gauge gradient" data-segments="10" data-markdown-ignore>
+          <figcaption>Customer satisfaction</figcaption>
+          <table>
+            <thead><tr><th>Survey</th><th>Score</th></tr></thead>
+            <tbody><tr><th>This quarter</th><td>78%</td></tr></tbody>
+            <tfoot><tr><th>Score</th><td>78%</td></tr></tfoot>
+          </table>
+        </figure>
+<Code code={`
+<figure class="radial-chart gauge gradient" data-segments="10">
+  <figcaption>Customer satisfaction</figcaption>
+  <table>
+    <thead>
+      <tr><th>Survey</th><th>Score</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>This quarter</th><td>78%</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><th>Score</th><td>78%</td></tr>
+    </tfoot>
   </table>
 </figure>
 `} />

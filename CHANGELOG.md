@@ -7,6 +7,28 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Radial chart fills: `data-segments` splits each ring into segments filled
+  whole, and `.gradient` shades each fill from a light tint to its full
+  color across the plot, along a gauge's arc.
+
+- Range columns and bars: a series header with the class `range` reads
+  cells such as `120–480`, `3 to 14` or `data-value="120 480"` and floats a
+  column or bar between the two ends, rounded at both.
+
+- Mixed chart stacking: `.stacked` stacks the column series into one
+  column per row, with the `end` scale's columns in their own column
+  beside it. Lines and areas keep their own values.
+- Line and mixed chart `.points` marks every value on a line with a dot,
+  and `.straight` draws straight lines between values instead of a curve.
+
+- Heatmap scales: `data-mid` makes the scale diverge from that value, with
+  values below it shading towards the new
+  `--md-comp-heatmap-chart-low-color` (`tertiary`), and `data-steps` groups
+  the shades into bands, with a swatch per band under the grid.
+- Wide heatmaps scroll: cells keep `--md-comp-heatmap-chart-cell-min-width`
+  (12px), and a grid too wide for its figure scrolls sideways instead of
+  narrowing them. The arrow keys scroll the cell they move to into view.
+
 - Pie chart grouping: `data-other="5"` turns every row under 5% of the
   whole into one last slice with their sum and share, named by
   `data-other-label` ("Other" by default). The table keeps every row.
@@ -457,6 +479,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Radar chart gaps: a missing value breaks the outline instead of joining
+  the spokes either side, as a line chart's does. With `.area`, each
+  unbroken run fills as a wedge from the middle, drawn by a new
+  `.radar-chart-area` path, and a value between two gaps is a dot.
 - A sheet drag that moves against the dismissing direction now counts as
   a drag, so the click that ends it no longer activates a handle button.
 - The time picker's hour and minute fields are spin buttons

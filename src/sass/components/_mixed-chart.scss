@@ -9,6 +9,8 @@
 // .axis labels the start scale beside the plot at round values, with a
 // grid line at each, and an end scale on the far side, stretched so its
 // labels share those lines when neither scale's ends are set.
+// .stacked stacks the columns on each scale into one per row, .points marks
+// each line's values with dots, and .straight draws straight lines.
 //
 // Columns are full-height spans clipped to their value, as in the column
 // chart, behind an SVG of the lines and areas, as in the line chart.
@@ -78,6 +80,11 @@
     &.negative {
       --mixed-chart-ends: 0 0 var(--md-comp-mixed-chart-shape) var(--md-comp-mixed-chart-shape);
     }
+
+    // A range floats, so both its ends are rounded.
+    &.floating {
+      --mixed-chart-ends: var(--md-comp-mixed-chart-shape);
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -88,6 +95,21 @@
         clip-path: inset(var(--zero, 100%) 0 calc(100% - var(--zero, 100%)) round var(--mixed-chart-ends));
       }
     }
+  }
+}
+
+// Stacked columns share one column per row, and the end scale's another
+// beside it. Only each stack's top segment is rounded: the last of its
+// scale, with the end scale's columns after the others in the table.
+.mixed-chart.stacked .mixed-chart-columns > div > span {
+  grid-area: 1 / 1;
+
+  &.end {
+    grid-column: 2;
+  }
+
+  &:not(:last-child, :has(+ .end)) {
+    --mixed-chart-ends: 0;
   }
 }
 
@@ -102,6 +124,15 @@
 
 .mixed-chart-series.dashed .mixed-chart-line {
   stroke-dasharray: 2 8;
+}
+
+// Round caps on zero-length lines: dots that keep their size at any scale.
+.mixed-chart-points {
+  fill: none;
+  stroke: var(--mixed-chart-color);
+  stroke-width: calc(var(--md-comp-mixed-chart-line-width) * 3);
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
 }
 
 .mixed-chart-series:not(.area) .mixed-chart-area {

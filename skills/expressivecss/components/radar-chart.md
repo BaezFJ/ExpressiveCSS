@@ -9,7 +9,7 @@ Component ID: `radar-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `d6f0dd8ed9cfce83c37e79f3b78bfd88c739c7767c6b6d97d43b3ef9246c9b9e`
+Contract SHA-256: `2c3fbb432621e801beb46626326ac1ae58017840841ed0b0e61e03f7e2ea1f1e`
 
 #### Selection and adaptation
 
@@ -29,7 +29,7 @@ Support (2026-10-07, `llm.md#radar-chart`): Spokes drawn clockwise from the top 
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, shapes, labels and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. A gap joins the spokes either side of it; there are no ring value labels.
+Known boundary: Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. A gap breaks the outline; there are no ring value labels.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#radar-chart).
 

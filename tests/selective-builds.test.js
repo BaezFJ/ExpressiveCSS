@@ -163,7 +163,13 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed radial chart ring names at each ring's start: 76,892 gzip bytes (+189).
   // Reviewed pie chart leader lines and gauge ring names: 76,978 gzip bytes (+86).
   // Reviewed pie chart data-other grouping small rows: 77,424 gzip bytes (+446).
-  assert.ok(sizes(js).gzip <= 77424, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed radar chart outlines broken at gaps: 77,562 gzip bytes (+138).
+  // Reviewed heatmap diverging and stepped scales and scrolling grids: 77,886 gzip bytes (+324).
+  // Reviewed mixed chart stacked columns, and line points and straight lines: 77,966 gzip bytes (+80).
+  // Reviewed range columns and bars: 78,189 gzip bytes (+223).
+  // Reviewed radial chart segments and gradient fills: 78,435 gzip bytes (+246).
+  // Reviewed chart review fixes: segment sizes, stacked ranges, diverging bounds and scrolling tooltips: 78,612 gzip bytes (+177).
+  assert.ok(sizes(js).gzip <= 78612, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -251,5 +257,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed pie chart names outside the slices: 79,675 gzip bytes (+127).
   // Reviewed radial chart ring names at each ring's start: 79,745 gzip bytes (+70).
   // Reviewed pie chart leader lines and gauge ring names: 80,094 gzip bytes (+349).
-  assert.ok(sizes(css).gzip <= 80094, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed radar chart outlines broken at gaps: 80,095 gzip bytes (+1).
+  // Reviewed heatmap diverging and stepped scales and scrolling grids: 80,253 gzip bytes (+158).
+  // Reviewed mixed chart stacked columns, and line points and straight lines: 80,338 gzip bytes (+85).
+  // Reviewed range columns and bars: 80,371 gzip bytes (+33).
+  // Reviewed radial chart segments and gradient fills: 80,410 gzip bytes (+39).
+  // Reviewed chart review fixes: segment sizes, stacked ranges, diverging bounds and scrolling tooltips: 80,415 gzip bytes (+5).
+  assert.ok(sizes(css).gzip <= 80415, `CSS gzip: ${sizes(css).gzip}`);
 });

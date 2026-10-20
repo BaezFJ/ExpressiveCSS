@@ -3087,7 +3087,7 @@
           "documentedSupport": "Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, grouped and stacked geometry, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There is no y axis labelling and no range (low to high) column; horizontal bars are the bar chart."
+            "Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There is no y axis labelling and no range (low to high) column; horizontal bars are the bar chart."
           ]
         },
         "relationship": "none",
@@ -3129,13 +3129,8 @@
         "gaps": [
           {
             "kind": "verification",
-            "description": "Drawing, the hidden table, grouped and stacked geometry, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+            "description": "Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
             "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-          },
-          {
-            "kind": "feature",
-            "description": "There are no range columns.",
-            "nextStep": "Add range columns when a page needs them."
           }
         ],
         "browserChecks": [
@@ -3435,7 +3430,7 @@
           "documentedSupport": "Every body cell of a figure's data table drawn as a shaded grid cell, with row headers beside the grid, column headers below, a scale naming the lowest and highest cells, values, data-label short or hidden labels, data-min and data-max, gaps, and a pointer and keyboard tooltip that moves cell by cell.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, labels and scale are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, cell shades and gaps, the fixed scale, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified. A wide grid narrows its cells rather than scrolling."
+            "Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified. In a wide grid the row labels scroll away with the cells."
           ]
         },
         "relationship": "none",
@@ -3477,13 +3472,13 @@
         "gaps": [
           {
             "kind": "verification",
-            "description": "Drawing, the hidden table, cell shades and gaps, the fixed scale, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified.",
+            "description": "Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified.",
             "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
           },
           {
             "kind": "feature",
-            "description": "A wide grid narrows its cells to fit instead of scrolling, and the scale is one color with no diverging or stepped option.",
-            "nextStep": "Add a scrolling layout that keeps the tooltip visible if year-long grids must work on phones, and a diverging scale if charts need a midpoint."
+            "description": "In a grid wide enough to scroll, the row labels scroll away with the cells.",
+            "nextStep": "Pin the row labels if wide grids need them in view."
           }
         ],
         "browserChecks": [
@@ -3545,7 +3540,7 @@
           "documentedSupport": "Spokes drawn clockwise from the top from a figure's data table, one shape per series from zero in the middle to the scale's top at the rim, row labels past each spoke, a legend for several series, area, points, dashed and sparkline modifiers, data-min and data-max, round labelled rings with .axis, and a pointer and keyboard tooltip with a cursor spoke.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, shapes, labels and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. A gap joins the spokes either side of it; there are no ring value labels."
+            "Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. A gap breaks the outline; there are no ring value labels."
           ]
         },
         "relationship": "none",
@@ -3592,8 +3587,8 @@
           },
           {
             "kind": "feature",
-            "description": "A gap joins the spokes either side of it rather than breaking the shape, and series past four reuse the colors.",
-            "nextStep": "Mark gaps if charts need them; keep to three series meanwhile."
+            "description": "Series past four reuse the colors.",
+            "nextStep": "Keep to three series, or compare more in a line or bar chart."
           }
         ],
         "browserChecks": [
@@ -3661,7 +3656,7 @@
           "documentedSupport": "Rings drawn clockwise from the top from a figure's data table as a share of data-max, with tracks, a legend of each row's cell for more than one row, gauge, labels and sparkline modifiers, a <tfoot> total in the middle, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the ring.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rings, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values leave only the track. The .labels names can run into a crowded middle total."
+            "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, segments, gradient fills, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values leave only the track. The .labels names can run into a crowded middle total."
           ]
         },
         "relationship": "none",
@@ -3703,13 +3698,13 @@
         "gaps": [
           {
             "kind": "verification",
-            "description": "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+            "description": "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, segments, gradient fills, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
             "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
           },
           {
             "kind": "feature",
-            "description": "There are no gradient or segmented fills, and rings past four reuse the colors.",
-            "nextStep": "Keep to four rings and use the legend for more."
+            "description": "A gradient fill runs across the plot, so it follows only a gauge's arc, and rings past four reuse the colors.",
+            "nextStep": "Draw gradients along each ring if full rings need them; keep to four rings and use the legend for more."
           }
         ],
         "browserChecks": [
@@ -3775,7 +3770,7 @@
           "documentedSupport": "Columns, smooth lines and areas drawn per series from a figure's data table by header class, with dashed lines, a second scale for end series with its own fixed range, x labels, round labels for both scales with .axis, aligned to shared grid lines, a legend, a sparkline modifier, and a pointer and keyboard tooltip with points on the lines.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns and SVG are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, both scales, gaps, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There is no y axis labelling for either scale, no always-on markers and no stacking."
+            "Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified."
           ]
         },
         "relationship": "none",
@@ -3821,13 +3816,8 @@
         "gaps": [
           {
             "kind": "verification",
-            "description": "Drawing, the hidden table, both scales, gaps, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+            "description": "Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
             "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-          },
-          {
-            "kind": "feature",
-            "description": "There are no always-on line markers, no stacked columns and no straight-line option.",
-            "nextStep": "Add markers, stacked columns or straight lines when a page needs them."
           }
         ],
         "browserChecks": [

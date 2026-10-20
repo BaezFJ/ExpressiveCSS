@@ -11,7 +11,12 @@
 // circle, from the --radial-chart-dash RadialChart sets, so it can grow in;
 // --radial-chart-offset moves a round-capped dash in by half the width.
 //
-// Modifiers: .gauge draws half circles over the middle, .labels draws
+// data-segments on the figure splits each ring into that many segments,
+// filled whole, with the ring gap between them.
+//
+// Modifiers: .gauge draws half circles over the middle, .gradient shades
+// each fill from a light tint at the plot's left to its full color at the
+// right, along a gauge's arc, .labels draws
 // three-quarter rings and names each one in the empty top left quarter,
 // or under the base line of a gauge, .sparkline is a small chart with no legend, tooltip or names. A <tfoot>
 // row shows in the middle.
@@ -80,7 +85,8 @@
 }
 
 .radial-chart-ring {
-  stroke: var(--radial-chart-color);
+  // RadialChart sets --radial-chart-paint to a gradient with .gradient.
+  stroke: var(--radial-chart-paint, var(--radial-chart-color));
   stroke-linecap: round;
 
   &.empty {
@@ -98,6 +104,15 @@
     @starting-style {
       stroke-dasharray: 0 1000;
     }
+  }
+}
+
+// From a tint of the ring's color to the color itself.
+.radial-chart-gradient > stop {
+  stop-color: var(--radial-chart-color);
+
+  &:first-child {
+    stop-color: color-mix(in oklab, var(--radial-chart-color) 35%, var(--md-sys-color-surface));
   }
 }
 

@@ -106,7 +106,11 @@ export interface Series {
  */
 function cellValue(cell: Element | undefined): number | null {
   if (!cell) return null;
-  const raw = (cell as HTMLElement).dataset.value ?? cell.textContent;
+  return numberValue((cell as HTMLElement).dataset.value ?? cell.textContent);
+}
+
+/** Reads text as one number, as cellValue does, or null. */
+export function numberValue(raw: string): number | null {
   const text = raw.replace(/\u2212/g, '-').replace(/[\s%\p{Sc}]/gu, '');
   if (!/^[+-]?(\d{1,3}(,\d{3})+|\d+)?(\.\d+)?(e[+-]?\d+)?$/i.test(text)) return null;
   // The pattern also lets through "e5" (NaN) and "1e400" (Infinity).
@@ -126,6 +130,11 @@ export function signs(text: string): [string, string] {
 function affix(cells: (Element | undefined)[]): [string, string] {
   const cell = cells.find((each) => !(each as HTMLElement)?.dataset.value && cellValue(each) !== null);
   return signs(cell?.textContent.trim() ?? '');
+}
+
+/** Straight lines through the points; one point is a dot. */
+function straightPath(points: [number, number][]): string {
+  return `M${points.join('L')}${points.length > 1 ? '' : 'h0'}`;
 }
 
 /**
@@ -347,21 +356,31 @@ export class LineChart extends Component<LineChartOptions> {
         affix: affix(rows.map((row) => row.cells[i + 1]))
       };
     });
-    const stacked = this.el.classList.contains('stacked');
-    if (stacked) {
-      // A gap leaves the total unknown, so the series above break there too.
-      // ponytail: negative values overlap the band below; diverging stacks if needed.
-      const totals: (number | null)[] = this.labels.map(() => 0);
-      for (const series of this.series) {
-        series.base = [...totals];
-        series.tops = series.values.map((value, i) =>
-          (totals[i] = value === null || totals[i] === null ? null : totals[i] + value));
-      }
-    }
+    this._arrange(this.series);
 
     if (this.series.every((series) => series.tops.every((value) => value === null))) this.series = [];
     const option = (name: 'min' | 'max') => this._number(name) ?? this.options[name];
     this._y = this._scale(this.series, option('min'), option('max'));
+  }
+
+  /** Turns the values read into what is drawn: with .stacked, running totals. */
+  protected _arrange(series: Series[]) {
+    if (this.el.classList.contains('stacked')) this._stack(series);
+  }
+
+  /**
+   * Stacks each series on the ones before it: its tops become running
+   * totals and its base the total below. A gap leaves the total unknown, so
+   * the series above break there too.
+   */
+  protected _stack(series: Series[]) {
+    // ponytail: negative values overlap the band below; diverging stacks if needed.
+    const totals: (number | null)[] = this.labels.map(() => 0);
+    for (const each of series) {
+      each.base = [...totals];
+      each.tops = each.values.map((value, i) =>
+        (totals[i] = value === null || totals[i] === null ? null : totals[i] + value));
+    }
   }
 
   /** A number from one of the chart's data attributes, or null. */
@@ -378,8 +397,9 @@ export class LineChart extends Component<LineChartOptions> {
     const fixed = [min !== null, max !== null] as const;
     const stacked = this.el.classList.contains('stacked');
     let [low, high] = [Infinity, -Infinity];
-    for (const { tops } of series) {
-      for (const value of tops) {
+    // A base below zero, such as a range's low end, needs room on the scale too.
+    for (const { tops, base = [] } of series) {
+      for (const value of [...tops, ...base]) {
         if (value === null) continue;
         low = Math.min(low, value);
         high = Math.max(high, value);
@@ -532,49 +552,58 @@ export class LineChart extends Component<LineChartOptions> {
       'aria-hidden': 'true',
       focusable: 'false'
     });
-
-    for (const series of drawn) {
-      const group = svgNode('g', {
-        class: `${this._type}-series ${series.className}`.trim(),
-        'data-series': seriesColor(this.series.indexOf(series))
-      });
-
-      // A gap in the data breaks the line into runs of row indexes.
-      const runs: number[][] = [[]];
-      series.tops.forEach((value, index) => {
-        if (value === null) runs.push([]);
-        else runs[runs.length - 1].push(index);
-      });
-      const filled = runs.filter((run) => run.length);
-      const points = (run: number[], values: (number | null)[]) =>
-        run.map((index): [number, number] => [this._x(index), series.y(values[index]!)]);
-      const tops = filled.map((run) => monotonePath(points(run, series.tops)));
-
-      const id = `line-chart-gradient-${++_gradientId}`;
-      const gradient = svgNode('linearGradient', { id, x2: '0', y2: '1' });
-      gradient.append(svgNode('stop'), svgNode('stop', { offset: '1' }));
-
-      const area = svgNode('path', {
-        class: `${this._type}-area`,
-        fill: `url(#${id})`,
-        // A stacked area runs back along the series below; the reversed curve
-        // is the same curve. Its base stops at the plot bottom when the y axis
-        // starts above zero.
-        d: filled
-          .map((run, r) => {
-            if (!series.base) return `${tops[r]}V100H${this._x(run[0])}Z`;
-            const base = points(run, series.base).map(([x, y]): [number, number] => [x, Math.min(100, y)]);
-            return `${tops[r]}L${monotonePath(base.reverse()).slice(1)}Z`;
-          })
-          .join('')
-      });
-
-      const line = svgNode('path', { class: `${this._type}-line`, d: tops.join('') });
-
-      group.append(gradient, area, line);
-      svg.append(group);
-    }
+    svg.append(...drawn.map((series) => this._line(series)));
     return svg;
+  }
+
+  /**
+   * One series' group: its line, smooth or with .straight straight, broken
+   * into runs at gaps; the fill under it; and with .points a dot at each
+   * value.
+   */
+  private _line(series: Series) {
+    const group = svgNode('g', {
+      class: `${this._type}-series ${series.className}`.trim(),
+      'data-series': seriesColor(this.series.indexOf(series))
+    });
+
+    // A gap in the data breaks the line into runs of row indexes.
+    const runs: number[][] = [[]];
+    series.tops.forEach((value, index) => {
+      if (value === null) runs.push([]);
+      else runs[runs.length - 1].push(index);
+    });
+    const filled = runs.filter((run) => run.length);
+    const points = (run: number[], values: (number | null)[]) =>
+      run.map((index): [number, number] => [this._x(index), series.y(values[index]!)]);
+    const curve = this.el.classList.contains('straight') ? straightPath : monotonePath;
+    const tops = filled.map((run) => curve(points(run, series.tops)));
+
+    const id = `line-chart-gradient-${++_gradientId}`;
+    const gradient = svgNode('linearGradient', { id, x2: '0', y2: '1' });
+    gradient.append(svgNode('stop'), svgNode('stop', { offset: '1' }));
+
+    const area = svgNode('path', {
+      class: `${this._type}-area`,
+      fill: `url(#${id})`,
+      // A stacked area runs back along the series below; the reversed curve
+      // is the same curve. Its base stops at the plot bottom when the y axis
+      // starts above zero.
+      d: filled
+        .map((run, r) => {
+          if (!series.base) return `${tops[r]}V100H${this._x(run[0])}Z`;
+          const base = points(run, series.base).map(([x, y]): [number, number] => [x, Math.min(100, y)]);
+          return `${tops[r]}L${curve(base.reverse()).slice(1)}Z`;
+        })
+        .join('')
+    });
+
+    const line = svgNode('path', { class: `${this._type}-line`, d: tops.join('') });
+    group.append(gradient, area, line);
+    // Round caps on zero-length lines, so CSS sizes the dots in pixels.
+    const dots = filled.flatMap((run) => points(run, series.tops)).map(([x, y]) => `M${x},${y}h0`);
+    if (this.el.classList.contains('points')) group.append(svgNode('path', { class: `${this._type}-points`, d: dots.join('') }));
+    return group;
   }
 
   private _onPointerMove = (e: PointerEvent) => {

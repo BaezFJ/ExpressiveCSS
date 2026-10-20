@@ -183,4 +183,57 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: column chart range series float between their ends`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(`<style>${css}</style>
+        <div style="width: 400px">
+          ${chart('class="column-chart" id="ranges" data-max="40"', 'Ranges', '<th class="range">Range</th><th>Mean</th>', [
+            ['Jan', '−10 – 10', '0'], ['Feb', '$5–$15', '10'], ['Mar', '30 to 20', '25'], ['Apr', 'n/a', '30'], ['May', '<span>5</span>', '5']])}
+          ${chart('class="column-chart stacked" id="stacked-range"', 'Stacked', '<th class="range">Range</th><th>A</th><th>B</th>', [['Jan', '10–20', '5', '5']])}
+          <figure class="bar-chart" id="bars"><figcaption>Bars</figcaption><table>
+            <thead><tr><th>Month</th><th class="range">Range</th></tr></thead>
+            <tbody><tr><th>Jan</th><td data-value="2 8">two to eight</td></tr><tr><th>Feb</th><td>4–6</td></tr></tbody>
+          </table></figure>
+        </div>
+        <script>${js}</script>`);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      const ranges = await page.locator('#ranges').evaluate((el) => {
+        const chart = Expressive.ColumnChart.getInstance(el);
+        const rows = [...el.querySelectorAll('.column-chart-columns > div')];
+        const first = rows[0].children[0];
+        return {
+          values: [chart.series[0].base, chart.series[0].values],
+          scale: [chart.series[0].scale.min, chart.series[0].scale.max],
+          slots: rows.map((row) => row.children.length),
+          spans: rows.slice(0, 3).map((row) => [row.children[0].style.getPropertyValue('--top'), row.children[0].style.getPropertyValue('--bottom')]),
+          gap: rows[3].children[0].className,
+          ends: getComputedStyle(first).getPropertyValue('--column-chart-ends').trim().split(/\s+/),
+          tooltip: (chart.show(0), [...el.querySelectorAll('.column-chart-tooltip span')].map((span) => span.textContent)),
+        };
+      });
+      // An en dash, a spaced hyphen with a minus sign, "to" in either order, and currency all read;
+      // anything else is a gap.
+      assert.deepEqual(ranges.values, [[-10, 5, 20, null, null], [10, 15, 30, null, null]]);
+      assert.equal(ranges.scale[0] < -10, true, `the scale makes room for the low ends: ${ranges.scale}`);
+      assert.deepEqual(ranges.slots, [2, 2, 2, 2, 2], 'a gap keeps its slot so the rows stay aligned');
+      assert.equal(ranges.gap, '', 'a gap draws nothing');
+      const [top, bottom] = ranges.spans[1].map(parseFloat);
+      assert.ok(top > 0 && bottom > 0 && top + bottom < 100, `a range floats off zero: ${ranges.spans[1]}`);
+      assert.equal(new Set(ranges.ends).size, 1, `both ends of a range are rounded: ${ranges.ends}`);
+      assert.deepEqual(ranges.tooltip, ['Range', '−10 – 10', 'Mean', '0'], 'the tooltip shows the cell as written');
+
+      const stackedRange = await page.locator('#stacked-range').evaluate((el) => Expressive.ColumnChart.getInstance(el).series.map((series) => [series.base, series.tops]));
+      assert.deepEqual(stackedRange, [[[10], [20]], [[0], [5]], [[5], [10]]], 'with .stacked a range keeps its ends, and only the other series stack');
+
+      const bars = await page.locator('#bars').evaluate((el) => Expressive.BarChart.getInstance(el).series[0].base);
+      assert.deepEqual(bars, [2, 4], 'data-value gives the two ends as numbers');
+    } finally {
+      await browser.close();
+    }
+  });
 }
