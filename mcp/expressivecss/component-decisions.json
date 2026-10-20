@@ -3692,8 +3692,8 @@
           },
           {
             "kind": "feature",
-            "description": "A gradient fill runs across the plot, so it follows only a gauge's arc, and rings past four reuse the colors.",
-            "nextStep": "Draw gradients along each ring if full rings need them; keep to four rings and use the legend for more."
+            "description": "Rings past four reuse the colors.",
+            "nextStep": "Keep to four rings and use the legend for more."
           }
         ],
         "browserChecks": [

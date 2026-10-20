@@ -35,8 +35,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `i18n.tooShort` message.
 
 - Radial chart fills: `data-segments` splits each ring into segments filled
-  whole, and `.gradient` shades each fill from a light tint to its full
-  color across the plot, along a gauge's arc.
+  whole, and `.gradient` shades each fill along its ring, from a light
+  tint at the start to its full color where the fill ends.
 
 - Range columns and bars: a series header with the class `range` reads
   cells such as `120–480`, `3 to 14` or `data-value="120 480"` and floats a

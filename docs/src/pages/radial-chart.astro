@@ -197,10 +197,9 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
           segments, with the ring gap between them, and fills whole segments
           to the one nearest the value; a value under half a segment draws
           none. The tooltip shows the value as written.
-          <code>gradient</code> shades each fill from a light tint of its
-          color at the plot's left to the full color at its right, which
-          follows a gauge's arc from start to end. On a full ring it sweeps
-          across the plot instead of along the ring.
+          <code>gradient</code> shades each fill along its ring, from a light
+          tint of its color at the start to the full color where the fill
+          ends, on full rings, gauges and segments alike.
         </p>
         <figure class="radial-chart gauge gradient" data-segments="10" data-markdown-ignore>
           <figcaption>Customer satisfaction</figcaption>

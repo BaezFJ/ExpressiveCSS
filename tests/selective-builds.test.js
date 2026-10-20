@@ -175,7 +175,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed autocomplete search abort signal: 80,273 gzip bytes (+44).
   // Reviewed component review fixes: keypad messages, safe restores and shortcut counts: 80,455 gzip bytes (+182).
   // Reviewed heatmap row labels kept in view beside scrolling cells: 80,514 gzip bytes (+59).
-  assert.ok(sizes(js).gzip <= 80514, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed radial gradients that follow the ring: 80,699 gzip bytes (+185).
+  assert.ok(sizes(js).gzip <= 80699, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -274,5 +275,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed common button square shape, toggles and press morph: 81,001 gzip bytes (+393).
   // Reviewed linear progress end stop and wavy indicator: 81,405 gzip bytes (+404).
   // Reviewed heatmap row labels kept in view beside scrolling cells: 81,429 gzip bytes (+24).
-  assert.ok(sizes(css).gzip <= 81429, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed radial gradients that follow the ring: 81,497 gzip bytes (+68).
+  assert.ok(sizes(css).gzip <= 81497, `CSS gzip: ${sizes(css).gzip}`);
 });
