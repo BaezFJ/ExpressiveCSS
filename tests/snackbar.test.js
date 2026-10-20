@@ -151,7 +151,7 @@ describe('Snackbar', () => {
       assert.equal(source.querySelectorAll('button').length, 3);
       assert.equal(source.style.marginTop, '');
       second.dismiss();
-      const third = new Expressive.Snackbar(options);
+      const third = new Expressive.Snackbar({ ...options, replace: true });
       t.mock.timers.tick(30);
       assert.equal(source.style.opacity, '1');
       assert.equal(source.inert, false);
@@ -205,7 +205,7 @@ describe('Snackbar', () => {
       assert.throws(() => new Expressive.Snackbar({ snackbarId: 'missing' }));
       assert.equal(Expressive.Snackbar._snackbars.length, 0);
       const first = new Expressive.Snackbar({ snackbarId: 'notice', displayLength: Infinity, outDuration: 0 });
-      const second = new Expressive.Snackbar({ snackbarId: 'notice', displayLength: Infinity, outDuration: 0 });
+      const second = new Expressive.Snackbar({ snackbarId: 'notice', displayLength: Infinity, outDuration: 0, replace: true });
       assert.notEqual(first.el, second.el);
       assert.equal(first.el.isConnected, false);
       assert.equal(source.innerHTML, original);
@@ -232,8 +232,12 @@ describe('Snackbar', () => {
         source.querySelector('button').focus();
         outside.addEventListener('focus', () => new Expressive.Snackbar({ ...options, action: 'Nested' }), { once: true });
         if (action === 'dismiss') first.dismiss();
-        else new Expressive.Snackbar({ ...options, action: 'Final' });
-        await new Promise(resolve => setTimeout(resolve, 10));
+        else new Expressive.Snackbar({ ...options, action: 'Final', replace: true });
+        // A dismissed snackbar hands over through the queue, a timer or two
+        // later; poll rather than guess how long a busy run takes.
+        for (let waited = 0; source.style.opacity !== '1' && waited < 2000; waited += 10) {
+          await new Promise(resolve => setTimeout(resolve, 10));
+        }
         assert.equal(source.isConnected, true);
         assert.equal(source.inert, false);
         assert.equal(source.style.opacity, '1');

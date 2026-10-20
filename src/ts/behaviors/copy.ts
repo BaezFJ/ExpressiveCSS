@@ -47,7 +47,9 @@ export class Copy {
       text: copied
         ? button.getAttribute('data-copy-message') || Copy.i18n.copied
         : button.getAttribute('data-copy-error') || Copy.i18n.failed,
-      root: button as HTMLElement
+      root: button as HTMLElement,
+      // A second copy answers at once rather than waiting behind the first.
+      replace: true
     });
     Utils.emit(button, 'copy', { text, copied });
   }

@@ -9,7 +9,7 @@ Component ID: `snackbar`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `7ecde19ae600e19fe2166b0848bff2e1d85e0a1ec3549a95dedcc89d313df400`
+Contract SHA-256: `394ef0fbf9e170f4c2cee995411f3786d4df395cf6ac2994ce6ac0aff738d124`
 
 #### Selection and adaptation
 
@@ -79,11 +79,12 @@ new Expressive.Snackbar({
 | `completeCallback` | Function | `null` | Called when the snackbar is dismissed. |
 | `activationPercent` | Number | `0.8` | Fraction of the snackbar’s width a drag must travel to dismiss it. |
 | `root` | Element | `null` | Any element in the tree the snackbar should render into. Pass one when the page lives in a shadow root, so the container is appended there rather than to `document.body`. |
+| `replace` | Boolean | `false` | Show at once, cutting the snackbar on screen short, instead of waiting behind it. Copy buttons use this so a second copy answers right away. |
 
 #### Methods
 
 - `.dismiss()`: Dismiss this snackbar with its exit animation. Runs `completeCallback` when the animation finishes.
-- `Snackbar.dismissAll()`: Dismiss every snackbar that is currently showing.
+- `Snackbar.dismissAll()`: Dismiss the snackbar on screen and every one waiting behind it.
 
 #### Also documented
 
