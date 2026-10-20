@@ -68,6 +68,25 @@ const S = defineSections([
   <div class="indeterminate"></div>
 </div>
 `} />
+        <h5 class="light">End stop and wave</h5>
+        <p>
+          <code>stop</code> puts a 4dp dot in the indicator colour at the
+          track's end, so a reader can see where the bar ends when the track
+          has too little contrast with the page. <code>wavy</code> draws the
+          indicator as a wave over a thin track, the M3 Expressive look for a
+          longer wait; the bar grows to 14px to hold the wave, and
+          <code>--md-comp-progress-wavelength</code> sets its period. Both
+          work on <code>&lt;progress&gt;</code>, a <code>.determinate</code>
+          child and a bare bar, and a wavy bar can be indeterminate.
+        </p>
+        <progress class="progress stop" value="40" max="100"></progress>
+        <progress class="progress wavy stop" value="60" max="100"></progress>
+        <progress class="progress wavy"></progress>
+<Code code={`
+<progress class="progress stop" value="40" max="100"></progress>
+<progress class="progress wavy stop" value="60" max="100"></progress>
+<progress class="progress wavy"></progress>
+`} />
   </Section>
   <Section {...S.circular}>
         <p>

@@ -117,6 +117,24 @@ onSearch: function(text, autocomplete) {
   );
 }
 `} />
+        <p>
+          The third argument is an <code>AbortSignal</code> that aborts when a
+          newer search starts or the autocomplete is destroyed. Pass it to
+          <code>fetch()</code>, so a slow response for old text never replaces
+          the results for what is typed now, and clear the list on any other
+          error:
+        </p>
+<Code code={`
+onSearch: function(text, autocomplete, signal) {
+  fetch('/api/search?q=' + encodeURIComponent(text), { signal })
+    .then(function(response) { return response.json(); })
+    .then(function(items) { autocomplete.setMenuItems(items); })
+    .catch(function(error) {
+      // A newer search aborted this one; its results are stale.
+      if (error.name !== 'AbortError') autocomplete.setMenuItems([]);
+    });
+}
+`} />
   </Section>
 
   <Section {...S.options}>
@@ -149,7 +167,7 @@ onSearch: function(text, autocomplete) {
               <td><code>onSearch</code></td>
               <td>Function</td>
               <td>filters <code>id</code> and <code>text</code></td>
-              <td>Called when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call <code>setMenuItems</code>.</td>
+              <td>Called with the text, the instance and an <code>AbortSignal</code> when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call <code>setMenuItems</code>. The signal aborts when a newer search starts or the autocomplete is destroyed.</td>
             </tr>
             <tr>
               <td><code>minLength</code></td>

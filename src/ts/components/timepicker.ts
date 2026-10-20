@@ -7,6 +7,9 @@ export type Views = 'hours' | 'minutes';
 /** How far each key moves the hour or minute field, wrapping round the dial. */
 const STEPS: Record<string, number> = { ArrowUp: 1, ArrowDown: -1, PageUp: 5, PageDown: -5 };
 
+/** A 12-hour time's hour of the day, 0 to 23. */
+const dayHour = (hours: number, pm: boolean) => (hours % 12) + (pm ? 12 : 0);
+
 export interface TimepickerOptions extends BaseOptions {
   /**
    * Dial radius.
@@ -696,23 +699,32 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   /**
    * Up and Down step a field by one, Page Up and Page Down by five, round
-   * the dial: past 59 minutes comes 00. The hand follows. AM and PM stay as
-   * they are.
+   * the dial: past 59 minutes comes 00. The hand follows. Hours step round
+   * the day, so in 12-hour time passing 12 switches AM and PM.
    */
   private _step(event: KeyboardEvent) {
     const input = event.target as HTMLInputElement;
     const isHours = input === this.inputHours;
     if (!isHours && input !== this.inputMinutes) return;
     event.preventDefault();
-    const [min, max] = this._range(isHours);
-    const span = max - min + 1;
-    const unit = isHours ? 'hours' : 'minutes';
-    const value = min + ((((this[unit] - min + STEPS[event.key]) % span) + span) % span);
+    const [unit, step] = isHours ? (['hours', this._stepHours] as const) : (['minutes', this._stepMinutes] as const);
+    const value = step(STEPS[event.key]);
     this[unit] = value;
     input.value = Timepicker._addLeadingZero(value);
     this._cancelClockReset();
     this.drawClockFromTimeInput(value, isHours);
   }
+
+  private _stepMinutes = (step: number) => (this.minutes + step + 60) % 60;
+
+  /** The hour `step` hours on, round the day; in 12-hour time it switches AM and PM past 12. */
+  private _stepHours = (step: number) => {
+    if (!this.options.twelveHour) return (this.hours + step + 24) % 24;
+    const next = (dayHour(this.hours, this.amOrPm === 'PM') + step + 24) % 24;
+    this.amOrPm = next >= 12 ? 'PM' : 'AM';
+    this._updateAmPmView();
+    return next % 12 || 12;
+  };
 
   _inputFromTextField = (event: Event) => {
     const input = event.target as HTMLInputElement;

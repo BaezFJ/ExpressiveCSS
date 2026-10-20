@@ -244,3 +244,153 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     }
   });
 }
+
+const extras = `<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+<form class="questionnaire no-autoinit" id="extra" data-shortcuts data-summary data-save="survey">
+  <fieldset><legend>Source</legend>
+    <label><input type="radio" name="source" value="search" required> Search</label>
+    <label><input type="radio" name="source" value="friend"> A friend<small>Or a colleague</small></label>
+    <label><input type="radio" name="source" value="ad" disabled> An ad</label>
+    <label><input type="radio" name="source" value="other"> Other</label>
+    <input name="other-source" aria-label="Other source"></fieldset>
+  <fieldset><legend>Uses</legend>
+    <label><input type="checkbox" name="use" value="work"> Work</label>
+    <label><input type="checkbox" name="use" value="home"> Home</label></fieldset>
+  <fieldset><legend>Note</legend><input name="note" aria-label="Note"></fieldset>
+  <footer><button type="button" value="previous">Back</button><button type="button" value="skip">Skip</button><button type="button" value="next">Next</button><button type="submit">Send</button></footer>
+</form></body></html>`;
+
+for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+  test(`${name}: questionnaire shortcuts, review step and saved progress`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      // localStorage needs a real origin.
+      await page.route('https://expressive.test/', (route) => route.fulfill({ contentType: 'text/html', body: extras }));
+      await page.goto('https://expressive.test/');
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => {
+        localStorage.clear();
+        document.addEventListener('submit', (e) => e.preventDefault());
+        Expressive.Questionnaire.init(document.querySelector('#extra'));
+      });
+      const shown = () => page.evaluate(() => ({
+        question: [...document.querySelectorAll('#extra > fieldset')].findIndex((item) => !item.hidden),
+        buttons: [...document.querySelectorAll('#extra footer button')].filter((button) => !button.hidden).map((button) => button.textContent),
+        progress: document.querySelector('.questionnaire-progress span').textContent,
+      }));
+
+      // A letter or digit picks the answer at that place; disabled answers are left out of the count.
+      await page.locator('#extra input[value="search"]').focus();
+      await page.keyboard.press('b');
+      assert.equal(await page.locator('#extra input[value="friend"]').isChecked(), true, 'b picks the second answer');
+      await page.keyboard.press('3');
+      assert.equal(await page.locator('#extra input[value="friend"]').isChecked(), true, '3 names the disabled third answer, so nothing changes');
+      await page.keyboard.press('4');
+      assert.equal(await page.locator('#extra input[value="other"]').isChecked(), true, '4 picks the fourth answer, as its badge says');
+      const badge = await page.locator('#extra input[value="other"]').evaluate((el) => getComputedStyle(el.closest('label'), '::after').content);
+      assert.match(badge, /counter\(questionnaire-choice, upper-alpha\)|"D"/);
+      await page.keyboard.press('Control+b');
+      assert.equal(await page.locator('#extra input[value="other"]').isChecked(), true, 'a key with a modifier picks nothing');
+      await page.locator('#extra input[name="other-source"]').press('a');
+      assert.deepEqual(await page.evaluate(() => [document.querySelector('#extra input[name="other-source"]').value, document.querySelector('#extra input[value="search"]').checked]),
+        ['a', false], 'a letter typed into a text field types and picks nothing');
+      await page.locator('#extra input[value="other"]').focus();
+      await page.keyboard.press('Enter');
+      await page.keyboard.press('2');
+      assert.equal(await page.locator('#extra input[value="home"]').isChecked(), true, 'a digit toggles a checkbox');
+
+      // Saved answers and the question they reached come back with the page.
+      await page.evaluate(() => Expressive.Questionnaire.getInstance(document.querySelector('#extra')).next());
+      await page.locator('#extra input[name="note"]').fill('fast');
+      await page.locator('#extra input[name="note"]').press('a');
+      assert.equal(await page.locator('#extra input[name="note"]').inputValue(), 'fasta', 'letters typed into a text field type');
+      await page.reload();
+      await page.addScriptTag({ content: js });
+      await page.evaluate(() => {
+        document.addEventListener('submit', (e) => e.preventDefault());
+        Expressive.Questionnaire.init(document.querySelector('#extra'));
+      });
+      assert.deepEqual(await page.evaluate(() => [
+        document.querySelector('#extra input[value="other"]').checked,
+        document.querySelector('#extra input[value="home"]').checked,
+        document.querySelector('#extra input[name="note"]').value,
+      ]), [true, true, 'fasta']);
+      assert.equal((await shown()).question, 2, 'the saved question shows');
+
+      // After the last question comes the review step, with the submit button.
+      assert.deepEqual((await shown()).buttons, ['Back', 'Skip', 'Next'], 'the last question moves on to the review');
+      await page.locator('#extra footer [value="next"]').click();
+      const review = await page.evaluate(() => ({
+        rows: [...document.querySelectorAll('.questionnaire-summary dl > div')].map((row) => [...row.children].map((cell) => cell.textContent)),
+        focused: document.activeElement.className,
+        described: document.querySelector('.questionnaire-summary button').getAttribute('aria-describedby') === document.querySelector('.questionnaire-summary dt').id,
+      }));
+      assert.deepEqual(review.rows, [['Source', 'Other, a', 'Edit'], ['Uses', 'Home', 'Edit'], ['Note', 'fasta', 'Edit']]);
+      assert.equal(review.focused, 'questionnaire-summary');
+      assert.ok(review.described, 'each Edit button is described by its question');
+      assert.deepEqual(await shown(), { question: -1, buttons: ['Back', 'Send'], progress: 'Review your answers' });
+
+      // Edit goes back to the question; Back from the review goes to the last one.
+      await page.locator('.questionnaire-summary button').nth(0).click();
+      assert.equal((await shown()).question, 0);
+      await page.evaluate(() => Expressive.Questionnaire.getInstance(document.querySelector('#extra')).review());
+      await page.locator('#extra footer [value="previous"]').click();
+      assert.equal((await shown()).question, 2);
+
+      // Submitting forgets the saved answers.
+      await page.evaluate(() => Expressive.Questionnaire.getInstance(document.querySelector('#extra')).review());
+      await page.locator('#extra footer [type="submit"]').click();
+      assert.equal(await page.evaluate(() => localStorage.getItem('questionnaire:survey')), null);
+      await page.evaluate(() => Expressive.Questionnaire.getInstance(document.querySelector('#extra')).destroy());
+      assert.equal(await page.locator('.questionnaire-summary').count(), 0, 'destroy removes the review step');
+    } finally {
+      await browser.close();
+    }
+  });
+}
+
+for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+  test(`${name}: questionnaire restores answers safely and wakes conditional questions`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      const body = `<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        <form class="questionnaire no-autoinit" id="branch" data-save="branch">
+          <fieldset><legend>Team?</legend>
+            <label><input type="radio" name="team" value="yes"> Yes</label>
+            <label><input type="radio" name="team" value="no"> No</label></fieldset>
+          <fieldset id="size" disabled><legend>Size</legend><input name="size" aria-label="Size"></fieldset>
+          <fieldset><legend>File</legend><input type="file" name="file" aria-label="File"><select name="pick" aria-label="Pick"><option>a</option><option>b</option></select></fieldset>
+          <footer><button type="button" value="previous">Back</button><button type="button" value="next">Next</button><button type="submit">Send</button></footer>
+        </form>
+        <script>
+          // The documented branching: an answer switches the next question on.
+          document.addEventListener('change', (e) => {
+            if (e.target.name === 'team') document.querySelector('#size').disabled = e.target.value !== 'yes' || !e.target.checked;
+          });
+        </script></body></html>`;
+      await page.route('https://expressive.test/', (route) => route.fulfill({ contentType: 'text/html', body }));
+      await page.goto('https://expressive.test/');
+      await page.addScriptTag({ content: js });
+      // A store with a file name and a select answer of the wrong type must not stop init.
+      await page.evaluate(() => {
+        localStorage.setItem('questionnaire:branch', JSON.stringify({ index: 1, answers: [true, false, '4', null] }));
+      });
+      const restored = await page.evaluate(() => {
+        try {
+          const q = Expressive.Questionnaire.init(document.querySelector('#branch'));
+          return { ok: true, size: document.querySelector('[name=size]').value, enabled: !document.querySelector('#size').disabled, index: q.index, count: q.items.length };
+        } catch (error) {
+          return { ok: false, error: error.message };
+        }
+      });
+      assert.deepEqual(restored, { ok: true, size: '4', enabled: true, index: 1, count: 3 },
+        'restored answers fire change, so the branch that depends on them opens');
+    } finally {
+      await browser.close();
+    }
+  });
+}

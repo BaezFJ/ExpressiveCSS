@@ -243,6 +243,8 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   --md-comp-filled-button-trailing-space: #{map.get($s, space)};
   --md-comp-filled-button-icon-label-space: #{map.get($s, gap)};
   --md-comp-filled-button-outline-width: #{map.get($s, outline)};
+  --md-comp-filled-button-container-shape-square: #{map.get($s, square)};
+  --md-comp-filled-button-pressed-container-shape: #{map.get($s, pressed)};
 }
 
 /// The icon-button tokens for one rung of `$icon-button-sizes`.

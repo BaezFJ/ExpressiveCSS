@@ -1011,8 +1011,9 @@ describe('the ExpressiveCSS agent skill', () => {
     // menu, menubar, calendar, tour and image compare rows with the sortable and
     // color aliases at 43,371 bytes (+1,481); the organization chart row at
     // 43,717 bytes (+346); the color swatches row at 44,075 bytes (+358); the
-    // color picker row at 44,413 bytes (+338).
-    assert.ok(bytes <= 44413, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // color picker row at 44,413 bytes (+338); the button toggle note at
+    // 44,443 bytes (+30).
+    assert.ok(bytes <= 44443, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 

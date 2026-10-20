@@ -16,16 +16,96 @@ export interface QuestionnaireOptions extends BaseOptions {
    * @default 'Choose an answer to continue.'
    */
   requiredMessage: string;
+  /**
+   * With `data-summary`, the heading of the review step and the text above
+   * the progress bar there.
+   * @default 'Review your answers'
+   */
+  summaryLabel: string;
+  /** With `data-summary`, the text of each answer's edit button. @default 'Edit' */
+  editLabel: string;
+  /** With `data-summary`, the answer shown for a question left blank. @default 'Not answered' */
+  skippedLabel: string;
 }
 
 const _defaults: QuestionnaireOptions = {
   progressLabel: 'Question {current} of {total}',
-  requiredMessage: 'Choose an answer to continue.'
+  requiredMessage: 'Choose an answer to continue.',
+  summaryLabel: 'Review your answers',
+  editLabel: 'Edit',
+  skippedLabel: 'Not answered'
 };
 
 const NAVIGATION = ['previous', 'skip', 'next'];
+const LETTERS = 'abcdefghijklmnopqrstuvwxyz';
 
 type Control = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+/** A control's answer as saved: whether a choice is checked, a select's chosen values, or a field's value. */
+type Saved = boolean | string | string[];
+
+const isChoice = (control: Control): control is HTMLInputElement =>
+  control instanceof HTMLInputElement && (control.type === 'radio' || control.type === 'checkbox');
+
+/** A choice's label text, without its input or the description in <small>. */
+function labelText(control: HTMLInputElement) {
+  const label = control.closest('label')?.cloneNode(true) as HTMLElement | undefined;
+  label?.querySelectorAll('input, small').forEach((el) => el.remove());
+  return label?.textContent.trim() || control.value;
+}
+
+/** A control's answer as text for the summary. */
+function answerText(control: Control) {
+  if (control instanceof HTMLSelectElement) return Array.from(control.selectedOptions, (option) => option.text).join(', ');
+  if (isChoice(control)) return control.checked ? labelText(control) : '';
+  return control.value.trim();
+}
+
+const savedState = (control: Control): Saved => {
+  if (control instanceof HTMLSelectElement) return Array.from(control.selectedOptions, (option) => option.value);
+  return isChoice(control) ? control.checked : control.value;
+};
+
+/** Saved state with a list of answers, or null. */
+const validSaved = (saved: { answers?: unknown } | null) =>
+  (Array.isArray(saved?.answers) ? saved : null) as { index: number; answers: Saved[] } | null;
+
+/** Puts a saved answer back, ignoring one of the wrong type, as a hand-edited store may hold. */
+function restoreState(control: Control, saved: Saved) {
+  if (control instanceof HTMLSelectElement) return restoreSelect(control, saved);
+  if (isChoice(control)) control.checked = saved === true;
+  else if (typeof saved === 'string') control.value = saved;
+}
+
+function restoreSelect(select: HTMLSelectElement, saved: Saved) {
+  if (!Array.isArray(saved)) return;
+  for (const option of select.options) option.selected = saved.includes(option.value);
+}
+
+/**
+ * Restores one control and fires `change` if its answer moved, so a page
+ * that switches questions on from an answer sees the restored one.
+ */
+function restoreControl(control: Control, saved: Saved) {
+  const before = JSON.stringify(savedState(control));
+  restoreState(control, saved);
+  if (JSON.stringify(savedState(control)) !== before) control.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+/**
+ * The answer a shortcut key picks, counted from 0: a digit 1 to 9 or a
+ * letter. Keys typed into a text field, or with a modifier, pick nothing.
+ */
+function shortcut(e: KeyboardEvent) {
+  if (typingIn(e.target) || modified(e)) return -1;
+  const digit = '123456789'.indexOf(e.key);
+  return digit >= 0 ? digit : letterIndex(e.key);
+}
+
+const TYPING = 'textarea, select, [contenteditable], input:not([type="radio"], [type="checkbox"], [type="button"], [type="submit"], [type="reset"])';
+const typingIn = (target: EventTarget | null) => !!(target as Element).matches?.(TYPING);
+const modified = (e: KeyboardEvent) => e.ctrlKey || e.metaKey || e.altKey;
+
+const letterIndex = (key: string) => (key.length === 1 ? LETTERS.indexOf(key.toLowerCase()) : -1);
 
 /**
  * A multi-step questionnaire: a <form class="questionnaire"> whose
@@ -39,6 +119,12 @@ type Control = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
  * it with the browser's own validation; an optional question gets Skip, which
  * clears its answer. A disabled fieldset is left out, so a page can switch
  * questions on and off from earlier answers.
+ *
+ * Three attributes on the form add to that: `data-shortcuts` lets a letter or
+ * digit pick an answer, `data-summary` adds a review step listing every
+ * answer before the submit button, and `data-save="key"` keeps the answers
+ * and the shown question in localStorage under that key until the form is
+ * submitted.
  *
  * Without JavaScript every question shows at once and the submit button sends
  * the form. The answers are ordinary form controls, so FormData reads them.
@@ -54,6 +140,9 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
   private _observer: MutationObserver;
   /** Set while one submission's invalid events arrive, so only the first opens. */
   private _reporting = false;
+  /** With data-summary, the review step, and whether it is shown. */
+  private _summary: HTMLElement | null = null;
+  private _reviewing = false;
 
   constructor(el: HTMLFormElement, options: Partial<QuestionnaireOptions>) {
     super(el, options, Questionnaire);
@@ -85,6 +174,8 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
     }
 
     this._active = this.items[0] ?? null;
+    this._summary = this._createSummary();
+    this._restore();
     this._syncRequired();
     this._render();
     // A page enabling or disabling a question from an earlier answer changes
@@ -97,6 +188,8 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
     this.el.addEventListener('click', this._handleClick);
     this.el.addEventListener('keydown', this._handleKeydown);
     this.el.addEventListener('input', this._handleInput);
+    this.el.addEventListener('change', this._save);
+    this.el.addEventListener('submit', this._forget);
     // invalid does not bubble.
     this.el.addEventListener('invalid', this._handleInvalid, true);
   }
@@ -151,33 +244,50 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
     const item = this.items[index];
     if (!item) return;
     this._active = item;
+    this._reviewing = false;
     this._render();
+    this._save();
     const controls = this._controls(item).filter((control) => !control.disabled);
     (controls.find((control) => (control as HTMLInputElement).checked) ?? controls[0])?.focus();
   };
 
   /** Checks the shown question and moves to the next one if it is answered. */
   next = () => {
-    if (this._validate(this._active)) this.goTo(this.index + 1);
+    if (this._validate(this._active)) this._advance();
   };
 
-  /** Moves to the previous question. */
-  previous = () => this.goTo(this.index - 1);
+  /** Moves to the previous question, or from the review step back to the last one. */
+  previous = () => this.goTo(this._reviewing ? this.items.length - 1 : this.index - 1);
+
+  /** Shows the review step of a questionnaire with data-summary. */
+  review = () => {
+    if (!this._summary) return;
+    this._fillSummary(this._summary);
+    this._reviewing = true;
+    this._render();
+    this._summary.focus();
+  };
+
+  /** The next question, or after the last one the review step. */
+  private _advance() {
+    if (this._summary && this.index === this.items.length - 1) this.review();
+    else this.goTo(this.index + 1);
+  }
 
   /** Clears the answer to the shown question and moves to the next one. */
   skip = () => {
     if (!this._active) return;
     for (const control of this._controls(this._active)) {
-      const isChoice = control instanceof HTMLInputElement && (control.type === 'radio' || control.type === 'checkbox');
-      if (isChoice ? !control.checked : !control.value) continue;
-      if (isChoice) control.checked = false;
+      const choice = isChoice(control);
+      if (choice ? !control.checked : !control.value) continue;
+      if (choice) control.checked = false;
       else control.value = '';
       control.dispatchEvent(new Event('change', { bubbles: true }));
     }
     // A skipped question has no answer left to be wrong about. Clearing fires
     // only `change`, not the `input` that clears an error, so clear it here.
     this._setInvalid(this._active, false);
-    this.goTo(this.index + 1);
+    this._advance();
   };
 
   destroy() {
@@ -185,7 +295,10 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
     this.el.removeEventListener('click', this._handleClick);
     this.el.removeEventListener('keydown', this._handleKeydown);
     this.el.removeEventListener('input', this._handleInput);
+    this.el.removeEventListener('change', this._save);
+    this.el.removeEventListener('submit', this._forget);
     this.el.removeEventListener('invalid', this._handleInvalid, true);
+    this._summary?.remove();
     for (const item of this._fieldsets()) {
       if (item.hasAttribute('data-required')) for (const control of this._controls(item)) control.setCustomValidity('');
       item.hidden = false;
@@ -234,26 +347,137 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
   private _render() {
     const items = this.items;
     // The shown question was switched off: carry on from the next one.
-    if (!items.includes(this._active)) {
-      const all = this._fieldsets();
-      const after = all.slice(all.indexOf(this._active) + 1).find((item) => !item.disabled);
-      this._active = after ?? items[items.length - 1] ?? null;
-    }
+    if (!items.includes(this._active)) this._active = this._after(items);
     const index = items.indexOf(this._active);
-    const last = index === items.length - 1;
-    for (const item of this._fieldsets()) item.hidden = item !== this._active;
-    for (const button of this._buttons()) {
-      if (button.value === 'previous') button.hidden = index <= 0;
-      else if (button.value === 'skip') button.hidden = last || !this._active || this._required(this._active);
-      else if (button.value === 'next') button.hidden = last;
-      else button.hidden = !last;
-    }
-    this._progressText.textContent = this.options.progressLabel
-      .replace('{current}', String(index + 1))
-      .replace('{total}', String(items.length));
-    this._progressBar.max = Math.max(items.length, 1);
-    this._progressBar.value = index + 1;
+    for (const item of this._fieldsets()) item.hidden = this._reviewing || item !== this._active;
+    this._summary?.toggleAttribute('hidden', !this._reviewing);
+    for (const button of this._buttons()) button.hidden = !this._shows(button, index);
+    this._renderProgress(index, items.length);
   }
+
+  /** The question after the shown one, which was switched off, or the last that applies. */
+  private _after(items: HTMLFieldSetElement[]) {
+    const all = this._fieldsets();
+    const after = all.slice(all.indexOf(this._active) + 1).find((item) => !item.disabled);
+    return after ?? items[items.length - 1] ?? null;
+  }
+
+  /** Whether the shown step is the one that submits: the review step, or without one the last question. */
+  private get _end() {
+    return this._summary ? this._reviewing : this.index === this.items.length - 1;
+  }
+
+  /** Whether a footer button applies to the shown step. */
+  private _shows(button: HTMLButtonElement, index: number) {
+    const end = this._end;
+    const shown: Record<string, boolean> = {
+      previous: index > 0 || this._reviewing,
+      skip: !end && this._skippable(),
+      next: !end
+    };
+    return shown[button.value] ?? end;
+  }
+
+  /** Whether the shown question may be skipped: it applies and needs no answer. */
+  private _skippable() {
+    return !!this._active && !this._required(this._active);
+  }
+
+  private _renderProgress(index: number, total: number) {
+    this._progressText.textContent = this._reviewing
+      ? this.options.summaryLabel
+      : this.options.progressLabel.replace('{current}', String(index + 1)).replace('{total}', String(total));
+    this._progressBar.max = Math.max(total, 1);
+    this._progressBar.value = this._reviewing ? total : index + 1;
+  }
+
+  /** With data-summary, the review step: a list of the questions and their answers, before the footer. */
+  private _createSummary() {
+    if (!this.el.hasAttribute('data-summary')) return null;
+    const summary = document.createElement('section');
+    summary.className = 'questionnaire-summary';
+    summary.tabIndex = -1;
+    summary.setAttribute('aria-label', this.options.summaryLabel);
+    summary.hidden = true;
+    summary.addEventListener('click', (e) => {
+      const edit = (e.target as Element).closest<HTMLButtonElement>('button[data-question]');
+      if (edit) this.goTo(Number(edit.dataset.question));
+    });
+    const footer = this.el.querySelector(':scope > footer');
+    if (footer) footer.before(summary);
+    else this.el.append(summary);
+    return summary;
+  }
+
+  /** Lists each question that applies with its answer and a button back to it. */
+  private _fillSummary(summary: HTMLElement) {
+    const list = document.createElement('dl');
+    list.append(...this.items.map((item, i) => {
+      const row = document.createElement('div');
+      const [term, answer, action] = [document.createElement('dt'), document.createElement('dd'), document.createElement('dd')];
+      term.id = `questionnaire-summary-${Utils.guid()}`;
+      term.textContent = item.querySelector(':scope > legend')?.textContent.trim() ?? '';
+      answer.textContent = this._controls(item).map(answerText).filter(Boolean).join(', ') || this.options.skippedLabel;
+      const edit = document.createElement('button');
+      Object.assign(edit, { type: 'button', className: 'text', textContent: this.options.editLabel });
+      edit.dataset.question = String(i);
+      edit.setAttribute('aria-describedby', term.id);
+      action.append(edit);
+      row.append(term, answer, action);
+      return row;
+    }));
+    summary.replaceChildren(list);
+  }
+
+  /** The storage key from data-save, or '' without it. */
+  private get _key() {
+    const key = this.el.dataset.save;
+    return key ? `questionnaire:${key}` : '';
+  }
+
+  /** Every answer control that can be saved, in order; a file cannot be put back. */
+  private _allControls() {
+    return this._fieldsets().flatMap((item) => this._controls(item)).filter((control) => control.type !== 'file');
+  }
+
+  /** With data-save, stores the answers and the shown question. */
+  private _save = () => {
+    const key = this._key;
+    if (!key) return;
+    const state = { index: this.index, answers: this._allControls().map(savedState) };
+    try {
+      localStorage.setItem(key, JSON.stringify(state));
+    } catch {
+      // Storage full or blocked: the questionnaire still works unsaved.
+    }
+  };
+
+  /** Puts back saved answers and the question they reached, if the questions are the same. */
+  private _restore() {
+    const saved = this._read();
+    const controls = this._allControls();
+    if (saved?.answers.length !== controls.length) return;
+    controls.forEach((control, i) => restoreControl(control, saved!.answers[i]));
+    this._active = this.items[saved!.index] ?? this._active;
+  }
+
+  /** The saved state, or null for none or a broken one. */
+  private _read(): { index: number; answers: Saved[] } | null {
+    try {
+      return validSaved(JSON.parse(localStorage.getItem(this._key) ?? 'null'));
+    } catch {
+      return null;
+    }
+  }
+
+  /** A submitted questionnaire has nothing left to resume. */
+  private _forget = () => {
+    try {
+      if (this._key) localStorage.removeItem(this._key);
+    } catch {
+      // Blocked storage has nothing saved.
+    }
+  };
 
   /**
    * Puts "choose at least one" on the first enabled checkbox of each
@@ -331,13 +555,30 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
     this._syncRequired();
   };
 
-  // Enter in a field moves on instead of submitting the form early.
+  // Enter in a field moves on instead of submitting the form early. With
+  // data-shortcuts, a letter or digit picks an answer.
   private _handleKeydown = (e: KeyboardEvent) => {
-    if (e.key !== 'Enter' || e.defaultPrevented || e.isComposing) return;
-    if (!(e.target instanceof HTMLInputElement) || this.index >= this.items.length - 1) return;
+    if (e.key !== 'Enter') return this._handleShortcut(e);
+    if (e.defaultPrevented || e.isComposing) return;
+    if (!(e.target instanceof HTMLInputElement) || this._end) return;
     e.preventDefault();
     this.next();
   };
+
+  /** Whether a shortcut key can pick an answer now: data-shortcuts is set and a question shows. */
+  private get _shortcuts() {
+    return this.el.hasAttribute('data-shortcuts') && !!this._active && !this._reviewing;
+  }
+
+  private _handleShortcut(e: KeyboardEvent) {
+    if (!this._shortcuts) return;
+    // Counted as the letters are, disabled choices included.
+    const choice = this._controls(this._active!).filter(isChoice)[shortcut(e)] as HTMLInputElement | undefined;
+    if (!choice || choice.disabled) return;
+    e.preventDefault();
+    choice.click();
+    choice.focus();
+  }
 
   // A submission found an unanswered question, possibly a hidden one. Open the
   // first instead of letting the browser report a control it cannot show.
@@ -350,6 +591,7 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
     this._reporting = true;
     setTimeout(() => (this._reporting = false));
     this._active = item;
+    this._reviewing = false;
     this._render();
     this._validate(item);
   };
@@ -357,6 +599,7 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
   // An answer clears the question's error.
   private _handleInput = (e: Event) => {
     this._syncRequired();
+    this._save();
     const item = (e.target as Element).closest?.('fieldset');
     if (item instanceof HTMLFieldSetElement && item.classList.contains('invalid')) this._setInvalid(item, false);
   };

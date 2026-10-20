@@ -8,12 +8,19 @@
 // Linear aliases: .progress > .determinate / .indeterminate, and
 // --md-comp-progress-value on a bare div.progress.
 //
+// Linear modifiers, from M3 Expressive: .stop puts a dot in the indicator
+// colour at the track's end, so the end still reads where the track's own
+// contrast falls short; .wavy draws the indicator as a wave over a thin
+// track.
+//
 // Tokens:
 //   --md-comp-progress-track
 //   --md-comp-progress-indicator
 //   --md-comp-progress-thickness        4px
 //   --md-comp-progress-shape            4px
 //   --md-comp-progress-value            determinate fill (optional)
+//   --md-comp-progress-stop-size        4px, the .stop dot
+//   --md-comp-progress-wavelength       40px, the .wavy indicator's wavelength
 //   --md-comp-progress-circular-size    48px
 //   --md-comp-progress-circular-thickness  4px
 
@@ -24,6 +31,8 @@
   --md-comp-progress-indicator: var(--md-sys-color-primary);
   --md-comp-progress-thickness: 4px;
   --md-comp-progress-shape: var(--md-sys-shape-corner-extra-small);
+  --md-comp-progress-stop-size: 4px;
+  --md-comp-progress-wavelength: 40px;
   --md-comp-progress-circular-size: 48px;
   --md-comp-progress-circular-thickness: 4px;
 }
@@ -42,7 +51,9 @@
   overflow: hidden;
   border: 0;
   border-radius: var(--md-comp-progress-shape);
-  background-color: var(--md-comp-progress-track);
+  // The track, under the .stop dot when there is one. .wavy narrows the track
+  // to a stripe; the layers are custom properties so the two combine.
+  background: var(--_progress-stop, none), var(--_progress-track, var(--md-comp-progress-track));
   appearance: none;
 }
 
@@ -54,7 +65,7 @@ progress.progress {
   vertical-align: baseline;
 
   &::-webkit-progress-bar {
-    background-color: var(--md-comp-progress-track);
+    background: var(--_progress-stop, none), var(--_progress-track, var(--md-comp-progress-track));
     border-radius: var(--md-comp-progress-shape);
   }
 
@@ -79,6 +90,47 @@ progress.progress {
     margin-inline-end: 60%;
     animation: progress-indeterminate-moz 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
   }
+}
+
+// The end stop, at the inline end of the track.
+.progress.stop:not(.circular) {
+  --_progress-stop-at: calc(100% - var(--md-comp-progress-thickness) / 2);
+  --_progress-stop: radial-gradient(
+    circle at var(--_progress-stop-at) 50%,
+    var(--md-comp-progress-indicator) calc(var(--md-comp-progress-stop-size) / 2),
+    transparent calc(var(--md-comp-progress-stop-size) / 2 + 0.5px)
+  ) no-repeat;
+
+  &:dir(rtl) {
+    --_progress-stop-at: calc(var(--md-comp-progress-thickness) / 2);
+  }
+}
+
+// The wavy indicator: a 4px wave, 3px either side of the track's middle,
+// drawn by masking the indicator with one wavelength repeated along it.
+$_wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='14'%3E%3Cpath d='M0 7C6.67 3 13.33 3 20 7S33.33 11 40 7' fill='none' stroke='%23000' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
+
+.progress.wavy:not(.circular) {
+  --_progress-track: linear-gradient(var(--md-comp-progress-track) 0 0) center / 100% var(--md-comp-progress-thickness) no-repeat;
+  --_progress-wave: #{$_wave} repeat-x 0 50% / var(--md-comp-progress-wavelength) 14px;
+
+  height: 14px;
+  border-radius: 0;
+}
+
+.progress.wavy:not(.circular) > .determinate,
+.progress.wavy:not(.circular) > .indeterminate::before,
+.progress.wavy:not(.circular) > .indeterminate::after,
+progress.progress.wavy::-webkit-progress-value,
+progress.progress.wavy:indeterminate::before,
+progress.progress.wavy:indeterminate::after {
+  mask: var(--_progress-wave);
+}
+
+// Firefox's own pseudo-element, kept out of the list above: Chromium drops a
+// list naming a pseudo-element it does not know.
+progress.progress.wavy::-moz-progress-bar {
+  mask: var(--_progress-wave);
 }
 
 @keyframes progress-indeterminate-moz {
@@ -116,6 +168,10 @@ $_bare: ".progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > 
     width: auto;
     animation: preloader-indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
   }
+}
+
+#{$_bare}.wavy::after {
+  mask: var(--_progress-wave);
 }
 
 .progress > .indeterminate {

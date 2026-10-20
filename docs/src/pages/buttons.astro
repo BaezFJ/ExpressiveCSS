@@ -16,6 +16,7 @@ const S = defineSections([
   { id: "icon", label: "Icon buttons" },
   { id: "floating", label: "Floating" },
   { id: "sizes", label: "Sizes" },
+  { id: "shape", label: "Shape and toggles" },
   { id: "disabled", label: "Disabled" },
 ]);
 ---
@@ -307,6 +308,50 @@ const S = defineSections([
 <button type="submit">
   <span>Submit</span><span class="material-symbols" aria-hidden="true">send</span>
 </button>
+`} />
+  </Section>
+  <Section {...S.shape}>
+        <p>
+          A button is round. <code>square</code> gives it the squared corner
+          of its size: 12dp up to small, 16dp at medium and 28dp at large and
+          extra large. Pressed, every common button morphs its corners to the
+          pressed shape of its size, 8dp up to small, 12dp at medium and 16dp
+          beyond, and springs back on release.
+        </p>
+        <p>
+          <button type="button">Round</button>
+          <button type="button" class="square">Square</button>
+          <button type="button" class="tonal square medium">Square medium</button>
+        </p>
+<Code code={`
+<button>Round</button>
+<button class="square">Square</button>
+<button class="tonal square medium">Square medium</button>
+`} />
+        <p>
+          <code>aria-pressed</code> makes a button a toggle. Selected, a round
+          button goes square and a square one goes round, a cue that does not
+          rely on colour, and the colours change: filled from
+          surface-container to primary, tonal from secondary-container to
+          secondary, outlined to inverse-surface without its outline, and
+          elevated to primary. Text buttons do not toggle. Switch
+          <code>aria-pressed</code> in your click handler; for a set of
+          toggles that share a row, use a
+          <a href={route('button_groups')}>button group</a>.
+        </p>
+        <p>
+          <button type="button" aria-pressed="false">Filled</button>
+          <button type="button" aria-pressed="true">Filled</button>
+          <button type="button" class="tonal" aria-pressed="true">Tonal</button>
+          <button type="button" class="outlined" aria-pressed="true">Outlined</button>
+          <button type="button" class="elevated square" aria-pressed="true">Elevated square</button>
+        </p>
+<Code code={`
+<button type="button" aria-pressed="false">Filled</button>
+<button type="button" aria-pressed="true">Filled</button>
+<button type="button" class="tonal" aria-pressed="true">Tonal</button>
+<button type="button" class="outlined" aria-pressed="true">Outlined</button>
+<button type="button" class="elevated square" aria-pressed="true">Elevated square</button>
 `} />
   </Section>
   <Section {...S.disabled}>

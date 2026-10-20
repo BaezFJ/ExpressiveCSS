@@ -7,6 +7,33 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Autocomplete `onSearch` gets an `AbortSignal` as its third argument. It
+  aborts when a newer search starts or the autocomplete is destroyed, so a
+  page that passes it to `fetch()` drops stale responses.
+
+- Linear progress `.stop` puts a dot in the indicator colour at the
+  track's end, and `.wavy` draws the indicator as a wave over a thin track,
+  on `<progress>`, `.determinate` and bare bars. New tokens:
+  `--md-comp-progress-stop-size` and `--md-comp-progress-wavelength`.
+
+- Common button shapes: `square` takes the size's squared corner, every
+  common button morphs to its size's pressed corner while pressed, and
+  `aria-pressed` makes a button a toggle that swaps round and square when
+  selected and takes the M3 selected colours for its style.
+
+- Questionnaire extras, each opt-in on the form: `data-shortcuts` lets a
+  letter or digit pick an answer, `data-summary` adds a review step that
+  lists every answer with an Edit button before submitting, and
+  `data-save="key"` keeps the answers and the shown question in
+  localStorage until the form is submitted.
+
+- Keypad and keyboard keys: `data-key="CapsLock"` holds capitals until
+  pressed again, and `data-key="Layer"` shows the elements whose
+  `data-layer` matches its `value`, such as a row of symbols. A hardware
+  key held down in the field presses the matching on-screen key. The
+  keypad now checks `minlength` on its own edits, with the
+  `i18n.tooShort` message.
+
 - Radial chart fills: `data-segments` splits each ring into segments filled
   whole, and `.gradient` shades each fill from a light tint to its full
   color across the plot, along a gauge's arc.
@@ -479,6 +506,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Time picker hours step round the day: in 12-hour time, Up from 11 AM
+  gives 12 PM and Down from 12 PM gives 11 AM, so AM and PM follow the
+  hour.
 - Radar chart gaps: a missing value breaks the outline instead of joining
   the spokes either side, as a line chart's does. With `.area`, each
   unbroken run fills as a wedge from the middle, drawn by a new

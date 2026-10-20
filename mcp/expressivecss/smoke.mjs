@@ -1851,8 +1851,8 @@ try {
   assert.equal(matchingSyntax.structuredContent.contractCompatibility, 'match');
   assert.equal(matchingSyntax.structuredContent.status, 'available');
   const buttonCapability = matchingSyntax.structuredContent.found[0].capability;
-  assert.equal(buttonCapability.lastReviewedSupport, 'partial');
-  assert.equal(buttonCapability.support, buttonCapability.sourceReview === 'source-reviewed' ? 'partial' : 'unassessed');
+  assert.equal(buttonCapability.lastReviewedSupport, 'implemented');
+  assert.equal(buttonCapability.support, buttonCapability.sourceReview === 'source-reviewed' ? 'implemented' : 'unassessed');
   assert.match(matchingSyntax.structuredContent.capabilityEvidence.basis, /not proof of published package/);
 
   const fallbackRules = [

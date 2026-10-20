@@ -28,7 +28,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Menubar](#menubar) | unassessed | needs-review | incomplete | 0 |
 | [Scrollspy](#scrollspy) | unassessed | needs-review | needs-rerun | 0 |
 | [Tree](#tree) | implemented | source-reviewed | needs-rerun | 0 |
-| [Buttons](#buttons) | unassessed | needs-review | needs-rerun | 1 |
+| [Buttons](#buttons) | unassessed | needs-review | needs-rerun | 0 |
 | [Icon buttons](#icon-buttons) | unassessed | needs-review | needs-rerun | 0 |
 | [Button groups](#button-groups) | unassessed | needs-review | needs-rerun | 0 |
 | [Split button](#split-button) | unassessed | needs-review | needs-rerun | 0 |
@@ -96,8 +96,8 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Autocomplete](#autocomplete) | unassessed | needs-review | needs-rerun | 1 |
 | [Date picker](#date-picker) | unassessed | needs-review | needs-rerun | 0 |
 | [Time picker](#time-picker) | unassessed | needs-review | needs-rerun | 1 |
-| [Keypad and Keyboard](#keypad) | unassessed | needs-review | incomplete | 1 |
-| [Questionnaire](#questionnaire) | unassessed | needs-review | needs-rerun | 1 |
+| [Keypad and Keyboard](#keypad) | unassessed | needs-review | incomplete | 0 |
+| [Questionnaire](#questionnaire) | unassessed | needs-review | needs-rerun | 0 |
 | [Typography](#typography) | unassessed | needs-review | needs-rerun | 1 |
 | [Shape](#shape) | unassessed | needs-review | needs-rerun | 1 |
 | [Motion](#motion) | unassessed | needs-review | needs-rerun | 1 |
@@ -358,7 +358,7 @@ Google relationship: component. Upstream review: overview-specs-guidelines-acces
 
 Web adaptation: Native buttons run commands; a.button links navigate.
 
-- feature: Standalone common buttons do not document a square/toggle shape-morph contract; do not borrow icon-button or connected-group modifiers. Next: Define and test a standalone shape-morph contract without borrowing connected-group or icon-button modifiers.
+No gap identified within the stated scope; broader upstream parity remains unassessed.
 
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
@@ -998,7 +998,7 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 Web adaptation: Prefer native progress where applicable; supply accessible state for custom hosts.
 
 - verification: Forced-colors rendering is checked in browser emulation; Windows high-contrast and spoken output still require manual review. Next: Verify native and custom indicators with Windows contrast themes and screen readers before claiming platform-wide support.
-- feature: Version 0.10.0 mirrors custom linear fill and motion in RTL. End-stop and wavy Expressive variants remain unverified. Next: Assess an end stop for insufficient track contrast and review wavy variants before claiming current variant parity.
+- feature: Linear progress has the Expressive end stop and wavy indicator; a circular indicator has no wavy form. Next: Add a wavy circular indicator if pages need one, from a generated wave ring mask.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining progress and loading variants stop spatial motion`. Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-web-accessibility-browser.test.js): `chromium: linear progress follows inherited and overridden RTL direction`. Custom child and token fills at 0/25/100 percent, inherited and overridden direction, mirrored indeterminate animation samples, RTL reduced-motion geometry, unchanged native value and absence of circular linear fill. Firefox and WebKit variants run in the browser suite.
@@ -1478,7 +1478,7 @@ Google relationship: related. Upstream review: requirements-prose-reviewed (2026
 
 Web adaptation: Runtime combobox behavior attached to a text field; no standalone upstream component claim.
 
-- feature: Version 0.10.0 exposes localized loading, result counts and multi-selection updates through a polite live region. Spoken delivery and application-owned async ordering remain unverified. Next: Check screen-reader delivery and application request cancellation, error handling and stale-response ordering.
+- feature: Version 0.10.0 exposes localized loading, result counts and multi-selection updates through a polite live region, and onSearch gets an AbortSignal that aborts a stale search. Spoken delivery remains unverified. Next: Check screen-reader delivery of the loading, count and selection announcements in each engine.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining suggestions and section links preserve selection and dismissal`. Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining autocomplete preserves a preselected display label on focus`. Initial selected record retains its display label and selection through first focus and Tab exit.
@@ -1517,7 +1517,7 @@ Google relationship: component. Upstream review: requirements-prose-reviewed (20
 
 Web adaptation: Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.
 
-- feature: The hour and minute fields step with the arrow keys as spin buttons and move the hand; the dial itself takes pointer input only, and stepping the hour does not change AM or PM. Next: Assess whether a focusable dial adds anything over the spin buttons before adding one.
+- integration: The dial takes pointer input only. The hour and minute spin buttons set the same values from the keyboard, move the hand, and step hours round the day, switching AM and PM past 12, so a focusable dial would add a second Tab stop with nothing new. Next: Revisit a focusable dial only if testing shows readers need it beyond the spin buttons.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker exposes named keyboard controls in inline and docked modes`. Localized hour name and fallback minute name, native AM/PM keyboard activation and selected state, no form submission, docked opening focus, and 12/24-hour digital entry including midnight. Firefox and WebKit variants run in the browser suite; no spoken-delivery assertion.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker digital values: input`. Input-only edits, invalid-value recovery, confirmation change counts and form values in 12/24-hour, inline/docked, LTR/RTL and ordinary/reduced motion fixtures. Physical keyboard and clipboard checks remain pending.
@@ -1535,10 +1535,9 @@ Source review: needs-review, 2026-10-11. [src/sass/components/_keypad.scss](http
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-11); [reviewed source](https://m3.material.io/components).
 
-Web adaptation: Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode="none" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so a minimum length is written as pattern.
+Web adaptation: Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode="none" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so the keypad checks it on its own edits.
 
-- verification: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. Next: Type a PIN and a message with a screen reader and on a touch device in each engine, and check forced colors and enlarged text.
-- feature: There is no caps lock, no symbol layer switching and no highlight of the key a hardware keyboard presses, and minlength does not apply to keypad edits. Next: Swap rows from onKey for a symbols key, add caps lock when a page needs it, and write a minimum length as pattern.
+- verification: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. Next: Type a PIN and a message with a screen reader and on a touch device in each engine, and check forced colors and enlarged text.
 
 - not-recorded: [tests/keypad-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/keypad-browser.test.js): `chromium: keypad and keyboard type at the caret, edit, submit, shift and lay out their keys`. Digits typed at the caret, maxlength, focus kept in the field on a pointer press, Backspace including emoji, Enter submitting once, a pattern mismatch blocking Enter, onKey values, composed input events from a shadow root, number, decimal and signed input, a disabled fieldset and its legend, a trailing Backspace in the field that runs once for two keypads, for a field inside its keyboard and for a field rendered after init, a password toggle that is not a key, a prefilled untouched field typed at the end, a caret placed at the start kept for keys activated from the keyboard, Shift showing capitals and releasing after one character, space and a textarea new line, three 72px round keypad columns, a two-cell wide key, a tenth-of-row letter key, the half-key indent, a one-and-a-half-key Shift, the space bar filling its row, a 40px number row that types and that hidden drops, the pressed corner, destroy, and the shared listeners leaving with the last keypad. No spoken-output assertion.
 
@@ -1554,8 +1553,7 @@ Google relationship: none. Upstream review: web-extension-inventory-reviewed (20
 
 Web adaptation: Each question is a native fieldset named by its legend; the browser's constraint validation checks answers, hidden questions use hidden, and without JavaScript the form shows every question and still submits.
 
-- verification: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Answer a questionnaire with a screen reader in each engine and confirm the question, its description, errors and the progress are announced; check forced colors and enlarged text.
-- feature: There are no letter or number shortcuts for answers, no summary step and no saved progress. Next: Add answer shortcuts or a review step when a page needs them; pages can save progress with FormData and goTo().
+- verification: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Answer a questionnaire with a screen reader in each engine and confirm the question, its description, errors and the progress are announced; check forced colors and enlarged text.
 
 - stale: [tests/questionnaire-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/questionnaire-browser.test.js): `chromium: questionnaire shows one question, validates, skips, branches and submits`. One question shown, the buttons that apply, the progress text and named progressbar, aria-describedby with the description and error, required radio and data-required checkbox errors with focus and aria-invalid, errors clearing on answer, a generated requiredMessage error, a question enabled mid-way, Enter moving on instead of submitting, Back focus, Skip clearing an answer and firing change, submit opening the first unanswered question, FormData without a disabled question and destroy restoring the plain form. No spoken-output assertion.
 - stale: [tests/questionnaire-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/questionnaire-browser.test.js): `chromium: questionnaire validates requestSubmit and ignores disabled checkboxes`. A checked disabled checkbox not answering a data-required group, focus on the first enabled checkbox, requestSubmit() blocked by an unanswered group and by a hidden required field with each question opened and its error shown, a valid requestSubmit() sending FormData, and destroy clearing the custom validity. No spoken-output assertion.

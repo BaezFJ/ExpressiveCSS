@@ -9,7 +9,7 @@ Component ID: `questionnaire`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `2c3fbb432621e801beb46626326ac1ae58017840841ed0b0e61e03f7e2ea1f1e`
+Contract SHA-256: `0ef7606bec4d16bc8bc187c7b6fe7102244104a627882edb69965eea94346112`
 
 #### Selection and adaptation
 
@@ -29,7 +29,7 @@ Support (2026-10-08, `llm.md#questionnaire`): A native form of fieldsets shown o
 
 Web adaptation: Each question is a native fieldset named by its legend; the browser's constraint validation checks answers, hidden questions use hidden, and without JavaScript the form shows every question and still submits.
 
-Known boundary: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no answer keyboard shortcuts, no summary step and no saved progress; the page owns persistence and branching.
+Known boundary: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no answer keyboard shortcuts, no summary step and no saved progress; the page owns persistence and branching.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#questionnaire).
 
@@ -79,6 +79,9 @@ A disabled fieldset is skipped and left out of the count, so a page branches by 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `progressLabel` | String | `'Question {current} of {total}'` | Text of the progress row. `{current}` and `{total}` become the question number and count. `data-progress-label` on the form sets it. |
+| `summaryLabel` | String | `'Review your answers'` | With `data-summary`, the review step's name and its progress text. |
+| `editLabel` | String | `'Edit'` | With `data-summary`, the text of each answer's button back to its question. |
+| `skippedLabel` | String | `'Not answered'` | With `data-summary`, the answer shown for a question left blank. |
 | `requiredMessage` | String | `'Choose an answer to continue.'` | Error for a question with no `.questionnaire-error` when the browser has no message, as for a `data-required` group. |
 
 #### Methods
@@ -86,6 +89,7 @@ A disabled fieldset is skipped and left out of the count, so a page branches by 
 - `.next()`: Checks the shown question and moves to the next one if it is answered.
 - `.previous()`: Moves to the previous question.
 - `.skip()`: Clears the answer to the shown question and moves to the next one.
+- `.review()`: With `data-summary`, shows the review step.
 - `.goTo(index)`: Shows the question at `index` without checking the current one, for example to resume a saved questionnaire.
 - `.destroy()`: Shows every question and removes the progress row, ids, states and listeners the component added.
 

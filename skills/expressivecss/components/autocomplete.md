@@ -9,7 +9,7 @@ Component ID: `autocomplete`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `2c3fbb432621e801beb46626326ac1ae58017840841ed0b0e61e03f7e2ea1f1e`
+Contract SHA-256: `0ef7606bec4d16bc8bc187c7b6fe7102244104a627882edb69965eea94346112`
 
 #### Selection and adaptation
 
@@ -62,7 +62,7 @@ Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every 
 | `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
 | `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
-| `onSearch` | Function | filters `id` and `text` | Called when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. |
+| `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when a newer search starts or the autocomplete is destroyed. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |

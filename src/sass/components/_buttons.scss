@@ -376,3 +376,95 @@ $_fixed: ".circle, .extend, .indicator-item, .chip .close, .timepicker-container
     min-width: 0;
   }
 }
+
+$_shaped: ":where(#{$_btn}):where(:not(#{$_fixed}))";
+
+// Shape, from md.comp.button.<size>.{shape.square, pressed.container.shape}.
+// A button is round; `.square` takes the size's squared corner. A toggle
+// button, one with `aria-pressed`, swaps shape when selected: round goes
+// square and square goes round, a cue beside the colour. Pressed, any
+// common button morphs to the size's pressed corner on Material's spring.
+// Buttons in fixed slots keep their own shapes and colours: FABs, button
+// group items, the time picker's AM and PM, and the rest of `$_fixed`.
+#{$_shaped} {
+  --_shape: var(--md-comp-filled-button-container-shape);
+
+  transition:
+    background-color var(--md-sys-motion-duration-short4) ease-out,
+    box-shadow var(--md-sys-motion-duration-short4) ease-out,
+    border-radius var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-property: background-color, box-shadow;
+  }
+}
+
+#{$_shaped}:is(.square, [aria-pressed="true"]) {
+  --_shape: var(--md-comp-filled-button-container-shape-square);
+}
+
+#{$_shaped}.square[aria-pressed="true"] {
+  --_shape: var(--md-sys-shape-corner-full);
+}
+
+#{$_shaped}:is(.square, [aria-pressed]) {
+  border-radius: var(--_shape);
+}
+
+#{$_shaped}:not(:disabled, [disabled], .disabled):active {
+  border-radius: var(--md-comp-filled-button-pressed-container-shape);
+}
+
+// Toggle colours, from md.comp.button.<style>.{unselected, selected}. Text
+// buttons do not toggle. A disabled toggle takes the disabled colours below.
+@mixin _toggle($container, $state) {
+  --_toggle-container: #{$container};
+  --_toggle-state: #{$state};
+}
+
+#{$_shaped}[aria-pressed]:not(.tonal, .outlined, .elevated, .text) {
+  @include _toggle(var(--md-sys-color-surface-container), var(--md-sys-color-on-surface-variant));
+}
+
+#{$_shaped}[aria-pressed="true"]:not(.tonal, .outlined, .elevated, .text) {
+  @include _toggle(var(--md-sys-color-primary), var(--md-sys-color-on-primary));
+}
+
+#{$_shaped}.tonal[aria-pressed] {
+  @include _toggle(var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container));
+}
+
+#{$_shaped}.tonal[aria-pressed="true"] {
+  @include _toggle(var(--md-sys-color-secondary), var(--md-sys-color-on-secondary));
+}
+
+#{$_shaped}.outlined[aria-pressed] {
+  @include _toggle(transparent, var(--md-sys-color-on-surface-variant));
+}
+
+#{$_shaped}.outlined[aria-pressed="true"] {
+  @include _toggle(var(--md-sys-color-inverse-surface), var(--md-sys-color-inverse-on-surface));
+
+  border-color: transparent;
+}
+
+#{$_shaped}.elevated[aria-pressed] {
+  @include _toggle(var(--md-sys-color-surface-container-low), var(--md-sys-color-primary));
+}
+
+#{$_shaped}.elevated[aria-pressed="true"] {
+  @include _toggle(var(--md-sys-color-primary), var(--md-sys-color-on-primary));
+}
+
+#{$_shaped}[aria-pressed]:not(.text, :disabled, [disabled], .disabled) {
+  color: var(--_toggle-state);
+  background-color: var(--_toggle-container);
+
+  &:hover {
+    background-color: color-mix(in oklab, var(--_toggle-state) state-opacity("hover"), var(--_toggle-container));
+  }
+
+  &:is(:focus, :active) {
+    background-color: color-mix(in oklab, var(--_toggle-state) state-opacity("focus"), var(--_toggle-container));
+  }
+}

@@ -874,7 +874,7 @@
       "title": "Buttons",
       "kind": "component",
       "support": "unassessed",
-      "lastReviewedSupport": "partial",
+      "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
       "scope": "Filled, tonal, outlined, elevated, and text; xsmall through xlarge.",
@@ -906,13 +906,7 @@
           "sha256": "2aaccb38cfd12b3829cbaa753e572ffc95f135a1f7f18d8de4f56764e94c3ec4"
         }
       ],
-      "gaps": [
-        {
-          "kind": "feature",
-          "description": "Standalone common buttons do not document a square/toggle shape-morph contract; do not borrow icon-button or connected-group modifiers.",
-          "nextStep": "Define and test a standalone shape-morph contract without borrowing connected-group or icon-button modifiers."
-        }
-      ],
+      "gaps": [],
       "browserChecks": [
         {
           "file": "tests/expressivecss-examples-browser.test.js",
@@ -3285,8 +3279,8 @@
         },
         {
           "kind": "feature",
-          "description": "Version 0.10.0 mirrors custom linear fill and motion in RTL. End-stop and wavy Expressive variants remain unverified.",
-          "nextStep": "Assess an end stop for insufficient track contrast and review wavy variants before claiming current variant parity."
+          "description": "Linear progress has the Expressive end stop and wavy indicator; a circular indicator has no wavy form.",
+          "nextStep": "Add a wavy circular indicator if pages need one, from a generated wave ring mask."
         }
       ],
       "browserChecks": [
@@ -5018,8 +5012,8 @@
       "gaps": [
         {
           "kind": "feature",
-          "description": "Version 0.10.0 exposes localized loading, result counts and multi-selection updates through a polite live region. Spoken delivery and application-owned async ordering remain unverified.",
-          "nextStep": "Check screen-reader delivery and application request cancellation, error handling and stale-response ordering."
+          "description": "Version 0.10.0 exposes localized loading, result counts and multi-selection updates through a polite live region, and onSearch gets an AbortSignal that aborts a stale search. Spoken delivery remains unverified.",
+          "nextStep": "Check screen-reader delivery of the loading, count and selection announcements in each engine."
         }
       ],
       "browserChecks": [
@@ -5200,9 +5194,9 @@
       ],
       "gaps": [
         {
-          "kind": "feature",
-          "description": "The hour and minute fields step with the arrow keys as spin buttons and move the hand; the dial itself takes pointer input only, and stepping the hour does not change AM or PM.",
-          "nextStep": "Assess whether a focusable dial adds anything over the spin buttons before adding one."
+          "kind": "integration",
+          "description": "The dial takes pointer input only. The hour and minute spin buttons set the same values from the keyboard, move the hand, and step hours round the day, switching AM and PM past 12, so a focusable dial would add a second Tab stop with nothing new.",
+          "nextStep": "Revisit a focusable dial only if testing shows readers need it beyond the spin buttons."
         }
       ],
       "browserChecks": [
@@ -5253,7 +5247,7 @@
       "sourceReview": "needs-review",
       "reviewedOn": "2026-10-11",
       "scope": "A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.",
-      "adaptation": "Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode=\"none\" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so a minimum length is written as pattern.",
+      "adaptation": "Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode=\"none\" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so the keypad checks it on its own edits.",
       "upstream": {
         "source": "https://m3.material.io/components",
         "reviewedOn": "2026-10-11",
@@ -5279,13 +5273,8 @@
       "gaps": [
         {
           "kind": "verification",
-          "description": "Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified.",
+          "description": "Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified.",
           "nextStep": "Type a PIN and a message with a screen reader and on a touch device in each engine, and check forced colors and enlarged text."
-        },
-        {
-          "kind": "feature",
-          "description": "There is no caps lock, no symbol layer switching and no highlight of the key a hardware keyboard presses, and minlength does not apply to keypad edits.",
-          "nextStep": "Swap rows from onKey for a symbols key, add caps lock when a page needs it, and write a minimum length as pattern."
         }
       ],
       "browserChecks": [
@@ -5338,13 +5327,8 @@
       "gaps": [
         {
           "kind": "verification",
-          "description": "Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "description": "Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
           "nextStep": "Answer a questionnaire with a screen reader in each engine and confirm the question, its description, errors and the progress are announced; check forced colors and enlarged text."
-        },
-        {
-          "kind": "feature",
-          "description": "There are no letter or number shortcuts for answers, no summary step and no saved progress.",
-          "nextStep": "Add answer shortcuts or a review step when a page needs them; pages can save progress with FormData and goTo()."
         }
       ],
       "browserChecks": [

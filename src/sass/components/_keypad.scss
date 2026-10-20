@@ -4,8 +4,10 @@
 //
 // Anatomy is the HTML. Every key is a <button type="button">. A key with a
 // `value` types that value; a key with `data-key` is a function key
-// (Backspace, Enter, Shift). `.keypad` is a three-column grid of round keys,
-// the dial pad and PIN pad. `.keyboard` is a column of rows (any <div>), each
+// (Backspace, Enter, Shift, CapsLock, Layer). A Layer key shows the
+// elements whose `data-layer` matches its `value`, such as a row of
+// symbols. `.keypad` is a three-column grid of round keys, the dial pad
+// and PIN pad. `.keyboard` is a column of rows (any <div>), each
 // row a flex line of keys. A key carrying a button style class (.filled,
 // .tonal, .outlined, .elevated, .text) keeps that style, so a call or submit
 // key is written the same way as any other button.
@@ -48,13 +50,14 @@ $_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
 
     // The state layer's opacity. Only the rule below reads it, so a key
     // that keeps a button style ignores it.
-    @each $state, $selector in ("hover": "&:hover", "focus": "&:focus", "pressed": "&:active") {
+    // .pressed is a hardware key held down in the field.
+    @each $state, $selector in ("hover": "&:hover", "focus": "&:focus", "pressed": "&:is(:active, .pressed)") {
       #{$selector} {
         --_state: #{state-opacity($state)};
       }
     }
 
-    &:active:not(:disabled) {
+    &:is(:active, .pressed):not(:disabled) {
       border-radius: var(--md-comp-keypad-key-pressed-shape);
     }
 
@@ -69,8 +72,8 @@ $_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
     background-color: color-mix(in oklab, var(--_label) var(--_state, 0%), var(--_color));
   }
 
-  // A latched Shift reads as selected: primary, like a selected toggle.
-  [data-key="Shift"][aria-pressed="true"] {
+  // A latched Shift or Caps Lock reads as selected: primary, like a selected toggle.
+  :is([data-key="Shift"], [data-key="CapsLock"])[aria-pressed="true"] {
     --_color: var(--md-sys-color-primary);
     --_label: var(--md-sys-color-on-primary);
   }
@@ -156,8 +159,8 @@ $_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
     height: var(--md-comp-keyboard-number-key-height);
   }
 
-  // Shift shows capitals on the character keys while it is latched.
-  &:has([data-key="Shift"][aria-pressed="true"]) button[value] {
+  // Shift or Caps Lock shows capitals on the character keys while latched.
+  &:has(:is([data-key="Shift"], [data-key="CapsLock"])[aria-pressed="true"]) button[value] {
     text-transform: uppercase;
   }
 }

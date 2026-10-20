@@ -2259,6 +2259,16 @@ For a form submit, use a real `<button type="submit">` rather than an input.
 </button>
 ```
 
+### Shape and toggles
+
+A button is round; `square` gives it its size's squared corner, 12dp up to small, 16dp at medium and 28dp at large and xlarge. Pressed, every common button morphs to its size's pressed corner, 8dp up to small, 12dp at medium and 16dp beyond, on Material's fast spatial spring (none under reduced motion). `aria-pressed` makes a button a toggle: selected, a round button goes square and a square one goes round, and the colours change from md.comp.button.<style>.{unselected,selected} — filled surface-container to primary, tonal secondary-container to secondary, outlined to inverse-surface without its outline, elevated surface-container-low to primary. Text buttons do not toggle. Switch `aria-pressed` in your own click handler. Buttons in fixed slots (FABs, button group items, toolbars, navigation, tabs, pagination, snackbars, dialog headers and the time picker's AM/PM) keep their own shapes and colours.
+
+```html
+<button class="square">Square</button>
+<button type="button" class="tonal" aria-pressed="true">Selected</button>
+<button type="button" class="square" aria-pressed="false">Unselected square</button>
+```
+
 ### Disabled
 
 The `disabled` attribute, or the `disabled` class on a link. Applies to every variant.
@@ -4343,6 +4353,15 @@ percentage.
 <div class="progress" role="progressbar">
   <div class="indeterminate"></div>
 </div>
+```
+
+#### End stop and wave
+
+`stop` puts a dot, `--md-comp-progress-stop-size` (4px) across, in the indicator colour at the track's inline end, so the end reads when the track's contrast falls short. `wavy` draws the indicator as a 4px wave, 3px either side of a thin track, by masking it; the bar is 14px tall and `--md-comp-progress-wavelength` (40px) sets the period. Both work on `<progress>`, a `.determinate` child and a bare bar, and `wavy` also on an indeterminate bar. A circular indicator has no wavy form.
+
+```html
+<progress class="progress stop" value="40" max="100"></progress>
+<progress class="progress wavy stop" value="60" max="100"></progress>
 ```
 
 ### Circular
@@ -7216,7 +7235,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 | `clear` | `'Clear'` |
 | `done` | `'Ok'` |
 
-`i18n.hours` and `i18n.minutes` default to `Hours` and `Minutes` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Stepping the hour leaves AM and PM as they are. Tab moves between controls; the dial itself takes pointer input only.
+`i18n.hours` and `i18n.minutes` default to `Hours` and `Minutes` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between controls. The dial itself takes pointer input only: the spin buttons already set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.
 
 ### 12-hour and 24-hour
 
@@ -7334,8 +7353,8 @@ A `.keypad` is three columns of round 72dp keys for PINs, codes and amounts. A `
 </div>
 ```
 
-- `data-key="Backspace"` deletes the selection or the character before the caret. `data-key="Enter"` calls `requestSubmit()` on the field's form, so validation runs, or types a new line in a `<textarea>`. `data-key="Shift"` toggles `aria-pressed`; while pressed the character keys show capitals, and the next one types a capital and releases Shift. Any other `data-key` only calls `onKey`.
-- Typing stops at the field's `maxlength`. Browsers check `minlength` and `maxlength` only on what a person types, and a keypad's edit is a script's, so give a minimum length as `pattern` instead: `pattern="\d{4}"` for a four-digit PIN. `pattern`, `required` and the type checks hold for keypad edits, and Enter submits with `requestSubmit()`, so they run. Keys type at the caret; a field nobody has clicked into takes them at the end. Number and email inputs have no caret position, so keys type at the end. A button with neither `value` nor `data-key` is not a key and is ignored. A number input empties itself on a partial value such as `12.` or `-`, so the key is ignored there; use a text field with `inputmode="none"` for decimals and signs.
+- `data-key="Backspace"` deletes the selection or the character before the caret. `data-key="Enter"` calls `requestSubmit()` on the field's form, so validation runs, or types a new line in a `<textarea>`. `data-key="Shift"` toggles `aria-pressed`; while pressed the character keys show capitals, and the next one types a capital and releases Shift. `data-key="CapsLock"` toggles `aria-pressed` and types capitals until pressed again. `data-key="Layer"` with `value="symbols"` shows every element in the keyboard whose `data-layer` is `symbols` and hides those with another `data-layer`, so a row of symbols can replace the letters; elements without `data-layer` always show. Any other `data-key` only calls `onKey`. While the field has focus, a hardware key held down gives the matching on-screen key the `pressed` class, which presses it as a pointer would.
+- Typing stops at the field's `maxlength`. Browsers check `minlength` only on what a person types, and a keypad's edit is a script's, so the keypad checks it: a non-empty value shorter than `minlength` gets the custom validity message from `i18n.tooShort`, "Use at least 3 characters." by default, and loses it once long enough. The keypad never replaces a message the page set, and a form reset or `destroy()` clears its own. `pattern`, `required` and the type checks hold for keypad edits, and Enter submits with `requestSubmit()`, so they run. Keys type at the caret; a field nobody has clicked into takes them at the end. Number and email inputs have no caret position, so keys type at the end. A button with neither `value` nor `data-key` is not a key and is ignored. A number input empties itself on a partial value such as `12.` or `-`, so the key is ignored there; use a text field with `inputmode="none"` for decimals and signs.
 - A dial-pad key puts its letters in `<small aria-hidden="true">` after the digit. A key with a button style class (`filled`, `tonal`, `outlined`, `elevated`, `text`) keeps that style. Keys fill their cell, and `wide` spans two as a pill, so a call key beside Backspace fills the last row:
 
 ```html
@@ -7372,7 +7391,8 @@ A `.keypad` is three columns of round 72dp keys for PINs, codes and amounts. A `
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `onKey` | Function | `null` | Called after every key press with the text typed or the function key's name (`'Backspace'`, `'Enter'`, `'Shift'`). Works without `aria-controls`. |
+| `onKey` | Function | `null` | Called after every key press with the text typed or the function key's name (`'Backspace'`, `'Enter'`, `'Shift'`, `'CapsLock'`, `'Layer'`). Works without `aria-controls`. |
+| `i18n.tooShort` | Function | `(minLength) => 'Use at least ' + minLength + ' characters.'` | The validation message for a keypad-typed value shorter than the field's `minlength`. |
 
 ### Methods
 
@@ -7772,6 +7792,8 @@ The component adds a progress row ("Question 1 of 3" and a `<progress>` named by
 
 A disabled fieldset is skipped and left out of the count, so a page branches by enabling or disabling questions from earlier answers. The form submits normally: read the answers with `FormData`, using `getAll()` for checkboxes. Without JavaScript every question shows at once, the navigation buttons stay hidden and the submit button sends the form; a `data-required` group is not checked then. Name the form with `aria-label` or `aria-labelledby`.
 
+`data-shortcuts` on the form lets a letter or digit pick the answer at that place in the shown question (A or 1 for the first enabled choice) and ends each choice with its letter, hidden from screen readers; keys typed into a text field stay text, and keys with Ctrl, Alt or Meta pick nothing. `data-summary` adds a review step after the last question: a `.questionnaire-summary` lists each question that applies, its answer (or `skippedLabel`) and an Edit button back to it, and the submit button shows there instead of on the last question; Back returns to the last question. `data-save="key"` stores the answers and the shown question in `localStorage` as `questionnaire:key`, restores them on init when the questions are unchanged, and removes them on submit. A restored answer fires `change`, so a page that switches questions on from an answer sees it; file inputs are not saved.
+
 ```html
 <form class="questionnaire" aria-label="Product survey">
   <fieldset>
@@ -7808,6 +7830,9 @@ A disabled fieldset is skipped and left out of the count, so a page branches by 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `progressLabel` | String | `'Question {current} of {total}'` | Text of the progress row. `{current}` and `{total}` become the question number and count. `data-progress-label` on the form sets it. |
+| `summaryLabel` | String | `'Review your answers'` | With `data-summary`, the review step's name and its progress text. |
+| `editLabel` | String | `'Edit'` | With `data-summary`, the text of each answer's button back to its question. |
+| `skippedLabel` | String | `'Not answered'` | With `data-summary`, the answer shown for a question left blank. |
 | `requiredMessage` | String | `'Choose an answer to continue.'` | Error for a question with no `.questionnaire-error` when the browser has no message, as for a `data-required` group. |
 
 ### Properties
@@ -7830,6 +7855,10 @@ Moves to the previous question.
 #### .skip()
 
 Clears the answer to the shown question and moves to the next one.
+
+#### .review()
+
+With `data-summary`, shows the review step.
 
 #### .goTo(index)
 
@@ -8709,6 +8738,20 @@ onSearch: function(text, autocomplete) {
 }
 ```
 
+The third argument is an `AbortSignal` that aborts when a newer search starts or the autocomplete is destroyed. Pass it to `fetch()` so a slow response for old text never replaces newer results, and clear the list on other errors:
+
+```text
+onSearch: function(text, autocomplete, signal) {
+  fetch('/api/search?q=' + encodeURIComponent(text), { signal })
+    .then(function(response) { return response.json(); })
+    .then(function(items) { autocomplete.setMenuItems(items); })
+    .catch(function(error) {
+      // A newer search aborted this one; its results are stale.
+      if (error.name !== 'AbortError') autocomplete.setMenuItems([]);
+    });
+}
+```
+
 ### Options
 
 | Name | Type | Default | Description |
@@ -8718,7 +8761,7 @@ onSearch: function(text, autocomplete) {
 | `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
 | `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
-| `onSearch` | Function | filters `id` and `text` | Called when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. |
+| `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when a newer search starts or the autocomplete is destroyed. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |

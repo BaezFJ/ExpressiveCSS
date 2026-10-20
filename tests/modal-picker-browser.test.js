@@ -97,10 +97,18 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       assert.deepEqual(fields, [['spinbutton', '1', '12'], ['spinbutton', '0', '59']]);
       assert.equal(await page.evaluate(() => document.activeElement.className), 'timepicker-input-hours');
 
-      // Hours wrap from 12 back to 1; minutes step by five and wrap past 59.
+      // Hours step round the day: past 11 AM comes 12 PM, then 1 PM, and back
+      // down past 12 PM comes 11 AM. Minutes step by five and wrap past 59.
+      const period = () => page.evaluate(() => document.querySelector('.am-btn').getAttribute('aria-pressed') === 'true' ? 'AM' : 'PM');
       for (let i = 0; i < 4; i++) await page.keyboard.press('ArrowUp');
-      assert.equal(await page.inputValue('.timepicker-input-hours'), '01');
+      assert.deepEqual([await page.inputValue('.timepicker-input-hours'), await period()], ['01', 'PM']);
       await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+      assert.deepEqual([await page.inputValue('.timepicker-input-hours'), await period()], ['11', 'AM']);
+      await page.keyboard.press('PageUp');
+      assert.deepEqual([await page.inputValue('.timepicker-input-hours'), await period()], ['04', 'PM']);
+      await page.keyboard.press('PageDown');
+      await page.keyboard.press('ArrowUp');
       await page.keyboard.press('Tab');
       for (let i = 0; i < 6; i++) await page.keyboard.press('PageUp');
       await page.keyboard.press('ArrowUp');
@@ -114,13 +122,13 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
 
       await page.keyboard.press('Enter');
       await settle(page);
-      assert.deepEqual(await state(page), { open: [false, false], focus: 'time', date: 'Mar 14, 2026', time: '12:01 AM', calls: ['done'] });
+      assert.deepEqual(await state(page), { open: [false, false], focus: 'time', date: 'Mar 14, 2026', time: '12:01 PM', calls: ['done'] });
 
       await page.click('#time');
       await page.keyboard.press('ArrowUp');
       await page.keyboard.press('Escape');
       await settle(page);
-      assert.deepEqual(await state(page), { open: [false, false], focus: 'time', date: 'Mar 14, 2026', time: '12:01 AM', calls: ['cancel'] });
+      assert.deepEqual(await state(page), { open: [false, false], focus: 'time', date: 'Mar 14, 2026', time: '12:01 PM', calls: ['cancel'] });
     } finally {
       await browser.close();
     }
