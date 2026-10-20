@@ -1,9 +1,9 @@
 import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions, numberFormat, polarPoint as at, svgNode as node } from './lineChart';
+import { LineChart, LineChartOptions, numberFormat, polarPoint as at, signs, svgNode as node } from './lineChart';
 
 export type PieChartOptions = LineChartOptions;
 
-// ponytail: rows past six repeat the colors; group small parts as "Other".
+// ponytail: rows past six repeat the colors; data-other groups the small ones.
 const COLORS = 6;
 /** The pie's radius in a 100-unit box, leaving room for the active slice to grow. */
 const RADIUS = 46;
@@ -12,6 +12,12 @@ const GROWN = 1.06;
 /** Slices smaller than this share get no .values label. */
 const LABEL_SHARE = 0.05;
 let _maskId = 0;
+
+/** How many decimals a cell's number has, counting an exponent: "2.5e-3" has 4. */
+function decimals(text: string) {
+  const [, fraction = '', exponent = '0'] = /(?:\.(\d+))?(?:e([+-]?\d+))?\D*$/i.exec(text)!;
+  return Math.max(0, fraction.length - Number(exponent));
+}
 
 /**
  * Sets each name's --pie-chart-name-top so neighbours on one side of the pie sit at least
@@ -37,7 +43,10 @@ function stack(names: [number, HTMLElement][], away: number, anchor?: number) {
  * Pie chart. It reads its <table> like LineChart, but draws each row of the
  * first value column as a slice of the whole, clockwise from the top, with
  * a legend of every row and its share. With `.donut`, a <tfoot> row is the
- * total in the middle. Further columns show in the tooltip.
+ * total in the middle. Further columns show in the tooltip. With
+ * `data-other`, rows under that percentage of the whole become one row,
+ * last, named by `data-other-label` ("Other" by default); the table keeps
+ * every row.
  *
  * Re-run `PieChart.init(el)` after changing the table.
  */
@@ -79,6 +88,53 @@ export class PieChart extends LineChart {
     options: Partial<PieChartOptions> = {}
   ): PieChart | PieChart[] {
     return super.init(els as HTMLElement, options) as PieChart | PieChart[];
+  }
+
+  protected _read() {
+    super._read();
+    const small = this._small();
+    if (!small) return;
+    const sum = this.series[0].values.reduce<number>((total, value, i) => total + (small[i] ? Math.max(0, value!) : 0), 0);
+    const text = this._written(sum, this._rows.filter((_, i) => small[i]).map((row) => row.cells[1]));
+    const keep = <T>(list: T[], other: T) => [...list.filter((_, i) => !small[i]), other];
+    this.labels = keep(this.labels, this.el.dataset.otherLabel || 'Other');
+    // Only the first column adds up; further columns have no value for the group.
+    this.series = this.series.map((series, i) => {
+      const values = keep(series.values, i ? null : sum);
+      return { ...series, values, tops: values, text: keep(series.text, i ? '' : text) };
+    });
+  }
+
+  /**
+   * The group's sum written like its cells: with their signs, and to their
+   * decimals, or compact when data-value stands behind text such as "$38M".
+   */
+  private _written(sum: number, cells: HTMLTableCellElement[]) {
+    const texts = cells.map((cell) => cell.textContent.trim());
+    const [prefix, suffix] = signs(texts[0]);
+    return `${prefix}${numberFormat(this.el, this._precision(texts, cells)).format(sum)}${suffix}`;
+  }
+
+  private _precision(texts: string[], cells: HTMLTableCellElement[]): Intl.NumberFormatOptions {
+    if (cells.some((cell) => cell.dataset.value)) return { notation: 'compact', maximumSignificantDigits: 3 };
+    const digits = Math.max(0, ...texts.map(decimals));
+    // Older engines take at most 20 fraction digits; past that, keep the sum's first digits.
+    return digits > 20 ? { maximumSignificantDigits: 3 } : { maximumFractionDigits: digits };
+  }
+
+  /**
+   * Which rows data-other groups: those with a value under that percentage
+   * of the whole. Null when it groups nothing, as one small row is clearer
+   * by its own name.
+   */
+  private _small() {
+    const percent = this._number('other');
+    const values = this.series[0]?.values.map((value) => (value === null ? null : Math.max(0, value)));
+    if (!values || !(percent! > 0)) return null;
+    const total = values.reduce<number>((sum, value) => sum + (value ?? 0), 0);
+    // A row exactly at the percentage stays, despite rounding in the division.
+    const small = values.map((value) => value !== null && (value / total) * 100 < percent! - 1e-9);
+    return small.filter(Boolean).length > 1 ? small : null;
   }
 
   static getInstance(el: HTMLElement): PieChart {

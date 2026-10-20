@@ -7,6 +7,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Pie chart grouping: `data-other="5"` turns every row under 5% of the
+  whole into one last slice with their sum and share, named by
+  `data-other-label` ("Other" by default). The table keeps every row.
 - Radial chart names: `.labels` draws the rings three quarters of the way
   round and writes each row's name in the empty top left quarter, beside
   its ring's start. Names shrink to fit crowded rings. On a gauge, the names

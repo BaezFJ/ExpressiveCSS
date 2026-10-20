@@ -162,7 +162,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed pie chart names outside the slices: 76,703 gzip bytes (+306).
   // Reviewed radial chart ring names at each ring's start: 76,892 gzip bytes (+189).
   // Reviewed pie chart leader lines and gauge ring names: 76,978 gzip bytes (+86).
-  assert.ok(sizes(js).gzip <= 76978, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed pie chart data-other grouping small rows: 77,388 gzip bytes (+410).
+  assert.ok(sizes(js).gzip <= 77388, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

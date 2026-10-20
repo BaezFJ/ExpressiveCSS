@@ -11,6 +11,7 @@ const S = defineSections([
   { id: "donut", label: "Donut" },
   { id: "values", label: "Values" },
   { id: "labels", label: "Labels" },
+  { id: "other", label: "Small parts" },
   { id: "columns", label: "More columns" },
   { id: "cards", label: "Chart cards" },
   { id: "data", label: "Values and colors" },
@@ -25,6 +26,7 @@ const sources: [string, number][] = [["Enterprise clients", 38], ["Referral part
 const money = (value: number) => `$${value.toLocaleString("en-US")}`;
 const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
 const revenue = money(sum(plans.map(([, value]) => value)));
+const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social", 2480], ["Email", 310], ["Podcasts", 140], ["Print", 90], ["Radio", 60]];
 ---
 <DocsLayout page="pie-chart">
 <PageBody sections={S}>
@@ -163,6 +165,41 @@ const revenue = money(sum(plans.map(([, value]) => value)));
   <figcaption>Leads by source</figcaption>
   <table>
     <!-- The same table as above -->
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.other}>
+        <p>
+          <code>data-other</code> groups every row under that percentage of
+          the whole into one slice, last, so thin slices do not crowd the pie
+          or push their names into the caption. The group shows the rows' sum
+          and share. The sum keeps the cells' currency and decimals, and is
+          compact when they use <code>data-value</code>. Further columns,
+          which do not add up, leave it out.
+          <code>data-other-label</code> names it, "Other" by default. A single
+          small row keeps its own slice, and the table keeps every row for
+          screen readers.
+        </p>
+        <figure class="pie-chart labels" data-other="5" data-markdown-ignore>
+          <figcaption>Visits by channel</figcaption>
+          <table>
+            <thead><tr><th>Channel</th><th>Visits</th></tr></thead>
+            <tbody>{visits.map(([channel, value]) => <tr><th>{channel}</th><td>{value.toLocaleString("en-US")}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="pie-chart labels" data-other="5">
+  <figcaption>Visits by channel</figcaption>
+  <table>
+    <thead>
+      <tr><th>Channel</th><th>Visits</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Search</th><td>4,210</td></tr>
+      <tr><th>Email</th><td>310</td></tr>
+      <!-- One row per channel; those under 5% become "Other" -->
+    </tbody>
   </table>
 </figure>
 `} />

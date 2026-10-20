@@ -114,11 +114,16 @@ function cellValue(cell: Element | undefined): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
-/** The signs around the first value a column spells out in its text, as [prefix, suffix]. */
+/** The currency, percent and spacing around a cell's number, as [prefix, suffix]. */
+export function signs(text: string): [string, string] {
+  const [, prefix, suffix] = /^([\s\p{Sc}]*)[^]*?([\s%\p{Sc}]*)$/u.exec(text)!;
+  return [prefix, suffix];
+}
+
+/** The signs around the first value a column spells out in its text. */
 function affix(cells: (Element | undefined)[]): [string, string] {
   const cell = cells.find((each) => !(each as HTMLElement)?.dataset.value && cellValue(each) !== null);
-  const [, prefix, suffix] = /^([\s\p{Sc}]*)[^]*?([\s%\p{Sc}]*)$/u.exec(cell?.textContent.trim() ?? '')!;
-  return [prefix, suffix];
+  return signs(cell?.textContent.trim() ?? '');
 }
 
 /**
@@ -316,7 +321,7 @@ export class LineChart extends Component<LineChartOptions> {
     this._tooltip.classList.toggle('end', x > 50);
   }
 
-  private _read() {
+  protected _read() {
     const table = this.el.querySelector<HTMLTableElement>(':scope > table');
     if (!table) return;
     // Without a <thead> the parser puts the header row in the first <tbody>.

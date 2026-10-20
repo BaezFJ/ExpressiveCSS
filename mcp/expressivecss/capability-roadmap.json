@@ -2154,13 +2154,13 @@
       "gaps": [
         {
           "kind": "verification",
-          "description": "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "description": "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, data-other grouping, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
           "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
         },
         {
           "kind": "feature",
-          "description": "Rows past six reuse the colors, and .labels names only move up or down their side, so many thin slices at the top or bottom push names into the caption or legend.",
-          "nextStep": "Group small parts into an Other row."
+          "description": "Rows past six reuse the colors, and .labels names only move up or down their side, so many thin slices at the top or bottom push names into the caption or legend unless data-other groups them.",
+          "nextStep": "Set data-other on pies with many small parts; lay names out in two dimensions if grouped pies still crowd."
         }
       ],
       "browserChecks": [
