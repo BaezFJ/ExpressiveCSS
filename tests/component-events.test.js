@@ -142,6 +142,9 @@ for (const [name, c] of Object.entries(completions)) {
       if (kind === 'rail') Object.assign(instance, { open: instance.expand, close: instance.collapse });
       try {
         await c.run(instance);
+        // Wait for the expected count rather than a fixed time, which a busy
+        // parallel run outlasts, then a little longer to catch any extra.
+        for (let waited = 0; seen.length < c[kind].length && waited < 2000; waited += 10) await sleep(10);
         await sleep(40);
         assert.deepEqual(seen.map((s) => s.split(':')[0]), c[kind]);
       } finally {

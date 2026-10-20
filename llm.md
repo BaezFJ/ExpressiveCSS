@@ -354,6 +354,18 @@ document.addEventListener('expressive:open', (event) => {
 });
 ```
 
+Choices and changes carry what was chosen in `event.detail`:
+
+| Event | Fired by | `detail` |
+| --- | --- | --- |
+| `expressive:change` | Tabs, Carousel | `{ panel }`, `{ item, dragged }` |
+| `expressive:select` | Menu, Datepicker, Timepicker | `{ item }`, `{ date }`, `{ hours, minutes }` |
+| `expressive:confirm`, `expressive:cancel` | Datepicker, Timepicker | none |
+| `expressive:autocomplete` | Autocomplete | `{ values }` |
+| `expressive:chip-add`, `chip-select`, `chip-delete` | Chips | `{ chip }` |
+
+An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
+
 ## Public JavaScript surface
 
 The main bundle exports:

@@ -13,6 +13,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `expressive:opened` and `expressive:closed`. The events bubble and cross
   shadow roots, and each follows its `on…` callback, which still works.
 
+- Choices and changes fire events too, with what was chosen in `detail`:
+  `expressive:change` from Tabs (`{ panel }`) and Carousel
+  (`{ item, dragged }`), `expressive:select` from Menu items (`{ item }`),
+  Datepicker (`{ date }`) and Timepicker (`{ hours, minutes }`),
+  `expressive:confirm` and `expressive:cancel` from both pickers,
+  `expressive:autocomplete` (`{ values }`), and `expressive:chip-add`,
+  `chip-select` and `chip-delete` (`{ chip }`). A callback that changes the
+  choice again leaves only the event for the final one. Tabs now calls
+  `onShow` after hiding the old panel, and Chips callbacks get the instance
+  as `this`, as every other component's do.
+
 - Sheets spring back with the finger's speed: a bottom or side sheet
   released short of dismissing solves its spring at run time from where
   it is and how fast it moves, and a press while it springs catches it in

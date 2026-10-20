@@ -210,7 +210,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
     this.cardReveal.classList.add('open');
     this.cardReveal.inert = false;
     this._activators.forEach((activator) => (activator.ariaExpanded = 'true'));
-    this._notify('open', this.options.onOpen, () => this.isOpen);
+    this._notify('open', this.options.onOpen, { current: () => this.isOpen });
   };
 
   /**
@@ -226,7 +226,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
     this.cardReveal.classList.remove('open');
     this.cardReveal.inert = true;
     this._activators.forEach((activator) => (activator.ariaExpanded = 'false'));
-    this._notify('close', this.options.onClose, () => !this.isOpen);
+    this._notify('close', this.options.onClose, { current: () => !this.isOpen });
 
     if (focusWasInside) {
       (this._lastActivator ?? this._activators[0])?.focus();

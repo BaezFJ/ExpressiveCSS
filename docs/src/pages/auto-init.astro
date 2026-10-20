@@ -171,6 +171,26 @@ document.addEventListener('expressive:open', (event) => {
   if (event.target.matches('.menu-trigger')) analytics.track('menu-open');
 });
 `} />
+        <p>Choices and changes carry what was chosen in <code>event.detail</code>:</p>
+        <div class="docs-table-scroll">
+        <table class="striped">
+          <thead><tr><th>Event</th><th>Fired by</th><th><code>detail</code></th></tr></thead>
+          <tbody>
+            <tr><td><code>expressive:change</code></td><td>Tabs, Carousel</td><td><code>{"{ panel }"}</code>, <code>{"{ item, dragged }"}</code></td></tr>
+            <tr><td><code>expressive:select</code></td><td>Menu, Datepicker, Timepicker</td><td><code>{"{ item }"}</code>, <code>{"{ date }"}</code>, <code>{"{ hours, minutes }"}</code></td></tr>
+            <tr><td><code>expressive:confirm</code>, <code>expressive:cancel</code></td><td>Datepicker, Timepicker</td><td>none</td></tr>
+            <tr><td><code>expressive:autocomplete</code></td><td>Autocomplete</td><td><code>{"{ values }"}</code></td></tr>
+            <tr><td><code>expressive:chip-add</code>, <code>chip-select</code>, <code>chip-delete</code></td><td>Chips</td><td><code>{"{ chip }"}</code></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p>
+          An Autocomplete or Select input hosts a Menu, so it also fires that Menu's
+          <code>expressive:open</code>, <code>expressive:close</code> and
+          <code>expressive:select</code>. A callback that changes the choice again, such as
+          an <code>onShow</code> that selects another tab, leaves only the event for the
+          final choice.
+        </p>
   </Section>
 </PageBody>
 </DocsLayout>

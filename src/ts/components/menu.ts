@@ -461,9 +461,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       this._toggleSubmenu(li);
       return;
     }
-    if (li && typeof this.options.onItemClick === 'function') {
-      this.options.onItemClick.call(this, li);
-    }
+    if (li) this._notify('select', this.options.onItemClick, { args: [li], detail: { item: li } });
   };
 
   private _setupAccessibility() {
@@ -915,7 +913,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this._schedule(() => {
       if (focusOnOpen) this._focusInitialItem();
       if (transition !== this._transition) return;
-      this._notify('opened', this.options.onOpenEnd, () => transition === this._transition);
+      this._notify('opened', this.options.onOpenEnd, { current: () => transition === this._transition });
     }, duration);
   }
 
@@ -929,7 +927,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.menuEl.style.transform = 'scale(0.85)';
     this._schedule(() => {
       this._resetMenuStyles();
-      this._notify('closed', this.options.onCloseEnd, () => transition === this._transition);
+      this._notify('closed', this.options.onCloseEnd, { current: () => transition === this._transition });
     }, duration);
   }
 
@@ -1096,7 +1094,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     const transition = this._clearPendingTimers();
     this.isOpen = true;
     // onOpenStart callback
-    if (!this._notify('open', this.options.onOpenStart, () => transition === this._transition)) return;
+    if (!this._notify('open', this.options.onOpenStart, { current: () => transition === this._transition })) return;
     // Reset styles
     this._resetMenuStyles();
     this.menuEl.style.display = 'block';
@@ -1127,7 +1125,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this._clearActive();
     this._closeSubmenus();
     // onCloseStart callback
-    if (!this._notify('close', this.options.onCloseStart, () => transition === this._transition)) return;
+    if (!this._notify('close', this.options.onCloseStart, { current: () => transition === this._transition })) return;
     this._animateOut();
     this._removeTemporaryEventHandlers();
     this._setExpanded(false);
