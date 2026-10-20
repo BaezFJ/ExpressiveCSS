@@ -5780,7 +5780,7 @@
         "sources": [
           {
             "path": "src/sass/components/_marquee.scss",
-            "sha256": "e76d8380b53cf788c1304e9331c632083468109f8b726c2e1eeaa3a20adb95eb"
+            "sha256": "cb6c055316c63d5ab7c42991c050188cc2bad91e073733a501bd0ab859d78991"
           }
         ],
         "gaps": [

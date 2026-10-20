@@ -332,6 +332,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A scrolling marquee no longer restyles every item on each frame. The
+  reset's `box-sizing: inherit` tied each item's style to its moving group,
+  so on a page that also drew every frame, each frame restyled every item
+  as well as the groups. Items now set `box-sizing: border-box` themselves.
 - A dot map marker takes taps in a 48dp circle around its 16dp dot. It was
   a 16px target on a map that is itself a target, under WCAG 2.5.8's 24px
   minimum.
