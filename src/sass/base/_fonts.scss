@@ -7,8 +7,11 @@
 
 // Text subsets and their unicode-range, as Fontsource publishes them
 // (node_modules/@fontsource/*/400.css). scripts/copy-fonts.mjs copies the
-// same subsets. Other scripts, such as Arabic or CJK, need their own Noto
-// family; add it to --md-ref-typeface-fallback.
+// same subsets. Arabic, Hebrew and Thai, which Noto Sans leaves out, come as
+// their own Noto families with only their script's range, so a page fetches
+// them only when it shows that script. CJK families are megabytes each, so
+// CJK text falls through to the system font the browser picks for the
+// element's lang.
 $_roboto-subsets: (
   "latin": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD",
   "latin-ext": "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF",
@@ -28,6 +31,18 @@ $_noto-sans-subsets: (
   "greek-ext": "U+1F00-1FFF",
   "vietnamese": "U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB",
   "devanagari": "U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B09",
+);
+
+$_noto-sans-arabic-subsets: (
+  "arabic": "U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0897-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC,U+102E0-102FB,U+10E60-10E7E,U+10EC2-10EC4,U+10EFC-10EFF,U+1EE00-1EEFF",
+);
+
+$_noto-sans-hebrew-subsets: (
+  "hebrew": "U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F",
+);
+
+$_noto-sans-thai-subsets: (
+  "thai": "U+02D7,U+0303,U+0331,U+0E01-0E5B,U+200C-200D,U+25CC",
 );
 
 @if $expressive-include-fonts {
@@ -57,7 +72,13 @@ $_noto-sans-subsets: (
 
   // One face per subset and weight. unicode-range lets the browser fetch
   // only the subsets the page's text uses, and 700 only when it is rendered.
-  @each $file, $family, $subsets in ("roboto", "Roboto", $_roboto-subsets), ("noto-sans", "Noto Sans", $_noto-sans-subsets) {
+  @each $file, $family, $subsets in
+    ("roboto", "Roboto", $_roboto-subsets),
+    ("noto-sans", "Noto Sans", $_noto-sans-subsets),
+    ("noto-sans-arabic", "Noto Sans Arabic", $_noto-sans-arabic-subsets),
+    ("noto-sans-hebrew", "Noto Sans Hebrew", $_noto-sans-hebrew-subsets),
+    ("noto-sans-thai", "Noto Sans Thai", $_noto-sans-thai-subsets)
+  {
     @each $subset, $range in $subsets {
       @each $weight in (400, 500, 700) {
         @font-face {

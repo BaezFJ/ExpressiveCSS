@@ -65,6 +65,9 @@ $_springs: (
     $stiffness: list.nth($spring, 2);
     --md-sys-motion-spring-#{$name}: #{spring($damping, $stiffness)};
     --md-sys-motion-spring-#{$name}-duration: #{spring-duration($damping, $stiffness)};
+    // The spring itself, for motion solved at run time from where it is.
+    --md-sys-motion-spring-#{$name}-damping: #{$damping};
+    --md-sys-motion-spring-#{$name}-stiffness: #{$stiffness};
   }
 }
 

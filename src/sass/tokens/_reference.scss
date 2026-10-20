@@ -181,7 +181,7 @@ $_emphasized-weights: (
   // token to customize the scale without rewriting every role.
   --md-ref-typeface-brand: "Roboto";
   --md-ref-typeface-plain: "Roboto";
-  --md-ref-typeface-fallback: "Noto Sans", sans-serif;
+  --md-ref-typeface-fallback: "Noto Sans", "Noto Sans Arabic", "Noto Sans Hebrew", "Noto Sans Thai", sans-serif;
 
   // display - large
   --md-sys-typescale-display-large-font-family-name: var(--md-ref-typeface-brand), var(--md-ref-typeface-fallback);

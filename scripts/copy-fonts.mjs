@@ -41,12 +41,19 @@ const copies = [
   // Text faces: every subset base/_fonts.scss declares, at 400, 500 and 700.
   ...textFaces('@fontsource/roboto', 'roboto', ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext', 'greek', 'greek-ext', 'vietnamese']),
   ...textFaces('@fontsource/noto-sans', 'noto-sans', ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext', 'greek', 'greek-ext', 'vietnamese', 'devanagari']),
+  // Scripts Noto Sans leaves out, each its own family and only its script.
+  ...textFaces('@fontsource/noto-sans-arabic', 'noto-sans-arabic', ['arabic']),
+  ...textFaces('@fontsource/noto-sans-hebrew', 'noto-sans-hebrew', ['hebrew']),
+  ...textFaces('@fontsource/noto-sans-thai', 'noto-sans-thai', ['thai']),
 ];
 
 const licenses = [
   ['@fontsource-variable/material-symbols-outlined', 'LICENSE', 'LICENSE-material-symbols'],
   ['@fontsource/roboto', 'LICENSE', 'LICENSE-roboto'],
   ['@fontsource/noto-sans', 'LICENSE', 'LICENSE-noto-sans'],
+  ['@fontsource/noto-sans-arabic', 'LICENSE', 'LICENSE-noto-sans-arabic'],
+  ['@fontsource/noto-sans-hebrew', 'LICENSE', 'LICENSE-noto-sans-hebrew'],
+  ['@fontsource/noto-sans-thai', 'LICENSE', 'LICENSE-noto-sans-thai'],
 ];
 
 mkdirSync(destDir, { recursive: true });

@@ -176,7 +176,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed component review fixes: keypad messages, safe restores and shortcut counts: 80,455 gzip bytes (+182).
   // Reviewed heatmap row labels kept in view beside scrolling cells: 80,514 gzip bytes (+59).
   // Reviewed radial gradients that follow the ring: 80,699 gzip bytes (+185).
-  assert.ok(sizes(js).gzip <= 80699, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed runtime spring snap-back for dragged sheets: 81,309 gzip bytes (+610).
+  // Reviewed sheet springs ending on close, reduced motion and token overrides: 81,465 gzip bytes (+156).
+  assert.ok(sizes(js).gzip <= 81465, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -278,5 +280,7 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed radial gradients that follow the ring: 81,497 gzip bytes (+68).
   // Reviewed wavy circular progress: 82,132 gzip bytes (+635).
   // Reviewed radial gradient reveal and wavy forced colors fixes: 82,210 gzip bytes (+78).
-  assert.ok(sizes(css).gzip <= 82210, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed Noto Sans Arabic, Hebrew and Thai faces: 82,506 gzip bytes (+296).
+  // Reviewed runtime spring snap-back for dragged sheets: 82,608 gzip bytes (+102).
+  assert.ok(sizes(css).gzip <= 82608, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -34,7 +34,7 @@ describe('Material 3 typography', () => {
   test('uses customizable Roboto brand/plain tokens with Noto Sans fallback', () => {
     assert.match(css, /--md-ref-typeface-brand:\s*"Roboto";/);
     assert.match(css, /--md-ref-typeface-plain:\s*"Roboto";/);
-    assert.match(css, /--md-ref-typeface-fallback:\s*"Noto Sans", sans-serif;/);
+    assert.match(css, /--md-ref-typeface-fallback:\s*"Noto Sans", "Noto Sans Arabic", "Noto Sans Hebrew", "Noto Sans Thai", sans-serif;/);
 
     for (const [role, [family]] of Object.entries(roles)) {
       assert.equal(

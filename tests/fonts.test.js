@@ -15,6 +15,9 @@ const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 const TEXT_SUBSETS = {
   roboto: ['Roboto', ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext', 'greek', 'greek-ext', 'vietnamese']],
   'noto-sans': ['Noto Sans', ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext', 'greek', 'greek-ext', 'vietnamese', 'devanagari']],
+  'noto-sans-arabic': ['Noto Sans Arabic', ['arabic']],
+  'noto-sans-hebrew': ['Noto Sans Hebrew', ['hebrew']],
+  'noto-sans-thai': ['Noto Sans Thai', ['thai']],
 };
 const textFiles = Object.entries(TEXT_SUBSETS).flatMap(([file, [family, subsets]]) =>
   subsets.flatMap((subset) => [400, 500, 700].map((weight) => [`${file}-${subset}-${weight}.woff2`, family])));
@@ -101,10 +104,12 @@ describe('self-hosted fonts', () => {
   });
 
   test('each text subset face carries its unicode-range, so only the scripts in use load', () => {
-    const faces = [...facesFor(readCss(), 'Roboto'), ...facesFor(readCss(), 'Noto Sans')];
+    const faces = Object.values(TEXT_SUBSETS).flatMap(([family]) => facesFor(readCss(), family));
     assert.equal(faces.length, textFiles.length);
     assert.deepEqual(faces.filter((face) => !/unicode-range:\s*U\+/.test(face)), []);
     const cyrillic = faces.find((face) => face.includes('roboto-cyrillic-400.woff2'));
     assert.match(cyrillic, /U\+0400-045F/);
+    const arabic = faces.find((face) => face.includes('noto-sans-arabic-arabic-400.woff2'));
+    assert.match(arabic, /U\+0600-06FF/, 'the Arabic family covers only Arabic, so other pages never fetch it');
   });
 });

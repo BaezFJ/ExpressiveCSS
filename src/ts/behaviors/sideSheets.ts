@@ -19,6 +19,7 @@ export class SideSheets {
       selector: 'dialog.side-sheet',
       axis: 'x',
       property: '--md-comp-side-sheet-shift',
+      motion: '--md-comp-side-sheet-motion',
       direction: (dialog) => (leftDocked(dialog) ? -1 : 1),
       inHandle: (event, dialog) => {
         // Only the sheet's own top bar: a <header> in its content, or one

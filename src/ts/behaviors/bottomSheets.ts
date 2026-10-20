@@ -44,6 +44,7 @@ export class BottomSheets {
       selector: SHEET_SELECTOR,
       axis: 'y',
       property: '--md-comp-bottom-sheet-shift',
+      motion: '--md-comp-bottom-sheet-motion',
       direction: () => 1,
       inHandle: (event, dialog) => {
         if (Utils.closestInPath(event, '.drag-handle')) return true;

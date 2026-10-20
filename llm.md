@@ -1790,6 +1790,8 @@ In Sass, `spring($damping, $stiffness)` and `spring-duration($damping, $stiffnes
 }
 ```
 
+A `linear()` easing always starts from rest, so a transition interrupted part way restarts without the speed it had. A dragged bottom or side sheet solves its spring at run time instead: released short of dismissing, it springs back on the default spatial spring from where the finger left it at the finger's speed, and a press while it moves catches it where it is. Reduced motion keeps the instant snap, and a sheet whose `--md-comp-bottom-sheet-motion` or `--md-comp-side-sheet-motion` tokens a page overrode keeps the CSS transition those ask for. The spring ends early if the sheet closes or reduced motion is turned on. Each spring also has `--md-sys-motion-spring-*-damping` and `-stiffness` tokens with its two numbers, following `motion`, for scripts that solve a spring themselves.
+
 ---
 
 ## Typography
@@ -1800,7 +1802,7 @@ The type scale is the HTML. `<h1>`–`<h6>` are display and headline roles, `<p>
 
 Tokens follow the [M3 type system](https://m3.material.io/styles/typography/overview). Each role sets family, size, weight, line-height, and letter-spacing from `--md-sys-typescale-*`. They do not set `font-style` — the token named `-font-family-style` holds “Regular” / “Medium”, which are weights, not CSS `font-style` keywords.
 
-M3's `--md-ref-typeface-brand` and `--md-ref-typeface-plain` tokens both default to Roboto. Large display, headline, and title-large roles use brand; smaller title, body, and label roles use plain. Noto Sans is the fallback for characters Roboto cannot cover. Roboto ships Latin, Latin Extended, Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese, and Noto Sans adds Devanagari, each at 400, 500 and 700. Every subset is its own face with a `unicode-range`, so the browser downloads only the scripts and weights the page renders. Arabic, Hebrew, CJK, Thai and other scripts need their own family, such as Noto Sans Arabic; load it and add it to `--md-ref-typeface-fallback`. Override the reference tokens to use a different family.
+M3's `--md-ref-typeface-brand` and `--md-ref-typeface-plain` tokens both default to Roboto. Large display, headline, and title-large roles use brand; smaller title, body, and label roles use plain. Noto Sans is the fallback for characters Roboto cannot cover. Roboto ships Latin, Latin Extended, Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese, and Noto Sans adds Devanagari, each at 400, 500 and 700. Every subset is its own face with a `unicode-range`, so the browser downloads only the scripts and weights the page renders. Noto Sans Arabic, Noto Sans Hebrew and Noto Sans Thai come next in the fallback, each with only its script's `unicode-range`, so a page fetches one only when it shows that script. CJK text falls through to the system font the browser picks for the element's `lang`, so set `lang` on Japanese, Chinese and Korean text. For another script, load its family and add it to `--md-ref-typeface-fallback` before `sans-serif`. Override the reference tokens to use a different family.
 
 ### Semantic map
 
@@ -1934,10 +1936,10 @@ Override the brand and plain reference tokens to customize the scale while prese
 }
 ```
 
-The default order is Roboto, Noto Sans, then the generic sans-serif family. For a script neither bundles, put its family before the generic one:
+The default order is Roboto, Noto Sans, Noto Sans Arabic, Noto Sans Hebrew, Noto Sans Thai, then the generic sans-serif family. For a script none of them covers, put its family before the generic one:
 
 ```css
-:root { --md-ref-typeface-fallback: "Noto Sans", "Noto Sans Arabic", sans-serif; }
+:root { --md-ref-typeface-fallback: "Noto Sans", "Noto Sans Arabic", "Noto Sans Hebrew", "Noto Sans Thai", "Noto Sans Bengali", sans-serif; }
 ``` ExpressiveCSS leaves the root font size to the browser and expresses the M3 scale in rem using the standard 16px conversion, so browser text-size preferences continue to work.
 
 ---
