@@ -5012,8 +5012,8 @@
       "gaps": [
         {
           "kind": "feature",
-          "description": "Version 0.10.0 exposes localized loading, result counts and multi-selection updates through a polite live region. Spoken delivery and application-owned async ordering remain unverified.",
-          "nextStep": "Check screen-reader delivery and application request cancellation, error handling and stale-response ordering."
+          "description": "Version 0.10.0 exposes localized loading, result counts and multi-selection updates through a polite live region, and onSearch gets an AbortSignal that aborts a stale search. Spoken delivery remains unverified.",
+          "nextStep": "Check screen-reader delivery of the loading, count and selection announcements in each engine."
         }
       ],
       "browserChecks": [

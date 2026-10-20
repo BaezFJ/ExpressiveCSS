@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Autocomplete `onSearch` gets an `AbortSignal` as its third argument. It
+  aborts when a newer search starts or the autocomplete is destroyed, so a
+  page that passes it to `fetch()` drops stale responses.
+
 - Linear progress `.stop` puts a dot in the indicator colour at the
   track's end, and `.wavy` draws the indicator as a wave over a thin track,
   on `<progress>`, `.determinate` and bare bars. New tokens:

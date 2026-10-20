@@ -59,8 +59,11 @@ export interface AutocompleteOptions extends BaseOptions {
    * If the results are collected the items in the list can be updated via the function setMenuItems(collectedItems).
    * @param text Searched text.
    * @param autocomplete Current autocomplete instance.
+   * @param signal Aborted when a newer search starts or the autocomplete is
+   * destroyed. Pass it to `fetch()` so a slow, stale response never replaces
+   * newer results.
    */
-  onSearch: (text: string, autocomplete: Autocomplete) => void;
+  onSearch: (text: string, autocomplete: Autocomplete, signal: AbortSignal) => void;
   /**
    * If true will render the key from each item directly as HTML.
    * User input MUST be properly sanitized first.
@@ -125,6 +128,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   private oldVal: string;
   private $active: HTMLElement | null;
   private _openTimer: ReturnType<typeof setTimeout> | undefined;
+  /** Aborts the running search when a newer one starts. */
+  private _searchAbort: AbortController | undefined;
   private _statusInfo: HTMLElement;
   private _announcer: HTMLElement;
 
@@ -243,6 +248,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       clearTimeout(this._openTimer);
       this._openTimer = undefined;
     }
+    this._searchAbort?.abort();
     this._removeEventHandlers();
     this.menu.destroy();
     this.isOpen = false;
@@ -416,11 +422,18 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // Value has changed!
     if (this.oldVal !== value) {
       this._setStatusLoading();
-      this.options.onSearch(this.el.value, this);
+      this._search(this.el.value);
     }
     if (deselected) this._triggerChanged();
     this.oldVal = value;
   };
+
+  /** Starts a search and aborts the one before, whose response is now stale. */
+  private _search(text: string) {
+    this._searchAbort?.abort();
+    this._searchAbort = new AbortController();
+    this.options.onSearch(text, this, this._searchAbort.signal);
+  }
 
   _handleInputKeydown = (e: KeyboardEvent) => {
     Autocomplete._keydown = true;

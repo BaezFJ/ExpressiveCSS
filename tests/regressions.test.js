@@ -1195,6 +1195,27 @@ describe('Autocomplete searches', () => {
   });
 });
 
+describe('Autocomplete search cancellation', () => {
+  test('aborts the running search when a newer one starts, and on destroy', () => {
+    document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac"></div>`;
+    const el = document.getElementById('ac');
+    const signals = [];
+    const instance = Expressive.Autocomplete.init(el, {
+      data: [{ id: 'go', text: 'Google' }],
+      onSearch: (text, ac, signal) => signals.push([text, signal]),
+      menuOptions: { inDuration: 0, outDuration: 0 }
+    });
+    const search = (value) => { el.value = value; fire(el, 'input'); };
+    el.focus();
+    search('g');
+    search('go');
+    assert.deepEqual(signals.map(([text, signal]) => [text, signal.aborted]), [['g', true], ['go', false]],
+      'a newer search aborts the stale one, so a page passing the signal to fetch() drops its response');
+    instance.destroy();
+    assert.equal(signals[1][1].aborted, true, 'destroy aborts the last search');
+  });
+});
+
 describe('Autocomplete with delayed results', () => {
   for (const isMultiSelect of [false, true]) {
     test(`a new query clears the active result before its results arrive (isMultiSelect: ${isMultiSelect})`, async () => {

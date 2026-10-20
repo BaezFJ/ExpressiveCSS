@@ -1478,7 +1478,7 @@ Google relationship: related. Upstream review: requirements-prose-reviewed (2026
 
 Web adaptation: Runtime combobox behavior attached to a text field; no standalone upstream component claim.
 
-- feature: Version 0.10.0 exposes localized loading, result counts and multi-selection updates through a polite live region. Spoken delivery and application-owned async ordering remain unverified. Next: Check screen-reader delivery and application request cancellation, error handling and stale-response ordering.
+- feature: Version 0.10.0 exposes localized loading, result counts and multi-selection updates through a polite live region, and onSearch gets an AbortSignal that aborts a stale search. Spoken delivery remains unverified. Next: Check screen-reader delivery of the loading, count and selection announcements in each engine.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining suggestions and section links preserve selection and dismissal`. Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining autocomplete preserves a preselected display label on focus`. Initial selected record retains its display label and selection through first focus and Tab exit.

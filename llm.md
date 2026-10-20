@@ -8738,6 +8738,20 @@ onSearch: function(text, autocomplete) {
 }
 ```
 
+The third argument is an `AbortSignal` that aborts when a newer search starts or the autocomplete is destroyed. Pass it to `fetch()` so a slow response for old text never replaces newer results, and clear the list on other errors:
+
+```text
+onSearch: function(text, autocomplete, signal) {
+  fetch('/api/search?q=' + encodeURIComponent(text), { signal })
+    .then(function(response) { return response.json(); })
+    .then(function(items) { autocomplete.setMenuItems(items); })
+    .catch(function(error) {
+      // A newer search aborted this one; its results are stale.
+      if (error.name !== 'AbortError') autocomplete.setMenuItems([]);
+    });
+}
+```
+
 ### Options
 
 | Name | Type | Default | Description |
@@ -8747,7 +8761,7 @@ onSearch: function(text, autocomplete) {
 | `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
 | `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
-| `onSearch` | Function | filters `id` and `text` | Called when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. |
+| `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when a newer search starts or the autocomplete is destroyed. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
