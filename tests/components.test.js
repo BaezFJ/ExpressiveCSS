@@ -846,7 +846,8 @@ describe("Snackbar", () => {
     });
     try {
       assert.equal(first.el.isConnected, false);
-      assert.equal(second.el.textContent.trim(), "Second");
+      // The message, not the whole bar: a bar that never times out has a close icon too.
+      assert.equal(second.el.querySelector("p").textContent.trim(), "Second");
       assert.equal(
         document.querySelectorAll("#snackbar-container .snackbar").length,
         1,

@@ -80,6 +80,15 @@
     border-radius: 50%;
     background-color: var(--md-comp-map-marker-color);
     @include z-depth(1);
+
+    // The dot is 16dp, under the 24dp minimum target. A 48dp round hit area
+    // around it takes the tap, and the map pans everywhere else.
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -16px;
+      border-radius: 50%;
+    }
   }
 
   &.location {
