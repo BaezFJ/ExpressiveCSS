@@ -287,5 +287,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed runtime spring snap-back for dragged sheets: 82,608 gzip bytes (+102).
   // Reviewed forced-colors edges, glyphs and disabled states: 82,931 gzip bytes (+323).
   // Reviewed forced-colors FAB edges, column track, picker area and aura variants: 82,968 gzip bytes (+37).
-  assert.ok(sizes(css).gzip <= 82968, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed nowrap breadcrumbs and trailing list badges: 82,995 gzip bytes (+27).
+  assert.ok(sizes(css).gzip <= 82995, `CSS gzip: ${sizes(css).gzip}`);
 });
