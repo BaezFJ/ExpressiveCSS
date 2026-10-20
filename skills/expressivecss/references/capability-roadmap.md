@@ -40,9 +40,9 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Message scroller](#message-scroller) | implemented | source-reviewed | needs-rerun | 0 |
 | [Accordion](#accordion) | implemented | source-reviewed | needs-rerun | 0 |
 | [Data table](#data-table) | unassessed | needs-review | needs-rerun | 0 |
-| [Stat](#stat) | implemented | source-reviewed | needs-rerun | 0 |
+| [Stat](#stat) | unassessed | needs-review | needs-rerun | 0 |
 | [Description list](#description-list) | implemented | source-reviewed | incomplete | 0 |
-| [KPI](#kpi) | implemented | source-reviewed | needs-rerun | 0 |
+| [KPI](#kpi) | unassessed | needs-review | needs-rerun | 0 |
 | [Countdown](#countdown) | implemented | source-reviewed | needs-rerun | 0 |
 | [Line chart](#line-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Column chart](#column-chart) | unassessed | needs-review | needs-rerun | 0 |
@@ -60,7 +60,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Drag handle](#drag-handle) | unassessed | needs-review | no-mapped-checks | 1 |
 | [Badges](#badges) | unassessed | needs-review | needs-rerun | 0 |
 | [Avatar](#avatar) | unassessed | needs-review | needs-rerun | 0 |
-| [Organization chart](#org-chart) | implemented | source-reviewed | incomplete | 0 |
+| [Organization chart](#org-chart) | unassessed | needs-review | incomplete | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | needs-rerun | 0 |
 | [Popover](#popover) | implemented | source-reviewed | needs-rerun | 0 |
 | [Tour](#tour) | unassessed | needs-review | incomplete | 0 |
@@ -560,9 +560,9 @@ Web adaptation: A plain div wraps a native <table>, so the table keeps its role;
 
 ## Stat
 
-**implemented within the stated scope.** Wrapping tiles in a description list with headline values, and a change line with up, down and negative states.
+**unassessed within the stated scope.** Wrapping tiles in a description list with headline values, and a change line with up, down and negative states.
 
-Source review: source-reviewed, 2026-10-06. [src/sass/components/_stat.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_stat.scss).
+Source review: needs-review, 2026-10-06. [src/sass/components/_stat.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_stat.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
 
@@ -592,9 +592,9 @@ Web adaptation: A native dl, dt and dd; the browser exposes the label-value pair
 
 ## KPI
 
-**implemented within the stated scope.** A card with a labelled value in a description list, a trend chip with up, down and negative states, a tonal icon, a corner action, a sparkline, a progress bar and a footer.
+**unassessed within the stated scope.** A card with a labelled value in a description list, a trend chip with up, down and negative states, a tonal icon, a corner action, a sparkline, a progress bar and a footer.
 
-Source review: source-reviewed, 2026-10-08. [src/sass/components/_kpi.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_kpi.scss).
+Source review: needs-review, 2026-10-08. [src/sass/components/_kpi.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_kpi.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
 
@@ -904,9 +904,9 @@ Web adaptation: An <img> or a <span> with role="img" and a name; initials scale 
 
 ## Organization chart
 
-**implemented within the stated scope.** Nested lists of native disclosures drawn as cards under their manager, with connector lines, a role band, an avatar and a name, profile links on cards without reports, mirrored order in RTL and sideways scrolling when wide.
+**unassessed within the stated scope.** Nested lists of native disclosures drawn as cards under their manager, with connector lines, a role band, an avatar and a name, profile links on cards without reports, mirrored order in RTL and sideways scrolling when wide.
 
-Source review: source-reviewed, 2026-10-16. [src/sass/components/_org-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_org-chart.scss).
+Source review: needs-review, 2026-10-16. [src/sass/components/_org-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_org-chart.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-16); [reviewed source](https://m3.material.io/components).
 

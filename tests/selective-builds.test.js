@@ -289,5 +289,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed forced-colors FAB edges, column track, picker area and aura variants: 82,968 gzip bytes (+37).
   // Reviewed nowrap breadcrumbs and trailing list badges: 82,995 gzip bytes (+27).
   // Reviewed rem sizes for controls that hold text or icons: 83,140 gzip bytes (+145).
-  assert.ok(sizes(css).gzip <= 83140, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed rem sizes for charts, cards, stat, KPI and the org chart: 83,153 gzip bytes (+13).
+  assert.ok(sizes(css).gzip <= 83153, `CSS gzip: ${sizes(css).gzip}`);
 });

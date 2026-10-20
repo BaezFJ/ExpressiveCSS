@@ -33,13 +33,13 @@
 
 .radar-chart {
   --md-comp-radar-chart-line-width: 2px;
-  --md-comp-radar-chart-label-room: 80px;
+  --md-comp-radar-chart-label-room: #{rem(80px)};
   // How far past the rim a label starts.
   --radar-chart-label-offset: 8px;
 
   &.sparkline {
     --md-comp-radar-chart-line-width: 1.5px;
-    --md-comp-radar-chart-label-room: 0px;
+    --md-comp-radar-chart-label-room: #{rem(0px)};
     --radar-chart-label-offset: 0px;
   }
 }

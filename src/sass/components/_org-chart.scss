@@ -109,8 +109,8 @@
   align-items: center;
   gap: 8px;
   inline-size: fit-content;
-  min-inline-size: 128px;
-  max-inline-size: 192px;
+  min-inline-size: rem(128px);
+  max-inline-size: rem(192px);
   margin-inline: auto;
   padding: 16px;
   border-radius: var(--md-comp-org-chart-node-shape);
@@ -146,11 +146,11 @@
     &::after {
       content: "";
       flex: none;
-      inline-size: 24px;
-      block-size: 24px;
+      inline-size: rem(24px);
+      block-size: rem(24px);
       margin-block: -8px;
       background-color: currentColor;
-      mask: $caret-down center / 24px no-repeat;
+      mask: $caret-down center / 100% no-repeat;
       transition: rotate var(--md-sys-motion-duration-short3) ease-out;
 
       @media (prefers-reduced-motion: reduce) {
