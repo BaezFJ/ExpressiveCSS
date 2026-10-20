@@ -296,6 +296,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Slider stops come back, and the inactive track is CanvasText, so
     GrayText now means only disabled.
   - Disabled checkboxes, radios and their labels turn GrayText.
+  - FABs (`.extra`, `.extend`, `.large.circle`) and `.button` get the
+    outline too, the column chart track is outlined like the bar chart's,
+    the color picker area gets an edge, and every aura variant, rainbow and
+    glow included, is the solid Highlight ring its docs describe.
 - Blockquotes, table cells and the stacked `.responsive-table` header use
   logical properties, so the quote bar, cell alignment and header border
   mirror in a right-to-left page.

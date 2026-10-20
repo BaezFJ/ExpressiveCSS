@@ -57,11 +57,13 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
 
       // Caught mid-spring, the sheet stays where it is instead of jumping to the end.
       await page.waitForTimeout(40);
-      // Press on the handle where the spring has moved it to.
+      // Press on the handle where the spring has moved it to. The spring keeps
+      // carrying it up while the press is on its way, so aim near its top
+      // edge: from the centre, a loaded machine missed it by the time it landed.
       const [before, handleY] = await page.evaluate(() => {
         const sheet = document.getElementById('sheet');
         const handle = sheet.querySelector('.drag-handle').getBoundingClientRect();
-        return [sheet.getBoundingClientRect().top, handle.top + handle.height / 2];
+        return [sheet.getBoundingClientRect().top, handle.top + 4];
       });
       await page.mouse.move(x, handleY);
       await page.mouse.down();
