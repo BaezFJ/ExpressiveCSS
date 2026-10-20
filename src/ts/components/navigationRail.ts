@@ -105,15 +105,11 @@ export class NavigationRail extends Component<NavigationRailOptions> {
    */
   expand = () => {
     if (this.isExpanded) return;
-    if (typeof this.options.onOpenStart === 'function') {
-      this.options.onOpenStart.call(this, this.el);
-    }
+    if (!this._notify('open', this.options.onOpenStart, () => !this.isExpanded)) return;
     this.isExpanded = true;
     this.el.classList.add('expanded');
     this._sync();
-    if (typeof this.options.onOpenEnd === 'function') {
-      this.options.onOpenEnd.call(this, this.el);
-    }
+    this._notify('opened', this.options.onOpenEnd, () => this.isExpanded);
   };
 
   /**
@@ -121,15 +117,11 @@ export class NavigationRail extends Component<NavigationRailOptions> {
    */
   collapse = () => {
     if (!this.isExpanded) return;
-    if (typeof this.options.onCloseStart === 'function') {
-      this.options.onCloseStart.call(this, this.el);
-    }
+    if (!this._notify('close', this.options.onCloseStart, () => this.isExpanded)) return;
     this.isExpanded = false;
     this.el.classList.remove('expanded');
     this._sync();
-    if (typeof this.options.onCloseEnd === 'function') {
-      this.options.onCloseEnd.call(this, this.el);
-    }
+    this._notify('closed', this.options.onCloseEnd, () => !this.isExpanded);
   };
 
   /**

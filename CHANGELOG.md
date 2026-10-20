@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Menu, Lightbox, NavigationRail, Cards and ExpandingCard fire
+  `expressive:open` and `expressive:close` DOM events from the element
+  they were initialized on. Menu, Lightbox and NavigationRail then fire
+  `expressive:opened` and `expressive:closed`. The events bubble and cross
+  shadow roots, and each follows its `on…` callback, which still works.
+
 - Sheets spring back with the finger's speed: a bottom or side sheet
   released short of dismissing solves its spring at run time from where
   it is and how fast it moves, and a press while it springs catches it in

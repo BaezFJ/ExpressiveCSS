@@ -74,6 +74,9 @@ export class Lightbox extends Component<LightboxOptions> {
   private _isOpen = false;
   private _destroyed = false;
   private _revision = 0;
+  // Counts opens and closes only. _revision also moves when reduced motion
+  // flushes a transition, which must still report its end.
+  private _phase = 0;
 
   constructor(el: HTMLElement, options: Partial<LightboxOptions>) {
     super(el, options, Lightbox);
@@ -281,6 +284,7 @@ export class Lightbox extends Component<LightboxOptions> {
 
   // Image
   private _animateImageIn(): void {
+    const phase = this._phase;
     this.el.style.maxHeight = this.newHeight.toString() + 'px';
     this.el.style.maxWidth = this.newWidth.toString() + 'px';
     const duration = this._motion.matches ? 0 : this.options.inDuration;
@@ -317,11 +321,12 @@ export class Lightbox extends Component<LightboxOptions> {
 
     this._schedule(() => {
       this.doneAnimating = true;
-      if (typeof this.options.onOpenEnd === 'function') this.options.onOpenEnd.call(this, this.el);
+      this._notify('opened', this.options.onOpenEnd, () => phase === this._phase);
     }, duration);
 
   }
   private _animateImageOut(): void {
+    const phase = this._phase;
     const duration = this._motion.matches ? 0 : this.options.outDuration;
     // easeOutQuad
     this.el.style.transition = `height ${duration}ms ease,
@@ -337,8 +342,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this._schedule(() => {
       this._reset();
       // onCloseEnd callback
-      if (typeof this.options.onCloseEnd === 'function')
-        this.options.onCloseEnd.call(this, this.el);
+      this._notify('closed', this.options.onCloseEnd, () => phase === this._phase);
     }, duration);
   }
 
@@ -399,6 +403,7 @@ export class Lightbox extends Component<LightboxOptions> {
    */
   open = () => {
     if (this._destroyed || this._isOpen) return;
+    this._phase++;
     const revision = this._cancel();
     if (this.overlayActive) this._reset();
     this._updateVars();
@@ -417,9 +422,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this.el.classList.add('active');
     this.overlayActive = true;
     // onOpenStart callback
-    if (typeof this.options.onOpenStart === 'function')
-      this.options.onOpenStart.call(this, this.el);
-    if (revision !== this._revision) return;
+    if (!this._notify('open', this.options.onOpenStart, () => revision === this._revision)) return;
     // Set positioning for placeholder
     this.placeholder.style.width = placeholderRect.width + 'px';
     this.placeholder.style.height = placeholderRect.height + 'px';
@@ -472,13 +475,12 @@ export class Lightbox extends Component<LightboxOptions> {
    */
   close = () => {
     if (this._destroyed || !this._isOpen) return;
+    this._phase++;
     const revision = this._cancel();
     this._isOpen = false;
     this.doneAnimating = false;
     // onCloseStart callback
-    if (typeof this.options.onCloseStart === 'function')
-      this.options.onCloseStart.call(this, this.el);
-    if (revision !== this._revision) return;
+    if (!this._notify('close', this.options.onCloseStart, () => revision === this._revision)) return;
     // disable exit handlers
     window.removeEventListener('scroll', this._handleWindowChange);
     window.removeEventListener('resize', this._handleWindowChange);

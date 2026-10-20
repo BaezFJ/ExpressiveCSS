@@ -915,11 +915,12 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this._schedule(() => {
       if (focusOnOpen) this._focusInitialItem();
       if (transition !== this._transition) return;
-      if (typeof this.options.onOpenEnd === 'function') this.options.onOpenEnd.call(this, this.el);
+      this._notify('opened', this.options.onOpenEnd, () => transition === this._transition);
     }, duration);
   }
 
   _animateOut() {
+    const transition = this._transition;
     const duration = this.options.outDuration;
     // easeOutQuad (opacity) & easeOutQuint
     this.menuEl.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
@@ -928,8 +929,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.menuEl.style.transform = 'scale(0.85)';
     this._schedule(() => {
       this._resetMenuStyles();
-      if (typeof this.options.onCloseEnd === 'function')
-        this.options.onCloseEnd.call(this, this.el);
+      this._notify('closed', this.options.onCloseEnd, () => transition === this._transition);
     }, duration);
   }
 
@@ -1096,10 +1096,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     const transition = this._clearPendingTimers();
     this.isOpen = true;
     // onOpenStart callback
-    if (typeof this.options.onOpenStart === 'function') {
-      this.options.onOpenStart.call(this, this.el);
-    }
-    if (transition !== this._transition) return;
+    if (!this._notify('open', this.options.onOpenStart, () => transition === this._transition)) return;
     // Reset styles
     this._resetMenuStyles();
     this.menuEl.style.display = 'block';
@@ -1130,10 +1127,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this._clearActive();
     this._closeSubmenus();
     // onCloseStart callback
-    if (typeof this.options.onCloseStart === 'function') {
-      this.options.onCloseStart.call(this, this.el);
-    }
-    if (transition !== this._transition) return;
+    if (!this._notify('close', this.options.onCloseStart, () => transition === this._transition)) return;
     this._animateOut();
     this._removeTemporaryEventHandlers();
     this._setExpanded(false);

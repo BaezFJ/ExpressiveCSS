@@ -346,6 +346,14 @@ current?.destroy();
 
 `init()` also accepts a NodeList or HTMLCollection and returns an array of component instances. Empty collections return an empty array. Re-initializing an element destroys its previous instance first. Component-specific sections below define additional methods, properties, callbacks, and option defaults.
 
+Menu, Lightbox, NavigationRail, Cards and ExpandingCard fire DOM events from the element they were initialized on: `expressive:open` and `expressive:close` when the state changes, then `expressive:opened` and `expressive:closed` when the motion ends. Cards and ExpandingCard fire only `expressive:open` and `expressive:close`. Each event follows the matching `on…` callback, which still works. The events bubble and are composed, so a document listener sees components inside open shadow roots; check `event.target` because nested components bubble too. Closing a Menu or Lightbox from its `expressive:open` listener stops it opening.
+
+```js
+document.addEventListener('expressive:open', (event) => {
+  if (event.target.matches('.menu-trigger')) analytics.track('menu-open');
+});
+```
+
 ## Public JavaScript surface
 
 The main bundle exports:
