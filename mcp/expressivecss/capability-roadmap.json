@@ -1997,13 +1997,8 @@
       "gaps": [
         {
           "kind": "verification",
-          "description": "Drawing, the hidden table, grouped and stacked geometry, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "description": "Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
           "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-        },
-        {
-          "kind": "feature",
-          "description": "There are no range columns.",
-          "nextStep": "Add range columns when a page needs them."
         }
       ],
       "browserChecks": [

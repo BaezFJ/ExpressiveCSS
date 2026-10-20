@@ -80,6 +80,11 @@
     &.negative {
       --mixed-chart-ends: 0 0 var(--md-comp-mixed-chart-shape) var(--md-comp-mixed-chart-shape);
     }
+
+    // A range floats, so both its ends are rounded.
+    &.range {
+      --mixed-chart-ends: var(--md-comp-mixed-chart-shape);
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {

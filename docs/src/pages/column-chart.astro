@@ -9,6 +9,7 @@ import { defineSections } from "../lib/sections";
 const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "series", label: "Several series" },
+  { id: "range", label: "Ranges" },
   { id: "stacked", label: "Stacked" },
   { id: "styles", label: "Fade and track" },
   { id: "sparkline", label: "Sparkline" },
@@ -28,6 +29,7 @@ const expenses = [2500, 2200, 2500, 1900, 2300, 2500, 2300, 2100, 2400, 2500, 22
 const profit = [1500, 1200, 1600, 1300, 1400, 1500, 1200, 1100, 2000, 2100, 1800, 2300];
 const net = [1200, -400, 800, 1500, -900, 600];
 const signups = [42, 38, 51, 47, 56, 61, 58];
+const response: [string, number, number, number][] = [["Mon", 120, 480, 210], ["Tue", 95, 390, 180], ["Wed", 140, 620, 260], ["Thu", 110, 450, 200], ["Fri", 160, 710, 310]];
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const money = (value: number) => `${value < 0 ? "−" : ""}$${Math.abs(value).toLocaleString("en-US")}`;
 const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
@@ -118,6 +120,38 @@ card.querySelectorAll('[data-period]').forEach((button) => {
     <tbody>
       <tr><th>Jan</th><td>5,500</td><td>3,500</td><td>3,200</td></tr>
       <!-- One row per month -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.range}>
+        <p>
+          Give a series header the class <code>range</code> and each of its
+          cells two numbers, such as <code>120–480</code>: the column floats
+          from the lower to the higher, rounded at both ends. Write the ends
+          with an en dash, a spaced hyphen or "to", or put them in
+          <code>data-value="120 480"</code>; any other cell is a gap. The
+          tooltip shows the cell as written, and other series draw from zero
+          beside the range as usual. A bar chart reads ranges the same way.
+        </p>
+        <figure class="column-chart axis" data-markdown-ignore>
+          <figcaption>Response time (ms), fastest to slowest and median</figcaption>
+          <table>
+            <thead><tr><th>Day</th><th class="range">Fastest to slowest</th><th>Median</th></tr></thead>
+            <tbody>{response.map(([day, low, high, median]) => <tr><th>{day}</th><td>{low}–{high}</td><td>{median}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="column-chart axis">
+  <figcaption>Response time (ms), fastest to slowest and median</figcaption>
+  <table>
+    <thead>
+      <tr><th>Day</th><th class="range">Fastest to slowest</th><th>Median</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Mon</th><td>120–480</td><td>210</td></tr>
+      <!-- … -->
     </tbody>
   </table>
 </figure>

@@ -5073,6 +5073,7 @@ A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as
 ```
 
 - `stacked` draws one column per row with each series on the total of the ones before it; only the top segment rounds its end. Keep stacked values positive; an empty cell leaves the total unknown, so the segments above it are left out. The tooltip still shows each cell.
+- A series header with the class `range` reads each cell as two numbers, such as `120–480`, `−4 – 6` or `3 to 14`, or `data-value="120 480"`, and floats a column from the lower to the higher, rounded at both ends; the scale makes room for low ends below zero. Any other cell is a gap that keeps its slot, and the tooltip shows the cell as written. A range does not stack.
 - `fade` fades each column toward its base; `track` draws a full-height track behind each group and rounds both ends of its columns; `sparkline` is a 48px chart with no grid, labels, legend or tooltip, and is not focusable.
 - Series take `primary`, `tertiary`, `secondary` and `on-surface-variant` in turn. A series header cell's classes reach its columns as hooks for your own styles; `dashed` has no column style.
 - Cells read as in a line chart: currency signs, percent signs and grouping commas are ignored, other text is a gap, and `data-value` gives the number. In a grouped chart a gap leaves an empty slot.
@@ -5119,6 +5120,7 @@ A `<figure class="bar-chart">` takes the same `<figcaption>` and `<table>` as a 
 
 - The plot is as tall as its rows: `--md-comp-bar-chart-row-height` sets each row, so a longer table makes a taller chart. Labels take up to 40% of the width and end in an ellipsis past it.
 - `stacked` draws one bar per row with each series after the total of the ones before it; only the last segment rounds its end. `split` separates stacked segments with a gap and rounds them at each joint. With `track` and `data-max` set to a budget, one stacked row is a meter of what is spent and what is left.
+- A series header with the class `range` reads each cell as two numbers, as in the column chart, and floats a bar between them, rounded at both ends.
 - `track` draws a full-width track behind each row and rounds both ends of its bars. `values` writes each cell's text from its bar's base, in the series' on-color over the bar; a value longer than a short bar runs on past its end in the label color, and a stacked segment cuts what does not fit. `sparkline` drops the labels, grid, legend and tooltip and is not focusable.
 - Cells, series colors, `data-min`, `data-max`, negative values and gaps work as in the column chart; negative bars grow toward the inline start.
 - `axis` labels the value axis at round values under the plot, with a grid line up from each, as in the column chart.

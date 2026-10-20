@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Range columns and bars: a series header with the class `range` reads
+  cells such as `120–480`, `3 to 14` or `data-value="120 480"` and floats a
+  column or bar between the two ends, rounded at both.
+
 - Mixed chart stacking: `.stacked` stacks the column series into one
   column per row, with the `end` scale's columns in their own column
   beside it. Lines and areas keep their own values.

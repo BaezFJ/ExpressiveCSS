@@ -106,7 +106,11 @@ export interface Series {
  */
 function cellValue(cell: Element | undefined): number | null {
   if (!cell) return null;
-  const raw = (cell as HTMLElement).dataset.value ?? cell.textContent;
+  return numberValue((cell as HTMLElement).dataset.value ?? cell.textContent);
+}
+
+/** Reads text as one number, as cellValue does, or null. */
+export function numberValue(raw: string): number | null {
   const text = raw.replace(/\u2212/g, '-').replace(/[\s%\p{Sc}]/gu, '');
   if (!/^[+-]?(\d{1,3}(,\d{3})+|\d+)?(\.\d+)?(e[+-]?\d+)?$/i.test(text)) return null;
   // The pattern also lets through "e5" (NaN) and "1e400" (Infinity).
@@ -352,11 +356,16 @@ export class LineChart extends Component<LineChartOptions> {
         affix: affix(rows.map((row) => row.cells[i + 1]))
       };
     });
-    if (this.el.classList.contains('stacked')) this._stack(this.series);
+    this._arrange(this.series);
 
     if (this.series.every((series) => series.tops.every((value) => value === null))) this.series = [];
     const option = (name: 'min' | 'max') => this._number(name) ?? this.options[name];
     this._y = this._scale(this.series, option('min'), option('max'));
+  }
+
+  /** Turns the values read into what is drawn: with .stacked, running totals. */
+  protected _arrange(series: Series[]) {
+    if (this.el.classList.contains('stacked')) this._stack(series);
   }
 
   /**
@@ -388,8 +397,9 @@ export class LineChart extends Component<LineChartOptions> {
     const fixed = [min !== null, max !== null] as const;
     const stacked = this.el.classList.contains('stacked');
     let [low, high] = [Infinity, -Infinity];
-    for (const { tops } of series) {
-      for (const value of tops) {
+    // A base below zero, such as a range's low end, needs room on the scale too.
+    for (const { tops, base = [] } of series) {
+      for (const value of [...tops, ...base]) {
         if (value === null) continue;
         low = Math.min(low, value);
         high = Math.max(high, value);

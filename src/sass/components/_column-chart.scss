@@ -13,7 +13,8 @@
 // ones before it, .fade fades each column toward its base, .track draws a
 // full-height track behind each row's columns, .axis labels the y axis at
 // round values with a grid line at each, .sparkline is a small chart
-// with no axis, grid, legend or tooltip.
+// with no axis, grid, legend or tooltip. A series header with class
+// "range" reads cells such as "12–28" and floats a column between the ends.
 //
 // Tokens:
 //   --md-comp-column-chart-height         240px (sparkline 48px)
@@ -65,6 +66,11 @@
     // A column below zero has its tip at the bottom.
     &.negative {
       --column-chart-ends: var(--column-chart-base) var(--column-chart-base) var(--column-chart-tip) var(--column-chart-tip);
+    }
+
+    // A range floats, so both its ends are tips.
+    &.range {
+      --column-chart-base: var(--column-chart-tip);
     }
   }
 

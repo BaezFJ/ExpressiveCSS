@@ -45,7 +45,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [KPI](#kpi) | implemented | source-reviewed | needs-rerun | 0 |
 | [Countdown](#countdown) | implemented | source-reviewed | needs-rerun | 0 |
 | [Line chart](#line-chart) | unassessed | needs-review | needs-rerun | 0 |
-| [Column chart](#column-chart) | unassessed | needs-review | needs-rerun | 1 |
+| [Column chart](#column-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Bar chart](#bar-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Pie chart](#pie-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Heatmap chart](#heatmap-chart) | unassessed | needs-review | needs-rerun | 1 |
@@ -651,8 +651,7 @@ Google relationship: none. Upstream review: web-extension-inventory-reviewed (20
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-- verification: Drawing, the hidden table, grouped and stacked geometry, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
-- feature: There are no range columns. Next: Add range columns when a page needs them.
+- verification: Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 
 - stale: [tests/column-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/column-chart-browser.test.js): `chromium: column chart draws grouped, stacked and negative columns from its table`. Hidden table in the accessibility tree, the named plot and its role description, labels, legend, series classes, separate instances from line charts, grouped column geometry with an empty slot for a gap, stacked segments on the total below with only the top segment rounded, a gap leaving the segments above out, negative columns from a centred zero, data-min above zero, the sparkline size and focus, and destroy restoring the table.
 - stale: [tests/column-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/column-chart-browser.test.js): `chromium: column chart tooltip and band follow the pointer and the arrow keys`. Pointer position to row, tooltip text without empty cells, no cursor points, the band's width and position, hiding on leave, focus, End and Escape, and the first row on the right in RTL. No spoken-output assertion.

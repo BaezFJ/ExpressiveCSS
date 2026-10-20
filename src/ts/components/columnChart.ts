@@ -1,13 +1,33 @@
 import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions, seriesColor } from './lineChart';
+import { LineChart, LineChartOptions, numberValue, Series, seriesColor } from './lineChart';
 
 export type ColumnChartOptions = LineChartOptions;
 
 /**
+ * A range cell's two ends, low first: data-value="12 28", or text with an
+ * en dash, a spaced hyphen or "to" between two numbers, such as "$12–$28".
+ * Anything else is a gap.
+ */
+function rangeValue(cell: HTMLTableCellElement | undefined): [number | null, number | null] {
+  const ends = rangeParts(cell).map(numberValue);
+  return ends.length === 2 && !ends.includes(null)
+    ? [Math.min(ends[0]!, ends[1]!), Math.max(ends[0]!, ends[1]!)]
+    : [null, null];
+}
+
+/** A range cell's data-value split at spaces, or its text split between the ends. */
+function rangeParts(cell: HTMLTableCellElement | undefined): string[] {
+  if (!cell) return [];
+  return cell.dataset.value?.trim().split(/\s+/) ?? cell.textContent.split(/\s*[–—]\s*|\s+(?:-|to)\s+/);
+}
+
+/**
  * Column chart. It reads its <table>, scales, labels and tooltip like
  * LineChart, but draws each row as a group of columns from zero, or one
- * column of segments with `stacked`. Columns are HTML clipped to their
- * value, so their rounded corners keep their shape at any size.
+ * column of segments with `stacked`. A series whose header has `range`
+ * reads each cell as two ends and floats a column between them. Columns
+ * are HTML clipped to their value, so their rounded corners keep their
+ * shape at any size.
  *
  * Re-run `ColumnChart.init(el)` after changing the table.
  */
@@ -41,11 +61,23 @@ export class ColumnChart extends LineChart {
     return el['Expressive_ColumnChart'];
   }
 
+  /** A `range` series' low ends become its base, before any stacking. */
+  protected _arrange(series: Series[]) {
+    series.forEach((each, i) => {
+      if (!each.className.split(/\s+/).includes('range')) return;
+      const ends = this._rows.map((row) => rangeValue(row.cells[i + 1]));
+      each.base = ends.map(([low]) => low);
+      each.values = each.tops = ends.map(([, high]) => high);
+    });
+    super._arrange(series);
+  }
+
   protected _draw(drawn = this.series): Element {
     const columns = document.createElement('div');
     columns.className = 'column-chart-columns';
     columns.setAttribute('aria-hidden', 'true');
     const clamp = (value: number, y = drawn[0]?.y ?? this._y) => Math.min(100, Math.max(0, y(value)));
+    const stacked = this.el.classList.contains('stacked');
     // Columns grow from zero, or from the plot edge when zero is off the scale.
     columns.style.setProperty('--zero', `${clamp(0)}%`);
     this._plot.style.setProperty('--rows', String(this.labels.length));
@@ -56,7 +88,7 @@ export class ColumnChart extends LineChart {
         // A stacked segment above a gap has no known base, so it is left out.
         const to = series.tops[index];
         const from = series.base?.[index] ?? 0;
-        if (series.base && (to === null || from === null)) return;
+        if (stacked && (to === null || from === null)) return;
         const column = document.createElement('span');
         // A gap in a grouped row keeps its empty slot, so the series stay aligned.
         if (to !== null) {
