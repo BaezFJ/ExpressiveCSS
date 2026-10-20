@@ -9,7 +9,7 @@ Component ID: `loading-indicator`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `61e0260a1b52a6688717b932d0ff9da31eb5f9618c1bbb0dfb7878b64315900c`
+Contract SHA-256: `204b2d12bba891bbd36408f7d090c55300c256de973c9a6800de3af7f3c59c42`
 
 #### Selection and adaptation
 

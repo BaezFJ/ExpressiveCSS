@@ -2259,6 +2259,16 @@ For a form submit, use a real `<button type="submit">` rather than an input.
 </button>
 ```
 
+### Shape and toggles
+
+A button is round; `square` gives it its size's squared corner, 12dp up to small, 16dp at medium and 28dp at large and xlarge. Pressed, every common button morphs to its size's pressed corner, 8dp up to small, 12dp at medium and 16dp beyond, on Material's fast spatial spring (none under reduced motion). `aria-pressed` makes a button a toggle: selected, a round button goes square and a square one goes round, and the colours change from md.comp.button.<style>.{unselected,selected} — filled surface-container to primary, tonal secondary-container to secondary, outlined to inverse-surface without its outline, elevated surface-container-low to primary. Text buttons do not toggle. Switch `aria-pressed` in your own click handler. Buttons in fixed slots (FABs, button group items, toolbars, navigation, tabs, pagination, snackbars, dialog headers and the time picker's AM/PM) keep their own shapes and colours.
+
+```html
+<button class="square">Square</button>
+<button type="button" class="tonal" aria-pressed="true">Selected</button>
+<button type="button" class="square" aria-pressed="false">Unselected square</button>
+```
+
 ### Disabled
 
 The `disabled` attribute, or the `disabled` class on a link. Applies to every variant.

@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Common button shapes: `square` takes the size's squared corner, every
+  common button morphs to its size's pressed corner while pressed, and
+  `aria-pressed` makes a button a toggle that swaps round and square when
+  selected and takes the M3 selected colours for its style.
+
 - Questionnaire extras, each opt-in on the form: `data-shortcuts` lets a
   letter or digit pick an answer, `data-summary` adds a review step that
   lists every answer with an Edit button before submitting, and

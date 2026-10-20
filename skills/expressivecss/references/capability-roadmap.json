@@ -874,7 +874,7 @@
       "title": "Buttons",
       "kind": "component",
       "support": "unassessed",
-      "lastReviewedSupport": "partial",
+      "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
       "scope": "Filled, tonal, outlined, elevated, and text; xsmall through xlarge.",
@@ -906,13 +906,7 @@
           "sha256": "2aaccb38cfd12b3829cbaa753e572ffc95f135a1f7f18d8de4f56764e94c3ec4"
         }
       ],
-      "gaps": [
-        {
-          "kind": "feature",
-          "description": "Standalone common buttons do not document a square/toggle shape-morph contract; do not borrow icon-button or connected-group modifiers.",
-          "nextStep": "Define and test a standalone shape-morph contract without borrowing connected-group or icon-button modifiers."
-        }
-      ],
+      "gaps": [],
       "browserChecks": [
         {
           "file": "tests/expressivecss-examples-browser.test.js",

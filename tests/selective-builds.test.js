@@ -268,5 +268,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed chart review fixes: segment sizes, stacked ranges, diverging bounds and scrolling tooltips: 80,415 gzip bytes (+5).
   // Reviewed keypad caps lock, layers, hardware key highlight and minlength: 80,435 gzip bytes (+20).
   // Reviewed questionnaire shortcuts, review step and saved progress: 80,608 gzip bytes (+173).
-  assert.ok(sizes(css).gzip <= 80608, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed common button square shape, toggles and press morph: 81,001 gzip bytes (+393).
+  assert.ok(sizes(css).gzip <= 81001, `CSS gzip: ${sizes(css).gzip}`);
 });

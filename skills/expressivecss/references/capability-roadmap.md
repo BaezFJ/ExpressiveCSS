@@ -28,7 +28,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Menubar](#menubar) | unassessed | needs-review | incomplete | 0 |
 | [Scrollspy](#scrollspy) | unassessed | needs-review | needs-rerun | 0 |
 | [Tree](#tree) | implemented | source-reviewed | needs-rerun | 0 |
-| [Buttons](#buttons) | unassessed | needs-review | needs-rerun | 1 |
+| [Buttons](#buttons) | unassessed | needs-review | needs-rerun | 0 |
 | [Icon buttons](#icon-buttons) | unassessed | needs-review | needs-rerun | 0 |
 | [Button groups](#button-groups) | unassessed | needs-review | needs-rerun | 0 |
 | [Split button](#split-button) | unassessed | needs-review | needs-rerun | 0 |
@@ -358,7 +358,7 @@ Google relationship: component. Upstream review: overview-specs-guidelines-acces
 
 Web adaptation: Native buttons run commands; a.button links navigate.
 
-- feature: Standalone common buttons do not document a square/toggle shape-morph contract; do not borrow icon-button or connected-group modifiers. Next: Define and test a standalone shape-morph contract without borrowing connected-group or icon-button modifiers.
+No gap identified within the stated scope; broader upstream parity remains unassessed.
 
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.

@@ -137,11 +137,11 @@ $flow-text-to: 960px !default;      // the old loop's last step: 360px + 20 * 30
 // the group itself. A partial may not @use another partial, so a table two of
 // them share has to be here.
 $button-sizes: (
-  "xsmall": (height: 32px, icon: 20px, space: 12px, gap: 8px, outline: 1px, label: "label-large"),
-  "small": (height: 40px, icon: 20px, space: 16px, gap: 8px, outline: 1px, label: "label-large"),
-  "medium": (height: 56px, icon: 24px, space: 24px, gap: 8px, outline: 1px, label: "title-medium"),
-  "large": (height: 96px, icon: 32px, space: 48px, gap: 12px, outline: 2px, label: "headline-small"),
-  "xlarge": (height: 136px, icon: 40px, space: 64px, gap: 16px, outline: 3px, label: "headline-large"),
+  "xsmall": (height: 32px, icon: 20px, space: 12px, gap: 8px, outline: 1px, square: 12px, pressed: 8px, label: "label-large"),
+  "small": (height: 40px, icon: 20px, space: 16px, gap: 8px, outline: 1px, square: 12px, pressed: 8px, label: "label-large"),
+  "medium": (height: 56px, icon: 24px, space: 24px, gap: 8px, outline: 1px, square: 16px, pressed: 12px, label: "title-medium"),
+  "large": (height: 96px, icon: 32px, space: 48px, gap: 12px, outline: 2px, square: 28px, pressed: 16px, label: "headline-small"),
+  "xlarge": (height: 136px, icon: 40px, space: 64px, gap: 16px, outline: 3px, square: 28px, pressed: 16px, label: "headline-large"),
 );
 
 // Icon-button geometry is shared with button groups. A group-size class must

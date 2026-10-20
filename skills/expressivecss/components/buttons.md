@@ -9,7 +9,7 @@ Component ID: `buttons`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `61e0260a1b52a6688717b932d0ff9da31eb5f9618c1bbb0dfb7878b64315900c`
+Contract SHA-256: `204b2d12bba891bbd36408f7d090c55300c256de973c9a6800de3af7f3c59c42`
 
 #### Selection and adaptation
 
@@ -33,7 +33,7 @@ Support (2026-09-07, `llm.md#buttons`): Filled, tonal, outlined, elevated, and t
 
 Web adaptation: Native buttons run commands; a.button links navigate.
 
-Known boundary: Standalone common buttons do not document a square/toggle shape-morph contract; do not borrow icon-button or connected-group modifiers.
+Known boundary: Standalone toggle buttons take their shape and colours from aria-pressed; the page switches aria-pressed, as the component ships no toggle script.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#buttons).
 
@@ -64,7 +64,7 @@ Tokens follow the [M3 button spec](https://m3.material.io/components/buttons/spe
 
 #### Also documented
 
-The Buttons section of the [API reference](https://www.expressivecss.com/llm.md) also covers Filled, Tonal, Outlined, Elevated, Text, Icon buttons, Floating, Sizes, Disabled.
+The Buttons section of the [API reference](https://www.expressivecss.com/llm.md) also covers Filled, Tonal, Outlined, Elevated, Text, Icon buttons, Floating, Sizes, Shape and toggles, Disabled.
 
 #### Rules
 
