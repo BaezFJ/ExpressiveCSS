@@ -78,3 +78,31 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     }
   });
 }
+
+// The reset's `box-sizing: inherit` ties each item's style to its group's,
+// so a page that draws every frame restyled every item as the groups moved.
+test('chromium: a moving marquee restyles its two groups, not their items', { timeout: 30000 }, async (t) => {
+  if (requested && requested !== 'chromium') { t.skip('chromium only'); return; }
+  if (!existsSync(chromium.executablePath())) { t.skip('chromium is not installed'); return; }
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
+    await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+      <div style="height:300px"></div>${strip('h')}</body></html>`);
+    // Something else on the page draws every frame, so each frame restyles.
+    await page.evaluate(() => { const frame = () => requestAnimationFrame(frame); frame(); });
+    const cdp = await page.context().newCDPSession(page);
+    const events = [];
+    cdp.on('Tracing.dataCollected', (e) => events.push(...e.value));
+    const done = new Promise((resolve) => cdp.once('Tracing.tracingComplete', resolve));
+    await cdp.send('Tracing.start', { categories: 'devtools.timeline', transferMode: 'ReportEvents' });
+    await page.waitForTimeout(500);
+    await cdp.send('Tracing.end');
+    await done;
+    const counts = events.filter((e) => e.name === 'UpdateLayoutTree' && e.ph === 'X').map((e) => e.args.elementCount);
+    assert.ok(counts.length > 10, `the strip restyled on ${counts.length} frames`);
+    assert.ok(Math.max(...counts) <= 2, `each frame restyled at most the two groups, not ${Math.max(...counts)} elements`);
+  } finally {
+    await browser.close();
+  }
+});

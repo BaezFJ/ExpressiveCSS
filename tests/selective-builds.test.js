@@ -298,5 +298,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed rem sizes for charts, cards, stat, KPI and the org chart: 83,153 gzip bytes (+13).
   // Reviewed touch: map marker hit area and the snackbar close default: 83,168 gzip bytes (+15).
   // Reviewed map tap-to-move markers, arrow nudge and pan actions: 83,204 gzip bytes (+36).
-  assert.ok(sizes(css).gzip <= 83204, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the marquee item box-sizing: 83,207 gzip bytes (+3).
+  assert.ok(sizes(css).gzip <= 83207, `CSS gzip: ${sizes(css).gzip}`);
 });

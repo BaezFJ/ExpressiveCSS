@@ -68,8 +68,11 @@
   list-style: none;
   animation: marquee-x var(--md-comp-marquee-duration) linear infinite;
 
+  // Its own box-sizing, not the reset's inherit, so each frame of the
+  // scroll restyles the two groups and not every item in them.
   > * {
     flex: none;
+    box-sizing: border-box;
   }
 
   .vertical > & {
