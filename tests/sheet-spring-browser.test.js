@@ -60,16 +60,19 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       // Press on the handle where the spring has moved it to. The spring keeps
       // carrying it up while the press is on its way, so aim near its top
       // edge: from the centre, a loaded machine missed it by the time it landed.
-      const [before, handleY] = await page.evaluate(() => {
+      // The spring is still moving while the press travels, so where the sheet
+      // was is read at the press itself, before the component sees it.
+      const handleY = await page.evaluate(() => {
         const sheet = document.getElementById('sheet');
-        const handle = sheet.querySelector('.drag-handle').getBoundingClientRect();
-        return [sheet.getBoundingClientRect().top, handle.top + 4];
+        window.addEventListener('pointerdown', () => { window.pressedAt = sheet.getBoundingClientRect().top; }, { capture: true, once: true });
+        return sheet.querySelector('.drag-handle').getBoundingClientRect().top + 4;
       });
       await page.mouse.move(x, handleY);
       await page.mouse.down();
       const caught = await page.evaluate(() => {
         const sheet = document.getElementById('sheet');
         return {
+          before: window.pressedAt,
           top: sheet.getBoundingClientRect().top,
           springs: sheet.getAnimations().filter((animation) => animation.effect.getKeyframes()[0].translate).length,
           shift: parseFloat(sheet.style.getPropertyValue('--md-comp-bottom-sheet-shift')),
@@ -78,7 +81,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await page.mouse.up();
       assert.equal(caught.springs, 0, 'catching it stops the spring');
       assert.ok(caught.shift > 0, `the drag carries on from the caught offset: ${caught.shift}`);
-      assert.ok(Math.abs(caught.top - before) < 25, `no jump: ${before} then ${caught.top}`);
+      assert.ok(Math.abs(caught.top - caught.before) < 2, `no jump: ${caught.before} then ${caught.top}`);
 
       // Once settled, the transition is back for the next open or close.
       await page.waitForTimeout(1200);

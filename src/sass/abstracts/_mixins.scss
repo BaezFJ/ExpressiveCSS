@@ -6,6 +6,16 @@
 
 $_state-layers: ("hover", "focus", "pressed", "dragged");
 
+/// A dp size as rem, for a box that holds text or an icon.
+///
+/// Type is set in rem, so raising the browser's default font size or zooming
+/// text only grows the text. A px box around it stays put, and the text spills
+/// out of it or is cut. A rem box grows with its text, and it renders exactly
+/// as before at the default 16px. Borders, gaps and insets stay px.
+@function rem($px) {
+  @return math.div($px, 16px) * 1rem;
+}
+
 /// A state layer opacity, as the percentage `color-mix()` wants.
 ///
 /// The tokens hold numbers (0.08), because an overlay uses one as `opacity`
@@ -28,7 +38,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 // label-large, corner.full, 16dp inset, 8dp icon gap. The size axis moves
 // those tokens; the style mixins only change color and elevation.
 @mixin btn(
-  $height: var(--md-comp-filled-button-container-height, 40px),
+  $height: var(--md-comp-filled-button-container-height, #{rem(40px)}),
   $border-radius: var(--md-comp-filled-button-container-shape, 9999px),
   $padding-left: var(--md-comp-filled-button-leading-space, 16px),
   $padding-right: var(--md-comp-filled-button-trailing-space, 16px),
@@ -237,8 +247,8 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 @mixin button-size($name) {
   $s: map.get($button-sizes, $name);
 
-  --md-comp-filled-button-container-height: #{map.get($s, height)};
-  --md-comp-filled-button-icon-size: #{map.get($s, icon)};
+  --md-comp-filled-button-container-height: #{rem(map.get($s, height))};
+  --md-comp-filled-button-icon-size: #{rem(map.get($s, icon))};
   --md-comp-filled-button-leading-space: #{map.get($s, space)};
   --md-comp-filled-button-trailing-space: #{map.get($s, space)};
   --md-comp-filled-button-icon-label-space: #{map.get($s, gap)};
@@ -251,8 +261,8 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 @mixin icon-button-size($name) {
   $s: map.get($icon-button-sizes, $name);
 
-  --md-comp-icon-button-container-height: #{map.get($s, height)};
-  --md-comp-icon-button-icon-size: #{map.get($s, icon)};
+  --md-comp-icon-button-container-height: #{rem(map.get($s, height))};
+  --md-comp-icon-button-icon-size: #{rem(map.get($s, icon))};
   --md-comp-icon-button-leading-space: #{map.get($s, space)};
   --md-comp-icon-button-trailing-space: #{map.get($s, space)};
   --md-comp-icon-button-narrow-space: #{map.get($s, narrow)};

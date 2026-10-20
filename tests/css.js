@@ -81,3 +81,9 @@ export function mediaRules(source, query) {
   }
   return out;
 }
+
+/**
+ * A dp size as the stylesheet writes it once the Sass `rem()` function has
+ * converted it: 40 is `2.5rem`, which is 40px at the default 16px root.
+ */
+export const rem = (dp) => `${dp / 16}rem`;

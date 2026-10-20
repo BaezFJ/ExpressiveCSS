@@ -85,7 +85,7 @@ $_sizes: (
 
   --md-comp-split-button-leading-button-trailing-space: #{map.get($s, lead-end)};
   --md-comp-split-button-trailing-button-space: #{map.get($s, trail-space)};
-  --md-comp-split-button-trailing-icon-size: #{map.get($s, trail-icon)};
+  --md-comp-split-button-trailing-icon-size: #{rem(map.get($s, trail-icon))};
   --md-comp-split-button-inner-corner-corner-size: #{map.get($s, inner)};
   --md-comp-split-button-inner-pressed-corner-corner-size: #{map.get($s, swollen)};
 }

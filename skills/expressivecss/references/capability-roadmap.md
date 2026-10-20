@@ -59,7 +59,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Side sheet](#side-sheet) | unassessed | needs-review | needs-rerun | 0 |
 | [Drag handle](#drag-handle) | unassessed | needs-review | no-mapped-checks | 1 |
 | [Badges](#badges) | unassessed | needs-review | needs-rerun | 0 |
-| [Avatar](#avatar) | implemented | source-reviewed | needs-rerun | 0 |
+| [Avatar](#avatar) | unassessed | needs-review | needs-rerun | 0 |
 | [Organization chart](#org-chart) | implemented | source-reviewed | incomplete | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | needs-rerun | 0 |
 | [Popover](#popover) | implemented | source-reviewed | needs-rerun | 0 |
@@ -888,9 +888,9 @@ Web adaptation: Expose counts through the enclosing control name when its icon i
 
 ## Avatar
 
-**implemented within the stated scope.** Image, initials and icon avatars in three sizes, and overlapping groups with a surface ring and a count avatar.
+**unassessed within the stated scope.** Image, initials and icon avatars in three sizes, and overlapping groups with a surface ring and a count avatar.
 
-Source review: source-reviewed, 2026-10-06. [src/sass/components/_avatar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_avatar.scss).
+Source review: needs-review, 2026-10-06. [src/sass/components/_avatar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_avatar.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
 

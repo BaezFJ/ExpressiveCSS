@@ -63,8 +63,8 @@ header:has(> #{$_bar}) {
   // the headline; trailing is everything after it.
   --md-comp-top-app-bar-leading-icon-color: inherit;
   --md-comp-top-app-bar-trailing-icon-color: inherit;
-  --md-comp-top-app-bar-container-height: 64px;
-  --md-comp-top-app-bar-leading-icon-size: 24px;
+  --md-comp-top-app-bar-container-height: #{rem(64px)};
+  --md-comp-top-app-bar-leading-icon-size: #{rem(24px)};
   --md-comp-top-app-bar-container-shape: 0;
 
   background-color: color-mix(
@@ -135,8 +135,8 @@ header:has(> #{$_bar}) {
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
+    width: rem(48px);
+    height: rem(48px);
     padding: 0;
     // Leave margin-inline-start unset so a medium/large bar can push
     // the first trailing action to the end with margin-inline-start: auto.
@@ -328,7 +328,7 @@ header.large:has(> #{$_bar}) > #{$_bar} {
   &::before {
     content: "";
     flex: 0 0 0;
-    height: 48px;
+    height: rem(48px);
   }
 
   > #{$_title} {
@@ -358,7 +358,7 @@ header.large:has(> #{$_bar}) > #{$_bar} {
 }
 
 header.medium:has(> #{$_bar}) > #{$_bar} {
-  min-height: 112px;
+  min-height: rem(112px);
   padding-bottom: 20px;
 
   > #{$_title} {
@@ -376,11 +376,11 @@ header.medium:has(> #{$_bar}) > #{$_bar} {
 }
 
 header.medium:has(> #{$_bar} > hgroup > p) > #{$_bar} {
-  min-height: 136px;
+  min-height: rem(136px);
 }
 
 header.large:has(> #{$_bar}) > #{$_bar} {
-  min-height: 120px;
+  min-height: rem(120px);
   padding-bottom: 20px;
 
   > #{$_title} {
@@ -398,7 +398,7 @@ header.large:has(> #{$_bar}) > #{$_bar} {
 }
 
 header.large:has(> #{$_bar} > hgroup > p) > #{$_bar} {
-  min-height: 152px;
+  min-height: rem(152px);
   padding-bottom: 28px;
 }
 
@@ -417,7 +417,7 @@ header.large.collapsed:has(> #{$_bar}) > #{$_bar} {
   flex-wrap: nowrap;
   align-content: center;
   align-items: center;
-  min-height: 64px;
+  min-height: rem(64px);
   padding-top: 0;
   padding-bottom: 0;
 

@@ -32,6 +32,15 @@ async function inspect(page) {
   const data = await page.evaluate(selectors => {
     if (document.querySelectorAll('*').length > 2000) throw new Error('Material fixture exceeds DOM node limit');
     const styles = {};
+    // A size token is written in rem; resolve it to the px length it renders as.
+    const length = (node, name) => {
+      const probe = document.createElement('span');
+      probe.style.cssText = `position: absolute; visibility: hidden; width: var(${name})`;
+      node.append(probe);
+      const value = getComputedStyle(probe).width;
+      probe.remove();
+      return value;
+    };
     for (const selector of selectors) {
       const nodes = document.querySelectorAll(selector);
       if (nodes.length !== 1) throw new Error(`Expected one ${selector}`);
@@ -39,7 +48,7 @@ async function inspect(page) {
       styles[selector] = { visible: node.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }), width: box.width, height: box.height,
         fontSize: style.fontSize, lineHeight: style.lineHeight, fontWeight: style.fontWeight, fontFamily: style.fontFamily,
         color: style.color, backgroundColor: style.backgroundColor, borderRadius: style.borderRadius,
-        containerHeight: style.getPropertyValue('--md-comp-filled-button-container-height').trim(), containerShape: style.getPropertyValue('--md-comp-filled-button-container-shape').trim() };
+        containerHeight: length(node, '--md-comp-filled-button-container-height'), containerShape: length(node, '--md-comp-filled-button-container-shape') };
     }
     return { width: innerWidth, scrollWidth: document.documentElement.scrollWidth, treatment: document.body.dataset.treatment, reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches, styles };
   }, SELECTORS);

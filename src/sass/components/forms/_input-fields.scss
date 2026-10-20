@@ -30,7 +30,7 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
   outline: none;
   color: var(--md-sys-color-on-surface);
   width: 100%;
-  height: 56px;
+  height: rem(56px);
   background-color: transparent;
   @include typescale("body-large");
 }
@@ -59,6 +59,11 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   // `direction`, instead. A page that sets only `direction` renders as LTR.
   --_field-start: 16px;
   --_field-end: 16px;
+  // Clearance for a 24dp icon at a 12dp inset with 16dp after it: 52px at
+  // the default size. The icon is rem, so the clearance grows with it.
+  --_field-icon-clearance: calc(28px + #{rem(24px)});
+  // A small icon button, 8dp either side of its rem icon: 40px by default.
+  --_field-icon-button: calc(16px + #{rem(24px)});
   --_field-left: var(--_field-start);
   --_field-right: var(--_field-end);
 
@@ -75,7 +80,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   input:not([type="range"], [type="checkbox"], [type="radio"], [type="file"], [type="color"]),
   textarea {
     box-sizing: border-box;
-    padding: 20px 16px 8px;
+    padding: rem(20px) 16px rem(8px);
     border: none;
     border-radius: var(--md-comp-filled-text-field-container-shape);
     border-bottom: 1px solid var(--md-sys-color-on-surface-variant);
@@ -85,7 +90,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     &:focus {
       border-bottom-width: 2px;
       border-bottom-color: var(--input-color);
-      padding-bottom: 7px;
+      padding-bottom: calc(#{rem(8px)} - 1px);
     }
 
     &:disabled,
@@ -107,7 +112,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     &:not([placeholder=" "]) + span:not(#{$_not-label}),
     &:not(:placeholder-shown) + span:not(#{$_not-label}) {
       transform: scale(calc(12 / 16));
-      top: 8px;
+      top: rem(8px);
     }
 
     &:disabled + label,
@@ -164,7 +169,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     user-select: none;
     position: absolute;
     left: var(--_field-start);
-    top: 16px;
+    top: rem(16px);
     cursor: text;
     transform-origin: top left;
     pointer-events: none;
@@ -205,13 +210,13 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   // of other spans (.supporting-text, .caret, .character-counter, .file-path).
   > :is(.prefix, .suffix):not(.icon-button) {
     position: absolute;
-    top: 16px;
+    top: rem(16px);
     display: flex;
     align-items: center;
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
+    font-size: rem(24px);
+    width: rem(24px);
+    height: rem(24px);
+    line-height: rem(24px);
     color: var(--md-sys-color-on-surface-variant);
     user-select: none;
   }
@@ -246,7 +251,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   // clicks. It centres on the same point as a 24dp trailing icon.
   > .icon-button.suffix {
     position: absolute;
-    top: 8px;
+    top: rem(8px);
     right: 4px;
     z-index: 1;
 
@@ -259,11 +264,11 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   // Number stepper: data-step="down" sits one button in from the end, before
   // data-step="up". The Forms behavior does the stepping.
   > .icon-button.suffix[data-step="down"] {
-    right: 48px;
+    right: calc(8px + var(--_field-icon-button));
 
     &:dir(rtl) {
       right: auto;
-      left: 48px;
+      left: calc(8px + var(--_field-icon-button));
     }
   }
 
@@ -280,22 +285,23 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
 
   // The label reads --_field-start too, so it indents with the input.
   &:has(> .prefix) {
-    --_field-start: 52px;
+    --_field-start: var(--_field-icon-clearance);
   }
 
   &:has(> .suffix) {
-    --_field-end: 52px;
+    --_field-end: var(--_field-icon-clearance);
   }
 
+  // Two buttons, 4dp from the end and 4dp apart, then 8dp before the text.
   &:has(> [data-step]) {
-    --_field-end: 96px;
+    --_field-end: calc(16px + 2 * var(--_field-icon-button));
   }
 
   &.outlined {
     > input,
     > textarea {
-      padding-top: 8px;
-      padding-bottom: 8px;
+      padding-top: rem(8px);
+      padding-bottom: rem(8px);
       background-color: transparent;
       border: 1px solid var(--md-sys-color-outline);
       border-radius: var(--md-comp-filled-text-field-container-shape);
@@ -303,8 +309,8 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
       &:focus {
         border-width: 2px;
         border-color: var(--input-color);
-        padding-top: 7px;
-        padding-bottom: 7px;
+        padding-top: calc(#{rem(8px)} - 1px);
+        padding-bottom: calc(#{rem(8px)} - 1px);
       }
 
       &:focus + label,
@@ -313,7 +319,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
       &:focus + span:not(#{$_not-label}),
       &:not([placeholder=" "]) + span:not(#{$_not-label}),
       &:not(:placeholder-shown) + span:not(#{$_not-label}) {
-        top: -8px;
+        top: rem(-8px);
         left: 16px;
         margin-left: -4px;
         padding: 0 4px;
@@ -343,10 +349,10 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     // A textarea's text starts at the top instead of centering, so pad its
     // first line to the input's 28px midline: border + padding + half of 24px.
     > textarea.expressive-textarea {
-      padding-block: 15px;
+      padding-block: calc(#{rem(16px)} - 1px);
 
       &:focus {
-        padding-block: 14px;
+        padding-block: calc(#{rem(16px)} - 2px);
       }
     }
   }
@@ -364,12 +370,12 @@ textarea {
   &.expressive-textarea {
     // No !important: source order beats `.field textarea`, and the outlined
     // and :focus rules outrank this one, as they must.
-    padding-top: 24px;
-    padding-bottom: 8px;
-    line-height: 24px;
+    padding-top: rem(24px);
+    padding-bottom: rem(8px);
+    line-height: rem(24px);
     overflow-y: hidden;
     resize: none;
-    min-height: 56px;
+    min-height: rem(56px);
     box-sizing: border-box;
   }
 }
@@ -470,8 +476,8 @@ textarea {
 // above, which would otherwise win on width, height and letter-spacing.
 input.otp:not(.browser-default) {
   --md-comp-otp-length: 6;
-  --md-comp-otp-cell-width: 48px;
-  --md-comp-otp-cell-height: 56px;
+  --md-comp-otp-cell-width: #{rem(48px)};
+  --md-comp-otp-cell-height: #{rem(56px)};
   --md-comp-otp-gap: 8px;
   --md-comp-otp-cell-color: var(--md-sys-color-surface-container-highest);
   --md-comp-otp-indicator-color: var(--md-sys-color-on-surface-variant);
@@ -498,7 +504,7 @@ input.otp:not(.browser-default) {
   // Digits read left to right in every script.
   direction: ltr;
   font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
-  font-size: 24px;
+  font-size: rem(24px);
   font-variant-numeric: tabular-nums;
   letter-spacing: calc(var(--md-comp-otp-pitch) - 1ch);
   color: var(--md-sys-color-on-surface);
@@ -560,7 +566,7 @@ input.otp:not(.browser-default) {
 // swatch of the chosen color with an outline, a 48px target and the shared
 // focus ring. Each engine's swatch is a private pseudo-element in its own rule.
 input[type="color"] {
-  --md-comp-color-input-size: 40px;
+  --md-comp-color-input-size: #{rem(40px)};
   --md-comp-color-input-outline-color: var(--md-sys-color-outline);
 
   box-sizing: content-box;

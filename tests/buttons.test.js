@@ -7,7 +7,7 @@
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseRules, sheet } from './css.js';
+import { parseRules, rem, sheet } from './css.js';
 
 const css = sheet();
 const rules = parseRules(css);
@@ -38,8 +38,8 @@ describe('Button size axis', () => {
     test(`${size} is ${spec.height}dp with a ${spec.icon}dp icon`, () => {
       const rule = buttonRule(size);
       assert.ok(rule, `no .${size} rule on the common-button selector`);
-      assert.match(rule, new RegExp(`--md-comp-filled-button-container-height:\\s*${spec.height}px`));
-      assert.match(rule, new RegExp(`--md-comp-filled-button-icon-size:\\s*${spec.icon}px`));
+      assert.match(rule, new RegExp(`--md-comp-filled-button-container-height:\\s*${rem(spec.height)}`));
+      assert.match(rule, new RegExp(`--md-comp-filled-button-icon-size:\\s*${rem(spec.icon)}`));
       assert.match(rule, new RegExp(`--md-comp-filled-button-leading-space:\\s*${spec.space}px`));
       assert.match(rule, new RegExp(`--md-comp-filled-button-trailing-space:\\s*${spec.space}px`));
       assert.match(rule, new RegExp(`--md-comp-filled-button-icon-label-space:\\s*${spec.gap}px`));
@@ -64,8 +64,8 @@ describe('Button size axis', () => {
     );
     assert.ok(root, 'the filled-button defaults sit on their own :root, :host block');
     for (const [prop, value] of [
-      ['container-height', '40px'],
-      ['icon-size', '20px'],
+      ['container-height', rem(40)],
+      ['icon-size', rem(20)],
       ['leading-space', '16px'],
       ['trailing-space', '16px'],
       ['icon-label-space', '8px']
