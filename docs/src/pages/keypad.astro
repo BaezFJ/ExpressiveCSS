@@ -256,14 +256,18 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
             <tr><td><code>data-key="Backspace"</code></td><td>Deletes the selection, or the character before the caret.</td></tr>
             <tr><td><code>data-key="Enter"</code></td><td>Submits the field's form with <code>requestSubmit()</code>, so validation runs. In a <code>&lt;textarea&gt;</code> it types a new line.</td></tr>
             <tr><td><code>data-key="Shift"</code></td><td>Toggles <code>aria-pressed</code>. While pressed the character keys show capitals, and the next one types a capital and releases Shift.</td></tr>
-            <tr><td>Any other <code>data-key</code></td><td>Types nothing and calls <code>onKey</code> with its name, for keys such as a symbols switch.</td></tr>
+            <tr><td><code>data-key="CapsLock"</code></td><td>Toggles <code>aria-pressed</code>. While pressed the character keys show and type capitals, until it is pressed again.</td></tr>
+            <tr><td><code>data-key="Layer"</code></td><td>Shows the elements in the keyboard whose <code>data-layer</code> matches the key's <code>value</code> and hides those with another <code>data-layer</code>, such as a row of symbols in place of the letters. Elements without <code>data-layer</code> always show.</td></tr>
+            <tr><td>Any other <code>data-key</code></td><td>Types nothing and calls <code>onKey</code> with its name.</td></tr>
           </tbody>
         </table>
         <p>
           A <code>&lt;button&gt;</code> without <code>value</code> or
           <code>data-key</code> is not a key, so the script ignores it. Keys
           type at the caret; a field nobody has clicked into takes them at the
-          end. Number and email inputs have no caret position to read, so keys
+          end. While the field has focus, a hardware key held down presses the
+          matching on-screen key, so the keyboard shows what is typed. Number
+          and email inputs have no caret position to read, so keys
           type at the end. A number input empties itself on a partial value
           such as <code>12.</code> or <code>-</code>, so the key is ignored
           there. For decimals and signs, use a text field with
@@ -274,7 +278,7 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
         <ul class="browser-default">
           <li>Name the group with <code>aria-label</code> and point <code>aria-controls</code> at the field. Give the field its own label.</li>
           <li>Give every key <code>type="button"</code>, or a key inside a form submits it. Name icon keys and the space bar with <code>aria-label</code>.</li>
-          <li>Give a minimum length as <code>pattern</code>, such as <code>pattern="\d{'{4}'}"</code> for a four-digit PIN. Browsers check <code>minlength</code> only on what a person types, and a keypad's input comes from a script. <code>pattern</code> and <code>required</code> still apply.</li>
+          <li>Browsers check <code>minlength</code> only on what a person types, and a keypad's input comes from a script, so the keypad checks it: a shorter value gets the <code>i18n.tooShort</code> message until it is long enough. <code>pattern</code> and <code>required</code> apply as usual.</li>
           <li>Add <code>inputmode="none"</code> to the field so a phone or tablet keeps its own keyboard closed. A hardware keyboard still types into the field.</li>
           <li>A pointer press keeps focus and the caret in the field while it has focus. Keys stay native buttons, so Tab, Enter and Space reach them.</li>
           <li>Keys are 72dp on a keypad and 48dp tall on a keyboard. Keep a keyboard wide enough that a character key stays at least 24px wide.</li>
@@ -303,7 +307,8 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
   </Section>
   <Section {...S.options}>
         <OptionsTable>
-          <tr><td><code>onKey</code></td><td>Function</td><td><code>null</code></td><td>Called after every key press with the text typed (<code>'7'</code>, <code>'A'</code>, <code>' '</code>) or the function key's name (<code>'Backspace'</code>, <code>'Enter'</code>, <code>'Shift'</code>). Works without <code>aria-controls</code>.</td></tr>
+          <tr><td><code>onKey</code></td><td>Function</td><td><code>null</code></td><td>Called after every key press with the text typed (<code>'7'</code>, <code>'A'</code>, <code>' '</code>) or the function key's name (<code>'Backspace'</code>, <code>'Enter'</code>, <code>'Shift'</code>, <code>'CapsLock'</code>, <code>'Layer'</code>). Works without <code>aria-controls</code>.</td></tr>
+          <tr><td><code>i18n.tooShort</code></td><td>Function</td><td>English</td><td>Takes the field's <code>minlength</code> and returns the validation message for a shorter keypad-typed value: <code>Use at least 3 characters.</code></td></tr>
         </OptionsTable>
   </Section>
   <Section {...S.methods}>

@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Keypad and keyboard keys: `data-key="CapsLock"` holds capitals until
+  pressed again, and `data-key="Layer"` shows the elements whose
+  `data-layer` matches its `value`, such as a row of symbols. A hardware
+  key held down in the field presses the matching on-screen key. The
+  keypad now checks `minlength` on its own edits, with the
+  `i18n.tooShort` message.
+
 - Radial chart fills: `data-segments` splits each ring into segments filled
   whole, and `.gradient` shades each fill from a light tint to its full
   color across the plot, along a gauge's arc.

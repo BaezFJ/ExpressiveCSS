@@ -5253,7 +5253,7 @@
       "sourceReview": "needs-review",
       "reviewedOn": "2026-10-11",
       "scope": "A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.",
-      "adaptation": "Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode=\"none\" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so a minimum length is written as pattern.",
+      "adaptation": "Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode=\"none\" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so the keypad checks it on its own edits.",
       "upstream": {
         "source": "https://m3.material.io/components",
         "reviewedOn": "2026-10-11",
@@ -5279,13 +5279,8 @@
       "gaps": [
         {
           "kind": "verification",
-          "description": "Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified.",
+          "description": "Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified.",
           "nextStep": "Type a PIN and a message with a screen reader and on a touch device in each engine, and check forced colors and enlarged text."
-        },
-        {
-          "kind": "feature",
-          "description": "There is no caps lock, no symbol layer switching and no highlight of the key a hardware keyboard presses, and minlength does not apply to keypad edits.",
-          "nextStep": "Swap rows from onKey for a symbols key, add caps lock when a page needs it, and write a minimum length as pattern."
         }
       ],
       "browserChecks": [

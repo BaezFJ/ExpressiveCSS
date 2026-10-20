@@ -7334,8 +7334,8 @@ A `.keypad` is three columns of round 72dp keys for PINs, codes and amounts. A `
 </div>
 ```
 
-- `data-key="Backspace"` deletes the selection or the character before the caret. `data-key="Enter"` calls `requestSubmit()` on the field's form, so validation runs, or types a new line in a `<textarea>`. `data-key="Shift"` toggles `aria-pressed`; while pressed the character keys show capitals, and the next one types a capital and releases Shift. Any other `data-key` only calls `onKey`.
-- Typing stops at the field's `maxlength`. Browsers check `minlength` and `maxlength` only on what a person types, and a keypad's edit is a script's, so give a minimum length as `pattern` instead: `pattern="\d{4}"` for a four-digit PIN. `pattern`, `required` and the type checks hold for keypad edits, and Enter submits with `requestSubmit()`, so they run. Keys type at the caret; a field nobody has clicked into takes them at the end. Number and email inputs have no caret position, so keys type at the end. A button with neither `value` nor `data-key` is not a key and is ignored. A number input empties itself on a partial value such as `12.` or `-`, so the key is ignored there; use a text field with `inputmode="none"` for decimals and signs.
+- `data-key="Backspace"` deletes the selection or the character before the caret. `data-key="Enter"` calls `requestSubmit()` on the field's form, so validation runs, or types a new line in a `<textarea>`. `data-key="Shift"` toggles `aria-pressed`; while pressed the character keys show capitals, and the next one types a capital and releases Shift. `data-key="CapsLock"` toggles `aria-pressed` and types capitals until pressed again. `data-key="Layer"` with `value="symbols"` shows every element in the keyboard whose `data-layer` is `symbols` and hides those with another `data-layer`, so a row of symbols can replace the letters; elements without `data-layer` always show. Any other `data-key` only calls `onKey`. While the field has focus, a hardware key held down gives the matching on-screen key the `pressed` class, which presses it as a pointer would.
+- Typing stops at the field's `maxlength`. Browsers check `minlength` only on what a person types, and a keypad's edit is a script's, so the keypad checks it: a non-empty value shorter than `minlength` gets the custom validity message from `i18n.tooShort`, "Use at least 3 characters." by default, and loses it once long enough. A field without `minlength` keeps any message the page set. `pattern`, `required` and the type checks hold for keypad edits, and Enter submits with `requestSubmit()`, so they run. Keys type at the caret; a field nobody has clicked into takes them at the end. Number and email inputs have no caret position, so keys type at the end. A button with neither `value` nor `data-key` is not a key and is ignored. A number input empties itself on a partial value such as `12.` or `-`, so the key is ignored there; use a text field with `inputmode="none"` for decimals and signs.
 - A dial-pad key puts its letters in `<small aria-hidden="true">` after the digit. A key with a button style class (`filled`, `tonal`, `outlined`, `elevated`, `text`) keeps that style. Keys fill their cell, and `wide` spans two as a pill, so a call key beside Backspace fills the last row:
 
 ```html
@@ -7372,7 +7372,8 @@ A `.keypad` is three columns of round 72dp keys for PINs, codes and amounts. A `
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `onKey` | Function | `null` | Called after every key press with the text typed or the function key's name (`'Backspace'`, `'Enter'`, `'Shift'`). Works without `aria-controls`. |
+| `onKey` | Function | `null` | Called after every key press with the text typed or the function key's name (`'Backspace'`, `'Enter'`, `'Shift'`, `'CapsLock'`, `'Layer'`). Works without `aria-controls`. |
+| `i18n.tooShort` | Function | `(minLength) => 'Use at least ' + minLength + ' characters.'` | The validation message for a keypad-typed value shorter than the field's `minlength`. |
 
 ### Methods
 

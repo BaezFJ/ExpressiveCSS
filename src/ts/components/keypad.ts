@@ -8,10 +8,23 @@ export interface KeypadOptions extends BaseOptions {
    * @default null
    */
   onKey: ((key: string) => void) | null;
+  /** Text the keypad writes. */
+  i18n: Partial<KeypadI18n>;
+}
+
+export interface KeypadI18n {
+  /**
+   * The validation message for a field whose keypad-typed value is shorter
+   * than its minlength, which the browser only checks after typing.
+   */
+  tooShort: (minLength: number) => string;
 }
 
 const _defaults: KeypadOptions = {
-  onKey: null
+  onKey: null,
+  i18n: {
+    tooShort: (minLength) => `Use at least ${minLength} characters.`
+  }
 };
 
 type Field = HTMLInputElement | HTMLTextAreaElement;
@@ -22,6 +35,9 @@ const isField = (el: unknown): el is Field => el instanceof HTMLInputElement || 
 const instances = new Set<Keypad>();
 // Fields that have had focus, so their caret is one a person placed.
 const touched = new WeakSet<Field>();
+// Fields a keypad typed into, with that keypad. A value set by script skips
+// minlength, so the keypad checks the length itself on every input.
+const typed = new WeakMap<Field, Keypad>();
 let segmenter: Intl.Segmenter | undefined;
 
 // One listener per document or shadow root serves every keypad in it, kept
@@ -58,15 +74,37 @@ const rootListeners: [string, EventListener][] = [
   }],
   ['focusin', (e) => {
     if (isField(e.target)) touched.add(e.target);
-  }]
+  }],
+  ['input', (e) => {
+    if (isField(e.target)) typed.get(e.target)?._checkLength(e.target);
+  }],
+  // A hardware key held down in a field lights the keypad key it matches.
+  ['keydown', (e) => light(e, true)],
+  ['keyup', (e) => light(e, false)]
 ];
 const attachEvents = ['focusin', 'mousedown', 'click'];
+
+/** Lights or clears the key matching a hardware key; a release clears it wherever focus went. */
+function light(e: Event, on: boolean) {
+  for (const keypad of instances) {
+    if (!on || keypad.target === e.target) keypad._light((e as KeyboardEvent).key, on);
+  }
+}
+
+/** Whether a button types its value or runs a function key; any other button is not a key. */
+const isKey = (key: HTMLButtonElement) => !key.disabled && (!!key.dataset.key || key.hasAttribute('value'));
+
+/** Whether a keypad key is the one a hardware key names, by its function or, ignoring case, its value. */
+const matches = (key: HTMLButtonElement, name: string) =>
+  key.dataset.key === name || (key.hasAttribute('value') && key.value.toLowerCase() === name.toLowerCase());
 
 /**
  * Keypad and keyboard. A `.keypad` or `.keyboard` whose `aria-controls`
  * names a text field types into it: a key's `value` is inserted at the caret,
- * and `data-key="Backspace"`, `"Enter"` and `"Shift"` edit, submit and
- * capitalize. The field receives the same `input` event typing would fire.
+ * and `data-key="Backspace"`, `"Enter"`, `"Shift"` and `"CapsLock"` edit,
+ * submit and capitalize. A `data-key="Layer"` key shows the elements whose
+ * `data-layer` matches its `value` and hides the other layers. The field
+ * receives the same `input` event typing would fire.
  */
 export class Keypad extends Component<KeypadOptions> {
   /** @internal */
@@ -75,7 +113,7 @@ export class Keypad extends Component<KeypadOptions> {
   constructor(el: HTMLElement, options: Partial<KeypadOptions>) {
     super(el, options, Keypad);
     this.el['Expressive_Keypad'] = this;
-    this.options = { ...Keypad.defaults, ...options };
+    this.options = { ...Keypad.defaults, ...options, i18n: { ...Keypad.defaults.i18n, ...options.i18n } };
     this._root = null;
     instances.add(this);
     this._attach();
@@ -145,29 +183,78 @@ export class Keypad extends Component<KeypadOptions> {
 
   /** @internal */
   _press(key: HTMLButtonElement) {
+    if (!isKey(key)) return;
+    // Run the key first: an optional call skips its argument when there is no onKey.
+    const pressed = this._act(key);
+    this.options.onKey?.(pressed);
+  }
+
+  /** Runs a key and returns what onKey hears: the typed text or the function key's name. */
+  private _act(key: HTMLButtonElement) {
     const name = key.dataset.key;
-    // A button that is neither a value key nor a function key is not a key.
-    if (key.disabled || (!name && !key.hasAttribute('value'))) return;
-    if (name === 'Shift') {
-      key.setAttribute('aria-pressed', String(key.getAttribute('aria-pressed') !== 'true'));
-      this.options.onKey?.(name);
-      return;
-    }
-    let text = name ? '' : key.value;
-    // Shift is one-shot: it capitalizes the next character and releases.
-    const shift = text && this.el.querySelector('[data-key="Shift"][aria-pressed="true"]');
-    if (shift) {
-      text = text.toUpperCase();
-      shift.setAttribute('aria-pressed', 'false');
-    }
+    if (name === 'Layer') return this._layer(key);
+    if (name === 'Shift' || name === 'CapsLock') return this._latch(key, name);
+    return this._type(key, name);
+  }
+
+  /** Shift and Caps Lock latch: pressed until pressed again, or for Shift until the next character. */
+  private _latch(key: HTMLButtonElement, name: string) {
+    key.setAttribute('aria-pressed', String(key.getAttribute('aria-pressed') !== 'true'));
+    return name;
+  }
+
+  /** Shows the layer the key names and hides the others. */
+  private _layer(key: HTMLButtonElement) {
+    for (const part of this.el.querySelectorAll<HTMLElement>('[data-layer]')) part.hidden = part.dataset.layer !== key.value;
+    return 'Layer';
+  }
+
+  private _type(key: HTMLButtonElement, name: string | undefined) {
+    const text = name ? '' : this._case(key.value);
+    const field = this._editable;
+    if (field) this._apply(field, name, text);
+    return name ?? text;
+  }
+
+  /** A character as Shift or Caps Lock writes it. Shift is one-shot: it releases after one character. */
+  private _case(text: string) {
+    const shift = this.el.querySelector('[data-key="Shift"][aria-pressed="true"]');
+    shift?.setAttribute('aria-pressed', 'false');
+    const upper = shift || this.el.querySelector('[data-key="CapsLock"][aria-pressed="true"]');
+    return upper ? text.toUpperCase() : text;
+  }
+
+  /** The target field, unless it is disabled or read-only. */
+  private get _editable(): Field | null {
     const field = this.target;
-    if (field && !field.matches(':disabled') && !field.readOnly) {
-      if (name === 'Enter' && field instanceof HTMLInputElement) field.form?.requestSubmit();
-      else if (name === 'Enter') this._edit(field, '\n', 'insertLineBreak');
-      else if (name === 'Backspace') this._edit(field, '', 'deleteContentBackward');
-      else if (text) this._edit(field, text, 'insertText');
+    return field && !field.matches(':disabled') && !field.readOnly ? field : null;
+  }
+
+  private _apply(field: Field, name: string | undefined, text: string) {
+    if (name === 'Enter') return this._enter(field);
+    if (name === 'Backspace') return this._edit(field, '', 'deleteContentBackward');
+    if (text) this._edit(field, text, 'insertText');
+  }
+
+  /** Enter submits an input's form and starts a new line in a textarea. */
+  private _enter(field: Field) {
+    if (field instanceof HTMLInputElement) field.form?.requestSubmit();
+    else this._edit(field, '\n', 'insertLineBreak');
+  }
+
+  /** @internal Lights or clears every key a hardware key matches. */
+  _light(name: string, on: boolean) {
+    for (const key of this.el.querySelectorAll<HTMLButtonElement>('button')) {
+      if (matches(key, name)) key.classList.toggle('pressed', on);
     }
-    this.options.onKey?.(name ?? text);
+  }
+
+  /** @internal A non-empty value shorter than minlength is invalid, as typing would make it. */
+  _checkLength(field: Field) {
+    // Without minlength a field keeps any message the page set.
+    if (field.minLength < 1) return;
+    const short = field.value.length > 0 && field.value.length < field.minLength;
+    field.setCustomValidity(short ? this.options.i18n.tooShort!(field.minLength) : '');
   }
 
   private _edit(field: Field, text: string, inputType: string) {
@@ -196,6 +283,7 @@ export class Keypad extends Component<KeypadOptions> {
     }
     if (field.selectionStart !== null) field.setSelectionRange(start + text.length, start + text.length);
     touched.add(field);
+    typed.set(field, this);
     // Composed, so listeners outside a shadow root hear it as they do typing.
     field.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true, inputType, data: text || null }));
   }

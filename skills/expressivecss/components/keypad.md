@@ -9,7 +9,7 @@ Component ID: `keypad`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `2c3fbb432621e801beb46626326ac1ae58017840841ed0b0e61e03f7e2ea1f1e`
+Contract SHA-256: `15d25df4ddf9694e5ad2ea2d324e854ba561a2624cf1088be9d298a7a22fdf2d`
 
 #### Selection and adaptation
 
@@ -27,9 +27,9 @@ Requirements and boundaries: design reference web-extensions-review. The invento
 
 Support (2026-10-11, `llm.md#keypad-and-keyboard`): A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.
 
-Web adaptation: Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode="none" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so a minimum length is written as pattern.
+Web adaptation: Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode="none" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so the keypad checks it on its own edits.
 
-Known boundary: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. There is no caps lock, no symbol layer switching and no hardware key highlighting, and minlength does not apply to keypad edits; the page owns layouts beyond the keys it writes.
+Known boundary: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. There is no caps lock, no symbol layer switching and no hardware key highlighting, and minlength does not apply to keypad edits; the page owns layouts beyond the keys it writes.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#keypad).
 
@@ -82,7 +82,8 @@ A `.keypad` is three columns of round 72dp keys for PINs, codes and amounts. A `
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `onKey` | Function | `null` | Called after every key press with the text typed or the function key's name (`'Backspace'`, `'Enter'`, `'Shift'`). Works without `aria-controls`. |
+| `onKey` | Function | `null` | Called after every key press with the text typed or the function key's name (`'Backspace'`, `'Enter'`, `'Shift'`, `'CapsLock'`, `'Layer'`). Works without `aria-controls`. |
+| `i18n.tooShort` | Function | `(minLength) => 'Use at least ' + minLength + ' characters.'` | The validation message for a keypad-typed value shorter than the field's `minlength`. |
 
 #### Methods
 

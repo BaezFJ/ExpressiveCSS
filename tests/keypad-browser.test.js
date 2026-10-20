@@ -288,4 +288,80 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await browser.close();
     }
   });
+
+  test(`${name}: keyboard caps lock, symbol layers, hardware key highlight and minlength`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        <form id="form"><input id="code" minlength="3" aria-label="Code"></form>
+        <div class="keyboard no-autoinit" id="kb" role="group" aria-label="Keyboard" aria-controls="code">
+          <div data-layer="letters">${keys('abc')}</div>
+          <div data-layer="symbols" hidden>${keys('!?#')}</div>
+          <div>
+            <button type="button" data-key="CapsLock" aria-pressed="false" aria-label="Caps lock">⇪</button>
+            <button type="button" data-key="Layer" value="symbols" data-layer="letters">?123</button>
+            <button type="button" data-key="Layer" value="letters" data-layer="symbols" hidden>ABC</button>
+            <button type="button" data-key="Backspace" aria-label="Delete">⌫</button>
+          </div>
+        </div>
+      </body></html>`);
+      await page.addScriptTag({ content: js });
+      const result = await page.evaluate(() => {
+        const heard = [];
+        Expressive.Keypad.init(document.querySelector('#kb'), { onKey: (key) => heard.push(key) });
+        const field = document.querySelector('#code');
+        const press = (selector) => document.querySelector(`#kb ${selector}`).click();
+        const caps = document.querySelector('[data-key="CapsLock"]');
+        press('[value="a"]');
+        press('[data-key="CapsLock"]');
+        press('[value="b"]');
+        press('[value="c"]');
+        const capitals = getComputedStyle(document.querySelector('#kb [value="a"]')).textTransform;
+        press('[data-key="CapsLock"]');
+        press('[value="a"]');
+        const typed = field.value;
+        press('[data-key="Layer"][value="symbols"]');
+        const visible = [...document.querySelectorAll('#kb [data-layer]')].filter((el) => !el.hidden).map((el) => el.textContent.trim());
+        press('[value="!"]');
+        press('[data-key="Layer"][value="letters"]');
+        return { typed, capitals, caps: caps.getAttribute('aria-pressed'), visible, value: field.value, heard,
+          back: [...document.querySelectorAll('#kb [data-layer]')].filter((el) => !el.hidden).map((el) => el.textContent.trim()) };
+      });
+      // Caps lock holds through several characters, and shows capitals, until pressed again.
+      assert.equal(result.typed, 'aBCa');
+      assert.equal(result.capitals, 'uppercase');
+      assert.equal(result.caps, 'false');
+      assert.deepEqual(result.visible, ['!?#', 'ABC'], 'a Layer key shows its layer and hides the others');
+      assert.equal(result.value, 'aBCa!');
+      assert.deepEqual(result.back, ['abc', '?123']);
+      assert.deepEqual(result.heard, ['a', 'CapsLock', 'B', 'C', 'CapsLock', 'a', 'Layer', '!', 'Layer']);
+
+      // A hardware key held in the field lights its on-screen key until released.
+      await page.focus('#code');
+      await page.keyboard.down('b');
+      const held = await page.evaluate(() => [document.querySelector('#kb [value="b"]').classList.contains('pressed')]);
+      await page.keyboard.up('b');
+      const released = await page.evaluate(() => document.querySelector('#kb [value="b"]').classList.contains('pressed'));
+      assert.deepEqual([held[0], released], [true, false]);
+
+      // A keypad-typed value shorter than minlength is invalid, as typing would make it.
+      const length = await page.evaluate(() => {
+        const field = document.querySelector('#code');
+        field.value = '';
+        const press = (selector) => document.querySelector(`#kb ${selector}`).click();
+        press('[value="a"]');
+        const short = [field.validity.valid, field.validationMessage];
+        press('[value="b"]');
+        press('[value="c"]');
+        const long = field.validity.valid;
+        press('[data-key="Backspace"]');
+        return { short, long, again: field.validity.valid };
+      });
+      assert.deepEqual(length, { short: [false, 'Use at least 3 characters.'], long: true, again: false });
+    } finally {
+      await browser.close();
+    }
+  });
 }
