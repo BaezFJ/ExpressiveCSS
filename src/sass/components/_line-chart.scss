@@ -15,7 +15,8 @@
 // the ones before it and fills between them, .points marks each value with
 // a dot, .straight draws straight lines between values, .fade fades the
 // line ends, .axis labels the y axis at round values with a grid line at
-// each, .sparkline is a small chart with no axis, grid, legend or tooltip.
+// each, .sparkline is a small chart with no axis, grid, legend or tooltip,
+// and .toggle makes each legend item a button that shows or hides its series.
 // A series header cell's classes reach its line: <th class="dashed">.
 //
 // Tokens:

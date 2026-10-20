@@ -10,6 +10,7 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "area", label: "Area" },
   { id: "series", label: "Several series" },
+  { id: "toggle", label: "Legend toggle" },
   { id: "points", label: "Points and straight lines" },
   { id: "stacked", label: "Stacked" },
   { id: "sparkline", label: "Sparkline" },
@@ -143,6 +144,29 @@ card.querySelectorAll('[data-period]').forEach((button) => {
       <!-- One row per month -->
     </tbody>
   </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.toggle}>
+        <p>
+          Add <code>toggle</code> to let readers hide a series. Each legend
+          item becomes a button, pressed while its series shows. Pressing one
+          hides that series from the plot and the tooltip, and the scale refits
+          to the series left. The others keep their colors. The last series
+          shown cannot be hidden. A hidden series is struck through, with a
+          hollow swatch, and stays hidden through <code>update()</code>.
+        </p>
+        <figure class="line-chart axis toggle" data-markdown-ignore>
+          <figcaption>Revenue against last year and target</figcaption>
+          <table>
+            <thead><tr><th>Month</th><th>This year</th><th>Last year</th><th class="dashed">Target</th></tr></thead>
+            <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td><td>{money(lastYear[i])}</td><td>{money(target[i])}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="line-chart axis toggle">
+  <figcaption>Revenue against last year and target</figcaption>
+  <table><!-- As above --></table>
 </figure>
 `} />
   </Section>
@@ -437,7 +461,9 @@ ${cardScript.replace(/^/gm, "  ")}
           The table is the chart's text alternative. Give it a header row and
           a header cell per row, and name the chart with a
           <code>&lt;figcaption&gt;</code>. The drawn chart, its labels and its
-          legend are hidden from assistive technology.
+          legend are hidden from assistive technology, except a
+          <code>toggle</code> legend, whose buttons follow the plot in the tab
+          order and say whether each series shows.
         </p>
         <p>
           The plot is one Tab stop named by the caption. Left and right arrows

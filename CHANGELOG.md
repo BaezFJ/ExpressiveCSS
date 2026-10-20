@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Charts with a series legend take `.toggle`. Each legend item becomes a
+  button with `aria-pressed` that shows or hides its series, and the scale
+  refits to the series left. The other series keep their colors, the last
+  one shown cannot be hidden, and a hidden series stays hidden through
+  `update()`. Line, column, bar, mixed and radar charts have it. Without the
+  class the legend stays decorative.
 - Charts have `update()`, which redraws a chart from its changed table in
   place. Before, the way to redraw was to call `init()` again, which dropped
   keyboard focus and the highlighted row. Now focus stays on the chart, the
