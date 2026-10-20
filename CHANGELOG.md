@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Arabic, Hebrew and Thai text: Noto Sans Arabic, Noto Sans Hebrew and
+  Noto Sans Thai ship at 400, 500 and 700, each limited to its script's
+  `unicode-range` so a page fetches one only when it shows that script,
+  and `--md-ref-typeface-fallback` lists them before `sans-serif`.
+
 - Autocomplete `onSearch` gets an `AbortSignal` as its third argument. It
   aborts when a newer search starts or the autocomplete is destroyed, so a
   page that passes it to `fetch()` drops stale responses.

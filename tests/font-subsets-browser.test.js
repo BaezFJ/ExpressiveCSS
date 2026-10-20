@@ -6,7 +6,7 @@ import { leaseBrowser } from './browser.js';
 
 const dist = new URL('../dist/', import.meta.url);
 
-test('chromium: the browser fetches only the font subsets and weights a page renders', { timeout: 30000 }, async (t) => {
+for (const arabic of ['', '<p lang="ar" dir="rtl">مرحبا بالعالم</p>']) test(`chromium: the browser fetches only the font subsets and weights a page renders${arabic ? ', and the Arabic family for Arabic text' : ''}`, { timeout: 30000 }, async (t) => {
   if (!existsSync(chromium.executablePath())) { t.skip('chromium is not installed'); return; }
   const browser = await leaseBrowser(chromium);
   try {
@@ -18,13 +18,18 @@ test('chromium: the browser fetches only the font subsets and weights a page ren
       if (path.endsWith('.woff2')) fetched.push(path.split('/').pop());
       const body = path === 'index.html'
         ? `<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="stylesheet" href="css/expressive.css"></head><body>
-            <p>Hello</p><p lang="ru">Привет</p><span class="label-large-emphasized">Selected</span></body></html>`
+            <p>Hello</p><p lang="ru">Привет</p><span class="label-large-emphasized">Selected</span>${arabic}</body></html>`
         : readFileSync(new URL(path, dist));
       route.fulfill({ body, contentType: path.endsWith('.css') ? 'text/css' : path.endsWith('.html') ? 'text/html' : 'font/woff2' });
     });
     await page.goto('http://fonts.test/index.html');
     await page.evaluate(() => document.fonts.ready);
     const text = fetched.filter((file) => file.startsWith('roboto-') || file.startsWith('noto-sans-')).sort();
+    if (arabic) {
+      assert.ok(text.includes('noto-sans-arabic-arabic-400.woff2'), `Arabic text did not fetch the Arabic face: ${text}`);
+      return;
+    }
+    assert.ok(!text.some((file) => /arabic|hebrew|thai/.test(file)), `script families fetched without their text: ${text}`);
     assert.ok(text.includes('roboto-latin-400.woff2'), `latin 400 not fetched: ${text}`);
     assert.ok(text.includes('roboto-cyrillic-400.woff2'), `cyrillic not fetched for Russian text: ${text}`);
     assert.ok(text.includes('roboto-latin-700.woff2'), `emphasized label did not fetch the 700 face: ${text}`);

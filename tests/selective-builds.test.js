@@ -278,5 +278,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed radial gradients that follow the ring: 81,497 gzip bytes (+68).
   // Reviewed wavy circular progress: 82,132 gzip bytes (+635).
   // Reviewed radial gradient reveal and wavy forced colors fixes: 82,210 gzip bytes (+78).
-  assert.ok(sizes(css).gzip <= 82210, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed Noto Sans Arabic, Hebrew and Thai faces: 82,506 gzip bytes (+296).
+  assert.ok(sizes(css).gzip <= 82506, `CSS gzip: ${sizes(css).gzip}`);
 });

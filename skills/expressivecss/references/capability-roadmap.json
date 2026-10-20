@@ -5350,7 +5350,7 @@
       "lastReviewedSupport": "partial",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
-      "scope": "Fifteen baseline type-role utilities and rem-based tokens, and their M3 Expressive emphasized counterparts as .{role}-emphasized classes and emphasized weight tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Roboto and Noto Sans 400/500/700 in Latin, Latin Extended, Cyrillic, Greek and Vietnamese subsets, plus Devanagari for Noto Sans, each gated by unicode-range.",
+      "scope": "Fifteen baseline type-role utilities and rem-based tokens, and their M3 Expressive emphasized counterparts as .{role}-emphasized classes and emphasized weight tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Roboto and Noto Sans 400/500/700 in Latin, Latin Extended, Cyrillic, Greek and Vietnamese subsets, plus Devanagari for Noto Sans and Noto Sans Arabic, Hebrew and Thai in their own scripts, each gated by unicode-range.",
       "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
       "upstream": {
         "source": "https://github.com/material-components/material-components-android/blob/master/docs/theming/Typography.md",
@@ -5373,14 +5373,14 @@
         },
         {
           "path": "src/sass/base/_fonts.scss",
-          "sha256": "e73570f6975bb197d4bdfe0cb813bb2d0ee505ba21f60c498b661daa6e49f247"
+          "sha256": "6fd4318aedda78446e5e187f161e89fb637d7ac667e735dc1a8542de85c3beb6"
         }
       ],
       "gaps": [
         {
-          "kind": "feature",
-          "description": "Arabic, Hebrew, CJK, Thai and other scripts outside the bundled subsets need an application-supplied family in --md-ref-typeface-fallback.",
-          "nextStep": "Decide whether to bundle Noto families for right-to-left and CJK scripts, weighing package size against the documented fallback recipe."
+          "kind": "integration",
+          "description": "Noto Sans Arabic, Hebrew and Thai are bundled with script-only ranges; CJK text uses the system font the browser picks from the element's lang, as CJK families are megabytes each, and other scripts need an application-supplied family in --md-ref-typeface-fallback.",
+          "nextStep": "Bundle another script's Noto family when pages need it; keep lang set on CJK text."
         }
       ],
       "browserChecks": [
