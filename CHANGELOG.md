@@ -332,6 +332,19 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- The Enter that confirms an IME candidate no longer acts on a field. In
+  the date picker it moved focus into the calendar and read the unfinished
+  text; the time picker, the autocomplete's active option and the color
+  picker's hex field also took it. The date picker, time picker and
+  autocomplete now skip every key of a composition, so the arrows and
+  Escape used to pick a candidate leave them alone too.
+  `Utils.isComposing(e)` checks `isComposing` and Safari's keyCode 229, and
+  Chips, Command palette, Menu and Questionnaire now share it, so Menu and
+  Questionnaire also skip Safari's confirming Enter.
+- A keyboard-focused slider handle takes the shared 3px focus ring. Its only
+  cue was a 10% tint around the handle, about 1.1:1 against the surface.
+- In a browser without CSS anchor positioning, a popover is centered in the
+  viewport. It used to land in the top-left corner, far from its button.
 - A scrolling marquee no longer restyles every item on each frame. The
   reset's `box-sizing: inherit` tied each item's style to its moving group,
   so on a page that also drew every frame, each frame restyled every item
@@ -641,6 +654,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   no styles. Use `isDateRange` for range selection.
 
 ### Changed
+
+- A full-screen `dialog.search-view` opens on a click, Enter or ArrowDown
+  in the app bar's search field, not on focus. Tabbing through the bar used
+  to open the modal each time, so every keyboard pass needed an Escape
+  (WCAG 3.2.1). A docked view still opens on focus. The bar shows the
+  shared focus ring while its field is focused, since its input clears its own.
 
 - Snackbars queue. A new snackbar waits until the one on screen is dismissed,
   then shows, as Material asks, instead of replacing it at once. Migration:

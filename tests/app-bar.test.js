@@ -231,3 +231,12 @@ describe('Collapsed flexible app bar', () => {
     assert.ok(title, 'collapsed title is not title-large');
   });
 });
+
+test('a search bar shows the focus ring its input clears', () => {
+  // Focus no longer opens a full-screen view, so the bar holds focus and
+  // needs a ring of its own outside forced colors too.
+  // The forced-colors rule for the same selector draws Highlight instead.
+  const ringed = rules.filter((r) => r.selector === ':is(.search-bar):not(.search-view *):has(input:focus-visible)')
+    .some((r) => /outline:\s*3px solid var\(--md-sys-color-secondary\)/.test(r.body));
+  assert.ok(ringed, 'the focused bar takes the shared focus ring');
+});

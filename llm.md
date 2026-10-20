@@ -3979,7 +3979,7 @@ Menus open on click by default (`hover: false`). Pass `{ hover: true }` to open 
 
 ### Search
 
-The search app bar is a `<search class="search-bar">` in the nav, in place of the headline. Icons beside it sit outside the search; icons inside it stay on the search-bar rules. The input is centered. Focusing or clicking the field opens the related `.search-view`: `aria-controls` on the input, or a `.search-view` descendant. A full-screen view is a `dialog.search-view.full-screen` opened with `showModal()`. Dismissal stays closed when native focus restoration returns to the field; clicking it again or leaving and refocusing reopens it. Query text, native dialog behavior and application-managed focus are preserved. `destroy()` disconnects the collapse observer and removes the search focus, click and close listeners.
+The search app bar is a `<search class="search-bar">` in the nav, in place of the headline. Icons beside it sit outside the search; icons inside it stay on the search-bar rules. The input is centered. The related `.search-view` is named by `aria-controls` on the input, or is a `.search-view` descendant. Focusing or clicking the field opens a docked view. A full-screen view is a `dialog.search-view.full-screen` opened with `showModal()` on a click, Enter or ArrowDown, not on focus, so tabbing through the bar and focus returning after dismissal leave it closed (WCAG 3.2.1). An Enter that confirms an IME composition does not open it. Query text, native dialog behavior and application-managed focus are preserved. `destroy()` disconnects the collapse observer and removes the search focus, click and keydown listeners.
 
 ```html
 <header>
@@ -4752,7 +4752,7 @@ An `.error-summary` alert at the top of a `novalidate` form lists what is wrong 
 
 A panel that opens from a button and stays until dismissed, on the native popover attribute.
 
-A `.popover` is a `[popover]` element, and the button that opens it names it with `popovertarget` (or `commandfor` with `command="toggle-popover"`). The browser owns the behavior: pressing the button toggles the panel, Escape or a click outside closes it, focus returns to the button, and the button reports the panel as expanded. CSS anchor positioning places the panel 4px below the button with their start edges aligned, and flips it to the other side when it would not fit. CSS only; there is no JavaScript.
+A `.popover` is a `[popover]` element, and the button that opens it names it with `popovertarget` (or `commandfor` with `command="toggle-popover"`). The browser owns the behavior: pressing the button toggles the panel, Escape or a click outside closes it, focus returns to the button, and the button reports the panel as expanded. CSS anchor positioning places the panel 4px below the button with their start edges aligned, and flips it to the other side when it would not fit. A browser without anchor positioning centers the panel in the viewport instead. CSS only; there is no JavaScript.
 
 It looks like a rich tooltip but behaves as a disclosure: it opens on press, stays open while the user reads or acts, and can hold links and buttons. A small one behind an info icon button is a toggletip. Add `top` to open above, or `start` or `end` to open beside the button, centered on it.
 

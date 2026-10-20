@@ -437,7 +437,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.options.onSearch(text, this, this._searchAbort.signal);
   }
 
-  _handleInputKeydown = (e: KeyboardEvent) => {
+  _handleInputKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {
     Autocomplete._keydown = true;
     if (e.key === Utils.keys.ESC || e.key === 'Tab') {
       this._dismiss(e);
@@ -476,7 +476,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
         });
       }
     }
-  };
+  });
 
   private _dismiss(e: KeyboardEvent) {
     if (e.key === Utils.keys.ESC) {

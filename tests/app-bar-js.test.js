@@ -164,7 +164,7 @@ describe('AppBar search view', () => {
     }
   });
 
-  test('focusing the search field opens a full-screen dialog view', () => {
+  const mountFullScreen = () => {
     document.body.innerHTML = `
       <header>
         <nav aria-label="Main">
@@ -175,37 +175,46 @@ describe('AppBar search view', () => {
       </header>
       <dialog class="search-view full-screen" id="search-full" aria-label="Search"></dialog>`;
     const header = document.querySelector('header');
-    const input = header.querySelector('input');
-    const view = document.getElementById('search-full');
-    const instance = Expressive.AppBar.init(header);
-    input.dispatchEvent(new window.Event('focus', { bubbles: true }));
-    assert.equal(view.open, true);
-    instance.destroy();
+    return { input: header.querySelector('input'), view: document.getElementById('search-full'), instance: Expressive.AppBar.init(header) };
+  };
+  const keydown = (input, key, init = {}) =>
+    input.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...init }));
+
+  test('tabbing onto the field does not open a full-screen dialog view', () => {
+    const { input, view, instance } = mountFullScreen();
+    try {
+      input.dispatchEvent(new window.Event('focus', { bubbles: true }));
+      assert.equal(view.open, false, 'focus alone is not a request to take over the page (WCAG 3.2.1)');
+    } finally {
+      instance.destroy();
+    }
   });
 
-  test('closing a full-screen dialog does not reopen on restored focus', () => {
-    document.body.innerHTML = `
-      <header>
-        <nav aria-label="Main">
-          <search class="search-bar" aria-label="Search">
-            <input type="search" aria-label="Search" aria-controls="search-full">
-          </search>
-        </nav>
-      </header>
-      <dialog class="search-view full-screen" id="search-full" aria-label="Search"></dialog>`;
-    const header = document.querySelector('header');
-    const input = header.querySelector('input');
-    const view = document.getElementById('search-full');
-    const instance = Expressive.AppBar.init(header);
-    input.dispatchEvent(new window.Event('focus', { bubbles: true }));
-    assert.equal(view.open, true);
-    view.removeAttribute('open');
-    assert.equal(view.open, false);
-    input.dispatchEvent(new window.Event('focus', { bubbles: true }));
-    assert.equal(view.open, false);
-    view.dispatchEvent(new window.Event('close'));
-    input.dispatchEvent(new window.Event('focus', { bubbles: true }));
-    assert.equal(view.open, true);
-    instance.destroy();
+  for (const [how, open] of [
+    ['a click', (input) => input.click()],
+    ['Enter', (input) => keydown(input, 'Enter')],
+    ['ArrowDown', (input) => keydown(input, 'ArrowDown')],
+  ]) {
+    test(`${how} on the field opens a full-screen dialog view`, () => {
+      const { input, view, instance } = mountFullScreen();
+      try {
+        open(input);
+        assert.equal(view.open, true);
+      } finally {
+        instance.destroy();
+      }
+    });
+  }
+
+  test('an Enter that confirms an IME composition does not open the view', () => {
+    const { input, view, instance } = mountFullScreen();
+    try {
+      keydown(input, 'Enter', { isComposing: true });
+      keydown(input, 'Enter', { keyCode: 229 });
+      keydown(input, 'a');
+      assert.equal(view.open, false);
+    } finally {
+      instance.destroy();
+    }
   });
 });

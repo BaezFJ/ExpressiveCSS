@@ -244,6 +244,11 @@ $_bar: ".search-bar";
   }
 }
 
+// The input inside clears its own focus ring, so the bar shows it.
+:is(#{$_bar}):not(.search-view *):has(input:focus-visible) {
+  @include focus-ring;
+}
+
 // Both surfaces are fills and shadows, which forced colors paint as Canvas and
 // drop. A bar inside the view is part of the view's surface.
 @media (forced-colors: active) {

@@ -44,6 +44,15 @@ describe('Slider CSS', () => {
     assert.match(css, /--md-comp-slider-end-fraction/);
   });
 
+  test('a keyboard-focused handle takes the shared focus ring in both engines', () => {
+    // The 10% state-layer tint alone was about 1.1:1 against the surface.
+    for (const thumb of ['::-webkit-slider-thumb', '::-moz-range-thumb']) {
+      const rule = css.match(new RegExp(`input\\[type=range\\]:focus-visible:not\\(:disabled\\)${thumb} \\{([^}]*)\\}`))?.[1] ?? '';
+      assert.match(rule, /outline:\s*3px solid var\(--md-sys-color-secondary\)/, `${thumb} has the focus ring`);
+      assert.match(rule, /outline-offset:\s*2px/, `${thumb} ring sits 2px out`);
+    }
+  });
+
   test('the value label is a 40dp bubble', () => {
     assert.match(css, /input\[type=range\]\s*\+\s*\.thumb[\s\S]*?min-width:\s*40px/s);
     assert.match(css, /input\[type=range\]\s*\+\s*\.thumb[\s\S]*?height:\s*40px/s);

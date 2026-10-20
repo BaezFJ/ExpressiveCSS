@@ -260,14 +260,6 @@ export class Chips extends Component<ChipsOptions> {
     return getComputedStyle(el).direction === 'rtl' ? Utils.keys.ARROW_RIGHT : Utils.keys.ARROW_LEFT;
   }
 
-  /**
-   * Enter that confirms an IME composition is not a request to add a chip.
-   * keyCode 229 covers browsers that end composition before the keydown.
-   */
-  private static _isComposing(e: KeyboardEvent) {
-    return e.isComposing || e.keyCode === 229;
-  }
-
   static _handleChipsKeydown(e: KeyboardEvent) {
     const chips = (<HTMLElement>e.target).closest('.chips');
 
@@ -323,7 +315,8 @@ export class Chips extends Component<ChipsOptions> {
   };
 
   _handleInputKeydown = (e: KeyboardEvent) => {
-    if (Chips._isComposing(e)) return;
+    // Enter that confirms an IME composition is not a request to add a chip.
+    if (Utils.isComposing(e)) return;
     if (e.key === Utils.keys.ENTER) {
       // Override enter if autocompleting.
       if (this.hasAutocomplete && this.autocomplete?.isOpen &&

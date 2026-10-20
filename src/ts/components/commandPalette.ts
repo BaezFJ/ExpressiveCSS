@@ -297,9 +297,7 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
     if (e.key === Utils.keys.ARROW_DOWN || e.key === Utils.keys.ARROW_UP) {
       e.preventDefault();
       this._move(e.key === Utils.keys.ARROW_DOWN ? 1 : -1);
-    } else if (e.key === Utils.keys.ENTER && !e.isComposing && e.keyCode !== 229 && this._active) {
-      // keyCode 229 is the Enter that confirms an IME composition in Safari,
-      // which reports isComposing false for it.
+    } else if (e.key === Utils.keys.ENTER && !Utils.isComposing(e) && this._active) {
       e.preventDefault();
       this._run(this._active);
     }

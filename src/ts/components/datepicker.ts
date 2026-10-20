@@ -1458,7 +1458,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     if (this.displayPlugin instanceof ModalDisplayPlugin) this._syncCalendarFocus(true);
   }
 
-  _handleInputKeydown = (e: KeyboardEvent) => {
+  _handleInputKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {
     if (e.key === Utils.keys.ENTER) {
       e.preventDefault();
       this._batchDraws(() => {
@@ -1470,7 +1470,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       this._syncCalendarFocus(true);
       if (this.options.onInputInteraction) this.options.onInputInteraction.call(this);
     }
-  };
+  });
 
   private _dayDate(button: HTMLElement) {
     const date = new Date(0);
