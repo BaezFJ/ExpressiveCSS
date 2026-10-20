@@ -9,7 +9,7 @@ Component ID: `navigation-bar`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `37a23f7098b810c6f0b6bceba4832836674a578dac8baa67723de5a6726389f5`
+Contract SHA-256: `928e5245e85c2e9a67da552225763b32c6c4236c070f905ebb11a8c8b98d2415`
 
 #### Selection and adaptation
 

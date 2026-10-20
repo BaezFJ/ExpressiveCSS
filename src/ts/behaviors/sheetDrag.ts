@@ -1,4 +1,5 @@
 import { Utils } from '../core/utils';
+import { Spring, animatePath, springPath, springToken } from '../core/spring';
 
 /**
  * Drag-to-dismiss, shared by the bottom sheet and the side sheet.
@@ -72,6 +73,22 @@ const flickVelocity = (held: Drag) => (Date.now() - held.lastT < FLICK_TIMEOUT ?
 const dismisses = (held: Drag, velocity: number) =>
   held.shift * held.direction > DISMISS_DISTANCE || velocity * held.direction > DISMISS_VELOCITY;
 
+/** Each sheet's snap-back spring while it runs, so a press can catch it. */
+const springs = new WeakMap<HTMLDialogElement, Animation>();
+
+/**
+ * Stops a sheet's snap-back where it is and returns how far off its edge
+ * that is, so a drag carries on from there instead of jumping.
+ */
+function catchSpring(dialog: HTMLDialogElement, axis: 'x' | 'y') {
+  const running = springs.get(dialog);
+  if (!running) return 0;
+  const [x, y = '0'] = getComputedStyle(dialog).translate.split(' ');
+  running.cancel();
+  springs.delete(dialog);
+  return parseFloat(axis === 'x' ? x : y) || 0;
+}
+
 /** Selectors whose drag is already installed, so a second `Init()` is a no-op. */
 const installed = new Set<string>();
 
@@ -109,15 +126,18 @@ export function installSheetDrag(config: SheetDragConfig): void {
     if (!dialog?.open || !config.inHandle(event, dialog)) return;
     dialog.style.transition = 'none';
     const at = coord(event);
+    // A sheet caught mid-spring carries on from where it is.
+    const caught = catchSpring(dialog, config.axis);
+    dialog.style.setProperty(config.property, `${caught}px`);
     drag = {
       dialog,
       pointerId: event.pointerId,
       direction: config.direction(dialog),
-      start: at,
+      start: at - caught,
       last: at,
       lastT: Date.now(),
       velocity: 0,
-      shift: 0
+      shift: caught
     };
     // The document cannot see inside a shadow root, so a sheet there is
     // watched in its own root too; host removal still shows up in the document.
@@ -157,19 +177,62 @@ export function installSheetDrag(config: SheetDragConfig): void {
     onMove(event);
     drag = null;
     observer.disconnect();
-    // Not `reset()`, though it looks like it: the two halves belong on either
-    // side of close(). The transition has to be back before the sheet closes,
-    // so the dismissal animates; the shift has to clear after, or a snap-back
-    // would jump to zero before the transition could carry it there.
+    letGo(held);
+  };
+
+  /**
+   * A finished drag resizes or dismisses the sheet, or else it springs back.
+   * Not `reset()`, though it looks like it: the two halves belong on either
+   * side of close(). The transition has to be back before the sheet closes,
+   * so the dismissal animates; the shift has to clear after, or a snap-back
+   * would jump to zero before the transition could carry it there.
+   */
+  const letGo = (held: Drag) => {
+    const spring = springFor(held);
     held.dialog.style.transition = '';
-    settle(held);
+    clearShift(held, !settle(held) && held.dialog.open ? spring : null);
+  };
+
+  /**
+   * Clears the drag's shift, springing back on `spring` when there is one.
+   * A running CSS transition would outrank the spring, so it waits until
+   * the spring ends. It goes off before the shift changes: switched off
+   * after, WebKit has already started it.
+   */
+  const clearShift = (held: Drag, spring: Spring | null) => {
+    if (spring) held.dialog.style.transition = 'none';
     held.dialog.style.setProperty(config.property, '0px');
+    if (spring) springBack(held, spring);
+  };
+
+  /** The spring a released sheet snaps back on, or null for the CSS snap: no shift, no token, or reduced motion. */
+  const springFor = (held: Drag) => {
+    if (!held.shift || matchMedia('(prefers-reduced-motion: reduce)').matches) return null;
+    return springToken(held.dialog, 'default-spatial');
+  };
+
+  /**
+   * The snap-back: a spring solved from where the sheet is and the
+   * finger's speed, instead of the CSS spring that starts from rest.
+   */
+  const springBack = (held: Drag, spring: Spring) => {
+    const write = config.axis === 'x' ? (value: number) => `${value}px 0` : (value: number) => `0 ${value}px`;
+    const running = animatePath(held.dialog, 'translate', springPath(held.shift, 0, flickVelocity(held), spring), write);
+    springs.set(held.dialog, running);
+    running.onfinish = () => {
+      springs.delete(held.dialog);
+      held.dialog.style.transition = '';
+    };
   };
 
   const onRelease = config.onRelease ?? (() => {});
   const release = config.release ?? (() => false);
 
-  /** A drag that moved resizes the sheet, if the sheet handles that, or else dismisses it past the distance or a flick. */
+  /**
+   * A drag that moved resizes the sheet, if the sheet handles that, or else
+   * dismisses it past the distance or a flick. Returns whether the release
+   * did something other than let the sheet snap back.
+   */
   const settle = (held: Drag) => {
     const velocity = flickVelocity(held);
     const delta = held.last - held.start;
@@ -178,6 +241,7 @@ export function installSheetDrag(config: SheetDragConfig): void {
     onRelease(dragged);
     const handled = !dragged || release(held.dialog, delta, velocity);
     if (!handled && dismisses(held, velocity)) held.dialog.close();
+    return handled;
   };
 
   const onCancel = (event?: PointerEvent) => {

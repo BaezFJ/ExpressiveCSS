@@ -5515,8 +5515,8 @@
       "gaps": [
         {
           "kind": "feature",
-          "description": "Springs are sampled at compile time; there is no runtime solver, so an interrupted spring restarts without carrying velocity. Sheets, the navigation rail, FAB menu actions, basic dialogs, the expanding card, button groups, the keypad, the tabs indicator, switches and chip sets run on spring tokens.",
-          "nextStep": "Move component spatial transitions onto the spring tokens one component at a time, with browser checks of the settled state and reduced motion."
+          "description": "CSS springs are sampled at compile time, so an interrupted CSS transition restarts without carrying velocity; dragged sheets solve their snap-back spring at run time and keep the finger's speed. Sheets, the navigation rail, FAB menu actions, basic dialogs, the expanding card, button groups, the keypad, the tabs indicator, switches and chip sets run on spring tokens.",
+          "nextStep": "Solve springs at run time for other interruptible motion, such as the navigation rail, where testing shows the restart."
         }
       ],
       "browserChecks": [

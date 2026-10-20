@@ -110,6 +110,9 @@ const S = defineSections([
   transition: translate spring-duration(0.8, 380) spring(0.8, 380);
 }
 `} />
+    <p>
+      A <code>linear()</code> easing always starts from rest, so a transition interrupted part way restarts without the speed it had. Where that shows most, a dragged bottom or side sheet, the sheet solves its spring when it is released instead: it springs back from where the finger left it at the finger's speed, and a press while it moves catches it where it is. Each spring also has <code>-damping</code> and <code>-stiffness</code> tokens with its two numbers, following <code>motion</code>, for scripts that solve a spring themselves.
+    </p>
   </Section>
 </PageBody>
 </DocsLayout>
