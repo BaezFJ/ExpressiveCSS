@@ -9,7 +9,7 @@ Normative HTML semantics for ExpressiveCSS. This data file is the single source 
 Element choice, landmark structure, and the ARIA that element choice implies. Keyboard interaction, focus management and colour contrast are deliberately out of scope.
 
 1. Static semantics are the page author's; dynamic state is the framework's. See CONTEXT.md for both terms.
-2. A component may declare a composite role only if its keyboard contract is implemented and tested. Tabs do not qualify: they are navigation (`<nav>` + anchors + `aria-current`), not a `tablist`. Carousel is a different case - its keyboard contract is implemented, and it rejects `tablist` because it follows the ARIA carousel pattern instead.
+2. A component may declare a composite role only if its keyboard contract is implemented and tested. Tabs are navigation (`<nav>` + anchors + `aria-current`) by default; a strip the page marks `role="tablist"` gets the tabs keyboard model and `aria-selected` from the component. Carousel is a different case - its keyboard contract is implemented, and it rejects `tablist` because it follows the ARIA carousel pattern instead.
 3. Icons are `<span class="material-symbols" aria-hidden="true">`. A bare `<i>` gets no icon styling.
 4. `<nav>` is for genuine navigation only, and every one carries a required `aria-label`. Card action rows and toolbars are not navigation.
 5. Every user-facing string the framework generates has an `i18n` option.
@@ -1153,16 +1153,26 @@ Added with the stepper component. The ordered list carries the step count and po
 
 ### tabs
 
-Swept 0.8.0. Anchor navigation, not a tablist - see rule 2. Left, Right, Home and End move focus between the links as a shortcut; each link stays a Tab stop.
-
-**Rejected role:** `tablist` is not withheld but declined - the tabs are links to sections inside a nav landmark, with aria-current marking the one shown - the arrow keys only move focus between them, every link stays a Tab stop, and Enter follows it as a link, so there is no selection model for tab and tabpanel roles to announce. `tabs-not-a-tablist` enforces that.
+Swept 0.8.0. Anchor navigation by default: Left, Right, Home and End move focus between the links as a shortcut, each link stays a Tab stop, and aria-current marks the one shown. A strip the page writes as role="tablist", with role="tab" links that name their panel in aria-controls, takes the ARIA tabs pattern instead - the component keeps aria-selected and a roving tabindex, and the arrow keys select as they move. The roles are the author's; the keyboard model and the state are the component's, implemented and tested, so rule 2 allows the role.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `tabs-not-a-tablist` | forbid | `.tabs[role], .tabs [role="tab"], .tabs [role="tabpanel"]` | must not match |
-| `tabs-marks-current` | forbid | `.tabs a.active:not([aria-current])` | must not match |
+| `tabs-role-is-tablist` | forbid | `.tabs[role]:not([role="tablist"])` | must not match |
+| `tabs-tab-needs-tablist` | forbid | `.tabs:not([role="tablist"]) [role="tab"]` | must not match |
+| `tablist-on-a-div` | forbid | `.tabs[role="tablist"]:not(div)` | must not match |
+| `tablist-has-a-name` | forbid | `.tabs[role="tablist"]:not([aria-label], [aria-labelledby])` | must not match |
+| `tablist-tabs-are-tabs` | forbid | `.tabs[role="tablist"] > a:not([role="tab"])` | must not match |
+| `tablist-tab-names-panel` | forbid | `.tabs[role="tablist"] > a[role="tab"]:not([aria-controls])` | must not match |
+| `tablist-no-current` | forbid | `.tabs[role="tablist"]:has([aria-current])` | must not match |
+| `tabs-marks-current` | forbid | `.tabs:not([role="tablist"]) a.active:not([aria-current])` | must not match |
 
-- **tabs-not-a-tablist** - A tab strip takes no ARIA role here; these are links to in-page sections.
+- **tabs-role-is-tablist** - A tab strip takes no role, or role="tablist" for the tabs pattern. Any other role promises a keyboard model it does not have.
+- **tabs-tab-needs-tablist** - role="tab" belongs in a strip marked role="tablist". Link tabs take no role.
+- **tablist-on-a-div** - Write a tablist on a <div>. A tablist is not navigation, so <nav> stays for link tabs.
+- **tablist-has-a-name** - A tablist needs a name: aria-label or aria-labelledby.
+- **tablist-tabs-are-tabs** - In a tablist every tab takes role="tab".
+- **tablist-tab-names-panel** - A tab names the panel it shows in aria-controls.
+- **tablist-no-current** - A tablist marks its tab with aria-selected, which the component keeps; aria-current belongs to link tabs.
 - **tabs-marks-current** - The active tab is the section you are on; aria-current says so where a class cannot.
 
 ### timeline

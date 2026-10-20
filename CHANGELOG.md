@@ -7,6 +7,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Tabs can be a tablist. A strip the page writes as `role="tablist"`, with
+  `role="tab"` links naming their panel in `aria-controls`, gets the ARIA
+  tabs pattern: Tabs keeps `aria-selected` and a roving `tabindex`, so the
+  strip is one Tab stop, and Left, Right, Home and End select as they move.
+  Link tabs with `aria-current` stay the default. `semantics.json` allows the
+  roles only when the markup is complete: named, on a `<div>`, every tab a
+  `role="tab"` with `aria-controls`. In either mode an overflowing bar
+  scrolls the selected tab into view, without scrolling the page, and with
+  no `.active` tab or matching hash the first enabled tab is selected rather
+  than a disabled first one.
+
 - A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap
   picks it up and sets `aria-pressed`, and the next tap on the map drops it
   there. `Escape` or a second tap puts it back, and the arrow keys nudge a

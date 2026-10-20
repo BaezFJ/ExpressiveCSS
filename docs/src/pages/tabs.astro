@@ -11,6 +11,7 @@ import { defineSections } from "../lib/sections";
 const S = defineSections([
   { id: "anatomy", label: "Introduction", heading: false },
   { id: "secondary", label: "Secondary" },
+  { id: "tablist", label: "Tablist" },
   { id: "initialization", label: "Initialization" },
   { id: "options", label: "Options" },
   { id: "method", label: "Methods" },
@@ -38,7 +39,7 @@ const S = defineSections([
           those marked <code>no-autoinit</code>.
         </p>
         <p>
-          Each tab is a link and a Tab stop. When one has focus, Left and Right move focus to the next or previous tab, wrapping at the ends, and Home and End to the first and last; disabled tabs are skipped. In a right-to-left page the arrows still move the way they point. Moving focus does not switch the panel: Enter follows the link. The tabs keep their link semantics and <code>aria-current</code>, so they are not a <code>tablist</code>.
+          Each tab is a link and a Tab stop. When one has focus, Left and Right move focus to the next or previous tab, wrapping at the ends, and Home and End to the first and last; disabled tabs are skipped. In a right-to-left page the arrows still move the way they point. Moving focus does not switch the panel: Enter follows the link. The tabs keep their link semantics and <code>aria-current</code>; for panels that switch in place, a <a href="#tablist">tablist</a> works the other way. When the bar scrolls, the selected tab scrolls into view.
         </p>
         <p>
           Tokens follow the
@@ -133,6 +134,36 @@ const S = defineSections([
     <span>Hotel</span>
   </a>
 </nav>
+`} />
+  </Section>
+  <Section {...S.tablist}>
+        <p>
+          Panels that switch in place can make the strip a tablist instead. Write
+          <code>role="tablist"</code> and a name on a <code>&lt;div class="tabs"&gt;</code>,
+          <code>role="tab"</code> with <code>aria-controls</code> on each link, and
+          <code>role="tabpanel"</code> with <code>aria-labelledby</code> on each panel.
+          Tabs then keeps <code>aria-selected</code> on the selected tab and a roving
+          <code>tabindex</code>, so the strip is one Tab stop. Left and Right, Home and End
+          move between the tabs and select as they go. Link tabs stay the default, for
+          tabs that lead to sections or pages.
+        </p>
+        <div class="tabs" role="tablist" aria-label="Trip details">
+          <a role="tab" id="tablist-demo-flight-tab" href="#tablist-demo-flight" aria-controls="tablist-demo-flight">Flight</a>
+          <a role="tab" class="active" id="tablist-demo-hotel-tab" href="#tablist-demo-hotel" aria-controls="tablist-demo-hotel">Hotel</a>
+          <a role="tab" id="tablist-demo-car-tab" href="#tablist-demo-car" aria-controls="tablist-demo-car">Car</a>
+        </div>
+        <div id="tablist-demo-flight" role="tabpanel" aria-labelledby="tablist-demo-flight-tab" class="py-3">Flight</div>
+        <div id="tablist-demo-hotel" role="tabpanel" aria-labelledby="tablist-demo-hotel-tab" class="py-3">Hotel</div>
+        <div id="tablist-demo-car" role="tabpanel" aria-labelledby="tablist-demo-car-tab" class="py-3">Car</div>
+<Code code={`
+<div class="tabs" role="tablist" aria-label="Trip details">
+  <a role="tab" id="flight-tab" href="#flight" aria-controls="flight">Flight</a>
+  <a role="tab" class="active" id="hotel-tab" href="#hotel" aria-controls="hotel">Hotel</a>
+  <a role="tab" id="car-tab" href="#car" aria-controls="car">Car</a>
+</div>
+<div id="flight" role="tabpanel" aria-labelledby="flight-tab">Flight</div>
+<div id="hotel" role="tabpanel" aria-labelledby="hotel-tab">Hotel</div>
+<div id="car" role="tabpanel" aria-labelledby="car-tab">Car</div>
 `} />
   </Section>
   <Section {...S.initialization}>

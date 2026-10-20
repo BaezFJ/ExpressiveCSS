@@ -6233,7 +6233,18 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 
 Add `disabled` on the `<a>` to make it inaccessible. Tabs become scrollable when there are too many to fit.
 
-Each tab is a link and a Tab stop. When one has focus, Left and Right move focus to the next or previous tab, wrapping at the ends, and Home and End to the first and last; disabled tabs are skipped. In a right-to-left page the arrows still move the way they point. Moving focus does not switch the panel: Enter follows the link. The tabs keep their link semantics and `aria-current`, so they are not a `tablist`.
+Each tab is a link and a Tab stop. When one has focus, Left and Right move focus to the next or previous tab, wrapping at the ends, and Home and End to the first and last; disabled tabs are skipped. In a right-to-left page the arrows still move the way they point. Moving focus does not switch the panel: Enter follows the link. The tabs keep their link semantics and `aria-current`. When the bar scrolls, the selected tab scrolls into view.
+
+Panels that switch in place can make the strip a tablist instead. Write `role="tablist"` and a name on a `<div class="tabs">` (not a `<nav>`), `role="tab"` with `aria-controls` on each link, and `role="tabpanel"` with `aria-labelledby` on each panel. Tabs then keeps `aria-selected` on the selected tab and a roving `tabindex`, so the strip is one Tab stop; Left and Right, Home and End move between the tabs and select as they go. Link tabs stay the default, for tabs that lead to sections or pages.
+
+```html
+<div class="tabs" role="tablist" aria-label="Trip details">
+  <a role="tab" id="flight-tab" href="#flight" aria-controls="flight">Flight</a>
+  <a role="tab" class="active" id="hotel-tab" href="#hotel" aria-controls="hotel">Hotel</a>
+</div>
+<div id="flight" role="tabpanel" aria-labelledby="flight-tab">Flight</div>
+<div id="hotel" role="tabpanel" aria-labelledby="hotel-tab">Hotel</div>
+```
 
 ### Secondary
 

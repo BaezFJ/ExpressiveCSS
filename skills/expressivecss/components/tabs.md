@@ -9,7 +9,7 @@ Component ID: `tabs`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `394ef0fbf9e170f4c2cee995411f3786d4df395cf6ac2994ce6ac0aff738d124`
+Contract SHA-256: `7d511423cceb738bd7742af1e7c83c84921bffd4e305ea6888c12c8a27ef232b`
 
 #### Selection and adaptation
 
@@ -86,7 +86,13 @@ The Tabs section of the [API reference](https://www.expressivecss.com/llm.md) al
 
 #### Rules
 
-- `tabs-not-a-tablist`: A tab strip takes no ARIA role here; these are links to in-page sections.
+- `tabs-role-is-tablist`: A tab strip takes no role, or role="tablist" for the tabs pattern. Any other role promises a keyboard model it does not have.
+- `tabs-tab-needs-tablist`: role="tab" belongs in a strip marked role="tablist". Link tabs take no role.
+- `tablist-on-a-div`: Write a tablist on a <div>. A tablist is not navigation, so <nav> stays for link tabs.
+- `tablist-has-a-name`: A tablist needs a name: aria-label or aria-labelledby.
+- `tablist-tabs-are-tabs`: In a tablist every tab takes role="tab".
+- `tablist-tab-names-panel`: A tab names the panel it shows in aria-controls.
+- `tablist-no-current`: A tablist marks its tab with aria-selected, which the component keeps; aria-current belongs to link tabs.
 - `tabs-marks-current`: The active tab is the section you are on; aria-current says so where a class cannot.
 
 #### Guide checks
