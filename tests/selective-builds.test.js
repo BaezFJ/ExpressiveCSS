@@ -170,7 +170,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed radial chart segments and gradient fills: 78,435 gzip bytes (+246).
   // Reviewed chart review fixes: segment sizes, stacked ranges, diverging bounds and scrolling tooltips: 78,612 gzip bytes (+177).
   // Reviewed keypad caps lock, layers, hardware key highlight and minlength: 78,993 gzip bytes (+381).
-  assert.ok(sizes(js).gzip <= 78993, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed questionnaire shortcuts, review step and saved progress: 80,137 gzip bytes (+1,144).
+  assert.ok(sizes(js).gzip <= 80137, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -265,5 +266,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed radial chart segments and gradient fills: 80,410 gzip bytes (+39).
   // Reviewed chart review fixes: segment sizes, stacked ranges, diverging bounds and scrolling tooltips: 80,415 gzip bytes (+5).
   // Reviewed keypad caps lock, layers, hardware key highlight and minlength: 80,435 gzip bytes (+20).
-  assert.ok(sizes(css).gzip <= 80435, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed questionnaire shortcuts, review step and saved progress: 80,608 gzip bytes (+173).
+  assert.ok(sizes(css).gzip <= 80608, `CSS gzip: ${sizes(css).gzip}`);
 });

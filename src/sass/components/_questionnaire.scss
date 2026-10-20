@@ -14,7 +14,10 @@
 // the submit button sends the form.
 //
 // Choices are outlined rows; a selected one fills with secondary-container,
-// the M3 colour for a selected item in a list.
+// the M3 colour for a selected item in a list. With data-shortcuts each
+// choice ends in the letter that picks it, hidden from screen readers.
+// With data-summary a .questionnaire-summary lists each answer before the
+// submit button.
 //
 // Tokens:
 //   --md-comp-questionnaire-choice-shape            12px
@@ -68,7 +71,10 @@
       display: none;
     }
 
+    counter-reset: questionnaire-choice;
+
     > label:has(> :is([type="radio"], [type="checkbox"])) {
+      counter-increment: questionnaire-choice;
       display: grid;
       grid-template-columns: auto 1fr;
       align-items: center;
@@ -112,6 +118,61 @@
         color: var(--md-sys-color-on-surface-variant);
         @include typescale("body-medium");
       }
+    }
+  }
+
+  &[data-shortcuts] > fieldset > label:has(> :is([type="radio"], [type="checkbox"])) {
+    grid-template-columns: auto 1fr auto;
+
+    &::after {
+      content: counter(questionnaire-choice, upper-alpha) / "";
+      grid-row: 1;
+      grid-column: 3;
+      min-width: 24px;
+      padding: 2px 6px;
+      border: 1px solid var(--md-comp-questionnaire-choice-outline-color);
+      border-radius: var(--md-sys-shape-corner-extra-small);
+      color: var(--md-sys-color-on-surface-variant);
+      text-align: center;
+      @include typescale("label-medium");
+    }
+  }
+
+  // The review step: each question, its answer and a button back to it.
+  > .questionnaire-summary {
+    outline: 0;
+
+    > dl {
+      margin: 0;
+    }
+
+    > dl > div {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      column-gap: 16px;
+      padding: 12px 0;
+      border-block-end: 1px solid var(--md-sys-color-outline-variant);
+    }
+
+    dt {
+      color: var(--md-sys-color-on-surface-variant);
+      @include typescale("label-large");
+    }
+
+    dd {
+      margin: 0;
+    }
+
+    dd:first-of-type {
+      grid-column: 1;
+      color: var(--md-sys-color-on-surface);
+      @include typescale("body-large");
+    }
+
+    dd:last-of-type {
+      grid-row: 1 / span 2;
+      grid-column: 2;
     }
   }
 

@@ -8268,7 +8268,7 @@
           "documentedSupport": "A native form of fieldsets shown one at a time, with single choice, multiple choice and text answers, choice descriptions, required and data-required questions, Skip for optional ones, authored or generated errors, a progress row, Enter to advance, disabled questions for branching and normal form submission.",
           "webAdaptation": "Each question is a native fieldset named by its legend; the browser's constraint validation checks answers, hidden questions use hidden, and without JavaScript the form shows every question and still submits.",
           "limitations": [
-            "Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no answer keyboard shortcuts, no summary step and no saved progress; the page owns persistence and branching."
+            "Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no answer keyboard shortcuts, no summary step and no saved progress; the page owns persistence and branching."
           ]
         },
         "relationship": "none",
@@ -8302,13 +8302,8 @@
         "gaps": [
           {
             "kind": "verification",
-            "description": "Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+            "description": "Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
             "nextStep": "Answer a questionnaire with a screen reader in each engine and confirm the question, its description, errors and the progress are announced; check forced colors and enlarged text."
-          },
-          {
-            "kind": "feature",
-            "description": "There are no letter or number shortcuts for answers, no summary step and no saved progress.",
-            "nextStep": "Add answer shortcuts or a review step when a page needs them; pages can save progress with FormData and goTo()."
           }
         ],
         "browserChecks": [

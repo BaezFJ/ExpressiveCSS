@@ -14,6 +14,7 @@ const S = defineSections([
   { id: "validation", label: "Validation" },
   { id: "conditional", label: "Conditional questions" },
   { id: "submitting", label: "Submitting" },
+  { id: "extras", label: "Shortcuts, review and saving" },
   { id: "accessibility", label: "Accessibility" },
   { id: "options", label: "Options" },
   { id: "methods", label: "Methods" },
@@ -202,6 +203,58 @@ form.addEventListener('submit', (event) => {
 });
 `} />
   </Section>
+  <Section {...S.extras}>
+        <p>
+          Three attributes on the form add more. <code>data-shortcuts</code>
+          lets a letter or a digit pick the answer at that place in the shown
+          question, A or 1 for the first, and ends each choice with its
+          letter, which screen readers skip. Keys typed into a text field
+          stay text. <code>data-summary</code> adds a review step after the
+          last question: it lists every question with its answer and an Edit
+          button back to it, and the submit button shows there instead.
+          <code>data-save="key"</code> keeps the answers and the shown
+          question in <code>localStorage</code> under that key, restores them
+          when the page comes back, and forgets them once the form is
+          submitted. Keep personal answers out of saved questionnaires on
+          shared devices.
+        </p>
+        <form class="questionnaire" aria-label="Shortcut survey" data-shortcuts data-summary data-markdown-ignore>
+          <fieldset>
+            <legend>How did you hear about us?</legend>
+            <label><input type="radio" name="heard" value="search" required>Search engine</label>
+            <label><input type="radio" name="heard" value="friend" required>A friend</label>
+            <label><input type="radio" name="heard" value="ad" required>An ad</label>
+          </fieldset>
+          <fieldset>
+            <legend>What do you use it for?</legend>
+            <label><input type="checkbox" name="use" value="work">Work</label>
+            <label><input type="checkbox" name="use" value="home">Home</label>
+          </fieldset>
+          <footer>
+            <button type="button" class="text" value="previous">Back</button>
+            <button type="button" class="text" value="skip">Skip</button>
+            <button type="button" value="next">Next</button>
+            <button type="submit">Submit</button>
+          </footer>
+        </form>
+<Code code={`
+<form class="questionnaire" aria-label="Shortcut survey" data-shortcuts data-summary data-save="survey">
+  <fieldset>
+    <legend>How did you hear about us?</legend>
+    <label><input type="radio" name="heard" value="search" required>Search engine</label>
+    <label><input type="radio" name="heard" value="friend" required>A friend</label>
+    <label><input type="radio" name="heard" value="ad" required>An ad</label>
+  </fieldset>
+  <!-- More questions -->
+  <footer>
+    <button type="button" class="text" value="previous">Back</button>
+    <button type="button" class="text" value="skip">Skip</button>
+    <button type="button" value="next">Next</button>
+    <button type="submit">Submit</button>
+  </footer>
+</form>
+`} />
+  </Section>
   <Section {...S.accessibility}>
         <p>
           Each question is a native group named by its legend, and the
@@ -232,6 +285,24 @@ form.addEventListener('submit', (event) => {
             <td><code>'Choose an answer to continue.'</code></td>
             <td>Error for a question with no <code>.questionnaire-error</code> when the browser has no message, as for a <code>data-required</code> group.</td>
           </tr>
+          <tr>
+            <td><code>summaryLabel</code></td>
+            <td>String</td>
+            <td><code>'Review your answers'</code></td>
+            <td>With <code>data-summary</code>, the review step's name and the text of the progress row there.</td>
+          </tr>
+          <tr>
+            <td><code>editLabel</code></td>
+            <td>String</td>
+            <td><code>'Edit'</code></td>
+            <td>With <code>data-summary</code>, the text of each answer's button back to its question.</td>
+          </tr>
+          <tr>
+            <td><code>skippedLabel</code></td>
+            <td>String</td>
+            <td><code>'Not answered'</code></td>
+            <td>With <code>data-summary</code>, the answer shown for a question left blank.</td>
+          </tr>
         </OptionsTable>
   </Section>
   <Section {...S.methods}>
@@ -243,6 +314,7 @@ questionnaire.next();    // checks the shown question, then moves on
 questionnaire.previous();
 questionnaire.skip();    // clears the shown answer, then moves on
 questionnaire.goTo(2);   // shows a question without checking, e.g. to resume
+questionnaire.review();  // with data-summary, shows the review step
 questionnaire.destroy(); // shows every question and removes what it added
 `} />
   </Section>

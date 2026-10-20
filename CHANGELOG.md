@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Questionnaire extras, each opt-in on the form: `data-shortcuts` lets a
+  letter or digit pick an answer, `data-summary` adds a review step that
+  lists every answer with an Edit button before submitting, and
+  `data-save="key"` keeps the answers and the shown question in
+  localStorage until the form is submitted.
+
 - Keypad and keyboard keys: `data-key="CapsLock"` holds capitals until
   pressed again, and `data-key="Layer"` shows the elements whose
   `data-layer` matches its `value`, such as a row of symbols. A hardware

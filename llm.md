@@ -7773,6 +7773,8 @@ The component adds a progress row ("Question 1 of 3" and a `<progress>` named by
 
 A disabled fieldset is skipped and left out of the count, so a page branches by enabling or disabling questions from earlier answers. The form submits normally: read the answers with `FormData`, using `getAll()` for checkboxes. Without JavaScript every question shows at once, the navigation buttons stay hidden and the submit button sends the form; a `data-required` group is not checked then. Name the form with `aria-label` or `aria-labelledby`.
 
+`data-shortcuts` on the form lets a letter or digit pick the answer at that place in the shown question (A or 1 for the first enabled choice) and ends each choice with its letter, hidden from screen readers; keys typed into a text field stay text, and keys with Ctrl, Alt or Meta pick nothing. `data-summary` adds a review step after the last question: a `.questionnaire-summary` lists each question that applies, its answer (or `skippedLabel`) and an Edit button back to it, and the submit button shows there instead of on the last question; Back returns to the last question. `data-save="key"` stores the answers and the shown question in `localStorage` as `questionnaire:key`, restores them on init when the questions are unchanged, and removes them on submit.
+
 ```html
 <form class="questionnaire" aria-label="Product survey">
   <fieldset>
@@ -7809,6 +7811,9 @@ A disabled fieldset is skipped and left out of the count, so a page branches by 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `progressLabel` | String | `'Question {current} of {total}'` | Text of the progress row. `{current}` and `{total}` become the question number and count. `data-progress-label` on the form sets it. |
+| `summaryLabel` | String | `'Review your answers'` | With `data-summary`, the review step's name and its progress text. |
+| `editLabel` | String | `'Edit'` | With `data-summary`, the text of each answer's button back to its question. |
+| `skippedLabel` | String | `'Not answered'` | With `data-summary`, the answer shown for a question left blank. |
 | `requiredMessage` | String | `'Choose an answer to continue.'` | Error for a question with no `.questionnaire-error` when the browser has no message, as for a `data-required` group. |
 
 ### Properties
@@ -7831,6 +7836,10 @@ Moves to the previous question.
 #### .skip()
 
 Clears the answer to the shown question and moves to the next one.
+
+#### .review()
+
+With `data-summary`, shows the review step.
 
 #### .goTo(index)
 
