@@ -334,9 +334,11 @@ on. The five rules:
 2. **A component may declare a composite role only if its keyboard contract is
    implemented and tested.** `role="tablist"` promises arrow-key navigation; a
    component that promises and does not deliver is worse than one that says
-   nothing. `tabs.ts` has no keyboard handling at all, so Tabs are navigation
-   (`<nav>` + anchors + `aria-current`), not a tablist — a role it *withholds*
-   until the keyboard model exists.
+   nothing. Tabs are navigation by default (`<nav>` + anchors +
+   `aria-current`). Once `tabs.ts` implemented and tested the tabs keyboard
+   model, a strip the page marks `role="tablist"` became allowed: the author
+   writes the roles, and the component keeps `aria-selected` and a roving
+   `tabindex` (October 2026).
 
    **Carousel is not the same case, though this file long said it was.**
    `carousel.ts` implements arrows plus Home/End with focus movement and is

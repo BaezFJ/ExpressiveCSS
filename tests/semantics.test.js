@@ -70,8 +70,7 @@ function splitCompounds(selector) {
  * inventing one: a false positive forces a bogus declaration, while a false
  * negative leaves a gap the generated summary already admits to.
  *
- * A bare `[role]` blocks every role, composite ones included - which is how
- * Tabs withholds `tablist` without naming it.
+ * A bare `[role]` blocks every role, composite ones included.
  */
 function rolesBlockedBy(rule, compositeRoles) {
   if (rule.kind === 'forbid-composite-roles') return [...compositeRoles];

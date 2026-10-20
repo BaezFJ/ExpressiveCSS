@@ -7,7 +7,7 @@
     "scope": "Element choice, landmark structure, and the ARIA that element choice implies. Keyboard interaction, focus management and colour contrast are deliberately out of scope.",
     "rules": [
       "Static semantics are the page author's; dynamic state is the framework's. See CONTEXT.md for both terms.",
-      "A component may declare a composite role only if its keyboard contract is implemented and tested. Tabs do not qualify: they are navigation (`<nav>` + anchors + `aria-current`), not a `tablist`. Carousel is a different case - its keyboard contract is implemented, and it rejects `tablist` because it follows the ARIA carousel pattern instead.",
+      "A component may declare a composite role only if its keyboard contract is implemented and tested. Tabs are navigation (`<nav>` + anchors + `aria-current`) by default; a strip the page marks `role=\"tablist\"` gets the tabs keyboard model and `aria-selected` from the component. Carousel is a different case - its keyboard contract is implemented, and it rejects `tablist` because it follows the ARIA carousel pattern instead.",
       "Icons are `<span class=\"material-symbols\" aria-hidden=\"true\">`. A bare `<i>` gets no icon styling.",
       "`<nav>` is for genuine navigation only, and every one carries a required `aria-label`. Card action rows and toolbars are not navigation.",
       "Every user-facing string the framework generates has an `i18n` option."
@@ -2021,24 +2021,61 @@
       },
       "tabs": {
         "status": "enforced",
-        "note": "Swept 0.8.0. Anchor navigation, not a tablist - see rule 2. Left, Right, Home and End move focus between the links as a shortcut; each link stays a Tab stop.",
-        "rejects": {
-          "rejected_role": "tablist",
-          "because": "the tabs are links to sections inside a nav landmark, with aria-current marking the one shown - the arrow keys only move focus between them, every link stays a Tab stop, and Enter follows it as a link, so there is no selection model for tab and tabpanel roles to announce",
-          "rule": "tabs-not-a-tablist"
-        },
+        "note": "Swept 0.8.0. Anchor navigation by default: Left, Right, Home and End move focus between the links as a shortcut, each link stays a Tab stop, and aria-current marks the one shown. A strip the page writes as role=\"tablist\", with role=\"tab\" links that name their panel in aria-controls, takes the ARIA tabs pattern instead - the component keeps aria-selected and a roving tabindex, and the arrow keys select as they move. The roles are the author's; the keyboard model and the state are the component's, implemented and tested, so rule 2 allows the role.",
         "rules": [
           {
-            "id": "tabs-not-a-tablist",
+            "id": "tabs-role-is-tablist",
             "kind": "forbid",
-            "selector": ".tabs[role], .tabs [role=\"tab\"], .tabs [role=\"tabpanel\"]",
+            "selector": ".tabs[role]:not([role=\"tablist\"])",
             "fragmentSafe": true,
-            "message": "A tab strip takes no ARIA role here; these are links to in-page sections."
+            "message": "A tab strip takes no role, or role=\"tablist\" for the tabs pattern. Any other role promises a keyboard model it does not have."
+          },
+          {
+            "id": "tabs-tab-needs-tablist",
+            "kind": "forbid",
+            "selector": ".tabs:not([role=\"tablist\"]) [role=\"tab\"]",
+            "fragmentSafe": true,
+            "message": "role=\"tab\" belongs in a strip marked role=\"tablist\". Link tabs take no role."
+          },
+          {
+            "id": "tablist-on-a-div",
+            "kind": "forbid",
+            "selector": ".tabs[role=\"tablist\"]:not(div)",
+            "fragmentSafe": true,
+            "message": "Write a tablist on a <div>. A tablist is not navigation, so <nav> stays for link tabs."
+          },
+          {
+            "id": "tablist-has-a-name",
+            "kind": "forbid",
+            "selector": ".tabs[role=\"tablist\"]:not([aria-label], [aria-labelledby])",
+            "fragmentSafe": true,
+            "message": "A tablist needs a name: aria-label or aria-labelledby."
+          },
+          {
+            "id": "tablist-tabs-are-tabs",
+            "kind": "forbid",
+            "selector": ".tabs[role=\"tablist\"] > a:not([role=\"tab\"])",
+            "fragmentSafe": true,
+            "message": "In a tablist every tab takes role=\"tab\"."
+          },
+          {
+            "id": "tablist-tab-names-panel",
+            "kind": "forbid",
+            "selector": ".tabs[role=\"tablist\"] > a[role=\"tab\"]:not([aria-controls])",
+            "fragmentSafe": true,
+            "message": "A tab names the panel it shows in aria-controls."
+          },
+          {
+            "id": "tablist-no-current",
+            "kind": "forbid",
+            "selector": ".tabs[role=\"tablist\"]:has([aria-current])",
+            "fragmentSafe": true,
+            "message": "A tablist marks its tab with aria-selected, which the component keeps; aria-current belongs to link tabs."
           },
           {
             "id": "tabs-marks-current",
             "kind": "forbid",
-            "selector": ".tabs a.active:not([aria-current])",
+            "selector": ".tabs:not([role=\"tablist\"]) a.active:not([aria-current])",
             "fragmentSafe": false,
             "message": "The active tab is the section you are on; aria-current says so where a class cannot."
           }

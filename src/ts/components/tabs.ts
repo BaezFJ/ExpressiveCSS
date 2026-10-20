@@ -42,6 +42,21 @@ const _defaults: TabsOptions = {
 const scrollBehavior = (): ScrollBehavior =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
 
+/** Links cannot be :disabled; a tab is turned off with a class or aria-disabled. */
+const isDisabled = (a: Element) => a.matches('.disabled, [aria-disabled="true"]');
+
+/** Shown, as far as the browser can say; a responsive utility may hide a tab. */
+const isShown = (a: Element) => a.checkVisibility?.() ?? true;
+
+/** A tab the keyboard can reach: enabled and shown. */
+const isUsable = (a: Element) => !isDisabled(a) && isShown(a);
+
+/** Puts back an attribute as the page wrote it; null means it was absent. */
+const restoreAttribute = (el: Element, name: string, value: string | null) => {
+  if (value === null) el.removeAttribute(name);
+  else el.setAttribute(name, value);
+};
+
 export class Tabs extends Component<TabsOptions> {
   _tabLinks: NodeListOf<HTMLAnchorElement>;
   _index: number;
@@ -59,7 +74,17 @@ export class Tabs extends Component<TabsOptions> {
   _activeTabLink: HTMLAnchorElement;
   _content: HTMLElement;
   private _originalPanels = new Map<HTMLElement, { display: string; priority: string; active: boolean; inert: boolean; marker?: Comment }>();
-  private _originalLinks = new Map<HTMLAnchorElement, { active: boolean; current: string | null }>();
+  private _originalLinks = new Map<HTMLAnchorElement, { active: boolean; current: string | null; selected: string | null; tabindex: string | null }>();
+  /**
+   * Whether the page made the strip a tablist. The roles are the author's;
+   * in that mode the component keeps aria-selected and a roving tabindex, and
+   * the arrow keys select as they move, as the ARIA tabs pattern asks.
+   */
+  private _tablist = false;
+  /** The bar's own tabindex as the page wrote it, put back on destroy. */
+  private _barTabindex: string | null = null;
+  /** Re-chooses a tablist's Tab stop when the strip is shown, hidden or resized. */
+  private _stripObserver: ResizeObserver | null = null;
 
   constructor(el: HTMLElement, options: Partial<TabsOptions>) {
     super(el, options, Tabs);
@@ -75,8 +100,12 @@ export class Tabs extends Component<TabsOptions> {
       console.error('Tabs: no tab links (an <a> child) to show');
       return;
     }
+    this._setupTablist();
     this._tabLinks.forEach(link => {
-      this._originalLinks.set(link, { active: link.classList.contains('active'), current: link.getAttribute('aria-current') });
+      this._originalLinks.set(link, {
+        active: link.classList.contains('active'), current: link.getAttribute('aria-current'),
+        selected: link.getAttribute('aria-selected'), tabindex: link.getAttribute('tabindex')
+      });
       const panel = this._panelFor(link);
       if (panel) this._originalPanels.set(panel, {
         display: panel.style.display, priority: panel.style.getPropertyPriority('display'),
@@ -101,6 +130,21 @@ export class Tabs extends Component<TabsOptions> {
     document.fonts?.ready.then(() => {
       if (this.el['Expressive_Tabs'] === this) this._handleWindowResize();
     });
+  }
+
+  private _setupTablist() {
+    this._tablist = this.el.getAttribute('role') === 'tablist';
+    // Firefox makes an overflowing bar a Tab stop of its own, ahead of the
+    // tabs; a tablist is one Tab stop, so the bar steps aside.
+    this._barTabindex = this.el.getAttribute('tabindex');
+    if (!this._tablist) return;
+    this.el.tabIndex = -1;
+    // A strip set up inside a closed dialog has no visible tabs yet; opening
+    // it changes the strip's size, and so does a utility that shows or hides
+    // a tab, so either way the Tab stop is chosen again.
+    if (typeof ResizeObserver === 'undefined') return;
+    this._stripObserver = new ResizeObserver(() => this._refreshTabStop());
+    this._stripObserver.observe(this.el);
   }
 
   static get defaults(): TabsOptions {
@@ -136,6 +180,8 @@ export class Tabs extends Component<TabsOptions> {
   }
 
   destroy() {
+    this._stripObserver?.disconnect();
+    this._stripObserver = null;
     this._removeEventHandlers();
     this._indicator?.remove();
     if (this._track) {
@@ -149,9 +195,11 @@ export class Tabs extends Component<TabsOptions> {
     });
     this._originalLinks.forEach((original, link) => {
       link.classList.toggle('active', original.active);
-      if (original.current === null) link.removeAttribute('aria-current');
-      else link.setAttribute('aria-current', original.current);
+      restoreAttribute(link, 'aria-current', original.current);
+      restoreAttribute(link, 'aria-selected', original.selected);
+      restoreAttribute(link, 'tabindex', original.tabindex);
     });
+    restoreAttribute(this.el, 'tabindex', this._barTabindex);
     this.el['Expressive_Tabs'] = undefined;
   }
 
@@ -176,22 +224,34 @@ export class Tabs extends Component<TabsOptions> {
 
   /**
    * Left and Right move focus to the next tab, wrapping at the ends, and
-   * Home and End to the first and last; disabled tabs are skipped. Focus
-   * moves without choosing: Enter follows the link as before. Each tab
-   * stays a Tab stop and a link, so the keys add a shortcut rather than a
-   * composite the markup would have to announce.
+   * Home and End to the first and last; disabled tabs are skipped. In link
+   * tabs focus moves without choosing, and Enter follows the link. In a
+   * tablist the tab that takes focus is selected too, the ARIA pattern's
+   * automatic activation, since a panel here shows at once.
    */
   _handleKeydown = (e: KeyboardEvent) => {
     const steps = STEPS[getComputedStyle(this.el).direction === 'rtl' ? 'rtl' : 'ltr'];
-    const target = Utils.focusTarget(Array.from(this._tabLinks), e, steps, true);
+    const target = Utils.focusTarget(Array.from(this._tabLinks).filter(isShown), e, steps, true) as HTMLAnchorElement | undefined;
     if (!target) return;
     e.preventDefault();
     target.focus();
+    this._followFocus(target);
   };
+
+  /**
+   * In a tablist the tab that takes focus is selected; link tabs wait for
+   * Enter. The page's focus handlers run inside focus(), and one may have
+   * destroyed or replaced the tabs, which then are no longer this instance's.
+   */
+  private _followFocus(tab: HTMLAnchorElement) {
+    if (this._tablist && tab !== this._activeTabLink && Tabs.getInstance(this.el) === this) this._select(tab);
+  }
 
   // Throttled like Carousel's: every bar re-measures on resize, and the left
   // and right positions are both read before either is written.
   _handleWindowResize = Utils.throttle(() => {
+    // The throttle's trailing call can land after destroy().
+    if (Tabs.getInstance(this.el) !== this) return;
     this._setTabsAndTabWidth();
     if (this._tabWidth !== 0 && this._tabsWidth !== 0) this._positionIndicator();
   }, 200);
@@ -216,9 +276,13 @@ export class Tabs extends Component<TabsOptions> {
     // Act as regular link if target attribute is specified.
     if (tabLink.hasAttribute('target')) return;
     e.preventDefault();
+    this._select(tabLink);
+  };
+
+  private _select(tabLink: HTMLAnchorElement) {
     if (this.options.swipeable) this._clickSwipeable(tabLink);
     else this._clickTab(tabLink);
-  };
+  }
 
   private _clickSwipeable(tabLink: HTMLAnchorElement) {
     if (!this._panels.includes(this._panelFor(tabLink))) return;
@@ -293,24 +357,60 @@ export class Tabs extends Component<TabsOptions> {
   /**
    * Which tab is current, for the eye and for assistive technology.
    *
-   * The class alone is a colour. `aria-current` is the part a screen reader
-   * reads, and because tabs are navigation rather than a tablist (rule 2 -
-   * there is no keyboard model here to back a tablist), "current" is exactly
-   * the right word for it. Its *value* changes as the user clicks, which makes
-   * maintaining it the component's job, not the author's - see CONTEXT.md on
+   * The class alone is a colour. Link tabs are navigation, so `aria-current`
+   * is the part a screen reader reads. A strip the page made a tablist reads
+   * `aria-selected` instead, with the keyboard model rule 2 asks of a
+   * composite role. Either value changes as the user picks, which makes
+   * keeping it the component's job, not the author's - see CONTEXT.md on
    * static semantics versus dynamic state. Writing it once in the markup and
    * never moving it left the old tab announcing itself as current.
    */
-  private _setActiveTabLink(tabLink: HTMLAnchorElement) {
-    Array.from(this._tabLinks).forEach(a => {
-      a.classList.remove('active');
-      a.removeAttribute('aria-current');
-    });
+  private _setActiveTabLink(tabLink: HTMLAnchorElement, behavior: ScrollBehavior = scrollBehavior()) {
+    const stop = this._tabStop(tabLink);
+    Array.from(this._tabLinks).forEach(a => this._mark(a, a === tabLink, a === stop));
     this._activeTabLink = tabLink;
-    tabLink.classList.add('active');
-    tabLink.setAttribute('aria-current', 'page');
     this._index = Array.from(this._tabLinks).indexOf(tabLink);
     this._content = this._panelFor(tabLink);
+    this._reveal(tabLink, behavior);
+  }
+
+  /** A tablist says selected and keeps one Tab stop; link tabs say current. */
+  private _mark(a: HTMLAnchorElement, on: boolean, stop: boolean) {
+    a.classList.toggle('active', on);
+    if (this._tablist) {
+      a.setAttribute('aria-selected', String(on));
+      a.tabIndex = stop ? 0 : -1;
+    } else if (on) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  }
+
+  /**
+   * The tablist's one Tab stop: the selected tab, or the first usable one
+   * when the selected tab is disabled or hidden. The arrow keys skip both,
+   * so a Tab stop on one would leave every other panel out of reach.
+   */
+  private _tabStop(selected: HTMLAnchorElement): HTMLAnchorElement {
+    if (isUsable(selected)) return selected;
+    // With nothing shown, as in a closed dialog, at least skip disabled tabs.
+    const links = Array.from(this._tabLinks);
+    return links.find(isUsable) ?? links.find((a) => !isDisabled(a)) ?? selected;
+  }
+
+  /** Showing or hiding the strip or a tab moves the Tab stop to a usable tab. */
+  private _refreshTabStop() {
+    const stop = this._tabStop(this._activeTabLink);
+    this._tabLinks.forEach((a) => (a.tabIndex = a === stop ? 0 : -1));
+  }
+
+  /**
+   * Scrolls an overflowing bar, and only the bar, so the tab is in view.
+   * Measured as a visual offset, so it holds in a right-to-left bar too.
+   */
+  private _reveal(tab: HTMLElement, behavior: ScrollBehavior) {
+    const bar = this.el.getBoundingClientRect();
+    const box = tab.getBoundingClientRect();
+    const left = Math.min(0, box.left - bar.left) || Math.max(0, box.right - bar.right);
+    if (left) this.el.scrollBy({ left, behavior });
   }
 
   _setupActiveTabLink() {
@@ -321,8 +421,8 @@ export class Tabs extends Component<TabsOptions> {
     this._activeTabLink =
       Array.from(this._tabLinks).find(a => hash && Tabs._decodeHash(a.getAttribute('href') ?? '') === hash) ??
       this.el.querySelector<HTMLAnchorElement>('a.active') ??
-      this._tabLinks[0];
-    this._setActiveTabLink(this._activeTabLink);
+      this._tabStop(this._tabLinks[0]);
+    this._setActiveTabLink(this._activeTabLink, 'instant');
 
     this._originalPanels.forEach((_, panel) => panel.classList.toggle('active', panel === this._content));
   }
