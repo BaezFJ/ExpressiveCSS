@@ -72,6 +72,21 @@ describe('Snackbar', () => {
     });
   }
 
+  test('a bar that never times out gets a close button, so a swipe is not the only way out', t => {
+    resetBody();
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    const close = (options) => {
+      const snackbar = new Expressive.Snackbar({ text: 'Saved', outDuration: 0, ...options });
+      const button = snackbar.el.querySelector('button[aria-label="Dismiss"]');
+      snackbar.dismiss();
+      t.mock.timers.tick(1);
+      return !!button;
+    };
+    assert.equal(close({ displayLength: Infinity }), true, 'no timer, no action');
+    assert.equal(close({}), false, 'a timed bar leaves on its own');
+    assert.equal(close({ displayLength: Infinity, dismissible: false }), false, 'an explicit false is kept');
+  });
+
   test('a cancelled flick does not turn the next stationary tap into a dismissal', t => {
     resetBody();
     t.mock.timers.enable({ apis: ['setTimeout'] });
