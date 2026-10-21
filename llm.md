@@ -6657,7 +6657,7 @@ For HTML, point `data-tooltip-id` at an element. That element is moved into the 
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.Tooltip`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.tooltipped`.
+The IIFE bundle exposes `Expressive.Tooltip`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.tooltipped`. On touch, a runtime tooltip shows on a long press of half a second, without `enterDelay`, and stays for a second and a half after the finger lifts; the long press does not press the button or follow the link, and a tap, or a press that turns into a scroll, shows nothing.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {

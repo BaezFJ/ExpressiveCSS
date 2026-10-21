@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Tooltips show on a long press on touch, as Android does: after half a
+  second held, without `enterDelay`, staying for a second and a half after the finger lifts. A
+  tap used to show the tooltip through its compatibility mouse events and
+  leave it up until the next tap elsewhere; a tap now shows nothing, and a
+  press that turns into a scroll shows nothing. The click a long press's
+  release sends is consumed, so it does not press the button or follow the
+  link.
 - Data tables sort and select. With `data-sort` on a `.data-table`, a
   button in a header cell reorders the rows by its column and moves
   `aria-sort`. A `numeric` column compares numbers, other columns compare
