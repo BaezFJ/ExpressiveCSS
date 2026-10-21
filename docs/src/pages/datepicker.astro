@@ -215,8 +215,8 @@ Expressive.Datepicker.init(elem, {
             <tr>
               <td><code>firstDay</code></td>
               <td>Number</td>
-              <td><code>0</code></td>
-              <td>First day of the week. <code>0</code> is Sunday, <code>1</code> is Monday.</td>
+              <td><code>0</code>, or the language's</td>
+              <td>First day of the week. <code>0</code> is Sunday, <code>1</code> is Monday. With a <code>lang</code> on or around the input, it defaults to that language's first day where the browser knows it.</td>
             </tr>
             <tr>
               <td><code>minDate</code></td>
@@ -342,7 +342,7 @@ Expressive.Datepicker.init(elem, {
   </Section>
 
   <Section {...S["date-format"]}>
-        <p>Without a custom <code>parse</code> callback, <code>YYYY-MM-DD</code> input is a local calendar date. Impossible dates such as <code>2023-02-29</code> do not change the selection. Other strings use the browser's date parser. Supply <code>parse</code> for other input formats.</p>
+        <p>Without a custom <code>parse</code> callback, <code>YYYY-MM-DD</code> input is a local calendar date. Impossible dates such as <code>2023-02-29</code> do not change the selection. Text in the picker's own string <code>format</code> is read with its <code>i18n</code> names, so <code>05/10/2026</code> in <code>dd/mm/yyyy</code> is 5 October and a German <code>Mär 15, 2026</code> reads back. Other strings use the browser's date parser. Supply <code>parse</code> for other input formats.</p>
         <p>The custom parser also applies when initializing or reopening the picker by click or Enter. Clearing a single-date input clears its selection, so confirming does not restore the deleted date.</p>
         <p>Use these tokens in the <code>format</code> string.</p>
         <table class="striped">
@@ -409,7 +409,14 @@ Expressive.Datepicker.init(elem, {
   </Section>
 
   <Section {...S.internationalization}>
-        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults.</p>
+        <p>
+          With a <code>lang</code> attribute on the input or around it, such as
+          <code>&lt;html lang="de"&gt;</code>, the month and weekday names come from
+          that language, as <code>Intl</code> writes them, and so does the first day of
+          the week where the browser knows it. The button words are not dates, so pass
+          them yourself. Without a <code>lang</code> the English defaults stay.
+        </p>
+        <p>Pass a partial <code>i18n</code> object. Keys you pass win over the language; missing keys keep its names, or the English defaults.</p>
         <table class="striped">
           <thead>
             <tr>

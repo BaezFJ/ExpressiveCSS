@@ -7004,7 +7004,7 @@ Expressive.Datepicker.init(elem, {
 | `setDefaultEndDate` | Boolean | `false` | If true, `defaultEndDate` is also the selected end value. |
 | `disableWeekends` | Boolean | `false` | Prevent selecting Saturday and Sunday. |
 | `disableDayFn` | Function | `null` | Return true to disable that day. Receives a `Date`. |
-| `firstDay` | Number | `0` | First day of the week. `0` is Sunday, `1` is Monday. |
+| `firstDay` | Number | `0`, or the language's | First day of the week. `0` is Sunday, `1` is Monday. With a `lang` on or around the input, defaults to that language's first day where the browser knows it. |
 | `minDate` | Date | `null` | Earliest selectable date. |
 | `maxDate` | Date | `null` | Latest selectable date. |
 | `yearRange` | Number or Array | `10` | Years on either side of the viewed year, or `[minYear, maxYear]`. |
@@ -7016,7 +7016,7 @@ Expressive.Datepicker.init(elem, {
 | `container` | Element or String | `null` | Element or selector to render the calendar into. When set, the calendar is not hidden. |
 | `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
 | `autoSubmit` | Boolean | `true` | If true, selecting a day writes the input immediately. If false, Ok and Cancel buttons are added. |
-| `i18n` | Object | See below | Labels and month/weekday names. Partial objects are merged with the defaults. |
+| `i18n` | Object | See below | Labels and month/weekday names. Partial objects are merged with the defaults. With a `lang` on or around the input, the month and weekday names default to that language's, as `Intl` writes them; the button words stay English unless passed. |
 | `events` | Array | `[]` | Strings from `Date.toDateString()`. Matching days get a `has-event` class. The default stylesheet does not style that class. |
 | `onSelect` | Function | `null` | Called when a date is selected. Receives the `Date`. |
 | `onDraw` | Function | `null` | Called after the calendar HTML is redrawn. |
@@ -7029,7 +7029,9 @@ Expressive.Datepicker.init(elem, {
 ### Date format options
 
 Without a custom `parse` callback, `YYYY-MM-DD` input is a local calendar date.
-Impossible dates such as `2023-02-29` do not change the selection. Other strings
+Impossible dates such as `2023-02-29` do not change the selection. Text in the
+picker's own string `format` is read with its `i18n` names, so `05/10/2026` in
+`dd/mm/yyyy` is 5 October and a German `Mär 15, 2026` reads back. Other strings
 use the browser's date parser. Supply `parse` for other input formats.
 
 The custom parser also applies when initializing or reopening the picker by click
@@ -7264,7 +7266,7 @@ Expressive.Timepicker.init(elem, {
 | `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` string (optionally with `AM`/`PM`). |
 | `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |
 | `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, and Minutes. |
-| `twelveHour` | Boolean | `true` | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. |
+| `twelveHour` | Boolean | `true`, or the language's | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. With a `lang` on or around the input, defaults to the clock that language uses. |
 | `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
 | `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |

@@ -190,7 +190,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the .toggle chart legend: 84,157 gzip bytes (+251).
   // Reviewed keyboard and IME fixes: search view, slider ring, popover fallback: 84,223 gzip bytes (+66).
   // Reviewed data table sorting and select-all: 85,710 gzip bytes (+1,487).
-  assert.ok(sizes(js).gzip <= 85710, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Datepicker and Timepicker names, first day and clock from the page's lang, and dates read in their format: 86,573 gzip bytes (+863).
+  assert.ok(sizes(js).gzip <= 86573, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
