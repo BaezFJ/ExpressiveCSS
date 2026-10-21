@@ -1,138 +1,174 @@
-# MCP implementation roadmap
+# ExpressiveCSS roadmap
 
-Implement the five improvements in the interview's confirmed order: complete rules, runtime API guidance, catalogue discovery, bounded responses and versioned resources. Follow the [mission](mission.md) and [technical constraints](tech-stack.md). Each numbered phase has one observable outcome and is intended for one focused work session.
+Work toward the [mission](mission.md) within the [technical constraints](tech-stack.md). Each numbered phase has one observable outcome and fits one focused work session.
 
-## Baseline and status
+## Current state
 
-The reviewed checkout is `7d3d238`. The MCP package is 0.2.2 and serves framework contract 0.12.0. Seven tools, bundled catalogue loading, version/provenance checks, heuristic semantics inspection, command restrictions and an independent package release process are implemented. Live protocol smoke tests passed during the review.
+Later phases build on these:
 
-All ten phases are implemented and merged into `master`. Phase 1 was the first usable milestone. Each validation record holds the local verification evidence for its phase:
+- **Components and events:** components report changes through `expressive:*` events alongside their option callbacks.
+- **Tabs:** an opt-in ARIA tablist with a roving tab stop.
+- **Charts:**
+  - `update()` redraws from a changed table, keeping focus and the highlighted row.
+  - A `.toggle` legend shows and hides series.
+- **Data tables:** `data-sort` sorting and a select-all box.
+- **Pickers:** Datepicker and Timepicker follow the page's `lang` and read typed dates in their own format.
+- **Chips:** submit their values under the input's `name`, with `required` and reset support.
+- **Menus:** Home and End keys, `placement`, and anchored menus that open on whichever side fits.
+- **Tooltips:** open on a long press on touch.
+- **Forms:** `.validate` fields set `aria-invalid` and are described by their error text.
+- **AutoInit:** starts every registered component in the page, with a `no-autoinit` opt-out.
+- **MCP server:**
+  - Lists and searches the catalogue.
+  - Returns complete rules and the documented Options and Methods within response limits.
+  - Serves the shipped catalogue and component guides as versioned resources with name completion.
 
-1. [Complete component rules](2026-10-04-mcp-complete-component-rules/validation.md#execution-evidence-on-2026-10-04), #213
-2. [Requested runtime options](2026-10-04-mcp-runtime-options/validation.md#execution-evidence-on-2026-10-04), #215
-3. [Requested runtime methods](2026-10-04-mcp-runtime-methods/validation.md#execution-evidence-on-2026-10-04), #216
-4. [Compact catalogue listing](2026-10-05-mcp-compact-catalogue/validation.md#execution-evidence-on-2026-10-05), #219
-5. [Catalogue search](2026-10-05-mcp-catalogue-search/validation.md#execution-evidence-on-2026-10-05), #220
-6. [Selectable response detail](2026-10-05-mcp-selectable-response-detail/validation.md#execution-evidence-on-2026-10-05), #221
-7. [Aggregate response limits and recovery](2026-10-05-mcp-aggregate-response-limits/validation.md#execution-evidence-on-2026-10-05), #222
-8. [Versioned catalogue resource](2026-10-06-mcp-versioned-catalogue-resource/validation.md#execution-evidence-on-2026-10-06), #223
-9. [Versioned component resources](2026-10-06-mcp-component-resources/validation.md#execution-evidence-on-2026-10-06), #224
-10. [Resource argument completion](2026-10-06-mcp-resource-completion/validation.md#execution-evidence-on-2026-10-06), #225
+## Milestone: MCP authoring guidance
 
-No release includes this work yet. The MCP changelog lists it under Unreleased, and the package version is still 0.2.2.
+### Phase 1: complete component rules
 
-| Improvement | Phases |
-| --- | --- |
-| Complete component rules | 1 |
-| Runtime API guidance | 2 and 3 |
-| Catalogue discovery | 4 and 5 |
-| Bounded responses | 6 and 7 |
-| Versioned resources | 8 through 10 |
+Completed 2026-10-04. See [spec](2026/10/04/mcp-complete-component-rules/).
 
-## Phase 1: complete component rules
+### Phase 2: requested runtime options
 
-Dependency: existing bundled guides and syntax tool.
+Completed 2026-10-04. See [spec](2026/10/04/mcp-runtime-options/).
 
-- Remove the fixed eight-rule omission in the shared guide summary.
-- Check returned normative rule IDs against the complete bundled guide rule IDs, including guides with more than eight rules.
-- Preserve existing version/provenance status and distinguish generic fallback advice from normative rules in the checks.
+### Phase 3: requested runtime methods
 
-Completion check: live syntax requests return all 16 Cards rules and the autocomplete supporting-text linkage rule. The existing MCP smoke suite passes. This is the first usable milestone.
+Completed 2026-10-04. See [spec](2026/10/04/mcp-runtime-methods/).
 
-## Phase 2: requested runtime options
+### Phase 4: compact catalogue listing
 
-Dependency: Phase 1.
+Completed 2026-10-05. See [spec](2026/10/05/mcp-compact-catalogue/).
 
-- Add an optional way to request documented Options through `component_syntax_expert`.
-- Read those sections from the existing bundled guidance and identify components with no documented Options section without inventing entries.
-- Preserve existing request forms and contract/provenance evidence.
+### Phase 5: catalogue search
 
-Completion check: a live Datepicker request returns its documented visibility and docked-display options; a component without Options reports their absence. A request using the previous input shape still succeeds.
+Completed 2026-10-05. See [spec](2026/10/05/mcp-catalogue-search/).
 
-## Phase 3: requested runtime methods
+### Phase 6: selectable response detail
 
-Dependency: Phase 2's section-selection behavior.
+Completed 2026-10-05. See [spec](2026/10/05/mcp-selectable-response-detail/).
 
-- Extend the same section-selection behavior to documented Methods.
-- Return the bundled method guidance and identify absent sections explicitly.
-- Document the supported section-selection behavior in the MCP README.
+### Phase 7: aggregate response limits and recovery
 
-Completion check: a live Autocomplete request returns its documented Methods, including `destroy()`. Selecting Options alone does not include unrequested Methods. Missing or mismatched target versions retain their existing blocked compatibility evidence.
+Completed 2026-10-05. See [spec](2026/10/05/mcp-aggregate-response-limits/).
 
-## Phase 4: compact catalogue listing
+### Phase 8: versioned catalogue resource
 
-Dependency: Phase 3; reuse the existing guide and component decision catalogue.
+Completed 2026-10-06. See [spec](2026/10/06/mcp-versioned-catalogue-resource/).
 
-- Add one read-only catalogue discovery tool that lists canonical slugs and compact descriptive metadata, including available aliases and runtime ownership.
-- Include the bundled framework version and snapshot source hash, with truthful project-compatibility evidence where a target project is supplied.
-- Document and test the new tool without changing existing names or aliases.
+### Phase 9: versioned component resources
 
-Completion check: a live catalogue request accounts for every shipped guide and includes no full syntax or capability dump. All existing tool registrations remain callable.
+Completed 2026-10-06. See [spec](2026/10/06/mcp-component-resources/).
 
-## Phase 5: catalogue search
+### Phase 10: resource argument completion
 
-Dependency: Phase 4.
+Completed 2026-10-06. See [spec](2026/10/06/mcp-resource-completion/).
 
-- Add optional search to the same discovery tool using existing names, aliases and descriptions.
-- Bound results and disclose whether matching entries were omitted.
-- Return an explicit empty result for no matches; keep heuristic matches distinguishable from exact names or aliases.
+## Milestone: component gaps
 
-Completion check: live requests cover an exact canonical name, a catalogue alias and a query with no matches. Search results resolve through the existing exact syntax lookup and do not create a second inventory.
+These close the second tier of the TypeScript gap review. Each phase stands alone unless it names a dependency.
 
-## Phase 6: selectable response detail
+### Phase 11: menu checkbox items
 
-Dependency: Phases 1 through 5.
+No dependency. A menu item the page writes as `role="menuitemcheckbox"` toggles its `aria-checked` when activated by click, Enter or Space. Its menu stays open so further items can be toggled, and an `expressive:change` event reports the item and its state.
 
-- Add compact and detailed retrieval behavior while preserving existing input forms.
-- Keep applicable rules and shared compatibility/evidence fields available; make optional API and capability detail selectable.
-- Publish output schemas for new detail and omission fields and document defaults.
+Completion check: a browser test toggles a checkbox item twice by keyboard and once by click. `aria-checked` follows each toggle, the menu stays open, and each change fires one event.
 
-Completion check: requests for the same component at different detail levels contain the same applicable rule IDs and compatibility outcome. Compact output excludes unrequested optional detail; detailed output returns the requested documented sections.
+Open for spec: whether Enter closes the menu after toggling, as some menus do, while Space keeps it open.
 
-## Phase 7: aggregate response limits and recovery
+### Phase 12: menu radio groups
 
-Dependency: Phase 6.
+Depends on phase 11. Items written as `role="menuitemradio"` inside a `role="group"` act as one choice. Activating one checks it and unchecks the others in its group, and an `expressive:change` event reports the new choice.
 
-- Specify and enforce aggregate limits on documentation/discovery responses, accounting for the complete serialized tool result. Retain existing QA limits and evidence behavior.
-- Disclose every omitted component or requested section through validated metadata, without cutting essential rules or code into misleading fragments.
-- Provide recovery through supported narrower requests. If even a minimal evidence/error result cannot fit the configured budget, fail explicitly rather than implying successful coverage.
+Completion check: a browser test with two groups in one menu checks an item in each. Only one item per group is checked, and the other group is unaffected.
 
-Completion check: boundary cases, multibyte content and a 12-component request respect the chosen aggregate budget. A deliberately small budget produces explicit partial/error evidence and a working recovery request. Tests verify both text and structured representations.
+### Phase 13: autocomplete search debounce
 
-## Phase 8: versioned catalogue resource
+No dependency. An option delays `onSearch` until typing pauses, so remote data is fetched once per pause rather than once per key. Each superseded search's `AbortSignal` is aborted.
 
-Dependency: Phase 7.
+Completion check: a test types five characters quickly and sees one search with the full text. A pause between two words gives two searches, and the first one's signal is aborted.
 
-- Expose the bundled catalogue as a read-only MCP resource using the existing compact catalogue data.
-- Give its identity an unambiguous framework-version and source-hash relationship; document that the server offers its current bundle only.
-- Advertise resources without changing stdio deployment or existing tools.
+Open for spec: the option's name and default, and whether the default stays at no delay.
 
-Completion check: `resources/list` and `resources/read` work over the live protocol. The catalogue agrees with the discovery tool and identifies the shipped snapshot without claiming compatibility with an unchecked consumer project.
+### Phase 14: autocomplete create option
 
-## Phase 9: versioned component resources
+No dependency. With an opt-in option, a value that matches no suggestion offers an "Add 'x'" row as the last option. Choosing it fires an event with the typed text, and Chips can add it as a chip.
 
-Dependency: Phase 8; reuse Phase 7's response-limit and recovery rules.
+Completion check: a test types a new value, chooses "Add 'x'" by keyboard, and receives the event. A value that exactly matches a suggestion offers no "Add" row.
 
-- Expose component guidance through a versioned resource template backed by the same bundled guides as the syntax tool.
-- Support bounded selection of documented sections so large guides remain retrievable without silent omission.
-- Validate resource names and requested snapshot identity; reject unknown components and unavailable versions without fetching upstream or reading arbitrary project files.
+Open for spec: the row's text in `i18n`, and how Chips with `autocompleteOnly` treat it.
 
-Completion check: live resource reads retrieve complete Cards rules and requested Datepicker Options with matching snapshot metadata. Small-budget recovery works, and unknown names or unavailable versions return explicit errors.
+### Phase 15: autocomplete visible no-results row
 
-## Phase 10: resource argument completion
+No dependency. When a search returns nothing, the list shows a "No results" row that isn't an option. That way sighted users see what screen reader users already hear.
 
-Dependency: Phase 9.
+Completion check: a browser test searches for text with no match and sees the row. The row can't be focused or chosen, and it leaves the list when a match appears.
 
-- Add canonical component-name completion for the resource template using the existing catalogue.
-- Bound completion results and disclose additional matches.
-- Document resource selection and completion, including that completion does not automatically apply to tool arguments.
+### Phase 16: timepicker seconds
 
-Completion check: a live `completion/complete` request returns appropriate canonical names for a prefix. An unknown reference or a prefix without matches has defined behavior, and completion never executes project commands.
+No dependency. An option adds a seconds field to the Timepicker. The written value includes seconds, and the field steps like the hour and minute fields.
 
-## Submission and release readiness
+Completion check: a test sets 14:30:45 through the fields and reads it back from the input, in both 12-hour and 24-hour modes.
 
-After the relevant phases, regenerate changed derived data and run their focused checks. Before submitting the completed work, run `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages` as required by the contributor policy. Verify that the packaged server exposes the new behavior outside the checkout and that existing clients can still call the original tools.
+Open for spec: whether the dial gets a seconds view or only the field does.
 
-Keep changes focused and update the MCP README and changelog alongside behavior. Follow `CONTRIBUTING.md` for public API review and `RELEASING.md` for independent MCP releases. Planning approval does not mean implementation, external publication or release approval has occurred.
+### Phase 17: timepicker time range
 
-Exact new argument names, budget values and resource URI syntax will be resolved during phase specification. Additional prompts, page recipes, HTTP hosting, an SDK migration and repository separation are outside this roadmap.
+Depends on phase 16. `minTime` and `maxTime` bound the times a person can choose. Times outside the range are disabled on the dial and refused when typed.
+
+Completion check: a test with a 09:00 to 17:30 range can't select 08:00 or 18:00 by dial, field or typing, and accepts 17:30.
+
+### Phase 18: tooltip shared delay
+
+No dependency. After one tooltip closes, another opened within a short window shows at once without its `enterDelay`, as tooltips in a toolbar do.
+
+Completion check: a test hovers one trigger, then a second within the window, and sees the second open at once. After the window, the second waits its delay.
+
+### Phase 19: tooltip click trigger
+
+No dependency. An opt-in option opens a tooltip on click instead of hover, and a second click, Escape or a click elsewhere closes it.
+
+Completion check: a browser test opens and closes a click tooltip by mouse and keyboard. With the option on, hover doesn't open it.
+
+Open for spec: the option's name, and how it relates to the touch long press.
+
+### Phase 20: AutoInit options from data attributes
+
+No dependency. AutoInit reads a component's options from attributes on its element, so markup can configure a component without page script. Options passed to `init` still win.
+
+Completion check: a test starts two components through AutoInit with options written in markup, and reads them back from the instances. An invalid value falls back to the default.
+
+Open for spec: one JSON attribute or one attribute per option, and how option names map to attribute names.
+
+### Phase 21: AutoInit for markup added later
+
+Depends on phase 20. An opt-in mode watches the page and starts components in markup added after load. It also destroys components whose elements are removed.
+
+Completion check: a browser test adds a menu trigger to the page and opens it without calling `init`, then removes it and finds its instance destroyed.
+
+Open for spec: how the mode is turned on, and how it treats shadow roots.
+
+## Milestone: deferred polish
+
+These came up while closing earlier gaps and were set aside on purpose.
+
+### Phase 22: chart transitions between datasets
+
+No dependency. `update()` animates lines, areas and bars from their old values to the new ones, and respects reduced motion.
+
+Completion check: a browser test updates a line chart and samples the path mid-transition, between the old and new shapes. With reduced motion, the final shape appears at once.
+
+### Phase 23: charts that follow their table
+
+No dependency. An opt-in chart watches its `<table>` and calls `update()` when the data changes. Page script no longer has to do it.
+
+Completion check: a browser test edits a cell and adds a row, and the chart redraws once per change batch without an explicit call.
+
+### Phase 24: Chips as a form-associated element
+
+No dependency. Chips form values move to a form-associated custom element, so the browser handles reset, validity and disabled state natively. This closes the two documented limits: validity that settles one microtask after `form.reset()`, and a page error set while the field is disabled that has to be set again after enabling it.
+
+Completion check: the Chips form tests pass with checks in the same task as `reset()`, and with a page error set while the field is disabled.
+
+Open for spec: the element's name, since it is the framework's first custom element, and how the existing markup stays compatible.
