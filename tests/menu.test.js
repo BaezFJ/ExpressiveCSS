@@ -132,7 +132,7 @@ describe("Menu", () => {
     // outrank the first/last-child edge shape - hence the :not(.divider).
     assert.match(
       css,
-      /menu\[id\] > li:is\(\.selected, \[aria-selected=true\], \[aria-checked=true\]\):not\(\.divider\)\s*\{[^}]*border-radius:\s*var\(--md-comp-menu-item-selected-container-shape\)/,
+      /menu\[id\] > li:is\(\.selected, \[aria-selected=true\], \[aria-checked=true\]\):not\(\.divider\)[^{]*\{[^}]*border-radius:\s*var\(--md-comp-menu-item-selected-container-shape\)/,
     );
     assert.match(
       css,
@@ -386,6 +386,36 @@ describe("Menu checkbox items", () => {
       assert.deepEqual(changes, [true]);
     } finally {
       bar.destroy();
+    }
+  });
+});
+
+describe("Menu radio groups", () => {
+  beforeEach(resetBody);
+
+  test("a group's rows are set up like direct rows and its wrapper is not a stop", () => {
+    document.body.innerHTML = `
+      <button type="button" class="menu-trigger" data-target="m">View</button>
+      <menu id="m">
+        <li id="wrap" role="none"><ul role="group" aria-label="Sort by">
+          <li id="name" role="menuitemradio" aria-checked="true"><button type="button">Name</button></li>
+          <li id="plain"><button type="button">Plain</button></li>
+          <li id="off" class="disabled"><button type="button">Off</button></li>
+        </ul></li>
+        <li id="more"><button type="button">More</button><ul role="group" aria-label="Not a submenu"></ul></li>
+      </menu>`;
+    const instance = Expressive.Menu.init(document.querySelector(".menu-trigger"));
+    try {
+      const $ = (id) => document.getElementById(id);
+      assert.equal($("wrap").getAttribute("role"), "none");
+      assert.equal($("wrap").tabIndex, -1);
+      assert.equal($("name").getAttribute("role"), "menuitemradio");
+      assert.equal($("name").tabIndex, 0);
+      assert.equal($("plain").getAttribute("role"), "menuitem");
+      assert.equal($("off").getAttribute("aria-disabled"), "true");
+      assert.equal(document.querySelector("#more > button").hasAttribute("aria-haspopup"), false, "a ul is not a submenu");
+    } finally {
+      instance.destroy();
     }
   });
 });

@@ -7,7 +7,9 @@
 // <li class="divider" role="separator"> is a divider: <menu> only permits
 // <li>, so a bare <hr> is not styled.
 // A .gap <li> splits groups. A .label
-// <li> is a 32dp group heading. A nested <menu> is a flyout. The trigger
+// <li> is a 32dp group heading. A nested <menu> is a flyout. An
+// <li role="none"> holding a <ul role="group"> is a group of rows, styled
+// as if each row were a direct item. The trigger
 // is .menu-trigger[data-target] — that is the JS contract.
 //
 // Tokens are md.comp.menus - the expressive family, not baseline
@@ -29,9 +31,13 @@
 $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M10 6l6 6-6 6'/%3E%3C/svg%3E");
 
 // Item states, interpolated after `li`. An item is any <li> that is not a
-// divider, optgroup, gap or label; an enabled item is also not disabled.
-$_item: ":not(.divider, .optgroup, .gap, .label)";
-$_enabled: ':not(.disabled, [aria-disabled="true"], .divider, .optgroup, .gap, .label)';
+// divider, optgroup, gap, label or group wrapper; an enabled item is also not
+// disabled. A segment is a run of a grouped surface, which a wrapper is.
+$_segment: ":not(.divider, .optgroup, .gap, .label)";
+$_item: ':not(.divider, .optgroup, .gap, .label, [role="none"])';
+$_enabled: ':not(.disabled, [aria-disabled="true"], .divider, .optgroup, .gap, .label, [role="none"])';
+// A row is a direct <li> or one inside a group.
+$_rows: '> li, > li > ul[role="group"] > li';
 $_selected: ':is(.selected, [aria-selected="true"], [aria-checked="true"])';
 $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
 
@@ -120,7 +126,13 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     );
   }
 
-  > li {
+  > li > ul[role="group"] {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #{$_rows} {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -217,8 +229,10 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     }
   }
 
-  > li#{$_item} {
-    min-height: var(--md-comp-menu-item-container-height);
+  #{$_rows} {
+    &#{$_item} {
+      min-height: var(--md-comp-menu-item-container-height);
+    }
   }
 
   > li#{$_item}:first-child {
@@ -234,71 +248,88 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
       var(--md-comp-menu-item-edge-shape) var(--md-comp-menu-item-edge-shape);
   }
 
-  // Hover / press sit on extra-small corners and do not span the container.
-  > li#{$_enabled}:hover,
-  > li.active#{$_unselected} {
-    background-color: color-mix(
-      in oklab,
-      var(--md-comp-menu-item-label-text-color) 8%,
-      transparent
-    );
+  // A group at either end of the menu rounds its end row the same way.
+  > li[role="none"]:first-child
+    > ul[role="group"]
+    > li#{$_item}#{$_unselected}:first-child {
+    border-start-start-radius: var(--md-comp-menu-item-edge-shape);
+    border-start-end-radius: var(--md-comp-menu-item-edge-shape);
   }
 
-  > li#{$_enabled}:active {
-    background-color: color-mix(
-      in oklab,
-      var(--md-comp-menu-item-label-text-color) 10%,
-      transparent
-    );
+  > li[role="none"]:last-child
+    > ul[role="group"]
+    > li#{$_item}#{$_unselected}:last-child {
+    border-end-start-radius: var(--md-comp-menu-item-edge-shape);
+    border-end-end-radius: var(--md-comp-menu-item-edge-shape);
   }
 
-  // :not(.divider) only buys specificity: menu-item.selected.shape is 12dp
-  // unconditionally, so it has to outrank the first/last-child edge rule that
-  // would otherwise leave a selected end item with 4dp inner corners.
-  > li#{$_selected}:not(.divider) {
-    border-radius: var(--md-comp-menu-item-selected-container-shape);
-    background-color: var(--md-comp-menu-item-selected-container-color);
-    color: var(--md-comp-menu-item-selected-label-text-color);
-    @include forced-colors-selected;
+  #{$_rows} {
+    // Hover / press sit on extra-small corners and do not span the container.
+    &#{$_enabled}:hover,
+    &.active#{$_unselected} {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-menu-item-label-text-color) 8%,
+        transparent
+      );
+    }
 
-    > :is(a, button, #{$icon-label}) {
+    &#{$_enabled}:active {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-menu-item-label-text-color) 10%,
+        transparent
+      );
+    }
+
+    // :not(.divider) only buys specificity: menu-item.selected.shape is 12dp
+    // unconditionally, so it has to outrank the first/last-child edge rule that
+    // would otherwise leave a selected end item with 4dp inner corners.
+    &#{$_selected}:not(.divider) {
+      border-radius: var(--md-comp-menu-item-selected-container-shape);
+      background-color: var(--md-comp-menu-item-selected-container-color);
       color: var(--md-comp-menu-item-selected-label-text-color);
+      @include forced-colors-selected;
+
+      > :is(a, button, #{$icon-label}) {
+        color: var(--md-comp-menu-item-selected-label-text-color);
+      }
+
+      > :is(a, button, #{$icon-label}) > #{$icon},
+      > #{$icon} {
+        color: var(--md-comp-menu-item-selected-leading-icon-color);
+      }
+
+      > :is(a, button, #{$icon-label}) :is(.supporting-text, kbd, .shortcut) {
+        color: var(--md-comp-menu-item-selected-label-text-color);
+      }
     }
 
-    > :is(a, button, #{$icon-label}) > #{$icon},
-    > #{$icon} {
-      color: var(--md-comp-menu-item-selected-leading-icon-color);
+    &#{$_selected}:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-menu-item-selected-label-text-color) 8%,
+        var(--md-comp-menu-item-selected-container-color)
+      );
     }
 
-    > :is(a, button, #{$icon-label}) :is(.supporting-text, kbd, .shortcut) {
-      color: var(--md-comp-menu-item-selected-label-text-color);
+    &#{$_selected}:is(:focus, :focus-visible, :active) {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-menu-item-selected-label-text-color) 10%,
+        var(--md-comp-menu-item-selected-container-color)
+      );
     }
-  }
 
-  > li#{$_selected}:hover {
-    background-color: color-mix(
-      in oklab,
-      var(--md-comp-menu-item-selected-label-text-color) 8%,
-      var(--md-comp-menu-item-selected-container-color)
-    );
-  }
+    &:focus-visible {
+      outline: 3px solid var(--md-sys-color-secondary);
+      outline-offset: -3px;
+    }
 
-  > li#{$_selected}:is(:focus, :focus-visible, :active) {
-    background-color: color-mix(
-      in oklab,
-      var(--md-comp-menu-item-selected-label-text-color) 10%,
-      var(--md-comp-menu-item-selected-container-color)
-    );
-  }
-
-  > li:focus-visible {
-    outline: 3px solid var(--md-sys-color-secondary);
-    outline-offset: -3px;
-  }
-
-  > li:is(.disabled, [aria-disabled="true"]) {
-    pointer-events: none;
-    opacity: 0.38;
+    &:is(.disabled, [aria-disabled="true"]) {
+      pointer-events: none;
+      opacity: 0.38;
+    }
   }
 
   // Inset divider — selection and rules do not span the container.
@@ -353,21 +384,21 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     // blur the menu itself. Grouped menus stay solid.
     backdrop-filter: none;
 
-    > li#{$_item} {
+    > li#{$_segment} {
       padding-inline: var(--md-comp-menu-group-padding);
       background-color: var(--md-comp-menu-container-color);
       border-radius: 0;
     }
 
-    > li#{$_item}:first-child,
-    > li.gap + li#{$_item} {
+    > li#{$_segment}:first-child,
+    > li.gap + li#{$_segment} {
       padding-block-start: var(--md-comp-menu-group-padding);
       border-start-start-radius: var(--md-comp-menu-group-shape);
       border-start-end-radius: var(--md-comp-menu-group-shape);
     }
 
-    > li#{$_item}:has(+ li.gap),
-    > li#{$_item}:last-child {
+    > li#{$_segment}:has(+ li.gap),
+    > li#{$_segment}:last-child {
       padding-block-end: var(--md-comp-menu-group-padding);
       border-end-start-radius: var(--md-comp-menu-group-shape);
       border-end-end-radius: var(--md-comp-menu-group-shape);
@@ -550,7 +581,8 @@ menu[id] li.submenu-start:is(:hover, :focus-within, .open) > menu {
 // item gets focus here - inherits :focus-visible from the element that had it,
 // so opening the menu by keyboard still lights the item and opening it by
 // pointer still does not.
-menu[id] > li:focus-visible {
+menu[id] > li:focus-visible,
+menu[id] > li > ul[role="group"] > li:focus-visible {
   background-color: color-mix(
     in oklab,
     var(--md-comp-menu-item-label-text-color) 10%,

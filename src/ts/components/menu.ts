@@ -42,6 +42,9 @@ function fixedBounds(menu: Element) {
 
 /** The keys that move between rows. Home and End go to the ends. */
 const STEPS = { ArrowUp: -1, ArrowDown: 1 };
+// A list's rows: its own items, and the items of each <li role="none"><ul
+// role="group"> inside it.
+const ROWS = ':scope > li, :scope > li > ul[role="group"] > li';
 
 const anchorSupported = typeof CSS !== 'undefined' && !!CSS.supports?.('anchor-name: --a');
 
@@ -547,7 +550,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       if (!menu.hasAttribute('role')) menu.setAttribute('role', 'menu');
       if (menu.getAttribute('role') !== 'menu') return;
 
-      menu.querySelectorAll(':scope > li').forEach((li) => {
+      menu.querySelectorAll(ROWS).forEach((li) => {
         if (li.classList.contains('divider')) {
           if (!li.hasAttribute('role')) li.setAttribute('role', 'separator');
           return;
@@ -720,9 +723,8 @@ export class Menu extends Component<MenuOptions> implements Openable {
       const string = this.filterQuery.join('');
       // textContent rather than innerText: this scans every item on every
       // keystroke, and innerText forces a layout flush per item.
-      const newOptionEl = Array.from(list.querySelectorAll(':scope > li')).find(
-        (el) => (el as HTMLElement).tabIndex !== -1 &&
-          !el.matches('.disabled, [aria-disabled="true"]') &&
+      const newOptionEl = this._rows(list).find(
+        (el) => !el.matches('.disabled, [aria-disabled="true"]') &&
           Array.from(el.childNodes).filter(node => !(node instanceof Element && node.matches('menu')))
             .map(node => node.textContent).join('').trim().toLowerCase().startsWith(string)
       );
@@ -804,12 +806,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.menuEl.tabIndex = -1;
     // Only set tabindex if it hasn't been set by user
     this.menuEl.querySelectorAll(':scope li').forEach((el) => {
-      if (
-        el.classList.contains('divider') ||
-        el.classList.contains('gap') ||
-        el.classList.contains('label') ||
-        el.classList.contains('optgroup')
-      ) {
+      if (el.matches('.divider, .gap, .label, .optgroup, [role="none"]')) {
         el.setAttribute('tabindex', '-1');
         return;
       }
@@ -822,7 +819,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
    * without wrapping, and says whether the key was one of those.
    */
   private _moveFocus(list: Element, e: KeyboardEvent) {
-    const rows = Array.from(list.children).filter((child): child is HTMLElement => child instanceof HTMLElement && child.tabIndex !== -1);
+    const rows = this._rows(list);
     const from = this._focusedRow(e) ?? list.children[this.focusedIndex];
     const index = Utils._keyIndex(e.key, rows.indexOf(from as HTMLElement), rows.length, STEPS);
     if (Number.isNaN(index)) return false;
@@ -834,14 +831,19 @@ export class Menu extends Component<MenuOptions> implements Openable {
     return true;
   }
 
+  /** The list's rows that take focus, in document order. */
+  private _rows(list: Element) {
+    return Array.from(list.querySelectorAll(ROWS)).filter(
+      (row): row is HTMLElement => row instanceof HTMLElement && row.tabIndex !== -1
+    );
+  }
+
   private _focusInitialItem() {
     if (!this.menuEl || !this.options.autoFocus) return;
-    const first = Array.from(this.menuEl.children).find(
-      (child) => child instanceof HTMLElement && child.tabIndex !== -1
-    ) as HTMLElement | undefined;
+    const first = this._rows(this.menuEl)[0];
     if (!first) return;
     this._clearActive();
-    this.focusedIndex = Array.from(this.menuEl.children).indexOf(first);
+    this.focusedIndex = Array.from(first.parentElement.children).indexOf(first);
     first.focus({ preventScroll: true });
   }
 
