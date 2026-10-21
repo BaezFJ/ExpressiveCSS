@@ -8,10 +8,15 @@ const script = readFileSync(
   'utf8'
 );
 
-function docsPage(markup, { clipboard = true, highlighter = true } = {}) {
+function docsPage(markup, { clipboard = true, highlighter = true, scrollWidth = 0 } = {}) {
   const dom = new JSDOM(`<!doctype html><body>${markup}</body>`, {
     runScripts: 'dangerously',
     url: 'https://docs.example.test/',
+  });
+  // jsdom has no layout, so a sample is as wide as the test says it is.
+  Object.defineProperty(dom.window.HTMLPreElement.prototype, 'scrollWidth', {
+    configurable: true,
+    get: () => scrollWidth,
   });
   const writes = [];
   const highlighted = [];
@@ -78,5 +83,13 @@ describe('documentation code blocks', () => {
     assert.equal(document.querySelector('.code-language').textContent, 'Shell');
     assert.equal(document.querySelector('code').textContent, 'npm install');
     assert.ok(document.querySelector('.code-copy-button'));
+  });
+
+  test('puts only an overflowing sample in the Tab order', () => {
+    const narrow = docsPage('<pre><code>npm install</code></pre>');
+    assert.equal(narrow.dom.window.document.querySelector('pre').hasAttribute('tabindex'), false);
+
+    const wide = docsPage('<pre><code>npm install</code></pre>', { scrollWidth: 900 });
+    assert.equal(wide.dom.window.document.querySelector('pre').tabIndex, 0);
   });
 });
