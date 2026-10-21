@@ -7219,7 +7219,7 @@ Wrap the input in its own small parent — a `.field`, or a bare `<div>`. The cl
 Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital hour and minute fields; Enter in either one writes the typed time.
 
 Digital edits use native input events, including paste. Invalid edits restore
-the last valid value on blur. Empty fields use the current hour or minute without
+the last valid value on blur. Empty fields use the current hour, minute or second without
 changing the selected AM/PM period. Twelve-hour initialization converts 24-hour
 strings and accepts either case for AM/PM. No modal or dial-keyboard API is added.
 
@@ -7288,8 +7288,9 @@ Expressive.Timepicker.init(elem, {
 | `autoSubmit` | Boolean | `true` | If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added. |
 | `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` string (optionally with `AM`/`PM`). |
 | `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |
-| `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, and Minutes. |
+| `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, Minutes and Seconds. |
 | `twelveHour` | Boolean | `true`, or the language's | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. With a `lang` on or around the input, defaults to the clock that language uses. |
+| `showSeconds` | Boolean | `false` | Add a seconds field after the minutes and write `HH:MM:SS`. The dial still sets hours and minutes only. |
 | `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
 | `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
@@ -7308,7 +7309,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 | `clear` | `'Clear'` |
 | `done` | `'Ok'` |
 
-`i18n.hours` and `i18n.minutes` default to `Hours` and `Minutes` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between controls. The dial itself takes pointer input only: the spin buttons already set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.
+`i18n.hours`, `i18n.minutes` and `i18n.seconds` default to `Hours`, `Minutes` and `Seconds` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour, minute and second fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round, and the hand follows the hour and minute. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between controls. The dial itself takes pointer input only: the spin buttons already set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.
 
 ### 12-hour and 24-hour
 
@@ -7318,6 +7319,22 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 Expressive.Timepicker.init(document.getElementById('timepicker-24'), {
   twelveHour: false
 });
+```
+
+### Seconds
+
+`showSeconds: true` adds a third field, a spin button named by `i18n.seconds`, after the minutes. It steps and takes typed values like the minute field, and an emptied field takes the current second. The written value becomes `HH:MM:SS`, with ` AM` or ` PM` on a 12-hour clock. A value read without seconds, such as `14:30`, opens at zero seconds. The dial keeps its hours and minutes views, as the Material 3 time picker does; seconds are set in the field only. Under `autoSubmit`, choosing a minute on the dial writes the time with the seconds the field shows.
+
+```js
+Expressive.Timepicker.init(document.getElementById('timepicker-seconds'), {
+  showSeconds: true
+});
+```
+
+A `type="time"` input gets 24-hour `HH:MM:SS`. Give it `step="1"` so the browser does not flag the seconds as a step mismatch.
+
+```html
+<input type="time" step="1" class="time-picker" id="alarm">
 ```
 
 ### Methods
@@ -7340,7 +7357,7 @@ instance.showView('hours');
 
 #### .done();
 
-Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.
+Write the current time to the input, with seconds when `showSeconds` is on. Pass a truthy argument to clear the input instead.
 
 ```text
 instance.done();
@@ -7373,9 +7390,10 @@ These methods are not provided. The clock defaults to visible inline presentatio
 | --- | --- | --- |
 | `el` | Element | The input the plugin was initialized with. |
 | `options` | Object | The options the instance was initialized with. |
-| `time` | String | The last value written by `done()`, without the AM/PM suffix. |
+| `time` | String | The last value written by `done()`, without the AM/PM suffix. It ends in `:SS` when `showSeconds` is on. |
 | `hours` | Number | The hour currently shown on the clock. |
 | `minutes` | Number | The minute currently shown on the clock. |
+| `seconds` | Number | The second shown in the seconds field. |
 | `amOrPm` | String | `'AM'` or `'PM'` when `twelveHour` is true. |
 | `currentView` | String | `'hours'` or `'minutes'`. |
 

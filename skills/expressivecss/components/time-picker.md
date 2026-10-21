@@ -9,7 +9,7 @@ Component ID: `time-picker`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `2a1acb0fe401021d0cafa6b083ff90a3ce7072f402008969842e6639cd682256`
+Contract SHA-256: `c4d28ef6bd94593c50f6a7d617cc577c88df8646c8270f7ec9db9a81c6e5750c`
 
 #### Selection and adaptation
 
@@ -64,8 +64,9 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 | `autoSubmit` | Boolean | `true` | If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added. |
 | `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` string (optionally with `AM`/`PM`). |
 | `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |
-| `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, and Minutes. |
+| `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, Minutes and Seconds. |
 | `twelveHour` | Boolean | `true`, or the language's | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. With a `lang` on or around the input, defaults to the clock that language uses. |
+| `showSeconds` | Boolean | `false` | Add a seconds field after the minutes and write `HH:MM:SS`. The dial still sets hours and minutes only. |
 | `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
 | `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
@@ -77,14 +78,14 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 #### Methods
 
 - `.showView()`: Show the hours or minutes face.
-- `.done()`: Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.
+- `.done()`: Write the current time to the input, with seconds when `showSeconds` is on. Pass a truthy argument to clear the input instead.
 - `.clear()`: Clear the input. Same as `done(true)`.
 - `.destroy()`: Destroy the plugin instance, remove the clock, and tear down its event handlers. Pending automatic submission and clock updates are cancelled, so the destroyed instance cannot write to the input.
 - `.open(); / .close()`: These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking and `displayPlugin: 'modal'` opens it in a dialog from the input.
 
 #### Also documented
 
-The Time Picker section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Display, Internationalization, 12-hour and 24-hour, Properties.
+The Time Picker section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Display, Internationalization, 12-hour and 24-hour, Seconds, Properties.
 
 #### Rules
 

@@ -57,11 +57,11 @@ Outcome: authors and agents can find the option, and the size change is reviewed
 
 Prerequisites: groups 2 and 3.
 
-- [ ] Document `showSeconds`, `i18n.seconds`, `seconds`, the value format in `done()` and `time`, the `step="1"` advice and the field-only dial in `docs/src/pages/timepicker.astro` and the Timepicker section of `llm.md`. Add a seconds example to the docs page, and start it from `docs/static/docs.js` through a table with the 24-hour example.
-- [ ] Add the changelog entries: the option under Unreleased, Added, and the AM/PM reading fix under Fixed.
-- [ ] Run `npm run build:skill` and `npm run check:generated`.
-- [ ] Add reviewed JavaScript and CSS budget lines to `tests/selective-builds.test.js`, and update a `docs/src/data/component-decisions.json` source pin only where `tests/expressivecss-component-decisions.test.js` fails on a pin that matched at the base commit.
-- [ ] Run `node --test tests/selective-builds.test.js`, the docs and skill tests, and the fallow audit on the new functions.
+- [x] Document `showSeconds`, `i18n.seconds`, `seconds`, the value format in `done()` and `time`, the `step="1"` advice and the field-only dial in `docs/src/pages/timepicker.astro` and the Timepicker section of `llm.md`. Add a seconds example to the docs page, and start it from `docs/static/docs.js` through a table with the 24-hour example.
+- [x] Add the changelog entries: the option under Unreleased, Added, and the AM/PM reading fix under Fixed.
+- [x] Run `npm run build:skill` and `npm run check:generated`.
+- [x] Add reviewed JavaScript and CSS budget lines to `tests/selective-builds.test.js`, and update a `docs/src/data/component-decisions.json` source pin only where `tests/expressivecss-component-decisions.test.js` fails on a pin that matched at the base commit.
+- [x] Run `node --test tests/selective-builds.test.js`, the docs and skill tests, and the fallow audit on the new functions.
 
 Completion check: V10 and V11 pass.
 
