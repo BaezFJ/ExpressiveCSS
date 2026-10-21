@@ -4,7 +4,7 @@ Date: 2026-10-21
 Roadmap phase: Phase 14, autocomplete create option
 Branch: `feature/2026-10-21-autocomplete-create-option`
 Base: `origin/master` at `8d45c2c4af6b6ccf0be918a4b2f325fae3978fb0`, fetched 2026-10-21
-Status: specified, not implemented
+Status: implemented and locally verified 2026-10-21; required CI and review pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 14](../../../../roadmap.md#phase-14-autocomplete-create-option). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -46,6 +46,8 @@ These are proposals made while writing the spec. The user can overturn any of th
 - The results announcement counts suggestions only. A search with no matches still announces `i18n.noResults` while the row is present. Phase 15 owns how a no-results state looks and sounds.
 - After the row is chosen, the field keeps the typed text and `oldVal` is set to it, so refocusing does not search again. A page that wants the new entry selected calls `setMenuItems(items, [id], false)`.
 - Multi-select behaves the same: the list closes and `selectedValues` does not change.
+- Added during implementation: Chips passes Autocomplete a copy of `autocompleteOptions` with its own `onCreate`, so a second Chips given the same options object does not wrap the first one's wrapper.
+- Added during implementation: the events table on the AutoInit docs page (`docs/src/pages/auto-init.astro`) also lists `expressive:create`.
 - Chips wraps `onCreate`. It adds `{ id: text }` through `addChip()`, so `limit` and duplicate checks apply, clears the input and focuses it, as its `onAutocomplete` does. It then calls an `onCreate` the page passed in `autocompleteOptions`. Today Chips replaces the page's `onAutocomplete` outright; this spec does not change that.
 
 ## Requirements
@@ -57,7 +59,7 @@ These are proposals made while writing the spec. The user can overturn any of th
 | R3 | No create row appears when `allowCreate` is off, when the trimmed text is empty or shorter than `minLength`, or when a suggestion matches exactly. A partial match, such as `app` with the suggestion `Apple`, still shows the row after `Apple`. |
 | R4 | The row is an `<li role="option" aria-selected="false" class="autocomplete-create" data-create>` with no `data-id`. Its label goes in as text, also when `allowUnsafeHTML` is true. Arrow keys make it active and point `aria-activedescendant` at it, like any other option. |
 | R5 | Enter on the active create row, or a click on it, calls `onCreate(text, autocomplete)` and then fires `expressive:create` on the input with `detail: { text }`, through `_notify`. `text` is the trimmed field value. The list closes. |
-| R6 | Choosing the create row leaves `selectedValues` unchanged and fires no `change` and no `expressive:autocomplete`. The field keeps its text, and focusing it again does not start a search. This holds for single and multi-select. |
+| R6 | Choosing the create row leaves `selectedValues` unchanged and fires no `change` and no `expressive:autocomplete`. The field keeps its text, and a focus that returns to it before it is left does not start a search. Blur still resets the search text, so a focus after blur searches, as it does today. This holds for single and multi-select. |
 | R7 | The results announcement counts suggestions only, so the create row does not change `i18n.results` or `i18n.noResults`. |
 | R8 | The row follows the list. It appears after `setMenuItems()` renders results for the current text, also results from an asynchronous `onSearch`, and it disappears or changes when the text changes. |
 | R9 | Existing behavior stays when `allowCreate` is off: the Autocomplete, selection events, injection, dismissal lifecycle, IME, generated forms and Chips tests pass unchanged. |
