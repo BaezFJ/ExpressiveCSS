@@ -9,7 +9,7 @@ Component ID: `progress`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `59b6e3720fef0e1abfad68f1334407563c3a44ffc5c322b9476a8d81e28d2f3f`
+Contract SHA-256: `e54668db2f9033b8f03cf49552271bdbc2033fb1a62f8f1687d1d5e16e236016`
 
 #### Selection and adaptation
 

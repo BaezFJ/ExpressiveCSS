@@ -9,7 +9,7 @@ Component ID: `autocomplete`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `59b6e3720fef0e1abfad68f1334407563c3a44ffc5c322b9476a8d81e28d2f3f`
+Contract SHA-256: `e54668db2f9033b8f03cf49552271bdbc2033fb1a62f8f1687d1d5e16e236016`
 
 #### Selection and adaptation
 
@@ -62,7 +62,8 @@ Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every 
 | `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
 | `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
-| `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when a newer search starts or the autocomplete is destroyed. |
+| `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when the search text changes or the autocomplete is destroyed. |
+| `searchDelay` | Number | `0` | Milliseconds to wait after typing pauses before calling `onSearch`, so remote data is fetched once per pause. A search on focus runs at once. Blur, `destroy()` and choosing a single result cancel a pending search. `0` searches on every input. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |

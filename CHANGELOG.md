@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Autocomplete's `searchDelay` option waits that many milliseconds after
+  typing pauses before calling `onSearch`, so a remote search runs once per
+  pause instead of once per key. A text change aborts the running search's
+  signal right away. A search on focus runs at once, and blur, `destroy()`
+  or choosing a single result cancels a pending one. The default of `0`
+  keeps the search on every input. Chips take it through
+  `autocompleteOptions`.
 - A menu item with `role="menuitemradio"` checks itself and unchecks the
   other radio items in its group. A group is a `<ul role="group">` with an
   `aria-label` inside an `<li role="none">`; radio items outside a group form

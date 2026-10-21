@@ -8821,9 +8821,10 @@ onSearch: function(text, autocomplete) {
 }
 ```
 
-The third argument is an `AbortSignal` that aborts when a newer search starts or the autocomplete is destroyed. Pass it to `fetch()` so a slow response for old text never replaces newer results, and clear the list on other errors:
+The third argument is an `AbortSignal` that aborts when the search text changes or the autocomplete is destroyed. Pass it to `fetch()` so a slow response for old text never replaces newer results, and clear the list on other errors. Set `searchDelay` so the request waits for typing to pause instead of going out on every key:
 
 ```text
+searchDelay: 300,
 onSearch: function(text, autocomplete, signal) {
   fetch('/api/search?q=' + encodeURIComponent(text), { signal })
     .then(function(response) { return response.json(); })
@@ -8844,7 +8845,8 @@ onSearch: function(text, autocomplete, signal) {
 | `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
 | `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
-| `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when a newer search starts or the autocomplete is destroyed. |
+| `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when the search text changes or the autocomplete is destroyed. |
+| `searchDelay` | Number | `0` | Milliseconds to wait after typing pauses before calling `onSearch`, so remote data is fetched once per pause. A search on focus runs at once. Blur, `destroy()` and choosing a single result cancel a pending search. `0` searches on every input. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
@@ -8852,7 +8854,7 @@ onSearch: function(text, autocomplete, signal) {
 
 Autocomplete provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
 
-Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still own asynchronous request cancellation, stale-response ordering and error handling. Results delivered after `destroy()` are ignored, and results delivered after the user leaves the field update the list without opening it. Test actual spoken delivery with a screen reader.
+Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still pass the signal to their requests, so a stale response cannot replace newer results, and own error handling. Results delivered after `destroy()` are ignored, and results delivered after the user leaves the field update the list without opening it. Test actual spoken delivery with a screen reader.
 
 ### Methods
 
