@@ -9,7 +9,7 @@ Component ID: `tooltips`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `2a1acb0fe401021d0cafa6b083ff90a3ce7072f402008969842e6639cd682256`
+Contract SHA-256: `5dd6c22ccf170f9aa2c3724925cac2487e195b1c30cd157f02c3377aa8569447`
 
 #### Selection and adaptation
 
@@ -69,10 +69,11 @@ Inside a `<button>` the bubble has to be a `<span>` — a `<div>` is not phrasin
 | `outDuration` | Number | `200` | Exit transition duration, in milliseconds. |
 | `position` | String | `'bottom'` | Direction: `'top'`, `'right'`, `'bottom'`, or `'left'`. Set by `data-position`. The CSS-only default is above. |
 | `transitionMovement` | Number | `10` | How far the tooltip moves during its transition, in pixels. An anchored tooltip does not move and adds this to the gap. |
+| `openOnClick` | Boolean | `false` | Open on a click instead of hover and focus, at once, without `enterDelay`. A second click, Escape, a click elsewhere or focus moving to another element closes it at once; a click inside the tooltip does not. Keyboard users open it with Enter or Space, so the trigger should be a `<button>`. |
 
 #### Methods
 
-- `.open()`: `open()` and `open(true)` show the tooltip after its enter delay without requiring hover or focus. `open(false)` uses the automatic behavior and requires hover or focus when the delay ends.
+- `.open()`: `open()` and `open(true)` show the tooltip after its enter delay without requiring hover or focus. `open(false)` uses the automatic behavior and requires hover or focus when the delay ends. With `openOnClick`, a click elsewhere also closes a tooltip opened this way.
 - `.close()`: Hide the tooltip.
 - `.destroy()`: Destroy the plugin instance and remove its generated tooltip and event handlers. Rich content returns to its authored position and presentation state. Existing description associations are preserved, so the same content can be initialized again.
 

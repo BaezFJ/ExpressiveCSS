@@ -35,7 +35,9 @@ const S = defineSections([
           motion. On touch, a runtime tooltip shows on a long press of half a
           second, without <code>enterDelay</code>, and stays for a second and a half after the finger lifts; the
           long press does not press the button or follow the link, and a tap,
-          or a press that turns into a scroll, shows nothing.
+          or a press that turns into a scroll, shows nothing. With
+          <code>openOnClick</code>, a tap is the click: it opens and closes
+          the tooltip, and the long press is off.
           CSS-only tooltips have no Escape handler. Use them only after you
           verify the applicable WCAG 1.4.13 conditions and dismissal exception.
           Otherwise, use a verified runtime tooltip or persistent supporting text.
@@ -273,6 +275,12 @@ Expressive.AutoInit(document.body, {
               <td><code>10</code></td>
               <td>How far the tooltip moves during its transition, in pixels.</td>
             </tr>
+            <tr>
+              <td><code>openOnClick</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Open on a click instead of hover and focus, at once, without <code>enterDelay</code>. A second click, Escape, a click elsewhere or focus moving to another element closes it at once; a click inside the tooltip does not. Keyboard users open it with Enter or Space, so the trigger should be a <code>&lt;button&gt;</code>.</td>
+            </tr>
   </OptionsTable>  </Section>
   <Section {...S.methods}>
         <InstanceNote plugin="Tooltip" />
@@ -288,6 +296,8 @@ Expressive.AutoInit(document.body, {
           <code>open()</code> and <code>open(true)</code> show the tooltip after
           its enter delay without requiring hover or focus. <code>open(false)</code>
           uses the automatic behavior and requires hover or focus when the delay ends.
+          With <code>openOnClick</code>, a click elsewhere also closes a tooltip
+          opened this way.
         </p>
 <Code code={`
 instance.open();

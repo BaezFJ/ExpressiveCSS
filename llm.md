@@ -6680,7 +6680,7 @@ For HTML, point `data-tooltip-id` at an element. That element is moved into the 
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.Tooltip`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.tooltipped`. On touch, a runtime tooltip shows on a long press of half a second, without `enterDelay`, and stays for a second and a half after the finger lifts; the long press does not press the button or follow the link, and a tap, or a press that turns into a scroll, shows nothing.
+The IIFE bundle exposes `Expressive.Tooltip`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.tooltipped`. On touch, a runtime tooltip shows on a long press of half a second, without `enterDelay`, and stays for a second and a half after the finger lifts; the long press does not press the button or follow the link, and a tap, or a press that turns into a scroll, shows nothing. With `openOnClick`, a tap is the click: it opens and closes the tooltip, and the long press is off.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
@@ -6715,6 +6715,7 @@ Constructor and `init` options. `data-tooltip`, `data-position`, and `data-toolt
 | `outDuration` | Number | `200` | Exit transition duration, in milliseconds. |
 | `position` | String | `'bottom'` | Direction: `'top'`, `'right'`, `'bottom'`, or `'left'`. Set by `data-position`. The CSS-only default is above. |
 | `transitionMovement` | Number | `10` | How far the tooltip moves during its transition, in pixels. An anchored tooltip does not move and adds this to the gap. |
+| `openOnClick` | Boolean | `false` | Open on a click instead of hover and focus, at once, without `enterDelay`. A second click, Escape, a click elsewhere or focus moving to another element closes it at once; a click inside the tooltip does not. Keyboard users open it with Enter or Space, so the trigger should be a `<button>`. |
 
 ### Methods
 
@@ -6726,7 +6727,7 @@ const instance = Expressive.Tooltip.getInstance(elem);
 
 #### .open();
 
-`open()` and `open(true)` show the tooltip after its enter delay without requiring hover or focus. `open(false)` uses the automatic behavior and requires hover or focus when the delay ends.
+`open()` and `open(true)` show the tooltip after its enter delay without requiring hover or focus. `open(false)` uses the automatic behavior and requires hover or focus when the delay ends. With `openOnClick`, a click elsewhere also closes a tooltip opened this way.
 
 ```text
 instance.open();
