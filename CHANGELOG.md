@@ -7,6 +7,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Chips submit a form value. Give the field's `<input>` a `name` and the
+  chips submit under it, one `id` per chip, as a multiple select does. The
+  text input gives its name up so half-typed text is not submitted, and the
+  values follow its form, `form` attribute and `disabled` state when the form
+  gathers its data. A `required` input makes the field valid once it has a
+  chip, and says the new `i18n.required` until then, with
+  `aria-required="true"` on the input. A form reset puts back the starting
+  chips at the next microtask, once it can no longer be canceled. `destroy()` gives the
+  input its name and `required` back. Pasting text that lists values, split
+  by commas, tabs or new lines, adds a chip for each, up to `limit`.
 - Data tables sort and select. With `data-sort` on a `.data-table`, a
   button in a header cell reorders the rows by its column and moves
   `aria-sort`. A `numeric` column compares numbers, other columns compare
@@ -696,6 +706,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- A Chips field whose text `<input>` has a `name` now submits its chips
+  under that name, one `id` each, instead of the text being typed. A page
+  that read the draft text from the form should read `chips.getData()`, or
+  take the `name` off the input to keep the old behavior.
 - Datepicker and Timepicker follow the page's language. With a `lang` on
   the input or around it, the calendar takes that language's month and
   weekday names from `Intl` and its first day of the week where the browser

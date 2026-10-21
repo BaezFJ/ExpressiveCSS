@@ -9,7 +9,7 @@ Component ID: `chips`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `95c80610cc1568fe517fa70df577f79c6a7c61e667502ea9d42f8f190a5349fd`
+Contract SHA-256: `12b47458b4d20c5a6f14f04cbff0b0ac2054c1a5445c74e1bdac44946c3d4fb3`
 
 #### Selection and adaptation
 
@@ -80,7 +80,7 @@ A long label wraps and the chip grows from its 32dp minimum, with 4dp above and 
 | `secondaryPlaceholder` | String | `''` | Placeholder after at least one chip exists. |
 | `closeIconClass` | String | `'material-symbols'` | Class on the icon inside the delete button. |
 | `allowUserInput` | Boolean | `false` | If true, render a text field and a delete button per chip, so the user can add and remove chips. |
-| `i18n` | Object | `{ remove: 'Remove' }` | Strings the component generates. `remove` prefixes the delete button's accessible name, giving "Remove Apple". |
+| `i18n` | Object | `{ remove: 'Remove', required: 'Add at least one item.' }` | Strings the component generates. `remove` prefixes the delete button's accessible name, giving "Remove Apple". `required` is what a required field says while it has no chips. |
 | `autocompleteOptions` | Object | `{}` | Options passed to Autocomplete on the input. A non-empty object enables autocomplete. |
 | `autocompleteOnly` | Boolean | `false` | If true, Enter will not add a value that is not in the autocomplete list. |
 | `limit` | Number | `Infinity` | Maximum number of chips. |
