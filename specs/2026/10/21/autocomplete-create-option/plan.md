@@ -83,6 +83,6 @@ Prerequisites: group 4.
 - [x] Optionally run `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, which `tech-stack.md` recommends before submitting. Record what ran.
 - [x] Record each result in `validation.md`.
 
-Completion check: V1 to V13 pass.
+Completion check: V1 to V14 pass. V14 was added in review.
 
 Covers: R9, R13; V9, V13.

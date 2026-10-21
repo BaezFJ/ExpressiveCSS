@@ -1492,6 +1492,8 @@ describe('Autocomplete allowCreate', () => {
       assert.equal(short.createRow(), null, 'blank text');
       short.type('ki');
       assert.equal(short.createRow(), null, 'below minLength');
+      short.type('  ki  ');
+      assert.equal(short.createRow(), null, 'below minLength once trimmed');
     } finally {
       off.instance.destroy();
       short.instance.destroy();
@@ -1587,6 +1589,80 @@ describe('Autocomplete allowCreate', () => {
       type('pear');
       results();
       assert.equal(createRow(), null);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a row left from older results creates the text it shows', async () => {
+    const { el, instance, log, type, key, createRow } = setup({ onSearch: () => {} });
+    try {
+      el.focus();
+      type('kiwi');
+      instance.setMenuItems([]);
+      await sleep(10);
+      type('kiwis'); // its results have not arrived
+      assert.equal(createRow().textContent, 'Add "kiwi"');
+      key('ArrowDown');
+      key('Enter');
+      assert.deepEqual(log[0].slice(0, 2), ['callback', 'kiwi']);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('after late results, returning to the field is not a new search', async () => {
+    let searches = 0;
+    const { el, instance, type, key } = setup({ onSearch: () => searches++ });
+    try {
+      el.focus();
+      type('kiwi');
+      instance.setMenuItems([]); // late results reset the search text
+      await sleep(10);
+      key('ArrowDown');
+      key('Enter');
+      const before = searches;
+      fire(el, 'focus');
+      assert.equal(searches, before);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('choosing the row cancels a search waiting for typing to pause', async () => {
+    let searches = 0;
+    const { el, instance, type, key } = setup({
+      searchDelay: 20,
+      onSearch: (text, ac) => (searches++, ac.setMenuItems([]))
+    });
+    try {
+      el.focus();
+      type('kiwi');
+      await sleep(40);
+      assert.equal(instance.menu.isOpen, true);
+      type('kiwi '); // a search is now waiting
+      key('ArrowDown');
+      key('Enter');
+      await sleep(60);
+      assert.equal(searches, 1, 'the waiting search never ran');
+      assert.equal(instance.menu.isOpen, false, 'the list stays closed');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a click from the focused row returns focus to the field', () => {
+    const { el, instance, type, createRow } = setup();
+    try {
+      el.focus();
+      type('kiwi');
+      const row = createRow();
+      // A mouse press keeps the list through the blur that focusing the row causes.
+      row.dispatchEvent(new window.PointerEvent('pointerdown', { bubbles: true, isPrimary: true, pointerType: 'mouse', button: 0 }));
+      row.focus();
+      fire(row, 'click');
+      row.dispatchEvent(new window.PointerEvent('pointerup', { bubbles: true, isPrimary: true, pointerType: 'mouse' }));
+      assert.equal(document.activeElement, el);
     } finally {
       instance.destroy();
     }

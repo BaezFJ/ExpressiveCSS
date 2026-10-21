@@ -707,8 +707,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     item.id = `autocomplete-option-${Utils.guid()}`;
     item.setAttribute('role', 'option');
     item.setAttribute('aria-selected', 'false');
-    // Not data-id, which an entry's id could equal.
-    item.setAttribute('data-create', '');
+    // Not data-id, which an entry's id could equal. The text is kept on the
+    // row because the field can change before newer results replace it.
+    item.setAttribute('data-create', text);
     item.classList.add('autocomplete-create');
     item.setAttribute('style', 'display:grid; user-select: none; align-items: center;');
     item.tabIndex = -1;
@@ -860,7 +861,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   /** Commits a row chosen by Enter or a click. */
   private _choose(li: Element) {
-    if (li.hasAttribute('data-create')) this._create(this.el.value.trim());
+    if (li.hasAttribute('data-create')) this._create(li.getAttribute('data-create'));
     else this.selectOption(li.getAttribute('data-id'));
   }
 
