@@ -9,7 +9,7 @@ Component ID: `date-picker`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `86cd661ff1163ce892119953fb11a6c0587e067c41871d3e969649c17d461792`
+Contract SHA-256: `107c727f044980f5e63c4bfe97bf870c658f83d8bcad86315c4cc5f480adb2d3`
 
 #### Selection and adaptation
 

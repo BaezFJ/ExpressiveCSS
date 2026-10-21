@@ -17,32 +17,41 @@ export interface ChipData {
   image?: string;
 }
 
-/** The fields that submit chips, served by one formdata listener per tree. */
-const submitting = new Set<Chips>();
-const listening = new WeakSet<EventTarget>();
-const heard = new WeakSet<Event>();
+/** The form control a named field submits through, wrapping its input. */
+const CONTROL = 'expressive-chips-control';
+
+interface ChipsControl extends HTMLElement {
+  readonly internals: ElementInternals;
+  /** Puts the field's starting chips back; set by its Chips instance. */
+  onFormReset: (() => void) | null;
+}
+
+/** Whether the browser has form-associated custom elements. jsdom does not. */
+const formAssociated = () => typeof ElementInternals !== 'undefined' && 'setFormValue' in ElementInternals.prototype;
 
 /**
- * Hears forms gather their data and reset. formdata does not bubble or leave
- * a shadow root, and a detached form is in no document, so fields listen in
- * the capture phase on the window, on their own root and on their form. One
- * event can pass several of those, so each is handled once, and each field
- * checks the form as the event comes, wherever the field has moved since.
+ * Defines the control on first use, so importing the bundle needs no DOM, and
+ * only once, so a second copy of the bundle on the page uses the first one's.
+ * The form sees the control, so it answers what a field does; its anchor and
+ * focus are the input it wraps.
  */
-function listenToForms(target: EventTarget | null) {
-  if (!target || listening.has(target)) return;
-  listening.add(target);
-  const handle = (e: Event) => {
-    if (heard.has(e)) return;
-    heard.add(e);
-    submitting.forEach((chips) => chips._onFormEvent(e));
-  };
-  target.addEventListener('formdata', handle, true);
-  target.addEventListener('reset', handle, true);
-  // Typing in a field can make the page clear its own error, which may be
-  // all that held an empty required field invalid. Heard as it bubbles, so
-  // after the page's listeners on the input.
-  target.addEventListener('input', (e) => submitting.forEach((chips) => chips._onEditorInput(e)));
+function defineControl() {
+  if (customElements.get(CONTROL)) return;
+  customElements.define(CONTROL, class extends HTMLElement {
+    static formAssociated = true;
+    readonly internals = this.attachInternals();
+    onFormReset: (() => void) | null = null;
+    /** Called only for a reset no listener canceled, in the same task. */
+    formResetCallback() { this.onFormReset?.(); }
+    get form() { return this.internals.form; }
+    get name() { return this.getAttribute('name') ?? ''; }
+    get labels() { return this._input?.labels; }
+    get validity() { return this.internals.validity; }
+    get validationMessage() { return this.internals.validationMessage; }
+    get willValidate() { return this.internals.willValidate; }
+    focus(options?: FocusOptions) { this._input?.focus(options); }
+    private get _input() { return this.querySelector<HTMLInputElement>(':scope > input'); }
+  });
 }
 
 /** The values in pasted text, split by commas, tabs or lines. */
@@ -151,14 +160,12 @@ export class Chips extends Component<ChipsOptions> {
   private _name = '';
   /** The chips the field started with, which a form reset puts back. */
   private _initialData: ChipData[] = [];
-  /** A reset whose dispatch may not be over, so a listener could still cancel it. */
-  private _pendingReset: Event | null = null;
-  /** Whether the input's custom error is the chips' required message. */
-  private _ownsError = false;
   /** The input's own aria-required, or null, put back on destroy. */
   private _ariaRequired: string | null = null;
-  /** Notices the field being laid out, as it is once mounted, to listen where its form now is. */
-  private _mountObserver: ResizeObserver | null = null;
+  /** The form control wrapping a named input, which the form reads instead of it. */
+  private _control: ChipsControl | null = null;
+  /** Copies the input's disabled and form attributes to the control, and checks its readonly again. */
+  private _mirror: MutationObserver | null = null;
   /** The named text input, whose form, disabled state and required the chips take over. */
   private _source: HTMLInputElement | null = null;
   private _required = false;
@@ -208,13 +215,13 @@ export class Chips extends Component<ChipsOptions> {
       this.el.classList.add('field');
       this._setupInput();
       this._setupEventHandlers();
-      // move input to end
-      this.el.append(this._input);
+      // move input to end, inside its control when it has one
+      this.el.append(this._end);
     }
     // After _setupInput: the label points at the input's id, which is only
     // assigned there. Running this first threw on any .chips with a <label>.
     this._setupLabel();
-    this._validate();
+    this._sync();
     // After autocomplete, which can turn the input's value into a chip.
     this._initialData = [...this.chipsData];
   }
@@ -252,7 +259,6 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   getData() {
-    this._flushReset();
     return this.chipsData;
   }
 
@@ -299,16 +305,29 @@ export class Chips extends Component<ChipsOptions> {
   private _takeName() {
     const input = this._editorInput();
     this._name = input?.getAttribute('name') ?? '';
-    if (!this._name) return;
+    // ponytail: without form-associated custom elements (jsdom) the input keeps its name and submits its text.
+    if (this._name && formAssociated()) this._wrap(input);
+  }
+
+  /**
+   * Wraps the input in the form control, which takes its name and required.
+   * `display: contents` lays the input out as a child of the field still.
+   */
+  private _wrap(input: HTMLInputElement) {
     this._source = input;
     this._takeRequired(input);
     input.removeAttribute('name');
-    submitting.add(this);
-    this._listen();
-    // A field set up before it is mounted, as in a shadow root, joins its
-    // form's tree later; its size changing is the sign it has.
-    this._mountObserver = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => this._listen());
-    this._mountObserver?.observe(this.el);
+    defineControl();
+    const control = document.createElement(CONTROL) as ChipsControl;
+    control.style.display = 'contents';
+    control.setAttribute('name', this._name);
+    control.onFormReset = () => this._resetChips();
+    input.replaceWith(control);
+    control.append(input);
+    this._control = control;
+    this._mirror = new MutationObserver(() => this._mirrorState());
+    this._mirror.observe(input, { attributeFilter: ['disabled', 'readonly', 'form'] });
+    this._mirrorState();
   }
 
   /**
@@ -319,20 +338,39 @@ export class Chips extends Component<ChipsOptions> {
     return this.options.allowUserInput ? this.el.querySelector<HTMLInputElement>('input:is(:not([type]), [type="text"])') : null;
   }
 
-  /** Listens where the input's form events can be heard: the page, the input's tree and its form. */
-  private _listen() {
-    if (this._source) [window, this._source.getRootNode(), this._source.form].forEach(listenToForms);
+  /** Where the text field ends: chips go before it, and it goes last. */
+  private get _end() {
+    return this._control ?? this._input;
   }
 
-  /** After the chips change: listen where the form is now, and update a required field's validity. */
+  /**
+   * The control is disabled with the input, or with a fieldset by itself, and
+   * submits to the input's form. A read-only input is not validated, so its
+   * required no longer counts.
+   */
+  private _mirrorState() {
+    ['disabled', 'form'].forEach((name) => this._copyAttribute(name));
+    this._validate();
+  }
+
+  private _copyAttribute(name: string) {
+    const value = this._source.getAttribute(name);
+    if (value === null) this._control.removeAttribute(name);
+    else this._control.setAttribute(name, value);
+  }
+
+  /** After the chips change: give the form one value per chip and update a required field's validity. */
   private _sync() {
-    this._listen();
+    if (!this._control) return;
+    const data = new FormData();
+    this.chipsData.forEach((chip) => data.append(this._name, String(chip.id)));
+    this._control.internals.setFormValue(data);
     this._validate();
   }
 
   /**
-   * The chips are what is required, not the text, so `required` becomes a
-   * custom validity, and aria-required keeps telling assistive technology.
+   * The chips are what is required, not the text, so `required` moves to the
+   * control, and aria-required keeps telling assistive technology.
    */
   private _takeRequired(input: HTMLInputElement) {
     this._required = input.required;
@@ -342,48 +380,26 @@ export class Chips extends Component<ChipsOptions> {
     input.setAttribute('aria-required', 'true');
   }
 
-  /** Typing in this field checks its required state again. */
-  _onEditorInput(e: Event) {
-    if (Utils.eventTarget(e) === this._source) this._validate();
-  }
-
-  /** What a form event asks of this field, when the form is its input's. */
-  _onFormEvent(e: Event) {
-    if (e.target !== this._source.form) return;
-    if (e.type === 'reset') this._onReset(e);
-    else this._onFormData(e as FormDataEvent);
-  }
-
   /**
-   * A reset puts back the chips the field started with, unless a listener
-   * cancels it, which any listener can until the dispatch is over. So the
-   * chips and their validity change once the reset is final: at the next
-   * microtask, or sooner when the field is used. Until then a required field
-   * stays as invalid as it was, rather than valid on a reset that a listener
-   * goes on to cancel.
+   * A required field is valid once it has a chip, whatever is half typed. The
+   * control holds this validity, apart from any error the page sets on the
+   * input, and anchors it at the input, which a submit then focuses.
    */
-  private _onReset(e: Event) {
-    this._pendingReset = e;
-    queueMicrotask(this._settleReset);
+  private _validate() {
+    const internals = this._control.internals;
+    if (this._required && !this._source.readOnly && !this.chipsData.length) {
+      internals.setValidity({ valueMissing: true }, this._requiredMessage, this._anchor);
+    } else internals.setValidity({});
   }
 
-  /**
-   * A reset a person starts with a reset button runs its microtasks between
-   * listeners, while the event is still dispatching, so then this tries
-   * again in a task, after the dispatch. destroy() drops the reset.
-   */
-  private _settleReset = () => {
-    if (this._pendingReset?.eventPhase === 0) this._flushReset();
-    else if (this._pendingReset) setTimeout(this._settleReset);
-  };
+  /** The input, unless page script moved it out of the control, where it cannot anchor the message. */
+  private get _anchor() {
+    return this._control.contains(this._source) ? this._source : undefined;
+  }
 
-  /** Applies a reset no listener can cancel any more, or puts the validity back for a canceled one. */
-  _flushReset() {
-    // eventPhase is NONE only once the dispatch is over; until then a listener can still cancel.
-    if (this._pendingReset?.eventPhase !== 0) return;
-    const canceled = this._pendingReset.defaultPrevented;
-    this._pendingReset = null;
-    if (!canceled) this._resetChips();
+  /** A validity flag needs a message, so an empty i18n.required falls back to the default. */
+  private get _requiredMessage() {
+    return this.options.i18n.required || _defaults.i18n.required;
   }
 
   private _resetChips() {
@@ -391,75 +407,19 @@ export class Chips extends Component<ChipsOptions> {
     this._chips.forEach((chip) => chip.remove());
     this.chipsData = [...this._initialData];
     this._chips = this.chipsData.map((chip) => this._renderChip(chip));
-    this._source.before(...this._chips);
+    this._control.before(...this._chips);
     this._setPlaceholder();
-    this._validate();
+    this._sync();
   }
 
-  /**
-   * Adds a value per chip to the data the input's form gathers, when that is
-   * the form and the input is enabled, read as the data is gathered, so a
-   * change just before submitting counts.
-   */
-  private _onFormData(e: FormDataEvent) {
-    this._flushReset();
-    if (this._source.matches(':disabled')) return;
-    this.chipsData.forEach((chip) => e.formData.append(this._name, String(chip.id)));
-  }
-
-  /** A required field is valid once it has a chip, whatever is half typed. */
-  private _validate() {
-    if (this._required) this._showRequired(!this.chipsData.length);
-  }
-
-  /**
-   * Sets or clears the chips' own required message. An error the page set
-   * is left alone: it is not replaced, and it is not the chips' to clear.
-   */
-  private _showRequired(missing: boolean) {
-    this._forgetClearedError();
-    if (missing === this._ownsError) return;
-    if (!missing) this._clearError();
-    else if (!this._source.validity.customError) this._setError(this.options.i18n.required);
-  }
-
-  /**
-   * Whether the input's custom error is still the chips' message. A disabled
-   * input shows no message, so then the flag is all there is to go on: chips
-   * added while it is disabled leave it valid once enabled, and an error the
-   * page set over the chips' own in that time has to be set again.
-   */
-  private _stillOwnsError() {
-    const input = this._source;
-    return this._ownsError && (!input.willValidate || input.validationMessage === this.options.i18n.required);
-  }
-
-  /** The page can clear the chips' message itself; then it is no longer theirs to own. */
-  private _forgetClearedError() {
-    if (!this._source.validity.customError) this._ownsError = false;
-  }
-
-  private _setError(message: string) {
-    this._source.setCustomValidity(message);
-    this._ownsError = !!message;
-  }
-
-  /** Clears the chips' message, but not an error the page has set in its place. */
-  private _clearError() {
-    if (this._stillOwnsError()) this._source.setCustomValidity('');
-    this._ownsError = false;
-  }
-
+  /** Unwraps the input, with whatever else went in the control, and gives it its name and required back. */
   private _giveNameBack() {
-    if (!this._source) return;
-    this._pendingReset = null;
-    submitting.delete(this);
-    this._mountObserver?.disconnect();
+    if (!this._control) return;
+    this._mirror.disconnect();
+    this._control.replaceWith(...this._control.childNodes);
+    this._control = null;
     this._source.setAttribute('name', this._name);
-    // Only a required field's validity is the chips' to undo; an optional
-    // input keeps any error the page set.
     if (!this._required) return;
-    this._showRequired(false);
     this._source.required = true;
     if (this._ariaRequired === null) this._source.removeAttribute('aria-required');
     else this._source.setAttribute('aria-required', this._ariaRequired);
@@ -574,6 +534,8 @@ export class Chips extends Component<ChipsOptions> {
         this.addChip({ id: this._input.value });
       }
       this._input.value = '';
+      // The list answered the text Enter just used up.
+      this.autocomplete?.close();
     } else if (
       this._input.value === '' &&
       this.chipsData.length &&
@@ -701,12 +663,11 @@ export class Chips extends Component<ChipsOptions> {
    * @param chip Chip data object
    */
   addChip(chip: ChipData) {
-    this._flushReset();
     if (!this._isValidAndNotExist(chip) || this.chipsData.length >= this.options.limit) return;
     const renderedChip = this._renderChip(chip);
     this._chips.push(renderedChip);
     this.chipsData.push(chip);
-    if (this._input) this._input.before(renderedChip);
+    if (this._end) this._end.before(renderedChip);
     else this.el.append(renderedChip);
     this._setPlaceholder();
     this._sync();
@@ -723,7 +684,6 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   private _deleteChip(chipIndex: number, focus: 'input' | 'previous' | null) {
-    this._flushReset();
     const chip = this._chips[chipIndex];
     if (!chip) return;
     if (this._selectedChip === chip) this._setSelected(null);
