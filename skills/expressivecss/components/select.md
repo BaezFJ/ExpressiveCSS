@@ -9,7 +9,7 @@ Component ID: `select`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `39d5ff5d2268e5aafe464a96296b35ba25bd165e348a7450058382b72d7c281f`
+Contract SHA-256: `38a3bfb6b899964c35be21a5cfcf20a409fd0600a08ad3cd66b62d92363f36fb`
 
 #### Selection and adaptation
 

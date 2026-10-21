@@ -13,6 +13,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `HH:MM:SS`, with AM or PM on a 12-hour clock. The dial keeps its hours
   and minutes views. A `type="time"` input needs `step="1"` to hold the
   seconds without a step mismatch. The default of `false` keeps `HH:MM`.
+- `AutoInit()` reads options from markup. An element's
+  `data-<name>-options` attribute holds a JSON object of that component's
+  options, with the name in kebab case: `data-menu-options`,
+  `data-form-select-options`. Options passed to `AutoInit()` win for the
+  keys they set. Values must match the kind of their default, so callbacks,
+  elements and `null`-default options stay script-only, as do
+  `allowUnsafeHTML` and the Chips and Autocomplete `data` lists. Invalid
+  values log a warning and keep their defaults. Direct `init()` calls do not
+  read the attribute.
 - Autocomplete's `allowCreate` option ends the list in an `Add "text"` row
   when the typed text matches no suggestion exactly, ignoring case and
   surrounding spaces. Choosing it with Enter or a click calls `onCreate` with
