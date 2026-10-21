@@ -10,6 +10,7 @@ const S = defineSections([
   { id: "introduction", label: "Introduction", heading: false },
   { id: "initialization", label: "Initialization" },
   { id: "options", label: "Options" },
+  { id: "markup-options", label: "Options in markup" },
   { id: "components", label: "Components" },
   { id: "ignoring", label: "Ignoring elements" },
   { id: "events", label: "Events" },
@@ -79,6 +80,62 @@ Tooltip.init(element, { position: 'top' });
           Calling <code>AutoInit()</code> again on the same elements is safe: each component's constructor
           destroys any existing instance on that element before creating a new one.
         </p>
+  </Section>
+  <Section {...S["markup-options"]}>
+        <p>
+          An element can carry its own options for <code>AutoInit()</code> in a
+          <code>data-<em>name</em>-options</code> attribute that holds a JSON object. The name is
+          the component's name from the table below in kebab case, and the keys are its option
+          names as written in script.
+        </p>
+<Code code={`
+<a class="button menu-trigger" data-target="actions"
+   data-menu-options='{"closeOnClick": false, "placement": "top"}'>Actions</a>
+
+<a class="button tooltipped" data-tooltip="Saved"
+   data-tooltip-options='{"enterDelay": 300}'>Save</a>
+
+<select data-form-select-options='{"classes": "wide"}'>...</select>
+`} />
+        <ul>
+          <li>
+            <code>Menu</code> reads <code>data-menu-options</code>, <code>FormSelect</code> reads
+            <code>data-form-select-options</code>, and <code>FloatingActionButton</code> reads
+            <code>data-floating-action-button-options</code>. The name comes from the table, not the
+            class: a <code>.date-picker</code> reads <code>data-datepicker-options</code>. An element that is both a tooltip and a
+            menu trigger reads each attribute for its own component.
+          </li>
+          <li>
+            Options passed to <code>AutoInit(context, options)</code> win for the keys they set. A
+            nested object such as <code>i18n</code> counts as one key. Tooltip reads its own
+            <code>data-tooltip</code>, <code>data-tooltip-id</code> and <code>data-position</code>
+            again each time it opens, so those win over both. Set the position, and Menu's
+            <code>contextMenu</code> (<code>data-context-menu</code>), in one place.
+          </li>
+          <li>
+            Markup can set an option whose default is a string, number, boolean, array or plain
+            object, with a value of the same kind. Keys inside an object such as <code>i18n</code>
+            are checked the same way, and if one is rejected the whole object keeps its default. An
+            object whose default is empty, such as FormSelect's <code>menuOptions</code>, accepts no
+            keys from markup. When the default is a non-empty array, the items need the kind
+            of its first item. Callbacks, elements and options whose default is <code>null</code>
+            cannot come from markup; pass those from script. Autocomplete's
+            <code>allowUnsafeHTML</code> and the <code>data</code> lists of Chips and Autocomplete
+            are script-only too.
+          </li>
+          <li>
+            The attribute is treated as untrusted. Invalid JSON, an unknown key or a value of the wrong
+            kind is skipped with a console warning, and that option keeps its default. A value that
+            passes these checks but still makes a component throw stops <code>AutoInit()</code>, as
+            the same value passed from script would.
+          </li>
+          <li>
+            Only <code>AutoInit()</code> reads the attribute. A direct <code>init()</code> call uses
+            the options it is given. Menus inside a <code>.menubar</code> take their options from
+            Menubar's <code>menuOptions</code>, so <code>data-menu-options</code> has no effect on
+            them.
+          </li>
+        </ul>
   </Section>
   <Section {...S.components}>
         <p>

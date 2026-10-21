@@ -44,19 +44,22 @@
 }
 
 .timepicker-input-hours-wrapper,
-.timepicker-input-minutes-wrapper {
+.timepicker-input-minutes-wrapper,
+.timepicker-input-seconds-wrapper {
   width: 6.9rem;
   height: 5.75rem;
 }
 
 .timepicker-input-hours,
 .timepicker-input-minutes,
+.timepicker-input-seconds,
 .timepicker-span-am-pm div {
   cursor: pointer;
 }
 
 input[type=text].timepicker-input-hours,
-input[type=text].timepicker-input-minutes {
+input[type=text].timepicker-input-minutes,
+input[type=text].timepicker-input-seconds {
   height: 100%;
   padding: 1.33rem 0.8rem;
   border: 0;
@@ -72,6 +75,26 @@ input[type=text].timepicker-input-minutes {
 .timepicker-input-divider-wrapper {
   width: 1.6rem;
   text-align: center;
+}
+
+// With `showSeconds`, three fields share the row two fill otherwise.
+.timepicker-display-digital-clock:has(.timepicker-input-seconds) {
+  // The field wrappers; the dividers narrow further below.
+  > * {
+    width: rem(60px);
+  }
+
+  .timepicker-input-divider-wrapper {
+    display: grid;
+    place-items: center;
+    width: rem(16px);
+    font-size: rem(36px);
+  }
+
+  input[type=text] {
+    padding-inline: rem(4px);
+    font-size: rem(36px);
+  }
 }
 
 .timepicker-display-am-pm {

@@ -4,7 +4,11 @@ import { DisplayPlugin, createDisplayPlugin, hideModal } from '../plugins/modalD
 
 export type Views = 'hours' | 'minutes';
 
-/** How far each key moves the hour or minute field, wrapping round the dial. */
+/** The clock's fields, in the order they appear. */
+const UNITS = ['hours', 'minutes', 'seconds'] as const;
+type Unit = (typeof UNITS)[number];
+
+/** How far each key moves a field, wrapping round. */
 const STEPS: Record<string, number> = { ArrowUp: 1, ArrowDown: -1, PageUp: 5, PageDown: -5 };
 
 /** A 12-hour time's hour of the day, 0 to 23. */
@@ -12,6 +16,24 @@ const dayHour = (hours: number, pm: boolean) => (hours % 12) + (pm ? 12 : 0);
 
 /** An hour on the 24-hour clock, from one written with AM or PM. */
 const hour24 = (hours: number, period?: string) => (period ? (hours % 12) + (period === 'PM' ? 12 : 0) : hours);
+
+/**
+ * The hour on the 24-hour clock, minute and second of a written time such as
+ * '14:30', '02:30:45 PM' or 'now'. A missing part reads as 0.
+ */
+function readTime(text: string, fromNow: number): [number, number, number] {
+  const upper = text.trim().toUpperCase();
+  if (upper.split(':')[0] === 'NOW') {
+    const now = new Date(+new Date() + fromNow);
+    return [now.getHours(), now.getMinutes(), now.getSeconds()];
+  }
+  const period = /AM|PM/.exec(upper)?.[0];
+  const parts = upper.replace(/AM|PM/, '').split(':');
+  const [hours, minutes, seconds] = [0, 1, 2].map((i) => +parts[i] || 0);
+  // A written AM or PM fixes the hour on either clock: "03:30 PM" is 15:30
+  // on a 24-hour clock too.
+  return [hour24(hours, period), minutes, seconds];
+}
 
 /**
  * With a `lang` on or around the input, whether that language tells the
@@ -79,12 +101,18 @@ export interface TimepickerOptions extends BaseOptions {
   /**
    * Internationalization options.
    */
-  i18n: Partial<I18nOptions & { hours: string; minutes: string }>;
+  i18n: Partial<I18nOptions & { hours: string; minutes: string; seconds: string }>;
   /**
    * Use 12 hour AM/PM clock instead of 24 hour clock.
    * @default true, or the clock the input's `lang` uses
    */
   twelveHour: boolean;
+  /**
+   * Add a seconds field after the minutes, and write `HH:MM:SS`. The dial
+   * still sets hours and minutes only.
+   * @default false
+   */
+  showSeconds: boolean;
   /**
    * Vibrate device when dragging clock hand.
    * @default true
@@ -139,9 +167,11 @@ const _defaults: TimepickerOptions = {
     clear: 'Clear',
     done: 'Ok',
     hours: 'Hours',
-    minutes: 'Minutes'
+    minutes: 'Minutes',
+    seconds: 'Seconds'
   },
   twelveHour: true, // change to 12 hour AM/PM clock from 24 hour
+  showSeconds: false,
   vibrate: true, // vibrate the device when dragging clock hand
   // Callbacks
   onSelect: null,
@@ -160,6 +190,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   digitalClock: HTMLElement;
   inputHours: HTMLInputElement;
   inputMinutes: HTMLInputElement;
+  /** The seconds field, or null without `showSeconds`. */
+  inputSeconds: HTMLInputElement | null;
   x0: number;
   y0: number;
   moved: boolean;
@@ -176,6 +208,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   minutesView: HTMLElement;
   hours: number;
   minutes: number;
+  seconds: number;
   /** The selected time. */
   time: string;
   /**
@@ -290,6 +323,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.inputHours.addEventListener('focusout', () => this.formatHours());
     this.inputMinutes.addEventListener('focus', () => this.showView('minutes'));
     this.inputMinutes.addEventListener('focusout', () => this.formatMinutes());
+    this.inputSeconds?.addEventListener('focusout', () => this.formatSeconds());
   }
 
   _removeEventHandlers() {
@@ -429,18 +463,37 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.minutesView = this.containerEl.querySelector('.timepicker-minutes');
     this.inputHours = this.containerEl.querySelector('.timepicker-input-hours');
     this.inputMinutes = this.containerEl.querySelector('.timepicker-input-minutes');
-    this.inputHours.setAttribute('aria-label', this.options.i18n.hours);
-    this.inputMinutes.setAttribute('aria-label', this.options.i18n.minutes);
-    // The fields are spin buttons: the arrows step them and move the hand.
-    for (const isHours of [true, false]) {
-      const [min, max] = this._range(isHours);
-      const input = isHours ? this.inputHours : this.inputMinutes;
-      Object.entries({ role: 'spinbutton', 'aria-valuemin': min, 'aria-valuemax': max })
-        .forEach(([name, value]) => input.setAttribute(name, String(value)));
+    this.inputSeconds = this.containerEl.querySelector('.timepicker-input-seconds');
+    if (!this.options.showSeconds) this._removeSecondsField();
+    // The fields are spin buttons: the arrows step them, and the hour and
+    // minute fields move the hand.
+    for (const unit of this._units()) {
+      const [min, max] = this._range(unit);
+      const attributes = { role: 'spinbutton', 'aria-valuemin': min, 'aria-valuemax': max, 'aria-label': this.options.i18n[unit] };
+      Object.entries(attributes).forEach(([name, value]) => this._input(unit).setAttribute(name, String(value)));
     }
     this.spanAmPm = this.containerEl.querySelector('.timepicker-span-am-pm');
     this.footer = this.containerEl.querySelector('.timepicker-footer');
     this.amOrPm = 'PM';
+  }
+
+  private _removeSecondsField() {
+    this.containerEl.querySelectorAll('.timepicker-seconds-divider, .timepicker-input-seconds-wrapper').forEach((el) => el.remove());
+    this.inputSeconds = null;
+  }
+
+  private _input(unit: Unit): HTMLInputElement | null {
+    return { hours: this.inputHours, minutes: this.inputMinutes, seconds: this.inputSeconds }[unit];
+  }
+
+  /** The units that have a field. */
+  private _units(): Unit[] {
+    return UNITS.filter((unit) => this._input(unit));
+  }
+
+  /** Which unit's field `target` is, if any. */
+  private _unitOf(target: EventTarget): Unit | undefined {
+    return this._units().find((unit) => this._input(unit) === target);
   }
 
   _pickerSetup() {
@@ -611,24 +664,12 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   _updateTimeFromInput() {
     this._cancelClockReset();
-    // Get the time
-    let value = ((this.el.value || this.options.defaultTime || '') + '').trim().toUpperCase().split(':');
-    const period = value[1]?.match(/AM|PM/)?.[0];
-    value[1] = value[1]?.replace(/AM|PM/, '');
-    if (value[0] === 'NOW') {
-      const now = new Date(+new Date() + this.options.fromNow);
-      value = [now.getHours().toString(), now.getMinutes().toString()];
-    }
-    // A written AM or PM fixes the hour on either clock: "03:30 PM" is 15:30
-    // on a 24-hour clock too.
-    this.hours = hour24(+value[0] || 0, period);
-    this.minutes = +value[1] || 0;
+    [this.hours, this.minutes, this.seconds] = readTime(`${this.el.value || this.options.defaultTime || ''}`, this.options.fromNow);
     if (this.options.twelveHour) {
       this.amOrPm = this.hours >= 12 ? 'PM' : 'AM';
       this.hours = this.hours % 12 || 12;
     }
-    this.inputHours.value = Timepicker._addLeadingZero(this.hours);
-    this.inputMinutes.value = Timepicker._addLeadingZero(this.minutes);
+    this._units().forEach((unit) => (this._input(unit).value = Timepicker._addLeadingZero(this[unit])));
 
     this._updateAmPmView();
   }
@@ -693,7 +734,7 @@ export class Timepicker extends Component<TimepickerOptions> {
    * are pointer targets only, and under `autoSubmit` there is no Ok button,
    * so without this a keyboard user could type a time but never set it.
    * Cancelling also keeps Enter from submitting a surrounding form. The
-   * listener's column holds only the two fields; AM/PM is a separate column.
+   * listener's column holds only the fields; AM/PM is a separate column.
    */
   _handleDigitalKeydown = Utils.ignoringComposition((event: KeyboardEvent) => {
     if (event.key in STEPS) return this._step(event);
@@ -701,37 +742,48 @@ export class Timepicker extends Component<TimepickerOptions> {
     event.preventDefault();
     // Normalize first, as leaving the field would: an emptied field takes its
     // default, and the committed time has to be the one the fields then show.
-    this.formatHours();
-    this.formatMinutes();
+    this._formatFields();
     if (this.options.autoSubmit) this.done();
     else this.confirm();
   });
 
-  /** The lowest and highest value of the hour or minute field. */
-  private _range(isHours: boolean): [number, number] {
-    if (!isHours) return [0, 59];
+  /** The lowest and highest value of a field. */
+  private _range(unit: Unit): [number, number] {
+    if (unit !== 'hours') return [0, 59];
     return this.options.twelveHour ? [1, 12] : [0, 23];
+  }
+
+  /** The whole number typed in a field, or NaN when it is not one or is out of range. */
+  private _fieldValue(unit: Unit, text: string) {
+    const value = Number(text.trim() || NaN);
+    const [min, max] = this._range(unit);
+    return Number.isInteger(value) && Math.min(Math.max(value, min), max) === value ? value : NaN;
+  }
+
+  /** Point the hand at an hour or minute. Seconds have no dial view. */
+  private _moveHand(unit: Unit, value: number) {
+    if (unit === 'seconds') return;
+    this._cancelClockReset();
+    this.drawClockFromTimeInput(value, unit === 'hours');
   }
 
   /**
    * Up and Down step a field by one, Page Up and Page Down by five, round
-   * the dial: past 59 minutes comes 00. The hand follows. Hours step round
-   * the day, so in 12-hour time passing 12 switches AM and PM.
+   * the dial: past 59 minutes comes 00. The hand follows hours and minutes.
+   * Hours step round the day, so in 12-hour time passing 12 switches AM and
+   * PM. Minutes and seconds wrap without carrying.
    */
   private _step(event: KeyboardEvent) {
     const input = event.target as HTMLInputElement;
-    const isHours = input === this.inputHours;
-    if (!isHours && input !== this.inputMinutes) return;
+    const unit = this._unitOf(input);
+    if (!unit) return;
     event.preventDefault();
-    const [unit, step] = isHours ? (['hours', this._stepHours] as const) : (['minutes', this._stepMinutes] as const);
-    const value = step(STEPS[event.key]);
+    const step = STEPS[event.key];
+    const value = unit === 'hours' ? this._stepHours(step) : (this[unit] + step + 60) % 60;
     this[unit] = value;
     input.value = Timepicker._addLeadingZero(value);
-    this._cancelClockReset();
-    this.drawClockFromTimeInput(value, isHours);
+    this._moveHand(unit, value);
   }
-
-  private _stepMinutes = (step: number) => (this.minutes + step + 60) % 60;
 
   /** The hour `step` hours on, round the day; in 12-hour time it switches AM and PM past 12. */
   private _stepHours = (step: number) => {
@@ -744,14 +796,14 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   _inputFromTextField = (event: Event) => {
     const input = event.target as HTMLInputElement;
-    const isHours = input === this.inputHours;
-    if (!isHours && input !== this.inputMinutes) return;
-    this._cancelClockReset();
-    const value = Number(input.value);
-    const [min, max] = this._range(isHours);
-    if (!input.value.trim() || !Number.isInteger(value) || value < min || value > max) return;
-    this[isHours ? 'hours' : 'minutes'] = value;
-    this.drawClockFromTimeInput(value, isHours);
+    const unit = this._unitOf(input);
+    if (!unit) return;
+    // Any edit to an hour or minute cancels an older delayed hand move.
+    if (unit !== 'seconds') this._cancelClockReset();
+    const value = this._fieldValue(unit, input.value);
+    if (Number.isNaN(value)) return;
+    this[unit] = value;
+    this._moveHand(unit, value);
   };
 
   drawClockFromTimeInput(value, isHours) {
@@ -839,6 +891,18 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.inputMinutes.value = Timepicker._addLeadingZero(this.minutes);
   }
 
+  formatSeconds() {
+    if (this.inputSeconds.value == '') this.seconds = new Date().getSeconds();
+    this.inputSeconds.value = Timepicker._addLeadingZero(this.seconds);
+  }
+
+  /** Normalize every field, as leaving it would. */
+  private _formatFields() {
+    this.formatHours();
+    this.formatMinutes();
+    if (this.inputSeconds) this.formatSeconds();
+  }
+
   setHoursDefault() {
     this.hours = new Date().getHours();
     if (this.options.twelveHour) this.hours = this.hours % 12 || 12;
@@ -848,9 +912,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   done = (clearValue = null) => {
     // Set input value
     const last = this.el.value;
-    let value = clearValue
-      ? ''
-      : Timepicker._addLeadingZero(this.hours) + ':' + Timepicker._addLeadingZero(this.minutes);
+    let value = clearValue ? '' : this._clockTime(this.hours);
     this.time = value;
     if (!clearValue) value = this._inputValue(value);
     this.el.value = value;
@@ -862,10 +924,16 @@ export class Timepicker extends Component<TimepickerOptions> {
     }
   };
 
-  // A time input accepts only 24-hour HH:mm and empties itself on anything
-  // else, so it never gets the AM/PM a text input shows.
+  /** `HH:MM` for the given hour, or `HH:MM:SS` with a seconds field. */
+  private _clockTime(hours: number) {
+    const parts = this.inputSeconds ? [hours, this.minutes, this.seconds] : [hours, this.minutes];
+    return parts.map(Timepicker._addLeadingZero).join(':');
+  }
+
+  // A time input accepts only 24-hour HH:mm or HH:mm:ss and empties itself
+  // on anything else, so it never gets the AM/PM a text input shows.
   private _inputValue(time: string) {
-    if (this.el.type === 'time') return `${Timepicker._addLeadingZero(this._hours24())}:${Timepicker._addLeadingZero(this.minutes)}`;
+    if (this.el.type === 'time') return this._clockTime(this._hours24());
     return this.options.twelveHour ? `${time} ${this.amOrPm}` : time;
   }
 
@@ -903,6 +971,12 @@ export class Timepicker extends Component<TimepickerOptions> {
                 </div>
                 <div class="timepicker-input-minutes-wrapper">
                   <input type="text" maxlength="2" class="timepicker-input-minutes" />
+                </div>
+                <div class="timepicker-input-divider-wrapper timepicker-seconds-divider">
+                  <span class="timepicker-input-divider">:</span>
+                </div>
+                <div class="timepicker-input-seconds-wrapper">
+                  <input type="text" maxlength="2" class="timepicker-input-seconds" />
                 </div>
               </div>
               <div class="timepicker-display-column timepicker-display-am-pm">

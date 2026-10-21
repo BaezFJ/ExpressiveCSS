@@ -758,6 +758,54 @@ scenario('autocomplete announces results and selection without moving focus', '<
   }
 });
 
+scenario('autocomplete shows a no-results row that cannot be chosen', '<div class="field"><label for="query">Fruit</label><input id="query"></div>', async page => {
+  await page.evaluate(() => {
+    const input = document.querySelector('#query');
+    window.instances = [Expressive.Autocomplete.init(input, { data: [{ id: 'apple' }, { id: 'apricot' }], menuOptions: { inDuration: 0, outDuration: 0 } })];
+    window.events = [];
+    for (const type of ['change', 'expressive:autocomplete', 'expressive:select']) input.addEventListener(type, () => window.events.push(type));
+  });
+  const input = page.locator('#query');
+  const row = page.locator('.autocomplete-content li.autocomplete-no-results');
+  const options = page.locator('.autocomplete-content [role="option"]');
+  await input.focus();
+  await page.keyboard.type('z');
+  await expect(row).toBeVisible();
+  await expect(row).toHaveText('No results.');
+  await expect(row).toHaveAttribute('role', 'none');
+  await expect(row).toHaveAttribute('aria-hidden', 'true');
+  await expect(page.locator('.autocomplete-status')).toHaveText('No results.');
+  await expect(options).toHaveCount(0);
+  await row.hover();
+  const look = await row.evaluate(li => {
+    const probe = document.createElement('span');
+    probe.style.color = 'var(--md-comp-menu-supporting-text-color)';
+    li.parentElement.append(probe);
+    const expected = getComputedStyle(probe).color;
+    probe.remove();
+    const style = getComputedStyle(li);
+    return { cursor: style.cursor, background: style.backgroundColor, color: style.color, expected };
+  });
+  assert.deepEqual(look, { cursor: 'default', background: 'rgba(0, 0, 0, 0)', color: look.expected, expected: look.expected });
+  assert.notEqual(look.expected, '');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect(input).not.toHaveAttribute('aria-activedescendant');
+  await expect(page.locator('.autocomplete-content li.active')).toHaveCount(0);
+  await expect(input).toHaveValue('z');
+  // Enter commits the text, so the browser fires its own change. Autocomplete chose nothing.
+  assert.deepEqual(await page.evaluate(() => window.events.filter(type => type !== 'change')), []);
+  await page.evaluate(() => { window.events = []; });
+  await row.click();
+  await expect(input).toBeFocused();
+  await expect(row).toBeVisible();
+  assert.deepEqual(await page.evaluate(() => window.events), []);
+  await page.keyboard.press('ControlOrMeta+A');
+  await page.keyboard.type('a');
+  await expect(options).toHaveCount(2);
+  await expect(row).toHaveCount(0);
+});
+
 scenario('date picker supports calendar keyboard navigation and redraw focus', '<label for="date">Appointment date</label><input id="date"><button id="after">After</button>', async page => {
   const day = (year, month, date) => page.locator(`.datepicker-day-button[data-year="${year}"][data-month="${month}"][data-day="${date}"]`);
   for (const docked of [false, true]) {
