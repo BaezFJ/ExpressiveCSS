@@ -4,7 +4,7 @@ Date: 2026-10-21
 Roadmap phase: Phase 11, menu checkbox items
 Branch: `feature/2026-10-21-menu-checkbox-items`
 Base: `origin/master` at `182d9af6490757f744492fc276f36c575b556204`, fetched 2026-10-21
-Status: specified; implementation not started
+Status: implemented and locally verified; required CI and review pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 11](../../../../roadmap.md#phase-11-menu-checkbox-items). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
