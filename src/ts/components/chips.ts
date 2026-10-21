@@ -641,7 +641,23 @@ export class Chips extends Component<ChipsOptions> {
         this._input.focus();
       }
     };
-    this.autocomplete = Autocomplete.init(this._input, this.options.autocompleteOptions);
+    // A new object, so a second Chips given the same options does not wrap this wrapper.
+    const pageOnCreate = this.options.autocompleteOptions.onCreate;
+    this.autocomplete = Autocomplete.init(this._input, {
+      ...this.options.autocompleteOptions,
+      onCreate: (text, autocomplete) => {
+        this._addTyped(text);
+        if (typeof pageOnCreate === 'function') pageOnCreate.call(autocomplete, text, autocomplete);
+      }
+    });
+  }
+
+  /** The "Add" row is a deliberate choice, so it adds a chip even in an autocompleteOnly field. */
+  private _addTyped(text: string) {
+    if (Chips.getInstance(this.el) !== this) return;
+    this.addChip({ id: text });
+    this._input.value = '';
+    this._input.focus();
   }
 
   _setupInput() {
