@@ -7497,7 +7497,7 @@ A field icon needs a side. `.prefix` is leading and `.suffix` is trailing; an ic
 
 ### Input types
 
-`email`, `password`, and the other native text-like types are styled the same way. `validate` uses HTML5 constraint validation on `change` and toggles `invalid` on the input. There is no green `valid` style.
+`email`, `password`, and the other native text-like types are styled the same way. `validate` uses HTML5 constraint validation on `change` and toggles `invalid` and `aria-invalid="true"` on the input, so a screen reader hears the error state too. It adds the field's `[data-error]` supporting text to the input's `aria-describedby`, giving it an id if it has none and keeping the ids already there, so the error the CSS shows is read with the field. There is no green `valid` style.
 
 ```html
 <div class="field">

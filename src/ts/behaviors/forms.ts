@@ -2,8 +2,11 @@ import { Utils } from '../core/utils';
 
 export class Forms {
   /**
-   * Checks if the label has validation and apply
-   * the correct class and styles
+   * Validates a `.validate` field: marks it `invalid` and `aria-invalid`
+   * when it fails its constraints or `data-length`, and clears both when it
+   * passes. An empty optional field never fails. The field is described by
+   * its `[data-error]` supporting text, so the error the CSS shows there is
+   * read with it.
    * @param textfield
    */
   static validateField(textfield: HTMLInputElement) {
@@ -11,26 +14,39 @@ export class Forms {
       console.error('No text field element found');
       return;
     }
+    if (!textfield.classList.contains('validate')) return;
+    const invalid = Forms._fails(textfield);
+    textfield.classList.toggle('invalid', invalid);
+    if (invalid) textfield.setAttribute('aria-invalid', 'true');
+    else textfield.removeAttribute('aria-invalid');
+    Forms._describeByError(textfield);
+  }
 
-    const hasLength = textfield.getAttribute('data-length') !== null;
-    const lenAttr = parseInt(textfield.getAttribute('data-length'));
-    const len = textfield.value.length;
+  /** Whether a field fails its constraints or is longer than `data-length`. */
+  private static _fails(field: HTMLInputElement) {
+    return !Forms._blankOptional(field) && (!field.validity.valid || field.value.length > parseInt(field.getAttribute('data-length')));
+  }
 
-    if (
-      len === 0 &&
-      textfield.validity.badInput === false &&
-      !textfield.required &&
-      textfield.classList.contains('validate')
-    ) {
-      textfield.classList.remove('invalid');
-    } else if (textfield.classList.contains('validate')) {
-      // Check for character counter attributes
-      if (textfield.validity.valid && (!hasLength || len <= lenAttr)) {
-        textfield.classList.remove('invalid');
-      } else {
-        textfield.classList.add('invalid');
-      }
-    }
+  /** An empty field that is not required, and holds no half-typed number or date, never fails. */
+  private static _blankOptional(field: HTMLInputElement) {
+    return field.value.length === 0 && !field.validity.badInput && !field.required;
+  }
+
+  /** Adds the field's `[data-error]` supporting text to its aria-describedby. */
+  private static _describeByError(field: HTMLInputElement) {
+    const error = field.parentElement?.querySelector(':scope > [data-error]');
+    if (error) Forms._addDescription(field, Forms._idOf(error));
+  }
+
+  private static _idOf(el: Element) {
+    if (!el.id) el.id = `field-error-${Utils.guid()}`;
+    return el.id;
+  }
+
+  /** Adds an id to a field's aria-describedby once, after the page's own. */
+  private static _addDescription(field: HTMLInputElement, id: string) {
+    const ids = (field.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean);
+    if (!ids.includes(id)) field.setAttribute('aria-describedby', [...ids, id].join(' '));
   }
 
   /**

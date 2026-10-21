@@ -113,8 +113,12 @@ const S = defineSections([
           <code>email</code>, <code>password</code>, and the other native
           text-like types are styled the same way. <code>validate</code>
           uses HTML5 constraint validation on <code>change</code> and
-          toggles <code>invalid</code> on the input. There is no green
-          <code>valid</code> style.
+          toggles <code>invalid</code> and <code>aria-invalid="true"</code> on
+          the input, so a screen reader hears the error state too. It adds the
+          field's <code>[data-error]</code> supporting text to the input's
+          <code>aria-describedby</code>, giving it an id if it has none and
+          keeping the ids already there, so the error the CSS shows is read
+          with the field. There is no green <code>valid</code> style.
         </p>
         <form class="row">
           <div class="s12 m6 field">
