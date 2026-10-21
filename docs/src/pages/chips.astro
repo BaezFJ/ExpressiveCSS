@@ -199,21 +199,24 @@ const S = defineSections([
         <p>
           In a form, give the field's <code>&lt;input&gt;</code> a <code>name</code>.
           The chips submit under it, one <code>id</code> per chip, as a multiple
-          select does. The text input gives its name up so half-typed text is not
-          submitted, and the values follow its form, <code>form</code> attribute and
-          <code>disabled</code> state at the moment the form gathers its data. A
-          <code>required</code> input makes the field valid once it has a chip, and
-          says <code>i18n.required</code> until then; the input keeps
-          <code>aria-required="true"</code>. A form reset puts back the chips the field
-          started with once no listener can cancel it: at the next microtask, or when
-          the field is next used. Check validity after an <code>await</code>, not in the
-          same task as <code>reset()</code>. A disabled input shows no validation
-          message, so if the page replaces the chips' required message while the field
-          is disabled and the chips then change, set the page's error again once the
-          field is enabled. Set a field up once it is in its form; one set up before it is
-          moved into a detached form or a shadow root is heard there once it is laid
-          out, or at once if you call <code>init</code> again. <code>destroy()</code> gives the
-          input its name and <code>required</code> back. Pasting text that lists values, split by commas,
+          select does. <code>init</code> wraps the input in an
+          <code>&lt;expressive-chips-control&gt;</code>, a form-associated custom
+          element with <code>display: contents</code>, and moves the name onto it, so
+          half-typed text is not submitted. The form treats the control as the field. A
+          disabled <code>fieldset</code> or a form reset applies to it at once, including
+          in a detached form or a shadow root, and a canceled reset changes nothing.
+          Setting <code>disabled</code>, <code>readonly</code> or <code>form</code> on
+          the input applies at the next microtask. A <code>required</code> input makes
+          the field valid once it has a chip, and says <code>i18n.required</code> until
+          then, unless the input is read-only. The control holds that validity apart
+          from any error the page sets on the input, and a blocked submit focuses the
+          input. The input itself stays valid and does not match <code>:invalid</code>, so
+          style or report the error from the control or the form. The input keeps
+          <code>aria-required="true"</code>.
+          <code>destroy()</code> unwraps the input and gives its name and
+          <code>required</code> back. Without form-associated custom elements, as in
+          jsdom, the input is left as it is and submits its own text. Pasting text that
+          lists values, split by commas,
           tabs or new lines, adds a chip for each, up to <code>limit</code>; an
           <code>autocompleteOnly</code> field pastes as text. With
           <code>allowCreate: true</code> in <code>autocompleteOptions</code>,
