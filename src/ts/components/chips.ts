@@ -163,7 +163,7 @@ export class Chips extends Component<ChipsOptions> {
   private _ariaRequired: string | null = null;
   /** The form control wrapping a named input, which the form reads instead of it. */
   private _control: ChipsControl | null = null;
-  /** Copies the input's disabled, readonly and form attributes to the control. */
+  /** Copies the input's disabled and form attributes to the control, and checks its readonly again. */
   private _mirror: MutationObserver | null = null;
   /** The named text input, whose form, disabled state and required the chips take over. */
   private _source: HTMLInputElement | null = null;
@@ -387,8 +387,13 @@ export class Chips extends Component<ChipsOptions> {
   private _validate() {
     const internals = this._control.internals;
     if (this._required && !this._source.readOnly && !this.chipsData.length) {
-      internals.setValidity({ valueMissing: true }, this.options.i18n.required, this._source);
+      internals.setValidity({ valueMissing: true }, this._requiredMessage, this._source);
     } else internals.setValidity({});
+  }
+
+  /** A validity flag needs a message, so an empty i18n.required falls back to the default. */
+  private get _requiredMessage() {
+    return this.options.i18n.required || _defaults.i18n.required;
   }
 
   private _resetChips() {

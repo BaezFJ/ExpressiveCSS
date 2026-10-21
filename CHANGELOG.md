@@ -52,15 +52,22 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   now opens above it when there is more room there. Its height was capped
   to the room below, so it shrank and scrolled instead of flipping.
 - Chips submit a form value. Give the field's `<input>` a `name` and the
-  chips submit under it, one `id` per chip, as a multiple select does. The
-  text input gives its name up so half-typed text is not submitted, and the
-  values follow its form, `form` attribute and `disabled` state when the form
-  gathers its data. A `required` input makes the field valid once it has a
+  chips submit under it, one `id` per chip, as a multiple select does.
+  `init` wraps the input in `<expressive-chips-control>`, the framework's
+  first custom element. It is form-associated, has `display: contents` and
+  takes the name, so half-typed text is not submitted. The browser handles
+  the field's reset, validity and disabled state: a reset puts back the
+  starting chips within the reset, and a disabled fieldset drops the values
+  at once. Setting `disabled`, `readonly` or `form` on the input applies at
+  the next microtask. A `required` input makes the field valid once it has a
   chip, and says the new `i18n.required` until then, with
-  `aria-required="true"` on the input. A form reset puts back the starting
-  chips at the next microtask, once it can no longer be canceled. `destroy()` gives the
-  input its name and `required` back. Pasting text that lists values, split
-  by commas, tabs or new lines, adds a chip for each, up to `limit`.
+  `aria-required="true"` on the input. That validity is on the control,
+  apart from any error the page sets on the input. A read-only input's field
+  is not required. `destroy()` unwraps the input and gives its name and
+  `required` back. Without form-associated custom elements, as in jsdom, the
+  input keeps its name and `required` and submits its text. Pasting text
+  that lists values, split by commas, tabs or new lines, adds a chip for
+  each, up to `limit`.
 - Data tables sort and select. With `data-sort` on a `.data-table`, a
   button in a header cell reorders the rows by its column and moves
   `aria-sort`. A `numeric` column compares numbers, other columns compare
@@ -768,28 +775,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- A named Chips field now submits through `<expressive-chips-control>`, the
-  framework's first custom element. `init` wraps the input in it, with
-  `display: contents`, and the browser handles the field's reset, required
-  validity and disabled state. `form.reset()` puts back the starting chips
-  and their validity within the reset, so `checkValidity()` in the same task
-  sees them. The chips' required message is no longer the input's custom
-  validity, so an error the page sets on the input keeps its own place, even
-  while the field is disabled. A read-only input's field is not required.
-  Migration: the input's parent is the control, so `.chips > input`
-  selectors and `input.parentElement` code need updating. The input's
-  `validity`, `validationMessage`, `:invalid` and `invalid` event no longer
-  report the required state; read them from the control or the form.
-  `form.elements` lists the control under the field's name. Setting
-  `disabled`, `readonly` or `form` on the input applies at the next
-  microtask instead of when the form gathers its data. In a Questionnaire
-  step, or on a `.validate` input, an empty required chips field no longer
-  counts as invalid. Without form-associated custom elements, as in jsdom,
-  the input keeps its name and `required` and submits its text.
 - A Chips field whose text `<input>` has a `name` now submits its chips
   under that name, one `id` each, instead of the text being typed. A page
   that read the draft text from the form should read `chips.getData()`, or
-  take the `name` off the input to keep the old behavior.
+  take the `name` off the input to keep the old behavior. The input now sits
+  inside `<expressive-chips-control>`, so `.chips > input` selectors and
+  `input.parentElement` code need updating. The input's `validity`,
+  `validationMessage`, `:invalid` and `invalid` event no longer report the
+  required state; read them from the control or the form. `form.elements`
+  lists the control under the field's name. In a Questionnaire step, or on
+  a `.validate` input, an empty required chips field does not count as
+  invalid.
 - Datepicker and Timepicker follow the page's language. With a `lang` on
   the input or around it, the calendar takes that language's month and
   weekday names from `Intl` and its first day of the week where the browser

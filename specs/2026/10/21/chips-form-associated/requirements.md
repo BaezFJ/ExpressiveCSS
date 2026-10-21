@@ -68,6 +68,7 @@ The roadmap's two documented limits come from the `formdata` design, and a form-
 - Questionnaire reads native controls only, so a required chips field inside a questionnaire step does not block Next.
 - `.validate` on a chips input no longer marks an empty required field invalid, because the input itself is valid.
 - When two bundle copies run on one page, the first registers the control and the second uses that class.
+- The input never fails validation itself, so assistive technology may no longer announce it as invalid after a blocked submit. Not verified with a screen reader.
 
 ## Exclusions
 

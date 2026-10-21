@@ -93,8 +93,12 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       const cancel = (e) => e.preventDefault();
       document.addEventListener('reset', cancel);
       form.reset();
-      document.removeEventListener('reset', cancel);
       seen.canceled = ids();
+      chips.deleteChip(1);
+      chips.deleteChip(0);
+      form.reset();
+      document.removeEventListener('reset', cancel);
+      seen.canceledEmpty = [ids(), form.checkValidity()];
       chips.destroy();
 
       const fruit = Expressive.Chips.init(document.getElementById('apple'), { allowUserInput: true, autocompleteOptions: { data: [{ id: 'apple', text: 'Apple' }] } });
@@ -118,6 +122,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       after: [true, ['red'], ['red']],
       added: ['red', 'new'],
       canceled: ['red', 'new'],
+      canceledEmpty: [[], false],
       fromValue: [['apple'], ['apple'], ['apple']],
       detached: [false, true, ['red']],
     });
@@ -143,7 +148,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
   });
 
   browserTest(`${engine}: a required field needs a chip, and its validity is apart from the input's`, async () => {
-    const result = await inPage('<form id="a"><div class="chips" id="field"><input name="tags" required></div></form>', async () => {
+    const result = await inPage('<form id="a"><div class="chips" id="field"><input name="tags" required></div></form><form><div class="chips" id="quiet"><input name="quiet" required></div></form>', async () => {
       const tick = () => Promise.resolve();
       const form = document.getElementById('a');
       let submitted = 0;
@@ -160,10 +165,11 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       chips.addChip({ id: 'red' });
       seen.withChip = form.checkValidity();
 
+      // The chips' own message first, then a page error over it while disabled.
+      chips.deleteChip(0);
       input.disabled = true;
       await tick();
       input.setCustomValidity('Rejected tag');
-      chips.deleteChip(0);
       chips.addChip({ id: 'blue' });
       input.disabled = false;
       await tick();
@@ -179,6 +185,10 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await tick();
       seen.editable = form.checkValidity();
 
+      const quiet = Expressive.Chips.init(document.getElementById('quiet'), { allowUserInput: true, i18n: { required: '' } });
+      seen.emptyMessage = quiet._input.parentElement.validationMessage;
+      quiet.destroy();
+
       input.setCustomValidity('Rejected tag');
       chips.destroy();
       seen.destroyed = [input.required, input.getAttribute('name'), input.hasAttribute('aria-required'), input.validationMessage, input.parentElement.id];
@@ -192,6 +202,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       cleared: [true, 'Add at least one item.'],
       readOnly: true,
       editable: false,
+      emptyMessage: 'Add at least one item.',
       destroyed: [true, 'tags', false, 'Rejected tag', 'field'],
     });
   });
@@ -237,17 +248,22 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         const chips = Expressive.Chips.init(el, { allowUserInput: true, data: [{ id: 'red' }] });
         form.append(el);
         const mounted = tags();
+        chips.addChip({ id: 'blue' });
+        form.reset();
+        mounted.push(chips.getData().map((chip) => chip.id));
         el.remove();
         chips.destroy();
         form.append(el);
         return [mounted, tags()];
       });
-      assert.deepEqual(result, [['red'], ['']], 'after destroy only the input, its name given back, submits');
+      assert.deepEqual(result, [['red', ['red']], ['']], 'after destroy only the input, its name given back, submits');
 
       const detached = await page.evaluate(() => {
         const form = Object.assign(document.createElement('form'), { innerHTML: '<div class="chips"><input name="tags"></div>' });
         const chips = Expressive.Chips.init(form.querySelector('.chips'), { allowUserInput: true, data: [{ id: 'red' }] });
         const tags = () => new FormData(form).getAll('tags');
+        chips.addChip({ id: 'blue' });
+        form.reset();
         const seen = [tags()];
         document.body.append(form);
         seen.push(tags());
