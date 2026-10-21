@@ -300,4 +300,55 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: a narrow line chart keeps every nth label whole, and all of them once it widens`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const weeks = months.map((_, i) => `Week ${i + 1}`);
+      await page.setContent(`<style>${css}</style>
+        <div id="box" style="width: 240px">
+          ${chart('class="line-chart" id="year"', 'Year', '<th>Value</th>', months.map((month, i) => [month, String(i)]))}
+          ${chart('class="line-chart" id="weeks"', 'Weeks', '<th>Value</th>', weeks.map((week, i) => [week, String(i)]))}
+        </div>
+        <script>${js}</script>`);
+      await page.evaluate(() => Expressive.AutoInit());
+      const read = (id) => page.locator(`#${id} .line-chart-labels`).evaluate(async (ol) => {
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        const kept = [...ol.children].filter((li) => getComputedStyle(li).visibility === 'visible');
+        const boxes = kept.map((li) => li.firstChild.getBoundingClientRect());
+        const edges = ol.getBoundingClientRect();
+        return {
+          kept: kept.map((li) => li.textContent),
+          overlap: boxes.some((box, i) => i > 0 && box.left < boxes[i - 1].right),
+          outside: boxes.some((box) => box.left < edges.left - 0.5 || box.right > edges.right + 0.5),
+          cut: kept.some((li) => getComputedStyle(li).overflow === 'hidden' && li.scrollWidth > li.clientWidth),
+        };
+      });
+
+      const narrow = await read('year');
+      assert.ok(narrow.kept.length < months.length, `some labels make way: ${narrow.kept}`);
+      assert.equal(narrow.kept[0], 'Jan', 'the first row keeps its label');
+
+      // Every width from too narrow to wide enough, across each step change:
+      // the end labels sit against the edges, so the pair beside them is
+      // where a collision would show first.
+      for (let width = 160; width <= 820; width += 6) {
+        await page.locator('#box').evaluate((box, px) => { box.style.width = `${px}px`; }, width);
+        for (const id of ['year', 'weeks']) {
+          const labels = await read(id);
+          if (labels.kept.length === 12 && labels.cut) continue; // too narrow for any step: all cut, as before
+          assert.equal(labels.overlap, false, `${id} at ${width}px: kept labels do not touch (${labels.kept})`);
+          assert.equal(labels.outside, false, `${id} at ${width}px: kept labels stay inside the chart`);
+          assert.equal(labels.cut, false, `${id} at ${width}px: no kept label is cut to an ellipsis`);
+        }
+      }
+
+      await page.locator('#box').evaluate((box) => { box.style.width = '900px'; });
+      assert.deepEqual((await read('year')).kept, months, 'a wide chart shows every label again');
+    } finally {
+      await browser.close();
+    }
+  });
 }

@@ -98,6 +98,18 @@
     });
   }
 
+  // A sample wider than its block scrolls sideways. Chromium and Firefox put
+  // such a scroller in the Tab order on their own; WebKit does not, so the
+  // keyboard could never reach the hidden part. Only overflowing blocks get
+  // the stop, and a resize re-checks it.
+  const syncScrollStop = (pre) => {
+    if (pre.scrollWidth > pre.clientWidth) pre.tabIndex = 0;
+    else pre.removeAttribute('tabindex');
+  };
+  const scrollStops = window.ResizeObserver
+    ? new ResizeObserver((entries) => entries.forEach((entry) => syncScrollStop(entry.target)))
+    : null;
+
   document.querySelectorAll('pre > code').forEach((code) => {
     const pre = code.parentElement;
     if (!pre || pre.parentElement?.classList.contains('code-block')) return;
@@ -116,5 +128,7 @@
 
     pre.before(wrapper);
     wrapper.append(languageLabel, makeCopyButton(source), pre);
+    syncScrollStop(pre);
+    scrollStops?.observe(pre);
   });
 })();

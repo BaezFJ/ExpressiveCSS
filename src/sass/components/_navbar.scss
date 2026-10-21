@@ -87,6 +87,22 @@ header:has(> #{$_bar}) {
     margin: 0;
   }
 
+  // Destinations that do not fit beside the title move to a row of their
+  // own, rather than squeezing the title down to its first letter. On one
+  // row both stretch to the bar and the title stays centred, so the sizes
+  // below only show once the row wraps.
+  > #{$_bar}:has(> :is(menu, ul)) {
+    flex-wrap: wrap;
+
+    > #{$_title} {
+      padding-block: 8px;
+    }
+
+    > :is(menu, ul) {
+      min-height: rem(48px);
+    }
+  }
+
   > #{$_bar} > #{$_title} {
     flex: 1 1 auto;
     min-width: 0;

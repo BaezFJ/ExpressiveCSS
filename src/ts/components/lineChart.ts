@@ -22,6 +22,55 @@ const _defaults: LineChartOptions = {
 const SVG = 'http://www.w3.org/2000/svg';
 export const COLORS = 4;
 
+/** The least space between two row labels. */
+const LABEL_GAP = 4;
+
+/**
+ * Where a kept row label starts, as the CSS places it: the first and last
+ * against the chart's edges, the rest centred on their columns.
+ */
+function labelStart(index: number, count: number, column: number, width: number) {
+  if (index === 0) return 0;
+  if (index === count - 1) return count * column - width;
+  return (index + 0.5) * column - width / 2;
+}
+
+/** Whether keeping every stepth row label leaves them apart and inside the chart. */
+function labelsFit(widths: number[], column: number, step: number) {
+  let end = -LABEL_GAP;
+  for (let index = 0; index < widths.length; index += step) {
+    const start = labelStart(index, widths.length, column, widths[index]);
+    if (start < end + LABEL_GAP || start + widths[index] > widths.length * column) return false;
+    end = start + widths[index];
+  }
+  return true;
+}
+
+/**
+ * How many columns apart the kept row labels are: 1 when every label fits
+ * its column, else the fewest that keeps them apart. When none does, 1
+ * again, and every label is cut to an ellipsis as before.
+ */
+function labelStep(widths: number[], column: number) {
+  if (widths.every((width) => width + LABEL_GAP <= column)) return 1;
+  for (let step = 2; step <= widths.length; step++) {
+    if (labelsFit(widths, column, step)) return step;
+  }
+  return 1;
+}
+
+/**
+ * Keeps every nth row label when they are wider than their columns, so a
+ * narrow chart shows whole labels rather than cutting each to an ellipsis.
+ */
+function thinLabels(labels: HTMLElement) {
+  const items = Array.from(labels.children);
+  const widths = items.map((li) => li.firstElementChild.getBoundingClientRect().width);
+  const step = labelStep(widths, labels.clientWidth / items.length);
+  labels.toggleAttribute('data-thinned', step > 1);
+  items.forEach((li, index) => li.toggleAttribute('data-skip', index % step > 0));
+}
+
 /** An SVG element with its attributes. */
 export function svgNode(name: string, attributes: Record<string, string> = {}): SVGElement {
   const element = document.createElementNS(SVG, name);
@@ -192,6 +241,8 @@ export class LineChart extends Component<LineChartOptions> {
   /** The highlighted row, or -1. */
   activeIndex = -1;
   private _generated: Element[] = [];
+  /** Watches the row labels' width, to thin them on a narrow chart. */
+  private _labelSizes: ResizeObserver | null = null;
   /** Every series in the table, shown or not, as the legend lists them. */
   protected _all: Series[] = [];
   /** The columns of the series a .toggle legend hid, kept through update(). */
@@ -315,6 +366,7 @@ export class LineChart extends Component<LineChartOptions> {
     // The listeners live on the plot, which goes with the generated nodes.
     this._generated.forEach((node) => node.remove());
     this._generated = [];
+    this._labelSizes?.disconnect();
     this.el[this._key] = undefined;
   }
 
@@ -570,10 +622,21 @@ export class LineChart extends Component<LineChartOptions> {
     // A loop rather than a spread: a spread of every row overflows the stack.
     for (const text of this.labels) {
       const li = document.createElement('li');
-      li.textContent = text;
+      // The span is the text's own width, which thinLabels() measures.
+      li.append(document.createElement('span'));
+      li.firstChild.textContent = text;
       labels.append(li);
     }
+    this._observeLabels(labels);
     return [labels, ...this._legend()];
+  }
+
+  /** Thins the row labels whenever their width changes; a bar chart's run down instead. */
+  private _observeLabels(labels: HTMLElement) {
+    this._labelSizes?.disconnect();
+    if (this._horizontal || typeof ResizeObserver === 'undefined') return;
+    this._labelSizes = new ResizeObserver(() => thinLabels(labels));
+    this._labelSizes.observe(labels);
   }
 
   /**
