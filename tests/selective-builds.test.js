@@ -202,7 +202,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed menu group rows reached by arrow keys and type-ahead: 89,252 gzip bytes (+30).
   // Reviewed menu radio items that check within their group, and Space keeping the menu open: 89,369 gzip bytes (+117).
   // Reviewed Autocomplete searchDelay, which waits for typing to pause before onSearch: 89,470 gzip bytes (+101).
-  assert.ok(sizes(js).gzip <= 89470, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Chips form values, reset and required through a form-associated custom element: 89,457 gzip bytes (-13).
+  assert.ok(sizes(js).gzip <= 89457, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

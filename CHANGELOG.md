@@ -768,6 +768,24 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- A named Chips field now submits through `<expressive-chips-control>`, the
+  framework's first custom element. `init` wraps the input in it, with
+  `display: contents`, and the browser handles the field's reset, required
+  validity and disabled state. `form.reset()` puts back the starting chips
+  and their validity within the reset, so `checkValidity()` in the same task
+  sees them. The chips' required message is no longer the input's custom
+  validity, so an error the page sets on the input keeps its own place, even
+  while the field is disabled. A read-only input's field is not required.
+  Migration: the input's parent is the control, so `.chips > input`
+  selectors and `input.parentElement` code need updating. The input's
+  `validity`, `validationMessage`, `:invalid` and `invalid` event no longer
+  report the required state; read them from the control or the form.
+  `form.elements` lists the control under the field's name. Setting
+  `disabled`, `readonly` or `form` on the input applies at the next
+  microtask instead of when the form gathers its data. In a Questionnaire
+  step, or on a `.validate` input, an empty required chips field no longer
+  counts as invalid. Without form-associated custom elements, as in jsdom,
+  the input keeps its name and `required` and submits its text.
 - A Chips field whose text `<input>` has a `name` now submits its chips
   under that name, one `id` each, instead of the text being typed. A page
   that read the draft text from the form should read `chips.getData()`, or
