@@ -44,6 +44,10 @@ Left as is: a fractional or out-of-range part such as `14:30:45.5` or `:99` pass
 
 After the fixes, `tests/timepicker-seconds.test.js` (12) and `tests/timepicker-seconds-browser.test.js` (6, three engines, none skipped) passed again, and `npm run build:skill` and `npm run check:generated` were clean. The fallow hook then flagged the V1 test body at cyclomatic 9, so its steps moved into three helpers; the browser file passed again in all three engines and the audit verdict was `pass`.
 
+## Code review
+
+`code-review-and-quality` on `git diff origin/master...HEAD`, 2026-10-21. Mutation checks on the conditions the change adds: letting seconds move the hand failed V4, and formatting a missing seconds field on Enter failed three tests. Letting a seconds edit cancel a pending hand move stayed green, so `tests/timepicker-seconds.test.js` gained "editing seconds leaves a pending hand move to finish", which fails under that mutation and passes on the change (13 tests). The `STEPS` comment now covers all three fields. No security or performance findings: the parser reads the author's value and default only, and the new lookups run once per key.
+
 ## Manual checks
 
 - Look at screenshots of the 12-hour inline picker with seconds at 360px and 1280px. Digits are whole, the dividers line up, and the AM/PM buttons are not squeezed. The agent takes and reads the screenshots. Done 2026-10-21 in Chromium: the first shots showed the colons at the old 4rem size, sitting high. The seconds layout now centers them at the digits' size, and the second shots show whole digits and AM/PM buttons at full size. The focused hour field's digits sit slightly lower than the others, as they do without seconds.

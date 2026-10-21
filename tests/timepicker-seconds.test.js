@@ -115,6 +115,27 @@ describe('Timepicker seconds field', () => {
   });
 });
 
+test('editing seconds leaves a pending hand move to finish', (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  document.body.innerHTML = '<input value="09:30:00">';
+  const picker = Expressive.Timepicker.init(document.querySelector('input'), { showSeconds: true, twelveHour: false, duration: 100, vibrate: false });
+  try {
+    picker.inputMinutes.focus();
+    picker.showView('minutes', 50);
+    type(picker.inputSeconds, '45');
+    for (const k of ['ArrowUp', 'PageDown']) key(picker.inputSeconds, k);
+    assert.equal(picker._canvas.classList.contains('timepicker-canvas-out'), true, 'the hand move is still pending');
+    t.mock.timers.tick(100);
+    assert.equal(picker._canvas.classList.contains('timepicker-canvas-out'), false);
+    // The hand points at 30 minutes, straight down.
+    assert.equal(Math.round(Number(picker.bg.getAttribute('cy'))), picker.options.outerRadius);
+    assert.equal(picker.seconds, 41);
+  } finally {
+    picker.destroy();
+    t.mock.timers.reset();
+  }
+});
+
 describe('Timepicker seconds value', () => {
   beforeEach(resetBody);
 

@@ -8,7 +8,7 @@ export type Views = 'hours' | 'minutes';
 const UNITS = ['hours', 'minutes', 'seconds'] as const;
 type Unit = (typeof UNITS)[number];
 
-/** How far each key moves the hour or minute field, wrapping round the dial. */
+/** How far each key moves a field, wrapping round. */
 const STEPS: Record<string, number> = { ArrowUp: 1, ArrowDown: -1, PageUp: 5, PageDown: -5 };
 
 /** A 12-hour time's hour of the day, 0 to 23. */
