@@ -613,6 +613,23 @@ $_chart-toggle-written: false;
   }
 }
 
+// The columns' or bars' growth, inside their container: from the zero
+// line, or after update() from where each span was, which ColumnChart
+// writes as --from-top and --from-bottom. !important lets these starting
+// values beat the inline --top and --bottom.
+@mixin chart-column-motion {
+  @media (prefers-reduced-motion: no-preference) {
+    > div > span {
+      transition: clip-path var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard);
+
+      @starting-style {
+        --top: var(--from-top, var(--zero, 100%)) !important;
+        --bottom: var(--from-bottom, calc(100% - var(--zero, 100%))) !important;
+      }
+    }
+  }
+}
+
 // The value labels LineChart draws for .axis: an .#{$name}-axis list in the
 // plot, behind the marks, with each label's distance down the plot in --at.
 // A label sits beside the plot with a grid line across it at its value; a

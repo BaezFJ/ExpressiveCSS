@@ -22,6 +22,9 @@ const html = `<style>${css}</style>
     ${chart('class="line-chart toggle" id="toggle"', '<th>Sales</th><th>Costs</th>', [['Jan', '20', '50'], ['Feb', '20', '50']])}
     ${chart('class="line-chart stacked" id="stacked"', '<th>Sales</th>', [['Jan', '20'], ['Feb', '20']])}
     ${chart('class="line-chart points" id="gap"', '<th>Sales</th>', [['Jan', '10'], ['Feb', ''], ['Mar', '30']])}
+    ${chart('class="column-chart" id="column"', '<th>Sales</th>', [['Jan', '20']])}
+    ${chart('class="bar-chart" id="bar"', '<th>Sales</th>', [['Jan', '20']])}
+    ${chart('class="mixed-chart" id="mixed"', '<th class="column">Sales</th><th>Margin</th>', [['Jan', '20', '20'], ['Feb', '20', '20']])}
   </div>
   <script>${js}</script>`;
 
@@ -35,6 +38,26 @@ async function open(browser, reducedMotion = 'no-preference') {
   await page.evaluate(() => Expressive.AutoInit());
   return page;
 }
+
+/**
+ * Sets a column or bar chart's first cell to 80, updates it, and reads each
+ * span's clip-path insets with its transition paused at each time, in ms.
+ */
+const sampleColumns = async (el, times) => {
+  el.querySelector('tbody td').textContent = '80';
+  Expressive.ColumnChart.getInstance(el)?.update();
+  Expressive.BarChart.getInstance(el)?.update();
+  const span = el.querySelector(':is(.column-chart-columns, .bar-chart-bars) span');
+  const motion = el.getAnimations({ subtree: true });
+  const insets = () => getComputedStyle(span).clipPath.match(/-?[\d.]+(?=%|px)/g).slice(0, 4).map(Number);
+  return {
+    animations: motion.length,
+    samples: times.map((time) => {
+      motion.forEach((animation) => { animation.pause(); animation.currentTime = time; });
+      return insets();
+    }),
+  };
+};
 
 for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
@@ -133,6 +156,68 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       assert.deepEqual(ys(gap.from), [90, 100, 70], 'a value that fills a gap rises from the plot bottom');
       assert.deepEqual(ys(gap.after), [90, 80], 'a removed row goes at once');
       assert.equal(gap.afterFrom, null, 'the rows left take their new places at once');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: update moves columns and bars from their old values`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await open(browser);
+      const column = await page.locator('#column').evaluate(sampleColumns, [0, 200]);
+      assert.equal(column.animations, 1);
+      const [[startTop], [middleTop]] = column.samples;
+      assert.equal(startTop, 80, 'the column starts at its old top');
+      assert.ok(middleTop > 20 && middleTop < 80, `mid-transition the column top is between, at ${middleTop}`);
+
+      const bar = await page.locator('#bar').evaluate(sampleColumns, [0, 200]);
+      assert.equal(bar.animations, 1);
+      const [[, startRight], [, middleRight]] = bar.samples;
+      assert.equal(startRight, 80, 'the bar starts at its old end');
+      assert.ok(middleRight > 20 && middleRight < 80, `mid-transition the bar end is between, at ${middleRight}`);
+
+      const added = await page.locator('#column').evaluate((el) => {
+        el.querySelector('tbody').insertAdjacentHTML('beforeend', '<tr><th>Feb</th><td>50</td></tr>');
+        Expressive.ColumnChart.getInstance(el).update();
+        const span = el.querySelectorAll('.column-chart-columns span')[1];
+        return [span.style.getPropertyValue('--from-top'), span.style.getPropertyValue('--from-bottom')];
+      });
+      assert.deepEqual(added, ['100%', '0%'], 'a new row\'s column starts collapsed at the zero line');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: a mixed chart moves its columns and lines together`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await open(browser);
+      const result = await page.locator('#mixed').evaluate((el) => {
+        el.querySelectorAll('tbody td').forEach((td) => { td.textContent = '80'; });
+        Expressive.MixedChart.getInstance(el).update();
+        const span = el.querySelector('.mixed-chart-columns span');
+        const animate = el.querySelector('.mixed-chart-line animate');
+        return {
+          column: [span.style.getPropertyValue('--from-top'), span.getAnimations().length],
+          line: [animate.getAttribute('from'), animate.getAttribute('to')],
+        };
+      });
+      assert.deepEqual(result.column, ['80%', 1], 'the column moves from its old top');
+      assert.deepEqual([...new Set(ys(result.line[0]))], [80], 'the line moves from its old values');
+      assert.deepEqual([...new Set(ys(result.line[1]))], [20]);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: with reduced motion update draws the new columns at once`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await open(browser, 'reduce');
+      const column = await page.locator('#column').evaluate(sampleColumns, []);
+      const top = await page.locator('#column .column-chart-columns span').evaluate((span) => parseFloat(getComputedStyle(span).clipPath.slice(6)));
+      assert.deepEqual([column.animations, top], [0, 20]);
     } finally {
       await browser.close();
     }

@@ -87,15 +87,7 @@
     }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    > div > span {
-      transition: clip-path var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard);
-
-      @starting-style {
-        clip-path: inset(var(--zero, 100%) 0 calc(100% - var(--zero, 100%)) round var(--mixed-chart-ends));
-      }
-    }
-  }
+  @include chart-column-motion;
 }
 
 // Stacked columns share one column per row, and the end scale's another
