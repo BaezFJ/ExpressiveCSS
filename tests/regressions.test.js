@@ -1242,6 +1242,177 @@ describe('Autocomplete search cancellation', () => {
   });
 });
 
+describe('Autocomplete searchDelay', () => {
+  beforeEach(() => resetBody());
+
+  /** An autocomplete whose onSearch records each text and signal. */
+  const setup = (options = {}, id = 'ac') => {
+    document.body.insertAdjacentHTML('beforeend', `<div class="field"><input class="autocomplete" type="text" id="${id}"></div>`);
+    const el = document.getElementById(id);
+    const calls = [];
+    const instance = Expressive.Autocomplete.init(el, {
+      searchDelay: 300,
+      menuOptions: { inDuration: 0, outDuration: 0 },
+      onSearch: (text, ac, signal) => calls.push({ text, signal }),
+      ...options
+    });
+    const type = (value) => { el.value = value; fire(el, 'input'); };
+    return { el, calls, instance, type };
+  };
+  const timers = (t) => t.mock.timers.enable({ apis: ['setTimeout'] });
+
+  test('waits for typing to pause and searches once with the full text', (t) => {
+    timers(t);
+    const { el, calls, instance, type } = setup();
+    try {
+      el.focus();
+      for (const value of ['a', 'ap', 'app', 'appl', 'apple']) {
+        type(value);
+        t.mock.timers.tick(50);
+      }
+      t.mock.timers.tick(249);
+      assert.equal(calls.length, 0, 'searched before the delay passed');
+      t.mock.timers.tick(1);
+      assert.deepEqual(calls.map((c) => [c.text, c.signal.aborted]), [['apple', false]]);
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('a pause gives a second search and aborts the first one when the text changes', (t) => {
+    timers(t);
+    const { el, calls, instance, type } = setup();
+    try {
+      el.focus();
+      type('apple');
+      t.mock.timers.tick(300);
+      type('apple p');
+      assert.equal(calls[0].signal.aborted, true, 'the first signal outlived the text it searched');
+      type('apple pi');
+      t.mock.timers.tick(300);
+      assert.deepEqual(calls.map((c) => [c.text, c.signal.aborted]), [['apple', true], ['apple pi', false]]);
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('shows the loading status before the delayed search runs', (t) => {
+    timers(t);
+    const { el, calls, instance, type } = setup();
+    try {
+      el.focus();
+      type('a');
+      assert.equal(calls.length, 0);
+      assert.ok(el.parentElement.querySelector('.status-info svg'), 'no loading indicator');
+      assert.equal(el.parentElement.querySelector('.autocomplete-status').textContent, 'Loading results.');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('focus searches at once and drops the pending search', (t) => {
+    timers(t);
+    const { el, calls, instance, type } = setup();
+    try {
+      el.focus();
+      type('ap');
+      el.blur();
+      el.value = 'apple';
+      el.focus();
+      assert.deepEqual(calls.map((c) => c.text), ['apple'], 'focus did not search at once');
+      t.mock.timers.tick(300);
+      assert.deepEqual(calls.map((c) => c.text), ['apple'], 'the pending search still ran');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('blur and destroy cancel the pending search', (t) => {
+    timers(t);
+    const blurred = setup({}, 'ac-blur');
+    const destroyed = setup({}, 'ac-destroy');
+    try {
+      blurred.el.focus();
+      blurred.type('a');
+      blurred.el.blur();
+      destroyed.el.focus();
+      destroyed.type('a');
+      t.mock.timers.tick(300);
+      destroyed.type('ab');
+      destroyed.instance.destroy();
+      t.mock.timers.tick(300);
+      assert.equal(blurred.calls.length, 0, 'searched after blur');
+      assert.deepEqual(destroyed.calls.map((c) => [c.text, c.signal.aborted]), [['a', true]], 'searched after destroy');
+    } finally {
+      blurred.instance.destroy();
+      if (Expressive.Autocomplete.getInstance(destroyed.el)) destroyed.instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('Escape lets the pending search run without opening the list', (t) => {
+    timers(t);
+    const item = { id: 'apple', text: 'Apple' };
+    const { el, calls, instance, type } = setup({
+      onSearch: (text, ac, signal) => { calls.push({ text, signal }); ac.setMenuItems([item]); }
+    });
+    try {
+      el.focus();
+      type('a');
+      el.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+      t.mock.timers.tick(300);
+      assert.deepEqual(calls.map((c) => c.text), ['a']);
+      assert.deepEqual(instance.menuItems, [item]);
+      assert.equal(instance.menu.isOpen, false, 'late results opened a dismissed list');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('choosing a result drops the pending search, so the list stays closed', (t) => {
+    timers(t);
+    const item = { id: 'apple', text: 'Apple' };
+    const { el, calls, instance, type } = setup({
+      onSearch: (text, ac, signal) => { calls.push({ text, signal }); ac.setMenuItems([item]); }
+    });
+    try {
+      el.focus();
+      type('a');
+      t.mock.timers.tick(300);
+      type('ap');
+      instance.selectOption('apple');
+      t.mock.timers.tick(300);
+      assert.deepEqual(calls.map((c) => c.text), ['a'], 'the pending search ran on the chosen label');
+      assert.equal(el.value, 'Apple');
+      assert.equal(instance.menu.isOpen, false, 'the pending search reopened the list');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  for (const searchDelay of [undefined, 0, -1, NaN]) {
+    test(`searchDelay ${searchDelay} searches on every input, synchronously`, (t) => {
+      timers(t);
+      const { el, calls, instance, type } = setup({ searchDelay });
+      try {
+        el.focus();
+        type('a');
+        type('ap');
+        assert.deepEqual(calls.map((c) => [c.text, c.signal.aborted]), [['a', true], ['ap', false]]);
+      } finally {
+        instance.destroy();
+        t.mock.timers.reset();
+      }
+    });
+  }
+});
+
 describe('Autocomplete with delayed results', () => {
   for (const isMultiSelect of [false, true]) {
     test(`a new query clears the active result before its results arrive (isMultiSelect: ${isMultiSelect})`, async () => {
