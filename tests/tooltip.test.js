@@ -127,3 +127,152 @@ test('Tooltip removes only its generated description and class', () => {
   assert.equal(content.parentNode, document.body);
   assert.equal(content.className, 'tooltip-content later-class');
 });
+
+// One tooltip closing lets the next show without its enterDelay, as along a
+// toolbar. The window is module state, so each case starts its mocked clock
+// an hour after the last: no case, and no real-clock test, falls inside a
+// window another case opened.
+let sharedClock = Date.now();
+function sharedDelayCase(name, exitDelay, body) {
+  test(`Tooltip shared delay: ${name}`, t => {
+    document.body.innerHTML = '<button id="a" data-tooltip="A">A</button><button id="b" data-tooltip="B">B</button>';
+    const [a, b] = ['a', 'b'].map(id => Expressive.Tooltip.init(document.getElementById(id), {
+      enterDelay: 500, exitDelay, inDuration: 0, outDuration: 0
+    }));
+    sharedClock += 3_600_000;
+    t.mock.timers.enable({ apis: ['setTimeout', 'Date'], now: sharedClock });
+    const tick = ms => t.mock.timers.tick(ms);
+    const hover = instance => instance.el.dispatchEvent(new window.MouseEvent('mouseenter'));
+    const leave = instance => instance.el.dispatchEvent(new window.MouseEvent('mouseleave'));
+    const shown = instance => instance.tooltipEl.style.visibility === 'visible';
+    const setClockBack = ms => t.mock.timers.setTime(Date.now() - ms);
+    try {
+      body({ a, b, tick, hover, leave, shown, setClockBack });
+    } finally {
+      for (const instance of [a, b]) if (Expressive.Tooltip.getInstance(instance.el)) instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+}
+
+sharedDelayCase('a tooltip opened just after another hid shows at once', 0, ({ a, b, tick, hover, leave, shown }) => {
+  hover(a);
+  tick(500);
+  assert.ok(shown(a));
+  leave(a);
+  tick(0);
+  tick(1);
+  tick(200);
+  hover(b);
+  tick(0);
+  assert.ok(shown(b), 'B skips its enterDelay');
+});
+
+sharedDelayCase('a tooltip opened while another is closing shows at once', 200, ({ a, b, tick, hover, leave, shown }) => {
+  hover(a);
+  tick(500);
+  leave(a);
+  hover(b);
+  tick(0);
+  assert.ok(shown(a), 'A is still in its exit delay');
+  assert.ok(shown(b), 'B skips its enterDelay');
+});
+
+sharedDelayCase('the window follows the closing tooltip\'s exitDelay, then 300 ms more', 200, ({ a, b, tick, hover, leave, shown }) => {
+  hover(a);
+  tick(500);
+  leave(a);
+  tick(450);
+  hover(b);
+  tick(0);
+  assert.ok(shown(b), 'inside exitDelay + 300 ms B skips its delay');
+  leave(b);
+  tick(560);
+  hover(a);
+  tick(0);
+  assert.ok(!shown(a), 'past exitDelay + 300 ms A waits');
+  tick(500);
+  assert.ok(shown(a));
+});
+
+sharedDelayCase('a shorter exitDelay closing later does not cut the window short', 0, ({ a, b, tick, hover, leave, shown }) => {
+  a.options.exitDelay = 2000;
+  hover(a);
+  tick(500);
+  leave(a);
+  hover(b);
+  tick(0);
+  leave(b);
+  tick(0);
+  tick(1);
+  tick(0);
+  assert.ok(!shown(b), 'B hid');
+  tick(499);
+  hover(b);
+  tick(0);
+  assert.ok(shown(a), 'A is still in its exit delay');
+  assert.ok(shown(b), 'B skips its delay while A is closing');
+});
+
+sharedDelayCase('after the window, or beside a tooltip that stays open, the delay applies', 0, ({ a, b, tick, hover, leave, shown }) => {
+  hover(a);
+  tick(500);
+  leave(a);
+  tick(0);
+  tick(1);
+  tick(400);
+  hover(b);
+  tick(0);
+  assert.ok(!shown(b), 'past the window B waits');
+  tick(499);
+  assert.ok(!shown(b));
+  tick(1);
+  assert.ok(shown(b));
+  leave(b);
+  tick(1000);
+  a.open();
+  tick(500);
+  assert.ok(shown(a));
+  hover(b);
+  tick(0);
+  assert.ok(!shown(b), 'an open tooltip that is not closing does not shorten the delay');
+  tick(500);
+  assert.ok(shown(b));
+});
+
+sharedDelayCase('a tooltip closed before it showed opens no window', 0, ({ a, b, tick, hover, leave, shown }) => {
+  hover(a);
+  tick(100);
+  leave(a);
+  hover(b);
+  tick(0);
+  assert.ok(!shown(b));
+  tick(500);
+  assert.ok(shown(b));
+});
+
+sharedDelayCase('destroying a showing tooltip opens no window', 0, ({ a, b, tick, hover, shown }) => {
+  hover(a);
+  tick(500);
+  assert.ok(shown(a));
+  a.destroy();
+  hover(b);
+  tick(0);
+  assert.ok(!shown(b));
+  tick(500);
+  assert.ok(shown(b));
+});
+
+sharedDelayCase('a clock set back before the window opened is outside it', 0, ({ a, b, tick, hover, leave, shown, setClockBack }) => {
+  hover(a);
+  tick(500);
+  leave(a);
+  tick(0);
+  tick(1);
+  setClockBack(3_600_000);
+  hover(b);
+  tick(0);
+  assert.ok(!shown(b));
+  tick(500);
+  assert.ok(shown(b));
+});
