@@ -410,9 +410,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
-- Timepicker reads AM or PM that follows seconds, so `02:30:45 PM` opens
-  at 2:30 PM. The period was looked for only after the minutes, so such a
-  value opened as AM.
+- Timepicker reads AM or PM wherever it appears in a value, so
+  `02:30:45 PM` opens at 2:30 PM. The period was looked for only after the
+  first colon, so such a value, or one like `2 PM`, opened as AM.
 - With a query typed, the first Escape in the command palette clears it and
   the next closes the palette, in every engine. Chromium and Firefox already
   did this for a search input; WebKit closed at once, and so did every

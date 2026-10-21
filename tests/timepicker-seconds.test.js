@@ -102,8 +102,11 @@ describe('Timepicker seconds field', () => {
       type(seconds, '');
       leave(seconds);
       assert.equal(seconds.value, '12');
+      type(seconds, '30');
+      leave(seconds);
       type(seconds, '');
       key(seconds, 'Enter');
+      assert.equal(seconds.value, '12', 'Enter formats the emptied field first');
       assert.equal(picker.el.value, '14:30:12');
     } finally {
       picker.destroy();

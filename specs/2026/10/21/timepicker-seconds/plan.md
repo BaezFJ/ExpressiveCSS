@@ -11,7 +11,7 @@ Outcome: `showSeconds` adds a seconds spin button that steps, accepts typed valu
 Prerequisites: none.
 
 - [x] Add jsdom cases for the field's presence, attributes, name, tab order and absence without the option (V3), stepping and wrapping that leaves the rest alone (V4), and typed, invalid and emptied values (V5). Build and confirm they fail because there is no seconds field.
-- [x] In `src/ts/components/timepicker.ts`, add `showSeconds`, `i18n.seconds` and the `seconds` property. Add the seconds divider and field to the template, and remove them in `_insertHTMLIntoDOM()` when the option is off.
+- [x] In `src/ts/components/timepicker.ts`, add `showSeconds`, `i18n.seconds` and the `seconds` property. Add the seconds divider and field to the template, and remove them in `_setupVariables()` when the option is off.
 - [x] Turn the hours-or-minutes branches in `_setupVariables()`, `_range()`, `_step()` and `_inputFromTextField()` into one per-field lookup, so seconds take the same path. Only hours and minutes move the hand.
 - [x] Add `formatSeconds()` with the focus out listener, and call it from Enter.
 - [x] Build and run the new cases plus `tests/regressions.test.js`, `tests/keyboard-focus.test.js` and `tests/hot-paths.test.js`.
@@ -73,9 +73,9 @@ Outcome: the phase is verified as a whole.
 
 Prerequisites: groups 1 to 4.
 
-- [ ] Run `npm run verify` once. Rerun any browser failure in untouched code alone before debugging it.
-- [ ] Run `npm ci --prefix mcp/expressivecss`, then `npm test --prefix mcp/expressivecss`.
-- [ ] Record results in [validation.md](validation.md) and have an independent reviewer trace each `R` ID to code and evidence.
+- [x] Run `npm run verify` once. Rerun any browser failure in untouched code alone before debugging it.
+- [x] Run `npm ci --prefix mcp/expressivecss`, then `npm test --prefix mcp/expressivecss`.
+- [x] Record results in [validation.md](validation.md) and have an independent reviewer trace each `R` ID to code and evidence.
 
 Completion check: V12 passes, and every result in validation.md comes from a run.
 

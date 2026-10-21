@@ -25,6 +25,37 @@ async function setUp(page, options) {
   }, options);
 }
 
+const field = (page, name) => page.getByRole('spinbutton', { name, exact: true });
+
+/** Open a seconds picker at 9 AM by keyboard, on PM for the 12-hour clock, with focus on the hours. */
+async function openAtNine(page, twelveHour) {
+  await setUp(page, { showSeconds: true, twelveHour, autoSubmit: false });
+  await page.locator('#time').fill(twelveHour ? '09:00:00 AM' : '09:00:00');
+  await page.locator('#time').press('Enter');
+  if (twelveHour) {
+    await page.getByRole('button', { name: 'PM', exact: true }).click();
+    await field(page, 'Hours').focus();
+  }
+}
+
+/** Type each field's digits, pressing Tab between the fields. */
+async function typeFields(page, entries) {
+  for (const [i, [name, digits]] of entries.entries()) {
+    if (i) await page.keyboard.press('Tab');
+    await expect(field(page, name)).toBeFocused();
+    await page.keyboard.press('ControlOrMeta+a');
+    await page.keyboard.type(digits);
+  }
+}
+
+/** Tab leaves the seconds for the AM/PM buttons, and Shift+Tab comes back. */
+async function tabPastSeconds(page) {
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'AM', exact: true })).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(field(page, 'Seconds')).toBeFocused();
+}
+
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
@@ -34,24 +65,12 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     let page;
     try {
       page = await browser.newPage();
-      for (const twelveHour of [true, false]) {
-        await setUp(page, { showSeconds: true, twelveHour, autoSubmit: false });
-        await page.locator('#time').fill(twelveHour ? '09:00:00 AM' : '09:00:00');
-        await page.locator('#time').press('Enter');
-        const field = (name) => page.getByRole('spinbutton', { name, exact: true });
-        if (twelveHour) {
-          await page.getByRole('button', { name: 'PM', exact: true }).click();
-          await field('Hours').focus();
-        }
-        await expect(field('Hours')).toBeFocused();
-        for (const [name, digits] of [['Hours', twelveHour ? '02' : '14'], ['Minutes', '30'], ['Seconds', '45']]) {
-          await expect(field(name)).toBeFocused();
-          await page.keyboard.press('ControlOrMeta+a');
-          await page.keyboard.type(digits);
-          if (name !== 'Seconds') await page.keyboard.press('Tab');
-        }
+      for (const [twelveHour, hours, expected] of [[true, '02', '02:30:45 PM'], [false, '14', '14:30:45']]) {
+        await openAtNine(page, twelveHour);
+        await typeFields(page, [['Hours', hours], ['Minutes', '30'], ['Seconds', '45']]);
+        if (twelveHour) await tabPastSeconds(page);
         await page.keyboard.press('Enter');
-        await expect(page.locator('#time')).toHaveValue(twelveHour ? '02:30:45 PM' : '14:30:45');
+        await expect(page.locator('#time')).toHaveValue(expected);
         await page.evaluate(() => window.picker.destroy());
       }
     } finally {

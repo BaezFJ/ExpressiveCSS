@@ -49,7 +49,7 @@ const S = defineSections([
           Click an hour on the dial, then a minute. With the default
           <code>autoSubmit: true</code>, finishing the minute writes the input
           (<code>HH:MM AM</code> or <code>HH:MM PM</code>). You can also type in the digital
-          hour and minute fields; Enter in either one writes the typed time.
+          fields; Enter in any of them writes the typed time.
           Digital edits use native input events, including paste. Invalid edits
           restore the last valid value when focus leaves the field. Empty fields
           use the current hour, minute or second without changing the selected AM/PM period.
@@ -165,7 +165,7 @@ Expressive.Timepicker.init(elem, {
               <td><code>defaultTime</code></td>
               <td>String</td>
               <td><code>'now'</code></td>
-              <td>Initial time. <code>'now'</code> or a <code>'HH:MM'</code> string (optionally with <code>AM</code>/<code>PM</code>).</td>
+              <td>Initial time. <code>'now'</code> or a <code>'HH:MM'</code> or <code>'HH:MM:SS'</code> string (optionally with <code>AM</code>/<code>PM</code>).</td>
             </tr>
             <tr>
               <td><code>fromNow</code></td>
@@ -383,7 +383,7 @@ instance.destroy();
             <tr>
               <td><code>seconds</code></td>
               <td>Number</td>
-              <td>The second shown in the seconds field.</td>
+              <td>The second of the time on the clock. The seconds field shows it when <code>showSeconds</code> is on.</td>
             </tr>
             <tr>
               <td><code>amOrPm</code></td>

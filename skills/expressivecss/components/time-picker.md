@@ -9,7 +9,7 @@ Component ID: `time-picker`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `c4d28ef6bd94593c50f6a7d617cc577c88df8646c8270f7ec9db9a81c6e5750c`
+Contract SHA-256: `690bd9dd262eb559d062411753720d4413021b471615731542356bc42d361598`
 
 #### Selection and adaptation
 
@@ -62,7 +62,7 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 | `container` | Element or String | `null` | Element or selector to render the clock into. When omitted, it is appended to the input’s parent. |
 | `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
 | `autoSubmit` | Boolean | `true` | If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added. |
-| `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` string (optionally with `AM`/`PM`). |
+| `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` or `'HH:MM:SS'` string (optionally with `AM`/`PM`). |
 | `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |
 | `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, Minutes and Seconds. |
 | `twelveHour` | Boolean | `true`, or the language's | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. With a `lang` on or around the input, defaults to the clock that language uses. |

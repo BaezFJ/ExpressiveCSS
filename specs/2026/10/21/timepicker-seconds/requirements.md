@@ -4,7 +4,7 @@ Date: 2026-10-21
 Roadmap phase: Phase 16, timepicker seconds
 Branch: `feature/2026-10-21-timepicker-seconds`
 Base: `origin/master` at `8d45c2c4af6b6ccf0be918a4b2f325fae3978fb0`, the commit T3 created the worktree from on 2026-10-21
-Status: specified 2026-10-21; implementation and validation follow in the same run
+Status: implemented and locally verified 2026-10-21; required CI and review pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 16](../../../../roadmap.md#phase-16-timepicker-seconds). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -72,7 +72,7 @@ Focusing the seconds field leaves the dial on its current view and does not move
 | R8 | Without `showSeconds`, the Timepicker writes `HH:MM` exactly as before and reads values as before apart from R11, the two fields keep their sizes, and every existing Timepicker test passes. |
 | R9 | The Timepicker docs page and the Timepicker section of `llm.md` document `showSeconds`, `i18n.seconds`, the `seconds` property, the `HH:MM:SS` value in `done()` and the `time` property, the `step="1"` advice for `type="time"` inputs and the field-only dial. The docs page has a live seconds example. The unreleased changelog lists the option under Added and R11 under Fixed. `npm run build:skill` regenerates the skill and MCP copies, and `npm run check:generated` passes. |
 | R10 | The bundle growth is recorded in reviewed gzip budget lines in `tests/selective-builds.test.js`, for JavaScript and for CSS. New functions stay below cyclomatic complexity 5 for the fallow pre-commit gate. |
-| R11 | With or without `showSeconds`, a value with AM or PM after its seconds, such as `02:30:45 PM`, reads with that period. Today it reads as AM. |
+| R11 | With or without `showSeconds`, AM or PM anywhere in a value sets the period, so `02:30:45 PM` reads as PM. Today the period is looked for only after the first colon, so such a value, or one like `2 PM`, reads as AM. |
 
 ## Constraints and dependencies
 

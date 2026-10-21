@@ -7216,7 +7216,7 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 
 Wrap the input in its own small parent — a `.field`, or a bare `<div>`. The clock is appended inside that parent.
 
-Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital hour and minute fields; Enter in either one writes the typed time.
+Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital fields; Enter in any of them writes the typed time.
 
 Digital edits use native input events, including paste. Invalid edits restore
 the last valid value on blur. Empty fields use the current hour, minute or second without
@@ -7286,7 +7286,7 @@ Expressive.Timepicker.init(elem, {
 | `container` | Element or String | `null` | Element or selector to render the clock into. When omitted, it is appended to the input’s parent. |
 | `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
 | `autoSubmit` | Boolean | `true` | If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added. |
-| `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` string (optionally with `AM`/`PM`). |
+| `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` or `'HH:MM:SS'` string (optionally with `AM`/`PM`). |
 | `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |
 | `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, Minutes and Seconds. |
 | `twelveHour` | Boolean | `true`, or the language's | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. With a `lang` on or around the input, defaults to the clock that language uses. |
@@ -7393,7 +7393,7 @@ These methods are not provided. The clock defaults to visible inline presentatio
 | `time` | String | The last value written by `done()`, without the AM/PM suffix. It ends in `:SS` when `showSeconds` is on. |
 | `hours` | Number | The hour currently shown on the clock. |
 | `minutes` | Number | The minute currently shown on the clock. |
-| `seconds` | Number | The second shown in the seconds field. |
+| `seconds` | Number | The second of the time on the clock. The seconds field shows it when `showSeconds` is on. |
 | `amOrPm` | String | `'AM'` or `'PM'` when `twelveHour` is true. |
 | `currentView` | String | `'hours'` or `'minutes'`. |
 
