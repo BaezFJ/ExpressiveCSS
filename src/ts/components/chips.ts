@@ -44,6 +44,7 @@ function defineControl() {
     /** Called only for a reset no listener canceled, in the same task. */
     formResetCallback() { this.onFormReset?.(); }
     get form() { return this.internals.form; }
+    get name() { return this.getAttribute('name') ?? ''; }
     get labels() { return this._input?.labels; }
     get validity() { return this.internals.validity; }
     get validationMessage() { return this.internals.validationMessage; }
@@ -387,8 +388,13 @@ export class Chips extends Component<ChipsOptions> {
   private _validate() {
     const internals = this._control.internals;
     if (this._required && !this._source.readOnly && !this.chipsData.length) {
-      internals.setValidity({ valueMissing: true }, this._requiredMessage, this._source);
+      internals.setValidity({ valueMissing: true }, this._requiredMessage, this._anchor);
     } else internals.setValidity({});
+  }
+
+  /** The input, unless page script moved it out of the control, where it cannot anchor the message. */
+  private get _anchor() {
+    return this._control.contains(this._source) ? this._source : undefined;
   }
 
   /** A validity flag needs a message, so an empty i18n.required falls back to the default. */

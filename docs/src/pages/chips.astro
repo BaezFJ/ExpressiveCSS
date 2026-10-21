@@ -210,7 +210,9 @@ const S = defineSections([
           the field valid once it has a chip, and says <code>i18n.required</code> until
           then, unless the input is read-only. The control holds that validity apart
           from any error the page sets on the input, and a blocked submit focuses the
-          input. The input keeps <code>aria-required="true"</code>.
+          input. The input itself stays valid and does not match <code>:invalid</code>, so
+          style or report the error from the control or the form. The input keeps
+          <code>aria-required="true"</code>.
           <code>destroy()</code> unwraps the input and gives its name and
           <code>required</code> back. Without form-associated custom elements, as in
           jsdom, the input is left as it is and submits its own text. Pasting text that

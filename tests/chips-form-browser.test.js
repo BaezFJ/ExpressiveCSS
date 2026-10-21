@@ -32,11 +32,12 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       const tick = () => Promise.resolve();
       const tags = (id) => new FormData(document.getElementById(id)).getAll('tags');
       const el = document.getElementById('field');
+      // Set up twice: the second init destroys the first, which unwraps the input before wrapping it again.
       Expressive.Chips.init(el, { allowUserInput: true, data: [{ id: 'red' }] });
       const chips = Expressive.Chips.init(el, { allowUserInput: true, data: [{ id: 'red' }] });
       const input = chips._input;
       const seen = {};
-      seen.wrapped = [el.querySelectorAll('expressive-chips-control').length, input.parentElement.localName, input.hasAttribute('name')];
+      seen.wrapped = [el.querySelectorAll('expressive-chips-control').length, input.parentElement.localName, input.hasAttribute('name'), input.parentElement.name];
       input.value = 'gre';
       chips.addChip({ id: 'blue' });
       seen.typed = tags('a');
@@ -64,7 +65,7 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       return seen;
     });
     assert.deepEqual(result, {
-      wrapped: [1, 'expressive-chips-control', false],
+      wrapped: [1, 'expressive-chips-control', false, 'tags'],
       typed: ['red', 'blue'],
       fieldset: [],
       disabled: [],
@@ -186,12 +187,27 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       seen.editable = form.checkValidity();
 
       const quiet = Expressive.Chips.init(document.getElementById('quiet'), { allowUserInput: true, i18n: { required: '' } });
-      seen.emptyMessage = quiet._input.parentElement.validationMessage;
+      seen.messages = [quiet._input.parentElement.validationMessage];
       quiet.destroy();
+      const custom = Expressive.Chips.init(document.getElementById('quiet'), { allowUserInput: true, i18n: { required: 'Pick a tag.' } });
+      seen.messages.push(custom._input.parentElement.validationMessage);
+      // Page script that moves the input out of the control leaves the chips working, unanchored.
+      custom.el.append(custom._input);
+      custom.addChip({ id: 'red' });
+      custom.deleteChip(0);
+      seen.messages.push(form.nextElementSibling.checkValidity());
+      custom.destroy();
 
       input.setCustomValidity('Rejected tag');
       chips.destroy();
       seen.destroyed = [input.required, input.getAttribute('name'), input.hasAttribute('aria-required'), input.validationMessage, input.parentElement.id];
+      // The observer is gone with the control: a later attribute change throws nothing.
+      const errors = [];
+      window.addEventListener('error', (e) => errors.push(e.message));
+      input.readOnly = true;
+      input.disabled = true;
+      await tick();
+      seen.afterDestroy = errors;
       return seen;
     });
     assert.deepEqual(result, {
@@ -202,16 +218,18 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       cleared: [true, 'Add at least one item.'],
       readOnly: true,
       editable: false,
-      emptyMessage: 'Add at least one item.',
+      messages: ['Add at least one item.', 'Pick a tag.', false],
       destroyed: [true, 'tags', false, 'Rejected tag', 'field'],
+      afterDestroy: [],
     });
   });
 
+  // The label sits outside the field, so the summary finds it through the control's labels.
   browserTest(`${engine}: the error summary lists an empty required chips field and its link focuses the input`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
-      await page.setContent(`<form novalidate><div class="error-summary" hidden><ul></ul></div><div class="chips" id="field"><label>Tags</label><input name="tags" required></div><button>Send</button></form><script>${js}</script>`);
+      await page.setContent(`<form novalidate><div class="error-summary" hidden><ul></ul></div><label for="tags">Tags</label><div class="chips" id="field"><input id="tags" name="tags" required></div><button>Send</button></form><script>${js}</script>`);
       await page.evaluate(() => Expressive.Chips.init(document.getElementById('field'), { allowUserInput: true }));
       await page.getByRole('button', { name: 'Send' }).click();
       assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('.error-summary li')].map((item) => item.textContent)), ['Tags: Add at least one item.']);
@@ -231,6 +249,16 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await page.getByRole('combobox', { name: 'Tags' }).fill('ap');
       await page.getByRole('option', { name: 'Apple' }).click();
       assert.deepEqual(await page.evaluate(() => new FormData(document.getElementById('a')).getAll('tags')), ['apple']);
+      // An Autocomplete the page set up on the input itself is the page's: destroy() leaves its listbox in the field.
+      const kept = await page.evaluate(() => {
+        const el = document.getElementById('field');
+        const own = Expressive.Autocomplete.init(el.querySelector('input'), { data: [{ id: 'pear' }] });
+        Expressive.Chips.getInstance(el).destroy();
+        const seen = [el.contains(own.container), !el.querySelector('expressive-chips-control')];
+        own.destroy();
+        return seen;
+      });
+      assert.deepEqual(kept, [true, true]);
     } finally {
       await browser.close();
     }
