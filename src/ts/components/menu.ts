@@ -187,6 +187,9 @@ export class Menu extends Component<MenuOptions> implements Openable {
   private _transition = 0;
   private _originalInert: string | null;
   private _menuClickTargets = new WeakMap<Event, HTMLElement>();
+  // True while Space activates a row, so the click it sends can keep a radio
+  // menu open.
+  private _spaceActivation = false;
   /** Whether the pointer opened the menu, so opening leaves focus where it was. */
   private _openedByHover = false;
   /**
@@ -517,23 +520,43 @@ export class Menu extends Component<MenuOptions> implements Openable {
     if (checked !== null) this._notify('change', null, { detail: { item: li, checked } });
   }
 
-  // A menuitemcheckbox flips aria-checked before anyone hears of the click;
-  // any other row returns null.
+  // A menuitemcheckbox flips aria-checked, and a menuitemradio checks itself
+  // and unchecks its group, before anyone hears of the click. Any other row,
+  // or a radio that was already checked, returns null.
   private _toggleChecked(li: HTMLElement): boolean | null {
-    if (!this._isCheckboxRow(li)) return null;
+    const role = li.getAttribute('role');
+    if (role === 'menuitemradio') return this._checkRadio(li);
+    if (role !== 'menuitemcheckbox') return null;
     const checked = li.getAttribute('aria-checked') !== 'true';
     li.setAttribute('aria-checked', String(checked));
     return checked;
+  }
+
+  // A radio's group is its parent list: a <ul role="group">, or for radio
+  // rows outside any group, their menu.
+  private _checkRadio(li: HTMLElement): true | null {
+    if (li.getAttribute('aria-checked') === 'true') return null;
+    li.parentElement.querySelectorAll(':scope > li[role="menuitemradio"]').forEach((radio) => {
+      radio.setAttribute('aria-checked', String(radio === li));
+    });
+    return true;
   }
 
   private _isCheckboxRow(el: Element | null | undefined) {
     return el?.closest('li')?.getAttribute('role') === 'menuitemcheckbox';
   }
 
-  // isTouchMoving: a scroll on mobile is not a choice. Click and Space keep a
-  // checkbox menu open so several items can be toggled.
+  // isTouchMoving: a scroll on mobile is not a choice.
   private _closesOnClick(target: HTMLElement) {
-    return this.options.closeOnClick && !this.isTouchMoving && !this._isCheckboxRow(target);
+    return this.options.closeOnClick && !this.isTouchMoving && !this._keepsOpen(target);
+  }
+
+  // Click and Space keep a checkbox menu open so several items can be
+  // toggled. Space keeps a radio menu open too; a click on a radio closes it.
+  private _keepsOpen(target: HTMLElement) {
+    const role = target.closest('li')?.getAttribute('role');
+    if (role === 'menuitemcheckbox') return true;
+    return this._spaceActivation && role === 'menuitemradio';
   }
 
   // Enter toggles a checkbox item and then closes, as it does on any item.
@@ -697,11 +720,13 @@ export class Menu extends Component<MenuOptions> implements Openable {
       }
       const focusedElement = li ?? this.menuEl.children[this.focusedIndex];
       const activatableElement = <HTMLElement>focusedElement?.querySelector(':scope > a, :scope > button');
+      this._spaceActivation = e.key === SPACE;
       if (!!activatableElement) {
         activatableElement.click();
       } else if (focusedElement instanceof HTMLElement) {
         focusedElement.click();
       }
+      this._spaceActivation = false;
       this._closeAfterEnter(e, focusedElement);
     }
     // Close menu on ESC

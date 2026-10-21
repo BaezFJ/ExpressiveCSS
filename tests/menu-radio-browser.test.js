@@ -1,5 +1,6 @@
 // Menu radio groups: rows inside <li role="none"><ul role="group"> are reached
-// and styled like direct rows.
+// and styled like direct rows, and a radio item checks within its group.
+// Space keeps the menu open; click and Enter close it.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -19,6 +20,21 @@ const mixed = `<button type="button" class="menu-trigger no-autoinit" id="t" dat
       <li role="menuitemradio" aria-checked="false"><button type="button">Date</button></li>
     </ul></li>
     <li role="menuitemcheckbox" aria-checked="true"><button type="button">Reset</button></li>
+  </menu>`;
+
+const groups = `<button type="button" class="menu-trigger no-autoinit" id="t" data-target="m">View</button>
+  <menu id="m">
+    <li role="none"><ul role="group" aria-label="Sort by">
+      <li role="menuitemradio" aria-checked="true"><button type="button">Name</button></li>
+      <li role="menuitemradio" aria-checked="false"><button type="button">Date</button></li>
+      <li role="menuitemradio" aria-checked="false"><button type="button">Size</button></li>
+    </ul></li>
+    <li class="divider" role="separator"></li>
+    <li role="none"><ul role="group" aria-label="Order">
+      <li role="menuitemradio" aria-checked="true"><button type="button">Ascending</button></li>
+      <li role="menuitemradio" aria-checked="false"><button type="button">Descending</button></li>
+      <li role="menuitemradio" aria-checked="false"><button type="button">Custom</button></li>
+    </ul></li>
   </menu>`;
 
 for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit })) {
@@ -42,6 +58,44 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
     await page.keyboard.press(key);
     return focused(page);
   };
+
+  browserTest(`${engine}: one item per group stays checked, and the other group is unaffected`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await setup(browser, groups);
+      const state = () => page.evaluate(() => ({
+        checked: [...document.querySelectorAll('[aria-checked="true"]')].map((li) => li.textContent.trim()),
+        open: window.menu.isOpen,
+        focused: document.activeElement.textContent.trim(),
+        changes: window.changes.length
+      }));
+      const openByKey = async () => {
+        await page.locator('#t').focus();
+        await page.keyboard.press('ArrowDown');
+        await page.waitForFunction(() => document.activeElement?.textContent.trim() === 'Name');
+      };
+      await openByKey();
+      assert.deepEqual([await press(page, 'ArrowDown'), await press(page, 'ArrowDown'), await press(page, 'ArrowDown')], ['Date', 'Size', 'Ascending']);
+      assert.equal(await press(page, 'ArrowUp'), 'Size');
+      await page.keyboard.press(' ');
+      assert.deepEqual(await state(), { checked: ['Size', 'Ascending'], open: true, focused: 'Size', changes: 1 });
+      await page.getByRole('menuitemradio', { name: 'Descending' }).click();
+      await page.waitForFunction(() => !window.menu.isOpen);
+      assert.deepEqual((await state()).checked, ['Size', 'Descending']);
+      await openByKey();
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('Enter');
+      await page.waitForFunction(() => document.activeElement?.id === 't');
+      assert.deepEqual(await state(), { checked: ['Date', 'Descending'], open: false, focused: 'View', changes: 3 });
+      assert.deepEqual(await page.evaluate(() => window.changes), [
+        { item: 'Size', checked: true },
+        { item: 'Descending', checked: true },
+        { item: 'Date', checked: true }
+      ]);
+    } finally {
+      await browser.close();
+    }
+  });
 
   browserTest(`${engine}: arrow keys, Home, End and type-ahead reach rows inside a group`, async () => {
     const browser = await leaseBrowser(browserType);

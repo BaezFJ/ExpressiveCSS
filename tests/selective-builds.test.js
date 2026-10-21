@@ -200,7 +200,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed palette Escape, keypad Call and progress ring in forced colors: 89,054 gzip bytes (+40).
   // Reviewed menu checkbox items that toggle aria-checked and stay open: 89,222 gzip bytes (+168).
   // Reviewed menu group rows reached by arrow keys and type-ahead: 89,252 gzip bytes (+30).
-  assert.ok(sizes(js).gzip <= 89252, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed menu radio items that check within their group, and Space keeping the menu open: 89,369 gzip bytes (+117).
+  assert.ok(sizes(js).gzip <= 89369, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
