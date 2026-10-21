@@ -68,16 +68,18 @@ card.querySelectorAll('[data-period]').forEach((button) => {
           pointer, and the arrow keys move them when the chart has focus.
         </p>
         <article class="outlined" data-markdown-ignore>
-          <dl class="stats mt-0">
-            <div><dt>Total revenue</dt><dd>{year.total}</dd><dd class="stat-change up">{year.change}</dd></div>
-          </dl>
-          <figure class="line-chart fade">
-            <figcaption>Monthly revenue, 2026</figcaption>
-            <table>
-              <thead><tr><th>Month</th><th>Revenue</th></tr></thead>
-              <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td></tr>)}</tbody>
-            </table>
-          </figure>
+          <div class="p-4">
+            <dl class="stats mt-0">
+              <div><dt>Total revenue</dt><dd>{year.total}</dd><dd class="stat-change up">{year.change}</dd></div>
+            </dl>
+            <figure class="line-chart fade">
+              <figcaption>Monthly revenue, 2026</figcaption>
+              <table>
+                <thead><tr><th>Month</th><th>Revenue</th></tr></thead>
+                <tbody>{months.map((month, i) => <tr><th>{month}</th><td>{money(revenue[i])}</td></tr>)}</tbody>
+              </table>
+            </figure>
+          </div>
         </article>
 <Code code={`
 <figure class="line-chart fade">
@@ -285,7 +287,9 @@ card.querySelectorAll('[data-period]').forEach((button) => {
           rows and call <code>update()</code> to redraw. The card adds no
           chart styles; size a chart with its tokens. A card pads only its
           headings and paragraphs, so wrap the stat and chart in
-          <code>&lt;div class="p-4"&gt;</code> to keep them off the border.
+          <code>&lt;div class="p-4"&gt;</code> to keep them off the border. A
+          connected button group fills its container, so give it a
+          <code>&lt;div&gt;</code> of its own to keep it beside the stat.
         </p>
         <article class="outlined" id="revenue-card" data-markdown-ignore>
           <div class="p-4">
@@ -293,9 +297,11 @@ card.querySelectorAll('[data-period]').forEach((button) => {
               <dl class="stats my-0">
                 <div><dt>Revenue</dt><dd>{year.total}</dd><dd class="stat-change up">{year.change}</dd></div>
               </dl>
-              <div class="button-group connected xsmall" data-selection="single" data-selection-required role="group" aria-label="Period">
-                <button type="button" class="button tonal" aria-pressed="true" data-period="12" data-total={year.total} data-change={year.change}>Year</button>
-                <button type="button" class="button tonal" aria-pressed="false" data-period="6" data-total={half.total} data-change={half.change}>6 months</button>
+              <div>
+                <div class="button-group connected xsmall" data-selection="single" data-selection-required role="group" aria-label="Period">
+                  <button type="button" class="button tonal" aria-pressed="true" data-period="12" data-total={year.total} data-change={year.change}>Year</button>
+                  <button type="button" class="button tonal" aria-pressed="false" data-period="6" data-total={half.total} data-change={half.change}>6 months</button>
+                </div>
               </div>
             </div>
             <figure class="line-chart area">
@@ -319,14 +325,16 @@ card.querySelectorAll('[data-period]').forEach((button) => {
           <dd class="stat-change up">${year.change}</dd>
         </div>
       </dl>
-      <div class="button-group connected xsmall" data-selection="single"
-           data-selection-required role="group" aria-label="Period">
-        <button type="button" class="button tonal" aria-pressed="true"
-                data-period="12" data-total="${year.total}"
-                data-change="${year.change}">Year</button>
-        <button type="button" class="button tonal" aria-pressed="false"
-                data-period="6" data-total="${half.total}"
-                data-change="${half.change}">6 months</button>
+      <div>
+        <div class="button-group connected xsmall" data-selection="single"
+             data-selection-required role="group" aria-label="Period">
+          <button type="button" class="button tonal" aria-pressed="true"
+                  data-period="12" data-total="${year.total}"
+                  data-change="${year.change}">Year</button>
+          <button type="button" class="button tonal" aria-pressed="false"
+                  data-period="6" data-total="${half.total}"
+                  data-change="${half.change}">6 months</button>
+        </div>
       </div>
     </div>
     <figure class="line-chart area">

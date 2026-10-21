@@ -47,6 +47,26 @@ describe('Forced colors', () => {
     test(`gives a focused ${name} an outline`, () => assert.ok(has(selector, /outline:\s*2px solid CanvasText/), name));
   }
 
+  // Forced colors drop the error color, so an invalid box needs a shape of
+  // its own, and a checked one must not pass the author's red through. A
+  // disabled one keeps the GrayText it has without the error.
+  test('an invalid checkbox has a dashed edge and keeps system colors when checked', () => {
+    const box = String.raw`label:has\(> \[type=checkbox\]\):not\(\.switch\) > \[type=checkbox\]:is\(\.invalid, \[aria-invalid=true\]\)`;
+    const checked = String.raw`:is\(:checked, :indeterminate\):not\(:disabled\)`;
+    assert.ok(has(new RegExp(`^${box}$`), /border-style:\s*dashed/), 'unchecked edge');
+    assert.ok(has(new RegExp(`^${box}${checked}$`), /border-color:\s*CanvasText;\s*background-color:\s*Highlight/), 'checked fill');
+    assert.ok(has(new RegExp(String.raw`:has\(> \[type=checkbox\]:is\(\.invalid, \[aria-invalid=true\]\)${checked}\)::before$`), /background-color:\s*HighlightText/), 'checked mark');
+    assert.ok(has(/\[type=checkbox\]:is\(\.invalid, \[aria-invalid=true\]\) \+ span:not\(.*\)::before$/, /border-style:\s*dashed/), 'legacy span edge');
+
+    // Every rule that gives an invalid checked box the enabled colors leaves disabled ones out.
+    const enabledColors = forced.filter((r) => /Highlight|CanvasText/.test(r.body) && r.selectors.some((sel) =>
+      /\[type=checkbox\]:is\(\.invalid, \[aria-invalid=true\]\):is\(:checked, :indeterminate\)/.test(sel)));
+    assert.ok(enabledColors.length >= 3, 'the checked invalid rules are found');
+    for (const rule of enabledColors) {
+      for (const sel of rule.selectors) assert.match(sel, /:is\(:checked, :indeterminate\):not\(:disabled\)/, `disabled boxes stay GrayText: ${sel}`);
+    }
+  });
+
   test('a keyboard-focused tab gets a focus ring, not only a tint', () => {
     const rule = parseRules(css).find((r) => r.selectors.includes('.tabs > a:focus-visible') && /outline:\s*3px solid/.test(r.body));
     assert.ok(rule, 'no focus ring on .tabs > a:focus-visible');

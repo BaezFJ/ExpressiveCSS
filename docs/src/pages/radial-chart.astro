@@ -256,31 +256,35 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
           <code>--md-comp-radial-chart-height</code>, their diameter.
         </p>
         <article class="outlined" data-markdown-ignore>
-          <dl class="stats my-0">
-            <div><dt>Response rate</dt><dd>72%</dd><dd class="stat-change up">+14 points from last month</dd></div>
-          </dl>
-          <figure class="radial-chart" style="--md-comp-radial-chart-height: 180px">
-            <figcaption class="visually-hidden">Response rate by month</figcaption>
-            <table>
-              <thead><tr><th>Month</th><th>Response rate</th></tr></thead>
-              <tbody><tr><th>This month</th><td>72%</td></tr><tr><th>Last month</th><td>58%</td></tr></tbody>
-              <tfoot><tr><th>This month</th><td>72%</td></tr></tfoot>
-            </table>
-          </figure>
+          <div class="p-4">
+            <dl class="stats my-0">
+              <div><dt>Response rate</dt><dd>72%</dd><dd class="stat-change up">+14 points from last month</dd></div>
+            </dl>
+            <figure class="radial-chart" style="--md-comp-radial-chart-height: 180px">
+              <figcaption class="visually-hidden">Response rate by month</figcaption>
+              <table>
+                <thead><tr><th>Month</th><th>Response rate</th></tr></thead>
+                <tbody><tr><th>This month</th><td>72%</td></tr><tr><th>Last month</th><td>58%</td></tr></tbody>
+                <tfoot><tr><th>This month</th><td>72%</td></tr></tfoot>
+              </table>
+            </figure>
+          </div>
         </article>
 <Code code={`
 <article class="outlined">
-  <dl class="stats my-0">
-    <div>
-      <dt>Response rate</dt>
-      <dd>72%</dd>
-      <dd class="stat-change up">+14 points from last month</dd>
-    </div>
-  </dl>
-  <figure class="radial-chart" style="--md-comp-radial-chart-height: 180px">
-    <figcaption class="visually-hidden">Response rate by month</figcaption>
-    <table><!-- … --></table>
-  </figure>
+  <div class="p-4">
+    <dl class="stats my-0">
+      <div>
+        <dt>Response rate</dt>
+        <dd>72%</dd>
+        <dd class="stat-change up">+14 points from last month</dd>
+      </div>
+    </dl>
+    <figure class="radial-chart" style="--md-comp-radial-chart-height: 180px">
+      <figcaption class="visually-hidden">Response rate by month</figcaption>
+      <table><!-- … --></table>
+    </figure>
+  </div>
 </article>
 `} />
         <p>

@@ -307,5 +307,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the .toggle chart legend, written once for every chart: 83,405 gzip bytes (+198).
   // Reviewed keyboard and IME fixes: search view, slider ring, popover fallback: 83,467 gzip bytes (+62).
   // Reviewed chart label thinning and navbar destination wrap: 83,750 gzip bytes (+283).
-  assert.ok(sizes(css).gzip <= 83750, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed pie slice contrast and forced-colors invalid checkboxes: 83,890 gzip bytes (+140).
+  assert.ok(sizes(css).gzip <= 83890, `CSS gzip: ${sizes(css).gzip}`);
 });
