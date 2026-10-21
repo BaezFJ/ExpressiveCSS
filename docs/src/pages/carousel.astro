@@ -210,6 +210,50 @@ const S = defineSections([
   controls on the carousel or place them beside its edges.
 </p>
 <p>
+  Show all is also the single-pointer path through the items (WCAG 2.5.7):
+  dragging the track is the only other way a mouse alone can move it.
+</p>
+<div class="carousel" aria-label="Recent trips">
+  <article class="carousel-item"><img src="https://picsum.photos/id/1015/800/500" alt="Mountain lake" /></article>
+  <article class="carousel-item"><img src="https://picsum.photos/id/1016/800/500" alt="Forest path" /></article>
+  <article class="carousel-item"><img src="https://picsum.photos/id/1018/800/500" alt="Rocky coastline" /></article>
+  <article class="carousel-item"><img src="https://picsum.photos/id/1019/800/500" alt="Beach at dusk" /></article>
+</div>
+<button type="button" class="mb-3" onclick="document.getElementById('carousel-all').showModal()">Show all</button>
+<dialog id="carousel-all" class="max" aria-labelledby="carousel-all-title">
+  <header>
+    <button type="button" aria-label="Close" onclick="this.closest('dialog').close()">
+      <span class="material-symbols" aria-hidden="true">close</span>
+    </button>
+    <h2 id="carousel-all-title">Recent trips</h2>
+  </header>
+  <div>
+    <img src="https://picsum.photos/id/1015/800/500" alt="Mountain lake" class="responsive-img" />
+    <img src="https://picsum.photos/id/1016/800/500" alt="Forest path" class="responsive-img" />
+    <img src="https://picsum.photos/id/1018/800/500" alt="Rocky coastline" class="responsive-img" />
+    <img src="https://picsum.photos/id/1019/800/500" alt="Beach at dusk" class="responsive-img" />
+  </div>
+</dialog>
+<Code code={`
+<div class="carousel" aria-label="Recent trips">
+  <article class="carousel-item"><img src="lake.jpg" alt="Mountain lake" /></article>
+  <article class="carousel-item"><img src="forest.jpg" alt="Forest path" /></article>
+</div>
+<button type="button" onclick="document.getElementById('all-trips').showModal()">Show all</button>
+<dialog id="all-trips" class="max" aria-labelledby="all-trips-title">
+  <header>
+    <button type="button" aria-label="Close" onclick="this.closest('dialog').close()">
+      <span class="material-symbols" aria-hidden="true">close</span>
+    </button>
+    <h2 id="all-trips-title">Recent trips</h2>
+  </header>
+  <div>
+    <img src="lake.jpg" alt="Mountain lake" class="responsive-img" />
+    <img src="forest.jpg" alt="Forest path" class="responsive-img" />
+  </div>
+</dialog>
+`} />
+<p>
   The component supplies a <code>region</code>, carousel and slide role
   descriptions, item position labels, and indicator labels when authors do not
   provide them.

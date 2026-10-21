@@ -190,8 +190,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the .toggle chart legend: 84,157 gzip bytes (+251).
   // Reviewed keyboard and IME fixes: search view, slider ring, popover fallback: 84,223 gzip bytes (+66).
   // Reviewed data table sorting and select-all: 85,710 gzip bytes (+1,487).
-  // Reviewed Datepicker and Timepicker names, first day and clock from the page's lang, and dates read in their format: 86,573 gzip bytes (+863).
-  assert.ok(sizes(js).gzip <= 86573, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed chart label thinning and navbar destination wrap: 85,993 gzip bytes (+283).
+  // Reviewed Datepicker and Timepicker names, first day and clock from the page's lang, and dates read in their format: 86,838 gzip bytes (+845).
+  assert.ok(sizes(js).gzip <= 86838, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -305,5 +306,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the marquee item box-sizing: 83,207 gzip bytes (+3).
   // Reviewed the .toggle chart legend, written once for every chart: 83,405 gzip bytes (+198).
   // Reviewed keyboard and IME fixes: search view, slider ring, popover fallback: 83,467 gzip bytes (+62).
-  assert.ok(sizes(css).gzip <= 83467, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed chart label thinning and navbar destination wrap: 83,750 gzip bytes (+283).
+  assert.ok(sizes(css).gzip <= 83750, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -343,6 +343,21 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A narrow line, column or mixed chart shows whole row labels. When each
+  label is wider than its column, the chart keeps every second label (or
+  every third, and so on) and hides the rest, rather than cutting all of
+  them to "J…". Twelve months on a 320px phone show as six. The chart
+  re-checks as it resizes, and the full text stays in the tooltip and the
+  table.
+- A top app bar whose destinations do not fit beside the title wraps them
+  onto a second row. Before, the title shrank to one letter and an
+  ellipsis. On one row the bar is unchanged.
+- In WebKit, the keyboard can scroll a docs code sample that is wider than
+  its block. Chromium and Firefox already put such a block in the Tab
+  order; WebKit skipped it.
+- The Carousel page shows the Show all action it recommends, opening a
+  full-screen dialog of the same items. It is the single-pointer way
+  through a carousel (WCAG 2.5.7), and no demo had it.
 - The Enter that confirms an IME candidate no longer acts on a field. In
   the date picker it moved focus into the calendar and read the unfinished
   text; the time picker, the autocomplete's active option and the color
