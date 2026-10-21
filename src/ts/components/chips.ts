@@ -534,6 +534,8 @@ export class Chips extends Component<ChipsOptions> {
         this.addChip({ id: this._input.value });
       }
       this._input.value = '';
+      // The list answered the text Enter just used up.
+      this.autocomplete?.close();
     } else if (
       this._input.value === '' &&
       this.chipsData.length &&
