@@ -9,7 +9,7 @@ Component ID: `chips`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `2a1acb0fe401021d0cafa6b083ff90a3ce7072f402008969842e6639cd682256`
+Contract SHA-256: `d87032217ac29306c228ebe4ec529a63c63762dc8b807d8737100822d58d0ce4`
 
 #### Selection and adaptation
 
