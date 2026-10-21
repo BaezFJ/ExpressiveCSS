@@ -211,30 +211,34 @@ const online = [38, 44, 41, 52, 49, 58];
           <code>--md-comp-mixed-chart-height</code>.
         </p>
         <article class="outlined" data-markdown-ignore>
-          <dl class="stats my-0">
-            <div><dt>Support tickets</dt><dd>190</dd><dd class="stat-change up">Resolved in 3.9h on average</dd></div>
-          </dl>
-          <figure class="mixed-chart" style="--md-comp-mixed-chart-height: 120px">
-            <figcaption class="visually-hidden">Tickets and resolution time by month</figcaption>
-            <table>
-              <thead><tr><th>Month</th><th class="area">Tickets</th><th class="dashed end">Hours to resolve</th></tr></thead>
-              <tbody>{half.map((month, i) => <tr><th>{month}</th><td>{tickets[i]}</td><td>{hours[i]}</td></tr>)}</tbody>
-            </table>
-          </figure>
+          <div class="p-4">
+            <dl class="stats my-0">
+              <div><dt>Support tickets</dt><dd>190</dd><dd class="stat-change up">Resolved in 3.9h on average</dd></div>
+            </dl>
+            <figure class="mixed-chart" style="--md-comp-mixed-chart-height: 120px">
+              <figcaption class="visually-hidden">Tickets and resolution time by month</figcaption>
+              <table>
+                <thead><tr><th>Month</th><th class="area">Tickets</th><th class="dashed end">Hours to resolve</th></tr></thead>
+                <tbody>{half.map((month, i) => <tr><th>{month}</th><td>{tickets[i]}</td><td>{hours[i]}</td></tr>)}</tbody>
+              </table>
+            </figure>
+          </div>
         </article>
 <Code code={`
 <article class="outlined">
-  <dl class="stats my-0">
-    <div>
-      <dt>Support tickets</dt>
-      <dd>190</dd>
-      <dd class="stat-change up">Resolved in 3.9h on average</dd>
-    </div>
-  </dl>
-  <figure class="mixed-chart" style="--md-comp-mixed-chart-height: 120px">
-    <figcaption class="visually-hidden">Tickets and resolution time by month</figcaption>
-    <table><!-- … --></table>
-  </figure>
+  <div class="p-4">
+    <dl class="stats my-0">
+      <div>
+        <dt>Support tickets</dt>
+        <dd>190</dd>
+        <dd class="stat-change up">Resolved in 3.9h on average</dd>
+      </div>
+    </dl>
+    <figure class="mixed-chart" style="--md-comp-mixed-chart-height: 120px">
+      <figcaption class="visually-hidden">Tickets and resolution time by month</figcaption>
+      <table><!-- … --></table>
+    </figure>
+  </div>
 </article>
 `} />
         <p>
