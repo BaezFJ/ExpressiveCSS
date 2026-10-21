@@ -240,15 +240,19 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
     }
   });
 
-  browserTest(`${engine}: a named field with autocomplete submits the option picked`, async () => {
+  browserTest(`${engine}: a named field with autocomplete submits the option picked and the text added`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       await page.setContent(`<form id="a"><div class="chips" id="field"><input name="tags" aria-label="Tags"></div></form><script>${js}</script>`);
-      await page.evaluate(() => Expressive.Chips.init(document.getElementById('field'), { allowUserInput: true, autocompleteOptions: { data: [{ id: 'apple', text: 'Apple' }] } }));
-      await page.getByRole('combobox', { name: 'Tags' }).fill('ap');
+      await page.evaluate(() => Expressive.Chips.init(document.getElementById('field'), { allowUserInput: true, autocompleteOptions: { data: [{ id: 'apple', text: 'Apple' }], allowCreate: true } }));
+      const combobox = page.getByRole('combobox', { name: 'Tags' });
+      await combobox.fill('ap');
       await page.getByRole('option', { name: 'Apple' }).click();
-      assert.deepEqual(await page.evaluate(() => new FormData(document.getElementById('a')).getAll('tags')), ['apple']);
+      // The "Add" row adds the typed text as a chip, which submits too.
+      await combobox.fill('kiwi');
+      await page.getByRole('option', { name: /kiwi/ }).click();
+      assert.deepEqual(await page.evaluate(() => new FormData(document.getElementById('a')).getAll('tags')), ['apple', 'kiwi']);
       // An Autocomplete the page set up on the input itself is the page's: destroy() leaves its listbox in the field.
       const kept = await page.evaluate(() => {
         const el = document.getElementById('field');

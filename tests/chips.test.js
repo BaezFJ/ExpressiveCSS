@@ -358,3 +358,83 @@ describe('Chips static markup', () => {
     }
   });
 });
+
+describe('Chips create row', () => {
+  beforeEach(resetBody);
+
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const key = (target, name) =>
+    target.dispatchEvent(new window.KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true }));
+  /** Chips whose Autocomplete offers a create row, recording the page's onCreate. */
+  const setup = (opts = {}) => {
+    const created = [];
+    const [el, chips] = mount({
+      autocompleteOptions: {
+        data: [{ id: 'Apple' }],
+        allowCreate: true,
+        menuOptions: { inDuration: 0, outDuration: 0 },
+        onCreate: (text) => created.push(text)
+      },
+      ...opts
+    });
+    const input = el.querySelector('input');
+    const type = (value) => { input.value = value; fire(input, 'input'); };
+    /** Types the value, arrows to the last row and presses Enter. */
+    const choose = async (value) => {
+      type(value);
+      await sleep(10);
+      for (let i = 0; i < chips.autocomplete.container.children.length; i++) key(input, 'ArrowDown');
+      key(input, 'Enter');
+    };
+    const ids = () => chips.getData().map((chip) => chip.id);
+    return { chips, input, created, type, choose, ids };
+  };
+
+  for (const autocompleteOnly of [false, true]) {
+    test(`choosing the row adds a chip (autocompleteOnly: ${autocompleteOnly})`, async () => {
+      const { chips, input, created, choose, ids } = setup({ autocompleteOnly });
+      try {
+        input.focus();
+        await choose('kiwi');
+        assert.deepEqual(ids(), ['kiwi']);
+        assert.equal(input.value, '');
+        assert.equal(document.activeElement, input);
+        assert.deepEqual(created, ['kiwi'], "the page's onCreate still runs");
+      } finally {
+        chips.destroy();
+      }
+    });
+  }
+
+  test('the limit and duplicate checks still hold', async () => {
+    const { chips, input, choose, ids } = setup({ limit: 2, data: [{ id: 'kiwi' }] });
+    try {
+      input.focus();
+      await choose('kiwi');
+      assert.deepEqual(ids(), ['kiwi'], 'a duplicate adds nothing');
+      await choose('pear');
+      await choose('plum');
+      assert.deepEqual(ids(), ['kiwi', 'pear'], 'the limit holds');
+    } finally {
+      chips.destroy();
+    }
+  });
+
+  test('an autocomplete-only field still adds nothing on Enter or paste', async () => {
+    const { chips, input, type } = setup({ autocompleteOnly: true });
+    try {
+      input.focus();
+      type('kiwi');
+      await sleep(10);
+      key(input, 'Enter');
+      assert.deepEqual(chips.getData(), [], 'Enter without a chosen row');
+      const paste = new window.Event('paste', { bubbles: true, cancelable: true });
+      paste.clipboardData = { getData: () => 'a, b' };
+      input.dispatchEvent(paste);
+      assert.equal(paste.defaultPrevented, false, 'the paste stays text');
+      assert.deepEqual(chips.getData(), []);
+    } finally {
+      chips.destroy();
+    }
+  });
+});

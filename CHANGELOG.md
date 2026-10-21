@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Autocomplete's `allowCreate` option ends the list in an `Add "text"` row
+  when the typed text matches no suggestion exactly, ignoring case and
+  surrounding spaces. Choosing it with Enter or a click calls `onCreate` with
+  the trimmed text and fires `expressive:create` with `{ text }`. The
+  selection does not change; the page adds the entry. `i18n.create` sets the
+  row's label. Chips add the text as a chip, in an `autocompleteOnly` field
+  too.
 - Autocomplete's `searchDelay` option waits that many milliseconds after
   typing pauses before calling `onSearch`, so a remote search runs once per
   pause instead of once per key. A text change aborts the running search's
@@ -775,6 +782,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- A runtime tooltip that opens while a tooltip is closing, or within 300 ms
+  after that one's `exitDelay` ends, shows without waiting its
+  `enterDelay`, so moving along a toolbar shows each tooltip at once. Only
+  pages that set `enterDelay` above `0` see a difference. The first tooltip
+  still waits its delay, and a tooltip that stays open does not shorten the
+  others'. The window is fixed and has no option.
 - A Chips field whose text `<input>` has a `name` now submits its chips
   under that name, one `id` each, instead of the text being typed. A page
   that read the draft text from the form should read `chips.getData()`, or

@@ -9,7 +9,7 @@ Component ID: `chips`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `b9bf85c438aefa3637761f6bac66668d48732d7f9185736f6d95cc64bcf02a88`
+Contract SHA-256: `4a61552e533389040a7d2a11af1e9daddd5eb5b2ce854fa282ff8d681579b247`
 
 #### Selection and adaptation
 
@@ -82,7 +82,7 @@ A long label wraps and the chip grows from its 32dp minimum, with 4dp above and 
 | `allowUserInput` | Boolean | `false` | If true, render a text field and a delete button per chip, so the user can add and remove chips. |
 | `i18n` | Object | `{ remove: 'Remove', required: 'Add at least one item.' }` | Strings the component generates. `remove` prefixes the delete button's accessible name, giving "Remove Apple". `required` is what a required field says while it has no chips. |
 | `autocompleteOptions` | Object | `{}` | Options passed to Autocomplete on the input. A non-empty object enables autocomplete. |
-| `autocompleteOnly` | Boolean | `false` | If true, Enter will not add a value that is not in the autocomplete list. |
+| `autocompleteOnly` | Boolean | `false` | If true, Enter will not add a value that is not in the autocomplete list. An `Add` row from `allowCreate` still adds its text. |
 | `limit` | Number | `Infinity` | Maximum number of chips. |
 | `onChipAdd` | Function | `null` | Called after a chip is added. Receives the container and the chip element. |
 | `onChipSelect` | Function | `null` | Called when a chip is selected. Receives the container and the chip element. |

@@ -362,6 +362,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:select` | Menu, Datepicker, Timepicker | `{ item }`, `{ date }`, `{ hours, minutes }` |
 | `expressive:confirm`, `expressive:cancel` | Datepicker, Timepicker | none |
 | `expressive:autocomplete` | Autocomplete | `{ values }` |
+| `expressive:create` | Autocomplete, from its `Add` row | `{ text }` |
 | `expressive:chip-add`, `chip-select`, `chip-delete` | Chips | `{ chip }` |
 | `expressive:change` | ButtonGroup, Menu checkbox and radio items, ScrollSpy (from the section), Tour | `{ button, pressed }`, `{ item, checked }`, `{ link }`, `{ step, index }` |
 | `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour | Tour's close: `{ completed }` |
@@ -6679,7 +6680,7 @@ For HTML, point `data-tooltip-id` at an element. That element is moved into the 
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.Tooltip`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.tooltipped`. On touch, a runtime tooltip shows on a long press of half a second, without `enterDelay`, and stays for a second and a half after the finger lifts; the long press does not press the button or follow the link, and a tap, or a press that turns into a scroll, shows nothing.
+The IIFE bundle exposes `Expressive.Tooltip`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.tooltipped`. On touch, a runtime tooltip shows on a long press of half a second, without `enterDelay`, and stays for a second and a half after the finger lifts; the long press does not press the button or follow the link, and a tap, or a press that turns into a scroll, shows nothing. A tooltip that opens while a tooltip is closing, or within 300 ms after that one's `exitDelay` ends, shows without waiting its `enterDelay`, so moving along a toolbar shows each tooltip at once.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
@@ -6705,7 +6706,7 @@ Constructor and `init` options. `data-tooltip`, `data-position`, and `data-toolt
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `exitDelay` | Number | `200` | Delay before the tooltip disappears, in milliseconds. |
-| `enterDelay` | Number | `0` | Delay before the tooltip appears, in milliseconds. |
+| `enterDelay` | Number | `0` | Delay before the tooltip appears, in milliseconds. Skipped while a tooltip is closing and for 300 ms after its `exitDelay` ends. |
 | `tooltipId` | String | — | Id of an element used as the tooltip body. Set by `data-tooltip-id`. Marks the bubble `rich`. |
 | `text` | String | `''` | Plain-text content. Set by `data-tooltip`. Ignored when `tooltipId` is set. |
 | `margin` | Number | `4` | Distance from the activator, in pixels, not counting `transitionMovement`. M3 is 4dp. |
@@ -8532,7 +8533,7 @@ Backspace and Delete target the focused chip, then select the preceding survivor
 
 `allowUserInput` defaults to `false`. Without it there is no text field and rendered chips have no delete button. Pass `allowUserInput: true` for the interactive field. `AutoInit()` starts every `.chips` except `no-autoinit`, but it uses the defaults, so those wrappers stay display-only until you call `init` with options.
 
-In a form, give the field's `<input>` a `name`. The chips submit under it, one `id` per chip, as a multiple select does. `init` wraps the input in an `<expressive-chips-control>`, a form-associated custom element with `display: contents`, and moves the name onto it, so half-typed text is not submitted. The form treats the control as the field. A disabled `fieldset` or a form reset applies to it at once, including in a detached form or a shadow root, and a canceled reset changes nothing. Setting `disabled`, `readonly` or `form` on the input applies at the next microtask. A `required` input makes the field valid once it has a chip, and says `i18n.required` until then, unless the input is read-only. The control holds that validity apart from any error the page sets on the input, and a blocked submit focuses the input. The input itself stays valid and does not match `:invalid`, so style or report the error from the control or the form. The input keeps `aria-required="true"`. `destroy()` unwraps the input and gives its name and `required` back. Without form-associated custom elements, as in jsdom, the input is left as it is and submits its own text. Pasting text that lists values, split by commas, tabs or new lines, adds a chip for each, up to `limit`; an `autocompleteOnly` field pastes as text.
+In a form, give the field's `<input>` a `name`. The chips submit under it, one `id` per chip, as a multiple select does. `init` wraps the input in an `<expressive-chips-control>`, a form-associated custom element with `display: contents`, and moves the name onto it, so half-typed text is not submitted. The form treats the control as the field. A disabled `fieldset` or a form reset applies to it at once, including in a detached form or a shadow root, and a canceled reset changes nothing. Setting `disabled`, `readonly` or `form` on the input applies at the next microtask. A `required` input makes the field valid once it has a chip, and says `i18n.required` until then, unless the input is read-only. The control holds that validity apart from any error the page sets on the input, and a blocked submit focuses the input. The input itself stays valid and does not match `:invalid`, so style or report the error from the control or the form. The input keeps `aria-required="true"`. `destroy()` unwraps the input and gives its name and `required` back. Without form-associated custom elements, as in jsdom, the input is left as it is and submits its own text. Pasting text that lists values, split by commas, tabs or new lines, adds a chip for each, up to `limit`; an `autocompleteOnly` field pastes as text. With `allowCreate: true` in `autocompleteOptions`, choosing the `Add` row adds the typed text as a chip, in an `autocompleteOnly` field too, and then calls the page's own `onCreate`.
 
 ```html
 <form>
@@ -8607,7 +8608,7 @@ const chip = {
 | `allowUserInput` | Boolean | `false` | If true, render a text field and a delete button per chip, so the user can add and remove chips. |
 | `i18n` | Object | `{ remove: 'Remove', required: 'Add at least one item.' }` | Strings the component generates. `remove` prefixes the delete button's accessible name, giving "Remove Apple". `required` is what a required field says while it has no chips. |
 | `autocompleteOptions` | Object | `{}` | Options passed to Autocomplete on the input. A non-empty object enables autocomplete. |
-| `autocompleteOnly` | Boolean | `false` | If true, Enter will not add a value that is not in the autocomplete list. |
+| `autocompleteOnly` | Boolean | `false` | If true, Enter will not add a value that is not in the autocomplete list. An `Add` row from `allowCreate` still adds its text. |
 | `limit` | Number | `Infinity` | Maximum number of chips. |
 | `onChipAdd` | Function | `null` | Called after a chip is added. Receives the container and the chip element. |
 | `onChipSelect` | Function | `null` | Called when a chip is selected. Receives the container and the chip element. |
@@ -8836,6 +8837,17 @@ onSearch: function(text, autocomplete, signal) {
 }
 ```
 
+Set `allowCreate` to offer the typed text as a new value. When the trimmed text matches no listed suggestion's `text`, or its `id` when it has no `text`, ignoring case, the list ends in an `Add "text"` row. Choosing it with Enter or a click calls `onCreate` with the trimmed text and fires `expressive:create` with `{ text }`. The selection does not change, so add and select the entry yourself:
+
+```text
+allowCreate: true,
+onCreate: function(text, autocomplete) {
+  const entry = { id: text, text: text };
+  autocomplete.options.data.push(entry);
+  autocomplete.setMenuItems(autocomplete.options.data, [entry.id], false);
+}
+```
+
 ### Options
 
 | Name | Type | Default | Description |
@@ -8846,15 +8858,17 @@ onSearch: function(text, autocomplete, signal) {
 | `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
 | `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when the search text changes or the autocomplete is destroyed. |
+| `allowCreate` | Boolean | `false` | If true, text that matches no listed suggestion exactly ends the list in an `Add "text"` row. Choosing it calls `onCreate` and fires `expressive:create`; the selection does not change. |
+| `onCreate` | Function | `null` | Called with the trimmed text and the instance when the `Add` row is chosen. |
 | `searchDelay` | Number | `0` | Milliseconds to wait after typing pauses before calling `onSearch`, so remote data is fetched once per pause. A search on focus runs at once. Blur, `destroy()` and choosing a single result cancel a pending search. `0` searches on every input. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
 | `selected` | Array | `[]` | Initial selected ids, strings or numbers. An id without loaded data displays the id. Pass the selected ids to `setMenuItems` with the loaded data to resolve their labels. |
 
-Autocomplete provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
+Autocomplete provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. `i18n.create(text)` labels the `Add` row and returns `Add "text"`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
 
-Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still pass the signal to their requests, so a stale response cannot replace newer results, and own error handling. Results delivered after `destroy()` are ignored, and results delivered after the user leaves the field update the list without opening it. Test actual spoken delivery with a screen reader.
+Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback and the `Add` row. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still pass the signal to their requests, so a stale response cannot replace newer results, and own error handling. Results delivered after `destroy()` are ignored, and results delivered after the user leaves the field update the list without opening it. Test actual spoken delivery with a screen reader.
 
 ### Methods
 
