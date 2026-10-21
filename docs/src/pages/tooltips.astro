@@ -35,7 +35,11 @@ const S = defineSections([
           motion. On touch, a runtime tooltip shows on a long press of half a
           second, without <code>enterDelay</code>, and stays for a second and a half after the finger lifts; the
           long press does not press the button or follow the link, and a tap,
-          or a press that turns into a scroll, shows nothing.
+          or a press that turns into a scroll, shows nothing. A runtime
+          tooltip that opens while a tooltip is closing, or within 300 ms
+          after that one's <code>exitDelay</code> ends, shows without waiting
+          its <code>enterDelay</code>, so moving along a toolbar shows each
+          tooltip at once.
           CSS-only tooltips have no Escape handler. Use them only after you
           verify the applicable WCAG 1.4.13 conditions and dismissal exception.
           Otherwise, use a verified runtime tooltip or persistent supporting text.
@@ -223,7 +227,7 @@ Expressive.AutoInit(document.body, {
               <td><code>enterDelay</code></td>
               <td>Number</td>
               <td><code>0</code></td>
-              <td>Delay before the tooltip appears, in milliseconds.</td>
+              <td>Delay before the tooltip appears, in milliseconds. Skipped while a tooltip is closing and for 300 ms after its <code>exitDelay</code> ends.</td>
             </tr>
             <tr>
               <td><code>tooltipId</code></td>
