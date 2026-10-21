@@ -1413,6 +1413,262 @@ describe('Autocomplete searchDelay', () => {
   }
 });
 
+describe('Autocomplete allowCreate', () => {
+  beforeEach(() => resetBody());
+
+  const data = [{ id: 'apple', text: 'Apple' }, { id: 'banana', text: 'Banana' }];
+  /** An autocomplete with a create row, logging its callback and event in order. */
+  const setup = (options = {}, id = 'ac') => {
+    document.body.insertAdjacentHTML('beforeend', `<div class="field"><input class="autocomplete" type="text" id="${id}"></div>`);
+    const el = document.getElementById(id);
+    const log = [];
+    const instance = Expressive.Autocomplete.init(el, {
+      data,
+      allowCreate: true,
+      menuOptions: { inDuration: 0, outDuration: 0 },
+      onCreate: (text, ac) => log.push(['callback', text, ac]),
+      ...options
+    });
+    el.addEventListener('expressive:create', (e) => log.push(['event', e.detail]));
+    const type = (value) => { el.value = value; fire(el, 'input'); };
+    const key = (name) => el.dispatchEvent(new window.KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true }));
+    const rows = () => [...instance.container.querySelectorAll('li')];
+    const createRow = () => instance.container.querySelector('li[data-create]');
+    /** Arrows down to the last row, the create row when there is one. */
+    const toLast = async () => {
+      await sleep(10);
+      for (let i = 0; i < rows().length; i++) key('ArrowDown');
+    };
+    return { el, instance, log, type, key, rows, createRow, toLast };
+  };
+
+  test('Enter on the create row reports the typed text and closes the list', async () => {
+    const { el, instance, log, type, key, rows, createRow, toLast } = setup();
+    try {
+      el.focus();
+      type('kiwi');
+      assert.equal(rows().at(-1), createRow());
+      assert.equal(createRow().textContent, 'Add "kiwi"');
+      await toLast();
+      assert.equal(el.getAttribute('aria-activedescendant'), createRow().id);
+      key('Enter');
+      assert.deepEqual(log, [['callback', 'kiwi', instance], ['event', { text: 'kiwi' }]]);
+      assert.equal(instance.isOpen, false);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('an exact match offers no row and a partial match offers it last', () => {
+    const { el, instance, type, rows, createRow } = setup();
+    // The default search keeps whitespace, so " Apple " needs one that trims.
+    const trimmed = setup({
+      onSearch: (text, ac) => ac.setMenuItems(data.filter((d) => d.text.toLowerCase().includes(text.trim().toLowerCase())))
+    }, 'trimmed');
+    try {
+      el.focus();
+      type('apple');
+      assert.equal(createRow(), null);
+      type('app');
+      assert.deepEqual(rows().map((li) => li.dataset.id ?? li.textContent), ['apple', 'Add "app"']);
+      trimmed.el.focus();
+      trimmed.type(' Apple ');
+      assert.deepEqual(trimmed.rows().map((li) => li.dataset.id), ['apple']);
+    } finally {
+      instance.destroy();
+      trimmed.instance.destroy();
+    }
+  });
+
+  test('no row while the option is off or the text is blank or too short', () => {
+    const off = setup({ allowCreate: false }, 'off');
+    const short = setup({ minLength: 3 }, 'short');
+    try {
+      off.el.focus();
+      off.type('kiwi');
+      assert.equal(off.createRow(), null);
+      short.el.focus();
+      short.type('   ');
+      assert.equal(short.createRow(), null, 'blank text');
+      short.type('ki');
+      assert.equal(short.createRow(), null, 'below minLength');
+      short.type('  ki  ');
+      assert.equal(short.createRow(), null, 'below minLength once trimmed');
+    } finally {
+      off.instance.destroy();
+      short.instance.destroy();
+    }
+  });
+
+  for (const allowUnsafeHTML of [false, true]) {
+    test(`the row is an option whose label is plain text (allowUnsafeHTML: ${allowUnsafeHTML})`, () => {
+      const { el, instance, type, createRow } = setup({ allowUnsafeHTML });
+      try {
+        el.focus();
+        type('<b>kiwi</b>');
+        const row = createRow();
+        assert.equal(row.getAttribute('role'), 'option');
+        assert.equal(row.getAttribute('aria-selected'), 'false');
+        assert.ok(row.classList.contains('autocomplete-create'));
+        assert.equal(row.hasAttribute('data-id'), false);
+        assert.equal(row.textContent, 'Add "<b>kiwi</b>"');
+        assert.equal(row.querySelector('b'), null);
+      } finally {
+        instance.destroy();
+      }
+    });
+  }
+
+  test('a click on the row reports it without selecting anything', () => {
+    const { el, instance, log, type, createRow } = setup();
+    let selected = 0;
+    instance.selectOption = () => selected++;
+    try {
+      el.focus();
+      type('kiwi');
+      fire(createRow(), 'click');
+      assert.deepEqual(log, [['callback', 'kiwi', instance], ['event', { text: 'kiwi' }]]);
+      assert.equal(selected, 0);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  for (const isMultiSelect of [false, true]) {
+    test(`choosing the row keeps the selection and the text (isMultiSelect: ${isMultiSelect})`, async () => {
+      let searches = 0;
+      const { el, instance, type, key, toLast } = setup({
+        isMultiSelect,
+        onSearch: (text, ac) => (searches++, Expressive.Autocomplete.defaults.onSearch(text, ac))
+      });
+      const fired = [];
+      el.addEventListener('change', () => fired.push('change'));
+      el.addEventListener('expressive:autocomplete', () => fired.push('autocomplete'));
+      try {
+        el.focus();
+        type('kiwi');
+        await toLast();
+        key('Enter');
+        assert.deepEqual(instance.selectedValues, []);
+        assert.deepEqual(fired, []);
+        assert.equal(el.value, 'kiwi');
+        const before = searches;
+        fire(el, 'focus');
+        assert.equal(searches, before, 'returning to the field is not a new search');
+      } finally {
+        instance.destroy();
+      }
+    });
+  }
+
+  test('the results announcement does not count the row', () => {
+    const { el, instance, type } = setup();
+    const announcer = el.parentElement.querySelector('.autocomplete-status');
+    try {
+      el.focus();
+      type('kiwi');
+      assert.equal(announcer.textContent, instance.options.i18n.noResults);
+      type('ban');
+      assert.equal(announcer.textContent, '1 result available.');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('the row follows late results and the text', () => {
+    const { el, instance, type, createRow } = setup({ onSearch: () => {} });
+    const results = () => instance.setMenuItems([{ id: 'pear' }]);
+    try {
+      el.focus();
+      type('pe');
+      results();
+      assert.deepEqual([...instance.container.querySelectorAll('li')].map((li) => li.dataset.id ?? li.textContent), ['pear', 'Add "pe"']);
+      type('pea');
+      results();
+      assert.equal(createRow().textContent, 'Add "pea"');
+      type('pear');
+      results();
+      assert.equal(createRow(), null);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a row left from older results creates the text it shows', async () => {
+    const { el, instance, log, type, key, createRow } = setup({ onSearch: () => {} });
+    try {
+      el.focus();
+      type('kiwi');
+      instance.setMenuItems([]);
+      await sleep(10);
+      type('kiwis'); // its results have not arrived
+      assert.equal(createRow().textContent, 'Add "kiwi"');
+      key('ArrowDown');
+      key('Enter');
+      assert.deepEqual(log[0].slice(0, 2), ['callback', 'kiwi']);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('after late results, returning to the field is not a new search', async () => {
+    let searches = 0;
+    const { el, instance, type, key } = setup({ onSearch: () => searches++ });
+    try {
+      el.focus();
+      type('kiwi');
+      instance.setMenuItems([]); // late results reset the search text
+      await sleep(10);
+      key('ArrowDown');
+      key('Enter');
+      const before = searches;
+      fire(el, 'focus');
+      assert.equal(searches, before);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('choosing the row cancels a search waiting for typing to pause', async () => {
+    let searches = 0;
+    const { el, instance, type, key } = setup({
+      searchDelay: 20,
+      onSearch: (text, ac) => (searches++, ac.setMenuItems([]))
+    });
+    try {
+      el.focus();
+      type('kiwi');
+      await sleep(40);
+      assert.equal(instance.menu.isOpen, true);
+      type('kiwi '); // a search is now waiting
+      key('ArrowDown');
+      key('Enter');
+      await sleep(60);
+      assert.equal(searches, 1, 'the waiting search never ran');
+      assert.equal(instance.menu.isOpen, false, 'the list stays closed');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a click from the focused row returns focus to the field', () => {
+    const { el, instance, type, createRow } = setup();
+    try {
+      el.focus();
+      type('kiwi');
+      const row = createRow();
+      // A mouse press keeps the list through the blur that focusing the row causes.
+      row.dispatchEvent(new window.PointerEvent('pointerdown', { bubbles: true, isPrimary: true, pointerType: 'mouse', button: 0 }));
+      row.focus();
+      fire(row, 'click');
+      row.dispatchEvent(new window.PointerEvent('pointerup', { bubbles: true, isPrimary: true, pointerType: 'mouse' }));
+      assert.equal(document.activeElement, el);
+    } finally {
+      instance.destroy();
+    }
+  });
+});
+
 describe('Autocomplete with delayed results', () => {
   for (const isMultiSelect of [false, true]) {
     test(`a new query clears the active result before its results arrive (isMultiSelect: ${isMultiSelect})`, async () => {

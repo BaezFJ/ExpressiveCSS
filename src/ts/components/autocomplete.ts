@@ -29,6 +29,7 @@ export interface AutocompleteOptions extends BaseOptions {
     noResults: string;
     results: (count: number) => string;
     selected: (count: number) => string;
+    create: (text: string) => string;
   }>;
   /**
    * Data object defining autocomplete options with
@@ -72,6 +73,20 @@ export interface AutocompleteOptions extends BaseOptions {
    */
   searchDelay: number;
   /**
+   * Ends the list in an "Add" row when the typed text matches no suggestion
+   * exactly. Choosing the row calls `onCreate` and fires `expressive:create`;
+   * the selection does not change.
+   * @default false
+   */
+  allowCreate: boolean;
+  /**
+   * Called when the person chooses the "Add" row.
+   * @param text The typed text, trimmed.
+   * @param autocomplete Current autocomplete instance.
+   * @default null
+   */
+  onCreate: (text: string, autocomplete: Autocomplete) => void;
+  /**
    * If true will render the key from each item directly as HTML.
    * User input MUST be properly sanitized first.
    * @default false
@@ -93,7 +108,8 @@ const _defaults: AutocompleteOptions = {
     loading: 'Loading results.',
     noResults: 'No results.',
     results: count => `${count} ${count === 1 ? 'result' : 'results'} available.`,
-    selected: count => `${count} ${count === 1 ? 'item' : 'items'} selected.`
+    selected: count => `${count} ${count === 1 ? 'item' : 'items'} selected.`,
+    create: text => `Add "${text}"`
   },
   data: [], // Autocomplete data set
   onAutocomplete: null, // Callback for when autocompleted
@@ -105,6 +121,8 @@ const _defaults: AutocompleteOptions = {
   },
   minLength: 1, // Min characters before autocomplete starts
   searchDelay: 0,
+  allowCreate: false,
+  onCreate: null,
   isMultiSelect: false,
   onSearch: (text: string, autocomplete: Autocomplete) => {
     const normSearch = text.toLocaleLowerCase();
@@ -348,8 +366,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     const userOnItemClick = menuOptions.onItemClick;
     menuOptions.onItemClick = (li) => {
       if (!li) return;
-      const entryID = li.getAttribute('data-id');
-      this.selectOption(entryID);
+      this._choose(li);
       if (typeof userOnItemClick === 'function') userOnItemClick.call(this.menu, li);
     };
     this.menu = Menu.init(this.el, menuOptions);
@@ -479,7 +496,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (e.key === Utils.keys.ENTER && this.activeIndex >= 0) {
       const liElement = this.container.querySelectorAll('li')[this.activeIndex];
       if (liElement) {
-        this.selectOption(liElement.getAttribute('data-id'));
+        this._choose(liElement);
         e.preventDefault();
       }
       return;
@@ -672,6 +689,36 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       const item = this._createMenuItem(this.menuItems[i]);
       this.container.append(item);
     }
+    const createText = this._createText();
+    if (createText) this.container.append(this._createRow(createText));
+  }
+
+  /** The typed text to offer as a new value, or '' when the option is off, the text is short or a suggestion matches it. */
+  private _createText() {
+    const text = this.el.value.trim();
+    if (!this.options.allowCreate || text.length < this.options.minLength) return '';
+    const typed = text.toLocaleLowerCase();
+    return this.menuItems.some((entry) => (entry.text || String(entry.id)).toLocaleLowerCase() === typed) ? '' : text;
+  }
+
+  /** The "Add" row. Its label is what the person typed, so it is set as text, never as HTML. */
+  private _createRow(text: string) {
+    const item = document.createElement('li');
+    item.id = `autocomplete-option-${Utils.guid()}`;
+    item.setAttribute('role', 'option');
+    item.setAttribute('aria-selected', 'false');
+    // Not data-id, which an entry's id could equal. The text is kept on the
+    // row because the field can change before newer results replace it.
+    item.setAttribute('data-create', text);
+    item.classList.add('autocomplete-create');
+    item.setAttribute('style', 'display:grid; user-select: none; align-items: center;');
+    item.tabIndex = -1;
+    const label = document.createElement('div');
+    label.classList.add('item-text');
+    label.setAttribute('style', 'padding:5px;overflow:hidden;line-height:1.2;font-weight:500;');
+    label.textContent = this.options.i18n.create(text);
+    item.append(label);
+    return item;
   }
 
   _setStatusLoading() {
@@ -810,6 +857,23 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       this.oldVal = this.el.value.toLocaleLowerCase();
       this.el.focus();
     }
+  }
+
+  /** Commits a row chosen by Enter or a click. */
+  private _choose(li: Element) {
+    if (li.hasAttribute('data-create')) this._create(li.getAttribute('data-create'));
+    else this.selectOption(li.getAttribute('data-id'));
+  }
+
+  private _create(text: string) {
+    const refocus = Utils.focusIsIn(this.container);
+    // A search still waiting would reopen the list on the same text.
+    this._cancelPendingSearch();
+    // The field keeps the text, so returning to it is not a new search.
+    this.oldVal = this.el.value.toLocaleLowerCase();
+    this.close();
+    if (refocus) this.el.focus();
+    this._notify('create', this.options.onCreate, { args: [text, this], detail: { text } });
   }
 
   /**
