@@ -4,7 +4,7 @@ Date: 2026-10-21
 Roadmap phase: Phase 22, chart transitions between datasets
 Branch: `feature/2026-10-21-chart-transitions`
 Base: `origin/master` at `8d45c2c4`, fetched 2026-10-21
-Status: specified; implementation and validation follow in the same run
+Status: implemented 2026-10-21. Local checks pass except the gzip budget test, which fails on this machine for master too (see V9); CI and review pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 22](../../../../roadmap.md#phase-22-chart-transitions-between-datasets). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -37,6 +37,15 @@ These facts come from the base commit.
 - A series, row or value that goes away is removed at once, as it is today.
 - Reduced motion: when `prefers-reduced-motion: reduce` matches, `update()` adds no `<animate>` elements and writes no start positions, so the final shape appears at once. The stylesheets already turn off the column transition under that query.
 - An `update()` during a running transition starts the new one from the previous target, not from the shape on screen at that moment. Reading a running SMIL path is not possible in current engines. This is a documented limit.
+- Added after the final review: a zero `--md-sys-motion-duration-medium4` skips the line motion. A Playwright probe showed that SVG treats `dur="0s"` as indefinite and holds the old shape in all three engines.
+
+### Documented limits
+
+Found during the final review and left as limits, with a `ponytail:` comment where they live in code:
+
+- An easing token that overshoots, such as `cubic-bezier(0.34, 1.56, 0.64, 1)`, is not a valid SVG spline, so the lines skip their motion while the columns still overshoot.
+- In a stacked mixed chart with columns on both scales, a new end-scale column series starts from the top of the start-scale stack instead of its own zero.
+- `--from-top` and `--from-bottom` stay on the spans. A chart hidden with `display: none` and shown again replays its columns from the values before the last `update()`, where it used to grow them from zero.
 
 ## Opt-in or migration
 

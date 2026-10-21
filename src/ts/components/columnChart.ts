@@ -132,6 +132,8 @@ export class ColumnChart extends LineChart {
    * After update(), writes where a column grows from: its old ends, or for
    * a column new to the chart, the zero line or the segment below it in a
    * stack. Returns the next segment's start in a stack.
+   * ponytail: in a stacked mixed chart a new end-scale column starts from
+   * the start-scale stack; track `below` per scale if that matters.
    */
   private _start(column: HTMLElement, series: Series, index: number, below: number, clamp: Clamp): number {
     if (!this._before.length) return below;

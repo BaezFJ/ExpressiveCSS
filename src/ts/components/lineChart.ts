@@ -111,29 +111,34 @@ let _gradientId = 0;
 const startsFrom = (series: Series[]) =>
   typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches ? [] : series;
 
+/** A cubic-bezier() easing's four numbers, or the standard curve's for any other easing. */
+const splines = (easing: string) => /cubic-bezier\(([^)]*)\)/.exec(easing)?.[1] ?? '0.2, 0, 0, 1';
+
 /**
  * The timing of the paths' motion after update(), from the chart's motion
- * tokens, as the columns' CSS transition reads them. A curve other than a
- * cubic-bezier() gets the standard one.
+ * tokens, as the columns' CSS transition reads them. Null for a zero
+ * duration, which SVG would take as indefinite and hold the old shape.
+ * ponytail: a curve that overshoots is not a valid SVG spline, so the
+ * paths then skip their motion; a linear() token gets the standard curve.
  */
 function pace(el: Element) {
   const style = getComputedStyle(el);
-  const curve = /cubic-bezier\(([^)]*)\)/.exec(style.getPropertyValue('--md-sys-motion-easing-standard'));
-  return {
-    dur: style.getPropertyValue('--md-sys-motion-duration-medium4').trim() || '400ms',
-    keySplines: curve?.[1] ?? '0.2, 0, 0, 1'
-  };
+  const dur = style.getPropertyValue('--md-sys-motion-duration-medium4').trim() || '400ms';
+  return parseFloat(dur) > 0 ? { dur, keySplines: splines(style.getPropertyValue('--md-sys-motion-easing-standard')) } : null;
 }
 
 /**
  * Moves a path from the path data `from` to its own. SVG animation rather
  * than a CSS transition, since WebKit cannot transition the d property.
  */
-function morph(path: SVGElement, from: string, timing: ReturnType<typeof pace>) {
+function morph(path: SVGElement, from: string, timing: Pace) {
   const to = path.getAttribute('d');
   if (from === to) return;
   path.append(svgNode('animate', { attributeName: 'd', from, to, ...timing, calcMode: 'spline', keyTimes: '0;1', fill: 'remove' }));
 }
+
+/** The paths' motion timing. */
+type Pace = NonNullable<ReturnType<typeof pace>>;
 
 /** A series' line, the fill under it and its dots, as path data. */
 interface Shape {
@@ -782,8 +787,8 @@ export class LineChart extends Component<LineChartOptions> {
       'aria-hidden': 'true',
       focusable: 'false'
     });
-    const starts = this._starts(drawn);
-    const timing = starts.length ? pace(this.el) : undefined;
+    const timing = this._before.length ? pace(this.el) : null;
+    const starts = timing ? this._starts(drawn) : [];
     svg.append(...drawn.map((series, i) => this._line(series, starts[i], timing)));
     return svg;
   }
@@ -794,7 +799,6 @@ export class LineChart extends Component<LineChartOptions> {
    * or in a stack where the series below starts, so the stack stays joined.
    */
   private _starts(drawn: Series[]): Shape[] {
-    if (!this._before.length) return [];
     let below: RowY | undefined;
     return drawn.map((series) => {
       const base: RowY = !series.base ? () => 100 : below ?? this._baseY(series);
@@ -850,7 +854,7 @@ export class LineChart extends Component<LineChartOptions> {
    * One series' group: its line, the fill under it, and with .points a dot
    * at each value. After update() each path moves from its `from` shape.
    */
-  private _line(series: Series, from?: Shape, timing?: ReturnType<typeof pace>) {
+  private _line(series: Series, from?: Shape, timing?: Pace | null) {
     const group = svgNode('g', {
       class: `${this._type}-series ${series.className}`.trim(),
       'data-series': series.color
@@ -863,6 +867,7 @@ export class LineChart extends Component<LineChartOptions> {
 
     const path = (part: keyof Shape, name: string, attributes: Record<string, string> = {}) => {
       const node = svgNode('path', { class: `${this._type}-${name}`, d: shape[part], ...attributes });
+      // A start shape comes with the timing it moves on.
       if (from) morph(node, from[part], timing!);
       return node;
     };

@@ -22,7 +22,10 @@ const html = `<style>${css}</style>
     ${chart('class="line-chart toggle" id="toggle"', '<th>Sales</th><th>Costs</th>', [['Jan', '20', '50'], ['Feb', '20', '50']])}
     ${chart('class="line-chart stacked" id="stacked"', '<th>Sales</th>', [['Jan', '20'], ['Feb', '20']])}
     ${chart('class="line-chart points" id="gap"', '<th>Sales</th>', [['Jan', '10'], ['Feb', ''], ['Mar', '30']])}
+    ${chart('class="line-chart" id="paced" style="--md-sys-motion-duration-medium4: 1000ms; --md-sys-motion-easing-standard: cubic-bezier(0.3, 0, 1, 1)"', '<th>Sales</th>', [['Jan', '20'], ['Feb', '20']])}
+    ${chart('class="line-chart" id="still" style="--md-sys-motion-duration-medium4: 0s"', '<th>Sales</th>', [['Jan', '20'], ['Feb', '20']])}
     ${chart('class="column-chart" id="column"', '<th>Sales</th>', [['Jan', '20']])}
+    ${chart('class="column-chart stacked" id="stack"', '<th>Sales</th>', [['Jan', '20']])}
     ${chart('class="bar-chart" id="bar"', '<th>Sales</th>', [['Jan', '20']])}
     ${chart('class="mixed-chart" id="mixed"', '<th class="column">Sales</th><th>Margin</th>', [['Jan', '20', '20'], ['Feb', '20', '20']])}
   </div>
@@ -71,6 +74,8 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         el.querySelectorAll('tbody td:nth-child(2)').forEach((td) => { td.textContent = '80'; });
         Expressive.LineChart.getInstance(el).update();
         const svg = el.querySelector('.line-chart-plot svg');
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        const running = svg.getCurrentTime() > 0;
         svg.pauseAnimations();
         const [first, second] = el.querySelectorAll('.line-chart-series');
         const line = first.querySelector('.line-chart-line');
@@ -85,12 +90,14 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
           paths: motion.map((animate) => animate.parentElement.getAttribute('class')),
           timing: motion.map((animate) => [animate.getAttribute('attributeName'), animate.getAttribute('dur'), animate.getAttribute('keySplines').replace(/\s+/g, '')]),
           unchanged: second.querySelectorAll('animate').length,
+          running,
           samples: [await at(0), await at(0.2), await at(1)],
         };
       });
       assert.deepEqual(result.paths, ['line-chart-area', 'line-chart-line', 'line-chart-points']);
       assert.deepEqual(result.timing, Array(3).fill(['d', '400ms', '0.2,0,0,1']));
       assert.equal(result.unchanged, 0, 'a series that did not change does not move');
+      assert.equal(result.running, true, 'the motion plays from the moment the plot is drawn');
       const [start, middle, end] = result.samples;
       assert.equal(start, 80, 'the line starts at the old values');
       assert.ok(middle > 20 && middle < 80, `mid-transition the line is between the shapes, at ${middle}`);
@@ -189,6 +196,41 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
     }
   });
 
+  browserTest(`${engine}: the line motion follows the motion tokens, and a zero duration skips it`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await open(browser);
+      const result = await page.evaluate(() => ['paced', 'still'].map((id) => {
+        const el = document.getElementById(id);
+        el.querySelectorAll('tbody td').forEach((td) => { td.textContent = '80'; });
+        Expressive.LineChart.getInstance(el).update();
+        const animate = el.querySelector('.line-chart-line animate');
+        return animate && [animate.getAttribute('dur'), animate.getAttribute('keySplines').replace(/\s+/g, '')];
+      }));
+      assert.deepEqual(result, [['1000ms', '0.3,0,1,1'], null]);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: a new stacked column starts on the segment below`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await open(browser);
+      const starts = await page.locator('#stack').evaluate((el) => {
+        el.querySelector('tbody td').textContent = '30';
+        el.querySelector('thead tr').insertAdjacentHTML('beforeend', '<th>Costs</th>');
+        el.querySelector('tbody tr').insertAdjacentHTML('beforeend', '<td>10</td>');
+        Expressive.ColumnChart.getInstance(el).update();
+        return [...el.querySelectorAll('.column-chart-columns span')].map((span) =>
+          [span.style.getPropertyValue('--from-top'), span.style.getPropertyValue('--from-bottom')]);
+      });
+      assert.deepEqual(starts, [['80%', '0%'], ['80%', '20%']], 'the new segment starts collapsed on the old top of the one below');
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: a mixed chart moves its columns and lines together`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
@@ -198,12 +240,14 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
         Expressive.MixedChart.getInstance(el).update();
         const span = el.querySelector('.mixed-chart-columns span');
         const animate = el.querySelector('.mixed-chart-line animate');
+        const motion = span.getAnimations();
+        motion.forEach((animation) => { animation.pause(); animation.currentTime = 0; });
         return {
-          column: [span.style.getPropertyValue('--from-top'), span.getAnimations().length],
+          column: [parseFloat(getComputedStyle(span).clipPath.slice(6)), motion.length],
           line: [animate.getAttribute('from'), animate.getAttribute('to')],
         };
       });
-      assert.deepEqual(result.column, ['80%', 1], 'the column moves from its old top');
+      assert.deepEqual(result.column, [80, 1], 'the column moves from its old top');
       assert.deepEqual([...new Set(ys(result.line[0]))], [80], 'the line moves from its old values');
       assert.deepEqual([...new Set(ys(result.line[1]))], [20]);
     } finally {
