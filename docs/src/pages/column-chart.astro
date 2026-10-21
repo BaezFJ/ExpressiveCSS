@@ -460,8 +460,10 @@ ${cardScript.replace(/^/gm, "  ")}
         <p>
           <code>AutoInit()</code> starts every <code>.column-chart</code>. To
           start one yourself, call <code>ColumnChart.init</code>. After changing its
-          table, call <code>update()</code> to redraw it in place. It takes the line chart's
-          options and methods.
+          table, call <code>update()</code> to redraw it in place. The columns
+          move from their old values to the new ones, and a new column grows
+          from zero; with reduced motion they appear at once. It takes the line
+          chart's options and methods.
         </p>
 <Code code={`
 const chart = Expressive.ColumnChart.init(document.querySelector('.column-chart'), {
