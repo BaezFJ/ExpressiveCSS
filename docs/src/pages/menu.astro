@@ -239,7 +239,7 @@ Expressive.AutoInit(document.body, {
               <td><code>closeOnClick</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>If true, close the menu when a leaf item is clicked. A click on a row that owns a nested <code>&lt;menu&gt;</code> toggles that flyout and does not close the root.</td>
+              <td>If true, close the menu when a leaf item is clicked. A click on a row that owns a nested <code>&lt;menu&gt;</code> toggles that flyout and does not close the root. A checkbox item stays open on a click or Space and closes on Enter.</td>
             </tr>
             <tr>
               <td><code>hover</code></td>
@@ -363,9 +363,13 @@ Expressive.Menu.init(document.querySelector('#hover'), {
           Mark an ordinary current item with <code>.selected</code>. For a
           single-select or multi-select menu, give items
           <code>role="menuitemradio"</code> or
-          <code>role="menuitemcheckbox"</code> and synchronize
-          <code>aria-checked</code>. Don't put <code>aria-selected</code> on a
-          menu item. A trailing
+          <code>role="menuitemcheckbox"</code> with an
+          <code>aria-checked</code> value. A checkbox item toggles its own
+          <code>aria-checked</code>: a click or Space flips it and keeps the
+          menu open, and Enter flips it and closes the menu. Each toggle fires
+          <code>expressive:change</code> with
+          <code>{"{ item, checked }"}</code>. Keep radio items in sync
+          yourself. Don't put <code>aria-selected</code> on a menu item. A trailing
           <code>&lt;kbd&gt;</code> is a keyboard shortcut. A
           <code>.gap</code> item splits groups. It is more expressive than a
           divider, so use one or two per menu at most. A

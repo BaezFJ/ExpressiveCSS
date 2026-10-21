@@ -7,6 +7,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- A menu item with `role="menuitemcheckbox"` toggles its own
+  `aria-checked`. A click or Space flips it and keeps the menu open, so
+  several items can be toggled in a row; Enter flips it and closes the menu
+  while `closeOnClick` is on. Each toggle fires `expressive:change` from the
+  trigger with `{ item, checked }`, after `onItemClick` and
+  `expressive:select`. Migration: a page that flipped `aria-checked` itself
+  in `onItemClick` or a click listener must remove that code, or the two
+  flips cancel out.
 - A `.validate` field sets `aria-invalid="true"` along with `invalid`, and
   clears both once the value passes, so a screen reader hears the error
   state the color shows. Its `[data-error]` supporting text joins the

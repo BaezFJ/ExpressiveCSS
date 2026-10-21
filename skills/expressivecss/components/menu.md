@@ -9,7 +9,7 @@ Component ID: `menu`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `2959edb25975b3cc1db7ccd4d77cf56d6d63dbc7c195f149614c595d7e11326c`
+Contract SHA-256: `f9f352d23c56893472a6696c6eb2942425352fd17d0ec8ca55af4cebe0e04d36`
 
 #### Selection and adaptation
 
@@ -71,7 +71,7 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
 | `container` | Element | `null` | Element that will contain the menu. When omitted, the menu is moved next to the trigger. |
 | `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |
 | `placement` | String | `'bottom'` | The side of the trigger the menu opens on when it fits there: `'bottom'` or `'top'`. It opens on the other side when that has more room. |
-| `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. |
+| `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. A checkbox item stays open on a click or Space and closes on Enter. |
 | `hover` | Boolean | `false` | If true, the menu opens on hover instead of click. |
 | `contextMenu` | Boolean | `false`; `true` with `data-context-menu` | If true, the trigger is a region and the menu opens at the pointer on right-click, long-press, the menu key or Shift+F10, instead of on click. |
 | `inDuration` | Number | `150` | Enter transition duration, in milliseconds. |
@@ -91,7 +91,7 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
 
 #### Also documented
 
-The Menu section of the [API reference](https://www.expressivecss.com/llm.md) also covers Context menu, Initialization, Properties.
+The Menu section of the [API reference](https://www.expressivecss.com/llm.md) also covers Checkbox and radio items, Context menu, Initialization, Properties.
 
 #### Rules
 

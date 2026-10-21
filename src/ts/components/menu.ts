@@ -435,8 +435,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     const target = menuTarget ?? <HTMLElement>(path[0] || e.target);
     const inside = !!menuTarget || path.includes(this.menuEl) || this.menuEl?.contains(target);
     if (this._isSubmenuTriggerClick(target)) return;
-    if (this.options.closeOnClick && inside && !this.isTouchMoving) {
-      // isTouchMoving to check if scrolling on mobile.
+    if (inside && this._closesOnClick(target)) {
       this.close();
     } else if (!inside) {
       // Do this one frame later so that if the element clicked also triggers _handleClick
@@ -506,8 +505,38 @@ export class Menu extends Component<MenuOptions> implements Openable {
       this._toggleSubmenu(li);
       return;
     }
-    if (li) this._notify('select', this.options.onItemClick, { args: [li], detail: { item: li } });
+    if (li) this._activateItem(li);
   };
+
+  private _activateItem(li: HTMLLIElement) {
+    const checked = this._toggleChecked(li);
+    if (!this._notify('select', this.options.onItemClick, { args: [li], detail: { item: li } })) return;
+    if (checked !== null) this._notify('change', null, { detail: { item: li, checked } });
+  }
+
+  // A menuitemcheckbox flips aria-checked before anyone hears of the click;
+  // any other row returns null.
+  private _toggleChecked(li: HTMLElement): boolean | null {
+    if (!this._isCheckboxRow(li)) return null;
+    const checked = li.getAttribute('aria-checked') !== 'true';
+    li.setAttribute('aria-checked', String(checked));
+    return checked;
+  }
+
+  private _isCheckboxRow(el: Element | null | undefined) {
+    return el?.closest('li')?.getAttribute('role') === 'menuitemcheckbox';
+  }
+
+  // isTouchMoving: a scroll on mobile is not a choice. Click and Space keep a
+  // checkbox menu open so several items can be toggled.
+  private _closesOnClick(target: HTMLElement) {
+    return this.options.closeOnClick && !this.isTouchMoving && !this._isCheckboxRow(target);
+  }
+
+  // Enter toggles a checkbox item and then closes, as it does on any item.
+  private _closeAfterEnter(e: KeyboardEvent, row: Element | undefined) {
+    if (e.key === Utils.keys.ENTER && this.options.closeOnClick && this._isCheckboxRow(row)) this.close();
+  }
 
   private _setupAccessibility() {
     if (!this.menuEl) return;
@@ -670,6 +699,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       } else if (focusedElement instanceof HTMLElement) {
         focusedElement.click();
       }
+      this._closeAfterEnter(e, focusedElement);
     }
     // Close menu on ESC
     else if (e.key === Utils.keys.ESC) {

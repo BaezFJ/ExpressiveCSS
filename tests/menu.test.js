@@ -245,3 +245,147 @@ describe("Menubar", () => {
     }
   });
 });
+
+describe("Menu checkbox items", () => {
+  beforeEach(resetBody);
+
+  const items = `
+    <li role="menuitemcheckbox"><button type="button">Ruler</button></li>
+    <li role="menuitemcheckbox" class="disabled" aria-checked="false"><button type="button">Grid</button></li>
+    <li role="menuitemcheckbox" aria-disabled="true" aria-checked="true"><button type="button">Guides</button></li>
+    <li><button type="button">Plain</button></li>
+    <li role="menuitemradio" aria-checked="false"><button type="button">Radio</button></li>`;
+  const open = async (options = {}) => {
+    document.body.innerHTML = `<button type="button" class="menu-trigger" data-target="m">View</button><menu id="m">${items}</menu>`;
+    const trigger = document.querySelector(".menu-trigger");
+    const instance = Expressive.Menu.init(trigger, { inDuration: 0, outDuration: 0, ...options });
+    instance.open();
+    await tick();
+    return { instance, trigger, row: (text) => [...document.querySelectorAll("#m > li")].find((li) => li.textContent.trim() === text) };
+  };
+  const record = (trigger, log) => {
+    for (const type of ["select", "change"]) {
+      trigger.addEventListener(`expressive:${type}`, (e) => log.push([type, e.detail.item.getAttribute("aria-checked"), e.detail.checked]));
+    }
+  };
+
+  test("a click toggles aria-checked before onItemClick, select and change run", async () => {
+    const log = [];
+    const { instance, trigger, row } = await open({ onItemClick: (li) => log.push(["click", li.getAttribute("aria-checked")]) });
+    record(trigger, log);
+    try {
+      row("Ruler").querySelector("button").click();
+      assert.equal(row("Ruler").getAttribute("aria-checked"), "true", "a missing value counts as unchecked");
+      assert.deepEqual(log, [["click", "true"], ["select", "true", undefined], ["change", "true", true]]);
+      assert.equal(instance.isOpen, true);
+      row("Ruler").click();
+      assert.equal(row("Ruler").getAttribute("aria-checked"), "false");
+      assert.deepEqual(log.at(-1), ["change", "false", false]);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("Space keeps the menu open and Enter closes it", async () => {
+    const { instance, row } = await open();
+    try {
+      key(row("Ruler").querySelector("button"), " ");
+      assert.equal(row("Ruler").getAttribute("aria-checked"), "true");
+      assert.equal(instance.isOpen, true);
+      key(row("Ruler").querySelector("button"), "Enter");
+      assert.equal(row("Ruler").getAttribute("aria-checked"), "false");
+      assert.equal(instance.isOpen, false);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("with closeOnClick off, Enter toggles and leaves the menu open", async () => {
+    const { instance, row } = await open({ closeOnClick: false });
+    try {
+      key(row("Ruler").querySelector("button"), "Enter");
+      assert.equal(row("Ruler").getAttribute("aria-checked"), "true");
+      assert.equal(instance.isOpen, true);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("disabled checkbox items do not toggle or report", async () => {
+    const log = [];
+    const { instance, trigger, row } = await open();
+    record(trigger, log);
+    try {
+      for (const text of ["Grid", "Guides"]) {
+        const before = row(text).getAttribute("aria-checked");
+        row(text).querySelector("button").click();
+        key(row(text).querySelector("button"), " ");
+        key(row(text).querySelector("button"), "Enter");
+        assert.equal(row(text).getAttribute("aria-checked"), before, text);
+      }
+      assert.deepEqual(log, []);
+      assert.equal(instance.isOpen, true);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("plain and radio items still close the menu and report no change", async () => {
+    for (const text of ["Plain", "Radio"]) {
+      const log = [];
+      const { instance, trigger, row } = await open();
+      record(trigger, log);
+      try {
+        row(text).querySelector("button").click();
+        assert.equal(instance.isOpen, false, text);
+        assert.equal(row("Radio").getAttribute("aria-checked"), "false");
+        assert.deepEqual(log.map(([type]) => type), ["select"], text);
+      } finally {
+        instance.destroy();
+      }
+    }
+  });
+
+  test("a checkbox item in a submenu toggles and keeps both menus open", async () => {
+    document.body.innerHTML = `
+      <button type="button" class="menu-trigger" data-target="m">View</button>
+      <menu id="m"><li id="more"><button type="button">More</button><menu>
+        <li role="menuitemcheckbox" aria-checked="false"><button type="button">Wrap</button></li>
+      </menu></li></menu>`;
+    const instance = Expressive.Menu.init(document.querySelector(".menu-trigger"), { inDuration: 0, outDuration: 0 });
+    try {
+      instance.open();
+      await tick();
+      document.querySelector("#more > button").click();
+      const wrap = document.querySelector('[role="menuitemcheckbox"]');
+      wrap.querySelector("button").click();
+      key(wrap.querySelector("button"), " ");
+      wrap.querySelector("button").click();
+      assert.equal(wrap.getAttribute("aria-checked"), "true");
+      assert.equal(instance.isOpen, true);
+      assert.equal(document.getElementById("more").classList.contains("open"), true);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("a checkbox item in a Menubar menu toggles and keeps it open", async () => {
+    document.body.innerHTML = `
+      <div class="menubar"><button type="button" class="menu-trigger" data-target="v">View</button></div>
+      <menu id="v"><li role="menuitemcheckbox" aria-checked="false"><button type="button">Ruler</button></li></menu>`;
+    const bar = Expressive.Menubar.init(document.querySelector(".menubar"));
+    const changes = [];
+    document.addEventListener("expressive:change", (e) => changes.push(e.detail.checked));
+    try {
+      const menu = Expressive.Menu.getInstance(document.querySelector(".menu-trigger"));
+      menu.open();
+      await tick();
+      document.querySelector("#v button").click();
+      assert.equal(document.querySelector("#v > li").getAttribute("aria-checked"), "true");
+      assert.equal(menu.isOpen, true);
+      assert.deepEqual(changes, [true]);
+    } finally {
+      bar.destroy();
+    }
+  });
+});

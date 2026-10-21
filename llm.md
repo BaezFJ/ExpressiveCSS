@@ -363,7 +363,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:confirm`, `expressive:cancel` | Datepicker, Timepicker | none |
 | `expressive:autocomplete` | Autocomplete | `{ values }` |
 | `expressive:chip-add`, `chip-select`, `chip-delete` | Chips | `{ chip }` |
-| `expressive:change` | ButtonGroup, ScrollSpy (from the section), Tour | `{ button, pressed }`, `{ link }`, `{ step, index }` |
+| `expressive:change` | ButtonGroup, Menu checkbox items, ScrollSpy (from the section), Tour | `{ button, pressed }`, `{ item, checked }`, `{ link }`, `{ step, index }` |
 | `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour | Tour's close: `{ completed }` |
 | `expressive:action`, `expressive:closed` | Snackbar | none |
 | `expressive:copy` | Copy buttons | `{ text, copied }` |
@@ -5649,6 +5649,18 @@ This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https:
 
 For a menu inside a top app bar, see Navbar menu.
 
+### Checkbox and radio items
+
+Give an item `role="menuitemcheckbox"` or `role="menuitemradio"` with an `aria-checked` value; a checked item takes the selected style. A checkbox item toggles its own `aria-checked`. A click or Space flips it and keeps the menu open, so several items can be toggled in a row. Enter flips it and then closes the menu, unless `closeOnClick` is false. `aria-checked` changes before `onItemClick` runs; then `expressive:select` fires, then `expressive:change` with `{ item, checked }` from the trigger. A disabled item does not toggle. Keep radio items in sync yourself.
+
+```html
+<button class="menu-trigger" data-target="view-menu">View</button>
+<menu id="view-menu">
+  <li role="menuitemcheckbox" aria-checked="true"><button type="button">Ruler</button></li>
+  <li role="menuitemcheckbox" aria-checked="false"><button type="button">Grid</button></li>
+</menu>
+```
+
 ### Context menu
 
 Add `data-context-menu` to a `.menu-trigger` that is a region of content, such as a file list or a card, and its menu replaces the browser's context menu there. Right-click opens it at the pointer, and it flips to stay on screen. The menu key and Shift+F10 open it at the region's start corner, so give the region `tabindex="0"` when it holds nothing focusable. Enter and Space stay with the region's own content. Closing the menu returns focus to whatever had it before the menu opened. In nested regions only the innermost menu opens, and a right-click on an open menu keeps it open. The menu stays inside the window and any scrolling container it sits in, and scrolls when it is taller than either; `open()` without a right-click places it at the region's start corner.
@@ -5697,7 +5709,7 @@ Expressive.AutoInit(document.body, {
 | `container` | Element | `null` | Element that will contain the menu. When omitted, the menu is moved next to the trigger. |
 | `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |
 | `placement` | String | `'bottom'` | The side of the trigger the menu opens on when it fits there: `'bottom'` or `'top'`. It opens on the other side when that has more room. |
-| `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. |
+| `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. A checkbox item stays open on a click or Space and closes on Enter. |
 | `hover` | Boolean | `false` | If true, the menu opens on hover instead of click. |
 | `contextMenu` | Boolean | `false`; `true` with `data-context-menu` | If true, the trigger is a region and the menu opens at the pointer on right-click, long-press, the menu key or Shift+F10, instead of on click. |
 | `inDuration` | Number | `150` | Enter transition duration, in milliseconds. |
