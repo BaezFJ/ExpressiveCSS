@@ -137,7 +137,10 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
 
       const stacked = await page.locator('#stacked').evaluate((el) => {
         el.querySelector('thead tr').insertAdjacentHTML('beforeend', '<th>Costs</th>');
-        el.querySelectorAll('tbody tr').forEach((tr) => tr.insertAdjacentHTML('beforeend', '<td>10</td>'));
+        el.querySelectorAll('tbody tr').forEach((tr) => {
+          tr.querySelector('td').textContent = '30';
+          tr.insertAdjacentHTML('beforeend', '<td>10</td>');
+        });
         Expressive.LineChart.getInstance(el).update();
         const [below, added] = el.querySelectorAll('.line-chart-series');
         return {
@@ -146,9 +149,9 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
           to: added.querySelector('.line-chart-line').getAttribute('d'),
         };
       });
-      assert.equal(stacked.below, 0);
-      assert.deepEqual([...new Set(ys(stacked.from))], [80], 'a stacked series starts on the series below');
-      assert.deepEqual([...new Set(ys(stacked.to))], [70]);
+      assert.equal(stacked.below, 2, 'the series below moves from 20 to 30');
+      assert.deepEqual([...new Set(ys(stacked.from))], [80], 'a stacked series starts where the series below starts');
+      assert.deepEqual([...new Set(ys(stacked.to))], [60]);
 
       const gap = await page.locator('#gap').evaluate((el) => {
         const chart = Expressive.LineChart.getInstance(el);
