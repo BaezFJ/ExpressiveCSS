@@ -531,6 +531,28 @@ $_chart-toggle-written: false;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
+    // When each label is wider than its column, LineChart keeps every nth
+    // one. A kept label spreads over the hidden ones beside it, still
+    // centred on its own column; the flex box centres what overflows. The
+    // end labels line up with the chart's edges, so none overflows them.
+    &[data-thinned] > li:not([data-skip]) {
+      display: flex;
+      justify-content: center;
+      overflow: visible;
+
+      &:first-child {
+        justify-content: start;
+      }
+
+      &:last-child {
+        justify-content: end;
+      }
+    }
+
+    > li[data-skip] {
+      visibility: hidden;
+    }
   }
 
   .#{$name}-legend {
