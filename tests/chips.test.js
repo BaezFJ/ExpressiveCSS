@@ -294,6 +294,27 @@ describe('Chips input and data', () => {
     }
   });
 
+  test('Enter that adds typed text closes a list that only said no results', async () => {
+    document.body.innerHTML = `<div class="chips"></div>`;
+    const chips = Expressive.Chips.init(document.querySelector('.chips'), {
+      allowUserInput: true,
+      autocompleteOptions: { data: [{ id: 'apple' }], menuOptions: { inDuration: 0, outDuration: 0 } }
+    });
+    try {
+      const input = chips._input;
+      input.focus();
+      input.value = 'kiwi';
+      fire(input, 'input');
+      assert.ok(chips.autocomplete.container.querySelector('.autocomplete-no-results'));
+      key(input, 'Enter');
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      assert.deepEqual(chips.getData().map((c) => c.id), ['kiwi']);
+      assert.equal(chips.autocomplete.menu.isOpen, false, 'the list stayed open under an empty field');
+    } finally {
+      chips.destroy();
+    }
+  });
+
   test('Enter that ends an IME composition does not add a chip', () => {
     const [el, chips] = mount();
     try {

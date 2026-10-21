@@ -14,6 +14,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   selection does not change; the page adds the entry. `i18n.create` sets the
   row's label. Chips add the text as a chip, in an `autocompleteOnly` field
   too.
+- When a search returns no suggestions, Autocomplete's open list shows
+  `i18n.noResults` as its first row, so sighted users see what the live
+  region announces. The row is `li.autocomplete-no-results` with
+  `role="none"` and `aria-hidden="true"`. Arrow keys skip it, and a click on
+  it chooses nothing and keeps focus in the field. It leaves the list when a
+  search returns a match. Arrow keys and Enter now move through
+  `li[role="option"]` rows only. In Chips, Enter that adds the typed text
+  as a chip now closes the list.
 - Autocomplete's `searchDelay` option waits that many milliseconds after
   typing pauses before calling `onSearch`, so a remote search runs once per
   pause instead of once per key. A text change aborts the running search's
