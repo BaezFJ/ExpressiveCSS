@@ -143,8 +143,10 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
           <code>--md-comp-heatmap-chart-row-height</code> and
           <code>--md-comp-heatmap-chart-gap</code> lower for small cells. A
           wide grid narrows its cells to fit, so on a phone show fewer
-          columns. Row labels take up to 40% of the width and end in an
-          ellipsis past it.
+          columns. When the column labels are wider than their columns, the
+          grid keeps every second or third one whole and hides the rest; leave
+          labels empty yourself to choose which ones show. Row labels take up
+          to 40% of the width and end in an ellipsis past it.
         </p>
         <figure class="heatmap-chart" style="--md-comp-heatmap-chart-row-height: 12px; --md-comp-heatmap-chart-gap: 2px; --md-comp-heatmap-chart-shape: 2px" data-markdown-ignore>
           <figcaption>Tasks completed, last 52 weeks</figcaption>
