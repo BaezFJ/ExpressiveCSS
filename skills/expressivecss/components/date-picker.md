@@ -9,7 +9,7 @@ Component ID: `date-picker`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `934e6375654b88162dbe4392cb2391931c92894c595be7eaca64209ab08938b8`
+Contract SHA-256: `fa4fac82723026bd10258a7320dd7ea34a231da9bf2b91cfcd7c55ab98ec3e99`
 
 #### Selection and adaptation
 
@@ -69,7 +69,7 @@ The calendar is inline, not a modal. `open()` and `close()` are not provided. Wi
 | `setDefaultEndDate` | Boolean | `false` | If true, `defaultEndDate` is also the selected end value. |
 | `disableWeekends` | Boolean | `false` | Prevent selecting Saturday and Sunday. |
 | `disableDayFn` | Function | `null` | Return true to disable that day. Receives a `Date`. |
-| `firstDay` | Number | `0` | First day of the week. `0` is Sunday, `1` is Monday. |
+| `firstDay` | Number | `0`, or the language's | First day of the week. `0` is Sunday, `1` is Monday. With a `lang` on or around the input, defaults to that language's first day where the browser knows it. |
 | `minDate` | Date | `null` | Earliest selectable date. |
 | `maxDate` | Date | `null` | Latest selectable date. |
 | `yearRange` | Number or Array | `10` | Years on either side of the viewed year, or `[minYear, maxYear]`. |
@@ -81,7 +81,7 @@ The calendar is inline, not a modal. `open()` and `close()` are not provided. Wi
 | `container` | Element or String | `null` | Element or selector to render the calendar into. When set, the calendar is not hidden. |
 | `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
 | `autoSubmit` | Boolean | `true` | If true, selecting a day writes the input immediately. If false, Ok and Cancel buttons are added. |
-| `i18n` | Object | See below | Labels and month/weekday names. Partial objects are merged with the defaults. |
+| `i18n` | Object | See below | Labels and month/weekday names. Partial objects are merged with the defaults. With a `lang` on or around the input, the month and weekday names default to that language's, as `Intl` writes them; the button words stay English unless passed. |
 | `events` | Array | `[]` | Strings from `Date.toDateString()`. Matching days get a `has-event` class. The default stylesheet does not style that class. |
 | `onSelect` | Function | `null` | Called when a date is selected. Receives the `Date`. |
 | `onDraw` | Function | `null` | Called after the calendar HTML is redrawn. |

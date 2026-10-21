@@ -10,6 +10,20 @@ const STEPS: Record<string, number> = { ArrowUp: 1, ArrowDown: -1, PageUp: 5, Pa
 /** A 12-hour time's hour of the day, 0 to 23. */
 const dayHour = (hours: number, pm: boolean) => (hours % 12) + (pm ? 12 : 0);
 
+/** An hour on the 24-hour clock, from one written with AM or PM. */
+const hour24 = (hours: number, period?: string) => (period ? (hours % 12) + (period === 'PM' ? 12 : 0) : hours);
+
+/**
+ * With a `lang` on or around the input, whether that language tells the
+ * time on a 12-hour clock.
+ */
+function localeClock(el: Element): Partial<TimepickerOptions> {
+  const locale = Utils.locale(el);
+  if (!locale) return {};
+  const cycle = new Intl.DateTimeFormat(locale, { hour: 'numeric' }).resolvedOptions().hourCycle;
+  return { twelveHour: cycle === 'h11' || cycle === 'h12' };
+}
+
 export interface TimepickerOptions extends BaseOptions {
   /**
    * Dial radius.
@@ -68,7 +82,7 @@ export interface TimepickerOptions extends BaseOptions {
   i18n: Partial<I18nOptions & { hours: string; minutes: string }>;
   /**
    * Use 12 hour AM/PM clock instead of 24 hour clock.
-   * @default true
+   * @default true, or the clock the input's `lang` uses
    */
   twelveHour: boolean;
   /**
@@ -193,6 +207,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.el['Expressive_Timepicker'] = this;
     this.options = {
       ...Timepicker.defaults,
+      ...localeClock(el),
       ...options,
       i18n: { ...Timepicker.defaults.i18n, ...options?.i18n }
     };
@@ -604,10 +619,12 @@ export class Timepicker extends Component<TimepickerOptions> {
       const now = new Date(+new Date() + this.options.fromNow);
       value = [now.getHours().toString(), now.getMinutes().toString()];
     }
-    this.hours = +value[0] || 0;
+    // A written AM or PM fixes the hour on either clock: "03:30 PM" is 15:30
+    // on a 24-hour clock too.
+    this.hours = hour24(+value[0] || 0, period);
     this.minutes = +value[1] || 0;
     if (this.options.twelveHour) {
-      this.amOrPm = period === 'AM' || period === 'PM' ? period : this.hours >= 12 ? 'PM' : 'AM';
+      this.amOrPm = this.hours >= 12 ? 'PM' : 'AM';
       this.hours = this.hours % 12 || 12;
     }
     this.inputHours.value = Timepicker._addLeadingZero(this.hours);

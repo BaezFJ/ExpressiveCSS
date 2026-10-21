@@ -9,7 +9,7 @@ Component ID: `radar-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `934e6375654b88162dbe4392cb2391931c92894c595be7eaca64209ab08938b8`
+Contract SHA-256: `fa4fac82723026bd10258a7320dd7ea34a231da9bf2b91cfcd7c55ab98ec3e99`
 
 #### Selection and adaptation
 
