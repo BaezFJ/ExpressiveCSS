@@ -103,7 +103,7 @@ const S = defineSections([
         </p>
         <p>
           The component repositions a menu when its preferred edge would be
-          clipped. In browsers with CSS anchor positioning, a menu opened from its trigger is anchored there in CSS: it stays under the trigger while the page or a container scrolls, flips above it or to the other side at the viewport edge, and scrolls when it is taller than the room on that side. Context menus and <code>coverTrigger: true</code> keep the measured placement, as do browsers without anchor positioning. Nested menus open beside their parent item and switch sides
+          clipped. In browsers with CSS anchor positioning, a menu opened from its trigger is anchored there in CSS: it stays under the trigger while the page or a container scrolls, opens above it when the whole menu does not fit below and there is more room above, flips to the other side at the viewport edge, and scrolls when it is taller than the room on the side it opens on. <code>placement: 'top'</code> opens it above the trigger when it fits there, as for a trigger in a bottom bar. Up and Down move between rows, and Home and End jump to the first and last. Context menus and <code>coverTrigger: true</code> keep the measured placement, as do browsers without anchor positioning. Nested menus open beside their parent item and switch sides
           near the viewport edge. Use dividers in scrollable menus; don't use
           gaps there. Keep each row to one action, and keep icons decorative
           when the visible label already names the action.
@@ -228,6 +228,12 @@ Expressive.AutoInit(document.body, {
               <td>Boolean</td>
               <td><code>false</code></td>
               <td>If false, the menu opens below the trigger (the M3 placement). Pass <code>true</code> to cover the trigger.</td>
+            </tr>
+            <tr>
+              <td><code>placement</code></td>
+              <td>String</td>
+              <td><code>'bottom'</code></td>
+              <td>The side of the trigger the menu opens on when it fits there: <code>'bottom'</code> or <code>'top'</code>. It opens on the other side when that has more room.</td>
             </tr>
             <tr>
               <td><code>closeOnClick</code></td>
