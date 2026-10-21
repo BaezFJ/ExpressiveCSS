@@ -293,6 +293,17 @@ Opt an element out when it needs manual options:
 <a class="button tooltipped no-autoinit" data-tooltip="Hi">Hover</a>
 ```
 
+Or give the element its options in markup. `AutoInit()` reads a `data-<name>-options` attribute holding a JSON object, where `<name>` is the component name in kebab case (`Menu` reads `data-menu-options`, `FormSelect` reads `data-form-select-options`, and `.date-picker` reads `data-datepicker-options` because the name comes from the component, not the class) and the keys are the option names used in script:
+
+```html
+<a class="button menu-trigger" data-target="actions" data-menu-options='{"closeOnClick": false}'>Actions</a>
+```
+
+- Options passed to `AutoInit(context, options)` win for the keys they set; a nested object such as `i18n` counts as one key. Tooltip reads its own `data-tooltip`, `data-tooltip-id` and `data-position` again each time it opens, so those win over both. Set those, and Menu's `contextMenu` (`data-context-menu`), in one place.
+- Markup can set only options whose default is a string, number, boolean, array or plain object, with a value of the same kind. Nested keys are checked against the default object, and one rejected nested key leaves the whole object at its default. An object whose default is empty, such as FormSelect's `menuOptions`, accepts no keys from markup. Items of a non-empty default array need the kind of its first item. Callbacks, elements, options with a `null` default, Autocomplete's `allowUnsafeHTML` and the `data` lists of Chips and Autocomplete stay script-only.
+- Invalid JSON, unknown keys and wrong kinds are skipped with a console warning, and those options keep their defaults. A value that passes the checks but still makes a component throw stops `AutoInit()`, as it would from script.
+- Direct `init()` calls do not read the attribute. Menus inside a `.menubar` take Menubar's `menuOptions` instead.
+
 `AutoInit()` recognizes these public components and selectors:
 
 | Component | Selector |

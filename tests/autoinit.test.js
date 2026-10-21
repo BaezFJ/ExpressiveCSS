@@ -259,3 +259,265 @@ describe("AutoInit", () => {
     assert.equal(Expressive.Datepicker.getInstance(start), undefined);
   });
 });
+
+describe("AutoInit options from markup", () => {
+  beforeEach(resetBody);
+
+  const names = AUTO_INIT_FIXTURES.map(({ name }) => name);
+  /** Destroys every instance AutoInit left in the document. */
+  function destroyAll() {
+    for (const el of document.body.querySelectorAll("*")) {
+      for (const name of names) Expressive[name].getInstance(el)?.destroy();
+    }
+  }
+  /** Starts `html` through AutoInit with console.warn mocked, then runs `check`. */
+  function start(t, html, check, options) {
+    const warn = t.mock.method(console, "warn", () => {});
+    document.body.innerHTML = html;
+    try {
+      Expressive.AutoInit(document.body, options);
+      check(warn.mock.calls.map((call) => String(call.arguments[0])));
+    } finally {
+      destroyAll();
+    }
+  }
+  const menu = (id, attribute) =>
+    `<a class="menu-trigger" id="${id}-trigger" data-target="${id}" data-menu-options='${attribute}'>Open</a><menu id="${id}"><li><a href="#!">one</a></li></menu>`;
+  const instance = (name, selector) => Expressive[name].getInstance(document.querySelector(selector));
+
+  test("starts two components with options written in markup", (t) => {
+    start(
+      t,
+      `${menu("m", '{"closeOnClick":false,"inDuration":0}')}
+       <a class="tooltipped" data-tooltip="Hi" data-tooltip-options='{"position":"top","enterDelay":50}'>Hover</a>`,
+      (warnings) => {
+        const menuOptions = instance("Menu", "#m-trigger").options;
+        assert.equal(menuOptions.closeOnClick, false);
+        assert.equal(menuOptions.inDuration, 0);
+        assert.equal(menuOptions.outDuration, Expressive.Menu.defaults.outDuration);
+        const tooltipOptions = instance("Tooltip", ".tooltipped").options;
+        assert.equal(tooltipOptions.position, "top");
+        assert.equal(tooltipOptions.enterDelay, 50);
+        assert.equal(tooltipOptions.exitDelay, Expressive.Tooltip.defaults.exitDelay);
+        assert.deepEqual(warnings, []);
+      },
+    );
+  });
+
+  test("an invalid value falls back to the default and the rest still apply", (t) => {
+    start(
+      t,
+      `${menu("bad-json", '{"hover":true')}
+       ${menu("array", "[1,2]")}
+       ${menu("unknown", '{"nope":1,"hover":true}')}
+       ${menu("kind", '{"inDuration":"fast","hover":true}')}
+       ${menu("callback", '{"onOpenStart":"alert(1)","hover":true}')}
+       <input class="autocomplete" id="ac" data-autocomplete-options='{"onSearch":"x"}'>
+       <input class="date-picker" id="dp" data-datepicker-options='{"minMonth":1}'>
+       <a class="tooltipped" data-tooltip="Hi" data-tooltip-options='{"margin":9}'>Hover</a>`,
+      (warnings) => {
+        const defaults = Expressive.Menu.defaults;
+        for (const id of ["bad-json", "array"]) {
+          assert.equal(instance("Menu", `#${id}-trigger`).options.hover, defaults.hover, id);
+        }
+        for (const id of ["unknown", "kind", "callback"]) {
+          assert.equal(instance("Menu", `#${id}-trigger`).options.hover, true, id);
+        }
+        assert.equal(instance("Menu", "#unknown-trigger").options.nope, undefined);
+        assert.equal(instance("Menu", "#kind-trigger").options.inDuration, defaults.inDuration);
+        assert.equal(instance("Menu", "#callback-trigger").options.onOpenStart, null);
+        assert.equal(instance("Autocomplete", "#ac").options.onSearch, Expressive.Autocomplete.defaults.onSearch);
+        assert.equal(instance("Datepicker", "#dp").options.minMonth, undefined);
+        assert.equal(instance("Tooltip", ".tooltipped").options.margin, 9);
+        assert.equal(warnings.length, 7);
+        assert.equal(warnings.filter((w) => w.includes("Menu") && w.includes("data-menu-options")).length, 5);
+        for (const key of ["nope", "inDuration", "onOpenStart"]) {
+          assert.ok(warnings.some((w) => w.includes(`"${key}"`)), key);
+        }
+        assert.ok(warnings.some((w) => w.includes("data-autocomplete-options") && w.includes('"onSearch"')));
+        assert.ok(warnings.some((w) => w.includes("data-datepicker-options") && w.includes('"minMonth"')));
+      },
+    );
+  });
+
+  test("options passed to AutoInit win, and Tooltip's own attributes keep their precedence", (t) => {
+    start(
+      t,
+      `<a class="tooltipped" id="first" data-tooltip="Hi" data-tooltip-options='{"position":"top","margin":8}'>A</a>
+       <a class="tooltipped" id="second" data-tooltip="Hi" data-position="right" data-tooltip-options='{"position":"top"}'>B</a>`,
+      () => {
+        const first = instance("Tooltip", "#first");
+        assert.equal(first.options.position, "left");
+        assert.equal(first.options.margin, 8);
+        const second = instance("Tooltip", "#second");
+        second.open(true);
+        assert.equal(second.options.position, "right");
+        second.close();
+      },
+      { Tooltip: { position: "left" } },
+    );
+  });
+
+  test("markup cannot pollute prototypes or turn on unsafe or internal options", (t) => {
+    start(
+      t,
+      `<input class="autocomplete" id="ac" data-autocomplete-options='{"allowUnsafeHTML":true,"minLength":2}'>
+       <input class="date-picker" id="dp" data-datepicker-options='{"maxYear":1,"yearRange":3}'>
+       ${menu("proto", '{"__proto__":{"polluted":true},"constructor":{"x":1}}')}`,
+      (warnings) => {
+        const autocomplete = instance("Autocomplete", "#ac").options;
+        assert.equal(autocomplete.allowUnsafeHTML, false);
+        assert.equal(autocomplete.minLength, 2);
+        const datepicker = instance("Datepicker", "#dp").options;
+        assert.equal(datepicker.maxYear, Expressive.Datepicker.defaults.maxYear);
+        assert.equal(datepicker.yearRange, 3);
+        const menuOptions = instance("Menu", "#proto-trigger").options;
+        assert.equal({}.polluted, undefined);
+        assert.equal(Object.getPrototypeOf(menuOptions), Object.prototype);
+        assert.equal(Object.hasOwn(menuOptions, "polluted"), false);
+        assert.equal(Object.hasOwn(menuOptions, "constructor"), false);
+        for (const key of ["allowUnsafeHTML", "maxYear", "__proto__", "constructor"]) {
+          assert.ok(warnings.some((w) => w.includes(`"${key}"`)), key);
+        }
+      },
+    );
+  });
+
+  test("nested objects and arrays are checked against their defaults", (t) => {
+    start(
+      t,
+      `<input class="time-picker" id="tp" data-timepicker-options='{"i18n":{"done":"Fertig","nope":"x","cancel":5},"twelveHour":false}'>
+       <input class="time-picker" id="tp-good" data-timepicker-options='{"i18n":{"done":"Fertig"}}'>
+       <button type="button" class="confetti" data-confetti-options='{"colors":["#f00",1],"shapes":["circle",1]}'>Go</button>`,
+      (warnings) => {
+        const timepicker = instance("Timepicker", "#tp").options;
+        assert.deepEqual(timepicker.i18n, Expressive.Timepicker.defaults.i18n);
+        assert.equal(timepicker.twelveHour, false);
+        const good = instance("Timepicker", "#tp-good").options.i18n;
+        assert.equal(good.done, "Fertig");
+        assert.equal(good.cancel, Expressive.Timepicker.defaults.i18n.cancel);
+        const confetti = instance("Confetti", ".confetti").options;
+        // An empty default array accepts any items; a non-empty one sets their kind.
+        assert.deepEqual(confetti.colors, ["#f00", 1]);
+        assert.deepEqual(confetti.shapes, Expressive.Confetti.defaults.shapes);
+        for (const key of ["i18n.nope", "i18n.cancel", "shapes"]) {
+          assert.ok(warnings.some((w) => w.includes(`"${key}"`)), key);
+        }
+        assert.equal(warnings.length, 3);
+      },
+    );
+  });
+
+  test("an option whose default is an element or class instance cannot be replaced from markup", (t) => {
+    // Tooltip reads transitionMovement only when it opens, so a stand-in default is safe here.
+    const defaults = Expressive.Tooltip.defaults;
+    const original = defaults.transitionMovement;
+    for (const fallback of [document.body, new (class Holder {})()]) {
+      defaults.transitionMovement = fallback;
+      try {
+        start(t, `<a class="tooltipped" data-tooltip="Hi" data-tooltip-options='{"transitionMovement":{},"margin":3}'>A</a>`, (warnings) => {
+          const options = instance("Tooltip", ".tooltipped").options;
+          assert.equal(options.transitionMovement, fallback);
+          assert.equal(options.margin, 3);
+          assert.ok(warnings.some((w) => w.includes('"transitionMovement"')));
+        });
+      } finally {
+        defaults.transitionMovement = original;
+      }
+    }
+  });
+
+  test("an element with two components reads each one's own attribute", (t) => {
+    start(
+      t,
+      `<a class="tooltipped menu-trigger" data-target="both" data-tooltip="More" data-tooltip-options='{"margin":12}' data-menu-options='{"hover":true}'>More</a><menu id="both"><li><a href="#!">one</a></li></menu>`,
+      (warnings) => {
+        const tooltip = instance("Tooltip", ".tooltipped").options;
+        const menuOptions = instance("Menu", ".menu-trigger").options;
+        assert.equal(tooltip.margin, 12);
+        assert.equal(Object.hasOwn(tooltip, "hover"), false);
+        assert.equal(menuOptions.hover, true);
+        assert.equal(Object.hasOwn(menuOptions, "margin"), false);
+        assert.deepEqual(warnings, []);
+      },
+    );
+  });
+
+  test("multi-word names read a kebab-case attribute", (t) => {
+    start(
+      t,
+      `<div class="field"><select id="fs" data-form-select-options='{"classes":"wide"}'><option value="1">One</option></select><label for="fs">Pick</label></div>`,
+      () => assert.equal(instance("FormSelect", "#fs").options.classes, "wide"),
+    );
+  });
+
+  test("elements without the attribute, opted-out elements and direct init are unchanged", (t) => {
+    start(
+      t,
+      `${menu("plain", "").replace(/ data-menu-options=''/, "")}
+       <a class="tooltipped" id="plain-tip" data-tooltip="Hi">A</a>
+       <a class="tooltipped no-autoinit" id="out" data-tooltip="Hi" data-tooltip-options='{"margin":20}'>B</a>`,
+      (warnings) => {
+        assert.deepEqual(
+          { ...instance("Menu", "#plain-trigger").options, contextMenu: false },
+          { ...Expressive.Menu.defaults },
+        );
+        assert.equal(instance("Tooltip", "#plain-tip").options.margin, Expressive.Tooltip.defaults.margin);
+        const out = document.getElementById("out");
+        assert.equal(Expressive.Tooltip.getInstance(out), undefined);
+        const direct = Expressive.Tooltip.init(out);
+        assert.equal(direct.options.margin, Expressive.Tooltip.defaults.margin);
+        assert.deepEqual(warnings, []);
+      },
+    );
+  });
+
+  test("a rejected nested key leaves the whole object at its default", (t) => {
+    start(
+      t,
+      `<div class="menubar" id="bad-bar" aria-label="Editor" data-menubar-options='{"menuOptions":{"constrainWidth":"bad","coverTrigger":true}}'><button type="button" class="menu-trigger" data-target="bar-menu">File</button></div><menu id="bar-menu"><li><button type="button">New</button></li></menu>
+       <div class="menubar" id="good-bar" aria-label="View" data-menubar-options='{"menuOptions":{"coverTrigger":true}}'><button type="button" class="menu-trigger" data-target="view-menu">View</button></div><menu id="view-menu"><li><button type="button">Zoom</button></li></menu>`,
+      (warnings) => {
+        const bad = instance("Menubar", "#bad-bar").options.menuOptions;
+        assert.deepEqual(bad, Expressive.Menubar.defaults.menuOptions);
+        assert.equal(instance("Menu", "#bad-bar .menu-trigger").options.constrainWidth, false);
+        assert.deepEqual(instance("Menubar", "#good-bar").options.menuOptions, { coverTrigger: true });
+        assert.deepEqual(warnings.filter((w) => w.includes("menuOptions")).length, 1);
+        assert.ok(warnings.some((w) => w.includes('"menuOptions.constrainWidth"')));
+      },
+    );
+  });
+
+  test("nested markup options keep Datepicker's locale names", (t) => {
+    start(
+      t,
+      `<div lang="de-DE"><input class="date-picker" id="dp" data-datepicker-options='{"i18n":{"done":"Fertig"}}'><input class="date-picker" id="plain"></div>`,
+      () => {
+        const configured = instance("Datepicker", "#dp").options.i18n;
+        const plain = instance("Datepicker", "#plain").options.i18n;
+        assert.equal(configured.done, "Fertig");
+        assert.equal(configured.months[2], plain.months[2]);
+        assert.equal(plain.months[2], "März");
+      },
+    );
+  });
+
+  test("markup cannot set the data entries that Chips and Autocomplete build from", (t) => {
+    start(
+      t,
+      `<form><div class="chips" id="chips" data-chips-options='{"allowUserInput":true,"data":[null]}'><input name="tags" required></div></form>
+       <div class="field"><input class="autocomplete" id="ac" data-autocomplete-options='{"data":[null],"selected":[1]}'><label for="ac">A</label></div>
+       <a class="tooltipped" data-tooltip="Hi" data-tooltip-options='{"margin":7}'>A</a>`,
+      (warnings) => {
+        const chips = instance("Chips", "#chips");
+        assert.equal(chips.options.allowUserInput, true);
+        assert.deepEqual(chips.options.data, Expressive.Chips.defaults.data);
+        const autocomplete = instance("Autocomplete", "#ac");
+        assert.deepEqual(autocomplete.options.data, []);
+        assert.deepEqual(autocomplete.options.selected, [1]);
+        assert.equal(instance("Tooltip", ".tooltipped").options.margin, 7);
+        assert.equal(warnings.filter((w) => w.includes('"data"')).length, 2);
+      },
+    );
+  });
+});
