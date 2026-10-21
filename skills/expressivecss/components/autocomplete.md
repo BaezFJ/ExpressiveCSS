@@ -9,7 +9,7 @@ Component ID: `autocomplete`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `e54668db2f9033b8f03cf49552271bdbc2033fb1a62f8f1687d1d5e16e236016`
+Contract SHA-256: `2a1acb0fe401021d0cafa6b083ff90a3ce7072f402008969842e6639cd682256`
 
 #### Selection and adaptation
 
@@ -63,6 +63,8 @@ Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every 
 | `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
 | `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when the search text changes or the autocomplete is destroyed. |
+| `allowCreate` | Boolean | `false` | If true, text that matches no listed suggestion exactly ends the list in an `Add "text"` row. Choosing it calls `onCreate` and fires `expressive:create`; the selection does not change. |
+| `onCreate` | Function | `null` | Called with the trimmed text and the instance when the `Add` row is chosen. |
 | `searchDelay` | Number | `0` | Milliseconds to wait after typing pauses before calling `onSearch`, so remote data is fetched once per pause. A search on focus runs at once. Blur, `destroy()` and choosing a single result cancel a pending search. `0` searches on every input. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |

@@ -362,6 +362,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:select` | Menu, Datepicker, Timepicker | `{ item }`, `{ date }`, `{ hours, minutes }` |
 | `expressive:confirm`, `expressive:cancel` | Datepicker, Timepicker | none |
 | `expressive:autocomplete` | Autocomplete | `{ values }` |
+| `expressive:create` | Autocomplete, from its `Add` row | `{ text }` |
 | `expressive:chip-add`, `chip-select`, `chip-delete` | Chips | `{ chip }` |
 | `expressive:change` | ButtonGroup, Menu checkbox and radio items, ScrollSpy (from the section), Tour | `{ button, pressed }`, `{ item, checked }`, `{ link }`, `{ step, index }` |
 | `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour | Tour's close: `{ completed }` |
@@ -8532,7 +8533,7 @@ Backspace and Delete target the focused chip, then select the preceding survivor
 
 `allowUserInput` defaults to `false`. Without it there is no text field and rendered chips have no delete button. Pass `allowUserInput: true` for the interactive field. `AutoInit()` starts every `.chips` except `no-autoinit`, but it uses the defaults, so those wrappers stay display-only until you call `init` with options.
 
-In a form, give the field's `<input>` a `name`. The chips submit under it, one `id` per chip, as a multiple select does. The text input gives its name up so half-typed text is not submitted, and the values follow its form, `form` attribute and `disabled` state at the moment the form gathers its data. A `required` input makes the field valid once it has a chip, and says `i18n.required` until then; the input keeps `aria-required="true"`. A form reset puts back the chips the field started with once no listener can cancel it: at the next microtask, or when the field is next used. Check validity after an `await`, not in the same task as `reset()`. A disabled input shows no validation message, so if the page replaces the chips' required message while the field is disabled and the chips then change, set the page's error again once the field is enabled. Set a field up once it is in its form; one set up before it is moved into a detached form or a shadow root is heard there once it is laid out, or at once if you call `init` again. `destroy()` gives the input its name and `required` back. Pasting text that lists values, split by commas, tabs or new lines, adds a chip for each, up to `limit`; an `autocompleteOnly` field pastes as text.
+In a form, give the field's `<input>` a `name`. The chips submit under it, one `id` per chip, as a multiple select does. The text input gives its name up so half-typed text is not submitted, and the values follow its form, `form` attribute and `disabled` state at the moment the form gathers its data. A `required` input makes the field valid once it has a chip, and says `i18n.required` until then; the input keeps `aria-required="true"`. A form reset puts back the chips the field started with once no listener can cancel it: at the next microtask, or when the field is next used. Check validity after an `await`, not in the same task as `reset()`. A disabled input shows no validation message, so if the page replaces the chips' required message while the field is disabled and the chips then change, set the page's error again once the field is enabled. Set a field up once it is in its form; one set up before it is moved into a detached form or a shadow root is heard there once it is laid out, or at once if you call `init` again. `destroy()` gives the input its name and `required` back. Pasting text that lists values, split by commas, tabs or new lines, adds a chip for each, up to `limit`; an `autocompleteOnly` field pastes as text. With `allowCreate: true` in `autocompleteOptions`, choosing the `Add` row adds the typed text as a chip, in an `autocompleteOnly` field too, and then calls the page's own `onCreate`.
 
 ```html
 <form>
@@ -8607,7 +8608,7 @@ const chip = {
 | `allowUserInput` | Boolean | `false` | If true, render a text field and a delete button per chip, so the user can add and remove chips. |
 | `i18n` | Object | `{ remove: 'Remove', required: 'Add at least one item.' }` | Strings the component generates. `remove` prefixes the delete button's accessible name, giving "Remove Apple". `required` is what a required field says while it has no chips. |
 | `autocompleteOptions` | Object | `{}` | Options passed to Autocomplete on the input. A non-empty object enables autocomplete. |
-| `autocompleteOnly` | Boolean | `false` | If true, Enter will not add a value that is not in the autocomplete list. |
+| `autocompleteOnly` | Boolean | `false` | If true, Enter will not add a value that is not in the autocomplete list. An `Add` row from `allowCreate` still adds its text. |
 | `limit` | Number | `Infinity` | Maximum number of chips. |
 | `onChipAdd` | Function | `null` | Called after a chip is added. Receives the container and the chip element. |
 | `onChipSelect` | Function | `null` | Called when a chip is selected. Receives the container and the chip element. |
@@ -8836,6 +8837,17 @@ onSearch: function(text, autocomplete, signal) {
 }
 ```
 
+Set `allowCreate` to offer the typed text as a new value. When the trimmed text matches no listed suggestion's `text`, or its `id` when it has no `text`, ignoring case, the list ends in an `Add "text"` row. Choosing it with Enter or a click calls `onCreate` with the trimmed text and fires `expressive:create` with `{ text }`. The selection does not change, so add and select the entry yourself:
+
+```text
+allowCreate: true,
+onCreate: function(text, autocomplete) {
+  const entry = { id: text, text: text };
+  autocomplete.options.data.push(entry);
+  autocomplete.setMenuItems(autocomplete.options.data, [entry.id], false);
+}
+```
+
 ### Options
 
 | Name | Type | Default | Description |
@@ -8846,15 +8858,17 @@ onSearch: function(text, autocomplete, signal) {
 | `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
 | `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when the search text changes or the autocomplete is destroyed. |
+| `allowCreate` | Boolean | `false` | If true, text that matches no listed suggestion exactly ends the list in an `Add "text"` row. Choosing it calls `onCreate` and fires `expressive:create`; the selection does not change. |
+| `onCreate` | Function | `null` | Called with the trimmed text and the instance when the `Add` row is chosen. |
 | `searchDelay` | Number | `0` | Milliseconds to wait after typing pauses before calling `onSearch`, so remote data is fetched once per pause. A search on focus runs at once. Blur, `destroy()` and choosing a single result cancel a pending search. `0` searches on every input. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
 | `selected` | Array | `[]` | Initial selected ids, strings or numbers. An id without loaded data displays the id. Pass the selected ids to `setMenuItems` with the loaded data to resolve their labels. |
 
-Autocomplete provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
+Autocomplete provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. `i18n.create(text)` labels the `Add` row and returns `Add "text"`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
 
-Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still pass the signal to their requests, so a stale response cannot replace newer results, and own error handling. Results delivered after `destroy()` are ignored, and results delivered after the user leaves the field update the list without opening it. Test actual spoken delivery with a screen reader.
+Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback and the `Add` row. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still pass the signal to their requests, so a stale response cannot replace newer results, and own error handling. Results delivered after `destroy()` are ignored, and results delivered after the user leaves the field update the list without opening it. Test actual spoken delivery with a screen reader.
 
 ### Methods
 

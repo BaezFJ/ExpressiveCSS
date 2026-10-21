@@ -215,7 +215,11 @@ const S = defineSections([
           out, or at once if you call <code>init</code> again. <code>destroy()</code> gives the
           input its name and <code>required</code> back. Pasting text that lists values, split by commas,
           tabs or new lines, adds a chip for each, up to <code>limit</code>; an
-          <code>autocompleteOnly</code> field pastes as text.
+          <code>autocompleteOnly</code> field pastes as text. With
+          <code>allowCreate: true</code> in <code>autocompleteOptions</code>,
+          choosing the "Add" row adds the typed text as a chip, in an
+          <code>autocompleteOnly</code> field too, and then calls the page's own
+          <code>onCreate</code>.
         </p>
 <Code code={`
 <form>
@@ -332,7 +336,7 @@ const chip = {
               <td><code>autocompleteOnly</code></td>
               <td>Boolean</td>
               <td><code>false</code></td>
-              <td>If true, Enter will not add a value that is not in the autocomplete list.</td>
+              <td>If true, Enter will not add a value that is not in the autocomplete list. An "Add" row from <code>allowCreate</code> still adds its text.</td>
             </tr>
             <tr>
               <td><code>limit</code></td>

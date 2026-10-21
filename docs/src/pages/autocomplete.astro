@@ -22,8 +22,8 @@ const S = defineSections([
 
 <PageBody sections={S}>
   <p>Autocomplete adds a visually hidden, polite live region for loading, result counts and multi-selection changes. The visible spinner and count stay unchanged. Announcements happen only while the input has focus and its text meets <code>minLength</code>. Closing the menu clears the region. Check spoken delivery with a screen reader.</p>
-  <p>Override <code>i18n.loading</code> and <code>i18n.noResults</code>, which default to "Loading results." and "No results.". Supply <code>i18n.results(count)</code> and <code>i18n.selected(count)</code> functions for localized plurals. Defaults produce "1 result available." or "N results available." and "1 item selected." or "N items selected.". Missing keys keep their defaults, and all messages are plain text.</p>
-  <p>Updates announce the count passed to <code>setMenuItems</code>, excluding fallback selected items. Opening an existing list announces its displayed item count. Updates with <code>open: false</code> stay silent. Your application handles request cancellation, stale-response ordering and errors. The plugin ignores results delivered after <code>destroy()</code>, and results delivered after the user leaves the field update the list without opening it.</p>
+  <p>Override <code>i18n.loading</code> and <code>i18n.noResults</code>, which default to "Loading results." and "No results.". Supply <code>i18n.results(count)</code> and <code>i18n.selected(count)</code> functions for localized plurals. Defaults produce "1 result available." or "N results available." and "1 item selected." or "N items selected.". <code>i18n.create(text)</code> labels the "Add" row and defaults to <code>Add "text"</code>. Missing keys keep their defaults, and all messages are plain text.</p>
+  <p>Updates announce the count passed to <code>setMenuItems</code>, excluding fallback selected items and the "Add" row. Opening an existing list announces its displayed item count. Updates with <code>open: false</code> stay silent. Your application handles request cancellation, stale-response ordering and errors. The plugin ignores results delivered after <code>destroy()</code>, and results delivered after the user leaves the field update the list without opening it.</p>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>autocomplete</code> to a text input inside <code>.field</code>.
@@ -137,6 +137,23 @@ onSearch: function(text, autocomplete, signal) {
     });
 }
 `} />
+        <p>
+          Set <code>allowCreate</code> to offer the typed text as a new value.
+          When the trimmed text matches no listed suggestion's <code>text</code>,
+          or its <code>id</code> when it has no <code>text</code>, ignoring case,
+          the list ends in an "Add" row. Choosing it with Enter or a click calls
+          <code>onCreate</code> with the trimmed text and fires
+          <code>expressive:create</code> with <code>&#123; text &#125;</code>.
+          The selection does not change, so add and select the entry yourself:
+        </p>
+<Code code={`
+allowCreate: true,
+onCreate: function(text, autocomplete) {
+  const entry = { id: text, text: text };
+  autocomplete.options.data.push(entry);
+  autocomplete.setMenuItems(autocomplete.options.data, [entry.id], false);
+}
+`} />
   </Section>
 
   <Section {...S.options}>
@@ -170,6 +187,18 @@ onSearch: function(text, autocomplete, signal) {
               <td>Function</td>
               <td>filters <code>id</code> and <code>text</code></td>
               <td>Called with the text, the instance and an <code>AbortSignal</code> when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call <code>setMenuItems</code>. The signal aborts when the search text changes or the autocomplete is destroyed.</td>
+            </tr>
+            <tr>
+              <td><code>allowCreate</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>If true, text that matches no listed suggestion exactly ends the list in an "Add" row. Choosing it calls <code>onCreate</code> and fires <code>expressive:create</code>; the selection does not change.</td>
+            </tr>
+            <tr>
+              <td><code>onCreate</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called with the trimmed text and the instance when the "Add" row is chosen.</td>
             </tr>
             <tr>
               <td><code>searchDelay</code></td>

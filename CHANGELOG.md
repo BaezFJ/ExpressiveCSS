@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Autocomplete's `allowCreate` option ends the list in an `Add "text"` row
+  when the typed text matches no suggestion exactly, ignoring case and
+  surrounding spaces. Choosing it with Enter or a click calls `onCreate` with
+  the trimmed text and fires `expressive:create` with `{ text }`. The
+  selection does not change; the page adds the entry. `i18n.create` sets the
+  row's label. Chips add the text as a chip, in an `autocompleteOnly` field
+  too.
 - Autocomplete's `searchDelay` option waits that many milliseconds after
   typing pauses before calling `onSearch`, so a remote search runs once per
   pause instead of once per key. A text change aborts the running search's
