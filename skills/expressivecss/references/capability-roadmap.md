@@ -79,7 +79,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Map](#map) | unassessed | needs-review | needs-rerun | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Search](#search) | unassessed | needs-review | needs-rerun | 1 |
-| [Command palette](#command-palette) | implemented | source-reviewed | needs-rerun | 0 |
+| [Command palette](#command-palette) | unassessed | needs-review | needs-rerun | 0 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | needs-rerun | 0 |
 | [Text fields](#text-fields) | unassessed | needs-review | needs-rerun | 0 |
 | [Rich text editor](#rich-text-editor) | unassessed | needs-review | needs-rerun | 0 |
@@ -1228,9 +1228,9 @@ Web adaptation: Application toggles hidden for docked views or opens a native di
 
 ## Command palette
 
-**implemented within the stated scope.** A modal dialog with a filtering combobox and listbox, group headings, keywords, an empty message, a Ctrl or Command shortcut and native commandfor opening.
+**unassessed within the stated scope.** A modal dialog with a filtering combobox and listbox, group headings, keywords, an empty message, a Ctrl or Command shortcut and native commandfor opening.
 
-Source review: source-reviewed, 2026-10-06. [src/sass/components/_command-palette.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_command-palette.scss), [src/ts/components/commandPalette.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/ts/components/commandPalette.ts).
+Source review: needs-review, 2026-10-06. [src/sass/components/_command-palette.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_command-palette.scss), [src/ts/components/commandPalette.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/ts/components/commandPalette.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
 
