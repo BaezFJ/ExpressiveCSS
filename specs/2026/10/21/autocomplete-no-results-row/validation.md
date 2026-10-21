@@ -71,7 +71,7 @@ The agent reviewed `git diff origin/master...HEAD` on 2026-10-21 for correctness
 
 Phase 14 merged to `master` as `774b0d27` before this branch was pushed, so the branch was rebased onto it on 2026-10-21. `autocomplete.ts` merged without conflicts: Phase 14's Enter and arrow-key code already went through the `_options()` list, which includes its "Add" row because that row is an option. The tests, changelog and docs conflicts kept both phases' additions. The generated skill and MCP files took `master`'s side and were regenerated with `npm run build:skill`.
 
-A new jsdom case checks the combined list: with `allowCreate`, a search for `kiwi` shows the no-results row first and the "Add" row after it, and ArrowDown makes the "Add" row active. The JavaScript budget line was re-measured on top of Phase 14: 89,895 gzip bytes (+133). CSS stayed at 84,585 (+72).
+A new jsdom case checks the combined list: with `allowCreate`, a search for `kiwi` shows the no-results row first and the "Add" row after it, and ArrowDown makes the "Add" row active. The JavaScript budget line was re-measured on top of Phase 14: 89,895 gzip bytes (+133), and after merging the tooltip shared delay (#381): 89,980 (+134). CSS stayed at 84,585 (+72).
 
 After the rebase these passed, one file at a time: regressions 150, Chips 27, Chips form 17, selection events 15, dismissal lifecycle 10, IME 10, injection 14, keyboard focus 10, generated forms 24, selective builds 4, docs API 2, skill 33, the Chips form browser suite 9, and the four Autocomplete browser scenarios in each engine. `check:generated` passed. The full `npm run verify` ran before the rebase; CI runs it on the rebased branch.
 

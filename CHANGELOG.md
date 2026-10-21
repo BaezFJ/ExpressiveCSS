@@ -783,6 +783,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- A runtime tooltip that opens while a tooltip is closing, or within 300 ms
+  after that one's `exitDelay` ends, shows without waiting its
+  `enterDelay`, so moving along a toolbar shows each tooltip at once. Only
+  pages that set `enterDelay` above `0` see a difference. The first tooltip
+  still waits its delay, and a tooltip that stays open does not shorten the
+  others'. The window is fixed and has no option.
 - A Chips field whose text `<input>` has a `name` now submits its chips
   under that name, one `id` each, instead of the text being typed. A page
   that read the draft text from the form should read `chips.getData()`, or
