@@ -196,6 +196,35 @@ const S = defineSections([
           <code>no-autoinit</code>, but it uses the defaults, so those wrappers stay
           display-only until you call <code>init</code> with options.
         </p>
+        <p>
+          In a form, give the field's <code>&lt;input&gt;</code> a <code>name</code>.
+          The chips submit under it, one <code>id</code> per chip, as a multiple
+          select does. The text input gives its name up so half-typed text is not
+          submitted, and the values follow its form, <code>form</code> attribute and
+          <code>disabled</code> state at the moment the form gathers its data. A
+          <code>required</code> input makes the field valid once it has a chip, and
+          says <code>i18n.required</code> until then; the input keeps
+          <code>aria-required="true"</code>. A form reset puts back the chips the field
+          started with once no listener can cancel it: at the next microtask, or when
+          the field is next used. Check validity after an <code>await</code>, not in the
+          same task as <code>reset()</code>. A disabled input shows no validation
+          message, so if the page replaces the chips' required message while the field
+          is disabled and the chips then change, set the page's error again once the
+          field is enabled. Set a field up once it is in its form; one set up before it is
+          moved into a detached form or a shadow root is heard there once it is laid
+          out, or at once if you call <code>init</code> again. <code>destroy()</code> gives the
+          input its name and <code>required</code> back. Pasting text that lists values, split by commas,
+          tabs or new lines, adds a chip for each, up to <code>limit</code>; an
+          <code>autocompleteOnly</code> field pastes as text.
+        </p>
+<Code code={`
+<form>
+  <div class="chips">
+    <input name="tags">
+  </div>
+</form>
+<!-- Submits tags=red&tags=blue -->
+`} />
         <p>An empty field. Type a tag and press Enter:</p>
         <div id="chips-empty" class="chips no-autoinit mb-5"></div>
         <p>Initial tags from the <code>data</code> option:</p>
@@ -290,8 +319,8 @@ const chip = {
             <tr>
               <td><code>i18n</code></td>
               <td>Object</td>
-              <td><code>&#123; remove: 'Remove' &#125;</code></td>
-              <td>Strings the component generates. <code>remove</code> prefixes the delete button's accessible name, giving "Remove Apple".</td>
+              <td><code>&#123; remove: 'Remove', required: 'Add at least one item.' &#125;</code></td>
+              <td>Strings the component generates. <code>remove</code> prefixes the delete button's accessible name, giving "Remove Apple". <code>required</code> is what a required field says while it has no chips.</td>
             </tr>
             <tr>
               <td><code>autocompleteOptions</code></td>

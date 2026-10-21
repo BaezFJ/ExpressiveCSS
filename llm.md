@@ -8510,6 +8510,17 @@ Backspace and Delete target the focused chip, then select the preceding survivor
 
 `allowUserInput` defaults to `false`. Without it there is no text field and rendered chips have no delete button. Pass `allowUserInput: true` for the interactive field. `AutoInit()` starts every `.chips` except `no-autoinit`, but it uses the defaults, so those wrappers stay display-only until you call `init` with options.
 
+In a form, give the field's `<input>` a `name`. The chips submit under it, one `id` per chip, as a multiple select does. The text input gives its name up so half-typed text is not submitted, and the values follow its form, `form` attribute and `disabled` state at the moment the form gathers its data. A `required` input makes the field valid once it has a chip, and says `i18n.required` until then; the input keeps `aria-required="true"`. A form reset puts back the chips the field started with once no listener can cancel it: at the next microtask, or when the field is next used. Check validity after an `await`, not in the same task as `reset()`. A disabled input shows no validation message, so if the page replaces the chips' required message while the field is disabled and the chips then change, set the page's error again once the field is enabled. Set a field up once it is in its form; one set up before it is moved into a detached form or a shadow root is heard there once it is laid out, or at once if you call `init` again. `destroy()` gives the input its name and `required` back. Pasting text that lists values, split by commas, tabs or new lines, adds a chip for each, up to `limit`; an `autocompleteOnly` field pastes as text.
+
+```html
+<form>
+  <div class="chips">
+    <input name="tags">
+  </div>
+</form>
+<!-- Submits tags=red&tags=blue -->
+```
+
 Empty field — type a tag and press Enter:
 
 Initial tags from the `data` option:
@@ -8572,7 +8583,7 @@ const chip = {
 | `secondaryPlaceholder` | String | `''` | Placeholder after at least one chip exists. |
 | `closeIconClass` | String | `'material-symbols'` | Class on the icon inside the delete button. |
 | `allowUserInput` | Boolean | `false` | If true, render a text field and a delete button per chip, so the user can add and remove chips. |
-| `i18n` | Object | `{ remove: 'Remove' }` | Strings the component generates. `remove` prefixes the delete button's accessible name, giving "Remove Apple". |
+| `i18n` | Object | `{ remove: 'Remove', required: 'Add at least one item.' }` | Strings the component generates. `remove` prefixes the delete button's accessible name, giving "Remove Apple". `required` is what a required field says while it has no chips. |
 | `autocompleteOptions` | Object | `{}` | Options passed to Autocomplete on the input. A non-empty object enables autocomplete. |
 | `autocompleteOnly` | Boolean | `false` | If true, Enter will not add a value that is not in the autocomplete list. |
 | `limit` | Number | `Infinity` | Maximum number of chips. |
