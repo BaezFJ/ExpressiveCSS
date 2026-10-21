@@ -195,8 +195,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed chips form values, required, reset and pasted lists: 87,870 gzip bytes (+1,032).
   // Reviewed menu Home and End, and placement top with the anchored side chosen to fit its containing block and kept on scroll: 88,407 gzip bytes (+537).
   // Reviewed tooltip long press on touch: 88,766 gzip bytes (+359).
-  // Reviewed aria-invalid and the error description on .validate fields: 88,914 gzip bytes (+148).
-  assert.ok(sizes(js).gzip <= 88914, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed heatmap column label thinning: 88,873 gzip bytes (+107).
+  // Reviewed aria-invalid and the error description on .validate fields: 89,014 gzip bytes (+141).
+  assert.ok(sizes(js).gzip <= 89014, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -312,5 +313,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed keyboard and IME fixes: search view, slider ring, popover fallback: 83,467 gzip bytes (+62).
   // Reviewed chart label thinning and navbar destination wrap: 83,750 gzip bytes (+283).
   // Reviewed pie slice contrast and forced-colors invalid checkboxes: 83,890 gzip bytes (+140).
-  assert.ok(sizes(css).gzip <= 83890, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed heatmap column label thinning: 84,031 gzip bytes (+141).
+  assert.ok(sizes(css).gzip <= 84031, `CSS gzip: ${sizes(css).gzip}`);
 });

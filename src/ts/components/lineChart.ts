@@ -25,50 +25,69 @@ export const COLORS = 4;
 /** The least space between two row labels. */
 const LABEL_GAP = 4;
 
-/**
- * Where a kept row label starts, as the CSS places it: the first and last
- * against the chart's edges, the rest centred on their columns.
- */
-function labelStart(index: number, count: number, column: number, width: number) {
-  if (index === 0) return 0;
-  if (index === count - 1) return count * column - width;
-  return (index + 0.5) * column - width / 2;
+/** A label's text width, and where the column it labels starts and ends. */
+interface LabelBox {
+  width: number;
+  start: number;
+  end: number;
 }
 
-/** Whether keeping every stepth row label leaves them apart and inside the chart. */
-function labelsFit(widths: number[], column: number, step: number) {
-  let end = -LABEL_GAP;
-  for (let index = 0; index < widths.length; index += step) {
-    const start = labelStart(index, widths.length, column, widths[index]);
-    if (start < end + LABEL_GAP || start + widths[index] > widths.length * column) return false;
-    end = start + widths[index];
+/** Measures each label along the inline axis, which runs leftward in a right-to-left chart. */
+function labelBoxes(items: Element[], rtl: boolean): LabelBox[] {
+  const range = document.createRange();
+  return items.map((item) => {
+    range.selectNodeContents(item);
+    const width = range.getBoundingClientRect().width;
+    const { left, right } = item.getBoundingClientRect();
+    return rtl ? { width, start: -right, end: -left } : { width, start: left, end: right };
+  });
+}
+
+/**
+ * Where a kept label's text starts, as the CSS places it: the first and last
+ * against the outer ends of their columns, the rest centred on theirs.
+ */
+function labelStart(boxes: LabelBox[], index: number) {
+  const box = boxes[index];
+  if (index === 0) return box.start;
+  if (index === boxes.length - 1) return box.end - box.width;
+  return (box.start + box.end - box.width) / 2;
+}
+
+/** Whether keeping every stepth label leaves them apart and inside the chart. */
+function labelsFit(boxes: LabelBox[], step: number) {
+  const edge = boxes[boxes.length - 1].end;
+  let previous = -Infinity;
+  for (let index = 0; index < boxes.length; index += step) {
+    const start = labelStart(boxes, index);
+    if (start < previous + LABEL_GAP || start + boxes[index].width > edge) return false;
+    previous = start + boxes[index].width;
   }
   return true;
 }
 
 /**
- * How many columns apart the kept row labels are: 1 when every label fits
- * its column, else the fewest that keeps them apart. When none does, 1
- * again, and every label is cut to an ellipsis as before.
+ * How many columns apart the kept labels are: 1 when every label fits its
+ * column, else the fewest that keeps them apart. When none does, 1 again,
+ * and every label is cut to an ellipsis as before.
  */
-function labelStep(widths: number[], column: number) {
-  if (widths.every((width) => width + LABEL_GAP <= column)) return 1;
-  for (let step = 2; step <= widths.length; step++) {
-    if (labelsFit(widths, column, step)) return step;
+function labelStep(boxes: LabelBox[]) {
+  if (boxes.every((box) => box.width + LABEL_GAP <= box.end - box.start)) return 1;
+  for (let step = 2; step <= boxes.length; step++) {
+    if (labelsFit(boxes, step)) return step;
   }
   return 1;
 }
 
 /**
- * Keeps every nth row label when they are wider than their columns, so a
+ * Keeps every nth column label when they are wider than their columns, so a
  * narrow chart shows whole labels rather than cutting each to an ellipsis.
+ * The container gets data-thinned and each hidden label data-skip.
  */
-function thinLabels(labels: HTMLElement) {
-  const items = Array.from(labels.children);
-  const widths = items.map((li) => li.firstElementChild.getBoundingClientRect().width);
-  const step = labelStep(widths, labels.clientWidth / items.length);
-  labels.toggleAttribute('data-thinned', step > 1);
-  items.forEach((li, index) => li.toggleAttribute('data-skip', index % step > 0));
+function thinLabels(container: Element, items: Element[]) {
+  const step = labelStep(labelBoxes(items, getComputedStyle(container).direction === 'rtl'));
+  container.toggleAttribute('data-thinned', step > 1);
+  items.forEach((item, index) => item.toggleAttribute('data-skip', index % step > 0));
 }
 
 /** An SVG element with its attributes. */
@@ -622,21 +641,24 @@ export class LineChart extends Component<LineChartOptions> {
     // A loop rather than a spread: a spread of every row overflows the stack.
     for (const text of this.labels) {
       const li = document.createElement('li');
-      // The span is the text's own width, which thinLabels() measures.
+      // In a span, so a kept label can overflow its column centred.
       li.append(document.createElement('span'));
       li.firstChild.textContent = text;
       labels.append(li);
     }
-    this._observeLabels(labels);
+    this._observeLabels(labels, Array.from(labels.children));
     return [labels, ...this._legend()];
   }
 
-  /** Thins the row labels whenever their width changes; a bar chart's run down instead. */
-  private _observeLabels(labels: HTMLElement) {
+  /**
+   * Thins the column labels in container whenever its width changes. A bar
+   * chart's labels run down instead, and no labels leaves nothing to watch.
+   */
+  protected _observeLabels(container: HTMLElement, items: Element[]) {
     this._labelSizes?.disconnect();
-    if (this._horizontal || typeof ResizeObserver === 'undefined') return;
-    this._labelSizes = new ResizeObserver(() => thinLabels(labels));
-    this._labelSizes.observe(labels);
+    if (this._horizontal || !items.length || typeof ResizeObserver === 'undefined') return;
+    this._labelSizes = new ResizeObserver(() => thinLabels(container, items));
+    this._labelSizes.observe(container);
   }
 
   /**

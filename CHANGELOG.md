@@ -371,6 +371,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A narrow heatmap shows whole column labels. Like the line, column and
+  mixed charts, it keeps every second label (or every third, and so on)
+  when each is wider than its column, instead of cutting all of them to
+  "W…". Labels the author already spaced out with empty `data-label`
+  cells, such as a year of weeks named once a month, are left as written.
+  The labels are now measured where they sit, so the columns' gaps and
+  right-to-left grids are counted.
 - Pie slices 5 and 6 stand out from the surface. They took
   `primary-container` and `tertiary-container`, which are 1.3:1 on the
   surface in light mode and 2:1 in dark, under the 3:1 a slice needs. Each is
