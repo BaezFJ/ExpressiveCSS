@@ -802,9 +802,11 @@ Swept 0.8.0. A [data-context-menu] trigger is a region: the menu opens at the po
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `menu-children-are-list-items` | forbid | `menu > :not(li):not(script):not(template)` | must not match |
+| `menu-group-is-named` | forbid | `menu ul[role="group"]:not([aria-label]):not([aria-labelledby])` | must not match |
 | `context-menu-region-is-not-a-control` | forbid | `[data-context-menu]:is(button, a[href], input, select, textarea)` | must not match |
 
 - **menu-children-are-list-items** - <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
+- **menu-group-is-named** - A <ul role=group> in a menu is a set of choices, and its name is what a screen reader announces on entering it. Give it aria-label or aria-labelledby.
 - **context-menu-region-is-not-a-control** - data-context-menu goes on a region of content. A button or link already has an action for Enter and click; give it its own menu trigger instead.
 
 ### menubar

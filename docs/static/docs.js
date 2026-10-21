@@ -293,10 +293,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const menuRich = document.getElementById("menu-rich-trigger");
-  if (menuRich) {
-    Expressive.Menu.init(menuRich, { constrainWidth: false });
-  }
+  document.querySelectorAll("#menu-rich-trigger, #menu-radio-trigger").forEach((trigger) => {
+    Expressive.Menu.init(trigger, { constrainWidth: false });
+  });
 
   const menuVibrant = document.getElementById("menu-vibrant-trigger");
   if (menuVibrant) {

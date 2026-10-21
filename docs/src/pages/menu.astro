@@ -239,7 +239,7 @@ Expressive.AutoInit(document.body, {
               <td><code>closeOnClick</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>If true, close the menu when a leaf item is clicked. A click on a row that owns a nested <code>&lt;menu&gt;</code> toggles that flyout and does not close the root. A checkbox item stays open on a click or Space and closes on Enter.</td>
+              <td>If true, close the menu when a leaf item is clicked. A click on a row that owns a nested <code>&lt;menu&gt;</code> toggles that flyout and does not close the root. A checkbox item stays open on a click or Space and closes on Enter. A radio item stays open on Space.</td>
             </tr>
             <tr>
               <td><code>hover</code></td>
@@ -366,10 +366,13 @@ Expressive.Menu.init(document.querySelector('#hover'), {
           <code>role="menuitemcheckbox"</code> with an
           <code>aria-checked</code> value. A checkbox item toggles its own
           <code>aria-checked</code>: a click or Space flips it and keeps the
-          menu open, and Enter flips it and closes the menu. Each toggle fires
+          menu open, and Enter flips it and closes the menu. A radio item
+          checks itself and unchecks the other radio items in its group: a
+          click or Enter checks it and closes the menu, and Space checks it
+          and keeps the menu open. Each change fires
           <code>expressive:change</code> with
-          <code>{"{ item, checked }"}</code>. Keep radio items in sync
-          yourself. Don't put <code>aria-selected</code> on a menu item. A trailing
+          <code>{"{ item, checked }"}</code>; choosing a radio item that is
+          already checked fires none. Don't put <code>aria-selected</code> on a menu item. A trailing
           <code>&lt;kbd&gt;</code> is a keyboard shortcut. A
           <code>.gap</code> item splits groups. It is more expressive than a
           divider, so use one or two per menu at most. A
@@ -450,6 +453,52 @@ Expressive.Menu.init(document.querySelector('#hover'), {
   </li>
   <li class="disabled" aria-disabled="true">
     <button type="button" tabindex="-1"><span class="material-symbols" aria-hidden="true">redo</span> Redo</button>
+  </li>
+</menu>
+`} />
+        <p>
+          Put each set of radio items in a <code>&lt;ul role="group"&gt;</code>
+          with an <code>aria-label</code>, inside an
+          <code>&lt;li role="none"&gt;</code>, so a screen reader names the
+          choice. Rows in a group look and move like any other row, and arrow
+          keys pass from one group to the next. Radio items outside a group
+          form one group per menu.
+        </p>
+        <p>
+          <button type="button" class="menu-trigger no-autoinit" id="menu-radio-trigger" data-target="menu-radio">Sort</button>
+        </p>
+        <menu id="menu-radio">
+          <li role="none">
+            <ul role="group" aria-label="Sort by">
+              <li role="menuitemradio" aria-checked="true"><button type="button">Name</button></li>
+              <li role="menuitemradio" aria-checked="false"><button type="button">Date modified</button></li>
+              <li role="menuitemradio" aria-checked="false"><button type="button">Size</button></li>
+            </ul>
+          </li>
+          <li class="divider" role="separator"></li>
+          <li role="none">
+            <ul role="group" aria-label="Order">
+              <li role="menuitemradio" aria-checked="true"><button type="button">Ascending</button></li>
+              <li role="menuitemradio" aria-checked="false"><button type="button">Descending</button></li>
+            </ul>
+          </li>
+        </menu>
+<Code code={`
+<button class="menu-trigger" data-target="sort-menu">Sort</button>
+<menu id="sort-menu">
+  <li role="none">
+    <ul role="group" aria-label="Sort by">
+      <li role="menuitemradio" aria-checked="true"><button type="button">Name</button></li>
+      <li role="menuitemradio" aria-checked="false"><button type="button">Date modified</button></li>
+      <li role="menuitemradio" aria-checked="false"><button type="button">Size</button></li>
+    </ul>
+  </li>
+  <li class="divider" role="separator"></li>
+  <li role="none">
+    <ul role="group" aria-label="Order">
+      <li role="menuitemradio" aria-checked="true"><button type="button">Ascending</button></li>
+      <li role="menuitemradio" aria-checked="false"><button type="button">Descending</button></li>
+    </ul>
   </li>
 </menu>
 `} />
