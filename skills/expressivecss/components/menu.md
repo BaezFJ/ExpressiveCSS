@@ -9,7 +9,7 @@ Component ID: `menu`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `12b47458b4d20c5a6f14f04cbff0b0ac2054c1a5445c74e1bdac44946c3d4fb3`
+Contract SHA-256: `06115b6f4f3d8d1567b2976521444fd4909e446da39dcd465d863e40a3f2cf2f`
 
 #### Selection and adaptation
 
@@ -70,6 +70,7 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
 | `constrainWidth` | Boolean | `true` | If true, the menu is as wide as the trigger. M3 menus are independently sized — pass `false` for that. |
 | `container` | Element | `null` | Element that will contain the menu. When omitted, the menu is moved next to the trigger. |
 | `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |
+| `placement` | String | `'bottom'` | The side of the trigger the menu opens on when it fits there: `'bottom'` or `'top'`. It opens on the other side when that has more room. |
 | `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. |
 | `hover` | Boolean | `false` | If true, the menu opens on hover instead of click. |
 | `contextMenu` | Boolean | `false`; `true` with `data-context-menu` | If true, the trigger is a region and the menu opens at the pointer on right-click, long-press, the menu key or Shift+F10, instead of on click. |

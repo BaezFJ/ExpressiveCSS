@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Menus take `placement: 'top'` to open above the trigger when they fit
+  there, as for a trigger in a bottom bar, and Home and End jump to the
+  first and last rows. An anchored menu that does not fit below its trigger
+  now opens above it when there is more room there. Its height was capped
+  to the room below, so it shrank and scrolled instead of flipping.
 - Chips submit a form value. Give the field's `<input>` a `name` and the
   chips submit under it, one `id` per chip, as a multiple select does. The
   text input gives its name up so half-typed text is not submitted, and the
