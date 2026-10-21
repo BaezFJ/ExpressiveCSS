@@ -14,7 +14,8 @@ Later phases build on these:
 - **Data tables:** `data-sort` sorting and a select-all box.
 - **Pickers:** Datepicker and Timepicker follow the page's `lang` and read typed dates in their own format.
 - **Chips:** submit their values under the input's `name`, with `required` and reset support.
-- **Menus:** Home and End keys, `placement`, and anchored menus that open on whichever side fits.
+- **Menus:** Home and End keys, `placement`, and anchored menus that open on whichever side fits. Checkbox items toggle and keep the menu open, and radio items check within a named group.
+- **Autocomplete:** `searchDelay` waits for typing to pause before calling `onSearch`, and a text change aborts the running search's signal.
 - **Tooltips:** open on a long press on touch.
 - **Forms:** `.validate` fields set `aria-invalid` and are described by their error text.
 - **AutoInit:** starts every registered component in the page, with a `no-autoinit` opt-out.
@@ -71,25 +72,15 @@ These close the second tier of the TypeScript gap review. Each phase stands alon
 
 ### Phase 11: menu checkbox items
 
-No dependency. A menu item the page writes as `role="menuitemcheckbox"` toggles its `aria-checked` when activated by click, Enter or Space. Its menu stays open so further items can be toggled, and an `expressive:change` event reports the item and its state.
-
-Completion check: a browser test toggles a checkbox item twice by keyboard and once by click. `aria-checked` follows each toggle, the menu stays open, and each change fires one event.
-
-Open for spec: whether Enter closes the menu after toggling, as some menus do, while Space keeps it open.
+Completed 2026-10-21. See [spec](2026/10/21/menu-checkbox-items/).
 
 ### Phase 12: menu radio groups
 
-Depends on phase 11. Items written as `role="menuitemradio"` inside a `role="group"` act as one choice. Activating one checks it and unchecks the others in its group, and an `expressive:change` event reports the new choice.
-
-Completion check: a browser test with two groups in one menu checks an item in each. Only one item per group is checked, and the other group is unaffected.
+Completed 2026-10-21. See [spec](2026/10/21/menu-radio-groups/).
 
 ### Phase 13: autocomplete search debounce
 
-No dependency. An option delays `onSearch` until typing pauses, so remote data is fetched once per pause rather than once per key. Each superseded search's `AbortSignal` is aborted.
-
-Completion check: a test types five characters quickly and sees one search with the full text. A pause between two words gives two searches, and the first one's signal is aborted.
-
-Open for spec: the option's name and default, and whether the default stays at no delay.
+Completed 2026-10-21. See [spec](2026/10/21/autocomplete-search-debounce/).
 
 ### Phase 14: autocomplete create option
 
