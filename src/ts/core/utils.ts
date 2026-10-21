@@ -149,7 +149,7 @@ export class Utils {
   }
 
   /** Where a key moves from `index` among `count` items: by `steps`, or to an end for Home and End. NaN for any other key. */
-  private static _keyIndex(key: string, index: number, count: number, steps: Record<string, number>) {
+  static _keyIndex(key: string, index: number, count: number, steps: Record<string, number>) {
     if (key === 'Home') return 0;
     if (key === 'End') return count - 1;
     return index + (steps[key] ?? NaN);
@@ -320,8 +320,10 @@ export class Utils {
     }
 
     // Check for container and viewport for Bottom
+    // The menu ends `offset` above the element's bottom, in a clipped
+    // container as in the viewport.
     canAlign.spaceOnTop = !containerAllowsOverflow
-      ? scrolledYBottomEdge - (bounding.height - offset)
+      ? scrolledYBottomEdge - (bounding.height + offset)
       : elOffsetRect.bottom - (bounding.height + offset);
     if (canAlign.spaceOnTop < 0) {
       canAlign.bottom = false;

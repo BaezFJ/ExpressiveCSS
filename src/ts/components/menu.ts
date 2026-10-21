@@ -5,6 +5,44 @@ import { Component, BaseOptions, InitElements, InitElement, Openable } from '../
 // trigger is anchored there and flips at the viewport edges in CSS; context
 // menus open at a point and cover-trigger menus overlap their trigger, so
 // both keep the measured placement, as does every browser without anchors.
+/**
+ * Whether a style makes its element the containing block of fixed-position
+ * descendants: a transform of any kind, even an identity translate, a
+ * filter, perspective or backdrop filter, layout or paint containment, or
+ * will-change for one of those. Size containment and query containers do
+ * not, in any engine.
+ */
+function containsFixed(style: CSSStyleDeclaration) {
+  const effects = [style.transform, style.translate, style.rotate, style.scale, style.filter, style.perspective, style.getPropertyValue('backdrop-filter')];
+  return effects.some((value) => value && value !== 'none') ||
+    /paint|layout|strict|content/.test(style.contain) ||
+    /transform|translate|rotate|scale|filter|perspective/.test(style.willChange);
+}
+
+/** The shadow roots an element sits in, nearest first. */
+function shadowRoots(el: Element) {
+  const roots: ShadowRoot[] = [];
+  for (let root = el.getRootNode(); 'host' in root; root = (root as ShadowRoot).host.getRootNode()) roots.push(root as ShadowRoot);
+  return roots;
+}
+
+/** An element's parent, or its shadow root's host. */
+const parentOf = (el: Element): Element | null => el.parentElement ?? ((el.getRootNode() as ShadowRoot).host || null);
+
+/**
+ * The top and bottom an anchored menu can use: those of its fixed-position
+ * containing block, where an ancestor makes one, within the viewport.
+ */
+function fixedBounds(menu: Element) {
+  let block = parentOf(menu);
+  while (block && !containsFixed(getComputedStyle(block))) block = parentOf(block);
+  const rect = block?.getBoundingClientRect() ?? { top: 0, bottom: window.innerHeight };
+  return { top: Math.max(0, rect.top), bottom: Math.min(window.innerHeight, rect.bottom) };
+}
+
+/** The keys that move between rows. Home and End go to the ends. */
+const STEPS = { ArrowUp: -1, ArrowDown: 1 };
+
 const anchorSupported = typeof CSS !== 'undefined' && !!CSS.supports?.('anchor-name: --a');
 
 // The anchored inline properties, cleared together when the menu is reset.
@@ -41,6 +79,12 @@ export interface MenuOptions extends BaseOptions {
    * @default false
    */
   coverTrigger: boolean;
+  /**
+   * The side of the trigger the menu opens on when there is room, such as
+   * 'top' for a trigger in a bottom bar. It flips when there is not.
+   * @default 'bottom'
+   */
+  placement: 'bottom' | 'top';
   /**
    * If true, close menu on item click.
    * @default true
@@ -106,6 +150,7 @@ const _defaults: MenuOptions = {
   constrainWidth: true,
   container: null,
   coverTrigger: false,
+  placement: 'bottom',
   closeOnClick: true,
   hover: false,
   contextMenu: false,
@@ -581,8 +626,6 @@ export class Menu extends Component<MenuOptions> implements Openable {
       clearTimeout(this.filterTimeout);
       this._resetFilterQuery();
     }
-    const arrowUpOrDown =
-      e.key === Utils.keys.ARROW_DOWN || e.key === Utils.keys.ARROW_UP;
     if (e.key === Utils.keys.TAB) {
       e.preventDefault();
       this.close();
@@ -607,29 +650,9 @@ export class Menu extends Component<MenuOptions> implements Openable {
         this._focusRow(parentLi);
       }
     }
-    // Navigate down menu list
-    else if (arrowUpOrDown) {
+    // Up and Down move a row, Home and End to the ends.
+    else if (this._moveFocus(list, e)) {
       e.preventDefault();
-      const direction = e.key === Utils.keys.ARROW_DOWN ? 1 : -1;
-      const row = this._focusedRow(e);
-      let newFocusedIndex = row ? Array.from(list.children).indexOf(row) : this.focusedIndex;
-      let hasFoundNewIndex = false;
-      do {
-        newFocusedIndex = newFocusedIndex + direction;
-        if (
-          !!list.children[newFocusedIndex] &&
-          (<HTMLLIElement>list.children[newFocusedIndex]).tabIndex !== -1
-        ) {
-          hasFoundNewIndex = true;
-          break;
-        }
-      } while (newFocusedIndex < list.children.length && newFocusedIndex >= 0);
-
-      if (hasFoundNewIndex) {
-        const item = list.children[newFocusedIndex] as HTMLElement;
-        this._focusRow(item);
-        item.classList.add('active');
-      }
     }
     // SPACE OR ENTER selects the focused item.
     else if (e.key === Utils.keys.ENTER || e.key === SPACE) {
@@ -729,6 +752,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.menuEl.style.top = '';
     this.menuEl.style.transformOrigin = '';
     for (const property of ANCHOR_STYLES) this.menuEl.style.removeProperty(property);
+    this._stopReanchoring();
   }
 
   _moveMenuToElement(containerEl: HTMLElement = null) {
@@ -763,6 +787,23 @@ export class Menu extends Component<MenuOptions> implements Openable {
     });
   }
 
+  /**
+   * Moves focus for Up, Down, Home or End among the list's focusable rows,
+   * without wrapping, and says whether the key was one of those.
+   */
+  private _moveFocus(list: Element, e: KeyboardEvent) {
+    const rows = Array.from(list.children).filter((child): child is HTMLElement => child instanceof HTMLElement && child.tabIndex !== -1);
+    const from = this._focusedRow(e) ?? list.children[this.focusedIndex];
+    const index = Utils._keyIndex(e.key, rows.indexOf(from as HTMLElement), rows.length, STEPS);
+    if (Number.isNaN(index)) return false;
+    const row = rows[index];
+    if (row) {
+      this._focusRow(row);
+      row.classList.add('active');
+    }
+    return true;
+  }
+
   private _focusInitialItem() {
     if (!this.menuEl || !this.options.autoFocus) return;
     const first = Array.from(this.menuEl.children).find(
@@ -789,6 +830,15 @@ export class Menu extends Component<MenuOptions> implements Openable {
         inline: 'nearest'
       });
     }
+  }
+
+  /**
+   * Whether a measured menu opens upward: when there is no room below, or
+   * when placement 'top' asks for it and there is room above. In
+   * checkPossibleAlignments, `top` is room below the trigger's top edge.
+   */
+  private _opensUp(alignments: { top: boolean; bottom: boolean }) {
+    return !alignments.top || (this.options.placement === 'top' && alignments.bottom);
   }
 
   _getMenuPosition(closestOverflowParent: HTMLElement) {
@@ -821,7 +871,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     // Reset isScrollable
     this.isScrollable = false;
 
-    if (!alignments.top) {
+    if (this._opensUp(alignments)) {
       if (alignments.bottom) {
         verticalAlignment = 'bottom';
 
@@ -992,10 +1042,28 @@ export class Menu extends Component<MenuOptions> implements Openable {
     else this._placeByCoordinates(closestOverflowParent);
   }
 
-  // Below the trigger, starting at its left edge for alignment 'left' or its
-  // right edge for 'right', with the flips position-try-fallbacks offers.
+  /**
+   * The side an anchored menu opens on: the one asked for when the whole
+   * menu fits there, or else the roomier one. The anchored height is capped
+   * to its side, so a menu that would only shrink never sets off the
+   * flip-block fallback, and the choice is made here.
+   */
+  private _side(): 'top' | 'bottom' {
+    const [rect, bounds] = [this.el.getBoundingClientRect(), fixedBounds(this.menuEl)];
+    const room = { top: rect.top - bounds.top, bottom: bounds.bottom - rect.bottom };
+    const [asked, other] = this.options.placement === 'top' ? ['top', 'bottom'] as const : ['bottom', 'top'] as const;
+    return room[asked] >= this.menuEl.scrollHeight || room[asked] >= room[other] ? asked : other;
+  }
+
+  // Below the trigger, or above it for placement 'top', starting at its left
+  // edge for alignment 'left' or its right edge for 'right', with the flips
+  // position-try-fallbacks offers.
   // The height is capped to the room on the chosen side, so a long menu
   // scrolls there, as in the measured path.
+  private _reanchorFrame = 0;
+  /** Where the open anchored menu hears scrolling. */
+  private _scrollTargets: EventTarget[] = [];
+
   private _anchorMenu() {
     const name = `--menu-${this.menuEl.id}`;
     Utils.setAnchorName(this.el, name, true);
@@ -1004,9 +1072,39 @@ export class Menu extends Component<MenuOptions> implements Openable {
     style.inset = 'auto';
     style.maxHeight = '100%';
     style.setProperty('position-anchor', name);
-    style.setProperty('position-area', this.options.alignment === 'right' ? 'bottom span-left' : 'bottom span-right');
+    this._placeAnchored();
+    // Scrolling can move the trigger so the other side has more room. A
+    // scroll inside a shadow root stays there, so each root around the
+    // trigger is heard as well as the window.
+    this._scrollTargets = [window, ...shadowRoots(this.el)];
+    this._scrollTargets.forEach((target) => target.addEventListener('scroll', this._reanchor, { capture: true, passive: true }));
+    window.addEventListener('resize', this._reanchor);
+  }
+
+  /** At most once a frame while the anchored menu is open, chooses its side again. */
+  private _reanchor = () => {
+    if (this._reanchorFrame) return;
+    this._reanchorFrame = requestAnimationFrame(() => {
+      this._reanchorFrame = 0;
+      if (this.isOpen) this._placeAnchored();
+    });
+  };
+
+  private _stopReanchoring() {
+    this._scrollTargets.forEach((target) => target.removeEventListener('scroll', this._reanchor, { capture: true }));
+    this._scrollTargets = [];
+    window.removeEventListener('resize', this._reanchor);
+    cancelAnimationFrame(this._reanchorFrame);
+    this._reanchorFrame = 0;
+  }
+
+  /** The anchored menu's side, the edge it starts from and its growth origin. */
+  private _placeAnchored() {
+    const style = this.menuEl.style;
+    const [side, edge] = [this._side(), this.options.alignment === 'right' ? 'left' : 'right'];
+    style.setProperty('position-area', `${side} span-${edge}`);
     style.setProperty('position-try-fallbacks', 'flip-block, flip-inline, flip-block flip-inline');
-    style.transformOrigin = this.options.alignment === 'right' ? '100% 0' : '0 0';
+    style.transformOrigin = `${edge === 'left' ? '100%' : '0'} ${side === 'top' ? '100%' : '0'}`;
     this.isScrollable = this.menuEl.scrollHeight > this.menuEl.clientHeight;
   }
 

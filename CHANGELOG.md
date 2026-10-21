@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Menus take `placement: 'top'` to open above the trigger when they fit
+  there, as for a trigger in a bottom bar, and Home and End jump to the
+  first and last rows. An anchored menu that does not fit below its trigger
+  now opens above it when there is more room there. Its height was capped
+  to the room below, so it shrank and scrolled instead of flipping.
 - Data tables sort and select. With `data-sort` on a `.data-table`, a
   button in a header cell reorders the rows by its column and moves
   `aria-sort`. A `numeric` column compares numbers, other columns compare

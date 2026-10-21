@@ -191,7 +191,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed keyboard and IME fixes: search view, slider ring, popover fallback: 84,223 gzip bytes (+66).
   // Reviewed data table sorting and select-all: 85,710 gzip bytes (+1,487).
   // Reviewed chart label thinning and navbar destination wrap: 85,993 gzip bytes (+283).
-  assert.ok(sizes(js).gzip <= 85993, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed menu Home and End, and placement top with the anchored side chosen to fit its containing block and kept on scroll: 86,517 gzip bytes (+524).
+  assert.ok(sizes(js).gzip <= 86517, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
