@@ -94,3 +94,29 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     }
   });
 }
+
+// Every engine under test supports anchor positioning, so the fallback's
+// rules are lifted out of their @supports block and applied with
+// position-area turned off, as an engine without the feature would.
+const fallback = css.match(/@supports not \(anchor-name: --a\) \{([^]*?\})\s*\}/)?.[1];
+
+for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+  test(`${name}: without anchor positioning a popover is centered in the viewport, not left in its corner`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    assert.ok(fallback, 'the stylesheet has an @supports not (anchor-name) fallback');
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 800, height: 600 }, reducedMotion: 'reduce' });
+      await page.setContent(markup('ltr').replace('</head>', `<style>.popover { position-area: none !important } ${fallback}</style></head>`));
+      for (const [trigger, id] of [['#b', 'p'], ['#eb', 'ep']]) {
+        await page.click(trigger);
+        const r = await page.locator(`#${id}`).evaluate((el) => el.getBoundingClientRect().toJSON());
+        assert.ok(Math.abs((r.left + r.right) / 2 - 400) < 1, `#${id} is centered across: ${r.left}..${r.right}`);
+        assert.ok(Math.abs((r.top + r.bottom) / 2 - 300) < 1, `#${id} is centered down: ${r.top}..${r.bottom}`);
+        await page.keyboard.press('Escape');
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+}

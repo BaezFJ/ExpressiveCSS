@@ -572,7 +572,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
   }
 
   _handleMenuKeydown = (e: KeyboardEvent) => {
-    if (!this.isOpen || e.ctrlKey || e.metaKey || e.altKey || e.isComposing) return;
+    if (!this.isOpen || e.ctrlKey || e.metaKey || e.altKey || Utils.isComposing(e)) return;
     const list = this._containingSubmenu(e) ?? this.menuEl;
     const rtl = getComputedStyle(list).direction === 'rtl';
     const openKey = rtl ? Utils.keys.ARROW_LEFT : Utils.keys.ARROW_RIGHT;

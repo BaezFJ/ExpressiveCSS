@@ -355,10 +355,12 @@ document.addEventListener('DOMContentLoaded', function() {
           The search app bar is a <code>&lt;search class="search-bar"&gt;</code>
           in the nav, in place of the headline. Icons beside it sit outside
           the search; icons inside it stay on the search-bar. The input is
-          centered. Focusing or clicking the field opens the related
-          <code>.search-view</code>. After a native dialog dismissal, the view
-          stays closed when focus returns to the field. Click it again, or leave and refocus it,
-          to reopen. Query text and application-managed focus are preserved.
+          centered. Focusing or clicking the field opens a docked
+          <code>.search-view</code>. A full-screen <code>&lt;dialog&gt;</code> view
+          takes over the page, so it opens on a click, Enter or the Down arrow
+          rather than on focus: tabbing through the bar does not open it, and
+          focus coming back after it closes does not reopen it. Query text and
+          application-managed focus are preserved.
         </p>
         <header class="mb-3">
           <nav aria-label="Main — Search">

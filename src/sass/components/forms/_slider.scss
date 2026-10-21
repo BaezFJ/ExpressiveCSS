@@ -285,8 +285,11 @@ $_active-pos: var(--md-comp-slider-active-position, var(--md-comp-slider-active-
     box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) 8%, transparent);
   }
 
+  // The tint alone was about 1.1:1 against the surface, so the handle also
+  // takes the shared focus ring.
   input[type="range"]:focus-visible:not(:disabled)#{$thumb} {
     box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) 10%, transparent);
+    @include focus-ring;
   }
 
   input[type="range"]:active:not(:disabled)#{$thumb} {

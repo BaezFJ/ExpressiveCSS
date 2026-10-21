@@ -303,12 +303,12 @@ export class Timepicker extends Component<TimepickerOptions> {
     if (typeof this.options.onInputInteraction === 'function') this.options.onInputInteraction.call(this);
   };
 
-  _handleInputKeydown = (e: KeyboardEvent) => {
+  _handleInputKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {
     if (e.key === Utils.keys.ENTER) {
       e.preventDefault();
       this._handleInputClick();
     }
-  };
+  });
 
   _handleClockClickStart = (e: PointerEvent) => {
     if (!e.isPrimary) return;
@@ -678,7 +678,7 @@ export class Timepicker extends Component<TimepickerOptions> {
    * Cancelling also keeps Enter from submitting a surrounding form. The
    * listener's column holds only the two fields; AM/PM is a separate column.
    */
-  _handleDigitalKeydown = (event: KeyboardEvent) => {
+  _handleDigitalKeydown = Utils.ignoringComposition((event: KeyboardEvent) => {
     if (event.key in STEPS) return this._step(event);
     if (event.key !== Utils.keys.ENTER) return;
     event.preventDefault();
@@ -688,7 +688,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.formatMinutes();
     if (this.options.autoSubmit) this.done();
     else this.confirm();
-  };
+  });
 
   /** The lowest and highest value of the hour or minute field. */
   private _range(isHours: boolean): [number, number] {
