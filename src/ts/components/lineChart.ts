@@ -107,6 +107,44 @@ export function polarPoint(turn: number, r: number): string {
 export const seriesColor = (i: number) => String((i % COLORS) + 1);
 let _gradientId = 0;
 
+/** The series update() moves the marks from: none when the reader asked for less motion. */
+const startsFrom = (series: Series[]) =>
+  typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches ? [] : series;
+
+/**
+ * The timing of the paths' motion after update(), from the chart's motion
+ * tokens, as the columns' CSS transition reads them. A curve other than a
+ * cubic-bezier() gets the standard one.
+ */
+function pace(el: Element) {
+  const style = getComputedStyle(el);
+  const curve = /cubic-bezier\(([^)]*)\)/.exec(style.getPropertyValue('--md-sys-motion-easing-standard'));
+  return {
+    dur: style.getPropertyValue('--md-sys-motion-duration-medium4').trim() || '400ms',
+    keySplines: curve?.[1] ?? '0.2, 0, 0, 1'
+  };
+}
+
+/**
+ * Moves a path from the path data `from` to its own. SVG animation rather
+ * than a CSS transition, since WebKit cannot transition the d property.
+ */
+function morph(path: SVGElement, from: string, timing: ReturnType<typeof pace>) {
+  const to = path.getAttribute('d');
+  if (from === to) return;
+  path.append(svgNode('animate', { attributeName: 'd', from, to, ...timing, calcMode: 'spline', keyTimes: '0;1', fill: 'remove' }));
+}
+
+/** A series' line, the fill under it and its dots, as path data. */
+interface Shape {
+  line: string;
+  area: string;
+  dots: string;
+}
+
+/** A row's distance down the plot, in percent. */
+type RowY = (index: number) => number;
+
 /** The buttons in a chart's generated parts, such as a .toggle legend's. */
 const buttons = (nodes: Element[]) => nodes.flatMap((node) => Array.from(node.querySelectorAll('button')));
 
@@ -264,6 +302,11 @@ export class LineChart extends Component<LineChartOptions> {
   private _labelSizes: ResizeObserver | null = null;
   /** Every series in the table, shown or not, as the legend lists them. */
   protected _all: Series[] = [];
+  /**
+   * During update(), the series drawn before it, which the new marks move
+   * from. Empty otherwise, and when the reader prefers less motion.
+   */
+  protected _before: Series[] = [];
   /** The columns of the series a .toggle legend hid, kept through update(). */
   private _hidden = new Set<number>();
   /** The table's header cells and body rows, as read. */
@@ -404,7 +447,9 @@ export class LineChart extends Component<LineChartOptions> {
     this._generated = [];
     this.activeIndex = -1;
     this._plot = this._cursor = this._tooltip = undefined;
+    this._before = startsFrom(this.series);
     this._build();
+    this._before = [];
     // Focus moves before the old plot goes, so a keyboard focus ring carries
     // over, and before the listeners, so focusing picks no row of its own.
     if (focused) (buttons(this._generated)[button] ?? this._plot)?.focus({ preventScroll: true });
@@ -737,57 +782,92 @@ export class LineChart extends Component<LineChartOptions> {
       'aria-hidden': 'true',
       focusable: 'false'
     });
-    svg.append(...drawn.map((series) => this._line(series)));
+    const starts = this._starts(drawn);
+    const timing = starts.length ? pace(this.el) : undefined;
+    svg.append(...drawn.map((series, i) => this._line(series, starts[i], timing)));
     return svg;
   }
 
   /**
-   * One series' group: its line, smooth or with .straight straight, broken
-   * into runs at gaps; the fill under it; and with .points a dot at each
-   * value.
+   * After update(), the shape each series moves from: where it was drawn,
+   * and for a row it had no value at, its base. That is the plot bottom,
+   * or in a stack where the series below starts, so the stack stays joined.
    */
-  private _line(series: Series) {
-    const group = svgNode('g', {
-      class: `${this._type}-series ${series.className}`.trim(),
-      'data-series': series.color
+  private _starts(drawn: Series[]): Shape[] {
+    if (!this._before.length) return [];
+    let below: RowY | undefined;
+    return drawn.map((series) => {
+      const base: RowY = !series.base ? () => 100 : below ?? this._baseY(series);
+      below = this._was(series, base);
+      return this._shape(series, below, base);
     });
+  }
 
-    // A gap in the data breaks the line into runs of row indexes.
+  /** Where a series drew each row before update(), or its base for a row it had no value at. */
+  private _was(series: Series, base: RowY): RowY {
+    const old = this._before.find((each) => each.column === series.column);
+    return (index) => {
+      const top = old?.tops[index] ?? null;
+      return top === null ? base(index) : old!.y(top);
+    };
+  }
+
+  /** Where a stacked area's base runs: the series below, or the plot bottom when zero is off the scale. */
+  private _baseY(series: Series): RowY {
+    return (index) => Math.min(100, series.y(series.base![index]!));
+  }
+
+  /**
+   * A series' paths, with its rows at `top` and a stacked area's base at
+   * `base`. The line is smooth, or with .straight straight, and a gap in the
+   * data breaks it into runs.
+   */
+  private _shape(series: Series, top: RowY, base: RowY): Shape {
     const runs: number[][] = [[]];
     series.tops.forEach((value, index) => {
       if (value === null) runs.push([]);
       else runs[runs.length - 1].push(index);
     });
     const filled = runs.filter((run) => run.length);
-    const points = (run: number[], values: (number | null)[]) =>
-      run.map((index): [number, number] => [this._x(index), series.y(values[index]!)]);
+    const points = (run: number[], y: RowY) => run.map((index): [number, number] => [this._x(index), y(index)]);
     const curve = this.el.classList.contains('straight') ? straightPath : monotonePath;
-    const tops = filled.map((run) => curve(points(run, series.tops)));
+    const tops = filled.map((run) => curve(points(run, top)));
+    return {
+      line: tops.join(''),
+      // A stacked area runs back along the series below; the reversed curve
+      // is the same curve.
+      area: filled
+        .map((run, r) => series.base
+          ? `${tops[r]}L${curve(points(run, base).reverse()).slice(1)}Z`
+          : `${tops[r]}V100H${this._x(run[0])}Z`)
+        .join(''),
+      // Round caps on zero-length lines, so CSS sizes the dots in pixels.
+      dots: filled.flatMap((run) => points(run, top)).map(([x, y]) => `M${x},${y}h0`).join('')
+    };
+  }
+
+  /**
+   * One series' group: its line, the fill under it, and with .points a dot
+   * at each value. After update() each path moves from its `from` shape.
+   */
+  private _line(series: Series, from?: Shape, timing?: ReturnType<typeof pace>) {
+    const group = svgNode('g', {
+      class: `${this._type}-series ${series.className}`.trim(),
+      'data-series': series.color
+    });
+    const shape = this._shape(series, (index) => series.y(series.tops[index]!), this._baseY(series));
 
     const id = `line-chart-gradient-${++_gradientId}`;
     const gradient = svgNode('linearGradient', { id, x2: '0', y2: '1' });
     gradient.append(svgNode('stop'), svgNode('stop', { offset: '1' }));
 
-    const area = svgNode('path', {
-      class: `${this._type}-area`,
-      fill: `url(#${id})`,
-      // A stacked area runs back along the series below; the reversed curve
-      // is the same curve. Its base stops at the plot bottom when the y axis
-      // starts above zero.
-      d: filled
-        .map((run, r) => {
-          if (!series.base) return `${tops[r]}V100H${this._x(run[0])}Z`;
-          const base = points(run, series.base).map(([x, y]): [number, number] => [x, Math.min(100, y)]);
-          return `${tops[r]}L${curve(base.reverse()).slice(1)}Z`;
-        })
-        .join('')
-    });
-
-    const line = svgNode('path', { class: `${this._type}-line`, d: tops.join('') });
-    group.append(gradient, area, line);
-    // Round caps on zero-length lines, so CSS sizes the dots in pixels.
-    const dots = filled.flatMap((run) => points(run, series.tops)).map(([x, y]) => `M${x},${y}h0`);
-    if (this.el.classList.contains('points')) group.append(svgNode('path', { class: `${this._type}-points`, d: dots.join('') }));
+    const path = (part: keyof Shape, name: string, attributes: Record<string, string> = {}) => {
+      const node = svgNode('path', { class: `${this._type}-${name}`, d: shape[part], ...attributes });
+      if (from) morph(node, from[part], timing!);
+      return node;
+    };
+    group.append(gradient, path('area', 'area', { fill: `url(#${id})` }), path('line', 'line'));
+    if (this.el.classList.contains('points')) group.append(path('dots', 'points'));
     return group;
   }
 
