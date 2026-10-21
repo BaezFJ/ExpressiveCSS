@@ -3,7 +3,7 @@
 Date: 2026-10-21
 Roadmap phase: Phase 16, timepicker seconds
 Branch: `feature/2026-10-21-timepicker-seconds`
-Base: `origin/master` at `8d45c2c4af6b6ccf0be918a4b2f325fae3978fb0`, the commit T3 created the worktree from on 2026-10-21
+Base: `origin/master` at `8d45c2c4af6b6ccf0be918a4b2f325fae3978fb0`, the commit T3 created the worktree from on 2026-10-21. Rebased onto `774b0d27` (Phase 14, autocomplete create option) before the pull request
 Status: implemented and locally verified 2026-10-21; required CI and review pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 16](../../../../roadmap.md#phase-16-timepicker-seconds). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).

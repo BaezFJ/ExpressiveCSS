@@ -48,6 +48,10 @@ After the fixes, `tests/timepicker-seconds.test.js` (12) and `tests/timepicker-s
 
 `code-review-and-quality` on `git diff origin/master...HEAD`, 2026-10-21. Mutation checks on the conditions the change adds: letting seconds move the hand failed V4, and formatting a missing seconds field on Enter failed three tests. Letting a seconds edit cancel a pending hand move stayed green, so `tests/timepicker-seconds.test.js` gained "editing seconds leaves a pending hand move to finish", which fails under that mutation and passes on the change (13 tests). The `STEPS` comment now covers all three fields. No security or performance findings: the parser reads the author's value and default only, and the new lookups run once per key.
 
+## After the rebase
+
+Rebased onto `origin/master` at `774b0d27` on 2026-10-21. The gzip budget conflict kept both changes' lines; with Phase 14 underneath, JavaScript is 90,089 gzip bytes, still +327 for this change, and CSS is unchanged at 84,584. The CHANGELOG kept both Added entries, and the generated skill and MCP files took master's side and were regenerated. After a fresh `npm run build`: `check:generated` clean; timepicker-seconds 13, selective-builds 4, regressions 144, keyboard-focus 10, skill 33, component decisions 15 and docs-api 2 passed; the browser file passed 6 of 6 in three engines.
+
 ## Manual checks
 
 - Look at screenshots of the 12-hour inline picker with seconds at 360px and 1280px. Digits are whole, the dividers line up, and the AM/PM buttons are not squeezed. The agent takes and reads the screenshots. Done 2026-10-21 in Chromium: the first shots showed the colons at the old 4rem size, sitting high. The seconds layout now centers them at the digits' size, and the second shots show whole digits and AM/PM buttons at full size. The focused hour field's digits sit slightly lower than the others, as they do without seconds.
