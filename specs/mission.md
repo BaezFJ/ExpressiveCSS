@@ -1,47 +1,50 @@
-# ExpressiveCSS MCP improvements
+# ExpressiveCSS mission
 
-Improve the local ExpressiveCSS MCP server so agents and developers can discover components and retrieve complete, version-specific authoring guidance within predictable response limits. Keep the server in this repository and build on its existing tools and generated catalogue.
-
-This constitution covers the five improvements confirmed in the planning interview. It does not define a new mission for the whole ExpressiveCSS framework. [Technical constraints](tech-stack.md) govern the work; the [roadmap](roadmap.md) orders its implementation.
+ExpressiveCSS is a Material Design 3 Expressive framework built from Sass and TypeScript. Pages get theme tokens, layout and styled components from plain markup, and interactive behavior from a small runtime that keeps that markup accessible. A local MCP server and skill give agents the same authoring rules people read in the docs. [Technical constraints](tech-stack.md) govern the work, and the [roadmap](roadmap.md) orders it.
 
 ## Users and problem
 
-The intended users are agents implementing ExpressiveCSS interfaces through MCP and developers configuring those clients or reviewing their output. They need canonical component names, complete applicable rules, and documented runtime options and methods without guessing from a markup example.
+Page authors build interfaces from documented markup. They expect components to behave as the platform and the ARIA Authoring Practices describe, in every engine, without writing glue code. Agents that implement ExpressiveCSS interfaces need canonical component names, complete rules and the documented runtime options and methods, without guessing from an example.
 
-The reviewed server bundles 41 component guides, but its syntax results silently limit rules to eight and omit Options and Methods sections present in 15 guides. It offers goal-based recommendations without a direct catalogue-list tool. A request for 12 components produced 75,468 characters of text, so its current per-component setting does not provide a predictable aggregate response limit.
-
-These findings describe checkout `7d3d238`, MCP package 0.2.2 and framework contract 0.12.0. They are the implementation baseline, not a claim about subsequent releases.
+Components still miss behavior that comparable frameworks provide, such as menu checkbox items, search debounce, seconds in a time picker, shared tooltip delays and options read from markup. Each gap leaves authors two choices: write their own script, or give up the pattern.
 
 ## Core workflow
 
-1. Discover canonical component names and relevant catalogue metadata.
-2. Resolve the consuming project's framework version and contract provenance through the existing tools.
-3. Request applicable rules and the runtime API sections needed for implementation.
-4. Receive a complete result or an explicit account of omitted material with a way to retrieve it.
-5. Select versioned bundled documentation through MCP resources when the client supports them, then use existing checks to assess authored output.
+1. An author writes documented markup, or an agent produces it through the MCP server or skill. Agents discover canonical names and retrieve the rules and runtime API sections they need, with an explicit account of anything omitted.
+2. `AutoInit()`, or an explicit `init`, starts the components the markup names.
+3. Components manage dynamic state, such as focus, `aria-*` state and selection. They report changes through `expressive:*` events and option callbacks.
+4. The author or agent checks the markup against `semantics.json` and the generated guidance.
 
-Resource reads identify the bundled documentation snapshot. They do not establish compatibility with a consuming project or prove browser behavior.
+## Product rules
+
+Every phase keeps these:
+
+- Static semantics, such as roles and names, belong to the author's markup. Dynamic state belongs to the framework.
+- A composite ARIA role is allowed only where the component implements its tested keyboard contract.
+- Public exports, markup compatibility and accessibility contracts stay stable unless an accepted change replaces them with a migration note.
+- A change to how existing markup behaves is opt-in, or it ships with a migration note. A page should not have to change because a component learned something new.
+- Generated guidance agrees with its sources, as [data ownership](tech-stack.md#data-ownership) assigns them.
 
 ## Agreed scope
 
-| Improvement | User-visible outcome |
+| Area | Outcome |
 | --- | --- |
-| Complete rules | Applicable component rules never disappear without disclosure. |
-| Runtime API guidance | Agents can request the Options and Methods already present in bundled guides. |
-| Catalogue discovery | Agents can list and search canonical entries without inventing a design goal. |
-| Bounded responses | Response size has an explicit limit, omissions are machine-readable, and omitted material remains retrievable. |
-| Versioned resources | Clients can discover and read the shipped catalogue and component documentation by versioned snapshot identity. |
+| Components and behaviors | Interactive components cover the keyboard, form and pointer patterns comparable frameworks provide, tested in Chromium, Firefox and WebKit. |
+| Initialization | Markup can start and configure components without page script. |
+| MCP server and skill | Agents can discover components and retrieve complete, version-specific rules and runtime API guidance within predictable response limits. They can also read the shipped documentation as versioned resources. |
 
 ## Success criteria
 
-The first usable milestone is complete component-rule delivery through the existing syntax tool, with a regression check against the bundled rule IDs. Subsequent milestones make runtime guidance discoverable, control response growth and expose the same documentation through resources.
+Each component gap closes with four things:
+- behavior that matches its documented contract
+- regression tests that fail without the change
+- updated docs and `llm.md`
+- a reviewed gzip budget
 
-Success requires live protocol checks for each new behavior, compatibility with existing tool names and requests, synchronized generated data, and isolated package verification. Version/provenance checks and operator command restrictions remain effective throughout. No result may imply that static guidance establishes visual, interaction or accessibility approval.
+MCP work keeps live protocol checks, compatibility with existing tool names and requests, and synchronized generated data. No result may imply that static guidance establishes visual, interaction or accessibility approval.
 
-## Boundaries
+## Non-goals
 
-Retain JavaScript, the current Node runtime and installed dependencies, stdio deployment, and the current repository. Preserve existing tools and aliases, generated-data ownership, markup compatibility and accessibility contracts.
-
-This work does not include a repository split, HTTP deployment, SDK or language migration, framework behavior changes, new theme-writing tools or page recipes. It does not require a new database, live upstream documentation fetches or a separate rule engine.
-
-No scope decision was deferred in the interview. Exact response-limit values, optional argument names and resource URI syntax remain implementation decisions to specify in the relevant phase.
+- Framework-specific bindings, such as React or Vue components, and runtime dependencies.
+- A repository split, HTTP hosting, or an SDK or language migration for the MCP server.
+- Theme-writing tools or page recipes in the MCP server.
