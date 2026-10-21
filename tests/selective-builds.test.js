@@ -192,8 +192,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed data table sorting and select-all: 85,710 gzip bytes (+1,487).
   // Reviewed chart label thinning and navbar destination wrap: 85,993 gzip bytes (+283).
   // Reviewed Datepicker and Timepicker names, first day and clock from the page's lang, and dates read in their format: 86,838 gzip bytes (+845).
-  // Reviewed menu Home and End, and placement top with the anchored side chosen to fit its containing block and kept on scroll: 87,371 gzip bytes (+533).
-  assert.ok(sizes(js).gzip <= 87371, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed chips form values, required, reset and pasted lists: 87,870 gzip bytes (+1,032).
+  // Reviewed menu Home and End, and placement top with the anchored side chosen to fit its containing block and kept on scroll: 88,407 gzip bytes (+537).
+  assert.ok(sizes(js).gzip <= 88407, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

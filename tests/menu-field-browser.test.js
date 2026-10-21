@@ -1676,7 +1676,9 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
           await expect(page.locator('#chips .chip')).toHaveCount(count - 1);
           assert.equal(await page.evaluate(() => deletions), 1);
           assert.equal(await page.evaluate(() => submits), 0);
-          assert.equal(await page.evaluate(() => new FormData(document.querySelector('form')).get('tags')), 'Draft');
+          // The draft stays typed; the named field submits the chips left, not the draft.
+          assert.equal(await page.evaluate(() => chips._input.value), 'Draft');
+          assert.deepEqual(await page.evaluate(() => new FormData(document.querySelector('form')).getAll('tags')), expected);
           const keyboardDelete = ['Backspace', 'Delete'].includes(action);
           if (keyboardDelete && count > 1) {
             const previous = Math.max(index - 1, 0);
