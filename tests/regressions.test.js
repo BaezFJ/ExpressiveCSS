@@ -1669,6 +1669,124 @@ describe('Autocomplete allowCreate', () => {
   });
 });
 
+describe('Autocomplete no-results row', () => {
+  beforeEach(() => resetBody());
+
+  const data = [{ id: 'apple' }, { id: 'apricot' }];
+  const setup = (options = {}) => {
+    document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac"></div>`;
+    const el = document.getElementById('ac');
+    const instance = Expressive.Autocomplete.init(el, { data, menuOptions: { inDuration: 0, outDuration: 0 }, ...options });
+    const type = (value) => { el.value = value; fire(el, 'input'); };
+    const key = (key) => el.dispatchEvent(new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+    const row = () => instance.container.querySelector('li.autocomplete-no-results');
+    const optionRows = () => instance.container.querySelectorAll('li[role="option"]');
+    el.focus();
+    return { el, instance, type, key, row, optionRows };
+  };
+
+  test('a search with no match shows a row that is not an option, until a match appears', () => {
+    const { el, instance, type, key, row, optionRows } = setup();
+    try {
+      type('z');
+      assert.ok(row(), 'no row for a search with no match');
+      assert.equal(row().textContent, 'No results.');
+      assert.equal(row().getAttribute('role'), 'none');
+      assert.equal(row().getAttribute('aria-hidden'), 'true');
+      for (const name of ['id', 'data-id', 'tabindex']) assert.equal(row().hasAttribute(name), false, name);
+      assert.equal(optionRows().length, 0);
+      key('ArrowDown');
+      key('Enter');
+      assert.equal(instance.activeIndex, -1);
+      assert.equal(el.hasAttribute('aria-activedescendant'), false);
+      assert.deepEqual(instance.selectedValues, []);
+      type('a');
+      assert.equal(row(), null);
+      assert.equal(optionRows().length, 2);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('the row reads a custom i18n.noResults as text, also with allowUnsafeHTML', () => {
+    const { instance, type, row } = setup({ allowUnsafeHTML: true, i18n: { noResults: '<b>none</b>' } });
+    try {
+      type('z');
+      assert.equal(row().textContent, '<b>none</b>');
+      assert.equal(row().querySelector('b'), null);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a press on the row keeps focus in the field and selects nothing', () => {
+    const { el, instance, type, row } = setup();
+    const events = [];
+    for (const name of ['change', 'expressive:autocomplete', 'expressive:select']) el.addEventListener(name, () => events.push(name));
+    try {
+      type('z');
+      const press = (name) => row().dispatchEvent(new window.MouseEvent(name, { bubbles: true, cancelable: true }));
+      assert.equal(press('mousedown'), false, 'mousedown was not cancelled');
+      press('click');
+      assert.deepEqual(events, []);
+      assert.ok(row(), 'the row left the list');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('no row below minLength or while a changed search is pending', () => {
+    const short = setup({ minLength: 3 });
+    try {
+      short.type('zz');
+      assert.equal(short.row(), null);
+    } finally {
+      short.instance.destroy();
+    }
+    let pending = null;
+    const slow = setup({ onSearch: (text, ac) => { pending = () => ac.setMenuItems([]); } });
+    try {
+      slow.type('z');
+      pending();
+      assert.ok(slow.row(), 'no row once the empty result arrived');
+      slow.key('Escape');
+      slow.type('zx');
+      assert.equal(slow.row(), null, 'the row showed before the new search returned');
+    } finally {
+      slow.instance.destroy();
+    }
+  });
+
+  test('with allowCreate, the row comes before the "Add" row, which arrow keys reach', () => {
+    const { el, instance, type, key, row } = setup({ allowCreate: true });
+    try {
+      type('kiwi');
+      const [first, second] = instance.container.children;
+      assert.equal(first, row());
+      assert.ok(second.classList.contains('autocomplete-create'));
+      key('ArrowDown');
+      assert.equal(el.getAttribute('aria-activedescendant'), second.id);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a multi-select shows the row above its chosen entries, which stay reachable', () => {
+    const { el, instance, type, key, row, optionRows } = setup({ isMultiSelect: true, selected: ['apple'] });
+    try {
+      type('z');
+      assert.equal(instance.container.firstElementChild, row());
+      assert.deepEqual([...optionRows()].map((li) => li.dataset.id), ['apple']);
+      key('ArrowDown');
+      assert.equal(el.getAttribute('aria-activedescendant'), optionRows()[0].id);
+      key('Enter');
+      assert.deepEqual(instance.selectedValues, []);
+    } finally {
+      instance.destroy();
+    }
+  });
+});
+
 describe('Autocomplete with delayed results', () => {
   for (const isMultiSelect of [false, true]) {
     test(`a new query clears the active result before its results arrive (isMultiSelect: ${isMultiSelect})`, async () => {

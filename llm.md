@@ -7227,10 +7227,10 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 
 Wrap the input in its own small parent — a `.field`, or a bare `<div>`. The clock is appended inside that parent.
 
-Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital hour and minute fields; Enter in either one writes the typed time.
+Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital fields; Enter in any of them writes the typed time.
 
 Digital edits use native input events, including paste. Invalid edits restore
-the last valid value on blur. Empty fields use the current hour or minute without
+the last valid value on blur. Empty fields use the current hour, minute or second without
 changing the selected AM/PM period. Twelve-hour initialization converts 24-hour
 strings and accepts either case for AM/PM. No modal or dial-keyboard API is added.
 
@@ -7297,10 +7297,11 @@ Expressive.Timepicker.init(elem, {
 | `container` | Element or String | `null` | Element or selector to render the clock into. When omitted, it is appended to the input’s parent. |
 | `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
 | `autoSubmit` | Boolean | `true` | If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added. |
-| `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` string (optionally with `AM`/`PM`). |
+| `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` or `'HH:MM:SS'` string (optionally with `AM`/`PM`). |
 | `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |
-| `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, and Minutes. |
+| `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, Minutes and Seconds. |
 | `twelveHour` | Boolean | `true`, or the language's | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. With a `lang` on or around the input, defaults to the clock that language uses. |
+| `showSeconds` | Boolean | `false` | Add a seconds field after the minutes and write `HH:MM:SS`. The dial still sets hours and minutes only. |
 | `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
 | `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
@@ -7319,7 +7320,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 | `clear` | `'Clear'` |
 | `done` | `'Ok'` |
 
-`i18n.hours` and `i18n.minutes` default to `Hours` and `Minutes` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between controls. The dial itself takes pointer input only: the spin buttons already set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.
+`i18n.hours`, `i18n.minutes` and `i18n.seconds` default to `Hours`, `Minutes` and `Seconds` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour, minute and second fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round, and the hand follows the hour and minute. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between controls. The dial itself takes pointer input only: the spin buttons already set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.
 
 ### 12-hour and 24-hour
 
@@ -7329,6 +7330,22 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 Expressive.Timepicker.init(document.getElementById('timepicker-24'), {
   twelveHour: false
 });
+```
+
+### Seconds
+
+`showSeconds: true` adds a third field, a spin button named by `i18n.seconds`, after the minutes. It steps and takes typed values like the minute field, and an emptied field takes the current second. The written value becomes `HH:MM:SS`, with ` AM` or ` PM` on a 12-hour clock. A value read without seconds, such as `14:30`, opens at zero seconds. The dial keeps its hours and minutes views, as the Material 3 time picker does; seconds are set in the field only. Under `autoSubmit`, choosing a minute on the dial writes the time with the seconds the field shows.
+
+```js
+Expressive.Timepicker.init(document.getElementById('timepicker-seconds'), {
+  showSeconds: true
+});
+```
+
+A `type="time"` input gets 24-hour `HH:MM:SS`. Give it `step="1"` so the browser does not flag the seconds as a step mismatch.
+
+```html
+<input type="time" step="1" class="time-picker" id="alarm">
 ```
 
 ### Methods
@@ -7351,7 +7368,7 @@ instance.showView('hours');
 
 #### .done();
 
-Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.
+Write the current time to the input, with seconds when `showSeconds` is on. Pass a truthy argument to clear the input instead.
 
 ```text
 instance.done();
@@ -7384,9 +7401,10 @@ These methods are not provided. The clock defaults to visible inline presentatio
 | --- | --- | --- |
 | `el` | Element | The input the plugin was initialized with. |
 | `options` | Object | The options the instance was initialized with. |
-| `time` | String | The last value written by `done()`, without the AM/PM suffix. |
+| `time` | String | The last value written by `done()`, without the AM/PM suffix. It ends in `:SS` when `showSeconds` is on. |
 | `hours` | Number | The hour currently shown on the clock. |
 | `minutes` | Number | The minute currently shown on the clock. |
+| `seconds` | Number | The second of the time on the clock. The seconds field shows it when `showSeconds` is on. |
 | `amOrPm` | String | `'AM'` or `'PM'` when `twelveHour` is true. |
 | `currentView` | String | `'hours'` or `'minutes'`. |
 
@@ -8544,7 +8562,7 @@ Backspace and Delete target the focused chip, then select the preceding survivor
 
 `allowUserInput` defaults to `false`. Without it there is no text field and rendered chips have no delete button. Pass `allowUserInput: true` for the interactive field. `AutoInit()` starts every `.chips` except `no-autoinit`, but it uses the defaults, so those wrappers stay display-only until you call `init` with options.
 
-In a form, give the field's `<input>` a `name`. The chips submit under it, one `id` per chip, as a multiple select does. The text input gives its name up so half-typed text is not submitted, and the values follow its form, `form` attribute and `disabled` state at the moment the form gathers its data. A `required` input makes the field valid once it has a chip, and says `i18n.required` until then; the input keeps `aria-required="true"`. A form reset puts back the chips the field started with once no listener can cancel it: at the next microtask, or when the field is next used. Check validity after an `await`, not in the same task as `reset()`. A disabled input shows no validation message, so if the page replaces the chips' required message while the field is disabled and the chips then change, set the page's error again once the field is enabled. Set a field up once it is in its form; one set up before it is moved into a detached form or a shadow root is heard there once it is laid out, or at once if you call `init` again. `destroy()` gives the input its name and `required` back. Pasting text that lists values, split by commas, tabs or new lines, adds a chip for each, up to `limit`; an `autocompleteOnly` field pastes as text. With `allowCreate: true` in `autocompleteOptions`, choosing the `Add` row adds the typed text as a chip, in an `autocompleteOnly` field too, and then calls the page's own `onCreate`.
+In a form, give the field's `<input>` a `name`. The chips submit under it, one `id` per chip, as a multiple select does. `init` wraps the input in an `<expressive-chips-control>`, a form-associated custom element with `display: contents`, and moves the name onto it, so half-typed text is not submitted. The form treats the control as the field. A disabled `fieldset` or a form reset applies to it at once, including in a detached form or a shadow root, and a canceled reset changes nothing. Setting `disabled`, `readonly` or `form` on the input applies at the next microtask. A `required` input makes the field valid once it has a chip, and says `i18n.required` until then, unless the input is read-only. The control holds that validity apart from any error the page sets on the input, and a blocked submit focuses the input. The input itself stays valid and does not match `:invalid`, so style or report the error from the control or the form. The input keeps `aria-required="true"`. `destroy()` unwraps the input and gives its name and `required` back. Without form-associated custom elements, as in jsdom, the input is left as it is and submits its own text. Pasting text that lists values, split by commas, tabs or new lines, adds a chip for each, up to `limit`; an `autocompleteOnly` field pastes as text. With `allowCreate: true` in `autocompleteOptions`, choosing the `Add` row adds the typed text as a chip, in an `autocompleteOnly` field too, and then calls the page's own `onCreate`.
 
 ```html
 <form>
@@ -8878,6 +8896,8 @@ onCreate: function(text, autocomplete) {
 | `selected` | Array | `[]` | Initial selected ids, strings or numbers. An id without loaded data displays the id. Pass the selected ids to `setMenuItems` with the loaded data to resolve their labels. |
 
 Autocomplete provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. `i18n.create(text)` labels the `Add` row and returns `Add "text"`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
+
+When a search returns no suggestions, the open list also shows `i18n.noResults` as its first row, so sighted users see what the live region says. The row is `<li class="autocomplete-no-results" role="none" aria-hidden="true">`. It is not an option: arrow keys skip it, and a click on it chooses nothing and leaves focus in the field. It leaves the list when a search returns a match. In Chips, Enter that adds the typed text as a chip closes the list.
 
 Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback and the `Add` row. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still pass the signal to their requests, so a stale response cannot replace newer results, and own error handling. Results delivered after `destroy()` are ignored, and results delivered after the user leaves the field update the list without opening it. Test actual spoken delivery with a screen reader.
 

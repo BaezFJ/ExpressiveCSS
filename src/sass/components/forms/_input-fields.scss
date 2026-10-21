@@ -393,6 +393,19 @@ textarea {
       margin: 5px 15px;
     }
   }
+
+  // Not an option: role="none" keeps Menu's hover layer off it. The text sits
+  // in the <li> itself, since Menu gives a bare span a pointer cursor.
+  > li.autocomplete-no-results {
+    display: flex;
+    align-items: center;
+    min-height: var(--md-comp-menu-item-container-height);
+    padding-inline: var(--md-comp-menu-item-leading-space)
+      var(--md-comp-menu-item-trailing-space);
+    color: var(--md-comp-menu-supporting-text-color);
+    cursor: default;
+    @include typescale("label-large");
+  }
 }
 
 // Datepicker paints its formatted date over the native value with ::after.
