@@ -4,7 +4,7 @@ Date: 2026-10-21
 Roadmap phase: Phase 22, chart transitions between datasets
 Branch: `feature/2026-10-21-chart-transitions`
 Base: `origin/master` at `8d45c2c4`, fetched 2026-10-21
-Status: implemented 2026-10-21. Local checks pass except the gzip budget test, which fails on this machine for master too (see V9); CI and review pending
+Status: implemented and locally verified 2026-10-21, rebased on `774b0d27`; CI and review pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 22](../../../../roadmap.md#phase-22-chart-transitions-between-datasets). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
