@@ -16,7 +16,9 @@
 //                      tr.data-table-detail right after it; a button with
 //                      aria-haspopup (a row's menu, select or combobox) is
 //                      not a disclosure and is left alone
-// The framework only draws them; the page reorders rows and flips
+// The framework draws them. With data-sort on the wrapper it also reorders
+// the rows and moves aria-sort, and a checkbox in the first header cell
+// selects every row (behaviors/dataTables.ts). The page flips
 // aria-expanded. A .data-table-actions bar just before the wrapper joins its
 // top edge and takes the selected color while any row is selected.
 //

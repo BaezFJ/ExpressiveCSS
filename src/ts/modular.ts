@@ -10,6 +10,7 @@ export { ImageCompare } from './behaviors/imageCompare';
 export { Tour } from './behaviors/tour';
 export { Sortable } from './behaviors/sortable';
 export { Lists } from './behaviors/lists';
+export { DataTables } from './behaviors/dataTables';
 export { AutoInit } from './components/registry';
 export type { AutoInitOptions } from './components/registry';
 

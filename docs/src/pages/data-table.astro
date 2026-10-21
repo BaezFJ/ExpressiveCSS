@@ -78,10 +78,18 @@ const S = defineSections([
           Put a <code>&lt;button&gt;</code> in each sortable header cell. Set
           <code>aria-sort="ascending"</code> or <code>"descending"</code> on the
           header of the sorted column and the framework draws its arrow; other
-          sortable headers show a faint arrow on hover. The page reorders the
-          rows and moves <code>aria-sort</code> when a header is pressed.
+          sortable headers show a faint arrow on hover.
         </p>
-        <div class="data-table" data-sortable>
+        <p>
+          Add <code>data-sort</code> to the wrapper and the framework sorts
+          too: pressing a header button reorders the rows by that column and
+          moves <code>aria-sort</code>. A <code>numeric</code> header compares
+          numbers, so $1,200.00 sorts after $87.00; other columns compare text
+          in the page's language, with 9 before 10. A cell's
+          <code>data-value</code> stands in for its text, and a detail row
+          moves with its row.
+        </p>
+        <div class="data-table" data-sort>
           <table>
             <thead>
               <tr>
@@ -106,37 +114,23 @@ const S = defineSections([
   </tr>
 </thead>
 `} />
+<Code code={`
+<div class="data-table" data-sort>
+  <table>…</table>
+</div>
+`} />
         <p>
-          The demo above sorts with a few lines of page script. Sort a
-          server-paged table on the server.
+          Each press fires a cancelable <code>expressive:sort</code> from the
+          wrapper, with <code>{"{ header, column, direction }"}</code>. A
+          server-paged table cancels it and fetches the sorted page;
+          <code>aria-sort</code> has already moved. Without
+          <code>data-sort</code>, the header buttons are the page's.
         </p>
 <Code code={`
-<script>
-document.querySelectorAll('[data-sortable] th > button').forEach((button) => {
-  button.addEventListener('click', () => {
-    const header = button.parentElement;
-    const table = header.closest('table');
-    const body = table.tBodies[0];
-    const column = header.cellIndex;
-    const direction = header.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
-    table.querySelectorAll('th[aria-sort]').forEach((cell) => cell.removeAttribute('aria-sort'));
-    header.setAttribute('aria-sort', direction);
-    const collator = new Intl.Collator(undefined, { numeric: true });
-    const numeric = body.rows[0]?.cells[column].classList.contains('numeric');
-    // data-value overrides the shown text. Numeric columns compare as numbers,
-    // so $1,200.00 sorts after $87.00 and a minus sign counts.
-    const value = (row) => {
-      const cell = row.cells[column];
-      const text = cell.dataset.value ?? cell.textContent;
-      return numeric ? parseFloat(text.replace('−', '-').replace(/[^0-9.-]/g, '')) || 0 : text;
-    };
-    const rows = [...body.rows].sort((a, b) =>
-      numeric ? value(a) - value(b) : collator.compare(value(a), value(b)));
-    if (direction === 'descending') rows.reverse();
-    body.append(...rows);
-  });
+table.addEventListener('expressive:sort', (event) => {
+  event.preventDefault();
+  loadPage({ sort: event.detail.column, direction: event.detail.direction });
 });
-</script>
 `} />
   </Section>
   <Section {...S.selection}>
@@ -144,8 +138,15 @@ document.querySelectorAll('[data-sortable] th > button').forEach((button) => {
           A checked checkbox in a row's first cell selects the row and fills
           it with <code>secondary-container</code>. Name each checkbox after
           its row. <code>aria-selected</code> is not valid on the rows of a
-          plain table, so the checkbox carries the state. Your page script has
-          to wire up any select-all box in the header.
+          plain table, so the checkbox carries the state.
+        </p>
+        <p>
+          A checkbox in the first header cell selects every row. It shows
+          mixed while only some rows are selected, and it skips disabled
+          rows. Every change to the selection fires
+          <code>expressive:change</code> from the wrapper with
+          <code>{"{ selected }"}</code>, the selected rows, so the page can
+          update a bulk action bar.
         </p>
         <div class="data-table">
           <table>
@@ -317,30 +318,4 @@ toggle.addEventListener('click', () => {
         </TokenTable>
   </Section>
 </PageBody>
-<script is:inline>
-document.querySelectorAll('[data-sortable] th > button').forEach((button) => {
-  button.addEventListener('click', () => {
-    const header = button.parentElement;
-    const table = header.closest('table');
-    const body = table.tBodies[0];
-    const column = header.cellIndex;
-    const direction = header.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
-    table.querySelectorAll('th[aria-sort]').forEach((cell) => cell.removeAttribute('aria-sort'));
-    header.setAttribute('aria-sort', direction);
-    const collator = new Intl.Collator(undefined, { numeric: true });
-    const numeric = body.rows[0]?.cells[column].classList.contains('numeric');
-    // data-value overrides the shown text. Numeric columns compare as numbers,
-    // so $1,200.00 sorts after $87.00 and a minus sign counts.
-    const value = (row) => {
-      const cell = row.cells[column];
-      const text = cell.dataset.value ?? cell.textContent;
-      return numeric ? parseFloat(text.replace('−', '-').replace(/[^0-9.-]/g, '')) || 0 : text;
-    };
-    const rows = [...body.rows].sort((a, b) =>
-      numeric ? value(a) - value(b) : collator.compare(value(a), value(b)));
-    if (direction === 'descending') rows.reverse();
-    body.append(...rows);
-  });
-});
-</script>
 </DocsLayout>

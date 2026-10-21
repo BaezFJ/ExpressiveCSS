@@ -359,7 +359,7 @@ Added with the countdown component. The digits are generated content hidden from
 
 ### data-table
 
-Added with the data table component. The wrapper is the scroll container so the <table> keeps its table semantics. Sorting and selection are page state: aria-sort on the header cell and a checkbox in the first cell.
+Added with the data table component. The wrapper is the scroll container so the <table> keeps its table semantics. Sorting and selection live in the markup: aria-sort on the header cell and a checkbox in the first cell. With data-sort the framework reorders the rows and moves aria-sort, and it keeps a select-all box in the first header cell in step with the rows.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |

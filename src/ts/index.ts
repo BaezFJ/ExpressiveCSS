@@ -23,6 +23,7 @@ import { ImageCompare } from "./behaviors/imageCompare";
 import { Tour } from "./behaviors/tour";
 import { Sortable } from "./behaviors/sortable";
 import { Lists } from "./behaviors/lists";
+import { DataTables } from "./behaviors/dataTables";
 
 export * from './modular';
 
@@ -50,3 +51,4 @@ ImageCompare.Init();
 Tour.Init();
 Sortable.Init();
 Lists.Init();
+DataTables.Init();
