@@ -49,7 +49,8 @@ function stack(names: [number, HTMLElement][], away: number, anchor?: number) {
  * last, named by `data-other-label` ("Other" by default); the table keeps
  * every row.
  *
- * Call `update()` after changing the table.
+ * Call `update()` after changing the table, or start it with `watch` or
+ * `data-watch`.
  */
 export class PieChart extends LineChart {
   // No initializers: LineChart's constructor draws before they would run.

@@ -5091,6 +5091,7 @@ A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The firs
 - The plot is one Tab stop named by the caption. Left and Right move between rows, Home and End jump to the ends, Escape hides the tooltip. In a right-to-left context the x axis runs right to left and the arrows follow it. The tooltip is a polite live region. Hide a redundant caption with `.visually-hidden` rather than removing it.
 - A direct `<figure>` in a card is normally media with an overlaid caption; a `.line-chart` keeps its own layout there.
 - After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. `show(index)` highlights a row (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
+- With `data-watch` on the figure, or the `watch` option, the chart calls `update()` itself whenever its table changes: rows or cells added or removed, cell text, or a `data-value`, `class` or heatmap `data-label` inside the table. The edits a script makes in one run redraw it once; edits on either side of an `await` redraw twice. A replaced table is watched too. The attribute is read when the chart starts, and any value turns it on. Changes to the figure itself, such as `data-min`, its classes or its caption, still need `update()`. Every chart type takes `data-watch`.
 
 ### Tokens
 
@@ -5134,7 +5135,7 @@ A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as
 - The y axis always includes zero, with 10% of the span to spare above and, with negative values, below. Negative columns hang from zero and round their lower end. `data-min` and `data-max` on the figure, or the `min` and `max` options, fix either end; when zero is off the scale, columns start at the plot's bottom.
 - `axis` labels the y axis at round values beside the plot, with a grid line at each, and widens an end the chart chose to the next round value. The labels repeat the cells' currency or percent sign and shorten large numbers (`$1.5K`); an end set by `data-min` or `data-max` stays put. They are `aria-hidden`; the table carries the values. `--md-comp-column-chart-axis-width` (48px) is the room they take.
 - Keyboard, RTL, the live tooltip and cards behave as for the line chart: the plot is one Tab stop named by the caption, and a `.column-chart` in a card keeps its own layout.
-- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. `show(index)` highlights a group (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. `show(index)` highlights a group (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
 
 ### Tokens
 
@@ -5179,7 +5180,7 @@ A `<figure class="bar-chart">` takes the same `<figcaption>` and `<table>` as a 
 - Cells, series colors, `data-min`, `data-max`, negative values and gaps work as in the column chart; negative bars grow toward the inline start.
 - `axis` labels the value axis at round values under the plot, with a grid line up from each, as in the column chart.
 - The plot is one Tab stop named by the caption. Up and down arrows move between rows, Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped row. In a right-to-left page, set by `dir` or CSS `direction`, the bars grow leftwards and the labels sit on the right; rows keep their order.
-- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. It takes the column chart's options and methods.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. It takes the column chart's options and methods.
 
 ### Tokens
 
@@ -5225,7 +5226,7 @@ A `<figure class="pie-chart">` takes the same `<figcaption>` and `<table>` as a 
 - `data-other="5"` groups every row under 5% of the whole into one last row, named by `data-other-label` ("Other" by default), with the rows' sum and share; the sum takes the cells' signs and decimals, and is compact when they use `data-value`. Further columns leave the group out. Rows with no value keep their place, a single small row keeps its own slice, and the table keeps every row.
 - Cells read as in the column chart. Zero, negative and non-numeric cells draw no slice and have no share; their rows stay in the legend and tooltip. Further value columns add lines to the tooltip. Slices take six colors; a seventh row takes the second color so it does not match the first beside it.
 - The plot is one Tab stop named by the caption. Right and down arrows move to the next row, left and up to the one before, Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped slice. In a right-to-left page, set by `dir` or CSS `direction`, the slices still run clockwise and left and right swap.
-- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options do not apply.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options do not apply.
 
 ### Tokens
 
@@ -5266,7 +5267,7 @@ A `<figure class="heatmap-chart">` takes the same `<figcaption>` and `<table>` a
 - The scale runs from the lowest value to the highest; `data-min` and `data-max` on the chart, or the `min` and `max` options, fix it, and values past either end take the end's shade. The scale under the grid runs from the lowest cell's shade to the highest's, labelled with their text, so a fixed scale wider than the data shows only the part it uses. `data-mid="0"` makes the scale diverge from that value: the midpoint is the empty color, values above shade towards `--md-comp-heatmap-chart-color` and values below towards `--md-comp-heatmap-chart-low-color`, as far as the end further from the midpoint. `data-steps="4"` groups the shades into that many bands (each side, on a diverging scale), with the lowest band in the empty color, and the scale becomes a swatch per band.
 - Cells read as in the column chart. A non-numeric cell is a gap: outlined, with no shade, and its text still shows in the tooltip.
 - The plot is one Tab stop named by the caption. The arrow keys move one cell the way they point, Home and End jump to the ends of the row and Escape hides the tooltip; with the tooltip hidden, Escape is left to a surrounding dialog. A tap or a drag shows the cell under the finger, and the space between cells counts as the nearer cell. In a right-to-left page, set by `dir` or CSS `direction`, the columns run right to left and left and right swap. In forced colors the cells keep their shades.
-- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. It has the line chart's `show(index)` and `destroy()`; `show()` takes a cell, counted row by row from 0.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. It has the line chart's `show(index)` and `destroy()`; `show()` takes a cell, counted row by row from 0.
 
 ### Tokens
 
@@ -5312,7 +5313,7 @@ A `<figure class="radar-chart">` takes the same `<figcaption>` and `<table>` as 
 - Cells read as in the line chart. A non-numeric cell is a gap: the outline breaks there and the tooltip leaves it out; `area` fills each unbroken run as a wedge from the middle, and a value between two gaps is a dot. The middle is zero, or below the lowest value if one is negative; the rim is the highest value plus a tenth of the range. `data-min` and `data-max`, or the `min` and `max` options, fix the scale; values past the rim stop at it. Series take four colors.
 - `axis` draws the grid rings at round values instead of quarters and labels each ring up the top spoke, leaving zero unlabelled; the rim widens to the next round value unless `data-max` sets it.
 - The plot is one Tab stop named by the caption. Right and down arrows move to the next row, left and up to the one before, wrapping between the last row and the first; Home and End jump to the ends and Escape hides the tooltip; the pointer or a tap shows the nearest spoke. In a right-to-left page the spokes and the arrows still run clockwise.
-- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. It has the line chart's `show(index)` and `destroy()`.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. It has the line chart's `show(index)` and `destroy()`.
 
 ### Tokens
 
@@ -5355,7 +5356,7 @@ A `<figure class="radial-chart">` takes the same `<figcaption>` and `<table>` as
 - `data-segments="10"` splits each ring into that many segments, with the ring gap between them, and fills whole segments to the one nearest the value; under half a segment draws none. `gradient` shades each fill along its ring, from a light tint at the start to the full color where the fill ends: a conic gradient in HTML, masked to the fill's dash, over the SVG fill.
 - Cells read as in the column chart. `data-max` must be above zero; otherwise the `max` option or 100 applies. Values past it close the ring; zero, negative and non-numeric cells leave only the track, and their rows stay in the legend and tooltip. Further value columns add lines to the tooltip. Rings take four colors, then repeat. Rings and their gaps thin together when there are too many to leave a middle.
 - The plot is one Tab stop named by the caption. Down and right arrows move to the next ring inwards, up and left to the one before, wrapping between the innermost ring and the outermost; Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped ring. In a right-to-left page the rings and the arrows still run clockwise.
-- After changing the table or the ring tokens, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. It has the line chart's `show(index)` and `destroy()`; the `max` option is the maximum without `data-max`, and `min` does not apply.
+- After changing the ring tokens, or the table without `data-watch`, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. It has the line chart's `show(index)` and `destroy()`; the `max` option is the maximum without `data-max`, and `min` does not apply.
 
 ### Tokens
 
@@ -5399,7 +5400,7 @@ A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as 
 - `axis` labels the first scale beside the plot's start, with grid lines, and the `end` scale along its end. When neither scale has a set end, the `end` scale stretches to as many round steps as the first so its labels share the grid lines. Each scale's labels repeat its cells' currency or percent sign.
 - Cells read as in the line chart; a suffix such as `K` makes a cell a gap, so use `data-value` or put the unit in the header. A gap breaks a line and leaves a column's slot empty. Series take four colors in column order, whatever their kind, then repeat.
 - The cursor bands the highlighted row and puts a point on each line and area. The plot is one Tab stop named by the caption; left and right move between rows, Home and End jump to the ends and Escape hides the tooltip. `sparkline` is a 48px chart with no grid, labels, legend or tooltip and is not focusable.
-- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale.
 - `stacked` stacks the column series into one column per row; the `end` series' columns stack in their own column beside it, so list them after the others. Lines and areas keep their own values, and the tooltip shows each cell. `points` marks every value on the lines and areas with a dot, and `straight` draws straight lines instead of curves.
 
 ### Tokens

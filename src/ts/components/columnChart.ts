@@ -29,7 +29,8 @@ function rangeParts(cell: HTMLTableCellElement | undefined): string[] {
  * are HTML clipped to their value, so their rounded corners keep their
  * shape at any size.
  *
- * Call `update()` after changing the table.
+ * Call `update()` after changing the table, or start it with `watch` or
+ * `data-watch`.
  */
 export class ColumnChart extends LineChart {
   // No initializers: LineChart's constructor draws before they would run.

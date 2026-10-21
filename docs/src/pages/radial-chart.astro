@@ -333,7 +333,7 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
         <p>
           <code>AutoInit()</code> starts every <code>.radial-chart</code>. To
           start one yourself, call <code>RadialChart.init</code>. After changing its
-          table or its ring tokens, call <code>update()</code> to redraw it in place. It has the
+          ring tokens, or its table without <code>data-watch</code>, call <code>update()</code> to redraw it in place. It has the
           line chart's methods; the <code>max</code> option sets the maximum
           when the figure has no <code>data-max</code>, and <code>min</code>
           does not apply.

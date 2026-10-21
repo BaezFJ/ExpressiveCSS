@@ -12,11 +12,18 @@ export interface LineChartOptions extends BaseOptions {
    * the range. Overridden by `data-max` on the chart.
    */
   max: number | null;
+  /**
+   * Redraws the chart whenever its table changes, once for the edits a
+   * script makes in one run, so page script need not call `update()`.
+   * `data-watch` on the chart turns it on too. Read when the chart starts.
+   */
+  watch: boolean;
 }
 
 const _defaults: LineChartOptions = {
   min: null,
-  max: null
+  max: null,
+  watch: false
 };
 
 const SVG = 'http://www.w3.org/2000/svg';
@@ -88,6 +95,13 @@ function thinLabels(container: Element, items: Element[]) {
   const step = labelStep(labelBoxes(items, getComputedStyle(container).direction === 'rtl'));
   container.toggleAttribute('data-thinned', step > 1);
   items.forEach((item, index) => item.toggleAttribute('data-skip', index % step > 0));
+}
+
+/** Whether the changes reach the data: inside the table, or a table added or removed. */
+function tableChanged(records: MutationRecord[], el: Element) {
+  const isTable = (node: Node) => node.nodeName === 'TABLE';
+  return records.some((record) =>
+    record.target !== el || [...record.addedNodes, ...record.removedNodes].some(isTable));
 }
 
 /** An SVG element with its attributes. */
@@ -251,7 +265,8 @@ function monotonePath(points: [number, number][]): string {
  * with x labels, a legend for more than one series, and a cursor and tooltip
  * that follow the pointer or the arrow keys. Styling is CSS.
  *
- * Call `update()` after changing the table.
+ * Call `update()` after changing the table, or start it with `watch` or
+ * `data-watch`.
  */
 export class LineChart extends Component<LineChartOptions> {
   /** The values' x positions and series, read from the table. */
@@ -262,6 +277,8 @@ export class LineChart extends Component<LineChartOptions> {
   private _generated: Element[] = [];
   /** Watches the row labels' width, to thin them on a narrow chart. */
   private _labelSizes: ResizeObserver | null = null;
+  /** With `watch`, redraws the chart when its table changes. */
+  private _tableWatch: MutationObserver | null = null;
   /** Every series in the table, shown or not, as the legend lists them. */
   protected _all: Series[] = [];
   /** The columns of the series a .toggle legend hid, kept through update(). */
@@ -335,6 +352,30 @@ export class LineChart extends Component<LineChartOptions> {
 
     this._build();
     this._listen();
+    if (this.options.watch || this.el.hasAttribute('data-watch')) {
+      this._tableWatch = new MutationObserver((records) => tableChanged(records, this.el) && this.update());
+    }
+    this._watch();
+  }
+
+  /**
+   * Observes the table as it is now, and the chart for a table added or
+   * replaced. Reconnecting drops the changes already queued, which the
+   * caller has just drawn.
+   */
+  private _watch() {
+    if (!this._tableWatch) return;
+    this._tableWatch.disconnect();
+    this._tableWatch.observe(this.el, { childList: true });
+    const table = this.el.querySelector(':scope > table');
+    if (table) {
+      this._tableWatch.observe(table, {
+        subtree: true,
+        childList: true,
+        characterData: true,
+        attributeFilter: ['data-value', 'class', 'data-label']
+      });
+    }
   }
 
   /** Reads the table and draws it, when it has data. */
@@ -386,6 +427,7 @@ export class LineChart extends Component<LineChartOptions> {
     this._generated.forEach((node) => node.remove());
     this._generated = [];
     this._labelSizes?.disconnect();
+    this._tableWatch?.disconnect();
     this.el[this._key] = undefined;
   }
 
@@ -411,6 +453,7 @@ export class LineChart extends Component<LineChartOptions> {
     old.forEach((node) => node.remove());
     this._listen();
     this.show(Math.min(index, this._count - 1));
+    this._watch();
   }
 
   /**

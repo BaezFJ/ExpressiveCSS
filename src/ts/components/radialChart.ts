@@ -22,7 +22,8 @@ const FILL = 0.8;
  * a legend lists the rows when there is more than one. Further columns show
  * in the tooltip.
  *
- * Call `update()` after changing the table or the ring tokens.
+ * Call `update()` after changing the ring tokens, and after changing the table
+ * unless it was started with `watch` or `data-watch`.
  */
 export class RadialChart extends LineChart {
   // No initializers: LineChart's constructor draws before they would run.

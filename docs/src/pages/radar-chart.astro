@@ -248,7 +248,8 @@ const average = (values: number[]) => (values.reduce((total, value) => total + v
         <p>
           <code>AutoInit()</code> starts every <code>.radar-chart</code>. To
           start one yourself, call <code>RadarChart.init</code>. After changing its
-          table, call <code>update()</code> to redraw it in place. It has the line chart's
+          table, call <code>update()</code> to redraw it in place, or put
+          <code>data-watch</code> on the figure and it redraws itself. It has the line chart's
           options and methods.
         </p>
 <Code code={`

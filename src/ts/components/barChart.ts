@@ -8,7 +8,8 @@ export type BarChartOptions = ColumnChartOptions;
  * a band of bars that grow from zero along the inline axis, with its label
  * beside it. The up and down arrows move the tooltip between rows.
  *
- * Call `update()` after changing the table.
+ * Call `update()` after changing the table, or start it with `watch` or
+ * `data-watch`.
  */
 export class BarChart extends ColumnChart {
   protected get _type() {
