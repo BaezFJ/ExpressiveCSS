@@ -18,6 +18,19 @@ const ANCHOR_PLACEMENT: Record<string, [string, string]> = {
   bottom: ['bottom', 'justify-self'],
 };
 
+/**
+ * On touch, a press held this long shows the tooltip, as Android's long
+ * press does, and the tooltip stays this long after the finger lifts.
+ */
+const LONG_PRESS = 500;
+const TOUCH_LINGER = 1500;
+// After a touch the browser fires mouse events for compatibility; within
+// this long of one they are the touch again, not a mouse.
+const TOUCH_ECHO = 800;
+// A long press that showed the tooltip was asking about the control, so the
+// click its release sends, within this long, does not activate it.
+const PRESS_CLICK = 400;
+
 export interface TooltipOptions extends BaseOptions {
   /**
    * Delay time before tooltip disappears.
@@ -101,6 +114,14 @@ export class Tooltip extends Component<TooltipOptions> {
   private _exitDelayTimeout: ReturnType<typeof setTimeout>;
   private _enterDelayTimeout: ReturnType<typeof setTimeout>;
   private _animationTimeout: ReturnType<typeof setTimeout>;
+  private _pressTimeout: ReturnType<typeof setTimeout>;
+  private _lingerTimeout: ReturnType<typeof setTimeout>;
+  /** When the last touch began or ended, to tell its mouse events from a mouse. */
+  private _lastTouch = -Infinity;
+  /** Whether a long press showed the tooltip, until it closes or a mouse hovers. */
+  private _touchShown = false;
+  /** Until when a click is the release of a long press, not a tap. */
+  private _swallowClickUntil = -Infinity;
   // Whether the last animation showed the tooltip, so each change is reported once.
   private _shown = false;
   private _originalContent: {
@@ -167,6 +188,8 @@ export class Tooltip extends Component<TooltipOptions> {
     clearTimeout(this._enterDelayTimeout);
     clearTimeout(this._exitDelayTimeout);
     clearTimeout(this._animationTimeout);
+    clearTimeout(this._pressTimeout);
+    clearTimeout(this._lingerTimeout);
     this.isOpen = false;
     this.isHovered = false;
     this.isFocused = false;
@@ -242,6 +265,11 @@ export class Tooltip extends Component<TooltipOptions> {
       el.addEventListener('focus', this._handleFocus, true);
       el.addEventListener('blur', this._handleBlur, true);
     }
+    this.el.addEventListener('pointerenter', this._handlePointerEnter);
+    this.el.addEventListener('pointerdown', this._handlePointerDown);
+    this.el.addEventListener('pointerup', this._handlePointerEnd);
+    this.el.addEventListener('pointercancel', this._handlePointerCancel);
+    this.el.addEventListener('click', this._handleClick, true);
   }
 
   _removeEventHandlers() {
@@ -251,6 +279,11 @@ export class Tooltip extends Component<TooltipOptions> {
       el.removeEventListener('focus', this._handleFocus, true);
       el.removeEventListener('blur', this._handleBlur, true);
     }
+    this.el.removeEventListener('pointerenter', this._handlePointerEnter);
+    this.el.removeEventListener('pointerdown', this._handlePointerDown);
+    this.el.removeEventListener('pointerup', this._handlePointerEnd);
+    this.el.removeEventListener('pointercancel', this._handlePointerCancel);
+    this.el.removeEventListener('click', this._handleClick, true);
     // Escape is only listened for while open; see open() and close().
     this.el.ownerDocument.removeEventListener('keydown', this._handleKeydown, true);
   }
@@ -274,6 +307,10 @@ export class Tooltip extends Component<TooltipOptions> {
    * Hide tooltip.
    */
   close = () => {
+    // A press or linger from an earlier touch has no say over a later opening.
+    clearTimeout(this._pressTimeout);
+    clearTimeout(this._lingerTimeout);
+    this._touchShown = false;
     if (!this.isOpen) return;
     this.isHovered = false;
     this.isFocused = false;
@@ -408,8 +445,74 @@ export class Tooltip extends Component<TooltipOptions> {
   }
 
   _handleMouseEnter = () => {
+    // A tap's mouse events are not a hover; touch shows the tooltip on a long press.
+    if (performance.now() - this._lastTouch < TOUCH_ECHO) return;
+    this._touchShown = false;
     this.isHovered = true;
     this.open(false);
+  };
+
+  /** Whether an event is a touch, noting when, so the mouse events that echo it are ignored. */
+  private _touched(e: PointerEvent) {
+    if (e.pointerType !== 'touch') return false;
+    this._lastTouch = performance.now();
+    return true;
+  }
+
+  // pointerenter comes before any compatibility mouseenter, in whatever order
+  // a browser sends those, so the touch is known before its mouse events.
+  _handlePointerEnter = (e: PointerEvent) => {
+    this._touched(e);
+  };
+
+  /** A touch held for LONG_PRESS shows the tooltip, unless it turns into a scroll first. */
+  _handlePointerDown = (e: PointerEvent) => {
+    if (!this._touched(e)) return;
+    clearTimeout(this._lingerTimeout);
+    clearTimeout(this._pressTimeout);
+    // The long press is the delay, so it shows at once rather than after
+    // enterDelay, and the linger after the finger lifts always follows a
+    // tooltip that is showing.
+    this._pressTimeout = setTimeout(() => {
+      this.isHovered = true;
+      this.open();
+      clearTimeout(this._enterDelayTimeout);
+      this._animateIn();
+      this._touchShown = true;
+    }, LONG_PRESS);
+  };
+
+  /** The finger lifted: a press too short stays a tap, and a tooltip it showed lingers for TOUCH_LINGER. */
+  _handlePointerEnd = (e: PointerEvent) => {
+    if (!this._touched(e)) return;
+    clearTimeout(this._pressTimeout);
+    if (this._touchShown) this._swallowClickUntil = performance.now() + PRESS_CLICK;
+    // Any release while it shows, even a second tap during the linger, starts the linger again.
+    if (!this.isOpen) return;
+    this.isHovered = false;
+    // A mouse that hovers in the meantime keeps it, as focus does.
+    this._lingerTimeout = setTimeout(() => this.isHovered || this.isFocused || this.close(), TOUCH_LINGER);
+  };
+
+  /** The click a long press's release sends would press the button or follow the link; it is consumed. */
+  _handleClick = (e: MouseEvent) => {
+    if (performance.now() > this._swallowClickUntil) return;
+    this._swallowClickUntil = -Infinity;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  };
+
+  /**
+   * The browser took the touch to scroll: no tooltip opens, not even one
+   * waiting out enterDelay, and one the touch showed closes at once.
+   */
+  _handlePointerCancel = (e: PointerEvent) => {
+    if (!this._touched(e)) return;
+    clearTimeout(this._pressTimeout);
+    // Lingering after an earlier press too; a mouse hover or focus keeps it.
+    if (!this._touchShown) return;
+    this.isHovered = false;
+    if (!this.isFocused) this.close();
   };
 
   _handleMouseLeave = (event: MouseEvent) => {
