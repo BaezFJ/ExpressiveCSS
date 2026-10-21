@@ -359,10 +359,16 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
           await page.evaluate(() => { document.querySelector('#bar2 input').disabled = false; });
           await page.locator('#bar1 input').focus();
           if (modal) {
+            // A dialog view takes over the page, so focus alone leaves it closed.
+            await expect(page.locator('#view1')).toHaveJSProperty('open', false);
+            await page.locator('#bar1 input').click();
+            await expect(page.locator('#view1')).toHaveJSProperty('open', true);
             await page.evaluate(() => document.querySelector('#view1').close());
             await expect.poll(() => page.evaluate(() => searchClosed)).toBe(1);
             await expect(page.locator('#outside')).toBeFocused();
             await page.locator('#bar1 input').focus();
+            await expect(page.locator('#view1')).toHaveJSProperty('open', false);
+            await page.keyboard.press('Enter');
             await expect(page.locator('#view1')).toHaveJSProperty('open', true);
           } else {
             await expect(page.locator('#view1')).toBeVisible();
@@ -380,7 +386,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
           await page.locator('#bar1 input').click();
           await expect(page.locator('#view1')).toBeHidden();
           assert.equal(await page.evaluate(() => sentinel.isConnected), false);
-          await page.locator('#bar2 input').focus();
+          await page.locator('#bar2 input')[modal ? 'click' : 'focus']();
           await expect(page.locator('#view2')).toBeVisible();
           await page.evaluate(modal => {
             if (modal) document.querySelector('#view2').close();
@@ -451,7 +457,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
           window.bar = Expressive.AppBar.init(document.querySelector('header'));
         });
         try {
-          await page.locator('#search').focus();
+          await page.locator('#search').click();
           await expect(page.locator('dialog')).toHaveJSProperty('open', true);
           await page.locator('#query').fill('results query');
           await page.evaluate(() => { events = []; });
@@ -472,6 +478,8 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
           await expect.poll(() => page.evaluate(() => events.includes('close'))).toBe(true);
           await page.locator('#outside').focus();
           await page.locator('#search').focus();
+          await expect(page.locator('dialog')).toHaveJSProperty('open', false);
+          await page.keyboard.press('ArrowDown');
           await expect(page.locator('dialog')).toHaveJSProperty('open', true);
           await expect(page.locator('#search')).toHaveValue('retained query');
           await expect(page.locator('#query')).toHaveValue('results query');

@@ -559,7 +559,7 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
   // data-shortcuts, a letter or digit picks an answer.
   private _handleKeydown = (e: KeyboardEvent) => {
     if (e.key !== 'Enter') return this._handleShortcut(e);
-    if (e.defaultPrevented || e.isComposing) return;
+    if (e.defaultPrevented || Utils.isComposing(e)) return;
     if (!(e.target instanceof HTMLInputElement) || this._end) return;
     e.preventDefault();
     this.next();

@@ -26,6 +26,25 @@ export class Utils {
   };
 
   /**
+   * Whether a keydown belongs to an IME composition, such as the Enter that
+   * confirms a candidate. Safari reports `isComposing` false for that Enter,
+   * so keyCode 229 covers it.
+   */
+  static isComposing(e: KeyboardEvent): boolean {
+    return e.isComposing || e.keyCode === 229;
+  }
+
+  /**
+   * `handler`, skipped for every key of an IME composition: while the user
+   * picks a candidate, Enter, the arrows and Escape belong to the IME.
+   */
+  static ignoringComposition(handler: (e: KeyboardEvent) => void): (e: KeyboardEvent) => void {
+    return (e) => {
+      if (!Utils.isComposing(e)) handler(e);
+    };
+  }
+
+  /**
    * Run `callback` once the document is parsed.
    *
    * The document-level behaviors all used a bare DOMContentLoaded listener,

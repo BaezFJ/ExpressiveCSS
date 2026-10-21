@@ -4845,7 +4845,7 @@
         "sources": [
           {
             "path": "src/sass/components/_popover.scss",
-            "sha256": "2e53fc06eec6588276afe33f849ac6f5df5b240208870364f65bce854d2ae0c7"
+            "sha256": "ea20e95c04b1ef46cfdd365edfae0441792f4e2c96412cfba853cf9114404616"
           }
         ],
         "gaps": [
@@ -6438,7 +6438,7 @@
           },
           {
             "path": "src/ts/components/commandPalette.ts",
-            "sha256": "55fb823a7e70d5cc7d22cd10a84054badac5a7d5df7274d3b67aa044349a642e"
+            "sha256": "8e3d5b555365df4ba28b4d915f6f717ac20be9d6d76390dd0a024b0816630725"
           }
         ],
         "gaps": [
@@ -7398,7 +7398,7 @@
           },
           {
             "path": "src/ts/components/colorPicker.ts",
-            "sha256": "1117dcd0d6f9848b0e766e98144f64841c0376f83bf7d6722f597f75f9060014"
+            "sha256": "16954e486291c235a8c071f46b95136840ffa3ce6eaec55ea05de452cd9da832"
           }
         ],
         "gaps": [

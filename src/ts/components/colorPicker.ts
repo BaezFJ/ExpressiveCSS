@@ -1,4 +1,5 @@
 import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Utils } from '../core/utils';
 
 export interface ColorPickerOptions extends BaseOptions {
   /**
@@ -175,7 +176,7 @@ export class ColorPicker extends Component<ColorPickerOptions> {
     hex.addEventListener('change', this._onHex);
     hex.addEventListener('keydown', (e) => {
       // Enter in a text field would submit the form; take it as "apply".
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && !Utils.isComposing(e)) {
         e.preventDefault();
         this._onHex();
       }

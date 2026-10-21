@@ -2,6 +2,8 @@ import { Component, BaseOptions, InitElements, InitElement } from '../core/compo
 import { Utils } from '../core/utils';
 
 const _defaults: BaseOptions = {};
+// Keys that open a full-screen search view from its field.
+const OPEN_KEYS = ['Enter', 'ArrowDown'];
 
 /**
  * Collapse medium/large flexible app bars on scroll, and open the related
@@ -15,7 +17,6 @@ export class AppBar extends Component<BaseOptions> {
   private _sentinel: HTMLElement | null = null;
   private _input: HTMLInputElement | null = null;
   private _view: HTMLElement | null = null;
-  private _searchOpen = false;
   // The docked view's state before the first open, for destroy() to restore.
   private _restore: { hidden: HTMLElement['hidden']; expanded: string | null } | null = null;
 
@@ -50,15 +51,14 @@ export class AppBar extends Component<BaseOptions> {
     this._sentinel?.remove();
     this._sentinel = null;
     this._input?.removeEventListener('focus', this._onSearchFocus);
-    this._input?.removeEventListener('click', this._onSearchFocus);
-    this._view?.removeEventListener('close', this._onSearchViewClose);
+    this._input?.removeEventListener('click', this._openSearch);
+    this._input?.removeEventListener('keydown', this._onSearchKeydown);
     if (this._restore) {
       this._view.hidden = this._restore.hidden;
       if (this._restore.expanded === null) this._input.removeAttribute('aria-expanded');
       else this._input.setAttribute('aria-expanded', this._restore.expanded);
       this._restore = null;
     }
-    this._searchOpen = false;
     this.el.classList.remove('collapsed');
     this.el['Expressive_AppBar'] = undefined;
   }
@@ -106,20 +106,25 @@ export class AppBar extends Component<BaseOptions> {
     if (!this._view) return;
 
     this._input.addEventListener('focus', this._onSearchFocus);
-    this._input.addEventListener('click', this._onSearchFocus);
-    if (this._view instanceof HTMLDialogElement) {
-      this._view.addEventListener('close', this._onSearchViewClose);
-    }
+    this._input.addEventListener('click', this._openSearch);
+    this._input.addEventListener('keydown', this._onSearchKeydown);
   }
 
-  private _onSearchViewClose = () => {
-    this._searchOpen = (this._view as HTMLDialogElement).open;
+  // A docked view opens on focus, like a combobox popup. A full-screen
+  // dialog takes over the page, so reaching the field with Tab only focuses
+  // it (WCAG 3.2.1); a click, Enter or ArrowDown opens it.
+  private _onSearchFocus = () => {
+    if (!(this._view instanceof HTMLDialogElement)) this._openSearch();
   };
 
-  private _onSearchFocus = () => {
-    if (!this._view || this._searchOpen) return;
+  private _onSearchKeydown = (e: KeyboardEvent) => {
+    if (!OPEN_KEYS.includes(e.key) || Utils.isComposing(e) || !(this._view instanceof HTMLDialogElement)) return;
+    e.preventDefault();
+    this._openSearch();
+  };
+
+  private _openSearch = () => {
     if (this._view instanceof HTMLDialogElement) {
-      this._searchOpen = true;
       if (!this._view.open) this._view.showModal();
       return;
     }

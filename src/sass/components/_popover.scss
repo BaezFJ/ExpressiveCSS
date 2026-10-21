@@ -10,7 +10,8 @@
 // press, stays open while the user reads or acts, and can hold links and
 // buttons. A small one behind an info button is a toggletip.
 //
-// Placement (the panel flips to the other side when it would not fit):
+// Placement (the panel flips to the other side when it would not fit, and
+// is centered in the viewport where anchor positioning is missing):
 //   (default)  below, start edges aligned
 //   .top       above, start edges aligned
 //   .start     before the button, centered on it
@@ -108,5 +109,17 @@
 
   @media (forced-colors: active) {
     border: 1px solid CanvasText;
+  }
+}
+
+// Without anchor positioning the browser ignores position-area, and the
+// panel would sit in the viewport's top-left corner, far from its button.
+// Centered instead, as a native popover is, it stays in view. :is() matches
+// .start and .end too, which set their own margin.
+@supports not (anchor-name: --a) {
+  .popover:is(*, .start, .end) {
+    inset: 0;
+    height: fit-content;
+    margin: auto;
   }
 }

@@ -9,7 +9,7 @@ Component ID: `popover`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `1e785ca6cf1ca28939ed05cddab350c39d1ea3560872f48e0136769500abeae0`
+Contract SHA-256: `1d0995f6488989aa7bde6511e83b3bf79585f70fe98a42280600e329331e18e9`
 
 #### Selection and adaptation
 
@@ -35,7 +35,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A `.popover` is a `[popover]` element, and the button that opens it names it with `popovertarget` (or `commandfor` with `command="toggle-popover"`). The browser owns the behavior: pressing the button toggles the panel, Escape or a click outside closes it, focus returns to the button, and the button reports the panel as expanded. CSS anchor positioning places the panel 4px below the button with their start edges aligned, and flips it to the other side when it would not fit. CSS only; there is no JavaScript.
+A `.popover` is a `[popover]` element, and the button that opens it names it with `popovertarget` (or `commandfor` with `command="toggle-popover"`). The browser owns the behavior: pressing the button toggles the panel, Escape or a click outside closes it, focus returns to the button, and the button reports the panel as expanded. CSS anchor positioning places the panel 4px below the button with their start edges aligned, and flips it to the other side when it would not fit. A browser without anchor positioning centers the panel in the viewport instead. CSS only; there is no JavaScript.
 
 It looks like a rich tooltip but behaves as a disclosure: it opens on press, stays open while the user reads or acts, and can hold links and buttons. A small one behind an info icon button is a toggletip. Add `top` to open above, or `start` or `end` to open beside the button, centered on it.
 
