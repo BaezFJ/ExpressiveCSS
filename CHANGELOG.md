@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- A `.validate` field sets `aria-invalid="true"` along with `invalid`, and
+  clears both once the value passes, so a screen reader hears the error
+  state the color shows. Its `[data-error]` supporting text joins the
+  input's `aria-describedby`, keeping the ids already there, so the error
+  message is read with the field. An empty `data-length` no longer marks a
+  field invalid.
 - Tooltips show on a long press on touch, as Android does: after half a
   second held, without `enterDelay`, staying for a second and a half after the finger lifts. A
   tap used to show the tooltip through its compatibility mouse events and

@@ -196,7 +196,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed menu Home and End, and placement top with the anchored side chosen to fit its containing block and kept on scroll: 88,407 gzip bytes (+537).
   // Reviewed tooltip long press on touch: 88,766 gzip bytes (+359).
   // Reviewed heatmap column label thinning: 88,873 gzip bytes (+107).
-  assert.ok(sizes(js).gzip <= 88873, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed aria-invalid and the error description on .validate fields: 89,014 gzip bytes (+141).
+  assert.ok(sizes(js).gzip <= 89014, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
