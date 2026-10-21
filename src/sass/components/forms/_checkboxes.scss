@@ -319,6 +319,21 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
     &:disabled:is(:checked, :indeterminate) {
       background-color: GrayText;
     }
+
+    // Forced colors have no error color, so an invalid box takes a dashed
+    // edge instead. A checked one keeps the Highlight fill - the error fill
+    // above is more specific than the :checked rule here and would pass the
+    // author's red through - inside a CanvasText edge, clipped so Canvas
+    // shows between the dashes. A disabled one stays GrayText.
+    &:is(.invalid, [aria-invalid="true"]) {
+      border-style: dashed;
+    }
+
+    &:is(.invalid, [aria-invalid="true"]):is(:checked, :indeterminate):not(:disabled) {
+      border-color: CanvasText;
+      background-color: Highlight;
+      background-clip: padding-box;
+    }
   }
 
   // Forced colors repaint the dimmed label as CanvasText, like an enabled one.
@@ -349,5 +364,28 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
   #{_cb-span(":focus-visible")}::before {
     outline: 2px solid CanvasText;
     outline-offset: 2px;
+  }
+
+  #{_cb-span(":is(.invalid, [aria-invalid='true'])")}::before {
+    border-style: dashed;
+  }
+
+  // The error mark color is more specific than the HighlightText rules
+  // above, so an invalid box restates them with the same selector.
+  label:has(> [type="checkbox"]):not(.switch):not(:has(> [type="checkbox"] + span)),
+  .checkbox:not(:has(> [type="checkbox"] + span)) {
+    &:has(> [type="checkbox"]:is(.invalid, [aria-invalid="true"]):is(:checked, :indeterminate):not(:disabled))::before {
+      background-color: HighlightText;
+    }
+  }
+
+  #{_cb-span(":is(.invalid, [aria-invalid='true']):is(:checked, :indeterminate):not(:disabled)")}::after {
+    background-color: HighlightText;
+  }
+
+  #{_cb-span(":is(.invalid, [aria-invalid='true']):is(:checked, :indeterminate):not(:disabled)")}::before {
+    border-color: CanvasText;
+    background-color: Highlight;
+    background-clip: padding-box;
   }
 }

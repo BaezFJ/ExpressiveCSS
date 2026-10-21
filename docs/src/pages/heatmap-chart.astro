@@ -271,30 +271,34 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
           no chart styles; size a chart with its tokens.
         </p>
         <article class="outlined" data-markdown-ignore>
-          <dl class="stats my-0">
-            <div><dt>Weekly visits</dt><dd>{total(traffic).toLocaleString("en-US")}</dd><dd class="stat-change">Busiest on Saturday evening</dd></div>
-          </dl>
-          <figure class="heatmap-chart">
-            <figcaption class="visually-hidden">Visits by day and time, last 7 days</figcaption>
-            <table>
-              <thead><tr><th>Day</th>{slots.map((slot) => <th>{slot}</th>)}</tr></thead>
-              <tbody>{days.map((day, row) => <tr><th>{day}</th>{traffic[row].map((value) => <td>{value}</td>)}</tr>)}</tbody>
-            </table>
-          </figure>
+          <div class="p-4">
+            <dl class="stats my-0">
+              <div><dt>Weekly visits</dt><dd>{total(traffic).toLocaleString("en-US")}</dd><dd class="stat-change">Busiest on Saturday evening</dd></div>
+            </dl>
+            <figure class="heatmap-chart">
+              <figcaption class="visually-hidden">Visits by day and time, last 7 days</figcaption>
+              <table>
+                <thead><tr><th>Day</th>{slots.map((slot) => <th>{slot}</th>)}</tr></thead>
+                <tbody>{days.map((day, row) => <tr><th>{day}</th>{traffic[row].map((value) => <td>{value}</td>)}</tr>)}</tbody>
+              </table>
+            </figure>
+          </div>
         </article>
 <Code code={`
 <article class="outlined">
-  <dl class="stats my-0">
-    <div>
-      <dt>Weekly visits</dt>
-      <dd>${total(traffic).toLocaleString("en-US")}</dd>
-      <dd class="stat-change">Busiest on Saturday evening</dd>
-    </div>
-  </dl>
-  <figure class="heatmap-chart">
-    <figcaption class="visually-hidden">Visits by day and time, last 7 days</figcaption>
-    <table><!-- … --></table>
-  </figure>
+  <div class="p-4">
+    <dl class="stats my-0">
+      <div>
+        <dt>Weekly visits</dt>
+        <dd>${total(traffic).toLocaleString("en-US")}</dd>
+        <dd class="stat-change">Busiest on Saturday evening</dd>
+      </div>
+    </dl>
+    <figure class="heatmap-chart">
+      <figcaption class="visually-hidden">Visits by day and time, last 7 days</figcaption>
+      <table><!-- … --></table>
+    </figure>
+  </div>
 </article>
 `} />
   </Section>

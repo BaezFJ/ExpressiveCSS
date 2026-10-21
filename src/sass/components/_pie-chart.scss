@@ -24,25 +24,29 @@
 //   --md-comp-pie-chart-gap          1.5, the gap between slices in hundredths
 //                                    of the plot's width
 //   --md-comp-pie-chart-color-1..6   primary, tertiary, secondary,
-//                                    on-surface-variant, primary-container,
-//                                    tertiary-container
+//                                    on-surface-variant, then primary- and
+//                                    tertiary-container deepened toward
+//                                    on-surface
 //   --md-comp-pie-chart-on-color-1..6  on-primary, on-tertiary, on-secondary,
-//                                      surface, on-primary-container,
-//                                      on-tertiary-container; .values text
+//                                      surface, surface, surface; .values text
 
 @include chart("pie-chart");
 
 .pie-chart {
   --md-comp-pie-chart-hole: 0.6;
   --md-comp-pie-chart-gap: 1.5;
-  --md-comp-pie-chart-color-5: var(--md-sys-color-primary-container);
-  --md-comp-pie-chart-color-6: var(--md-sys-color-tertiary-container);
+  // The container roles alone are 1.3:1 on the surface in light mode and
+  // 2:1 in dark. Mixed 45% with on-surface, they keep their hue and reach
+  // 5:1 and 6.8:1, past the 3:1 a slice needs (WCAG 1.4.11), and surface
+  // text on them passes too.
+  --md-comp-pie-chart-color-5: color-mix(in oklab, var(--md-sys-color-primary-container) 45%, var(--md-sys-color-on-surface));
+  --md-comp-pie-chart-color-6: color-mix(in oklab, var(--md-sys-color-tertiary-container) 45%, var(--md-sys-color-on-surface));
   --md-comp-pie-chart-on-color-1: var(--md-sys-color-on-primary);
   --md-comp-pie-chart-on-color-2: var(--md-sys-color-on-tertiary);
   --md-comp-pie-chart-on-color-3: var(--md-sys-color-on-secondary);
   --md-comp-pie-chart-on-color-4: var(--md-sys-color-surface);
-  --md-comp-pie-chart-on-color-5: var(--md-sys-color-on-primary-container);
-  --md-comp-pie-chart-on-color-6: var(--md-sys-color-on-tertiary-container);
+  --md-comp-pie-chart-on-color-5: var(--md-sys-color-surface);
+  --md-comp-pie-chart-on-color-6: var(--md-sys-color-surface);
   // Where labels and the tooltip sit, as a share of the radius.
   --pie-chart-label-at: 0.62;
 

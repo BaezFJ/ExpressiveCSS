@@ -348,6 +348,21 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Pie slices 5 and 6 stand out from the surface. They took
+  `primary-container` and `tertiary-container`, which are 1.3:1 on the
+  surface in light mode and 2:1 in dark, under the 3:1 a slice needs. Each is
+  now its container role mixed 45% with `on-surface`: the same hue, at 5:1
+  in light and 6.8:1 in dark. `.values` text on them is `surface`. A page
+  that sets `--md-comp-pie-chart-color-5` or `-6` keeps its own colors.
+- In forced colors, an invalid checkbox has a dashed edge. Forced colors
+  drop the error color, so it looked like any other box. A checked invalid
+  box used to paint the author's error red and on-error mark, because the
+  error rules outranked the forced-colors ones; it now takes Highlight and
+  HighlightText like any checked box, and a disabled one stays GrayText.
+- Chart cards in the docs keep their contents off the border, and the
+  period switch sits beside the stat instead of on a row of its own. The
+  column chart page now says a card needs `p-4` around its stat and chart,
+  as the line chart page already did.
 - A narrow line, column or mixed chart shows whole row labels. When each
   label is wider than its column, the chart keeps every second label (or
   every third, and so on) and hides the rest, rather than cutting all of
@@ -686,6 +701,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Datepicker and Timepicker follow the page's language. With a `lang` on
+  the input or around it, the calendar takes that language's month and
+  weekday names from `Intl` and its first day of the week where the browser
+  knows it, and the clock defaults to 12- or 24-hour as that language does.
+  Options the page passes still win, and the button words stay English
+  unless passed. A page with no `lang` is unchanged. To keep the English
+  calendar on a page with another `lang`, pass the English names in `i18n`.
+  A typed date in the picker's own `format` is now read with its names, so
+  the localized value it writes reads back, and `05/10/2026` in
+  `dd/mm/yyyy` is 5 October rather than what `Date.parse` guessed.
 - A full-screen `dialog.search-view` opens on a click, Enter or ArrowDown
   in the app bar's search field, not on focus. Tabbing through the bar used
   to open the modal each time, so every keyboard pass needed an Escape
