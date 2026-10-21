@@ -30,6 +30,23 @@ const TOUCH_ECHO = 800;
 // A long press that showed the tooltip was asking about the control, so the
 // click its release sends, within this long, does not activate it.
 const PRESS_CLICK = 400;
+// A tooltip that opens while a tooltip is closing, or this long after that
+// one's exitDelay ends, shows without enterDelay, as tooltips along a toolbar
+// do. The window is shared by every tooltip; a clock earlier than its start,
+// after the system clock went back, is outside it.
+const SKIP_DELAY_WINDOW = 300;
+let skipDelayFrom = -Infinity;
+let skipDelayUntil = -Infinity;
+
+const skippingDelay = (now: number) => now >= skipDelayFrom && now < skipDelayUntil;
+
+/** A showing tooltip is closing: open the window, or extend it while an earlier one is still closing. */
+function startSkipDelay(exitDelay: number) {
+  const now = Date.now();
+  const end = now + exitDelay + SKIP_DELAY_WINDOW;
+  skipDelayUntil = skippingDelay(now) ? Math.max(skipDelayUntil, end) : end;
+  skipDelayFrom = now;
+}
 
 export interface TooltipOptions extends BaseOptions {
   /**
@@ -38,7 +55,8 @@ export interface TooltipOptions extends BaseOptions {
    */
   exitDelay: number;
   /**
-   * Delay time before tooltip appears.
+   * Delay time before tooltip appears. Skipped while a tooltip is closing
+   * and for 300ms after its exitDelay ends.
    * @default 0
    */
   enterDelay: number;
@@ -312,6 +330,7 @@ export class Tooltip extends Component<TooltipOptions> {
     clearTimeout(this._lingerTimeout);
     this._touchShown = false;
     if (!this.isOpen) return;
+    if (this._shown) startSkipDelay(this.options.exitDelay);
     this.isHovered = false;
     this.isFocused = false;
     this.isOpen = false;
@@ -330,10 +349,11 @@ export class Tooltip extends Component<TooltipOptions> {
 
   _setEnterDelayTimeout(isManual) {
     clearTimeout(this._enterDelayTimeout);
+    const skipDelay = skippingDelay(Date.now());
     this._enterDelayTimeout = setTimeout(() => {
       if (!this.isHovered && !this.isFocused && !isManual) return;
       this._animateIn();
-    }, this.options.enterDelay);
+    }, skipDelay ? 0 : this.options.enterDelay);
   }
 
   _positionTooltip() {

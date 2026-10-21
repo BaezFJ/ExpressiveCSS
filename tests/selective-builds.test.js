@@ -205,8 +205,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Autocomplete allowCreate, an "Add" row for text that matches no suggestion: 89,710 gzip bytes (+240).
   // Reviewed Chips adding a chip from the Autocomplete "Add" row: 89,760 gzip bytes (+50).
   // Reviewed the "Add" row keeping the text it offers: 89,762 gzip bytes (+2).
-  // Reviewed chart update() transitions from the old values to the new: 90,347 gzip bytes (+585).
-  assert.ok(sizes(js).gzip <= 90347, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the tooltip shared delay, which skips enterDelay just after another tooltip closes: 89,846 gzip bytes (+84).
+  // Reviewed chart update() transitions from the old values to the new: 90,447 gzip bytes (+601).
+  assert.ok(sizes(js).gzip <= 90447, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
