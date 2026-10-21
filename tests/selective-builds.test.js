@@ -205,7 +205,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Autocomplete allowCreate, an "Add" row for text that matches no suggestion: 89,710 gzip bytes (+240).
   // Reviewed Chips adding a chip from the Autocomplete "Add" row: 89,760 gzip bytes (+50).
   // Reviewed the "Add" row keeping the text it offers: 89,762 gzip bytes (+2).
-  assert.ok(sizes(js).gzip <= 89762, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the Autocomplete no-results row, which Chips closes on Enter: 89,895 gzip bytes (+133).
+  assert.ok(sizes(js).gzip <= 89895, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -324,5 +325,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed heatmap column label thinning: 84,031 gzip bytes (+141).
   // Reviewed palette Escape, keypad Call and progress ring in forced colors: 84,066 gzip bytes (+35).
   // Reviewed menu group rows styled as direct rows, in menus and submenus: 84,513 gzip bytes (+447).
-  assert.ok(sizes(css).gzip <= 84513, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the Autocomplete no-results row: 84,585 gzip bytes (+72).
+  assert.ok(sizes(css).gzip <= 84585, `CSS gzip: ${sizes(css).gzip}`);
 });
