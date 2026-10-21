@@ -9,7 +9,7 @@ Component ID: `tooltips`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `5dd6c22ccf170f9aa2c3724925cac2487e195b1c30cd157f02c3377aa8569447`
+Contract SHA-256: `1e71299f70889d1e33a0a165f17c860b1d5f8e482c332ba4045b235f39ae339a`
 
 #### Selection and adaptation
 
@@ -60,7 +60,7 @@ Inside a `<button>` the bubble has to be a `<span>` — a `<div>` is not phrasin
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `exitDelay` | Number | `200` | Delay before the tooltip disappears, in milliseconds. |
-| `enterDelay` | Number | `0` | Delay before the tooltip appears, in milliseconds. |
+| `enterDelay` | Number | `0` | Delay before the tooltip appears, in milliseconds. Skipped while a tooltip is closing and for 300 ms after its `exitDelay` ends. |
 | `tooltipId` | String | — | Id of an element used as the tooltip body. Set by `data-tooltip-id`. Marks the bubble `rich`. |
 | `text` | String | `''` | Plain-text content. Set by `data-tooltip`. Ignored when `tooltipId` is set. |
 | `margin` | Number | `4` | Distance from the activator, in pixels, not counting `transitionMovement`. M3 is 4dp. |

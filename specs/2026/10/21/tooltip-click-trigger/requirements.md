@@ -3,7 +3,7 @@
 Date: 2026-10-21
 Roadmap phase: Phase 19, tooltip click trigger
 Branch: `feature/2026-10-21-tooltip-click-trigger`
-Base: `origin/master` at `8d45c2c4af6b6ccf0be918a4b2f325fae3978fb0`, rebased onto `774b0d27` (#380) before the pull request
+Base: `origin/master` at `8d45c2c4af6b6ccf0be918a4b2f325fae3978fb0`, rebased onto `774b0d27` (#380), then merged with `origin/master` at `76781860` (#381, Phase 18) before the pull request
 Status: implemented and locally verified 2026-10-21; required CI and review pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 19](../../../../roadmap.md#phase-19-tooltip-click-trigger). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
@@ -48,6 +48,13 @@ These facts come from `src/ts/components/tooltip.ts` at the base commit.
 - No data attribute. Phase 20 adds markup options for every component, and the existing `data-tooltip`, `data-position` and `data-tooltip-id` attributes stay as they are.
 - Keyboard use needs a trigger that turns Enter or Space into a click, such as a `<button>`. The docs say so.
 - No `aria-expanded` and no live region. The trigger keeps `aria-describedby`, which names the tooltip whether it shows or not, and `role="tooltip"` does not take `aria-expanded`.
+
+### Merge with Phase 18
+
+Phase 18, tooltip shared delay, merged first as #381. A tooltip that opens while another is closing, or within 300 ms after that one's `exitDelay` ends, skips its `enterDelay`, and `close()` on a showing tooltip opens that window. The two features compose without new code:
+
+- A click opens a click tooltip at once whether or not the window is open, because `_showNow` clears the enter timer either way.
+- A click tooltip that closes while showing opens the window like any other tooltip, so a hover tooltip opened right after it shows at once. That follows Phase 18's rule that any closing tooltip opens the window.
 
 ## Requirements
 

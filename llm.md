@@ -6680,7 +6680,7 @@ For HTML, point `data-tooltip-id` at an element. That element is moved into the 
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.Tooltip`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.tooltipped`. On touch, a runtime tooltip shows on a long press of half a second, without `enterDelay`, and stays for a second and a half after the finger lifts; the long press does not press the button or follow the link, and a tap, or a press that turns into a scroll, shows nothing. With `openOnClick`, a tap is the click: it opens and closes the tooltip, and the long press is off.
+The IIFE bundle exposes `Expressive.Tooltip`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.tooltipped`. On touch, a runtime tooltip shows on a long press of half a second, without `enterDelay`, and stays for a second and a half after the finger lifts; the long press does not press the button or follow the link, and a tap, or a press that turns into a scroll, shows nothing. A tooltip that opens while a tooltip is closing, or within 300 ms after that one's `exitDelay` ends, shows without waiting its `enterDelay`, so moving along a toolbar shows each tooltip at once. With `openOnClick`, a tap is the click: it opens and closes the tooltip, and the long press is off.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
@@ -6706,7 +6706,7 @@ Constructor and `init` options. `data-tooltip`, `data-position`, and `data-toolt
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `exitDelay` | Number | `200` | Delay before the tooltip disappears, in milliseconds. |
-| `enterDelay` | Number | `0` | Delay before the tooltip appears, in milliseconds. |
+| `enterDelay` | Number | `0` | Delay before the tooltip appears, in milliseconds. Skipped while a tooltip is closing and for 300 ms after its `exitDelay` ends. |
 | `tooltipId` | String | — | Id of an element used as the tooltip body. Set by `data-tooltip-id`. Marks the bubble `rich`. |
 | `text` | String | `''` | Plain-text content. Set by `data-tooltip`. Ignored when `tooltipId` is set. |
 | `margin` | Number | `4` | Distance from the activator, in pixels, not counting `transitionMovement`. M3 is 4dp. |
