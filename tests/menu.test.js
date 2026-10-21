@@ -132,7 +132,7 @@ describe("Menu", () => {
     // outrank the first/last-child edge shape - hence the :not(.divider).
     assert.match(
       css,
-      /menu\[id\] > li:is\(\.selected, \[aria-selected=true\], \[aria-checked=true\]\):not\(\.divider\)\s*\{[^}]*border-radius:\s*var\(--md-comp-menu-item-selected-container-shape\)/,
+      /menu\[id\] > li:is\(\.selected, \[aria-selected=true\], \[aria-checked=true\]\):not\(\.divider\)[^{]*\{[^}]*border-radius:\s*var\(--md-comp-menu-item-selected-container-shape\)/,
     );
     assert.match(
       css,
@@ -330,19 +330,16 @@ describe("Menu checkbox items", () => {
     }
   });
 
-  test("plain and radio items still close the menu and report no change", async () => {
-    for (const text of ["Plain", "Radio"]) {
-      const log = [];
-      const { instance, trigger, row } = await open();
-      record(trigger, log);
-      try {
-        row(text).querySelector("button").click();
-        assert.equal(instance.isOpen, false, text);
-        assert.equal(row("Radio").getAttribute("aria-checked"), "false");
-        assert.deepEqual(log.map(([type]) => type), ["select"], text);
-      } finally {
-        instance.destroy();
-      }
+  test("plain items still close the menu and report no change", async () => {
+    const log = [];
+    const { instance, trigger, row } = await open();
+    record(trigger, log);
+    try {
+      row("Plain").querySelector("button").click();
+      assert.equal(instance.isOpen, false);
+      assert.deepEqual(log.map(([type]) => type), ["select"]);
+    } finally {
+      instance.destroy();
     }
   });
 
@@ -384,6 +381,263 @@ describe("Menu checkbox items", () => {
       assert.equal(document.querySelector("#v > li").getAttribute("aria-checked"), "true");
       assert.equal(menu.isOpen, true);
       assert.deepEqual(changes, [true]);
+    } finally {
+      bar.destroy();
+    }
+  });
+});
+
+describe("Menu radio groups", () => {
+  beforeEach(resetBody);
+
+  test("a group's rows are set up like direct rows and its wrapper is not a stop", () => {
+    document.body.innerHTML = `
+      <button type="button" class="menu-trigger" data-target="m">View</button>
+      <menu id="m">
+        <li id="wrap" role="none"><ul role="group" aria-label="Sort by">
+          <li id="name" role="menuitemradio" aria-checked="true"><button type="button">Name</button></li>
+          <li id="plain"><button type="button">Plain</button></li>
+          <li id="off" class="disabled"><button type="button">Off</button></li>
+        </ul></li>
+        <li id="more"><button type="button">More</button><ul role="group" aria-label="Not a submenu"></ul></li>
+      </menu>`;
+    const instance = Expressive.Menu.init(document.querySelector(".menu-trigger"));
+    try {
+      const $ = (id) => document.getElementById(id);
+      assert.equal($("wrap").getAttribute("role"), "none");
+      assert.equal($("wrap").tabIndex, -1);
+      assert.equal($("name").getAttribute("role"), "menuitemradio");
+      assert.equal($("name").tabIndex, 0);
+      assert.equal($("plain").getAttribute("role"), "menuitem");
+      assert.equal($("off").getAttribute("aria-disabled"), "true");
+      assert.equal(document.querySelector("#more > button").hasAttribute("aria-haspopup"), false, "a ul is not a submenu");
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  const groups = `
+    <li role="none"><ul role="group" aria-label="Sort by">
+      <li role="menuitemradio" aria-checked="true"><button type="button">Name</button></li>
+      <li role="menuitemradio" aria-checked="false"><button type="button">Date</button></li>
+      <li role="menuitemradio" class="disabled" aria-checked="false"><button type="button">Size</button></li>
+      <li role="menuitemradio" aria-disabled="true" aria-checked="false"><button type="button">Kind</button></li>
+    </ul></li>
+    <li class="divider" role="separator"></li>
+    <li role="none"><ul role="group" aria-label="Order">
+      <li role="menuitemradio" aria-checked="true"><button type="button">Up</button></li>
+      <li role="menuitemradio" aria-checked="false"><button type="button">Down</button></li>
+      <li><button type="button">Plain</button></li>
+      <li role="menuitemcheckbox" aria-checked="false"><button type="button">Wrap</button></li>
+    </ul></li>
+    <li role="menuitemradio" aria-checked="true"><button type="button">Light</button></li>
+    <li role="menuitemradio" aria-checked="false"><button type="button">Dark</button></li>`;
+  const open = async (options = {}) => {
+    document.body.innerHTML = `<button type="button" class="menu-trigger" data-target="m">View</button><menu id="m">${groups}</menu>`;
+    const trigger = document.querySelector(".menu-trigger");
+    const instance = Expressive.Menu.init(trigger, { inDuration: 0, outDuration: 0, ...options });
+    instance.open();
+    await tick();
+    const row = (text) => [...document.querySelectorAll("#m li")].find((li) => li.textContent.trim() === text);
+    const button = (text) => row(text).querySelector("button");
+    // The checked radio items, by label.
+    const checked = () => [...document.querySelectorAll('[role="menuitemradio"][aria-checked="true"]')].map((li) => li.textContent.trim());
+    return { instance, trigger, row, button, checked };
+  };
+  const record = (trigger, log) => {
+    for (const type of ["select", "change"]) {
+      trigger.addEventListener(`expressive:${type}`, (e) => log.push([type, e.detail.item.textContent.trim(), e.detail.checked]));
+    }
+  };
+
+  test("a click checks a radio item, unchecks its group and reports after select", async () => {
+    const log = [];
+    const { instance, trigger, row, button, checked } = await open({
+      onItemClick: (li) => log.push(["click", li.textContent.trim(), checked().join()])
+    });
+    record(trigger, log);
+    try {
+      button("Date").click();
+      assert.deepEqual(checked(), ["Date", "Up", "Light"]);
+      assert.equal(row("Name").getAttribute("aria-checked"), "false");
+      assert.deepEqual(log, [["click", "Date", "Date,Up,Light"], ["select", "Date", undefined], ["change", "Date", true]]);
+      assert.equal(instance.isOpen, false);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("Space checks and keeps the menu open; Enter checks and closes", async () => {
+    const { instance, button, checked } = await open();
+    try {
+      key(button("Down"), " ");
+      assert.deepEqual(checked(), ["Name", "Down", "Light"]);
+      assert.equal(instance.isOpen, true);
+      key(button("Up"), "Enter");
+      assert.deepEqual(checked(), ["Name", "Up", "Light"]);
+      assert.equal(instance.isOpen, false);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("an already checked item fires select but no change", async () => {
+    const log = [];
+    const { instance, trigger, button, checked } = await open();
+    record(trigger, log);
+    try {
+      key(button("Name"), " ");
+      assert.equal(instance.isOpen, true);
+      button("Name").click();
+      assert.equal(instance.isOpen, false);
+      instance.open();
+      await tick();
+      key(button("Name"), "Enter");
+      assert.equal(instance.isOpen, false);
+      assert.deepEqual(checked(), ["Name", "Up", "Light"]);
+      assert.deepEqual(log.map(([type]) => type), ["select", "select", "select"]);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("disabled radio items do not check, report or close", async () => {
+    const log = [];
+    const { instance, trigger, button, checked } = await open();
+    record(trigger, log);
+    try {
+      for (const text of ["Size", "Kind"]) {
+        button(text).click();
+        key(button(text), " ");
+        key(button(text), "Enter");
+      }
+      assert.deepEqual(checked(), ["Name", "Up", "Light"]);
+      assert.deepEqual(log, []);
+      assert.equal(instance.isOpen, true);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("radio items outside a group form one group per menu", async () => {
+    const { instance, button, checked } = await open();
+    try {
+      key(button("Dark"), " ");
+      assert.deepEqual(checked(), ["Name", "Up", "Dark"]);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("plain and checkbox rows in a group keep their own behavior", async () => {
+    const log = [];
+    const { instance, trigger, row, button, checked } = await open();
+    record(trigger, log);
+    try {
+      key(button("Wrap"), " ");
+      assert.equal(row("Wrap").getAttribute("aria-checked"), "true");
+      assert.deepEqual(log.at(-1), ["change", "Wrap", true]);
+      button("Plain").click();
+      assert.equal(instance.isOpen, false);
+      assert.deepEqual(checked(), ["Name", "Up", "Light"]);
+      assert.deepEqual(log.map(([type]) => type), ["select", "change", "select"]);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("with closeOnClick off, click and Enter check and leave the menu open", async () => {
+    const { instance, button, checked } = await open({ closeOnClick: false });
+    try {
+      button("Date").click();
+      key(button("Down"), "Enter");
+      assert.deepEqual(checked(), ["Date", "Down", "Light"]);
+      assert.equal(instance.isOpen, true);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("the Theme behavior and the menu agree on a theme menu", async () => {
+    document.body.innerHTML = `
+      <button type="button" class="menu-trigger" data-target="m">Theme</button>
+      <menu id="m">
+        <li role="menuitemradio" data-theme-set="light" aria-checked="false"><button type="button">Light</button></li>
+        <li role="menuitemradio" data-theme-set="dark" aria-checked="false"><button type="button">Dark</button></li>
+        <li role="menuitemradio" data-theme-set="auto" aria-checked="true"><button type="button">Auto</button></li>
+      </menu>`;
+    Expressive.Theme.Init();
+    const changes = [];
+    const trigger = document.querySelector(".menu-trigger");
+    trigger.addEventListener("expressive:change", (e) => changes.push(e.detail.item.dataset.themeSet));
+    const instance = Expressive.Menu.init(trigger, { inDuration: 0, outDuration: 0 });
+    try {
+      instance.open();
+      await tick();
+      document.querySelector('[data-theme-set="dark"] button').click();
+      const checkedThemes = [...document.querySelectorAll('[aria-checked="true"]')].map((li) => li.dataset.themeSet);
+      assert.deepEqual(checkedThemes, ["dark"]);
+      assert.equal(document.documentElement.getAttribute("theme"), "dark");
+      assert.deepEqual(changes, ["dark"]);
+    } finally {
+      instance.destroy();
+      document.documentElement.removeAttribute("theme");
+      window.localStorage.removeItem("theme");
+    }
+  });
+
+  test("a group in a submenu checks within itself and Space keeps both menus open", async () => {
+    document.body.innerHTML = `
+      <button type="button" class="menu-trigger" data-target="m">View</button>
+      <menu id="m">
+        <li role="menuitemradio" aria-checked="true"><button type="button">Top</button></li>
+        <li id="more"><button type="button">More</button><menu>
+          <li role="none"><ul role="group" aria-label="Zoom">
+            <li role="menuitemradio" aria-checked="true"><button type="button">Fit</button></li>
+            <li role="menuitemradio" aria-checked="false"><button type="button">Fill</button></li>
+          </ul></li>
+        </menu></li>
+      </menu>`;
+    const trigger = document.querySelector(".menu-trigger");
+    const changes = [];
+    trigger.addEventListener("expressive:change", (e) => changes.push(e.detail.item.textContent.trim()));
+    const instance = Expressive.Menu.init(trigger, { inDuration: 0, outDuration: 0 });
+    const checked = () => [...document.querySelectorAll('[aria-checked="true"]')].map((li) => li.textContent.trim());
+    const fill = () => document.querySelectorAll("#more li")[2].querySelector("button");
+    try {
+      instance.open();
+      await tick();
+      document.querySelector("#more > button").click();
+      key(fill(), " ");
+      assert.deepEqual(checked(), ["Top", "Fill"]);
+      assert.equal(instance.isOpen, true);
+      assert.equal(document.getElementById("more").classList.contains("open"), true);
+      document.querySelectorAll("#more li")[1].querySelector("button").click();
+      assert.deepEqual(checked(), ["Top", "Fit"]);
+      assert.deepEqual(changes, ["Fill", "Fit"]);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test("a group in a Menubar menu checks within itself", async () => {
+    document.body.innerHTML = `
+      <div class="menubar"><button type="button" class="menu-trigger" data-target="v">View</button></div>
+      <menu id="v"><li role="none"><ul role="group" aria-label="Zoom">
+        <li role="menuitemradio" aria-checked="true"><button type="button">Fit</button></li>
+        <li role="menuitemradio" aria-checked="false"><button type="button">Fill</button></li>
+      </ul></li></menu>`;
+    const bar = Expressive.Menubar.init(document.querySelector(".menubar"));
+    const changes = [];
+    document.addEventListener("expressive:change", (e) => changes.push(e.detail.item.textContent.trim()));
+    try {
+      const menu = Expressive.Menu.getInstance(document.querySelector(".menu-trigger"));
+      menu.open();
+      await tick();
+      key(document.querySelectorAll("#v button")[1], " ");
+      assert.deepEqual([...document.querySelectorAll("#v [aria-checked]")].map((li) => li.getAttribute("aria-checked")), ["false", "true"]);
+      assert.equal(menu.isOpen, true);
+      assert.deepEqual(changes, ["Fill"]);
     } finally {
       bar.destroy();
     }

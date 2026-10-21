@@ -7,6 +7,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- A menu item with `role="menuitemradio"` checks itself and unchecks the
+  other radio items in its group. A group is a `<ul role="group">` with an
+  `aria-label` inside an `<li role="none">`; radio items outside a group form
+  one group per menu. Rows in a group are styled and reached by arrow keys
+  and type-ahead like any other row. A click or Enter checks the item and
+  closes the menu while `closeOnClick` is on. Space now checks it and keeps
+  the menu open, where it used to close the menu. A change fires
+  `expressive:change` from the trigger with `{ item, checked: true }`, after
+  `onItemClick` and `expressive:select`; choosing the checked item fires no
+  change. Page code that synced `aria-checked` on radio items can go. It
+  writes the same values, so leaving it in place does no harm.
 - A menu item with `role="menuitemcheckbox"` toggles its own
   `aria-checked`. A click or Space flips it and keeps the menu open, so
   several items can be toggled in a row; Enter flips it and closes the menu

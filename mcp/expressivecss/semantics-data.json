@@ -981,6 +981,13 @@
             "message": "<menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there."
           },
           {
+            "id": "menu-group-is-named",
+            "kind": "forbid",
+            "selector": "menu ul[role=\"group\"]:not([aria-label]):not([aria-labelledby])",
+            "fragmentSafe": true,
+            "message": "A <ul role=group> in a menu is a set of choices, and its name is what a screen reader announces on entering it. Give it aria-label or aria-labelledby."
+          },
+          {
             "id": "context-menu-region-is-not-a-control",
             "kind": "forbid",
             "selector": "[data-context-menu]:is(button, a[href], input, select, textarea)",

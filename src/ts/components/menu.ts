@@ -42,6 +42,9 @@ function fixedBounds(menu: Element) {
 
 /** The keys that move between rows. Home and End go to the ends. */
 const STEPS = { ArrowUp: -1, ArrowDown: 1 };
+// A list's rows: its own items, and the items of each <li role="none"><ul
+// role="group"> inside it.
+const ROWS = ':scope > li, :scope > li > ul[role="group"] > li';
 
 const anchorSupported = typeof CSS !== 'undefined' && !!CSS.supports?.('anchor-name: --a');
 
@@ -184,6 +187,9 @@ export class Menu extends Component<MenuOptions> implements Openable {
   private _transition = 0;
   private _originalInert: string | null;
   private _menuClickTargets = new WeakMap<Event, HTMLElement>();
+  // True while Space activates a row, so the click it sends can keep a radio
+  // menu open.
+  private _spaceActivation = false;
   /** Whether the pointer opened the menu, so opening leaves focus where it was. */
   private _openedByHover = false;
   /**
@@ -514,23 +520,43 @@ export class Menu extends Component<MenuOptions> implements Openable {
     if (checked !== null) this._notify('change', null, { detail: { item: li, checked } });
   }
 
-  // A menuitemcheckbox flips aria-checked before anyone hears of the click;
-  // any other row returns null.
+  // A menuitemcheckbox flips aria-checked, and a menuitemradio checks itself
+  // and unchecks its group, before anyone hears of the click. Any other row,
+  // or a radio that was already checked, returns null.
   private _toggleChecked(li: HTMLElement): boolean | null {
-    if (!this._isCheckboxRow(li)) return null;
+    const role = li.getAttribute('role');
+    if (role === 'menuitemradio') return this._checkRadio(li);
+    if (role !== 'menuitemcheckbox') return null;
     const checked = li.getAttribute('aria-checked') !== 'true';
     li.setAttribute('aria-checked', String(checked));
     return checked;
+  }
+
+  // A radio's group is its parent list: a <ul role="group">, or for radio
+  // rows outside any group, their menu.
+  private _checkRadio(li: HTMLElement): true | null {
+    if (li.getAttribute('aria-checked') === 'true') return null;
+    li.parentElement.querySelectorAll(':scope > li[role="menuitemradio"]').forEach((radio) => {
+      radio.setAttribute('aria-checked', String(radio === li));
+    });
+    return true;
   }
 
   private _isCheckboxRow(el: Element | null | undefined) {
     return el?.closest('li')?.getAttribute('role') === 'menuitemcheckbox';
   }
 
-  // isTouchMoving: a scroll on mobile is not a choice. Click and Space keep a
-  // checkbox menu open so several items can be toggled.
+  // isTouchMoving: a scroll on mobile is not a choice.
   private _closesOnClick(target: HTMLElement) {
-    return this.options.closeOnClick && !this.isTouchMoving && !this._isCheckboxRow(target);
+    return this.options.closeOnClick && !this.isTouchMoving && !this._keepsOpen(target);
+  }
+
+  // Click and Space keep a checkbox menu open so several items can be
+  // toggled. Space keeps a radio menu open too; a click on a radio closes it.
+  private _keepsOpen(target: HTMLElement) {
+    const role = target.closest('li')?.getAttribute('role');
+    if (role === 'menuitemcheckbox') return true;
+    return this._spaceActivation && role === 'menuitemradio';
   }
 
   // Enter toggles a checkbox item and then closes, as it does on any item.
@@ -547,7 +573,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       if (!menu.hasAttribute('role')) menu.setAttribute('role', 'menu');
       if (menu.getAttribute('role') !== 'menu') return;
 
-      menu.querySelectorAll(':scope > li').forEach((li) => {
+      menu.querySelectorAll(ROWS).forEach((li) => {
         if (li.classList.contains('divider')) {
           if (!li.hasAttribute('role')) li.setAttribute('role', 'separator');
           return;
@@ -694,11 +720,13 @@ export class Menu extends Component<MenuOptions> implements Openable {
       }
       const focusedElement = li ?? this.menuEl.children[this.focusedIndex];
       const activatableElement = <HTMLElement>focusedElement?.querySelector(':scope > a, :scope > button');
+      this._spaceActivation = e.key === SPACE;
       if (!!activatableElement) {
         activatableElement.click();
       } else if (focusedElement instanceof HTMLElement) {
         focusedElement.click();
       }
+      this._spaceActivation = false;
       this._closeAfterEnter(e, focusedElement);
     }
     // Close menu on ESC
@@ -720,9 +748,8 @@ export class Menu extends Component<MenuOptions> implements Openable {
       const string = this.filterQuery.join('');
       // textContent rather than innerText: this scans every item on every
       // keystroke, and innerText forces a layout flush per item.
-      const newOptionEl = Array.from(list.querySelectorAll(':scope > li')).find(
-        (el) => (el as HTMLElement).tabIndex !== -1 &&
-          !el.matches('.disabled, [aria-disabled="true"]') &&
+      const newOptionEl = this._rows(list).find(
+        (el) => !el.matches('.disabled, [aria-disabled="true"]') &&
           Array.from(el.childNodes).filter(node => !(node instanceof Element && node.matches('menu')))
             .map(node => node.textContent).join('').trim().toLowerCase().startsWith(string)
       );
@@ -804,12 +831,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.menuEl.tabIndex = -1;
     // Only set tabindex if it hasn't been set by user
     this.menuEl.querySelectorAll(':scope li').forEach((el) => {
-      if (
-        el.classList.contains('divider') ||
-        el.classList.contains('gap') ||
-        el.classList.contains('label') ||
-        el.classList.contains('optgroup')
-      ) {
+      if (el.matches('.divider, .gap, .label, .optgroup, [role="none"]')) {
         el.setAttribute('tabindex', '-1');
         return;
       }
@@ -822,7 +844,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
    * without wrapping, and says whether the key was one of those.
    */
   private _moveFocus(list: Element, e: KeyboardEvent) {
-    const rows = Array.from(list.children).filter((child): child is HTMLElement => child instanceof HTMLElement && child.tabIndex !== -1);
+    const rows = this._rows(list);
     const from = this._focusedRow(e) ?? list.children[this.focusedIndex];
     const index = Utils._keyIndex(e.key, rows.indexOf(from as HTMLElement), rows.length, STEPS);
     if (Number.isNaN(index)) return false;
@@ -834,14 +856,19 @@ export class Menu extends Component<MenuOptions> implements Openable {
     return true;
   }
 
+  /** The list's rows that take focus, in document order. */
+  private _rows(list: Element) {
+    return Array.from(list.querySelectorAll(ROWS)).filter(
+      (row): row is HTMLElement => row instanceof HTMLElement && row.tabIndex !== -1
+    );
+  }
+
   private _focusInitialItem() {
     if (!this.menuEl || !this.options.autoFocus) return;
-    const first = Array.from(this.menuEl.children).find(
-      (child) => child instanceof HTMLElement && child.tabIndex !== -1
-    ) as HTMLElement | undefined;
+    const first = this._rows(this.menuEl)[0];
     if (!first) return;
     this._clearActive();
-    this.focusedIndex = Array.from(this.menuEl.children).indexOf(first);
+    this.focusedIndex = Array.from(first.parentElement.children).indexOf(first);
     first.focus({ preventScroll: true });
   }
 

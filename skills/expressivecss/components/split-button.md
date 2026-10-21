@@ -9,7 +9,7 @@ Component ID: `split-button`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `f9f352d23c56893472a6696c6eb2942425352fd17d0ec8ca55af4cebe0e04d36`
+Contract SHA-256: `59b6e3720fef0e1abfad68f1334407563c3a44ffc5c322b9476a8d81e28d2f3f`
 
 #### Selection and adaptation
 
@@ -71,4 +71,5 @@ The trailing half is an ordinary Menu trigger, so everything Menu does it does h
 - `split-button-trailing-icon-hidden`: The ligature is real text and is read out verbatim, so an unhidden chevron names the trailing half "arrow_drop_down". It is decoration - the control carries the name - so it is aria-hidden="true", and `icon-only-control-is-named` then requires the aria-label.
 - `split-button-expanded-is-not-authored`: Expanded is dynamic state, so the framework owns it. Menu's constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten - and the expanded shape is drawn from that attribute, so an authored "true" draws an open split button over a closed menu.
 - `menu-children-are-list-items`: <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
+- `menu-group-is-named`: A <ul role=group> in a menu is a set of choices, and its name is what a screen reader announces on entering it. Give it aria-label or aria-labelledby.
 - `context-menu-region-is-not-a-control`: data-context-menu goes on a region of content. A button or link already has an action for Enter and click; give it its own menu trigger instead.

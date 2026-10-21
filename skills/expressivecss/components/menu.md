@@ -9,7 +9,7 @@ Component ID: `menu`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `f9f352d23c56893472a6696c6eb2942425352fd17d0ec8ca55af4cebe0e04d36`
+Contract SHA-256: `59b6e3720fef0e1abfad68f1334407563c3a44ffc5c322b9476a8d81e28d2f3f`
 
 #### Selection and adaptation
 
@@ -71,7 +71,7 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
 | `container` | Element | `null` | Element that will contain the menu. When omitted, the menu is moved next to the trigger. |
 | `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |
 | `placement` | String | `'bottom'` | The side of the trigger the menu opens on when it fits there: `'bottom'` or `'top'`. It opens on the other side when that has more room. |
-| `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. A checkbox item stays open on a click or Space and closes on Enter. |
+| `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. A checkbox item stays open on a click or Space and closes on Enter. A radio item stays open on Space. |
 | `hover` | Boolean | `false` | If true, the menu opens on hover instead of click. |
 | `contextMenu` | Boolean | `false`; `true` with `data-context-menu` | If true, the trigger is a region and the menu opens at the pointer on right-click, long-press, the menu key or Shift+F10, instead of on click. |
 | `inDuration` | Number | `150` | Enter transition duration, in milliseconds. |
@@ -96,4 +96,5 @@ The Menu section of the [API reference](https://www.expressivecss.com/llm.md) al
 #### Rules
 
 - `menu-children-are-list-items`: <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
+- `menu-group-is-named`: A <ul role=group> in a menu is a set of choices, and its name is what a screen reader announces on entering it. Give it aria-label or aria-labelledby.
 - `context-menu-region-is-not-a-control`: data-context-menu goes on a region of content. A button or link already has an action for Enter and click; give it its own menu trigger instead.

@@ -363,7 +363,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:confirm`, `expressive:cancel` | Datepicker, Timepicker | none |
 | `expressive:autocomplete` | Autocomplete | `{ values }` |
 | `expressive:chip-add`, `chip-select`, `chip-delete` | Chips | `{ chip }` |
-| `expressive:change` | ButtonGroup, Menu checkbox items, ScrollSpy (from the section), Tour | `{ button, pressed }`, `{ item, checked }`, `{ link }`, `{ step, index }` |
+| `expressive:change` | ButtonGroup, Menu checkbox and radio items, ScrollSpy (from the section), Tour | `{ button, pressed }`, `{ item, checked }`, `{ link }`, `{ step, index }` |
 | `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour | Tour's close: `{ completed }` |
 | `expressive:action`, `expressive:closed` | Snackbar | none |
 | `expressive:copy` | Copy buttons | `{ text, copied }` |
@@ -5651,13 +5651,22 @@ For a menu inside a top app bar, see Navbar menu.
 
 ### Checkbox and radio items
 
-Give an item `role="menuitemcheckbox"` or `role="menuitemradio"` with an `aria-checked` value; a checked item takes the selected style. A checkbox item toggles its own `aria-checked`. A click or Space flips it and keeps the menu open, so several items can be toggled in a row. Enter flips it and then closes the menu, unless `closeOnClick` is false. `aria-checked` changes before `onItemClick` runs; then `expressive:select` fires, then `expressive:change` with `{ item, checked }` from the trigger. A disabled item does not toggle. Keep radio items in sync yourself.
+Give an item `role="menuitemcheckbox"` or `role="menuitemradio"` with an `aria-checked` value; a checked item takes the selected style. A checkbox item toggles its own `aria-checked`. A click or Space flips it and keeps the menu open, so several items can be toggled in a row. Enter flips it and then closes the menu, unless `closeOnClick` is false. `aria-checked` changes before `onItemClick` runs; then `expressive:select` fires, then `expressive:change` with `{ item, checked }` from the trigger. A disabled item does not toggle.
+
+A radio item checks itself and unchecks the other radio items in its group. A click or Enter checks it and closes the menu while `closeOnClick` is on; Space checks it and keeps the menu open. The order is the same as for a checkbox item, and `expressive:change` carries `{ item, checked: true }`. Choosing a radio item that is already checked fires `onItemClick` and `expressive:select` but no change. Put each set of radio items in a `<ul role="group">` with an `aria-label`, inside an `<li role="none">`, so a screen reader names the choice. Rows in a group look and move like any other row, and arrow keys and type-ahead pass from one group to the next. Radio items outside a group form one group per menu. A `<ul>` in a row is a group, never a flyout; a flyout is a nested `<menu>`.
 
 ```html
 <button class="menu-trigger" data-target="view-menu">View</button>
 <menu id="view-menu">
   <li role="menuitemcheckbox" aria-checked="true"><button type="button">Ruler</button></li>
   <li role="menuitemcheckbox" aria-checked="false"><button type="button">Grid</button></li>
+  <li class="divider" role="separator"></li>
+  <li role="none">
+    <ul role="group" aria-label="Zoom">
+      <li role="menuitemradio" aria-checked="true"><button type="button">Fit</button></li>
+      <li role="menuitemradio" aria-checked="false"><button type="button">Fill</button></li>
+    </ul>
+  </li>
 </menu>
 ```
 
@@ -5709,7 +5718,7 @@ Expressive.AutoInit(document.body, {
 | `container` | Element | `null` | Element that will contain the menu. When omitted, the menu is moved next to the trigger. |
 | `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |
 | `placement` | String | `'bottom'` | The side of the trigger the menu opens on when it fits there: `'bottom'` or `'top'`. It opens on the other side when that has more room. |
-| `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. A checkbox item stays open on a click or Space and closes on Enter. |
+| `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. A checkbox item stays open on a click or Space and closes on Enter. A radio item stays open on Space. |
 | `hover` | Boolean | `false` | If true, the menu opens on hover instead of click. |
 | `contextMenu` | Boolean | `false`; `true` with `data-context-menu` | If true, the trigger is a region and the menu opens at the pointer on right-click, long-press, the menu key or Shift+F10, instead of on click. |
 | `inDuration` | Number | `150` | Enter transition duration, in milliseconds. |

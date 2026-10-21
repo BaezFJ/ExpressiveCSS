@@ -199,7 +199,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed aria-invalid and the error description on .validate fields: 89,014 gzip bytes (+141).
   // Reviewed palette Escape, keypad Call and progress ring in forced colors: 89,054 gzip bytes (+40).
   // Reviewed menu checkbox items that toggle aria-checked and stay open: 89,222 gzip bytes (+168).
-  assert.ok(sizes(js).gzip <= 89222, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed menu group rows reached by arrow keys and type-ahead: 89,252 gzip bytes (+30).
+  // Reviewed menu radio items that check within their group, and Space keeping the menu open: 89,369 gzip bytes (+117).
+  assert.ok(sizes(js).gzip <= 89369, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -317,5 +319,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed pie slice contrast and forced-colors invalid checkboxes: 83,890 gzip bytes (+140).
   // Reviewed heatmap column label thinning: 84,031 gzip bytes (+141).
   // Reviewed palette Escape, keypad Call and progress ring in forced colors: 84,066 gzip bytes (+35).
-  assert.ok(sizes(css).gzip <= 84066, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed menu group rows styled as direct rows, in menus and submenus: 84,513 gzip bytes (+447).
+  assert.ok(sizes(css).gzip <= 84513, `CSS gzip: ${sizes(css).gzip}`);
 });
