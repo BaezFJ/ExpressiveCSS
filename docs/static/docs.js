@@ -416,10 +416,13 @@ document.addEventListener("DOMContentLoaded", () => {
     isMultipleSelection: true,
   });
 
-  const timepicker24 = document.getElementById("timepicker-24");
-  if (timepicker24) {
-    Expressive.Timepicker.init(timepicker24, { twelveHour: false });
-  }
+  Object.entries({
+    "timepicker-24": { twelveHour: false },
+    "timepicker-seconds": { showSeconds: true },
+  }).forEach(([id, options]) => {
+    const el = document.getElementById(id);
+    if (el) Expressive.Timepicker.init(el, options);
+  });
 
   document
     .querySelectorAll("#input_text_counter, #textarea_counter")

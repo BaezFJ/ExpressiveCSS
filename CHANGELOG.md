@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Timepicker's `showSeconds` option adds a seconds field after the
+  minutes. It is a spin button named by the new `i18n.seconds`, it steps
+  and takes typed values like the minute field, and the picker writes
+  `HH:MM:SS`, with AM or PM on a 12-hour clock. The dial keeps its hours
+  and minutes views. A `type="time"` input needs `step="1"` to hold the
+  seconds without a step mismatch. The default of `false` keeps `HH:MM`.
 - Autocomplete's `allowCreate` option ends the list in an `Add "text"` row
   when the typed text matches no suggestion exactly, ignoring case and
   surrounding spaces. Choosing it with Enter or a click calls `onCreate` with
@@ -419,6 +425,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Timepicker reads AM or PM wherever it appears in a value, so
+  `02:30:45 PM` opens at 2:30 PM. The period was looked for only after the
+  first colon, so such a value, or one like `2 PM`, opened as AM.
 - With a query typed, the first Escape in the command palette clears it and
   the next closes the palette, in every engine. Chromium and Firefox already
   did this for a search input; WebKit closed at once, and so did every

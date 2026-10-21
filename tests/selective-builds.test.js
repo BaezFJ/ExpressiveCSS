@@ -208,7 +208,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the tooltip shared delay, which skips enterDelay just after another tooltip closes: 89,846 gzip bytes (+84).
   // Reviewed the Autocomplete no-results row, which Chips closes on Enter: 89,980 gzip bytes (+134).
   // Reviewed Chips form values, reset and required through a form-associated custom element: 90,025 gzip bytes (+45).
-  assert.ok(sizes(js).gzip <= 90025, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Timepicker showSeconds, a seconds field written as HH:MM:SS: 90,352 gzip bytes (+327).
+  assert.ok(sizes(js).gzip <= 90352, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -328,5 +329,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed palette Escape, keypad Call and progress ring in forced colors: 84,066 gzip bytes (+35).
   // Reviewed menu group rows styled as direct rows, in menus and submenus: 84,513 gzip bytes (+447).
   // Reviewed the Autocomplete no-results row: 84,585 gzip bytes (+72).
-  assert.ok(sizes(css).gzip <= 84585, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the Timepicker seconds field and the narrower three-field row: 84,659 gzip bytes (+74).
+  assert.ok(sizes(css).gzip <= 84659, `CSS gzip: ${sizes(css).gzip}`);
 });
