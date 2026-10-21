@@ -181,8 +181,8 @@ Expressive.Timepicker.init(elem, {
             <tr>
               <td><code>twelveHour</code></td>
               <td>Boolean</td>
-              <td><code>true</code></td>
-              <td>If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings.</td>
+              <td><code>true</code>, or the language's</td>
+              <td>If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. With a <code>lang</code> on or around the input, it defaults to the clock that language uses.</td>
             </tr>
             <tr>
               <td><code>vibrate</code></td>
@@ -283,7 +283,9 @@ Expressive.Timepicker.init(elem, {
 
   <Section {...S["twelve-hour"]}>
         <p>
-          <code>twelveHour</code> defaults to <code>true</code>. The intro clock above is
+          <code>twelveHour</code> defaults to <code>true</code>, or with a <code>lang</code>
+          on or around the input, to the clock that language uses: 24-hour for
+          <code>de</code> or <code>fr</code>, 12-hour for <code>en-US</code>. The intro clock above is
           12-hour with AM/PM. Set <code>twelveHour: false</code> for a 24-hour dial: hours
           1 to 12 on the inner ring and 13 to 00 on the outer ring. The written value is then
           <code>HH:MM</code> with no meridian.

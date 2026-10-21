@@ -62,6 +62,25 @@ export class Utils {
   }
 
   /**
+   * The language an element is written in, from the nearest `lang`, or
+   * undefined without one or for a tag the browser does not know.
+   */
+  static locale(el: Element): string | undefined {
+    // Inside a shadow root the language comes from the host's tree, unless
+    // something nearer sets one.
+    let [node, lang]: [Element | undefined, string | undefined] = [el, undefined];
+    while (node && lang === undefined) {
+      lang = node.closest<HTMLElement>('[lang]')?.lang;
+      node = (node.getRootNode() as ShadowRoot).host;
+    }
+    try {
+      return lang ? Intl.getCanonicalLocales(lang)[0] : undefined;
+    } catch {
+      return undefined;
+    }
+  }
+
+  /**
    * Generates a unique string identifier. Every caller prefixes the result and
    * uses it as an element id, and a UUID is valid in that position.
    *

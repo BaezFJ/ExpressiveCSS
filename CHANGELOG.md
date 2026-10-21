@@ -681,6 +681,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Datepicker and Timepicker follow the page's language. With a `lang` on
+  the input or around it, the calendar takes that language's month and
+  weekday names from `Intl` and its first day of the week where the browser
+  knows it, and the clock defaults to 12- or 24-hour as that language does.
+  Options the page passes still win, and the button words stay English
+  unless passed. A page with no `lang` is unchanged. To keep the English
+  calendar on a page with another `lang`, pass the English names in `i18n`.
+  A typed date in the picker's own `format` is now read with its names, so
+  the localized value it writes reads back, and `05/10/2026` in
+  `dd/mm/yyyy` is 5 October rather than what `Date.parse` guessed.
 - A full-screen `dialog.search-view` opens on a click, Enter or ArrowDown
   in the app bar's search field, not on focus. Tabbing through the bar used
   to open the modal each time, so every keyboard pass needed an Escape

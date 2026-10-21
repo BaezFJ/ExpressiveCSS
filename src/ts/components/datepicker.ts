@@ -13,6 +13,99 @@ export interface DateI18nOptions extends I18nOptions {
   weekdaysAbbrev: string[];
 }
 
+/** A day in each month, and each weekday from Sunday: 1 January 2023 was one. */
+const MONTHS = Array.from({ length: 12 }, (_, month) => new Date(Date.UTC(2023, month, 1)));
+const WEEKDAYS = Array.from({ length: 7 }, (_, day) => new Date(Date.UTC(2023, 0, 1 + day)));
+
+type WeekLocale = Intl.Locale & { getWeekInfo?(): { firstDay: number }; weekInfo?: { firstDay: number } };
+
+/**
+ * Month and weekday names in a language, as Intl writes them, and its first
+ * day of the week where the browser knows it. The button words are not
+ * dates, so they stay as given.
+ */
+function localeDates(locale: string) {
+  const names = (dates: Date[], options: Intl.DateTimeFormatOptions) => {
+    // The picker draws Gregorian dates, so the names are Gregorian too: in fa
+    // the default calendar is Persian, whose first month is not January.
+    const format = new Intl.DateTimeFormat(locale, { ...options, calendar: 'gregory', timeZone: 'UTC' });
+    return dates.map((date) => format.format(date));
+  };
+  const intl = new Intl.Locale(locale) as WeekLocale;
+  // Intl counts the days from Monday (1) to Sunday (7); firstDay counts from Sunday (0).
+  const week = intl.getWeekInfo?.() ?? intl.weekInfo;
+  return {
+    week: week ? { firstDay: week.firstDay % 7 } : {},
+    i18n: {
+      months: names(MONTHS, { month: 'long' }),
+      monthsShort: names(MONTHS, { month: 'short' }),
+      weekdays: names(WEEKDAYS, { weekday: 'long' }),
+      weekdaysShort: names(WEEKDAYS, { weekday: 'short' }),
+      weekdaysAbbrev: names(WEEKDAYS, { weekday: 'narrow' })
+    }
+  };
+}
+
+type DateParts = { year?: number; month?: number; day?: number };
+type Reader = [pattern: string, set: (parts: DateParts, text: string) => void];
+
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const NUMBER = '(\\d{1,2})';
+/** A pattern for any of `names`, and what sets `key` to the index of the one found. */
+const named = (names: string[], key?: keyof DateParts): Reader => [
+  `(${names.map(escapeRegExp).join('|')})`,
+  (parts, text) => key && (parts[key] = names.findIndex((name) => name.toLowerCase() === text.toLowerCase()))
+];
+
+/** How each format token reads back. Weekday names are read past, not used. */
+const READERS: Record<string, (i18n: Partial<DateI18nOptions>) => Reader> = {
+  d: () => [NUMBER, (parts, text) => (parts.day = +text)],
+  dd: () => [NUMBER, (parts, text) => (parts.day = +text)],
+  ddd: (i18n) => named(i18n.weekdaysShort),
+  dddd: (i18n) => named(i18n.weekdays),
+  m: () => [NUMBER, (parts, text) => (parts.month = +text - 1)],
+  mm: () => [NUMBER, (parts, text) => (parts.month = +text - 1)],
+  mmm: (i18n) => named(i18n.monthsShort, 'month'),
+  mmmm: (i18n) => named(i18n.months, 'month'),
+  // As Date.parse reads them: 00 to 49 in this century, 50 to 99 in the last.
+  yy: () => ['(\\d{2})', (parts, text) => (parts.year = +text + (+text < 50 ? 2000 : 1900))],
+  yyyy: () => ['(\\d{4})', (parts, text) => (parts.year = +text)]
+};
+
+/**
+ * Reads a date written in a string format with the names it was written
+ * in, so a German "Mär 15, 2026" reads back as Date.parse never would.
+ * Null for text that does not fit the format, or a day the month lacks.
+ */
+export function readDate(value: string, format: string, i18n: Partial<DateI18nOptions>): Date | null {
+  const readers: Reader[] = [];
+  const pattern = format.split(/(d{1,4}|m{1,4}|y{4}|yy|!.)/g).map((token) => {
+    const reader = READERS[token]?.(i18n);
+    if (reader) readers.push(reader);
+    return reader ? reader[0] : escapeRegExp(token);
+  });
+  const match = new RegExp(`^\\s*${pattern.join('')}\\s*$`, 'iu').exec(value);
+  if (!match) return null;
+  const parts: DateParts = {};
+  readers.forEach(([, set], i) => set(parts, match[i + 1]));
+  // setFullYear keeps a year below 100, which the Date constructor moves to the 1900s.
+  const date = new Date(2000, 0, 1);
+  date.setFullYear(parts.year, parts.month, parts.day);
+  const same = [date.getFullYear(), date.getMonth(), date.getDate()].join() === [parts.year, parts.month, parts.day].join();
+  return same ? date : null;
+}
+
+/**
+ * The options under the page's: with a `lang` on or around the input, its
+ * month and weekday names and first day of the week.
+ */
+function withLocale(el: Element, options: Partial<DatepickerOptions> = {}): Partial<DatepickerOptions> {
+  const locale = Utils.locale(el);
+  if (!locale) return options;
+  const { week, i18n } = localeDates(locale);
+  return { ...week, ...options, i18n: { ...i18n, ...options.i18n } };
+}
+
 export interface DatepickerOptions extends BaseOptions {
   /**
    * The date output format for the input field value
@@ -74,7 +167,7 @@ export interface DatepickerOptions extends BaseOptions {
   disableDayFn: ((day: Date) => boolean) | null;
   /**
    * First day of week (0: Sunday, 1: Monday etc).
-   * @default 0
+   * @default 0, or the first day in the input's `lang` where the browser knows it
    */
   firstDay: number;
   /**
@@ -134,7 +227,8 @@ export interface DatepickerOptions extends BaseOptions {
    */
   autoSubmit: boolean;
   /**
-   * Internationalization options.
+   * Internationalization options. With a `lang` on or around the input, the
+   * month and weekday names default to that language's, as Intl writes them.
    */
   i18n: Partial<DateI18nOptions>;
   /**
@@ -330,6 +424,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   constructor(el: HTMLInputElement, options: Partial<DatepickerOptions>) {
     super(el, options, Datepicker);
     this.el['Expressive_Datepicker'] = this;
+    options = withLocale(el, options);
 
     this.options = {
       ...Datepicker.defaults,
@@ -458,6 +553,17 @@ export class Datepicker extends Component<DatepickerOptions> {
     return /Date/.test(Object.prototype.toString.call(obj)) && !isNaN(obj.getTime());
   }
 
+  /**
+   * A value read without a custom parser: in the picker's own string format
+   * with its names, or else as an ISO date or by the browser.
+   */
+  private _readDefault(value: string, el: HTMLInputElement): Date {
+    const { format, i18n } = this.options;
+    // A native date input's value is ISO, whatever the display format.
+    const read = typeof format === 'string' && el.type !== 'date' ? readDate(value, format, i18n) : null;
+    return read ?? Datepicker._parseDate(value);
+  }
+
   private static _parseDate(value: string): Date {
     value = value.trim();
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return new Date(Date.parse(value));
@@ -466,8 +572,8 @@ export class Datepicker extends Component<DatepickerOptions> {
     return date.getDate() === Number(value.slice(-2)) ? date : new Date(NaN);
   }
 
-  private _parseInput(value: string): Date {
-    if (!value.trim() || !this.options.parse) return Datepicker._parseDate(value);
+  private _parseInput(value: string, el: HTMLInputElement = this.el as HTMLInputElement): Date {
+    if (!value.trim() || !this.options.parse) return this._readDefault(value, el);
     return this.options.parse(
       value,
       typeof this.options.format === 'string' ? this.options.format : ''
@@ -713,7 +819,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   _dateInInput(el: HTMLInputElement): Date | null {
     const known = !this.options.parse && [this._writtenInputs.get(el), this._resetDates.get(el)]
       .find((entry) => entry?.value === el.value);
-    return known ? known.date : this._parseInput(el.value);
+    return known ? known.date : this._parseInput(el.value, el);
   }
 
   /** The selected date an input shows: its place in `dates` for a multiple selection. */
