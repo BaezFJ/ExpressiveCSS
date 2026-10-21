@@ -170,40 +170,44 @@ const spent = sum(spending.map(([, value]) => value));
           keeps each segment's text inside it and cuts what does not fit.
         </p>
         <article class="outlined" data-markdown-ignore>
-          <dl class="stats my-0">
-            <div><dt>Spending limit</dt><dd>{money(spent)}</dd><dd class="stat-change">of $10,000 this month</dd></div>
-          </dl>
-          <figure class="bar-chart stacked split track" data-max="10000" style="--md-comp-bar-chart-bar-height: 100%; --md-comp-bar-chart-shape: 8px; --md-comp-bar-chart-grid-color: transparent">
-            <figcaption class="visually-hidden">Spending by category, April</figcaption>
-            <table>
-              <thead><tr><th>Month</th>{spending.map(([name]) => <th>{name}</th>)}</tr></thead>
-              <tbody><tr><th>Apr</th>{spending.map(([, value]) => <td>{money(value)}</td>)}</tr></tbody>
-            </table>
-          </figure>
+          <div class="p-4">
+            <dl class="stats my-0">
+              <div><dt>Spending limit</dt><dd>{money(spent)}</dd><dd class="stat-change">of $10,000 this month</dd></div>
+            </dl>
+            <figure class="bar-chart stacked split track" data-max="10000" style="--md-comp-bar-chart-bar-height: 100%; --md-comp-bar-chart-shape: 8px; --md-comp-bar-chart-grid-color: transparent">
+              <figcaption class="visually-hidden">Spending by category, April</figcaption>
+              <table>
+                <thead><tr><th>Month</th>{spending.map(([name]) => <th>{name}</th>)}</tr></thead>
+                <tbody><tr><th>Apr</th>{spending.map(([, value]) => <td>{money(value)}</td>)}</tr></tbody>
+              </table>
+            </figure>
+          </div>
         </article>
 <Code code={`
 <article class="outlined">
-  <dl class="stats my-0">
-    <div>
-      <dt>Spending limit</dt>
-      <dd>${money(spent)}</dd>
-      <dd class="stat-change">of $10,000 this month</dd>
-    </div>
-  </dl>
-  <figure class="bar-chart stacked split track" data-max="10000" style="
-      --md-comp-bar-chart-bar-height: 100%;
-      --md-comp-bar-chart-shape: 8px;
-      --md-comp-bar-chart-grid-color: transparent">
-    <figcaption class="visually-hidden">Spending by category, April</figcaption>
-    <table>
-      <thead>
-        <tr><th>Month</th><th>Ads</th><th>Software</th><th>Payroll tools</th><th>Team events</th></tr>
-      </thead>
-      <tbody>
-        <tr><th>Apr</th><td>$1,450</td><td>$1,120</td><td>$890</td><td>$740</td></tr>
-      </tbody>
-    </table>
-  </figure>
+  <div class="p-4">
+    <dl class="stats my-0">
+      <div>
+        <dt>Spending limit</dt>
+        <dd>${money(spent)}</dd>
+        <dd class="stat-change">of $10,000 this month</dd>
+      </div>
+    </dl>
+    <figure class="bar-chart stacked split track" data-max="10000" style="
+        --md-comp-bar-chart-bar-height: 100%;
+        --md-comp-bar-chart-shape: 8px;
+        --md-comp-bar-chart-grid-color: transparent">
+      <figcaption class="visually-hidden">Spending by category, April</figcaption>
+      <table>
+        <thead>
+          <tr><th>Month</th><th>Ads</th><th>Software</th><th>Payroll tools</th><th>Team events</th></tr>
+        </thead>
+        <tbody>
+          <tr><th>Apr</th><td>$1,450</td><td>$1,120</td><td>$890</td><td>$740</td></tr>
+        </tbody>
+      </table>
+    </figure>
+  </div>
 </article>
 `} />
         <p>
@@ -218,25 +222,29 @@ const spent = sum(spending.map(([, value]) => value));
           chart styles; size a chart with its tokens.
         </p>
         <article class="outlined" data-markdown-ignore>
-          <dl class="stats my-0">
-            <div><dt>Total revenue</dt><dd>{money(sum(countries.map(([, value]) => value)))}</dd><dd class="stat-change up">+14.5% from last year</dd></div>
-          </dl>
-          <figure class="bar-chart values" style="--md-comp-bar-chart-grid-color: transparent">
-            <figcaption class="visually-hidden">Revenue by country</figcaption>
-            <table>
-              <thead><tr><th>Country</th><th>Revenue</th></tr></thead>
-              <tbody>{countries.map(([country, value]) => <tr><th>{country}</th><td>{money(value)}</td></tr>)}</tbody>
-            </table>
-          </figure>
+          <div class="p-4">
+            <dl class="stats my-0">
+              <div><dt>Total revenue</dt><dd>{money(sum(countries.map(([, value]) => value)))}</dd><dd class="stat-change up">+14.5% from last year</dd></div>
+            </dl>
+            <figure class="bar-chart values" style="--md-comp-bar-chart-grid-color: transparent">
+              <figcaption class="visually-hidden">Revenue by country</figcaption>
+              <table>
+                <thead><tr><th>Country</th><th>Revenue</th></tr></thead>
+                <tbody>{countries.map(([country, value]) => <tr><th>{country}</th><td>{money(value)}</td></tr>)}</tbody>
+              </table>
+            </figure>
+          </div>
         </article>
 <Code code={`
 <article class="outlined">
-  <dl class="stats my-0">…</dl>
-  <figure class="bar-chart values"
-          style="--md-comp-bar-chart-grid-color: transparent">
-    <figcaption class="visually-hidden">Revenue by country</figcaption>
-    <table><!-- … --></table>
-  </figure>
+  <div class="p-4">
+    <dl class="stats my-0">…</dl>
+    <figure class="bar-chart values"
+            style="--md-comp-bar-chart-grid-color: transparent">
+      <figcaption class="visually-hidden">Revenue by country</figcaption>
+      <table><!-- … --></table>
+    </figure>
+  </div>
 </article>
 `} />
   </Section>

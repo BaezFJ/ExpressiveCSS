@@ -372,4 +372,47 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: every slice color is 3:1 on the surface, and its .values text 4.5:1 on the slice, in light and dark`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css}</style><figure class="pie-chart" id="probe"></figure>`);
+      for (const colorScheme of ['light', 'dark']) {
+        await page.emulateMedia({ colorScheme });
+        const ratios = await page.evaluate(() => {
+          const chart = document.getElementById('probe');
+          const swatch = document.createElement('span');
+          chart.append(swatch);
+          // A canvas turns any color syntax the engine computes, color-mix() included, into sRGB bytes.
+          const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+          const rgb = (value) => {
+            swatch.style.color = value;
+            ctx.clearRect(0, 0, 1, 1);
+            ctx.fillStyle = getComputedStyle(swatch).color;
+            ctx.fillRect(0, 0, 1, 1);
+            return [...ctx.getImageData(0, 0, 1, 1).data].slice(0, 3);
+          };
+          const luminance = (color) => rgb(color).map((c) => {
+            c /= 255;
+            return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+          }).reduce((sum, c, i) => sum + c * [0.2126, 0.7152, 0.0722][i], 0);
+          const ratio = (a, b) => {
+            const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+            return (hi + 0.05) / (lo + 0.05);
+          };
+          return [1, 2, 3, 4, 5, 6].map((n) => [
+            ratio(`var(--md-comp-pie-chart-color-${n})`, 'var(--md-sys-color-surface)'),
+            ratio(`var(--md-comp-pie-chart-on-color-${n})`, `var(--md-comp-pie-chart-color-${n})`),
+          ]);
+        });
+        ratios.forEach(([slice, text], i) => {
+          assert.ok(slice >= 3, `${colorScheme} slice ${i + 1} is ${slice.toFixed(2)}:1 on the surface`);
+          assert.ok(text >= 4.5, `${colorScheme} slice ${i + 1} text is ${text.toFixed(2)}:1 on the slice`);
+        });
+      }
+    } finally {
+      await browser.close();
+    }
+  });
 }

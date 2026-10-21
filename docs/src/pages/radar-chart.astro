@@ -160,30 +160,34 @@ const average = (values: number[]) => (values.reduce((total, value) => total + v
           <code>--md-comp-radar-chart-height</code>, the rim's diameter.
         </p>
         <article class="outlined" data-markdown-ignore>
-          <dl class="stats my-0">
-            <div><dt>Team skill average</dt><dd>{average(skills.map(([, value]) => value))}</dd><dd class="stat-change up">+6.2% from last review</dd></div>
-          </dl>
-          <figure class="radar-chart area points" style="--md-comp-radar-chart-height: 200px">
-            <figcaption class="visually-hidden">Team skills across six capabilities</figcaption>
-            <table>
-              <thead><tr><th>Skill</th><th>Current team</th></tr></thead>
-              <tbody>{skills.map(([skill, value]) => <tr><th>{skill}</th><td>{value}</td></tr>)}</tbody>
-            </table>
-          </figure>
+          <div class="p-4">
+            <dl class="stats my-0">
+              <div><dt>Team skill average</dt><dd>{average(skills.map(([, value]) => value))}</dd><dd class="stat-change up">+6.2% from last review</dd></div>
+            </dl>
+            <figure class="radar-chart area points" style="--md-comp-radar-chart-height: 200px">
+              <figcaption class="visually-hidden">Team skills across six capabilities</figcaption>
+              <table>
+                <thead><tr><th>Skill</th><th>Current team</th></tr></thead>
+                <tbody>{skills.map(([skill, value]) => <tr><th>{skill}</th><td>{value}</td></tr>)}</tbody>
+              </table>
+            </figure>
+          </div>
         </article>
 <Code code={`
 <article class="outlined">
-  <dl class="stats my-0">
-    <div>
-      <dt>Team skill average</dt>
-      <dd>${average(skills.map(([, value]) => value))}</dd>
-      <dd class="stat-change up">+6.2% from last review</dd>
-    </div>
-  </dl>
-  <figure class="radar-chart area points" style="--md-comp-radar-chart-height: 200px">
-    <figcaption class="visually-hidden">Team skills across six capabilities</figcaption>
-    <table><!-- … --></table>
-  </figure>
+  <div class="p-4">
+    <dl class="stats my-0">
+      <div>
+        <dt>Team skill average</dt>
+        <dd>${average(skills.map(([, value]) => value))}</dd>
+        <dd class="stat-change up">+6.2% from last review</dd>
+      </div>
+    </dl>
+    <figure class="radar-chart area points" style="--md-comp-radar-chart-height: 200px">
+      <figcaption class="visually-hidden">Team skills across six capabilities</figcaption>
+      <table><!-- … --></table>
+    </figure>
+  </div>
 </article>
 `} />
   </Section>

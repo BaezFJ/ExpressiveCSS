@@ -239,30 +239,34 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
           <code>--md-comp-pie-chart-height</code>, its diameter.
         </p>
         <article class="outlined" data-markdown-ignore>
-          <dl class="stats my-0">
-            <div><dt>Total revenue</dt><dd>{revenue}</dd><dd class="stat-change up">+10% from last year</dd></div>
-          </dl>
-          <figure class="pie-chart donut" style="--md-comp-pie-chart-height: 200px">
-            <figcaption class="visually-hidden">Revenue by plan</figcaption>
-            <table>
-              <thead><tr><th>Plan</th><th>Revenue</th></tr></thead>
-              <tbody>{plans.map(([plan, value]) => <tr><th>{plan}</th><td>{money(value)}</td></tr>)}</tbody>
-            </table>
-          </figure>
+          <div class="p-4">
+            <dl class="stats my-0">
+              <div><dt>Total revenue</dt><dd>{revenue}</dd><dd class="stat-change up">+10% from last year</dd></div>
+            </dl>
+            <figure class="pie-chart donut" style="--md-comp-pie-chart-height: 200px">
+              <figcaption class="visually-hidden">Revenue by plan</figcaption>
+              <table>
+                <thead><tr><th>Plan</th><th>Revenue</th></tr></thead>
+                <tbody>{plans.map(([plan, value]) => <tr><th>{plan}</th><td>{money(value)}</td></tr>)}</tbody>
+              </table>
+            </figure>
+          </div>
         </article>
 <Code code={`
 <article class="outlined">
-  <dl class="stats my-0">
-    <div>
-      <dt>Total revenue</dt>
-      <dd>${revenue}</dd>
-      <dd class="stat-change up">+10% from last year</dd>
-    </div>
-  </dl>
-  <figure class="pie-chart donut" style="--md-comp-pie-chart-height: 200px">
-    <figcaption class="visually-hidden">Revenue by plan</figcaption>
-    <table><!-- … --></table>
-  </figure>
+  <div class="p-4">
+    <dl class="stats my-0">
+      <div>
+        <dt>Total revenue</dt>
+        <dd>${revenue}</dd>
+        <dd class="stat-change up">+10% from last year</dd>
+      </div>
+    </dl>
+    <figure class="pie-chart donut" style="--md-comp-pie-chart-height: 200px">
+      <figcaption class="visually-hidden">Revenue by plan</figcaption>
+      <table><!-- … --></table>
+    </figure>
+  </div>
 </article>
 `} />
         <p>
@@ -282,9 +286,10 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
         </p>
         <p>
           Slices take <code>primary</code>, <code>tertiary</code>,
-          <code>secondary</code>, <code>on-surface-variant</code>,
+          <code>secondary</code>, <code>on-surface-variant</code>, and then
           <code>primary-container</code> and <code>tertiary-container</code>
-          in turn. A seventh row would take the first row's color beside it,
+          mixed with <code>on-surface</code>, in turn. The mix keeps every
+          slice at 3:1 or more against the surface in light and dark themes. A seventh row would take the first row's color beside it,
           so it takes the second; past that the colors repeat. Group small
           parts into one "Other" row instead.
         </p>
@@ -331,8 +336,8 @@ chart.destroy(); // remove the drawing and show the table again
           <tr><td><code>--md-comp-pie-chart-label-width</code></td><td>96px, the room on each side of the pie for <code>labels</code>, at most a quarter of the figure's width</td></tr>
           <tr><td><code>--md-comp-pie-chart-gap</code></td><td>1.5, the gap between slices in hundredths of the plot's width</td></tr>
           <tr><td><code>--md-comp-pie-chart-color-1</code> … <code>-4</code></td><td><code>primary</code>, <code>tertiary</code>, <code>secondary</code>, <code>on-surface-variant</code></td></tr>
-          <tr><td><code>--md-comp-pie-chart-color-5</code>, <code>-6</code></td><td><code>primary-container</code>, <code>tertiary-container</code></td></tr>
-          <tr><td><code>--md-comp-pie-chart-on-color-1</code> … <code>-6</code></td><td><code>on-primary</code>, <code>on-tertiary</code>, <code>on-secondary</code>, <code>surface</code>, <code>on-primary-container</code>, <code>on-tertiary-container</code>; text from <code>values</code></td></tr>
+          <tr><td><code>--md-comp-pie-chart-color-5</code>, <code>-6</code></td><td><code>primary-container</code>, <code>tertiary-container</code>, each mixed 45% with <code>on-surface</code></td></tr>
+          <tr><td><code>--md-comp-pie-chart-on-color-1</code> … <code>-6</code></td><td><code>on-primary</code>, <code>on-tertiary</code>, <code>on-secondary</code>, <code>surface</code>, <code>surface</code>, <code>surface</code>; text from <code>values</code></td></tr>
         </TokenTable>
         <p>For a selective Sass build, include <code>"pie-chart"</code> in <code>$components</code>.</p>
   </Section>
