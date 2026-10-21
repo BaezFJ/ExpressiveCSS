@@ -172,4 +172,11 @@ $_key: "button:not(.filled, .tonal, .outlined, .elevated, .text, :disabled)";
     outline: 1px solid ButtonText;
     outline-offset: -1px;
   }
+
+  // The fill that marks the main key, such as Call, is dropped too, so a
+  // thicker edge sets it apart, as a default button's is in high contrast.
+  :is(.keypad, .keyboard) button.filled {
+    outline-width: 3px;
+    outline-offset: -3px;
+  }
 }

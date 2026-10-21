@@ -371,6 +371,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- With a query typed, the first Escape in the command palette clears it and
+  the next closes the palette, in every engine. Chromium and Firefox already
+  did this for a search input; WebKit closed at once, and so did every
+  engine for a text input. An Escape that cancels an IME composition is left
+  to the IME.
+- In forced colors, a filled keypad key such as Call has a 3px edge. The
+  fill that set it apart is dropped there, so it looked like every digit.
+- In forced colors, a determinate circular progress draws its track as a
+  thin line through the ring, so the value and the track differ in shape.
+  Both were full-width rings, told apart only by GrayText against
+  CanvasText, which Night sky sets close together.
 - A narrow heatmap shows whole column labels. Like the line, column and
   mixed charts, it keeps every second label (or every third, and so on)
   when each is wider than its column, instead of cutting all of them to

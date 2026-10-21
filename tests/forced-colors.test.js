@@ -86,6 +86,10 @@ describe('Forced colors edges and glyphs', () => {
     'pressed toggle': [/^:where\(.*\.icon-button\)\[aria-pressed=true\]:not\(:disabled/, /background-color:\s*Highlight !important;\s*color:\s*HighlightText !important/],
     'keypad key': [/^:is\(\.keypad, \.keyboard\) button$/, EDGE],
     'keyboard container': [/^\.keyboard$/, EDGE],
+    // The fill that marks Call is dropped, so the main key takes a thicker edge.
+    'filled keypad key': [/^:is\(\.keypad, \.keyboard\) button\.filled$/, /outline-width:\s*3px/],
+    // Value and track differ in shape, not only GrayText against CanvasText.
+    'circular determinate track': [/^\.progress\.circular\.determinate$/, /conic-gradient\(CanvasText 0 var\(--md-comp-progress-value, 0%\), transparent 0\),\s*radial-gradient\([\s\S]*GrayText 0 calc/],
     'questionnaire footer button': [/^:where\(\.questionnaire > footer\) > button:not\(\.outlined, \.text\)$/, EDGE],
     'bar chart track': [/^\.bar-chart\.track \.bar-chart-bars > div$/, EDGE],
     'search bar': [/^:is\(\.search-bar\):not\(\.search-view \*\)$/, /outline:\s*1px solid CanvasText/],
