@@ -367,6 +367,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour | Tour's close: `{ completed }` |
 | `expressive:action`, `expressive:closed` | Snackbar | none |
 | `expressive:copy` | Copy buttons | `{ text, copied }` |
+| `expressive:change`, `expressive:sort` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`; `sort` is cancelable |
 
 An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
 
@@ -3482,12 +3483,12 @@ A leading icon goes first in the summary, hidden from assistive technology. The 
 
 Rows of records in a scrolling table with a sticky header, sort state and row selection.
 
-A `.data-table` is a `<div>` around one native `<table>`. The wrapper scrolls and draws the outline, so the table keeps its table semantics. The header row sticks to the top of the wrapper once the wrapper scrolls vertically, so give the wrapper a `max-block-size` for long tables. Add `numeric` to the header and body cells of a number column to align them on the end edge with tabular figures, and `dense` to the wrapper for shorter rows. CSS only; there is no JavaScript.
+A `.data-table` is a `<div>` around one native `<table>`. The wrapper scrolls and draws the outline, so the table keeps its table semantics. The header row sticks to the top of the wrapper once the wrapper scrolls vertically, so give the wrapper a `max-block-size` for long tables. Add `numeric` to the header and body cells of a number column to align them on the end edge with tabular figures, and `dense` to the wrapper for shorter rows.
 
-Sorting is page state. Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"descending"` on the header of the sorted column. The framework draws the arrow; the page reorders the rows and moves `aria-sort`.
+Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"descending"` on the header of the sorted column. The framework draws the arrow. Add `data-sort` to the wrapper and the framework sorts too: a header button reorders the rows by its column and moves `aria-sort`. A `numeric` header compares numbers (`$1,200.00` after `$87.00`); other columns compare text in the page's language, with 9 before 10. A cell's `data-value` stands in for its text, and a `tr.data-table-detail` moves with its row. Each press fires a cancelable `expressive:sort` from the wrapper with `{ header, column, direction }`; a server-paged table cancels it and loads the sorted page, with `aria-sort` already moved. Without `data-sort`, the page reorders the rows and moves `aria-sort` itself.
 
 ```html
-<div class="data-table">
+<div class="data-table" data-sort>
   <table>
     <caption>Orders</caption>
     <thead>
@@ -3515,7 +3516,7 @@ Sorting is page state. Put a `<button>` in each sortable `<th>` and set `aria-so
 
 ### Row selection
 
-A checked checkbox in a row's first cell selects the row and fills it with `secondary-container`. Name each checkbox after its row. `aria-selected` is not valid on the rows of a plain table, so the checkbox carries the state. A select-all box in the header is the page's to wire.
+A checked checkbox in a row's first cell selects the row and fills it with `secondary-container`. Name each checkbox after its row. `aria-selected` is not valid on the rows of a plain table, so the checkbox carries the state. A checkbox in the first header cell selects every enabled row, and shows mixed while only some are selected. Each change fires `expressive:change` from the wrapper with `{ selected }`, the selected rows. Checking rows from script fires no change, so call `Expressive.DataTables.sync(wrapper)` afterwards, and for a table rendered after the page loaded with rows already checked.
 
 ```html
 <div class="data-table">

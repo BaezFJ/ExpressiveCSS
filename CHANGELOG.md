@@ -7,6 +7,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Data tables sort and select. With `data-sort` on a `.data-table`, a
+  button in a header cell reorders the rows by its column and moves
+  `aria-sort`. A `numeric` column compares numbers, other columns compare
+  text in the page's language, `data-value` stands in for a cell's text, and
+  a detail row moves with its row. A cancelable `expressive:sort` lets a
+  server-paged table sort the rows itself. A checkbox in the first header
+  cell now selects every enabled row and shows mixed for some, and each
+  change fires `expressive:change` with the selected rows.
+  `Expressive.DataTables.sync()` updates the select-all box after rows are
+  checked from script. Pages that sort with their own script and no
+  `data-sort` are unaffected.
 - Charts with a series legend take `.toggle`. Each legend item becomes a
   button with `aria-pressed` that shows or hides its series, and the scale
   refits to the series left. The other series keep their colors, the last

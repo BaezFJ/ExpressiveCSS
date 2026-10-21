@@ -106,10 +106,11 @@ export class Utils {
 
   /**
    * Fires `expressive:<type>` from `el`. It bubbles and crosses shadow roots,
-   * so a page can listen on the element, an ancestor or the document.
+   * so a page can listen on the element, an ancestor or the document. A
+   * `cancelable` event returns false once a listener calls preventDefault().
    */
-  static emit(el: Element, type: string, detail?: unknown) {
-    el.dispatchEvent(new CustomEvent(`expressive:${type}`, { bubbles: true, composed: true, detail }));
+  static emit(el: Element, type: string, detail?: unknown, cancelable = false) {
+    return el.dispatchEvent(new CustomEvent(`expressive:${type}`, { bubbles: true, composed: true, cancelable, detail }));
   }
 
   /**

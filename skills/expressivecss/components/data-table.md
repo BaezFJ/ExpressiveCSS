@@ -9,7 +9,7 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `881c004615467516c12331646f85d6602d36418d33ba42ccc59f673bcc2d2f21`
+Contract SHA-256: `1e785ca6cf1ca28939ed05cddab350c39d1ea3560872f48e0136769500abeae0`
 
 #### Selection and adaptation
 
@@ -35,14 +35,14 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A `.data-table` is a `<div>` around one native `<table>`. The wrapper scrolls and draws the outline, so the table keeps its table semantics. The header row sticks to the top of the wrapper once the wrapper scrolls vertically, so give the wrapper a `max-block-size` for long tables. Add `numeric` to the header and body cells of a number column to align them on the end edge with tabular figures, and `dense` to the wrapper for shorter rows. CSS only; there is no JavaScript.
+A `.data-table` is a `<div>` around one native `<table>`. The wrapper scrolls and draws the outline, so the table keeps its table semantics. The header row sticks to the top of the wrapper once the wrapper scrolls vertically, so give the wrapper a `max-block-size` for long tables. Add `numeric` to the header and body cells of a number column to align them on the end edge with tabular figures, and `dense` to the wrapper for shorter rows.
 
-Sorting is page state. Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"descending"` on the header of the sorted column. The framework draws the arrow; the page reorders the rows and moves `aria-sort`.
+Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"descending"` on the header of the sorted column. The framework draws the arrow. Add `data-sort` to the wrapper and the framework sorts too: a header button reorders the rows by its column and moves `aria-sort`. A `numeric` header compares numbers (`$1,200.00` after `$87.00`); other columns compare text in the page's language, with 9 before 10. A cell's `data-value` stands in for its text, and a `tr.data-table-detail` moves with its row. Each press fires a cancelable `expressive:sort` from the wrapper with `{ header, column, direction }`; a server-paged table cancels it and loads the sorted page, with `aria-sort` already moved. Without `data-sort`, the page reorders the rows and moves `aria-sort` itself.
 
 #### Syntax
 
 ```html
-<div class="data-table">
+<div class="data-table" data-sort>
   <table>
     <caption>Orders</caption>
     <thead>
