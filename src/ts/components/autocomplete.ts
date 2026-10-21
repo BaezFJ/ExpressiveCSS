@@ -65,6 +65,13 @@ export interface AutocompleteOptions extends BaseOptions {
    */
   onSearch: (text: string, autocomplete: Autocomplete, signal: AbortSignal) => void;
   /**
+   * Milliseconds to wait after typing pauses before calling `onSearch`, so
+   * remote data is fetched once per pause rather than once per key. A search
+   * on focus never waits. `0` searches on every input.
+   * @default 0
+   */
+  searchDelay: number;
+  /**
    * If true will render the key from each item directly as HTML.
    * User input MUST be properly sanitized first.
    * @default false
@@ -97,6 +104,7 @@ const _defaults: AutocompleteOptions = {
     coverTrigger: false
   },
   minLength: 1, // Min characters before autocomplete starts
+  searchDelay: 0,
   isMultiSelect: false,
   onSearch: (text: string, autocomplete: Autocomplete) => {
     const normSearch = text.toLocaleLowerCase();
@@ -130,6 +138,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   private _openTimer: ReturnType<typeof setTimeout> | undefined;
   /** Aborts the running search when a newer one starts. */
   private _searchAbort: AbortController | undefined;
+  /** The search waiting for typing to pause. */
+  private _searchTimer: ReturnType<typeof setTimeout> | undefined;
   // Counts selections, so a callback that selects again silences the stale event.
   private _selection = 0;
   private _statusInfo: HTMLElement;
@@ -250,6 +260,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       clearTimeout(this._openTimer);
       this._openTimer = undefined;
     }
+    this._cancelPendingSearch();
     this._searchAbort?.abort();
     this._removeEventHandlers();
     this.menu.destroy();
@@ -380,6 +391,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   _handleInputBlur = () => {
     if (!this._pointerDown) {
       this._left = true;
+      this._cancelPendingSearch();
       this.close();
       this._resetAutocomplete();
     }
@@ -406,7 +418,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       if (this.el.matches(':focus-visible')
         && (!this.menu.isOpen || actualValue.length < this.options.minLength)) this.open();
     }
-    this._inputChangeDetection(actualValue);
+    this._inputChangeDetection(actualValue, true);
   };
 
   _handleInputFocus = () => {
@@ -416,7 +428,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._inputChangeDetection(actualValue);
   };
 
-  _inputChangeDetection = (value: string) => {
+  _inputChangeDetection = (value: string, typed?: boolean) => {
     // Editing or clearing a single selection's text deselects it.
     const deselected = !this.options.isMultiSelect && this.selectedValues.length > 0
       && this.el.value !== (this.selectedValues[0].text || String(this.selectedValues[0].id));
@@ -424,11 +436,29 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // Value has changed!
     if (this.oldVal !== value) {
       this._setStatusLoading();
-      this._search(this.el.value);
+      this._queueSearch(typed);
     }
     if (deselected) this._triggerChanged();
     this.oldVal = value;
   };
+
+  /** Searches now, or once typing pauses for `searchDelay`. Focus never waits. */
+  private _queueSearch(typed?: boolean) {
+    this._cancelPendingSearch();
+    const delay = this.options.searchDelay;
+    if (!typed || !(delay > 0 && delay < Infinity)) return this._search(this.el.value);
+    // The running search is for text the field no longer holds.
+    this._searchAbort?.abort();
+    this._searchTimer = setTimeout(() => {
+      this._searchTimer = undefined;
+      this._search(this.el.value);
+    }, delay);
+  }
+
+  private _cancelPendingSearch() {
+    clearTimeout(this._searchTimer);
+    this._searchTimer = undefined;
+  }
 
   /** Starts a search and aborts the one before, whose response is now stale. */
   private _search(text: string) {
@@ -769,6 +799,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // A click focuses the row, and removing it would drop focus to <body>.
     // A selection made from code leaves focus where it is.
     const refocus = Utils.focusIsIn(this.container);
+    // A search still waiting would run on the chosen label and reopen the list.
+    this._cancelPendingSearch();
     this.selectedValues = [entry];
     this._refreshInputText();
     this._resetAutocomplete();
