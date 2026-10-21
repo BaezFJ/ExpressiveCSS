@@ -4,7 +4,7 @@ Date: 2026-10-21
 Roadmap phase: Phase 12, menu radio groups
 Branch: `feature/2026-10-21-menu-radio-groups`
 Base: `origin/master` at `02f5e3fc47a97530cf7a0d8cae89841a02074785`, fetched 2026-10-21
-Status: specified; not implemented
+Status: implemented and locally verified 2026-10-21; required CI and review pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 12](../../../../roadmap.md#phase-12-menu-radio-groups). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
