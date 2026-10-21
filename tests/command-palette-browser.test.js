@@ -114,6 +114,17 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await page.keyboard.press('Escape');
       assert.equal(await isOpen(), false, 'Escape closes it');
 
+      // With a query typed, the first Escape clears it in every engine, as a
+      // native search input does in Chromium and Firefox; the next closes.
+      await page.keyboard.press('Control+k');
+      await input.fill('zzz');
+      await page.keyboard.press('Escape');
+      assert.equal(await isOpen(), true, 'Escape with a query keeps the palette open');
+      assert.equal(await input.inputValue(), '', 'and clears the query');
+      assert.equal((await visible()).length, 6, 'and shows every command again');
+      await page.keyboard.press('Escape');
+      assert.equal(await isOpen(), false, 'the next Escape closes it');
+
       await page.evaluate(() => {
         const li = document.createElement('li');
         li.innerHTML = '<button type="button" id="late">Recent: report</button>';

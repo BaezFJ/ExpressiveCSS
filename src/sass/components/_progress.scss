@@ -353,11 +353,18 @@ progress.progress:indeterminate {
   .progress.circular {
     background: conic-gradient(CanvasText 0 90deg, transparent 90deg 360deg);
 
+    // The value fills the ring and the track is a 2px line through its
+    // middle, so the two differ in shape and not only in GrayText against
+    // CanvasText, which a theme can set close together.
     &.determinate {
-      background: conic-gradient(
-        CanvasText 0 var(--md-comp-progress-value, 0%),
-        GrayText var(--md-comp-progress-value, 0%)
-      );
+      background:
+        conic-gradient(CanvasText 0 var(--md-comp-progress-value, 0%), transparent 0),
+        radial-gradient(
+          farthest-side,
+          transparent calc(100% - var(--md-comp-progress-circular-thickness) / 2 - 1px),
+          GrayText 0 calc(100% - var(--md-comp-progress-circular-thickness) / 2 + 1px),
+          transparent 0
+        );
     }
   }
 

@@ -197,7 +197,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed tooltip long press on touch: 88,766 gzip bytes (+359).
   // Reviewed heatmap column label thinning: 88,873 gzip bytes (+107).
   // Reviewed aria-invalid and the error description on .validate fields: 89,014 gzip bytes (+141).
-  assert.ok(sizes(js).gzip <= 89014, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed palette Escape, keypad Call and progress ring in forced colors: 89,054 gzip bytes (+40).
+  assert.ok(sizes(js).gzip <= 89054, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -314,5 +315,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed chart label thinning and navbar destination wrap: 83,750 gzip bytes (+283).
   // Reviewed pie slice contrast and forced-colors invalid checkboxes: 83,890 gzip bytes (+140).
   // Reviewed heatmap column label thinning: 84,031 gzip bytes (+141).
-  assert.ok(sizes(css).gzip <= 84031, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed palette Escape, keypad Call and progress ring in forced colors: 84,066 gzip bytes (+35).
+  assert.ok(sizes(css).gzip <= 84066, `CSS gzip: ${sizes(css).gzip}`);
 });

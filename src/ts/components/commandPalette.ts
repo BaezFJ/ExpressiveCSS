@@ -82,6 +82,7 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
     });
     this.input.addEventListener('input', this._handleInput);
     this.input.addEventListener('keydown', this._handleKeydown);
+    this.input.addEventListener('keydown', this._handleEscape);
     this.list.addEventListener('click', this._handleListClick);
     this.list.addEventListener('pointermove', this._handlePointerMove);
     this.el.addEventListener('close', this._handleClose);
@@ -146,6 +147,7 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
     if (this.input && this.list) {
       this.input.removeEventListener('input', this._handleInput);
       this.input.removeEventListener('keydown', this._handleKeydown);
+      this.input.removeEventListener('keydown', this._handleEscape);
       this.list.removeEventListener('click', this._handleListClick);
       this.list.removeEventListener('pointermove', this._handlePointerMove);
       for (const name of ['role', 'aria-controls', 'aria-expanded', 'aria-autocomplete', 'aria-activedescendant']) {
@@ -301,6 +303,19 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
       e.preventDefault();
       this._run(this._active);
     }
+  };
+
+  /**
+   * The first Escape clears a typed query and the next closes the palette.
+   * Chromium and Firefox clear a search input on their own; WebKit closed at
+   * once, and so did every engine for a text input. Escape that cancels an
+   * IME composition is left to the IME.
+   */
+  _handleEscape = (e: KeyboardEvent) => {
+    if (e.key !== Utils.keys.ESC || !this.input.value || Utils.isComposing(e)) return;
+    e.preventDefault();
+    this.input.value = '';
+    this.input.dispatchEvent(new Event('input', { bubbles: true }));
   };
 
   _handleListClick = (e: MouseEvent) => {
