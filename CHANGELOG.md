@@ -20,6 +20,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   selection does not change; the page adds the entry. `i18n.create` sets the
   row's label. Chips add the text as a chip, in an `autocompleteOnly` field
   too.
+- When a search returns no suggestions, Autocomplete's open list shows
+  `i18n.noResults` as its first row, so sighted users see what the live
+  region announces. The row is `li.autocomplete-no-results` with
+  `role="none"` and `aria-hidden="true"`. Arrow keys skip it, and a click on
+  it chooses nothing and keeps focus in the field. It leaves the list when a
+  search returns a match. Arrow keys and Enter now move through
+  `li[role="option"]` rows only. In Chips, Enter that adds the typed text
+  as a chip now closes the list.
 - Autocomplete's `searchDelay` option waits that many milliseconds after
   typing pauses before calling `onSearch`, so a remote search runs once per
   pause instead of once per key. A text change aborts the running search's
@@ -65,15 +73,22 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   now opens above it when there is more room there. Its height was capped
   to the room below, so it shrank and scrolled instead of flipping.
 - Chips submit a form value. Give the field's `<input>` a `name` and the
-  chips submit under it, one `id` per chip, as a multiple select does. The
-  text input gives its name up so half-typed text is not submitted, and the
-  values follow its form, `form` attribute and `disabled` state when the form
-  gathers its data. A `required` input makes the field valid once it has a
+  chips submit under it, one `id` per chip, as a multiple select does.
+  `init` wraps the input in `<expressive-chips-control>`, the framework's
+  first custom element. It is form-associated, has `display: contents` and
+  takes the name, so half-typed text is not submitted. The browser handles
+  the field's reset, validity and disabled state: a reset puts back the
+  starting chips within the reset, and a disabled fieldset drops the values
+  at once. Setting `disabled`, `readonly` or `form` on the input applies at
+  the next microtask. A `required` input makes the field valid once it has a
   chip, and says the new `i18n.required` until then, with
-  `aria-required="true"` on the input. A form reset puts back the starting
-  chips at the next microtask, once it can no longer be canceled. `destroy()` gives the
-  input its name and `required` back. Pasting text that lists values, split
-  by commas, tabs or new lines, adds a chip for each, up to `limit`.
+  `aria-required="true"` on the input. That validity is on the control,
+  apart from any error the page sets on the input. A read-only input's field
+  is not required. `destroy()` unwraps the input and gives its name and
+  `required` back. Without form-associated custom elements, as in jsdom, the
+  input keeps its name and `required` and submits its text. Pasting text
+  that lists values, split by commas, tabs or new lines, adds a chip for
+  each, up to `limit`.
 - Data tables sort and select. With `data-sort` on a `.data-table`, a
   button in a header cell reorders the rows by its column and moves
   `aria-sort`. A `numeric` column compares numbers, other columns compare
@@ -793,7 +808,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - A Chips field whose text `<input>` has a `name` now submits its chips
   under that name, one `id` each, instead of the text being typed. A page
   that read the draft text from the form should read `chips.getData()`, or
-  take the `name` off the input to keep the old behavior.
+  take the `name` off the input to keep the old behavior. The input now sits
+  inside `<expressive-chips-control>`, so `.chips > input` selectors and
+  `input.parentElement` code need updating. The input's `validity`,
+  `validationMessage`, `:invalid` and `invalid` event no longer report the
+  required state; read them from the control or the form. `form.elements`
+  lists the control under the field's name. In a Questionnaire step, or on
+  a `.validate` input, an empty required chips field does not count as
+  invalid.
 - Datepicker and Timepicker follow the page's language. With a `lang` on
   the input or around it, the calendar takes that language's month and
   weekday names from `Intl` and its first day of the week where the browser

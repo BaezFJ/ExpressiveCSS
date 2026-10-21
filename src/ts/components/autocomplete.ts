@@ -162,6 +162,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   private _selection = 0;
   private _statusInfo: HTMLElement;
   private _announcer: HTMLElement;
+  /** The last search returned no suggestions. A text change clears it until the next one returns. */
+  private _noResults = false;
 
   /**
    * The active entry, for both the eye and the screen reader. The class alone
@@ -305,6 +307,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.container.addEventListener('pointerdown', this._handleContainerPointerDown);
     this.container.addEventListener('pointerup', this._handleContainerPointerUp);
     this.container.addEventListener('pointercancel', this._handleContainerPointerUp);
+    this.container.addEventListener('mousedown', this._handleNoResultsPress, true);
+    this.container.addEventListener('click', this._handleNoResultsPress, true);
   }
 
   _removeEventHandlers() {
@@ -317,6 +321,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.container.removeEventListener('pointerdown', this._handleContainerPointerDown);
     this.container.removeEventListener('pointerup', this._handleContainerPointerUp);
     this.container.removeEventListener('pointercancel', this._handleContainerPointerUp);
+    this.container.removeEventListener('mousedown', this._handleNoResultsPress, true);
+    this.container.removeEventListener('click', this._handleNoResultsPress, true);
   }
 
   _setupMenu() {
@@ -432,6 +438,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       // but none may stay active: Enter would select a result for the
       // previous query.
       this._resetCurrentElementPosition();
+      // open() renders before the new search starts, so the old answer goes first.
+      this._noResults = false;
       if (this.el.matches(':focus-visible')
         && (!this.menu.isOpen || actualValue.length < this.options.minLength)) this.open();
     }
@@ -452,6 +460,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (deselected) this.selectedValues = [];
     // Value has changed!
     if (this.oldVal !== value) {
+      this._noResults = false;
       this._setStatusLoading();
       this._queueSearch(typed);
     }
@@ -491,10 +500,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       return;
     }
     // Arrow keys and enter key usage
-    const numItems = this.container.querySelectorAll('li').length;
+    const options = this._options();
+    const numItems = options.length;
     // select element on Enter
     if (e.key === Utils.keys.ENTER && this.activeIndex >= 0) {
-      const liElement = this.container.querySelectorAll('li')[this.activeIndex];
+      const liElement = options[this.activeIndex];
       if (liElement) {
         this._choose(liElement);
         e.preventDefault();
@@ -514,9 +524,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
         this.activeIndex++;
       this._setActive(null);
       if (this.activeIndex >= 0) {
-        this._setActive(this.container.querySelectorAll('li')[this.activeIndex]);
+        this._setActive(options[this.activeIndex]);
         // Focus selected
-        this.container.children[this.activeIndex].scrollIntoView({
+        options[this.activeIndex].scrollIntoView({
           behavior: 'smooth',
           block: 'nearest',
           inline: 'nearest'
@@ -553,6 +563,19 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   _handleContainerPointerUp = () => {
     this._pointerDown = false;
   };
+
+  // The no-results row is not an option. A press on it would move focus to the
+  // list, which nothing hands back, and Menu would report the row as chosen.
+  _handleNoResultsPress = (e: MouseEvent) => {
+    if (!(e.target instanceof Element) || !e.target.closest('.autocomplete-no-results')) return;
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  /** The rows that can be chosen. The no-results row is not one. */
+  private _options() {
+    return this.container.querySelectorAll<HTMLElement>('li[role="option"]');
+  }
 
   _resetCurrentElementPosition() {
     this.activeIndex = -1;
@@ -681,14 +704,12 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   _renderMenu() {
     this._resetAutocomplete();
+    if (this._noResults) this.container.append(this._createNoResultsRow());
     // Check if Data is empty
     if (this.menuItems.length === 0) {
       this.menuItems = this.selectedValues; // Show selected Items
     }
-    for (let i = 0; i < this.menuItems.length; i++) {
-      const item = this._createMenuItem(this.menuItems[i]);
-      this.container.append(item);
-    }
+    this.container.append(...this.menuItems.map((entry) => this._createMenuItem(entry)));
     const createText = this._createText();
     if (createText) this.container.append(this._createRow(createText));
   }
@@ -719,6 +740,20 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     label.textContent = this.options.i18n.create(text);
     item.append(label);
     return item;
+  }
+
+  /**
+   * Shows sighted users the `i18n.noResults` that the live region announces.
+   * Screen readers already hear that, and a listbox may only own options, so
+   * the row is hidden from them.
+   */
+  private _createNoResultsRow() {
+    const row = document.createElement('li');
+    row.classList.add('autocomplete-no-results');
+    row.setAttribute('role', 'none');
+    row.setAttribute('aria-hidden', 'true');
+    row.textContent = this.options.i18n.noResults;
+    return row;
   }
 
   _setStatusLoading() {
@@ -810,6 +845,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // without opening it under an input nobody is using.
     open &&= !this._left;
     const resultCount = menuItems.length;
+    this._noResults = resultCount === 0;
     this.menuItems = menuItems;
     if (selected) {
       this.selectedValues = this.menuItems.filter(
