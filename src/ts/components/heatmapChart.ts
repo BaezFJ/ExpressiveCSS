@@ -293,6 +293,7 @@ export class HeatmapChart extends LineChart {
 
     // A column label runs on over the empty labels after it.
     const labels = this._header.slice(1, columns + 1).map(label);
+    const columnLabels: HTMLElement[] = [];
     labels.forEach((text, column) => {
       if (!text) return;
       let end = column + 1;
@@ -301,7 +302,10 @@ export class HeatmapChart extends LineChart {
       element.classList.toggle('run', end > column + 1);
       element.style.gridArea = `${this.labels.length + 1} / ${column + 1} / auto / ${end + 1}`;
       cells.append(element);
+      columnLabels.push(element);
     });
+    // Labels the author already spaced out with empty ones are left as written.
+    this._observeLabels(cells, columnLabels.some((element) => element.classList.contains('run')) ? [] : columnLabels);
 
     // The plot is the one Tab stop, so the scroll box is not another, and a
     // press that focuses it hands focus on to the plot.

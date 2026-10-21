@@ -122,6 +122,27 @@
   &.run {
     text-align: start;
   }
+
+  // When each label is wider than its column, HeatmapChart keeps every nth
+  // one, as LineChart does. A kept label spreads over the hidden ones beside
+  // it, centred on its column; the end labels line up with the grid's edges.
+  .heatmap-chart-cells[data-thinned] > &:not([data-skip]) {
+    display: flex;
+    justify-content: center;
+    overflow: visible;
+
+    &:nth-child(1 of .heatmap-chart-column) {
+      justify-content: start;
+    }
+
+    &:nth-last-child(1 of .heatmap-chart-column) {
+      justify-content: end;
+    }
+  }
+
+  &[data-skip] {
+    visibility: hidden;
+  }
 }
 
 .heatmap-chart-cell {

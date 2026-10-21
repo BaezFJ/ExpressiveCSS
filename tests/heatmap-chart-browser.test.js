@@ -419,4 +419,66 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: a narrow heatmap keeps every nth column label whole, and leaves spaced-out labels alone`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const header = Array.from({ length: 12 }, (_, i) => `<th>Week ${i + 1}</th>`).join('');
+      const rows = ['Mon', 'Tue'].map((day) => [`<th>${day}</th>`, ...Array.from({ length: 12 }, (_, i) => String(i))]);
+      await page.setContent(`<style>${css}</style>
+        <div id="box" style="width: 600px">
+          ${chart('class="heatmap-chart" id="weeks"', 'Weeks', header, rows)}
+          ${chart('class="heatmap-chart" id="months"', 'Months', weeks, [['<th>Mon</th>', ...Array.from({ length: 40 }, () => '1')]])}
+        </div>
+        <script>${js}</script>`);
+      await page.evaluate(() => Expressive.AutoInit());
+      const read = (id) => page.locator(`#${id}`).evaluate(async (figure) => {
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        const labels = [...figure.querySelectorAll('.heatmap-chart-column')];
+        const kept = labels.filter((label) => getComputedStyle(label).visibility === 'visible');
+        const range = document.createRange();
+        const boxes = kept.map((label) => {
+          range.selectNodeContents(label);
+          return range.getBoundingClientRect();
+        }).sort((a, b) => a.left - b.left);
+        const grid = figure.querySelector('.heatmap-chart-cells').getBoundingClientRect();
+        return {
+          kept: kept.map((label) => label.textContent),
+          total: labels.length,
+          overlap: boxes.some((box, i) => i > 0 && box.left < boxes[i - 1].right),
+          outside: boxes.some((box) => box.left < grid.left - 0.5 || box.right > grid.right + 0.5),
+          cut: kept.some((label) => getComputedStyle(label).overflow === 'hidden' && label.scrollWidth > label.clientWidth + 0.5),
+        };
+      });
+
+      // From a phone's width to a wide card, in both directions: kept labels
+      // never touch, stay on the grid, and are never cut.
+      for (const dir of ['ltr', 'rtl']) {
+        await page.evaluate((value) => {
+          document.documentElement.dir = value;
+          document.querySelectorAll('.heatmap-chart').forEach((figure) => Expressive.HeatmapChart.getInstance(figure).update());
+        }, dir);
+        for (let width = 200; width <= 700; width += 10) {
+          await page.locator('#box').evaluate((box, px) => { box.style.width = `${px}px`; }, width);
+          const labels = await read('weeks');
+          if (labels.kept.length === labels.total && labels.cut) continue; // no step fits: all cut, as before
+          assert.equal(labels.overlap, false, `${dir} ${width}px: kept labels do not touch (${labels.kept})`);
+          assert.equal(labels.outside, false, `${dir} ${width}px: kept labels stay on the grid`);
+          assert.equal(labels.cut, false, `${dir} ${width}px: no kept label is cut`);
+        }
+      }
+
+      await page.locator('#box').evaluate((box) => { box.style.width = '300px'; });
+      const narrow = await read('weeks');
+      assert.ok(narrow.kept.length < 12 && narrow.kept[0] === 'Week 1', `a narrow grid keeps the first label and drops some: ${narrow.kept}`);
+      const months = await read('months');
+      assert.equal(months.kept.length, months.total, 'labels the author spaced out with empty ones are all kept');
+
+      await page.locator('#box').evaluate((box) => { box.style.width = '1200px'; });
+      assert.equal((await read('weeks')).kept.length, 12, 'a wide grid shows every label again');
+    } finally {
+      await browser.close();
+    }
+  });
 }
