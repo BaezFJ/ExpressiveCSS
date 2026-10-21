@@ -4,7 +4,7 @@ Date: 2026-10-21
 Roadmap phase: Phase 13, autocomplete search debounce
 Branch: `feature/2026-10-21-autocomplete-search-debounce`
 Base: `origin/master` at `e67c13ccc466d6fa5e9fc924d753f7319b9cc099`, fetched 2026-10-21
-Status: specified, not implemented
+Status: implemented and locally verified 2026-10-21; required CI and review pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 13](../../../../roadmap.md#phase-13-autocomplete-search-debounce). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -43,6 +43,7 @@ These are proposals made while writing the spec. The user can overturn any of th
 - A value that is not a positive finite number, such as `0`, a negative number or `NaN`, means no delay.
 - The delayed search reads the field's text when the timer fires, not the text from the first key of the burst.
 - No Chips change. Chips users set `autocompleteOptions: { searchDelay }`.
+- Added during implementation: choosing a single-select result cancels a pending search. Otherwise the search runs on the chosen label once the pause ends, and its results reopen the list the choice just closed. A multi-select choice leaves the pending search alone, since the field still holds the typed text.
 
 ## Requirements
 
@@ -55,7 +56,7 @@ These are proposals made while writing the spec. The user can overturn any of th
 | R5 | The loading indicator and the `i18n.loading` announcement appear on the input event that changes the text, as today, whether or not the search waits. |
 | R6 | A search started by focus, through `_handleInputFocus`, runs at once whatever `searchDelay` is, and cancels any pending delayed search. |
 | R7 | Blur cancels a pending delayed search: `onSearch` is not called for it. The next focus searches at once, as R6 and the existing `oldVal` reset describe. |
-| R8 | `destroy()` cancels a pending delayed search and aborts the last running search. No `onSearch` call happens after `destroy()`. |
+| R8 | `destroy()` cancels a pending delayed search and aborts the last running search. No `onSearch` call happens after `destroy()`. Choosing a single-select result also cancels a pending search, so the list stays closed. |
 | R9 | Escape does not cancel a pending delayed search. When it runs, `setMenuItems` updates the list without opening it, as `_left` already ensures. |
 | R10 | Existing behavior stays when `searchDelay` is `0`: the search cancellation, delayed results, dismissal lifecycle, IME, injection and generated forms tests pass unchanged. |
 | R11 | Docs and generated guidance describe the option. The options tables in the Autocomplete section of `llm.md` and in `docs/src/pages/autocomplete.astro` list `searchDelay` with its type, default and behavior. The remote search example uses it. The text saying pages own request cancellation is narrowed to error handling and ordering beyond the delay. The unreleased changelog lists the option under Added. `npm run build:skill` regenerates the derived files and `npm run check:generated` passes. |
