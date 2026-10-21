@@ -22,6 +22,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `allowUnsafeHTML` and the Chips and Autocomplete `data` lists. Invalid
   values log a warning and keep their defaults. Direct `init()` calls do not
   read the attribute.
+- Tooltip's `openOnClick` option opens the tooltip on a click instead of
+  hover and focus. A second click, Escape, a click elsewhere or focus moving
+  to another element closes it, and Enter or Space on a button trigger
+  toggles it. On touch a tap is the click, so the long press is off. The
+  default of `false` keeps hover and focus.
 - Autocomplete's `allowCreate` option ends the list in an `Add "text"` row
   when the typed text matches no suggestion exactly, ignoring case and
   surrounding spaces. Choosing it with Enter or a click calls `onCreate` with

@@ -39,7 +39,9 @@ const S = defineSections([
           tooltip that opens while a tooltip is closing, or within 300 ms
           after that one's <code>exitDelay</code> ends, shows without waiting
           its <code>enterDelay</code>, so moving along a toolbar shows each
-          tooltip at once.
+          tooltip at once. With
+          <code>openOnClick</code>, a tap is the click: it opens and closes
+          the tooltip, and the long press is off.
           CSS-only tooltips have no Escape handler. Use them only after you
           verify the applicable WCAG 1.4.13 conditions and dismissal exception.
           Otherwise, use a verified runtime tooltip or persistent supporting text.
@@ -277,6 +279,12 @@ Expressive.AutoInit(document.body, {
               <td><code>10</code></td>
               <td>How far the tooltip moves during its transition, in pixels.</td>
             </tr>
+            <tr>
+              <td><code>openOnClick</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Open on a click instead of hover and focus, at once, without <code>enterDelay</code>. A second click, Escape, a click elsewhere or focus moving to another element closes it at once; a click inside the tooltip does not. Keyboard users open it with Enter or Space, so the trigger should be a <code>&lt;button&gt;</code>.</td>
+            </tr>
   </OptionsTable>  </Section>
   <Section {...S.methods}>
         <InstanceNote plugin="Tooltip" />
@@ -292,6 +300,8 @@ Expressive.AutoInit(document.body, {
           <code>open()</code> and <code>open(true)</code> show the tooltip after
           its enter delay without requiring hover or focus. <code>open(false)</code>
           uses the automatic behavior and requires hover or focus when the delay ends.
+          With <code>openOnClick</code>, a click elsewhere also closes a tooltip
+          opened this way.
         </p>
 <Code code={`
 instance.open();

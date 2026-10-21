@@ -210,7 +210,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Chips form values, reset and required through a form-associated custom element: 90,025 gzip bytes (+45).
   // Reviewed Timepicker showSeconds, a seconds field written as HH:MM:SS: 90,352 gzip bytes (+327).
   // Reviewed AutoInit reading data-<name>-options from markup, checked against each default's kind: 90,942 gzip bytes (+590).
-  assert.ok(sizes(js).gzip <= 90942, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Tooltip openOnClick, which toggles on click and closes on a click elsewhere: 91,199 gzip bytes (+257).
+  assert.ok(sizes(js).gzip <= 91199, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

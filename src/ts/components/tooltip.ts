@@ -101,6 +101,13 @@ export interface TooltipOptions extends BaseOptions {
    * @default 10
    */
   transitionMovement: number;
+  /**
+   * Open on a click instead of hover and focus. A second click, Escape, a
+   * click elsewhere or focus on another element closes it. On touch a tap
+   * is the click, so the long press is off.
+   * @default false
+   */
+  openOnClick: boolean;
 }
 
 const _defaults: TooltipOptions = {
@@ -112,7 +119,8 @@ const _defaults: TooltipOptions = {
   outDuration: 200,
   position: 'bottom',
   transitionMovement: 10,
-  opacity: 1
+  opacity: 1,
+  openOnClick: false
 };
 
 export class Tooltip extends Component<TooltipOptions> {
@@ -134,6 +142,9 @@ export class Tooltip extends Component<TooltipOptions> {
   private _animationTimeout: ReturnType<typeof setTimeout>;
   private _pressTimeout: ReturnType<typeof setTimeout>;
   private _lingerTimeout: ReturnType<typeof setTimeout>;
+  private _outsideTimeout: ReturnType<typeof setTimeout>;
+  /** The last click on the trigger or inside the tooltip, which the document listener leaves alone. */
+  private _insideClick: Event | null = null;
   /** When the last touch began or ended, to tell its mouse events from a mouse. */
   private _lastTouch = -Infinity;
   /** Whether a long press showed the tooltip, until it closes or a mouse hovers. */
@@ -208,6 +219,7 @@ export class Tooltip extends Component<TooltipOptions> {
     clearTimeout(this._animationTimeout);
     clearTimeout(this._pressTimeout);
     clearTimeout(this._lingerTimeout);
+    clearTimeout(this._outsideTimeout);
     this.isOpen = false;
     this.isHovered = false;
     this.isFocused = false;
@@ -288,6 +300,7 @@ export class Tooltip extends Component<TooltipOptions> {
     this.el.addEventListener('pointerup', this._handlePointerEnd);
     this.el.addEventListener('pointercancel', this._handlePointerCancel);
     this.el.addEventListener('click', this._handleClick, true);
+    this.tooltipEl.addEventListener('click', this._handleTooltipClick, true);
   }
 
   _removeEventHandlers() {
@@ -302,8 +315,10 @@ export class Tooltip extends Component<TooltipOptions> {
     this.el.removeEventListener('pointerup', this._handlePointerEnd);
     this.el.removeEventListener('pointercancel', this._handlePointerCancel);
     this.el.removeEventListener('click', this._handleClick, true);
-    // Escape is only listened for while open; see open() and close().
+    this.tooltipEl.removeEventListener('click', this._handleTooltipClick, true);
+    // Escape and outside clicks are only listened for while open; see open() and close().
     this.el.ownerDocument.removeEventListener('keydown', this._handleKeydown, true);
+    this.el.ownerDocument.removeEventListener('click', this._handleDocumentClick);
   }
 
   /**
@@ -315,6 +330,11 @@ export class Tooltip extends Component<TooltipOptions> {
     clearTimeout(this._animationTimeout);
     this.isOpen = true;
     this.el.ownerDocument.addEventListener('keydown', this._handleKeydown, true);
+    // A task later, so the click that opened it, on the trigger or on a page
+    // button that called open(), does not reach the listener and close it.
+    if (this.options.openOnClick) {
+      this._outsideTimeout = setTimeout(() => this.el.ownerDocument.addEventListener('click', this._handleDocumentClick));
+    }
     // Update tooltip content with HTML attribute options
     this.options = { ...this.options, ...this._getAttributeOptions() };
     this._updateTooltipContent();
@@ -335,9 +355,25 @@ export class Tooltip extends Component<TooltipOptions> {
     this.isFocused = false;
     this.isOpen = false;
     this.el.ownerDocument.removeEventListener('keydown', this._handleKeydown, true);
+    clearTimeout(this._outsideTimeout);
+    this.el.ownerDocument.removeEventListener('click', this._handleDocumentClick);
     clearTimeout(this._enterDelayTimeout);
     this._setExitDelayTimeout();
   };
+
+  /** Show at once, without enterDelay, for a request that is its own delay: a long press or a click. */
+  private _showNow() {
+    this.open();
+    clearTimeout(this._enterDelayTimeout);
+    this._animateIn();
+  }
+
+  /** Hide at once, without exitDelay, for an explicit dismissal. */
+  private _hideNow() {
+    this.close();
+    clearTimeout(this._exitDelayTimeout);
+    this._animateOut();
+  }
 
   _setExitDelayTimeout() {
     clearTimeout(this._exitDelayTimeout);
@@ -466,7 +502,7 @@ export class Tooltip extends Component<TooltipOptions> {
 
   _handleMouseEnter = () => {
     // A tap's mouse events are not a hover; touch shows the tooltip on a long press.
-    if (performance.now() - this._lastTouch < TOUCH_ECHO) return;
+    if (this.options.openOnClick || performance.now() - this._lastTouch < TOUCH_ECHO) return;
     this._touchShown = false;
     this.isHovered = true;
     this.open(false);
@@ -479,6 +515,11 @@ export class Tooltip extends Component<TooltipOptions> {
     return true;
   }
 
+  /** Whether an event is a touch for the long press, which a click tooltip does without. */
+  private _longPress(e: PointerEvent) {
+    return !this.options.openOnClick && this._touched(e);
+  }
+
   // pointerenter comes before any compatibility mouseenter, in whatever order
   // a browser sends those, so the touch is known before its mouse events.
   _handlePointerEnter = (e: PointerEvent) => {
@@ -487,7 +528,7 @@ export class Tooltip extends Component<TooltipOptions> {
 
   /** A touch held for LONG_PRESS shows the tooltip, unless it turns into a scroll first. */
   _handlePointerDown = (e: PointerEvent) => {
-    if (!this._touched(e)) return;
+    if (!this._longPress(e)) return;
     clearTimeout(this._lingerTimeout);
     clearTimeout(this._pressTimeout);
     // The long press is the delay, so it shows at once rather than after
@@ -495,16 +536,14 @@ export class Tooltip extends Component<TooltipOptions> {
     // tooltip that is showing.
     this._pressTimeout = setTimeout(() => {
       this.isHovered = true;
-      this.open();
-      clearTimeout(this._enterDelayTimeout);
-      this._animateIn();
+      this._showNow();
       this._touchShown = true;
     }, LONG_PRESS);
   };
 
   /** The finger lifted: a press too short stays a tap, and a tooltip it showed lingers for TOUCH_LINGER. */
   _handlePointerEnd = (e: PointerEvent) => {
-    if (!this._touched(e)) return;
+    if (!this._longPress(e)) return;
     clearTimeout(this._pressTimeout);
     if (this._touchShown) this._swallowClickUntil = performance.now() + PRESS_CLICK;
     // Any release while it shows, even a second tap during the linger, starts the linger again.
@@ -514,12 +553,33 @@ export class Tooltip extends Component<TooltipOptions> {
     this._lingerTimeout = setTimeout(() => this.isHovered || this.isFocused || this.close(), TOUCH_LINGER);
   };
 
-  /** The click a long press's release sends would press the button or follow the link; it is consumed. */
+  /**
+   * A click tooltip toggles. Otherwise the click a long press's release sends
+   * would press the button or follow the link, so it is consumed.
+   */
   _handleClick = (e: MouseEvent) => {
+    if (this.options.openOnClick) return this._toggle(e);
     if (performance.now() > this._swallowClickUntil) return;
     this._swallowClickUntil = -Infinity;
     e.preventDefault();
     e.stopImmediatePropagation();
+  };
+
+  /** A click tooltip toggles on what shows: one open() still holds back for enterDelay shows at once. */
+  private _toggle(e: MouseEvent) {
+    this._insideClick = e;
+    if (this._shown) this._hideNow();
+    else this._showNow();
+  }
+
+  // Marked rather than found on the composed path, which a document listener
+  // cannot see into when the tooltip sits in a closed shadow root.
+  _handleTooltipClick = (e: MouseEvent) => {
+    this._insideClick = e;
+  };
+
+  _handleDocumentClick = (e: MouseEvent) => {
+    if (e !== this._insideClick) this._hideNow();
   };
 
   /**
@@ -527,7 +587,7 @@ export class Tooltip extends Component<TooltipOptions> {
    * waiting out enterDelay, and one the touch showed closes at once.
    */
   _handlePointerCancel = (e: PointerEvent) => {
-    if (!this._touched(e)) return;
+    if (!this._longPress(e)) return;
     clearTimeout(this._pressTimeout);
     // Lingering after an earlier press too; a mouse hover or focus keeps it.
     if (!this._touchShown) return;
@@ -535,9 +595,13 @@ export class Tooltip extends Component<TooltipOptions> {
     if (!this.isFocused) this.close();
   };
 
+  /** Whether a node is the trigger or the tooltip, or inside either. */
+  private _holds(node: Node | null) {
+    return !!node && (this.el.contains(node) || this.tooltipEl.contains(node));
+  }
+
   _handleMouseLeave = (event: MouseEvent) => {
-    const next = event.relatedTarget as Node | null;
-    if (next && (this.el.contains(next) || this.tooltipEl.contains(next))) return;
+    if (this.options.openOnClick || this._holds(event.relatedTarget as Node | null)) return;
     this.isHovered = false;
     if (!this.isFocused) this.close();
   };
@@ -551,15 +615,14 @@ export class Tooltip extends Component<TooltipOptions> {
       event.preventDefault();
       event.stopPropagation();
     }
-    this.close();
-    clearTimeout(this._exitDelayTimeout);
-    this._animateOut();
+    this._hideNow();
   };
 
   // Focus opens the tooltip only when it arrived by keyboard: a pointer press
   // on the trigger also focuses it, and _handleMouseEnter already covers that.
   _handleFocus = (event: FocusEvent) => {
-    if ((event.target as HTMLElement).matches(':focus-visible')) {
+    // A click tooltip opens on the click that Enter or Space sends instead.
+    if (!this.options.openOnClick && (event.target as HTMLElement).matches(':focus-visible')) {
       this.isFocused = true;
       this.open(false);
     }
@@ -567,10 +630,17 @@ export class Tooltip extends Component<TooltipOptions> {
 
   _handleBlur = (event: FocusEvent) => {
     const next = event.relatedTarget as Node | null;
-    if (next && (this.el.contains(next) || this.tooltipEl.contains(next))) return;
+    if (this._holds(next)) return;
+    if (this.options.openOnClick) return this._blurClickTooltip(next);
     this.isFocused = false;
     if (!this.isHovered) this.close();
   };
+
+  // A press on a rich tooltip's text blurs to nothing, so only focus that
+  // lands on another element closes a click tooltip.
+  private _blurClickTooltip(next: Node | null) {
+    if (next && (this.isOpen || this._shown)) this._hideNow();
+  }
 
   _getAttributeOptions(): Partial<TooltipOptions> {
     const attributeOptions: Partial<TooltipOptions> = {};
