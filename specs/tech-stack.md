@@ -17,6 +17,7 @@ The [mission](mission.md) covers the framework and its MCP server. Both stay in 
 - A new function must stay below cyclomatic complexity 5, or the fallow pre-commit gate fails. Split logic into small helpers or tables.
 - Each change to the bundles records its gzip size in the reviewed budget lines of `tests/selective-builds.test.js`.
 - Text- and icon-holding boxes are sized in `rem()`; borders and gaps stay in pixels.
+- Custom elements take the `expressive-` prefix. The first is Chips' form-associated `expressive-chips-control`.
 - Browser support follows the `browserslist` in `package.json`: the last five Chrome and Firefox versions, plus current WebKit through the tests.
 
 ### Framework testing
