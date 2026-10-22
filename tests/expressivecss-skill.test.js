@@ -570,9 +570,9 @@ describe('the ExpressiveCSS agent skill', () => {
     for (const role of typeRoles) {
       assert.ok(references.typography.includes(`\`.${role}\``), `typography reference omits .${role}`);
       assert.match(compiledCss, new RegExp(`\\.${role}(?![\\w-])`), `compiled CSS omits .${role}`);
-      const metric = (property) => referenceSass.match(new RegExp(`--md-sys-typescale-${role}-${property}:\\s*([^;]+);`))?.[1];
+      const metric = (property) => compiledCss.match(new RegExp(`--md-sys-typescale-${role}-${property}:\\s*([^;]+);`))?.[1];
       const values = ['font-size', 'line-height', 'font-weight', 'letter-spacing'].map(metric);
-      assert.ok(values.every(Boolean), `typography source omits metrics for ${role}`);
+      assert.ok(values.every(Boolean), `compiled CSS omits metrics for ${role}`);
       assert.ok(
         references.typography.includes(`| \`.${role}\` | ${values.map((value) => `\`${value}\``).join(' | ')} |`),
         `typography reference has the wrong metrics for .${role}`,

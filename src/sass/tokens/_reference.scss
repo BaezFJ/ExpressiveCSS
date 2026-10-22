@@ -111,6 +111,25 @@ $sys-dark: (
   "scrim": "neutral0", "shadow": "neutral0"
 );
 
+// M3 type roles: typeface (brand or plain), weight, size, line height, tracking.
+$_typescale: (
+  ("display-large",   brand, 400, 3.5625rem, 4rem,    -0.015625rem),
+  ("display-medium",  brand, 400, 2.8125rem, 3.25rem, 0rem),
+  ("display-small",   brand, 400, 2.25rem,   2.75rem, 0rem),
+  ("headline-large",  brand, 400, 2rem,      2.5rem,  0rem),
+  ("headline-medium", brand, 400, 1.75rem,   2.25rem, 0rem),
+  ("headline-small",  brand, 400, 1.5rem,    2rem,    0rem),
+  ("body-large",      plain, 400, 1rem,      1.5rem,  0.03125rem),
+  ("body-medium",     plain, 400, 0.875rem,  1.25rem, 0.015625rem),
+  ("body-small",      plain, 400, 0.75rem,   1rem,    0.025rem),
+  ("label-large",     plain, 500, 0.875rem,  1.25rem, 0.00625rem),
+  ("label-medium",    plain, 500, 0.75rem,   1rem,    0.03125rem),
+  ("label-small",     plain, 500, 0.6875rem, 1rem,    0.03125rem),
+  ("title-large",     brand, 400, 1.375rem,  1.75rem, 0rem),
+  ("title-medium",    plain, 500, 1rem,      1.5rem,  0.009375rem),
+  ("title-small",     plain, 500, 0.875rem,  1.25rem, 0.00625rem),
+);
+
 // Emphasized weights, from Google's typography guidance: medium for display,
 // headline, title-large and body, bold for title-medium, title-small and
 // label. base/_fonts.scss bundles the 500 and 700 faces.
@@ -183,111 +202,15 @@ $_emphasized-weights: (
   --md-ref-typeface-plain: "Roboto";
   --md-ref-typeface-fallback: "Noto Sans", "Noto Sans Arabic", "Noto Sans Hebrew", "Noto Sans Thai", sans-serif;
 
-  // display - large
-  --md-sys-typescale-display-large-font-family-name: var(--md-ref-typeface-brand), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-display-large-font-family-style: Regular;
-  --md-sys-typescale-display-large-font-weight: 400;
-  --md-sys-typescale-display-large-font-size: 3.5625rem;
-  --md-sys-typescale-display-large-line-height: 4rem;
-  --md-sys-typescale-display-large-letter-spacing: -0.015625rem;
-  // display - medium
-  --md-sys-typescale-display-medium-font-family-name: var(--md-ref-typeface-brand), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-display-medium-font-family-style: Regular;
-  --md-sys-typescale-display-medium-font-weight: 400;
-  --md-sys-typescale-display-medium-font-size: 2.8125rem;
-  --md-sys-typescale-display-medium-line-height: 3.25rem;
-  --md-sys-typescale-display-medium-letter-spacing: 0rem;
-  // display - small
-  --md-sys-typescale-display-small-font-family-name: var(--md-ref-typeface-brand), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-display-small-font-family-style: Regular;
-  --md-sys-typescale-display-small-font-weight: 400;
-  --md-sys-typescale-display-small-font-size: 2.25rem;
-  --md-sys-typescale-display-small-line-height: 2.75rem;
-  --md-sys-typescale-display-small-letter-spacing: 0rem;
-  // headline - large
-  --md-sys-typescale-headline-large-font-family-name: var(--md-ref-typeface-brand), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-headline-large-font-family-style: Regular;
-  --md-sys-typescale-headline-large-font-weight: 400;
-  --md-sys-typescale-headline-large-font-size: 2rem;
-  --md-sys-typescale-headline-large-line-height: 2.5rem;
-  --md-sys-typescale-headline-large-letter-spacing: 0rem;
-  // headline - medium
-  --md-sys-typescale-headline-medium-font-family-name: var(--md-ref-typeface-brand), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-headline-medium-font-family-style: Regular;
-  --md-sys-typescale-headline-medium-font-weight: 400;
-  --md-sys-typescale-headline-medium-font-size: 1.75rem;
-  --md-sys-typescale-headline-medium-line-height: 2.25rem;
-  --md-sys-typescale-headline-medium-letter-spacing: 0rem;
-  // headline - small
-  --md-sys-typescale-headline-small-font-family-name: var(--md-ref-typeface-brand), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-headline-small-font-family-style: Regular;
-  --md-sys-typescale-headline-small-font-weight: 400;
-  --md-sys-typescale-headline-small-font-size: 1.5rem;
-  --md-sys-typescale-headline-small-line-height: 2rem;
-  --md-sys-typescale-headline-small-letter-spacing: 0rem;
-  // body - large
-  --md-sys-typescale-body-large-font-family-name: var(--md-ref-typeface-plain), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-body-large-font-family-style: Regular;
-  --md-sys-typescale-body-large-font-weight: 400;
-  --md-sys-typescale-body-large-font-size: 1rem;
-  --md-sys-typescale-body-large-line-height: 1.5rem;
-  --md-sys-typescale-body-large-letter-spacing: 0.03125rem;
-  // body - medium
-  --md-sys-typescale-body-medium-font-family-name: var(--md-ref-typeface-plain), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-body-medium-font-family-style: Regular;
-  --md-sys-typescale-body-medium-font-weight: 400;
-  --md-sys-typescale-body-medium-font-size: 0.875rem;
-  --md-sys-typescale-body-medium-line-height: 1.25rem;
-  --md-sys-typescale-body-medium-letter-spacing: 0.015625rem;
-  // body - small
-  --md-sys-typescale-body-small-font-family-name: var(--md-ref-typeface-plain), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-body-small-font-family-style: Regular;
-  --md-sys-typescale-body-small-font-weight: 400;
-  --md-sys-typescale-body-small-font-size: 0.75rem;
-  --md-sys-typescale-body-small-line-height: 1rem;
-  --md-sys-typescale-body-small-letter-spacing: 0.025rem;
-  // label - large
-  --md-sys-typescale-label-large-font-family-name: var(--md-ref-typeface-plain), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-label-large-font-family-style: Medium;
-  --md-sys-typescale-label-large-font-weight: 500;
-  --md-sys-typescale-label-large-font-size: 0.875rem;
-  --md-sys-typescale-label-large-line-height: 1.25rem;
-  --md-sys-typescale-label-large-letter-spacing: 0.00625rem;
-  // label - medium
-  --md-sys-typescale-label-medium-font-family-name: var(--md-ref-typeface-plain), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-label-medium-font-family-style: Medium;
-  --md-sys-typescale-label-medium-font-weight: 500;
-  --md-sys-typescale-label-medium-font-size: 0.75rem;
-  --md-sys-typescale-label-medium-line-height: 1rem;
-  --md-sys-typescale-label-medium-letter-spacing: 0.03125rem;
-  // label - small
-  --md-sys-typescale-label-small-font-family-name: var(--md-ref-typeface-plain), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-label-small-font-family-style: Medium;
-  --md-sys-typescale-label-small-font-weight: 500;
-  --md-sys-typescale-label-small-font-size: 0.6875rem;
-  --md-sys-typescale-label-small-line-height: 1rem;
-  --md-sys-typescale-label-small-letter-spacing: 0.03125rem;
-  // title - large
-  --md-sys-typescale-title-large-font-family-name: var(--md-ref-typeface-brand), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-title-large-font-family-style: Regular;
-  --md-sys-typescale-title-large-font-weight: 400;
-  --md-sys-typescale-title-large-font-size: 1.375rem;
-  --md-sys-typescale-title-large-line-height: 1.75rem;
-  --md-sys-typescale-title-large-letter-spacing: 0rem;
-  // title - medium
-  --md-sys-typescale-title-medium-font-family-name: var(--md-ref-typeface-plain), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-title-medium-font-family-style: Medium;
-  --md-sys-typescale-title-medium-font-weight: 500;
-  --md-sys-typescale-title-medium-font-size: 1rem;
-  --md-sys-typescale-title-medium-line-height: 1.5rem;
-  --md-sys-typescale-title-medium-letter-spacing: 0.009375rem;
-  // title - small
-  --md-sys-typescale-title-small-font-family-name: var(--md-ref-typeface-plain), var(--md-ref-typeface-fallback);
-  --md-sys-typescale-title-small-font-family-style: Medium;
-  --md-sys-typescale-title-small-font-weight: 500;
-  --md-sys-typescale-title-small-font-size: 0.875rem;
-  --md-sys-typescale-title-small-line-height: 1.25rem;
-  --md-sys-typescale-title-small-letter-spacing: 0.00625rem;
+  // Type roles.
+  @each $role, $face, $weight, $size, $line-height, $tracking in $_typescale {
+    --md-sys-typescale-#{$role}-font-family-name: var(--md-ref-typeface-#{$face}), var(--md-ref-typeface-fallback);
+    --md-sys-typescale-#{$role}-font-family-style: #{map.get((400: Regular, 500: Medium), $weight)};
+    --md-sys-typescale-#{$role}-font-weight: #{$weight};
+    --md-sys-typescale-#{$role}-font-size: #{$size};
+    --md-sys-typescale-#{$role}-line-height: #{$line-height};
+    --md-sys-typescale-#{$role}-letter-spacing: #{$tracking};
+  }
 
   // emphasized - M3 Expressive's heavier counterpart of each role. Only the
   // weight changes; the family, size, line height and tracking are the
