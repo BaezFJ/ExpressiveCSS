@@ -839,6 +839,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `skillContractVersion` and `matchingCommit`. The first two copied
   `declaredRange` and `contractVersion`, which remain; `matchingCommit`
   was always `null`. Read `declaredRange` and `contractVersion` instead.
+- Datepicker's undocumented `formats` property, the table of format
+  functions. The `format` option and its tokens are unchanged.
 - **Breaking (1.0).** Most names kept for markup written before 0.8.0 are
   gone. Each one has a replacement that has been documented since 0.8.0;
   see Migration below. A few stay: `.breadcrumb` and `.breadcrumb-wrapper`,
@@ -882,6 +884,20 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   unchanged. The `CommandPalette` and `Questionnaire` constructors accept
   any `HTMLElement`, which their `init` already took, and a subclass that
   overrides `defaults` now gets its own defaults merged.
+- Every component inherits one `getInstance` from `Component`, which also
+  sets and clears the `el.Expressive_<Name>` property. The types are
+  unchanged, except that `Slider` and `CharacterCounter` accept any
+  `HTMLElement`. A subclass that overrides `getInstance` with its own return
+  type no longer compiles (TS2417); delete the override, because the inherited
+  one already returns the subclass.
+- The bundle uses `ResizeObserver` and `IntersectionObserver` without
+  checking that they exist. Every supported browser has both, but tests that
+  run components in jsdom need stubs for them, as they already need one for
+  `matchMedia`.
+- A click in a Select sets `selected` on the option clicked and leaves the
+  others alone. It used to write every option.
+- Data tables and line charts inside a shadow root sort and format numbers
+  in the host's `lang`, as the date and time pickers already do.
 - The MCP package ships `scripts/bounded-file.mjs` and
   `scripts/semantics-rules.mjs`. Inspection read errors use new wording,
   such as "inspected file exceeds N bytes".
