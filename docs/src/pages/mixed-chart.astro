@@ -37,18 +37,20 @@ const online = [38, 44, 41, 52, 49, 58];
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>&lt;figure class="mixed-chart"&gt;</code> draws a
-          <code>&lt;table&gt;</code> as columns, lines and areas on one plot.
-          Each series header's class picks how it is drawn.
+          Wrap a <code>&lt;table&gt;</code> in a
+          <code>&lt;figure class="mixed-chart"&gt;</code> to draw it as columns, lines and areas on one plot.
+          The class on each series header picks how that series is drawn.
         </p>
         <p>
-          It takes the same markup as a <a href="line-chart.html">line
+          The markup is the same as for a <a href="line-chart.html">line
           chart</a>. Give a header cell <code>column</code> to draw that series
           as columns from zero, or <code>area</code> for a line with a fading
           fill under it. Any other series is a line, and
-          <code>dashed</code> dashes it. Columns sit behind the lines. A legend
-          names the series, and a tooltip follows the pointer or the arrow keys
-          from row to row, with a point on each line. With <code>toggle</code> on the figure, each legend item is a button that shows or hides its series, as on the <a href="line-chart.html#toggle">line chart</a>.
+          <code>dashed</code> dashes it. Columns sit behind the lines.
+        </p>
+        <p>
+          A legend names the series. A tooltip follows the pointer or the arrow keys
+          from row to row, with a point on each line. Add <code>toggle</code> to the figure to make each legend item a button that shows or hides its series, as on the <a href="line-chart.html#toggle">line chart</a>.
         </p>
         <figure class="mixed-chart" data-markdown-ignore>
           <figcaption>Revenue against target, $K</figcaption>
@@ -75,17 +77,17 @@ const online = [38, 44, 41, 52, 49, 58];
   </Section>
   <Section {...S.scales}>
         <p>
-          Series share one scale unless their header has <code>end</code>.
-          Those are drawn against a second scale fitted to their own values,
-          so a series in other units or of another size still fills the plot.
-          Set <code>data-end-min</code> and <code>data-end-max</code> on the
-          figure to fix that scale, as <code>data-min</code> and
+          Add <code>end</code> to a series header to draw that series against a second scale.
+          The second scale fits that series' own values, so a series in other units
+          or of another size still fills the plot. Without <code>end</code>, series share one scale.
+          To fix the second scale, set <code>data-end-min</code> and <code>data-end-max</code> on the
+          figure, as <code>data-min</code> and
           <code>data-max</code> fix the first.
         </p>
         <p>
-          <code>axis</code> labels both scales at round values: the first
-          beside the plot's start with a grid line at each, the second along
-          its end. When no end of either scale is set, the second scale
+          Add <code>axis</code> to label both scales at round values. The first
+          scale's labels sit beside the plot's start, with a grid line at each. The second
+          scale's labels run along its end. When neither scale has a fixed end, the second scale
           stretches to as many steps as the first, so its labels share the
           same grid lines. The labels repeat each scale's currency or percent
           sign and are hidden from assistive technology. Without
@@ -116,7 +118,7 @@ const online = [38, 44, 41, 52, 49, 58];
   <Section {...S.areas}>
         <p>
           An <code>area</code> series fills down to the bottom of the plot.
-          Here traffic has an area and the bounce rate is a dashed line on a
+          In this example, traffic is an area and the bounce rate is a dashed line on a
           second scale from 0% to 100%.
         </p>
         <figure class="mixed-chart" data-end-min="0" data-end-max="100" data-markdown-ignore>
@@ -142,8 +144,8 @@ const online = [38, 44, 41, 52, 49, 58];
 `} />
         <p>
           All three kinds fit on one plot. Several series can share the second
-          scale: here the margin and the growth rate are both percentages
-          from 0 to 35, while revenue keeps the first scale.
+          scale. Here the margin and the growth rate are both percentages
+          from 0 to 35, and revenue keeps the first scale.
         </p>
         <figure class="mixed-chart" data-end-min="0" data-end-max="35" data-markdown-ignore>
           <figcaption>Revenue ($K), profit margin and customer growth</figcaption>
@@ -174,11 +176,11 @@ const online = [38, 44, 41, 52, 49, 58];
   </Section>
   <Section {...S.stacked}>
         <p>
-          <code>stacked</code> stacks the column series into one column per
+          Add <code>stacked</code> to stack the column series into one column per
           row, so a reader sees both the parts and the total. Lines and areas
           keep their own values, such as a target to compare the totals
           with. Columns on the second scale stack in their own column beside
-          the first; list them after the others. <code>points</code> marks
+          the first. List them after the others. <code>points</code> marks
           each value on the lines with a dot, and <code>straight</code> draws
           straight lines between them instead of a curve.
         </p>
@@ -206,8 +208,8 @@ const online = [38, 44, 41, 52, 49, 58];
   </Section>
   <Section {...S.cards}>
         <p>
-          A chart goes in a card with the figures it explains. The card adds
-          no chart styles; set the plot's height with
+          Put a chart in a card with the figures it explains. The card adds
+          no chart styles. Set the plot's height with
           <code>--md-comp-mixed-chart-height</code>.
         </p>
         <article class="outlined" data-markdown-ignore>
@@ -242,24 +244,24 @@ const online = [38, 44, 41, 52, 49, 58];
 </article>
 `} />
         <p>
-          <code>sparkline</code> is a 48px chart with no grid, labels, legend
-          or tooltip, for a trend beside a figure that already explains it.
+          For a trend beside a figure that already explains it, add <code>sparkline</code>.
+          It draws a 48px chart with no grid, labels, legend or tooltip.
         </p>
   </Section>
   <Section {...S.data}>
         <p>
-          Cells read as in a line chart: a cell's number is its
+          The chart reads cells as a line chart does. A cell's number is its
           <code>data-value</code>, or its text without currency signs, percent
           signs or grouping commas. The tooltip shows each cell's text as
           written. A scale with columns always includes zero. Otherwise it
-          spans its values with a tenth to spare at each end, unless fixed by
-          the data attributes or the <code>min</code> and <code>max</code>
-          options. A gap breaks a line and leaves a column's slot empty.
+          spans its values with a tenth to spare at each end. The data attributes or the
+          <code>min</code> and <code>max</code> options override that range.
+          A gap breaks a line and leaves a column's slot empty.
         </p>
         <p>
           Series take <code>primary</code>, <code>tertiary</code>,
           <code>secondary</code> and <code>on-surface-variant</code> in
-          column order, whatever their kind; a fifth series repeats the first
+          column order, whatever their kind. A fifth series repeats the first
           color.
         </p>
   </Section>
@@ -267,31 +269,33 @@ const online = [38, 44, 41, 52, 49, 58];
         <p>
           The table is the chart's text alternative. Give it a header row and
           a header cell per row, and name the chart with a
-          <code>&lt;figcaption&gt;</code>. Since there is no y axis, put the
-          units in the caption, the headers or the cells. The drawn marks,
-          labels and legend are hidden from assistive technology.
+          <code>&lt;figcaption&gt;</code>. There is no y axis, so put the
+          units in the caption, the headers or the cells. The chart hides its drawn marks,
+          labels and legend from assistive technology.
         </p>
         <p>
-          The plot is one Tab stop named by the caption. Left and right move
-          between rows, Home and End jump to the ends and Escape hides the
-          tooltip. In a right-to-left page the rows and the arrows run right
+          The plot is one Tab stop, named by the caption. Left and right move
+          between rows. Home and End jump to the ends, and Escape hides the
+          tooltip. In a right-to-left page, the rows and the arrows run right
           to left. On a touch screen, tap a row to show it. The tooltip is a
-          polite live region, so a screen reader hears each row's values as it
-          moves. A sparkline is not focusable. Dashed lines can be told apart
-          from solid ones without color, and in forced colors the marks keep
+          polite live region, so a screen reader announces each row's values as the
+          tooltip moves. A sparkline is not focusable.
+        </p>
+        <p>
+          Readers can tell dashed lines from solid ones without color. In forced colors, the marks keep
           their colors so the legend still matches them.
         </p>
   </Section>
   <Section {...S.javascript}>
         <p>
           <code>AutoInit()</code> starts every <code>.mixed-chart</code>. To
-          start one yourself, call <code>MixedChart.init</code>. After changing its
-          table, call <code>update()</code> to redraw it in place, or put
-          <code>data-watch</code> on the figure and it redraws itself. Its columns,
+          start one yourself, call <code>MixedChart.init</code>. After you change its
+          table, call <code>update()</code> to redraw it in place. Or put
+          <code>data-watch</code> on the figure, and the chart redraws itself. The columns,
           lines and areas move from their old values to the new ones, as in
-          the line and column charts; with reduced motion they appear at
-          once. It has the line chart's
-          methods and options; <code>min</code> and <code>max</code> apply to
+          the line and column charts. With reduced motion, they appear at
+          once. The mixed chart has the line chart's
+          methods and options. <code>min</code> and <code>max</code> apply to
           the first scale.
         </p>
 <Code code={`

@@ -21,8 +21,8 @@ const colors = [
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>&lt;fieldset class="color-swatches"&gt;</code> holds one radio per
-          color. Each radio is drawn as a round chip of its color, so Tab, the arrow
-          keys and form submission stay native.
+          color. Each radio shows as a round chip of its color, so Tab, the arrow
+          keys and form submission keep their native behavior.
         </p>
         <p>
           Put each radio in a <code>&lt;label&gt;</code> whose visually hidden text,
@@ -52,8 +52,8 @@ const colors = [
   <Section {...S.custom}>
         <p>
           Add an <code>&lt;input type="color"&gt;</code> at the end of the group for a
-          value outside the palette. It opens the browser's own picker and is already
-          drawn as a matching round swatch. Give it its own <code>name</code> and its
+          value outside the palette. It opens the browser's own picker and already
+          shows as a matching round swatch. Give it its own <code>name</code> and its
           own label.
         </p>
         <fieldset class="color-swatches mb-3">
@@ -77,7 +77,7 @@ const colors = [
 `} />
   </Section>
   <Section {...S.tokens}>
-        <p>Override these on the <code>.color-swatches</code>; set the swatch color on each radio.</p>
+        <p>Override these on the <code>.color-swatches</code>. Set the swatch color on each radio.</p>
         <TokenTable>
           <tr><td><code>--md-comp-color-swatch-color</code></td><td>transparent; set it on each radio</td></tr>
           <tr><td><code>--md-comp-color-swatches-size</code></td><td>40px</td></tr>

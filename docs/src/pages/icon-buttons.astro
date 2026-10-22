@@ -30,15 +30,15 @@ const S = defineSections([
           <code>&lt;span class="material-symbols"&gt;</code> inside it.
         </p>
         <p>
-          The icon is decoration, so it is <code>aria-hidden</code>, which
-          leaves the control without an accessible name. Every icon button
-          needs an <code>aria-label</code>.
+          Mark the icon <code>aria-hidden</code>, because it is decoration.
+          That leaves the control without an accessible name, so every icon
+          button needs an <code>aria-label</code>.
           <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">SEMANTICS.md</a>
           enforces both rules against the docs, and a bare icon button fails
           the suite.
         </p>
         <p>
-          It keeps its own look inside the components that host actions: a
+          An icon button keeps its own look inside the components that host actions: a
           toolbar, an app bar, a list row, a dialog header, a snackbar, a
           navigation rail, a pane header, or a footer. Those hosts style plain
           controls placed in them and leave a control that styles itself
@@ -74,8 +74,8 @@ const S = defineSections([
   </Section>
   <Section {...S.styles}>
         <p>
-          There are four styles, and they use the same modifier names as buttons:
-          <strong>standard</strong> is the default and has no container,
+          There are four styles, with the same modifier names as buttons.
+          <strong>standard</strong> is the default and has no container.
           <code>filled</code> is <code>primary</code>,
           <code>tonal</code> is <code>secondary-container</code>, and
           <code>outlined</code> is an <code>outline-variant</code> border with
@@ -138,11 +138,11 @@ const S = defineSections([
   </Section>
   <Section {...S.width}>
         <p>
-          Width is the inset plus the icon, so it has no size of its own. That
-          is why the default width of every size equals its height, and why a
-          round icon button is already a circle. Add <code>narrow</code> to
-          tighten the inset or <code>wide</code> to widen it. Both scale with
-          whichever size they are on.
+          Add <code>narrow</code> to tighten the inset or <code>wide</code> to
+          widen it. Both scale with whichever size they are on. Width is the
+          inset plus the icon, so it has no size of its own. That is why the
+          default width of every size equals its height, and why a round icon
+          button is already a circle.
         </p>
         <p>
           <button type="button" class="icon-button tonal medium narrow" aria-label="Star, narrow">
@@ -163,10 +163,10 @@ const S = defineSections([
   <Section {...S.shape}>
         <p>
           Icon buttons are round by default. Add <code>square</code> for the
-          squared container, whose corner grows with the size: 12dp on the
-          two small sizes, 16dp on medium, and 28dp on the two large ones. Either way the corner tightens
-          while the button is pressed, which is the Material 3 Expressive shape
-          morph.
+          squared container. Its corner grows with the size: 12dp on the
+          two small sizes, 16dp on medium, and 28dp on the two large ones.
+          Either way, the corner tightens while the button is pressed. This is
+          the Material 3 Expressive shape morph.
         </p>
         <p>
           <button type="button" class="icon-button filled square" aria-label="Edit, square">
@@ -194,11 +194,11 @@ const S = defineSections([
           class makes it so.</strong> <code>pointer-events: none</code> only
           blocks the pointer. The link stays in the tab order and still
           navigates on Enter, so a <code>.disabled</code> anchor looks inert but
-          still works. Remove the <code>href</code>, since an anchor without one
-          is neither focusable nor actionable, or remove the link entirely.
-          <code>aria-disabled="true"</code> gets the same styling, for an
-          element that must stay in the document and announce itself as
-          unavailable.
+          still works. Remove the <code>href</code> instead, because an anchor
+          without one is neither focusable nor actionable. You can also remove
+          the link entirely. For an element that must stay in the document and
+          announce itself as unavailable, use <code>aria-disabled="true"</code>,
+          which gets the same styling.
         </p>
         <p>
           <button type="button" class="icon-button" aria-label="Add" disabled>
@@ -239,19 +239,19 @@ const S = defineSections([
   </Section>
   <Section {...S.copy}>
         <p>
-          Any button copies to the clipboard. <code>data-copy-for</code> names
-          the id of a field, which copies its value, or of another element,
-          which copies its trimmed text. <code>data-copy</code> holds the text
-          itself. A snackbar confirms the result, and screen readers announce
-          it.
+          Any button can copy to the clipboard. Set <code>data-copy-for</code>
+          to the id of a field to copy its value, or to the id of another
+          element to copy its trimmed text. To copy fixed text, put it in
+          <code>data-copy</code>. A snackbar confirms the result, and screen
+          readers announce it.
         </p>
         <p>
           <code>data-copy-message</code> and <code>data-copy-error</code>
-          replace the snackbar's texts for one button, and
+          replace the snackbar's texts for one button.
           <code>Expressive.Copy.i18n</code> replaces them everywhere. The root
-          bundle starts the behavior on load; with the modular entry, call
-          <code>Copy.Init()</code>. The clipboard needs HTTPS or localhost;
-          anywhere else the snackbar reports the failure.
+          bundle starts the behavior on load. With the modular entry, call
+          <code>Copy.Init()</code>. The clipboard needs HTTPS or localhost.
+          Anywhere else, the snackbar reports the failure.
           <code>Expressive.Copy.textFor(button)</code> returns the text a
           button would copy, or <code>null</code> when its
           <code>data-copy-for</code> names no element.

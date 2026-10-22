@@ -21,11 +21,11 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          An <code>&lt;article&gt;</code> is an elevated card. Any heading is the
-          headline, <code>&lt;p class="subhead"&gt;</code> is the optional
-          subhead, a <code>&lt;p&gt;</code> is supporting
-          copy, direct <code>&lt;img&gt;</code>, <code>&lt;picture&gt;</code>, or
-          <code>&lt;figure&gt;</code> is media, and direct <code>.actions</code>
+          Use an <code>&lt;article&gt;</code> for an elevated card. Inside it, any
+          heading is the headline, <code>&lt;p class="subhead"&gt;</code> is the
+          optional subhead, and a <code>&lt;p&gt;</code> is supporting copy. A
+          direct <code>&lt;img&gt;</code>, <code>&lt;picture&gt;</code>, or
+          <code>&lt;figure&gt;</code> is media, and a direct <code>.actions</code>
           is the action row. Include only the slots the content needs.
           There is no <code>card-content</code>, <code>card-title</code>, or
           <code>card-action</code> class.
@@ -34,7 +34,7 @@ const S = defineSections([
           Tokens follow the
           <a href="https://m3.material.io/components/cards/specs">M3 card spec</a>.
           The elevated container is <code>surface-container-low</code> with
-          12dp corners. The default sits at elevation 1; an interactive card
+          12dp corners. The default sits at elevation 1, and an interactive card
           rises to 2 on hover. The
           headline is <code>title-medium</code> in <code>on-surface</code>, the
           subhead is <code>title-small</code> in <code>on-surface</code>, and
@@ -70,9 +70,9 @@ const S = defineSections([
   </Section>
   <Section {...S.variants}>
         <p>
-          The default is elevated. <code>filled</code> uses
-          <code>surface-container-highest</code> at rest (no shadow).
-          <code>outlined</code> (or <code>border</code>) draws a 1dp
+          Cards are elevated by default. Add <code>filled</code> for
+          <code>surface-container-highest</code> at rest, with no shadow. Add
+          <code>outlined</code> (or <code>border</code>) for a 1dp
           <code>outline-variant</code> stroke over <code>surface</code>.
         </p>
         <div class="row" data-markdown-ignore>
@@ -103,17 +103,18 @@ const S = defineSections([
   </Section>
   <Section {...S.interaction}>
         <p>
-          A static card has no hover treatment. To make the card an entry
-          point, wrap its primary content in a direct
+          To make the card an entry point, wrap its primary content in a direct
           <code>&lt;a class="primary-action"&gt;</code>. That gives the card M3
-          hover, focus, pressed, and focus-indicator states. A directly
-          actionable card has no other links or buttons. When the content
-          needs several actions, leave the card static and put the controls in
-          <code>.actions</code>. Toggle <code>dragged</code> or
-          <code>picked-up</code> during reordering; that state keeps its dragged
-          elevation and 16% state layer even if the primary action remains
-          hovered or pressed. For a disabled destination, remove
-          <code>href</code> and set both
+          hover, focus, pressed, and focus-indicator states. A static card has
+          no hover treatment. A directly actionable card has no other links or
+          buttons. When the content needs several actions, leave the card
+          static and put the controls in <code>.actions</code>.
+        </p>
+        <p>
+          Toggle <code>dragged</code> or <code>picked-up</code> during
+          reordering. That state keeps its dragged elevation and 16% state
+          layer even if the primary action remains hovered or pressed. For a
+          disabled destination, remove <code>href</code> and set both
           <code>aria-disabled="true"</code> and <code>tabindex="-1"</code> on
           the primary action.
         </p>
@@ -134,8 +135,8 @@ const S = defineSections([
   </Section>
   <Section {...S.collections}>
         <p>
-          <code>card-collection</code> creates a responsive grid with no more
-          than 8dp between cards. Cards keep their variant-specific resting
+          Add <code>card-collection</code> to a container for a responsive grid
+          with no more than 8dp between cards. Cards keep their variant-specific resting
           elevation: level 1 for elevated, level 0 for filled and outlined.
           Add <code>picked-up</code> or <code>dragged</code> only while a card is
           being moved. Add <code>list</code>, <code>staggered</code>,
@@ -145,9 +146,9 @@ const S = defineSections([
 
         <h4>Responsive grid</h4>
         <p>
-          The default uses auto-fit columns. Change the minimum card width or
-          replace the complete grid track token when the content needs a
-          different column strategy.
+          The default uses auto-fit columns. When the content needs a different
+          column strategy, change the minimum card width or replace the
+          complete grid track token.
         </p>
         <section
           data-markdown-ignore
@@ -218,8 +219,9 @@ const S = defineSections([
 
         <h4>Carousel</h4>
         <p>
-          Add <code>carousel uncontained</code>. Add <code>carousel-item</code>
-          to every card; <code>AutoInit()</code> supplies the M3 scroll track.
+          Add <code>carousel uncontained</code> to the collection and
+          <code>carousel-item</code> to every card. <code>AutoInit()</code>
+          supplies the M3 scroll track.
         </p>
         <section
           data-markdown-ignore
@@ -264,15 +266,15 @@ const S = defineSections([
 </Section>
   <Section {...S.image}>
         <p>
-          A direct <code>&lt;img&gt;</code> is full-bleed across the top and its
-          media surface has rounded corners matching the card.
-          Wrap it in a <code>&lt;figure&gt;</code> if you want a caption on
-          the image. The <code>&lt;figcaption&gt;</code> is an opaque, rounded
-          bounding shape using the paired <code>surface</code> and
+          A direct <code>&lt;img&gt;</code> is full-bleed across the top, and its
+          media surface has rounded corners matching the card. To caption the
+          image, wrap it in a <code>&lt;figure&gt;</code>. The
+          <code>&lt;figcaption&gt;</code> is an opaque, rounded bounding shape
+          that uses the paired <code>surface</code> and
           <code>on-surface</code> roles, so image colors cannot reduce the
-          contrast of its text or icons. Normal text must retain at least
-          4.5:1 contrast; large text and meaningful icons require at least
-          3:1. Recheck those ratios if you override either color token.
+          contrast of its text or icons. Normal text must keep at least 4.5:1
+          contrast. Large text and meaningful icons need at least 3:1. Recheck
+          those ratios if you override either color token.
         </p>
         <div class="row" data-markdown-ignore>
           <div class="s12 m7">
@@ -314,15 +316,17 @@ const S = defineSections([
   </Section>
   <Section {...S.horizontal}>
         <p>
-          The same card can use two orientations without changing its content
-          order. Add <code>horizontal</code> to move the media to the start and
-          stack the headline, supporting text, and action beside it. A direct
-          <code>.primary-action</code> link can wrap those same slots when the
-          whole horizontal card is one destination. Without a size helper, its
-          height follows content with a 240px minimum; <code>small</code>,
-          <code>medium</code>, and <code>large</code> provide fixed expanded
-          heights. Below 600px, both forms return to the vertical layout and
-          fixed heights reset to content. Inside a
+          Add <code>horizontal</code> to move the media to the start and stack
+          the headline, supporting text, and action beside it. The content
+          order stays the same in both orientations. When the whole horizontal
+          card is one destination, a direct <code>.primary-action</code> link
+          can wrap those same slots.
+        </p>
+        <p>
+          Without a size helper, the card's height follows content with a 240px
+          minimum. <code>small</code>, <code>medium</code>, and
+          <code>large</code> set fixed expanded heights. Below 600px, both forms
+          return to the vertical layout and fixed heights reset to content. Inside a
           <a href="/helpers.html#display"><code>.query-container</code></a> narrower than 600px they
           do the same on any window, so a horizontal card in a sidebar stacks too.
         </p>
@@ -381,24 +385,28 @@ const S = defineSections([
   </Section>
   <Section {...S.reveal}>
         <p>
-          An <code>&lt;aside&gt;</code> expands in normal flow below the persistent
-          media, headline, and subhead. Place a
-          <code>.card-reveal-trigger</code> button over the media;
-          the same button opens and closes the details.
+          Put the details in an <code>&lt;aside&gt;</code>. It expands in normal
+          flow below the persistent media, headline, and subhead. Place a
+          <code>.card-reveal-trigger</code> button over the media, and use that
+          same native button to open and close the panel. The reveal grows the
+          card instead of covering or internally scrolling it. This replaces
+          legacy <code>.activator</code> markup and heading-based close controls.
+        </p>
+        <p>
           <code>Cards.Init()</code>, and <code>AutoInit()</code> when the card
           contains both that button and one identified direct <code>&lt;aside&gt;</code>,
           manages <code>aria-expanded</code>. It applies the closed-panel styles
-          only when the disclosure markup passes these checks, and the trigger must be
+          only when the disclosure markup passes these checks. The trigger must be
           enabled when Cards initializes. A disclosure that fails, such as one with only
           disabled triggers, an unidentified panel, or several panels, leaves every
-          panel visible, available, and untouched. The native button handles Enter and Space. Escape closes
-          an open panel and returns focus to its trigger. A trigger belongs to
-          its closest <code>&lt;article&gt;</code>; nested cards, including cards
+          panel visible, available, and untouched.
+        </p>
+        <p>
+          The native button handles Enter and Space. Escape closes an open
+          panel and returns focus to its trigger. A trigger belongs to its
+          closest <code>&lt;article&gt;</code>. Nested cards, including cards
           inside an outer reveal panel, keep their own disclosure ownership and
-          do not initialize or toggle the outer card. The reveal grows the
-          card instead of covering or internally scrolling it.
-          This replaces legacy <code>.activator</code> markup and heading-based
-          close controls. Use the same native button to open and close the panel.
+          do not initialize or toggle the outer card.
         </p>
         <p>
           <code>Cards.init(el, options)</code> takes two callbacks, both
@@ -457,28 +465,31 @@ const S = defineSections([
   </Section>
   <Section {...S.expanding}>
         <p>
-          An expanding card performs a shared-container transition from a
-          compact feed item into a full-screen modal detail surface. Use an
-          <code>&lt;article class="expanding-card"&gt;</code> with a direct
-          <code>&lt;dialog class="expanding-card-dialog"&gt;</code>. Keep the
+          Use an <code>&lt;article class="expanding-card"&gt;</code> with a direct
+          <code>&lt;dialog class="expanding-card-dialog"&gt;</code>. The card
+          performs a shared-container transition from a compact feed item into
+          a full-screen modal detail surface. Keep the
           same hero image in both states so the media appears to grow with the
           container. <code>ExpandingCard.Init()</code> and
           <code>AutoInit()</code> wire up the modal, measured clip origin,
           back action, focus return, Escape, and reduced motion.
         </p>
         <p>
-          The container morph and the hero run on the slow spatial spring, the
-          close button and detail content on the default spatial spring, and their
-          fade on the fast effects spring, so <code>motion="expressive"</code> reaches
-          all three. Override <code>--md-comp-expanding-card-motion-duration</code>
-          and <code>--md-comp-expanding-card-motion-easing</code> together to change
-          container timing; a spring easing over another duration is no longer that
-          spring. Closing waits for the actual clip transition, including
-          cancellation; zero duration and reduced motion close immediately.
-          Reopening or destroying the instance invalidates pending close cleanup.
+          The container morph and the hero run on the slow spatial spring. The
+          close button and detail content run on the default spatial spring,
+          and their fade on the fast effects spring. So
+          <code>motion="expressive"</code> reaches all three. To change container
+          timing, override <code>--md-comp-expanding-card-motion-duration</code>
+          and <code>--md-comp-expanding-card-motion-easing</code> together. A
+          spring easing over another duration is no longer that spring.
+        </p>
+        <p>
+          Closing waits for the actual clip transition, including cancellation.
+          Zero duration and reduced motion close immediately. Reopening or
+          destroying the instance invalidates pending close cleanup.
           <code>ExpandingCard.init(el, options)</code> takes two callbacks, both
-          called with the card: <code>onOpen</code> runs once the dialog is
-          open and focus is on the back button, and <code>onClose</code> runs
+          called with the card. <code>onOpen</code> runs once the dialog is
+          open and focus is on the back button. <code>onClose</code> runs
           when closing starts.
         </p>
         <div class="row" data-markdown-ignore>
@@ -560,8 +571,8 @@ const S = defineSections([
   <Section {...S.sizes}>
         <p>
           <code>small</code>, <code>medium</code>, and <code>large</code>
-          lock the height at 300px, 400px, and 500px so a row of cards lines
-          up. Media takes the top 60%; the action row sticks to the bottom.
+          lock the height at 300px, 400px, and 500px, so a row of cards lines
+          up. Media takes the top 60%, and the action row sticks to the bottom.
           These sizes are optional layout helpers and are not part of the M3
           spec.
         </p>

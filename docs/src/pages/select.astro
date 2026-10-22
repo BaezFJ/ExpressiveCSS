@@ -23,16 +23,16 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
-          Select turns a native <code>&lt;select&gt;</code> into an exposed menu,
-          which is a text field paired with a menu. Wrap it in
-          <code>.field</code> and give the label a matching
-          <code>for</code>. Add <code>outlined</code> (or <code>border</code>) on that
-          field for the outlined variant.
+          Wrap a native <code>&lt;select&gt;</code> in <code>.field</code> and
+          give the label a matching <code>for</code>. Select turns it into an
+          exposed menu, a text field paired with a menu. Add
+          <code>outlined</code> (or <code>border</code>) on that field for the
+          outlined variant.
           <code>AutoInit()</code> starts every <code>select</code> except those marked
           <code>no-autoinit</code>. Add <code>browser-default</code> to keep the native control.
         </p>
 
-        <p>Filled enhanced selects reserve space for their label, including translated labels that wrap or grow with text size. The outlined and native variants retain their existing layout.</p>
+        <p>Filled enhanced selects reserve space for their label, including translated labels that wrap or grow with text size. The outlined and native variants keep their existing layout.</p>
 
         <div class="field mb-5">
           <select id="form-select-1">
@@ -71,12 +71,13 @@ const S = defineSections([
         </div>
 
         <p>
-          Put an image URL in <code>data-icon</code> on an option. Classes on that option
-          are copied to the image; <code>left</code> floats it left. Images float right
-          by default. There is no <code>icons</code> class on the <code>&lt;select&gt;</code>.
-          Relative, HTTP(S), blob, and image data URLs are supported (AVIF, BMP, GIF,
-          JPEG, PNG, SVG, WebP, or ICO). Invalid URLs and other schemes are ignored;
-          the option remains selectable.
+          Put an image URL in <code>data-icon</code> on an option. The component
+          copies that option's classes to the image. Images float right by
+          default, and <code>left</code> floats one left. The
+          <code>&lt;select&gt;</code> needs no <code>icons</code> class.
+          Supported URLs are relative, HTTP(S), blob, and image data URLs (AVIF,
+          BMP, GIF, JPEG, PNG, SVG, WebP, or ICO). The component ignores invalid
+          URLs and other schemes, and the option stays selectable.
         </p>
         <form class="row">
           <div class="s12 m6 field">
@@ -175,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 `} />
-        <p>Per-instance options can also be passed through AutoInit:</p>
+        <p>You can also pass per-instance options through AutoInit:</p>
 <Code code={`
 Expressive.AutoInit(document.body, {
   FormSelect: { menuOptions: { constrainWidth: false } }
@@ -197,8 +198,8 @@ Expressive.AutoInit(document.body, {
               <td>
                 Options passed to <code>Menu</code>. See
                 <a href={`${route('menu')}#options`}>Menu</a>.
-                <code>coverTrigger</code> is forced to <code>false</code> and
-                <code>closeOnClick</code> is forced to <code>false</code>.
+                The component forces <code>coverTrigger</code> and
+                <code>closeOnClick</code> to <code>false</code>.
               </td>
             </tr>
         </OptionsTable>
@@ -217,8 +218,8 @@ instance.getSelectedValues();
         <p>
           Re-read the native <code>&lt;select&gt;</code>. Call this after changing
           <code>select.value</code>, option labels, options or disabled states.
-          The menu rows are rebuilt; the field and an existing Menu instance stay put.
-          Refreshing an open menu preserves focus on a surviving option.
+          It rebuilds the menu rows and leaves the field and any existing Menu
+          instance in place. Refreshing an open menu keeps focus on a surviving option.
           These programmatic updates do not emit a user <code>change</code> event.
         </p>
 <Code code={`
@@ -226,29 +227,30 @@ instance.refresh();
 `} />
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove the menu, and restore the native select. Associated labels keep their original nodes and event listeners; teardown restores their attributes and authored positions.</p>
+        <p>Destroy the plugin instance, remove the menu, and restore the native select. Associated labels keep their original nodes and event listeners. Teardown restores their attributes and authored positions.</p>
 <Code code={`
 instance.destroy();
 `} />
   </Section>
   <Section {...S["native-forms"]}>
-        <p>The native select handles selection and form submission. Disabled options and
-          disabled optgroups cannot be chosen in the generated menu. A selected
-          disabled option remains visible in the field, but native form submission
-          excludes it. An empty selection displays an empty field.</p>
+        <p>The native select handles selection and form submission. The generated menu
+          does not let users choose disabled options or options in disabled optgroups.
+          A selected disabled option stays visible in the field, but native form
+          submission excludes it. An empty selection displays an empty field.</p>
         <p>The enhanced field exposes one combobox to assistive technology. All associated
           labels contribute to its name in their original order, unless an authored
           <code>aria-label</code> or <code>aria-labelledby</code> supplies the name. Each label
-          targets the visible control. The native
-          select stays visually hidden and excluded from the accessibility tree while initialized. Required and custom validation errors
-          use its browser-provided message, displayed as supporting text associated
-          with the visible field. Native validation chooses which field receives focus,
-          and the enhanced select forwards that focus to its visible field.
-          <code>checkValidity()</code> preserves focus; <code>reportValidity()</code>
+          targets the visible control. While initialized, the native select stays
+          visually hidden and out of the accessibility tree.</p>
+        <p>Required and custom validation errors use the native select's
+          browser-provided message. The component shows it as supporting text
+          associated with the visible field. Native validation chooses which field
+          receives focus, and the enhanced select forwards that focus to its visible
+          field. <code>checkValidity()</code> preserves focus. <code>reportValidity()</code>
           on a select reports that control even when an earlier field is invalid.</p>
         <p>After changing <code>setCustomValidity()</code> from script, call
           <code>refresh()</code> to update an existing error. Correcting the value clears
-          resolved errors; resetting the form clears displayed errors without changing
+          resolved errors. Resetting the form clears displayed errors without changing
           native validation rules. <code>destroy()</code> removes generated error messages
           and restores the native control.</p>
         <p>Use the form's Reset button or <code>form.reset()</code> to restore defaults.

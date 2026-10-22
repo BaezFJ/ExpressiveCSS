@@ -23,17 +23,19 @@ const S = defineSections([
 ---
 <DocsLayout page="datepicker">
 <PageBody sections={S}>
-<p>The inline and docked calendars support keyboard navigation. Enter on the date input focuses a day. Tab enters or leaves the grid; arrow keys move by day or week. Home and End follow <code>firstDay</code>, and Left and Right follow <code>isRTL</code>. PageUp and PageDown change the month; hold Shift to change the year. Enter or Space selects an enabled day. Disabled dates remain focusable and are announced as unavailable. A typed date that is outside the bounds, a disabled weekend or refused by <code>disableDayFn</code> puts the input back to the selected date. An input's initial value is the selection, and a form reset reads the selection back from the reset values. Navigation respects configured bounds and preserves focus after redraws. A modal calendar moves focus to the selected day when it opens and back to the input when it closes.</p>
+<p>The inline and docked calendars support keyboard navigation. Enter on the date input focuses a day. Tab enters or leaves the grid, and the arrow keys move by day or week. Home and End follow <code>firstDay</code>, and Left and Right follow <code>isRTL</code>. PageUp and PageDown change the month. Hold Shift with them to change the year. Enter or Space selects an enabled day.</p>
+<p>Disabled dates stay focusable, and screen readers announce them as unavailable. Navigation respects configured bounds and keeps focus after redraws. A modal calendar moves focus to the selected day when it opens and back to the input when it closes.</p>
+<p>An input's initial value is the selection, and a form reset reads the selection back from the reset values. If a typed date is outside the bounds, falls on a disabled weekend or is refused by <code>disableDayFn</code>, the input goes back to the selected date.</p>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>date-picker</code> to a text input. <code>AutoInit()</code> starts every
           <code>.date-picker</code> except those marked <code>no-autoinit</code>.
         </p>
         <p>
-          The calendar is inline, not a modal. With the default options the
-          calendar is hidden (<code>openByDefault: false</code>) and clicking
-          the input does not reveal it. Pass <code>openByDefault: true</code>
-          to show the calendar under the field.
+          Pass <code>openByDefault: true</code> to show the calendar under the
+          field. The calendar is inline, not a modal. With the default options
+          it is hidden (<code>openByDefault: false</code>), and clicking the
+          input does not reveal it.
         </p>
         <div class="field">
           <input type="text" class="date-picker no-autoinit" id="datepicker-intro">
@@ -52,7 +54,7 @@ Expressive.Datepicker.init(document.querySelectorAll('.date-picker'), {
 `} />
         <p>
           Wrap the input in its own <code>.field</code> (or another small parent). The
-          calendar is inserted after that parent, not after the input itself.
+          picker inserts the calendar after that parent, not after the input itself.
         </p>
   </Section>
 
@@ -72,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 `} />
-        <p>Per-instance options can also be passed through AutoInit:</p>
+        <p>You can also pass per-instance options through AutoInit:</p>
 <Code code={`
 Expressive.AutoInit(document.body, {
   Datepicker: { openByDefault: true }
@@ -94,8 +96,8 @@ Expressive.AutoInit(document.body, {
         <h5 class="light">Docked popover</h5>
         <p>
           <code>displayPlugin: 'docked'</code> wraps the calendar in a
-          <code>.display-docked</code> popover that appears when the input is clicked or
-          focused with Enter, and hides when you click outside. The plugin only animates
+          <code>.display-docked</code> popover. The popover appears when the input is
+          clicked or focused with Enter, and hides when you click outside. The plugin only animates
           the wrapper. If <code>openByDefault</code> is still <code>false</code>, the calendar
           inside stays <code>display: none</code>. Use both:
         </p>
@@ -107,8 +109,8 @@ Expressive.Datepicker.init(elem, {
 `} />
         <p>
           The popover stays inside the input's parent and accounts for its
-          positioning and scroll offsets. Positioned wrappers such as
-          <code>.field</code> can be used directly.
+          positioning and scroll offsets. You can use positioned wrappers such as
+          <code>.field</code> directly.
         </p>
         <p>
           Optional <code>displayPluginOptions</code>: <code>margin</code> (default
@@ -119,11 +121,14 @@ Expressive.Datepicker.init(elem, {
         <h5 class="light">Modal dialog</h5>
         <p>
           <code>displayPlugin: 'modal'</code> opens the calendar in a modal
-          <code>&lt;dialog class="display-modal"&gt;</code>, drawn as a basic
-          dialog over a scrim, when the input is clicked or focused with Enter.
-          The dialog takes the input's label as its name and focus moves to the
-          selected day. Picking a day writes nothing until Ok; Cancel, Escape
-          or a press on the scrim close it without changing the input and call
+          <code>&lt;dialog class="display-modal"&gt;</code> when the input is
+          clicked or focused with Enter. It looks like a basic dialog over a
+          scrim. The dialog takes the input's label as its name, and focus
+          moves to the selected day.
+        </p>
+        <p>
+          Picking a day writes nothing until Ok. Cancel, Escape or a press on
+          the scrim closes the dialog without changing the input and calls
           <code>onCancel</code>. Focus then goes back to the input. A modal
           calendar always shows Cancel and Ok, so it sets
           <code>openByDefault: true</code> and <code>autoSubmit: false</code>
@@ -140,7 +145,7 @@ Expressive.Datepicker.init(elem, {
         </p>
         <p>
           <code>container</code> renders the calendar into a specific element and does not
-          hide it. Use a selector or a DOM node.
+          hide it. Pass a selector or a DOM node.
         </p>
   </Section>
 
@@ -168,13 +173,13 @@ Expressive.Datepicker.init(elem, {
               <td><code>dateRangeEndEl</code></td>
               <td>String</td>
               <td><code>null</code></td>
-              <td>Selector for an existing end-date input. If omitted, a second input is created.</td>
+              <td>Selector for an existing end-date input. If you omit it, the picker creates a second input.</td>
             </tr>
             <tr>
               <td><code>isMultipleSelection</code></td>
               <td>Boolean</td>
               <td><code>false</code></td>
-              <td>Toggle several dates. Extra inputs are created as dates are added.</td>
+              <td>Toggle several dates. The picker creates extra inputs as dates are added.</td>
             </tr>
             <tr>
               <td><code>defaultDate</code></td>
@@ -264,7 +269,7 @@ Expressive.Datepicker.init(elem, {
               <td><code>openByDefault</code></td>
               <td>Boolean</td>
               <td><code>false</code></td>
-              <td>If true, the calendar is visible. If false, it is given <code>display: none</code>.</td>
+              <td>If true, the calendar is visible. If false, it gets <code>display: none</code>.</td>
             </tr>
             <tr>
               <td><code>container</code></td>
@@ -318,13 +323,13 @@ Expressive.Datepicker.init(elem, {
               <td><code>onConfirm</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called once when Ok is activated by click, Enter or Space. The button is created when <code>autoSubmit</code> is false.</td>
+              <td>Called once when Ok is activated by click, Enter or Space. The picker adds this button when <code>autoSubmit</code> is false.</td>
             </tr>
             <tr>
               <td><code>onCancel</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called once when Cancel is activated by click, Enter or Space. The button is created when <code>autoSubmit</code> is false.</td>
+              <td>Called once when Cancel is activated by click, Enter or Space. The picker adds this button when <code>autoSubmit</code> is false.</td>
             </tr>
             <tr>
               <td><code>displayPlugin</code></td>
@@ -342,8 +347,8 @@ Expressive.Datepicker.init(elem, {
   </Section>
 
   <Section {...S["date-format"]}>
-        <p>Without a custom <code>parse</code> callback, <code>YYYY-MM-DD</code> input is a local calendar date. Impossible dates such as <code>2023-02-29</code> do not change the selection. Text in the picker's own string <code>format</code> is read with its <code>i18n</code> names, so <code>05/10/2026</code> in <code>dd/mm/yyyy</code> is 5 October and a German <code>Mär 15, 2026</code> reads back. Other strings use the browser's date parser. Supply <code>parse</code> for other input formats.</p>
-        <p>The custom parser also applies when initializing or reopening the picker by click or Enter. Clearing a single-date input clears its selection, so confirming does not restore the deleted date.</p>
+        <p>Without a custom <code>parse</code> callback, the picker reads <code>YYYY-MM-DD</code> input as a local calendar date. Impossible dates such as <code>2023-02-29</code> do not change the selection. The picker reads text in its own string <code>format</code> with its <code>i18n</code> names. So <code>05/10/2026</code> in <code>dd/mm/yyyy</code> is 5 October, and a German <code>Mär 15, 2026</code> reads back. Other strings go to the browser's date parser. Supply <code>parse</code> for other input formats.</p>
+        <p>The custom parser also runs when the picker initializes, and when it reopens by click or Enter. Clearing a single-date input clears its selection, so confirming does not restore the deleted date.</p>
         <p>Use these tokens in the <code>format</code> string.</p>
         <table class="striped">
           <thead>
@@ -410,13 +415,14 @@ Expressive.Datepicker.init(elem, {
 
   <Section {...S.internationalization}>
         <p>
-          With a <code>lang</code> attribute on the input or around it, such as
-          <code>&lt;html lang="de"&gt;</code>, the month and weekday names come from
-          that language, as <code>Intl</code> writes them, and so does the first day of
-          the week where the browser knows it. The button words are not dates, so pass
-          them yourself. Without a <code>lang</code> the English defaults stay.
+          Put a <code>lang</code> attribute on the input or around it, such as
+          <code>&lt;html lang="de"&gt;</code>, to take the month and weekday names from
+          that language, as <code>Intl</code> writes them. The first day of the week
+          follows that language too, where the browser knows it. Without a
+          <code>lang</code>, the English defaults stay. The button words are not dates,
+          so pass them yourself.
         </p>
-        <p>Pass a partial <code>i18n</code> object. Keys you pass win over the language; missing keys keep its names, or the English defaults.</p>
+        <p>Pass a partial <code>i18n</code> object. Keys you pass win over the language. Missing keys keep the language's names, or the English defaults.</p>
         <table class="striped">
           <thead>
             <tr>
@@ -472,14 +478,18 @@ Expressive.Datepicker.init(elem, {
   <Section {...S["date-range"]}>
         <p>
           Set <code>isDateRange: true</code>. Click a start day, then an end day that is on or
-          after it. Point <code>dateRangeEndEl</code> at a second input, or omit it and a second
-          input is created next to the first.
+          after it. Point <code>dateRangeEndEl</code> at a second input, or omit it and the
+          picker creates a second input next to the first.
+        </p>
+        <p>
           An authored end input supports typing and Enter-to-calendar navigation.
           A range with only an end date can be reopened safely. Clearing either
-          input preserves the other date and removes the range shading until both dates are set.
+          input keeps the other date and removes the range shading until both dates are set.
           An edit that would reverse the range restores that field's previous value.
-          Each input emits its own bubbling change event when the picker writes its value.
-          Destroying the picker preserves authored inputs and removes generated ones.
+        </p>
+        <p>
+          Each input fires its own bubbling change event when the picker writes its value.
+          Destroying the picker keeps authored inputs and removes generated ones.
           Generated inputs opt out of AutoInit, so repeated initialization does not create another picker for them.
         </p>
         <div class="field">
@@ -501,10 +511,10 @@ Expressive.Datepicker.init(document.getElementById('datepicker-range'), {
 
   <Section {...S.multiple}>
         <p>
-          Set <code>isMultipleSelection: true</code>. Click a day to add it; click it again to
+          Set <code>isMultipleSelection: true</code>. Click a day to add it, and click it again to
           remove it. Each selected date gets its own input.
           Removing the last date or using Clear keeps the original input empty.
-          Extra generated inputs are removed on deselection or destruction.
+          The picker removes extra generated inputs when their dates are deselected or the picker is destroyed.
         </p>
         <div class="field mb-3">
           <input type="text" class="date-picker no-autoinit" id="datepicker-multi">
@@ -523,7 +533,7 @@ Expressive.Datepicker.init(document.getElementById('datepicker-multi'), {
         <p>The low-level <code>renderRow</code>, <code>renderBody</code>, and <code>renderTable</code>
           helpers accept only calendar rows, cells, and day buttons. Use <code>renderDay</code>
           to create cells. Unsupported elements or attributes, including event handlers and styles,
-          throw <code>TypeError</code>; day buttons require <code>type="button"</code>.
+          throw <code>TypeError</code>. Day buttons require <code>type="button"</code>.
           Arbitrary custom HTML is no longer accepted.</p>
 
         <h5 class="light">.toString();</h5>

@@ -64,10 +64,13 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
           chart</a>. The row headers sit beside the grid and the column headers
           below it. Cells shade from the lowest value to the highest, and a
           scale under the grid names both ends. A tooltip shows the cell under
-          the pointer, and the arrow keys move it round the grid when the
-          chart has focus. Use a heatmap to find patterns across two
-          categories, such as busy days and hours; to compare exact values,
-          use a <a href="data-table.html">data table</a>.
+          the pointer. When the chart has focus, the arrow keys move the
+          tooltip round the grid.
+        </p>
+        <p>
+          Use a heatmap to find patterns across two categories, such as busy
+          days and hours. To compare exact values, use a
+          <a href="data-table.html">data table</a>.
         </p>
         <figure class="heatmap-chart" data-markdown-ignore>
           <figcaption>Tasks completed per day, last 12 weeks</figcaption>
@@ -97,14 +100,14 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
 </figure>
 `} />
         <p>
-          An empty <code>data-label</code> hides a header on the grid, as the
-          week numbers are here. The table keeps the full header for screen
+          Set an empty <code>data-label</code> to hide a header on the grid,
+          as the week numbers are here. The table keeps the full header for screen
           readers and the tooltip.
         </p>
   </Section>
   <Section {...S.values}>
         <p>
-          <code>values</code> writes each cell's text on it. The text is
+          Add <code>values</code> to write each cell's text on it. The text is
           black or white, whichever reads better on the cell's shade. Give a
           formatted cell its number in <code>data-value</code>.
         </p>
@@ -139,14 +142,16 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
         <p>
           A <code>data-label</code> on a header cell replaces its text on the
           grid. A column label runs on over the empty labels after it, so a
-          year of weeks can name each month once. Set
-          <code>--md-comp-heatmap-chart-row-height</code> and
-          <code>--md-comp-heatmap-chart-gap</code> lower for small cells. A
-          wide grid narrows its cells to fit, so on a phone show fewer
-          columns. When the column labels are wider than their columns, the
-          grid keeps every second or third one whole and hides the rest; leave
-          labels empty yourself to choose which ones show. Row labels take up
-          to 40% of the width and end in an ellipsis past it.
+          year of weeks can name each month once. Row labels take up to 40% of
+          the width and end in an ellipsis past it.
+        </p>
+        <p>
+          For small cells, set <code>--md-comp-heatmap-chart-row-height</code>
+          and <code>--md-comp-heatmap-chart-gap</code> lower. A wide grid
+          narrows its cells to fit, so show fewer columns on a phone. When the
+          column labels are wider than their columns, the grid keeps every
+          second or third one whole and hides the rest. To choose which ones
+          show, leave labels empty yourself.
         </p>
         <figure class="heatmap-chart" style="--md-comp-heatmap-chart-row-height: 12px; --md-comp-heatmap-chart-gap: 2px; --md-comp-heatmap-chart-shape: 2px" data-markdown-ignore>
           <figcaption>Tasks completed, last 52 weeks</figcaption>
@@ -181,18 +186,18 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
   </Section>
   <Section {...S.scale}>
         <p>
-          The scale runs from the lowest value to the highest. Set
-          <code>data-min</code> and <code>data-max</code> on the chart to fix
-          it, such as 0 to 100 for scores; values past either end take the
-          end's shade. The scale under the grid still runs from the lowest
-          cell to the highest, over only the shades they use.
+          The scale runs from the lowest value to the highest. To fix it, set
+          <code>data-min</code> and <code>data-max</code> on the chart, such as
+          0 to 100 for scores. Values past either end take the end's shade.
+          The scale under the grid still runs from the lowest cell to the
+          highest, over only the shades they use.
         </p>
         <p>
           Cells are at least <code>--md-comp-heatmap-chart-cell-min-width</code>
           wide, 12px by default. A grid with too many columns for its figure
-          scrolls its cells sideways instead of narrowing them, with the row
-          labels kept in view, and the arrow keys
-          scroll the cell they move to into view.
+          scrolls its cells sideways instead of narrowing them, and keeps the
+          row labels in view. The arrow keys scroll the cell they move to into
+          view.
         </p>
         <figure class="heatmap-chart values" data-min="0" data-max="100" style="--md-comp-heatmap-chart-row-height: 56px; --md-comp-heatmap-chart-gap: 4px; --md-comp-heatmap-chart-shape: 12px" data-markdown-ignore>
           <figcaption>Channel score, paid and organic</figcaption>
@@ -219,12 +224,12 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
 </figure>
 `} />
         <p>
-          <code>data-mid</code> makes the scale diverge from that value, such
-          as 0 for a change. The midpoint is the empty color, values above it
-          shade towards <code>--md-comp-heatmap-chart-color</code> and values
-          below towards <code>--md-comp-heatmap-chart-low-color</code>, both as
-          far as the end further from the midpoint, so equal distances get
-          equal shades.
+          Set <code>data-mid</code> to make the scale diverge from that value,
+          such as 0 for a change. The midpoint takes the empty color. Values
+          above it shade towards <code>--md-comp-heatmap-chart-color</code>
+          and values below towards <code>--md-comp-heatmap-chart-low-color</code>.
+          Both sides run as far as the end further from the midpoint, so equal
+          distances get equal shades.
         </p>
         <figure class="heatmap-chart values" data-mid="0" data-markdown-ignore>
           <figcaption>Sales change on last year, in percent</figcaption>
@@ -244,9 +249,9 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
 </figure>
 `} />
         <p>
-          <code>data-steps</code> groups the shades into that many bands, the
-          lowest band in the empty color, and the scale under the grid shows
-          a swatch per band. On a diverging scale each side gets that many
+          Set <code>data-steps</code> to group the shades into that many
+          bands. The lowest band takes the empty color, and the scale under
+          the grid shows a swatch per band. On a diverging scale each side gets that many
           bands, and the band nearest the midpoint is the empty color.
         </p>
         <figure class="heatmap-chart" data-steps="4" data-markdown-ignore>
@@ -269,8 +274,8 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
   </Section>
   <Section {...S.cards}>
         <p>
-          A chart goes in a card with the figures it explains. The card adds
-          no chart styles; size a chart with its tokens.
+          Put a chart in a card with the figures it explains. The card adds
+          no chart styles, so size the chart with its tokens.
         </p>
         <article class="outlined" data-markdown-ignore>
           <div class="p-4">
@@ -306,12 +311,13 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
   </Section>
   <Section {...S.data}>
         <p>
-          Cells read as in a column chart: a cell's number is its
-          <code>data-value</code>, or its text without currency signs, percent
-          signs or grouping commas. Text that is not a single number, such as
-          "n/a" or "$45K" without a <code>data-value</code>, is a gap: an
-          outlined cell with no shade. The tooltip still shows its text. A
-          chart whose cells are all gaps shows its table.
+          The chart reads cells the same way a column chart does. A cell's
+          number is its <code>data-value</code>, or its text without currency
+          signs, percent signs or grouping commas. Text that is not a single
+          number, such as "n/a" or "$45K" without a <code>data-value</code>,
+          is a gap. A gap draws as an outlined cell with no shade, and the
+          tooltip still shows its text. A chart whose cells are all gaps shows
+          its table.
         </p>
         <p>
           Cells mix <code>primary</code> into
@@ -323,17 +329,20 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
         <p>
           The table is the chart's text alternative. Give it a header row and
           a header cell per row, and name the chart with a
-          <code>&lt;figcaption&gt;</code>. The drawn grid, labels and scale
-          are hidden from assistive technology, and a <code>data-label</code>
+          <code>&lt;figcaption&gt;</code>. The chart hides the drawn grid,
+          labels and scale from assistive technology. A <code>data-label</code>
           changes only the drawn label.
         </p>
         <p>
-          The plot is one Tab stop named by the caption. The arrow keys move
-          one cell the way they point, Home and End jump to the ends of the
-          row and Escape hides the tooltip; once it is hidden, Escape is left
-          to a dialog around the chart. On a touch screen, tap a cell or drag
-          across the grid to show a cell. In a right-to-left page the columns run right to left. The
-          tooltip is a polite live region, so a screen reader hears each
+          The plot is one Tab stop, named by the caption. The arrow keys move
+          one cell the way they point. Home and End jump to the ends of the
+          row, and Escape hides the tooltip. Once the tooltip is hidden, Escape
+          goes to a dialog around the chart. On a touch screen, tap a cell or
+          drag across the grid to show a cell. In a right-to-left page the
+          columns run right to left.
+        </p>
+        <p>
+          The tooltip is a polite live region, so a screen reader hears each
           cell's row, column and value as it moves. Shade alone is hard to
           tell apart, so use <code>values</code> when exact numbers matter. In
           forced colors the cells keep their shades.
@@ -343,10 +352,10 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
         <p>
           <code>AutoInit()</code> starts every <code>.heatmap-chart</code>. To
           start one yourself, call <code>HeatmapChart.init</code>. After changing its
-          table, call <code>update()</code> to redraw it in place, or put
-          <code>data-watch</code> on the figure and it redraws itself. It has the line chart's
-          options and methods; <code>show()</code> takes a cell, counted row
-          by row from 0.
+          table, call <code>update()</code> to redraw it in place. Or put
+          <code>data-watch</code> on the figure, and it redraws itself. It has
+          the line chart's options and methods. <code>show()</code> takes a
+          cell, counted row by row from 0.
         </p>
 <Code code={`
 const chart = Expressive.HeatmapChart.init(document.querySelector('.heatmap-chart'), { min: 0, max: 100 });

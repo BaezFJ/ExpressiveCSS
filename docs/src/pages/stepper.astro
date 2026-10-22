@@ -27,7 +27,7 @@ const S = defineSections([
           The list numbers the steps and tells assistive technology how many
           there are. A <code>&lt;small&gt;</code> after the label is supporting
           text. Use <a href={route('tabs')}>tabs</a> for views people move
-          between freely; a stepper is for an order they move through.
+          between freely. A stepper is for an order they move through.
         </p>
         <ol class="stepper">
           <li class="complete"><a href="#states">Cart</a></li>
@@ -46,12 +46,12 @@ const S = defineSections([
   </Section>
   <Section {...S.states}>
         <p>
-          The page keeps the state current as the user moves.
-          <code>aria-current="step"</code> marks the step the user is on, and
-          only one step has it. <code>complete</code> turns the number into a
-          check; <code>invalid</code> turns it into "!" for a step that needs
-          attention. Screen readers announce both states before the label. A finished step
-          can link back with an <code>&lt;a&gt;</code>.
+          Put <code>aria-current="step"</code> on the step the user is on.
+          Only one step has it. Add <code>complete</code> to turn the number
+          into a check, or <code>invalid</code> to turn it into "!" for a step
+          that needs attention. Screen readers announce both states before the
+          label. A finished step can link back with an <code>&lt;a&gt;</code>.
+          The page keeps these states current as the user moves.
         </p>
         <ol class="stepper">
           <li class="complete">Cart</li>
@@ -70,10 +70,11 @@ const S = defineSections([
   </Section>
   <Section {...S.vertical}>
         <p>
-          A horizontal stepper wraps when its row is too narrow for every
-          label. <code>vertical</code> stacks the steps instead, which suits
-          compact windows and long labels. A <code>.stepper-content</code> block in a step shows its
-          form or summary under the label.
+          Add <code>vertical</code> to stack the steps, which suits compact
+          windows and long labels. Without it, a horizontal stepper wraps when
+          its row is too narrow for every label. Put a
+          <code>.stepper-content</code> block in a step to show its form or
+          summary under the label.
         </p>
         <ol class="stepper vertical" style="max-width: 24rem;">
           <li class="complete">Account</li>
@@ -96,8 +97,8 @@ const S = defineSections([
   </Section>
   <Section {...S.translation}>
         <p>
-          The spoken "Completed" and "Error" are tokens, so a page can say them
-          in its own language. Set them on the stepper or any ancestor.
+          The spoken "Completed" and "Error" labels are tokens. Set them on the
+          stepper or any ancestor to say them in the page's own language.
         </p>
 <Code code={`
 <style>

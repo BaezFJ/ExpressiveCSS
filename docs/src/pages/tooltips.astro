@@ -22,8 +22,8 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A child <code>.tooltip</code> is the bubble, and the activator
-          does not need a <code>tooltipped</code> class. Tooltips show on
+          Put a <code>.tooltip</code> child inside the activator to make the bubble.
+          The activator does not need a <code>tooltipped</code> class. Tooltips show on
           hover and keyboard focus with CSS alone. Helper classes set only
           placement and the rich variant: <code>top</code> (the default),
           <code>bottom</code>, <code>left</code>, <code>right</code>, and
@@ -32,16 +32,23 @@ const S = defineSections([
         <p>
           The hover area of a plain tooltip includes the gap to the
           activator. Runtime tooltips support Escape dismissal and reduced
-          motion. On touch, a runtime tooltip shows on a long press of half a
-          second, without <code>enterDelay</code>, and stays for a second and a half after the finger lifts; the
-          long press does not press the button or follow the link, and a tap,
-          or a press that turns into a scroll, shows nothing. A runtime
-          tooltip that opens while a tooltip is closing, or within 300 ms
-          after that one's <code>exitDelay</code> ends, shows without waiting
-          its <code>enterDelay</code>, so moving along a toolbar shows each
-          tooltip at once. With
-          <code>openOnClick</code>, a tap is the click: it opens and closes
+          motion.
+        </p>
+        <p>
+          On touch, a runtime tooltip shows after a half-second long press,
+          without <code>enterDelay</code>. It stays for a second and a half after the finger lifts.
+          The long press does not press the button or follow the link. A tap,
+          or a press that turns into a scroll, shows nothing. With
+          <code>openOnClick</code>, a tap counts as the click. It opens and closes
           the tooltip, and the long press is off.
+        </p>
+        <p>
+          A runtime tooltip skips its <code>enterDelay</code> if it opens while
+          another tooltip is closing, or within 300 ms after that one's
+          <code>exitDelay</code> ends. Moving along a toolbar therefore shows each
+          tooltip at once.
+        </p>
+        <p>
           CSS-only tooltips have no Escape handler. Use them only after you
           verify the applicable WCAG 1.4.13 conditions and dismissal exception.
           Otherwise, use a verified runtime tooltip or persistent supporting text.
@@ -52,14 +59,14 @@ const S = defineSections([
           A plain tooltip uses <code>inverse-surface</code> for the container
           and <code>inverse-on-surface</code> for the text, with 4dp corners and
           <code>body-small</code> type. It is at least 24dp tall and at most
-          200dp wide, with 4dp vertical and 8dp horizontal padding, and has no
-          elevation or caret. It sits 4dp from the activator. M3 recommends
+          200dp wide, with 4dp vertical and 8dp horizontal padding. It has no
+          elevation or caret. It sits 4dp from the activator, and M3 recommends
           placing it above.
         </p>
         <p>
-          Inside a <code>&lt;button&gt;</code> the bubble has to be a
+          Inside a <code>&lt;button&gt;</code>, make the bubble a
           <code>&lt;span&gt;</code>. A <code>&lt;div&gt;</code> is not
-          phrasing content, and the parser will hoist it. Icon-only
+          phrasing content, so the parser hoists it out. Icon-only
           buttons still need <code>.circle</code> so the span is not
           treated as a label.
         </p>
@@ -99,12 +106,12 @@ const S = defineSections([
   </Section>
   <Section {...S.rich}>
         <p>
-          <code>rich</code> makes a rich
+          Add <code>rich</code> for a rich
           tooltip with a <code>surface</code> container, elevation 2, 12dp
-          corners, and a 320dp maximum width. A heading is the title
+          corners, and a 320dp maximum width. Inside it, a heading is the title
           (<code>title-small</code>), a <code>&lt;p&gt;</code> is
           supporting text (<code>body-medium</code>), and a trailing
-          <code>&lt;nav&gt;</code> is the action. Rich bubbles
+          <code>&lt;nav&gt;</code> holds the action. Rich bubbles
           receive pointer events, so the user can click the action.
         </p>
         <div>
@@ -137,18 +144,21 @@ const S = defineSections([
   </Section>
   <Section {...S.javascript}>
         <p>
-          CSS-only tooltips do not need AutoInit. The JS plugin handles
-          <code>data-tooltip</code>, delayed show and hide, and
-          keeping the bubble inside the viewport. Add
+          To use the JS plugin, add
           <code>tooltipped</code> to the activator.
-          <code>data-tooltip</code> is the text;
+          <code>data-tooltip</code> holds the text, and
           <code>data-position</code> is <code>top</code>,
           <code>right</code>, <code>bottom</code>, or
-          <code>left</code>. <code>AutoInit()</code> starts every
+          <code>left</code>. The plugin handles
+          <code>data-tooltip</code>, delayed show and hide, and
+          keeping the bubble inside the viewport. CSS-only tooltips do not need AutoInit.
+          <code>AutoInit()</code> starts every
           <code>.tooltipped</code> except those marked
           <code>no-autoinit</code>. The generated element gets
           <code>.tooltip</code> (plus <code>.rich</code> when <code>tooltipId</code> is set).
-          In browsers with CSS anchor positioning, the plugin anchors the bubble to its activator instead of measuring: it stays beside the activator while the page or a container scrolls, and flips to the opposite side at the viewport edge. An anchored tooltip fades in without sliding, because script cannot tell which side it flipped to; <code>transitionMovement</code> is added to the gap instead. Other browsers keep the measured, viewport-clamped position.
+        </p>
+        <p>
+          In browsers with CSS anchor positioning, the plugin anchors the bubble to its activator instead of measuring. The bubble stays beside the activator while the page or a container scrolls, and flips to the opposite side at the viewport edge. An anchored tooltip fades in without sliding, because script cannot tell which side it flipped to. The plugin adds <code>transitionMovement</code> to the gap instead. Other browsers keep the measured, viewport-clamped position.
         </p>
         <p class="flex flex-wrap gap-2">
           <button type="button" class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip">Bottom</button>
@@ -162,10 +172,10 @@ const S = defineSections([
 </button>
 `} />
         <p>
-          For HTML, point <code>data-tooltip-id</code> at an element.
+          For HTML content, point <code>data-tooltip-id</code> at an element.
           The plugin moves that element into the tooltip and marks the
           bubble <code>rich</code>. Leave <code>data-tooltip</code> off
-          so the HTML is kept. There is no <code>data-html</code>
+          so the plugin keeps the HTML. There is no <code>data-html</code>
           attribute and no <code>unsafeHTML</code> option.
         </p>
         <p>
@@ -203,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 `} />
-        <p>Per-instance options can also be passed through AutoInit:</p>
+        <p>You can also pass per-instance options through AutoInit:</p>
 <Code code={`
 Expressive.AutoInit(document.body, {
   Tooltip: { enterDelay: 200 }
@@ -212,9 +222,9 @@ Expressive.AutoInit(document.body, {
   </Section>
   <Section {...S.options}>
         <p>
-          Constructor and <code>init</code> options.
+          Pass these to the constructor or <code>init</code>.
           <code>data-tooltip</code>, <code>data-position</code>, and
-          <code>data-tooltip-id</code> come from the element and
+          <code>data-tooltip-id</code> on the element
           override these defaults. The plugin reads the attributes again each
           time the tooltip opens, so a later change takes effect on the
           next show.
@@ -283,7 +293,7 @@ Expressive.AutoInit(document.body, {
               <td><code>openOnClick</code></td>
               <td>Boolean</td>
               <td><code>false</code></td>
-              <td>Open on a click instead of hover and focus, at once, without <code>enterDelay</code>. A second click, Escape, a click elsewhere or focus moving to another element closes it at once; a click inside the tooltip does not. Keyboard users open it with Enter or Space, so the trigger should be a <code>&lt;button&gt;</code>.</td>
+              <td>Open on a click instead of hover and focus, at once, without <code>enterDelay</code>. A second click, Escape, a click elsewhere or focus moving to another element closes it at once. A click inside the tooltip does not. Keyboard users open it with Enter or Space, so make the trigger a <code>&lt;button&gt;</code>.</td>
             </tr>
   </OptionsTable>  </Section>
   <Section {...S.methods}>
@@ -298,8 +308,8 @@ Expressive.AutoInit(document.body, {
         <h5 class="light">.open();</h5>
         <p>
           <code>open()</code> and <code>open(true)</code> show the tooltip after
-          its enter delay without requiring hover or focus. <code>open(false)</code>
-          uses the automatic behavior and requires hover or focus when the delay ends.
+          its enter delay, with no hover or focus needed. <code>open(false)</code>
+          uses the automatic behavior, so the activator must be hovered or focused when the delay ends.
           With <code>openOnClick</code>, a click elsewhere also closes a tooltip
           opened this way.
         </p>
@@ -314,7 +324,7 @@ instance.close();
 `} />
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance and remove its generated tooltip and event handlers. Rich content returns to its authored position and presentation state. It keeps existing description associations, so you can initialize the same content again.</p>
+        <p>Destroy the plugin instance and remove its generated tooltip and event handlers. Rich content returns to its authored position and presentation state. The method keeps existing description associations, so you can initialize the same content again.</p>
 <Code code={`
 instance.destroy();
 `} />

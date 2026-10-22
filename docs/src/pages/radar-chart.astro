@@ -71,7 +71,7 @@ const average = (values: number[]) => (values.reduce((total, value) => total + v
   </Section>
   <Section {...S.area}>
         <p>
-          <code>area</code> fills each shape and <code>points</code> marks
+          Add <code>area</code> to fill each shape and <code>points</code> to mark
           each value with a dot. They work alone or together.
         </p>
         <figure class="radar-chart area points" data-markdown-ignore>
@@ -91,8 +91,8 @@ const average = (values: number[]) => (values.reduce((total, value) => total + v
   <Section {...S.series}>
         <p>
           Each further column is another shape, in the next color, with a
-          legend below the chart. With <code>toggle</code> on the figure, each legend item is a button that shows or hides its series, as on the <a href="line-chart.html#toggle">line chart</a>. The tooltip lists every series for the
-          spoke. <code>class="dashed"</code> on a header cell dashes that
+          legend below the chart. Add <code>toggle</code> to the figure to make each legend item a button that shows or hides its series, as on the <a href="line-chart.html#toggle">line chart</a>. The tooltip lists every series for the
+          spoke. Put <code>class="dashed"</code> on a header cell to dash that
           series' outline, for a target or an earlier period.
         </p>
         <figure class="radar-chart area" data-markdown-ignore>
@@ -155,9 +155,9 @@ const average = (values: number[]) => (values.reduce((total, value) => total + v
   </Section>
   <Section {...S.cards}>
         <p>
-          A chart goes in a card with the figures it explains. The card adds
-          no chart styles; size the chart with
-          <code>--md-comp-radar-chart-height</code>, the rim's diameter.
+          Put a chart in a card with the figures it explains. The card adds
+          no chart styles. Size the chart with
+          <code>--md-comp-radar-chart-height</code>, which sets the rim's diameter.
         </p>
         <article class="outlined" data-markdown-ignore>
           <div class="p-4">
@@ -193,10 +193,10 @@ const average = (values: number[]) => (values.reduce((total, value) => total + v
   </Section>
   <Section {...S.scale}>
         <p>
-          Cells read as in a line chart: a cell's number is its
+          Cells read as in a line chart. A cell's number is its
           <code>data-value</code>, or its text without currency signs, percent
           signs or grouping commas. The tooltip shows the cell's text as
-          written. A cell that is not a number is a gap: the outline breaks
+          written. A cell that is not a number is a gap. The outline breaks
           there, as a line chart's does, and the tooltip leaves it out. With
           <code>area</code>, each unbroken run fills as a wedge from the
           middle, and a value between two gaps is a dot.
@@ -211,11 +211,11 @@ const average = (values: number[]) => (values.reduce((total, value) => total + v
           <code>secondary</code> and <code>on-surface-variant</code> in turn.
         </p>
         <p>
-          <code>axis</code> draws the grid rings at round values instead of
-          quarters and labels each ring up the top spoke, leaving zero in the
+          Add <code>axis</code> to draw the grid rings at round values instead of
+          quarters. It labels each ring up the top spoke and leaves zero in the
           middle unlabelled. The rim widens to the next round value unless
           <code>data-max</code> sets it. The labels are hidden from assistive
-          technology; the table still carries the values.
+          technology. The table still carries the values.
         </p>
 <Code code={`
 <figure class="radar-chart axis">
@@ -233,9 +233,9 @@ const average = (values: number[]) => (values.reduce((total, value) => total + v
         </p>
         <p>
           The plot is one Tab stop named by the caption. The arrow keys move
-          round the spokes, right and down to the next row and left and up to
-          the one before, and past the last row they go on to the first. Home
-          and End jump to the first and last rows and Escape hides the
+          round the spokes. Right and down go to the next row, and left and up
+          go to the one before. Past the last row they go on to the first. Home
+          and End jump to the first and last rows, and Escape hides the
           tooltip. On a touch screen, tap near a spoke to show it. In a
           right-to-left page the spokes still run clockwise, and so do the
           arrows. The tooltip is a polite live region, so a screen reader

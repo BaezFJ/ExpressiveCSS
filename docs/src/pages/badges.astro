@@ -18,19 +18,18 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          Badges show notifications, counts, or status information on
-          navigation items and icons. They can hold a label or a number.
-          There are two variants: <strong>small</strong> (an empty
-          <code>&lt;span class="badge"&gt;</code>, a 6dp dot) and
-          <strong>large</strong> (text inside, a 16dp stadium). Nest the
+          Badges show notifications, counts, or status on navigation items
+          and icons. Leave a <code>&lt;span class="badge"&gt;</code> empty for
+          a <strong>small</strong> badge, a 6dp dot. Put a label or number
+          inside for a <strong>large</strong> badge, a 16dp stadium. Nest the
           badge in the icon so it anchors at the upper trailing edge of
           the 24dp glyph. Limit content to four characters, including
           <code>+</code>.
         </p>
         <p>
-          The default mapping is <code>error</code> /
-          <code>on-error</code>. Pair a fill utility with its
-          <code>on-*</code> text class only if you override it.
+          Badges use <code>error</code> / <code>on-error</code> by default. If
+          you override the color, pair a fill utility with its
+          <code>on-*</code> text class.
         </p>
 
         <nav class="navigation-bar mb-3" aria-label="Badge demo">
@@ -71,7 +70,7 @@ const S = defineSections([
         <p>
           Put a number or short label in the badge. It is 16dp high, with
           stadium corners and a 4dp inset. Cap the string at four
-          characters; use <code>999+</code> when the count is larger.
+          characters. Use <code>999+</code> when the count is larger.
         </p>
         <p>
           <button type="button" class="button extra circle" aria-label="Mail, 1 unread">
@@ -116,9 +115,8 @@ const S = defineSections([
   </Section>
   <Section {...S.lists}>
         <p>
-          A trailing <code>.badge</code> in a list row stays
-          in flow at the end of the row as a count. It does not overlap the
-          leading icon.
+          Put a <code>.badge</code> at the end of a list row to show a count.
+          It stays in flow there and does not overlap the leading icon.
         </p>
         <ul class="list">
           <li>

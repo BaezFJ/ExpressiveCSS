@@ -17,20 +17,20 @@ const S = defineSections([
 ]);
 ---
 <DocsLayout page="autocomplete">
-<p>Autocomplete preserves the original suggestion dataset and selected display label while editing. Escape and Tab in the input close the menu and cancel a pending open. Listbox options stay out of the sequential Tab order.</p>
-<p><code>isOpen</code> follows the suggestion menu through rerenders and dismissal. Selection changes emit a bubbling, composed <code>change</code> event from the input, so delegated form listeners can observe them.</p>
+<p>Autocomplete keeps the original suggestion dataset and the selected display label while the user edits. Escape and Tab in the input close the menu and cancel a pending open. Listbox options stay out of the sequential Tab order.</p>
+<p><code>isOpen</code> follows the suggestion menu through rerenders and dismissal. When the selection changes, the input emits a bubbling, composed <code>change</code> event, so delegated form listeners can observe it.</p>
 
 <PageBody sections={S}>
-  <p>Autocomplete adds a visually hidden, polite live region for loading, result counts and multi-selection changes. The visible spinner and count stay unchanged. Announcements happen only while the input has focus and its text meets <code>minLength</code>. Closing the menu clears the region. Check spoken delivery with a screen reader.</p>
-  <p>Override <code>i18n.loading</code> and <code>i18n.noResults</code>, which default to "Loading results." and "No results.". Supply <code>i18n.results(count)</code> and <code>i18n.selected(count)</code> functions for localized plurals. Defaults produce "1 result available." or "N results available." and "1 item selected." or "N items selected.". <code>i18n.create(text)</code> labels the "Add" row and defaults to <code>Add "text"</code>. Missing keys keep their defaults, and all messages are plain text.</p>
-  <p>When a search returns no suggestions, the open list also shows <code>i18n.noResults</code> as its first row, so sighted users see what the live region says. The row is not an option: it is hidden from assistive technology, arrow keys skip it, and a click on it chooses nothing and leaves focus in the field. It leaves the list when a search returns a match. In Chips, Enter that adds the typed text as a chip closes the list.</p>
+  <p>Autocomplete adds a visually hidden, polite live region for loading, result counts and multi-selection changes. The visible spinner and count stay unchanged. It announces only while the input has focus and its text meets <code>minLength</code>. Closing the menu clears the region. Check spoken delivery with a screen reader.</p>
+  <p>Override <code>i18n.loading</code> and <code>i18n.noResults</code>, which default to "Loading results." and "No results.". For localized plurals, supply <code>i18n.results(count)</code> and <code>i18n.selected(count)</code> functions. The defaults produce "1 result available." or "N results available." and "1 item selected." or "N items selected.". <code>i18n.create(text)</code> labels the "Add" row and defaults to <code>Add "text"</code>. Missing keys keep their defaults. All messages are plain text.</p>
+  <p>When a search returns no suggestions, the open list also shows <code>i18n.noResults</code> as its first row, so sighted users see what the live region says. The row is not an option. It is hidden from assistive technology, arrow keys skip it, and a click on it chooses nothing and leaves focus in the field. The row goes away when a search returns a match. In Chips, pressing Enter to add the typed text as a chip closes the list.</p>
   <p>Updates announce the count passed to <code>setMenuItems</code>, excluding fallback selected items and the "Add" row. Opening an existing list announces its displayed item count. Updates with <code>open: false</code> stay silent. Your application handles request cancellation, stale-response ordering and errors. The plugin ignores results delivered after <code>destroy()</code>, and results delivered after the user leaves the field update the list without opening it.</p>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>autocomplete</code> to a text input inside <code>.field</code>.
           <code>AutoInit()</code> starts every <code>.autocomplete</code> except
-          <code>no-autoinit</code>, but the default <code>data</code> list is empty. Pass
-          options (or call <code>init</code>) to give it something to suggest.
+          those with <code>no-autoinit</code>. The default <code>data</code> list is empty,
+          so pass options, or call <code>init</code>, to give it something to suggest.
         </p>
         <div class="field mb-5">
           <span class="material-symbols prefix" aria-hidden="true">textsms</span>
@@ -119,10 +119,10 @@ onSearch: function(text, autocomplete) {
 }
 `} />
         <p>
-          The third argument is an <code>AbortSignal</code> that aborts when the
+          The third argument is an <code>AbortSignal</code>. It aborts when the
           search text changes or the autocomplete is destroyed. Pass it to
-          <code>fetch()</code>, so a slow response for old text never replaces
-          the results for what is typed now, and clear the list on any other
+          <code>fetch()</code> so a slow response for old text never replaces
+          the results for the current text. Clear the list on any other
           error. Set <code>searchDelay</code> so the request waits for typing
           to pause instead of going out on every key:
         </p>
@@ -140,9 +140,10 @@ onSearch: function(text, autocomplete, signal) {
 `} />
         <p>
           Set <code>allowCreate</code> to offer the typed text as a new value.
-          When the trimmed text matches no listed suggestion's <code>text</code>,
-          or its <code>id</code> when it has no <code>text</code>, ignoring case,
-          the list ends in an "Add" row. Choosing it with Enter or a click calls
+          The list then ends in an "Add" row whenever the trimmed text matches
+          no listed suggestion. The comparison ignores case and checks each
+          suggestion's <code>text</code>, or its <code>id</code> when it has no
+          <code>text</code>. Choosing the row with Enter or a click calls
           <code>onCreate</code> with the trimmed text and fires
           <code>expressive:create</code> with <code>&#123; text &#125;</code>.
           The selection does not change, so add and select the entry yourself:
@@ -163,7 +164,7 @@ onCreate: function(text, autocomplete) {
               <td><code>data</code></td>
               <td>Array</td>
               <td><code>[]</code></td>
-              <td>Suggestion list. Each item needs an <code>id</code>; <code>text</code>, <code>image</code>, and <code>description</code> are optional.</td>
+              <td>Suggestion list. Each item needs an <code>id</code>. The <code>text</code>, <code>image</code>, and <code>description</code> fields are optional.</td>
             </tr>
             <tr>
               <td><code>isMultiSelect</code></td>
@@ -181,7 +182,7 @@ onCreate: function(text, autocomplete) {
               <td><code>onAutocomplete</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called after a selection (and when a default value is applied). Receives the selected entries.</td>
+              <td>Called after a selection and when a default value is applied. Receives the selected entries.</td>
             </tr>
             <tr>
               <td><code>onSearch</code></td>
@@ -193,7 +194,7 @@ onCreate: function(text, autocomplete) {
               <td><code>allowCreate</code></td>
               <td>Boolean</td>
               <td><code>false</code></td>
-              <td>If true, text that matches no listed suggestion exactly ends the list in an "Add" row. Choosing it calls <code>onCreate</code> and fires <code>expressive:create</code>; the selection does not change.</td>
+              <td>If true, text that matches no listed suggestion exactly ends the list in an "Add" row. Choosing it calls <code>onCreate</code> and fires <code>expressive:create</code>. The selection does not change.</td>
             </tr>
             <tr>
               <td><code>onCreate</code></td>

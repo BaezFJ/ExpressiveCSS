@@ -15,17 +15,17 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.footer}>
         <p class="flow-text">
-          Footers are a good place for site navigation and extra information. This is where people look after they finish the page, or when they want more about the site.
+          Use the footer for site navigation and extra information. People look there after they finish a page, or when they want to know more about the site.
         </p>
         <p>
           Put the page in the three HTML5 landmarks <code>header</code>, <code>main</code>, and <code>footer</code>.
-          The footer is CSS-only. A <code>&lt;footer&gt;</code> whose only
-          child is a <code>nav.navigation-bar</code> is the
-          <a href={route('navigation_bar')}>navigation bar</a>;
-          anything richer is the site footer. A heading is a column title, a
-          <code>&lt;nav&gt;</code> is a link list, and the last
-          <code>&lt;small&gt;</code> is the legal bar. There is no JavaScript
-          component.
+          The footer is CSS only, with no JavaScript component. A
+          <code>&lt;footer&gt;</code> whose only child is a
+          <code>nav.navigation-bar</code> is the
+          <a href={route('navigation_bar')}>navigation bar</a>.
+          Anything richer is the site footer. Inside it, a heading is a column
+          title, a <code>&lt;nav&gt;</code> is a link list, and the last
+          <code>&lt;small&gt;</code> is the legal bar.
         </p>
         <p>
           By default the footer is unfilled, with a dashed hairline and theme
@@ -69,11 +69,11 @@ const S = defineSections([
 </footer>
 `} />
         <p>
-          The grid still works if you prefer columns. <code>.page-footer</code> and
-          <code>.footer-copyright</code> are <strong>not</strong> aliases. No rule in
-          the stylesheet matches either class. The component is a bare
-          <code>&lt;footer&gt;</code> with <code>&lt;nav&gt;</code> columns and a
-          trailing <code>&lt;small&gt;</code>.
+          You can still use the grid if you prefer columns. The component is a
+          bare <code>&lt;footer&gt;</code> with <code>&lt;nav&gt;</code> columns
+          and a trailing <code>&lt;small&gt;</code>. <code>.page-footer</code> and
+          <code>.footer-copyright</code> are <strong>not</strong> aliases, and no
+          rule in the stylesheet matches either class.
         </p>
 <Code code={`
 <footer>
@@ -97,17 +97,18 @@ const S = defineSections([
 </footer>
 `} />
         <p>
-          The trailing <code>&lt;small&gt;</code> is the copyright bar, a wrapping
-          flex row with space-between. Give it two children, the notice and the
-          trailing link. A <code>right</code> float is not required.
+          Give the trailing <code>&lt;small&gt;</code> two children, the notice
+          and the trailing link. It is the copyright bar, a wrapping flex row
+          with space-between, so you do not need a <code>right</code> float.
         </p>
   </Section>
   <Section {...S["sticky-footer"]}>
         <p>
-          A sticky footer sits at the bottom of a short page and moves down when
-          the content is taller. It is not a fixed footer. Expressive does not
-          include these rules; add them to your own stylesheet once the page has
-          <code>header</code>, <code>main</code> and <code>footer</code> landmarks.
+          For a sticky footer, add these rules to your own stylesheet once the
+          page has <code>header</code>, <code>main</code> and <code>footer</code>
+          landmarks. Expressive does not include them. A sticky footer sits at
+          the bottom of a short page and moves down when the content is taller.
+          It is not a fixed footer.
         </p>
 <Code code={`
 body {

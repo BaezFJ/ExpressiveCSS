@@ -26,11 +26,11 @@ const S = defineSections([
           The IIFE bundle exposes it as <code>Expressive.AutoInit</code>.
         </p>
         <p>
-          Importing the JavaScript installs a few document-level behaviors
-          (Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets,
-          and SideSheets), but it does
-          <strong>not</strong> call <code>AutoInit()</code> for you. Call it after the DOM is ready.
-          This documentation site does that in <code>docs.js</code> on <code>DOMContentLoaded</code>.
+          Call <code>AutoInit()</code> yourself after the DOM is ready. Importing the JavaScript
+          installs a few document-level behaviors (Forms, Chips, Slider, Cards, ExpandingCard,
+          Dialogs, BottomSheets, and SideSheets), but it does
+          <strong>not</strong> call <code>AutoInit()</code> for you.
+          This documentation site calls it in <code>docs.js</code> on <code>DOMContentLoaded</code>.
         </p>
   </Section>
   <Section {...S.initialization}>
@@ -84,15 +84,15 @@ Tooltip.init(element, { position: 'top' });
             </tr>
         </OptionsTable>
         <p>
-          Calling <code>AutoInit()</code> again on the same elements is safe: each component's constructor
+          You can call <code>AutoInit()</code> again on the same elements. Each component's constructor
           destroys any existing instance on that element before creating a new one.
         </p>
   </Section>
   <Section {...S["markup-options"]}>
         <p>
-          An element can carry its own options for <code>AutoInit()</code> in a
+          To give an element its own options for <code>AutoInit()</code>, add a
           <code>data-<em>name</em>-options</code> attribute that holds a JSON object. The name is
-          the component's name from the table below in kebab case, and the keys are its option
+          the component's name from the table below in kebab case. The keys are its option
           names as written in script.
         </p>
 <Code code={`
@@ -109,7 +109,7 @@ Tooltip.init(element, { position: 'top' });
             <code>Menu</code> reads <code>data-menu-options</code>, <code>FormSelect</code> reads
             <code>data-form-select-options</code>, and <code>FloatingActionButton</code> reads
             <code>data-floating-action-button-options</code>. The name comes from the table, not the
-            class: a <code>.date-picker</code> reads <code>data-datepicker-options</code>. An element that is both a tooltip and a
+            class, so a <code>.date-picker</code> reads <code>data-datepicker-options</code>. An element that is both a tooltip and a
             menu trigger reads each attribute for its own component.
           </li>
           <li>
@@ -121,8 +121,8 @@ Tooltip.init(element, { position: 'top' });
           </li>
           <li>
             Markup can set an option whose default is a string, number, boolean, array or plain
-            object, with a value of the same kind. Keys inside an object such as <code>i18n</code>
-            are checked the same way, and if one is rejected the whole object keeps its default. An
+            object, with a value of the same kind. <code>AutoInit()</code> checks keys inside an object
+            such as <code>i18n</code> the same way. If it rejects one, the whole object keeps its default. An
             object whose default is empty, such as FormSelect's <code>menuOptions</code>, accepts no
             keys from markup. When the default is a non-empty array, the items need the kind
             of its first item. Callbacks, elements and options whose default is <code>null</code>
@@ -131,8 +131,8 @@ Tooltip.init(element, { position: 'top' });
             are script-only too.
           </li>
           <li>
-            The attribute is treated as untrusted. Invalid JSON, an unknown key or a value of the wrong
-            kind is skipped with a console warning, and that option keeps its default. A value that
+            <code>AutoInit()</code> treats the attribute as untrusted. It skips invalid JSON, an unknown
+            key or a value of the wrong kind with a console warning, and that option keeps its default. A value that
             passes these checks but still makes a component throw stops <code>AutoInit()</code>, as
             the same value passed from script would.
           </li>
@@ -146,9 +146,10 @@ Tooltip.init(element, { position: 'top' });
   </Section>
   <Section {...S.watch}>
         <p>
-          <code>AutoInit()</code> scans <code>context</code> once. Pass <code>{"{ watch: true }"}</code>
-          as the third argument to keep watching it: components start in markup added later, and are
-          destroyed when their markup is removed. The call returns a function that stops watching.
+          <code>AutoInit()</code> scans <code>context</code> once. To keep watching it, pass
+          <code>{"{ watch: true }"}</code> as the third argument. Components then start in markup added
+          later, and <code>AutoInit()</code> destroys them when their markup is removed. The call returns
+          a function that stops watching.
         </p>
 <Code code={`
 const stop = Expressive.AutoInit(document.body, {}, { watch: true });
@@ -178,7 +179,7 @@ function unmount() {
           <li>
             Removed markup destroys the instances <code>AutoInit()</code> would have started. Elements
             with <code>no-autoinit</code> are left to your code. An element moved elsewhere in the
-            page keeps its instance; one that is removed and added back later starts again.
+            page keeps its instance. One that is removed and added back later starts again.
           </li>
           <li>
             Only added and removed elements count. Adding <code>tooltipped</code> to an element already in the page does not start a Tooltip; call <code>init</code> for that.
@@ -189,12 +190,12 @@ function unmount() {
             you don't want started.
           </li>
           <li>
-            Shadow roots are not entered. To watch markup inside one, call
+            Watch mode does not enter shadow roots. To watch markup inside one, call
             <code>AutoInit(shadowRoot, options, {"{ watch: true }"})</code> for that root.
           </li>
           <li>
             Call it once per root. A component that throws while starting stops the rest of that
-            batch, as it stops <code>AutoInit()</code>; later changes are still handled.
+            batch, the same way it stops <code>AutoInit()</code>. The watcher still handles later changes.
           </li>
         </ul>
         <p>
@@ -287,8 +288,8 @@ Expressive.Tooltip.init(
         <p>
           Each event comes right after the matching <code>on…</code> callback, which still
           works. The events bubble and cross shadow roots, so one listener on the document
-          sees every component. Nested components bubble too: check <code>event.target</code>.
-          Closing a Menu or Lightbox from its <code>expressive:open</code> listener stops it opening.
+          sees every component. Events from nested components bubble too, so check <code>event.target</code>.
+          Closing a Menu or Lightbox from its <code>expressive:open</code> listener stops it from opening.
         </p>
 <Code code={`
 document.addEventListener('expressive:open', (event) => {
@@ -323,8 +324,8 @@ document.addEventListener('expressive:open', (event) => {
         </p>
         <p>
           Tooltip fires <code>expressive:open</code> and <code>expressive:close</code> when it
-          actually shows and hides, after its delays. A snackbar fires its events from the
-          snackbar itself; <code>expressive:closed</code> comes just before it leaves the page.
+          shows and hides, after its delays. A snackbar fires its events from the
+          snackbar itself. <code>expressive:closed</code> comes just before it leaves the page.
           Tour's <code>expressive:close</code> says whether the Done button finished it.
         </p>
   </Section>
@@ -376,7 +377,7 @@ document.addEventListener('alpine:init', () => {
         <p>
           Component events bubble, so Alpine listens to them like any other:
           <code>@expressive:change="tab = $event.detail.panel.id"</code>. Dialogs and sheets are native
-          <code>&lt;dialog&gt;</code> elements; open one with <code>$refs.dialog.showModal()</code>.
+          <code>&lt;dialog&gt;</code> elements. Open one with <code>$refs.dialog.showModal()</code>.
         </p>
   </Section>
 </PageBody>

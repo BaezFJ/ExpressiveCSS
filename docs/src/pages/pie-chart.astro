@@ -42,7 +42,7 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
           the largest part first. A legend lists every row with its cell and
           its share of the total. A tooltip follows the pointer round the pie,
           and the arrow keys move it when the chart has focus. Keep a pie to
-          about five parts; for more, or to compare parts that are close in
+          about five parts. For more, or to compare parts that are close in
           size, use a <a href="bar-chart.html">bar chart</a>.
         </p>
         <figure class="pie-chart" data-markdown-ignore>
@@ -74,9 +74,9 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
   </Section>
   <Section {...S.donut}>
         <p>
-          <code>donut</code> cuts a hole in the middle. A
-          <code>&lt;tfoot&gt;</code> row is the total: its value and label
-          show in the hole, and it is not drawn as a slice. Write the total
+          Add <code>donut</code> to cut a hole in the middle. A
+          <code>&lt;tfoot&gt;</code> row holds the total. Its value and label
+          show in the hole, and the chart does not draw it as a slice. Write the total
           yourself, formatted as you want it read.
         </p>
         <figure class="pie-chart donut" data-markdown-ignore>
@@ -108,9 +108,9 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
   </Section>
   <Section {...S.values}>
         <p>
-          <code>values</code> writes each slice's share on it, in the slice
-          color's on-color. Slices under 5% are too thin for a label; the
-          legend still shows their share.
+          Add <code>values</code> to write each slice's share on it, in the
+          slice color's on-color. Slices under 5% are too thin for a label.
+          The legend still shows their share.
         </p>
         <figure class="pie-chart donut values" data-markdown-ignore>
           <figcaption>Top revenue sources</figcaption>
@@ -141,14 +141,14 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
   </Section>
   <Section {...S.labels}>
         <p>
-          <code>labels</code> writes each slice's name outside it, so a reader
-          can match slices to parts without the legend. Names on the right
-          half run rightwards and those on the left run leftwards. Neighbours
-          that would touch move apart, away from the middle, and a line from
-          each name back to its slice shows which slice a moved name belongs
-          to. The pie shrinks to
+          Add <code>labels</code> to write each slice's name outside it, so a
+          reader can match slices to parts without the legend. Names on the
+          right half run rightwards and those on the left run leftwards.
+          Neighbours that would touch move apart, away from the middle. A line
+          from each name back to its slice shows which slice a moved name
+          belongs to. The pie shrinks to
           leave <code>--md-comp-pie-chart-label-width</code> on each side, or a
-          quarter of a narrow figure, and longer names are cut short with an
+          quarter of a narrow figure. Longer names get cut short with an
           ellipsis. Combine it with
           <code>values</code> to show the shares too.
         </p>
@@ -171,13 +171,14 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
   </Section>
   <Section {...S.other}>
         <p>
-          <code>data-other</code> groups every row under that percentage of
-          the whole into one slice, last, so thin slices do not crowd the pie
-          or push their names into the caption. The group shows the rows' sum
-          and share. The sum keeps the cells' currency and decimals, and is
-          compact when they use <code>data-value</code>. Further columns,
-          which do not add up, leave it out.
-          <code>data-other-label</code> names it, "Other" by default. A single
+          Set <code>data-other</code> to a percentage to group every row under
+          that share of the whole into one slice. The group comes last, so thin
+          slices do not crowd the pie or push their names into the caption. It
+          shows the rows' sum and share. The sum keeps the cells' currency and
+          decimals, and is compact when they use <code>data-value</code>.
+          Further columns do not add up, so the group shows no sum for them.
+          Set <code>data-other-label</code> to name the group. It defaults to
+          "Other". A single
           small row keeps its own slice, and the table keeps every row for
           screen readers.
         </p>
@@ -234,9 +235,9 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
   </Section>
   <Section {...S.cards}>
         <p>
-          A chart goes in a card with the figures it explains. The card adds
-          no chart styles; size the pie with
-          <code>--md-comp-pie-chart-height</code>, its diameter.
+          Put a chart in a card with the figures it explains. The card adds
+          no chart styles. Size the pie with
+          <code>--md-comp-pie-chart-height</code>, which sets its diameter.
         </p>
         <article class="outlined" data-markdown-ignore>
           <div class="p-4">
@@ -270,17 +271,17 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
 </article>
 `} />
         <p>
-          <code>sparkline</code> is a 48px pie with no legend or tooltip, for
-          a small pie beside a figure that already explains it.
+          Use <code>sparkline</code> for a small pie beside a figure that
+          already explains it. It is a 48px pie with no legend or tooltip.
         </p>
   </Section>
   <Section {...S.data}>
         <p>
-          Cells read as in a column chart: a cell's number is its
+          Cells read the same way as in a column chart. A cell's number is its
           <code>data-value</code>, or its text without currency signs, percent
           signs or grouping commas. Text that is not a single number, such as
           "$38M" without a <code>data-value</code>, counts as nothing. So do
-          zero and negative values: their rows stay in the legend and the
+          zero and negative values. Their rows stay in the legend and the
           tooltip with no slice and no share. A chart whose cells are all
           gaps shows its table.
         </p>
@@ -290,7 +291,7 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
           <code>primary-container</code> and <code>tertiary-container</code>
           mixed with <code>on-surface</code>, in turn. The mix keeps every
           slice at 3:1 or more against the surface in light and dark themes. A seventh row would take the first row's color beside it,
-          so it takes the second; past that the colors repeat. Group small
+          so it takes the second. Past that, the colors repeat. Group small
           parts into one "Other" row instead.
         </p>
   </Section>
@@ -298,14 +299,14 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
         <p>
           The table is the chart's text alternative. Give it a header row and
           a header cell per row, and name the chart with a
-          <code>&lt;figcaption&gt;</code>. The drawn pie, values, total and
-          legend are hidden from assistive technology.
+          <code>&lt;figcaption&gt;</code>. The chart hides the drawn pie,
+          values, total and legend from assistive technology.
         </p>
         <p>
-          The plot is one Tab stop named by the caption. The arrow keys move
-          round the pie, right and down to the next row and left and up to the
-          one before, and past the last row they go on to the first. Home and
-          End jump to the first and last rows and Escape hides the tooltip. On a touch screen, tap a slice to show it. In a
+          The plot is one Tab stop, named by the caption. The arrow keys move
+          round the pie. Right and down go to the next row, and left and up go
+          to the one before. Past the last row they go on to the first. Home and
+          End jump to the first and last rows, and Escape hides the tooltip. On a touch screen, tap a slice to show it. In a
           right-to-left page the slices still run clockwise, and so do the
           arrows. The tooltip is a polite live region, so a screen reader
           hears each row's values and share as it moves. A sparkline is not
@@ -317,9 +318,9 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
         <p>
           <code>AutoInit()</code> starts every <code>.pie-chart</code>. To
           start one yourself, call <code>PieChart.init</code>. After changing its
-          table, call <code>update()</code> to redraw it in place, or put
-          <code>data-watch</code> on the figure and it redraws itself. It has the line chart's
-          methods; the <code>min</code> and <code>max</code> options do not
+          table, call <code>update()</code> to redraw it in place, or add
+          <code>data-watch</code> to the figure so it redraws itself. It has the line chart's
+          methods. The <code>min</code> and <code>max</code> options do not
           apply.
         </p>
 <Code code={`

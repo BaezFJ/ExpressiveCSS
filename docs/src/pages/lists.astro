@@ -100,8 +100,8 @@ const S = defineSections([
   </Section>
   <Section {...S.segmented}>
         <p>
-          Add <code>segmented</code>. Every row is a rounded tile;
-          the selected tile uses the same <code>secondary-container</code>
+          Add <code>segmented</code> to make every row a rounded tile. The
+          selected tile uses the same <code>secondary-container</code>
           fill. Use this when the list itself should read as a group.
         </p>
         <ul class="list segmented">
@@ -149,8 +149,8 @@ const S = defineSections([
   <Section {...S.text}>
         <p>
           A row can be a single line of label text, or a label with
-          supporting text underneath. Either can wrap, or take
-          <code>truncate</code> to ellipsis.
+          supporting text underneath. Either can wrap. To cut it off with an
+          ellipsis instead, add <code>truncate</code>.
         </p>
         <ul class="list">
           <li>Label text only</li>
@@ -238,7 +238,7 @@ const S = defineSections([
           inside the label, paints the selected pill.
         </p>
         <p>
-          In a list whose rows are each a single link or button, Up and Down move focus to the row before or after, and Home and End to the first and last, skipping disabled rows and stopping at the ends. Every row stays a Tab stop, so the keys are a shortcut that needs the script; rows with more than one control, and radio rows, which the browser already moves with the arrows, keep their native keys.
+          In a list where each row is a single link or button, the script adds arrow-key shortcuts. Up and Down move focus to the row before or after. Home and End move it to the first and last row. The keys skip disabled rows and stop at the ends. Every row stays a Tab stop, so the keys are only a shortcut. Rows with more than one control keep their native keys. So do radio rows, which the browser already moves with the arrows.
         </p>
         <ul class="list">
           <li>
@@ -310,17 +310,18 @@ const S = defineSections([
           Add <code>sortable</code> to a list to let people reorder it. Drag
           an item by its <code>.drag-handle</code>, or press its
           <code>[data-move="up"]</code> and <code>[data-move="down"]</code>
-          buttons. Every item needs both buttons, in the row or in a menu:
-          they are the keyboard path and the single-pointer alternative to
+          buttons. Every item needs both buttons, in the row or in a menu.
+          They are the keyboard path and the single-pointer alternative to
           dragging. Escape during a drag puts the item back.
         </p>
         <p>
-          After each move the list fires a bubbling <code>change</code>
-          event whose <code>detail</code> is <code>{"{ item, from, to }"}</code>,
-          so the page can save the order, and a polite live region announces
-          the new position (<code>Expressive.Sortable.i18n.moved</code>). The
-          root bundle starts the behavior on load; with the modular entry,
-          call <code>Sortable.Init()</code>.
+          Listen for <code>change</code> to save the order. After each move,
+          the list fires a bubbling <code>change</code> event whose
+          <code>detail</code> is <code>{"{ item, from, to }"}</code>. A polite
+          live region announces the new position
+          (<code>Expressive.Sortable.i18n.moved</code>). The root bundle
+          starts the behavior on load. With the modular entry, call
+          <code>Sortable.Init()</code>.
         </p>
         <ul class="list sortable mb-3" aria-label="Playlist">
           <li><span class="drag-handle" aria-hidden="true"></span><span>Blue in Green</span><span class="sortable-actions"><button type="button" class="icon-button" data-move="up" aria-label="Move Blue in Green up"><span class="material-symbols" aria-hidden="true">arrow_upward</span></button><button type="button" class="icon-button" data-move="down" aria-label="Move Blue in Green down"><span class="material-symbols" aria-hidden="true">arrow_downward</span></button></span></li><li><span class="drag-handle" aria-hidden="true"></span><span>So What</span><span class="sortable-actions"><button type="button" class="icon-button" data-move="up" aria-label="Move So What up"><span class="material-symbols" aria-hidden="true">arrow_upward</span></button><button type="button" class="icon-button" data-move="down" aria-label="Move So What down"><span class="material-symbols" aria-hidden="true">arrow_downward</span></button></span></li><li><span class="drag-handle" aria-hidden="true"></span><span>Freddie Freeloader</span><span class="sortable-actions"><button type="button" class="icon-button" data-move="up" aria-label="Move Freddie Freeloader up"><span class="material-symbols" aria-hidden="true">arrow_upward</span></button><button type="button" class="icon-button" data-move="down" aria-label="Move Freddie Freeloader down"><span class="material-symbols" aria-hidden="true">arrow_downward</span></button></span></li>

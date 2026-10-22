@@ -43,11 +43,13 @@ button.addEventListener('click', () => {
         <p>
           Write the items twice, as two identical
           <code>&lt;ul class="marquee-content"&gt;</code> groups. The second
-          is a copy that fills the gap as the first scrolls out, so mark it
-          <code>aria-hidden="true"</code> and give each link or button in it
-          <code>tabindex="-1"</code>. Each group is at least as wide as the
-          strip and spreads short content out, so one copy is enough. Add
-          <code>fade</code> to fade the items out at both edges. Hovering
+          group is a copy that fills the gap as the first scrolls out. Mark
+          it <code>aria-hidden="true"</code> and give each link or button in
+          it <code>tabindex="-1"</code>. Each group is at least as wide as the
+          strip and spreads short content out, so one copy is enough.
+        </p>
+        <p>
+          Add <code>fade</code> to fade the items out at both edges. Hovering
           over the strip or focusing a link inside stops it. The marquee is CSS only.
         </p>
         <div class="marquee fade" data-markdown-ignore>
@@ -110,8 +112,8 @@ button.addEventListener('click', () => {
   </Section>
   <Section {...S.vertical}>
         <p>
-          <code>vertical</code> scrolls up, or down with <code>reverse</code>.
-          The strip is 320px tall; set <code>height</code> to change it.
+          Add <code>vertical</code> to scroll up, or down with <code>reverse</code>.
+          The strip is 320px tall. Set <code>height</code> to change it.
         </p>
         <div class="marquee vertical fade" style="height: 360px; max-width: 320px" data-markdown-ignore>
           <ul class="marquee-content">
@@ -184,8 +186,8 @@ ${pauseScript.replace(/^/gm, "  ")}
             once, and clicking the copy still follows it.
           </li>
           <li>
-            With reduced motion the strip stops, the copy is hidden and the
-            strip scrolls by hand when its items overflow.
+            With reduced motion, the strip stops and hides the copy. When
+            its items overflow, people scroll the strip by hand.
           </li>
           <li>
             Do not put information people need only in a marquee. Each item

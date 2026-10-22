@@ -29,7 +29,7 @@ const S = defineSections([
           <code>.time-picker</code> except those marked <code>no-autoinit</code>.
         </p>
         <p>
-          The clock is inline, not a modal. It is appended to the input's parent and stays
+          The clock is inline, not a modal. The picker appends it to the input's parent, and it stays
           visible. There is no <code>openByDefault</code> flag.
         </p>
         <div class="field mb-3">
@@ -44,18 +44,21 @@ const S = defineSections([
 `} />
         <p>
           Wrap the input in its own <code>.field</code> (or another small parent). The
-          clock is appended inside that parent.
+          picker appends the clock inside that parent.
         </p>
         <p>
-          Click an hour on the dial, then a minute. With the default
-          <code>autoSubmit: true</code>, finishing the minute writes the input
-          (<code>HH:MM AM</code> or <code>HH:MM PM</code>). You can also type in the digital
-          fields; Enter in any of them writes the typed time.
-          Digital edits use native input events, including paste. Invalid edits
-          restore the last valid value when focus leaves the field. Empty fields
-          use the current hour, minute or second without changing the selected AM/PM period.
+          To pick a time, click an hour on the dial, then a minute. With the default
+          <code>autoSubmit: true</code>, choosing the minute writes the input
+          (<code>HH:MM AM</code> or <code>HH:MM PM</code>).
         </p>
-        <p>Clicking the host input or pressing Enter reloads its current value into the clock. Changing the active clock field or editing its value cancels an older delayed clock update.</p>
+        <p>
+          You can also type in the digital
+          fields. Enter in any of them writes the typed time.
+          Digital edits use native input events, including paste. When focus leaves a field
+          after an invalid edit, the field restores the last valid value. An empty field
+          takes the current hour, minute or second and leaves the selected AM/PM period as it is.
+        </p>
+        <p>Click the host input or press Enter in it to reload its current value into the clock. Changing the active clock field, or editing its value, cancels an older delayed clock update.</p>
   </Section>
 
   <Section {...S.initialization}>
@@ -83,23 +86,26 @@ Expressive.AutoInit(document.body, {
 
   <Section {...S.display}>
         <p>
-          The clock is a <code>.timepicker-container</code> in the page, unless
-          <code>displayPlugin: 'modal'</code> puts it in a dialog. There is no
+          By default the clock is a <code>.timepicker-container</code> in the page.
+          <code>displayPlugin: 'modal'</code> puts it in a dialog instead. There is no
           <code>autoClose</code> option.
         </p>
         <p>
-          <code>container</code> renders the clock into a specific element instead of the
-          input's parent. Pass a selector or a DOM node.
+          To render the clock into a specific element instead of the
+          input's parent, pass a selector or a DOM node as <code>container</code>.
         </p>
         <h5 class="light">Modal dialog</h5>
         <p>
-          <code>displayPlugin: 'modal'</code> opens the clock in a modal
+          Set <code>displayPlugin: 'modal'</code> to open the clock in a modal
           <code>&lt;dialog class="display-modal"&gt;</code>, drawn as a basic
-          dialog over a scrim, when the input is clicked or confirmed with
-          Enter. The dialog takes the input's label as its name and focus moves
-          to the hour field. The time is written on Ok or on Enter in a field;
-          Cancel, Escape or a press on the scrim close it without changing the
-          input and call <code>onCancel</code>. Focus then goes back to the
+          dialog over a scrim. It opens when the user clicks the input or confirms it with
+          Enter. The dialog takes the input's label as its name, and focus moves
+          to the hour field.
+        </p>
+        <p>
+          Ok, or Enter in a field, writes the time.
+          Cancel, Escape or a press on the scrim closes the dialog without changing the
+          input and calls <code>onCancel</code>. Focus then goes back to the
           input. A modal clock always shows Cancel and Ok, so it sets
           <code>autoSubmit: false</code> for you.
         </p>
@@ -109,14 +115,14 @@ Expressive.Timepicker.init(elem, {
 });
 `} />
         <p>
-          A selective Sass build needs <code>"dialog"</code> and
-          <code>"modal-display"</code> in <code>$components</code>.
+          In a selective Sass build, add <code>"dialog"</code> and
+          <code>"modal-display"</code> to <code>$components</code>.
         </p>
         <h5 class="light">Docked popover</h5>
         <p>
-          <code>displayPlugin: 'docked'</code> wraps the clock in a
-          <code>.display-docked</code> popover that appears when the input is clicked or
-          confirmed with Enter, and hides when you click outside.
+          Set <code>displayPlugin: 'docked'</code> to wrap the clock in a
+          <code>.display-docked</code> popover. The popover appears when the user clicks the input or
+          confirms it with Enter, and hides when they click outside.
         </p>
 <Code code={`
 Expressive.Timepicker.init(elem, {
@@ -124,12 +130,12 @@ Expressive.Timepicker.init(elem, {
 });
 `} />
         <p>
-          The popover stays inside the input's parent and accounts for its
+          The popover stays inside the input's parent and accounts for the parent's
           positioning and scroll offsets. You can use positioned wrappers
           such as <code>.field</code> directly.
         </p>
         <p>
-          Optional <code>displayPluginOptions</code>: <code>margin</code> (default
+          <code>displayPluginOptions</code> is optional and takes <code>margin</code> (default
           <code>5</code>), <code>transition</code> (<code>10</code>),
           <code>duration</code> (<code>250</code>), and <code>align</code>
           (<code>'left'</code>).
@@ -148,7 +154,7 @@ Expressive.Timepicker.init(elem, {
               <td><code>container</code></td>
               <td>Element or String</td>
               <td><code>null</code></td>
-              <td>Element or selector to render the clock into. When omitted, it is appended to the input's parent.</td>
+              <td>Element or selector to render the clock into. When omitted, the picker appends the clock to the input's parent.</td>
             </tr>
             <tr>
               <td><code>showClearBtn</code></td>
@@ -274,7 +280,9 @@ Expressive.Timepicker.init(elem, {
   </Section>
 
   <Section {...S.internationalization}>
-        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults. The <code>hours</code>, <code>minutes</code> and <code>seconds</code> keys provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour, minute and second fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round, and the hand follows the hour and minute. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between the fields, the AM/PM buttons and the footer. The dial itself takes pointer input only: the spin buttons set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.</p>
+        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults. The <code>hours</code>, <code>minutes</code> and <code>seconds</code> keys give the inputs their accessible names.</p>
+        <p>The AM/PM buttons expose their selected state and support Enter and Space. The hour, minute and second fields are spin buttons. Up and Down step them by one, and Page Up and Page Down step by five, wrapping round. The hand follows the hour and minute. Hours step round the day, so in 12-hour time, passing 12 switches AM and PM. Up from 11 AM comes 12 PM. Tab moves between the fields, the AM/PM buttons and the footer.</p>
+        <p>The dial itself takes pointer input only. The spin buttons set the same values from the keyboard and for a screen reader, so a focusable dial would only add a second Tab stop for them.</p>
         <table class="striped">
           <thead>
             <tr>
@@ -304,12 +312,15 @@ Expressive.Timepicker.init(elem, {
 
   <Section {...S["twelve-hour"]}>
         <p>
-          <code>twelveHour</code> defaults to <code>true</code>, or with a <code>lang</code>
-          on or around the input, to the clock that language uses: 24-hour for
-          <code>de</code> or <code>fr</code>, 12-hour for <code>en-US</code>. The intro clock above is
-          12-hour with AM/PM. Set <code>twelveHour: false</code> for a 24-hour dial: hours
+          Set <code>twelveHour: false</code> for a 24-hour dial, with hours
           1 to 12 on the inner ring and 13 to 00 on the outer ring. The written value is then
-          <code>HH:MM</code> with no meridian.
+          <code>HH:MM</code> with no meridian. The intro clock above is
+          12-hour with AM/PM.
+        </p>
+        <p>
+          <code>twelveHour</code> defaults to <code>true</code>. With a <code>lang</code>
+          on or around the input, it defaults to the clock that language uses. That is 24-hour for
+          <code>de</code> or <code>fr</code>, and 12-hour for <code>en-US</code>.
         </p>
         <div class="field mb-3">
           <input type="text" class="time-picker no-autoinit" id="timepicker-24">
@@ -324,10 +335,10 @@ Expressive.Timepicker.init(document.getElementById('timepicker-24'), {
 
   <Section {...S.seconds}>
         <p>
-          <code>showSeconds: true</code> adds a third field, a spin button named by <code>i18n.seconds</code>, after the minutes. It steps and takes typed values like the minute field, and an emptied field takes the current second. The written value becomes <code>HH:MM:SS</code>, with AM or PM on a 12-hour clock. A value read without seconds, such as <code>14:30</code>, opens at zero seconds.
+          Set <code>showSeconds: true</code> to add a third field after the minutes. It is a spin button named by <code>i18n.seconds</code>. It steps and takes typed values like the minute field, and an emptied field takes the current second. The written value becomes <code>HH:MM:SS</code>, with AM or PM on a 12-hour clock. A value read without seconds, such as <code>14:30</code>, opens at zero seconds.
         </p>
         <p>
-          The dial keeps its hours and minutes views, as the Material 3 time picker does; seconds are set in the field only. Under <code>autoSubmit</code>, choosing a minute on the dial writes the time with the seconds the field shows.
+          The dial keeps its hours and minutes views, as the Material 3 time picker does. You set seconds in the field only. Under <code>autoSubmit</code>, choosing a minute on the dial writes the time with the seconds the field shows.
         </p>
         <div class="field mb-3">
           <input type="text" class="time-picker no-autoinit" id="timepicker-seconds">
@@ -339,7 +350,7 @@ Expressive.Timepicker.init(document.getElementById('timepicker-seconds'), {
 });
 `} />
         <p>
-          A <code>type="time"</code> input gets 24-hour <code>HH:MM:SS</code>. Give it <code>step="1"</code> so the browser does not flag the seconds as a step mismatch.
+          A <code>type="time"</code> input gets 24-hour <code>HH:MM:SS</code>. Give it <code>step="1"</code> so the browser doesn't flag the seconds as a step mismatch.
         </p>
 <Code code={`
 <input type="time" step="1" class="time-picker" id="alarm">
@@ -348,13 +359,16 @@ Expressive.Timepicker.init(document.getElementById('timepicker-seconds'), {
 
   <Section {...S["time-range"]}>
         <p>
-          <code>minTime</code> and <code>maxTime</code> bound the times a person can choose, as 24-hour <code>'HH:MM'</code> or <code>'HH:MM:SS'</code> strings. Either one alone bounds one end of the day. The range can't cross midnight: a <code>minTime</code> after <code>maxTime</code> logs a warning, and the picker ignores both. Without <code>showSeconds</code> the picker writes whole minutes, so <code>minTime</code> rounds up and <code>maxTime</code> rounds down to a minute.
+          Set <code>minTime</code> and <code>maxTime</code> to bound the times a person can choose. Pass them as 24-hour <code>'HH:MM'</code> or <code>'HH:MM:SS'</code> strings. Either one alone bounds one end of the day. The range can't cross midnight. If <code>minTime</code> is after <code>maxTime</code>, the picker logs a warning and ignores both. Without <code>showSeconds</code>, the picker writes whole minutes, so <code>minTime</code> rounds up and <code>maxTime</code> rounds down to a minute.
         </p>
         <p>
-          An hour stays available while any minute of it is in range, so with 09:00 to 17:30 the hour 17 is available and its minutes stop at 30. Dial ticks outside the range are dimmed and the hand won't stop on them. A release on one changes nothing and fires no <code>select</code>. In the fields, Up and Down stop at the last allowed value instead of wrapping, a typed time outside the range is refused, and each field's <code>aria-valuemin</code> and <code>aria-valuemax</code> follow the allowed values. On a 12-hour clock, the AM or PM button is disabled when no time in that half of the day is allowed.
+          An hour stays available while any minute of it is in range. With 09:00 to 17:30, the hour 17 is available and its minutes stop at 30. The picker dims dial ticks outside the range, and the hand won't stop on them. Releasing on one changes nothing and fires no <code>select</code>.
         </p>
         <p>
-          A value outside the range, in the input or <code>defaultTime</code>, opens at the nearest bound. So does a minute that an hour change leaves outside it: choosing 17 at 16:45 gives 17:30.
+          In the fields, Up and Down stop at the last allowed value instead of wrapping. The picker refuses a typed time outside the range. Each field's <code>aria-valuemin</code> and <code>aria-valuemax</code> follow the allowed values. On a 12-hour clock, the picker disables the AM or PM button when no time in that half of the day is allowed.
+        </p>
+        <p>
+          A value outside the range, in the input or <code>defaultTime</code>, opens at the nearest bound. So does a minute that an hour change leaves outside the range. For example, choosing 17 at 16:45 gives 17:30.
         </p>
         <div class="field mb-3">
           <input type="text" class="time-picker no-autoinit" id="timepicker-range">
@@ -398,7 +412,7 @@ instance.clear();
 `} />
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove the clock, and tear down its event handlers. It also cancels pending automatic submission and clock updates, so the destroyed instance cannot write to the input.</p>
+        <p>Destroy the plugin instance, remove the clock, and tear down its event handlers. The method also cancels pending automatic submission and clock updates, so the destroyed instance cannot write to the input.</p>
 <Code code={`
 instance.destroy();
 `} />

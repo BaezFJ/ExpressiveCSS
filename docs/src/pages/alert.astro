@@ -25,10 +25,11 @@ const S = defineSections([
           dismisses it.
         </p>
         <p>
-          Use a <a href={route("snackbar")}>snackbar</a> for brief feedback
-          after an action, and a <a href={route("dialogs")}>dialog</a> when the
-          user must decide before going on. An alert holds an optional leading
-          icon, then the message: a heading, a <code>&lt;p&gt;</code>, or both.
+          Put an optional leading icon in the alert, then the message: a
+          heading, a <code>&lt;p&gt;</code>, or both. Use a
+          <a href={route("snackbar")}>snackbar</a> for brief feedback after an
+          action, and a <a href={route("dialogs")}>dialog</a> when the user
+          must decide before going on.
         </p>
         <div class="alert mb-3">
           <span class="material-symbols" aria-hidden="true">info</span>
@@ -43,8 +44,8 @@ const S = defineSections([
   </Section>
   <Section {...S.critical}>
         <p>
-          <code>critical</code> uses the error container colors for problems
-          that stop something from working.
+          Add <code>critical</code> for problems that stop something from
+          working. It uses the error container colors.
         </p>
         <div class="alert critical mb-3">
           <span class="material-symbols" aria-hidden="true">error</span>
@@ -61,11 +62,11 @@ const S = defineSections([
   </Section>
   <Section {...S.actions}>
         <p>
-          An <code>.alert-actions</code> row puts buttons under the message,
-          aligned to the end. An <code>.icon-button</code> as the last child is
-          the close button; it stays beside the first line. Closing the alert
-          is the page's job: remove it, then move focus to something nearby
-          so it does not fall back to the top of the page.
+          Put buttons in an <code>.alert-actions</code> row to place them under
+          the message, aligned to the end. Make an <code>.icon-button</code> the
+          last child to use it as the close button. It stays beside the first
+          line. Your page closes the alert. Remove the alert, then move focus to
+          something nearby so focus does not fall back to the top of the page.
         </p>
         <div class="alert mb-3">
           <span class="material-symbols" aria-hidden="true">cloud_off</span>
@@ -92,14 +93,14 @@ const S = defineSections([
   </Section>
   <Section {...S.announcing}>
         <p>
-          An alert that is in the page when it loads needs no role. When one
-          appears or changes while the page is in use, put
-          <code>role="status"</code> on its text, or <code>role="alert"</code>
-          when the user must act now. The live element must already be in the
-          page before you write the text into it, and it must not hold the
-          buttons: a screen reader would read their labels as part of the
-          message. Never use <code>role="banner"</code>, which marks the page
-          header.
+          An alert that is in the page when it loads needs no role. When an
+          alert appears or changes while the page is in use, put
+          <code>role="status"</code> on its text. Use <code>role="alert"</code>
+          instead when the user must act now. Add the live element to the page
+          before you write the text into it. Keep the buttons out of the live
+          element, because a screen reader would read their labels as part of
+          the message. Never use <code>role="banner"</code>, which marks the
+          page header.
         </p>
 <Code code={`
 <div class="alert critical">
@@ -113,22 +114,28 @@ const S = defineSections([
   </Section>
   <Section {...S["error-summary"]}>
         <p>
-          An <code>.error-summary</code> alert at the top of a
-          <code>novalidate</code> form lists what is wrong when the form is
-          submitted. While any field is invalid the submit stops, as it would
-          natively, and the Forms behavior writes one link per invalid field
-          into the summary's <code>&lt;ul&gt;</code>: the field's label and
-          the browser's message. A radio group gets one link, named by its
-          legend. Then the summary shows and takes focus, so a screen reader
-          reads it. Each link focuses its field. A valid submit hides the
-          summary again, and a submit button with
-          <code>formnovalidate</code> skips the check.
+          Put an <code>.error-summary</code> alert at the top of a
+          <code>novalidate</code> form to list what is wrong when the form is
+          submitted. When the user submits while any field is invalid:
+        </p>
+        <ol>
+          <li>The submit stops, as it would natively.</li>
+          <li>
+            The Forms behavior writes one link per invalid field into the
+            summary's <code>&lt;ul&gt;</code>, with the field's label and the
+            browser's message. A radio group gets one link, named by its legend.
+          </li>
+          <li>The summary shows and takes focus, so a screen reader reads it.</li>
+        </ol>
+        <p>
+          Each link focuses its field. A valid submit hides the summary again.
+          A submit button with <code>formnovalidate</code> skips the check.
         </p>
         <p>
-          <code>novalidate</code> is required. Without it the browser stops an
+          <code>novalidate</code> is required. Without it, the browser stops an
           invalid form before the submit event, and only the first field's
-          bubble appears. Keep each field's own error text too; the summary
-          only gathers them.
+          bubble appears. Keep each field's own error text too, because the
+          summary only gathers them.
         </p>
 <Code code={`
 <form novalidate>

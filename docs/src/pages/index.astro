@@ -85,27 +85,27 @@ const S = defineSections([
 
   <Section {...S.download}>
                     <p class="flow-text">
-                        Expressive comes in two forms. Choose one based on your
-                        preference and expertise.
-                        The project is at version <code>0.15.0</code> and is still growing, so the usual path is to build
+                        Expressive comes in two forms. Pick the one that fits your
+                        preference and experience.
+                        The project is at version <code>0.15.0</code> and still growing, so the usual path is to build
                         from the repository.
                     </p>
                     <div class="row">
                         <div class="s12 m6">
                             <h5>Expressive</h5>
                             <p>
-                                This is the standard version that comes with both the minified and unminified CSS and
+                                The standard version includes minified and unminified CSS and
                                 JavaScript files.
-                                After you build the project, copy the files from <code>dist/</code>. This option
-                                requires little to no setup.
-                                Use this if you are unfamiliar with Sass.
+                                Build the project, then copy the files from <code>dist/</code>. This option
+                                needs little to no setup.
+                                Use it if you are unfamiliar with Sass.
                             </p>
                         </div>
                         <div class="s12 m6">
                             <h5>Sass</h5>
                             <p>
                                 This version is the source SCSS in <code>src/sass</code>. It gives you more control over
-                                which layers to include, and it needs a Sass compiler.
+                                which layers to include. It needs a Sass compiler.
                             </p>
                         </div>
                     </div>
@@ -134,7 +134,7 @@ dist/
 
                     <h5>NPM</h5>
                     <p>
-                        The package name is <code>@expressivecss/expressive</code>. This release contains source files as well as
+                        The package name is <code>@expressivecss/expressive</code>. It contains the source files and
                         the compiled CSS and JavaScript files.
                     </p>
                     <Code code={`
@@ -155,8 +155,8 @@ yarn add @expressivecss/expressive
 
   <Section {...S.setup}>
                     <h5>Project structure</h5>
-                    <p>After building, copy the compiled files into the directory where your website is located. Your
-                        directory will look something like this.</p>
+                    <p>After building, copy the compiled files into your website's directory. It will look
+                        something like the tree below.</p>
                     <p>
                         There are two sets of files. The
                         <code>min</code> files are compressed to reduce load times. Use the minified files
@@ -180,9 +180,8 @@ MyWebsite/
 
                     <h5>HTML setup</h5>
                     <p>
-                        Next, link the files in your webpage. Load JavaScript files at the end of the body to
-                        reduce page load time. The example below shows how to import Expressive into your
-                        webpage.
+                        Next, link the files in your webpage, as in the example below. Load JavaScript files at
+                        the end of the body to reduce page load time.
                     </p>
                     <Code code={`
 <!DOCTYPE html>
@@ -205,12 +204,11 @@ MyWebsite/
 
                     <h5>Initialize JavaScript</h5>
                     <p>
-                        The browser bundle exposes the framework as the global <code>Expressive</code> object. Importing
-                        the JavaScript installs
-                        shared document behaviors (forms, chips, cards, and a few others), but it does not call <code>AutoInit()</code>
-                        automatically.
-                        Call it after the page has loaded so components such as navigation rails, tooltips, and tabs
-                        start themselves.
+                        Call <code>AutoInit()</code> after the page has loaded so components such as navigation
+                        rails, tooltips, and tabs start themselves. Importing the JavaScript does not call it for
+                        you. The import does install shared document behaviors (forms, chips, cards, and a few
+                        others). The browser bundle exposes the framework as the global <code>Expressive</code>
+                        object.
                     </p>
                     <p>
                         <code>AutoInit()</code> scans <code>document.body</code> by default. Pass a container to limit
@@ -238,9 +236,9 @@ Tooltip.init(element, { position: 'top' });
 
                     <h5>Themes</h5>
                     <p>
-                        Expressive uses the <code>theme</code> attribute on the root element.
-                        <code>light</code> and <code>dark</code> lock the scheme;
-                        <code>auto</code> (or omitting the attribute) follows the OS.
+                        Set the <code>theme</code> attribute on the root element.
+                        <code>light</code> and <code>dark</code> lock the scheme.
+                        <code>auto</code>, or no attribute at all, follows the OS.
                     </p>
                     <Code code={`
 <html lang="en" theme="auto">
@@ -283,8 +281,8 @@ my-site/
                     <h5>Layout reference</h5>
                     <p class="flow-text">
                         These two pages show how Expressive
-                        structures content,
-                        and you can copy the markup they use.
+                        structures content.
+                        You can copy the markup they use.
                     </p>
                     <div class="row">
                         <div class="s12 m6">
@@ -314,20 +312,20 @@ my-site/
 
   <Section {...S["smaller-builds"]}>
     <p>Use the modular entry with a bundler to include selected JavaScript components.
-      Initialize after the markup exists, and destroy instances when removing the view.</p>
+      Initialize each component after its markup exists, and destroy instances when you remove the view.</p>
     <Code code={`import { Tabs } from '@expressivecss/expressive/modular';
 const tabs = Tabs.init(document.querySelector('.tabs'));`} />
-    <p>This entry installs no document behaviors. Call the behaviors your page needs,
-      such as <code>Forms.Init()</code> or <code>Dialogs.Init()</code>, once explicitly.
-      The original root import keeps its existing initialization. <code>AutoInit</code>
-      remains available and includes the full component registry.</p>
+    <p>This entry installs no document behaviors. Call each behavior your page needs once,
+      such as <code>Forms.Init()</code> or <code>Dialogs.Init()</code>.
+      The root import keeps its existing initialization. <code>AutoInit</code>
+      is still available and includes the full component registry.</p>
     <p>Select Sass partials with the custom entry. With Sass's Node package importer,
-      compile using <code>sass --pkg-importer=node app.scss app.css</code>.</p>
+      compile with <code>sass --pkg-importer=node app.scss app.css</code>.</p>
     <Code code={`@use "pkg:@expressivecss/expressive/scss/custom" with (
   $components: ("icons-material-design", "tabs"),
   $utilities: ()
 );`} />
-    <p>Tokens and base styles stay included. Lists load in the order written;
+    <p>Tokens and base styles stay included. Lists load in the order written.
       <code>null</code> includes the full group, and <code>()</code> omits it.
       Include supporting partials for the features you use. The default configuration
       produces the same CSS as the full entry.</p>
@@ -335,13 +333,13 @@ const tabs = Tabs.init(document.querySelector('.tabs'));`} />
       <code>buttons</code>, <code>menu</code>, <code>forms</code>, and
       <code>datepicker</code>, in that order. Initialize both components explicitly.</p>
     <p>To supply smaller icon fonts, set <code>$expressive-include-fonts: false</code>
-      and provide your own font faces, including text fonts. Include icons from
-      dynamic content and generated controls. Keep full fonts for unrestricted icon names.</p>
+      and provide your own font faces, including text fonts. Your subset must include icons
+      from dynamic content and generated controls. Keep full fonts if icon names are unrestricted.</p>
     <p>The <a href="https://github.com/BaezFJ/ExpressiveCSS#reduce-page-downloads">README</a>
       contains the initialization table, complete Sass recipes, and font declarations.</p>
   </Section>
   <Section {...S.sass}>
-                    <p class="flow-text">This section is only relevant if you chose to use the Sass sources.</p>
+                    <p class="flow-text">You only need this section if you chose the Sass sources.</p>
                     <h5>Compiling Sass</h5>
                     <p>
                         Besides compiled CSS, the repository contains many <code>.scss</code> files with the
@@ -358,7 +356,7 @@ npm run build:css
                     <Code code={`
 @use "@expressivecss/expressive/src/sass/expressive";
 `} />
-                    <p>When working directly in this repository, the entry point is
+                    <p>Inside this repository, the entry point is
                         <code>src/sass/expressive.scss</code>.</p>
                     <Code code={`
 MyWebsite/

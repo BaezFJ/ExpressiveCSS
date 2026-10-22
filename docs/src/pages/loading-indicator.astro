@@ -16,10 +16,10 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.basic}>
         <p class="flow-text">
-          This is M3 Expressive's indicator for a short wait. It is a single
-          CSS-only element and needs no JavaScript plugin. The shape morphs
-          through a circle and four cookie shapes while the whole indicator
-          rotates.
+          The loading indicator is M3 Expressive's indicator for a short wait.
+          It is a single CSS-only element and needs no JavaScript plugin. The
+          shape morphs through a circle and four cookie shapes while the whole
+          indicator rotates.
         </p>
         <p class="py-5 center-align">
           <span class="loading-indicator" role="status" aria-label="Loading"></span>
@@ -29,17 +29,18 @@ const S = defineSections([
 `} />
         <p>
           The element is empty, so it reports nothing on its own.
-          Give the waiting state a name, make status text updates meaningful,
-          and check what assistive technology actually announces.
-          An indeterminate <code>progressbar</code> is also valid and omits
-          <code>aria-valuenow</code>. The framework currently requires a named
-          status, but a name alone does not guarantee an announcement.
+          Give the waiting state a name and make status text updates meaningful.
+          Then check what assistive technology actually announces, because a
+          name alone does not guarantee an announcement. The framework
+          currently requires a named status. An indeterminate
+          <code>progressbar</code>, which omits <code>aria-valuenow</code>,
+          is also valid.
         </p>
   </Section>
   <Section {...S.contained}>
         <p>
-          <code>contained</code> puts the indicator on a
-          <code>secondary-container</code> circle and switches it to
+          Add <code>contained</code> to put the indicator on a
+          <code>secondary-container</code> circle and switch it to
           <code>on-secondary-container</code>. Use it over an image, a
           coloured surface, or anything else the plain indicator would get
           lost against.
@@ -54,9 +55,9 @@ const S = defineSections([
   <Section {...S["vs-progress"]}>
         <p>
           Use it for short waits with unknown progress. It replaces most
-          indeterminate circular uses, but keep a progress indicator for a
-          process that will transition to a determinate value. Google's button
-          guidance also retains circular progress.
+          indeterminate circular uses. Keep a progress indicator for a process
+          that will switch to a determinate value. Google's button guidance
+          also keeps circular progress.
         </p>
         <table class="striped">
           <thead>

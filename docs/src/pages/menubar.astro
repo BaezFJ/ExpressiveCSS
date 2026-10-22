@@ -21,12 +21,13 @@ const S = defineSections([
           File, Edit and View.
         </p>
         <p>
-          It holds <code>.menu-trigger</code> buttons, and each one opens an
-          ordinary <a href={route("menu")}>menu</a> written after the bar.
-          The <code>Menubar</code> component adds the menubar and menuitem
-          roles and the keyboard below. <code>AutoInit()</code> starts it;
-          otherwise call <code>Expressive.Menubar.init(el)</code>. Name the
-          bar with <code>aria-label</code>. For site navigation, use a
+          Fill the bar with <code>.menu-trigger</code> buttons and name it with
+          <code>aria-label</code>. Each button opens an ordinary
+          <a href={route("menu")}>menu</a> written after the bar. The
+          <code>Menubar</code> component adds the menubar and menuitem roles
+          and the keyboard support below. <code>AutoInit()</code> starts it,
+          or you can call <code>Expressive.Menubar.init(el)</code> yourself.
+          For site navigation, use a
           <a href={route("mega_menu")}>mega menu</a> of links instead.
         </p>
 <Code code={`
@@ -47,7 +48,7 @@ const S = defineSections([
   <Section {...S.keyboard}>
         <ul>
           <li>The bar is one Tab stop, and it remembers the last item focused.</li>
-          <li><kbd>Left</kbd> and <kbd>Right</kbd> move along the bar and wrap; <kbd>Home</kbd> and <kbd>End</kbd> go to the ends. Both mirror in right-to-left pages.</li>
+          <li><kbd>Left</kbd> and <kbd>Right</kbd> move along the bar and wrap. <kbd>Home</kbd> and <kbd>End</kbd> go to the ends. Both pairs mirror in right-to-left pages.</li>
           <li><kbd>Down</kbd>, <kbd>Enter</kbd> or <kbd>Space</kbd> opens a menu on its first item.</li>
           <li>In an open menu, <kbd>Left</kbd> and <kbd>Right</kbd> open the neighbouring menu, unless the row opens or closes a submenu.</li>
           <li><kbd>Escape</kbd> closes the menu and returns to its item.</li>

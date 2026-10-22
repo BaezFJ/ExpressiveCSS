@@ -24,11 +24,11 @@ const S = defineSections([
           the panel opens against that button.
         </p>
         <p>
-          The browser does the work: pressing the button toggles the panel,
-          Escape or a click outside closes it, focus returns to the button,
-          and the button reports the panel as expanded. CSS anchor
-          positioning places it and flips it when it would not fit. There is
-          no JavaScript. It looks like a
+          The browser handles the behavior without JavaScript. Pressing the
+          button toggles the panel, and Escape or a click outside closes it.
+          Focus returns to the button, and the button reports the panel as
+          expanded. CSS anchor positioning places the panel and flips it when
+          it would not fit. It looks like a
           <a href={route('tooltips')}>rich tooltip</a>, but it opens on press,
           stays open while the user reads or acts, and can hold buttons.
         </p>
@@ -57,9 +57,10 @@ const S = defineSections([
   </Section>
   <Section {...S.toggletip}>
         <p>
-          A short popover behind an info <a href={route('icon_buttons')}>icon
-          button</a> is a toggletip: a note the user asks for, which stays
-          until they dismiss it. Name the button for what it explains.
+          Put a short popover behind an info <a href={route('icon_buttons')}>icon
+          button</a> to make a toggletip. A toggletip is a note the user asks
+          for, and it stays until they dismiss it. Name the button for what it
+          explains.
         </p>
         <p class="flex align-center gap-2 mb-3">
           <span class="body-large">Two-step verification</span>
@@ -106,9 +107,9 @@ const S = defineSections([
   <Section {...S.accessibility}>
         <p>
           The panel follows its button in the reading order, so a screen
-          reader reaches it next; the browser does not move focus into it.
-          Keep it short and leave the role off. A form, or anything the user
-          has to finish, belongs in a <a href={route('dialogs')}>dialog</a>.
+          reader reaches it next. The browser does not move focus into it.
+          Keep it short and leave the role off. Put a form, or anything the
+          user has to finish, in a <a href={route('dialogs')}>dialog</a>.
         </p>
   </Section>
   <Section {...S.tokens}>

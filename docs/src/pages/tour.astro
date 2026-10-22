@@ -21,13 +21,29 @@ const S = defineSections([
           a time, beside each element it explains.
         </p>
         <p>
-          The card is a <code>popover="manual"</code> dialog holding a
-          <code>&lt;section&gt;</code> per step. Each section's
-          <code>data-tour-target</code> names the id of the element it is
-          about. Add a <code>.tour-progress</code> line, a
-          <code>.tour-actions</code> row with Back, Next and Done buttons, and
-          a close button. A <code>data-tour-start</code> button names the tour
-          to start. For one hint beside one control, use a
+          To build a tour:
+        </p>
+        <ol>
+          <li>
+            Make the card a <code>popover="manual"</code> dialog with one
+            <code>&lt;section&gt;</code> per step.
+          </li>
+          <li>
+            Set each section's <code>data-tour-target</code> to the id of the
+            element it is about.
+          </li>
+          <li>
+            Add a <code>.tour-progress</code> line, a
+            <code>.tour-actions</code> row with Back, Next and Done buttons,
+            and a close button.
+          </li>
+          <li>
+            Add a button whose <code>data-tour-start</code> names the tour to
+            start.
+          </li>
+        </ol>
+        <p>
+          For one hint beside one control, use a
           <a href={route("popover")}>popover</a>.
         </p>
 <Code code={`
@@ -57,23 +73,27 @@ const S = defineSections([
   <Section {...S.behavior}>
         <p>
           The <code>Tour</code> behavior shows one step at a time below its
-          target, flipping above when there is no room, rings the target and
-          scrolls it into view. Steps whose target is missing or hidden are
-          skipped. Back hides on the first step, Next on the last, and Done
-          shows only on the last. The card is named by the step's heading and
-          takes focus. Escape, Done or the close button end the tour and
-          return focus to where it was; the card's <code>toggle</code> event
-          tells the page, for example to remember that the tour was seen.
+          target. It flips the card above the target when there is no room
+          below, rings the target and scrolls it into view. It skips steps
+          whose target is missing or hidden. Back hides on the first step and
+          Next on the last. Done shows only on the last step.
         </p>
         <p>
-          <code>Expressive.Tour.start(el, index)</code>,
-          <code>go(el, index)</code> and <code>end(el, completed)</code> work from script.
-          The tour fires <code>expressive:open</code>, <code>expressive:change</code> with
-          <code>{"{ step, index }"}</code>, and <code>expressive:close</code> with
-          <code>{"{ completed }"}</code>, true when Done ended it;
-          and <code>Expressive.Tour.i18n.progress</code> holds the
-          <code>{"Step {current} of {total}"}</code> text. The root bundle starts the
-          behavior on load; with the modular entry, call
+          The step's heading names the card, and the card takes focus.
+          Escape, Done or the close button ends the tour and returns focus to
+          where it was. The card's <code>toggle</code> event tells the page,
+          so it can, for example, remember that the user saw the tour.
+        </p>
+        <p>
+          From script, call <code>Expressive.Tour.start(el, index)</code>,
+          <code>go(el, index)</code> and <code>end(el, completed)</code>.
+          The tour fires <code>expressive:open</code>, and
+          <code>expressive:change</code> with <code>{"{ step, index }"}</code>.
+          It also fires <code>expressive:close</code> with
+          <code>{"{ completed }"}</code>, which is true when Done ended the
+          tour. <code>Expressive.Tour.i18n.progress</code> holds the
+          <code>{"Step {current} of {total}"}</code> text. The root bundle
+          starts the behavior on load. With the modular entry, call
           <code>Tour.Init()</code>.
         </p>
   </Section>

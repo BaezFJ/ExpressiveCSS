@@ -20,13 +20,15 @@ const S = defineSections([
           events.
         </p>
         <p>
-          The page renders it: a <code>&lt;caption&gt;</code> naming the
-          month, a header row of weekdays, then a row per week. Each day starts
-          with a <code>&lt;time&gt;</code> and may hold a
-          <code>.calendar-events</code> list of links or text. Mark days from
-          other months with <code>outside</code> and today with
+          Your page renders the table. It has a <code>&lt;caption&gt;</code>
+          naming the month, a header row of weekdays, then a row per week.
+          Each day starts with a <code>&lt;time&gt;</code> and may hold a
+          <code>.calendar-events</code> list of links or text.
+        </p>
+        <p>
+          Mark days from other months with <code>outside</code> and today with
           <code>aria-current="date"</code>. The page owns the dates, the
-          navigation between months and the events; CSS draws the grid. Long
+          navigation between months and the events. CSS draws the grid. Long
           event titles ellipsize, and on a phone the days get shorter. To pick
           a date for a field, use the <a href={route("datepicker")}>date picker</a>.
         </p>

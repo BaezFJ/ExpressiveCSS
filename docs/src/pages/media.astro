@@ -14,7 +14,7 @@ const S = defineSections([
 ]);
 ---
 <DocsLayout page="media">
-<p>Lightbox supports Space and native button activation, cancels pending animation callbacks on destroy and retains the original image. This does not supply a modal-gallery focus contract.</p>
+<p>Lightbox supports Space and native button activation. On destroy it cancels pending animation callbacks and keeps the original image. It does not supply a modal-gallery focus contract.</p>
 
 <PageBody sections={S}>
   <Section {...S.lightbox}>
@@ -25,18 +25,18 @@ const S = defineSections([
 
         <h3>Lightbox</h3>
         <p>
-          Lightbox is Expressive's material-style enlarge-on-click image. Click an image with
-          <code>lightboxed</code> and it centers and grows. Click it again, scroll, or press Escape to dismiss.
-          The image keeps the same 12px corners as <code>responsive-img</code>.
+          Add <code>lightboxed</code> to an image to get Expressive's material-style enlarge-on-click
+          behavior. Click the image and it centers and grows. Click it again, scroll, or press Escape to
+          dismiss it. The image keeps the same 12px corners as <code>responsive-img</code>.
           <code>AutoInit()</code> starts every <code>.lightboxed</code> image except those marked
           <code>no-autoinit</code>.
         </p>
         <p>
-          Repeated open or close requests are ignored. Reopening during closing cancels the
-          old transition; canceled transitions do not call their completion callback.
-          Reduced motion skips animation, including when the preference changes while mounted.
-          Destroy restores the image and releases owned styles, listeners and pending callbacks.
-          Lightbox enlarges images; it does not provide a modal-gallery focus contract.
+          Lightbox ignores repeated open or close requests. Reopening while it closes cancels the
+          old transition, and a canceled transition does not call its completion callback.
+          Reduced motion skips animation, including when the preference changes while the lightbox is mounted.
+          Destroying the instance restores the image and releases the styles, listeners and pending
+          callbacks it owns. Lightbox enlarges images. It does not provide a modal-gallery focus contract.
         </p>
         <img class="lightboxed responsive-img" tabindex="0" role="button" src="https://picsum.photos/id/1015/800/400" alt="A mountain lake that opens in a lightbox">
 <Code code={`

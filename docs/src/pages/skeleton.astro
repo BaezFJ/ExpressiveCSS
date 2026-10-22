@@ -60,7 +60,7 @@ const S = defineSections([
           The default box takes its size from <code>width</code> and
           <code>height</code>. <code>text</code> is one line of body text, and
           the last of several lines runs shorter. <code>circle</code> is a 40px
-          circle for an avatar; change it with
+          circle for an avatar. Change its size with
           <code>--md-comp-skeleton-circle-size</code>.
         </p>
         <div class="mb-3" style="max-width: 20rem;">
@@ -79,12 +79,16 @@ const S = defineSections([
   <Section {...S.accessibility}>
         <p>
           Skeletons say nothing to assistive technology, so keep them empty.
-          Mark the region being filled with <code>aria-busy="true"</code> and
-          report the wait in a status: a loading indicator, or visually hidden
-          <code>role="status"</code> text placed in the page before it is
-          needed. Swap in the content and remove <code>aria-busy</code> in the
-          same update.
+          Then announce the wait another way:
         </p>
+        <ol>
+          <li>Mark the region being filled with <code>aria-busy="true"</code>.</li>
+          <li>Report the wait in a status, either a loading indicator or visually hidden
+          <code>role="status"</code> text placed in the page before it is
+          needed.</li>
+          <li>Swap in the content and remove <code>aria-busy</code> in the
+          same update.</li>
+        </ol>
   </Section>
   <Section {...S.tokens}>
         <p>Override these on the <code>.skeleton</code>, or on a parent to change a group.</p>

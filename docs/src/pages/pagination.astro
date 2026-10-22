@@ -16,8 +16,8 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.basic}>
         <p class="flow-text">
-          Pagination is CSS-only, with no JavaScript plugin. The markup is a
-          <code>nav.pagination</code> whose child is an <code>&lt;ol&gt;</code> of links.
+          Build pagination as a <code>nav.pagination</code> whose child is an
+          <code>&lt;ol&gt;</code> of links. It is CSS-only, with no JavaScript plugin.
         </p>
         <p>
           Mark the current page with <code>aria-current="page"</code>
@@ -64,10 +64,10 @@ const S = defineSections([
 </nav>
 `} />
         <p>
-          Items are compact 2rem chips. The current page
-          fills with <code>primary</code>. Icon-only previous and next links need an
-          <code>aria-label</code>. A <code>&lt;span&gt;</code> next to
-          the icon widens the control:
+          Give icon-only previous and next links an <code>aria-label</code>.
+          Items are compact 2rem chips, and the current page fills with
+          <code>primary</code>. To widen the control, add a
+          <code>&lt;span&gt;</code> next to the icon:
         </p>
         <nav class="pagination" aria-label="Pagination with labels">
           <ol>

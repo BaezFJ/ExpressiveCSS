@@ -31,7 +31,7 @@ const S = defineSections([
           <a href="https://m3.material.io/components/dialogs/specs">M3 dialog spec</a>.
           The basic container is <code>surface-container-high</code>, 28dp
           corners, 280 to 560dp wide, and elevation 3. The headline is
-          <code>headline-small</code> / <code>on-surface</code>; supporting
+          <code>headline-small</code> / <code>on-surface</code>. Supporting
           text is <code>body-medium</code> /
           <code>on-surface-variant</code>. Actions are text buttons, end
           aligned, with an 8dp gap. Padding is 24dp (16dp between the
@@ -46,13 +46,13 @@ const S = defineSections([
   </Section>
   <Section {...S.basic}>
         <p>
-          A <code>&lt;dialog&gt;</code> is the surface. A heading is the
-          headline, a <code>&lt;p&gt;</code> (or a wrapping
-          <code>&lt;div&gt;</code>) is supporting text, and the last child
+          The <code>&lt;dialog&gt;</code> is the surface and a heading is the
+          headline. A <code>&lt;p&gt;</code>, or a wrapping
+          <code>&lt;div&gt;</code>, is supporting text. The last child
           <code>&lt;form method="dialog"&gt;</code> or <code>&lt;nav&gt;</code>
-          is the action row. An optional leading icon centers the headline. An
-          <code>&lt;hr&gt;</code> is the divider when extra content follows the
-          copy.
+          is the action row. An optional leading icon centers the headline. Add
+          an <code>&lt;hr&gt;</code> as the divider when extra content follows
+          the copy.
         </p>
         <p>
           <button type="button" onclick="document.getElementById('dialog-basic').showModal()">Show</button>
@@ -119,13 +119,14 @@ const S = defineSections([
 </dialog>
 `} />
         <p>
-          A <code>&lt;form method="dialog"&gt;</code> closes the dialog when a
-          submit button is pressed and sets <code>dialog.returnValue</code>
-          from the button's <code>value</code>. Action buttons are text
+          When someone presses a submit button in a
+          <code>&lt;form method="dialog"&gt;</code>, the browser closes the
+          dialog and sets <code>dialog.returnValue</code> from the button's
+          <code>value</code>. Action buttons are text
           buttons by default. Add <code>filled</code>, <code>tonal</code>,
           or <code>outlined</code> if you need more emphasis. Tapping the
           scrim closes it too, but only if the press and the release both
-          miss the dialog. Docked panes are
+          miss the dialog. For docked panes, see
           <a href={route('side_sheet')}>Side sheet</a>
           and
           <a href={route('bottom_sheet')}>Bottom sheet</a>.
@@ -135,7 +136,7 @@ const S = defineSections([
         <p>
           Add <code>max</code> when the task needs the whole viewport,
           typically on compact windows or whenever the dialog holds a
-          form. There is no scrim and no corner radius. A
+          form. A full-screen dialog has no scrim and no corner radius. A
           <code>&lt;header&gt;</code> is the 64dp top bar: a close icon,
           a <code>title-large</code> headline, and the confirming text
           button. Body content is inset 24dp.
@@ -198,12 +199,12 @@ const S = defineSections([
           for the full API.
         </p>
         <h5 class="light">.showModal()</h5>
-        <p>Open as a modal, with the scrim (basic) or as the page (full-screen).</p>
+        <p>Opens the dialog as a modal. A basic dialog gets the scrim, and a full-screen dialog fills the page.</p>
 <Code code={`
 dialog.showModal();
 `} />
         <h5 class="light">.close()</h5>
-        <p>Close the dialog.</p>
+        <p>Closes the dialog.</p>
 <Code code={`
 dialog.close();
 `} />
@@ -216,10 +217,10 @@ dialog.close();
         </p>
   </Section>
   <Section {...S.tokens}>
-        <p>Override these on the <code>&lt;dialog&gt;</code> if you need a different surface or width.
+        <p>Override these on the <code>&lt;dialog&gt;</code> to change the surface or width.
           A basic dialog fades in and grows from 96% on springs, so <code>motion="expressive"</code>
-          reaches it; it closes at once, and opens without moving when reduced motion is requested.
-          Full-screen dialogs and sheets keep their own motion.</p>
+          applies to it. It closes at once. When the user requests reduced motion, it opens without
+          moving. Full-screen dialogs and sheets keep their own motion.</p>
         <TokenTable>            <tr>
               <td><code>--md-comp-basic-dialog-container-color</code></td>
               <td><code>--md-sys-color-surface-container-high</code></td>
@@ -242,11 +243,11 @@ dialog.close();
             </tr>
             <tr>
               <td><code>--md-comp-basic-dialog-easing</code>, <code>--md-comp-basic-dialog-duration</code></td>
-              <td>The default spatial spring: the dialog grows from 96% as it opens</td>
+              <td>The default spatial spring, which grows the dialog from 96% as it opens</td>
             </tr>
             <tr>
               <td><code>--md-comp-basic-dialog-effects-easing</code>, <code>--md-comp-basic-dialog-effects-duration</code></td>
-              <td>The fast effects spring: the fade-in</td>
+              <td>The fast effects spring, used for the fade-in</td>
             </tr>
             <tr>
               <td><code>--md-comp-scrim-color</code></td>

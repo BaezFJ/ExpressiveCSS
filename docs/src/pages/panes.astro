@@ -33,32 +33,36 @@ const S = defineSections([
       <p>
         Tokens follow the
         <a href="https://m3.material.io/foundations/layout/canonical-layouts">M3 canonical layouts</a>.
-        Coplanar is the default: full-bleed surfaces and a 1dp
-        <code>outline-variant</code> divider. The split is 840px, measured against
-        the nearest ancestor with inline-size or size containment. Without one,
-        viewport media rules apply. Put <code>container-type: inline-size</code>
-        on the containing column to adapt a nested layout. Below the split, one pane
-        shows at a time. Google recommends stacking supporting content below
-        primary content on compact and medium layouts; this component's
-        one-active-pane behavior is a framework adaptation. Compact widths add 16dp inline margins; every wider
-        layout uses 24dp margins and 24dp spacers. Give the container a
-        height. It is <code>height: 100%</code>.
+        Coplanar is the default, with full-bleed surfaces and a 1dp
+        <code>outline-variant</code> divider. Compact widths add 16dp inline
+        margins. Every wider layout uses 24dp margins and 24dp spacers. Give
+        the container a height. It is <code>height: 100%</code>.
+      </p>
+      <p>
+        The split is at 840px, measured against the nearest ancestor with
+        inline-size or size containment. Without one, viewport media rules
+        apply. To adapt a nested layout, put
+        <code>container-type: inline-size</code> on the containing column.
+        Below the split, one pane shows at a time. Google recommends stacking
+        supporting content below primary content on compact and medium
+        layouts. This component's one-active-pane behavior is a framework
+        adaptation.
       </p>
       <p>
         Semantic child names are aliases of <code>.pane</code>:
         <code>.list-pane</code>, <code>.detail-pane</code>,
         <code>.primary-pane</code>, <code>.supporting-pane</code>.
         Mark the visible pane on compact windows with
-        <code>active</code>. Optional content that should overlay the
-        page is a
+        <code>active</code>. For optional content that should overlay the
+        page, use a
         <a href={route('side_sheet')}>side sheet</a>, not a pane.
       </p>
   </Section>
   <Section {...S["list-detail"]}>
       <p>
-        This is the default: a 360dp list pane beside a flexible detail
-        pane. When people pick a row, the detail pane shows that item. Use
-        <code>.list-detail</code> or a plain <code>.panes</code>.
+        Use <code>.list-detail</code> or a plain <code>.panes</code> for the
+        default layout, a 360dp list pane beside a flexible detail pane.
+        When people pick a row, the detail pane shows that item.
         Pair the list pane with a
         <a href={route('lists')}>list</a>.
       </p>
@@ -146,11 +150,13 @@ const S = defineSections([
         At Compact widths (below 600px), the layout has 16dp inline
         margins. Medium, Expanded, Large, and Extra-large widths use
         24dp inline margins and 24dp spacers. On Compact and Medium
-        widths (below 840px), every pane is hidden except
-        <code>active</code>. If none is active, the first pane shows.
-        Toggle <code>active</code> yourself when the user picks a row
-        or taps back, because <code>AutoInit()</code> does not start panes.
-        At Expanded widths both panes are shown regardless of
+        widths (below 840px), every pane is hidden except the
+        <code>active</code> one. If none is active, the first pane shows.
+      </p>
+      <p>
+        <code>AutoInit()</code> does not start panes, so toggle
+        <code>active</code> yourself when the user picks a row or taps back.
+        At Expanded widths both panes show regardless of
         <code>active</code>, so the same markup works at every size.
       </p>
       <p>
@@ -217,14 +223,14 @@ back.addEventListener('click', () => {
   </Section>
   <Section {...S.supporting}>
       <p>
-        This layout puts a flexible primary pane next to a 360dp supporting
-        pane on the trailing edge. Use it when the extra content is
-        secondary, such as a related list, an inspector or an outline, and
-        should stay in view beside the main content. Add <code>supporting</code>, or use
-        <code>.supporting-pane-layout</code>.
+        Add <code>supporting</code>, or use
+        <code>.supporting-pane-layout</code>, to put a flexible primary pane
+        next to a 360dp supporting pane on the trailing edge. Use it when the
+        extra content is secondary and should stay in view beside the main
+        content, such as a related list, an inspector or an outline.
       </p>
       <p>
-        <code>start</code> (or <code>left</code>) docks the supporting
+        Add <code>start</code> (or <code>left</code>) to dock the supporting
         pane on the leading edge instead.
       </p>
       <div class="panes supporting panes-demo">
@@ -285,7 +291,7 @@ back.addEventListener('click', () => {
   </Section>
   <Section {...S.equal}>
       <p>
-        <code>equal</code> splits two panes 1fr / 1fr. Use it when the
+        Add <code>equal</code> to split two panes 1fr / 1fr. Use it when the
         two surfaces have the same weight, such as two documents, a diff,
         or an editor and a preview.
       </p>
@@ -316,13 +322,13 @@ back.addEventListener('click', () => {
   </Section>
   <Section {...S["three-pane"]}>
       <p>
-        <code>three-pane</code> holds a list, a main pane and a supporting
+        Add <code>three-pane</code> for a list, a main pane and a supporting
         pane. It needs 1200px of container width, or of viewport width
         without a query container. The columns are a 360dp list, a flexible
         middle and a 360dp supporting pane.
         Between 840px and 1200px the default two-column list-detail
         grid still applies, so the third pane wraps. Below 840px it
-        is the same single-pane <code>active</code> pattern as the
+        uses the same single-pane <code>active</code> pattern as the
         others.
       </p>
       <div class="panes three-pane panes-demo">
@@ -387,23 +393,25 @@ back.addEventListener('click', () => {
   </Section>
   <Section {...S.resizing}>
       <p>
-        A <code>&lt;button class="drag-handle"&gt;</code> written between
-        the two panes of a list-detail or supporting layout lets people
-        resize them at 840px and up. It replaces the spacer and the divider,
-        and resizes the list or supporting pane. Drag it; press
-        <kbd>Left</kbd> or <kbd>Right</kbd> to move it 16px
-        (<kbd>Shift</kbd> for 64px) and <kbd>Home</kbd> or <kbd>End</kbd>
-        for the narrowest and widest; or click it, or press
-        <kbd>Enter</kbd>, to step through narrow, middle and wide. The
-        click is the single-pointer alternative to dragging. A resized pane
-        stays at least 240px wide, and the other pane keeps
+        Write a <code>&lt;button class="drag-handle"&gt;</code> between the
+        two panes of a list-detail or supporting layout to let people resize
+        them at 840px and up. The handle replaces the spacer and the divider,
+        and resizes the list or supporting pane.
+      </p>
+      <p>
+        People can drag the handle. <kbd>Left</kbd> or <kbd>Right</kbd>
+        moves it 16px (<kbd>Shift</kbd> for 64px), and <kbd>Home</kbd> or
+        <kbd>End</kbd> moves it to the narrowest or widest. Clicking it, or
+        pressing <kbd>Enter</kbd>, steps through narrow, middle and wide.
+        The click is the single-pointer alternative to dragging. A resized
+        pane stays at least 240px wide, and the other pane keeps
         <code>--md-comp-pane-primary-min-width</code>.
       </p>
       <p>
-        The new width is written to <code>--md-comp-pane-list-width</code>
-        or <code>--md-comp-pane-supporting-width</code> on the layout, so
-        save that value to restore it later. The root bundle starts the
-        <code>PaneResize</code> behavior on load; with the modular entry,
+        The handle writes the new width to <code>--md-comp-pane-list-width</code>
+        or <code>--md-comp-pane-supporting-width</code> on the layout. Save
+        that value to restore it later. The root bundle starts the
+        <code>PaneResize</code> behavior on load. With the modular entry,
         call <code>PaneResize.Init()</code>. Equal and three-pane layouts
         do not resize.
       </p>
@@ -411,9 +419,8 @@ back.addEventListener('click', () => {
         From script, <code>Expressive.PaneResize.width(handle)</code> returns
         the resizable pane's current width in pixels, or <code>null</code>
         when the handle is not in a layout that resizes.
-        <code>Expressive.PaneResize.setWidth(handle, width)</code> sets it,
-        clamped to the same bounds as dragging, which is how to restore a
-        saved width.
+        <code>Expressive.PaneResize.setWidth(handle, width)</code> sets it
+        within the same bounds as dragging. Use it to restore a saved width.
       </p>
 <Code code={`
 <div class="panes list-detail">
@@ -425,16 +432,16 @@ back.addEventListener('click', () => {
   </Section>
   <Section {...S.appearance}>
       <p>
-        Coplanar is the default: the panes share one surface, with a
-        1dp divider on expanded windows. <code>separated</code> (or
-        <code>floating</code>) insets the panes 24dp, rounds them to
-        16dp, and fills each with
+        Coplanar is the default. The panes share one surface, with a
+        1dp divider on expanded windows. Add <code>separated</code> (or
+        <code>floating</code>) to inset the panes 24dp, round them to
+        16dp, and fill each with
         <code>surface-container-low</code>.
       </p>
       <p>
-        On a separated pane, <code>elevated</code> adds elevation 1.
-        <code>outlined</code> switches the fill to <code>surface</code>
-        and draws a 1dp outline.
+        On a separated pane, add <code>elevated</code> for elevation 1.
+        Add <code>outlined</code> to switch the fill to <code>surface</code>
+        and draw a 1dp outline.
       </p>
       <div class="panes equal separated panes-demo">
         <section class="pane outlined">

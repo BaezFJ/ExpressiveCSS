@@ -22,8 +22,8 @@ const S = defineSections([
       paint it behind themselves, and these tokens decide how strong it is.
     </p>
     <p>
-      Because the opacity lives in one place, changing it at runtime changes every component at
-      once, without a rebuild.
+      The opacity lives in one place, so changing it at runtime updates every component at once
+      without a rebuild.
     </p>
   </Section>
   <Section {...S.opacities}>
@@ -52,9 +52,8 @@ const S = defineSections([
 </style>
 `} />
     <p>
-      Components that expose their own state layer token read from these, so you can still change
-      one component without touching the rest. The component token is the override point; the
-      value behind it comes from the foundation.
+      Some components have their own state layer token. Set it to change one component without
+      touching the rest. Its default value still comes from the foundation token.
     </p>
 <Code code={`
 <style>

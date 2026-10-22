@@ -20,14 +20,14 @@ const S = defineSections([
           with a divider that reveals the second over the first.
         </p>
         <p>
-          It holds two <code>&lt;img&gt;</code> elements and a native
-          <code>&lt;input type="range"&gt;</code>. The range is the control,
-          so arrow keys, dragging and taps work as they do on any slider, and
-          screen readers hear its value. It covers the images invisibly; the
-          <code>ImageCompare</code> behavior moves the divider to its value.
-          Give each image alt text that says which it is, and name the range.
-          Several unrelated images belong in a
-          <a href={route("carousel")}>carousel</a>.
+          Put two <code>&lt;img&gt;</code> elements and a native
+          <code>&lt;input type="range"&gt;</code> inside it. Give each image
+          alt text that says which one it is, and give the range a name. The
+          range is the control. Arrow keys, dragging and taps work as they do
+          on any slider, and screen readers hear its value. The range sits
+          invisibly over the images, and the <code>ImageCompare</code>
+          behavior moves the divider to its value. For several unrelated
+          images, use a <a href={route("carousel")}>carousel</a>.
         </p>
         <div class="image-compare mb-3" style="max-width: 480px">
           <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect width='800' height='400' fill='%23c6a0f6'/%3E%3C/svg%3E" alt="Before: a lilac panel" width="800" height="400">

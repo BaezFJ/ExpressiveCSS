@@ -20,8 +20,8 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
                     <p class="flow-text">
-                        A <code>&lt;search&gt;</code> with <code>search-bar</code> on it
-                        is the bar: a leading icon or icon button, an
+                        Add <code>search-bar</code> to a <code>&lt;search&gt;</code> element
+                        to make the bar. It holds a leading icon or icon button, an
                         <code>&lt;input type="search"&gt;</code>, and whatever trailing
                         actions the query needs. The element is the landmark, so you do
                         not need to add <code>role="search"</code>.
@@ -49,16 +49,16 @@ const S = defineSections([
                         <code>.field</code>.
                     </p>
                     <p>
-                        Spacing follows what is at each end: a bare glyph sits 16dp from
-                        the edge, an icon button 4dp, because the button already insets
-                        its own glyph by 12dp. You do not need to set anything, because
-                        the bar adjusts to its children.
+                        The bar sets its spacing from what is at each end, so you do not
+                        need to set anything. A bare glyph sits 16dp from the edge. An
+                        icon button sits 4dp from it, because the button already insets
+                        its own glyph by 12dp.
                     </p>
   </Section>
   <Section {...S["leading-action"]}>
                     <p>
-                        When the bar opens a drawer or goes back, the leading glyph
-                        becomes an icon button. The bar's leading space shrinks to 4dp
+                        When the bar opens a drawer or goes back, use an icon button for
+                        the leading glyph. The bar's leading space shrinks to 4dp
                         on its own.
                     </p>
                     <search class="search-bar" aria-label="Search — A leading action">
@@ -89,19 +89,19 @@ const S = defineSections([
   </Section>
   <Section {...S.docked}>
                     <p>
-                        The docked view is a <code>.search-view</code> inside the bar. It
-                        is positioned against the bar, so the bar keeps its
-                        <code>position: relative</code> and the view needs no coordinates
+                        For the docked view, put a <code>.search-view</code> inside the bar.
+                        The view is positioned against the bar, which keeps its
+                        <code>position: relative</code>, so the view needs no coordinates
                         of its own. Show and hide it with the
                         <code>hidden</code> attribute.
                     </p>
                     <p>
-                        It is a plain element and not a <code>&lt;dialog&gt;</code>
-                        because <code>dialog.show()</code> moves focus into the dialog,
-                        which would take the caret out of the input the user is typing in.
+                        The view is a plain element rather than a <code>&lt;dialog&gt;</code>,
+                        because <code>dialog.show()</code> moves focus into the dialog.
+                        That would take the caret out of the input the user is typing in.
                     </p>
                     <p>
-                        The demo below starts open so the surface is on the page; the
+                        The demo below starts open so the surface shows on the page. The
                         sample under it has the <code>hidden</code> a real page would
                         write. Focus the input to reopen it.
                     </p>
@@ -143,8 +143,8 @@ const S = defineSections([
   </Section>
   <Section {...S["full-screen"]}>
                     <p>
-                        Full screen, the view is a <code>&lt;dialog&gt;</code> opened with
-                        <code>showModal()</code>. The browser handles Escape and a tap
+                        For the full-screen view, use a <code>&lt;dialog&gt;</code> and open
+                        it with <code>showModal()</code>. The browser handles Escape and a tap
                         outside, so you only have to open it. Its header is another
                         <code>.search-bar</code> with the same markup, minus the pill
                         shape and the shadow.
@@ -197,8 +197,8 @@ const S = defineSections([
                     </p>
                     <p>
                         The M3 guideline is the full-screen view at Compact and the
-                        docked view from Medium up. <strong>The app picks</strong>; the
-                        stylesheet has no breakpoint that swaps one for the other. The
+                        docked view from Medium up. Your app picks which one to show,
+                        because the stylesheet has no breakpoint that swaps one for the other. The
                         two use different markup. The docked view is a plain element
                         nested inside the bar, and the full-screen view is a top-level
                         <code>&lt;dialog&gt;</code>, so render the one that fits the
@@ -214,12 +214,12 @@ if (window.matchMedia('(width < 600px)').matches) {
   </Section>
   <Section {...S.suggestions}>
                     <p>
-                        Search does not ship a suggestion list of its own. Put
-                        <code>autocomplete</code> on the bar's input and you get the
-                        combobox, its listbox, and the arrow-key and
+                        For suggestions, put <code>autocomplete</code> on the bar's input.
+                        You get the combobox, its listbox, and the arrow-key and
                         <code>aria-activedescendant</code> handling from
                         <a href={route('autocomplete')}>Autocomplete</a>, which
-                        already implements and tests them.
+                        already implements and tests them. Search does not ship a
+                        suggestion list of its own.
                     </p>
                     <Code code={`
 <search class="search-bar" aria-label="Search">
@@ -238,8 +238,8 @@ Expressive.Autocomplete.init(document.querySelector('.search-bar input'), {
                         <code>.search-view</code> takes no composite role. Its contents
                         are links and buttons that users reach with Tab. A second listbox
                         here would announce the same behavior as Autocomplete's without
-                        the keyboard handling behind it. Use the view for recent searches, filters, and results;
-                        use Autocomplete for a list the user arrows through.
+                        the keyboard handling behind it. Use the view for recent searches, filters, and results.
+                        Use Autocomplete for a list the user arrows through.
                     </p>
   </Section>
   <Section {...S.tokens}>

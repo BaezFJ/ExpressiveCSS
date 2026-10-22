@@ -16,9 +16,9 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>&lt;ul class="tree"&gt;</code> nests lists for file browsers
-          and deep navigation. A branch is a <code>&lt;details&gt;</code> whose
-          <code>&lt;summary&gt;</code> is the row; a leaf is a link.
+          Use a <code>&lt;ul class="tree"&gt;</code> of nested lists for file browsers
+          and deep navigation. Each branch is a <code>&lt;details&gt;</code>, and its
+          <code>&lt;summary&gt;</code> is the row. Each leaf is a link.
         </p>
         <p>
           Mark the current row with <code>aria-current</code>. Each level draws
@@ -81,10 +81,10 @@ const S = defineSections([
   </Section>
   <Section {...S.keyboard}>
         <p>
-          Every row is a Tab stop, and Enter or Space opens a branch, because
-          the rows are native disclosures and links. The tree takes no
-          <code>role="tree"</code>: that role promises arrow-key navigation
-          between rows, which native disclosures do not provide.
+          The rows are native disclosures and links, so every row is a Tab stop
+          and Enter or Space opens a branch. Don't add
+          <code>role="tree"</code>. That role promises arrow-key navigation
+          between rows, and native disclosures don't provide it.
         </p>
   </Section>
   <Section {...S.tokens}>

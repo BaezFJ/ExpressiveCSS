@@ -28,7 +28,7 @@ const S = defineSections([
           Collapsed is 96dp with the icon above the label. Add
           <code>expanded</code> for a 220 to 360dp rail with icon and label
           on one row and an extended FAB. The menu button toggles that class
-          (<code>AutoInit()</code> starts it). On compact windows an
+          (<code>AutoInit()</code> starts it). On compact windows, an
           expanded rail is modal. It shows a scrim, and Escape or a tap on
           the scrim collapses it. Add <code>modal</code> to keep that overlay at
           every breakpoint.
@@ -106,7 +106,7 @@ const S = defineSections([
           layout.
         </p>
         <p>
-          Expanding and collapsing run on the default spatial spring:
+          Expanding and collapsing run on the default spatial spring.
           <code>--md-comp-nav-rail-motion</code> and
           <code>--md-comp-nav-rail-motion-duration</code> read
           <code>--md-sys-motion-spring-default-spatial</code> and its duration, so
@@ -180,11 +180,13 @@ const S = defineSections([
           the destination a <code>&lt;button&gt;</code> with
           <code>popovertarget</code> and put its
           <code>.navigation-rail-panel</code> popover right after it. The
-          panel docks against the rail's edge at full window height. A click
-          toggles it, and the browser handles light dismiss, Escape and the
-          button's expanded state. With a mouse, hovering the destination
-          opens the panel, which closes again once the pointer leaves both;
-          clicking a hovered destination keeps its panel open.
+          panel docks against the rail's edge at full window height.
+        </p>
+        <p>
+          A click toggles the panel. The browser handles light dismiss, Escape
+          and the button's expanded state. With a mouse, hovering the
+          destination opens the panel, and it closes again once the pointer
+          leaves both. Clicking a hovered destination keeps its panel open.
         </p>
         <p>
           Group links under a <code>&lt;details&gt;</code>. Its

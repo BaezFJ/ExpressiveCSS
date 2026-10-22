@@ -14,16 +14,16 @@ const S = defineSections([
 ]);
 ---
 <DocsLayout page="preloader">
-<p>Native and custom progress use system colors in forced-colors mode, outline empty linear tracks, and preserve circular value segments. Reduced motion retains static feedback. Browser emulation checks do not replace Windows high-contrast or screen-reader review.</p>
+<p>In forced-colors mode, native and custom progress use system colors. Empty linear tracks get an outline, and circular indicators keep their value segments. Under reduced motion, the indicators still show static feedback. Browser emulation checks do not replace a review in Windows high contrast or with a screen reader.</p>
 
 <PageBody sections={S}>
-  <p>Custom linear progress fills from the left in LTR and from the right in RTL. Indeterminate motion and reduced-motion static fills follow the inherited direction, including nested overrides. Native determinate progress and circular indicators are unchanged.</p>
+  <p>Custom linear progress fills from the left in LTR and from the right in RTL. Indeterminate motion and the static reduced-motion fill follow the inherited direction, including nested overrides. This does not change native determinate progress or circular indicators.</p>
   <Section {...S.linear}>
         <p class="flow-text">
-          If content will take a while to load, give the user feedback.
-          Linear bars are a native <code>&lt;progress&gt;</code>. Circular
-          spinners are one element. Both are CSS only and need no
-          JavaScript plugin.
+          Show a progress indicator when content takes a while to load. A
+          linear bar is a native <code>&lt;progress&gt;</code>. A circular
+          spinner is one element. Both are CSS only and need no JavaScript
+          plugin.
         </p>
 
         <h3>Linear</h3>
@@ -70,14 +70,15 @@ const S = defineSections([
 `} />
         <h5 class="light">End stop and wave</h5>
         <p>
-          <code>stop</code> puts a 4dp dot in the indicator colour at the
-          track's end, so a reader can see where the bar ends when the track
-          has too little contrast with the page. <code>wavy</code> draws the
+          Add <code>stop</code> to put a 4dp dot in the indicator colour at the
+          track's end. It shows where the bar ends when the track has too
+          little contrast with the page. Add <code>wavy</code> to draw the
           indicator as a wave over a thin track, the M3 Expressive look for a
-          longer wait; the bar grows to 14px to hold the wave, and
+          longer wait. The bar grows to 14px to hold the wave, and
           <code>--md-comp-progress-wavelength</code> sets its period. Both
-          work on <code>&lt;progress&gt;</code>, a <code>.determinate</code>
-          child and a bare bar, and a wavy bar can be indeterminate.
+          classes work on <code>&lt;progress&gt;</code>, a
+          <code>.determinate</code> child and a bare bar. A wavy bar can also
+          be indeterminate.
         </p>
         <progress class="progress stop" value="40" max="100"></progress>
         <progress class="progress wavy stop" value="60" max="100"></progress>
@@ -91,9 +92,9 @@ const S = defineSections([
   <Section {...S.circular}>
         <p>
           For an indeterminate wait under about five seconds, prefer the
-          <a href={route('loading_indicator')}>loading indicator</a>,
-          which replaces the indeterminate circular spinner as the default for
-          a short wait. The indeterminate spinner below still works and is not
+          <a href={route('loading_indicator')}>loading indicator</a>. It
+          replaces the indeterminate circular spinner as the default for a
+          short wait. The indeterminate spinner below still works and is not
           deprecated.
         </p>
         <p>
@@ -135,7 +136,7 @@ const S = defineSections([
         <p>
           <code>wavy</code> draws the indicator as a wave round the ring, the
           M3 Expressive look for a longer wait. A determinate wavy ring keeps
-          a thin plain track after the wave; a wavy spinner has none.
+          a thin plain track after the wave. A wavy spinner has none.
         </p>
         <p>
           <span class="progress circular wavy" role="status" aria-label="Loading"></span>
@@ -154,14 +155,14 @@ const S = defineSections([
         <p>
           A <code>&lt;progress&gt;</code> shows how far a task has gone. A
           <code>&lt;meter&gt;</code> shows a measurement within a known range,
-          such as storage used or password strength. It needs no class: every
+          such as storage used or password strength. It needs no class. Every
           meter gets an 8px bar on a <code>secondary-container</code> track
           and fills its container's width. Set <code>width</code> on a meter
           to keep it inline.
         </p>
         <p>
-          The fill color comes from the native <code>low</code>,
-          <code>high</code> and <code>optimum</code> attributes. A value in
+          Set the native <code>low</code>, <code>high</code> and
+          <code>optimum</code> attributes to choose the fill color. A value in
           the same region as <code>optimum</code> is <code>primary</code>, one
           region away is <code>tertiary</code>, and two regions away is
           <code>error</code>. In the storage example below, less is better,
@@ -184,8 +185,8 @@ const S = defineSections([
 <meter id="storage" min="0" max="100" low="60" high="85" optimum="0" value="70">70 GB</meter>
 `} />
         <p>
-          Give each meter a visible label that states the value, because the
-          color alone does not tell anyone whether the reading is good.
+          Give each meter a visible label that states the value. The color
+          alone does not tell anyone whether the reading is good.
           Override <code>--md-comp-meter-track</code>,
           <code>--md-comp-meter-optimum</code>,
           <code>--md-comp-meter-suboptimum</code>,

@@ -21,9 +21,9 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.introduction}>
 <p class="flow-text">
-  A <code>.carousel</code> displays a scrollable collection of visual items. The
-  default is Material 3's multi-browse layout: one large, one medium, and one
-  small item adapt as the active item changes. <code>AutoInit()</code> starts
+  Add <code>.carousel</code> to show a scrollable collection of visual items. The
+  default is Material 3's multi-browse layout, where one large, one medium, and
+  one small item adapt as the active item changes. <code>AutoInit()</code> starts
   every carousel except <code>no-autoinit</code>.
 </p>
 <p>
@@ -94,9 +94,9 @@ const S = defineSections([
 <h4>Uncontained</h4>
 <p>
   Uncontained items keep one width and can stop anywhere. Add
-  <code>snap</code> when snapping is preferable. Add
+  <code>snap</code> if you want them to snap. Add
   <code>multi-aspect</code> only when the source media has different
-  aspect ratios; widths stay between 9:16 and 16:9.
+  aspect ratios. Widths stay between 9:16 and 16:9.
 </p>
 <div class="carousel uncontained mb-3" aria-label="Travel stories">
   <a class="carousel-item" href="#!"
@@ -193,7 +193,7 @@ const S = defineSections([
   <li>
     Mouse users can drag the track with a grab cursor. Trackpads keep native
     two-axis page and carousel scrolling. Buttons and links inside items keep
-    ordinary click activation; dragging does not activate them.
+    ordinary click activation, and dragging does not activate them.
   </li>
   <li>Focus starts on the first item, never on the container.</li>
   <li>
@@ -210,8 +210,8 @@ const S = defineSections([
   controls on the carousel or place them beside its edges.
 </p>
 <p>
-  Show all is also the single-pointer path through the items (WCAG 2.5.7):
-  dragging the track is the only other way a mouse alone can move it.
+  Show all is also the single-pointer path through the items (WCAG 2.5.7).
+  Dragging the track is the only other way a mouse alone can move it.
 </p>
 <div class="carousel" aria-label="Recent trips">
   <article class="carousel-item"><img src="https://picsum.photos/id/1015/800/500" alt="Mountain lake" /></article>
@@ -257,15 +257,17 @@ const S = defineSections([
   The component supplies a <code>region</code>, carousel and slide role
   descriptions, item position labels, and indicator labels when authors do not
   provide them.
-  Localize generated strings with the <code>i18n</code> option. Layout changes
-  follow the carousel's rendered width, including when a pane or side navigation
+  Localize generated strings with the <code>i18n</code> option.
+</p>
+<p>
+  Layout changes follow the carousel's rendered width, including when a pane or side navigation
   resizes without a window resize. A full-screen carousel becomes
   a horizontal hero in landscape or at an expanded width. Reduced-motion mode
   removes parallax and size morphing, uses equal item widths, and disables
   smooth scrolling.
 </p>
 <p>
-  An <code>interval</code> makes the carousel advance on its own, and content
+  Set an <code>interval</code> to make the carousel advance on its own. Content
   that moves by itself has to be stoppable, so no option turns off the pause
   contract. An interval always pauses while the pointer is over the carousel,
   while focus is inside it, and while the tab is in the background.
@@ -275,8 +277,8 @@ const S = defineSections([
   Auto-advance is the only caller that can loop back past them.
 </p>
 <p>
-  Carousel responds to reduced-motion changes while mounted without
-  clearing an explicit pause. Editable descendants keep their own navigation
+  The carousel responds to reduced-motion changes while mounted, and the
+  change does not clear an explicit pause. Editable descendants keep their own navigation
   keys. Testing with real screen readers, native zoom and physical devices is still pending.
 </p>
 <h4>Application-owned pause control</h4>
@@ -363,8 +365,8 @@ toggle.addEventListener('click', () => {
 </TokenTable>
   <p>
   The carousel still reads the older <code>--carousel-height</code> author hook.
-  Interactive state layer, focus indicator, and disabled opacity tokens are also
-  available in the compiled component source.
+  The compiled component source also has tokens for the interactive state
+  layer, focus indicator, and disabled opacity.
 </p>
   </Section>
   <Section {...S.initialization}>
@@ -420,7 +422,7 @@ Expressive.AutoInit(document.body, {
       <code>duration</code>. The rest starts after each transition ends, so a
       full cycle takes <code>duration + interval</code>.
       <code>0</code> leaves auto-advance off, and setting it turns on the pause
-      contract below. Each rest starts from the move before it, not from a
+      contract described under Behavior and accessibility. Each rest starts from the move before it, not from a
       fixed schedule, so a dropped tick costs a whole rest instead of the
       remainder of one.
     </td>
@@ -450,7 +452,7 @@ Expressive.AutoInit(document.body, {
     <td><code>{`{ carousel: 'Carousel', item: 'Item', of: 'of', indicators: 'Slides', slide: 'Slide' }`}</code></td>
     <td>Generated accessible label strings. <code>indicators</code> names the
       indicator row and <code>slide</code> prefixes each dot, giving
-      &ldquo;Slide 1&rdquo;. Partial objects merge with the defaults.</td>
+      "Slide 1". Partial objects merge with the defaults.</td>
   </tr>
 </OptionsTable>
   </Section>

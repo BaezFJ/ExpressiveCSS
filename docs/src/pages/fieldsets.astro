@@ -16,20 +16,20 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>&lt;fieldset&gt;</code> is the group and its
-          <code>&lt;legend&gt;</code> is the headline. Everything else is
-          a field: a <code>.field</code>, radios, switches, a
+          Wrap related fields in a <code>&lt;fieldset&gt;</code> and give it a
+          <code>&lt;legend&gt;</code> as the headline. Everything else inside is
+          a field. That can be a <code>.field</code>, radios, switches, a
           <code>&lt;nav&gt;</code> of radios, or a trailing
           <code>&lt;small&gt;</code> as supporting text. Fieldsets need no
-          wrapper class and are CSS only, with no JavaScript
+          wrapper class. They are CSS only, with no JavaScript
           component to AutoInit.
         </p>
         <p>
-          Material Design 3 has no fieldset component. Tokens follow the
-          outlined grouping container used around related form content,
-          and the
+          Material Design 3 has no fieldset component. The tokens follow the
+          outlined grouping container used around related form content.
+          They also follow the
           <a href="https://m3.material.io/components/text-fields/specs">outlined text-field</a>
-          shape so a group of fields matches the fields. The container has
+          shape, so a group of fields matches the fields inside it. The container has
           4dp corners and a 1dp <code>outline-variant</code> stroke.
           The legend uses <code>title-small</code> in
           <code>on-surface</code>. Supporting text is
@@ -64,11 +64,11 @@ const S = defineSections([
   </Section>
   <Section {...S.choices}>
         <p>
-          A fieldset is also the right parent for a radio, checkbox, or
-          switch group. The legend names the question, and the
+          Use a fieldset as the parent of a radio, checkbox, or
+          switch group too. The legend names the question, and the
           <code>disabled</code> attribute disables every control inside.
-          Put the labels in a <code>&lt;div class="inline"&gt;</code> to sit them on one
-          line.
+          To put the labels on one line, wrap them in a
+          <code>&lt;div class="inline"&gt;</code>.
         </p>
         <fieldset>
           <legend>Notify me about</legend>
@@ -130,12 +130,11 @@ const S = defineSections([
   </Section>
   <Section {...S.variants}>
         <p>
-          The default is outlined. <code>filled</code> is a
-          <code>surface-container-highest</code> well with no stroke. Pair it with
+          Fieldsets are outlined by default. To state that explicitly, add
+          <code>outlined</code> or <code>border</code>. Add <code>filled</code> for a
+          <code>surface-container-highest</code> well with no stroke, and pair it with
           <code>outlined</code> fields so the wells stay distinct.
           <code>rounded</code> gives 12dp corners (M3 medium, like a card).
-          <code>outlined</code> and <code>border</code> name the default
-          if you want to state it explicitly.
         </p>
         <fieldset class="filled">
           <legend>
@@ -177,9 +176,9 @@ const S = defineSections([
 </fieldset>
 `} />
         <p>
-          <code>plain</code> drops the container for a group that already sits
-          on a surface, such as radios in a card or a dialog: no outline, fill,
-          padding, or margin from a preceding fieldset, and the legend starts
+          Add <code>plain</code> to drop the container for a group that already sits
+          on a surface, such as radios in a card or a dialog. The group loses its outline, fill,
+          padding, and the margin from a preceding fieldset. The legend starts
           flush with the content.
         </p>
         <div class="surface-container-low p-4">
@@ -199,7 +198,7 @@ const S = defineSections([
   </Section>
   <Section {...S.disabled}>
         <p>
-          The HTML <code>disabled</code> attribute on a fieldset disables
+          Add the HTML <code>disabled</code> attribute to a fieldset to disable
           every control inside it. The legend and outline drop to 38%.
         </p>
         <fieldset disabled>

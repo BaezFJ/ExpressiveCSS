@@ -30,9 +30,9 @@ const rows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
         <p>
           A <code>.keypad</code> is three columns of round keys for PINs,
           codes and amounts. A <code>.keyboard</code> is rows of keys for
-          text. Both are a <code>role="group"</code> with a name, and
-          <code>aria-controls</code> names the field they type into. Every key
-          is a <code>&lt;button type="button"&gt;</code>. A key with a
+          text. Give either one <code>role="group"</code> and a name, and
+          point <code>aria-controls</code> at the field it types into. Make
+          every key a <code>&lt;button type="button"&gt;</code>. A key with a
           <code>value</code> types it at the caret, and the field gets the
           same <code>input</code> event typing would fire.
           <code>AutoInit()</code> starts every <code>.keypad</code> and
@@ -73,7 +73,7 @@ const rows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
           Put a key's letters in a <code>&lt;small&gt;</code> after the digit.
           A key with a button style class keeps that style, so a call key is
           a <code>filled</code> button. Add <code>wide</code> to a key to span
-          two cells as a pill, which fills the last row beside Backspace.
+          two cells as a pill. That fills the last row beside Backspace.
         </p>
         <div data-markdown-ignore style="display: grid; gap: 16px; justify-items: center">
           <div class="field">
@@ -101,7 +101,7 @@ const rows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
         <h3>Backspace in the field</h3>
         <p>
           For a centered call key, move Backspace into the text field as a
-          trailing <code>icon-button suffix</code> and hold the cells beside
+          trailing <code>icon-button suffix</code>. Hold the cells beside
           the call key open with empty <code>&lt;span&gt;</code> elements. A
           <code>data-key</code> key inside the field's <code>.field</code> works
           like a keypad key, even when the field renders after the keypad.
@@ -140,9 +140,9 @@ const rows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
 `} />
         <h3>A third action</h3>
         <p>
-          A key with a <code>data-key</code> the script does not know types
-          nothing and calls <code>onKey</code> with its name, so the empty cell
-          can hold a page action such as contacts.
+          To put a page action such as contacts in the empty cell, give the
+          key a <code>data-key</code> the script does not know. That key types
+          nothing and calls <code>onKey</code> with its name.
         </p>
         <div data-markdown-ignore style="display: grid; gap: 16px; justify-items: center">
           <div class="field">
@@ -180,7 +180,7 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
   <Section {...S.keyboard}>
         <p>
           Each child of a <code>.keyboard</code> is a row. A character key is
-          a tenth of the row and may shrink, a function key is one and a half
+          a tenth of the row and may shrink. A function key is one and a half
           keys wide, and the space bar takes what is left. A nine-key row is
           centered, which gives QWERTY its half-key indent. Set
           <code>--md-comp-keyboard-columns</code> for a layout with more or
@@ -188,8 +188,8 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
         </p>
         <p>
           An optional <code>&lt;div class="numbers"&gt;</code> row of digits
-          sits above the letters with shorter 40dp keys. Leave it out, or add
-          <code>hidden</code> to drop it and remove <code>hidden</code> to show
+          sits above the letters, with shorter 40dp keys. To drop it, leave it
+          out or add <code>hidden</code>. Remove <code>hidden</code> to show
           it again.
         </p>
         <div data-markdown-ignore style="display: grid; gap: 16px">
@@ -257,20 +257,23 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
             <tr><td><code>data-key="Enter"</code></td><td>Submits the field's form with <code>requestSubmit()</code>, so validation runs. In a <code>&lt;textarea&gt;</code> it types a new line.</td></tr>
             <tr><td><code>data-key="Shift"</code></td><td>Toggles <code>aria-pressed</code>. While pressed the character keys show capitals, and the next one types a capital and releases Shift.</td></tr>
             <tr><td><code>data-key="CapsLock"</code></td><td>Toggles <code>aria-pressed</code>. While pressed the character keys show and type capitals, until it is pressed again.</td></tr>
-            <tr><td><code>data-key="Layer"</code></td><td>Shows the elements in the keyboard whose <code>data-layer</code> matches the key's <code>value</code> and hides those with another <code>data-layer</code>, such as a row of symbols in place of the letters. Elements without <code>data-layer</code> always show.</td></tr>
+            <tr><td><code>data-key="Layer"</code></td><td>Shows the elements in the keyboard whose <code>data-layer</code> matches the key's <code>value</code>, such as a row of symbols in place of the letters. Hides those with another <code>data-layer</code>. Elements without <code>data-layer</code> always show.</td></tr>
             <tr><td>Any other <code>data-key</code></td><td>Types nothing and calls <code>onKey</code> with its name.</td></tr>
           </tbody>
         </table>
         <p>
-          A <code>&lt;button&gt;</code> without <code>value</code> or
-          <code>data-key</code> is not a key, so the script ignores it. Keys
-          type at the caret; a field nobody has clicked into takes them at the
-          end. While the field has focus, a hardware key held down presses the
-          matching on-screen key, so the keyboard shows what is typed. Number
-          and email inputs have no caret position to read, so keys
+          The script ignores a <code>&lt;button&gt;</code> without
+          <code>value</code> or <code>data-key</code>, because it is not a key.
+          Keys type at the caret. In a field nobody has clicked into, they
+          type at the end. While the field has focus, holding down a hardware
+          key presses the matching on-screen key, so the keyboard shows what
+          is typed.
+        </p>
+        <p>
+          Number and email inputs have no caret position to read, so keys
           type at the end. A number input empties itself on a partial value
-          such as <code>12.</code> or <code>-</code>, so the key is ignored
-          there. For decimals and signs, use a text field with
+          such as <code>12.</code> or <code>-</code>, so the script ignores
+          that key there. For decimals and signs, use a text field with
           <code>inputmode="none"</code>.
         </p>
   </Section>
@@ -278,7 +281,7 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
         <ul class="browser-default">
           <li>Name the group with <code>aria-label</code> and point <code>aria-controls</code> at the field. Give the field its own label.</li>
           <li>Give every key <code>type="button"</code>, or a key inside a form submits it. Name icon keys and the space bar with <code>aria-label</code>.</li>
-          <li>Browsers check <code>minlength</code> only on what a person types, and a keypad's input comes from a script, so the keypad checks it: a shorter value gets the <code>i18n.tooShort</code> message until it is long enough. It never replaces a message the page set, and a form reset or <code>destroy()</code> clears its own. <code>pattern</code> and <code>required</code> apply as usual.</li>
+          <li>The keypad checks <code>minlength</code> itself, because browsers check it only on what a person types and keypad input comes from a script. A shorter value gets the <code>i18n.tooShort</code> message until it is long enough. The keypad never replaces a message the page set, and a form reset or <code>destroy()</code> clears its own. <code>pattern</code> and <code>required</code> apply as usual.</li>
           <li>Add <code>inputmode="none"</code> to the field so a phone or tablet keeps its own keyboard closed. A hardware keyboard still types into the field.</li>
           <li>A pointer press keeps focus and the caret in the field while it has focus. Keys stay native buttons, so Tab, Enter and Space reach them.</li>
           <li>Keys are 72dp on a keypad and 48dp tall on a keyboard. Keep a keyboard wide enough that a character key stays at least 24px wide.</li>

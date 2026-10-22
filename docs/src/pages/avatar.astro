@@ -39,8 +39,8 @@ const S = defineSections([
   </Section>
   <Section {...S.sizes}>
         <p>
-          The default is 40px. <code>small</code> is 32px and
-          <code>large</code> is 56px; initials and icons scale with the circle.
+          Add <code>small</code> for 32px or <code>large</code> for 56px. The
+          default is 40px. Initials and icons scale with the circle.
         </p>
         <div class="flex align-center gap-6 mb-3">
           <span class="avatar small" role="img" aria-label="Grace Hopper">GH</span>
@@ -80,12 +80,12 @@ const S = defineSections([
   </Section>
   <Section {...S.accessibility}>
         <p>
-          An image avatar needs <code>alt</code> text naming the person, or
-          <code>alt=""</code> when the name is already next to it. Initials
-          read as separate letters and an icon reads as its ligature name, so
-          give a <code>&lt;span&gt;</code> avatar <code>role="img"</code> and an
-          <code>aria-label</code>, or <code>aria-hidden="true"</code> when the
-          person is named beside it.
+          Give an image avatar <code>alt</code> text that names the person.
+          Use <code>alt=""</code> when the name is already next to it.
+          Initials read as separate letters, and an icon reads as its ligature
+          name. Give a <code>&lt;span&gt;</code> avatar <code>role="img"</code>
+          and an <code>aria-label</code> instead. When the person is named
+          beside it, use <code>aria-hidden="true"</code>.
         </p>
         <div class="flex align-center gap-4 mb-3">
           <span class="avatar" aria-hidden="true">GH</span>

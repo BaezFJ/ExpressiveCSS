@@ -28,10 +28,10 @@ const S = defineSections([
   </Section>
   <Section {...S.sizes}>
         <p>
-          A FAB is <code>circle extra</code> (or its alias
-          <code>circle large</code>). It is 56dp, with 16dp corners, a
-          <code>primary-container</code> fill and elevation 3. The medium and large size classes
-          go alongside the <code>extra</code>. The corner grows with the
+          Add <code>circle extra</code> (or its alias
+          <code>circle large</code>) to make a FAB. It is 56dp, with 16dp corners, a
+          <code>primary-container</code> fill and elevation 3. Put the medium and large size classes
+          alongside the <code>extra</code>. The corner grows with the
           container, so a bigger FAB is not a scaled-up copy of the default.
         </p>
         <div class="fab-size-demo">
@@ -92,8 +92,8 @@ const S = defineSections([
 </a>
 `} />
         <p>
-          Each size sets the same four custom properties, so for a one-off
-          size you reset them instead of writing new rules.
+          For a one-off size, reset these four custom properties instead of
+          writing new rules. Each size class sets the same four.
         </p>
         <div class="docs-table-scroll">
         <TokenTable>
@@ -106,7 +106,7 @@ const S = defineSections([
   </Section>
   <Section {...S.extended}>
         <p>
-          <code>extend small</code> is the extended FAB, an icon and a label in a
+          Add <code>extend small</code> for the extended FAB, an icon and a label in a
           56dp container with 16dp corners and 8dp between the two. Wrap the
           label in its own <code>&lt;span&gt;</code>. The order of the two spans
           sets the placement, and the wrapper triggers the 16dp leading inset.
@@ -142,15 +142,16 @@ const S = defineSections([
           <code>large</code>, and the label role grows with the container:
           <code>title-medium</code>, <code>title-large</code>,
           <code>headline-small</code>. <code>extend small</code> is 56dp on a
-          symmetric 16dp inset. Always specify a size; the sizeless baseline extended FAB has been removed.
+          symmetric 16dp inset. Always specify a size, because the sizeless
+          baseline extended FAB has been removed.
         </p>
         <p>
-          The container colour is a role rather than a value.
-          <code>primary-container</code> is the default;
+          Set the container colour with a role class rather than a value.
+          <code>primary-container</code> is the default, and
           <code>secondary-container</code> and <code>tertiary-container</code>
-          are the other two. Each sets the container and the label colour
-          together, so the hover and focus state layers follow the role with
-          it.
+          are the other two. Each class sets the container and the label
+          colour together, so the hover and focus state layers follow the
+          role.
         </p>
         <div class="fab-size-demo">
           <div>
@@ -186,12 +187,12 @@ const S = defineSections([
   </Section>
   <Section {...S["fab-menu"]}>
         <p>
-          <code>fab-menu</code> is the FAB that expands into a list of
-          labelled actions. The trigger is an ordinary FAB; the actions are a
+          Use <code>fab-menu</code> for a FAB that expands into a list of
+          labelled actions. The trigger is an ordinary FAB. The actions are a
           <code>&lt;ul&gt;</code> (or <code>&lt;menu&gt;</code>) of pills, each
           an icon and a label at 56dp on a full corner. Click the FAB to
-          expand; click it again, click outside, or press
-          <kbd>Esc</kbd> to collapse.
+          expand the menu. Click it again, click outside, or press
+          <kbd>Esc</kbd> to collapse it.
         </p>
         <p>
           The framework manages the expanded state. The constructor sets
@@ -253,11 +254,11 @@ const S = defineSections([
           box. With one icon, the shape change is the only cue.
         </p>
         <p>
-          The colour axis is the same three roles as the extended FAB, and one
-          class sets both halves: the actions take
+          The menu uses the same three colour roles as the extended FAB, and one
+          class sets both halves. The actions take
           <code>primary-container</code> (the default),
           <code>secondary-container</code> or
-          <code>tertiary-container</code>, and the close button takes the
+          <code>tertiary-container</code>. The close button takes the
           matching solid <code>primary</code>, <code>secondary</code> or
           <code>tertiary</code>. Material 3 pairs them this way so the close
           button stands out more than the actions.
@@ -266,13 +267,14 @@ const S = defineSections([
 <div class="fab-menu secondary-container">…</div>
 `} />
         <p>
-          <code>FloatingActionButton</code> manages the menu state. It opens upward on click, closes on Escape, outside click or action activation, and returns focus when closing would hide the focused action. Closed actions are inert. Tab navigation works as usual.        </p>
+          <code>FloatingActionButton</code> manages the menu state. The menu opens upward on click. It closes on Escape, an outside click or an action's activation. When closing would hide the focused action, the component returns focus. Closed actions are inert. Tab navigation works as usual.
+        </p>
         <p>
           After six actions, the stagger ends and the remaining actions
           appear together. Material 3 does not recommend more than six.
           Actions move on the fast spatial spring and fade on the fast effects
-          spring, so <code>motion="expressive"</code> gives them a small bounce
-          while the fade never overshoots. Override
+          spring. So <code>motion="expressive"</code> gives the move a small
+          bounce, and the fade never overshoots. Override
           <code>--md-comp-fab-menu-easing</code> and
           <code>--md-comp-fab-menu-duration</code> for the move, and
           <code>--md-comp-fab-menu-effects-easing</code> and

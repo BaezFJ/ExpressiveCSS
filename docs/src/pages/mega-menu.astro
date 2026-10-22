@@ -20,16 +20,19 @@ const S = defineSections([
           wide panels of grouped links.
         </p>
         <p>
-          Top items are links and <code>&lt;button&gt;</code>s. Each button
-          names a <code>.mega-menu-panel</code> with
-          <code>popovertarget</code>, so the panel is a native popover: the
-          browser opens it, closes it on Escape or an outside click, puts it
-          next in the Tab order and tells assistive technology whether it is
-          expanded. There is no JavaScript. The panel opens below the bar,
-          spans the window and lays its <code>&lt;section&gt;</code> groups out
-          in as many columns as fit. Use a
-          <a href={route("menubar")}>menubar</a> for application commands
-          instead.
+          Make the top items links and <code>&lt;button&gt;</code>s. Point
+          each button at a <code>.mega-menu-panel</code> with
+          <code>popovertarget</code>. The panel is then a native popover, and
+          the browser does the work without JavaScript. It opens the panel,
+          closes it on Escape or an outside click, and puts it next in the Tab
+          order. It also tells assistive technology whether the panel is
+          expanded.
+        </p>
+        <p>
+          The panel opens below the bar and spans the window. It lays its
+          <code>&lt;section&gt;</code> groups out in as many columns as fit.
+          For application commands, use a
+          <a href={route("menubar")}>menubar</a> instead.
         </p>
         <nav class="mega-menu" aria-label="Demo">
   <a href="#" aria-current="page">Home</a>

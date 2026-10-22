@@ -27,30 +27,30 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>&lt;nav class="tabs"&gt;</code> of
-          <code>&lt;a href="#panel"&gt;</code> is the bar. A
-          <code>&lt;span&gt;</code> (or the link text) is the label; a
+          Build the bar from a <code>&lt;nav class="tabs"&gt;</code> of
+          <code>&lt;a href="#panel"&gt;</code> links. A
+          <code>&lt;span&gt;</code> (or the link text) is the label, and a
           leading <code>&lt;span class="material-symbols" aria-hidden="true"&gt;</code> is the icon.
-          Nest a <code>&lt;span class="badge"&gt;</code> in the icon for a count,
-          and put that count in the tab's <code>aria-label</code> so screen
+          For a count, nest a <code>&lt;span class="badge"&gt;</code> in the icon
+          and put the count in the tab's <code>aria-label</code>, so screen
           readers still announce it when the icon is hidden.
-          <code>.active</code> is the selected tab.
+          Add <code>.active</code> to the selected tab.
           <code>AutoInit()</code> starts every <code>.tabs</code> except
           those marked <code>no-autoinit</code>.
         </p>
         <p>
-          Each tab is a link and a Tab stop. When one has focus, Left and Right move focus to the next or previous tab, wrapping at the ends, and Home and End to the first and last; disabled tabs are skipped. In a right-to-left page the arrows still move the way they point. Moving focus does not switch the panel: Enter follows the link. The tabs keep their link semantics and <code>aria-current</code>; for panels that switch in place, a <a href="#tablist">tablist</a> works the other way. When the bar scrolls, the selected tab scrolls into view.
+          Each tab is a link and a Tab stop. When a tab has focus, Left and Right move focus to the next or previous tab and wrap at the ends. Home and End move focus to the first and last tab. Focus skips disabled tabs. In a right-to-left page, the arrows still move the way they point. Moving focus does not switch the panel. Enter follows the link. The tabs keep their link semantics and <code>aria-current</code>. For panels that switch in place, a <a href="#tablist">tablist</a> works the other way. When the bar scrolls, the selected tab scrolls into view.
         </p>
         <p>
           Tokens follow the
           <a href="https://m3.material.io/components/tabs/specs">M3 tabs spec</a>.
-          Primary tabs sit on <code>surface</code>, 48dp (64dp with a
-          stacked icon). The label is <code>title-small</code> /
-          <code>on-surface-variant</code>; selected is
-          <code>primary</code>. The indicator is 3dp
+          Primary tabs sit on <code>surface</code> and are 48dp tall, or 64dp
+          with a stacked icon. The label is <code>title-small</code> in
+          <code>on-surface-variant</code>, and <code>primary</code> when
+          selected. The indicator is 3dp
           <code>primary</code> with 3dp top corners. The icon is 24dp.
           A 1dp <code>outline-variant</code> divider runs under the bar.
-          Hover is 8%; focus is 10%. Disabled is 38%.
+          Hover is 8%, focus is 10%, and disabled is 38%.
         </p>
 
         <nav class="tabs" aria-label="Travel">
@@ -111,9 +111,9 @@ const S = defineSections([
   </Section>
   <Section {...S.secondary}>
         <p>
-          <code>tabs-secondary</code> is the in-content variant. It is always
-          48dp, with inline icons and a 2dp indicator. Use it to split a pane
-          further.
+          Add <code>tabs-secondary</code> for the in-content variant. Use it to
+          split a pane further. It is always 48dp, with inline icons and a 2dp
+          indicator.
         </p>
         <nav class="tabs tabs-secondary" aria-label="Trip">
           <a href="#tabs-sec-birds"><span class="material-symbols" aria-hidden="true">flight</span><span>Travel</span></a>
@@ -138,14 +138,19 @@ const S = defineSections([
   </Section>
   <Section {...S.tablist}>
         <p>
-          Panels that switch in place can make the strip a tablist instead. Write
-          <code>role="tablist"</code> and a name on a <code>&lt;div class="tabs"&gt;</code>,
-          <code>role="tab"</code> with <code>aria-controls</code> on each link, and
-          <code>role="tabpanel"</code> with <code>aria-labelledby</code> on each panel.
+          For panels that switch in place, you can make the strip a tablist
+          instead. Link tabs stay the default, for tabs that lead to sections or
+          pages. To build a tablist:
+        </p>
+        <ol>
+          <li>Put <code>role="tablist"</code> and a name on a <code>&lt;div class="tabs"&gt;</code>.</li>
+          <li>Put <code>role="tab"</code> with <code>aria-controls</code> on each link.</li>
+          <li>Put <code>role="tabpanel"</code> with <code>aria-labelledby</code> on each panel.</li>
+        </ol>
+        <p>
           Tabs then keeps <code>aria-selected</code> on the selected tab and a roving
           <code>tabindex</code>, so the strip is one Tab stop. Left and Right, Home and End
-          move between the tabs and select as they go. Link tabs stay the default, for
-          tabs that lead to sections or pages.
+          move between the tabs and select as they go.
         </p>
         <div class="tabs" role="tablist" aria-label="Trip details">
           <a role="tab" id="tablist-demo-flight-tab" href="#tablist-demo-flight" aria-controls="tablist-demo-flight">Flight</a>
@@ -215,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <InstanceNote plugin="Tabs" />
 
         <h5 class="light">.select();</h5>
-        <p>Show the panel that belongs to the tab with this id. Panel IDs are matched literally, including numeric IDs and IDs containing dots, colons or brackets, in normal and swipeable modes.</p>
+        <p>Show the panel that belongs to the tab with this id. Tabs matches panel IDs literally in normal and swipeable modes, including numeric IDs and IDs containing dots, colons or brackets.</p>
         <p><strong>String:</strong> The id of the tab panel (without <code>#</code>).</p>
 <Code code={`
 instance.select('tab_id');
@@ -253,8 +258,8 @@ instance.destroy();
   </Section>
   <Section {...S.external}>
         <p>
-          Tabs ignore default anchor behaviour. To keep a tab as a
-          normal hyperlink, set <code>target</code> on the link.
+          To keep a tab as a normal hyperlink, set <code>target</code> on the
+          link. Without it, Tabs ignores default anchor behaviour.
         </p>
 <Code code={`
 <nav class="tabs" aria-label="Sections">
@@ -268,13 +273,16 @@ instance.destroy();
           Set <code>swipeable: true</code> to swipe between panels with
           touch or a trackpad. Keep the tab panels in the same wrapping
           container. Tabs moves those panels into a full-width
-          <code>.tabs-content</code> scroll-snap track, and only the shown
-          panel is reachable by keyboard. <code>responsiveThreshold</code> is the maximum
+          <code>.tabs-content</code> scroll-snap track. Only the shown
+          panel is reachable by keyboard.
+        </p>
+        <p>
+          <code>responsiveThreshold</code> is the maximum
           viewport width at which swipeable mode initializes. Resizing later
-          does not switch modes. Clicks and swipes update the current link and
-          call <code>onShow</code> once per changed selection with the shown panel.
-          <code>destroy()</code> removes the track and restores panel
-          positions and the state owned by Tabs.
+          does not switch modes. Clicks and swipes update the current link.
+          They call <code>onShow</code> once per changed selection, with the
+          shown panel. <code>destroy()</code> removes the track and restores
+          panel positions and the state owned by Tabs.
         </p>
         <p>This demo is marked <code>no-autoinit</code> and started with <code>swipeable: true</code>.</p>
         <nav id="tabs-swipe" class="tabs no-autoinit" aria-label="Swipe demo">

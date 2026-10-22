@@ -24,12 +24,12 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>&lt;button&gt;</code> is a filled common button. An
-          <code>&lt;a class="button"&gt;</code> is the same thing for a link. Put an
+          Use a <code>&lt;button&gt;</code> for a filled common button, or an
+          <code>&lt;a class="button"&gt;</code> for a link that looks the same. Put an
           <code>&lt;span class="material-symbols" aria-hidden="true"&gt;</code> icon before or after the label and wrap the label in its own
-          <code>&lt;span&gt;</code>. There is no <code>icon-left</code> or
-          <code>icon-right</code> class; the order of the two spans sets the
-          placement. An icon-only button needs an <code>aria-label</code>,
+          <code>&lt;span&gt;</code>. The order of the two spans sets the
+          placement. There is no <code>icon-left</code> or
+          <code>icon-right</code> class. An icon-only button needs an <code>aria-label</code>,
           because the icon is hidden from assistive technology. Add <code>circle</code> for a round
           common button. Icon buttons are
           <a href={route('icon_buttons')}><code>.icon-button</code></a>.
@@ -53,16 +53,17 @@ const S = defineSections([
           at 38% on a 12% container.
         </p>
         <p>
-          A label that does not fit wraps between words and the button grows
-          taller, so enlarged text, 200% zoom and narrow columns keep the label
-          inside the button and the button inside its parent. The size's height
+          A label that does not fit wraps between words, and the button grows
+          taller. With enlarged text, 200% zoom or a narrow column, the label stays
+          inside the button and the button stays inside its parent. The size's height
           is the minimum, so a label that fits looks the same. Keep the label
           in its own <code>&lt;span&gt;</code> so a single word longer than the
-          parent can break as well. <code>circle</code> buttons, FABs, extended
+          parent can break as well. These stay on one line at a fixed height:
+          <code>circle</code> buttons, FABs, extended
           FABs, Timepicker AM/PM controls, and buttons in button groups, split
           buttons, toolbars, top app bars, dialog and sheet headers, navigation bars and rails, tabs,
-          pagination and snackbars stay on one line at a fixed height. A rule
-          that gives a button a smaller <code>height</code> must set
+          pagination and snackbars. If a rule
+          gives a button a smaller <code>height</code>, set
           <code>min-height</code> too, or set
           <code>--md-comp-filled-button-container-height</code> instead.
         </p>
@@ -89,11 +90,11 @@ const S = defineSections([
   </Section>
   <Section {...S.filled}>
         <p>
-          High emphasis. This is the default, for the main action on a page.
+          Filled is the default, high-emphasis style, for the main action on a page.
           The container is <code>primary</code>, the label is
           <code>on-primary</code>, and there is no elevation. It also has its
           own class, <code>filled</code>, so all five styles have a name.
-          Writing it changes nothing.
+          Adding it changes nothing.
         </p>
         <p>
           <button type="button">Create</button>
@@ -112,7 +113,7 @@ const S = defineSections([
   </Section>
   <Section {...S["filled-tonal"]}>
         <p>
-          Medium emphasis. Add <code>tonal</code>. The container is
+          Add <code>tonal</code> for medium emphasis. The container is
           <code>secondary-container</code> and the label is
           <code>on-secondary-container</code>.
         </p>
@@ -129,8 +130,8 @@ const S = defineSections([
   </Section>
   <Section {...S.outlined}>
         <p>
-          Medium emphasis with no fill. Add <code>outlined</code> (or
-          <code>border</code>). The outline is <code>outline</code> and the
+          Add <code>outlined</code> (or <code>border</code>) for medium
+          emphasis with no fill. The outline is <code>outline</code> and the
           label is <code>primary</code>.
         </p>
         <p>
@@ -143,7 +144,7 @@ const S = defineSections([
   </Section>
   <Section {...S.elevated}>
         <p>
-          Medium emphasis with a shadow. The container is
+          Add <code>elevated</code> for medium emphasis with a shadow. The container is
           <code>surface</code> and the label is <code>primary</code>, with
           elevation 1 at rest and 2 on hover. Use it sparingly so the page
           does not fill with shadows.
@@ -158,7 +159,7 @@ const S = defineSections([
   </Section>
   <Section {...S.text}>
         <p>
-          Low emphasis. Add <code>text</code>. It has no container, and the
+          Add <code>text</code> for low emphasis. It has no container, and the
           label is <code>primary</code>. Use text buttons inside cards and
           dialogs so they do not stack shadows.
         </p>
@@ -175,7 +176,7 @@ const S = defineSections([
           <a href={route('icon_buttons')}><code>.icon-button</code></a> is its
           own component. <code>circle</code> on a common button is the older
           round common-button form and still works. It follows the size
-          scale, 40dp by default. The variant helpers still apply: the
+          scale, 40dp by default. The variant helpers still apply. The
           default is filled, <code>text</code> gives the standard
           (transparent) icon button, and <code>tonal</code> and
           <code>outlined</code> match the common-button colors.
@@ -197,19 +198,21 @@ const S = defineSections([
   </Section>
   <Section {...S.floating}>
         <p>
-          A FAB is <code>circle extra</code> or <code>circle large</code>:
-          56dp, 16dp corners, <code>primary-container</code>, elevation 3.
+          For a FAB, use <code>circle extra</code> or <code>circle large</code>.
+          It is 56dp with 16dp corners, <code>primary-container</code> and elevation 3.
           <code>extra circle medium</code> is the 80dp medium one (20dp
-          corners, 26dp icon) and <code>extra circle large</code> the 96dp
+          corners, 26dp icon), and <code>extra circle large</code> is the 96dp
           large one (28dp corners, 36dp icon). The large size needs the
-          <code>extra</code>: <code>circle large</code> on its own is the
+          <code>extra</code>, because <code>circle large</code> on its own is the
           alias for the default 56dp FAB.
-          <code>extend small</code> is the extended FAB: an icon and a
+        </p>
+        <p>
+          Use <code>extend small</code> for the extended FAB, an icon and a
           label at 56dp, with 16dp corners and 8dp between the two. It takes the
-          three explicit sizes: <code>extend small</code> is 56dp on a
-          symmetric 16dp inset, <code>extend medium</code> 80dp (20dp
-          corners, 28dp icon) and <code>extend large</code> 96dp (28dp
-          corners, 36dp icon), each with the label role Material gives it.
+          three explicit sizes. <code>extend small</code> is 56dp on a
+          symmetric 16dp inset, <code>extend medium</code> is 80dp (20dp
+          corners, 28dp icon) and <code>extend large</code> is 96dp (28dp
+          corners, 36dp icon). Each uses the label role Material gives it.
           Its container colour is also a role. Adding
           <code>secondary-container</code> or
           <code>tertiary-container</code> recolours the label and the state
@@ -257,7 +260,7 @@ const S = defineSections([
           <code>outlined</code> button's border thickens with it:
           1dp up to medium, 2dp at large and 3dp at extra large.
           <code>circle</code> follows the
-          same size scale: a round common button takes both the box
+          same size scale. A round common button takes both the box
           <em>and</em> the icon size of its step, 40dp with a 20dp icon by
           default and 136dp with a 40dp icon at <code>xlarge</code>. Only
           <code>circle extra</code> and <code>circle large</code> leave this
@@ -312,11 +315,11 @@ const S = defineSections([
   </Section>
   <Section {...S.shape}>
         <p>
-          A button is round. <code>square</code> gives it the squared corner
-          of its size: 12dp up to small, 16dp at medium and 28dp at large and
-          extra large. Pressed, every common button morphs its corners to the
-          pressed shape of its size, 8dp up to small, 12dp at medium and 16dp
-          beyond, and springs back on release.
+          Buttons are round. Add <code>square</code> for the squared corner
+          of the size: 12dp up to small, 16dp at medium and 28dp at large and
+          extra large. When pressed, every common button morphs its corners to the
+          pressed shape of its size (8dp up to small, 12dp at medium and 16dp
+          beyond) and springs back on release.
         </p>
         <p>
           <button type="button">Round</button>
@@ -329,13 +332,13 @@ const S = defineSections([
 <button class="tonal square medium">Square medium</button>
 `} />
         <p>
-          <code>aria-pressed</code> makes a button a toggle. Selected, a round
-          button goes square and a square one goes round, a cue that does not
-          rely on colour, and the colours change: filled from
+          Add <code>aria-pressed</code> to make a button a toggle. When selected, a round
+          button goes square and a square one goes round, so the cue does not
+          rely on colour alone. The colours change too: filled from
           surface-container to primary, tonal from secondary-container to
           secondary, outlined to inverse-surface without its outline, and
           elevated to primary. Text buttons do not toggle. Switch
-          <code>aria-pressed</code> in your click handler; for a set of
+          <code>aria-pressed</code> in your click handler. For a set of
           toggles that share a row, use a
           <a href={route('button_groups')}>button group</a>.
         </p>

@@ -35,13 +35,13 @@ const intro = [
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>.message-scroller</code> scrolls a conversation. While the
-          reader is at the end it follows new output; scrolling up stops it.
-          Messages added above keep the reader's place.
+          Use a <code>.message-scroller</code> to scroll a conversation. While the
+          reader is at the end, the scroller follows new output. Scrolling up stops it.
+          When you add messages above, the reader keeps their place.
         </p>
         <p>
-          The frame holds a <code>.message-scroller-viewport</code> and an
-          optional <code>.message-scroller-button</code>. Every child of the
+          Put a <code>.message-scroller-viewport</code> and an
+          optional <code>.message-scroller-button</code> in the frame. Every child of the
           viewport is one item, usually a <a href={route('message')}>message</a>
           or a message group. The frame fills its parent, so give the parent a
           height. <code>AutoInit()</code> starts every
@@ -87,19 +87,19 @@ const intro = [
 `} />
         <p>
           The viewport is a named, focusable scroll region, so the arrow keys
-          scroll it. On a conversation that receives messages, make it the log:
+          scroll it. If the conversation receives messages, make the viewport the log.
           <code>role="log"</code> with <code>aria-relevant="additions"</code>
           announces new messages. The button is inert while the viewport is at
-          the end, and focus moves to the viewport if the button had it.
+          the end. If the button had focus, focus moves to the viewport.
         </p>
   </Section>
   <Section {...S.turns}>
         <p>
           Mark the message that starts a turn with
-          <code>data-scroll-anchor</code>, usually each of the user's
-          messages. Anchors are not tied to the sender: in a group chat, a
-          "joined the conversation" notice can start a turn too. When an anchor
-          is appended, the viewport scrolls it to the top and leaves 64px of
+          <code>data-scroll-anchor</code>. Usually that is each of the user's
+          messages. Anchors are not tied to the sender. In a group chat, a
+          "joined the conversation" notice can start a turn too. When you append an
+          anchor, the viewport scrolls it to the top and leaves 64px of
           the previous message in view. Blank space below the anchor makes room
           for the reply and shrinks as the reply grows.
         </p>
@@ -115,12 +115,12 @@ viewport.insertAdjacentHTML('beforeend', \`
         <p>
           Append the reply and write into it as it streams. Once the reply
           passes the bottom of the viewport, the viewport follows it. Scrolling
-          toward the start with the wheel, touch, the scrollbar or the
-          <kbd>↑</kbd>, <kbd>Page Up</kbd> and <kbd>Home</kbd> keys stops
-          following; reaching the end again, or pressing the button, resumes
-          it. Set <code>aria-busy="true"</code> on the log while a reply
-          streams, so a screen reader announces it once it is complete rather
-          than word by word.
+          toward the start stops following. That covers the wheel, touch, the scrollbar and the
+          <kbd>↑</kbd>, <kbd>Page Up</kbd> and <kbd>Home</kbd> keys.
+          Following resumes when the reader reaches the end again or presses the button.
+          Set <code>aria-busy="true"</code> on the log while a reply
+          streams. A screen reader then announces the reply once it is complete, instead
+          of word by word.
         </p>
 <Code code={`
 const reply = document.createElement('div');
@@ -135,12 +135,12 @@ viewport.removeAttribute('aria-busy');
   </Section>
   <Section {...S.saved}>
         <p>
-          <code>defaultScrollPosition</code> sets where a transcript opens:
+          Set <code>defaultScrollPosition</code> to choose where a transcript opens:
           <code>'end'</code>, <code>'start'</code>, or
-          <code>'last-anchor'</code>. The last option opens on the start of the
-          last turn, so a long answer is read from its question. When that
-          turn fits in the viewport, it opens at the end. A viewport that is
-          hidden when it starts, for example in a closed dialog, opens when it
+          <code>'last-anchor'</code>. <code>'last-anchor'</code> opens on the start of the
+          last turn, so the reader reads a long answer from its question. When that
+          turn fits in the viewport, the transcript opens at the end. If the viewport is
+          hidden when it starts, for example in a closed dialog, it opens there when it
           is first shown.
         </p>
 <Code code={`
@@ -156,9 +156,9 @@ Expressive.MessageScroller.init(document.querySelector('.message-scroller'), {
   <Section {...S.history}>
         <p>
           Insert older messages at the start of the viewport. The message the
-          reader was looking at stays where it was, and anchors in the
+          reader was looking at stays where it was. Anchors in the
           inserted history do not scroll. Load more when the reader nears the
-          top, for example with an <code>IntersectionObserver</code> on the
+          top. For example, use an <code>IntersectionObserver</code> on the
           first message or a button above the conversation.
         </p>
         <p class="mb-3">
@@ -170,8 +170,8 @@ viewport.insertAdjacentHTML('afterbegin', olderMessagesHtml);
   </Section>
   <Section {...S.jump}>
         <p>
-          <code>scrollToMessage(id)</code> scrolls the element with that id
-          to the top of the viewport, below the peek, and stops following. It
+          Call <code>scrollToMessage(id)</code> to scroll the element with that id
+          to the top of the viewport, below the peek. Following stops. The method
           returns <code>false</code> when the viewport holds no such element.
         </p>
         <p class="mb-3">

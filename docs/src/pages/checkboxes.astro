@@ -15,9 +15,9 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>&lt;label&gt;</code> wrapping
-          <code>&lt;input type="checkbox"&gt;</code> is the control. The
-          label text is a sibling of the input and needs no extra class or
+          Wrap an <code>&lt;input type="checkbox"&gt;</code> in a
+          <code>&lt;label&gt;</code> to make the control. The label text
+          sits next to the input as a sibling and needs no extra class or
           <code>&lt;span&gt;</code>. Checkboxes are CSS only, with no
           JavaScript component to AutoInit.
         </p>
@@ -36,7 +36,7 @@ const S = defineSections([
           Put the input first. Add <code>checked</code> or
           <code>disabled</code> on the input. Indeterminate is not an
           HTML attribute. Set <code>element.indeterminate = true</code>
-          in script. <code>filled-in</code> is a no-op because the selected
+          in script. <code>filled-in</code> does nothing because the selected
           state is always the filled box.
         </p>
         <form>
@@ -128,8 +128,8 @@ document.getElementById('indeterminate-checkbox').indeterminate = true;
         <p>
           Add <code>aria-invalid="true"</code> or
           <code>class="invalid"</code> on the input. The box uses
-          <code>error</code> / <code>on-error</code>. Forced colors have no
-          error color, so there the box takes a dashed edge instead. Either
+          <code>error</code> / <code>on-error</code>. Forced-colors mode has
+          no error color, so the box gets a dashed edge there instead. Either
           way, say what is wrong in text next to the box.
         </p>
         <label>
