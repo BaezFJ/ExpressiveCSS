@@ -269,14 +269,15 @@ function watch(context: Node, options?: Partial<AutoInitOptions>) {
 
 /**
  * Automatically initialize components.
- * @param context Root element to initialize. Defaults to `document.body`.
+ * @param context Root element or shadow root to initialize. Defaults to
+ * `document.body`. Shadow roots inside it are not entered.
  * @param options Options for each component.
  * @param settings With `watch: true`, keep starting components in markup
  * added to `context` later, and destroy them when their markup is removed.
  * @returns A function that stops watching. It does nothing without `watch`.
  */
 export function AutoInit(
-  context: HTMLElement = document.body,
+  context: HTMLElement | ShadowRoot = document.body,
   options?: Partial<AutoInitOptions>,
   settings: { watch?: boolean } = {},
 ): () => void {

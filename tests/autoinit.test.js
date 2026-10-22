@@ -530,9 +530,11 @@ describe("AutoInit watch mode", () => {
   const settle = () => new Promise((resolve) => setTimeout(resolve));
   /** Appends `html` to `parent` and returns the first element it added. */
   function add(html, parent = document.body) {
-    const before = parent.lastElementChild;
-    parent.insertAdjacentHTML("beforeend", html);
-    return before ? before.nextElementSibling : parent.firstElementChild;
+    const template = document.createElement("template");
+    template.innerHTML = html;
+    const first = template.content.firstElementChild;
+    parent.append(template.content);
+    return first;
   }
   /** Runs `check` with the body watched, then stops watching and destroys every instance. */
   async function watching(check, options) {
@@ -680,6 +682,30 @@ describe("AutoInit watch mode", () => {
       await settle();
       const second = Expressive.Tooltip.getInstance(el);
       assert.ok(second && second !== first, "the element added back was not started again");
+    }));
+
+  test("watches a shadow root only through its own call", () =>
+    watching(async () => {
+      const root = add("<div></div>").attachShadow({ mode: "open" });
+      const inside = add(`<a class="tooltipped" data-tooltip="Hi">Inside</a>`, root);
+      await settle();
+      assert.equal(Expressive.Tooltip.getInstance(inside), undefined, "the document watcher entered the shadow root");
+      const stop = Expressive.AutoInit(root, {}, { watch: true });
+      try {
+        assert.ok(Expressive.Tooltip.getInstance(inside), "the shadow root's first scan missed it");
+        const later = add(`<a class="tooltipped" data-tooltip="Hi">Later</a>`, root);
+        await settle();
+        assert.ok(Expressive.Tooltip.getInstance(later), "the shadow root watcher missed an addition");
+        later.remove();
+        await settle();
+        assert.equal(Expressive.Tooltip.getInstance(later), undefined);
+        Expressive.Tooltip.getInstance(inside).destroy();
+      } finally {
+        stop();
+      }
+      const outside = add(`<a class="tooltipped" data-tooltip="Hi">Outside</a>`);
+      await settle();
+      assert.ok(Expressive.Tooltip.getInstance(outside));
     }));
 
   test("without watch, AutoInit creates no observer and returns a function that does nothing", async () => {
