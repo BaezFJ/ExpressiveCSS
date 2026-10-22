@@ -104,7 +104,7 @@ export type AutoInitOptions = {
 /** The shape every entry in the table satisfies; see the cast in AutoInit. */
 type AutoInitable = {
   defaults: object;
-  getInstance(el: Element): unknown;
+  getInstance(el: Element): { destroy(): void } | undefined;
   init(els: InitElement | InitElements<InitElement>, options: Partial<object>): unknown;
 };
 
@@ -212,6 +212,8 @@ function markupOptions(el: Element, name: string, defaults: object) {
 // to a union TypeScript cannot call, so narrow it once, here.
 const entry = (name: keyof Registry) => AUTO_INIT_COMPONENTS[name] as unknown as AutoInitEntry;
 const NAMES = Object.keys(AUTO_INIT_COMPONENTS) as (keyof Registry)[];
+// Teardown runs last entry first, so a Menubar goes before its triggers' Menus.
+const REVERSED = [...NAMES].reverse();
 
 /** Starts component `name` on one element, with its markup options under `options`. */
 function initElement(name: keyof Registry, el: Element, options: object = {}) {
@@ -241,10 +243,23 @@ function startAdded(node: Node, options?: Partial<AutoInitOptions>) {
   }
 }
 
-/** Watches `context` and starts components in markup added to it. */
+/**
+ * Destroys the instances of a removed element and its descendants that
+ * AutoInit would claim. An element that is back in the page by now was moved,
+ * and keeps its instances.
+ */
+function stopRemoved(node: Node) {
+  if (node.nodeType !== Node.ELEMENT_NODE || node.isConnected) return;
+  for (const name of REVERSED) {
+    claimed(name, node as Element, true).forEach((el) => entry(name).component.getInstance(el)?.destroy());
+  }
+}
+
+/** Watches `context`, starting components in added markup and destroying them in removed markup. */
 function watch(context: Node, options?: Partial<AutoInitOptions>) {
   const observer = new MutationObserver((records) => {
-    for (const { addedNodes } of records) {
+    for (const { addedNodes, removedNodes } of records) {
+      removedNodes.forEach(stopRemoved);
       addedNodes.forEach((node) => context.contains(node) && startAdded(node, options));
     }
   });
@@ -257,7 +272,7 @@ function watch(context: Node, options?: Partial<AutoInitOptions>) {
  * @param context Root element to initialize. Defaults to `document.body`.
  * @param options Options for each component.
  * @param settings With `watch: true`, keep starting components in markup
- * added to `context` later.
+ * added to `context` later, and destroy them when their markup is removed.
  * @returns A function that stops watching. It does nothing without `watch`.
  */
 export function AutoInit(

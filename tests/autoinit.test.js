@@ -633,6 +633,55 @@ describe("AutoInit watch mode", () => {
       instance.destroy();
     }));
 
+  for (const { name, selector, html } of AUTO_INIT_FIXTURES) {
+    test(`destroys ${name} when its markup is removed`, (t) => {
+      const errors = t.mock.method(console, "error", () => {});
+      return watching(async () => {
+        const box = add(`<div>${html}</div>`);
+        await settle();
+        const el = box.querySelector(selector);
+        assert.ok(Expressive[name].getInstance(el), "not started");
+        // Count only teardown errors: jsdom logs that Particles' canvas has no context on start.
+        const before = errors.mock.callCount();
+        box.remove();
+        await settle();
+        assert.equal(Expressive[name].getInstance(el), undefined);
+        assert.equal(errors.mock.callCount(), before, String(errors.mock.calls[before]?.arguments[0]));
+      });
+    });
+  }
+
+  test("keeps the instance of an element moved within the page", () =>
+    watching(async () => {
+      const [from, to] = [add("<div></div>"), add("<div></div>")];
+      const el = add(trigger("moved"), from);
+      await settle();
+      const instance = Expressive.Menu.getInstance(el);
+      assert.ok(instance);
+      to.append(el);
+      await settle();
+      assert.equal(Expressive.Menu.getInstance(el), instance);
+    }));
+
+  test("skips markup removed before the observer runs, and restarts markup added back later", () =>
+    watching(async () => {
+      const brief = add(`<a class="tooltipped" data-tooltip="Hi">Brief</a>`);
+      brief.remove();
+      await settle();
+      assert.equal(Expressive.Tooltip.getInstance(brief), undefined);
+      const el = add(`<a class="tooltipped" data-tooltip="Hi">Back</a>`);
+      await settle();
+      const first = Expressive.Tooltip.getInstance(el);
+      assert.ok(first);
+      el.remove();
+      await settle();
+      assert.equal(Expressive.Tooltip.getInstance(el), undefined);
+      document.body.append(el);
+      await settle();
+      const second = Expressive.Tooltip.getInstance(el);
+      assert.ok(second && second !== first, "the element added back was not started again");
+    }));
+
   test("without watch, AutoInit creates no observer and returns a function that does nothing", async () => {
     const Original = globalThis.MutationObserver;
     let created = 0;

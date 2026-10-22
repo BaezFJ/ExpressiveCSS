@@ -214,8 +214,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed chart update() transitions from the old values to the new: 91,795 gzip bytes (+596).
   // Reviewed charts that watch their table and redraw once per batch of edits: 91,981 gzip bytes (+186).
   // Reviewed Timepicker minTime and maxTime across the fields, AM/PM and dial: 92,729 gzip bytes (+748).
-  // Reviewed AutoInit watch mode, which starts components in markup added later: 92,943 gzip bytes (+214).
-  assert.ok(sizes(js).gzip <= 92943, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed AutoInit watch mode, which starts components in added markup and destroys them in removed markup: 93,011 gzip bytes (+282).
+  assert.ok(sizes(js).gzip <= 93011, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
