@@ -340,5 +340,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the Sass cleanup: shared header, label and trend-arrow mixins, state-opacity() for menu, navbar and slider layers: 84,667 gzip bytes (-4).
   // Reviewed calendar week, day and year views: 85,031 gzip bytes (+364).
   // Reviewed shared navigation destination mixins; one badge rule moves after its siblings: 85,033 gzip bytes (+2).
-  assert.ok(sizes(css).gzip <= 85033, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed base rules that restated the browser's own em, i, cell and root weight values: 85,016 gzip bytes (-17).
+  assert.ok(sizes(css).gzip <= 85016, `CSS gzip: ${sizes(css).gzip}`);
 });
