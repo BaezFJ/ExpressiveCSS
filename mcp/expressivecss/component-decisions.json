@@ -8355,7 +8355,7 @@
           },
           {
             "path": "src/sass/base/_fonts.scss",
-            "sha256": "6fd4318aedda78446e5e187f161e89fb637d7ac667e735dc1a8542de85c3beb6"
+            "sha256": "61c0b4c9dae40b791beab0382a668664354db2ce11314bbc58cea6cfcc7c47e4"
           }
         ],
         "inventorySha256": "e5c204f237fac5230a627d290306cb010616d7413f369b5e10ff18708179a0bd",

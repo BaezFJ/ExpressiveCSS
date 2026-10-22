@@ -9,7 +9,7 @@ Component ID: `particles`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `8512c31fc0e163a7da7cd45ace75c7b6b663ae72f8b22dc3089ad7c644b33c76`
+Contract SHA-256: `2deae07800473a18c4d6c8182cca410ed008454d6aba2fdeacc86077c48157f3`
 
 #### Selection and adaptation
 
