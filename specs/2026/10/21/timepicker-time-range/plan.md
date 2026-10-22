@@ -47,7 +47,7 @@ Prerequisites: group 2.
 - [ ] Toggle `is-disabled` on the ticks from one helper, called when the dial is built, when the view shows, and after an hour or period change.
 - [ ] In `setHand()`, ignore a value outside `_range()`, so the hand and field keep the last allowed value and the device does not vibrate.
 - [ ] In `_handleDocumentClickEnd()`, refuse a release over a disabled value: no view switch, no `select`, no `autoSubmit` write.
-- [ ] In `src/sass/components/_timepicker.scss`, style `.timepicker-tick.is-disabled` at the disabled opacity, with no hover state, and in `GrayText` under forced colors.
+- [ ] In `src/sass/components/_timepicker.scss`, style `.timepicker-tick.is-disabled` in the on-surface color at 38%, with no hover state, and in `GrayText` under forced colors.
 - [ ] Build and run the new jsdom and browser files, then `tests/docked-picker-browser.test.js` and `tests/modal-picker-browser.test.js`.
 
 Completion check: V1 and V11 to V13 pass, V1 in Chromium, Firefox and WebKit.

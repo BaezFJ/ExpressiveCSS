@@ -182,6 +182,17 @@ input[type=text].timepicker-input-seconds {
   background-color: color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent);
 }
 
+// Outside minTime to maxTime. The plate takes the pointer, so dropping
+// pointer events only drops the hover.
+.timepicker-tick.is-disabled {
+  color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+  pointer-events: none;
+
+  @media (forced-colors: active) {
+    color: GrayText;
+  }
+}
+
 .timepicker-dial {
   transition: transform var(--md-sys-motion-duration-medium3), opacity var(--md-sys-motion-duration-medium3);
 

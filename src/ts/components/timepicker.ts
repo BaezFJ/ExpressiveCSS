@@ -17,6 +17,15 @@ const dayHour = (hours: number, pm: boolean) => (hours % 12) + (pm ? 12 : 0);
 /** Each field's length in seconds and how many values it has. */
 const SPANS: Record<Unit, [number, number]> = { hours: [3600, 24], minutes: [60, 60], seconds: [1, 60] };
 
+/**
+ * The hour at a position on the 24-hour dial, 0 to 12 from the top: the
+ * inner ring holds 1 to 12, the outer 13 to 23 and 00.
+ */
+const ringHour = (position: number, inner: boolean) => {
+  const hour = (position % 12) + (inner ? 0 : 12);
+  return hour % 12 ? hour : 12 - hour;
+};
+
 /** The last second of the day. */
 const DAY_END = 24 * 3600 - 1;
 
@@ -257,6 +266,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   private displayPlugin: DisplayPlugin;
   /** Whether the dial (ticks + SVG + AM/PM buttons) has been built yet. */
   private _clockBuilt = false;
+  /** Whether the pointer last pointed at a value outside the range. */
+  private _handRefused = false;
   /** The first and last allowed second of the day. */
   private _limits: [number, number] = [0, DAY_END];
 
@@ -430,7 +441,12 @@ export class Timepicker extends Component<TimepickerOptions> {
     if (this.moved && x === this.dx && y === this.dy) {
       this.setHand(x, y);
     }
+    // A release on a disabled tick is no choice at all.
+    if (!this._handRefused) this._chooseHand();
+  };
 
+  /** Take the value under the hand: move on to the minutes, or submit. */
+  private _chooseHand() {
     if (this.currentView === 'hours') {
       this.inputMinutes.focus();
       this.showView('minutes', this.options.duration / 2);
@@ -444,7 +460,7 @@ export class Timepicker extends Component<TimepickerOptions> {
 
     const { hours, minutes } = this;
     this._notify('select', this.options.onSelect, { args: [hours, minutes], detail: { hours, minutes }, current: () => this.hours === hours && this.minutes === minutes });
-  };
+  }
 
   /**
    * A cancelled pointer is not a completed selection. The browser or the OS
@@ -740,6 +756,15 @@ export class Timepicker extends Component<TimepickerOptions> {
     }
     const [first, last] = this._dayRange('hours');
     if (this._amBtn) [this._amBtn.disabled, this._pmBtn.disabled] = [first > 11, last < 12];
+    this._disableTicks(this.hoursView, 'hours');
+    this._disableTicks(this.minutesView, 'minutes');
+  }
+
+  /** Mark the ticks of a dial view that are outside the range. */
+  private _disableTicks(view: HTMLElement, unit: Unit) {
+    view.querySelectorAll('.timepicker-tick').forEach((tick) => {
+      tick.classList.toggle('is-disabled', !this._allows(unit, Number(tick.textContent)));
+    });
   }
 
   /** The hour on the 24-hour clock, setting AM or PM on a 12-hour one. */
@@ -963,23 +988,15 @@ export class Timepicker extends Component<TimepickerOptions> {
     }
 
     // Get the round value
-    let value = Math.round(radian / unit);
+    const position = Math.round(radian / unit);
 
     // Get the round radian
-    radian = value * unit;
+    radian = position * unit;
 
-    // Correct the hours or minutes
-    if (!isHours) {
-      if (roundBy5) value *= 5;
-      if (value === 60) value = 0;
-    } else if (this.options.twelveHour) {
-      if (value === 0) value = 12;
-    } else if (value % 12 === 0) {
-      // 0 and 12 share a position: 12 on the inner ring, 00 on the outer.
-      value = inner ? 12 : 0;
-    } else if (!inner) {
-      value += 12;
-    }
+    const value = isHours ? this._hourAt(position, inner) : ((roundBy5 ? position * 5 : position) % 60);
+    // The hand stays on the last allowed value.
+    this._handRefused = !this._allows(this.currentView, value);
+    if (this._handRefused) return;
 
     // Once hours or minutes changed, vibrate the device. The timer keeps it
     // from vibrating too frequently.
@@ -995,6 +1012,12 @@ export class Timepicker extends Component<TimepickerOptions> {
 
     // Set clock hand and others' position
     this.setClockAttributes(radian, radius);
+    this._afterChange();
+  }
+
+  /** The hour at a dial position, 0 to 12 from the top. */
+  private _hourAt(position: number, inner: boolean) {
+    return this.options.twelveHour ? position % 12 || 12 : ringHour(position, inner);
   }
 
   setClockAttributes(radian: number, radius: number) {

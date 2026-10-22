@@ -4,6 +4,7 @@
 
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 import { Expressive, resetBody, fire, window } from './setup.js';
 
@@ -280,5 +281,93 @@ describe('Timepicker time range in the fields', () => {
     } finally {
       picker.destroy();
     }
+  });
+});
+
+/**
+ * Press and release a pointer on the dial at `value` on the current view:
+ * an hour on the 24-hour clock (`inner` for the 1 to 12 ring), or a minute.
+ * jsdom lays the plate out at 0,0, so its centre is at the dial radius.
+ */
+function pick(picker, value, inner = false) {
+  const { dialRadius, outerRadius, innerRadius } = picker.options;
+  const hours = picker.currentView === 'hours';
+  const radian = (value / (hours ? 6 : 30)) * Math.PI;
+  const radius = inner ? innerRadius : outerRadius;
+  const at = { clientX: dialRadius + Math.sin(radian) * radius, clientY: dialRadius - Math.cos(radian) * radius };
+  const init = { bubbles: true, cancelable: true, isPrimary: true, pointerId: 1, button: 0, ...at };
+  picker.plate.dispatchEvent(new window.PointerEvent('pointerdown', init));
+  document.dispatchEvent(new window.PointerEvent('pointerup', init));
+}
+
+const disabledTicks = (view) => [...view.querySelectorAll('.timepicker-tick.is-disabled')].map((tick) => Number(tick.textContent));
+const range = (from, to) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
+
+describe('Timepicker time range on the dial', () => {
+  beforeEach(resetBody);
+
+  test('ticks outside the range are disabled and follow the hour and period', () => {
+    const cases = [
+      ['17:00', {}, range(0, 8).concat(range(18, 23)), [35, 40, 45, 50, 55]],
+      ['12:00', {}, range(0, 8).concat(range(18, 23)), []],
+      ['02:00 PM', { twelveHour: true }, range(6, 11), []],
+      ['10:00 AM', { twelveHour: true }, range(1, 8).concat(12), []]
+    ];
+    for (const [value, options, hours, minutes] of cases) {
+      const { picker } = open(value, { twelveHour: false, ...RANGE, ...options });
+      try {
+        assert.deepEqual(disabledTicks(picker.hoursView).sort((a, b) => a - b), hours, `hours at ${value}`);
+        assert.deepEqual(disabledTicks(picker.minutesView), minutes, `minutes at ${value}`);
+      } finally {
+        picker.destroy();
+      }
+    }
+    const { picker } = open('12:00', { twelveHour: false, ...RANGE });
+    try {
+      key(picker.inputHours, 'PageUp');
+      assert.deepEqual(disabledTicks(picker.minutesView), [35, 40, 45, 50, 55]);
+    } finally {
+      picker.destroy();
+    }
+  });
+
+  test('a pick on a disabled tick changes nothing', async () => {
+    const selected = [];
+    const { input, picker } = open('17:00', { twelveHour: false, ...RANGE, autoSubmit: true, onSelect: (h, m) => selected.push([h, m]) });
+    try {
+      pick(picker, 18);
+      pick(picker, 8, true);
+      assert.equal(picker.currentView, 'hours');
+      picker.showView('minutes');
+      pick(picker, 45);
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      assert.equal(shown(picker), '17:00');
+      assert.equal(picker.currentView, 'minutes');
+      assert.deepEqual(selected, []);
+      assert.equal(input.value, '17:00');
+    } finally {
+      picker.destroy();
+    }
+  });
+
+  test('an allowed pick still selects, and an hour pick clamps the minutes', () => {
+    const selected = [];
+    const { picker } = open('16:45', { twelveHour: false, ...RANGE, autoSubmit: false, onSelect: (h, m) => selected.push([h, m]) });
+    try {
+      pick(picker, 17);
+      assert.equal(shown(picker), '17:30');
+      assert.equal(picker.currentView, 'minutes');
+      assert.deepEqual(selected, [[17, 30]]);
+    } finally {
+      picker.destroy();
+    }
+  });
+
+  test('disabled ticks are dimmed, skip hover and use GrayText in forced colors', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    const rule = /\.timepicker-tick\.is-disabled\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+    assert.match(rule, /color:\s*color-mix\(in oklab, var\(--md-sys-color-on-surface\) 38%, transparent\)/);
+    assert.match(rule, /pointer-events:\s*none/);
+    assert.match(css, /@media \(forced-colors: active\)\s*\{\s*\.timepicker-tick\.is-disabled\s*\{\s*color:\s*GrayText/);
   });
 });
