@@ -521,3 +521,139 @@ describe("AutoInit options from markup", () => {
     );
   });
 });
+
+describe("AutoInit watch mode", () => {
+  beforeEach(resetBody);
+
+  const names = AUTO_INIT_FIXTURES.map(({ name }) => name);
+  /** Lets the MutationObserver callback run. */
+  const settle = () => new Promise((resolve) => setTimeout(resolve));
+  /** Appends `html` to `parent` and returns the first element it added. */
+  function add(html, parent = document.body) {
+    const before = parent.lastElementChild;
+    parent.insertAdjacentHTML("beforeend", html);
+    return before ? before.nextElementSibling : parent.firstElementChild;
+  }
+  /** Runs `check` with the body watched, then stops watching and destroys every instance. */
+  async function watching(check, options) {
+    const stop = Expressive.AutoInit(document.body, options, { watch: true });
+    try {
+      await check(stop);
+    } finally {
+      stop();
+      for (const el of document.body.querySelectorAll("*")) {
+        for (const name of names) Expressive[name].getInstance(el)?.destroy();
+      }
+    }
+  }
+  const trigger = (id, attributes = "") =>
+    `<a class="menu-trigger" id="${id}-trigger" data-target="${id}" ${attributes}>Open</a><menu id="${id}"><li><a href="#!">one</a></li></menu>`;
+
+  test("starts a menu added after the scan with AutoInit and markup options", () =>
+    watching(async () => {
+      const el = add(trigger("m", `data-menu-options='{"hover":true}'`));
+      assert.equal(Expressive.Menu.getInstance(el), undefined, "started before the observer ran");
+      await settle();
+      const options = Expressive.Menu.getInstance(el)?.options;
+      assert.ok(options, "the added menu trigger was not started");
+      assert.equal(options.inDuration, 0);
+      assert.equal(options.hover, true);
+    }, { Menu: { inDuration: 0 } }));
+
+  test("starts every component in an added subtree in registry order, and the added element itself", () =>
+    watching(async () => {
+      const box = add(`<div>
+        <div class="menubar" aria-label="Editor">${trigger("file")}${trigger("edit")}</div>
+        <a class="tooltipped" data-tooltip="Hi">Hi</a>
+        <div class="field"><select id="s"><option value="1">One</option></select><label for="s">S</label></div>
+      </div>`);
+      const bare = add(`<a class="tooltipped" data-tooltip="Bare">Bare</a>`);
+      await settle();
+      assert.ok(Expressive.Menubar.getInstance(box.querySelector(".menubar")));
+      for (const id of ["file", "edit"]) {
+        // Menubar runs after Menu and replaces each menu with its own menuOptions.
+        assert.equal(Expressive.Menu.getInstance(document.getElementById(`${id}-trigger`)).options.constrainWidth, false, id);
+      }
+      assert.ok(Expressive.Tooltip.getInstance(box.querySelector(".tooltipped")));
+      assert.ok(Expressive.FormSelect.getInstance(box.querySelector("select")));
+      assert.ok(Expressive.Tooltip.getInstance(bare), "the added element itself was not started");
+    }));
+
+  test("leaves .no-autoinit elements and the instances page code starts on them alone", () =>
+    watching(async () => {
+      const skipped = add(`<a class="tooltipped no-autoinit" data-tooltip="Hi">Hi</a>`);
+      await settle();
+      assert.equal(Expressive.Tooltip.getInstance(skipped), undefined);
+      const manual = Expressive.Tooltip.init(skipped, {});
+      skipped.remove();
+      await settle();
+      assert.equal(Expressive.Tooltip.getInstance(skipped), manual);
+      manual.destroy();
+    }));
+
+  test("keeps the instance and options of an element started before it was added", () =>
+    watching(async () => {
+      const el = document.createElement("a");
+      el.className = "tooltipped";
+      el.dataset.tooltip = "Hi";
+      const instance = Expressive.Tooltip.init(el, { position: "left" });
+      document.body.append(el);
+      await settle();
+      assert.equal(Expressive.Tooltip.getInstance(el), instance);
+      assert.equal(instance.options.position, "left");
+    }));
+
+  test("ignores class changes on elements already in the page", () =>
+    watching(async () => {
+      const plain = add(`<a data-tooltip="Hi">Plain</a>`);
+      const started = add(`<a class="tooltipped" data-tooltip="Hi">Started</a>`);
+      await settle();
+      const instance = Expressive.Tooltip.getInstance(started);
+      assert.ok(instance);
+      plain.classList.add("tooltipped");
+      started.classList.remove("tooltipped");
+      await settle();
+      assert.equal(Expressive.Tooltip.getInstance(plain), undefined);
+      assert.equal(Expressive.Tooltip.getInstance(started), instance);
+    }));
+
+  test("stop() ends watching and keeps the instances already started", () =>
+    watching(async (stop) => {
+      assert.equal(typeof stop, "function");
+      const started = add(`<a class="tooltipped" data-tooltip="Hi">Started</a>`);
+      await settle();
+      const instance = Expressive.Tooltip.getInstance(started);
+      assert.ok(instance);
+      stop();
+      const later = add(`<a class="tooltipped" data-tooltip="Hi">Later</a>`);
+      started.remove();
+      await settle();
+      assert.equal(Expressive.Tooltip.getInstance(later), undefined);
+      assert.equal(Expressive.Tooltip.getInstance(started), instance);
+      instance.destroy();
+    }));
+
+  test("without watch, AutoInit creates no observer and returns a function that does nothing", async () => {
+    const Original = globalThis.MutationObserver;
+    let created = 0;
+    globalThis.MutationObserver = class extends Original {
+      constructor(callback) {
+        super(callback);
+        created++;
+      }
+    };
+    try {
+      const stops = [Expressive.AutoInit(), Expressive.AutoInit(document.body, {}), Expressive.AutoInit(document.body, {}, { watch: false })];
+      assert.equal(created, 0);
+      for (const stop of stops) {
+        assert.equal(typeof stop, "function");
+        stop();
+      }
+    } finally {
+      globalThis.MutationObserver = Original;
+    }
+    const later = add(`<a class="tooltipped" data-tooltip="Hi">Later</a>`);
+    await settle();
+    assert.equal(Expressive.Tooltip.getInstance(later), undefined);
+  });
+});
