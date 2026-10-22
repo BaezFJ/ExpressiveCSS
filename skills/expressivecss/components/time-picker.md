@@ -9,7 +9,7 @@ Component ID: `time-picker`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `efeb064288ea521ac367b578784ae758b71e2e410297e0b96469c5d72e8e1a39`
+Contract SHA-256: `809037285a2b798abee44e407313bd52c7c50a26c2c4435c71aaebcf5201f392`
 
 #### Selection and adaptation
 
@@ -67,6 +67,8 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 | `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, Minutes and Seconds. |
 | `twelveHour` | Boolean | `true`, or the language's | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. With a `lang` on or around the input, defaults to the clock that language uses. |
 | `showSeconds` | Boolean | `false` | Add a seconds field after the minutes and write `HH:MM:SS`. The dial still sets hours and minutes only. |
+| `minTime` | String | `null` | The earliest time a person can choose, as 24-hour `HH:MM` or `HH:MM:SS`. Without `showSeconds` it rounds up to a whole minute. |
+| `maxTime` | String | `null` | The latest time a person can choose, as 24-hour `HH:MM` or `HH:MM:SS`. Without `showSeconds` it rounds down to a whole minute. |
 | `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
 | `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
@@ -85,7 +87,7 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 
 #### Also documented
 
-The Time Picker section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Display, Internationalization, 12-hour and 24-hour, Seconds, Properties.
+The Time Picker section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Display, Internationalization, 12-hour and 24-hour, Seconds, Time range, Properties.
 
 #### Rules
 
