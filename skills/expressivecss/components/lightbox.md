@@ -9,7 +9,7 @@ Component ID: `lightbox`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `32c071dd9f56b9a498b6931b7df1660db5baec8ded23f89a789820c1c8d9b3cf`
+Contract SHA-256: `f7181ced82cd28cb345583511d50d6719a690d455d3da9afa9d61a5ac87f018e`
 
 #### Selection and adaptation
 
@@ -35,7 +35,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Lightbox supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. Shared ancestor overflow remains visible until the last open Lightbox releases it. This does not supply a modal-gallery focus contract.
+Lightbox supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. The open image, its overlay and its caption are manual popovers in the browser's top layer, so a clipping or transformed ancestor does not cut the image off, and Lightbox leaves its ancestors' styles alone. Tab still closes it rather than being trapped: this does not supply a modal-gallery focus contract.
 
 Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
 

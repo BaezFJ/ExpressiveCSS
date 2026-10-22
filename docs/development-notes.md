@@ -891,6 +891,13 @@ centred with `translateX(-50%)`, gets the measured placement, which
 re-places on scroll. Anchored tooltips appended to the body have the same
 Firefox offset and no such fallback yet.
 
+Lightbox shows its overlay, image and caption as manual popovers, in that
+order, so each stacks above the one before. The image gets `popover` only
+while open, because the UA hides a closed `[popover]`, which would hide the
+thumbnail. In the top layer it is absolutely positioned in the document, so
+it scrolls with the page while it zooms back to its placeholder. It is not a
+modal `<dialog>`: Tab closes it rather than being trapped.
+
 Filled enhanced selects always float their associated label. A real label row
 lets translations wrap and text grow without colliding with the value. Keep
 leading-icon padding on that row and paint only the label/control, not supporting

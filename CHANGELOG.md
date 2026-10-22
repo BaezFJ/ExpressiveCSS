@@ -895,6 +895,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   tests that run Menu in jsdom need `showPopover` and `hidePopover` stubs,
   and CSS or script that read an open menu's inline `display: block`
   should use `menu[id]:popover-open` or the instance's `isOpen`.
+- An open Lightbox shows its overlay, image and caption as manual popovers
+  in the browser's top layer. The image still zooms from its thumbnail
+  and back, and Tab, Escape, a click and scrolling still close it; focus is
+  not trapped. Lightbox no longer sets `overflow: visible` on every
+  ancestor of the image while it is open, which let a scrolling container
+  lose its clipping. `--expressive-z-lightbox` no longer applies to it. The
+  image carries `popover="manual"` only while open. Migration: tests that
+  run Lightbox in jsdom need `showPopover` and `hidePopover` stubs.
 - The `.mx-*`, `.my-*`, `.px-*` and `.py-*` helpers set `margin-inline`,
   `margin-block`, `padding-inline` and `padding-block`. Horizontal text
   renders as before. In a vertical writing mode, `.mx-*` and `.px-*` now

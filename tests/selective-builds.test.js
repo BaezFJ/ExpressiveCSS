@@ -220,7 +220,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the runtime audit: one AbortController per component, instance keys in Component and shared helpers: 89,842 gzip bytes (-3,167).
   // Reviewed the viewport clamp that replaced the body-box edge check: 89,645 gzip bytes (-197).
   // Reviewed menus opened as manual popovers in the top layer, without the clipping-ancestor walk: 89,279 gzip bytes (-366).
-  assert.ok(sizes(js).gzip <= 89279, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the lightbox shown as manual popovers instead of clearing ancestor overflow: 89,011 gzip bytes (-268).
+  assert.ok(sizes(js).gzip <= 89011, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -352,5 +353,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the text input selector as one :is() list at the same specificity: 84,821 gzip bytes (+1).
   // Reviewed row badges that restated the navigation badge transform and a left lost to inset-inline-start: 84,778 gzip bytes (-43).
   // Reviewed the open menu shown by :popover-open in place of an inline display: 84,789 gzip bytes (+11).
-  assert.ok(sizes(css).gzip <= 84789, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the lightbox resets for the UA popover box: 84,819 gzip bytes (+30).
+  assert.ok(sizes(css).gzip <= 84819, `CSS gzip: ${sizes(css).gzip}`);
 });

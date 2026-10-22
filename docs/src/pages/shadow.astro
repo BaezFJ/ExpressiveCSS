@@ -13,9 +13,9 @@ const layers = [
   ["app-bar", "997", "A pinned top app bar and a fixed navigation bar."],
   ["modal-rail", "998", "An expanded navigation rail over the page."],
   ["sheet", "1100", "A bottom or side sheet opened without showModal()."],
-  ["lightbox", "1200", "The lightbox overlay and its zoomed image."],
+  ["lightbox", "1200", "Nothing. An open lightbox is in the top layer."],
   ["tooltip", "2000", "Tooltips."],
-  ["menu", "9999", "Menus and the docked date and time pickers."],
+  ["menu", "9999", "The docked date and time pickers. Open menus are in the top layer."],
   ["snackbar", "10000", "Snackbars."],
   ["confetti", "10001", "The confetti overlay, in browsers without popovers."],
 ];
@@ -104,8 +104,8 @@ const layers = [
   <Section {...S.stacking}>
     <p>
       A shadow does not decide what sits on top. Surfaces that float over the page take their
-      <code>z-index</code> from these properties, listed lowest first. Dialogs, modal sheets and open
-      popovers sit in the browser's top layer, above all of them.
+      <code>z-index</code> from these properties, listed lowest first. Dialogs, modal sheets, open
+      menus, an open lightbox and open popovers sit in the browser's top layer, above all of them.
     </p>
     <table class="striped">
       <thead><tr><th>Property</th><th>Value</th><th>Used by</th></tr></thead>

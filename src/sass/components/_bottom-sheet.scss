@@ -68,7 +68,7 @@ dialog.bottom-sheet {
   @include glass(var(--md-comp-bottom-sheet-container-color));
 
   // Non-modal `show()` is not in the top layer — sit above page content
-  // and below the lightbox and snackbars (tokens/_stacking.scss).
+  // and below tooltips and snackbars (tokens/_stacking.scss).
   &:not(:modal) {
     z-index: var(--expressive-z-sheet);
   }

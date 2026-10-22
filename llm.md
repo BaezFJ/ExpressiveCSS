@@ -1665,7 +1665,7 @@ Each level is also a custom property, `--md-sys-elevation-level0` to `--md-sys-e
 
 #### Stacking order
 
-A shadow does not decide what sits on top. Surfaces that float over the page take their `z-index` from these properties, lowest first. Dialogs, modal sheets, open menus and open popovers are in the browser’s top layer, above all of them.
+A shadow does not decide what sits on top. Surfaces that float over the page take their `z-index` from these properties, lowest first. Dialogs, modal sheets, open menus, an open lightbox and open popovers are in the browser’s top layer, above all of them.
 
 | Property | Value | Used by |
 | --- | --- | --- |
@@ -1673,7 +1673,7 @@ A shadow does not decide what sits on top. Surfaces that float over the page tak
 | `--expressive-z-app-bar` | 997 | A pinned top app bar and a fixed navigation bar. |
 | `--expressive-z-modal-rail` | 998 | An expanded navigation rail over the page. |
 | `--expressive-z-sheet` | 1100 | A bottom or side sheet opened without `showModal()`. |
-| `--expressive-z-lightbox` | 1200 | The lightbox overlay and its zoomed image. |
+| `--expressive-z-lightbox` | 1200 | Nothing. An open lightbox is in the top layer. |
 | `--expressive-z-tooltip` | 2000 | Tooltips. |
 | `--expressive-z-menu` | 9999 | The docked date and time pickers. Open menus are in the top layer. |
 | `--expressive-z-snackbar` | 10000 | Snackbars. |
@@ -5952,7 +5952,7 @@ Media components handle large objects such as images. For responsive images and 
 
 ### Lightbox
 
-Lightbox supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. Shared ancestor overflow remains visible until the last open Lightbox releases it. This does not supply a modal-gallery focus contract.
+Lightbox supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. The open image, its overlay and its caption are manual popovers in the browser's top layer, so a clipping or transformed ancestor does not cut the image off, and Lightbox leaves its ancestors' styles alone. Tab still closes it rather than being trapped: this does not supply a modal-gallery focus contract.
 
 Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
 
