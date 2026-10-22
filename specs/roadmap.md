@@ -13,13 +13,13 @@ Later phases build on these:
   - `data-watch` redraws a chart whenever its table changes.
   - A `.toggle` legend shows and hides series.
 - **Data tables:** `data-sort` sorting and a select-all box.
-- **Pickers:** Datepicker and Timepicker follow the page's `lang` and read typed dates in their own format. Timepicker's `showSeconds` adds a seconds field.
+- **Pickers:** Datepicker and Timepicker follow the page's `lang` and read typed dates in their own format. Timepicker's `showSeconds` adds a seconds field, and `minTime` and `maxTime` bound the times a person can choose.
 - **Chips:** submit their values under the input's `name` through the form-associated `expressive-chips-control` element, so the browser handles reset, validity and disabled state.
 - **Menus:** Home and End keys, `placement`, and anchored menus that open on whichever side fits. Checkbox items toggle and keep the menu open, and radio items check within a named group.
 - **Autocomplete:** `searchDelay` waits for typing to pause before calling `onSearch`, and a text change aborts the running search's signal. `allowCreate` ends the list in an `Add "text"` row, and a search with no match shows a "No results" row.
 - **Tooltips:** open on a long press on touch, or on a click with `openOnClick`. A tooltip opened just after another closes skips its `enterDelay`.
 - **Forms:** `.validate` fields set `aria-invalid` and are described by their error text.
-- **AutoInit:** starts every registered component in the page, with a `no-autoinit` opt-out. A `data-<name>-options` attribute supplies a component's options from markup.
+- **AutoInit:** starts every registered component in the page, with a `no-autoinit` opt-out. A `data-<name>-options` attribute supplies a component's options from markup. With `{ watch: true }`, AutoInit also starts components in markup added later and destroys those whose markup is removed.
 - **MCP server:**
   - Lists and searches the catalogue.
   - Returns complete rules and the documented Options and Methods within response limits.
@@ -97,9 +97,7 @@ Completed 2026-10-21. See [spec](2026/10/21/timepicker-seconds/).
 
 ### Phase 17: timepicker time range
 
-Depends on phase 16. `minTime` and `maxTime` bound the times a person can choose. Times outside the range are disabled on the dial and refused when typed.
-
-Completion check: a test with a 09:00 to 17:30 range can't select 08:00 or 18:00 by dial, field or typing, and accepts 17:30.
+Completed 2026-10-21. See [spec](2026/10/21/timepicker-time-range/).
 
 ### Phase 18: tooltip shared delay
 
@@ -115,11 +113,7 @@ Completed 2026-10-21. See [spec](2026/10/21/autoinit-data-options/).
 
 ### Phase 21: AutoInit for markup added later
 
-Depends on phase 20. An opt-in mode watches the page and starts components in markup added after load. It also destroys components whose elements are removed.
-
-Completion check: a browser test adds a menu trigger to the page and opens it without calling `init`, then removes it and finds its instance destroyed.
-
-Open for spec: how the mode is turned on, and how it treats shadow roots.
+Completed 2026-10-21. See [spec](2026/10/21/autoinit-watch/).
 
 ## Milestone: deferred polish
 
