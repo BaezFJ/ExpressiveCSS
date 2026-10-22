@@ -1,4 +1,3 @@
-import { Utils } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 export interface CarouselI18nOptions {
@@ -101,7 +100,6 @@ export class Carousel extends Component<CarouselOptions> {
   private _vertical: boolean = false;
   private _resizeObserver: ResizeObserver | null = null;
   private _resizeTimeout: ReturnType<typeof setTimeout> = null;
-  private _usesWindowResize: boolean = false;
   private _dragPointerId: number | null = null;
   private _dragStartX: number = 0;
   private _dragStartY: number = 0;
@@ -133,12 +131,6 @@ export class Carousel extends Component<CarouselOptions> {
   private get _scroller(): HTMLElement {
     return this._trackEl ?? this.el;
   }
-
-  private static _live = new Set<Carousel>();
-  private static _resizeListening = false;
-  private static _onResize = Utils.throttle(() => {
-    Carousel._live.forEach((c) => c._handleResize());
-  }, 200);
 
   constructor(el: HTMLElement, options: Partial<CarouselOptions>) {
     super(el, options);
@@ -307,16 +299,8 @@ export class Carousel extends Component<CarouselOptions> {
     // Full-screen needs a window signal when orientation changes without
     // changing the container width. ResizeObserver handles every other track,
     // including pane resizes.
-    this._usesWindowResize =
-      !this._resizeObserver || this.el.classList.contains('full-screen');
-    if (this._usesWindowResize) {
-      Carousel._live.add(this);
-      if (!Carousel._resizeListening) {
-        window.addEventListener('resize', Carousel._onResize, {
-          passive: true
-        });
-        Carousel._resizeListening = true;
-      }
+    if (!this._resizeObserver || this.el.classList.contains('full-screen')) {
+      window.addEventListener('resize', this._handleThrottledResize, { passive: true });
     }
 
     this._scroller.addEventListener('scroll', this._handleTrackScroll, {
@@ -350,13 +334,7 @@ export class Carousel extends Component<CarouselOptions> {
 
     this._resizeObserver?.disconnect();
     this._resizeObserver = null;
-    if (this._usesWindowResize) {
-      Carousel._live.delete(this);
-      if (Carousel._live.size === 0 && Carousel._resizeListening) {
-        window.removeEventListener('resize', Carousel._onResize);
-        Carousel._resizeListening = false;
-      }
-    }
+    window.removeEventListener('resize', this._handleThrottledResize);
   }
 
   private _teardown() {

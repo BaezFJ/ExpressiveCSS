@@ -267,50 +267,6 @@ export class Utils {
   }
 
   /**
-   * Trailing-edge throttle: run `func` now, then at most once per `wait` ms
-   * with the most recent arguments.
-   *
-   * This used to carry its underscore ancestor's whole configuration - leading
-   * and trailing switches, a result passthrough - and both call sites are
-   * resize handlers passing nothing but a function and a delay.
-   *
-   * Assign the return value once. `x = Utils.throttle(fn, 200)` is right;
-   * wrapping it in an arrow builds a fresh closure per event and never calls
-   * it, which is how resize handling was dead in three components.
-   */
-  static throttle(func: (...args: unknown[]) => void, wait: number) {
-    let timeout: ReturnType<typeof setTimeout> = null;
-    let lastArgs: unknown[] = null;
-    let previous = -Infinity;
-
-    return (...args: unknown[]) => {
-      // performance.now() is monotonic; Date.now() follows the system clock
-      // and a backward jump would hold the trailing call for as long as it jumped.
-      const now = performance.now();
-      const remaining = wait - (now - previous);
-      if (remaining <= 0) {
-        clearTimeout(timeout);
-        timeout = null;
-        previous = now;
-        lastArgs = null;
-        func(...args);
-      } else if (!timeout) {
-        // The trailing call replays the most recent arguments; without this it
-        // used to fire with none at all.
-        lastArgs = args;
-        timeout = setTimeout(() => {
-          previous = performance.now();
-          timeout = null;
-          func(...(lastArgs ?? []));
-          lastArgs = null;
-        }, remaining);
-      } else {
-        lastArgs = args;
-      }
-    };
-  }
-
-  /**
    * Renders confirm/close buttons with callback function
    */
   static createConfirmationContainer(

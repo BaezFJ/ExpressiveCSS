@@ -601,7 +601,7 @@ The base constructor destroys any pre-existing instance found via `getInstance`,
 
 **Adding a component** touches: the new `src/ts/components/<name>.ts`, one export line in `components/index.ts`, one line in `components/registry.ts` if it auto-inits, and a `src/sass/components/_<name>.scss` partial `@forward`ed from `components/_index.scss`.
 
-Supporting files: `core/utils.ts` (shared `Utils` statics — `_setAbsolutePosition`, `_repositionWithinScreen`, `throttle`, `guid`, `onDocumentReady`, global key/focus state); `core/bounding.ts` and `core/edges.ts` are type-only; `plugins/dockedDisplayPlugin.ts` wraps an element in a `.display-docked` container and positions/animates it (used for picker-style popovers). Dialogs are native `<dialog>` plus `behaviors/dialogs.ts` for light-dismiss — there is no `Modal` plugin.
+Supporting files: `core/utils.ts` (shared `Utils` statics — `_setAbsolutePosition`, `_repositionWithinScreen`, `guid`, `onDocumentReady`, global key/focus state); `core/bounding.ts` and `core/edges.ts` are type-only; `plugins/dockedDisplayPlugin.ts` wraps an element in a `.display-docked` container and positions/animates it (used for picker-style popovers). Dialogs are native `<dialog>` plus `behaviors/dialogs.ts` for light-dismiss — there is no `Modal` plugin.
 
 ### Cross-cutting invariants
 
@@ -611,7 +611,7 @@ These were all learned from bugs in the vendored source:
 - **`Utils.onDocumentReady(fn)`, never a bare `DOMContentLoaded` listener** — the event has already fired when the bundle is loaded async or by dynamic import, and the listener then never runs. All eight `Init()` entry points (`Forms`, `Chips`, `Slider`, `Cards`, `ExpandingCard`, `Dialogs`, `BottomSheets`, `SideSheets`) go through it.
 - **Never build markup out of values the page author controls.** `optgroup` labels, option text, ids and i18n strings reach the DOM as nodes (`textContent`, `setAttribute`, `getElementById`) — not via `innerHTML` or an interpolated `#${…}` selector, which also throws on any id that is not a bare identifier. `Datepicker.draw()` is the exception: it still assembles an HTML string, so every i18n value it splices in goes through `Datepicker._escape()`.
 - **`Datepicker.draw()` is batchable.** One input click legitimately reaches it three times (through `setDate`, directly for the unparseable-input case, and through the trailing `gotoDate`), and each draw destroys and rebuilds two `FormSelect`s. `_batchDraws()` collapses them to one. It is deliberately synchronous — callers read `calendarEl` immediately after `init()`.
-- **`Utils.throttle` returns the throttled function; assign it once.** `x = Utils.throttle(fn, 200)` is right; `x = () => Utils.throttle(fn, 200)` builds a fresh closure per event and never calls it, which is how resize handling was dead in three components.
+- **Resize handlers are stable per-instance functions.** Carousel's `_handleThrottledResize` measures at once, then once more 200ms later, and ignores events in between. Register that field itself; wrapping a throttle in an arrow per event (`x = () => throttle(fn, 200)`) builds a fresh closure each time and never calls it, which is how resize handling was dead in three components.
 - Scroll and touch handlers that never call `preventDefault()` are registered `{ passive: true }`, and anything running per pointer-move or per scroll reads layout before it writes style.
 
 ## docs/
