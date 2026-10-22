@@ -419,6 +419,7 @@ document.addEventListener("DOMContentLoaded", () => {
   Object.entries({
     "timepicker-24": { twelveHour: false },
     "timepicker-seconds": { showSeconds: true },
+    "timepicker-range": { minTime: "09:00", maxTime: "17:30" },
   }).forEach(([id, options]) => {
     const el = document.getElementById(id);
     if (el) Expressive.Timepicker.init(el, options);

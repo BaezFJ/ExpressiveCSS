@@ -7304,6 +7304,8 @@ Expressive.Timepicker.init(elem, {
 | `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, Minutes and Seconds. |
 | `twelveHour` | Boolean | `true`, or the language's | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. With a `lang` on or around the input, defaults to the clock that language uses. |
 | `showSeconds` | Boolean | `false` | Add a seconds field after the minutes and write `HH:MM:SS`. The dial still sets hours and minutes only. |
+| `minTime` | String | `null` | The earliest time a person can choose, as 24-hour `HH:MM` or `HH:MM:SS`. Without `showSeconds` it rounds up to a whole minute. |
+| `maxTime` | String | `null` | The latest time a person can choose, as 24-hour `HH:MM` or `HH:MM:SS`. Without `showSeconds` it rounds down to a whole minute. |
 | `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
 | `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
@@ -7348,6 +7350,27 @@ A `type="time"` input gets 24-hour `HH:MM:SS`. Give it `step="1"` so the browser
 
 ```html
 <input type="time" step="1" class="time-picker" id="alarm">
+```
+
+### Time range
+
+`minTime` and `maxTime` bound the times a person can choose, as 24-hour `'HH:MM'` or `'HH:MM:SS'` strings. Either one alone bounds one end of the day. The range can't cross midnight: a `minTime` after `maxTime` logs a warning, and the picker ignores both. Without `showSeconds` the picker writes whole minutes, so `minTime` rounds up and `maxTime` rounds down to a minute.
+
+An hour stays available while any minute of it is in range, so with 09:00 to 17:30 the hour 17 is available and its minutes stop at 30. Dial ticks outside the range get `is-disabled`, are dimmed, and the hand won't stop on them. A release on one changes nothing and fires no `select`. In the fields, Up and Down stop at the last allowed value instead of wrapping, a typed time outside the range is refused, and each field's `aria-valuemin` and `aria-valuemax` follow the allowed values. On a 12-hour clock, the AM or PM button is `disabled` when no time in that half of the day is allowed.
+
+A value outside the range, in the input or `defaultTime`, opens at the nearest bound. So does a minute that an hour change leaves outside it: choosing 17 at 16:45 gives 17:30.
+
+```js
+Expressive.Timepicker.init(document.getElementById('timepicker-range'), {
+  minTime: '09:00',
+  maxTime: '17:30'
+});
+```
+
+The picker doesn't check a value typed straight into the input. On a `type="time"` input, also set `min` and `max`, so the browser flags a value outside the range.
+
+```html
+<input type="time" min="09:00" max="17:30" class="time-picker" id="appointment">
 ```
 
 ### Methods

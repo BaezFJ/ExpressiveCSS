@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Timepicker's `minTime` and `maxTime` options bound the times a person
+  can choose, as 24-hour `HH:MM` or `HH:MM:SS`. Dial ticks outside the
+  range are dimmed and refused, the fields stop stepping at the bounds and
+  refuse typed times outside them, and a value outside the range opens at
+  the nearest bound. On a 12-hour clock, a period with no allowed time has
+  its AM or PM button disabled. Ranges can't cross midnight. Without the
+  options every time stays open.
 - Timepicker's `showSeconds` option adds a seconds field after the
   minutes. It is a spin button named by the new `i18n.seconds`, it steps
   and takes typed values like the minute field, and the picker writes

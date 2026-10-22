@@ -213,7 +213,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Tooltip openOnClick, which toggles on click and closes on a click elsewhere: 91,199 gzip bytes (+257).
   // Reviewed chart update() transitions from the old values to the new: 91,795 gzip bytes (+596).
   // Reviewed charts that watch their table and redraw once per batch of edits: 91,981 gzip bytes (+186).
-  assert.ok(sizes(js).gzip <= 91981, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Timepicker minTime and maxTime across the fields, AM/PM and dial: 92,729 gzip bytes (+748).
+  assert.ok(sizes(js).gzip <= 92729, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -334,5 +335,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed menu group rows styled as direct rows, in menus and submenus: 84,513 gzip bytes (+447).
   // Reviewed the Autocomplete no-results row: 84,585 gzip bytes (+72).
   // Reviewed the Timepicker seconds field and the narrower three-field row: 84,659 gzip bytes (+74).
-  assert.ok(sizes(css).gzip <= 84659, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed disabled Timepicker ticks outside minTime and maxTime: 84,671 gzip bytes (+14 from 84,657 at the base).
+  assert.ok(sizes(css).gzip <= 84671, `CSS gzip: ${sizes(css).gzip}`);
 });
