@@ -4,7 +4,7 @@ Date: 2026-10-21
 Roadmap phase: Phase 21, AutoInit for markup added later
 Branch: `feature/2026-10-21-autoinit-watch`
 Base: `origin/master` at `64ea7c64b1fd796a12151a302e62fd0f5aea8198` (#390)
-Status: specified, not implemented
+Status: implemented and locally verified 2026-10-21; CI and review pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules) and its Initialization scope ("Markup can start and configure components without page script"), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 21](../../../../roadmap.md#phase-21-autoinit-for-markup-added-later). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -46,7 +46,7 @@ The interview did not cover these. They follow from the confirmed decisions and 
 
 - `AutoInit` returns the stop function whether or not `watch` is set. Without `watch` it is a no-op. One return type avoids overloads, and the change from `void` breaks no caller.
 - The observer watches `childList` with `subtree: true` on `context`, and handles each batch of records in one callback.
-- A node counts as moved when it is connected again by the time the callback runs. Removal destroys instances only in removed nodes that are no longer connected. Addition skips added nodes that are no longer connected. An element removed in one batch and added back in a later one is destroyed and then started again.
+- A node counts as moved when it is connected again by the time the callback runs. Removal destroys instances only in removed nodes that are no longer connected. Addition skips added nodes that are no longer inside `context`, which also covers a watched element that is itself detached. An element removed in one batch and added back in a later one is destroyed and then started again.
 - Added nodes are started in registry order, as the initial scan does, so Menubar still runs after Menu on markup added in one batch. Each added element is checked itself as well as its descendants.
 - Removed elements are destroyed in reverse registry order, so a Menubar is torn down before the Menus of its triggers.
 - Constructor errors are not caught, matching the Phase 20 decision. A throw in the callback stops the rest of that batch, and the observer stays connected for later batches. The docs record this limit.
@@ -59,7 +59,7 @@ The interview did not cover these. They follow from the confirmed decisions and 
 | --- | --- |
 | R1 | `AutoInit(context, options, { watch: true })` runs the initial scan as today, then watches `context` for added and removed nodes. Without the third argument, or with `watch` false, `AutoInit` creates no observer and behaves as it does at the base commit. |
 | R2 | `AutoInit` returns a function. Calling it stops watching and leaves every existing instance in place. Without `watch` the function does nothing. |
-| R3 | When nodes are added inside a watched `context`, each added element still connected when the callback runs, and each of its descendants, is started in registry order with the same selector, `.no-autoinit` opt-out, `filter`, markup options (`data-<name>-options`) and `AutoInit` options as the initial scan. The added element itself is checked, not only its descendants. |
+| R3 | When nodes are added inside a watched `context`, each added element still inside `context` when the callback runs, and each of its descendants, is started in registry order with the same selector, `.no-autoinit` opt-out, `filter`, markup options (`data-<name>-options`) and `AutoInit` options as the initial scan. The added element itself is checked, not only its descendants. |
 | R4 | An added element that already has an instance of a component, from a direct `init()`, an earlier scan or the component that inserted it, is not started again for that component. Its instance and options stay as they were. |
 | R5 | When nodes are removed and are no longer connected when the callback runs, each element in the removed subtree that matches a registry selector, lacks `.no-autoinit`, passes the entry's `filter` and still has an instance of that component has that instance destroyed. Elements that are connected again by then keep their instances. Elements with `.no-autoinit` are never destroyed by the watcher. |
 | R6 | The watcher observes child lists only. Changes to classes or other attributes on connected elements neither start nor destroy components. |
@@ -87,6 +87,11 @@ The interview did not cover these. They follow from the confirmed decisions and 
 - Roadmap edits, including marking Phase 17 completed. That belongs in a separate docs change.
 - Release and publication.
 
+### Found during implementation
+
+- The guard in R4 also stops a loop. FormSelect wraps its `<select>` in a `.field`, which moves the select and reports it as added. With the guard removed for a mutation check, the watcher started FormSelect again on every move and the browser sweep never finished. The jsdom and browser checks pass with the guard in place.
+- `AutoInit`'s third parameter is an inline `{ watch?: boolean }` type. No exported type was needed, so `src/ts/modular.ts` is unchanged.
+
 ## Open decisions
 
-None. The proposals above stand unless review changes them.
+None. Implementation accepted the proposals above as written; review can still change them.
