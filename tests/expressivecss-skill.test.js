@@ -200,7 +200,7 @@ describe('the ExpressiveCSS agent skill', () => {
   test('keeps generated component guides synchronized with their sources', () => {
     assert.equal(
       packageJson.scripts['build:skill'],
-      'node scripts/gen-expressivecss-skill.mjs && node mcp/expressivecss/scripts/sync-guides.mjs',
+      'node scripts/gen-expressivecss-skill.mjs',
     );
     const result = spawnSync(process.execPath, ['scripts/gen-expressivecss-skill.mjs', '--check'], {
       cwd: new URL('..', import.meta.url),
@@ -208,14 +208,8 @@ describe('the ExpressiveCSS agent skill', () => {
     });
     assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
     assert.match(result.stdout, /84 ExpressiveCSS component guides are current\./);
-
-    const mcpResult = spawnSync(
-      process.execPath,
-      ['mcp/expressivecss/scripts/sync-guides.mjs', '--check'],
-      { cwd: new URL('..', import.meta.url), encoding: 'utf8' },
-    );
-    assert.equal(mcpResult.status, 0, `${mcpResult.stdout}${mcpResult.stderr}`);
-    assert.match(mcpResult.stdout, /Verified 84 bundled guides and normative semantics\./);
+    const bundled = JSON.parse(readFileSync(new URL('../mcp/expressivecss/component-guides.json', import.meta.url), 'utf8'));
+    assert.equal(bundled.guides.length, 84);
   });
 
   test('assigns authority by question and version', () => {

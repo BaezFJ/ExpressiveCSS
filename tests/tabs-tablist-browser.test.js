@@ -107,6 +107,37 @@ for (const [name, engine] of engines) {
   });
 }
 
+for (const [name, engine] of engines) {
+  // Below 840px the tabs share the strip equally; above it they take their
+  // labels' widths. A fixed-width strip keeps its size across that switch,
+  // so only the tabs' own size changes tell the indicator to move.
+  test(`${name}: the indicator follows its tab across the 840px breakpoint in a fixed-width strip`, { timeout: 30000 }, async (t) => {
+    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        <nav class="tabs" aria-label="Destinations" style="width: 600px">
+          <a href="#p0">One</a><a href="#p1">Two</a><a class="active" href="#p2">Three</a></nav>${panels(3)}
+        <script>${js}</script></body></html>`);
+      await page.evaluate(() => Expressive.Tabs.init(document.querySelector('.tabs')));
+      const aligned = () => {
+        const tab = document.querySelector('.tabs > a.active').getBoundingClientRect();
+        const bar = document.querySelector('.tabs > .indicator').getBoundingClientRect();
+        return Math.abs(tab.left - bar.left) < 1.5 && Math.abs(tab.right - bar.right) < 1.5;
+      };
+      await page.waitForFunction(aligned, null, { timeout: 2000 }).catch(() => assert.fail('aligned at 800px'));
+      const before = await page.locator('.tabs > a.active').evaluate((a) => a.getBoundingClientRect().width);
+      await page.setViewportSize({ width: 1000, height: 600 });
+      const after = await page.locator('.tabs > a.active').evaluate((a) => a.getBoundingClientRect().width);
+      assert.notEqual(Math.round(after), Math.round(before), 'the breakpoint changed the tab width');
+      await page.waitForFunction(aligned, null, { timeout: 2000 }).catch(() => assert.fail('aligned at 1000px'));
+    } finally {
+      await browser.close();
+    }
+  });
+}
+
 /** Waits until focus is on `selector`. */
 async function expect(page, selector, message = `focus on ${selector}`) {
   await page.waitForFunction((s) => document.activeElement?.matches(s), selector, { timeout: 2000 })

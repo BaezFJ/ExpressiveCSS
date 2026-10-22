@@ -2,18 +2,19 @@
 // Operator evidence only. Candidate verification claims never establish acceptance.
 import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
+import { parseArgs, promisify } from 'node:util';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { snapshotProject } from './expressivecss-codex-adapter.mjs';
 import { assertSameProvenance, validateRetainedResults } from './expressivecss-eval-provenance.mjs';
-import { readBoundedRegularFile } from './eval-expressivecss-skill.mjs';
+import { readBoundedRegularFile } from './lib/bounded-file.mjs';
+import { saveJson } from './lib/save-json.mjs';
 import { statistics } from './benchmark-expressivecss-skill.mjs';
 
 const sha256 = value => createHash('sha256').update(value).digest('hex');
-const save = (filename, value) => writeFile(filename, JSON.stringify(value, null, 2) + '\n', { flag: 'wx' });
+const save = (filename, value) => saveJson(filename, value, 'wx');
 const readJson = async filename => JSON.parse(await readBoundedRegularFile(filename, 16 * 1024 * 1024, 'operator cost evidence'));
 const runId = row => `eval-${row.eval_name}-${row.configuration}-run-${row.run_number}`;
 const attemptHash = row => sha256(JSON.stringify(row));
@@ -117,7 +118,7 @@ export async function exportAssistanceEvidence({ source, output, reviews = null 
 }
 
 if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
-  const args = Object.fromEntries(process.argv.slice(2).map(arg => { const index = arg.indexOf('='); if (index < 0) throw new Error('Use --option=value'); return [arg.slice(2, index), arg.slice(index + 1)]; }));
+  const { values: args } = parseArgs({ options: { source: { type: 'string' }, output: { type: 'string' }, reviews: { type: 'string' } } });
   if (!args.source || !args.output) throw new Error('--source and --output are required; --reviews is optional');
   const report = await exportAssistanceEvidence(args);
   console.log(JSON.stringify({ output: args.output, status: report.status, attempts: report.attempts.length }));

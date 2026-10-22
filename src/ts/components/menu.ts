@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, InitElement, Openable } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 // CSS anchor positioning, where the browser has it. A menu opened from its
 // trigger is anchored there and flips at the viewport edges in CSS; context
@@ -168,7 +168,7 @@ const _defaults: MenuOptions = {
 
 const SPACE = ' ';
 
-export class Menu extends Component<MenuOptions> implements Openable {
+export class Menu extends Component<MenuOptions> {
   static _menus: Menu[] = [];
   /** ID of the menu element. */
   id: string;
@@ -202,18 +202,12 @@ export class Menu extends Component<MenuOptions> implements Openable {
   private _contextReturn: HTMLElement | null = null;
 
   constructor(el: HTMLElement, options: Partial<MenuOptions>) {
-    super(el, options, Menu);
+    super(el, { contextMenu: el.hasAttribute('data-context-menu'), ...options });
     this.el['Expressive_Menu'] = this;
 
     Menu._menus.push(this);
     this.id = Utils.getIdFromTrigger(el);
     this.menuEl = Utils.getElementById(el, this.id);
-
-    this.options = {
-      ...Menu.defaults,
-      contextMenu: el.hasAttribute('data-context-menu'),
-      ...options
-    };
 
     this.isOpen = false;
     this.isScrollable = false;
@@ -246,30 +240,6 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
   static get defaults(): MenuOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of Menu.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLElement, options?: Partial<MenuOptions>): Menu;
-  /**
-   * Initializes instances of Menu.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(els: InitElements<InitElement>, options?: Partial<MenuOptions>): Menu[];
-  /**
-   * Initializes instances of Menu.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<MenuOptions> = {}
-  ): Menu | Menu[] {
-    return super.init(els, options, Menu);
   }
 
   static getInstance(el: HTMLElement): Menu {
@@ -467,9 +437,9 @@ export class Menu extends Component<MenuOptions> implements Openable {
     // M3: Space, Enter, Arrow Down, and Arrow Up open a closed menu.
     const opensMenu =
       e.key === SPACE ||
-      e.key === Utils.keys.ENTER ||
-      e.key === Utils.keys.ARROW_DOWN ||
-      e.key === Utils.keys.ARROW_UP;
+      e.key === 'Enter' ||
+      e.key === 'ArrowDown' ||
+      e.key === 'ArrowUp';
     if (!opensMenu) return;
     if (!this.isOpen) {
       e.preventDefault();
@@ -561,7 +531,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
   // Enter toggles a checkbox item and then closes, as it does on any item.
   private _closeAfterEnter(e: KeyboardEvent, row: Element | undefined) {
-    if (e.key === Utils.keys.ENTER && this.options.closeOnClick && this._isCheckboxRow(row)) this.close();
+    if (e.key === 'Enter' && this.options.closeOnClick && this._isCheckboxRow(row)) this.close();
   }
 
   private _setupAccessibility() {
@@ -675,13 +645,13 @@ export class Menu extends Component<MenuOptions> implements Openable {
     if (!this.isOpen || e.ctrlKey || e.metaKey || e.altKey || Utils.isComposing(e)) return;
     const list = this._containingSubmenu(e) ?? this.menuEl;
     const rtl = getComputedStyle(list).direction === 'rtl';
-    const openKey = rtl ? Utils.keys.ARROW_LEFT : Utils.keys.ARROW_RIGHT;
-    const backKey = rtl ? Utils.keys.ARROW_RIGHT : Utils.keys.ARROW_LEFT;
-    if ([openKey, backKey, Utils.keys.ARROW_UP, Utils.keys.ARROW_DOWN, Utils.keys.ESC, Utils.keys.TAB].includes(e.key)) {
+    const openKey = rtl ? 'ArrowLeft' : 'ArrowRight';
+    const backKey = rtl ? 'ArrowRight' : 'ArrowLeft';
+    if ([openKey, backKey, 'ArrowUp', 'ArrowDown', 'Escape', 'Tab'].includes(e.key)) {
       clearTimeout(this.filterTimeout);
       this._resetFilterQuery();
     }
-    if (e.key === Utils.keys.TAB) {
+    if (e.key === 'Tab') {
       e.preventDefault();
       this.close();
     } else if (e.key === openKey) {
@@ -710,7 +680,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       e.preventDefault();
     }
     // SPACE OR ENTER selects the focused item.
-    else if (e.key === Utils.keys.ENTER || e.key === SPACE) {
+    else if (e.key === 'Enter' || e.key === SPACE) {
       const li = this._focusedRow(e);
       e.preventDefault();
       if (li?.matches('.disabled, [aria-disabled="true"]')) return;
@@ -730,7 +700,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       this._closeAfterEnter(e, focusedElement);
     }
     // Close menu on ESC
-    else if (e.key === Utils.keys.ESC) {
+    else if (e.key === 'Escape') {
       e.preventDefault();
       const openSub = this._containingSubmenu(e)?.parentElement ??
         Array.from(this.menuEl.querySelectorAll('li.open')).reverse()[0];

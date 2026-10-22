@@ -200,7 +200,7 @@ describe('ExpressiveCSS component decisions', () => {
     for (const component of data.components) {
       assert.ok(generated.includes(`| [${component.title}](${component.guide}) |`));
     }
-    assert.equal(bundled.generatedBy, 'mcp/expressivecss/scripts/sync-guides.mjs');
+    assert.equal(bundled.generatedBy, 'scripts/gen-expressivecss-skill.mjs');
     const { generatedBy, ...bundledCatalogue } = bundled;
     assert.ok(generatedBy);
     assert.deepEqual(bundledCatalogue, data);

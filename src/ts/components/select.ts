@@ -1,6 +1,6 @@
 import { Utils } from '../core/utils';
 import { Menu, MenuOptions } from './menu';
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 export interface FormSelectOptions extends BaseOptions {
   /**
@@ -53,14 +53,9 @@ export class FormSelect extends Component<FormSelectOptions> {
   nativeTabIndex: number;
 
   constructor(el: HTMLSelectElement, options: FormSelectOptions) {
-    super(el, options, FormSelect);
+    super(el, options);
     if (this.el.classList.contains('browser-default')) return;
     this.el['Expressive_FormSelect'] = this;
-
-    this.options = {
-      ...FormSelect.defaults,
-      ...options
-    };
 
     this.isMultiple = this.el.multiple;
     this.nativeTabIndex = this.el.tabIndex;
@@ -73,33 +68,6 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   static get defaults(): FormSelectOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of FormSelect.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLSelectElement, options?: Partial<FormSelectOptions>): FormSelect;
-  /**
-   * Initializes instances of FormSelect.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: InitElements<HTMLSelectElement | InitElement>,
-    options?: Partial<FormSelectOptions>
-  ): FormSelect[];
-  /**
-   * Initializes instances of FormSelect.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLSelectElement | InitElements<HTMLSelectElement | InitElement>,
-    options: Partial<FormSelectOptions> = {}
-  ): FormSelect | FormSelect[] {
-    return super.init(els, options, FormSelect);
   }
 
   static getInstance(el: HTMLElement): FormSelect {

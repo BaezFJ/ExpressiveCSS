@@ -1,10 +1,18 @@
 @charset "UTF-8";
+
+// The only place cascade order is decided; expressive.scss forwards this file
+// with its defaults. See README.md for why each layer sits where it does.
+// abstracts emits no CSS and is forwarded for the Sass API. @forward cannot
+// appear inside @layer, so each layer is loaded with meta.load-css().
 @use "sass:meta";
 @forward "abstracts";
 
 $components: null !default;
 $utilities: null !default;
 
+// @font-face must stay unlayered. A face declared inside @layer base can
+// lose to any unlayered consumer face, or be ignored by engines that still
+// treat layered faces as experimental.
 @include meta.load-css("base/fonts");
 
 @layer tokens, base, components, utilities;

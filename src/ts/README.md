@@ -36,12 +36,10 @@ const _defaults = { /* … */ };
 
 export class Thing extends Component<ThingOptions> {
   constructor(el: HTMLElement, options: Partial<ThingOptions>) {
-    super(el, options, Thing);
+    super(el, options);                                       // sets this.options
     this.el['Expressive_Thing'] = this;                       // instance lookup key
-    this.options = { ...Thing.defaults, ...options };
   }
   static get defaults() { return _defaults; }
-  static init(els, options = {}) { return super.init(els, options, Thing); }
   static getInstance(el: HTMLElement): Thing { return el['Expressive_Thing']; }
   destroy() { this.el['Expressive_Thing'] = undefined; /* remove handlers */ }
 }
@@ -49,7 +47,15 @@ export class Thing extends Component<ThingOptions> {
 
 `getInstance` and `destroy` throw in the base class — a subclass that omits
 them is broken, not defaulted. The base constructor destroys any existing
-instance first, so re-initializing an element is safe.
+instance first, so re-initializing an element is safe, then spreads `options`
+over `new.target.defaults`. Nested options (`i18n`) are the subclass's to
+deep-merge after `super()`; options read from markup go into the object passed
+to `super()`.
+
+`Thing.init(el | els, options)` is inherited. The base `init` is typed on
+`this`, so `Thing.init(el)` returns a `Thing`, a list returns `Thing[]`, and the
+element and options types come from Thing's constructor and `options`. Type the
+constructor's `el` as the widest element `init` should accept.
 
 The `el['Expressive_Thing']` stashing backs `Expressive.Thing.getInstance(el)`,
 and page code can read `el.Expressive_Thing` directly. The key was `M_Thing`

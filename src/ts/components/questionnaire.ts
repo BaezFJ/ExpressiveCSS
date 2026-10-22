@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 export interface QuestionnaireOptions extends BaseOptions {
   /**
@@ -144,15 +144,12 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
   private _summary: HTMLElement | null = null;
   private _reviewing = false;
 
-  constructor(el: HTMLFormElement, options: Partial<QuestionnaireOptions>) {
-    super(el, options, Questionnaire);
-    this.el['Expressive_Questionnaire'] = this;
+  // HTMLElement, not HTMLFormElement: init() takes the element type from
+  // here, and has always accepted any HTMLElement.
+  constructor(el: HTMLElement, options: Partial<QuestionnaireOptions>) {
     const progressLabel = el.dataset.progressLabel;
-    this.options = {
-      ...Questionnaire.defaults,
-      ...(progressLabel ? { progressLabel } : {}),
-      ...options
-    };
+    super(el, { ...(progressLabel ? { progressLabel } : {}), ...options });
+    this.el['Expressive_Questionnaire'] = this;
 
     this._progress = document.createElement('div');
     this._progress.className = 'questionnaire-progress';
@@ -196,33 +193,6 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
 
   static get defaults(): QuestionnaireOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of Questionnaire.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLElement, options?: Partial<QuestionnaireOptions>): Questionnaire;
-  /**
-   * Initializes instances of Questionnaire.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: InitElements<InitElement>,
-    options?: Partial<QuestionnaireOptions>
-  ): Questionnaire[];
-  /**
-   * Initializes instances of Questionnaire.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<QuestionnaireOptions> = {}
-  ): Questionnaire | Questionnaire[] {
-    return super.init(els, options, Questionnaire);
   }
 
   static getInstance(el: HTMLElement): Questionnaire {

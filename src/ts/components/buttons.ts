@@ -1,14 +1,10 @@
-import { Component, BaseOptions, InitElements, InitElement, Openable } from "../core/component";
-import { Utils } from '../core/utils';
+import { Component, BaseOptions } from "../core/component";
 
 export type FloatingActionButtonOptions = BaseOptions;
 
 const _defaults: FloatingActionButtonOptions = {};
 
-export class FloatingActionButton
-  extends Component<FloatingActionButtonOptions>
-  implements Openable
-{
+export class FloatingActionButton extends Component<FloatingActionButtonOptions> {
   isOpen: boolean;
   private _anchor: HTMLElement | null;
   private _list: HTMLElement | null;
@@ -17,9 +13,8 @@ export class FloatingActionButton
   private _anchorTabIndex: string | null | undefined;
 
   constructor(el: HTMLElement, options: Partial<FloatingActionButtonOptions>) {
-    super(el, options, FloatingActionButton);
+    super(el, options);
     this.el['Expressive_FloatingActionButton'] = this;
-    this.options = { ...FloatingActionButton.defaults, ...options };
     this.isOpen = false;
     this._anchor = this.el.querySelector(':scope > a, :scope > button');
     this._list = this.el.querySelector(':scope > ul, :scope > menu');
@@ -42,15 +37,6 @@ export class FloatingActionButton
 
   static get defaults() {
     return _defaults;
-  }
-
-  static init(el: HTMLElement, options?: Partial<FloatingActionButtonOptions>): FloatingActionButton;
-  static init(els: InitElements<InitElement>, options?: Partial<FloatingActionButtonOptions>): FloatingActionButton[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<FloatingActionButtonOptions> = {}
-  ): FloatingActionButton | FloatingActionButton[] {
-    return super.init(els, options, FloatingActionButton);
   }
 
   static getInstance(el: HTMLElement): FloatingActionButton {
@@ -100,14 +86,14 @@ export class FloatingActionButton
   };
 
   private _handleAnchorKeydown = (e: KeyboardEvent) => {
-    if (e.key === Utils.keys.ENTER || e.key === ' ') {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       this._toggle();
     }
   };
 
   private _handleDocumentKeydown = (e: KeyboardEvent) => {
-    if (e.key === Utils.keys.ESC && !e.defaultPrevented) this.close();
+    if (e.key === 'Escape' && !e.defaultPrevented) this.close();
   };
 
   private _handleDocumentClick = (e: MouseEvent) => {

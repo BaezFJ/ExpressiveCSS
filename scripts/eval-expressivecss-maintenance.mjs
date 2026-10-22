@@ -10,15 +10,12 @@ import { configuredDefaults, hashProject, runCodex, snapshotProject, validateVer
 import { assertSameProvenance, collectEvaluationProvenance } from './expressivecss-eval-provenance.mjs';
 import { startEvaluationBrowser, startFixtureServer, createRestrictedFixturePage } from './expressivecss-eval-browser.mjs';
 import { retainSourceArtifacts, statistics } from './benchmark-expressivecss-skill.mjs';
+import { saveJson as save } from './lib/save-json.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DEFINITION = 'tests/fixtures/expressivecss-skill-evals/maintenance.json';
 const SELF = 'scripts/eval-expressivecss-maintenance.mjs';
 const allowed = ['src/index.html', 'src/app.js'];
-const save = async (file, value) => {
-  await mkdir(path.dirname(file), { recursive: true });
-  await writeFile(file, JSON.stringify(value, null, 2) + '\n');
-};
 const check = (text, passed, evidence) => ({ text, passed: Boolean(passed), evidence: redactValue(String(evidence)) });
 
 // Only call with snapshots taken by the operator, never candidate-authored evidence.

@@ -40,7 +40,7 @@ The lockfile is authoritative for installed versions.
 
 ### Data ownership
 
-`semantics.json` owns markup rules. `llm.md` owns the framework API and markup reference. The docs catalogue and component decision data own their existing inventories and selection metadata. The skill generator creates component guides; `mcp/expressivecss/scripts/sync-guides.mjs` packages them with semantics, decisions, capabilities and contract metadata.
+`semantics.json` owns markup rules. `llm.md` owns the framework API and markup reference. The docs catalogue and component decision data own their existing inventories and selection metadata. The skill generator creates component guides and packages them for the MCP server with semantics, decisions, capabilities and contract metadata.
 
 Change source or generator logic when needed, then regenerate. Do not introduce another component inventory. Catalogue discovery, tool results and resource reads must agree on canonical names and snapshot identity. Resolve generator paths from the checkout before making a change.
 

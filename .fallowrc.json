@@ -39,7 +39,7 @@
   "ignorePatterns": [
     ".design-sync/**",
     "skills/expressivecss/scripts/{resolve-version,verify-consumer,consumer-browser,bounded-file}.mjs",
-    "mcp/expressivecss/scripts/resolve-version.mjs"
+    "mcp/expressivecss/scripts/{resolve-version,bounded-file,semantics-rules}.mjs"
   ],
   "ignoreDependencies": [
     "@fontsource-variable/material-symbols-outlined",
@@ -49,6 +49,13 @@
     "@fontsource/roboto"
   ],
   "ignoreExports": [
+    {
+      "file": "scripts/semantics-rules.mjs",
+      "exports": [
+        "authoredName",
+        "ruleBreach"
+      ]
+    },
     {
       "file": "src/ts/components/registry.ts",
       "exports": [

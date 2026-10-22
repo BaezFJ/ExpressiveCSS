@@ -643,7 +643,10 @@ describe('ExpressiveCSS version resolution', () => {
       'skills/expressivecss/scripts/bounded-file.mjs',
       'skills/expressivecss/assets/templates/starter.html',
       'mcp/expressivecss/contract.json',
+      'mcp/expressivecss/component-guides.json',
       'mcp/expressivecss/scripts/resolve-version.mjs',
+      'mcp/expressivecss/scripts/bounded-file.mjs',
+      'mcp/expressivecss/scripts/semantics-rules.mjs',
     ]) {
       assert.equal(
         await readFile(path.join(projectRoot, output), 'utf8'),

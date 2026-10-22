@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, InitElement, Openable } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 export interface CommandPaletteOptions extends BaseOptions {
   /**
@@ -41,7 +41,7 @@ const fold = (text: string) =>
  * button inside an option; running it clicks that element, so a page wires
  * commands with ordinary hrefs and click handlers.
  */
-export class CommandPalette extends Component<CommandPaletteOptions> implements Openable {
+export class CommandPalette extends Component<CommandPaletteOptions> {
   declare el: HTMLDialogElement;
   /** The search input. */
   input: HTMLInputElement;
@@ -52,15 +52,12 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
   /** Wires and refilters commands the page adds or removes later. */
   private _observer: MutationObserver | null = null;
 
-  constructor(el: HTMLDialogElement, options: Partial<CommandPaletteOptions>) {
-    super(el, options, CommandPalette);
-    this.el['Expressive_CommandPalette'] = this;
+  // HTMLElement, not HTMLDialogElement: init() takes the element type from
+  // here, and has always accepted any HTMLElement.
+  constructor(el: HTMLElement, options: Partial<CommandPaletteOptions>) {
     const shortcut = el.dataset.shortcut;
-    this.options = {
-      ...CommandPalette.defaults,
-      ...(shortcut !== undefined ? { shortcut: shortcut || null } : {}),
-      ...options
-    };
+    super(el, { ...(shortcut !== undefined ? { shortcut: shortcut || null } : {}), ...options });
+    this.el['Expressive_CommandPalette'] = this;
     this.input = el.querySelector(':scope > input');
     this.list = el.querySelector(':scope > :is(ul, ol)');
     if (!this.input || !this.list) {
@@ -91,33 +88,6 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
 
   static get defaults(): CommandPaletteOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of CommandPalette.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLElement, options?: Partial<CommandPaletteOptions>): CommandPalette;
-  /**
-   * Initializes instances of CommandPalette.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: InitElements<InitElement>,
-    options?: Partial<CommandPaletteOptions>
-  ): CommandPalette[];
-  /**
-   * Initializes instances of CommandPalette.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<CommandPaletteOptions> = {}
-  ): CommandPalette | CommandPalette[] {
-    return super.init(els, options, CommandPalette);
   }
 
   static getInstance(el: HTMLElement): CommandPalette {
@@ -296,10 +266,10 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
   _handleInput = () => this._filter();
 
   _handleKeydown = (e: KeyboardEvent) => {
-    if (e.key === Utils.keys.ARROW_DOWN || e.key === Utils.keys.ARROW_UP) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
-      this._move(e.key === Utils.keys.ARROW_DOWN ? 1 : -1);
-    } else if (e.key === Utils.keys.ENTER && !Utils.isComposing(e) && this._active) {
+      this._move(e.key === 'ArrowDown' ? 1 : -1);
+    } else if (e.key === 'Enter' && !Utils.isComposing(e) && this._active) {
       e.preventDefault();
       this._run(this._active);
     }
@@ -312,7 +282,7 @@ export class CommandPalette extends Component<CommandPaletteOptions> implements 
    * IME composition is left to the IME.
    */
   _handleEscape = (e: KeyboardEvent) => {
-    if (e.key !== Utils.keys.ESC || !this.input.value || Utils.isComposing(e)) return;
+    if (e.key !== 'Escape' || !this.input.value || Utils.isComposing(e)) return;
     e.preventDefault();
     this.input.value = '';
     this.input.dispatchEvent(new Event('input', { bubbles: true }));

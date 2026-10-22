@@ -4,27 +4,17 @@ type Bounding = Pick<DOMRect, 'left' | 'top' | 'width' | 'height'>;
 /** Which edges of a container a box has crossed. */
 type Edges = { top: boolean; right: boolean; bottom: boolean; left: boolean };
 
+/** An SVG element with its attributes. */
+export function svgNode(name: string, attributes: Record<string, string> = {}): SVGElement {
+  const element = document.createElementNS('http://www.w3.org/2000/svg', name);
+  for (const key in attributes) element.setAttribute(key, attributes[key]);
+  return element;
+}
+
 /**
  * Class with utilitary functions for global usage.
  */
 export class Utils {
-  /**
-   * Key maps. One `KeyboardEvent.key` value each: the second entries these used
-   * to carry (`Esc`, `Up`, `Del`, ...) were IE and Edge Legacy spellings, and
-   * the support baseline excludes both.
-   */
-  static keys = {
-    TAB: 'Tab',
-    ENTER: 'Enter',
-    ESC: 'Escape',
-    BACKSPACE: 'Backspace',
-    ARROW_UP: 'ArrowUp',
-    ARROW_DOWN: 'ArrowDown',
-    ARROW_LEFT: 'ArrowLeft',
-    ARROW_RIGHT: 'ArrowRight',
-    DELETE: 'Delete'
-  };
-
   /**
    * Whether a keydown belongs to an IME composition, such as the Enter that
    * confirms a candidate. Safari reports `isComposing` false for that Enter,
@@ -360,20 +350,6 @@ export class Utils {
   }
 
   /**
-   * Retrieves document scroll postion from top.
-   */
-  static getDocumentScrollTop(): number {
-    return window.scrollY;
-  }
-
-  /**
-   * Retrieves document scroll postion from left.
-   */
-  static getDocumentScrollLeft(): number {
-    return window.scrollX;
-  }
-
-  /**
    * Trailing-edge throttle: run `func` now, then at most once per `wait` ms
    * with the most recent arguments.
    *
@@ -471,8 +447,8 @@ export class Utils {
       containerHeight = container.offsetHeight,
       containerWidth = container.offsetWidth,
       originRect = origin.getBoundingClientRect();
-    const targetTop = originRect.top + Utils.getDocumentScrollTop() + originHeight + margin;
-    let targetLeft = originRect.left + Utils.getDocumentScrollLeft();
+    const targetTop = originRect.top + window.scrollY + originHeight + margin;
+    let targetLeft = originRect.left + window.scrollX;
 
     if (align === 'center') {
       targetLeft += originWidth / 2 - containerWidth / 2;
@@ -507,8 +483,8 @@ export class Utils {
     if (parent && (parent !== document.body || getComputedStyle(parent).position !== 'static')) {
       const rect = parent.getBoundingClientRect();
       const root = parent === document.scrollingElement;
-      x -= rect.left + Utils.getDocumentScrollLeft() + parent.clientLeft - (root ? 0 : parent.scrollLeft);
-      y -= rect.top + Utils.getDocumentScrollTop() + parent.clientTop - (root ? 0 : parent.scrollTop);
+      x -= rect.left + window.scrollX + parent.clientLeft - (root ? 0 : parent.scrollLeft);
+      y -= rect.top + window.scrollY + parent.clientTop - (root ? 0 : parent.scrollTop);
     }
     el.style.top = y + 'px';
     el.style.left = x + 'px';
@@ -523,8 +499,8 @@ export class Utils {
     transitionMovement: number,
     align: string
   ) {
-    const scrollLeft = Utils.getDocumentScrollLeft();
-    const scrollTop = Utils.getDocumentScrollTop();
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
     let newX = x - scrollLeft;
     let newY = y - scrollTop;
 

@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 export type TooltipPosition = 'top' | 'right' | 'bottom' | 'left';
 
@@ -165,9 +165,10 @@ export class Tooltip extends Component<TooltipOptions> {
   yMovement: number;
 
   constructor(el: HTMLElement, options: Partial<TooltipOptions>) {
-    super(el, options, Tooltip);
+    super(el, options);
     this.el['Expressive_Tooltip'] = this;
 
+    // Again, so the data-* options sit between the defaults and the options.
     this.options = {
       ...Tooltip.defaults,
       ...this._getAttributeOptions(),
@@ -183,30 +184,6 @@ export class Tooltip extends Component<TooltipOptions> {
 
   static get defaults(): TooltipOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of Tooltip.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLElement, options?: Partial<TooltipOptions>): Tooltip;
-  /**
-   * Initializes instances of Tooltip.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(els: InitElements<InitElement>, options?: Partial<TooltipOptions>): Tooltip[];
-  /**
-   * Initializes instances of Tooltip.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<TooltipOptions> = {}
-  ): Tooltip | Tooltip[] {
-    return super.init(els, options, Tooltip);
   }
 
   static getInstance(el: HTMLElement): Tooltip {
@@ -405,8 +382,8 @@ export class Tooltip extends Component<TooltipOptions> {
     this.yMovement = 0;
 
     const originRect = origin.getBoundingClientRect();
-    let targetTop = originRect.top + Utils.getDocumentScrollTop();
-    let targetLeft = originRect.left + Utils.getDocumentScrollLeft();
+    let targetTop = originRect.top + window.scrollY;
+    let targetLeft = originRect.left + window.scrollX;
     if (this.options.position === 'top') {
       targetTop += -tooltipHeight - margin;
       targetLeft += originWidth / 2 - tooltipWidth / 2;
@@ -425,11 +402,8 @@ export class Tooltip extends Component<TooltipOptions> {
       this.yMovement = this.options.transitionMovement;
     }
 
-    const newCoordinates = this._repositionWithinScreen(
-      targetLeft,
-      targetTop,
-      tooltipWidth,
-      tooltipHeight
+    const newCoordinates = Utils._repositionWithinScreen(
+      targetLeft, targetTop, tooltipWidth, tooltipHeight, margin, this.options.transitionMovement, 'center'
     );
 
     tooltip.style.setProperty('--md-comp-tooltip-anchor-gap', `${Math.max(0, margin) + Math.abs(this.options.transitionMovement)}px`);
@@ -460,12 +434,6 @@ export class Tooltip extends Component<TooltipOptions> {
     style.setProperty('position-area', area);
     style.setProperty(alignment, 'anchor-center');
     style.setProperty('position-try-fallbacks', 'flip-block, flip-inline');
-  }
-
-  _repositionWithinScreen(x: number, y: number, width: number, height: number) {
-    return Utils._repositionWithinScreen(
-      x, y, width, height, this.options.margin, this.options.transitionMovement, 'center'
-    );
   }
 
   _animateIn() { this._animate(true); }

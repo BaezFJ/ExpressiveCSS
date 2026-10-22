@@ -72,14 +72,16 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 // State layers mix the on-color into the container in oklab; the opacities come
 // from md.sys.state via `state-opacity()`. Filled and tonal have no elevation.
 
-// Shared by filled, tonal, outlined and flat. Elevated also moves z-depth.
-@mixin _btn-states($on, $base) {
+// Shared by every style. Elevated also moves z-depth on hover and press.
+@mixin _btn-states($on, $base, $hover-depth: null, $press-depth: null) {
   &:hover {
+    @if $hover-depth { @include z-depth($hover-depth); }
     background-color: color-mix(in oklab, #{$on} state-opacity("hover"), #{$base});
   }
 
   &:active,
   &:focus {
+    @if $press-depth { @include z-depth($press-depth); }
     background-color: color-mix(in oklab, #{$on} state-opacity("focus"), #{$base});
   }
 
@@ -105,18 +107,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   background-color: var(--md-sys-color-surface-container-low);
   @include z-depth("1");
 
-  &:hover {
-    @include z-depth("2");
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), var(--md-sys-color-surface-container-low));
-  }
-
-  &:active,
-  &:focus {
-    @include z-depth("1");
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), var(--md-sys-color-surface-container-low));
-  }
-
-  @include focus-visible();
+  @include _btn-states(var(--md-sys-color-primary), var(--md-sys-color-surface-container-low), "2", "1");
 }
 
 @mixin btn-outlined {
@@ -158,9 +149,6 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 // `$important` is for the `.visually-hidden` utility, which has to beat a
 // consumer's own `position` or `padding` the way `.hide` beats their
 // `display`. Component rules leave it off.
-//
-// _navigation-rail.scss carries its own copy, which predates the mixin and
-// omits the margin and white-space; fold it in when it is next touched.
 @mixin visually-hidden($important: false) {
   $flag: null;
   @if $important { $flag: !important; }
@@ -189,6 +177,45 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   &:focus-visible {
     @include focus-ring();
   }
+}
+
+// The 18dp up arrow on a pseudo-element: Stat and KPI change lines, data
+// table sort buttons. Rotate it 180deg for down.
+@mixin trend-arrow {
+  content: "";
+  flex: none;
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
+  mask: $trend-arrow center / 18px no-repeat;
+}
+
+// A 48dp icon action in a dialog, pane or side sheet header bar.
+@mixin header-icon-action {
+  flex: 0 0 48px;
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  box-shadow: none;
+
+  > #{$icon} {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+
+  &:hover {
+    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+  }
+
+  @include focus-visible;
 }
 
 // Forced colors repaint every background as Canvas and drop box-shadow, so a
@@ -223,6 +250,20 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   }
   line-height: var(--md-sys-typescale-#{$role}-line-height);
   letter-spacing: var(--md-sys-typescale-#{$role}-letter-spacing);
+}
+
+// The <label> row of a radio, checkbox or switch: 48dp touch target, 12dp
+// between control and text, body-large on-surface.
+@mixin selection-control-label($display: flex) {
+  display: $display;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+  color: var(--md-sys-color-on-surface);
+  @include typescale("body-large");
 }
 
 /// The state layer some controls draw as a ring rather than an overlay.

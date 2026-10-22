@@ -76,16 +76,6 @@ export class DockedDisplayPlugin {
     this.container.remove();
   };
 
-  /**
-   * Initializes instance of DockedDisplayPlugin
-   * @param el HTMLElement to position to
-   * @param container HTMLElement to be positioned
-   * @param options Plugin options
-   */
-  static init(el: HTMLElement, container: HTMLElement, options?: Partial<DockedDisplayPluginOptions>): DockedDisplayPlugin {
-    return new DockedDisplayPlugin(el, container, options);
-  }
-
   show = () => {
     if (this.visible) return;
     this.visible = true;

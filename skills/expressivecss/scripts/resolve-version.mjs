@@ -1,8 +1,8 @@
 // Generated from scripts/lib/resolve-expressivecss-version.mjs. Do not edit.
-import { constants as fsConstants } from 'node:fs';
-import { lstat, open, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseArgs } from 'node:util';
+import { readBoundedRegularFile } from './bounded-file.mjs';
 
 const PACKAGE_NAME = '@expressivecss/expressive';
 const MAX_MANIFEST_BYTES = 1 * 1024 * 1024;
@@ -16,46 +16,17 @@ function readLimit(filePath) {
   return MAX_MANIFEST_BYTES;
 }
 
-function sameFile(left, right) {
-  return left.dev === right.dev && left.ino === right.ino && left.size === right.size
-    && left.mtimeNs === right.mtimeNs && left.ctimeNs === right.ctimeNs;
-}
+const READ_REFUSALS = new Set(['symbolic-link', 'not-regular-file', 'identity-changed', 'oversized']);
+const OPEN_LINK_ERRORS = new Set(['ELOOP', 'EMLINK']);
 
+// No root: node_modules may be a link farm (pnpm), so only the file itself must not be a link.
 async function readBounded(filePath) {
-  let handle;
   try {
-    const pathBefore = await lstat(filePath, { bigint: true });
-    if (pathBefore.isSymbolicLink()) return { error: 'symbolic-link' };
-    if (!pathBefore.isFile()) return { error: 'not-regular-file' };
-    const noFollow = fsConstants.O_NOFOLLOW ?? 0;
-    handle = await open(filePath, fsConstants.O_RDONLY | noFollow);
-    const before = await handle.stat({ bigint: true });
-    if (!before.isFile() || !sameFile(before, pathBefore)) return { error: 'identity-changed' };
-    const limit = readLimit(filePath);
-    if (before.size > BigInt(limit)) return { error: 'oversized' };
-    // Size the buffer to the file, not the limit. The spare byte exposes growth.
-    const buffer = Buffer.allocUnsafe(Number(before.size) + 1);
-    let offset = 0;
-    while (offset < buffer.length) {
-      const { bytesRead } = await handle.read(buffer, offset, buffer.length - offset, offset);
-      if (bytesRead === 0) break;
-      offset += bytesRead;
-    }
-    if (offset > before.size) return { error: 'identity-changed' };
-    const after = await handle.stat({ bigint: true });
-    const pathAfter = await lstat(filePath, { bigint: true });
-    const currentResolved = await realpath(filePath);
-    const openedResolved = await realpath(`/proc/self/fd/${handle.fd}`).catch(() => currentResolved);
-    if (!sameFile(before, after) || !sameFile(after, pathAfter) || currentResolved !== openedResolved) {
-      return { error: 'identity-changed' };
-    }
-    return { text: buffer.subarray(0, offset).toString('utf8') };
+    return { text: await readBoundedRegularFile(filePath, readLimit(filePath), path.basename(filePath)) };
   } catch (error) {
     if (error?.code === 'ENOENT') return { missing: true };
-    if (error?.code === 'ELOOP' || error?.code === 'EMLINK') return { error: 'symbolic-link' };
-    return { error: 'unreadable' };
-  } finally {
-    await handle?.close().catch(() => {});
+    if (OPEN_LINK_ERRORS.has(error?.code)) return { error: 'symbolic-link' };
+    return { error: READ_REFUSALS.has(error?.code) ? error.code : 'unreadable' };
   }
 }
 
@@ -712,22 +683,10 @@ export async function resolveExpressiveVersion({
   };
 }
 
-function cliArguments(argv) {
-  const values = {};
-  for (let index = 0; index < argv.length; index += 1) {
-    const argument = argv[index];
-    if (!argument.startsWith('--')) continue;
-    const [key, ...rest] = argument.slice(2).split('=');
-    if (rest.length) values[key] = rest.join('=');
-    else if (argv[index + 1] && !argv[index + 1].startsWith('--')) values[key] = argv[index += 1];
-    else values[key] = true;
-  }
-  return values;
-}
-
 const invokedPath = process.argv[1] ? path.resolve(process.argv[1]) : null;
 if (invokedPath === fileURLToPath(import.meta.url)) {
-  const args = cliArguments(process.argv.slice(2));
+  const option = { type: 'string' };
+  const { values: args } = parseArgs({ strict: false, allowPositionals: true, options: { 'project-root': option, 'contract-version': option, 'skill-version': option } });
   const result = await resolveExpressiveVersion({
     projectRoot: typeof args['project-root'] === 'string' ? args['project-root'] : process.cwd(),
     contractVersion: typeof args['contract-version'] === 'string' ? args['contract-version'] : null,

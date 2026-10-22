@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 export type ConfettiShape = 'square' | 'circle' | 'star';
 
@@ -134,24 +134,14 @@ export class Confetti extends Component<ConfettiOptions> {
   private _onClick = () => { this.fire(); };
 
   constructor(el: HTMLElement, options: Partial<ConfettiOptions>) {
-    super(el, options, Confetti);
+    super(el, options);
     this.el['Expressive_Confetti'] = this;
-    this.options = { ...Confetti.defaults, ...options };
     if (!(el instanceof HTMLCanvasElement)) el.addEventListener('click', this._onClick);
     else if (!this.options.manualStart) this.fire();
   }
 
   static get defaults(): ConfettiOptions {
     return _defaults;
-  }
-
-  static init(el: HTMLElement, options?: Partial<ConfettiOptions>): Confetti;
-  static init(els: InitElements<InitElement>, options?: Partial<ConfettiOptions>): Confetti[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<ConfettiOptions> = {}
-  ): Confetti | Confetti[] {
-    return super.init(els, options, Confetti);
   }
 
   static getInstance(el: HTMLElement): Confetti {

@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 import { Utils } from '../core/utils';
 
 export interface ColorPickerOptions extends BaseOptions {
@@ -78,9 +78,8 @@ export class ColorPicker extends Component<ColorPickerOptions> {
   private _writing = false;
 
   constructor(el: HTMLElement, options: Partial<ColorPickerOptions>) {
-    super(el, options, ColorPicker);
+    super(el, options);
     this.el['Expressive_ColorPicker'] = this;
-    this.options = { ...ColorPicker.defaults, ...options };
     this.input = el.querySelector<HTMLInputElement>(':scope > input[type="color"]');
     if (!this.input) return;
     this._hsv = toHsv(this.input.value) ?? this._hsv;
@@ -91,15 +90,6 @@ export class ColorPicker extends Component<ColorPickerOptions> {
 
   static get defaults(): ColorPickerOptions {
     return _defaults;
-  }
-
-  static init(el: HTMLElement, options?: Partial<ColorPickerOptions>): ColorPicker;
-  static init(els: InitElements<InitElement>, options?: Partial<ColorPickerOptions>): ColorPicker[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<ColorPickerOptions> = {}
-  ): ColorPicker | ColorPicker[] {
-    return super.init(els, options, ColorPicker);
   }
 
   static getInstance(el: HTMLElement): ColorPicker {

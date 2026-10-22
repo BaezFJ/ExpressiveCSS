@@ -468,6 +468,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- MCP static inspection checks the `require-idref` and
+  `require-owned-descendant` rules from `semantics.json`. The server kept
+  its own copy of the rule helpers, which had drifted and skipped both, so
+  markup that passed before can now get findings. It now imports the same
+  rule module the repo's semantics checks use.
 - Timepicker reads AM or PM wherever it appears in a value, so
   `02:30:45 PM` opens at 2:30 PM. The period was looked for only after the
   first colon, so such a value, or one like `2 PM`, opened as AM.
@@ -842,6 +847,18 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Menu, navigation bar and slider state layers read the
+  `--md-sys-state-*-state-layer-opacity` tokens instead of fixed 8% and
+  10% mixes. The defaults render the same. A page that overrides a state
+  token now changes these layers too.
+- Every component inherits one `Component.init`, and the base constructor
+  merges `defaults` with the options passed in. `init` types are
+  unchanged. The `CommandPalette` and `Questionnaire` constructors accept
+  any `HTMLElement`, which their `init` already took, and a subclass that
+  overrides `defaults` now gets its own defaults merged.
+- The MCP package ships `scripts/bounded-file.mjs` and
+  `scripts/semantics-rules.mjs`. Inspection read errors use new wording,
+  such as "inspected file exceeds N bytes".
 - A runtime tooltip that opens while a tooltip is closing, or within 300 ms
   after that one's `exitDelay` ends, shows without waiting its
   `enterDelay`, so moving along a toolbar shows each tooltip at once. Only

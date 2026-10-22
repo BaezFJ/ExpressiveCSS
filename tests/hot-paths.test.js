@@ -90,20 +90,9 @@ describe('layout reads per frame and resize', () => {
     }
   });
 
-  test('Tabs re-measures at most once per burst of resize events', async () => {
-    document.body.innerHTML = `
-      <nav class="tabs" aria-label="Tabs">
-        <a class="active" href="#t1">1</a>
-        <a href="#t2">2</a>
-      </nav>
-      <div id="t1">one</div><div id="t2">two</div>`;
-    const el = document.querySelector('.tabs');
-    const counter = { reads: 0 };
-    stubRect(el, counter);
-    const instance = Expressive.Tabs.init(el);
+  test('a full-screen Carousel re-measures at most once per burst of resize events', async () => {
+    const { instance, counter } = await fullScreenCarousel();
     try {
-      await sleep(250); // let construction fall out of the throttle window
-      counter.reads = 0;
       for (let i = 0; i < 10; i++) window.dispatchEvent(new window.Event('resize'));
       assert.equal(counter.reads, 1, `ten resize events measured ${counter.reads} times`);
       await sleep(250);
@@ -114,18 +103,23 @@ describe('layout reads per frame and resize', () => {
   });
 });
 
+/** A full-screen carousel listens for window resizes; count its re-measures. */
+async function fullScreenCarousel() {
+  document.body.innerHTML = `<div class="carousel full-screen"><a class="carousel-item" href="#one"></a><a class="carousel-item" href="#two"></a></div>`;
+  const instance = Expressive.Carousel.init(document.querySelector('.carousel'));
+  const counter = { reads: 0 };
+  await sleep(250); // let construction fall out of the throttle window
+  instance._handleResize = () => counter.reads++;
+  return { instance, counter };
+}
+
 describe('throttled resize after a clock change', () => {
   beforeEach(resetBody);
 
   test('a backwards clock jump does not hold the trailing call', async () => {
-    document.body.innerHTML = `<nav class="tabs" aria-label="Tabs"><a class="active" href="#t1">1</a></nav><div id="t1"></div>`;
-    const el = document.querySelector('.tabs');
-    const counter = { reads: 0 };
-    stubRect(el, counter);
-    const instance = Expressive.Tabs.init(el);
+    const { instance, counter } = await fullScreenCarousel();
     const now = Date.now;
     try {
-      await sleep(250); // let construction fall out of the throttle window
       const start = now();
       Date.now = () => start;
       window.dispatchEvent(new window.Event('resize'));

@@ -22,13 +22,12 @@ interface Drag {
  */
 export class Sortable {
   static i18n = { moved: 'Moved to position {position} of {total}' };
-  private static _initialized = false;
   private static _drag: Drag | null = null;
   private static _regions = new WeakMap<HTMLElement, HTMLElement>();
 
+  // A second Init adds nothing: addEventListener ignores a listener it has.
   static Init() {
-    if (Sortable._initialized || typeof document === 'undefined') return;
-    Sortable._initialized = true;
+    if (typeof document === 'undefined') return;
     document.addEventListener('click', Sortable._onClick);
     document.addEventListener('pointerdown', Sortable._onPointerDown);
   }

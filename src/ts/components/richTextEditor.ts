@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 /**
  * The parts of a Tiptap `Editor` this component uses. Declared here so the
@@ -66,12 +66,8 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
   private _form: HTMLFormElement | null = null;
 
   constructor(el: HTMLElement, options: Partial<RichTextEditorOptions>) {
-    super(el, options, RichTextEditor);
+    super(el, options);
     this.el['Expressive_RichTextEditor'] = this;
-    this.options = {
-      ...RichTextEditor.defaults,
-      ...options
-    };
     this.textarea = el.querySelector(':scope > textarea');
     if (!this.textarea || !this.options.Editor) {
       console.error('RichTextEditor needs a <textarea> child and the Tiptap Editor class in options.Editor.');
@@ -135,33 +131,6 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
 
   static get defaults(): RichTextEditorOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of RichTextEditor.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLElement, options?: Partial<RichTextEditorOptions>): RichTextEditor;
-  /**
-   * Initializes instances of RichTextEditor.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: InitElements<InitElement>,
-    options?: Partial<RichTextEditorOptions>
-  ): RichTextEditor[];
-  /**
-   * Initializes instances of RichTextEditor.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<RichTextEditorOptions> = {}
-  ): RichTextEditor | RichTextEditor[] {
-    return super.init(els, options, RichTextEditor);
   }
 
   static getInstance(el: HTMLElement): RichTextEditor {

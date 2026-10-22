@@ -1,6 +1,6 @@
 import { mkdir, readFile, readdir, unlink, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { dirname, resolve } from 'node:path';
+import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { transform } from 'esbuild';
 import { buildCapabilityRoadmap, renderCapabilityRoadmap } from './lib/material-capabilities.mjs';
@@ -83,12 +83,38 @@ async function syncResolver(checkOnly) {
   }
 }
 
+// Each copy sits beside the resolver copy, so its relative imports resolve inside the same scripts/ directory.
+const TOOL_COPIES = [
+  ['scripts/lib/verify-consumer.mjs', 'skills/expressivecss/scripts'],
+  ['scripts/lib/consumer-browser.mjs', 'skills/expressivecss/scripts'],
+  ['scripts/lib/bounded-file.mjs', 'skills/expressivecss/scripts'],
+  ['scripts/lib/bounded-file.mjs', 'mcp/expressivecss/scripts'],
+  ['scripts/semantics-rules.mjs', 'mcp/expressivecss/scripts'],
+];
+
 async function syncConsumerTools(checkOnly) {
-  for (const name of ['verify-consumer.mjs', 'consumer-browser.mjs', 'bounded-file.mjs']) {
-    const source = `scripts/lib/${name}`;
-    const destination = resolve(ROOT, 'skills/expressivecss/scripts', name);
+  for (const [source, directory] of TOOL_COPIES) {
+    const name = basename(source);
     const expected = `// Generated from ${source}. Do not edit.\n${await readFile(resolve(ROOT, source), 'utf8')}`;
-    if ((await syncGeneratedFiles([destination], expected, checkOnly)).length) throw new Error(`Generated consumer tool is stale: ${name}`);
+    if ((await syncGeneratedFiles([resolve(ROOT, directory, name)], expected, checkOnly)).length) throw new Error(`Generated consumer tool is stale: ${name}`);
+  }
+}
+
+// The MCP package bundles the generated guides with the data they come from.
+async function syncMcpData(checkOnly, guides, roadmapJson) {
+  const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
+  const read = async (source) => JSON.parse(await readFile(resolve(ROOT, source), 'utf8'));
+  const generatedBy = 'scripts/gen-expressivecss-skill.mjs';
+  const { version: frameworkVersion } = await read('package.json');
+  const { schemaVersion, ...decisions } = decisionData;
+  const outputs = {
+    'component-guides.json': json({ schemaVersion: 1, generatedBy, frameworkVersion, guides: [...guides.keys()].sort().map((file) => ({ file, content: guides.get(file) })) }),
+    'semantics-data.json': json({ schemaVersion: 1, generatedBy, frameworkVersion, semantics: await read('semantics.json') }),
+    'component-decisions.json': json({ schemaVersion, generatedBy, ...decisions }),
+    'capability-roadmap.json': roadmapJson,
+  };
+  for (const [name, expected] of Object.entries(outputs)) {
+    if ((await syncGeneratedFiles([resolve(ROOT, 'mcp/expressivecss', name)], expected, checkOnly)).length) throw new Error(`Generated MCP data is stale: ${name}`);
   }
 }
 
@@ -425,9 +451,11 @@ await syncDecisionIndex(checkOnly);
 await syncDesignRules(checkOnly);
 await syncContractManifest(checkOnly);
 const roadmap = await buildCapabilityRoadmap(decisionData, ROOT);
-for (const [name, expected] of [['capability-roadmap.json', JSON.stringify(roadmap, null, 2) + '\n'], ['capability-roadmap.md', renderCapabilityRoadmap(roadmap)]]) {
+const roadmapJson = JSON.stringify(roadmap, null, 2) + '\n';
+for (const [name, expected] of [['capability-roadmap.json', roadmapJson], ['capability-roadmap.md', renderCapabilityRoadmap(roadmap)]]) {
   const destination = resolve(ROOT, 'skills/expressivecss/references', name);
   if ((await syncGeneratedFiles([destination], expected, checkOnly)).length) throw new Error(`Generated capability roadmap is stale: ${name}`);
 }
+await syncMcpData(checkOnly, guides, roadmapJson);
 if (checkOnly) await check(guides);
 else await write(guides);

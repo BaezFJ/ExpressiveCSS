@@ -1,5 +1,5 @@
-import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions, numberFormat, polarPoint as at, signs, svgNode as node } from './lineChart';
+import { LineChart, LineChartOptions, numberFormat, polarPoint as at, rowLegend, signs } from './lineChart';
+import { svgNode as node } from '../core/utils';
 
 export type PieChartOptions = LineChartOptions;
 
@@ -81,15 +81,6 @@ export class PieChart extends LineChart {
 
   protected get _circular() {
     return true;
-  }
-
-  static init(el: HTMLElement, options?: Partial<PieChartOptions>): PieChart;
-  static init(els: InitElements<InitElement>, options?: Partial<PieChartOptions>): PieChart[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<PieChartOptions> = {}
-  ): PieChart | PieChart[] {
-    return super.init(els as HTMLElement, options) as PieChart | PieChart[];
   }
 
   protected _read() {
@@ -222,22 +213,8 @@ export class PieChart extends LineChart {
   protected _guides(): Element[] {
     // A redraw picks up a changed lang attribute.
     this._percents = [];
-    const legend = document.createElement('ul');
-    legend.className = 'pie-chart-legend';
-    legend.setAttribute('aria-hidden', 'true');
     const text = this.series[0].text;
-    legend.append(...this.labels.map((label, i) => {
-      const li = document.createElement('li');
-      if (this._colors[i]) li.dataset.series = this._colors[i];
-      const [name, value, share] = [label, text[i], this._share(i)].map((content) => {
-        const span = document.createElement('span');
-        span.textContent = content;
-        return span;
-      });
-      li.append(name, value, share);
-      return li;
-    }));
-    return [legend];
+    return [rowLegend('pie-chart-legend', this._colors, this.labels.map((label, i) => [label, text[i], this._share(i)]))];
   }
 
   /** The row under the pointer by its angle from the middle, or -1 off the slices. */

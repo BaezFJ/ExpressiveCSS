@@ -4,7 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isDeepStrictEqual } from 'node:util';
 import { hashProject } from './expressivecss-codex-adapter.mjs';
-import { readBoundedRegularFile } from './eval-expressivecss-skill.mjs';
+import { readBoundedRegularFile } from './lib/bounded-file.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const EVALUATION_SOURCE_FILES = Object.freeze([
@@ -17,6 +17,7 @@ export const EVALUATION_SOURCE_FILES = Object.freeze([
   'skills/expressivecss/references/contract.json', 'package.json', 'package-lock.json',
   'mcp/expressivecss/package.json', 'mcp/expressivecss/package-lock.json',
   'mcp/expressivecss/server.js', 'mcp/expressivecss/scripts/resolve-version.mjs',
+  'mcp/expressivecss/scripts/bounded-file.mjs', 'mcp/expressivecss/scripts/semantics-rules.mjs',
   'mcp/expressivecss/component-guides.json', 'mcp/expressivecss/component-decisions.json',
   'mcp/expressivecss/capability-roadmap.json', 'mcp/expressivecss/contract.json', 'mcp/expressivecss/semantics-data.json',
 ]);

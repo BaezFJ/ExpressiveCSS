@@ -1,4 +1,5 @@
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
+import { svgNode } from '../core/utils';
 
 export interface LineChartOptions extends BaseOptions {
   /**
@@ -26,7 +27,6 @@ const _defaults: LineChartOptions = {
   watch: false
 };
 
-const SVG = 'http://www.w3.org/2000/svg';
 export const COLORS = 4;
 
 /** The least space between two row labels. */
@@ -104,11 +104,21 @@ function tableChanged(records: MutationRecord[], el: Element) {
     record.target !== el || [...record.addedNodes, ...record.removedNodes].some(isTable));
 }
 
-/** An SVG element with its attributes. */
-export function svgNode(name: string, attributes: Record<string, string> = {}): SVGElement {
-  const element = document.createElementNS(SVG, name);
-  for (const key in attributes) element.setAttribute(key, attributes[key]);
-  return element;
+/**
+ * The legend of a pie or radial chart: an item per row, colored as
+ * `colors[i]` when that is set, holding a span for each of `rows[i]`.
+ */
+export function rowLegend(className: string, colors: (string | undefined)[], rows: string[][]): HTMLUListElement {
+  const legend = document.createElement('ul');
+  legend.className = className;
+  legend.setAttribute('aria-hidden', 'true');
+  legend.append(...rows.map((cells, i) => {
+    const li = document.createElement('li');
+    if (colors[i]) li.dataset.series = colors[i];
+    li.append(...cells.map((content) => Object.assign(document.createElement('span'), { textContent: content })));
+    return li;
+  }));
+  return legend;
 }
 
 /** A point at a turn clockwise from the top and a distance from the middle, as "x,y". */
@@ -390,13 +400,8 @@ export class LineChart extends Component<LineChartOptions> {
   }
 
   constructor(el: HTMLElement, options: Partial<LineChartOptions>) {
-    super(el, options, new.target);
+    super(el, options);
     this.el[this._key] = this;
-
-    this.options = {
-      ...new.target.defaults,
-      ...options
-    };
 
     this._build();
     this._listen();
@@ -455,15 +460,6 @@ export class LineChart extends Component<LineChartOptions> {
 
   static get defaults(): LineChartOptions {
     return _defaults;
-  }
-
-  static init(el: HTMLElement, options?: Partial<LineChartOptions>): LineChart;
-  static init(els: InitElements<InitElement>, options?: Partial<LineChartOptions>): LineChart[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<LineChartOptions> = {}
-  ): LineChart | LineChart[] {
-    return super.init(els, options, this);
   }
 
   static getInstance(el: HTMLElement): LineChart {

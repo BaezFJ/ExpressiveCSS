@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { existsSync, closeSync, constants as fsConstants, fstatSync, lstatSync, openSync, readFileSync, realpathSync } from 'node:fs';
-import { lstat, open, readdir, readFile, realpath, stat } from 'node:fs/promises';
+import { lstat, readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
@@ -11,6 +11,8 @@ import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mc
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { McpError, ReadResourceRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { resolveExpressiveVersion } from './scripts/resolve-version.mjs';
+import { readBoundedRegularFile } from './scripts/bounded-file.mjs';
+import { authoredName, enforcedRules, expandedSelector, ruleBreach } from './scripts/semantics-rules.mjs';
 
 const SERVER_DIR = path.dirname(fileURLToPath(import.meta.url));
 const COMPONENT_DECISIONS = JSON.parse(readFileSync(path.join(SERVER_DIR, 'component-decisions.json'), 'utf8'));
@@ -36,9 +38,6 @@ const MAX_STATIC_MARKUP_DELIMITERS = 4_000;
 // `:has()` selectors visit every descendant of every candidate, so deep nesting is quadratic
 // (1,024 levels take over a second), and `outerHTML` overflows the stack past about 2,200.
 const MAX_STATIC_MARKUP_DEPTH = 256;
-// Opening a FIFO with no writer would otherwise block a libuv thread forever; the readers'
-// regular-file checks then reject it. Regular files ignore the flag.
-const O_NONBLOCK = fsConstants.O_NONBLOCK ?? 0;
 // Source locations make parse5 copy a parent's children for each text run, so the cost grows with
 // characters times tags. Past this product, semantics findings report 1:1 to stay within the budget.
 const MAX_LOCATED_MARKUP_WORK = 100_000_000;
@@ -759,22 +758,6 @@ function sameFileIdentity(left, right) {
   return left.dev === right.dev && left.ino === right.ino;
 }
 
-async function readHandleBounded(handle, maxBytes) {
-  const chunks = [];
-  let totalBytes = 0;
-  while (totalBytes <= maxBytes) {
-    const buffer = Buffer.allocUnsafe(Math.min(64 * 1024, (maxBytes + 1) - totalBytes));
-    const { bytesRead } = await handle.read(buffer, 0, buffer.length, null);
-    if (bytesRead === 0) break;
-    chunks.push(buffer.subarray(0, bytesRead));
-    totalBytes += bytesRead;
-  }
-  return {
-    content: totalBytes > maxBytes ? null : Buffer.concat(chunks, totalBytes),
-    totalBytes,
-  };
-}
-
 async function verifyLocalContractProvenance(projectRoot, contract, canonicalSources) {
   if (!contract) {
     return { status: 'missing', expectedHash: null, computedHash: null, missingSources: [] };
@@ -828,7 +811,7 @@ async function verifyLocalContractProvenance(projectRoot, contract, canonicalSou
     if (aggregateBytes > MAX_CONTRACT_TOTAL_BYTES) {
       return { status: 'invalid', expectedHash: contract.sourceHash, computedHash: null, missingSources };
     }
-    validatedSources.push({ source, sourcePath: resolvedSourcePath, sourceStat });
+    validatedSources.push({ source, sourcePath: resolvedSourcePath });
   }
   if (missingSources.length) {
     return { status: 'missing', expectedHash: contract.sourceHash, computedHash: null, missingSources };
@@ -836,50 +819,14 @@ async function verifyLocalContractProvenance(projectRoot, contract, canonicalSou
 
   const hash = createHash('sha256');
   aggregateBytes = 0;
-  for (const { source, sourcePath, sourceStat } of validatedSources) {
-    const handle = await open(sourcePath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW | O_NONBLOCK).catch(() => null);
-    if (!handle) {
+  for (const { source, sourcePath } of validatedSources) {
+    const limit = Math.min(MAX_CONTRACT_SOURCE_BYTES, Math.max(0, MAX_CONTRACT_TOTAL_BYTES - aggregateBytes));
+    const content = await readBoundedRegularFile(sourcePath, limit, 'contract source', root, null).catch(() => null);
+    if (!content) {
       return { status: 'invalid', expectedHash: contract.sourceHash, computedHash: null, missingSources };
     }
-    try {
-      const openedStat = await handle.stat();
-      const currentPathStat = await lstat(sourcePath).catch(() => null);
-      const currentResolvedPath = await realpath(sourcePath).catch(() => null);
-      const openedResolvedPath = await realpath(`/proc/self/fd/${handle.fd}`).catch(() => currentResolvedPath);
-      if (
-        !openedStat.isFile()
-        || !currentPathStat?.isFile()
-        || currentPathStat.isSymbolicLink()
-        || !currentResolvedPath
-        || !openedResolvedPath
-        || !isPathInside(root, currentResolvedPath)
-        || currentResolvedPath !== sourcePath
-        || openedResolvedPath !== sourcePath
-        || !sameFileIdentity(sourceStat, openedStat)
-        || !sameFileIdentity(openedStat, currentPathStat)
-        || openedStat.size > MAX_CONTRACT_SOURCE_BYTES
-      ) {
-        return { status: 'invalid', expectedHash: contract.sourceHash, computedHash: null, missingSources };
-      }
-
-      const remainingAggregateBytes = Math.max(0, MAX_CONTRACT_TOTAL_BYTES - aggregateBytes);
-      const bounded = await readHandleBounded(handle, Math.min(MAX_CONTRACT_SOURCE_BYTES, remainingAggregateBytes));
-      aggregateBytes += bounded.totalBytes;
-      const finalStat = await handle.stat();
-      if (
-        !bounded.content
-        || aggregateBytes > MAX_CONTRACT_TOTAL_BYTES
-        || !sameFileIdentity(openedStat, finalStat)
-        || openedStat.size !== finalStat.size
-        || openedStat.mtimeMs !== finalStat.mtimeMs
-        || openedStat.ctimeMs !== finalStat.ctimeMs
-      ) {
-        return { status: 'invalid', expectedHash: contract.sourceHash, computedHash: null, missingSources };
-      }
-      hash.update(`${source}\0${bounded.content.toString('utf8')}\0`);
-    } finally {
-      await handle.close();
-    }
+    aggregateBytes += content.length;
+    hash.update(`${source}\0${content.toString('utf8')}\0`);
   }
   const computedHash = hash.digest('hex');
   return {
@@ -1149,45 +1096,6 @@ function loadSemanticsContract() {
   return semanticsCache;
 }
 
-function enforcedSemanticRules(data) {
-  return Object.entries(data.rows)
-    .filter(([, component]) => component.status === 'enforced')
-    .flatMap(([component, definition]) => definition.rules.map((rule) => ({ ...rule, component })));
-}
-
-function expandedSemanticSelector(rule, compositeRoles) {
-  if (rule.kind !== 'forbid-composite-roles') {
-    return rule.selector;
-  }
-  return compositeRoles.map((role) => `${rule.selector}[role="${role}"]`).join(', ');
-}
-
-function authoredName(element, document) {
-  const label = element.getAttribute('aria-label');
-  if (label?.trim()) {
-    return label.trim();
-  }
-  const labelledBy = element.getAttribute('aria-labelledby');
-  if (!labelledBy) {
-    return '';
-  }
-  return labelledBy
-    .split(/\s+/u)
-    .map((id) => document.getElementById(id)?.textContent ?? '')
-    .join(' ')
-    .trim();
-}
-
-function accessibleName(element, document) {
-  const authored = authoredName(element, document);
-  if (authored) {
-    return authored;
-  }
-  const clone = element.cloneNode(true);
-  clone.querySelectorAll('[aria-hidden="true"]').forEach((node) => node.remove());
-  return clone.textContent.trim();
-}
-
 function markInspectionTruncated(issues, reason) {
   Object.defineProperty(issues, 'truncatedReason', { value: reason, enumerable: false });
   return issues;
@@ -1250,34 +1158,14 @@ function inspectSemanticRules(snippet, maxIssues = MAX_STATIC_ISSUES, deadline =
   };
   const issues = [];
 
-  for (const rule of enforcedSemanticRules(semantics)) {
+  for (const rule of enforcedRules(semantics)) {
     const beforeRule = inspectionStopReason(issues, maxIssues, deadline);
     if (beforeRule) return markInspectionTruncated(issues, beforeRule);
-    const hits = document.querySelectorAll(expandedSemanticSelector(rule, semantics.compositeRoles));
-    if (rule.kind === 'forbid' || rule.kind === 'forbid-composite-roles') {
-      for (const element of hits) {
-        const stop = inspectionStopReason(issues, maxIssues, deadline);
-        if (stop) return markInspectionTruncated(issues, stop);
-        issues.push(semanticIssue(rule, element, frameworkVersion, locate(element)));
-      }
-    } else if (rule.kind === 'require-attr') {
-      for (const element of hits) {
-        const stop = inspectionStopReason(issues, maxIssues, deadline);
-        if (stop) return markInspectionTruncated(issues, stop);
-        const value = element.getAttribute(rule.attr);
-        const valid = rule.equals ? value === rule.equals : value !== null && value !== '';
-        if (!valid) {
-          issues.push(semanticIssue(rule, element, frameworkVersion, locate(element)));
-        }
-      }
-    } else if (rule.kind === 'require-accessible-name') {
-      for (const element of hits) {
-        const stop = inspectionStopReason(issues, maxIssues, deadline);
-        if (stop) return markInspectionTruncated(issues, stop);
-        if (!accessibleName(element, document)) {
-          issues.push(semanticIssue(rule, element, frameworkVersion, locate(element)));
-        }
-      }
+    const breaks = ruleBreach(rule);
+    for (const element of document.querySelectorAll(expandedSelector(rule, semantics.compositeRoles))) {
+      const stop = inspectionStopReason(issues, maxIssues, deadline);
+      if (stop) return markInspectionTruncated(issues, stop);
+      if (breaks(element, document)) issues.push(semanticIssue(rule, element, frameworkVersion, locate(element)));
     }
   }
 
@@ -1792,48 +1680,14 @@ export function redactSensitiveText(value) {
     .replace(/[A-Z]:\\+Users\\+[^\\\s]+(?:\\+[^\s]*)?/giu, '[LOCAL_PATH]');
 }
 
+// Directories above the file may be links (callers pass realpaths beside lexical roots);
+// the file itself may not, and it must resolve inside projectRoot.
 export async function readInspectionFile(filePath, projectRoot, byteLimit) {
-  const resolvedRoot = await realpath(projectRoot);
-  const noFollow = Number.isInteger(fsConstants.O_NOFOLLOW) ? fsConstants.O_NOFOLLOW : 0;
-  const handle = await open(filePath, fsConstants.O_RDONLY | noFollow | O_NONBLOCK);
-  try {
-    const before = await handle.stat({ bigint: true });
-    const pathBefore = await lstat(filePath, { bigint: true });
-    if (pathBefore.isSymbolicLink()) throw new Error('path is a symbolic link');
-    if (!before.isFile() || !pathBefore.isFile()) throw new Error('path is not a regular file');
-    if (before.dev !== pathBefore.dev || before.ino !== pathBefore.ino) throw new Error('file identity changed before reading');
-    const openedPath = await realpath(`/proc/self/fd/${handle.fd}`).catch(() => realpath(filePath));
-    if (!isPathInside(resolvedRoot, openedPath)) throw new Error('opened file is outside projectRoot');
-    if (before.size > BigInt(byteLimit)) {
-      const error = new Error(`file exceeds ${byteLimit} byte read limit`);
-      error.code = 'INSPECTION_FILE_TOO_LARGE';
-      throw error;
-    }
-
-    // Size the buffer to the file, not the limit. The spare byte exposes growth
-    // and files such as /proc entries that report a smaller size than they hold.
-    const capacity = Number(before.size) + 1;
-    const bytes = Buffer.allocUnsafe(capacity);
-    let total = 0;
-    while (total < capacity) {
-      const chunk = await handle.read(bytes, total, capacity - total, total);
-      if (chunk.bytesRead === 0) break;
-      total += chunk.bytesRead;
-    }
-    if (total > before.size) throw new Error('file changed while reading');
-
-    const after = await handle.stat({ bigint: true });
-    const pathAfter = await lstat(filePath, { bigint: true });
-    if (pathAfter.isSymbolicLink() || !pathAfter.isFile()
-      || before.dev !== after.dev || before.ino !== after.ino
-      || before.size !== after.size || before.mtimeNs !== after.mtimeNs || before.ctimeNs !== after.ctimeNs
-      || after.dev !== pathAfter.dev || after.ino !== pathAfter.ino) {
-      throw new Error('file changed while reading');
-    }
-    return { text: bytes.subarray(0, total).toString('utf8'), bytes: total, sha256: createHash('sha256').update(bytes.subarray(0, total)).digest('hex') };
-  } finally {
-    await handle.close();
-  }
+  const root = await realpath(projectRoot);
+  const target = path.join(await realpath(path.dirname(path.resolve(filePath))), path.basename(filePath));
+  if (!isPathInside(root, target)) throw new Error('opened file is outside projectRoot');
+  const bytes = await readBoundedRegularFile(target, byteLimit, 'inspected', root, null);
+  return { text: bytes.toString('utf8'), bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') };
 }
 
 async function findFileViolations(fileInfoList, projectRoot) {
@@ -1887,7 +1741,7 @@ async function findFileViolations(fileInfoList, projectRoot) {
         inspected.push(file.requested);
       }
     } catch (error) {
-      const aggregateLimit = error.code === 'INSPECTION_FILE_TOO_LARGE' && maxTotalBytes - totalBytes < maxBytes;
+      const aggregateLimit = error.code === 'oversized' && maxTotalBytes - totalBytes < maxBytes;
       uninspected.push({
         file: file.requested,
         reason: aggregateLimit

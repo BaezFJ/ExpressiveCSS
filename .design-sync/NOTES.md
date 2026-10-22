@@ -28,8 +28,9 @@ the M3 token layer, and the guidelines** — not importable components.
   `[BUNDLE_EXPORT]` for any component not exported on `window.Expressive`, with
   no config escape. Button, List, Badge, Table, Grid and Panes therefore have no
   card; they are covered by `guidelines/` and the conventions header. A working
-  Button preview was built and rendered before hitting this gate — it is kept at
-  `.design-sync/rejected/Button.tsx` if the constraint ever changes.
+  Button preview was built and rendered before hitting this gate. It has since
+  been removed; `git show ee2b6f20c:.design-sync/rejected/Button.tsx` restores
+  it if the constraint ever changes.
 - **Dialogs and sheets need a sized, positioned wrapper.** `dialog` sets
   `max-height: min(70vh, calc(100% - 48px))`; with no containing block that
   computes negative and the dialog collapses to a sliver. Every dialog-based
@@ -170,7 +171,7 @@ bar, Panes, Footer, Breadcrumbs, Pagination, Buttons, Lists, Badges, Toolbars,
 Preloader, Table, Grid, Typography, Color, Icons, Elevation, Helpers, and the
 form controls — exports nothing, so none of it can have a preview card. A
 working Button card was built and rendered before being rejected by that gate;
-it is kept at `.design-sync/rejected/Button.tsx` (committed, with a README explaining why).
+it was committed in `ee2b6f20c` under `.design-sync/rejected/` and later removed.
 
 The decision (Javier, 2026-08-21) was **not** to add a design-system-only React
 wrapper layer to unlock cards — it would create a second API surface that drifts

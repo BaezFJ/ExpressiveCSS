@@ -10,7 +10,6 @@ import {
   PROJECT_FIXTURES,
   materializeProjectFixture,
   readCompletionFiles,
-  readBoundedRegularFile,
   checkProjectCompletion,
   assembleSkillBundle,
   DEFAULT_ADAPTER_TIMEOUT_MS,
@@ -20,6 +19,7 @@ import {
   runEvaluations,
   validateCaseDefinitions,
 } from '../scripts/eval-expressivecss-skill.mjs';
+import { readBoundedRegularFile } from '../scripts/lib/bounded-file.mjs';
 import { resolveExpressiveVersion } from '../scripts/lib/resolve-expressivecss-version.mjs';
 
 const caseData = JSON.parse(await readFile(new URL('./fixtures/expressivecss-skill-evals/cases.json', import.meta.url), 'utf8'));
@@ -89,7 +89,7 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
       const created = spawnSync('mkfifo', [fifo], { encoding: 'utf8', timeout: 1000 });
       assert.equal(created.status, 0, created.stderr);
       const checked = spawnSync(process.execPath, ['--input-type=module', '-e', `
-        import { readBoundedRegularFile } from './scripts/eval-expressivecss-skill.mjs';
+        import { readBoundedRegularFile } from './scripts/lib/bounded-file.mjs';
         try { await readBoundedRegularFile(process.argv[1], 1024, 'source', process.argv[2]); process.exitCode = 2; }
         catch (error) { if (!/not a regular file/.test(error.message)) throw error; console.log('rejected'); }
       `, fifo, directory], { encoding: 'utf8', timeout: 2000 });

@@ -25,15 +25,7 @@ label:has(> [type="radio"]),
   --md-comp-radio-button-icon-size: 20px;
   --md-comp-radio-button-state-layer-size: 40px;
 
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 48px;
-  margin: 0;
-  cursor: pointer;
-  user-select: none;
-  color: var(--md-sys-color-on-surface);
-  @include typescale("body-large");
+  @include selection-control-label;
 }
 
 // A row of radios is a group of controls, not navigation - see rule 4 in

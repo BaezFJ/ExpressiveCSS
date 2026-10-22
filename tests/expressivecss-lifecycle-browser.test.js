@@ -122,11 +122,23 @@ browserTest('Tooltip positioning preserves margins and viewport edges after scro
     await page.setViewportSize({ width: 640, height: 480 });
     await page.addStyleTag({ content: 'html, body { margin: 0; overflow: visible; } body { width: 2000px; height: 2000px; }' });
     const observed = await page.evaluate(() => {
+      // An 80x40 tooltip under a zero-size trigger whose rect puts the
+      // tooltip's box at viewport (x, y) before it is kept on screen.
+      const place = (instance, x, y) => {
+        const { tooltipEl: tip, el: origin } = instance;
+        for (const [el, width, height] of [[tip, 80, 40], [origin, 0, 0]]) {
+          Object.defineProperty(el, 'offsetWidth', { configurable: true, value: width });
+          Object.defineProperty(el, 'offsetHeight', { configurable: true, value: height });
+        }
+        origin.getBoundingClientRect = () => ({ left: x + 40, top: y - instance.options.margin, width: 0, height: 0 });
+        instance._positionTooltip();
+        return { x: parseFloat(tip.style.left), y: parseFloat(tip.style.top) };
+      };
       const outcomes = [];
       for (const [scrollX, scrollY] of [[0, 0], [130, 240]]) {
         window.scrollTo(scrollX, scrollY);
         for (const [margin, movement] of [[7, 3], [12, 8]]) {
-          const instance = Expressive.Tooltip.init(document.querySelector('.tooltipped'), { margin, transitionMovement: movement });
+          const instance = Expressive.Tooltip.init(document.querySelector('.tooltipped'), { margin, transitionMovement: movement, position: 'bottom' });
           try {
             const offset = margin + movement;
             for (const [x, y, expectedX, expectedY] of [
@@ -135,7 +147,7 @@ browserTest('Tooltip positioning preserves margins and viewport edges after scro
               [100, 100, 100, 100],
             ]) {
               outcomes.push({
-                actual: instance._repositionWithinScreen(x + window.scrollX, y + window.scrollY, 80, 40),
+                actual: place(instance, x, y),
                 expected: { x: expectedX + window.scrollX, y: expectedY + window.scrollY },
                 scroll: [window.scrollX, window.scrollY],
               });

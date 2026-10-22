@@ -32,6 +32,8 @@
     "semantics-data.json",
     "smoke.mjs",
     "scripts/resolve-version.mjs",
+    "scripts/bounded-file.mjs",
+    "scripts/semantics-rules.mjs",
     "README.md",
     "mcp.json",
     ".claude-plugin/plugin.json",

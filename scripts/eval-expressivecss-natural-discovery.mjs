@@ -2,14 +2,16 @@
 import { cp, mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { materializeProjectFixture, readBoundedRegularFile, redactValue } from './eval-expressivecss-skill.mjs';
+import { parseArgs } from 'node:util';
+import { materializeProjectFixture, redactValue } from './eval-expressivecss-skill.mjs';
+import { readBoundedRegularFile } from './lib/bounded-file.mjs';
+import { saveJson as save } from './lib/save-json.mjs';
 import { configuredDefaults, hashProject, runCodex } from './expressivecss-codex-adapter.mjs';
 import { collectEvaluationProvenance, assertSameProvenance, validateRetainedResults } from './expressivecss-eval-provenance.mjs';
 import { prepareReviewOutputs, statistics } from './benchmark-expressivecss-skill.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CATALOGUE = 'tests/fixtures/expressivecss-skill-evals/natural-discovery.json';
-const save = async (file, value, flag = 'w') => { await mkdir(path.dirname(file), { recursive: true }); await writeFile(file, `${JSON.stringify(value, null, 2)}\n`, { flag }); };
 
 export function validateNaturalCatalogue(catalogue) {
   const ids = new Set();
@@ -116,6 +118,7 @@ export async function runNaturalDiscovery({ baseline, candidate = path.join(ROOT
 }
 
 if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
-  const args = Object.fromEntries(process.argv.slice(2).map((argument) => { const index = argument.indexOf('='); if (!argument.startsWith('--') || index < 0) throw new Error('Use --option=value'); return [argument.slice(2, index), argument.slice(index + 1)]; }));
+  const names = ['baseline', 'candidate', 'output', 'split', 'manifest', 'freeze', 'resume', 'timeout-ms', 'executable', 'configPath'];
+  const { values: args } = parseArgs({ options: Object.fromEntries(names.map((name) => [name, { type: 'string' }])) });
   await runNaturalDiscovery({ ...args, freeze: args.freeze === 'true', resume: args.resume === 'true', timeoutMs: args['timeout-ms'] ? Number(args['timeout-ms']) : 180000 });
 }

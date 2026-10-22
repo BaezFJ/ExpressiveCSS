@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, InitElement } from "../core/component";
+import { Component, BaseOptions } from "../core/component";
 
 export interface ButtonGroupOptions extends BaseOptions {}
 
@@ -27,9 +27,8 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
   private _activeItem: HTMLElement | null = null;
 
   constructor(el: HTMLElement, options: Partial<ButtonGroupOptions> = {}) {
-    super(el, options, ButtonGroup);
+    super(el, options);
     this.el["Expressive_ButtonGroup"] = this;
-    this.options = { ...ButtonGroup.defaults, ...options };
 
     if (this._selectionMode) {
       this._normalizeSelection();
@@ -46,18 +45,6 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
 
   static get defaults() {
     return _defaults;
-  }
-
-  static init(el: HTMLElement, options?: Partial<ButtonGroupOptions>): ButtonGroup;
-  static init(
-    els: InitElements<InitElement>,
-    options?: Partial<ButtonGroupOptions>,
-  ): ButtonGroup[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<ButtonGroupOptions> = {},
-  ): ButtonGroup | ButtonGroup[] {
-    return super.init(els, options, ButtonGroup);
   }
 
   static getInstance(el: HTMLElement): ButtonGroup {

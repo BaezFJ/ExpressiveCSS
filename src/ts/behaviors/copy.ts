@@ -11,11 +11,9 @@ import { Utils } from '../core/utils';
  */
 export class Copy {
   static i18n = { copied: 'Copied', failed: "Couldn't copy" };
-  private static _initialized = false;
-
+  // A second Init adds nothing: addEventListener ignores a listener it has.
   static Init() {
-    if (Copy._initialized || typeof document === 'undefined') return;
-    Copy._initialized = true;
+    if (typeof document === 'undefined') return;
     document.addEventListener('click', Copy._onClick);
   }
 

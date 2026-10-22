@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 import { Utils } from '../core/utils';
 
 const _defaults: BaseOptions = {};
@@ -21,24 +21,14 @@ export class AppBar extends Component<BaseOptions> {
   private _restore: { hidden: HTMLElement['hidden']; expanded: string | null } | null = null;
 
   constructor(el: HTMLElement, options: Partial<BaseOptions>) {
-    super(el, options, AppBar);
+    super(el, options);
     this.el['Expressive_AppBar'] = this;
-    this.options = { ...AppBar.defaults, ...options };
     this._setupCollapse();
     this._setupSearch();
   }
 
   static get defaults(): BaseOptions {
     return _defaults;
-  }
-
-  static init(el: HTMLElement, options?: Partial<BaseOptions>): AppBar;
-  static init(els: InitElements<InitElement>, options?: Partial<BaseOptions>): AppBar[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<BaseOptions> = {}
-  ): AppBar | AppBar[] {
-    return super.init(els, options, AppBar);
   }
 
   static getInstance(el: HTMLElement): AppBar {

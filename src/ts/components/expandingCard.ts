@@ -1,11 +1,5 @@
 import { Utils } from "../core/utils";
-import {
-  Component,
-  BaseOptions,
-  InitElements,
-  InitElement,
-  Openable,
-} from "../core/component";
+import { Component, BaseOptions } from "../core/component";
 
 export interface ExpandingCardOptions extends BaseOptions {
   onOpen: (el: Element) => void;
@@ -23,10 +17,7 @@ export const EXPANDING_CARD_SELECTOR =
 /**
  * Morphs a compact card into a full-screen modal detail surface.
  */
-export class ExpandingCard
-  extends Component<ExpandingCardOptions>
-  implements Openable
-{
+export class ExpandingCard extends Component<ExpandingCardOptions> {
   isOpen: boolean = false;
   private readonly trigger: HTMLElement | null;
   private readonly dialog: HTMLDialogElement | null;
@@ -36,13 +27,8 @@ export class ExpandingCard
   private _initialTrigger: Record<string, string | null> = {};
 
   constructor(el: HTMLElement, options: Partial<ExpandingCardOptions>) {
-    super(el, options, ExpandingCard);
+    super(el, options);
     this.el["Expressive_ExpandingCard"] = this;
-
-    this.options = {
-      ...ExpandingCard.defaults,
-      ...options,
-    };
 
     this.dialog = this.el.querySelector(
       ":scope > dialog.expanding-card-dialog",
@@ -69,21 +55,6 @@ export class ExpandingCard
 
   static get defaults(): ExpandingCardOptions {
     return _defaults;
-  }
-
-  static init(
-    el: HTMLElement,
-    options?: Partial<ExpandingCardOptions>,
-  ): ExpandingCard;
-  static init(
-    els: InitElements<InitElement>,
-    options?: Partial<ExpandingCardOptions>,
-  ): ExpandingCard[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options?: Partial<ExpandingCardOptions>,
-  ): ExpandingCard | ExpandingCard[] {
-    return super.init(els, options, ExpandingCard);
   }
 
   static getInstance(el: HTMLElement): ExpandingCard {
@@ -118,7 +89,7 @@ export class ExpandingCard
   };
 
   private _handleTriggerKeypress = (event: KeyboardEvent) => {
-    if (event.key === Utils.keys.ENTER || event.key === " ") {
+    if (event.key === 'Enter' || event.key === " ") {
       event.preventDefault();
       this.open();
     }

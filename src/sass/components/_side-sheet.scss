@@ -139,30 +139,7 @@ $_sheet: "dialog.side-sheet";
   }
 
   > header :is(button, a.button) {
-    flex: 0 0 48px;
-    box-sizing: border-box;
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
-    padding: 0;
-    border: none;
-    border-radius: 50%;
-    background-color: transparent;
-    color: var(--md-sys-color-on-surface-variant);
-    box-shadow: none;
-
-    > #{$icon} {
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
-      line-height: 24px;
-    }
-
-    &:hover {
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
-    }
-
-    @include focus-visible;
+    @include header-icon-action;
   }
 
   > :is(form, nav):last-child {

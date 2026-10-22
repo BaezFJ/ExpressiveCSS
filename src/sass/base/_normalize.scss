@@ -131,7 +131,8 @@ sup {
 // Forms
 // ==========================================================================
 
-// 1. Change the font styles in all browsers.
+// 1. Change the font styles in all browsers. The family is set from
+//    $font-stack on the same selectors in _global.scss.
 // 2. Remove the margin in Firefox and Safari.
 
 button,
@@ -139,7 +140,6 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: inherit; // 1
   font-size: 100%; // 1
   line-height: 1.15; // 1
   margin: 0; // 2

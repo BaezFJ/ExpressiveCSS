@@ -174,12 +174,7 @@
     @include focus-visible;
 
     &::after {
-      content: "";
-      flex: none;
-      width: 18px;
-      height: 18px;
-      background-color: currentColor;
-      mask: $trend-arrow center / 18px no-repeat;
+      @include trend-arrow;
       opacity: 0;
       transition: opacity var(--md-sys-motion-duration-short4) ease-out, transform var(--md-sys-motion-duration-short4) ease-out;
     }

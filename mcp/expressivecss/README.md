@@ -677,7 +677,7 @@ Hermes uses the top-level `mcp_servers` setting shown in `sample-hermes-config.y
 ## Notes
 
 - Published package scripts are self-contained: `npm test` runs the live MCP protocol smoke test, and `npm pack --dry-run` runs that test through `prepack`.
-- Repository maintainers can verify generated sources with `node ../../scripts/gen-expressivecss-skill.mjs --check` and `node scripts/sync-guides.mjs --check`, then run `npm test`. To refresh them, run those two generator commands without `--check` before packing.
+- Repository maintainers can verify generated sources with `node ../../scripts/gen-expressivecss-skill.mjs --check`, then run `npm test`. To refresh them, run the generator without `--check` before packing.
 - `setup_expert` resolves framework source, an installed package, or supported lockfiles in that order. A manifest range alone is reported as unresolved rather than treated as the installed version. An installed version outside the direct manifest range also blocks contract-dependent guidance.
 - Pass `projectRoot` in tool calls when the target project differs from the MCP process working directory.
 

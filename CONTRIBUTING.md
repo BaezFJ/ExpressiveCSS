@@ -137,18 +137,6 @@ For a PR run, download the `browser-critical-flows-<engine>` artifacts instead. 
 browser `result.json` files and failure traces; the weekly artifact also includes
 visual HTML reports. A local Podman pass does not establish a Docker Actions pass.
 
-Select the manual workflow's `benchmark` input to compare three cold and three
-cached builds on separate fresh runners at the same revision. The experiment
-transfers a dependency-stage BuildKit cache through a temporary Actions artifact;
-cached timings include that download. It does not enable caching for normal CI.
-The six timing artifacts last seven days; the temporary cache lasts one day.
-
-Enable production caching only if median cold `npm ci` time exceeds 60 seconds
-and median total build savings reach 30 seconds. If measured, implement Buildx
-GHA caching with `mode=max` and local image loading, and confirm its transfer costs
-meet the same threshold. Keep the weekly cold check uncached and permit cache
-misses. Until those measurements exist, leave caching disabled.
-
 Dependabot groups Playwright minor and patch updates separately from other build
 tooling. Major updates remain individual reviews. The image follows the lockfile;
 there is no separate version to update. Regenerate committed skill/MCP metadata

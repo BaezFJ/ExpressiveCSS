@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { access, copyFile, mkdir, mkdtemp, readFile, realpath, rm, symlink, truncate, writeFile } from 'node:fs/promises';
+import { access, copyFile, cp, mkdir, mkdtemp, readFile, realpath, rm, symlink, truncate, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -318,8 +318,7 @@ async function verifyResponseBudgets(matchingDir, versionedDir) {
   const fixtureDir = await mkdtemp(path.join(packageDir, '.budget-fixture-'));
   try {
     for (const file of ['server.js', 'package.json', 'component-decisions.json', 'capability-roadmap.json', 'contract.json', 'semantics-data.json']) await copyFile(path.join(packageDir, file), path.join(fixtureDir, file));
-    await mkdir(path.join(fixtureDir, 'scripts'));
-    await copyFile(path.join(packageDir, 'scripts', 'resolve-version.mjs'), path.join(fixtureDir, 'scripts', 'resolve-version.mjs'));
+    await cp(path.join(packageDir, 'scripts'), path.join(fixtureDir, 'scripts'), { recursive: true });
     const code = 'const text = "界🌍\\\\\\\"";\n'.repeat(500).trim();
     const markdown = '完整 Options 🌍 with an escaped \\" value.\n'.repeat(5_000).trim();
     const rules = ['`whole-first`: Preserve this full record.', '`huge-rule`: ' + '界🌍'.repeat(20_000)];
@@ -473,8 +472,7 @@ async function verifyCatalogueResources(expectedEntries, toolPayload, consumerRo
   const fixtureDir = await mkdtemp(path.join(packageDir, '.resource-fixture-'));
   try {
     for (const file of ['server.js', 'package.json', 'component-guides.json', 'component-decisions.json', 'capability-roadmap.json', 'contract.json', 'semantics-data.json']) await copyFile(path.join(packageDir, file), path.join(fixtureDir, file));
-    await mkdir(path.join(fixtureDir, 'scripts'));
-    await copyFile(path.join(packageDir, 'scripts', 'resolve-version.mjs'), path.join(fixtureDir, 'scripts', 'resolve-version.mjs'));
+    await cp(path.join(packageDir, 'scripts'), path.join(fixtureDir, 'scripts'), { recursive: true });
     const decisions = structuredClone(decisionsData);
     const unicode = '界🌍 "escaped" \\ value\n'.repeat(2_000);
     decisions.components.find((row) => row.slug === expectedEntries[0].slug).useWhen = [unicode];
@@ -1095,7 +1093,7 @@ const transport = new StdioClientTransport({
   const crowdedMarkup = path.join(outsideDir, 'crowded.html');
   await symlink(invalidMarkupFile, linkedMarkup);
   await writeFile(crowdedMarkup, '<i></i>'.repeat(2_100));
-  for (const [file, reason] of [[oversizedFile, /read limit/u], [linkedMarkup, /symbolic link/u], [path.join(packageDir, 'README.md'), /outside projectRoot/u], [crowdedMarkup, /inspection-truncated/u]]) {
+  for (const [file, reason] of [[oversizedFile, /exceeds \d+ bytes/u], [linkedMarkup, /symbolic link/u], [path.join(packageDir, 'README.md'), /outside projectRoot/u], [crowdedMarkup, /inspection-truncated/u]]) {
     const refused = lint([file]);
     assert.equal(refused.status, 1, `${file} passed`);
     assert.match(refused.stdout, reason);
@@ -1990,8 +1988,7 @@ try {
     for (const file of ['server.js', 'package.json', 'component-decisions.json', 'capability-roadmap.json', 'contract.json', 'semantics-data.json']) {
       await copyFile(path.join(packageDir, file), path.join(optionsFixtureDir, file));
     }
-    await mkdir(path.join(optionsFixtureDir, 'scripts'));
-    await copyFile(path.join(packageDir, 'scripts', 'resolve-version.mjs'), path.join(optionsFixtureDir, 'scripts', 'resolve-version.mjs'));
+    await cp(path.join(packageDir, 'scripts'), path.join(optionsFixtureDir, 'scripts'), { recursive: true });
     const markdown = [
       '| Name | Description |', '| --- | --- |', '| example | Complete table |',
       '##### Nested guidance', '[Reference](https://example.test/options)',
