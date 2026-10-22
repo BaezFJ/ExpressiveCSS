@@ -74,15 +74,7 @@
     }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    > div > span {
-      transition: clip-path var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard);
-
-      @starting-style {
-        clip-path: inset(var(--zero, 100%) 0 calc(100% - var(--zero, 100%)) round var(--column-chart-ends));
-      }
-    }
-  }
+  @include chart-column-motion;
 }
 
 // One column per row, rounded only at the ends of the whole stack.

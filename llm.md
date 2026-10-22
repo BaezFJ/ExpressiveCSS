@@ -293,6 +293,17 @@ Opt an element out when it needs manual options:
 <a class="button tooltipped no-autoinit" data-tooltip="Hi">Hover</a>
 ```
 
+Or give the element its options in markup. `AutoInit()` reads a `data-<name>-options` attribute holding a JSON object, where `<name>` is the component name in kebab case (`Menu` reads `data-menu-options`, `FormSelect` reads `data-form-select-options`, and `.date-picker` reads `data-datepicker-options` because the name comes from the component, not the class) and the keys are the option names used in script:
+
+```html
+<a class="button menu-trigger" data-target="actions" data-menu-options='{"closeOnClick": false}'>Actions</a>
+```
+
+- Options passed to `AutoInit(context, options)` win for the keys they set; a nested object such as `i18n` counts as one key. Tooltip reads its own `data-tooltip`, `data-tooltip-id` and `data-position` again each time it opens, so those win over both. Set those, and Menu's `contextMenu` (`data-context-menu`), in one place.
+- Markup can set only options whose default is a string, number, boolean, array or plain object, with a value of the same kind. Nested keys are checked against the default object, and one rejected nested key leaves the whole object at its default. An object whose default is empty, such as FormSelect's `menuOptions`, accepts no keys from markup. Items of a non-empty default array need the kind of its first item. Callbacks, elements, options with a `null` default, Autocomplete's `allowUnsafeHTML` and the `data` lists of Chips and Autocomplete stay script-only.
+- Invalid JSON, unknown keys and wrong kinds are skipped with a console warning, and those options keep their defaults. A value that passes the checks but still makes a component throw stops `AutoInit()`, as it would from script.
+- Direct `init()` calls do not read the attribute. Menus inside a `.menubar` take Menubar's `menuOptions` instead.
+
 `AutoInit()` recognizes these public components and selectors:
 
 | Component | Selector |
@@ -5090,7 +5101,7 @@ A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The firs
 - `axis` labels the y axis at round values beside the plot, with a grid line at each, and widens an end the chart chose to the next round value. The labels repeat the cells' currency or percent sign and shorten large numbers (`$1.5K`); an end set by `data-min` or `data-max` stays put. They are `aria-hidden`; the table carries the values. `--md-comp-line-chart-axis-width` (48px) is the room they take.
 - The plot is one Tab stop named by the caption. Left and Right move between rows, Home and End jump to the ends, Escape hides the tooltip. In a right-to-left context the x axis runs right to left and the arrows follow it. The tooltip is a polite live region. Hide a redundant caption with `.visually-hidden` rather than removing it.
 - A direct `<figure>` in a card is normally media with an overlaid caption; a `.line-chart` keeps its own layout there.
-- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. `show(index)` highlights a row (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
+- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. The lines, areas and points move from their old values to the new ones over `--md-sys-motion-duration-medium4` with `--md-sys-motion-easing-standard`, matched by table column and row position. A series or value new to the chart rises from the plot bottom, or in a stack from the series below; one that goes away goes at once, and so do the axis labels. With reduced motion, or a zero duration token, the new shape appears at once. A second `update()` while the marks move starts them from the values the first one drew, not from where they are. `show(index)` highlights a row (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
 - With `data-watch` on the figure, or the `watch` option, the chart calls `update()` itself whenever its table changes: rows or cells added or removed, cell text, or a `data-value`, `class` or heatmap `data-label` inside the table. The edits a script makes in one run redraw it once; edits on either side of an `await` redraw twice. A replaced table is watched too. The attribute is read when the chart starts, and any value turns it on. Changes to the figure itself, such as `data-min`, its classes or its caption, still need `update()`. Every chart type takes `data-watch`.
 
 ### Tokens
@@ -5135,7 +5146,7 @@ A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as
 - The y axis always includes zero, with 10% of the span to spare above and, with negative values, below. Negative columns hang from zero and round their lower end. `data-min` and `data-max` on the figure, or the `min` and `max` options, fix either end; when zero is off the scale, columns start at the plot's bottom.
 - `axis` labels the y axis at round values beside the plot, with a grid line at each, and widens an end the chart chose to the next round value. The labels repeat the cells' currency or percent sign and shorten large numbers (`$1.5K`); an end set by `data-min` or `data-max` stays put. They are `aria-hidden`; the table carries the values. `--md-comp-column-chart-axis-width` (48px) is the room they take.
 - Keyboard, RTL, the live tooltip and cards behave as for the line chart: the plot is one Tab stop named by the caption, and a `.column-chart` in a card keeps its own layout.
-- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. `show(index)` highlights a group (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. The columns move from their old values to the new ones with their usual transition, and a new column grows from zero, or in a stack from the segment below; with reduced motion they appear at once. `show(index)` highlights a group (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
 
 ### Tokens
 
@@ -5180,7 +5191,7 @@ A `<figure class="bar-chart">` takes the same `<figcaption>` and `<table>` as a 
 - Cells, series colors, `data-min`, `data-max`, negative values and gaps work as in the column chart; negative bars grow toward the inline start.
 - `axis` labels the value axis at round values under the plot, with a grid line up from each, as in the column chart.
 - The plot is one Tab stop named by the caption. Up and down arrows move between rows, Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped row. In a right-to-left page, set by `dir` or CSS `direction`, the bars grow leftwards and the labels sit on the right; rows keep their order.
-- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. It takes the column chart's options and methods.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. The bars move from their old values to the new ones, as the column chart's columns do; with reduced motion they appear at once. It takes the column chart's options and methods.
 
 ### Tokens
 
@@ -5400,7 +5411,7 @@ A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as 
 - `axis` labels the first scale beside the plot's start, with grid lines, and the `end` scale along its end. When neither scale has a set end, the `end` scale stretches to as many round steps as the first so its labels share the grid lines. Each scale's labels repeat its cells' currency or percent sign.
 - Cells read as in the line chart; a suffix such as `K` makes a cell a gap, so use `data-value` or put the unit in the header. A gap breaks a line and leaves a column's slot empty. Series take four colors in column order, whatever their kind, then repeat.
 - The cursor bands the highlighted row and puts a point on each line and area. The plot is one Tab stop named by the caption; left and right move between rows, Home and End jump to the ends and Escape hides the tooltip. `sparkline` is a 48px chart with no grid, labels, legend or tooltip and is not focusable.
-- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. Its columns, lines and areas move from their old values to the new ones, as in the line and column charts; with reduced motion they appear at once. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale.
 - `stacked` stacks the column series into one column per row; the `end` series' columns stack in their own column beside it, so list them after the others. Lines and areas keep their own values, and the tooltip shows each cell. `points` marks every value on the lines and areas with a dot, and `straight` draws straight lines instead of curves.
 
 ### Tokens
@@ -6681,7 +6692,7 @@ For HTML, point `data-tooltip-id` at an element. That element is moved into the 
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.Tooltip`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.tooltipped`. On touch, a runtime tooltip shows on a long press of half a second, without `enterDelay`, and stays for a second and a half after the finger lifts; the long press does not press the button or follow the link, and a tap, or a press that turns into a scroll, shows nothing. A tooltip that opens while a tooltip is closing, or within 300 ms after that one's `exitDelay` ends, shows without waiting its `enterDelay`, so moving along a toolbar shows each tooltip at once.
+The IIFE bundle exposes `Expressive.Tooltip`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.tooltipped`. On touch, a runtime tooltip shows on a long press of half a second, without `enterDelay`, and stays for a second and a half after the finger lifts; the long press does not press the button or follow the link, and a tap, or a press that turns into a scroll, shows nothing. A tooltip that opens while a tooltip is closing, or within 300 ms after that one's `exitDelay` ends, shows without waiting its `enterDelay`, so moving along a toolbar shows each tooltip at once. With `openOnClick`, a tap is the click: it opens and closes the tooltip, and the long press is off.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
@@ -6716,6 +6727,7 @@ Constructor and `init` options. `data-tooltip`, `data-position`, and `data-toolt
 | `outDuration` | Number | `200` | Exit transition duration, in milliseconds. |
 | `position` | String | `'bottom'` | Direction: `'top'`, `'right'`, `'bottom'`, or `'left'`. Set by `data-position`. The CSS-only default is above. |
 | `transitionMovement` | Number | `10` | How far the tooltip moves during its transition, in pixels. An anchored tooltip does not move and adds this to the gap. |
+| `openOnClick` | Boolean | `false` | Open on a click instead of hover and focus, at once, without `enterDelay`. A second click, Escape, a click elsewhere or focus moving to another element closes it at once; a click inside the tooltip does not. Keyboard users open it with Enter or Space, so the trigger should be a `<button>`. |
 
 ### Methods
 
@@ -6727,7 +6739,7 @@ const instance = Expressive.Tooltip.getInstance(elem);
 
 #### .open();
 
-`open()` and `open(true)` show the tooltip after its enter delay without requiring hover or focus. `open(false)` uses the automatic behavior and requires hover or focus when the delay ends.
+`open()` and `open(true)` show the tooltip after its enter delay without requiring hover or focus. `open(false)` uses the automatic behavior and requires hover or focus when the delay ends. With `openOnClick`, a click elsewhere also closes a tooltip opened this way.
 
 ```text
 instance.open();
@@ -7217,10 +7229,10 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 
 Wrap the input in its own small parent — a `.field`, or a bare `<div>`. The clock is appended inside that parent.
 
-Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital hour and minute fields; Enter in either one writes the typed time.
+Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital fields; Enter in any of them writes the typed time.
 
 Digital edits use native input events, including paste. Invalid edits restore
-the last valid value on blur. Empty fields use the current hour or minute without
+the last valid value on blur. Empty fields use the current hour, minute or second without
 changing the selected AM/PM period. Twelve-hour initialization converts 24-hour
 strings and accepts either case for AM/PM. No modal or dial-keyboard API is added.
 
@@ -7287,10 +7299,11 @@ Expressive.Timepicker.init(elem, {
 | `container` | Element or String | `null` | Element or selector to render the clock into. When omitted, it is appended to the input’s parent. |
 | `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
 | `autoSubmit` | Boolean | `true` | If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added. |
-| `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` string (optionally with `AM`/`PM`). |
+| `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` or `'HH:MM:SS'` string (optionally with `AM`/`PM`). |
 | `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |
-| `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, and Minutes. |
+| `i18n` | Object | See below | Labels for Cancel, Clear, Ok, Hours, Minutes and Seconds. |
 | `twelveHour` | Boolean | `true`, or the language's | If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. With a `lang` on or around the input, defaults to the clock that language uses. |
+| `showSeconds` | Boolean | `false` | Add a seconds field after the minutes and write `HH:MM:SS`. The dial still sets hours and minutes only. |
 | `vibrate` | Boolean | `true` | Vibrate the device when the clock hand changes value. |
 | `onSelect` | Function | `null` | Called when a time is chosen on the dial. Receives `(hour, minute)`. |
 | `onInputInteraction` | Function | `null` | Called when the input is clicked or confirmed with Enter. |
@@ -7309,7 +7322,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 | `clear` | `'Clear'` |
 | `done` | `'Ok'` |
 
-`i18n.hours` and `i18n.minutes` default to `Hours` and `Minutes` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between controls. The dial itself takes pointer input only: the spin buttons already set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.
+`i18n.hours`, `i18n.minutes` and `i18n.seconds` default to `Hours`, `Minutes` and `Seconds` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour, minute and second fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round, and the hand follows the hour and minute. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between controls. The dial itself takes pointer input only: the spin buttons already set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.
 
 ### 12-hour and 24-hour
 
@@ -7319,6 +7332,22 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 Expressive.Timepicker.init(document.getElementById('timepicker-24'), {
   twelveHour: false
 });
+```
+
+### Seconds
+
+`showSeconds: true` adds a third field, a spin button named by `i18n.seconds`, after the minutes. It steps and takes typed values like the minute field, and an emptied field takes the current second. The written value becomes `HH:MM:SS`, with ` AM` or ` PM` on a 12-hour clock. A value read without seconds, such as `14:30`, opens at zero seconds. The dial keeps its hours and minutes views, as the Material 3 time picker does; seconds are set in the field only. Under `autoSubmit`, choosing a minute on the dial writes the time with the seconds the field shows.
+
+```js
+Expressive.Timepicker.init(document.getElementById('timepicker-seconds'), {
+  showSeconds: true
+});
+```
+
+A `type="time"` input gets 24-hour `HH:MM:SS`. Give it `step="1"` so the browser does not flag the seconds as a step mismatch.
+
+```html
+<input type="time" step="1" class="time-picker" id="alarm">
 ```
 
 ### Methods
@@ -7341,7 +7370,7 @@ instance.showView('hours');
 
 #### .done();
 
-Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.
+Write the current time to the input, with seconds when `showSeconds` is on. Pass a truthy argument to clear the input instead.
 
 ```text
 instance.done();
@@ -7374,9 +7403,10 @@ These methods are not provided. The clock defaults to visible inline presentatio
 | --- | --- | --- |
 | `el` | Element | The input the plugin was initialized with. |
 | `options` | Object | The options the instance was initialized with. |
-| `time` | String | The last value written by `done()`, without the AM/PM suffix. |
+| `time` | String | The last value written by `done()`, without the AM/PM suffix. It ends in `:SS` when `showSeconds` is on. |
 | `hours` | Number | The hour currently shown on the clock. |
 | `minutes` | Number | The minute currently shown on the clock. |
+| `seconds` | Number | The second of the time on the clock. The seconds field shows it when `showSeconds` is on. |
 | `amOrPm` | String | `'AM'` or `'PM'` when `twelveHour` is true. |
 | `currentView` | String | `'hours'` or `'minutes'`. |
 
@@ -8534,7 +8564,7 @@ Backspace and Delete target the focused chip, then select the preceding survivor
 
 `allowUserInput` defaults to `false`. Without it there is no text field and rendered chips have no delete button. Pass `allowUserInput: true` for the interactive field. `AutoInit()` starts every `.chips` except `no-autoinit`, but it uses the defaults, so those wrappers stay display-only until you call `init` with options.
 
-In a form, give the field's `<input>` a `name`. The chips submit under it, one `id` per chip, as a multiple select does. The text input gives its name up so half-typed text is not submitted, and the values follow its form, `form` attribute and `disabled` state at the moment the form gathers its data. A `required` input makes the field valid once it has a chip, and says `i18n.required` until then; the input keeps `aria-required="true"`. A form reset puts back the chips the field started with once no listener can cancel it: at the next microtask, or when the field is next used. Check validity after an `await`, not in the same task as `reset()`. A disabled input shows no validation message, so if the page replaces the chips' required message while the field is disabled and the chips then change, set the page's error again once the field is enabled. Set a field up once it is in its form; one set up before it is moved into a detached form or a shadow root is heard there once it is laid out, or at once if you call `init` again. `destroy()` gives the input its name and `required` back. Pasting text that lists values, split by commas, tabs or new lines, adds a chip for each, up to `limit`; an `autocompleteOnly` field pastes as text. With `allowCreate: true` in `autocompleteOptions`, choosing the `Add` row adds the typed text as a chip, in an `autocompleteOnly` field too, and then calls the page's own `onCreate`.
+In a form, give the field's `<input>` a `name`. The chips submit under it, one `id` per chip, as a multiple select does. `init` wraps the input in an `<expressive-chips-control>`, a form-associated custom element with `display: contents`, and moves the name onto it, so half-typed text is not submitted. The form treats the control as the field. A disabled `fieldset` or a form reset applies to it at once, including in a detached form or a shadow root, and a canceled reset changes nothing. Setting `disabled`, `readonly` or `form` on the input applies at the next microtask. A `required` input makes the field valid once it has a chip, and says `i18n.required` until then, unless the input is read-only. The control holds that validity apart from any error the page sets on the input, and a blocked submit focuses the input. The input itself stays valid and does not match `:invalid`, so style or report the error from the control or the form. The input keeps `aria-required="true"`. `destroy()` unwraps the input and gives its name and `required` back. Without form-associated custom elements, as in jsdom, the input is left as it is and submits its own text. Pasting text that lists values, split by commas, tabs or new lines, adds a chip for each, up to `limit`; an `autocompleteOnly` field pastes as text. With `allowCreate: true` in `autocompleteOptions`, choosing the `Add` row adds the typed text as a chip, in an `autocompleteOnly` field too, and then calls the page's own `onCreate`.
 
 ```html
 <form>
@@ -8868,6 +8898,8 @@ onCreate: function(text, autocomplete) {
 | `selected` | Array | `[]` | Initial selected ids, strings or numbers. An id without loaded data displays the id. Pass the selected ids to `setMenuItems` with the loaded data to resolve their labels. |
 
 Autocomplete provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. `i18n.create(text)` labels the `Add` row and returns `Add "text"`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
+
+When a search returns no suggestions, the open list also shows `i18n.noResults` as its first row, so sighted users see what the live region says. The row is `<li class="autocomplete-no-results" role="none" aria-hidden="true">`. It is not an option: arrow keys skip it, and a click on it chooses nothing and leaves focus in the field. It leaves the list when a search returns a match. In Chips, Enter that adds the typed text as a chip closes the list.
 
 Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback and the `Add` row. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still pass the signal to their requests, so a stale response cannot replace newer results, and own error handling. Results delivered after `destroy()` are ignored, and results delivered after the user leaves the field update the list without opening it. Test actual spoken delivery with a screen reader.
 

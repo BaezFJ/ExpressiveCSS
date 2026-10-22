@@ -15,6 +15,7 @@ const S = defineSections([
   { id: "options", label: "Options" },
   { id: "internationalization", label: "Internationalization" },
   { id: "twelve-hour", label: "12-hour and 24-hour" },
+  { id: "seconds", label: "Seconds" },
   { id: "methods", label: "Methods" },
   { id: "properties", label: "Properties" },
 ]);
@@ -48,10 +49,10 @@ const S = defineSections([
           Click an hour on the dial, then a minute. With the default
           <code>autoSubmit: true</code>, finishing the minute writes the input
           (<code>HH:MM AM</code> or <code>HH:MM PM</code>). You can also type in the digital
-          hour and minute fields; Enter in either one writes the typed time.
+          fields; Enter in any of them writes the typed time.
           Digital edits use native input events, including paste. Invalid edits
           restore the last valid value when focus leaves the field. Empty fields
-          use the current hour or minute without changing the selected AM/PM period.
+          use the current hour, minute or second without changing the selected AM/PM period.
         </p>
         <p>Clicking the host input or pressing Enter reloads its current value into the clock. Changing the active clock field or editing its value cancels an older delayed clock update.</p>
   </Section>
@@ -164,7 +165,7 @@ Expressive.Timepicker.init(elem, {
               <td><code>defaultTime</code></td>
               <td>String</td>
               <td><code>'now'</code></td>
-              <td>Initial time. <code>'now'</code> or a <code>'HH:MM'</code> string (optionally with <code>AM</code>/<code>PM</code>).</td>
+              <td>Initial time. <code>'now'</code> or a <code>'HH:MM'</code> or <code>'HH:MM:SS'</code> string (optionally with <code>AM</code>/<code>PM</code>).</td>
             </tr>
             <tr>
               <td><code>fromNow</code></td>
@@ -176,13 +177,19 @@ Expressive.Timepicker.init(elem, {
               <td><code>i18n</code></td>
               <td>Object</td>
               <td>See below</td>
-              <td>Labels for Cancel, Clear, Ok, Hours, and Minutes.</td>
+              <td>Labels for Cancel, Clear, Ok, Hours, Minutes and Seconds.</td>
             </tr>
             <tr>
               <td><code>twelveHour</code></td>
               <td>Boolean</td>
               <td><code>true</code>, or the language's</td>
               <td>If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings. With a <code>lang</code> on or around the input, it defaults to the clock that language uses.</td>
+            </tr>
+            <tr>
+              <td><code>showSeconds</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Add a seconds field after the minutes and write <code>HH:MM:SS</code>. The dial still sets hours and minutes only.</td>
             </tr>
             <tr>
               <td><code>vibrate</code></td>
@@ -254,7 +261,7 @@ Expressive.Timepicker.init(elem, {
   </Section>
 
   <Section {...S.internationalization}>
-        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults. The <code>hours</code> and <code>minutes</code> keys provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour and minute fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round the dial, and the hand follows. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between the fields, the AM/PM buttons and the footer. The dial itself takes pointer input only: the spin buttons set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.</p>
+        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults. The <code>hours</code>, <code>minutes</code> and <code>seconds</code> keys provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour, minute and second fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round, and the hand follows the hour and minute. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between the fields, the AM/PM buttons and the footer. The dial itself takes pointer input only: the spin buttons set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.</p>
         <table class="striped">
           <thead>
             <tr>
@@ -277,6 +284,7 @@ Expressive.Timepicker.init(elem, {
             </tr>
             <tr><td><code>hours</code></td><td><code>'Hours'</code></td></tr>
             <tr><td><code>minutes</code></td><td><code>'Minutes'</code></td></tr>
+            <tr><td><code>seconds</code></td><td><code>'Seconds'</code></td></tr>
           </tbody>
         </table>
   </Section>
@@ -301,6 +309,30 @@ Expressive.Timepicker.init(document.getElementById('timepicker-24'), {
 `} />
   </Section>
 
+  <Section {...S.seconds}>
+        <p>
+          <code>showSeconds: true</code> adds a third field, a spin button named by <code>i18n.seconds</code>, after the minutes. It steps and takes typed values like the minute field, and an emptied field takes the current second. The written value becomes <code>HH:MM:SS</code>, with AM or PM on a 12-hour clock. A value read without seconds, such as <code>14:30</code>, opens at zero seconds.
+        </p>
+        <p>
+          The dial keeps its hours and minutes views, as the Material 3 time picker does; seconds are set in the field only. Under <code>autoSubmit</code>, choosing a minute on the dial writes the time with the seconds the field shows.
+        </p>
+        <div class="field mb-3">
+          <input type="text" class="time-picker no-autoinit" id="timepicker-seconds">
+          <label for="timepicker-seconds">With seconds</label>
+        </div>
+<Code code={`
+Expressive.Timepicker.init(document.getElementById('timepicker-seconds'), {
+  showSeconds: true
+});
+`} />
+        <p>
+          A <code>type="time"</code> input gets 24-hour <code>HH:MM:SS</code>. Give it <code>step="1"</code> so the browser does not flag the seconds as a step mismatch.
+        </p>
+<Code code={`
+<input type="time" step="1" class="time-picker" id="alarm">
+`} />
+  </Section>
+
   <Section {...S.methods}>
         <InstanceNote plugin="Timepicker" />
 
@@ -312,7 +344,7 @@ instance.showView('hours');
 `} />
 
         <h5 class="light">.done();</h5>
-        <p>Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.</p>
+        <p>Write the current time to the input, with seconds when <code>showSeconds</code> is on. Pass a truthy argument to clear the input instead.</p>
 <Code code={`
 instance.done();
 instance.done(true);
@@ -336,7 +368,7 @@ instance.destroy();
             <tr>
               <td><code>time</code></td>
               <td>String</td>
-              <td>The last value written by <code>done()</code>, without the AM/PM suffix.</td>
+              <td>The last value written by <code>done()</code>, without the AM/PM suffix. It ends in <code>:SS</code> when <code>showSeconds</code> is on.</td>
             </tr>
             <tr>
               <td><code>hours</code></td>
@@ -347,6 +379,11 @@ instance.destroy();
               <td><code>minutes</code></td>
               <td>Number</td>
               <td>The minute currently shown on the clock.</td>
+            </tr>
+            <tr>
+              <td><code>seconds</code></td>
+              <td>Number</td>
+              <td>The second of the time on the clock. The seconds field shows it when <code>showSeconds</code> is on.</td>
             </tr>
             <tr>
               <td><code>amOrPm</code></td>

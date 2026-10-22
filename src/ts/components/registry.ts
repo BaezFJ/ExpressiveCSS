@@ -103,6 +103,7 @@ export type AutoInitOptions = {
 
 /** The shape every entry in the table satisfies; see the cast in AutoInit. */
 type AutoInitable = {
+  defaults: object;
   init(els: InitElement | InitElements<InitElement>, options: Partial<object>): unknown;
 };
 
@@ -111,6 +112,108 @@ type AutoInitEntry = {
   selector: string;
   filter?: (el: Element) => boolean;
 };
+
+/**
+ * Options markup cannot set: `allowUnsafeHTML` turns off HTML escaping,
+ * `minYear` and `maxYear` are internal, and Chips and Autocomplete throw
+ * part way through their constructors on `data` entries of the wrong shape.
+ */
+const MARKUP_BLOCKED = new Set(["allowUnsafeHTML", "minYear", "maxYear", "data"]);
+const OBJECT = "[object Object]";
+const ARRAY = "[object Array]";
+/** The default kinds markup can replace with a value of the same kind. */
+const SETTABLE = new Set(["[object String]", "[object Number]", "[object Boolean]", ARRAY, OBJECT]);
+
+/** The attribute a component reads its markup options from: `FormSelect` reads `data-form-select-options`. */
+const optionsAttribute = (name: string) => `data-${name.replace(/\B[A-Z]/g, "-$&").toLowerCase()}-options`;
+
+/** A value's kind as its `toString` tag, with objects that are not plain counted apart. */
+function kind(value: unknown) {
+  const tag = Object.prototype.toString.call(value);
+  return tag === OBJECT && Object.getPrototypeOf(value) !== Object.prototype ? "other" : tag;
+}
+
+/** Whether every item has the kind of the default array's first item, when it has one. */
+const itemsMatch = (fallback: unknown[], value: unknown[]) =>
+  !fallback.length || value.every((item) => kind(item) === kind(fallback[0]));
+
+/** Whether a markup value may replace `fallback`: both are the same settable kind. */
+function sameKind(fallback: unknown, value: unknown) {
+  const type = kind(fallback);
+  if (!SETTABLE.has(type) || kind(value) !== type) return false;
+  return type !== ARRAY || itemsMatch(fallback as unknown[], value as unknown[]);
+}
+
+const accepts = (defaults: object, key: string, value: unknown) =>
+  Object.hasOwn(defaults, key) && !MARKUP_BLOCKED.has(key) && sameKind(defaults[key], value);
+
+/** Records a rejected key; returns undefined so the key is left out. */
+const reject = (rejected: string[], key: string) => void rejected.push(key);
+
+/**
+ * A plain object filtered against its default object, or undefined once any
+ * key inside it is rejected, so the whole option keeps its default. Other
+ * values pass through.
+ */
+function nested(value: unknown, fallback: object, rejected: string[], path: string) {
+  if (kind(value) !== OBJECT) return value;
+  const count = rejected.length;
+  const picked = pick(value as object, fallback, rejected, path);
+  return rejected.length === count ? picked : undefined;
+}
+
+/**
+ * Copies the entries of `parsed` that `defaults` owns and that keep their
+ * default's kind. Only own keys of `defaults` are copied, so `__proto__` never
+ * is. Rejected keys go into `rejected`, dotted below the top level.
+ */
+function pick(parsed: object, defaults: object, rejected: string[], path = ""): Record<string, unknown> {
+  const picked: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(parsed)) {
+    const kept = accepts(defaults, key, value) ? nested(value, defaults[key], rejected, `${path}${key}.`) : reject(rejected, path + key);
+    if (kept !== undefined) picked[key] = kept;
+  }
+  return picked;
+}
+
+/** `text` parsed as a JSON object, or null. */
+function parseObject(text: string): object | null {
+  try {
+    const value: unknown = JSON.parse(text);
+    return kind(value) === OBJECT ? (value as object) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The options an element sets for component `name` in its
+ * `data-<name>-options` attribute. The attribute is untrusted: a value that is
+ * not valid JSON, not an object, or not the kind of its default is dropped
+ * with a warning, so that option keeps its default.
+ */
+function markupOptions(el: Element, name: string, defaults: object) {
+  const attribute = optionsAttribute(name);
+  const text = el.getAttribute(attribute);
+  if (text === null) return {};
+  const parsed = parseObject(text);
+  if (!parsed) {
+    console.warn(`${name} ignored ${attribute}: expected a JSON object.`, el);
+    return {};
+  }
+  const rejected: string[] = [];
+  const options = pick(parsed, defaults, rejected);
+  rejected.forEach((key) => console.warn(`${name} ignored "${key}" in ${attribute}: markup cannot set that option to that value.`, el));
+  return options;
+}
+
+/** Starts component `name` on one element, with its markup options under `options`. */
+function initElement(name: keyof Registry, el: Element, options: object = {}) {
+  // Each component's static `init` is overloaded; indexing the table widens
+  // it to a union TypeScript cannot call, so narrow it once, here.
+  const { component } = AUTO_INIT_COMPONENTS[name] as unknown as AutoInitEntry;
+  component.init(el, { ...markupOptions(el, name, component.defaults), ...options });
+}
 
 /**
  * Automatically initialize components.
@@ -122,22 +225,15 @@ export function AutoInit(
   options?: Partial<AutoInitOptions>,
 ) {
   for (const name of Object.keys(AUTO_INIT_COMPONENTS) as (keyof Registry)[]) {
-    const { component, selector, filter } = AUTO_INIT_COMPONENTS[
+    const { selector, filter = () => true } = AUTO_INIT_COMPONENTS[
       name
     ] as unknown as AutoInitEntry;
     // `:is()` so that `:not(.no-autoinit)` applies to the whole selector. A
     // bare `${selector}:not(...)` binds the negation to the last alternative
     // only, which would silently break the opt-out for any comma-separated
     // entry (Cards is the first).
-    const els = context.querySelectorAll(`:is(${selector}):not(.no-autoinit)`);
-    // Each component's static `init` is overloaded; indexing the table widens
-    // it to a union TypeScript cannot call, so narrow it once, here.
-    if (filter) {
-      els.forEach((el) => {
-        if (filter(el)) component.init(el, options?.[name] ?? {});
-      });
-    } else {
-      component.init(els, options?.[name] ?? {});
-    }
+    context.querySelectorAll(`:is(${selector}):not(.no-autoinit)`).forEach((el) => {
+      if (filter(el)) initElement(name, el, options?.[name]);
+    });
   }
 }

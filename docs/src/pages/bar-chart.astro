@@ -315,7 +315,9 @@ const spent = sum(spending.map(([, value]) => value));
           <code>AutoInit()</code> starts every <code>.bar-chart</code>. To
           start one yourself, call <code>BarChart.init</code>. After changing its
           table, call <code>update()</code> to redraw it in place, or put
-          <code>data-watch</code> on the figure and it redraws itself. It takes the column chart's
+          <code>data-watch</code> on the figure and it redraws itself. The bars move
+          from their old values to the new ones, and a new bar grows from zero;
+          with reduced motion they appear at once. It takes the column chart's
           options and methods.
         </p>
 <Code code={`
