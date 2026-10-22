@@ -169,6 +169,7 @@ for (const [engine, browserType, browserTest] of engines) {
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
         await frames2();
         const focused = document.activeElement.getBoundingClientRect(), box = el.getBoundingClientRect();
+        menu.close();
         return { anchored: !!el.style.getPropertyValue('position-anchor'), own, page, endVisible: focused.top >= box.top && focused.bottom <= box.bottom };
       });
       assert.deepEqual(measured, { anchored: false, own: 300, page: 300, endVisible: true });
@@ -181,7 +182,8 @@ for (const [engine, browserType, browserTest] of engines) {
         const select = Expressive.FormSelect.init(document.getElementById('select'));
         select.menu.options.inDuration = 0;
         select.menu.open();
-        await frames2();
+        // Opening scrolls the selected row into view, a frame later in Firefox.
+        await new Promise((resolve) => setTimeout(resolve, 200));
         const menu = select.menuEl;
         menu.scrollTop = 400;
         await frames2();
