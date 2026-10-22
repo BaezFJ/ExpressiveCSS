@@ -158,8 +158,6 @@
   > div > span {
     --bar-chart-tip: var(--md-comp-bar-chart-shape);
     --bar-chart-base: 0px;
-    --bar-chart-zero-left: calc(100% - var(--zero, 100%));
-    --bar-chart-zero-right: var(--zero, 100%);
     --bar-chart-ends: var(--bar-chart-base) var(--bar-chart-tip) var(--bar-chart-tip) var(--bar-chart-base);
 
     background-color: var(--bar-chart-color);
@@ -177,8 +175,6 @@
   }
 
   &.rtl > div > span {
-    --bar-chart-zero-left: var(--zero, 100%);
-    --bar-chart-zero-right: calc(100% - var(--zero, 100%));
     --bar-chart-ends: var(--bar-chart-tip) var(--bar-chart-base) var(--bar-chart-base) var(--bar-chart-tip);
 
     &.negative {
@@ -186,15 +182,7 @@
     }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    > div > span {
-      transition: clip-path var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard);
-
-      @starting-style {
-        clip-path: inset(0 var(--bar-chart-zero-right) 0 var(--bar-chart-zero-left) round var(--bar-chart-ends));
-      }
-    }
-  }
+  @include chart-column-motion;
 }
 
 // One bar per row, rounded only at the ends of the whole stack unless split.

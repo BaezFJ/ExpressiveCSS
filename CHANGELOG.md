@@ -27,6 +27,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   to another element closes it, and Enter or Space on a button trigger
   toggles it. On touch a tap is the click, so the long press is off. The
   default of `false` keeps hover and focus.
+- A chart's `update()` moves its marks from the old values to the new ones.
+  Line chart lines, areas and points, column chart columns, bar chart bars
+  and mixed chart marks move over `--md-sys-motion-duration-medium4` with
+  `--md-sys-motion-easing-standard`. A series or value new to the chart
+  rises from its base, and one that goes away goes at once. With reduced
+  motion the new shape appears at once. Migration: after `update()`,
+  columns and bars no longer grow again from zero, and lines no longer jump
+  to their new shape. No page change is needed.
 - Autocomplete's `allowCreate` option ends the list in an `Add "text"` row
   when the typed text matches no suggestion exactly, ignoring case and
   surrounding spaces. Choosing it with Enter or a click calls `onCreate` with

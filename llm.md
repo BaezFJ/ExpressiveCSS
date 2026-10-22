@@ -5101,7 +5101,7 @@ A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The firs
 - `axis` labels the y axis at round values beside the plot, with a grid line at each, and widens an end the chart chose to the next round value. The labels repeat the cells' currency or percent sign and shorten large numbers (`$1.5K`); an end set by `data-min` or `data-max` stays put. They are `aria-hidden`; the table carries the values. `--md-comp-line-chart-axis-width` (48px) is the room they take.
 - The plot is one Tab stop named by the caption. Left and Right move between rows, Home and End jump to the ends, Escape hides the tooltip. In a right-to-left context the x axis runs right to left and the arrows follow it. The tooltip is a polite live region. Hide a redundant caption with `.visually-hidden` rather than removing it.
 - A direct `<figure>` in a card is normally media with an overlaid caption; a `.line-chart` keeps its own layout there.
-- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. `show(index)` highlights a row (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
+- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. The lines, areas and points move from their old values to the new ones over `--md-sys-motion-duration-medium4` with `--md-sys-motion-easing-standard`, matched by table column and row position. A series or value new to the chart rises from the plot bottom, or in a stack from the series below; one that goes away goes at once, and so do the axis labels. With reduced motion, or a zero duration token, the new shape appears at once. A second `update()` while the marks move starts them from the values the first one drew, not from where they are. `show(index)` highlights a row (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
 
 ### Tokens
 
@@ -5145,7 +5145,7 @@ A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as
 - The y axis always includes zero, with 10% of the span to spare above and, with negative values, below. Negative columns hang from zero and round their lower end. `data-min` and `data-max` on the figure, or the `min` and `max` options, fix either end; when zero is off the scale, columns start at the plot's bottom.
 - `axis` labels the y axis at round values beside the plot, with a grid line at each, and widens an end the chart chose to the next round value. The labels repeat the cells' currency or percent sign and shorten large numbers (`$1.5K`); an end set by `data-min` or `data-max` stays put. They are `aria-hidden`; the table carries the values. `--md-comp-column-chart-axis-width` (48px) is the room they take.
 - Keyboard, RTL, the live tooltip and cards behave as for the line chart: the plot is one Tab stop named by the caption, and a `.column-chart` in a card keeps its own layout.
-- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. `show(index)` highlights a group (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
+- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. The columns move from their old values to the new ones with their usual transition, and a new column grows from zero, or in a stack from the segment below; with reduced motion they appear at once. `show(index)` highlights a group (`-1` hides the tooltip) and `destroy()` removes the drawing and shows the table.
 
 ### Tokens
 
@@ -5190,7 +5190,7 @@ A `<figure class="bar-chart">` takes the same `<figcaption>` and `<table>` as a 
 - Cells, series colors, `data-min`, `data-max`, negative values and gaps work as in the column chart; negative bars grow toward the inline start.
 - `axis` labels the value axis at round values under the plot, with a grid line up from each, as in the column chart.
 - The plot is one Tab stop named by the caption. Up and down arrows move between rows, Home and End jump to the ends and Escape hides the tooltip; a tap shows the tapped row. In a right-to-left page, set by `dir` or CSS `direction`, the bars grow leftwards and the labels sit on the right; rows keep their order.
-- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. It takes the column chart's options and methods.
+- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. The bars move from their old values to the new ones, as the column chart's columns do; with reduced motion they appear at once. It takes the column chart's options and methods.
 
 ### Tokens
 
@@ -5410,7 +5410,7 @@ A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as 
 - `axis` labels the first scale beside the plot's start, with grid lines, and the `end` scale along its end. When neither scale has a set end, the `end` scale stretches to as many round steps as the first so its labels share the grid lines. Each scale's labels repeat its cells' currency or percent sign.
 - Cells read as in the line chart; a suffix such as `K` makes a cell a gap, so use `data-value` or put the unit in the header. A gap breaks a line and leaves a column's slot empty. Series take four colors in column order, whatever their kind, then repeat.
 - The cursor bands the highlighted row and puts a point on each line and area. The plot is one Tab stop named by the caption; left and right move between rows, Home and End jump to the ends and Escape hides the tooltip. `sparkline` is a 48px chart with no grid, labels, legend or tooltip and is not focusable.
-- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale.
+- After changing the table, call `update()` on the instance to redraw in place; keyboard focus and the highlighted row stay. Its columns, lines and areas move from their old values to the new ones, as in the line and column charts; with reduced motion they appear at once. It has the line chart's `show(index)` and `destroy()`; the `min` and `max` options apply to the first scale.
 - `stacked` stacks the column series into one column per row; the `end` series' columns stack in their own column beside it, so list them after the others. Lines and areas keep their own values, and the tooltip shows each cell. `points` marks every value on the lines and areas with a dot, and `straight` draws straight lines instead of curves.
 
 ### Tokens
