@@ -179,7 +179,7 @@ export class Confetti extends Component<ConfettiOptions> {
 
 // `themed` is where the theme colors are read, so a scoped theme applies.
 function burst(getCanvas: () => HTMLCanvasElement, themed: Element, o: ConfettiOptions): Promise<void> {
-  if (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches) return Promise.resolve();
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return Promise.resolve();
   const canvas = getCanvas();
   let scene = scenes.get(canvas);
   if (!scene) {

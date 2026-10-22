@@ -133,7 +133,7 @@ let _gradientId = 0;
 
 /** The series update() moves the marks from: none when the reader asked for less motion. */
 const startsFrom = (series: Series[]) =>
-  typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches ? [] : series;
+  matchMedia('(prefers-reduced-motion: reduce)').matches ? [] : series;
 
 /** A cubic-bezier() easing's four numbers, or the standard curve's for any other easing. */
 const splines = (easing: string) => /cubic-bezier\(([^)]*)\)/.exec(easing)?.[1] ?? '0.2, 0, 0, 1';
@@ -741,7 +741,7 @@ export class LineChart extends Component<LineChartOptions> {
    */
   protected _observeLabels(container: HTMLElement, items: Element[]) {
     this._labelSizes?.disconnect();
-    if (this._horizontal || !items.length || typeof ResizeObserver === 'undefined') return;
+    if (this._horizontal || !items.length) return;
     this._labelSizes = new ResizeObserver(() => thinLabels(container, items));
     this._labelSizes.observe(container);
   }

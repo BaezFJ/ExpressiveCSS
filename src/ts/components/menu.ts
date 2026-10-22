@@ -29,13 +29,19 @@ function shadowRoots(el: Element) {
 /** An element's parent, or its shadow root's host. */
 const parentOf = (el: Element): Element | null => el.parentElement ?? ((el.getRootNode() as ShadowRoot).host || null);
 
+/** The nearest ancestor that passes `test`, across shadow roots. */
+function ancestor(el: Element, test: (el: Element) => boolean) {
+  let found = parentOf(el);
+  while (found && !test(found)) found = parentOf(found);
+  return found;
+}
+
 /**
  * The top and bottom an anchored menu can use: those of its fixed-position
  * containing block, where an ancestor makes one, within the viewport.
  */
 function fixedBounds(menu: Element) {
-  let block = parentOf(menu);
-  while (block && !containsFixed(getComputedStyle(block))) block = parentOf(block);
+  const block = ancestor(menu, (el) => containsFixed(getComputedStyle(el)));
   const rect = block?.getBoundingClientRect() ?? { top: 0, bottom: window.innerHeight };
   return { top: Math.max(0, rect.top), bottom: Math.min(window.innerHeight, rect.bottom) };
 }
@@ -809,16 +815,9 @@ export class Menu extends Component<MenuOptions> {
     this._stopReanchoring();
   }
 
-  _moveMenuToElement(containerEl: HTMLElement = null) {
-    if (this.options.container) {
-      this.options.container.append(this.menuEl);
-      return;
-    }
-    if (containerEl) {
-      if (!containerEl.contains(this.menuEl)) containerEl.append(this.menuEl);
-      return;
-    }
-    this.el.after(this.menuEl);
+  _moveMenuToElement() {
+    if (this.options.container) this.options.container.append(this.menuEl);
+    else this.el.after(this.menuEl);
   }
 
   _makeMenuFocusable() {
@@ -1027,31 +1026,14 @@ export class Menu extends Component<MenuOptions> {
     }, duration);
   }
 
-  private _getClosestAncestor(el: HTMLElement, condition: (Function) => boolean): HTMLElement {
-    let ancestor: Node = el.parentNode;
-    while (ancestor !== null && ancestor !== undefined && ancestor !== document) {
-      // A shadow root is not an element and getComputedStyle() rejects it, so
-      // step over it to the host - the elements that actually clip the menu
-      // are above that.
-      if (ancestor.nodeType === Node.ELEMENT_NODE && condition(ancestor)) {
-        return <HTMLElement>ancestor;
-      }
-      ancestor = ancestor.parentNode ?? (<ShadowRoot>ancestor).host;
-    }
-    return null;
-  }
-
   _placeMenu() {
-    // Container here will be closest ancestor with overflow: hidden
-    let closestOverflowParent: HTMLElement = this._getClosestAncestor(
+    // Container here will be closest ancestor with overflow: hidden. The walk
+    // steps over a shadow root to its host, since getComputedStyle() rejects a
+    // shadow root and the elements that clip the menu are above it.
+    let closestOverflowParent = ancestor(
       this.menuEl,
-      (ancestor: HTMLElement) => {
-        return (
-          !['HTML', 'BODY'].includes(ancestor.tagName) &&
-          getComputedStyle(ancestor).overflow !== 'visible'
-        );
-      }
-    );
+      (el) => !['HTML', 'BODY'].includes(el.tagName) && getComputedStyle(el).overflow !== 'visible'
+    ) as HTMLElement;
     // Fallback
     if (!closestOverflowParent) {
       const parent = !!this.menuEl.offsetParent ? this.menuEl.offsetParent : this.menuEl.parentNode;

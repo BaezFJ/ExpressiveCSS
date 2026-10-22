@@ -56,8 +56,6 @@ export class AppBar extends Component<BaseOptions> {
     if (!this.el.classList.contains('medium') && !this.el.classList.contains('large')) {
       return;
     }
-    if (typeof IntersectionObserver === 'undefined') return;
-
     // Collapsing shrinks the header, and scroll anchoring then scrolls the page
     // back by the height it lost. The sentinel follows the header, so it moves
     // with the page and that correction cannot bring it back into view. It sits

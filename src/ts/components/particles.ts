@@ -93,28 +93,20 @@ export class Particles extends Component<ParticlesOptions> {
     this._ctx = this.el.getContext('2d');
     if (!this._ctx) return;
     this._style = getComputedStyle(this.el);
-    if (typeof matchMedia === 'function') {
-      this._motion = matchMedia('(prefers-reduced-motion: reduce)');
-      this._motion.addEventListener('change', this._onMotion);
-      // Still dots are painted once, so a theme or color-scheme change
-      // repaints them. Moving ones read the color every frame anyway.
-      this._scheme = matchMedia('(prefers-color-scheme: dark)');
-      this._scheme.addEventListener('change', this._repaint);
-    }
+    this._motion = matchMedia('(prefers-reduced-motion: reduce)');
+    this._motion.addEventListener('change', this._onMotion);
+    // Still dots are painted once, so a theme or color-scheme change
+    // repaints them. Moving ones read the color every frame anyway.
+    this._scheme = matchMedia('(prefers-color-scheme: dark)');
+    this._scheme.addEventListener('change', this._repaint);
     this._theme = new MutationObserver(this._repaint);
     this._theme.observe(document.documentElement, { attributes: true, attributeFilter: ['theme'], subtree: true });
-    this._still = !!this._motion?.matches;
+    this._still = this._motion.matches;
     this._reset();
-    if (typeof ResizeObserver !== 'undefined') {
-      this._resizeObserver = new ResizeObserver(() => {
-        if (this.el.clientWidth !== this._width || this.el.clientHeight !== this._height) this._reset();
-      });
-      this._resizeObserver.observe(this.el);
-    }
-    if (typeof IntersectionObserver === 'undefined') {
-      this._animate();
-      return;
-    }
+    this._resizeObserver = new ResizeObserver(() => {
+      if (this.el.clientWidth !== this._width || this.el.clientHeight !== this._height) this._reset();
+    });
+    this._resizeObserver.observe(this.el);
     // Animates only while on screen. A canvas scrolled away, hidden or
     // removed without destroy() stops drawing and following the pointer.
     // Entries arrive oldest first, so the last one is the current state.

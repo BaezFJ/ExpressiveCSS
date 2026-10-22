@@ -288,15 +288,13 @@ export class Carousel extends Component<CarouselOptions> {
     if (this.showIndicators && this._indicators) {
       this._indicators.addEventListener('click', this._handleIndicatorClick);
     }
-    if (typeof ResizeObserver !== 'undefined') {
-      this._resizeObserver = new ResizeObserver(() => this._handleThrottledResize());
-      this._resizeObserver.observe(this.el);
-    }
+    this._resizeObserver = new ResizeObserver(() => this._handleThrottledResize());
+    this._resizeObserver.observe(this.el);
 
     // Full-screen needs a window signal when orientation changes without
     // changing the container width. ResizeObserver handles every other track,
     // including pane resizes.
-    if (!this._resizeObserver || this.el.classList.contains('full-screen')) {
+    if (this.el.classList.contains('full-screen')) {
       window.addEventListener('resize', this._handleThrottledResize, { passive: true });
     }
 

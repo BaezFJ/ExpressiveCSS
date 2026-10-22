@@ -2621,6 +2621,7 @@ describe('Particles', () => {
     });
     let visibility;
     globalThis.devicePixelRatio = 1;
+    const { IntersectionObserver } = globalThis;
     globalThis.IntersectionObserver = class {
       constructor(callback) { visibility = callback; }
       observe() {}
@@ -2628,7 +2629,7 @@ describe('Particles', () => {
     };
     const restore = () => {
       globalThis.matchMedia = matchMedia;
-      delete globalThis.IntersectionObserver;
+      globalThis.IntersectionObserver = IntersectionObserver;
       delete globalThis.devicePixelRatio;
       document.documentElement.removeAttribute('theme');
     };

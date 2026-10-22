@@ -1529,7 +1529,7 @@
         },
         {
           "path": "src/ts/components/messageScroller.ts",
-          "sha256": "d785b447b8014382448c8b541bcf44e07b67c1b1c89ca785c6e54ad86d600201"
+          "sha256": "d87c05d72e6ac2685e21a2be9b9fa32368bbff0ae20822e7bca353e9a66f2b49"
         }
       ],
       "gaps": [
@@ -3729,7 +3729,7 @@
         },
         {
           "path": "src/ts/components/confetti.ts",
-          "sha256": "17394fa1132646bd6d646d27c42fb12a9a880272ee2ab831c9cc13f53cae4878"
+          "sha256": "c9ebb53e007ad5420ae52f99daf4cf7f8c547a41f2a66964ec1e9575fe063ef2"
         }
       ],
       "gaps": [

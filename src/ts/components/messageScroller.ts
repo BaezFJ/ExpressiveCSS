@@ -90,12 +90,10 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
     // A viewport that is not rendered yet (a closed dialog, a hidden tab)
     // has no size to position against; it opens on its first resize.
     if (this.viewport.clientHeight > 0) this._open();
-    if (typeof ResizeObserver !== 'undefined') {
-      this._resizeObserver = new ResizeObserver(this._handleResize);
-      // Border box: the spacer changes the padding, which must not count.
-      this._resizeObserver.observe(this.viewport, { box: 'border-box' });
-      for (const item of Array.from(this.viewport.children)) this._resizeObserver.observe(item);
-    }
+    this._resizeObserver = new ResizeObserver(this._handleResize);
+    // Border box: the spacer changes the padding, which must not count.
+    this._resizeObserver.observe(this.viewport, { box: 'border-box' });
+    for (const item of Array.from(this.viewport.children)) this._resizeObserver.observe(item);
     this._mutationObserver = new MutationObserver(this._handleMutations);
     this._mutationObserver.observe(this.viewport, { childList: true });
     this.viewport.addEventListener('scroll', this._handleScroll, { passive: true });
@@ -220,10 +218,10 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
   private _handleMutations = (records: MutationRecord[]) => {
     for (const record of records) {
       record.addedNodes.forEach((node) => {
-        if (node instanceof Element) this._resizeObserver?.observe(node);
+        if (node instanceof Element) this._resizeObserver.observe(node);
       });
       record.removedNodes.forEach((node) => {
-        if (node instanceof Element) this._resizeObserver?.unobserve(node);
+        if (node instanceof Element) this._resizeObserver.unobserve(node);
       });
     }
     const previous = this._last;
@@ -274,7 +272,7 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
     }
     this._target = target;
     this._distance = Infinity;
-    const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     v.scrollTo({
       top: target === 'end' ? v.scrollHeight : target,
       behavior: reduce ? 'auto' : 'smooth'

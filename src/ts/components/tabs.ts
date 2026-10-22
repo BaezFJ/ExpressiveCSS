@@ -133,7 +133,6 @@ export class Tabs extends Component<TabsOptions> {
     // breakpoint they switch between equal and intrinsic widths inside a
     // strip that may keep its size. Each change re-measures the indicator,
     // and a tablist chooses its Tab stop again.
-    if (typeof ResizeObserver === 'undefined') return;
     this._stripObserver = new ResizeObserver(() => {
       if (this._tablist) this._refreshTabStop();
       this._remeasure();
@@ -414,14 +413,12 @@ export class Tabs extends Component<TabsOptions> {
     // the scroll below cannot reach the active panel. Re-align whenever the
     // track's width changes, which also covers window resizes. Only the width:
     // a panel growing taller mid-swipe must not pull the track back.
-    if (typeof ResizeObserver !== 'undefined') {
-      this._trackObserver = new ResizeObserver(() => {
-        if (track.clientWidth === this._trackWidth) return;
-        this._trackWidth = track.clientWidth;
-        this._scrollToActivePanel('instant');
-      });
-      this._trackObserver.observe(track);
-    }
+    this._trackObserver = new ResizeObserver(() => {
+      if (track.clientWidth === this._trackWidth) return;
+      this._trackWidth = track.clientWidth;
+      this._scrollToActivePanel('instant');
+    });
+    this._trackObserver.observe(track);
     this._scrollToActivePanel('instant');
   }
 

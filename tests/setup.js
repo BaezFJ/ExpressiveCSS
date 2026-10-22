@@ -42,6 +42,19 @@ const globalNames = [
   'cancelAnimationFrame'
 ];
 
+// jsdom does no layout, so it implements neither observer; components
+// construct both unconditionally. These observe nothing and never report.
+for (const name of ['ResizeObserver', 'IntersectionObserver']) {
+  window[name] ??= class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+    takeRecords() {
+      return [];
+    }
+  };
+}
+
 // ...plus every element constructor jsdom exposes, so `instanceof` checks and
 // `new HTMLTemplateElement`-style lookups inside components resolve.
 for (const key of Object.getOwnPropertyNames(window)) {
