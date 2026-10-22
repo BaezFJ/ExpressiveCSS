@@ -8,11 +8,18 @@ import { chromium, firefox, webkit } from 'playwright';
 const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 if (requested && !['chromium', 'firefox', 'webkit'].includes(requested)) throw new Error(`Unknown EXPRESSIVECSS_TEST_BROWSER: ${requested}`);
 
-// [name, browser type, test] for each engine this run covers, where `test`
-// skips when that engine is not installed.
+// The test function for an engine: test.skip when it is not installed, unless
+// the run asked for it by name, so a missing browser cannot pass as skipped.
+function runner(name, type) {
+  if (existsSync(type.executablePath())) return test;
+  if (requested) throw new Error(`EXPRESSIVECSS_TEST_BROWSER=${name}, but ${name} is not installed`);
+  return test.skip;
+}
+
+// [name, browser type, test] for each engine this run covers.
 export const engines = Object.entries({ chromium, firefox, webkit })
   .filter(([name]) => !requested || requested === name)
-  .map(([name, type]) => [name, type, existsSync(type.executablePath()) ? test : test.skip]);
+  .map(([name, type]) => [name, type, runner(name, type)]);
 
 const launched = new Map();
 

@@ -57,8 +57,8 @@ export async function collectEvaluationProvenance({ repositoryRoot = ROOT, proto
 }
 
 export function assertSameProvenance(expected, actual) {
-  const { hash, ...fields } = actual && typeof actual === 'object' && !Array.isArray(actual) ? actual : {};
-  if (!validHash(hash) || fingerprint(fields) !== hash || !isDeepStrictEqual(expected, actual)) throw new Error('Evaluation provenance is missing or changed; use a new output directory');
+  const { hash: stored, ...fields } = actual && typeof actual === 'object' && !Array.isArray(actual) ? actual : {};
+  if (!validHash(stored) || fingerprint(fields) !== stored || !isDeepStrictEqual(expected, actual)) throw new Error('Evaluation provenance is missing or changed; use a new output directory');
 }
 
 const readJson = async (output, relative, limit = 16 * 1024 * 1024) => JSON.parse(await readBoundedRegularFile(path.join(output, relative), limit, 'retained evaluation evidence', output));

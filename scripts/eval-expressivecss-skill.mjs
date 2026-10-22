@@ -1324,7 +1324,8 @@ async function main() {
   if (report.status !== 'pass') process.exitCode = 1;
 }
 
-if (import.meta.main) {
+// Node 20 has no import.meta.main; compare paths there, so the CLI still runs.
+if (import.meta.main ?? path.resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
   main().catch((error) => {
     console.error(redactValue(error.message));
     process.exitCode = 1;

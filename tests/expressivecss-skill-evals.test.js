@@ -539,7 +539,13 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     delete unevaluated.mode;
     const result = evaluateCase(original, unevaluated, executionEvidence[original.id]);
     assert.equal(result.status, 'fail');
-    assert.ok(result.invariants.some((item) => item.status === 'unevaluated'));
+    assert.equal(result.invariants.find((item) => item.id === 'critique-no-edit/contract')?.status, 'unevaluated');
+
+    // A case with no contract in the evaluator cannot pass its own invariant.
+    const unknown = { ...clone(original), id: 'unknown-case' };
+    const unknownResult = evaluateCase(unknown, { ...clone(responses[original.id]), caseId: 'unknown-case' }, executionEvidence[original.id]);
+    assert.equal(unknownResult.status, 'fail');
+    assert.equal(unknownResult.invariants.find((item) => item.id === 'unknown-case/contract')?.status, 'unevaluated');
   });
 
   test('rejects candidate-authored guide reads and filesystem hashes without trusted execution evidence', () => {
