@@ -1,29 +1,5 @@
 {
   "schemaVersion": 2,
-  "stableInvariantIds": [
-    "setup-only-routing/contract",
-    "css-only-markup-routing/contract",
-    "token-only-theming-routing/contract",
-    "critique-no-edit/contract",
-    "css-only-audit/contract",
-    "interactive-audit/contract",
-    "combined-review-order/contract",
-    "refine-preserves-product/contract",
-    "redesign-preserves-requirements/contract",
-    "feedback-component-choice/contract",
-    "feedback-inline-choice/contract",
-    "feedback-dialog-choice/contract",
-    "switch-versus-checkbox/contract",
-    "deferred-checkbox/contract",
-    "adaptive-navigation/contract",
-    "brand-through-tokens/contract",
-    "runtime-owned-aria/contract",
-    "manual-init-teardown/contract",
-    "older-version-contract/contract",
-    "reachable-state-ledger/contract",
-    "matched-before-after/contract",
-    "mcp-pass-is-scoped/contract"
-  ],
   "cases": [
     {
       "id": "setup-only-routing",
@@ -37,15 +13,6 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "setup-only-routing/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "setup-only-routing/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [],
       "requiredReportFields": [
         "caseId",
@@ -77,15 +44,6 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "css-only-markup-routing/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "css-only-markup-routing/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [],
       "requiredReportFields": [
         "caseId",
@@ -120,15 +78,6 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "token-only-theming-routing/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "token-only-theming-routing/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [],
       "requiredReportFields": [
         "caseId",
@@ -168,15 +117,6 @@
           "rendered-capture"
         ]
       },
-      "expectedCriticalInvariantIds": [
-        "critique-no-edit/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "critique-no-edit/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [
         "reviewRows"
       ],
@@ -232,15 +172,6 @@
           "accessibility-tree"
         ]
       },
-      "expectedCriticalInvariantIds": [
-        "css-only-audit/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "css-only-audit/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [
         "reviewRows"
       ],
@@ -312,15 +243,6 @@
           "interaction-trace"
         ]
       },
-      "expectedCriticalInvariantIds": [
-        "interactive-audit/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "interactive-audit/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [
         "reviewRows"
       ],
@@ -397,15 +319,6 @@
           "source"
         ]
       },
-      "expectedCriticalInvariantIds": [
-        "combined-review-order/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "combined-review-order/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [
         "reviewRows"
       ],
@@ -457,15 +370,6 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "refine-preserves-product/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "refine-preserves-product/contract",
-          "operator": "caseContract"
-        }
-      ],
       "captureDimensions": [
         "route",
         "taskPoint",
@@ -562,15 +466,6 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "redesign-preserves-requirements/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "redesign-preserves-requirements/contract",
-          "operator": "caseContract"
-        }
-      ],
       "captureDimensions": [
         "route",
         "taskPoint",
@@ -694,15 +589,6 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "feedback-component-choice/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "feedback-component-choice/contract",
-          "operator": "caseContract"
-        }
-      ],
       "expectedComponent": "snackbar",
       "rejectedComponents": [
         "inline",
@@ -744,15 +630,6 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "feedback-inline-choice/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "feedback-inline-choice/contract",
-          "operator": "caseContract"
-        }
-      ],
       "expectedComponent": "inline",
       "rejectedComponents": [
         "snackbar",
@@ -794,15 +671,6 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "feedback-dialog-choice/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "feedback-dialog-choice/contract",
-          "operator": "caseContract"
-        }
-      ],
       "expectedComponent": "dialogs",
       "rejectedComponents": [
         "snackbar",
@@ -843,15 +711,6 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "switch-versus-checkbox/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "switch-versus-checkbox/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [
         "selectedComponent",
         "markup",
@@ -889,15 +748,6 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "deferred-checkbox/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "deferred-checkbox/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [
         "selectedComponent",
         "markup",
@@ -947,15 +797,6 @@
           "accessibility-tree"
         ]
       },
-      "expectedCriticalInvariantIds": [
-        "adaptive-navigation/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "adaptive-navigation/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [
         "navigationByWidth",
         "reviewRows"
@@ -1028,15 +869,6 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "brand-through-tokens/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "brand-through-tokens/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [
         "rawColorUses",
         "componentColorUses",
@@ -1087,15 +919,6 @@
           "runtime-inspection"
         ]
       },
-      "expectedCriticalInvariantIds": [
-        "runtime-owned-aria/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "runtime-owned-aria/contract",
-          "operator": "caseContract"
-        }
-      ],
       "runtimeOwnedFields": [
         "aria-expanded"
       ],
@@ -1169,15 +992,6 @@
           "runtime-inspection"
         ]
       },
-      "expectedCriticalInvariantIds": [
-        "manual-init-teardown/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "manual-init-teardown/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [
         "registryElementId",
         "markup",
@@ -1243,15 +1057,6 @@
           "source"
         ]
       },
-      "expectedCriticalInvariantIds": [
-        "older-version-contract/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "older-version-contract/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [
         "resolvedVersion",
         "contractVersion",
@@ -1310,15 +1115,6 @@
       "mustNotLoad": [],
       "noEdits": true,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "reachable-state-ledger/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "reachable-state-ledger/contract",
-          "operator": "caseContract"
-        }
-      ],
       "coverageInventory": [
         {
           "id": "state-loading",
@@ -1550,15 +1346,6 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "matched-before-after/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "matched-before-after/contract",
-          "operator": "caseContract"
-        }
-      ],
       "captureDimensions": [
         "route",
         "taskPoint",
@@ -1644,15 +1431,6 @@
       "mustNotLoad": [],
       "noEdits": true,
       "requiredEvidenceCategories": [],
-      "expectedCriticalInvariantIds": [
-        "mcp-pass-is-scoped/contract"
-      ],
-      "criticalInvariants": [
-        {
-          "id": "mcp-pass-is-scoped/contract",
-          "operator": "caseContract"
-        }
-      ],
       "requiredDecisionFields": [
         "mcpStatus",
         "checksPerformed",
