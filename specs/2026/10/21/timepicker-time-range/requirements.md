@@ -4,7 +4,7 @@ Date: 2026-10-21
 Roadmap phase: Phase 17, timepicker time range
 Branch: `feature/2026-10-21-timepicker-time-range`
 Base: `origin/master` at `f153b3e049af0c179f8650eb4cff4123e07c13dd`
-Status: specified, waiting for review. Not implemented.
+Status: implemented and locally verified 2026-10-21 in six local commits, not pushed. The proposed decisions were accepted as written when the user started implementation, with two changes recorded below.
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 17](../../../../roadmap.md#phase-17-timepicker-time-range). The work order is in [plan.md](plan.md) and the acceptance checks are in [validation.md](validation.md).
 
@@ -89,6 +89,12 @@ These fill gaps the interview did not cover. Each follows the code or an existin
 - Size any new text-holding box in `rem()`. Borders and gaps stay in pixels.
 - Read [the Sass architecture](../../../../../src/sass/README.md) before the tick styles and [the TypeScript conventions](../../../../../src/ts/README.md) before the component change.
 - Depends on Phase 16 for `seconds`, `_units()`, `_unitOf()` and `readTime()`. Nothing depends on this phase.
+
+## Changes during implementation
+
+- Disabled ticks use the on-surface color at 38%, as the Datepicker's disabled days do, instead of an opacity.
+- Without `showSeconds`, `maxTime` rounds to the last second of its minute (`17:29:45` allows up to `17:29:59`). The written value is still `HH:MM`, but a hidden second read from the input or `'now'` no longer clamps to `:00` when no bound is set. Found in self-review; covered by its own test.
+- `setHand()` now reads the dial value through `_hourAt()` and the top-level `ringHour()`, which dropped its cyclomatic complexity from 20 to 15. The release after a drag moved into `_chooseHand()`, so the fallow gate found nothing new.
 
 ## Open decisions
 
