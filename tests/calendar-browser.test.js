@@ -1,12 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
+import { readFileSync } from 'node:fs';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
-const engines = Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name);
 const week = (days) => `<tr>${days.map(([d, extra = '', events = '']) => `<td${extra}><time datetime="2026-10-${String(d).padStart(2, '0')}">${d}</time>${events}</td>`).join('')}</tr>`;
 const markup = `<!doctype html><html lang="en" theme="light"><head><style>${css}</style></head><body>
 <table id="cal" class="calendar"><caption>October 2026</caption>
@@ -17,9 +15,8 @@ ${week([[4], [5, '', '<ul class="calendar-events"><li><a id="ev" href="#standup"
 ${week([[11], [12], [13], [14], [15, ' id="today" aria-current="date"'], [16], [17]])}
 </tbody></table></body></html>`;
 
-for (const [name, engine] of engines) {
+for (const [name, engine, test] of engines) {
   test(`${name}: calendar lays out a month grid with today, outside days and event chips`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 900, height: 900 } });
@@ -66,9 +63,8 @@ ${hourRow('12', ['', '', '', '', '', '', ''])}
 <div id="year" class="calendar-year">${Array.from({ length: 12 }, (_, m) => `<table class="calendar"><caption>Month ${m + 1}</caption><thead><tr>${'SMTWTFS'.split('').map((d) => `<th scope="col">${d}</th>`).join('')}</tr></thead><tbody>${week([[1], [2], [3], [4], [5], [6], [7]])}</tbody></table>`).join('')}</div>
 </body></html>`;
 
-for (const [name, engine] of engines) {
+for (const [name, engine, test] of engines) {
   test(`${name}: calendar week and day views place events on an hourly grid, and the year view tiles months`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 1000, height: 900 } });

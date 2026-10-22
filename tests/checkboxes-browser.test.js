@@ -1,10 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
+import { readFileSync } from 'node:fs';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 // The legacy anatomy: the span after the input is the label text and draws the box.
 const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head><body>
@@ -14,9 +13,8 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
   <div style="width:180px"><label id="narrow"><input type="checkbox"><span>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></span></label></div>
 </main></body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: legacy checkbox span keeps inline links in the text flow`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 600 } });

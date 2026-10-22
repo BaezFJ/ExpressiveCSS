@@ -1,8 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { readFileSync } from 'node:fs';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 
@@ -22,9 +21,7 @@ const html = `<style>${css}</style>
   <div class="timepicker-container"><button id="am" class="am-btn filled" aria-pressed="true">AM</button></div>
   <div id="colors" style="color: var(--md-sys-color-surface-container); background: var(--md-sys-color-primary); border-color: var(--md-sys-color-inverse-surface)"></div>`;
 
-for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
-  const browserTest = existsSync(browserType.executablePath()) ? test : test.skip;
+for (const [engine, browserType, browserTest] of engines) {
 
   browserTest(`${engine}: common buttons take a square shape, toggle shape and colour, and morph when pressed`, async () => {
     const browser = await leaseBrowser(browserType);

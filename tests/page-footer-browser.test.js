@@ -1,13 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 
-for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
-  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+for (const [engine, type, browserTest] of engines) {
   browserTest(`Only a lone navigation bar opts a footer out of the page footer (${engine})`, async () => {
     const browser = await type.launch();
     try {

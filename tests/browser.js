@@ -1,7 +1,18 @@
 // One browser per engine per test file. Launching dominated browser-test time,
 // Firefox's most of all, so tests lease the file's browser instead. A lease
 // opens pages and contexts like a Browser, and its close() closes only those.
-import { after } from 'node:test';
+import { existsSync } from 'node:fs';
+import { after, test } from 'node:test';
+import { chromium, firefox, webkit } from 'playwright';
+
+const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
+if (requested && !['chromium', 'firefox', 'webkit'].includes(requested)) throw new Error(`Unknown EXPRESSIVECSS_TEST_BROWSER: ${requested}`);
+
+// [name, browser type, test] for each engine this run covers, where `test`
+// skips when that engine is not installed.
+export const engines = Object.entries({ chromium, firefox, webkit })
+  .filter(([name]) => !requested || requested === name)
+  .map(([name, type]) => [name, type, existsSync(type.executablePath()) ? test : test.skip]);
 
 const launched = new Map();
 

@@ -4,9 +4,8 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { readFileSync } from 'node:fs';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -14,9 +13,7 @@ const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'u
 const menu = (id) => `<button type="button" class="menu-trigger" id="${id}" data-target="${id}-menu">Open</button>
   <menu id="${id}-menu"><li><button type="button">One</button></li></menu>`;
 
-for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
-  const browserTest = existsSync(browserType.executablePath()) ? test : test.skip;
+for (const [engine, browserType, browserTest] of engines) {
 
   /** A page that watches its body, with page errors and console errors collected. */
   const setup = async (browser) => {

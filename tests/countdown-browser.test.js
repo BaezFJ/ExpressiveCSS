@@ -1,10 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
+import { readFileSync } from 'node:fs';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const counter = (id, value, extra = '') =>
   `<span id="${id}" class="countdown" style="--md-comp-countdown-value: ${value}; ${extra}">${value}</span>`;
@@ -14,9 +13,8 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
   ${counter('padded', 5, '--md-comp-countdown-digits: 2')} ${counter('high', 1500)} ${counter('low', -3)} <span id="ref" style="display:inline-block;line-height:1em">x</span></p>
 </body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: countdown shows 0 to 999 as rolling digits and keeps the text for assistive technology`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 900, height: 300 } });

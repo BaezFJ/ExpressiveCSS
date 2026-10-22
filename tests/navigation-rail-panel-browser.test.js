@@ -1,13 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { readFileSync } from 'node:fs';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
-const engines = Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name);
 const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}" theme="light"><head><style>${css}</style></head><body style="margin:0">
 <nav class="navigation-rail" aria-label="Main" style="position:fixed;inset-block:0;inset-inline-start:0">
   <button type="button" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button>
@@ -30,10 +27,9 @@ const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}" theme="ligh
 </nav><main><p id="content" style="margin:0;margin-inline-start:400px">Content</p></main>
 <script>${js}</script><script>Expressive.NavigationRail.init(document.querySelector('nav'))</script></body></html>`;
 
-for (const [name, engine] of engines) {
+for (const [name, engine, test] of engines) {
   for (const dir of ['ltr', 'rtl']) {
     test(`${name} ${dir}: a rail destination opens a docked side panel on hover and click`, { timeout: 30000 }, async (t) => {
-      if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
       const browser = await leaseBrowser(engine);
       try {
         const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
@@ -131,7 +127,6 @@ for (const [name, engine] of engines) {
   }
 
   test(`${name}: a rail that starts with a panel destination has no menu toggle`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });

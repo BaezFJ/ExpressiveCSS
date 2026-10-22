@@ -1,12 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { readFileSync } from 'node:fs';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head><body>
 <main style="width:560px">
@@ -44,9 +42,8 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
   </form>
 </main></body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: questionnaire shows one question, validates, skips, branches and submits`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 900 } });
@@ -191,9 +188,8 @@ const submitMarkup = `<!doctype html><html lang="en"><head><style>${css}</style>
   </form>
 </main></body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: questionnaire validates requestSubmit and ignores disabled checkboxes`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 900 } });
@@ -260,9 +256,8 @@ const extras = `<!doctype html><html lang="en"><head><style>${css}</style></head
   <footer><button type="button" value="previous">Back</button><button type="button" value="skip">Skip</button><button type="button" value="next">Next</button><button type="submit">Send</button></footer>
 </form></body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: questionnaire shortcuts, review step and saved progress`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage();
@@ -351,9 +346,8 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
   });
 }
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: questionnaire restores answers safely and wakes conditional questions`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage();

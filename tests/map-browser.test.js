@@ -1,11 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { readFileSync } from 'node:fs';
+import { leaseBrowser, engines } from './browser.js';
 
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 const root = new URL('..', import.meta.url);
 
 // The framework does not bundle MapLibre; the page supplies it, as here.
@@ -72,9 +70,8 @@ await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
 const origin = `http://127.0.0.1:${server.address().port}`;
 test.after(() => server.close());
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: map places markers and popups, runs controls, themes overlays and restores its markup`, { timeout: 60000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
@@ -190,7 +187,6 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
   });
 
   test(`${name}: a draggable marker moves by tap and by arrow key, and a pan button moves the view`, { timeout: 60000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
@@ -252,7 +248,6 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
   });
 
   test(`${name}: a map in a shadow root opens its marker popup`, { timeout: 60000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();

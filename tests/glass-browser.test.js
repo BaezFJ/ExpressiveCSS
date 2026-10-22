@@ -1,8 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { compileString } from 'sass';
-import { chromium, firefox, webkit } from 'playwright';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const glassOn = compileString('@use "expressive" with ($expressive-glass: true, $expressive-include-fonts: false);', {
@@ -19,9 +19,7 @@ const markup = `
 const filters = page => page.evaluate(() =>
   Object.fromEntries(['a', 'b', 'c', 'grouped'].map(id => [id, getComputedStyle(document.getElementById(id)).backdropFilter])));
 
-for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
-  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+for (const [engine, type, browserTest] of engines) {
 
   browserTest(`--expressive-glass switches frosted glass at runtime and yields to user preferences (${engine})`, async () => {
     const browser = await type.launch({ headless: true });

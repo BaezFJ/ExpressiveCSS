@@ -1,11 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
+import { readFileSync } from 'node:fs';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const field = (id, attrs = '') => `<div class="field" style="width: 280px">
   <input id="${id}" type="number" placeholder=" " ${attrs}><label for="${id}">Quantity</label>
@@ -13,9 +12,8 @@ const field = (id, attrs = '') => `<div class="field" style="width: 280px">
   <button type="button" class="icon-button suffix" data-step="up" aria-label="Increase"><span class="material-symbols" aria-hidden="true">add</span></button>
 </div>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([n]) => !requested || requested === n)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: number stepper buttons step within min, max and step and fire input and change`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage();

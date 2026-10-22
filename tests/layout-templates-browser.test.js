@@ -1,16 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
 import { cp, mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { chromium, firefox, webkit, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
+import { engines } from './browser.js';
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== name) continue;
+for (const [name, engine, test] of engines) {
   test(`${name}: copied layout templates adapt and preserve list-detail focus`, async t => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const directory = await mkdtemp(join(tmpdir(), 'expressivecss-layouts-'));
     let browser, page;
     try {

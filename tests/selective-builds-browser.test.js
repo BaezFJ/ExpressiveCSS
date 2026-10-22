@@ -1,18 +1,16 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
 import { mkdir, mkdtemp, writeFile, cp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { chromium, firefox, webkit, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import utilsBundle from 'playwright-core/lib/utilsBundle';
 import { startFixtureServer } from '../scripts/expressivecss-eval-browser.mjs';
 import { consumerBuild, fixtures, root } from './fixtures/selective-builds.mjs';
+import { engines } from './browser.js';
 
-for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engineName) continue;
+for (const [engineName, engine, test] of engines) {
   test(`${engineName}: selective builds preserve rendering and interaction`, { timeout: 120000 }, async t => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${engineName} is not installed`); return; }
     const directory = await mkdtemp(join(tmpdir(), 'expressive-selective-'));
     let browser, server;
     const report = {};

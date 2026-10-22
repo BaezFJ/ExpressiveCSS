@@ -4,22 +4,19 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
+import { readFileSync } from 'node:fs';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
-const engines = Object.entries({ chromium, firefox, webkit }).filter(([n]) => !requested || requested === n);
 
 const tabs = (count) => Array.from({ length: count }, (_, i) =>
   `<a role="tab" id="t${i}" href="#p${i}" aria-controls="p${i}">Destination ${i}</a>`).join('');
 const panels = (count) => Array.from({ length: count }, (_, i) =>
   `<div id="p${i}" role="tabpanel" aria-labelledby="t${i}">Panel ${i}</div>`).join('');
 
-for (const [name, engine] of engines) {
+for (const [name, engine, test] of engines) {
   test(`${name}: a tablist is one Tab stop, and its arrows select while the bar scrolls the tab into view`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 360, height: 640 } });
@@ -57,9 +54,8 @@ for (const [name, engine] of engines) {
   });
 }
 
-for (const [name, engine] of engines) {
+for (const [name, engine, test] of engines) {
   test(`${name}: a tablist whose first tab is hidden is still entered by Tab`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage();
@@ -83,9 +79,8 @@ for (const [name, engine] of engines) {
   });
 }
 
-for (const [name, engine] of engines) {
+for (const [name, engine, test] of engines) {
   test(`${name}: a tablist set up in a closed dialog is entered by Tab once the dialog opens`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage();
@@ -107,12 +102,11 @@ for (const [name, engine] of engines) {
   });
 }
 
-for (const [name, engine] of engines) {
+for (const [name, engine, test] of engines) {
   // Below 840px the tabs share the strip equally; above it they take their
   // labels' widths. A fixed-width strip keeps its size across that switch,
   // so only the tabs' own size changes tell the indicator to move.
   test(`${name}: the indicator follows its tab across the 840px breakpoint in a fixed-width strip`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 600 } });

@@ -1,11 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { readFileSync } from 'node:fs';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const names = ['Alvin', 'Alan', 'Jonathan', 'Shannon', 'Ada', 'Grace', 'Edsger', 'Barbara'];
 const rows = names.map((person, index) => `<tr id="r${index}">
@@ -36,9 +34,8 @@ const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><styl
 <div id="probe" style="background-color:var(--md-sys-color-secondary-container)"></div>
 </main></body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: data table keeps table semantics, sticks its header and draws sort and selection`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 900 } });
@@ -88,7 +85,6 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
   });
 
   test(`${name}: data table joins a bulk-action bar and expands detail rows`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 700 } });

@@ -1,12 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { readFileSync } from 'node:fs';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const markup = `<!doctype html><html lang="en" theme="dark"><head><style>${css}</style></head><body>
 <input id="key" value="sk-123" readonly>
@@ -38,9 +36,8 @@ const open = async (page) => {
   await page.goto('https://expressive.test/');
 };
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: copy buttons write the clipboard and confirm with a snackbar`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
@@ -78,7 +75,6 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
   });
 
   test(`${name}: theme controls write the theme, save it and mark the current choice`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();

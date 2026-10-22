@@ -1,15 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
+import { readFileSync } from 'node:fs';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([n]) => !requested || requested === n)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: a bottom sheet opens on the spatial spring without uncovering a gap below it`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 400, height: 800 } });
@@ -58,7 +56,6 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     ['end, rtl', 'rtl', '', 'left'],
   ]) {
     test(`${name}: a side sheet (${label}) opens on the spatial spring without uncovering its edge`, { timeout: 30000 }, async (t) => {
-      if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
       const browser = await engine.launch({ headless: true });
       try {
         const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
@@ -91,7 +88,6 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
   }
 
   test(`${name}: a navigation rail expands on the spatial spring and settles at its expanded width`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 1280, height: 700 } });
@@ -119,7 +115,6 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
   });
 
   test(`${name}: FAB menu items move on the fast spatial spring and fade on the effects spring`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage();
@@ -150,7 +145,6 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
   });
 
   test(`${name}: a basic dialog fades and grows in on springs, and other dialogs keep their own motion`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage();
@@ -179,7 +173,6 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
   });
 
   test(`${name}: the tabs indicator and switch handle move on springs`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage();
