@@ -77,6 +77,21 @@ const READERS: Record<string, (i18n: Partial<DateI18nOptions>) => Reader> = {
  * in, so a German "Mär 15, 2026" reads back as Date.parse never would.
  * Null for text that does not fit the format, or a day the month lacks.
  */
+const pad = (n: number) => String(n).padStart(2, '0');
+/** What each `format` token writes for a date. */
+const FORMATS: Record<string, (date: Date, i18n: Partial<DateI18nOptions>) => string | number> = {
+  d: (date) => date.getDate(),
+  dd: (date) => pad(date.getDate()),
+  ddd: (date, i18n) => i18n.weekdaysShort[date.getDay()],
+  dddd: (date, i18n) => i18n.weekdays[date.getDay()],
+  m: (date) => date.getMonth() + 1,
+  mm: (date) => pad(date.getMonth() + 1),
+  mmm: (date, i18n) => i18n.monthsShort[date.getMonth()],
+  mmmm: (date, i18n) => i18n.months[date.getMonth()],
+  yy: (date) => String(date.getFullYear()).slice(2),
+  yyyy: (date) => date.getFullYear()
+};
+
 export function readDate(value: string, format: string, i18n: Partial<DateI18nOptions>): Date | null {
   const readers: Reader[] = [];
   const pattern = format.split(/(d{1,4}|m{1,4}|y{4}|yy|!.)/g).map((token) => {
@@ -397,7 +412,6 @@ export class Datepicker extends Component<DatepickerOptions> {
   date: Date;
   endDate: null | Date;
   dates: Date[];
-  formats: object;
   calendars: [{ month: number; year: number }];
   private displayPlugin: DisplayPlugin;
   /** What setInputValue last wrote, so reading it back does not depend on the parser. */
@@ -546,11 +560,6 @@ export class Datepicker extends Component<DatepickerOptions> {
     );
   }
 
-  static _isWeekend(date) {
-    const day = date.getDay();
-    return day === 0 || day === 6;
-  }
-
   /**
    * @deprecated as this function has no effect without any return statement or global parameter setter.
    */
@@ -561,14 +570,6 @@ export class Datepicker extends Component<DatepickerOptions> {
   static _compareDates(a, b) {
     // weak date comparison (use setToStartOfDay(date) to ensure correct result)
     return a.getTime() === b.getTime();
-  }
-
-  static _compareWithinRange(day: Date, date: Date, dateEnd: Date) {
-    return day.getTime() > date.getTime() && day.getTime() < dateEnd.getTime();
-  }
-
-  static _comparePastDate(a: Date, b: Date) {
-    return a.getTime() < b.getTime();
   }
 
   static getInstance(el: HTMLElement): Datepicker {
@@ -674,7 +675,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   formatDate(date: Date, format: string) {
     const formatArray = format.split(/(d{1,4}|m{1,4}|y{4}|yy|!.)/g);
     return formatArray
-      .map((label) => (this.formats[label] ? this.formats[label](date) : label))
+      .map((label) => (FORMATS[label] ? FORMATS[label](date, this.options.i18n) : label))
       .join('');
   }
 
@@ -802,7 +803,7 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   _isRefusedDay(day: Date): boolean {
     const { disableWeekends, disableDayFn } = this.options;
-    return (disableWeekends && Datepicker._isWeekend(day)) || !!disableDayFn?.(day);
+    return (disableWeekends && [0, 6].includes(day.getDay())) || !!disableDayFn?.(day);
   }
 
   /**
@@ -990,9 +991,9 @@ export class Datepicker extends Component<DatepickerOptions> {
         isDateRangeEnd = this.options.isDateRange && this.endDate && Datepicker._compareDates(this.endDate, day),
         isDateRange =
           this.options.isDateRange &&
-          Datepicker._isDate(this.date) &&
-          Datepicker._isDate(this.endDate) &&
-          Datepicker._compareWithinRange(day, this.date, this.endDate);
+          [this.date, this.endDate].every(Datepicker._isDate) &&
+          day > this.date &&
+          day < this.endDate;
       let dayNumber = 1 + (i - before),
         monthNumber = month,
         yearNumber = year;
@@ -1432,41 +1433,6 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.calendarEl = this.containerEl.querySelector('.datepicker-calendar');
     this.dateTextEl = this.containerEl.querySelector('.date-text');
     this.footer = this.containerEl.querySelector('.datepicker-footer');
-
-    this.formats = {
-      d: (date: Date) => {
-        return date.getDate();
-      },
-      dd: (date: Date) => {
-        const d = date.getDate();
-        return (d < 10 ? '0' : '') + d;
-      },
-      ddd: (date: Date) => {
-        return this.options.i18n.weekdaysShort[date.getDay()];
-      },
-      dddd: (date: Date) => {
-        return this.options.i18n.weekdays[date.getDay()];
-      },
-      m: (date: Date) => {
-        return date.getMonth() + 1;
-      },
-      mm: (date: Date) => {
-        const m = date.getMonth() + 1;
-        return (m < 10 ? '0' : '') + m;
-      },
-      mmm: (date: Date) => {
-        return this.options.i18n.monthsShort[date.getMonth()];
-      },
-      mmmm: (date: Date) => {
-        return this.options.i18n.months[date.getMonth()];
-      },
-      yy: (date: Date) => {
-        return ('' + date.getFullYear()).slice(2);
-      },
-      yyyy: (date: Date) => {
-        return date.getFullYear();
-      }
-    };
   }
 
   _removeEventHandlers() {
@@ -1632,7 +1598,7 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   _handleDateRangeCalendarClick = (date: Date) => {
     if (this.endDate == null || !Datepicker._compareDates(date, this.endDate)) {
-      if (Datepicker._isDate(this.date) && Datepicker._comparePastDate(date, this.date)) {
+      if (Datepicker._isDate(this.date) && date < this.date) {
         return;
       }
 

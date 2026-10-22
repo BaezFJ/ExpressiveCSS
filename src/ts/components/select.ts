@@ -217,7 +217,7 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   _handleOptionClick = (e: MouseEvent | KeyboardEvent) => {
     // Canceling a click on the multi-select checkbox itself reverts the box
-    // after _selectValue has set it, leaving it out of step with the option.
+    // after _setSelectedStates has set it, leaving it out of step with the option.
     if (!(e.target as Element).matches('input[type="checkbox"]')) e.preventDefault();
     const virtualOption = (e.target as HTMLLIElement).closest('li');
     this._selectOptionElement(virtualOption);
@@ -231,14 +231,6 @@ export class FormSelect extends Component<FormSelectOptions> {
     if (li?.id) this.input.setAttribute('aria-activedescendant', li.id);
   };
 
-  _arraysEqual<T, E>(a: T[], b: (E | T)[]) {
-    if (a === b) return true;
-    if (a == null || b == null) return false;
-    if (a.length !== b.length) return false;
-    for (let i = 0; i < a.length; ++i) if (a[i] !== b[i]) return false;
-    return true;
-  }
-
   _selectOptionElement(virtualOption: HTMLElement) {
     if (this.el.matches(':disabled')) return;
     if (
@@ -247,17 +239,11 @@ export class FormSelect extends Component<FormSelectOptions> {
     ) {
       const value = this._values.find((value) => value.optionEl === virtualOption);
       if (!value || value.el.matches(':disabled')) return;
-      const previousSelectedValues = this.getSelectedValues();
-      if (this.isMultiple) {
-        this._toggleEntryFromArray(value);
-      } else {
-        this._deselectAll();
-        this._selectValue(value);
-      }
+      const previousSelectedValues = JSON.stringify(this.getSelectedValues());
+      // Selecting one option of a single select deselects the others.
+      value.el.selected = !this.isMultiple || !value.el.selected;
       this._handleSelectChange();
-      const actualSelectedValues = this.getSelectedValues();
-      const selectionHasChanged = !this._arraysEqual(previousSelectedValues, actualSelectedValues);
-      if (selectionHasChanged)
+      if (JSON.stringify(this.getSelectedValues()) !== previousSelectedValues)
         this.el.dispatchEvent(
           new Event('change', { bubbles: true, cancelable: true, composed: true })
         );
@@ -432,7 +418,7 @@ export class FormSelect extends Component<FormSelectOptions> {
           realOption,
           this.isMultiple ? 'multiple' : undefined
         );
-        this._addOptionToValues(realOption as HTMLOptionElement, virtualOption);
+        this._values.push({ el: realOption as HTMLOptionElement, optionEl: virtualOption });
       } else if (realOption.tagName === 'OPTGROUP') {
         const groupId = 'opt-group-' + Utils.guid();
         const groupParent = document.createElement('li');
@@ -457,7 +443,7 @@ export class FormSelect extends Component<FormSelectOptions> {
         selectOptions.forEach((child) => {
           const virtualOption = this._createAndAppendOptionWithIcon(child, 'optgroup-option');
           groupChildren.push(virtualOption.id);
-          this._addOptionToValues(child, virtualOption);
+          this._values.push({ el: child, optionEl: virtualOption });
         });
         groupParent.setAttribute('aria-owns', groupChildren.join(' '));
       }
@@ -470,10 +456,6 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._buildOptions();
     this._setupOptionHandlers();
     this.menu?._makeMenuFocusable();
-  }
-
-  _addOptionToValues(realOption: HTMLOptionElement, virtualOption: HTMLElement) {
-    this._values.push({ el: realOption, optionEl: virtualOption });
   }
 
   _removeMenu() {
@@ -560,66 +542,21 @@ export class FormSelect extends Component<FormSelectOptions> {
     return li;
   }
 
-  _selectValue(value: ValueStruct) {
-    value.el.selected = true;
-    value.optionEl.classList.add('selected');
-    value.optionEl.ariaSelected = 'true';
-    const checkbox = <HTMLInputElement>value.optionEl.querySelector('input[type="checkbox"]');
-    if (checkbox) checkbox.checked = true;
-  }
-
-  _deselectValue(value: ValueStruct) {
-    value.el.selected = false;
-    value.optionEl.classList.remove('selected');
-    value.optionEl.ariaSelected = 'false';
-    const checkbox = <HTMLInputElement>value.optionEl.querySelector('input[type="checkbox"]');
-    if (checkbox) checkbox.checked = false;
-  }
-
-  _deselectAll() {
-    this._values.forEach((value) => this._deselectValue(value));
-  }
-
-  _isValueSelected(value: ValueStruct) {
-    return value.el.selected;
-  }
-
-  _toggleEntryFromArray(value: ValueStruct) {
-    if (this._isValueSelected(value)) this._deselectValue(value);
-    else this._selectValue(value);
-  }
-
-  _getSelectedOptions(): HTMLOptionElement[] {
-    return Array.from(this.el.selectedOptions);
-  }
-
   _setValueToInput() {
-    this.input.value = this._getSelectedOptions().map(option => option.textContent.trim()).join(', ');
+    this.input.value = Array.from(this.el.selectedOptions, (option) => option.textContent.trim()).join(', ');
   }
 
+  /** Shows each option's selection on its row and checkbox. */
   _setSelectedStates() {
-    this._values.forEach((value) => {
-      const optionIsSelected = value.el.selected;
-      const cb = <HTMLInputElement>value.optionEl.querySelector('input[type="checkbox"]');
-      if (cb) cb.checked = optionIsSelected;
-      if (optionIsSelected) {
-        this._activateOption(this.menuEl, value.optionEl);
-      } else {
-        value.optionEl.classList.remove('selected');
-        value.optionEl.ariaSelected = 'false';
-      }
+    this._values.forEach(({ el, optionEl }) => {
+      optionEl.classList.toggle('selected', el.selected);
+      optionEl.ariaSelected = String(el.selected);
+      const checkbox = optionEl.querySelector<HTMLInputElement>('input[type="checkbox"]');
+      if (checkbox) checkbox.checked = el.selected;
     });
   }
 
-  _activateOption(ul: HTMLElement, li: HTMLElement) {
-    if (!li) return;
-    if (!this.isMultiple)
-      ul.querySelectorAll('li.selected').forEach((row) => row.classList.remove('selected'));
-    li.classList.add('selected');
-    li.ariaSelected = 'true';
-  }
-
   getSelectedValues() {
-    return this._getSelectedOptions().map((realOption) => realOption.value);
+    return Array.from(this.el.selectedOptions, (option) => option.value);
   }
 }
