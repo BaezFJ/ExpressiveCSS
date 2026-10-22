@@ -230,10 +230,12 @@ describe('the compatibility routes Astro publishes', () => {
 
   test('every legacy route the catalogue records keeps redirecting', () => {
     // These named routes are URLs in search results.
-    for (const { from, to } of aliases()) {
-      const target = PAGES.find((p) => p.aliases?.includes(from));
-      assert.equal(to, target?.route, `${from}: points elsewhere`);
-    }
+    assert.deepEqual(Object.fromEntries(aliases().map(({ from, to }) => [from, to])), {
+      '/getting-started.html': '/', '/sidenav.html': '/navigation-rail.html', '/collapsible.html': '/navigation-rail.html',
+      '/dropdown.html': '/menu.html', '/segmented-buttons.html': '/button-groups.html', '/collections.html': '/lists.html',
+      '/floating-sheet.html': '/dialogs.html', '/modals.html': '/dialogs.html', '/toasts.html': '/snackbar.html',
+      '/bottom-app-bar.html': '/toolbars.html', '/range.html': '/slider.html',
+    });
     assert.deepEqual(
       aliases().map((a) => a.from).sort(),
       ['/bottom-app-bar.html', '/collapsible.html', '/collections.html',

@@ -417,7 +417,7 @@ pre code {
 .astro-code {
   --astro-code-foreground: var(--md-sys-color-on-surface);
   --astro-code-background: var(--md-sys-color-surface-container-high);
-  --astro-code-token-comment: var(--md-sys-color-outline);
+  --astro-code-token-comment: var(--md-sys-color-on-surface-variant);
   --astro-code-token-keyword: var(--md-sys-color-primary);
   --astro-code-token-string: var(--md-sys-color-tertiary);
   --astro-code-token-string-expression: var(--md-sys-color-tertiary);
