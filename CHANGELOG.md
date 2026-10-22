@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `AutoInit(context, options, { watch: true })` keeps watching the
+  context after the first scan. Components start in markup added later,
+  with the same options, markup options and `no-autoinit` opt-out, and
+  are destroyed when their markup is removed. Elements that already have
+  an instance keep it, moved elements keep theirs, and shadow roots are
+  watched only when passed as the context. The call returns a function
+  that stops watching. Without `watch`, `AutoInit()` behaves as before.
 - Timepicker's `minTime` and `maxTime` options bound the times a person
   can choose, as 24-hour `HH:MM` or `HH:MM:SS`. Dial ticks outside the
   range are dimmed and refused, the fields stop stepping at the bounds and

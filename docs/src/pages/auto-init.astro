@@ -11,6 +11,7 @@ const S = defineSections([
   { id: "initialization", label: "Initialization" },
   { id: "options", label: "Options" },
   { id: "markup-options", label: "Options in markup" },
+  { id: "watch", label: "Markup added later" },
   { id: "components", label: "Components" },
   { id: "ignoring", label: "Ignoring elements" },
   { id: "events", label: "Events" },
@@ -61,19 +62,25 @@ Tooltip.init(element, { position: 'top' });
         <p>Component <code>init()</code> methods also accept a <code>NodeList</code> or <code>HTMLCollection</code> and return an array of instances. An empty collection returns an empty array.</p>
   </Section>
   <Section {...S.options}>
-        <p><code>AutoInit(context, options)</code> takes two arguments:</p>
+        <p><code>AutoInit(context, options, settings)</code> takes three arguments:</p>
         <OptionsTable>
             <tr>
               <td><code>context</code></td>
               <td>Element</td>
               <td><code>document.body</code></td>
-              <td>DOM element to search within for components.</td>
+              <td>DOM element or shadow root to search within for components.</td>
             </tr>
             <tr>
               <td><code>options</code></td>
               <td>Object</td>
               <td><code>{"{}"}</code></td>
               <td>Options for each component, keyed by name. See that component's page for its own options.</td>
+            </tr>
+            <tr>
+              <td><code>settings</code></td>
+              <td>Object</td>
+              <td><code>{"{}"}</code></td>
+              <td><code>{"{ watch: true }"}</code> keeps starting components in markup added to <code>context</code> later. See <a href="#watch">Markup added later</a>.</td>
             </tr>
         </OptionsTable>
         <p>
@@ -136,6 +143,65 @@ Tooltip.init(element, { position: 'top' });
             them.
           </li>
         </ul>
+  </Section>
+  <Section {...S.watch}>
+        <p>
+          <code>AutoInit()</code> scans <code>context</code> once. Pass <code>{"{ watch: true }"}</code>
+          as the third argument to keep watching it: components start in markup added later, and are
+          destroyed when their markup is removed. The call returns a function that stops watching.
+        </p>
+<Code code={`
+const stop = Expressive.AutoInit(document.body, {}, { watch: true });
+
+// Starts a Menu once the observer sees the trigger, without calling init.
+document.querySelector('main').insertAdjacentHTML('beforeend', \`
+  <a class="button menu-trigger" data-target="more">More</a>
+  <menu id="more"><li><a href="#!">Share</a></li></menu>\`);
+
+// In your view's teardown. Components already started keep running.
+function unmount() {
+  stop();
+}
+`} />
+        <ul>
+          <li>
+            Added markup starts the same way the first scan does, with the same <code>options</code>,
+            <code>data-<em>name</em>-options</code> attributes and <code>no-autoinit</code> opt-out. The
+            added element is checked as well as its descendants. Components start in a later microtask,
+            when the browser reports the change, not during the call that adds the markup.
+          </li>
+          <li>
+            An element that already has an instance keeps it. Starting a component yourself before
+            adding its element works, and components that build their own markup, such as the
+            Datepicker's month and year selects, keep the instances they made.
+          </li>
+          <li>
+            Removed markup destroys the instances <code>AutoInit()</code> would have started. Elements
+            with <code>no-autoinit</code> are left to your code. An element moved elsewhere in the
+            page keeps its instance; one that is removed and added back later starts again.
+          </li>
+          <li>
+            Only added and removed elements count. Adding <code>tooltipped</code> to an element already in the page does not start a Tooltip; call <code>init</code> for that.
+          </li>
+          <li>
+            Markup inserted at runtime becomes live components. If you insert user content, sanitize
+            it first and drop component classes and <code>data-<em>name</em>-options</code> attributes
+            you don't want started.
+          </li>
+          <li>
+            Shadow roots are not entered. To watch markup inside one, call
+            <code>AutoInit(shadowRoot, options, {"{ watch: true }"})</code> for that root.
+          </li>
+          <li>
+            Call it once per root. A component that throws while starting stops the rest of that
+            batch, as it stops <code>AutoInit()</code>; later changes are still handled.
+          </li>
+        </ul>
+        <p>
+          <code>stop()</code> first handles changes the browser has not reported yet, so markup added
+          just before the call still starts. Without <code>watch</code>, <code>AutoInit()</code>
+          returns a function that does nothing.
+        </p>
   </Section>
   <Section {...S.components}>
         <p>
@@ -265,7 +331,9 @@ document.addEventListener('expressive:open', (event) => {
   <Section {...S.alpine}>
         <p>
           <code>AutoInit()</code> scans the page once, so it misses anything Alpine renders later with
-          <code>x-if</code> or <code>x-for</code>. Register a directive instead. Alpine runs it each time it
+          <code>x-if</code> or <code>x-for</code>. <a href="#watch">Watch mode</a> starts and destroys that
+          markup with the options of the <code>AutoInit()</code> call and its <code>data-<em>name</em>-options</code>
+          attributes. To pass options from Alpine expressions instead, register a directive. Alpine runs it each time it
           creates the element and calls <code>cleanup</code> when it removes it, so every instance gets
           destroyed with its element.
         </p>

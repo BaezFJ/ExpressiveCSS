@@ -104,6 +104,7 @@ export type AutoInitOptions = {
 /** The shape every entry in the table satisfies; see the cast in AutoInit. */
 type AutoInitable = {
   defaults: object;
+  getInstance(el: Element): { destroy(): void } | undefined;
   init(els: InitElement | InitElements<InitElement>, options: Partial<object>): unknown;
 };
 
@@ -207,33 +208,84 @@ function markupOptions(el: Element, name: string, defaults: object) {
   return options;
 }
 
+// Each component's static `init` is overloaded; indexing the table widens it
+// to a union TypeScript cannot call, so narrow it once, here.
+const entry = (name: keyof Registry) => AUTO_INIT_COMPONENTS[name] as unknown as AutoInitEntry;
+const NAMES = Object.keys(AUTO_INIT_COMPONENTS) as (keyof Registry)[];
+
 /** Starts component `name` on one element, with its markup options under `options`. */
 function initElement(name: keyof Registry, el: Element, options: object = {}) {
-  // Each component's static `init` is overloaded; indexing the table widens
-  // it to a union TypeScript cannot call, so narrow it once, here.
-  const { component } = AUTO_INIT_COMPONENTS[name] as unknown as AutoInitEntry;
+  const { component } = entry(name);
   component.init(el, { ...markupOptions(el, name, component.defaults), ...options });
 }
 
 /**
+ * The elements under `root` that component `name` claims, plus `root` itself
+ * when `self` is set. `:is()` so that `:not(.no-autoinit)` applies to the
+ * whole selector: a bare `${selector}:not(...)` binds the negation to the last
+ * alternative only, which would break the opt-out for any comma-separated
+ * entry (Cards is the first).
+ */
+function claimed(name: keyof Registry, root: ParentNode, self = false): Element[] {
+  const { selector, filter = () => true } = entry(name);
+  const query = `:is(${selector}):not(.no-autoinit)`;
+  const own = self && (root as Element).matches(query) ? [root as Element] : [];
+  return [...own, ...root.querySelectorAll(query)].filter(filter);
+}
+
+/** Starts the components an added element and its descendants claim, leaving existing instances alone. */
+function startAdded(node: Node, options?: Partial<AutoInitOptions>) {
+  if (node.nodeType !== Node.ELEMENT_NODE) return;
+  for (const name of NAMES) {
+    claimed(name, node as Element, true).forEach((el) => entry(name).component.getInstance(el) || initElement(name, el, options?.[name]));
+  }
+}
+
+/**
+ * Destroys the instances of a removed element and its descendants that
+ * AutoInit would claim. An element that is back in the page by now was moved,
+ * and keeps its instances.
+ */
+function stopRemoved(node: Node) {
+  if (node.nodeType !== Node.ELEMENT_NODE || node.isConnected) return;
+  for (const name of NAMES) {
+    claimed(name, node as Element, true).forEach((el) => entry(name).component.getInstance(el)?.destroy());
+  }
+}
+
+/** Watches `context`, starting components in added markup and destroying them in removed markup. */
+function watch(context: Node, options?: Partial<AutoInitOptions>) {
+  const handle = (records: MutationRecord[]) => {
+    for (const { addedNodes, removedNodes } of records) {
+      removedNodes.forEach(stopRemoved);
+      addedNodes.forEach((node) => context.contains(node) && startAdded(node, options));
+    }
+  };
+  const observer = new MutationObserver(handle);
+  observer.observe(context, { childList: true, subtree: true });
+  // Handle the changes not delivered yet first, so markup added just before stop() still starts.
+  return () => {
+    handle(observer.takeRecords());
+    observer.disconnect();
+  };
+}
+
+/**
  * Automatically initialize components.
- * @param context Root element to initialize. Defaults to `document.body`.
+ * @param context Root element or shadow root to initialize. Defaults to
+ * `document.body`. Shadow roots inside it are not entered.
  * @param options Options for each component.
+ * @param settings With `watch: true`, keep starting components in markup
+ * added to `context` later, and destroy them when their markup is removed.
+ * @returns A function that stops watching. It does nothing without `watch`.
  */
 export function AutoInit(
-  context: HTMLElement = document.body,
+  context: HTMLElement | ShadowRoot = document.body,
   options?: Partial<AutoInitOptions>,
-) {
-  for (const name of Object.keys(AUTO_INIT_COMPONENTS) as (keyof Registry)[]) {
-    const { selector, filter = () => true } = AUTO_INIT_COMPONENTS[
-      name
-    ] as unknown as AutoInitEntry;
-    // `:is()` so that `:not(.no-autoinit)` applies to the whole selector. A
-    // bare `${selector}:not(...)` binds the negation to the last alternative
-    // only, which would silently break the opt-out for any comma-separated
-    // entry (Cards is the first).
-    context.querySelectorAll(`:is(${selector}):not(.no-autoinit)`).forEach((el) => {
-      if (filter(el)) initElement(name, el, options?.[name]);
-    });
+  settings: { watch?: boolean } = {},
+): () => void {
+  for (const name of NAMES) {
+    claimed(name, context).forEach((el) => initElement(name, el, options?.[name]));
   }
+  return settings.watch ? watch(context, options) : () => {};
 }
