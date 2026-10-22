@@ -8,7 +8,7 @@ const script = readFileSync(
   'utf8'
 );
 
-function docsPage(markup, { clipboard = true, scrollWidth = 0 } = {}) {
+function docsPage(markup, { scrollWidth = 0 } = {}) {
   const dom = new JSDOM(`<!doctype html><body>${markup}</body>`, {
     runScripts: 'dangerously',
     url: 'https://docs.example.test/',
@@ -18,14 +18,13 @@ function docsPage(markup, { clipboard = true, scrollWidth = 0 } = {}) {
     configurable: true,
     get: () => scrollWidth,
   });
+  // Nor a ResizeObserver; the width never changes here anyway.
+  dom.window.ResizeObserver = class { observe() {} };
   const writes = [];
-
-  if (clipboard) {
-    Object.defineProperty(dom.window.navigator, 'clipboard', {
-      configurable: true,
-      value: { writeText: async (value) => writes.push(value) },
-    });
-  }
+  Object.defineProperty(dom.window.navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText: async (value) => writes.push(value) },
+  });
   dom.window.eval(script);
   return { dom, writes };
 }

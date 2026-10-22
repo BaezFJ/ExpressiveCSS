@@ -2,7 +2,6 @@ import { mkdir, readFile, readdir, unlink, writeFile } from 'node:fs/promises';
 import { createHash, hash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { transform } from 'esbuild';
 import { buildCapabilityRoadmap, renderCapabilityRoadmap } from './lib/material-capabilities.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -137,19 +136,7 @@ async function contractManifest(provenance) {
   };
 }
 
-async function loadCatalogue() {
-  const source = await readFile(resolve(ROOT, 'docs/src/data/nav.ts'), 'utf8');
-  // Node 20 cannot import TypeScript directly; use the existing build tool in memory.
-  const { code } = await transform(source, {
-    format: 'esm',
-    loader: 'ts',
-    sourcefile: 'nav.ts',
-    target: 'es2020',
-  });
-  return import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
-}
-
-const { NAV, PAGES } = await loadCatalogue();
+const { NAV, PAGES } = await import('../docs/src/data/nav.ts');
 
 const COMPONENT_GROUPS = new Set(['Structure', 'Components', 'Forms']);
 const cataloguePages = NAV

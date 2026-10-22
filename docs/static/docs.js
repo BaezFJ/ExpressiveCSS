@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const navigationDialog = document.getElementById("docs-navigation-dialog");
   const navigationTrigger = document.getElementById("docs-navigation-trigger");
-  navigationTrigger?.addEventListener("click", () => navigationDialog?.showModal());
   // Return focus to the menu button, or to the current group in the rail
   // when the window has grown past the button's range.
   navigationDialog?.addEventListener("close", () => {

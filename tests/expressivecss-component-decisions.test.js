@@ -1,7 +1,6 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
-import { transform } from 'esbuild';
 
 const root = new URL('..', import.meta.url);
 const sourceUrl = new URL('../docs/src/data/component-decisions.json', import.meta.url);
@@ -16,9 +15,7 @@ const semantics = JSON.parse(await readFile(semanticsUrl, 'utf8'));
 const generated = await readFile(generatedUrl, 'utf8');
 const reviewMatrix = await readFile(reviewMatrixUrl, 'utf8');
 const generator = await readFile(new URL('../scripts/gen-expressivecss-skill.mjs', import.meta.url), 'utf8');
-const navSource = await readFile(new URL('../docs/src/data/nav.ts', import.meta.url), 'utf8');
-const { code: navCode } = await transform(navSource, { format: 'esm', loader: 'ts', target: 'es2020' });
-const { NAV } = await import(`data:text/javascript;base64,${Buffer.from(navCode).toString('base64')}`);
+const { NAV } = await import('../docs/src/data/nav.ts');
 const cataloguePageIds = NAV
   .filter((group) => ['Structure', 'Components', 'Forms'].includes(group.label))
   .flatMap((group) => group.pages.map((page) => page.id));

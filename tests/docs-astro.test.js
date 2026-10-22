@@ -174,6 +174,7 @@ describe('the Astro chrome', () => {
       'docs/src/layouts/DocsLayout.astro': [
         'id="docs-navigation-trigger"',
         'aria-controls="docs-navigation-dialog"',
+        'commandfor="docs-navigation-dialog" command="show-modal"',
       ],
       'docs/src/components/Footer.astro': [
         'footer-',
@@ -192,7 +193,6 @@ describe('the Astro chrome', () => {
   test('compact navigation uses the native dialog lifecycle', () => {
     const script = read('docs/static/docs.js');
     const styles = read('docs/static/docs.css');
-    assert.match(script, /navigationDialog\?\.showModal\(\)/);
     assert.match(script, /navigationDialog\?\.addEventListener\("close", \(\) => \{[^}]*navigationTrigger\?\.checkVisibility\(\)/s);
     assert.match(script, /if \(wide\.matches && navigationDialog\?\.open\) navigationDialog\.close\(\)/);
     assert.match(styles, /\.docs-navigation-dialog > div\s*\{[^}]*flex: 1 1 auto;[^}]*min-height: 0;[^}]*overflow-y: auto;/s);

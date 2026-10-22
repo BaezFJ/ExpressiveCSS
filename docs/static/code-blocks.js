@@ -9,24 +9,6 @@
     scss: 'SCSS',
   };
 
-  const copyText = async (source) => {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(source);
-      return;
-    }
-
-    const textarea = document.createElement('textarea');
-    textarea.value = source;
-    textarea.setAttribute('readonly', '');
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.append(textarea);
-    textarea.select();
-    const copied = document.execCommand?.('copy');
-    textarea.remove();
-    if (!copied) throw new Error('Copy is not available');
-  };
-
   const setCopyState = (button, state) => {
     const icon = button.querySelector('.material-symbols');
     const label = button.querySelector('.code-copy-label');
@@ -61,7 +43,7 @@
     button.addEventListener('click', async () => {
       window.clearTimeout(resetTimer);
       try {
-        await copyText(source);
+        await navigator.clipboard.writeText(source);
         setCopyState(button, 'copied');
       } catch {
         setCopyState(button, 'error');
@@ -80,9 +62,9 @@
     if (pre.scrollWidth > pre.clientWidth) pre.tabIndex = 0;
     else pre.removeAttribute('tabindex');
   };
-  const scrollStops = window.ResizeObserver
-    ? new ResizeObserver((entries) => entries.forEach((entry) => syncScrollStop(entry.target)))
-    : null;
+  const scrollStops = new ResizeObserver((entries) =>
+    entries.forEach((entry) => syncScrollStop(entry.target))
+  );
 
   // Code.astro highlights each sample at build time and records its language.
   document.querySelectorAll('pre[data-language] > code').forEach((code) => {
@@ -100,6 +82,6 @@
     pre.before(wrapper);
     wrapper.append(languageLabel, makeCopyButton(source), pre);
     syncScrollStop(pre);
-    scrollStops?.observe(pre);
+    scrollStops.observe(pre);
   });
 })();
