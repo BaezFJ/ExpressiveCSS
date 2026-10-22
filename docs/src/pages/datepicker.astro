@@ -36,7 +36,7 @@ const S = defineSections([
           input does not reveal it.
         </p>
         <div class="field">
-          <input type="text" class="date-picker no-autoinit" id="datepicker-intro">
+          <input type="text" class="date-picker" id="datepicker-intro" data-datepicker-options='{"openByDefault": true}'>
           <label for="datepicker-intro">Birthdate</label>
         </div>
 <Code code={`
@@ -515,7 +515,7 @@ Expressive.Datepicker.init(document.getElementById('datepicker-range'), {
           The picker removes extra generated inputs when their dates are deselected or the picker is destroyed.
         </p>
         <div class="field mb-3">
-          <input type="text" class="date-picker no-autoinit" id="datepicker-multi">
+          <input type="text" class="date-picker" id="datepicker-multi" data-datepicker-options='{"openByDefault": true, "isMultipleSelection": true}'>
           <label for="datepicker-multi">Dates</label>
         </div>
 <Code code={`

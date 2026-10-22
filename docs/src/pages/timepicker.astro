@@ -321,7 +321,7 @@ Expressive.Timepicker.init(elem, {
           <code>de</code> or <code>fr</code>, and 12-hour for <code>en-US</code>.
         </p>
         <div class="field mb-3">
-          <input type="text" class="time-picker no-autoinit" id="timepicker-24">
+          <input type="text" class="time-picker" id="timepicker-24" data-timepicker-options='{"twelveHour": false}'>
           <label for="timepicker-24">24-hour</label>
         </div>
 <Code code={`
@@ -339,7 +339,7 @@ Expressive.Timepicker.init(document.getElementById('timepicker-24'), {
           The dial keeps its hours and minutes views, as the Material 3 time picker does. You set seconds in the field only. Under <code>autoSubmit</code>, choosing a minute on the dial writes the time with the seconds the field shows.
         </p>
         <div class="field mb-3">
-          <input type="text" class="time-picker no-autoinit" id="timepicker-seconds">
+          <input type="text" class="time-picker" id="timepicker-seconds" data-timepicker-options='{"showSeconds": true}'>
           <label for="timepicker-seconds">With seconds</label>
         </div>
 <Code code={`

@@ -241,11 +241,11 @@ const S = defineSections([
 <!-- Submits tags=red&tags=blue -->
 `} />
         <p>An empty field. Type a tag and press Enter:</p>
-        <div id="chips-empty" class="chips no-autoinit mb-5"></div>
+        <div id="chips-empty" data-chips-options='{"allowUserInput": true}' class="chips mb-5"></div>
         <p>Initial tags from the <code>data</code> option:</p>
         <div id="chips-initial" class="chips no-autoinit mb-5"></div>
         <p>Placeholders when the field is empty and after the first tag:</p>
-        <div id="chips-placeholder" class="chips no-autoinit mb-5"></div>
+        <div id="chips-placeholder" data-chips-options='{"allowUserInput": true, "placeholder": "Enter a tag", "secondaryPlaceholder": "+Tag"}' class="chips mb-5"></div>
         <p>Autocomplete suggestions while typing:</p>
         <div id="chips-autocomplete" class="chips no-autoinit mb-5"></div>
 <Code code={`

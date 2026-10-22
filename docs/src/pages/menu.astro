@@ -139,7 +139,7 @@ const S = defineSections([
         <div class="row">
           <div class="s12 m6">
             <h6>1. Standard</h6>
-            <button type="button" class="menu-trigger no-autoinit" id="menu-standard-trigger" data-target="menu-standard">Open standard menu</button>
+            <button type="button" class="menu-trigger" id="menu-standard-trigger" data-menu-options='{"constrainWidth": false}' data-target="menu-standard">Open standard menu</button>
             <menu id="menu-standard">
               <li><button type="button">Refresh<span class="material-symbols suffix" aria-hidden="true">refresh</span></button></li>
               <li><button type="button">Settings<span class="material-symbols suffix" aria-hidden="true">settings</span></button></li>
@@ -149,7 +149,7 @@ const S = defineSections([
           </div>
           <div class="s12 m6">
             <h6>2. Grouped</h6>
-            <button type="button" class="menu-trigger no-autoinit" id="menu-grouped-trigger" data-target="menu-grouped">Open grouped menu</button>
+            <button type="button" class="menu-trigger" id="menu-grouped-trigger" data-menu-options='{"constrainWidth": false}' data-target="menu-grouped">Open grouped menu</button>
             <menu id="menu-grouped" class="grouped">
               <li><button type="button"><span class="material-symbols" aria-hidden="true">visibility</span>Item 1</button></li>
               <li><button type="button"><span class="material-symbols" aria-hidden="true">content_copy</span>Item 2<kbd>⌘C</kbd></button></li>
@@ -303,8 +303,8 @@ Expressive.AutoInit(document.body, {
           pick an edge.
         </p>
         <p>
-          <button type="button" class="menu-trigger no-autoinit" id="menu-left-trigger" data-target="menu-left">Left</button>
-          <button type="button" class="menu-trigger no-autoinit" id="menu-right-trigger" data-target="menu-right">Right</button>
+          <button type="button" class="menu-trigger" id="menu-left-trigger" data-menu-options='{"alignment": "left", "constrainWidth": false}' data-target="menu-left">Left</button>
+          <button type="button" class="menu-trigger" id="menu-right-trigger" data-menu-options='{"alignment": "right", "constrainWidth": false}' data-target="menu-right">Right</button>
         </p>
         <menu id="menu-left">
           <li><button type="button">One</button></li>
@@ -342,7 +342,7 @@ Expressive.Menu.init(document.querySelector('#left'), {
           mouse enter instead of click.
         </p>
         <p>
-          <button type="button" class="menu-trigger no-autoinit" id="menu-hover-trigger" data-target="menu-hover">Hover me</button>
+          <button type="button" class="menu-trigger" id="menu-hover-trigger" data-menu-options='{"hover": true, "constrainWidth": false}' data-target="menu-hover">Hover me</button>
         </p>
         <menu id="menu-hover">
           <li><button type="button">One</button></li>
@@ -385,7 +385,7 @@ Expressive.Menu.init(document.querySelector('#hover'), {
           a scrollable menu.
         </p>
         <p>
-          <button type="button" class="menu-trigger no-autoinit" id="menu-rich-trigger" data-target="menu-rich">Edit</button>
+          <button type="button" class="menu-trigger" id="menu-rich-trigger" data-menu-options='{"constrainWidth": false}' data-target="menu-rich">Edit</button>
         </p>
         <menu id="menu-rich" class="grouped">
           <li>
@@ -470,7 +470,7 @@ Expressive.Menu.init(document.querySelector('#hover'), {
           form one group per menu.
         </p>
         <p>
-          <button type="button" class="menu-trigger no-autoinit" id="menu-radio-trigger" data-target="menu-radio">Sort</button>
+          <button type="button" class="menu-trigger" id="menu-radio-trigger" data-menu-options='{"constrainWidth": false}' data-target="menu-radio">Sort</button>
         </p>
         <menu id="menu-radio">
           <li role="none">
@@ -516,7 +516,7 @@ Expressive.Menu.init(document.querySelector('#hover'), {
           Add <code>.vibrant</code> to use it, and use it sparingly.
         </p>
         <p>
-          <button type="button" class="tonal menu-trigger no-autoinit" id="menu-vibrant-trigger" data-target="menu-vibrant">Vibrant</button>
+          <button type="button" class="tonal menu-trigger" id="menu-vibrant-trigger" data-menu-options='{"constrainWidth": false}' data-target="menu-vibrant">Vibrant</button>
         </p>
         <menu id="menu-vibrant" class="vibrant">
           <li>
@@ -557,7 +557,7 @@ Expressive.Menu.init(document.querySelector('#hover'), {
           Keyboard users open it with Enter, Space, or the submenu entry arrow.
         </p>
         <p>
-          <button type="button" class="menu-trigger no-autoinit" id="menu-nested-trigger" data-target="menu-nested">Nested</button>
+          <button type="button" class="menu-trigger" id="menu-nested-trigger" data-menu-options='{"constrainWidth": false, "coverTrigger": false}' data-target="menu-nested">Nested</button>
         </p>
         <menu id="menu-nested">
           <li><button type="button">One</button></li>
