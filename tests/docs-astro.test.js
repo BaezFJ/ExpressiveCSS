@@ -20,7 +20,7 @@ const root = new URL('../', import.meta.url);
 const read = (p) => readFileSync(new URL(p, root), 'utf8');
 
 // Node strips the types; nothing compiles these files for the test run.
-const { NAV, PAGES, ALIASES } = await import('../docs/src/data/nav.ts');
+const { NAV, PAGES } = await import('../docs/src/data/nav.ts');
 const { route, aliases, markdownRoute } = await import('../docs/src/lib/catalogue.ts');
 const { renderLlmsTxt } = await import('../docs/src/lib/llms.ts');
 const pkg = JSON.parse(read('package.json'));
@@ -65,10 +65,7 @@ describe('the Astro documentation pages', () => {
       assert.ok(id, `${file}: does not name a catalogue page`);
       const entry = PAGES.find((p) => p.id === id);
       assert.ok(entry, `${file}: "${id}" is not in the catalogue`);
-      // The landing page is the one page whose published route Astro changes:
-      // the site root is canonical and the catalogue route becomes an alias.
-      const expected = id === 'index' ? '/' : entry.route;
-      assert.equal(publishedAt(file), expected, `${file}: publishes at the wrong route`);
+      assert.equal(publishedAt(file), entry.route, `${file}: publishes at the wrong route`);
     }
   });
 
@@ -113,7 +110,7 @@ describe('the Astro documentation pages', () => {
 describe('the Astro chrome', () => {
   const section = read('docs/src/components/Section.astro');
   const header = read('docs/src/components/PageHeader.astro');
-  const base = read('docs/src/layouts/BaseLayout.astro');
+  const base = read('docs/src/layouts/DocsLayout.astro');
 
   test('gives a section the hooks and heading roles docs.css styles it by', () => {
     // Class hooks, not appearance: docs.css and the scrollspy both key on
@@ -165,17 +162,14 @@ describe('the Astro chrome', () => {
         'navigation-rail docs-category-rail',
         'popovertarget={panelId(group.label)}',
         'class="navigation-rail-panel" popover',
-        '<DocsRailPanel',
+        '<details open=',
+        '<summary>',
         'id="docs-navigation-dialog"',
         'side-sheet start docs-navigation-dialog',
         'class="accordion"',
         'material-symbols',
         'aria-current',
         'active',
-      ],
-      'docs/src/components/DocsRailPanel.astro': [
-        '<details open=',
-        '<summary>',
       ],
       'docs/src/layouts/DocsLayout.astro': [
         'id="docs-navigation-trigger"',
@@ -207,16 +201,14 @@ describe('the Astro chrome', () => {
 
 describe('the compatibility routes Astro publishes', () => {
   const alias = read('docs/src/pages/[alias].astro');
-  const layout = read('docs/src/layouts/RedirectLayout.astro');
-  const index = PAGES.find((p) => p.id === 'index');
 
   test('the landing page disowns the second URL a static host serves it at', () => {
     // `/` and `/index.html` are the same file on any static host, and no
     // redirect can separate them -- only a canonical link can. Astro hands out
     // the wrong one of the two by default: `Astro.url.pathname` is
     // `/index.html` for the index route under `build.format: 'file'`, so
-    // BaseLayout normalises it, and that normalisation is the whole guard.
-    const base = read('docs/src/layouts/BaseLayout.astro');
+    // DocsLayout normalises it, and that normalisation is the whole guard.
+    const base = read('docs/src/layouts/DocsLayout.astro');
     assert.match(base, /<link rel="canonical" href=\{canonical\}>/);
     assert.match(base, /Astro\.url\.pathname\.replace\(\/\\\/index\\\.html\$\/, "\/"\)/);
   });
@@ -227,8 +219,8 @@ describe('the compatibility routes Astro publishes', () => {
     // the root document there, so a redirect would point the root at itself.
     const found = aliases();
     assert.ok(
-      found.some((a) => a.from === index.route && a.to === '/'),
-      `${index.route} does not redirect to the site root`,
+      found.some((a) => a.from === '/getting-started.html' && a.to === '/'),
+      '/getting-started.html does not redirect to the site root',
     );
     assert.ok(
       !found.some((a) => a.from === '/index.html'),
@@ -237,26 +229,22 @@ describe('the compatibility routes Astro publishes', () => {
   });
 
   test('every legacy route the catalogue records keeps redirecting', () => {
-    // `aliases()` diverges from `ALIASES` for exactly one page -- the landing
-    // page's two compatibility paths swap roles -- and every other alias has
-    // to survive that transformation untouched. These named routes are URLs in
-    // search results.
-    const published = new Map(aliases().map((a) => [a.from, a.to]));
-    for (const { from, to } of ALIASES) {
-      if (from === '/index.html') continue;
-      assert.equal(published.get(from), to, `${from}: not published, or points elsewhere`);
+    // These named routes are URLs in search results.
+    for (const { from, to } of aliases()) {
+      const target = PAGES.find((p) => p.aliases?.includes(from));
+      assert.equal(to, target?.route, `${from}: points elsewhere`);
     }
     assert.deepEqual(
-      ALIASES.map((a) => a.from).filter((from) => from !== '/index.html').sort(),
+      aliases().map((a) => a.from).sort(),
       ['/bottom-app-bar.html', '/collapsible.html', '/collections.html',
-       '/dropdown.html', '/floating-sheet.html', '/modals.html', '/range.html',
-       '/segmented-buttons.html', '/sidenav.html', '/toasts.html'],
+       '/dropdown.html', '/floating-sheet.html', '/getting-started.html', '/modals.html',
+       '/range.html', '/segmented-buttons.html', '/sidenav.html', '/toasts.html'],
       'the set of legacy routes changed',
     );
   });
 
   test('an alias is generated, not maintained', () => {
-    // One layout and one dynamic route. Hand-written redirect pages would
+    // One dynamic route. Hand-written redirect pages would
     // be six places for a canonical target to go stale.
     assert.match(alias, /getStaticPaths/);
     assert.match(alias, /aliases\(\)/);
@@ -268,21 +256,21 @@ describe('the compatibility routes Astro publishes', () => {
   });
 
   test('a redirect declares its target and survives a reader with no scripting', () => {
-    assert.match(layout, /<link rel="canonical" href=\{canonical\}>/);
-    assert.match(layout, /http-equiv="refresh"/);
+    assert.match(alias, /<link rel="canonical" href=\{canonical\}>/);
+    assert.match(alias, /http-equiv="refresh"/);
     // The query string and the fragment are the reader's, and the meta refresh
     // cannot carry either -- so the script has to come first in document order,
     // which is the whole of what decides which one moves the reader.
-    assert.match(layout, /location\.search \+ location\.hash/);
+    assert.match(alias, /location\.search \+ location\.hash/);
     // The markup, not the frontmatter: the comment above it names both
     // mechanisms too, and would answer this question with prose.
-    const markup = layout.slice(layout.indexOf('---', 3) + 3);
+    const markup = alias.slice(alias.indexOf('---', 3) + 3);
     assert.ok(
       markup.indexOf('location.replace(') < markup.indexOf('http-equiv="refresh"'),
       'the meta refresh is written above the script, so it may win and drop the query',
     );
     // An alias in history means Back from the target bounces forward again.
-    assert.match(layout, /location\.replace\(/);
+    assert.match(alias, /location\.replace\(/);
   });
 
   test('the custom domain is declared with the documentation source', () => {

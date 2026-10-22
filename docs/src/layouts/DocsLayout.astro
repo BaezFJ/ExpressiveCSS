@@ -1,5 +1,9 @@
 ---
-import BaseLayout from "./BaseLayout.astro";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+
+import pkg from "../../../package.json";
+import Footer from "../components/Footer.astro";
 import PageHeader from "../components/PageHeader.astro";
 import DocsNavigation from "../components/DocsNavigation.astro";
 import PageBody from "../components/PageBody.astro";
@@ -8,9 +12,11 @@ import { markdownRoute, page, route } from "../lib/catalogue";
 import type { Sections } from "../lib/sections";
 
 /**
- * Every documentation page. The title and the page header come from the
- * shared catalogue rather than being restated per page, so a page cannot call
- * itself one thing in navigation and another in its own heading.
+ * Every documentation page: head, the pre-paint theme restore, the app bar and
+ * navigation, the page itself, the footer, and the three scripts every page
+ * loads. The title and the page header come from the shared catalogue rather
+ * than being restated per page, so a page cannot call itself one thing in
+ * navigation and another in its own heading.
  */
 interface Props {
   /** The catalogue id of the page being rendered. */
@@ -25,6 +31,35 @@ const { page: id, sections, wide } = Astro.props;
 
 const entry = page(id);
 const pageName = entry.title ?? entry.label;
+const description = entry.description;
+const markdownPath = markdownRoute(id);
+
+// package.json is the only statement of the version the site makes, so the
+// footer cannot drift from what `npm install` hands out. Semver puts a
+// prerelease after a hyphen.
+const version: string = pkg.version;
+const prerelease = version.includes("-");
+
+// Unminified while developing so the source maps stay usable.
+const suffix = import.meta.env.DEV ? "" : ".min";
+const cssUrl = `/dist/css/expressive${suffix}.css`;
+const jsUrl = `/dist/js/expressive${suffix}.js`;
+// Stamped in by astro.config.mjs -- see the note there.
+declare const __REPO_ROOT__: string;
+const buildMissing = !existsSync(join(__REPO_ROOT__, "dist/css"));
+
+// Self-referential, on every page. Every page except the landing page has
+// exactly one URL, so for them this is a formality. The landing page has two:
+// a static host serves the root document at both `/` and `/index.html`, and
+// making the root canonical in the *links* does nothing about the second URL,
+// which stays reachable and independently indexable. Declaring it here is what
+// makes the root canonical to a crawler rather than only to a reader.
+//
+// And `Astro.url.pathname` is `/index.html` for the index route under
+// `build.format: 'file'` -- the very URL being disowned -- so it is normalised
+// rather than used as given.
+const path = Astro.url.pathname.replace(/\/index\.html$/, "/");
+const canonical = new URL(path, Astro.site).href;
 const sourceColorNames = ["Lagoon", "Harbor", "Breeze", "Cobalt", "Iris"];
 const sourceColorPalettes = [
   { name: "Bold", colors: ["#179299", "#209fb5", "#04a5e5", "#1e66f5", "#8839ef"] },
@@ -33,9 +68,53 @@ const sourceColorPalettes = [
   { name: "Glow", colors: ["#94e2d5", "#74c7ec", "#89dceb", "#89b4fa", "#cba6f7"] },
 ];
 ---
-<BaseLayout pageName={pageName} description={entry.description} bodyClass="docs" markdownPath={markdownRoute(id)}>
+<!DOCTYPE html>
+<html lang="en" theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{`${pageName} - ExpressiveCSS`}</title>
+    <meta name="description" content={description}>
+    <link rel="canonical" href={canonical}>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="ExpressiveCSS">
+    <meta property="og:title" content={pageName}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={canonical}>
+    <meta name="twitter:card" content="summary">
+    <link rel="describedby" href="/llms.txt">
+    <link rel="alternate" type="text/markdown" href={markdownPath}>
+    <link rel="stylesheet" href={cssUrl}>
+    <link rel="stylesheet" href={`/static/docs.css?v=${version}`}>
+    {/* Apply a stored --md-source before first paint so the page does not flash the default seed. */}
+    <script is:inline>
+        (function () {
+            try {
+                var t = localStorage.getItem('theme');
+                if (t === 'light' || t === 'dark' || t === 'auto') {
+                    document.documentElement.setAttribute('theme', t);
+                }
+                var c = localStorage.getItem('md-source');
+                if (c && /^#[0-9A-Fa-f]{6}$/.test(c)) {
+                    document.documentElement.style.setProperty('--md-source', c);
+                }
+                if (localStorage.getItem('glass') === 'true') {
+                    document.documentElement.style.setProperty('--expressive-glass', 'true');
+                }
+            } catch (e) {
+            }
+        })();
+    </script>
     {/* A page that needs its own <head> content -- an extra font, say -- fills this. */}
-    <slot name="head" slot="head" />
+    <slot name="head" />
+</head>
+<body class="docs">
+{buildMissing && (
+    <div class="build-warning error-container on-error-container-text">
+        No build found in <code>dist/</code> &mdash; run <code>npm run build</code> (or <code>npm run watch</code>) and
+        reload.
+    </div>
+)}
 
     <a class="visually-hidden-focusable button filled docs-skip-link" href="#docs-main">Skip to content</a>
 
@@ -69,7 +148,7 @@ const sourceColorPalettes = [
 
     <main id="docs-main" tabindex="-1">
         <div class="docs-page">
-            <PageHeader page={id} title={pageName} description={entry.description} markdownPath={markdownRoute(id)}>
+            <PageHeader page={id} title={pageName} description={description} markdownPath={markdownPath}>
                 <slot name="banner" />
             </PageHeader>
             <PageBody sections={sections} wide={wide}>
@@ -163,4 +242,11 @@ const sourceColorPalettes = [
             <button type="submit" value="done">Done</button>
         </form>
     </dialog>
-</BaseLayout>
+
+<Footer version={version} prerelease={prerelease} />
+
+<script is:inline src={jsUrl}></script>
+<script is:inline src={`/static/docs.js?v=${version}`}></script>
+<script is:inline src="/static/code-blocks.js"></script>
+</body>
+</html>

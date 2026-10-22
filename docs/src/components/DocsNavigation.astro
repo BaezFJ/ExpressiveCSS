@@ -1,13 +1,13 @@
 ---
-import { NAV } from "../data/nav";
-import DocsRailPanel from "./DocsRailPanel.astro";
+import { NAV, type DocsPage } from "../data/nav";
 import { groupOf, route, sectionsOf } from "../lib/catalogue";
 
 /**
  * Site navigation. From Expanded up a collapsed rail holds the catalogue
  * groups; each opens a side panel of its pages on hover or click, with a
- * section as a dropdown. Below Large the app bar's menu button also opens
- * the whole catalogue as a modal sheet.
+ * section as a dropdown that starts open when it holds the current page.
+ * Below Large the app bar's menu button also opens the whole catalogue as a
+ * modal sheet.
  */
 interface Props {
   current: string;
@@ -17,6 +17,10 @@ const { current } = Astro.props;
 const currentGroup = groupOf(current);
 const id = (label: string) => `docs-group-${label.toLowerCase()}`;
 const panelId = (label: string) => `docs-rail-panel-${label.toLowerCase()}`;
+const link = (page: DocsPage) => ({
+  href: route(page.id),
+  "aria-current": current === page.id ? "page" : undefined,
+});
 ---
 <div class="docs-navigation-wide">
   <nav class="navigation-rail docs-category-rail" aria-label="Documentation categories">
@@ -32,7 +36,12 @@ const panelId = (label: string) => `docs-rail-panel-${label.toLowerCase()}`;
           {group.label}
         </button>
         <div id={panelId(group.label)} class="navigation-rail-panel" popover>
-          <DocsRailPanel group={group} current={current} />
+          {sectionsOf(group).map((run) => run.label ? (
+            <details open={run.pages.some((page) => page.id === current)}>
+              <summary>{run.label}</summary>
+              {run.pages.map((page) => <a {...link(page)}>{page.label}</a>)}
+            </details>
+          ) : run.pages.map((page) => <a {...link(page)}>{page.label}</a>))}
         </div>
       </Fragment>
     ))}

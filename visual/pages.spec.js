@@ -66,13 +66,13 @@ for (const entry of PAGES) {
   // nothing, and skipped itself as a new page. Seventy-six shots went
   // uncompared and the run still reported success. A route has no character
   // that needs rewriting.
-  const slug = entry.route.replace(/^\//, '').replace(/\.html$/, '');
+  const slug = entry.route.replace(/^\//, '').replace(/\.html$/, '') || 'index';
 
   for (const variant of VARIANTS) {
     const shot = `${slug}--${variant.name}.png`;
 
     test(`${slug} @ ${variant.name}`, async ({ page }) => {
-      // The theme is read from localStorage by BaseLayout.astro before first
+      // The theme is read from localStorage by DocsLayout.astro before first
       // paint, so seeding it here avoids photographing a flash of
       // the other scheme. --md-source is cleared for the same reason: a stored
       // seed would re-theme every token.

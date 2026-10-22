@@ -176,8 +176,9 @@ locally only; the pull request job was removed because nobody read its report.
   path by design, so anything that perturbs a shot name disables coverage
   without failing.
 - **The landing page is photographed at the site root.**
-  `/getting-started.html` is a compatibility redirect. `catalogue.ts` owns the
-  exception so both passes photograph the same canonical page into the same shot.
+  `/getting-started.html` is a compatibility redirect. The catalogue routes the
+  landing page to `/`, so both passes photograph the same canonical page into
+  the shot `index`.
 - **Every non-font third party is stubbed.** picsum.photos serves 51 demo
   images and is fulfilled with an SVG of exactly the requested size; the live
   YouTube iframe and MDN video on `media-css.html` are aborted. An image
@@ -627,7 +628,7 @@ block is swept and the sentence around it is not. Grep the compiled
 The site serves the npm build **directly out of `dist/`** — there is no copy
 step, so `npm run docs:dev` (which runs `npm run watch` beside `astro dev`) plus
 a browser reload is the dev loop. Astro reaches it through the two symlinks in
-`docs/public/`; `BaseLayout.astro` picks unminified assets when `dist/` was
+`docs/public/`; `DocsLayout.astro` picks unminified assets when `dist/` was
 built for development and renders a "run npm run build" banner when `dist/` is
 absent altogether. `docs/static/` holds only docs-site chrome (`docs.css`,
 `docs.js`), never framework styles.
@@ -701,14 +702,16 @@ and a page added to the catalogue is on the site with the next push to master.
 - **`import.meta.url` inside a component points at the emitted chunk**, not at
   the source file, so it cannot address the repository. The repo root is
   stamped in as `__REPO_ROOT__` by `astro.config.mjs`, which is not bundled.
-  `BaseLayout.astro` reads `package.json` and checks for `dist/` through it.
-- **The landing page is canonical at the site root.** The catalogue keeps
-  `/getting-started.html` as its historic compatibility path, and
-  `docs/src/lib/catalogue.ts` owns that exception. It is also the only place the
-  site looks a page up by id: both accessors throw on an unknown one, so a
-  mistyped link fails the build instead of publishing a 404.
+  `DocsLayout.astro` checks for `dist/` through it and imports `package.json`
+  for the version.
+- **The landing page is canonical at the site root.** The catalogue gives it
+  the route `/` and keeps `/getting-started.html` as a compatibility alias.
+  `docs/src/lib/catalogue.ts` is the only place the site looks a page up by id:
+  both accessors throw on an unknown one, so a mistyped link fails the build
+  instead of publishing a 404.
 - **A page declares its sections once.** `defineSections()` returns them keyed
-  by id and in order: `<PageBody>` builds the table of contents from it and each
+  by id and in order: the page passes them to `<DocsLayout sections={S}>`, whose
+  `<PageBody>` builds the table of contents from them, and each
   `<Section {...S.download}>` is spread from the same object, so a heading and
   its entry cannot drift. `Section` throws on a missing id, because a mistyped
   key spreads *nothing* rather than failing.
@@ -729,24 +732,20 @@ and a page added to the catalogue is on the site with the next push to master.
   fails any page that declares sections but writes its own table of contents.
 - **The shell follows the window classes.** The app bar spans the top. From
   Expanded (840px) a collapsed rail holds the catalogue groups, and each opens
-  its pages in a `.navigation-rail-panel` (`DocsRailPanel.astro`), with the
+  its pages in a `.navigation-rail-panel` (`DocsNavigation.astro`), with the
   optional `section` subheadings from `nav.ts` as `<details>` dropdowns. Below
   Large the app bar's menu button opens the whole catalogue as a modal
   start-edge side sheet. `<main>` and the footer are offset by
   `--docs-rail-width`, which only the media queries in `docs.css` set.
 - **A page needing its own `<head>` content puts `slot="head"` on the element.**
-  `DocsLayout` forwards the named slot to `BaseLayout`, which renders it last in
-  the head. Fonts no longer go there: `BaseLayout` loads the compiled sheet,
+  `DocsLayout` renders the named slot last in the head. Fonts no longer go
+  there: `DocsLayout` loads the compiled sheet,
   which already ships `@font-face`.
-- **The six legacy routes are one dynamic page, and the landing page's two
-  compatibility paths swap roles.** `src/pages/[alias].astro` spreads
-  `aliases()` over `RedirectLayout`, so a canonical target is stated once, not
-  once per redirect. `aliases()` is deliberately *not* `ALIASES` from the
-  catalogue: `ALIASES` is the set of legacy paths as authored, and Astro's
-  published set differs from it by exactly the landing page. `/index.html` stops being an
-  alias -- `build.format: 'file'` writes the root document there, so the
-  redirect would point the root at itself -- and `/getting-started.html`
-  becomes one, because the root took canonical.
+- **The legacy routes are one dynamic page.** `src/pages/[alias].astro` renders
+  a redirect for each entry of `aliases()`, so a canonical target is stated
+  once, not once per redirect. `/index.html` is not an alias:
+  `build.format: 'file'` writes the root document there, so a redirect would
+  point the root at itself.
 
   **All three redirect mechanisms are load-bearing and their order is the
   point.** `<link rel="canonical">` keeps the alias out of the index as a
@@ -763,7 +762,7 @@ and a page added to the catalogue is on the site with the next push to master.
   first two). `?raw` rather than `readFileSync` because the root `tsconfig.json`
   sets `types: []` -- deliberately, so the framework's own source cannot reach
   for Node globals -- and a `node:fs` import in a `.ts` endpoint fails
-  `typecheck` where the same import in `BaseLayout.astro` does not, since tsc
+  `typecheck` where the same import in `DocsLayout.astro` does not, since tsc
   never reads `.astro`. `docs/src/env.d.ts` pulls in the `*?raw` declaration.
 
   `/llms-full.txt` is the two documents joined at build time, in the order
@@ -776,9 +775,8 @@ and a page added to the catalogue is on the site with the next push to master.
   of contents, preserves GFM tables and fenced samples, and rewrites links to
   other canonical pages to their `.html.md` counterparts. The landing page publishes as
   `/index.html.md`; every other counterpart appends `.md` to the established
-  `.html` route. `BaseLayout` advertises `/llms.txt` with `rel="describedby"`
-  and `DocsLayout` supplies the page-specific
-  `rel="alternate" type="text/markdown"` link.
+  `.html` route. `DocsLayout` advertises `/llms.txt` with `rel="describedby"`
+  and supplies the page-specific `rel="alternate" type="text/markdown"` link.
 - **The three modules Node loads unbuilt carry `.ts` on their own imports**:
   `data/nav.ts`, `lib/catalogue.ts`, `lib/llms.ts`. `tests/*.test.js` and
   `scripts/verify-site.mjs` reach them through Node's type stripping, which
@@ -806,7 +804,7 @@ and a page added to the catalogue is on the site with the next push to master.
   A static host serves the root document at `/index.html` as well as `/`, and
   no redirect can separate them -- making the root canonical in the *links*
   leaves the second URL reachable and independently indexable. Only a canonical
-  link disowns it. `BaseLayout.astro` emits one from `Astro.url.pathname`,
+  link disowns it. `DocsLayout.astro` emits one from `Astro.url.pathname`,
   **normalised**: that property is `/index.html` for the index route under
   `build.format: 'file'`, so used as given it would declare the very URL being
   disowned. Both the test and the verifier pin the normalisation, because the

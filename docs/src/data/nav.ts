@@ -15,7 +15,7 @@ export interface DocsPage {
   label: string;
   /** Heading and `<title>`, when the page calls itself something other than its `label`. */
   title?: string;
-  /** The published path. Root-absolute, always `.html` -- these URLs are in search results. */
+  /** The published path. Root-absolute and `.html`, except the landing page at `/` -- these URLs are in search results. */
   route: string;
   /** The one-line description in the page header and in `llms.txt`. */
   description: string;
@@ -24,10 +24,7 @@ export interface DocsPage {
    * the first page of each run; the pages after it inherit it until the next.
    */
   section?: string;
-  /**
-   * Other published paths that resolve here: the legacy routes kept for
-   * compatibility, and — for the landing page — the canonical site root.
-   */
+  /** Legacy paths kept for compatibility, each published as a redirect here. */
   aliases?: string[];
 }
 
@@ -47,10 +44,10 @@ export const NAV: DocsGroup[] = [
         id: "index",
         label: "Getting started",
         title: "Material Design 3 for the web",
-        route: "/getting-started.html",
+        route: "/",
         description:
           "Build Material Design 3 interfaces from semantic HTML, with light and dark themes and accessible components.",
-        aliases: ["/index.html"],
+        aliases: ["/getting-started.html"],
       },
       {
         id: "layouts",
@@ -828,8 +825,3 @@ export const NAV: DocsGroup[] = [
 
 /** Every canonical page, in navigation order. */
 export const PAGES: DocsPage[] = NAV.flatMap((group) => group.pages);
-
-/** Every legacy path, paired with the canonical route it resolves to. */
-export const ALIASES: { from: string; to: string }[] = PAGES.flatMap((page) =>
-  (page.aliases ?? []).map((from) => ({ from, to: page.route })),
-);
