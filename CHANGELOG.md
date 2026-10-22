@@ -868,6 +868,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The `.mx-*`, `.my-*`, `.px-*` and `.py-*` helpers set `margin-inline`,
+  `margin-block`, `padding-inline` and `padding-block`. Horizontal text
+  renders as before. In a vertical writing mode, `.mx-*` and `.px-*` now
+  space the top and bottom, following the text, and `.my-*` and `.py-*`
+  the left and right.
 - Menu, navigation bar and slider state layers read the
   `--md-sys-state-*-state-layer-opacity` tokens instead of fixed 8% and
   10% mixes. The defaults render the same. A page that overrides a state

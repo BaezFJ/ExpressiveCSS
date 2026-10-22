@@ -34,12 +34,10 @@ $spacing-values: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "5
           }
         }
         .#{$prefix}#{$shortcut}x-#{$name}{
-          #{$property}-left: $value !important;
-          #{$property}-right: $value !important;
+          #{$property}-inline: $value !important;
         }
         .#{$prefix}#{$shortcut}y-#{$name}{
-          #{$property}-top: $value !important;
-          #{$property}-bottom: $value !important;
+          #{$property}-block: $value !important;
         }
       }
     }
