@@ -3913,6 +3913,9 @@
       "title": "Calendar",
       "aliases": [
         "month view",
+        "week view",
+        "day view",
+        "year view",
         "event calendar",
         "schedule"
       ],
@@ -3925,10 +3928,11 @@
         ]
       },
       "jobs": [
-        "A month of days with their events, on a table the page renders."
+        "A month, week or day of events, or a year of months, on tables the page renders."
       ],
       "useWhen": [
-        "Show a month of days with events people scan by date, such as bookings or a team schedule."
+        "Show a month of days with events people scan by date, such as bookings or a team schedule.",
+        "Show a week or a day as an hourly grid where each event covers its start and length."
       ],
       "avoidWhen": [
         "Picking one date for a field needs the date picker; an ordered list of dated events needs a timeline."
@@ -3946,11 +3950,12 @@
         "href": null,
         "implementation": {
           "source": "llm.md#calendar",
-          "reviewedOn": "2026-10-15",
-          "documentedSupport": "A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize.",
+          "reviewedOn": "2026-10-22",
+          "documentedSupport": "A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize; week and day hourly grids with events placed by start and duration; a year of small months in as many columns as fit.",
           "webAdaptation": "A native table with a caption; the page renders the dates, navigation and events.",
           "limitations": [
-            "Equal columns, today, outside days, ellipsized event chips, column headers and the phone width are checked in a browser; screen reader output remains unverified."
+            "Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified.",
+            "Events that overlap in time overlap on screen in the week and day views; the page splits them."
           ]
         },
         "relationship": "none",
@@ -3969,18 +3974,18 @@
       },
       "selectionExample": "A team schedule for October is a calendar. Choosing a delivery date in a form is the date picker.",
       "capabilityReview": {
-        "reviewedOn": "2026-10-15",
+        "reviewedOn": "2026-10-22",
         "support": "implemented",
         "sources": [
           {
             "path": "src/sass/components/_calendar.scss",
-            "sha256": "f209f40beeaa9e815848dde9cd75f4ac9754de160bc050740810b1e7fc35916c"
+            "sha256": "bf230eb2f7f9f0d3956ffc9e2cc853dab36fe248b47da7c6d615ab0ffddbbcdf"
           }
         ],
         "gaps": [
           {
             "kind": "verification",
-            "description": "Equal columns, today, outside days, ellipsized event chips, column headers and the phone width are checked in a browser; screen reader output remains unverified.",
+            "description": "Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified.",
             "nextStep": "Read a month with a screen reader in each engine and confirm the day and weekday are announced with each event."
           }
         ],
@@ -3989,6 +3994,11 @@
             "file": "tests/calendar-browser.test.js",
             "name": "chromium: calendar lays out a month grid with today, outside days and event chips",
             "scope": "Seven equal columns, day height, the today mark, muted outside days, event chips that stay inside their day and ellipsize, event links, column headers and the month at phone width. No spoken-output assertion."
+          },
+          {
+            "file": "tests/calendar-browser.test.js",
+            "name": "chromium: calendar week and day views place events on an hourly grid, and the year view tiles months",
+            "scope": "Hour row height, event top and height from start and duration, events inside their day column, event links, today in the header, hour row headers, a day view event across its column, months side by side and stacked at phone width. No spoken-output assertion."
           }
         ]
       }

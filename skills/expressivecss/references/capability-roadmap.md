@@ -786,17 +786,18 @@ Web adaptation: An <ol> of events with <time datetime>; the dots and line are de
 
 ## Calendar
 
-**implemented within the stated scope.** A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize.
+**implemented within the stated scope.** A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize; week and day hourly grids with events placed by start and duration; a year of small months in as many columns as fit.
 
-Source review: source-reviewed, 2026-10-15. [src/sass/components/_calendar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_calendar.scss).
+Source review: source-reviewed, 2026-10-22. [src/sass/components/_calendar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/src/sass/components/_calendar.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
 
 Web adaptation: A native table with a caption; the page renders the dates, navigation and events.
 
-- verification: Equal columns, today, outside days, ellipsized event chips, column headers and the phone width are checked in a browser; screen reader output remains unverified. Next: Read a month with a screen reader in each engine and confirm the day and weekday are announced with each event.
+- verification: Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified. Next: Read a month with a screen reader in each engine and confirm the day and weekday are announced with each event.
 
 - not-recorded: [tests/calendar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/calendar-browser.test.js): `chromium: calendar lays out a month grid with today, outside days and event chips`. Seven equal columns, day height, the today mark, muted outside days, event chips that stay inside their day and ellipsize, event links, column headers and the month at phone width. No spoken-output assertion.
+- not-recorded: [tests/calendar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/d2b0e7f91d5e1d871b33424091071316e96ac88f/tests/calendar-browser.test.js): `chromium: calendar week and day views place events on an hourly grid, and the year view tiles months`. Hour row height, event top and height from start and duration, events inside their day column, event links, today in the header, hour row headers, a day view event across its column, months side by side and stacked at phone width. No spoken-output assertion.
 
 <a id="dialogs"></a>
 

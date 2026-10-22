@@ -9,6 +9,27 @@
 //   td.outside            a day from the previous or next month
 //   td[aria-current=date] today
 //
+// Week and day: table.calendar.week (or .day, with one day column) is an
+// hourly grid. The header row starts with an empty <td> over the hour
+// column, then one <th scope="col"> per day holding the weekday and a <time>;
+// mark today's header with aria-current="date". Each body row is an hour: a
+// <th scope="row"> with its <time>, then a cell per day. An event in a cell
+// starts at that hour and covers one hour; set these inline to change that:
+//
+//   --md-comp-calendar-event-start     hours after the row's hour (0.5 = :30)
+//   --md-comp-calendar-event-duration  length in hours
+//
+// The placement is only visual, so the page writes each event's time in a
+// .visually-hidden span. Events that overlap in time overlap on screen, and
+// one that runs past the last hour row spills out of the table; the page
+// splits the first and ends the second at the last row.
+// ponytail: no side-by-side layout for overlapping events, add a column
+// index custom property if schedules need it.
+//
+// Year: .calendar-year lays out twelve small month tables, each a normal
+// table.calendar, in as many columns as fit. Render only the days; event
+// lists belong in the month, week or day view.
+//
 // At Compact widths days get shorter and event chips tighter; long titles
 // ellipsize rather than hide, so each event stays a visible target.
 //
@@ -17,6 +38,7 @@
 //   --md-comp-calendar-outline-color      outline-variant
 //   --md-comp-calendar-event-container-color  primary-container
 //   --md-comp-calendar-event-color            on-primary-container
+//   --md-comp-calendar-hour-height        48px (week and day)
 
 table.calendar {
   --md-comp-calendar-day-min-height: 96px;
@@ -116,13 +138,109 @@ table.calendar {
     }
   }
 
+  // Week and day: hour rows whose cells hold absolutely placed events, so a
+  // long event runs down into the rows below.
+  &.week,
+  &.day {
+    --md-comp-calendar-hour-height: #{rem(48px)};
+
+    thead td {
+      inline-size: rem(56px);
+      border: 0;
+    }
+
+    thead th > time {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      inline-size: rem(32px);
+      block-size: rem(32px);
+      margin: 4px auto 0;
+      border-radius: 50%;
+      color: var(--md-sys-color-on-surface);
+      @include typescale("title-medium");
+    }
+
+    thead th[aria-current="date"] > time {
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+    }
+
+    tbody th {
+      padding-block: 0;
+      padding-inline: 0 8px;
+      vertical-align: top;
+      text-align: end;
+      @include typescale("label-small");
+    }
+
+    tbody td {
+      position: relative;
+      block-size: var(--md-comp-calendar-hour-height);
+      padding: 0;
+      overflow: visible;
+    }
+
+    .calendar-events {
+      margin: 0;
+
+      > li {
+        position: absolute;
+        z-index: 1;
+        inset-inline: 2px;
+        inset-block-start: calc(var(--md-comp-calendar-event-start, 0) * var(--md-comp-calendar-hour-height) + 1px);
+        block-size: calc(var(--md-comp-calendar-event-duration, 1) * var(--md-comp-calendar-hour-height) - 2px);
+      }
+    }
+  }
+
   @media (forced-colors: active) {
+    thead th[aria-current="date"] > time,
     td[aria-current="date"] > time {
       outline: 2px solid CanvasText;
     }
 
     .calendar-events > li {
       border: 1px solid CanvasText;
+    }
+  }
+}
+
+// Year: twelve small months in as many columns as fit.
+.calendar-year {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(rem(224px), 1fr));
+  gap: 24px;
+  margin: $element-top-margin 0 $element-bottom-margin;
+
+  > table.calendar {
+    margin: 0;
+
+    > caption {
+      padding-block-end: 4px;
+      @include typescale("title-small");
+    }
+
+    tr {
+      border: 0;
+    }
+
+    th {
+      padding: 4px 0;
+      @include typescale("label-small");
+    }
+
+    td {
+      block-size: auto;
+      padding: 2px 0;
+      border: 0;
+      text-align: center;
+
+      > time {
+        min-inline-size: rem(24px);
+        block-size: rem(24px);
+        @include typescale("label-small");
+      }
     }
   }
 }

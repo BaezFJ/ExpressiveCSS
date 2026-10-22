@@ -9,15 +9,60 @@ import { route } from "../lib/catalogue";
 
 const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "week", label: "Week and day", heading: "Week and day views" },
+  { id: "year", label: "Year", heading: "Year view" },
   { id: "tokens", label: "Tokens" },
 ]);
+
+// Demo data. The docs pin "today" to 15 October 2026 so the page renders the
+// same on every build.
+const today = "2026-10-15";
+const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+const addDays = (d: Date, n: number) => new Date(d.getTime() + n * 86400000);
+const week = Array.from({ length: 7 }, (_, i) => addDays(new Date(Date.UTC(2026, 9, 11)), i));
+const hours = Array.from({ length: 10 }, (_, i) => i + 8);
+const hourLabel = (h: number) => `${h % 12 || 12} ${h < 12 ? "AM" : "PM"}`;
+// [date, hour, start offset in hours, duration in hours, title]
+const events: [string, number, number, number, string][] = [
+  ["2026-10-12", 9, 0, 0.5, "Standup"],
+  ["2026-10-13", 10, 0, 1.5, "Design review"],
+  ["2026-10-15", 9, 0, 0.5, "Standup"],
+  ["2026-10-15", 12, 0, 1, "Lunch with the team"],
+  ["2026-10-15", 14, 0.5, 2, "Planning"],
+  ["2026-10-16", 11, 0, 1, "Interview"],
+];
+const eventsAt = (date: string, hour: number) => events.filter(([d, h]) => d === date && h === hour);
+// "2:30 PM", for the event's spoken time.
+const clock = (t: number) => {
+  const h = Math.floor(t);
+  const m = Math.round((t - h) * 60);
+  return `${h % 12 || 12}${m ? `:${String(m).padStart(2, "0")}` : ""} ${h < 12 ? "AM" : "PM"}`;
+};
+const spokenTime = (hour: number, start: number, duration: number) =>
+  `${clock(hour + start)} to ${clock(hour + start + duration)}, `;
+const eventStyle = (start: number, duration: number) =>
+  `--md-comp-calendar-event-start: ${start}; --md-comp-calendar-event-duration: ${duration}`;
+// Weeks of one month, padded with the neighbouring months' days.
+const monthWeeks = (month: number) => {
+  const first = new Date(Date.UTC(2026, month, 1));
+  let day = addDays(first, -first.getUTCDay());
+  const rows = [];
+  do {
+    rows.push(Array.from({ length: 7 }, (_, i) => addDays(day, i)));
+    day = addDays(day, 7);
+  } while (day.getUTCMonth() === month);
+  return rows;
+};
+const monthName = (month: number) =>
+  new Date(Date.UTC(2026, month, 1)).toLocaleString("en-US", { month: "long", timeZone: "UTC" });
 ---
 <DocsLayout page="calendar">
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>table.calendar</code> shows a month of days with their
-          events.
+          A <code>table.calendar</code> shows a month, week or day of events.
+          A <code>.calendar-year</code> lays out twelve months.
         </p>
         <p>
           Your page renders the table. It has a <code>&lt;caption&gt;</code>
@@ -58,11 +103,216 @@ const S = defineSections([
 </table>
 `} />
   </Section>
+  <Section {...S.week}>
+        <p>
+          Add <code>week</code> for an hourly grid. The header row starts with
+          an empty <code>&lt;td&gt;</code> over the hour column, then one
+          <code>&lt;th scope="col"&gt;</code> per day with its weekday and a
+          <code>&lt;time&gt;</code>. Mark today's header with
+          <code>aria-current="date"</code>. Each body row is an hour, named by
+          a <code>&lt;th scope="row"&gt;</code>.
+        </p>
+        <p>
+          Put an event in the cell for its day and starting hour. It covers
+          one hour unless you set <code>--md-comp-calendar-event-duration</code>
+          in hours. <code>--md-comp-calendar-event-start</code> moves it down
+          within the hour, so <code>0.5</code> starts it at half past.
+        </p>
+        <p>
+          The placement is only visual. A screen reader hears the hour row
+          and the title, so write the event's time in a
+          <code>.visually-hidden</code> span before its title. Events that
+          overlap in time also overlap on screen, and an event that runs past
+          the last hour row spills out of the table. Split overlapping events
+          in the page and end long ones at the last row.
+        </p>
+        <table class="calendar week">
+          <caption>October 11 to 17, 2026</caption>
+          <thead>
+            <tr>
+              <td></td>
+              {week.map((d) => (
+                <th scope="col" aria-current={iso(d) === today ? "date" : undefined}>
+                  <abbr title={weekdays[d.getUTCDay()]}>{weekdays[d.getUTCDay()].slice(0, 3)}</abbr>
+                  <time datetime={iso(d)}>{d.getUTCDate()}</time>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {hours.map((h) => (
+              <tr>
+                <th scope="row"><time datetime={`${String(h).padStart(2, "0")}:00`}>{hourLabel(h)}</time></th>
+                {week.map((d) => {
+                  const here = eventsAt(iso(d), h);
+                  return (
+                    <td>
+                      {here.length > 0 && (
+                        <ul class="calendar-events">
+                          {here.map(([, , start, duration, title]) => (
+                            <li style={eventStyle(start, duration)}><span class="visually-hidden">{spokenTime(h, start, duration)}</span>{title}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+<Code code={`
+<table class="calendar week">
+  <caption>October 11 to 17, 2026</caption>
+  <thead>
+    <tr>
+      <td></td>
+      <th scope="col"><abbr title="Sunday">Sun</abbr> <time datetime="2026-10-11">11</time></th>
+      …
+      <th scope="col" aria-current="date">
+        <abbr title="Thursday">Thu</abbr> <time datetime="2026-10-15">15</time>
+      </th>
+      …
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row"><time datetime="14:00">2 PM</time></th>
+      <td></td>
+      …
+      <td>
+        <ul class="calendar-events">
+          <li style="--md-comp-calendar-event-start: 0.5; --md-comp-calendar-event-duration: 2">
+            <a href="/events/planning"><span class="visually-hidden">2:30 to 4:30 PM, </span>Planning</a>
+          </li>
+        </ul>
+      </td>
+      …
+    </tr>
+  </tbody>
+</table>
+`} />
+        <p>
+          A <code>day</code> calendar is the same grid with one day column.
+        </p>
+        <table class="calendar day">
+          <caption>Thursday, October 15, 2026</caption>
+          <thead>
+            <tr>
+              <td></td>
+              <th scope="col" aria-current="date">
+                <abbr title="Thursday">Thu</abbr>
+                <time datetime={today}>15</time>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {hours.map((h) => (
+              <tr>
+                <th scope="row"><time datetime={`${String(h).padStart(2, "0")}:00`}>{hourLabel(h)}</time></th>
+                <td>
+                  {eventsAt(today, h).length > 0 && (
+                    <ul class="calendar-events">
+                      {eventsAt(today, h).map(([, , start, duration, title]) => (
+                        <li style={eventStyle(start, duration)}><span class="visually-hidden">{spokenTime(h, start, duration)}</span>{title}</li>
+                      ))}
+                    </ul>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+<Code code={`
+<table class="calendar day">
+  <caption>Thursday, October 15, 2026</caption>
+  <thead>
+    <tr>
+      <td></td>
+      <th scope="col" aria-current="date">
+        <abbr title="Thursday">Thu</abbr> <time datetime="2026-10-15">15</time>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row"><time datetime="09:00">9 AM</time></th>
+      <td>
+        <ul class="calendar-events">
+          <li style="--md-comp-calendar-event-duration: 0.5">
+            <span class="visually-hidden">9 to 9:30 AM, </span>Standup
+          </li>
+        </ul>
+      </td>
+    </tr>
+    …
+  </tbody>
+</table>
+`} />
+  </Section>
+  <Section {...S.year}>
+        <p>
+          Wrap twelve month tables in a <code>.calendar-year</code> to show a
+          year. The months shrink and fill as many columns as fit. Render
+          only the days. Event lists belong in the month, week or day view.
+        </p>
+        <div class="calendar-year">
+          {Array.from({ length: 12 }, (_, month) => (
+            <table class="calendar">
+              <caption>{monthName(month)} 2026</caption>
+              <thead>
+                <tr>
+                  {weekdays.map((name) => <th scope="col"><abbr title={name}>{name.slice(0, 1)}</abbr></th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {monthWeeks(month).map((row) => (
+                  <tr>
+                    {row.map((d) => (
+                      <td
+                        class={d.getUTCMonth() !== month ? "outside" : undefined}
+                        aria-current={iso(d) === today && d.getUTCMonth() === month ? "date" : undefined}
+                      >
+                        <time datetime={iso(d)}>{d.getUTCDate()}</time>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ))}
+        </div>
+<Code code={`
+<div class="calendar-year">
+  <table class="calendar">
+    <caption>January 2026</caption>
+    <thead>
+      <tr><th scope="col"><abbr title="Sunday">S</abbr></th>…</tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="outside"><time datetime="2025-12-28">28</time></td>
+        …
+      </tr>
+    </tbody>
+  </table>
+  <table class="calendar">
+    <caption>February 2026</caption>
+    …
+  </table>
+  …
+</div>
+`} />
+  </Section>
   <Section {...S.tokens}>
         <TokenTable>
           <tr>
             <td><code>--md-comp-calendar-day-min-height</code></td>
             <td>96px (Compact: 64px)</td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-calendar-hour-height</code></td>
+            <td>48px (week and day)</td>
           </tr>
           <tr>
             <td><code>--md-comp-calendar-outline-color</code></td>

@@ -4914,7 +4914,7 @@ An `<ol class="timeline">` lists events in the order the page chooses, newest or
 
 ## Calendar
 
-A month of days with their events, on a table the page renders.
+A month, week or day of events, or a year of months, on tables the page renders.
 
 A `table.calendar` has a `<caption>` naming the month, a header row of weekday `<th scope="col">` cells, then a row per week. Each day `<td>` starts with a `<time datetime>` and may hold a `.calendar-events` list of links or text. Mark days from other months with `outside` and today with `aria-current="date"`. The page owns the dates, the navigation between months and the events; CSS draws seven equal columns, the today mark and event chips that ellipsize. On a phone the days get shorter and chips tighter. CSS only; there is no JavaScript. Use the date picker to choose a date for a field.
 
@@ -4936,7 +4936,40 @@ A `table.calendar` has a `<caption>` naming the month, a header row of weekday `
 </table>
 ```
 
-Tokens: `--md-comp-calendar-day-min-height` (96px; 64px Compact), `--md-comp-calendar-outline-color` (`outline-variant`), `--md-comp-calendar-event-container-color` (`primary-container`) and `--md-comp-calendar-event-color` (`on-primary-container`).
+Add `week` (or `day`, with one day column) for an hourly grid. The header row starts with an empty `<td>` over the hour column, then a `<th scope="col">` per day with the weekday and a `<time>`; mark today's header with `aria-current="date"`. Each body row is an hour named by a `<th scope="row">`. Put an event in the cell for its day and starting hour. It covers one hour; set `--md-comp-calendar-event-duration` (hours) and `--md-comp-calendar-event-start` (hours into the row, `0.5` for half past) inline to change that. The placement is only visual: a screen reader hears the hour row and the title, so write the event's time in a `.visually-hidden` span before its title. Events that overlap in time overlap on screen, and an event that runs past the last hour row spills out of the table, so split overlapping events and end long ones at the last row in the page.
+
+```html
+<table class="calendar week">
+  <caption>October 11 to 17, 2026</caption>
+  <thead>
+    <tr>
+      <td></td>
+      <th scope="col" aria-current="date"><abbr title="Thursday">Thu</abbr> <time datetime="2026-10-15">15</time></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row"><time datetime="14:00">2 PM</time></th>
+      <td>
+        <ul class="calendar-events">
+          <li style="--md-comp-calendar-event-start: 0.5; --md-comp-calendar-event-duration: 2"><a href="/events/planning"><span class="visually-hidden">2:30 to 4:30 PM, </span>Planning</a></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+```
+
+For a year, wrap twelve month tables in a `.calendar-year`. The months shrink and fill as many columns as fit. Render only their days; event lists belong in the month, week or day view.
+
+```html
+<div class="calendar-year">
+  <table class="calendar"><caption>January 2026</caption>…</table>
+  <table class="calendar"><caption>February 2026</caption>…</table>
+</div>
+```
+
+Tokens: `--md-comp-calendar-day-min-height` (96px; 64px Compact), `--md-comp-calendar-hour-height` (48px, week and day), `--md-comp-calendar-outline-color` (`outline-variant`), `--md-comp-calendar-event-container-color` (`primary-container`) and `--md-comp-calendar-event-color` (`on-primary-container`).
 
 ---
 

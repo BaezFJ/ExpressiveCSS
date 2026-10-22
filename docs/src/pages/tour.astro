@@ -46,6 +46,30 @@ const S = defineSections([
           For one hint beside one control, use a
           <a href={route("popover")}>popover</a>.
         </p>
+        <p>
+          <button type="button" class="button filled" data-tour-start="demo-tour">Take the tour</button>
+          <button type="button" id="demo-tour-search" class="button outlined">Search</button>
+          <button type="button" id="demo-tour-new" class="button tonal">New</button>
+        </p>
+        <div id="demo-tour" class="tour" popover="manual" role="dialog">
+          <section data-tour-target="demo-tour-search">
+            <h2>Search everything</h2>
+            <p>Find files, people and settings from here.</p>
+          </section>
+          <section data-tour-target="demo-tour-new">
+            <h2>Create</h2>
+            <p>Start a document, sheet or folder.</p>
+          </section>
+          <p class="tour-progress"></p>
+          <div class="tour-actions">
+            <button type="button" class="button text" data-tour-back>Back</button>
+            <button type="button" class="button filled" data-tour-next>Next</button>
+            <button type="button" class="button filled" data-tour-done>Done</button>
+          </div>
+          <button type="button" class="icon-button" data-tour-close aria-label="Close tour">
+            <span class="material-symbols" aria-hidden="true">close</span>
+          </button>
+        </div>
 <Code code={`
 <button type="button" data-tour-start="welcome">Take the tour</button>
 

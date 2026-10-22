@@ -7,6 +7,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Calendar week, day and year views. `table.calendar.week` and
+  `table.calendar.day` are hourly grids: a row per hour named by a
+  `<th scope="row">`, and a column per day whose header can carry
+  `aria-current="date"`. An event sits in the cell for its day and
+  starting hour and covers one hour, or `--md-comp-calendar-event-duration`
+  hours, starting `--md-comp-calendar-event-start` hours into the row.
+  The placement is only visual, so write each event's time in a
+  `.visually-hidden` span. Events that overlap in time overlap on screen,
+  and an event past the last hour row spills out of the table. `.calendar-year` lays
+  out twelve month tables in as many columns as fit. The new
+  `--md-comp-calendar-hour-height` token sets the row height (48px).
 - `AutoInit(context, options, { watch: true })` keeps watching the
   context after the first scan. Components start in markup added later,
   with the same options, markup options and `no-autoinit` opt-out, and

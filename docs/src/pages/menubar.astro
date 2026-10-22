@@ -30,6 +30,29 @@ const S = defineSections([
           For site navigation, use a
           <a href={route("mega_menu")}>mega menu</a> of links instead.
         </p>
+        <div class="menubar" aria-label="Demo editor">
+          <button type="button" class="menu-trigger" data-target="demo-file-menu">File</button>
+          <button type="button" class="menu-trigger" data-target="demo-edit-menu">Edit</button>
+          <button type="button" class="menu-trigger" data-target="demo-view-menu">View</button>
+        </div>
+        <menu id="demo-file-menu">
+          <li><button type="button">New<kbd>Ctrl+N</kbd></button></li>
+          <li><button type="button">Open<kbd>Ctrl+O</kbd></button></li>
+          <li><button type="button">Save<kbd>Ctrl+S</kbd></button></li>
+        </menu>
+        <menu id="demo-edit-menu">
+          <li><button type="button">Undo<kbd>Ctrl+Z</kbd></button></li>
+          <li><button type="button">Redo<kbd>Ctrl+Y</kbd></button></li>
+          <li class="divider" role="separator"></li>
+          <li><button type="button">Cut<kbd>Ctrl+X</kbd></button></li>
+          <li><button type="button">Copy<kbd>Ctrl+C</kbd></button></li>
+          <li><button type="button">Paste<kbd>Ctrl+V</kbd></button></li>
+        </menu>
+        <menu id="demo-view-menu">
+          <li><button type="button">Zoom in</button></li>
+          <li><button type="button">Zoom out</button></li>
+          <li><button type="button">Full screen</button></li>
+        </menu>
 <Code code={`
 <div class="menubar" aria-label="Editor">
   <button type="button" class="menu-trigger" data-target="file-menu">File</button>

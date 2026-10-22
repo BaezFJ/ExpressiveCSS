@@ -9,7 +9,7 @@ Component ID: `calendar`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6b57f23dcfe23372d21f442757a4879e1254f0b7a0623f259233400f74b50130`
+Contract SHA-256: `8838ff148e76813dfe3050c8b74b514e0e40226de57d8383d6b2b2b9f486456d`
 
 #### Selection and adaptation
 
@@ -25,15 +25,19 @@ Upstream: web-extension-inventory-reviewed (2026-10-15); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-15, `llm.md#calendar`): A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize.
+Support (2026-10-22, `llm.md#calendar`): A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize; week and day hourly grids with events placed by start and duration; a year of small months in as many columns as fit.
 
 Web adaptation: A native table with a caption; the page renders the dates, navigation and events.
 
-Known boundary: Equal columns, today, outside days, ellipsized event chips, column headers and the phone width are checked in a browser; screen reader output remains unverified.
+Known boundary: Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified.
+
+Known boundary: Events that overlap in time overlap on screen in the week and day views; the page splits them.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#calendar).
 
 #### Contract
+
+A month, week or day of events, or a year of months, on tables the page renders.
 
 A `table.calendar` has a `<caption>` naming the month, a header row of weekday `<th scope="col">` cells, then a row per week. Each day `<td>` starts with a `<time datetime>` and may hold a `.calendar-events` list of links or text. Mark days from other months with `outside` and today with `aria-current="date"`. The page owns the dates, the navigation between months and the events; CSS draws seven equal columns, the today mark and event chips that ellipsize. On a phone the days get shorter and chips tighter. CSS only; there is no JavaScript. Use the date picker to choose a date for a field.
 
