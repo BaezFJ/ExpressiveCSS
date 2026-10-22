@@ -18,12 +18,16 @@ const parentOf = (el: Element): Element | null => el.parentElement ?? ((el.getRo
  * out, before transforms, so a menu under one is measured instead, as in a
  * floating toolbar centred with `translateX(-50%)`.
  */
+// Computed values of the individual transform properties that move nothing,
+// such as a side sheet's resting `translate: 0px`.
+const IDENTITY = { translate: /^(none|0px( 0px){0,2})$/, rotate: /^(none|(\S+ )*0deg)$/, scale: /^(none|1( 1){0,2})$/ };
+
 function transformed(el: Element) {
   for (let node = parentOf(el); node; node = parentOf(node)) {
     const style = getComputedStyle(node);
     // An identity transform, often a translateZ(0) layer hint, moves nothing.
     if (!new DOMMatrixReadOnly(style.transform).isIdentity) return true;
-    if ([style.translate, style.rotate, style.scale].some((value) => value !== 'none')) return true;
+    if (Object.entries(IDENTITY).some(([property, identity]) => !identity.test(style.getPropertyValue(property)))) return true;
   }
   return false;
 }
@@ -1037,17 +1041,21 @@ export class Menu extends Component<MenuOptions> {
   }
 
   /**
-   * At most once a frame while the menu is open and something scrolls, an
-   * anchored menu chooses its side again and a measured one follows its
-   * trigger. A context menu stays where it opened.
+   * At most once a frame while the menu is open and something outside it
+   * scrolls, an anchored menu chooses its side again and a measured one
+   * follows its trigger, keeping its own scroll position. A context menu
+   * stays where it opened, and the menu's own scrolling moves nothing.
    */
-  private _reanchor = () => {
-    if (this._reanchorFrame || this.options.contextMenu) return;
+  private _reanchor = (event: Event) => {
+    if (this._reanchorFrame || this.options.contextMenu || this.menuEl.contains(event.target as Node)) return;
     this._reanchorFrame = requestAnimationFrame(() => {
       this._reanchorFrame = 0;
       if (!this.isOpen) return;
-      if (this.menuEl.style.getPropertyValue('position-anchor')) this._placeAnchored();
-      else this.recalculateDimensions();
+      if (this.menuEl.style.getPropertyValue('position-anchor')) return this._placeAnchored();
+      // Re-measuring clears the height, which would reset the scroll position.
+      const { scrollTop } = this.menuEl;
+      this.recalculateDimensions();
+      this.menuEl.scrollTop = scrollTop;
     });
   };
 

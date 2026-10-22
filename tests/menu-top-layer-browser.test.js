@@ -145,4 +145,51 @@ for (const [engine, browserType, browserTest] of engines) {
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: a long measured menu keeps its scroll position, and a select in a side sheet stays anchored`, async () => {
+    const long = Array.from({ length: 40 }, (_, i) => `<li><button type="button">Item ${i}</button></li>`).join('');
+    const options = Array.from({ length: 40 }, (_, i) => `<option>Option ${i}</option>`).join('');
+    const { browser, tab } = await page(browserType, `<div style="height: 1200px; padding: 40px">
+        <button type="button" id="m-trigger" data-target="m">Open</button><menu id="m">${long}</menu></div>
+      <dialog class="side-sheet" id="sheet"><div class="input-field"><select id="select">${options}</select><label>Pick</label></div></dialog>`);
+    try {
+      // coverTrigger places the menu by measurement, which used to clear its
+      // height on every scroll, including its own, and so reset it to the top.
+      const measured = await tab.evaluate(async () => {
+        const menu = Expressive.Menu.init(document.getElementById('m-trigger'), { inDuration: 0, coverTrigger: true });
+        menu.open();
+        await frames2();
+        const el = menu.menuEl;
+        el.scrollTop = 300;
+        await frames2();
+        const own = el.scrollTop;
+        window.scrollBy(0, 20);
+        await frames2();
+        const page = el.scrollTop;
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+        await frames2();
+        const focused = document.activeElement.getBoundingClientRect(), box = el.getBoundingClientRect();
+        return { anchored: !!el.style.getPropertyValue('position-anchor'), own, page, endVisible: focused.top >= box.top && focused.bottom <= box.bottom };
+      });
+      assert.deepEqual(measured, { anchored: false, own: 300, page: 300, endVisible: true });
+
+      // The sheet rests at translate: 0px, which moves nothing, so its select
+      // keeps CSS anchoring.
+      const sheet = await tab.evaluate(async () => {
+        document.getElementById('sheet').showModal();
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        const select = Expressive.FormSelect.init(document.getElementById('select'));
+        select.menu.options.inDuration = 0;
+        select.menu.open();
+        await frames2();
+        const menu = select.menuEl;
+        menu.scrollTop = 400;
+        await frames2();
+        return { anchored: !!menu.style.getPropertyValue('position-anchor'), scrollTop: menu.scrollTop };
+      });
+      assert.deepEqual(sheet, { anchored: true, scrollTop: 400 });
+    } finally {
+      await browser.close();
+    }
+  });
 }

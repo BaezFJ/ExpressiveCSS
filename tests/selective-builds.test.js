@@ -221,7 +221,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the viewport clamp that replaced the body-box edge check: 89,645 gzip bytes (-197).
   // Reviewed menus opened as manual popovers in the top layer, without the clipping-ancestor walk: 89,279 gzip bytes (-366).
   // Reviewed the lightbox shown as manual popovers instead of clearing ancestor overflow: 89,011 gzip bytes (-268).
-  assert.ok(sizes(js).gzip <= 89011, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed measured menus keeping their scroll position and identity transforms leaving menus anchored: 89,099 gzip bytes (+88).
+  assert.ok(sizes(js).gzip <= 89099, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
