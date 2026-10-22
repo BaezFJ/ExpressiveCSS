@@ -28,38 +28,7 @@ fieldset.color-swatches {
   --md-comp-color-swatches-outline-color: var(--md-sys-color-outline);
   --md-comp-color-swatches-selected-color: var(--md-sys-color-on-surface);
 
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-  border: 0;
-
-  > legend {
-    margin-block-end: 4px;
-    padding: 0;
-    color: var(--md-sys-color-on-surface-variant);
-    @include typescale("body-medium");
-  }
-
-  // 4px of padding makes the 48px target, as it does for the color input.
-  > label {
-    display: inline-flex;
-    gap: 0;
-    min-height: 0;
-    padding: 4px;
-    border-radius: var(--md-sys-shape-corner-full);
-    cursor: pointer;
-
-    &:has(> [type="radio"]:focus-visible) {
-      @include focus-ring;
-    }
-
-    &:has(> [type="radio"]:disabled) {
-      opacity: 0.38;
-      cursor: default;
-    }
-  }
+  @include choice-fieldset(var(--md-sys-shape-corner-full), '[type="radio"]');
 
   > label > [type="color"] {
     padding: 0;

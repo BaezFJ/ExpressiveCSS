@@ -9,7 +9,7 @@ Component ID: `side-sheet`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `2deae07800473a18c4d6c8182cca410ed008454d6aba2fdeacc86077c48157f3`
+Contract SHA-256: `5d3e546a1ffe7dcb7f11251261c8f4e4815ad74ece1e048ecd48a5d641166c5e`
 
 #### Selection and adaptation
 

@@ -242,6 +242,44 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   }
 }
 
+// A fieldset of round, labeled choices (color swatches, rating): no fieldset
+// chrome, a body-medium legend, and labels whose 4px of padding makes the
+// 48px target. $control is the input the label's focus and disabled states
+// follow.
+@mixin choice-fieldset($radius, $control) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  > legend {
+    margin-block-end: 4px;
+    padding: 0;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-medium");
+  }
+
+  > label {
+    display: inline-flex;
+    gap: 0;
+    min-height: 0;
+    padding: 4px;
+    border-radius: $radius;
+    cursor: pointer;
+
+    &:has(> #{$control}:focus-visible) {
+      @include focus-ring;
+    }
+
+    &:has(> #{$control}:disabled) {
+      opacity: 0.38;
+      cursor: default;
+    }
+  }
+}
+
 // A navigation bar or rail destination stacked over its label: the indicator
 // behind the icon, its hover layer, the active state, and a sibling badge on
 // the upper trailing corner of the 24dp glyph. $prefix names the component

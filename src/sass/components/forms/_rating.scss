@@ -31,37 +31,7 @@ $_rating-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
 }
 
 fieldset.rating {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-  border: 0;
-
-  > legend {
-    margin-block-end: 4px;
-    padding: 0;
-    color: var(--md-sys-color-on-surface-variant);
-    @include typescale("body-medium");
-  }
-
-  > label {
-    display: inline-flex;
-    gap: 0;
-    min-height: 0;
-    padding: 4px;
-    border-radius: 50%;
-    cursor: pointer;
-
-    &:has(> input:focus-visible) {
-      @include focus-ring;
-    }
-
-    &:has(> input:disabled) {
-      opacity: 0.38;
-      cursor: default;
-    }
-  }
+  @include choice-fieldset(50%, "input");
 
   > label > [type="radio"] {
     flex: none;
