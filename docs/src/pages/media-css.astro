@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -10,8 +9,7 @@ const S = defineSections([
   { id: "videos", label: "Videos" },
 ]);
 ---
-<DocsLayout page="media_css">
-<PageBody sections={S}>
+<DocsLayout page="media_css" sections={S}>
   <Section {...S.images}>
         <p class="flow-text">Expressive has classes for responsive and circular images.</p>
 
@@ -95,5 +93,4 @@ const S = defineSections([
 </video>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

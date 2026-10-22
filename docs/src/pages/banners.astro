@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -12,8 +11,7 @@ const S = defineSections([
   { id: "semantics", label: "Accessibility and behavior" },
 ]);
 ---
-<DocsLayout page="banners">
-  <PageBody sections={S}>
+<DocsLayout page="banners" sections={S}>
     <Section {...S.migration}>
       <p>The framework no longer ships a banner component. This page stays up for existing links.</p>
       <p>
@@ -62,5 +60,4 @@ const S = defineSections([
         controls.
       </p>
     </Section>
-  </PageBody>
 </DocsLayout>

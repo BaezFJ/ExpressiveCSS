@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import OptionsTable from "../components/api/OptionsTable.astro";
@@ -21,8 +20,7 @@ const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const dial = [["1", ""], ["2", "ABC"], ["3", "DEF"], ["4", "GHI"], ["5", "JKL"], ["6", "MNO"], ["7", "PQRS"], ["8", "TUV"], ["9", "WXYZ"], ["*", ""], ["0", "+"], ["#", ""]];
 const rows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
 ---
-<DocsLayout page="keypad">
-<PageBody sections={S}>
+<DocsLayout page="keypad" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A keypad or keyboard is a set of on-screen keys that type into a text field.
@@ -321,7 +319,6 @@ keypad.target;    // the field named by aria-controls, or null
 keypad.destroy(); // removes the listeners
 `} />
   </Section>
-</PageBody>
 <script is:inline>
 document.getElementById('demo-number-row').addEventListener('change', (e) => {
   document.getElementById('demo-numbers').hidden = !e.target.checked;

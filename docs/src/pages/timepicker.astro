@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import InstanceNote from "../components/api/InstanceNote.astro";
@@ -21,8 +20,7 @@ const S = defineSections([
   { id: "properties", label: "Properties" },
 ]);
 ---
-<DocsLayout page="timepicker">
-<PageBody sections={S}>
+<DocsLayout page="timepicker" sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>time-picker</code> to a text input. <code>AutoInit()</code> starts every
@@ -453,5 +451,4 @@ instance.destroy();
         </PropertiesTable>
   </Section>
 
-</PageBody>
 </DocsLayout>

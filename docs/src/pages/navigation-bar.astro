@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -15,8 +14,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="navigation_bar">
-<PageBody sections={S}>
+<DocsLayout page="navigation_bar" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Put 3 to 5 destinations of equal importance in a
@@ -138,5 +136,4 @@ const S = defineSections([
             <tr><td><code>--md-comp-nav-bar-active-indicator-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
         </TokenTable>
   </Section>
-</PageBody>
 </DocsLayout>

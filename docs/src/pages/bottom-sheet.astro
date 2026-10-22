@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -12,8 +11,7 @@ const S = defineSections([
   { id: "layout", label: "Layout" },
 ]);
 ---
-<DocsLayout page="bottom_sheet">
-<PageBody sections={S}>
+<DocsLayout page="bottom_sheet" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Use a <code>dialog.bottom-sheet</code> for additional or secondary
@@ -178,5 +176,4 @@ const S = defineSections([
           The sheet slides in, and snaps back after a short drag, on the default spatial spring. <code>--md-comp-bottom-sheet-motion</code> and <code>--md-comp-bottom-sheet-motion-duration</code> read <code>--md-sys-motion-spring-default-spatial</code> and its <code>-duration</code> token, so <code>motion="expressive"</code> gives it a slight bounce. The sheet extends 24px below the viewport, so the bounce never uncovers the page under it. With reduced motion requested, it appears without moving.
         </p>
   </Section>
-</PageBody>
 </DocsLayout>

@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -12,8 +11,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="tree">
-<PageBody sections={S}>
+<DocsLayout page="tree" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Use a <code>&lt;ul class="tree"&gt;</code> of nested lists for file browsers
@@ -96,5 +94,4 @@ const S = defineSections([
           <tr><td><code>--md-comp-tree-selected-container-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
         </TokenTable>
   </Section>
-</PageBody>
 </DocsLayout>

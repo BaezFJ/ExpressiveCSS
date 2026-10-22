@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -31,8 +30,7 @@ const intro = [
   ["", "Good. Anything else?"],
 ];
 ---
-<DocsLayout page="message_scroller">
-<PageBody sections={S}>
+<DocsLayout page="message_scroller" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Use a <code>.message-scroller</code> to scroll a conversation. While the
@@ -223,7 +221,6 @@ scroller.destroy();              // removes listeners, observers and the spacer
           <tr><td><code>--md-comp-message-scroller-gap</code></td><td>16px</td></tr>
         </TokenTable>
   </Section>
-</PageBody>
 <script is:inline>
 (() => {
   const root = document.getElementById('demo-scroller');

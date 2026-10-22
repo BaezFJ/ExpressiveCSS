@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -15,8 +14,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="split_button">
-<PageBody sections={S}>
+<DocsLayout page="split_button" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A split button puts the action you take most of the time next to a
@@ -285,5 +283,5 @@ const S = defineSections([
           both. The hovered and pressed seam also share one token, because
           Material gives them the same value.
         </p>
-  </Section></PageBody>
+  </Section>
 </DocsLayout>

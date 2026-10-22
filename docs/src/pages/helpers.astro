@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -18,8 +17,7 @@ const S = defineSections([
   { id: "browser-default", label: "Browser defaults" },
 ]);
 ---
-<DocsLayout page="helpers">
-<PageBody sections={S}>
+<DocsLayout page="helpers" sections={S}>
   <Section {...S.valign}>
         <p class="flow-text">Use these classes to align content.</p>
 
@@ -822,5 +820,4 @@ const S = defineSections([
 <input class="browser-default" type="text">
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

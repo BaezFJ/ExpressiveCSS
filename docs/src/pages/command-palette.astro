@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -16,8 +15,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="command_palette">
-<PageBody sections={S}>
+<DocsLayout page="command_palette" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Put a search input and a list of commands in a
@@ -125,5 +123,4 @@ palette.destroy();  // removes the shortcut, listeners, roles and ids it added
           <tr><td><code>--md-comp-command-palette-active-container-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
         </TokenTable>
   </Section>
-</PageBody>
 </DocsLayout>

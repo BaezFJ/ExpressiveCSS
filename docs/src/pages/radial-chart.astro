@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -23,8 +22,7 @@ const S = defineSections([
 const plans: [string, number][] = [["Free plan", 80], ["Basic plan", 70], ["Premium plan", 60], ["Enterprise plan", 50]];
 const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referral", 70], ["Social", 65]];
 ---
-<DocsLayout page="radial-chart">
-<PageBody sections={S}>
+<DocsLayout page="radial-chart" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>&lt;figure class="radial-chart"&gt;</code> draws a
@@ -356,5 +354,4 @@ chart.destroy(); // remove the drawing and show the table again
         </TokenTable>
         <p>For a selective Sass build, include <code>"radial-chart"</code> in <code>$components</code>.</p>
   </Section>
-</PageBody>
 </DocsLayout>

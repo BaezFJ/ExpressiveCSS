@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import InstanceNote from "../components/api/InstanceNote.astro";
@@ -19,8 +18,7 @@ const S = defineSections([
   { id: "properties", label: "Properties" },
 ]);
 ---
-<DocsLayout page="chips">
-<PageBody sections={S}>
+<DocsLayout page="chips" sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>.chip</code> to an element to make a chip. The element you pick
@@ -436,5 +434,4 @@ instance.destroy();
         </PropertiesTable>
   </Section>
 
-</PageBody>
 </DocsLayout>

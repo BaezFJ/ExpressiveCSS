@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -11,8 +10,7 @@ const S = defineSections([
   { id: "springs", label: "Springs" },
 ]);
 ---
-<DocsLayout page="css_transitions">
-<PageBody sections={S}>
+<DocsLayout page="css_transitions" sections={S}>
   <Section {...S.scale}>
         <p class="flow-text">
           These classes transition your content with only CSS. Each transition has a base class
@@ -119,5 +117,4 @@ const S = defineSections([
       Each spring also has <code>-damping</code> and <code>-stiffness</code> tokens that hold its two numbers and follow <code>motion</code>. Scripts that solve a spring themselves can read them.
     </p>
   </Section>
-</PageBody>
 </DocsLayout>

@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -12,8 +11,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="mega_menu">
-<PageBody sections={S}>
+<DocsLayout page="mega_menu" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>nav.mega-menu</code> is site navigation whose top items open
@@ -97,5 +95,4 @@ const S = defineSections([
           </tr>
         </TokenTable>
   </Section>
-</PageBody>
 </DocsLayout>

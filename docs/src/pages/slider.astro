@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -16,11 +15,10 @@ const S = defineSections([
   { id: "methods", label: "Methods" },
 ]);
 ---
-<DocsLayout page="sliders">
+<DocsLayout page="sliders" sections={S}>
 <p>Slider labels and track gaps align with native handles after resizing, including RTL and vertical layouts. Paired inputs accept track clicks and stay in order. In forced-colors mode, tracks use system colors.</p>
 <p>The native range inputs handle keyboard and pointer interaction. Vertical values increase from bottom to top. For precise entry, pair a labeled number input with a range input. To update the slider, assign the range input's value and dispatch an <code>input</code> event. Use matching bounds and steps on paired ranges.</p>
 
-<PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Sliders let people pick from a range of values. An
@@ -213,5 +211,4 @@ instance.destroy();
         <p><code>destroy()</code> removes the plugin instance and the value label, tears down its event handlers, and restores the inline custom properties it changed.</p>
   </Section>
 
-</PageBody>
 </DocsLayout>

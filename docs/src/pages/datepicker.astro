@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import InstanceNote from "../components/api/InstanceNote.astro";
@@ -21,8 +20,7 @@ const S = defineSections([
   { id: "properties", label: "Properties" },
 ]);
 ---
-<DocsLayout page="datepicker">
-<PageBody sections={S}>
+<DocsLayout page="datepicker" sections={S}>
 <p>The inline and docked calendars support keyboard navigation. Enter on the date input focuses a day. Tab enters or leaves the grid, and the arrow keys move by day or week. Home and End follow <code>firstDay</code>, and Left and Right follow <code>isRTL</code>. PageUp and PageDown change the month. Hold Shift with them to change the year. Enter or Space selects an enabled day.</p>
 <p>Disabled dates stay focusable, and screen readers announce them as unavailable. Navigation respects configured bounds and keeps focus after redraws. A modal calendar moves focus to the selected day when it opens and back to the input when it closes.</p>
 <p>An input's initial value is the selection, and a form reset reads the selection back from the reset values. If a typed date is outside the bounds, falls on a disabled weekend or is refused by <code>disableDayFn</code>, the input goes back to the selected date.</p>
@@ -584,5 +582,4 @@ instance.destroy();
         </PropertiesTable>
   </Section>
 
-</PageBody>
 </DocsLayout>

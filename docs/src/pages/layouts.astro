@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -21,8 +20,7 @@ const S = defineSections([
   ...layouts.map(({ id, title }) => ({ id, label: title })),
 ]);
 ---
-<DocsLayout page="layouts">
-<PageBody sections={S} wide>
+<DocsLayout page="layouts" sections={S} wide>
   <Section {...S.choose}>
     <p>Choose a structure, preview it, and copy the complete HTML into your project.
       These templates use ExpressiveCSS navigation, panes, and grid classes.</p>
@@ -86,7 +84,6 @@ cp -R dist my-site/dist`} />
       </details>
     </Section>
   ))}
-</PageBody>
 </DocsLayout>
 
 <style>

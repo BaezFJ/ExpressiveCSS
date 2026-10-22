@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -50,8 +49,7 @@ const year = sunday.map((_, day) =>
 const starts: Record<number, string> = { 0: "Jan", 4: "Feb", 9: "Mar", 13: "Apr", 17: "May", 22: "Jun", 26: "Jul", 30: "Aug", 35: "Sep", 39: "Oct", 43: "Nov", 48: "Dec" };
 const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + value, 0);
 ---
-<DocsLayout page="heatmap-chart">
-<PageBody sections={S}>
+<DocsLayout page="heatmap-chart" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>&lt;figure class="heatmap-chart"&gt;</code> draws a
@@ -378,5 +376,4 @@ chart.destroy(); // remove the drawing and show the table again
         </TokenTable>
         <p>For a selective Sass build, include <code>"heatmap-chart"</code> in <code>$components</code>.</p>
   </Section>
-</PageBody>
 </DocsLayout>

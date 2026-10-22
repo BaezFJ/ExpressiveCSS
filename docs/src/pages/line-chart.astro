@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -51,8 +50,7 @@ card.querySelectorAll('[data-period]').forEach((button) => {
   });
 });`;
 ---
-<DocsLayout page="line-chart">
-<PageBody sections={S}>
+<DocsLayout page="line-chart" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>&lt;figure class="line-chart"&gt;</code> draws a
@@ -546,5 +544,4 @@ chart.destroy(); // remove the drawing and show the table again
         </TokenTable>
         <p>For a selective Sass build, include <code>"line-chart"</code> in <code>$components</code>.</p>
   </Section>
-</PageBody>
 </DocsLayout>

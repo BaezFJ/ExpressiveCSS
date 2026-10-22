@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -20,8 +19,7 @@ const S = defineSections([
   { id: "disabled", label: "Disabled" },
 ]);
 ---
-<DocsLayout page="buttons">
-<PageBody sections={S}>
+<DocsLayout page="buttons" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Use a <code>&lt;button&gt;</code> for a filled common button, or an
@@ -375,5 +373,4 @@ const S = defineSections([
 <a class="button disabled">Link</a>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

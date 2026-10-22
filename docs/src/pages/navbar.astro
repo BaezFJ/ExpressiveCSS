@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -19,8 +18,7 @@ const S = defineSections([
   { id: "search-docs", label: "Search" },
 ]);
 ---
-<DocsLayout page="navbar">
-<PageBody sections={S}>
+<DocsLayout page="navbar" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Build a top app bar from plain elements, a <code>&lt;header&gt;</code> whose child is a
@@ -413,5 +411,4 @@ document.addEventListener('DOMContentLoaded', function() {
           in the bar and needs no extra field class.
         </p>
   </Section>
-</PageBody>
 </DocsLayout>

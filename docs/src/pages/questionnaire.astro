@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -21,8 +20,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="questionnaire">
-<PageBody sections={S}>
+<DocsLayout page="questionnaire" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Put each question in a <code>&lt;fieldset&gt;</code> inside a
@@ -336,5 +334,4 @@ questionnaire.destroy(); // shows every question and removes what it added
           <tr><td><code>--md-comp-questionnaire-choice-selected-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
         </TokenTable>
   </Section>
-</PageBody>
 </DocsLayout>

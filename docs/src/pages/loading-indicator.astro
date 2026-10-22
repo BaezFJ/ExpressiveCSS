@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -12,8 +11,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="loading_indicator">
-<PageBody sections={S}>
+<DocsLayout page="loading_indicator" sections={S}>
   <Section {...S.basic}>
         <p class="flow-text">
           The loading indicator is M3 Expressive's indicator for a short wait.
@@ -109,5 +107,4 @@ const S = defineSections([
           and leaves the circle.
         </p>
   </Section>
-</PageBody>
 </DocsLayout>

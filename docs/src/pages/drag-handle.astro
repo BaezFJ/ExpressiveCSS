@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -16,8 +15,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="drag_handle">
-<PageBody sections={S}>
+<DocsLayout page="drag_handle" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A drag handle is the mark that shows something can be dragged: the
@@ -185,5 +183,5 @@ const S = defineSections([
           sheet's own <code>--md-comp-bottom-sheet-drag-handle-color</code>
           sets the colour instead.
         </p>
-  </Section></PageBody>
+  </Section>
 </DocsLayout>

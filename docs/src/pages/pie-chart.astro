@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -28,8 +27,7 @@ const sum = (values: number[]) => values.reduce((total, value) => total + value,
 const revenue = money(sum(plans.map(([, value]) => value)));
 const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social", 2480], ["Email", 310], ["Podcasts", 140], ["Print", 90], ["Radio", 60]];
 ---
-<DocsLayout page="pie-chart">
-<PageBody sections={S}>
+<DocsLayout page="pie-chart" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>&lt;figure class="pie-chart"&gt;</code> draws a
@@ -343,5 +341,4 @@ chart.destroy(); // remove the drawing and show the table again
         </TokenTable>
         <p>For a selective Sass build, include <code>"pie-chart"</code> in <code>$components</code>.</p>
   </Section>
-</PageBody>
 </DocsLayout>

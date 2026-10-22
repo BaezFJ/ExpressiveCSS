@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -12,8 +11,7 @@ const S = defineSections([
   { id: "disabled", label: "Disabled" },
 ]);
 ---
-<DocsLayout page="fieldsets">
-<PageBody sections={S}>
+<DocsLayout page="fieldsets" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Wrap related fields in a <code>&lt;fieldset&gt;</code> and give it a
@@ -219,5 +217,4 @@ const S = defineSections([
 </fieldset>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

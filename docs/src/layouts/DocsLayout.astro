@@ -2,8 +2,10 @@
 import BaseLayout from "./BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import DocsNavigation from "../components/DocsNavigation.astro";
+import PageBody from "../components/PageBody.astro";
 import { NAV } from "../data/nav";
 import { markdownRoute, page, route } from "../lib/catalogue";
+import type { Sections } from "../lib/sections";
 
 /**
  * Every documentation page. The title and the page header come from the
@@ -13,9 +15,13 @@ import { markdownRoute, page, route } from "../lib/catalogue";
 interface Props {
   /** The catalogue id of the page being rendered. */
   page: string;
+  /** The page's sections, for its table of contents. */
+  sections: Sections;
+  /** A wider content column, for pages with wide demos. */
+  wide?: boolean;
 }
 
-const { page: id } = Astro.props;
+const { page: id, sections, wide } = Astro.props;
 
 const entry = page(id);
 const pageName = entry.title ?? entry.label;
@@ -66,7 +72,10 @@ const sourceColorPalettes = [
             <PageHeader page={id} title={pageName} description={entry.description} markdownPath={markdownRoute(id)}>
                 <slot name="banner" />
             </PageHeader>
-            <slot />
+            <PageBody sections={sections} wide={wide}>
+                <slot name="toc-extra" slot="toc-extra" />
+                <slot />
+            </PageBody>
         </div>
     </main>
 

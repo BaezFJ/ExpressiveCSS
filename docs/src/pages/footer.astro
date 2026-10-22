@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -11,8 +10,7 @@ const S = defineSections([
   { id: "sticky-footer", label: "Sticky footer" },
 ]);
 ---
-<DocsLayout page="footer">
-<PageBody sections={S}>
+<DocsLayout page="footer" sections={S}>
   <Section {...S.footer}>
         <p class="flow-text">
           Use the footer for site navigation and extra information. People look there after they finish a page, or when they want to know more about the site.
@@ -122,5 +120,4 @@ main {
 }
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

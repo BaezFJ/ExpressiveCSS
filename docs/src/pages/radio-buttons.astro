@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -10,8 +9,7 @@ const S = defineSections([
   { id: "row", label: "In a row" },
 ]);
 ---
-<DocsLayout page="radio_buttons">
-<PageBody sections={S}>
+<DocsLayout page="radio_buttons" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Wrap an <code>&lt;input type="radio"&gt;</code> in a <code>&lt;label&gt;</code>
@@ -108,5 +106,4 @@ const S = defineSections([
 </fieldset>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

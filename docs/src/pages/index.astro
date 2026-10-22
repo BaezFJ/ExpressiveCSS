@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -54,7 +53,7 @@ const S = defineSections([
   { id: "sass", label: "Sass", heading: "Sass setup" },
 ]);
 ---
-<DocsLayout page="index">
+<DocsLayout page="index" sections={S}>
 <div slot="banner" class="docs-hero-actions">
   <p>
     <a class="button filled" href="#download">Get started</a>
@@ -63,7 +62,6 @@ const S = defineSections([
   </p>
   <p><code>npm install @expressivecss/expressive</code></p>
 </div>
-<PageBody sections={S}>
   <Section {...S.features}>
     <div class="docs-features">
       {features.map((f) => (
@@ -377,5 +375,4 @@ MyWebsite/
 |--index.html
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

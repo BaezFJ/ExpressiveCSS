@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -15,8 +14,7 @@ const S = defineSections([
   { id: "contrast", label: "More contrast" },
 ]);
 ---
-<DocsLayout page="themes">
-<PageBody sections={S}>
+<DocsLayout page="themes" sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
           Expressive maps Material Design 3 color tokens onto live
@@ -411,5 +409,4 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
 <html contrast="high">
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

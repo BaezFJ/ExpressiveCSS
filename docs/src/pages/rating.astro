@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -12,8 +11,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="rating">
-<PageBody sections={S}>
+<DocsLayout page="rating" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>&lt;fieldset class="rating"&gt;</code> holds one radio per
@@ -70,5 +68,4 @@ const S = defineSections([
           <tr><td><code>--md-comp-rating-max</code></td><td>5 (display)</td></tr>
         </TokenTable>
   </Section>
-</PageBody>
 </DocsLayout>

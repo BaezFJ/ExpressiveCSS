@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -13,10 +12,9 @@ const S = defineSections([
   { id: "colors", label: "Colors" },
 ]);
 ---
-<DocsLayout page="preloader">
+<DocsLayout page="preloader" sections={S}>
 <p>In forced-colors mode, native and custom progress use system colors. Empty linear tracks get an outline, and circular indicators keep their value segments. Under reduced motion, the indicators still show static feedback. Browser emulation checks do not replace a review in Windows high contrast or with a screen reader.</p>
 
-<PageBody sections={S}>
   <p>Custom linear progress fills from the left in LTR and from the right in RTL. Indeterminate motion and the static reduced-motion fill follow the inherited direction, including nested overrides. This does not change native determinate progress or circular indicators.</p>
   <Section {...S.linear}>
         <p class="flow-text">
@@ -221,5 +219,4 @@ const S = defineSections([
       role="status" aria-label="Loading"></span>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

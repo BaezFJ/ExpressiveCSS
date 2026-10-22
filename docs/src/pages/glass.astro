@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -22,8 +21,7 @@ const demos = [
   { label: "Custom glass", setting: "--expressive-glass: true; --expressive-glass-blur: 4px; --expressive-glass-opacity: 40%" },
 ];
 ---
-<DocsLayout page="glass">
-<PageBody sections={S}>
+<DocsLayout page="glass" sections={S}>
   <Section {...S.overview}>
     <p class="flow-text">
       Floating surfaces can show the page behind them through a frosted,
@@ -183,5 +181,4 @@ const demos = [
       surfaces. The choice is saved in this browser.
     </p>
   </Section>
-</PageBody>
 </DocsLayout>

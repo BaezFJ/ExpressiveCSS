@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -44,8 +43,7 @@ const ROLE_GROUPS: RoleGroup[] = [
   ]],
 ];
 ---
-<DocsLayout page="color">
-<PageBody sections={S}>
+<DocsLayout page="color" sections={S}>
   <Section {...S.tokens}>
         <p class="flow-text">
           Color in Expressive uses the Material Design 3 Expressive roles.
@@ -205,5 +203,4 @@ const ROLE_GROUPS: RoleGroup[] = [
           runtime. A custom property can.
         </p>
   </Section>
-</PageBody>
 </DocsLayout>

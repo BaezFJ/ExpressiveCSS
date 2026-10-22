@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -18,8 +17,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="data_table">
-<PageBody sections={S}>
+<DocsLayout page="data_table" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Wrap one native <code>&lt;table&gt;</code> in a
@@ -317,5 +315,4 @@ toggle.addEventListener('click', () => {
           </tr>
         </TokenTable>
   </Section>
-</PageBody>
 </DocsLayout>

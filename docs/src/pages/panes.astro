@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -20,8 +19,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="panes">
-<PageBody sections={S} wide>
+<DocsLayout page="panes" sections={S} wide>
 
   <Section {...S.anatomy}>
       <p class="flow-text">
@@ -515,7 +513,6 @@ back.addEventListener('click', () => {
           <tr><td><code>--md-comp-pane-supporting-width</code></td><td>360px</td></tr>
       </TokenTable>
   </Section>
-</PageBody>
 <script is:inline>
   document.querySelectorAll('[data-pane-select]').forEach((root) => {
     const listPane = root.querySelector('.list-pane');

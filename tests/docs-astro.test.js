@@ -130,6 +130,7 @@ describe('the Astro chrome', () => {
   });
 
   test('every page with sections renders them through PageBody', () => {
+    assert.match(read('docs/src/layouts/DocsLayout.astro'), /<PageBody sections=\{sections\} wide=\{wide\}>/);
     // PageBody owns the table of contents, its landmark name and the
     // `docs-page-content` hook the Markdown generator and docs.css key on. A
     // page that writes its own scaffold drifts from all three without failing.
@@ -141,7 +142,7 @@ describe('the Astro chrome', () => {
     for (const file of readdirSync(pagesDir).filter((f) => f.endsWith('.astro'))) {
       const source = read(`docs/src/pages/${file}`);
       if (!source.includes('defineSections(')) continue;
-      assert.ok(source.includes('<PageBody'), `${file} declares sections but does not render them through <PageBody>`);
+      assert.match(source, /<DocsLayout page="[\w-]+" sections=\{S\}/, `${file} declares sections but does not pass them to DocsLayout`);
       // The Scrollspy page demonstrates a table of contents inside its content.
       if (file !== 'scrollspy.astro') {
         assert.ok(!source.includes('table-of-contents'), `${file} writes its own table of contents`);

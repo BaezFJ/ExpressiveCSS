@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -27,8 +26,7 @@ const S = defineSections([
   { id: "lint", label: "Lint checks" },
 ]);
 ---
-<DocsLayout page="ai">
-<PageBody sections={S}>
+<DocsLayout page="ai" sections={S}>
   <Section {...S.introduction}>
     <p class="flow-text">
       ExpressiveCSS ships its documentation in plain text, agent skills that walk a coding agent
@@ -121,5 +119,4 @@ npx --package @expressivecss/mcp-server expressivecss-lint src/pages/*.html
       check every file the agent edits. The server's README has the settings.
     </p>
   </Section>
-</PageBody>
 </DocsLayout>

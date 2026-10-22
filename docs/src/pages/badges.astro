@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -14,8 +13,7 @@ const S = defineSections([
   { id: "color", label: "Color" },
 ]);
 ---
-<DocsLayout page="badges">
-<PageBody sections={S}>
+<DocsLayout page="badges" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Badges show notifications, counts, or status on navigation items
@@ -154,5 +152,4 @@ const S = defineSections([
 <span class="badge primary on-primary-text">1</span>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

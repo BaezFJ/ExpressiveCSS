@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -21,8 +20,7 @@ const layers = [
   ["confetti", "10001", "The confetti overlay, in browsers without popovers."],
 ];
 ---
-<DocsLayout page="shadow">
-<PageBody sections={S}>
+<DocsLayout page="shadow" sections={S}>
   <Section {...S.shadow}>
         <p class="flow-text">
           In Material Design, every element has a z-depth. The z-depth sets how far the element rises above the page.
@@ -125,5 +123,4 @@ const layers = [
 </style>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

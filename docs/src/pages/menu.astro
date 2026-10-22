@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import InstanceNote from "../components/api/InstanceNote.astro";
@@ -23,8 +22,7 @@ const S = defineSections([
   { id: "properties", label: "Properties" },
 ]);
 ---
-<DocsLayout page="menu">
-<PageBody sections={S}>
+<DocsLayout page="menu" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>&lt;menu&gt;</code> is the surface. Each <code>&lt;li&gt;</code>
@@ -683,5 +681,4 @@ instance.destroy();
             </tr>
         </PropertiesTable>
   </Section>
-</PageBody>
 </DocsLayout>

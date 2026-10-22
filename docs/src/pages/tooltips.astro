@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import InstanceNote from "../components/api/InstanceNote.astro";
@@ -18,8 +17,7 @@ const S = defineSections([
   { id: "properties", label: "Properties" },
 ]);
 ---
-<DocsLayout page="tooltips">
-<PageBody sections={S}>
+<DocsLayout page="tooltips" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Put a <code>.tooltip</code> child inside the activator to make the bubble.
@@ -351,5 +349,4 @@ instance.destroy();
               <td>The generated tooltip element.</td>
             </tr>
   </PropertiesTable>  </Section>
-</PageBody>
 </DocsLayout>

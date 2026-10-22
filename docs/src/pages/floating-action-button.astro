@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -19,8 +18,7 @@ const S = defineSections([
   { id: "properties", label: "Properties" },
 ]);
 ---
-<DocsLayout page="floating_action_button">
-<PageBody sections={S}>
+<DocsLayout page="floating_action_button" sections={S}>
 
   <Section {...S.introduction}>
     <p class="flow-text">Use one FAB for the primary action, or a FAB menu for related labelled actions. The menu opens on click and keeps ordinary Tab navigation.</p>
@@ -338,5 +336,4 @@ instance.destroy();
             </tr>
   </PropertiesTable>
   </Section>
-</PageBody>
 </DocsLayout>
