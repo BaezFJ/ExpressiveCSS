@@ -234,13 +234,7 @@
 
       > .badge {
         top: calc((var(--md-comp-nav-rail-indicator-height) - 24px) / 2);
-        left: auto;
         inset-inline-start: calc(16px + 24px);
-        transform: translate(-50%, -50%);
-
-        &:dir(rtl) {
-          transform: translate(50%, -50%);
-        }
       }
     }
 

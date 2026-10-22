@@ -347,5 +347,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the x and y spacing helpers as margin-inline, margin-block and their padding twins: 84,891 gzip bytes (-124).
   // Reviewed the horizontal card grid written once for the card and its primary action: 84,820 gzip bytes (-71).
   // Reviewed the text input selector as one :is() list at the same specificity: 84,821 gzip bytes (+1).
-  assert.ok(sizes(css).gzip <= 84821, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed row badges that restated the navigation badge transform and a left lost to inset-inline-start: 84,778 gzip bytes (-43).
+  assert.ok(sizes(css).gzip <= 84778, `CSS gzip: ${sizes(css).gzip}`);
 });
