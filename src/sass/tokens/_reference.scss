@@ -152,11 +152,7 @@ $_emphasized-weights: (
       $c: map.get($cfg, "chroma");
       @if $tone == 0 or $tone == 100 { $c: 0; }
 
-      @if $off == 0 {
-        --md-ref-palette-#{$name}#{$tone}: oklch(from var(--md-source) #{$l} #{$c} h);
-      } @else {
-        --md-ref-palette-#{$name}#{$tone}: oklch(from var(--md-source) #{$l} #{$c} calc(h + #{$off}));
-      }
+      --md-ref-palette-#{$name}#{$tone}: oklch(from var(--md-source) #{$l} #{$c} calc(h + #{$off}));
     }
   }
 
