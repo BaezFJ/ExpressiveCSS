@@ -1,8 +1,8 @@
 # src/sass
 
 ```
-expressive.scss     entry point - decides cascade order, nothing else
-custom.scss         optional entry - selected partials in the same layers
+expressive.scss     entry point - forwards custom.scss with its defaults
+custom.scss         decides cascade order; optionally loads selected partials
 abstracts/          variables, functions, mixins        (emits no CSS)
 tokens/             M3 design tokens as :root custom properties
 base/               normalize, element defaults, typography, grid
@@ -13,7 +13,8 @@ utilities/          single-purpose helper classes
 `custom.scss` accepts `$components` and `$utilities` lists of partial names,
 in load order. `null` loads the complete group; `()` loads none. Tokens and base
 are always loaded, and the existing font configuration still applies. Its
-default output must equal `expressive.scss`. Use one entry per consumer sheet.
+default output is `expressive.scss`, which forwards it with `$components` and
+`$utilities` hidden. Use one entry per consumer sheet.
 Keep selections in the order of the existing indexes, with icons first, and
 include supporting partials. See the README's smaller-build recipes.
 
@@ -49,7 +50,7 @@ adding one, see rule 2.
 **2. Nothing outside `abstracts/` is ever imported by another partial.**
 
 Dependencies point one way: everything depends on `abstracts`, `abstracts`
-depends on nothing. This is what keeps `expressive.scss` the only place cascade
+depends on nothing. This is what keeps `custom.scss` the only place cascade
 order is decided. (This is the Sass dependency graph, not the CSS `@layer`
 list — they happen to be described by the same word.)
 
@@ -227,11 +228,11 @@ the wrong file.
 | A colour/type token | `tokens/_reference.scss` | wire it up in `tokens/_theme.scss` |
 
 Anything under `abstracts/` that emits a selector is a bug: it would put CSS in
-the output at a position `expressive.scss` does not control.
+the output at a position `custom.scss` does not control.
 
 ## Cascade layers
 
-`expressive.scss` declares `@layer tokens, base, components, utilities;` and
+`custom.scss` declares `@layer tokens, base, components, utilities;` and
 loads each layer with `meta.load-css()` — `@forward` cannot appear inside
 `@layer`, which is the only reason the entry file uses a different mechanism
 from every other index file.

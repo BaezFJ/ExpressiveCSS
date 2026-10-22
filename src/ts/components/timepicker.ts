@@ -1,5 +1,5 @@
-import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, InitElement, I18nOptions } from '../core/component';
+import { Utils, svgNode } from '../core/utils';
+import { Component, BaseOptions, I18nOptions } from '../core/component';
 import { DisplayPlugin, createDisplayPlugin, hideModal } from '../plugins/modalDisplayPlugin';
 
 export type Views = 'hours' | 'minutes';
@@ -28,6 +28,9 @@ const ringHour = (position: number, inner: boolean) => {
 
 /** The last second of the day. */
 const DAY_END = 24 * 3600 - 1;
+
+/** A clock number as two digits. */
+const pad2 = (n: number) => String(n).padStart(2, '0');
 
 /** An hour on the 24-hour clock, from one written with AM or PM. */
 const hour24 = (hours: number, period?: string) => (period ? (hours % 12) + (period === 'PM' ? 12 : 0) : hours);
@@ -272,14 +275,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   private _limits: [number, number] = [0, DAY_END];
 
   constructor(el: HTMLInputElement, options: Partial<TimepickerOptions>) {
-    super(el, options, Timepicker);
+    super(el, { ...localeClock(el), ...options, i18n: { ...Timepicker.defaults.i18n, ...options?.i18n } });
     this.el['Expressive_Timepicker'] = this;
-    this.options = {
-      ...Timepicker.defaults,
-      ...localeClock(el),
-      ...options,
-      i18n: { ...Timepicker.defaults.i18n, ...options?.i18n }
-    };
     // A modal clock writes on Ok, so it has the buttons.
     this.options.autoSubmit &&= this.options.displayPlugin !== 'modal';
     this.id = Utils.guid();
@@ -297,42 +294,6 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   static get defaults(): TimepickerOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of Timepicker.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLInputElement, options?: Partial<TimepickerOptions>): Timepicker;
-  /**
-   * Initializes instances of Timepicker.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: InitElements<HTMLInputElement | InitElement>,
-    options?: Partial<TimepickerOptions>
-  ): Timepicker[];
-  /**
-   * Initializes instances of Timepicker.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLInputElement | InitElements<HTMLInputElement | InitElement>,
-    options: Partial<TimepickerOptions> = {}
-  ): Timepicker | Timepicker[] {
-    return super.init(els, options, Timepicker);
-  }
-
-  static _addLeadingZero(num: number) {
-    return (num < 10 ? '0' : '') + num;
-  }
-
-  static _createSVGEl(name: string) {
-    const svgNS = 'http://www.w3.org/2000/svg';
-    return document.createElementNS(svgNS, name);
   }
 
   static getInstance(el: HTMLElement): Timepicker {
@@ -390,7 +351,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   };
 
   _handleInputKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {
-    if (e.key === Utils.keys.ENTER) {
+    if (e.key === 'Enter') {
       e.preventDefault();
       this._handleInputClick();
     }
@@ -625,23 +586,11 @@ export class Timepicker extends Component<TimepickerOptions> {
     // The ticks, hand and pointer math all centre on dialRadius, so the
     // painted face has to be the same size or the hand sits off centre.
     this.plate.style.width = this.plate.style.height = diameter + 'px';
-    const svg = Timepicker._createSVGEl('svg');
-    svg.setAttribute('class', 'timepicker-svg');
-    svg.setAttribute('width', diameter.toString());
-    svg.setAttribute('height', diameter.toString());
-    const g = Timepicker._createSVGEl('g');
-    g.setAttribute('transform', 'translate(' + dialRadius + ',' + dialRadius + ')');
-    const bearing = Timepicker._createSVGEl('circle');
-    bearing.setAttribute('class', 'timepicker-canvas-bearing');
-    bearing.setAttribute('cx', '0');
-    bearing.setAttribute('cy', '0');
-    bearing.setAttribute('r', '4');
-    const hand = Timepicker._createSVGEl('line');
-    hand.setAttribute('x1', '0');
-    hand.setAttribute('y1', '0');
-    const bg = Timepicker._createSVGEl('circle');
-    bg.setAttribute('class', 'timepicker-canvas-bg');
-    bg.setAttribute('r', tickRadius.toString());
+    const svg = svgNode('svg', { class: 'timepicker-svg', width: String(diameter), height: String(diameter) });
+    const g = svgNode('g', { transform: `translate(${dialRadius},${dialRadius})` });
+    const bearing = svgNode('circle', { class: 'timepicker-canvas-bearing', cx: '0', cy: '0', r: '4' });
+    const hand = svgNode('line', { x1: '0', y1: '0' });
+    const bg = svgNode('circle', { class: 'timepicker-canvas-bg', r: String(tickRadius) });
     g.appendChild(hand);
     g.appendChild(bg);
     g.appendChild(bearing);
@@ -677,7 +626,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   _buildMinutesView() {
     for (let i = 0; i < 60; i += 5) {
       const radian = (i / 30) * Math.PI;
-      this._placeTick(this.minutesView, radian, this.options.outerRadius, Timepicker._addLeadingZero(i));
+      this._placeTick(this.minutesView, radian, this.options.outerRadius, pad2(i));
     }
   }
 
@@ -736,7 +685,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   /** Show the time in every field but `except`, which the person is typing in. */
   private _writeFields(except?: HTMLInputElement) {
     this._units().forEach((unit) => {
-      if (this._input(unit) !== except) this._input(unit).value = Timepicker._addLeadingZero(this[unit]);
+      if (this._input(unit) !== except) this._input(unit).value = pad2(this[unit]);
     });
   }
 
@@ -856,7 +805,7 @@ export class Timepicker extends Component<TimepickerOptions> {
    */
   _handleDigitalKeydown = Utils.ignoringComposition((event: KeyboardEvent) => {
     if (event.key in STEPS) return this._step(event);
-    if (event.key !== Utils.keys.ENTER) return;
+    if (event.key !== 'Enter') return;
     event.preventDefault();
     // Normalize first, as leaving the field would: an emptied field takes its
     // default, and the committed time has to be the one the fields then show.
@@ -937,7 +886,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     if (unit === 'hours') this._setHours24(value);
     else this[unit] = value;
     this._afterChange();
-    input.value = Timepicker._addLeadingZero(this[unit]);
+    input.value = pad2(this[unit]);
     this._moveHand(unit, this[unit]);
   }
 
@@ -1010,7 +959,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     }
 
     this[this.currentView] = value;
-    (isHours ? this.inputHours : this.inputMinutes).value = Timepicker._addLeadingZero(value);
+    (isHours ? this.inputHours : this.inputMinutes).value = pad2(value);
 
     // Set clock hand and others' position
     this.setClockAttributes(radian, radius);
@@ -1037,17 +986,17 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   formatHours() {
     if (this.inputHours.value == '') this.setHoursDefault();
-    this.inputHours.value = Timepicker._addLeadingZero(this.hours);
+    this.inputHours.value = pad2(this.hours);
   }
 
   formatMinutes() {
     if (this.inputMinutes.value == '') this.minutes = new Date().getMinutes();
-    this.inputMinutes.value = Timepicker._addLeadingZero(this.minutes);
+    this.inputMinutes.value = pad2(this.minutes);
   }
 
   formatSeconds() {
     if (this.inputSeconds.value == '') this.seconds = new Date().getSeconds();
-    this.inputSeconds.value = Timepicker._addLeadingZero(this.seconds);
+    this.inputSeconds.value = pad2(this.seconds);
   }
 
   /** Normalize every field, as leaving it would. */
@@ -1081,7 +1030,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   /** `HH:MM` for the given hour, or `HH:MM:SS` with a seconds field. */
   private _clockTime(hours: number) {
     const parts = this.inputSeconds ? [hours, this.minutes, this.seconds] : [hours, this.minutes];
-    return parts.map(Timepicker._addLeadingZero).join(':');
+    return parts.map(pad2).join(':');
   }
 
   // A time input accepts only 24-hour HH:mm or HH:mm:ss and empties itself

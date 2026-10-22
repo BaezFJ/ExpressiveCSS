@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 import { Utils } from '../core/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -20,13 +20,8 @@ export class Slider extends Component<SliderOptions> {
   thumb: HTMLElement;
 
   constructor(el: HTMLInputElement, options: Partial<SliderOptions>) {
-    super(el, options, Slider);
+    super(el, options);
     this.el['Expressive_Slider'] = this;
-
-    this.options = {
-      ...Slider.defaults,
-      ...options
-    };
 
     this._pointerDown = false;
     this._setupThumb();
@@ -43,33 +38,6 @@ export class Slider extends Component<SliderOptions> {
 
   static get defaults(): SliderOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of Slider.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLInputElement, options?: Partial<SliderOptions>): Slider;
-  /**
-   * Initializes instances of Slider.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: InitElements<HTMLInputElement | InitElement>,
-    options?: Partial<SliderOptions>
-  ): Slider[];
-  /**
-   * Initializes instances of Slider.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLInputElement | InitElements<HTMLInputElement | InitElement>,
-    options: Partial<SliderOptions> = {}
-  ): Slider | Slider[] {
-    return super.init(els, options, Slider);
   }
 
   static getInstance(el: HTMLInputElement): Slider {

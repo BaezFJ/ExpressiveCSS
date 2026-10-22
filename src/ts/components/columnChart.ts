@@ -1,4 +1,3 @@
-import { InitElements, InitElement } from '../core/component';
 import { LineChart, LineChartOptions, numberValue, Series } from './lineChart';
 
 export type ColumnChartOptions = LineChartOptions;
@@ -62,15 +61,6 @@ export class ColumnChart extends LineChart {
 
   protected get _points() {
     return false;
-  }
-
-  static init(el: HTMLElement, options?: Partial<ColumnChartOptions>): ColumnChart;
-  static init(els: InitElements<InitElement>, options?: Partial<ColumnChartOptions>): ColumnChart[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<ColumnChartOptions> = {}
-  ): ColumnChart | ColumnChart[] {
-    return super.init(els as HTMLElement, options) as ColumnChart | ColumnChart[];
   }
 
   static getInstance(el: HTMLElement): ColumnChart {

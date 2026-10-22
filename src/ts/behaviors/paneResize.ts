@@ -19,12 +19,11 @@ const step = 16;
  * `--md-comp-pane-supporting-width` on the container's style.
  */
 export class PaneResize {
-  private static _initialized = false;
   private static _dragged = false;
 
+  // A second Init adds nothing: addEventListener ignores a listener it has.
   static Init() {
-    if (PaneResize._initialized || typeof document === 'undefined') return;
-    PaneResize._initialized = true;
+    if (typeof document === 'undefined') return;
     document.addEventListener('pointerdown', PaneResize._onPointerDown);
     document.addEventListener('keydown', PaneResize._onKeyDown);
     document.addEventListener('click', PaneResize._onClick);

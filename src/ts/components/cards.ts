@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, InitElement, Openable } from '../core/component';
+import { Component, BaseOptions, } from '../core/component';
 
 export interface CardsOptions extends BaseOptions {
   onOpen: (el: Element) => void;
@@ -66,7 +66,7 @@ export function isCardReveal(el: Element): el is HTMLElement {
   ).some((trigger) => isUsableCardTrigger(trigger, el, panels[0]));
 }
 
-export class Cards extends Component<CardsOptions> implements Openable {
+export class Cards extends Component<CardsOptions> {
   isOpen: boolean = false;
   private readonly cardReveal: HTMLElement | null;
   private _activators: HTMLButtonElement[];
@@ -75,13 +75,8 @@ export class Cards extends Component<CardsOptions> implements Openable {
   private _lastActivator: HTMLButtonElement | null = null;
 
   constructor(el: HTMLElement, options: Partial<CardsOptions> = {}) {
-    super(el, options, Cards);
+    super(el, options);
     this.el['Expressive_Cards'] = this;
-
-    this.options = {
-      ...Cards.defaults,
-      ...options
-    };
 
     const cardReveals = this.el.querySelectorAll<HTMLElement>(':scope > aside');
     const cardReveal = cardReveals.length === 1 ? cardReveals[0] : null;
@@ -115,30 +110,6 @@ export class Cards extends Component<CardsOptions> implements Openable {
 
   static get defaults(): CardsOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of Cards.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLElement, options?: Partial<CardsOptions>): Cards;
-  /**
-   * Initializes instances of Cards.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(els: InitElements<InitElement>, options?: Partial<CardsOptions>): Cards[];
-  /**
-   * Initializes instances of Cards.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options?: Partial<CardsOptions>
-  ): Cards | Cards[] {
-    return super.init(els, options, Cards);
   }
 
   static getInstance(el: HTMLElement): Cards {

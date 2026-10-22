@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 export interface NavigationRailOptions extends BaseOptions {
   /**
@@ -53,13 +53,8 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   private _hoverTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor(el: HTMLElement, options: Partial<NavigationRailOptions>) {
-    super(el, options, NavigationRail);
+    super(el, options);
     this.el['Expressive_NavigationRail'] = this;
-
-    this.options = {
-      ...NavigationRail.defaults,
-      ...options
-    };
 
     this._toggle = this._findToggle();
     this._mql = window.matchMedia(COMPACT);
@@ -73,18 +68,6 @@ export class NavigationRail extends Component<NavigationRailOptions> {
 
   static get defaults(): NavigationRailOptions {
     return _defaults;
-  }
-
-  static init(el: HTMLElement, options?: Partial<NavigationRailOptions>): NavigationRail;
-  static init(
-    els: InitElements<InitElement>,
-    options?: Partial<NavigationRailOptions>
-  ): NavigationRail[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<NavigationRailOptions> = {}
-  ): NavigationRail | NavigationRail[] {
-    return super.init(els, options, NavigationRail);
   }
 
   static getInstance(el: HTMLElement): NavigationRail {

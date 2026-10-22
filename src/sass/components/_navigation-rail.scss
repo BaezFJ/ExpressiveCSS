@@ -142,11 +142,7 @@
     text-decoration: none;
 
     > :not(#{$icon}) {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
+      @include visually-hidden;
     }
   }
 
@@ -257,6 +253,7 @@
         position: static;
         width: auto;
         height: auto;
+        margin: 0;
         overflow: visible;
         clip-path: none;
         @include typescale("label-large");

@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 export interface CarouselI18nOptions {
   carousel: string;
@@ -141,13 +141,9 @@ export class Carousel extends Component<CarouselOptions> {
   }, 200);
 
   constructor(el: HTMLElement, options: Partial<CarouselOptions>) {
-    super(el, options, Carousel);
+    super(el, options);
     this.el['Expressive_Carousel'] = this;
 
-    this.options = {
-      ...Carousel.defaults,
-      ...options
-    };
     if (options?.i18n) {
       this.options.i18n = { ...Carousel.defaults.i18n, ...options.i18n };
     }
@@ -206,15 +202,6 @@ export class Carousel extends Component<CarouselOptions> {
 
   static get defaults(): CarouselOptions {
     return _defaults;
-  }
-
-  static init(el: HTMLElement, options?: Partial<CarouselOptions>): Carousel;
-  static init(els: InitElements<InitElement>, options?: Partial<CarouselOptions>): Carousel[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<CarouselOptions> = {}
-  ): Carousel | Carousel[] {
-    return super.init(els, options, Carousel);
   }
 
   static getInstance(el: HTMLElement): Carousel {
@@ -597,8 +584,8 @@ export class Carousel extends Component<CarouselOptions> {
   _handleKeydown = (e: KeyboardEvent) => {
     if (this._keyBelongsElsewhere(e)) return;
     const rtl = getComputedStyle(this._scroller).direction === 'rtl';
-    const forward = this._vertical ? e.key === 'ArrowDown' : e.key === (rtl ? Utils.keys.ARROW_LEFT : Utils.keys.ARROW_RIGHT);
-    const backward = this._vertical ? e.key === 'ArrowUp' : e.key === (rtl ? Utils.keys.ARROW_RIGHT : Utils.keys.ARROW_LEFT);
+    const forward = this._vertical ? e.key === 'ArrowDown' : e.key === (rtl ? 'ArrowLeft' : 'ArrowRight');
+    const backward = this._vertical ? e.key === 'ArrowUp' : e.key === (rtl ? 'ArrowRight' : 'ArrowLeft');
     if (e.key === 'Home') {
       e.preventDefault();
       this.set(0);

@@ -22,6 +22,12 @@
   @return clamp(var(--md-comp-carousel-small-item-min-width), $share, var(--md-comp-carousel-small-item-max-width));
 }
 
+// The medium item takes what $n large items, one small item at $share and
+// the $n + 1 gaps of 8px leave of the track, held between 64px and 240px.
+@function _medium-item-width($n, $share) {
+  @return clamp(64px, calc(100% - #{$n} * var(--md-comp-carousel-large-item-width) - #{_small-item-width($share)} - #{($n + 1) * 8px}), 240px);
+}
+
 .carousel {
   --md-comp-carousel-height: 240px;
   --md-comp-carousel-shape: var(--md-sys-shape-corner-extra-large);
@@ -30,18 +36,7 @@
   --md-comp-carousel-inline-padding: 16px;
   --md-comp-carousel-block-padding: 8px;
   --md-comp-carousel-large-item-width: clamp(150px, 52%, 480px);
-  --md-comp-carousel-medium-item-width: clamp(
-    64px,
-    calc(
-      100% - var(--md-comp-carousel-large-item-width) - clamp(
-          var(--md-comp-carousel-small-item-min-width),
-          12%,
-          var(--md-comp-carousel-small-item-max-width)
-        ) -
-        16px
-    ),
-    240px
-  );
+  --md-comp-carousel-medium-item-width: #{_medium-item-width(1, 12%)};
   --md-comp-carousel-small-item-min-width: 40px;
   --md-comp-carousel-small-item-max-width: 56px;
   --md-comp-carousel-uncontained-item-width: min(78%, 320px);
@@ -304,22 +299,7 @@
 // medium width is solved from the container so every visible item is complete.
 .carousel.multi-wide {
   --md-comp-carousel-large-item-width: clamp(180px, 36%, 480px);
-  --md-comp-carousel-medium-item-width: min(
-    240px,
-    max(
-      64px,
-      calc(
-        100% - var(--md-comp-carousel-large-item-width) - var(
-            --md-comp-carousel-large-item-width
-          ) - clamp(
-            var(--md-comp-carousel-small-item-min-width),
-            8%,
-            var(--md-comp-carousel-small-item-max-width)
-          ) -
-          24px
-      )
-    )
-  );
+  --md-comp-carousel-medium-item-width: #{_medium-item-width(2, 8%)};
 
   .carousel-track > .carousel-item[data-carousel-size="small"] {
     flex-basis: _small-item-width(8%);
@@ -331,22 +311,7 @@
 // the medium item smaller than its large neighbours and the final item whole.
 .carousel.multi-large {
   --md-comp-carousel-large-item-width: clamp(180px, 27%, 480px);
-  --md-comp-carousel-medium-item-width: min(
-    240px,
-    max(
-      64px,
-      calc(
-        100% - var(--md-comp-carousel-large-item-width) - var(
-            --md-comp-carousel-large-item-width
-          ) - var(--md-comp-carousel-large-item-width) - clamp(
-            var(--md-comp-carousel-small-item-min-width),
-            6%,
-            var(--md-comp-carousel-small-item-max-width)
-          ) -
-          32px
-      )
-    )
-  );
+  --md-comp-carousel-medium-item-width: #{_medium-item-width(3, 6%)};
 
   .carousel-track > .carousel-item[data-carousel-size="small"] {
     flex-basis: _small-item-width(6%);
@@ -356,24 +321,7 @@
 
 .carousel.multi-extra-large {
   --md-comp-carousel-large-item-width: clamp(180px, 22%, 480px);
-  --md-comp-carousel-medium-item-width: min(
-    240px,
-    max(
-      64px,
-      calc(
-        100% - var(--md-comp-carousel-large-item-width) - var(
-            --md-comp-carousel-large-item-width
-          ) - var(--md-comp-carousel-large-item-width) - var(
-            --md-comp-carousel-large-item-width
-          ) - clamp(
-            var(--md-comp-carousel-small-item-min-width),
-            4%,
-            var(--md-comp-carousel-small-item-max-width)
-          ) -
-          40px
-      )
-    )
-  );
+  --md-comp-carousel-medium-item-width: #{_medium-item-width(4, 4%)};
 
   .carousel-track > .carousel-item[data-carousel-size="small"] {
     flex-basis: _small-item-width(4%);

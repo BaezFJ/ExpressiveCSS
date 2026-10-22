@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 import { Utils } from '../core/utils';
 
 export interface TabsOptions extends BaseOptions {
@@ -87,13 +87,8 @@ export class Tabs extends Component<TabsOptions> {
   private _stripObserver: ResizeObserver | null = null;
 
   constructor(el: HTMLElement, options: Partial<TabsOptions>) {
-    super(el, options, Tabs);
+    super(el, options);
     this.el['Expressive_Tabs'] = this;
-
-    this.options = {
-      ...Tabs.defaults,
-      ...options
-    };
 
     this._tabLinks = this._queryTabLinks();
     if (!this._tabLinks.length) {
@@ -126,9 +121,9 @@ export class Tabs extends Component<TabsOptions> {
     this._createIndicator();
     this._setupEventHandlers();
     // Labels measured before a web font arrives have the fallback's width,
-    // and nothing else re-measures them until the window resizes.
+    // and the strip's size need not change when the font arrives.
     document.fonts?.ready.then(() => {
-      if (this.el['Expressive_Tabs'] === this) this._handleWindowResize();
+      if (this.el['Expressive_Tabs'] === this) this._remeasure();
     });
   }
 
@@ -137,42 +132,24 @@ export class Tabs extends Component<TabsOptions> {
     // Firefox makes an overflowing bar a Tab stop of its own, ahead of the
     // tabs; a tablist is one Tab stop, so the bar steps aside.
     this._barTabindex = this.el.getAttribute('tabindex');
-    if (!this._tablist) return;
-    this.el.tabIndex = -1;
+    if (this._tablist) this.el.tabIndex = -1;
     // A strip set up inside a closed dialog has no visible tabs yet; opening
-    // it changes the strip's size, and so does a utility that shows or hides
-    // a tab, so either way the Tab stop is chosen again.
+    // it changes the strip's size, and so does a window resize or a utility
+    // that shows or hides a tab. The tabs are watched too: at the 840px
+    // breakpoint they switch between equal and intrinsic widths inside a
+    // strip that may keep its size. Each change re-measures the indicator,
+    // and a tablist chooses its Tab stop again.
     if (typeof ResizeObserver === 'undefined') return;
-    this._stripObserver = new ResizeObserver(() => this._refreshTabStop());
+    this._stripObserver = new ResizeObserver(() => {
+      if (this._tablist) this._refreshTabStop();
+      this._remeasure();
+    });
     this._stripObserver.observe(this.el);
+    this._tabLinks.forEach((a) => this._stripObserver.observe(a));
   }
 
   static get defaults(): TabsOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of Tabs.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLElement, options?: Partial<TabsOptions>): Tabs;
-  /**
-   * Initializes instances of Tabs.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(els: InitElements<InitElement>, options?: Partial<TabsOptions>): Tabs[];
-  /**
-   * Initializes instances of Tabs.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<TabsOptions> = {}
-  ): Tabs | Tabs[] {
-    return super.init(els, options, Tabs);
   }
 
   static getInstance(el: HTMLElement): Tabs {
@@ -211,13 +188,11 @@ export class Tabs extends Component<TabsOptions> {
   }
 
   _setupEventHandlers() {
-    window.addEventListener('resize', this._handleWindowResize);
     this.el.addEventListener('click', this._handleTabClick);
     this.el.addEventListener('keydown', this._handleKeydown);
   }
 
   _removeEventHandlers() {
-    window.removeEventListener('resize', this._handleWindowResize);
     this.el.removeEventListener('click', this._handleTabClick);
     this.el.removeEventListener('keydown', this._handleKeydown);
   }
@@ -247,14 +222,10 @@ export class Tabs extends Component<TabsOptions> {
     if (this._tablist && tab !== this._activeTabLink && Tabs.getInstance(this.el) === this) this._select(tab);
   }
 
-  // Throttled like Carousel's: every bar re-measures on resize, and the left
-  // and right positions are both read before either is written.
-  _handleWindowResize = Utils.throttle(() => {
-    // The throttle's trailing call can land after destroy().
-    if (Tabs.getInstance(this.el) !== this) return;
+  private _remeasure() {
     this._setTabsAndTabWidth();
     if (this._tabWidth !== 0 && this._tabsWidth !== 0) this._positionIndicator();
-  }, 200);
+  }
 
   _queryTabLinks() {
     return this.el.querySelectorAll<HTMLAnchorElement>(':scope > a');

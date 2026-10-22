@@ -10,24 +10,28 @@ export const capabilityEntries = (data) => [...data.components, ...(data.foundat
 const safePath = (value) => typeof value === 'string' && /^(src|tests|scripts|skills|dist)\/[\w./-]+$|^(?:package(?:-lock)?|semantics)\.json$/u.test(value) && !value.split('/').includes('..');
 const hashValue = (value) => typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value);
 
+// Compare segment by segment so the order matches a depth-first walk sorted by name.
+const bySegments = (a, b) => {
+  const left = a.split('/'), right = b.split('/');
+  const index = left.findIndex((part, position) => part !== right[position]);
+  return left[index].localeCompare(right[index]);
+};
+
 export async function pinDirectory(root, directory) {
+  const names = [];
+  for (const entry of await readdir(path.join(root, directory), { recursive: true, withFileTypes: true })) {
+    assert.ok(!entry.isSymbolicLink(), 'Capability inputs cannot contain links');
+    if (!entry.isDirectory()) names.push(path.relative(root, path.join(entry.parentPath, entry.name)).replaceAll(path.sep, '/'));
+  }
   const pins = [];
   let bytes = 0;
-  async function visit(relative) {
-    for (const entry of (await readdir(path.join(root, relative), { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name))) {
-      const name = `${relative}/${entry.name}`;
-      assert.ok(!entry.isSymbolicLink(), 'Capability inputs cannot contain links');
-      if (entry.isDirectory()) await visit(name);
-      else {
-        assert.ok(entry.isFile() && pins.length < 2000);
-        const content = await readBoundedRegularFile(path.join(root, name), 32 * 1024 * 1024, 'capability input', root, null);
-        bytes += content.length;
-        assert.ok(bytes <= 128 * 1024 * 1024, 'Capability directory exceeds 128 MiB');
-        pins.push({ path: name, sha256: sha256(content) });
-      }
-    }
+  for (const name of names.sort(bySegments)) {
+    assert.ok(pins.length < 2000);
+    const content = await readBoundedRegularFile(path.join(root, name), 32 * 1024 * 1024, 'capability input', root, null);
+    bytes += content.length;
+    assert.ok(bytes <= 128 * 1024 * 1024, 'Capability directory exceeds 128 MiB');
+    pins.push({ path: name, sha256: sha256(content) });
   }
-  await visit(directory);
   return pins;
 }
 

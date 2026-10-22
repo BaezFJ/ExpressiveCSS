@@ -1,4 +1,3 @@
-import { InitElements, InitElement } from '../core/component';
 import { ColumnChart, ColumnChartOptions } from './columnChart';
 
 export type BarChartOptions = ColumnChartOptions;
@@ -22,15 +21,6 @@ export class BarChart extends ColumnChart {
 
   protected get _horizontal() {
     return true;
-  }
-
-  static init(el: HTMLElement, options?: Partial<BarChartOptions>): BarChart;
-  static init(els: InitElements<InitElement>, options?: Partial<BarChartOptions>): BarChart[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<BarChartOptions> = {}
-  ): BarChart | BarChart[] {
-    return super.init(els as HTMLElement, options) as BarChart | BarChart[];
   }
 
   static getInstance(el: HTMLElement): BarChart {

@@ -29,16 +29,6 @@ export class ModalDisplayPlugin {
     this.dialog.addEventListener('close', this._handleClose);
   }
 
-  /**
-   * Initializes instance of ModalDisplayPlugin
-   * @param el The field that opens the picker
-   * @param container The picker
-   * @param onDismiss Runs when the user closes the dialog without Ok or Cancel
-   */
-  static init(el: HTMLElement, container: HTMLElement, onDismiss: () => void): ModalDisplayPlugin {
-    return new ModalDisplayPlugin(el, container, onDismiss);
-  }
-
   /** The picker fills the dialog, so a press on the dialog itself is on the scrim. */
   private _handleClick = (e: MouseEvent) => {
     if (e.target === this.dialog) this.dialog.close();
@@ -84,8 +74,8 @@ export function createDisplayPlugin(
   options: Partial<DockedDisplayPluginOptions>,
   onDismiss: () => void
 ): DisplayPlugin | undefined {
-  if (type === 'modal') return ModalDisplayPlugin.init(el, container, onDismiss);
-  if (type === 'docked') return DockedDisplayPlugin.init(el, container, options);
+  if (type === 'modal') return new ModalDisplayPlugin(el, container, onDismiss);
+  if (type === 'docked') return new DockedDisplayPlugin(el, container, options);
   return undefined;
 }
 

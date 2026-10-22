@@ -177,11 +177,11 @@ header:has(> #{$_bar}) {
     }
 
     &:hover {
-      background-color: color-mix(in oklab, currentColor 8%, transparent);
+      background-color: color-mix(in oklab, currentColor state-opacity("hover"), transparent);
     }
 
     &:active {
-      background-color: color-mix(in oklab, currentColor 10%, transparent);
+      background-color: color-mix(in oklab, currentColor state-opacity("pressed"), transparent);
     }
   }
 
@@ -293,11 +293,11 @@ header:has(> #{$_bar}) {
   @include focus-visible;
 
   &:hover:not(.active) {
-    background-color: color-mix(in oklab, currentColor 8%, transparent);
+    background-color: color-mix(in oklab, currentColor state-opacity("hover"), transparent);
   }
 
   &.active {
-    background-color: color-mix(in oklab, currentColor 10%, transparent);
+    background-color: color-mix(in oklab, currentColor state-opacity("pressed"), transparent);
     @include forced-colors-selected;
   }
 }

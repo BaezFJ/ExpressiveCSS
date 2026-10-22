@@ -8,7 +8,8 @@ import { parse as parseToml } from 'smol-toml';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { performance } from 'node:perf_hooks';
-import { redactValue, readBoundedRegularFile } from './eval-expressivecss-skill.mjs';
+import { redactValue } from './eval-expressivecss-skill.mjs';
+import { readBoundedRegularFile } from './lib/bounded-file.mjs';
 
 // Partition existing bounded records before redaction: one large observation must
 // not exhaust another section's traversal budget. Each call keeps the same limits.

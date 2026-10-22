@@ -21,11 +21,7 @@ export class Theme {
     if (Theme._initialized || typeof document === 'undefined') return;
     Theme._initialized = true;
     document.addEventListener('click', Theme._onClick);
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => Theme.sync(), { once: true });
-    } else {
-      Theme.sync();
-    }
+    Utils.onDocumentReady(() => Theme.sync());
   }
 
   /** The current theme: the root's `theme` attribute, or `auto` without one. */

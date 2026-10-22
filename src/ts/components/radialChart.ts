@@ -1,5 +1,5 @@
-import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions, seriesColor, svgNode as node } from './lineChart';
+import { LineChart, LineChartOptions, rowLegend, seriesColor } from './lineChart';
+import { svgNode as node } from '../core/utils';
 
 export type RadialChartOptions = LineChartOptions;
 
@@ -110,15 +110,6 @@ export class RadialChart extends LineChart {
     return this._radii.length > 1 ? this._radii[0] - this._radii[1] : this._width;
   }
 
-  static init(el: HTMLElement, options?: Partial<RadialChartOptions>): RadialChart;
-  static init(els: InitElements<InitElement>, options?: Partial<RadialChartOptions>): RadialChart[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<RadialChartOptions> = {}
-  ): RadialChart | RadialChart[] {
-    return super.init(els as HTMLElement, options) as RadialChart | RadialChart[];
-  }
-
   static getInstance(el: HTMLElement): RadialChart {
     return el['Expressive_RadialChart'];
   }
@@ -156,22 +147,9 @@ export class RadialChart extends LineChart {
   /** For more than one row, a legend of every row with its color and cell. */
   protected _guides(): Element[] {
     if (this.labels.length < 2) return [];
-    const legend = document.createElement('ul');
-    legend.className = 'radial-chart-legend';
-    legend.setAttribute('aria-hidden', 'true');
     const text = this.series[0].text;
-    legend.append(...this.labels.map((label, i) => {
-      const li = document.createElement('li');
-      li.dataset.series = seriesColor(i);
-      const [name, value] = [label, text[i]].map((content) => {
-        const span = document.createElement('span');
-        span.textContent = content;
-        return span;
-      });
-      li.append(name, value);
-      return li;
-    }));
-    return [legend];
+    const colors = this.labels.map((_, i) => seriesColor(i));
+    return [rowLegend('radial-chart-legend', colors, this.labels.map((label, i) => [label, text[i]]))];
   }
 
   /** The ring under the pointer by its distance from the middle, or -1. */

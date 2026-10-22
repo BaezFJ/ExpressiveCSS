@@ -7,11 +7,12 @@ export interface BaseOptions {}
 
 export type InitElement = HTMLElement | Element;
 export type InitElements<T extends InitElement> = NodeListOf<T> | HTMLCollectionOf<T>;
-type ComponentConstructor<T extends Component<O>, O extends BaseOptions> = {
-  new (el: HTMLElement, options: Partial<O>): T;
-};
-type ComponentType<C extends Component<O>, O extends BaseOptions> = ComponentConstructor<C, O> &
-  typeof Component<O>;
+/** Any component class; `init` reads its element, options and instance types. */
+type ComponentClass = new (el: never, options: never) => Component<BaseOptions>;
+/** The element a component class is constructed on. */
+type ElementOf<C extends ComponentClass> = C extends new (el: infer E, options: never) => unknown ? E : never;
+/** The options `init` accepts for a component class. */
+type InitOptions<C extends ComponentClass> = Partial<InstanceType<C>['options']>;
 
 export interface I18nOptions {
   cancel: string;
@@ -24,12 +25,6 @@ export interface NotifyOptions {
   args?: unknown[];
   detail?: unknown;
   current?: () => boolean;
-}
-
-export interface Openable {
-  isOpen: boolean;
-  open(): void;
-  close(): void;
 }
 
 /**
@@ -46,64 +41,44 @@ export class Component<O extends BaseOptions> {
   options: O;
 
   /**
-   * Constructs component instance and set everything up.
+   * Destroys any instance already on `el`, then spreads `options` over the
+   * class defaults. A subclass deep-merges nested options such as `i18n`
+   * after `super()`, and passes options it reads from markup in `options`.
    */
-  constructor(el: HTMLElement, options: Partial<O>, classDef: ComponentType<Component<O>, O>) {
+  constructor(el: HTMLElement, options: Partial<O>) {
     // Display error if el is not a valid HTML Element
     if (!(el instanceof HTMLElement)) {
       console.error(Error(el + ' is not an HTML Element'));
     }
-    // If exists, destroy and reinitialize in child
-    classDef.getInstance(el)?.destroy();
+    new.target.getInstance(el)?.destroy();
     this.el = el;
+    this.options = { ...new.target.defaults, ...options } as O;
   }
 
   /**
-   * Initializes component instance.
+   * Initializes an instance of the class it is called on.
    * @param el HTML element.
    * @param options Component options.
-   * @param classDef Class definition.
    */
-  protected static init<I extends HTMLElement, O extends BaseOptions, C extends Component<O>>(
-    el: I,
-    options: O,
-    classDef: ComponentType<C, O>
-  ): C;
+  static init<C extends ComponentClass>(this: C, el: ElementOf<C>, options?: InitOptions<C>): InstanceType<C>;
   /**
-   * Initializes component instances.
+   * Initializes an instance of the class it is called on for each element.
    * @param els HTML elements.
    * @param options Component options.
-   * @param classDef Class definition.
    */
-  protected static init<I extends InitElement, O extends BaseOptions, C extends Component<O>>(
-    els: InitElements<I>,
-    options: Partial<O>,
-    classDef: ComponentType<C, O>
-  ): C[];
-  /**
-   * Initializes component instances.
-   * @param els HTML elements.
-   * @param options Component options.
-   * @param classDef Class definition.
-   */
-  protected static init<I extends InitElement, O extends BaseOptions, C extends Component<O>>(
-    els: I | InitElements<I>,
-    options: Partial<O>,
-    classDef: ComponentType<C, O>
-  ): C | C[];
-  /**
-   * Initializes component instances.
-   * @param els HTML elements.
-   * @param options Component options.
-   * @param classDef Class definition.
-   */
-  protected static init<I extends InitElement, O extends BaseOptions, C extends Component<O>>(
-    els: I | InitElements<I>,
-    options: Partial<O>,
-    classDef: ComponentType<C, O>
-  ): C | C[] {
-    if (els instanceof Element) return new classDef(<HTMLElement>els, options);
-    return els ? Array.from(els, (el) => new classDef(<HTMLElement>el, options)) : null;
+  static init<C extends ComponentClass>(
+    this: C,
+    els: InitElements<InitElement>,
+    options?: InitOptions<C>
+  ): InstanceType<C>[];
+  static init<C extends ComponentClass>(
+    this: C,
+    els: ElementOf<C> | InitElements<InitElement>,
+    options: InitOptions<C> = {}
+  ): InstanceType<C> | InstanceType<C>[] {
+    const create = (el: unknown) => new this(el as never, options as never) as InstanceType<C>;
+    if (els instanceof Element) return create(els);
+    return els ? Array.from(els as InitElements<InitElement>, create) : null;
   }
 
   /**

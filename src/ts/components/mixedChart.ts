@@ -1,4 +1,3 @@
-import { InitElements, InitElement } from '../core/component';
 import { ColumnChart } from './columnChart';
 import { LineChart, LineChartOptions, Series, niceStep, steps } from './lineChart';
 
@@ -38,15 +37,6 @@ export class MixedChart extends ColumnChart {
 
   protected get _points() {
     return true;
-  }
-
-  static init(el: HTMLElement, options?: Partial<MixedChartOptions>): MixedChart;
-  static init(els: InitElements<InitElement>, options?: Partial<MixedChartOptions>): MixedChart[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<MixedChartOptions> = {}
-  ): MixedChart | MixedChart[] {
-    return super.init(els as HTMLElement, options) as MixedChart | MixedChart[];
   }
 
   static getInstance(el: HTMLElement): MixedChart {

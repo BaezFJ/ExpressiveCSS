@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 import { Menu, MenuOptions } from './menu';
 
 export interface MenubarOptions extends BaseOptions {
@@ -29,9 +29,8 @@ export class Menubar extends Component<MenubarOptions> {
   private _added: { el: Element; name: string }[] = [];
 
   constructor(el: HTMLElement, options: Partial<MenubarOptions>) {
-    super(el, options, Menubar);
+    super(el, options);
     this.el['Expressive_Menubar'] = this;
-    this.options = { ...Menubar.defaults, ...options };
     this._setAttribute(this.el, 'role', 'menubar');
     this._items.forEach((item, index) => {
       Menu.init(item, this.options.menuOptions);
@@ -45,15 +44,6 @@ export class Menubar extends Component<MenubarOptions> {
 
   static get defaults(): MenubarOptions {
     return _defaults;
-  }
-
-  static init(el: HTMLElement, options?: Partial<MenubarOptions>): Menubar;
-  static init(els: InitElements<InitElement>, options?: Partial<MenubarOptions>): Menubar[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<MenubarOptions> = {}
-  ): Menubar | Menubar[] {
-    return super.init(els, options, Menubar);
   }
 
   static getInstance(el: HTMLElement): Menubar {

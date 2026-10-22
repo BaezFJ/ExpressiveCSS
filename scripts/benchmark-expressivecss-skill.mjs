@@ -2,9 +2,12 @@
 import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { parseArgs } from 'node:util';
 import { chromium } from '@playwright/test';
 import { JSDOM } from 'jsdom';
-import { EVALUATOR_LIMITS, materializeProjectFixture, readCompletionFiles, readBoundedRegularFile, redactValue } from './eval-expressivecss-skill.mjs';
+import { EVALUATOR_LIMITS, materializeProjectFixture, readCompletionFiles, redactValue } from './eval-expressivecss-skill.mjs';
+import { readBoundedRegularFile } from './lib/bounded-file.mjs';
+import { saveJson as save } from './lib/save-json.mjs';
 import { ASSISTANCE_MODES, ASSISTANCE_CONFIG, configuredDefaults, hashProject, retainedBrowserEvidence, runCodex, validateVerificationClaims } from './expressivecss-codex-adapter.mjs';
 import { assertSameProvenance, collectEvaluationProvenance, validateRetainedResults } from './expressivecss-eval-provenance.mjs';
 import { startEvaluationBrowser, startFixtureServer, createRestrictedFixturePage } from './expressivecss-eval-browser.mjs';
@@ -14,7 +17,6 @@ import { captureMaterialQuality, gradeMaterialQuality, isMaterialCase, retainedM
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DEFINITIONS = JSON.parse(await readFile(path.join(ROOT, 'tests/fixtures/expressivecss-skill-evals/benchmark.json'), 'utf8'));
-const save = async (filename, value) => { await mkdir(path.dirname(filename), { recursive: true }); await writeFile(filename, `${JSON.stringify(value, null, 2)}\n`); };
 const check = (text, passed, evidence) => ({ text, passed: Boolean(passed), evidence: redactValue(String(evidence)) });
 const isInterfaceCase = (name) => ['interface-refine', 'interface-review'].includes(name);
 export const INTERFACE_REVIEW_CRITERIA = ['C-TASK-PRIMARY', 'C-EMPHASIS-ONE', 'C-CONTAINER-PURPOSE', 'C-TYPE-ROLE', 'C-IDENTITY-CHANNELS', 'C-ADAPTIVE-COMPOSITION', 'C-THEME-HIERARCHY', 'C-LONG-CONTENT-FIT', 'C-STATE-NONCOLOR', 'A-FOCUS-VISIBLE'];
@@ -633,7 +635,8 @@ async function runTriggerEvaluations({ baseline, candidate = path.join(ROOT, 'sk
 }
 
 if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
-  const args = Object.fromEntries(process.argv.slice(2).map((arg) => { const index = arg.indexOf('='); if (index < 0) throw new Error('Use --option=value'); return [arg.slice(2, index), arg.slice(index + 1)]; }));
+  const names = ['baseline', 'candidate', 'output', 'repetitions', 'case', 'resume', 'assistance', 'triggers'];
+  const { values: args } = parseArgs({ options: Object.fromEntries(names.map((name) => [name, { type: 'string' }])) });
   if (args.triggers === 'true') await runTriggerEvaluations({ baseline: args.baseline, candidate: args.candidate, output: args.output });
   else await runBenchmark({ baseline: args.baseline, candidate: args.candidate, output: args.output, repetitions: args.repetitions ? Number(args.repetitions) : 3, caseName: args.case, resume: args.resume === 'true', assistance: args.assistance === 'true' });
 }

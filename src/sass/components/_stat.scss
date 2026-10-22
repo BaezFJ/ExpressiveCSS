@@ -56,12 +56,7 @@
     @include typescale("label-large");
 
     &:is(.up, .down)::before {
-      content: "";
-      flex: none;
-      width: 18px;
-      height: 18px;
-      background-color: currentColor;
-      mask: $trend-arrow center / 18px no-repeat;
+      @include trend-arrow;
     }
 
     &.down::before {

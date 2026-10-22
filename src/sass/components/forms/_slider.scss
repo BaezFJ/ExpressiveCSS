@@ -198,97 +198,53 @@ $_active: var(--md-comp-slider-active-track-color);
 $_inactive: var(--md-comp-slider-inactive-track-color);
 $_active-pos: var(--md-comp-slider-active-position, var(--md-comp-slider-active-fraction));
 
-// Gap around the handle so the tracks do not run under it.
-@mixin range-track-fill {
-  background-image:
-    _stop(end),
-    linear-gradient(var(--md-comp-slider-gradient), _handle-gap($_active, $_active-pos, $_inactive));
-}
-
-@mixin range-track-fill-centered {
-  background-image:
-    _stop(start),
-    _stop(end),
-    linear-gradient(
-      var(--md-comp-slider-gradient),
-      _handle-gap($_inactive, min(50%, $_active-pos), $_active),
-      _handle-gap($_active, max(50%, $_active-pos), $_inactive)
-    );
-}
-
-@mixin range-track-fill-dual {
-  background-image:
-    _stop(start),
-    _stop(end),
-    linear-gradient(
-      var(--md-comp-slider-gradient),
-      _handle-gap($_inactive, var(--md-comp-slider-start-position, var(--md-comp-slider-start-fraction)), $_active),
-      _handle-gap($_active, var(--md-comp-slider-end-position, var(--md-comp-slider-end-fraction)), $_inactive)
-    );
-}
-
-@mixin range-track {
-  box-sizing: border-box;
-  width: 100%;
-  height: var(--md-comp-slider-track-height);
-  border: none;
-  border-radius: calc(var(--md-comp-slider-track-height) / 2);
-  background-color: transparent;
-}
-
-@mixin range-track-vertical {
-  width: var(--md-comp-slider-track-height);
-  height: 100%;
-}
-
-@mixin range-thumb {
-  appearance: none;
-  box-sizing: border-box;
-  border: none;
-  width: var(--md-comp-slider-handle-width);
-  height: var(--md-comp-slider-handle-height);
-  border-radius: calc(var(--md-comp-slider-handle-width) / 2);
-  background: var(--md-comp-slider-handle-color);
-  box-shadow: none;
-  cursor: grab;
-  transition: box-shadow var(--md-sys-motion-duration-short4) ease, width var(--md-sys-motion-duration-short3) ease, height var(--md-sys-motion-duration-short3) ease;
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
-}
-
-@mixin range-thumb-vertical {
-  width: var(--md-comp-slider-handle-height);
-  height: var(--md-comp-slider-handle-width);
-  border-radius: calc(var(--md-comp-slider-handle-width) / 2);
-}
-
 // One set of rules per engine: a browser drops a whole rule with a pseudo-element
 // it does not know, so the two cannot share a selector list.
 @each $track, $thumb in ("::-webkit-slider-runnable-track" "::-webkit-slider-thumb", "::-moz-range-track" "::-moz-range-thumb") {
   $webkit: $thumb == "::-webkit-slider-thumb";
 
   input[type="range"]#{$track} {
-    @include range-track;
-    @include range-track-fill;
+    box-sizing: border-box;
+    width: 100%;
+    height: var(--md-comp-slider-track-height);
+    border: none;
+    border-radius: calc(var(--md-comp-slider-track-height) / 2);
+    background-color: transparent;
+    // Gap around the handle so the tracks do not run under it.
+    background-image:
+      _stop(end),
+      linear-gradient(var(--md-comp-slider-gradient), _handle-gap($_active, $_active-pos, $_inactive));
   }
 
   input[type="range"]#{$thumb} {
-    @include range-thumb;
+    appearance: none;
+    box-sizing: border-box;
+    border: none;
+    width: var(--md-comp-slider-handle-width);
+    height: var(--md-comp-slider-handle-height);
+    border-radius: calc(var(--md-comp-slider-handle-width) / 2);
+    background: var(--md-comp-slider-handle-color);
+    box-shadow: none;
+    cursor: grab;
+    transition: box-shadow var(--md-sys-motion-duration-short4) ease, width var(--md-sys-motion-duration-short3) ease, height var(--md-sys-motion-duration-short3) ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
     @if $webkit {
       margin-top: calc((var(--md-comp-slider-track-height) - var(--md-comp-slider-handle-height)) / 2);
     }
   }
 
   input[type="range"]:hover:not(:disabled)#{$thumb} {
-    box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) 8%, transparent);
+    box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) state-opacity("hover"), transparent);
   }
 
   // The tint alone was about 1.1:1 against the surface, so the handle also
   // takes the shared focus ring.
   input[type="range"]:focus-visible:not(:disabled)#{$thumb} {
-    box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) 10%, transparent);
+    box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) state-opacity("focus"), transparent);
     @include focus-ring;
   }
 
@@ -297,16 +253,26 @@ $_active-pos: var(--md-comp-slider-active-position, var(--md-comp-slider-active-
   }
 
   :is(#{$_host}).centered [type="range"]#{$track} {
-    @include range-track-fill-centered;
+    background-image:
+      _stop(start),
+      _stop(end),
+      linear-gradient(
+        var(--md-comp-slider-gradient),
+        _handle-gap($_inactive, min(50%, $_active-pos), $_active),
+        _handle-gap($_active, max(50%, $_active-pos), $_inactive)
+      );
   }
 
   :is(#{$_host}).vertical > [type="range"]#{$track} {
-    @include range-track-vertical;
+    width: var(--md-comp-slider-track-height);
+    height: 100%;
     margin-left: calc((var(--md-comp-slider-handle-height) - var(--md-comp-slider-track-height)) / 2);
   }
 
   :is(#{$_host}).vertical > [type="range"]#{$thumb} {
-    @include range-thumb-vertical;
+    width: var(--md-comp-slider-handle-height);
+    height: var(--md-comp-slider-handle-width);
+    border-radius: calc(var(--md-comp-slider-handle-width) / 2);
     @if $webkit {
       margin-top: 0;
     }
@@ -332,7 +298,14 @@ $_active-pos: var(--md-comp-slider-active-position, var(--md-comp-slider-active-
     height: var(--md-comp-slider-track-height);
     border-radius: calc(var(--md-comp-slider-track-height) / 2);
     pointer-events: none;
-    @include range-track-fill-dual;
+    background-image:
+      _stop(start),
+      _stop(end),
+      linear-gradient(
+        var(--md-comp-slider-gradient),
+        _handle-gap($_inactive, var(--md-comp-slider-start-position, var(--md-comp-slider-start-fraction)), $_active),
+        _handle-gap($_active, var(--md-comp-slider-end-position, var(--md-comp-slider-end-fraction)), $_inactive)
+      );
   }
 
   > [type="range"]:first-of-type {

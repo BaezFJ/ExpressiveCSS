@@ -269,7 +269,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     &.active#{$_unselected} {
       background-color: color-mix(
         in oklab,
-        var(--md-comp-menu-item-label-text-color) 8%,
+        var(--md-comp-menu-item-label-text-color) state-opacity("hover"),
         transparent
       );
     }
@@ -277,7 +277,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     &#{$_enabled}:active {
       background-color: color-mix(
         in oklab,
-        var(--md-comp-menu-item-label-text-color) 10%,
+        var(--md-comp-menu-item-label-text-color) state-opacity("pressed"),
         transparent
       );
     }
@@ -308,7 +308,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     &#{$_selected}:hover {
       background-color: color-mix(
         in oklab,
-        var(--md-comp-menu-item-selected-label-text-color) 8%,
+        var(--md-comp-menu-item-selected-label-text-color) state-opacity("hover"),
         var(--md-comp-menu-item-selected-container-color)
       );
     }
@@ -316,7 +316,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     &#{$_selected}:is(:focus, :focus-visible, :active) {
       background-color: color-mix(
         in oklab,
-        var(--md-comp-menu-item-selected-label-text-color) 10%,
+        var(--md-comp-menu-item-selected-label-text-color) state-opacity("pressed"),
         var(--md-comp-menu-item-selected-container-color)
       );
     }
@@ -424,7 +424,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
       border-radius: var(--md-comp-menu-item-container-shape);
       background-color: color-mix(
         in oklab,
-        var(--md-comp-menu-item-label-text-color) 8%,
+        var(--md-comp-menu-item-label-text-color) state-opacity("hover"),
         transparent
       );
     }
@@ -433,7 +433,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
       > :is(a, button, #{$icon-label}) {
       background-color: color-mix(
         in oklab,
-        var(--md-comp-menu-item-label-text-color) 10%,
+        var(--md-comp-menu-item-label-text-color) state-opacity("pressed"),
         transparent
       );
     }
@@ -448,7 +448,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
       > :is(a, button, #{$icon-label}) {
       background-color: color-mix(
         in oklab,
-        var(--md-comp-menu-item-selected-label-text-color) 8%,
+        var(--md-comp-menu-item-selected-label-text-color) state-opacity("hover"),
         var(--md-comp-menu-item-selected-container-color)
       );
     }
@@ -457,7 +457,7 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
       > :is(a, button, #{$icon-label}) {
       background-color: color-mix(
         in oklab,
-        var(--md-comp-menu-item-selected-label-text-color) 10%,
+        var(--md-comp-menu-item-selected-label-text-color) state-opacity("pressed"),
         var(--md-comp-menu-item-selected-container-color)
       );
     }
@@ -585,7 +585,7 @@ menu[id] > li:focus-visible,
 menu[id] > li > ul[role="group"] > li:focus-visible {
   background-color: color-mix(
     in oklab,
-    var(--md-comp-menu-item-label-text-color) 10%,
+    var(--md-comp-menu-item-label-text-color) state-opacity("focus"),
     transparent
   );
 }
@@ -600,7 +600,7 @@ menu[id].grouped
   border-radius: var(--md-comp-menu-item-container-shape);
   background-color: color-mix(
     in oklab,
-    var(--md-comp-menu-item-label-text-color) 10%,
+    var(--md-comp-menu-item-label-text-color) state-opacity("focus"),
     transparent
   );
 }
@@ -626,8 +626,8 @@ menu[id].grouped
   // The trigger stays in its pressed state for as long as its menu is open.
   &[aria-expanded="true"] {
     background-image: linear-gradient(
-      color-mix(in oklab, currentcolor 10%, transparent),
-      color-mix(in oklab, currentcolor 10%, transparent)
+      color-mix(in oklab, currentcolor state-opacity("pressed"), transparent),
+      color-mix(in oklab, currentcolor state-opacity("pressed"), transparent)
     );
   }
 }

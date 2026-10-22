@@ -1,4 +1,3 @@
-import { InitElements, InitElement } from '../core/component';
 import { LineChart, LineChartOptions } from './lineChart';
 
 export type HeatmapChartOptions = LineChartOptions;
@@ -47,15 +46,6 @@ export class HeatmapChart extends LineChart {
 
   protected get _key() {
     return 'Expressive_HeatmapChart';
-  }
-
-  static init(el: HTMLElement, options?: Partial<HeatmapChartOptions>): HeatmapChart;
-  static init(els: InitElements<InitElement>, options?: Partial<HeatmapChartOptions>): HeatmapChart[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<HeatmapChartOptions> = {}
-  ): HeatmapChart | HeatmapChart[] {
-    return super.init(els as HTMLElement, options) as HeatmapChart | HeatmapChart[];
   }
 
   static getInstance(el: HTMLElement): HeatmapChart {

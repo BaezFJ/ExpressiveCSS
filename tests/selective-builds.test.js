@@ -337,5 +337,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the Autocomplete no-results row: 84,585 gzip bytes (+72).
   // Reviewed the Timepicker seconds field and the narrower three-field row: 84,659 gzip bytes (+74).
   // Reviewed disabled Timepicker ticks outside minTime and maxTime: 84,671 gzip bytes (+14 from 84,657 at the base).
-  assert.ok(sizes(css).gzip <= 84671, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the Sass cleanup: shared header, label and trend-arrow mixins, state-opacity() for menu, navbar and slider layers: 84,667 gzip bytes (-4).
+  assert.ok(sizes(css).gzip <= 84667, `CSS gzip: ${sizes(css).gzip}`);
 });

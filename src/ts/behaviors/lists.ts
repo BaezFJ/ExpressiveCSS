@@ -14,11 +14,9 @@ const STEPS = { ArrowUp: -1, ArrowDown: 1 };
  * with the arrows, and other lists are left alone.
  */
 export class Lists {
-  private static _initialized = false;
-
+  // A second Init adds nothing: addEventListener ignores a listener it has.
   static Init() {
-    if (Lists._initialized || typeof document === 'undefined') return;
-    Lists._initialized = true;
+    if (typeof document === 'undefined') return;
     document.addEventListener('keydown', Lists._onKeydown);
   }
 

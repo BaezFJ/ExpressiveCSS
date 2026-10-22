@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 export interface ScrollSpyOptions extends BaseOptions {
   /**
@@ -50,13 +50,8 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
   private _offsetPriority: string;
 
   constructor(el: HTMLElement, options: Partial<ScrollSpyOptions>) {
-    super(el, options, ScrollSpy);
+    super(el, options);
     this.el['Expressive_ScrollSpy'] = this;
-
-    this.options = {
-      ...ScrollSpy.defaults,
-      ...options
-    };
 
     this._offset = this.el.style.getPropertyValue('--md-comp-scrollspy-offset');
     this._offsetPriority = this.el.style.getPropertyPriority('--md-comp-scrollspy-offset');
@@ -81,15 +76,6 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
 
   static get defaults(): ScrollSpyOptions {
     return _defaults;
-  }
-
-  static init(el: HTMLElement, options?: Partial<ScrollSpyOptions>): ScrollSpy;
-  static init(els: InitElements<InitElement>, options?: Partial<ScrollSpyOptions>): ScrollSpy[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<ScrollSpyOptions> = {}
-  ): ScrollSpy | ScrollSpy[] {
-    return super.init(els, options, ScrollSpy);
   }
 
   static getInstance(el: HTMLElement): ScrollSpy {

@@ -1,5 +1,5 @@
-import { InitElements, InitElement } from '../core/component';
-import { LineChart, LineChartOptions, polarPoint, Series, svgNode as node } from './lineChart';
+import { LineChart, LineChartOptions, polarPoint, Series } from './lineChart';
+import { svgNode as node } from '../core/utils';
 
 export type RadarChartOptions = LineChartOptions;
 
@@ -48,15 +48,6 @@ export class RadarChart extends LineChart {
 
   protected get _circular() {
     return true;
-  }
-
-  static init(el: HTMLElement, options?: Partial<RadarChartOptions>): RadarChart;
-  static init(els: InitElements<InitElement>, options?: Partial<RadarChartOptions>): RadarChart[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<RadarChartOptions> = {}
-  ): RadarChart | RadarChart[] {
-    return super.init(els as HTMLElement, options) as RadarChart | RadarChart[];
   }
 
   static getInstance(el: HTMLElement): RadarChart {

@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 export interface ParticlesOptions extends BaseOptions {
   /**
@@ -88,9 +88,8 @@ export class Particles extends Component<ParticlesOptions> {
   private _visibility: IntersectionObserver | null = null;
 
   constructor(el: HTMLElement, options: Partial<ParticlesOptions>) {
-    super(el, options, Particles);
+    super(el, options);
     this.el['Expressive_Particles'] = this;
-    this.options = { ...Particles.defaults, ...options };
     this._ctx = this.el.getContext('2d');
     if (!this._ctx) return;
     this._style = getComputedStyle(this.el);
@@ -128,15 +127,6 @@ export class Particles extends Component<ParticlesOptions> {
 
   static get defaults(): ParticlesOptions {
     return _defaults;
-  }
-
-  static init(el: HTMLElement, options?: Partial<ParticlesOptions>): Particles;
-  static init(els: InitElements<InitElement>, options?: Partial<ParticlesOptions>): Particles[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<ParticlesOptions> = {}
-  ): Particles | Particles[] {
-    return super.init(els, options, Particles);
   }
 
   static getInstance(el: HTMLElement): Particles {

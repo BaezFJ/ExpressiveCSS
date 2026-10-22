@@ -1,6 +1,6 @@
 import { readBoundedRegularFile } from './lib/bounded-file.mjs';
-export { readBoundedRegularFile } from './lib/bounded-file.mjs';
 import { readFileSync } from 'node:fs';
+import { parseArgs } from 'node:util';
 import { cp, mkdir, mkdtemp, realpath, rm, writeFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { tmpdir } from 'node:os';
@@ -1114,18 +1114,6 @@ export function redactValue(value, parentKey = '') {
   return output;
 }
 
-function parseArguments(argv) {
-  const parsed = { adapterArgs: [] };
-  for (const argument of argv) {
-    if (argument.startsWith('--adapter-arg=')) parsed.adapterArgs.push(argument.slice('--adapter-arg='.length));
-    else if (argument.startsWith('--')) {
-      const [key, ...rest] = argument.slice(2).split('=');
-      parsed[key] = rest.join('=') || true;
-    }
-  }
-  return parsed;
-}
-
 export async function materializeProjectFixture(fixtureId, repositoryRoot = DEFAULT_ROOT) {
   const fixture = PROJECT_FIXTURES[fixtureId];
   if (!fixture) throw new Error(`Unknown project fixture ${fixtureId}`);
@@ -1412,13 +1400,13 @@ export async function runEvaluations({
 }
 
 async function main() {
-  const args = parseArguments(process.argv.slice(2));
+  const { values: args } = parseArgs({ strict: false, allowPositionals: true, options: { 'adapter-arg': { type: 'string', multiple: true, default: [] } } });
   const casesPath = path.resolve(args.cases || path.join(DEFAULT_ROOT, 'tests/fixtures/expressivecss-skill-evals/cases.json'));
   const report = await runEvaluations({
     casesPath,
     responsesPath: typeof args.responses === 'string' ? path.resolve(args.responses) : null,
     adapter: typeof args.adapter === 'string' ? args.adapter : null,
-    adapterArgs: args.adapterArgs,
+    adapterArgs: args['adapter-arg'],
     adapterTimeoutMs: typeof args['adapter-timeout-ms'] === 'string'
       ? Number(args['adapter-timeout-ms'])
       : DEFAULT_ADAPTER_TIMEOUT_MS,

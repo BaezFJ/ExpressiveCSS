@@ -1,6 +1,6 @@
 import { Utils } from '../core/utils';
 import { Autocomplete, AutocompleteOptions } from './autocomplete';
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 export interface ChipData {
   /**
@@ -186,13 +186,9 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   constructor(el: HTMLElement, options: Partial<ChipsOptions>) {
-    super(el, options, Chips);
+    super(el, options);
     this.el['Expressive_Chips'] = this;
 
-    this.options = {
-      ...Chips.defaults,
-      ...options
-    };
     // Spreading options over the defaults replaces the i18n object wholesale,
     // so passing one string would drop the rest. Same fix as Datepicker.
     if (options?.i18n) this.options.i18n = { ...Chips.defaults.i18n, ...options.i18n };
@@ -228,30 +224,6 @@ export class Chips extends Component<ChipsOptions> {
 
   static get defaults() {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of Chips.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLElement, options?: Partial<ChipsOptions>): Chips;
-  /**
-   * Initializes instances of Chips.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(els: InitElements<InitElement>, options?: Partial<ChipsOptions>): Chips[];
-  /**
-   * Initializes instances of Chips.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<ChipsOptions> = {}
-  ): Chips | Chips[] {
-    return super.init(els, options, Chips);
   }
 
   static getInstance(el: HTMLElement): Chips {
@@ -463,7 +435,7 @@ export class Chips extends Component<ChipsOptions> {
 
   /** The arrow that points back towards the first chip, which in RTL is Right. */
   private static _backKey(el: Element) {
-    return getComputedStyle(el).direction === 'rtl' ? Utils.keys.ARROW_RIGHT : Utils.keys.ARROW_LEFT;
+    return getComputedStyle(el).direction === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
   }
 
   static _handleChipsKeydown(e: KeyboardEvent) {
@@ -476,12 +448,12 @@ export class Chips extends Component<ChipsOptions> {
     const currChips: Chips = chips['Expressive_Chips'];
     if (!currChips) return; // .chips markup without an instance behind it
 
-    if (e.key === Utils.keys.BACKSPACE || e.key === Utils.keys.DELETE) {
+    if (e.key === 'Backspace' || e.key === 'Delete') {
       const index = currChips._chips.indexOf((e.target as HTMLElement).closest('.chip'));
       if (index < 0) return;
       e.preventDefault();
       currChips._deleteChip(index, 'previous');
-    } else if (e.key === Utils.keys.ARROW_LEFT || e.key === Utils.keys.ARROW_RIGHT) {
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       // Move from the chip that has focus, the same one Backspace deletes.
       const current = (e.target as HTMLElement).closest<HTMLElement>('.chip') ?? currChips._selectedChip;
       const index = currChips._chips.indexOf(current);
@@ -523,7 +495,7 @@ export class Chips extends Component<ChipsOptions> {
   _handleInputKeydown = (e: KeyboardEvent) => {
     // Enter that confirms an IME composition is not a request to add a chip.
     if (Utils.isComposing(e)) return;
-    if (e.key === Utils.keys.ENTER) {
+    if (e.key === 'Enter') {
       // Override enter if autocompleting.
       if (this.hasAutocomplete && this.autocomplete?.isOpen &&
         this.autocomplete.container.querySelector('[role="option"]')) {
@@ -539,7 +511,7 @@ export class Chips extends Component<ChipsOptions> {
     } else if (
       this._input.value === '' &&
       this.chipsData.length &&
-      [Utils.keys.BACKSPACE, Chips._backKey(this.el)].includes(e.key)
+      ['Backspace', Chips._backKey(this.el)].includes(e.key)
     ) {
       e.preventDefault();
       this.selectChip(this.chipsData.length - 1);

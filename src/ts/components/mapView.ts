@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 /** `[longitude, latitude]`, MapLibre's order. */
 export type LngLat = [number, number];
@@ -181,12 +181,8 @@ export class MapView extends Component<MapViewOptions> {
   };
 
   constructor(el: HTMLElement, options: Partial<MapViewOptions>) {
-    super(el, options, MapView);
+    super(el, options);
     this.el['Expressive_MapView'] = this;
-    this.options = {
-      ...MapView.defaults,
-      ...options
-    };
     const lib = this.options.maplibregl;
     if (!lib) {
       console.error('MapView needs the maplibre-gl module in options.maplibregl.');
@@ -235,30 +231,6 @@ export class MapView extends Component<MapViewOptions> {
 
   static get defaults(): MapViewOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of MapView.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLElement, options?: Partial<MapViewOptions>): MapView;
-  /**
-   * Initializes instances of MapView.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(els: InitElements<InitElement>, options?: Partial<MapViewOptions>): MapView[];
-  /**
-   * Initializes instances of MapView.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<MapViewOptions> = {}
-  ): MapView | MapView[] {
-    return super.init(els, options, MapView);
   }
 
   static getInstance(el: HTMLElement): MapView {

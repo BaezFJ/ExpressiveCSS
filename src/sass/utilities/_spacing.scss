@@ -10,8 +10,6 @@ $spacing-directions: (
   "top": "t", "right": "r", "bottom": "b", "left": "l",
   "inline-start": "s", "inline-end": "e"
 );
-$spacing-horizontal: "x";
-$spacing-vertical: "y";
 $spacing-values: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "5": 1.5rem, "6": 3rem, "auto": auto);
 
 // $prefix is "" for the base classes, or an escaped window size such as
@@ -35,19 +33,13 @@ $spacing-values: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "5
             }
           }
         }
-        // x spacing
-        @if $spacing-horizontal != null{
-           .#{$prefix}#{$shortcut}#{$spacing-horizontal}-#{$name}{
-             #{$property}-left: $value !important;
-             #{$property}-right: $value !important;
-           }
+        .#{$prefix}#{$shortcut}x-#{$name}{
+          #{$property}-left: $value !important;
+          #{$property}-right: $value !important;
         }
-        // y spacing
-        @if $spacing-vertical != null{
-          .#{$prefix}#{$shortcut}#{$spacing-vertical}-#{$name}{
-            #{$property}-top: $value !important;
-            #{$property}-bottom: $value !important;
-          }
+        .#{$prefix}#{$shortcut}y-#{$name}{
+          #{$property}-top: $value !important;
+          #{$property}-bottom: $value !important;
         }
       }
     }

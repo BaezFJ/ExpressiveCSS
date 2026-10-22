@@ -1,6 +1,6 @@
 import { Utils } from '../core/utils';
 import { Menu, MenuOptions } from './menu';
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 export interface AutocompleteData {
   /**
@@ -194,14 +194,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   menuItems: AutocompleteData[];
 
   constructor(el: HTMLInputElement, options: Partial<AutocompleteOptions>) {
-    super(el, options, Autocomplete);
+    super(el, options);
     this.el['Expressive_Autocomplete'] = this;
-
-    this.options = {
-      ...Autocomplete.defaults,
-      ...options,
-      i18n: { ...Autocomplete.defaults.i18n, ...options?.i18n }
-    };
+    this.options.i18n = { ...Autocomplete.defaults.i18n, ...options?.i18n };
 
     this.isOpen = false;
     this.count = 0;
@@ -217,33 +212,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   static get defaults(): AutocompleteOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of Autocomplete.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLInputElement, options?: Partial<AutocompleteOptions>): Autocomplete;
-  /**
-   * Initializes instances of Autocomplete.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: InitElements<HTMLInputElement | InitElement>,
-    options?: Partial<AutocompleteOptions>
-  ): Autocomplete[];
-  /**
-   * Initializes instances of Autocomplete.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLInputElement | InitElements<HTMLInputElement | InitElement>,
-    options: Partial<AutocompleteOptions> = {}
-  ): Autocomplete | Autocomplete[] {
-    return super.init(els, options, Autocomplete);
   }
 
   static getInstance(el: HTMLElement): Autocomplete {
@@ -495,7 +463,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   _handleInputKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {
     Autocomplete._keydown = true;
-    if (e.key === Utils.keys.ESC || e.key === 'Tab') {
+    if (e.key === 'Escape' || e.key === 'Tab') {
       this._dismiss(e);
       return;
     }
@@ -503,7 +471,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     const options = this._options();
     const numItems = options.length;
     // select element on Enter
-    if (e.key === Utils.keys.ENTER && this.activeIndex >= 0) {
+    if (e.key === 'Enter' && this.activeIndex >= 0) {
       const liElement = options[this.activeIndex];
       if (liElement) {
         this._choose(liElement);
@@ -512,15 +480,15 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       return;
     }
     // Capture up and down key
-    if (e.key === Utils.keys.ARROW_UP || e.key === Utils.keys.ARROW_DOWN) {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       e.preventDefault();
       // A list that is already opening keeps its rendered results.
       if (!this.menu.isOpen && this._openTimer === undefined) {
         this.open();
         return;
       }
-      if (e.key === Utils.keys.ARROW_UP && this.activeIndex > 0) this.activeIndex--;
-      if (e.key === Utils.keys.ARROW_DOWN && this.activeIndex < numItems - 1)
+      if (e.key === 'ArrowUp' && this.activeIndex > 0) this.activeIndex--;
+      if (e.key === 'ArrowDown' && this.activeIndex < numItems - 1)
         this.activeIndex++;
       this._setActive(null);
       if (this.activeIndex >= 0) {
@@ -536,7 +504,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   });
 
   private _dismiss(e: KeyboardEvent) {
-    if (e.key === Utils.keys.ESC) {
+    if (e.key === 'Escape') {
       // Take the key only when it closes something, or a surrounding <dialog>
       // would cancel too. A dismissed list stays shut for late results.
       if (this.menu.isOpen || this._openTimer !== undefined) e.preventDefault();

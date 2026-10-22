@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 import { Utils } from '../core/utils';
 
 export interface KeypadOptions extends BaseOptions {
@@ -133,9 +133,9 @@ export class Keypad extends Component<KeypadOptions> {
   private _fields = new Set<Field>();
 
   constructor(el: HTMLElement, options: Partial<KeypadOptions>) {
-    super(el, options, Keypad);
+    super(el, options);
     this.el['Expressive_Keypad'] = this;
-    this.options = { ...Keypad.defaults, ...options, i18n: { ...Keypad.defaults.i18n, ...options.i18n } };
+    this.options.i18n = { ...Keypad.defaults.i18n, ...options.i18n };
     this._root = null;
     instances.add(this);
     this._attach();
@@ -168,15 +168,6 @@ export class Keypad extends Component<KeypadOptions> {
 
   static get defaults(): KeypadOptions {
     return _defaults;
-  }
-
-  static init(el: HTMLElement, options?: Partial<KeypadOptions>): Keypad;
-  static init(els: InitElements<InitElement>, options?: Partial<KeypadOptions>): Keypad[];
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<KeypadOptions> = {}
-  ): Keypad | Keypad[] {
-    return super.init(els, options, Keypad);
   }
 
   static getInstance(el: HTMLElement): Keypad {

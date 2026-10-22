@@ -8,10 +8,14 @@
  * answerable at all.
  *
  * It lives under scripts/ rather than tests/ because a test file cannot be
- * imported without running its tests.
+ * imported without running its tests. The MCP server ships a generated copy
+ * and walks the hits itself, so it can stop early and report locations.
  */
 
-import { JSDOM } from 'jsdom';
+import { createRequire } from 'node:module';
+
+// Loaded on first parse: jsdom takes ~0.3 s, and most MCP server starts never inspect markup.
+const parse = (html) => new (createRequire(import.meta.url)('jsdom').JSDOM)(html).window.document;
 
 export const FORBID_KINDS = ['forbid', 'forbid-composite-roles'];
 
@@ -44,7 +48,7 @@ export function enforcedRules(data) {
  * here: a control falls back to its own text, a landmark does not. A <nav>
  * full of links is not named by the links in it.
  */
-function authoredName(el, document) {
+export function authoredName(el, document) {
   const label = el.getAttribute('aria-label');
   if (label && label.trim()) return label.trim();
   const ref = el.getAttribute('aria-labelledby');
@@ -79,53 +83,55 @@ function accessibleName(el, document) {
  * nothing. Whole pages go through `checkPage`.
  */
 export function violations(html, rules, compositeRoles, opts) {
-  const { document } = new JSDOM(`<!doctype html><body>${html}</body>`).window;
-  return violationsIn(document, rules, compositeRoles, opts);
+  return violationsIn(parse(`<!doctype html><body>${html}</body>`), rules, compositeRoles, opts);
+}
+
+const idrefTargets = (rule, el, document) => {
+  const container = rule.container ? el.closest(rule.container) : document;
+  return new Set(container?.querySelectorAll(rule.targetSelector));
+};
+
+const ownedBy = (rule, el) => (candidate) => {
+  if (candidate.closest(rule.ownerSelector) !== el) return false;
+  const excludedAncestor = rule.excludeAncestorSelector && candidate.closest(rule.excludeAncestorSelector);
+  return !excludedAncestor || !el.contains(excludedAncestor);
+};
+
+/** Per rule kind: does this hit break the rule? */
+const BROKEN = {
+  forbid: () => true,
+  'forbid-composite-roles': () => true,
+  'require-attr': (rule, el) => {
+    const v = el.getAttribute(rule.attr);
+    return rule.equals ? v !== rule.equals : v === null || v === '';
+  },
+  'require-idref': (rule, el, document) => {
+    const ids = (el.getAttribute(rule.attr) ?? '').trim().split(/\s+/).filter(Boolean);
+    const targets = idrefTargets(rule, el, document);
+    return !ids.length || !ids.every((id) => targets.has(document.getElementById(id)));
+  },
+  'require-owned-descendant': (rule, el) => ![...el.querySelectorAll(rule.descendantSelector)].some(ownedBy(rule, el)),
+  // The one thing a selector cannot ask. "Has no accessible name" depends
+  // on text *nodes*, and CSS cannot see them: `:has(> .icon:only-child)`
+  // counts elements, so it flags <a><span icon/>Five</a> - a link that is
+  // perfectly well named. This reads the content instead.
+  'require-accessible-name': (rule, el, document) => !accessibleName(el, document),
+};
+
+/** The predicate for one rule: `(element, document) => true` when that hit breaks it. */
+export function ruleBreach(rule) {
+  const broken = BROKEN[rule.kind];
+  if (!broken) throw new Error(`unknown rule kind: ${rule.kind}`);
+  return (el, document) => broken(rule, el, document);
 }
 
 export function violationsIn(document, rules, compositeRoles, { fragmentSafe = false } = {}) {
   const found = [];
   for (const rule of rules) {
     if (fragmentSafe && !rule.fragmentSafe) continue;
-    const hits = [...document.querySelectorAll(expandedSelector(rule, compositeRoles))];
-    if (FORBID_KINDS.includes(rule.kind)) {
-      for (const el of hits) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
-    } else if (rule.kind === 'require-attr') {
-      for (const el of hits) {
-        const v = el.getAttribute(rule.attr);
-        const ok = rule.equals ? v === rule.equals : v !== null && v !== '';
-        if (!ok) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
-      }
-    } else if (rule.kind === 'require-idref') {
-      for (const el of hits) {
-        const ids = (el.getAttribute(rule.attr) ?? '').trim().split(/\s+/).filter(Boolean);
-        const container = rule.container ? el.closest(rule.container) : document;
-        const targets = container
-          ? new Set(container.querySelectorAll(rule.targetSelector))
-          : new Set();
-        const ok = ids.length > 0 && ids.every((id) => targets.has(document.getElementById(id)));
-        if (!ok) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
-      }
-    } else if (rule.kind === 'require-owned-descendant') {
-      for (const el of hits) {
-        const ok = [...el.querySelectorAll(rule.descendantSelector)].some((candidate) => {
-          if (candidate.closest(rule.ownerSelector) !== el) return false;
-          if (!rule.excludeAncestorSelector) return true;
-          const excludedAncestor = candidate.closest(rule.excludeAncestorSelector);
-          return !excludedAncestor || !el.contains(excludedAncestor);
-        });
-        if (!ok) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
-      }
-    } else if (rule.kind === 'require-accessible-name') {
-      // The one thing a selector cannot ask. "Has no accessible name" depends
-      // on text *nodes*, and CSS cannot see them: `:has(> .icon:only-child)`
-      // counts elements, so it flags <a><span icon/>Five</a> - a link that is
-      // perfectly well named. This reads the content instead.
-      for (const el of hits) {
-        if (!accessibleName(el, document)) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
-      }
-    } else {
-      throw new Error(`unknown rule kind: ${rule.kind}`);
+    const breaks = ruleBreach(rule);
+    for (const el of document.querySelectorAll(expandedSelector(rule, compositeRoles))) {
+      if (breaks(el, document)) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
     }
   }
   return found;
@@ -159,7 +165,7 @@ function duplicateLandmarkNames(document) {
  * `<head>` survive, so a rule may be written against either.
  */
 export function checkPage(html, rules, compositeRoles) {
-  const { document } = new JSDOM(html).window;
+  const document = parse(html);
   return {
     violations: violationsIn(document, rules, compositeRoles),
     duplicateNames: duplicateLandmarkNames(document)

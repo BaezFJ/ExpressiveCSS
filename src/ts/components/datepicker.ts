@@ -1,6 +1,6 @@
 import { Utils } from '../core/utils';
 import { FormSelect } from './select';
-import { BaseOptions, Component, I18nOptions, InitElements, InitElement } from '../core/component';
+import { BaseOptions, Component, I18nOptions } from '../core/component';
 import { DisplayPlugin, ModalDisplayPlugin, createDisplayPlugin, hideModal } from '../plugins/modalDisplayPlugin';
 
 export interface DateI18nOptions extends I18nOptions {
@@ -407,8 +407,6 @@ export class Datepicker extends Component<DatepickerOptions> {
   // Counts selections, so a callback that selects again silences the stale event.
   private _selection = 0;
   private _resetTimer: ReturnType<typeof setTimeout>;
-  /** Rows renderRow has already checked, so renderBody does not parse them again. */
-  private _checkedRows = new Set<string>();
   private footer: HTMLElement;
   /** Nesting depth of {@link _batchDraws}; > 0 means draws are being collected. */
   private _drawDepth = 0;
@@ -422,14 +420,9 @@ export class Datepicker extends Component<DatepickerOptions> {
   static _template: string;
 
   constructor(el: HTMLInputElement, options: Partial<DatepickerOptions>) {
-    super(el, options, Datepicker);
-    this.el['Expressive_Datepicker'] = this;
     options = withLocale(el, options);
-
-    this.options = {
-      ...Datepicker.defaults,
-      ...options
-    };
+    super(el, options);
+    this.el['Expressive_Datepicker'] = this;
 
     // make sure i18n defaults are not lost when only few i18n option properties are passed
     if (!!options && options.hasOwnProperty('i18n') && typeof options.i18n === 'object') {
@@ -505,33 +498,6 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   /**
-   * Initializes instance of Datepicker.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLInputElement, options?: Partial<DatepickerOptions>): Datepicker;
-  /**
-   * Initializes instances of Datepicker.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: InitElements<HTMLInputElement | InitElement>,
-    options?: Partial<DatepickerOptions>
-  ): Datepicker[];
-  /**
-   * Initializes instances of Datepicker.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLInputElement | InitElements<HTMLInputElement | InitElement>,
-    options: Partial<DatepickerOptions> = {}
-  ): Datepicker | Datepicker[] {
-    return super.init(els, options, Datepicker);
-  }
-
-  /**
    * Escape a value for interpolation into the calendar markup.
    *
    * `draw()` assembles the calendar as an HTML string, so every value that is
@@ -590,17 +556,6 @@ export class Datepicker extends Component<DatepickerOptions> {
    */
   static _setToStartOfDay(date) {
     if (Datepicker._isDate(date)) date.setHours(0, 0, 0, 0);
-  }
-
-  static _getDaysInMonth(year, month) {
-    return [31, Datepicker._isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][
-      month
-    ];
-  }
-
-  static _isLeapYear(year) {
-    // solution by Matti Virkkunen: http://stackoverflow.com/a/4881951
-    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
   }
 
   static _compareDates(a, b) {
@@ -1007,7 +962,8 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   render(year, month, randId) {
     const now = new Date(),
-      days = Datepicker._getDaysInMonth(year, month),
+      // Day 0 of the next month is the last of this one.
+      days = new Date(year, month + 1, 0).getDate(),
       data = [];
     let before = new Date(year, month, 1).getDay(),
       row = [];
@@ -1022,7 +978,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       nextMonth = month === 11 ? 0 : month + 1,
       yearOfPreviousMonth = month === 0 ? year - 1 : year,
       yearOfNextMonth = month === 11 ? year + 1 : year,
-      daysInPreviousMonth = Datepicker._getDaysInMonth(yearOfPreviousMonth, previousMonth);
+      daysInPreviousMonth = new Date(year, month, 0).getDate();
     const cells = Math.ceil((days + before) / 7) * 7;
     for (let i = 0, r = 0; i < cells; i++) {
       const day = new Date(year, month, 1 + (i - before)),
@@ -1141,7 +1097,6 @@ export class Datepicker extends Component<DatepickerOptions> {
       '">' +
       Datepicker._calendarMarkup((isRTL ? days.reverse() : days).join(''), 'tr') +
       '</tr>';
-    this._checkedRows.add(row);
     return row;
   }
 
@@ -1173,7 +1128,6 @@ export class Datepicker extends Component<DatepickerOptions> {
     const html = rows.join('');
     // Always sanitize row markup before insertion to avoid propagating unsafe library input.
     const safeHtml = Datepicker._calendarMarkup(html, 'tbody');
-    this._checkedRows.clear();
     return '<tbody>' + safeHtml + '</tbody>';
   }
 
@@ -1565,7 +1519,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   _handleInputKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {
-    if (e.key === Utils.keys.ENTER) {
+    if (e.key === 'Enter') {
       e.preventDefault();
       this._batchDraws(() => {
         this.setDateFromInput(e.target as HTMLInputElement);

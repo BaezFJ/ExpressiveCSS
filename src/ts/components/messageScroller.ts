@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 export interface MessageScrollerOptions extends BaseOptions {
   /**
@@ -78,12 +78,8 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
   private _mutationObserver: MutationObserver | null = null;
 
   constructor(el: HTMLElement, options: Partial<MessageScrollerOptions>) {
-    super(el, options, MessageScroller);
+    super(el, options);
     this.el['Expressive_MessageScroller'] = this;
-    this.options = {
-      ...MessageScroller.defaults,
-      ...options
-    };
     this.viewport = el.querySelector(':scope > .message-scroller-viewport');
     this.button = el.querySelector(':scope > .message-scroller-button');
     if (!this.viewport) {
@@ -112,33 +108,6 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
 
   static get defaults(): MessageScrollerOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of MessageScroller.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLElement, options?: Partial<MessageScrollerOptions>): MessageScroller;
-  /**
-   * Initializes instances of MessageScroller.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: InitElements<InitElement>,
-    options?: Partial<MessageScrollerOptions>
-  ): MessageScroller[];
-  /**
-   * Initializes instances of MessageScroller.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<MessageScrollerOptions> = {}
-  ): MessageScroller | MessageScroller[] {
-    return super.init(els, options, MessageScroller);
   }
 
   static getInstance(el: HTMLElement): MessageScroller {

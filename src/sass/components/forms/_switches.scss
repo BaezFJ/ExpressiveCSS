@@ -25,16 +25,8 @@
   --md-comp-switch-handle-unselected: 16px;
   --md-comp-switch-handle-selected: 24px;
 
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 48px;
-  margin: 0;
-  cursor: pointer;
-  user-select: none;
   -webkit-tap-highlight-color: transparent;
-  color: var(--md-sys-color-on-surface);
-  @include typescale("body-large");
+  @include selection-control-label(inline-flex);
 }
 
 // Paint the switch on the checkbox. The class goes on the <label> that wraps

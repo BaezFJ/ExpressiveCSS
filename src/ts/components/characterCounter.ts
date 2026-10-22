@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Component, BaseOptions } from '../core/component';
 
 const _defaults = Object.freeze({});
 
@@ -14,13 +14,8 @@ export class CharacterCounter extends Component<BaseOptions> {
   isValidLength: boolean;
 
   constructor(el: HTMLInputElement | HTMLTextAreaElement, options: Partial<BaseOptions>) {
-    super(el, {}, CharacterCounter);
+    super(el, options);
     this.el['Expressive_CharacterCounter'] = this;
-
-    this.options = {
-      ...CharacterCounter.defaults,
-      ...options
-    };
 
     this.isInvalid = false;
     this.isValidLength = false;
@@ -33,33 +28,6 @@ export class CharacterCounter extends Component<BaseOptions> {
 
   static get defaults(): BaseOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of CharacterCounter.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: InputElement, options?: Partial<BaseOptions>): CharacterCounter;
-  /**
-   * Initializes instances of CharacterCounter.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: InitElements<InputElement | InitElement>,
-    options?: Partial<BaseOptions>
-  ): CharacterCounter[];
-  /**
-   * Initializes instances of CharacterCounter.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: InputElement | InitElements<InputElement | InitElement>,
-    options: Partial<BaseOptions> = {}
-  ): CharacterCounter | CharacterCounter[] {
-    return super.init(els, options, CharacterCounter);
   }
 
   static getInstance(el: InputElement): CharacterCounter {

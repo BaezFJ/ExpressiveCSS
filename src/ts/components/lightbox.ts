@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { BaseOptions, Component, InitElements, InitElement } from '../core/component';
+import { BaseOptions, Component } from '../core/component';
 
 export interface LightboxOptions extends BaseOptions {
   /**
@@ -79,13 +79,8 @@ export class Lightbox extends Component<LightboxOptions> {
   private _phase = 0;
 
   constructor(el: HTMLElement, options: Partial<LightboxOptions>) {
-    super(el, options, Lightbox);
+    super(el, options);
     this.el['Expressive_Lightbox'] = this;
-
-    this.options = {
-      ...Lightbox.defaults,
-      ...options
-    };
 
     this.overlayActive = false;
     this.doneAnimating = true;
@@ -106,30 +101,6 @@ export class Lightbox extends Component<LightboxOptions> {
 
   static get defaults(): LightboxOptions {
     return _defaults;
-  }
-
-  /**
-   * Initializes instance of Lightbox.
-   * @param el HTML element.
-   * @param options Component options.
-   */
-  static init(el: HTMLElement, options?: Partial<LightboxOptions>): Lightbox;
-  /**
-   * Initializes instances of Lightbox.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(els: InitElements<InitElement>, options?: Partial<LightboxOptions>): Lightbox[];
-  /**
-   * Initializes instances of Lightbox.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(
-    els: HTMLElement | InitElements<InitElement>,
-    options: Partial<LightboxOptions> = {}
-  ): Lightbox | Lightbox[] {
-    return super.init(els, options, Lightbox);
   }
 
   static getInstance(el: HTMLElement): Lightbox {
@@ -223,7 +194,7 @@ export class Lightbox extends Component<LightboxOptions> {
   }
 
   private _handleLightboxKeypress = (e: KeyboardEvent) => {
-    if (this._trigger === this.el && (e.key === Utils.keys.ENTER || e.key === ' ')) {
+    if (this._trigger === this.el && (e.key === 'Enter' || e.key === ' ')) {
       e.preventDefault();
       this._handleLightboxToggle();
     }
@@ -240,7 +211,7 @@ export class Lightbox extends Component<LightboxOptions> {
   };
 
   private _handleWindowEscape = (e: KeyboardEvent) => {
-    if (e.key === Utils.keys.ESC) this.close();
+    if (e.key === 'Escape') this.close();
   };
 
   // The image zooms in place, not in a modal, so Tab would reach the page
@@ -305,14 +276,14 @@ export class Lightbox extends Component<LightboxOptions> {
       this.el.style.height = this.newHeight + 'px';
       this.el.style.width = this.newWidth + 'px';
       this.el.style.left =
-        Utils.getDocumentScrollLeft() +
+        window.scrollX +
         this.windowWidth / 2 -
         placeholderOffset.left -
         this.newWidth / 2 +
         'px';
 
       this.el.style.top =
-        Utils.getDocumentScrollTop() +
+        window.scrollY +
         this.windowHeight / 2 -
         placeholderOffset.top -
         this.newHeight / 2 +
