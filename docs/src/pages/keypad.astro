@@ -3,6 +3,7 @@ import DocsLayout from "../layouts/DocsLayout.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import OptionsTable from "../components/api/OptionsTable.astro";
+import TokenTable from "../components/api/TokenTable.astro";
 import { defineSections } from "../lib/sections";
 
 const S = defineSections([
@@ -286,9 +287,7 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
         </ul>
   </Section>
   <Section {...S.tokens}>
-        <table class="striped">
-          <thead><tr><th>Token</th><th>Default</th></tr></thead>
-          <tbody>
+        <TokenTable>
             <tr><td><code>--md-comp-keypad-key-size</code></td><td>72px</td></tr>
             <tr><td><code>--md-comp-keypad-gap</code></td><td>12px</td></tr>
             <tr><td><code>--md-comp-keypad-key-color</code></td><td><code>surface-container-highest</code></td></tr>
@@ -303,8 +302,7 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
             <tr><td><code>--md-comp-keyboard-key-shape</code></td><td>12px</td></tr>
             <tr><td><code>--md-comp-keyboard-container-color</code></td><td><code>surface-container</code></td></tr>
             <tr><td><code>--md-comp-keyboard-container-shape</code></td><td>16px</td></tr>
-          </tbody>
-        </table>
+        </TokenTable>
   </Section>
   <Section {...S.options}>
         <OptionsTable>

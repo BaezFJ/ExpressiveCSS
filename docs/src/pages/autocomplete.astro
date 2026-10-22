@@ -4,6 +4,7 @@ import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import OptionsTable from "../components/api/OptionsTable.astro";
 import PropertiesTable from "../components/api/PropertiesTable.astro";
+import InstanceNote from "../components/api/InstanceNote.astro";
 import { defineSections } from "../lib/sections";
 import { route } from "../lib/catalogue";
 
@@ -239,13 +240,7 @@ onCreate: function(text, autocomplete) {
   </Section>
 
   <Section {...S.methods}>
-        <blockquote>
-          Call all methods on the plugin instance. You can get the instance like this:
-        </blockquote>
-<Code code={`
-const instance = Expressive.Autocomplete.getInstance(elem);
-instance.open();
-`} />
+        <InstanceNote plugin="Autocomplete" />
 
         <h5 class="light">.open();</h5>
         <p>Open the suggestion menu if the input meets <code>minLength</code>.</p>
