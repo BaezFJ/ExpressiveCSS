@@ -1301,23 +1301,25 @@ export async function runEvaluations({
 }
 
 async function main() {
-  const { values: args } = parseArgs({ strict: false, allowPositionals: true, options: { 'adapter-arg': { type: 'string', multiple: true, default: [] } } });
-  const casesPath = path.resolve(args.cases || path.join(DEFAULT_ROOT, 'tests/fixtures/expressivecss-skill-evals/cases.json'));
+  const string = { type: 'string' };
+  const { values: args } = parseArgs({ options: {
+    cases: string, responses: string, adapter: string, 'adapter-arg': { type: 'string', multiple: true, default: [] },
+    'adapter-timeout-ms': string, case: string, 'skill-root': string, 'output-directory': string, output: string,
+  } });
+  const resolved = (value) => (value ? path.resolve(value) : null);
   const report = await runEvaluations({
-    casesPath,
-    responsesPath: typeof args.responses === 'string' ? path.resolve(args.responses) : null,
-    adapter: typeof args.adapter === 'string' ? args.adapter : null,
+    casesPath: path.resolve(args.cases || path.join(DEFAULT_ROOT, 'tests/fixtures/expressivecss-skill-evals/cases.json')),
+    responsesPath: resolved(args.responses),
+    adapter: args.adapter ?? null,
     adapterArgs: args['adapter-arg'],
-    adapterTimeoutMs: typeof args['adapter-timeout-ms'] === 'string'
-      ? Number(args['adapter-timeout-ms'])
-      : DEFAULT_ADAPTER_TIMEOUT_MS,
-    caseId: typeof args.case === 'string' ? args.case : null,
+    adapterTimeoutMs: args['adapter-timeout-ms'] ? Number(args['adapter-timeout-ms']) : DEFAULT_ADAPTER_TIMEOUT_MS,
+    caseId: args.case ?? null,
     repositoryRoot: DEFAULT_ROOT,
-    skillRoot: typeof args['skill-root'] === 'string' ? path.resolve(args['skill-root']) : null,
-    outputDirectory: typeof args['output-directory'] === 'string' ? path.resolve(args['output-directory']) : null,
+    skillRoot: resolved(args['skill-root']),
+    outputDirectory: resolved(args['output-directory']),
   });
   const output = `${JSON.stringify(report, null, 2)}\n`;
-  if (typeof args.output === 'string') await writeFile(path.resolve(args.output), output);
+  if (args.output) await writeFile(path.resolve(args.output), output);
   else process.stdout.write(output);
   if (report.status !== 'pass') process.exitCode = 1;
 }
