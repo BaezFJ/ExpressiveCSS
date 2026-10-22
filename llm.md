@@ -304,6 +304,21 @@ Or give the element its options in markup. `AutoInit()` reads a `data-<name>-opt
 - Invalid JSON, unknown keys and wrong kinds are skipped with a console warning, and those options keep their defaults. A value that passes the checks but still makes a component throw stops `AutoInit()`, as it would from script.
 - Direct `init()` calls do not read the attribute. Menus inside a `.menubar` take Menubar's `menuOptions` instead.
 
+`AutoInit()` scans once. Pass `{ watch: true }` as a third argument to keep watching the context: components start in markup added later and are destroyed when their markup is removed. The call returns a function that stops watching; without `watch` it does nothing.
+
+```js
+const stop = Expressive.AutoInit(document.body, {}, { watch: true });
+document.querySelector('main').insertAdjacentHTML('beforeend', html); // started in a later microtask
+// Later, in teardown: stop watching. Started components keep running.
+window.addEventListener('pagehide', stop, { once: true });
+```
+
+- Added markup starts like the first scan, with the same options, `data-<name>-options` attributes and `no-autoinit` opt-out. The added element itself is checked as well as its descendants.
+- An element that already has an instance keeps it, so starting a component yourself before adding its element works, and components that build their own markup (the Datepicker's month and year selects) keep their instances.
+- Removal destroys only instances `AutoInit()` would have started; `no-autoinit` elements are left to your code. An element moved elsewhere in the page keeps its instance. Class and attribute changes on elements already in the page are ignored.
+- `stop()` drops changes not yet reported, so markup added in the same task as the `stop()` call does not start.
+- Shadow roots are not entered. Pass a `ShadowRoot` as the context to watch inside one. Call it once per root. A component that throws while starting stops the rest of that batch; later changes are still handled.
+
 `AutoInit()` recognizes these public components and selectors:
 
 | Component | Selector |
