@@ -35,7 +35,7 @@ Everything else was removed.
 
 ## Two rules
 
-**1. Every partial starts with the same line.**
+**1. A partial that needs the shared helpers starts with the same line.**
 
 ```scss
 @use "../abstracts" as *;   // components/, base/, tokens/, utilities/
@@ -44,8 +44,8 @@ Everything else was removed.
 
 That single line brings in the breakpoint mixins, the Sass variables (grid,
 font sizes), `z-depth()`, and the `btn-*` mixins.
-There is never a second project-local `@use` to work out — if you find yourself
-adding one, see rule 2.
+A partial that uses none of them leaves the line out. There is never a second
+project-local `@use` to work out — if you find yourself adding one, see rule 2.
 
 **2. Nothing outside `abstracts/` is ever imported by another partial.**
 

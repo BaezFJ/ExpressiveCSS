@@ -397,7 +397,8 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 /// they grow a `box-shadow` from the control's edge out to the state layer
 /// size.
 @mixin state-layer-ring($outer, $inner, $color, $state) {
-  box-shadow: 0 0 0 calc((#{$outer} - #{$inner}) / 2) state-layer($color, $state);
+  // Interpolated so a quoted color, such as "var(--c)", is written unquoted.
+  box-shadow: 0 0 0 calc((#{$outer} - #{$inner}) / 2) state-layer(#{$color}, $state);
 }
 
 /// The button size tokens for one rung of `$button-sizes`.
