@@ -242,6 +242,88 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   }
 }
 
+// A navigation bar or rail destination stacked over its label: the indicator
+// behind the icon, its hover layer, the active state, and a sibling badge on
+// the upper trailing corner of the 24dp glyph. $prefix names the component
+// tokens (nav-bar, nav-rail); $inset is the destination's top padding. Rules
+// passed as content land between the active state and the badge.
+@mixin nav-destination($prefix, $inset, $transition) {
+  > #{$icon} {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--md-comp-#{$prefix}-indicator-width);
+    height: var(--md-comp-#{$prefix}-indicator-height);
+    border-radius: var(--md-comp-#{$prefix}-indicator-shape);
+    font-size: var(--md-comp-#{$prefix}-icon-size);
+    color: inherit;
+    transition: $transition;
+  }
+
+  &:hover:not(.active, [aria-current]) > #{$icon} {
+    background-color: state-layer(var(--md-sys-color-on-surface), "hover");
+  }
+
+  &.active,
+  &[aria-current] {
+    color: var(--md-sys-color-on-surface);
+
+    > #{$icon} {
+      background-color: var(--md-comp-#{$prefix}-active-indicator-color);
+      color: var(--md-comp-#{$prefix}-active-color);
+      --md-icon-fill: 1;
+      @include forced-colors-selected;
+    }
+  }
+
+  @content;
+
+  > .badge {
+    position: absolute;
+    z-index: 1;
+    top: calc(#{$inset} + (var(--md-comp-#{$prefix}-indicator-height) - 24px) / 2);
+    inset-inline-start: calc(50% + 12px);
+    transform: translate(-50%, -50%);
+
+    &:dir(rtl) {
+      transform: translate(50%, -50%);
+    }
+  }
+}
+
+// The same destination laid out as a row (bar .horizontal, rail .expanded):
+// the indicator moves from the icon to the whole destination.
+@mixin nav-destination-row($prefix) {
+  > #{$icon} {
+    width: var(--md-comp-#{$prefix}-icon-size);
+    height: var(--md-comp-#{$prefix}-icon-size);
+    border-radius: 0;
+  }
+
+  &:hover:not(.active, [aria-current]) {
+    background-color: state-layer(var(--md-sys-color-on-surface), "hover");
+
+    > #{$icon} {
+      background-color: transparent;
+    }
+  }
+
+  &.active,
+  &[aria-current] {
+    background-color: var(--md-comp-#{$prefix}-active-indicator-color);
+    color: var(--md-comp-#{$prefix}-active-color);
+    @include forced-colors-selected;
+
+    > #{$icon} {
+      background-color: transparent;
+      color: inherit;
+      outline: none;
+    }
+  }
+}
+
 // M3 type role. Every property must name a token tokens/_reference.scss
 // actually defines — a missing var() drops the whole declaration.
 // $emphasized takes the role's M3 Expressive emphasized weight.

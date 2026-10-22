@@ -339,5 +339,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed disabled Timepicker ticks outside minTime and maxTime: 84,671 gzip bytes (+14 from 84,657 at the base).
   // Reviewed the Sass cleanup: shared header, label and trend-arrow mixins, state-opacity() for menu, navbar and slider layers: 84,667 gzip bytes (-4).
   // Reviewed calendar week, day and year views: 85,031 gzip bytes (+364).
-  assert.ok(sizes(css).gzip <= 85031, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed shared navigation destination mixins; one badge rule moves after its siblings: 85,033 gzip bytes (+2).
+  assert.ok(sizes(css).gzip <= 85033, `CSS gzip: ${sizes(css).gzip}`);
 });

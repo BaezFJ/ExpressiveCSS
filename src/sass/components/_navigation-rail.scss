@@ -172,49 +172,9 @@
     @include typescale("label-medium");
     @include focus-visible;
 
-    > #{$icon} {
-      display: flex;
-      flex-shrink: 0;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      width: var(--md-comp-nav-rail-indicator-width);
-      height: var(--md-comp-nav-rail-indicator-height);
-      border-radius: var(--md-comp-nav-rail-indicator-shape);
-      font-size: var(--md-comp-nav-rail-icon-size);
-      color: inherit;
-      transition: background-color var(--md-comp-nav-rail-duration) ease;
-    }
-
-    &:hover:not(.active, [aria-current]) > #{$icon} {
-      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
-    }
-
-    &.active,
-    &[aria-current] {
-      color: var(--md-sys-color-on-surface);
-
-      > #{$icon} {
-        background-color: var(--md-comp-nav-rail-active-indicator-color);
-        color: var(--md-comp-nav-rail-active-color);
-        --md-icon-fill: 1;
-        @include forced-colors-selected;
-      }
-    }
-
     // Sibling badge (icon + label + .badge). Child-of-icon is handled
-    // in _badges.scss. Sit on the upper trailing corner of the 24dp glyph.
-    > .badge {
-      position: absolute;
-      z-index: 1;
-      top: calc(6px + (var(--md-comp-nav-rail-indicator-height) - 24px) / 2);
-      inset-inline-start: calc(50% + 12px);
-      transform: translate(-50%, -50%);
-
-      &:dir(rtl) {
-        transform: translate(50%, -50%);
-      }
-    }
+    // in _badges.scss.
+    @include nav-destination("nav-rail", 6px, background-color var(--md-comp-nav-rail-duration) ease);
   }
 
   > :is(h1, h2, h3, h4, h5, h6) {
@@ -270,32 +230,7 @@
       border-radius: var(--md-comp-nav-rail-indicator-shape);
       text-align: start;
 
-      > #{$icon} {
-        width: var(--md-comp-nav-rail-icon-size);
-        height: var(--md-comp-nav-rail-icon-size);
-        border-radius: 0;
-      }
-
-      &:hover:not(.active, [aria-current]) {
-        background-color: state-layer(var(--md-sys-color-on-surface), "hover");
-
-        > #{$icon} {
-          background-color: transparent;
-        }
-      }
-
-      &.active,
-      &[aria-current] {
-        background-color: var(--md-comp-nav-rail-active-indicator-color);
-        color: var(--md-comp-nav-rail-active-color);
-        @include forced-colors-selected;
-
-        > #{$icon} {
-          background-color: transparent;
-          color: inherit;
-          outline: none;
-        }
-      }
+      @include nav-destination-row("nav-rail");
 
       > .badge {
         top: calc((var(--md-comp-nav-rail-indicator-height) - 24px) / 2);
