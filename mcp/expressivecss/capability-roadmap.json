@@ -762,7 +762,7 @@
       "sources": [
         {
           "path": "src/sass/components/_scrollspy.scss",
-          "sha256": "39e23fb90c5b0bc2a5d34513bec7342a9a12d0a080043074f287ab8594d87c69"
+          "sha256": "98b9bd486ee144f96b047ad98708c85fd7c8f06ed19d06d24199553a52ab5324"
         },
         {
           "path": "src/sass/components/_table_of_contents.scss",
@@ -3389,7 +3389,7 @@
       "sources": [
         {
           "path": "src/sass/components/_skeleton.scss",
-          "sha256": "f3a48d490f5a43671e8d9dbeb31a5091c8b90823c6af0e7109939ef6a11a4366"
+          "sha256": "f5b2a97773d171ad5d535f638324ed329aa93c1c957b601c59471838cfbd12d6"
         }
       ],
       "gaps": [
@@ -3675,7 +3675,7 @@
       "sources": [
         {
           "path": "src/sass/components/_marquee.scss",
-          "sha256": "cb6c055316c63d5ab7c42991c050188cc2bad91e073733a501bd0ab859d78991"
+          "sha256": "b7494c72fa5de69416b87830f020425ac91a1fb123711917534e4dc46d6e8f95"
         }
       ],
       "gaps": [
@@ -3725,7 +3725,7 @@
       "sources": [
         {
           "path": "src/sass/components/_confetti.scss",
-          "sha256": "0dc01d28e2bf26877ab57e5d5504b6dbd734b3ef64f593bf67e34753922a3d63"
+          "sha256": "f0491b4174a1cb86bcc8e089b2b719f072440594641eb039ee27dca1a56ac24e"
         },
         {
           "path": "src/ts/components/confetti.ts",
@@ -3779,7 +3779,7 @@
       "sources": [
         {
           "path": "src/sass/components/_particles.scss",
-          "sha256": "5d2d67515f7152d5b86d506e7fe42d9c66f058bd7b9e30a06a7b8fedc4738cc3"
+          "sha256": "7c9f562cdcac1fca51eea032786fa324c708e1972d10f4cd08e61f4982f31efd"
         },
         {
           "path": "src/ts/components/particles.ts",
@@ -5073,7 +5073,7 @@
         },
         {
           "path": "src/sass/components/_docked-display.scss",
-          "sha256": "057e12b802c9cf30fdea364b609f9b0fa9378028667af22f4df34f5b890d59a6"
+          "sha256": "dfc657828280fc683a67ed5d9b55b84f3323a9365df5c590d73f769ed4adf470"
         },
         {
           "path": "src/ts/components/datepicker.ts",
@@ -5177,7 +5177,7 @@
         },
         {
           "path": "src/sass/components/_docked-display.scss",
-          "sha256": "057e12b802c9cf30fdea364b609f9b0fa9378028667af22f4df34f5b890d59a6"
+          "sha256": "dfc657828280fc683a67ed5d9b55b84f3323a9365df5c590d73f769ed4adf470"
         },
         {
           "path": "src/ts/components/timepicker.ts",

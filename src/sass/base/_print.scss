@@ -1,5 +1,3 @@
-@use "../abstracts" as *;
-
 // Paper defaults, element level only. Components that only make sense on a
 // screen (navigation, snackbars, tooltips, the FAB menu) hide themselves in
 // their own partials; .hide-on-print and .print-only are in

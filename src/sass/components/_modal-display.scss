@@ -1,5 +1,3 @@
-@use "../abstracts" as *;
-
 // Dialog created by src/ts/plugins/modalDisplayPlugin.ts for a modal date or
 // time picker. The dialog partial draws it as a basic dialog over a scrim,
 // so a selective build needs "dialog" too; this only fits it to the picker,
