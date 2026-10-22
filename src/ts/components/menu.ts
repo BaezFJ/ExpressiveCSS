@@ -40,6 +40,34 @@ function fixedBounds(menu: Element) {
   return { top: Math.max(0, rect.top), bottom: Math.min(window.innerHeight, rect.bottom) };
 }
 
+/**
+ * The room a measured menu has when aligned at each edge of its trigger
+ * `el`, within `container` or, when it lets content overflow, the viewport.
+ * Aligned at `top` it starts `offset` below the trigger's top edge, and at
+ * `bottom` it ends `offset` above its bottom edge. Negative room means the
+ * menu does not fit that way.
+ */
+function room(el: HTMLElement, container: HTMLElement, menu: Pick<DOMRect, 'left' | 'top' | 'width' | 'height'>, offset: number) {
+  const rect = el.getBoundingClientRect();
+  if (getComputedStyle(container).overflow === 'visible') {
+    return {
+      left: window.innerWidth - (rect.left + menu.width),
+      right: rect.right - menu.width,
+      top: window.innerHeight - (rect.top + menu.height + offset),
+      bottom: rect.bottom - (menu.height + offset)
+    };
+  }
+  const box = container.getBoundingClientRect();
+  const x = menu.left - container.scrollLeft;
+  const y = menu.top - container.scrollTop;
+  return {
+    left: Math.min(box.width, window.innerWidth) - (x + menu.width),
+    right: x - menu.width + rect.width,
+    top: Math.min(box.height, window.innerHeight) - (y + menu.height + offset),
+    bottom: y + rect.height - (menu.height + offset)
+  };
+}
+
 /** The keys that move between rows. Home and End go to the ends. */
 const STEPS = { ArrowUp: -1, ArrowDown: 1 };
 // A list's rows: its own items, and the items of each <li role="none"><ul
@@ -861,11 +889,10 @@ export class Menu extends Component<MenuOptions> {
 
   /**
    * Whether a measured menu opens upward: when there is no room below, or
-   * when placement 'top' asks for it and there is room above. In
-   * checkPossibleAlignments, `top` is room below the trigger's top edge.
+   * when placement 'top' asks for it and there is room above.
    */
-  private _opensUp(alignments: { top: boolean; bottom: boolean }) {
-    return !alignments.top || (this.options.placement === 'top' && alignments.bottom);
+  private _opensUp(space: { top: number; bottom: number }) {
+    return space.top < 0 || (this.options.placement === 'top' && space.bottom >= 0);
   }
 
   _getMenuPosition(closestOverflowParent: HTMLElement) {
@@ -877,17 +904,10 @@ export class Menu extends Component<MenuOptions> {
     let idealXPos = triggerBRect.left - menuBRect.left;
     let idealYPos = triggerBRect.top - menuBRect.top;
 
-    const menuBounds = {
-      left: idealXPos,
-      top: idealYPos,
-      height: idealHeight,
-      width: idealWidth
-    };
-
-    const alignments = Utils.checkPossibleAlignments(
+    const space = room(
       this.el,
       closestOverflowParent,
-      menuBounds,
+      { left: idealXPos, top: idealYPos, height: idealHeight, width: idealWidth },
       this.options.coverTrigger ? 0 : triggerBRect.height
     );
 
@@ -898,8 +918,8 @@ export class Menu extends Component<MenuOptions> {
     // Reset isScrollable
     this.isScrollable = false;
 
-    if (this._opensUp(alignments)) {
-      if (alignments.bottom) {
+    if (this._opensUp(space)) {
+      if (space.bottom >= 0) {
         verticalAlignment = 'bottom';
 
         if (!this.options.coverTrigger) {
@@ -910,32 +930,32 @@ export class Menu extends Component<MenuOptions> {
 
         // Determine which side has most space and cutoff at correct height
         idealHeight -= 20; // Add padding when cutoff
-        if (alignments.spaceOnTop > alignments.spaceOnBottom) {
+        if (space.bottom > space.top) {
           verticalAlignment = 'bottom';
-          idealHeight += alignments.spaceOnTop;
+          idealHeight += space.bottom;
           idealYPos -= this.options.coverTrigger
-            ? alignments.spaceOnTop - 20
-            : alignments.spaceOnTop - 20 + triggerBRect.height;
+            ? space.bottom - 20
+            : space.bottom - 20 + triggerBRect.height;
         } else {
-          idealHeight += alignments.spaceOnBottom;
+          idealHeight += space.top;
         }
       }
     }
 
     // If preferred horizontal alignment is possible
-    if (!alignments[horizontalAlignment]) {
+    if (space[horizontalAlignment] < 0) {
       const oppositeAlignment = horizontalAlignment === 'left' ? 'right' : 'left';
-      if (alignments[oppositeAlignment]) {
+      if (space[oppositeAlignment] >= 0) {
         horizontalAlignment = oppositeAlignment;
       } else {
         // Determine which side has most space and cutoff at correct height
-        if (alignments.spaceOnLeft > alignments.spaceOnRight) {
+        if (space.right > space.left) {
           horizontalAlignment = 'right';
-          idealWidth += alignments.spaceOnLeft;
-          idealXPos -= alignments.spaceOnLeft;
+          idealWidth += space.right;
+          idealXPos -= space.right;
         } else {
           horizontalAlignment = 'left';
-          idealWidth += alignments.spaceOnRight;
+          idealWidth += space.left;
         }
       }
     }
