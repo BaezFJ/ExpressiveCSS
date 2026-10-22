@@ -246,7 +246,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
     this._cancelPendingSearch();
     this._searchAbort?.abort();
-    this._removeEventHandlers();
+    this._events.abort();
     this.menu.destroy();
     this.isOpen = false;
     this._removeMenu();
@@ -259,34 +259,21 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   _setupEventHandlers() {
-    this.el.addEventListener('blur', this._handleInputBlur);
-    this.el.addEventListener('input', this._handleInput);
-    this.el.addEventListener('keyup', this._handleInputKeyup);
-    this.el.addEventListener('focus', this._handleInputFocus);
-    this.el.addEventListener('keydown', this._handleInputKeydown);
-    this.el.addEventListener('click', this._handleInputClick);
+    const { signal } = this._events;
+    this.el.addEventListener('blur', this._handleInputBlur, { signal });
+    this.el.addEventListener('input', this._handleInput, { signal });
+    this.el.addEventListener('keyup', this._handleInputKeyup, { signal });
+    this.el.addEventListener('focus', this._handleInputFocus, { signal });
+    this.el.addEventListener('keydown', this._handleInputKeydown, { signal });
+    this.el.addEventListener('click', this._handleInputClick, { signal });
     // One pair, not two. These used to be a mouse pair plus a touch pair behind
     // a `window.ontouchstart` feature detect; a pointer event covers both, and
     // the detect covered nothing the browser does not report itself.
-    this.container.addEventListener('pointerdown', this._handleContainerPointerDown);
-    this.container.addEventListener('pointerup', this._handleContainerPointerUp);
-    this.container.addEventListener('pointercancel', this._handleContainerPointerUp);
-    this.container.addEventListener('mousedown', this._handleNoResultsPress, true);
-    this.container.addEventListener('click', this._handleNoResultsPress, true);
-  }
-
-  _removeEventHandlers() {
-    this.el.removeEventListener('blur', this._handleInputBlur);
-    this.el.removeEventListener('input', this._handleInput);
-    this.el.removeEventListener('keyup', this._handleInputKeyup);
-    this.el.removeEventListener('focus', this._handleInputFocus);
-    this.el.removeEventListener('keydown', this._handleInputKeydown);
-    this.el.removeEventListener('click', this._handleInputClick);
-    this.container.removeEventListener('pointerdown', this._handleContainerPointerDown);
-    this.container.removeEventListener('pointerup', this._handleContainerPointerUp);
-    this.container.removeEventListener('pointercancel', this._handleContainerPointerUp);
-    this.container.removeEventListener('mousedown', this._handleNoResultsPress, true);
-    this.container.removeEventListener('click', this._handleNoResultsPress, true);
+    this.container.addEventListener('pointerdown', this._handleContainerPointerDown, { signal });
+    this.container.addEventListener('pointerup', this._handleContainerPointerUp, { signal });
+    this.container.addEventListener('pointercancel', this._handleContainerPointerUp, { signal });
+    this.container.addEventListener('mousedown', this._handleNoResultsPress, { capture: true, signal });
+    this.container.addEventListener('click', this._handleNoResultsPress, { capture: true, signal });
   }
 
   _setupMenu() {

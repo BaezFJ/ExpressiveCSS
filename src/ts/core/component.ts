@@ -1,4 +1,4 @@
-import { Utils } from './utils';
+import { Utils, controllerFor } from './utils';
 
 /**
  * Base options for component initialization.
@@ -44,6 +44,8 @@ export class Component<O extends BaseOptions> {
    * The options the instance was initialized with.
    */
   options: O;
+  /** Aborted by destroy(), which removes every listener added with its signal. */
+  protected _events: AbortController;
 
   /**
    * Destroys any instance already on `el`, then spreads `options` over the
@@ -61,6 +63,7 @@ export class Component<O extends BaseOptions> {
     const defaults: Partial<O> & { i18n?: object } = new.target.defaults;
     const i18n: object = defaults.i18n && { i18n: { ...defaults.i18n, ...(options as typeof defaults)?.i18n } };
     this.options = { ...defaults, ...options, ...i18n } as O;
+    this._events = controllerFor(el);
     el[new.target.key] = this;
   }
 
@@ -129,9 +132,10 @@ export class Component<O extends BaseOptions> {
 
   /**
    * Destroy plugin instance and teardown. A subclass tears down its own state
-   * and calls this to release the element.
+   * and calls this to remove its listeners and release the element.
    */
   destroy(): void {
+    this._events.abort();
     this.el[(this.constructor as typeof Component).key] = undefined;
   }
 }

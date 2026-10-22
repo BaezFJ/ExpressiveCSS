@@ -180,13 +180,14 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
       this._render();
     });
     this._observer.observe(this.el, { attributes: true, subtree: true, attributeFilter: ['disabled'] });
-    this.el.addEventListener('click', this._handleClick);
-    this.el.addEventListener('keydown', this._handleKeydown);
-    this.el.addEventListener('input', this._handleInput);
-    this.el.addEventListener('change', this._save);
-    this.el.addEventListener('submit', this._forget);
+    const { signal } = this._events;
+    this.el.addEventListener('click', this._handleClick, { signal });
+    this.el.addEventListener('keydown', this._handleKeydown, { signal });
+    this.el.addEventListener('input', this._handleInput, { signal });
+    this.el.addEventListener('change', this._save, { signal });
+    this.el.addEventListener('submit', this._forget, { signal });
     // invalid does not bubble.
-    this.el.addEventListener('invalid', this._handleInvalid, true);
+    this.el.addEventListener('invalid', this._handleInvalid, { capture: true, signal });
   }
 
   static get defaults(): QuestionnaireOptions {
@@ -258,12 +259,6 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
 
   destroy() {
     this._observer.disconnect();
-    this.el.removeEventListener('click', this._handleClick);
-    this.el.removeEventListener('keydown', this._handleKeydown);
-    this.el.removeEventListener('input', this._handleInput);
-    this.el.removeEventListener('change', this._save);
-    this.el.removeEventListener('submit', this._forget);
-    this.el.removeEventListener('invalid', this._handleInvalid, true);
     this._summary?.remove();
     for (const item of this._fieldsets()) {
       if (item.hasAttribute('data-required')) for (const control of this._controls(item)) control.setCustomValidity('');

@@ -135,7 +135,7 @@ export class Confetti extends Component<ConfettiOptions> {
 
   constructor(el: HTMLElement, options: Partial<ConfettiOptions>) {
     super(el, options);
-    if (!(el instanceof HTMLCanvasElement)) el.addEventListener('click', this._onClick);
+    if (!(el instanceof HTMLCanvasElement)) el.addEventListener('click', this._onClick, { signal: this._events.signal });
     else if (!this.options.manualStart) this.fire();
   }
 
@@ -168,7 +168,6 @@ export class Confetti extends Component<ConfettiOptions> {
   }
 
   destroy() {
-    this.el.removeEventListener('click', this._onClick);
     if (this.el instanceof HTMLCanvasElement) stop(this.el);
     super.destroy();
   }

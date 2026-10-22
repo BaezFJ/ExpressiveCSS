@@ -59,7 +59,7 @@ export class ExpandingCard extends Component<ExpandingCardOptions> {
   static key = 'Expressive_ExpandingCard';
 
   destroy() {
-    this._removeEventHandlers();
+    this._events.abort();
     this._collapse();
     if (this.dialog?.open) this.dialog.close();
     for (const [name, value] of Object.entries(this._initialTrigger)) restoreAttribute(this.trigger, name, value);
@@ -67,19 +67,12 @@ export class ExpandingCard extends Component<ExpandingCardOptions> {
   }
 
   private _setupEventHandlers = () => {
-    this.trigger?.addEventListener("click", this.open);
-    this.trigger?.addEventListener("keypress", this._handleTriggerKeypress);
-    this.closeButton?.addEventListener("click", this.close);
-    this.dialog?.addEventListener("cancel", this._handleCancel);
-    this.dialog?.addEventListener("close", this._handleNativeClose);
-  };
-
-  private _removeEventHandlers = () => {
-    this.trigger?.removeEventListener("click", this.open);
-    this.trigger?.removeEventListener("keypress", this._handleTriggerKeypress);
-    this.closeButton?.removeEventListener("click", this.close);
-    this.dialog?.removeEventListener("cancel", this._handleCancel);
-    this.dialog?.removeEventListener("close", this._handleNativeClose);
+    const { signal } = this._events;
+    this.trigger?.addEventListener("click", this.open, { signal });
+    this.trigger?.addEventListener("keypress", this._handleTriggerKeypress, { signal });
+    this.closeButton?.addEventListener("click", this.close, { signal });
+    this.dialog?.addEventListener("cancel", this._handleCancel, { signal });
+    this.dialog?.addEventListener("close", this._handleNativeClose, { signal });
   };
 
   private _handleTriggerKeypress = (event: KeyboardEvent) => {

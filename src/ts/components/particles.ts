@@ -82,7 +82,6 @@ export class Particles extends Component<ParticlesOptions> {
   private _still = false;
   private _visible = true;
   private _motion: MediaQueryList | null = null;
-  private _scheme: MediaQueryList | null = null;
   private _theme: MutationObserver | null = null;
   private _resizeObserver: ResizeObserver | null = null;
   private _visibility: IntersectionObserver | null = null;
@@ -93,11 +92,11 @@ export class Particles extends Component<ParticlesOptions> {
     if (!this._ctx) return;
     this._style = getComputedStyle(this.el);
     this._motion = matchMedia('(prefers-reduced-motion: reduce)');
-    this._motion.addEventListener('change', this._onMotion);
+    const { signal } = this._events;
+    this._motion.addEventListener('change', this._onMotion, { signal });
     // Still dots are painted once, so a theme or color-scheme change
     // repaints them. Moving ones read the color every frame anyway.
-    this._scheme = matchMedia('(prefers-color-scheme: dark)');
-    this._scheme.addEventListener('change', this._repaint);
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this._repaint, { signal });
     this._theme = new MutationObserver(this._repaint);
     this._theme.observe(document.documentElement, { attributes: true, attributeFilter: ['theme'], subtree: true });
     this._still = this._motion.matches;
@@ -124,8 +123,6 @@ export class Particles extends Component<ParticlesOptions> {
 
   destroy() {
     this._stop();
-    this._motion?.removeEventListener('change', this._onMotion);
-    this._scheme?.removeEventListener('change', this._repaint);
     this._theme?.disconnect();
     this._resizeObserver?.disconnect();
     this._visibility?.disconnect();

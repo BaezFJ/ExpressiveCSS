@@ -37,9 +37,6 @@ export class AppBar extends Component<BaseOptions> {
     this._observer = null;
     this._sentinel?.remove();
     this._sentinel = null;
-    this._input?.removeEventListener('focus', this._onSearchFocus);
-    this._input?.removeEventListener('click', this._openSearch);
-    this._input?.removeEventListener('keydown', this._onSearchKeydown);
     if (this._restore) {
       this._view.hidden = this._restore.hidden;
       restoreAttribute(this._input, 'aria-expanded', this._restore.expanded);
@@ -89,9 +86,10 @@ export class AppBar extends Component<BaseOptions> {
     this._view = (id && Utils.getElementById(this.el, id)) || this.el.querySelector('.search-view');
     if (!this._view) return;
 
-    this._input.addEventListener('focus', this._onSearchFocus);
-    this._input.addEventListener('click', this._openSearch);
-    this._input.addEventListener('keydown', this._onSearchKeydown);
+    const { signal } = this._events;
+    this._input.addEventListener('focus', this._onSearchFocus, { signal });
+    this._input.addEventListener('click', this._openSearch, { signal });
+    this._input.addEventListener('keydown', this._onSearchKeydown, { signal });
   }
 
   // A docked view opens on focus, like a combobox popup. A full-screen

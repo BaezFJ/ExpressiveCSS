@@ -156,7 +156,6 @@ export class MapView extends Component<MapViewOptions> {
   private _styleReady = false;
   private _dark = false;
   private _location: any = null;
-  private _media: MediaQueryList | null = null;
   private _observer: MutationObserver | null = null;
   // Looked up once: `move` fires every frame of a pan or zoom.
   private _zoomIn: HTMLButtonElement[] = [];
@@ -167,7 +166,6 @@ export class MapView extends Component<MapViewOptions> {
   private _dragged: HTMLElement | null = null;
   // Undoes what the map added to the page's markup, for destroy().
   private _restore: (() => void)[] = [];
-  private _abort = new AbortController();
   private _actions: Record<string, (button: HTMLButtonElement) => void> = {
     'zoom-in': () => this.map.zoomIn(),
     'zoom-out': () => this.map.zoomOut(),
@@ -215,16 +213,16 @@ export class MapView extends Component<MapViewOptions> {
       this._popup(popup, 0).setLngLat(at).addTo(this.map);
     }
 
+    const { signal } = this._events;
     if (this._themed()) {
-      this._media = matchMedia('(prefers-color-scheme: dark)');
-      this._media.addEventListener('change', this._handleScheme);
+      matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this._handleScheme, { signal });
       this._observer = new MutationObserver(this._handleScheme);
       this._observer.observe(document.documentElement, { attributes: true, attributeFilter: ['theme'], subtree: true });
     }
     for (const button of this._buttons('fullscreen')) button.hidden = !document.fullscreenEnabled;
-    document.addEventListener('fullscreenchange', this._handleFullscreen);
-    el.addEventListener('click', this._handleClick);
-    el.addEventListener('keydown', this._handleKeydown);
+    document.addEventListener('fullscreenchange', this._handleFullscreen, { signal });
+    el.addEventListener('click', this._handleClick, { signal });
+    el.addEventListener('keydown', this._handleKeydown, { signal });
     this._sync();
   }
 
@@ -237,11 +235,7 @@ export class MapView extends Component<MapViewOptions> {
   destroy() {
     super.destroy();
     if (!this.map) return;
-    this.el.removeEventListener('click', this._handleClick);
-    this.el.removeEventListener('keydown', this._handleKeydown);
     this._releaseMarkers();
-    document.removeEventListener('fullscreenchange', this._handleFullscreen);
-    this._media?.removeEventListener('change', this._handleScheme);
     this._observer?.disconnect();
     for (const overlay of this._overlays.values()) overlay.off?.();
     for (const popup of this._popups) popup.remove();
@@ -427,14 +421,13 @@ export class MapView extends Component<MapViewOptions> {
     if (added.includes('tabindex')) element.tabIndex = 0;
     element.setAttribute('aria-pressed', 'false');
     this._restore.push(() => ['aria-pressed', ...added].forEach((name) => element.removeAttribute(name)));
-    element.addEventListener('keydown', (e) => this._nudge(e, marker), { signal: this._abort.signal });
+    element.addEventListener('keydown', (e) => this._nudge(e, marker), { signal: this._events.signal });
     marker.on('dragstart', () => (this._dragged = element));
     marker.on('dragend', () => setTimeout(() => (this._dragged = null)));
   }
 
-  /** Takes back the listeners and attributes `_makeMovable()` added. */
+  /** Takes back the attributes `_makeMovable()` added. Destroy removes its listeners. */
   private _releaseMarkers() {
-    this._abort.abort();
     this._restore.splice(0).forEach((undo) => undo());
     this._picked = null;
   }

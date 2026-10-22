@@ -37,9 +37,10 @@ export class Menubar extends Component<MenubarOptions> {
       this._setAttribute(item, 'role', 'menuitem');
       item.tabIndex = index === 0 ? 0 : -1;
     });
-    this.el.addEventListener('keydown', this._onBarKeydown);
-    this.el.addEventListener('focusin', this._onFocusin);
-    document.addEventListener('keydown', this._onMenuKeydown);
+    const { signal } = this._events;
+    this.el.addEventListener('keydown', this._onBarKeydown, { signal });
+    this.el.addEventListener('focusin', this._onFocusin, { signal });
+    document.addEventListener('keydown', this._onMenuKeydown, { signal });
   }
 
   static get defaults(): MenubarOptions {
@@ -49,9 +50,6 @@ export class Menubar extends Component<MenubarOptions> {
   static key = 'Expressive_Menubar';
 
   destroy() {
-    this.el.removeEventListener('keydown', this._onBarKeydown);
-    this.el.removeEventListener('focusin', this._onFocusin);
-    document.removeEventListener('keydown', this._onMenuKeydown);
     this._items.forEach((item) => {
       Menu.getInstance(item)?.destroy();
       item.removeAttribute('tabindex');

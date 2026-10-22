@@ -45,12 +45,19 @@ function watchSharedListeners() {
 
     target.addEventListener = function (type, listener, opts) {
       const c = capture(opts);
-      // The DOM ignores a duplicate (target, type, listener, capture); so do we.
+      const signal = typeof opts === 'object' ? opts?.signal : undefined;
+      // The DOM ignores a duplicate (target, type, listener, capture), and a
+      // listener whose signal has already aborted; so do we.
       const known = entries.some(
         (e) => e.target === target && e.type === type && e.listener === listener && e.capture === c
       );
-      if (!known && !JSDOM_INTERNAL_HANDLERS.has(listener?.name)) {
-        entries.push({ target, type, listener, capture: c });
+      if (!known && !signal?.aborted && !JSDOM_INTERNAL_HANDLERS.has(listener?.name)) {
+        const entry = { target, type, listener, capture: c };
+        entries.push(entry);
+        // Aborting the signal removes the listener, as removeEventListener does.
+        signal?.addEventListener('abort', () => {
+          if (entries.includes(entry)) entries.splice(entries.indexOf(entry), 1);
+        });
       }
       return add(type, listener, opts);
     };

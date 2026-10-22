@@ -1,4 +1,4 @@
-import { Utils, restoreAttribute } from '../core/utils';
+import { Utils, controllerFor, restoreAttribute } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 // CSS anchor positioning, where the browser has it. A menu opened from its
@@ -219,6 +219,8 @@ export class Menu extends Component<MenuOptions> {
   filterTimeout: ReturnType<typeof setTimeout>;
   private _pendingTimers = new Set<ReturnType<typeof setTimeout>>();
   private _transition = 0;
+  /** Removes the listeners an open menu adds. */
+  private _openEvents: AbortController | undefined;
   private _originalInert: string | null;
   private _menuClickTargets = new WeakMap<Event, HTMLElement>();
   // True while Space activates a row, so the click it sends can keep a radio
@@ -285,77 +287,49 @@ export class Menu extends Component<MenuOptions> {
     clearTimeout(this.filterTimeout);
     this._resetMenuStyles();
     this._restoreInert();
-    this._removeEventHandlers();
-    // Temporary handlers only exist while open, but removing them is a no-op
-    // otherwise and leaving them attached leaks the instance.
-    this._removeTemporaryEventHandlers();
+    this._events.abort();
+    this._openEvents?.abort();
     const index = Menu._menus.indexOf(this);
     if (index >= 0) Menu._menus.splice(index, 1);
     super.destroy();
   }
 
   _setupEventHandlers() {
+    const { signal } = this._events;
     // Trigger keydown handler
-    this.el.addEventListener('keydown', this._handleTriggerKeydown);
+    this.el.addEventListener('keydown', this._handleTriggerKeydown, { signal });
     // Item click handler
-    this.menuEl?.addEventListener('click', this._handleMenuClick);
+    this.menuEl?.addEventListener('click', this._handleMenuClick, { signal });
     if (this.menuEl?.querySelector(':scope > li > menu')) {
-      this.menuEl.addEventListener('mouseover', this._handleSubmenuAlign);
+      this.menuEl.addEventListener('mouseover', this._handleSubmenuAlign, { signal });
     }
     if (this.options.contextMenu) {
-      this.el.addEventListener('contextmenu', this._handleContextMenu);
+      this.el.addEventListener('contextmenu', this._handleContextMenu, { signal });
     } else if (this.options.hover) {
       // Hover event handlers
-      this.el.addEventListener('mouseenter', this._handleMouseEnter);
-      this.el.addEventListener('mouseleave', this._handleMouseLeave);
-      this.menuEl.addEventListener('mouseleave', this._handleMouseLeave);
+      this.el.addEventListener('mouseenter', this._handleMouseEnter, { signal });
+      this.el.addEventListener('mouseleave', this._handleMouseLeave, { signal });
+      this.menuEl.addEventListener('mouseleave', this._handleMouseLeave, { signal });
       // Click event handlers
     } else {
-      this.el.addEventListener('click', this._handleClick);
-    }
-  }
-
-  _removeEventHandlers() {
-    // `menuEl` is optional-chained on the way in (the trigger may point at
-    // an id that does not resolve); it has to be here too, or destroy() throws
-    // before it can detach anything else.
-    this.el.removeEventListener('keydown', this._handleTriggerKeydown);
-    this.menuEl?.removeEventListener('click', this._handleMenuClick);
-    this.menuEl?.removeEventListener('mouseover', this._handleSubmenuAlign);
-    if (this.options.contextMenu) {
-      this.el.removeEventListener('contextmenu', this._handleContextMenu);
-    } else if (this.options.hover) {
-      this.el.removeEventListener('mouseenter', this._handleMouseEnter);
-      this.el.removeEventListener('mouseleave', this._handleMouseLeave);
-      this.menuEl?.removeEventListener('mouseleave', this._handleMouseLeave);
-    } else {
-      this.el.removeEventListener('click', this._handleClick);
+      this.el.addEventListener('click', this._handleClick, { signal });
     }
   }
 
   _setupTemporaryEventHandlers() {
-    document.addEventListener('click', this._handleDocumentClick);
-    this.menuEl?.addEventListener('pointerdown', this._handleMenuPointerdown, { passive: true });
-    this.menuEl?.addEventListener('touchmove', this._handleDocumentTouchmove, { passive: true });
-    document.addEventListener('touchmove', this._handleDocumentTouchmove, {
-      passive: true
-    });
-    this.menuEl?.addEventListener('keydown', this._handleMenuKeydown);
-    document.addEventListener('keydown', this._handleDocumentKeydown);
-    window.addEventListener('resize', this._handleWindowResize);
+    this._openEvents?.abort();
+    this._openEvents = controllerFor(this.el);
+    const { signal } = this._openEvents;
+    const passive = { passive: true, signal };
+    document.addEventListener('click', this._handleDocumentClick, { signal });
+    this.menuEl?.addEventListener('pointerdown', this._handleMenuPointerdown, passive);
+    this.menuEl?.addEventListener('touchmove', this._handleDocumentTouchmove, passive);
+    document.addEventListener('touchmove', this._handleDocumentTouchmove, passive);
+    this.menuEl?.addEventListener('keydown', this._handleMenuKeydown, { signal });
+    document.addEventListener('keydown', this._handleDocumentKeydown, { signal });
+    window.addEventListener('resize', this._handleWindowResize, { signal });
     // A right-click elsewhere fires no click, so it would leave the menu open.
-    if (this.options.contextMenu) document.addEventListener('contextmenu', this._handleDocumentContextMenu);
-  }
-
-  _removeTemporaryEventHandlers() {
-    document.removeEventListener('click', this._handleDocumentClick);
-    this.menuEl?.removeEventListener('pointerdown', this._handleMenuPointerdown);
-    this.menuEl?.removeEventListener('touchmove', this._handleDocumentTouchmove);
-    document.removeEventListener('touchmove', this._handleDocumentTouchmove);
-    this.menuEl?.removeEventListener('keydown', this._handleMenuKeydown);
-    document.removeEventListener('keydown', this._handleDocumentKeydown);
-    window.removeEventListener('resize', this._handleWindowResize);
-    document.removeEventListener('contextmenu', this._handleDocumentContextMenu);
+    if (this.options.contextMenu) document.addEventListener('contextmenu', this._handleDocumentContextMenu, { signal });
   }
 
   _handleContextMenu = (e: MouseEvent) => {
@@ -1250,7 +1224,7 @@ export class Menu extends Component<MenuOptions> {
     // onCloseStart callback
     if (!this._notify('close', this.options.onCloseStart, { current: () => transition === this._transition })) return;
     this._animateOut();
-    this._removeTemporaryEventHandlers();
+    this._openEvents?.abort();
     this._setExpanded(false);
     if (this.options.autoFocus && this.menuEl.contains(focused) &&
       (root.activeElement === focused || this.el.ownerDocument.activeElement === this.el.ownerDocument.body)) {

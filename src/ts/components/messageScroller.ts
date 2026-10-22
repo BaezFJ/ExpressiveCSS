@@ -95,12 +95,13 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
     for (const item of Array.from(this.viewport.children)) this._resizeObserver.observe(item);
     this._mutationObserver = new MutationObserver(this._handleMutations);
     this._mutationObserver.observe(this.viewport, { childList: true });
-    this.viewport.addEventListener('scroll', this._handleScroll, { passive: true });
+    const { signal } = this._events;
+    this.viewport.addEventListener('scroll', this._handleScroll, { passive: true, signal });
     for (const type of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
-      this.viewport.addEventListener(type, this._handleUserScroll, { passive: true });
+      this.viewport.addEventListener(type, this._handleUserScroll, { passive: true, signal });
     }
-    for (const type of RELEASE_EVENTS) document.addEventListener(type, this._handleRelease);
-    this.button?.addEventListener('click', this._handleButtonClick);
+    for (const type of RELEASE_EVENTS) document.addEventListener(type, this._handleRelease, { signal });
+    this.button?.addEventListener('click', this._handleButtonClick, { signal });
   }
 
   static get defaults(): MessageScrollerOptions {
@@ -114,16 +115,8 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
     if (!this.viewport) return;
     this._resizeObserver?.disconnect();
     this._mutationObserver?.disconnect();
-    this.viewport.removeEventListener('scroll', this._handleScroll);
-    for (const type of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
-      this.viewport.removeEventListener(type, this._handleUserScroll);
-    }
-    for (const type of RELEASE_EVENTS) document.removeEventListener(type, this._handleRelease);
     this.viewport.style.removeProperty('--md-comp-message-scroller-spacer');
-    if (this.button) {
-      this.button.removeEventListener('click', this._handleButtonClick);
-      this.button.inert = false;
-    }
+    if (this.button) this.button.inert = false;
   }
 
   /** Scrolls to the latest message and resumes following. */

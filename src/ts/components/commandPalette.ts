@@ -76,13 +76,14 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
       attributes: true,
       attributeFilter: ['hidden', 'disabled']
     });
-    this.input.addEventListener('input', this._handleInput);
-    this.input.addEventListener('keydown', this._handleKeydown);
-    this.input.addEventListener('keydown', this._handleEscape);
-    this.list.addEventListener('click', this._handleListClick);
-    this.list.addEventListener('pointermove', this._handlePointerMove);
-    this.el.addEventListener('close', this._handleClose);
-    document.addEventListener('keydown', this._handleShortcut);
+    const { signal } = this._events;
+    this.input.addEventListener('input', this._handleInput, { signal });
+    this.input.addEventListener('keydown', this._handleKeydown, { signal });
+    this.input.addEventListener('keydown', this._handleEscape, { signal });
+    this.list.addEventListener('click', this._handleListClick, { signal });
+    this.list.addEventListener('pointermove', this._handlePointerMove, { signal });
+    this.el.addEventListener('close', this._handleClose, { signal });
+    document.addEventListener('keydown', this._handleShortcut, { signal });
   }
 
   static get defaults(): CommandPaletteOptions {
@@ -109,14 +110,7 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
 
   destroy() {
     this._observer?.disconnect();
-    document.removeEventListener('keydown', this._handleShortcut);
-    this.el.removeEventListener('close', this._handleClose);
     if (this.input && this.list) {
-      this.input.removeEventListener('input', this._handleInput);
-      this.input.removeEventListener('keydown', this._handleKeydown);
-      this.input.removeEventListener('keydown', this._handleEscape);
-      this.list.removeEventListener('click', this._handleListClick);
-      this.list.removeEventListener('pointermove', this._handlePointerMove);
       for (const name of ['role', 'aria-controls', 'aria-expanded', 'aria-autocomplete', 'aria-activedescendant']) {
         this.input.removeAttribute(name);
       }

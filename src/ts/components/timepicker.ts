@@ -1,4 +1,4 @@
-import { Utils, pickerFooter, svgNode } from '../core/utils';
+import { Utils, controllerFor, pickerFooter, svgNode } from '../core/utils';
 import { Component, BaseOptions, I18nOptions } from '../core/component';
 import { DisplayPlugin, createDisplayPlugin, hideModal } from '../plugins/modalDisplayPlugin';
 
@@ -229,6 +229,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   moved: boolean;
   /** Which pointer is dragging the clock hand; a second finger is ignored. */
   private _dragPointerId: number | null = null;
+  /** Removes the document listeners of the drag in progress. */
+  private _drag: AbortController | null = null;
   dx: number;
   dy: number;
   /**
@@ -299,39 +301,26 @@ export class Timepicker extends Component<TimepickerOptions> {
     clearTimeout(this.toggleViewTimer);
     clearTimeout(this.vibrateTimer);
     this._cancelClockReset();
-    this._removeEventHandlers();
+    // Drag handlers live on the document while the clock hand is held; if the
+    // component is destroyed mid-drag they would otherwise outlive it.
+    this._drag?.abort();
     this.displayPlugin?.destroy();
     this.containerEl.remove();
     super.destroy();
   }
 
   _setupEventHandlers() {
-    this.el.addEventListener('click', this._handleInputClick);
-    this.el.addEventListener('keydown', this._handleInputKeydown);
+    const { signal } = this._events;
+    this.el.addEventListener('click', this._handleInputClick, { signal });
+    this.el.addEventListener('keydown', this._handleInputKeydown, { signal });
     this.plate.addEventListener('pointerdown', this._handleClockClickStart);
-    this.digitalClock.addEventListener('input', this._inputFromTextField);
-    this.digitalClock.addEventListener('keydown', this._handleDigitalKeydown);
+    this.digitalClock.addEventListener('input', this._inputFromTextField, { signal });
+    this.digitalClock.addEventListener('keydown', this._handleDigitalKeydown, { signal });
     this.inputHours.addEventListener('focus', () => this.showView('hours'));
     this.inputHours.addEventListener('focusout', () => this.formatHours());
     this.inputMinutes.addEventListener('focus', () => this.showView('minutes'));
     this.inputMinutes.addEventListener('focusout', () => this.formatMinutes());
     this.inputSeconds?.addEventListener('focusout', () => this.formatSeconds());
-  }
-
-  _removeEventHandlers() {
-    this.digitalClock.removeEventListener('input', this._inputFromTextField);
-    this.digitalClock.removeEventListener('keydown', this._handleDigitalKeydown);
-    this.el.removeEventListener('click', this._handleInputClick);
-    this.el.removeEventListener('keydown', this._handleInputKeydown);
-    // Drag handlers live on the document while the clock hand is held; if the
-    // component is destroyed mid-drag they would otherwise outlive it.
-    this._removeDragListeners();
-  }
-
-  private _removeDragListeners() {
-    document.removeEventListener('pointermove', this._handleDocumentClickMove);
-    document.removeEventListener('pointerup', this._handleDocumentClickEnd);
-    document.removeEventListener('pointercancel', this._handleDocumentClickCancel);
   }
 
   _handleInputClick = () => {
@@ -372,9 +361,12 @@ export class Timepicker extends Component<TimepickerOptions> {
     // `pointercancel` ends the drag the same way `pointerup` does: without it
     // these document listeners outlived a cancelled touch, because the
     // `touchend` pair this replaced had no `touchcancel` companion.
-    document.addEventListener('pointermove', this._handleDocumentClickMove);
-    document.addEventListener('pointerup', this._handleDocumentClickEnd);
-    document.addEventListener('pointercancel', this._handleDocumentClickCancel);
+    this._drag?.abort();
+    this._drag = controllerFor(this.el);
+    const { signal } = this._drag;
+    document.addEventListener('pointermove', this._handleDocumentClickMove, { signal });
+    document.addEventListener('pointerup', this._handleDocumentClickEnd, { signal });
+    document.addEventListener('pointercancel', this._handleDocumentClickCancel, { signal });
   };
 
   _handleDocumentClickMove = (e: PointerEvent) => {
@@ -390,7 +382,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     if (e.pointerId !== this._dragPointerId) return;
     this._dragPointerId = null;
     e.preventDefault();
-    this._removeDragListeners();
+    this._drag.abort();
     const x = e.clientX - this.x0;
     const y = e.clientY - this.y0;
     if (this.moved && x === this.dx && y === this.dy) {
@@ -427,7 +419,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     if (e.pointerId !== this._dragPointerId) return;
     this._dragPointerId = null;
     this.moved = false;
-    this._removeDragListeners();
+    this._drag.abort();
   };
 
   /**

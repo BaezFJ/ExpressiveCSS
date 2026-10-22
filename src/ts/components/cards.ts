@@ -117,7 +117,6 @@ export class Cards extends Component<CardsOptions> {
    * {@inheritDoc}
    */
   destroy() {
-    this._removeEventHandlers();
     if (this.cardReveal) {
       this.cardReveal.classList.remove('open');
       this.cardReveal.inert = false;
@@ -136,17 +135,9 @@ export class Cards extends Component<CardsOptions> {
   }
 
   _setupEventHandlers = () => {
-    this._activators.forEach((activator) => {
-      activator.addEventListener('click', this._handleClickInteraction);
-    });
-    this.el.addEventListener('keydown', this._handleKeydownEvent);
-  };
-
-  _removeEventHandlers = () => {
-    this._activators.forEach((activator) => {
-      activator.removeEventListener('click', this._handleClickInteraction);
-    });
-    this.el.removeEventListener('keydown', this._handleKeydownEvent);
+    const { signal } = this._events;
+    this._activators.forEach((activator) => activator.addEventListener('click', this._handleClickInteraction, { signal }));
+    this.el.addEventListener('keydown', this._handleKeydownEvent, { signal });
   };
 
   _handleClickInteraction = (event: MouseEvent) => {

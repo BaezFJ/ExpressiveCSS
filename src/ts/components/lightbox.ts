@@ -1,4 +1,4 @@
-import { Utils, restoreAttribute } from '../core/utils';
+import { Utils, controllerFor, restoreAttribute } from '../core/utils';
 import { BaseOptions, Component } from '../core/component';
 
 export interface LightboxOptions extends BaseOptions {
@@ -73,6 +73,8 @@ export class Lightbox extends Component<LightboxOptions> {
   private _motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   private _isOpen = false;
   private _destroyed = false;
+  /** Removes the listeners that close an open lightbox. */
+  private _windowEvents: AbortController | undefined;
   private _revision = 0;
   // Counts opens and closes only. _revision also moves when reduced motion
   // flushes a transition, which must still report its end.
@@ -108,7 +110,6 @@ export class Lightbox extends Component<LightboxOptions> {
     if (this._destroyed) return;
     this._destroyed = true;
     const focused = (this.el.getRootNode() as Document | ShadowRoot).activeElement === this.el;
-    this._removeEventHandlers();
     this._cancel();
     this._reset();
     this.placeholder.replaceWith(this.el);
@@ -127,10 +128,7 @@ export class Lightbox extends Component<LightboxOptions> {
   }
 
   private _reset() {
-    window.removeEventListener('scroll', this._handleWindowChange);
-    window.removeEventListener('resize', this._handleWindowChange);
-    window.removeEventListener('keyup', this._handleWindowEscape);
-    window.removeEventListener('keydown', this._handleWindowTab);
+    this._windowEvents?.abort();
     this._overlay?.remove();
     this._photoCaption?.remove();
     for (const ancestor of this._changedAncestorList) {
@@ -177,15 +175,10 @@ export class Lightbox extends Component<LightboxOptions> {
   };
 
   private _setupEventHandlers() {
-    this._motion.addEventListener('change', this._handleMotionChange);
-    this._trigger.addEventListener('click', this._handleLightboxToggle);
-    this.el.addEventListener('keydown', this._handleLightboxKeypress);
-  }
-
-  private _removeEventHandlers() {
-    this._motion.removeEventListener('change', this._handleMotionChange);
-    this._trigger.removeEventListener('click', this._handleLightboxToggle);
-    this.el.removeEventListener('keydown', this._handleLightboxKeypress);
+    const { signal } = this._events;
+    this._motion.addEventListener('change', this._handleMotionChange, { signal });
+    this._trigger.addEventListener('click', this._handleLightboxToggle, { signal });
+    this.el.addEventListener('keydown', this._handleLightboxKeypress, { signal });
   }
 
   private _handleLightboxKeypress = (e: KeyboardEvent) => {
@@ -429,10 +422,13 @@ export class Lightbox extends Component<LightboxOptions> {
       this.newHeight = this.windowHeight * 0.9;
     }
     // Handle Exit triggers
-    window.addEventListener('scroll', this._handleWindowChange, { passive: true });
-    window.addEventListener('resize', this._handleWindowChange, { passive: true });
-    window.addEventListener('keyup', this._handleWindowEscape);
-    window.addEventListener('keydown', this._handleWindowTab);
+    this._windowEvents?.abort();
+    this._windowEvents = controllerFor(this.el);
+    const { signal } = this._windowEvents;
+    window.addEventListener('scroll', this._handleWindowChange, { passive: true, signal });
+    window.addEventListener('resize', this._handleWindowChange, { passive: true, signal });
+    window.addEventListener('keyup', this._handleWindowEscape, { signal });
+    window.addEventListener('keydown', this._handleWindowTab, { signal });
     this._animateImageIn();
   };
 
@@ -448,10 +444,7 @@ export class Lightbox extends Component<LightboxOptions> {
     // onCloseStart callback
     if (!this._notify('close', this.options.onCloseStart, { current: () => revision === this._revision })) return;
     // disable exit handlers
-    window.removeEventListener('scroll', this._handleWindowChange);
-    window.removeEventListener('resize', this._handleWindowChange);
-    window.removeEventListener('keyup', this._handleWindowEscape);
-    window.removeEventListener('keydown', this._handleWindowTab);
+    this._windowEvents?.abort();
     this._restoreFocus();
     if (this._overlay) this._fadeOut(this._overlay);
     if (this._photoCaption) this._fadeOut(this._photoCaption);

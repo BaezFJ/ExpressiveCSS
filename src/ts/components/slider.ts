@@ -15,7 +15,6 @@ export class Slider extends Component<SliderOptions> {
   declare el: HTMLInputElement;
   private _pointerDown: boolean;
   private _resizeObserver: ResizeObserver | null = null;
-  private _form: HTMLFormElement | null = null;
   value: HTMLElement;
   thumb: HTMLElement;
 
@@ -41,7 +40,6 @@ export class Slider extends Component<SliderOptions> {
 
   destroy() {
     this._resizeObserver?.disconnect();
-    this._removeEventHandlers();
     this._removeThumb();
     super.destroy();
     const host = this._host();
@@ -64,35 +62,23 @@ export class Slider extends Component<SliderOptions> {
   // twice - once for mouse, once for touch. One of the touch spellings,
   // `touchleave`, was never implemented by any browser at all.
   _setupEventHandlers() {
-    this.el.addEventListener('change', this._handleRangeChange);
-    this.el.addEventListener('pointerdown', this._handleRangePointerDown);
+    const { signal } = this._events;
+    this.el.addEventListener('change', this._handleRangeChange, { signal });
+    this.el.addEventListener('pointerdown', this._handleRangePointerDown, { signal });
     // `input` alone tracks a drag. A `pointermove` sync used to run as well,
     // twice per frame, and before the browser had moved the value.
-    this.el.addEventListener('input', this._handleRangeInput);
-    this.el.addEventListener('pointerup', this._handleRangePointerUp);
-    this.el.addEventListener('pointercancel', this._handleRangePointerUp);
-    this.el.addEventListener('blur', this._handleRangeRelease);
+    this.el.addEventListener('input', this._handleRangeInput, { signal });
+    this.el.addEventListener('pointerup', this._handleRangePointerUp, { signal });
+    this.el.addEventListener('pointercancel', this._handleRangePointerUp, { signal });
+    this.el.addEventListener('blur', this._handleRangeRelease, { signal });
     // `mouseout`, not `pointerout`: this used to be a `mouseout`/`touchleave`
     // pair, and `touchleave` was never implemented by any browser, so the
     // handler has only ever run for a mouse. `pointerout` also fires when a
     // touch lifts, which would clear the thumb's active state at a moment
     // nothing cleared it before.
-    this.el.addEventListener('mouseout', this._handleRangeRelease);
+    this.el.addEventListener('mouseout', this._handleRangeRelease, { signal });
     // A form reset restores the value without an input event.
-    this._form = this.el.form;
-    this._form?.addEventListener('reset', this._handleFormReset);
-  }
-
-  _removeEventHandlers() {
-    this.el.removeEventListener('change', this._handleRangeChange);
-    this.el.removeEventListener('pointerdown', this._handleRangePointerDown);
-    this.el.removeEventListener('input', this._handleRangeInput);
-    this.el.removeEventListener('pointerup', this._handleRangePointerUp);
-    this.el.removeEventListener('pointercancel', this._handleRangePointerUp);
-    this.el.removeEventListener('blur', this._handleRangeRelease);
-    this.el.removeEventListener('mouseout', this._handleRangeRelease);
-    this._form?.removeEventListener('reset', this._handleFormReset);
-    this._form = null;
+    this.el.form?.addEventListener('reset', this._handleFormReset, { signal });
   }
 
   // The reset event fires before the browser restores the values.

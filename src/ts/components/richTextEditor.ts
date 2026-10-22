@@ -98,7 +98,7 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
     if (this._label && !attributes['aria-labelledby']) {
       if (!this._label.id) this._label.id = `rich-text-editor-label-${Utils.guid()}`;
       attributes['aria-labelledby'] = this._label.id;
-      this._label.addEventListener('click', this._handleLabelClick);
+      this._label.addEventListener('click', this._handleLabelClick, { signal: this._events.signal });
     }
     // A hidden required textarea blocks submit with no message, because the
     // browser cannot focus it to report. The editor takes over: it carries
@@ -108,7 +108,7 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
       attributes['aria-required'] = 'true';
       this.textarea.required = false;
       this._form = this.textarea.form;
-      this._form?.addEventListener('submit', this._handleSubmit, true);
+      this._form?.addEventListener('submit', this._handleSubmit, { capture: true, signal: this._events.signal });
     }
 
     this.content = document.createElement('div');
@@ -125,7 +125,7 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
     this.editor.on('update', this._handleUpdate);
     this.editor.on('transaction', this._handleTransaction);
     this._handleTransaction();
-    el.addEventListener('click', this._handleClick);
+    el.addEventListener('click', this._handleClick, { signal: this._events.signal });
   }
 
   static get defaults(): RichTextEditorOptions {
@@ -137,8 +137,6 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
   destroy() {
     super.destroy();
     if (!this.editor) return;
-    this.el.removeEventListener('click', this._handleClick);
-    this._label?.removeEventListener('click', this._handleLabelClick);
     this.editor.off('update', this._handleUpdate);
     this.editor.off('transaction', this._handleTransaction);
     this.editor.destroy();
@@ -146,7 +144,6 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
     this.content.remove();
     this.textarea.hidden = false;
     this.textarea.required = this._required;
-    this._form?.removeEventListener('submit', this._handleSubmit, true);
     for (const button of this._actions.keys()) {
       button.disabled = false;
       button.classList.remove('active');

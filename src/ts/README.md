@@ -38,11 +38,18 @@ export class Thing extends Component<ThingOptions> {
   static key = 'Expressive_Thing';                            // instance lookup key
   constructor(el: HTMLElement, options: Partial<ThingOptions>) {
     super(el, options);                                       // sets this.options and el.Expressive_Thing
+    this.el.addEventListener('click', this._onClick, { signal: this._events.signal });
   }
   static get defaults() { return _defaults; }
-  destroy() { /* remove handlers */ super.destroy(); }        // clears el.Expressive_Thing
+  destroy() { /* undo DOM changes */ super.destroy(); }       // aborts _events, clears el.Expressive_Thing
 }
 ```
+
+Listeners that last as long as the instance take `this._events.signal`, so
+destroy() needs no removeEventListener calls. Listeners that come and go while
+the instance lives, such as an open menu's document handlers or a drag, get
+their own `controllerFor(el)` from `core/utils`. It builds the AbortController
+from the element's window, because jsdom rejects a signal from another one.
 
 The base class reads `key` to set, look up and clear the instance:
 `Thing.getInstance(el)` is inherited and typed on `this`, so it returns a

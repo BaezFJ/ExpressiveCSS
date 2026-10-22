@@ -569,7 +569,8 @@ export class Datepicker extends Component<DatepickerOptions> {
   static key = 'Expressive_Datepicker';
 
   destroy() {
-    this._removeEventHandlers();
+    this._events.abort();
+    clearTimeout(this._resetTimer);
     this.dateEls?.slice(1).forEach(input => this._removeDateInput(input));
     if (!this.options.dateRangeEndEl && this.endDateEl) this._removeDateInput(this.endDateEl);
     this.displayPlugin?.destroy();
@@ -1406,10 +1407,11 @@ export class Datepicker extends Component<DatepickerOptions> {
     this._addInputEventHandlers(this.el);
     if (this.endDateEl) this._addInputEventHandlers(this.endDateEl);
     this._form = this.el.form;
-    this._form?.addEventListener('reset', this._handleFormReset);
-    this.calendarEl.addEventListener('click', this._handleCalendarClick);
-    this.calendarEl.addEventListener('keydown', this._handleCalendarKeydown);
-    this.calendarEl.addEventListener('focusin', this._handleCalendarFocus);
+    const { signal } = this._events;
+    this._form?.addEventListener('reset', this._handleFormReset, { signal });
+    this.calendarEl.addEventListener('click', this._handleCalendarClick, { signal });
+    this.calendarEl.addEventListener('keydown', this._handleCalendarKeydown, { signal });
+    this.calendarEl.addEventListener('focusin', this._handleCalendarFocus, { signal });
   }
 
   _setupVariables() {
@@ -1423,33 +1425,16 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.footer = this.containerEl.querySelector('.datepicker-footer');
   }
 
-  _removeEventHandlers() {
-    this._form?.removeEventListener('reset', this._handleFormReset);
-    clearTimeout(this._resetTimer);
-    for (const input of this.dateEls ?? [this.el]) this._removeInputEventHandlers(input);
-    this.calendarEl.removeEventListener('click', this._handleCalendarClick);
-    this.calendarEl.removeEventListener('keydown', this._handleCalendarKeydown);
-    this.calendarEl.removeEventListener('focusin', this._handleCalendarFocus);
-    if (this.options.isDateRange && this.endDateEl) {
-      this._removeInputEventHandlers(this.endDateEl);
-    }
-  }
-
+  /** A date input's listeners. An input the picker removes keeps them, but no event reaches it then. */
   private _addInputEventHandlers(input: HTMLInputElement) {
-    input.addEventListener('click', this._handleInputClick);
-    input.addEventListener('keydown', this._handleInputKeydown);
-    input.addEventListener('change', this._handleInputChange);
-  }
-
-  private _removeInputEventHandlers(input: HTMLInputElement) {
-    input.removeEventListener('click', this._handleInputClick);
-    input.removeEventListener('keydown', this._handleInputKeydown);
-    input.removeEventListener('change', this._handleInputChange);
+    const { signal } = this._events;
+    input.addEventListener('click', this._handleInputClick, { signal });
+    input.addEventListener('keydown', this._handleInputKeydown, { signal });
+    input.addEventListener('change', this._handleInputChange, { signal });
   }
 
   private _removeDateInput(input: HTMLInputElement) {
     const focused = (input.getRootNode() as Document | ShadowRoot).activeElement === input;
-    this._removeInputEventHandlers(input);
     input.remove();
     if (focused && document.activeElement === document.body) this.el.focus();
   }

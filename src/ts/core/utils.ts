@@ -43,6 +43,14 @@ export function pickerFooter(
   footerButton(buttons, i18n.done, 'btn-confirm', onConfirm);
 }
 
+/**
+ * An AbortController from the window `node` is in. Its signal removes
+ * listeners added there, and jsdom rejects a signal from another window.
+ */
+export function controllerFor(node: Node): AbortController {
+  return new (node.ownerDocument?.defaultView ?? window).AbortController();
+}
+
 /** An SVG element with its attributes. */
 export function svgNode(name: string, attributes: Record<string, string> = {}): SVGElement {
   const element = document.createElementNS('http://www.w3.org/2000/svg', name);

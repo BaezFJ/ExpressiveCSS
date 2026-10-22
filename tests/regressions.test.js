@@ -2615,7 +2615,10 @@ describe('Particles', () => {
     globalThis.matchMedia = (query) => (queries[query] ??= {
       matches: query.includes('reduced-motion') && reduce,
       listeners: new Set(),
-      addEventListener(type, fn) { this.listeners.add(fn); },
+      addEventListener(type, fn, options) {
+        this.listeners.add(fn);
+        options?.signal?.addEventListener('abort', () => this.listeners.delete(fn));
+      },
       removeEventListener(type, fn) { this.listeners.delete(fn); },
       change(matches = this.matches) { this.matches = matches; this.listeners.forEach((fn) => fn()); }
     });

@@ -32,20 +32,15 @@ export class CharacterCounter extends Component<BaseOptions> {
   static key = 'Expressive_CharacterCounter';
 
   destroy() {
-    this._removeEventHandlers();
     super.destroy();
     this._removeCounter();
     if (this.isInvalid) this.el.classList.remove('invalid');
   }
 
   _setupEventHandlers() {
-    this.el.addEventListener('focus', this.updateCounter, true);
-    this.el.addEventListener('input', this.updateCounter, true);
-  }
-
-  _removeEventHandlers() {
-    this.el.removeEventListener('focus', this.updateCounter, true);
-    this.el.removeEventListener('input', this.updateCounter, true);
+    const options = { capture: true, signal: this._events.signal };
+    this.el.addEventListener('focus', this.updateCounter, options);
+    this.el.addEventListener('input', this.updateCounter, options);
   }
 
   _setupCounter() {

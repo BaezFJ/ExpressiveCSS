@@ -2372,7 +2372,7 @@
           },
           {
             "path": "src/ts/components/messageScroller.ts",
-            "sha256": "38088c3eef44a35dcc699c5c3313104e00b1167d58116e9e0f7192f1e41cb483"
+            "sha256": "857aeed955c93192e5cf0e003ca9f0c18900284083e97d4547da04fbc936866e"
           }
         ],
         "gaps": [
@@ -5881,7 +5881,7 @@
           },
           {
             "path": "src/ts/components/confetti.ts",
-            "sha256": "e580125a7dc3e2cbc715cf2dd0627f738b207f176bb5e1ce62e9a1d2786a533d"
+            "sha256": "3eeacd4eabd4ffe48586e85b874a394f2bc96fe35133678e1a06f14ac751ebf2"
           }
         ],
         "gaps": [
@@ -7408,7 +7408,7 @@
           },
           {
             "path": "src/ts/components/colorPicker.ts",
-            "sha256": "f2594df8ada3d803c8b5958e75afb996b35ca8be8075bb4934337fb21689e567"
+            "sha256": "f21cb593636261f0bd56515bfaa3bf24284d00e517406672a9823cc06f52be16"
           }
         ],
         "gaps": [

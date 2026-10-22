@@ -76,7 +76,8 @@ export class FormSelect extends Component<FormSelectOptions> {
   static key = 'Expressive_FormSelect';
 
   destroy() {
-    this._removeEventHandlers();
+    this._events.abort();
+    clearTimeout(this._resetTimer);
     this._clearValidationError();
     // The Menu holds itself in the static Menu._menus registry
     // until its own destroy() runs, so dropping the elements is not enough -
@@ -115,43 +116,28 @@ export class FormSelect extends Component<FormSelectOptions> {
   }
 
   _setupEventHandlers() {
+    const { signal } = this._events;
     this._setupOptionHandlers();
-    this.el.addEventListener('change', this._handleSelectChange);
-    this.el.addEventListener('invalid', this._handleInvalid);
-    this.el.addEventListener('focus', this._handleNativeFocus);
-    this.input.addEventListener('click', this._handleInputClick);
-    this.menuEl.addEventListener('focusin', this._handleOptionFocus);
+    this.el.addEventListener('change', this._handleSelectChange, { signal });
+    this.el.addEventListener('invalid', this._handleInvalid, { signal });
+    this.el.addEventListener('focus', this._handleNativeFocus, { signal });
+    this.input.addEventListener('click', this._handleInputClick, { signal });
+    this.menuEl.addEventListener('focusin', this._handleOptionFocus, { signal });
     this._bindForm();
   }
 
   private _bindForm() {
     this._form?.removeEventListener('reset', this._handleReset);
     this._form = this.el.form;
-    this._form?.addEventListener('reset', this._handleReset);
+    this._form?.addEventListener('reset', this._handleReset, { signal: this._events.signal });
   }
 
-  _removeEventHandlers() {
-    this._removeOptionHandlers();
-    this.el.removeEventListener('change', this._handleSelectChange);
-    this.el.removeEventListener('invalid', this._handleInvalid);
-    this.el.removeEventListener('focus', this._handleNativeFocus);
-    this.input?.removeEventListener('click', this._handleInputClick);
-    this.menuEl?.removeEventListener('focusin', this._handleOptionFocus);
-    this._form?.removeEventListener('reset', this._handleReset);
-    clearTimeout(this._resetTimer);
-  }
-
+  // A rebuild replaces the rows, and no event reaches the old ones.
   private _setupOptionHandlers() {
+    const { signal } = this._events;
     this.menuEl.querySelectorAll('li:not(.optgroup)').forEach((el) => {
-      el.addEventListener('click', this._handleOptionClick);
-      el.addEventListener('keydown', this._handleOptionKeydown);
-    });
-  }
-
-  private _removeOptionHandlers() {
-    this.menuEl?.querySelectorAll('li:not(.optgroup)').forEach((el) => {
-      el.removeEventListener('click', this._handleOptionClick);
-      el.removeEventListener('keydown', this._handleOptionKeydown);
+      el.addEventListener('click', this._handleOptionClick, { signal });
+      el.addEventListener('keydown', this._handleOptionKeydown, { signal });
     });
   }
 
@@ -210,8 +196,6 @@ export class FormSelect extends Component<FormSelectOptions> {
     }, 0);
   };
 
-  // Named rather than inline so that _removeEventHandlers can actually detach
-  // it - an anonymous listener per option was unremovable.
   _handleOptionKeydown = (e: KeyboardEvent) => {
     if (e.key === ' ' || e.key === 'Enter') this._handleOptionClick(e);
   };
@@ -452,7 +436,6 @@ export class FormSelect extends Component<FormSelectOptions> {
   }
 
   private _rebuildOptions() {
-    this._removeOptionHandlers();
     this.menuEl.replaceChildren();
     this._buildOptions();
     this._setupOptionHandlers();

@@ -231,9 +231,7 @@ export class Chips extends Component<ChipsOptions> {
     if (this.autocomplete && Autocomplete.getInstance(this._input) === this.autocomplete) {
       this.autocomplete.destroy();
     }
-    if (this.options.allowUserInput) {
-      this._removeEventHandlers();
-    }
+    this._events.abort();
     this._chips.forEach((c) => c.remove());
     this._chips = [];
     this._giveNameBack();
@@ -241,25 +239,15 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   _setupEventHandlers() {
-    this.el.addEventListener('click', this._handleChipClick);
-    this.el.addEventListener('keydown', Chips._handleChipsKeydown);
-    this.el.addEventListener('focusin', this._handleFocusIn);
-    this.el.addEventListener('focusout', this._handleFocusOut);
-    this._input.addEventListener('focus', this._handleInputFocus);
-    this._input.addEventListener('blur', this._handleInputBlur);
-    this._input.addEventListener('keydown', this._handleInputKeydown);
-    this._input.addEventListener('paste', this._handleInputPaste);
-  }
-
-  _removeEventHandlers() {
-    this.el.removeEventListener('click', this._handleChipClick);
-    this.el.removeEventListener('keydown', Chips._handleChipsKeydown);
-    this.el.removeEventListener('focusin', this._handleFocusIn);
-    this.el.removeEventListener('focusout', this._handleFocusOut);
-    this._input.removeEventListener('focus', this._handleInputFocus);
-    this._input.removeEventListener('blur', this._handleInputBlur);
-    this._input.removeEventListener('keydown', this._handleInputKeydown);
-    this._input.removeEventListener('paste', this._handleInputPaste);
+    const { signal } = this._events;
+    this.el.addEventListener('click', this._handleChipClick, { signal });
+    this.el.addEventListener('keydown', Chips._handleChipsKeydown, { signal });
+    this.el.addEventListener('focusin', this._handleFocusIn, { signal });
+    this.el.addEventListener('focusout', this._handleFocusOut, { signal });
+    this._input.addEventListener('focus', this._handleInputFocus, { signal });
+    this._input.addEventListener('blur', this._handleInputBlur, { signal });
+    this._input.addEventListener('keydown', this._handleInputKeydown, { signal });
+    this._input.addEventListener('paste', this._handleInputPaste, { signal });
   }
 
   /**

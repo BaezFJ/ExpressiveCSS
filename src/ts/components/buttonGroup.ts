@@ -30,17 +30,18 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
   constructor(el: HTMLElement, options: Partial<ButtonGroupOptions> = {}) {
     super(el, options);
 
+    const { signal } = this._events;
     if (this._selectionMode) {
       this._normalizeSelection();
-      this.el.addEventListener("click", this._handleClick, true);
+      this.el.addEventListener("click", this._handleClick, { capture: true, signal });
     }
-    this.el.addEventListener("pointerdown", this._handlePointerDown);
-    this.el.addEventListener("keydown", this._handleKeyDown);
-    this.el.addEventListener("focusout", this._handleFocusOut);
-    document.addEventListener("pointerup", this._resetPress);
-    document.addEventListener("pointercancel", this._resetPress);
-    document.addEventListener("keyup", this._handleKeyUp);
-    window.addEventListener("blur", this._resetPress);
+    this.el.addEventListener("pointerdown", this._handlePointerDown, { signal });
+    this.el.addEventListener("keydown", this._handleKeyDown, { signal });
+    this.el.addEventListener("focusout", this._handleFocusOut, { signal });
+    document.addEventListener("pointerup", this._resetPress, { signal });
+    document.addEventListener("pointercancel", this._resetPress, { signal });
+    document.addEventListener("keyup", this._handleKeyUp, { signal });
+    window.addEventListener("blur", this._resetPress, { signal });
   }
 
   static get defaults() {
@@ -52,14 +53,6 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
   destroy() {
     this._resetPress();
     this._finishRelease();
-    this.el.removeEventListener("click", this._handleClick, true);
-    this.el.removeEventListener("pointerdown", this._handlePointerDown);
-    this.el.removeEventListener("keydown", this._handleKeyDown);
-    this.el.removeEventListener("focusout", this._handleFocusOut);
-    document.removeEventListener("pointerup", this._resetPress);
-    document.removeEventListener("pointercancel", this._resetPress);
-    document.removeEventListener("keyup", this._handleKeyUp);
-    window.removeEventListener("blur", this._resetPress);
     for (const [item, value] of this._originalPressed) restoreAttribute(item, "aria-pressed", value);
     this._originalPressed.clear();
     super.destroy();
