@@ -479,6 +479,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- `@use "expressive" with ($text-color: …)` colors the page text. The
+  variable was written on `html`, where the `body` rule's own on-surface
+  color covered it, so it only took effect inside a shadow root. `body`
+  and `:host` now take their color from `$text-color`. The default is
+  unchanged.
 - MCP static inspection checks the `require-idref` and
   `require-owned-descendant` rules from `semantics.json`. The server kept
   its own copy of the rule helpers, which had drifted and skipped both, so

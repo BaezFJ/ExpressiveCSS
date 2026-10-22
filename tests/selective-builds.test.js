@@ -66,6 +66,8 @@ test('default custom Sass matches the complete stylesheet and preserves configur
   assert.doesNotMatch(empty, /\.scroll-area/);
   const seeded = compileString('@use "expressive" with ($md-source: #6750a4, $expressive-include-fonts: false);', options).css;
   assert.match(seeded, /--md-source: ?#6750a4/);
+  const textColor = compileString('@use "expressive" with ($text-color: red, $expressive-include-fonts: false);', options).css;
+  assert.match(textColor, /body,:host\{color:red\}/);
   const scrollArea = compileString('@use "custom" with ($components: (), $utilities: ("scroll-area"), $expressive-include-fonts: false);', options).css;
   assert.match(scrollArea, /\.scroll-area\{overflow:auto;scrollbar-width:thin/);
   assert.doesNotMatch(scrollArea, /\.datepicker|\.tabs|\.overflow-x-auto/);
@@ -341,5 +343,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed calendar week, day and year views: 85,031 gzip bytes (+364).
   // Reviewed shared navigation destination mixins; one badge rule moves after its siblings: 85,033 gzip bytes (+2).
   // Reviewed base rules that restated the browser's own em, i, cell and root weight values: 85,016 gzip bytes (-17).
-  assert.ok(sizes(css).gzip <= 85016, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed $text-color moved onto body and :host, so it reaches the page: 85,015 gzip bytes (-1).
+  assert.ok(sizes(css).gzip <= 85015, `CSS gzip: ${sizes(css).gzip}`);
 });
