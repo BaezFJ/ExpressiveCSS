@@ -345,5 +345,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed base rules that restated the browser's own em, i, cell and root weight values: 85,016 gzip bytes (-17).
   // Reviewed $text-color moved onto body and :host, so it reaches the page: 85,015 gzip bytes (-1).
   // Reviewed the x and y spacing helpers as margin-inline, margin-block and their padding twins: 84,891 gzip bytes (-124).
-  assert.ok(sizes(css).gzip <= 84891, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the horizontal card grid written once for the card and its primary action: 84,820 gzip bytes (-71).
+  assert.ok(sizes(css).gzip <= 84820, `CSS gzip: ${sizes(css).gzip}`);
 });
