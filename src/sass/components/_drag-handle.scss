@@ -97,19 +97,11 @@
 // every other element to aria-hidden is what keeps the two in step.
 button.drag-handle {
   &:hover {
-    background-color: color-mix(
-      in oklab,
-      var(--md-comp-drag-handle-state-layer-color) state-opacity("hover"),
-      transparent
-    );
+    background-color: state-layer(var(--md-comp-drag-handle-state-layer-color), "hover");
   }
 
   &:focus-visible {
-    background-color: color-mix(
-      in oklab,
-      var(--md-comp-drag-handle-state-layer-color) state-opacity("focus"),
-      transparent
-    );
+    background-color: state-layer(var(--md-comp-drag-handle-state-layer-color), "focus");
   }
 
   @include focus-visible;

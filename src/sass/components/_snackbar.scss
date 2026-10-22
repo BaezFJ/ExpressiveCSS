@@ -165,12 +165,12 @@ $_bar: ".snackbar";
     @include typescale("label-large");
 
     &:hover {
-      background-color: color-mix(in oklab, var(--md-sys-color-inverse-primary) state-opacity("hover"), transparent);
+      background-color: state-layer(var(--md-sys-color-inverse-primary), "hover");
     }
 
     &:active,
     &:focus {
-      background-color: color-mix(in oklab, var(--md-sys-color-inverse-primary) state-opacity("focus"), transparent);
+      background-color: state-layer(var(--md-sys-color-inverse-primary), "focus");
     }
 
     &:focus-visible {
@@ -200,12 +200,12 @@ $_bar: ".snackbar";
     }
 
     &:hover {
-      background-color: color-mix(in oklab, var(--md-sys-color-inverse-on-surface) state-opacity("hover"), transparent);
+      background-color: state-layer(var(--md-sys-color-inverse-on-surface), "hover");
     }
 
     &:active,
     &:focus {
-      background-color: color-mix(in oklab, var(--md-sys-color-inverse-on-surface) state-opacity("focus"), transparent);
+      background-color: state-layer(var(--md-sys-color-inverse-on-surface), "focus");
     }
 
     &:focus-visible {

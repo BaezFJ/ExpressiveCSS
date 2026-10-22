@@ -85,7 +85,7 @@ table {
     transition: background-color var(--md-sys-motion-duration-medium1) ease;
 
     &:hover {
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
     }
   }
 

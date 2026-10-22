@@ -238,13 +238,13 @@ $_active-pos: var(--md-comp-slider-active-position, var(--md-comp-slider-active-
   }
 
   input[type="range"]:hover:not(:disabled)#{$thumb} {
-    box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) state-opacity("hover"), transparent);
+    box-shadow: 0 0 0 18px state-layer(var(--md-comp-slider-handle-color), "hover");
   }
 
   // The tint alone was about 1.1:1 against the surface, so the handle also
   // takes the shared focus ring.
   input[type="range"]:focus-visible:not(:disabled)#{$thumb} {
-    box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) state-opacity("focus"), transparent);
+    box-shadow: 0 0 0 18px state-layer(var(--md-comp-slider-handle-color), "focus");
     @include focus-ring;
   }
 

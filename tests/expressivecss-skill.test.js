@@ -460,7 +460,7 @@ describe('the ExpressiveCSS agent skill', () => {
     }
     assert.match(globalSass, /@include bp-down\("expanded"\)[\s\S]*table\.responsive-table/);
     assert.match(globalSass, /tbody > tr:nth-child\(odd\)\s*\{\s*background-color:\s*var\(--md-sys-color-surface-container-high\)/);
-    assert.match(globalSass, /&\.highlight > tbody > tr[\s\S]*&:hover[\s\S]*var\(--md-sys-color-on-surface\) state-opacity\("hover"\)/);
+    assert.match(globalSass, /&\.highlight > tbody > tr[\s\S]*&:hover[\s\S]*state-layer\(var\(--md-sys-color-on-surface\), "hover"\)/);
     assert.match(references.table, /`--md-sys-color-surface-container-high`[\s\S]*on-surface hover state layer/i);
     assert.match(globalSass, /&\.centered\s*\{[\s\S]*thead tr th, tbody tr td\s*\{[\s\S]*text-align:\s*center/);
     assert.match(references.table, /`\.centered` \| Centers column headers and body data cells\.[\s\S]*Body row headers[\s\S]*stay start-aligned/i);

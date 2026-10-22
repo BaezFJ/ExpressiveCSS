@@ -46,7 +46,7 @@ Checkboxes and radio buttons use a ring because the visible control is too small
 }
 ```
 
-Do not append `%` directly to `var(...)`, and do not pass a complete color token through `rgba()`. In framework Sass, use the existing `state-opacity()` or `state-layer-ring()` helper instead of repeating the conversion.
+Do not append `%` directly to `var(...)`, and do not pass a complete color token through `rgba()`. In framework Sass, use the existing `state-layer()`, `state-opacity()` or `state-layer-ring()` helper instead of repeating the conversion.
 
 ## State and focus rules
 

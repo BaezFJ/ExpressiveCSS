@@ -33,6 +33,11 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   @return calc(var(--md-sys-state-#{$state}-state-layer-opacity) * 100%);
 }
 
+/// `$color` at the `$state` layer's opacity, mixed over `$base`.
+@function state-layer($color, $state, $base: transparent) {
+  @return color-mix(in oklab, $color state-opacity($state), $base);
+}
+
 
 // Common-button geometry. M3 Expressive's default size is small: 40dp,
 // label-large, corner.full, 16dp inset, 8dp icon gap. The size axis moves
@@ -76,13 +81,13 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 @mixin _btn-states($on, $base, $hover-depth: null, $press-depth: null) {
   &:hover {
     @if $hover-depth { @include z-depth($hover-depth); }
-    background-color: color-mix(in oklab, #{$on} state-opacity("hover"), #{$base});
+    background-color: state-layer($on, "hover", $base);
   }
 
   &:active,
   &:focus {
     @if $press-depth { @include z-depth($press-depth); }
-    background-color: color-mix(in oklab, #{$on} state-opacity("focus"), #{$base});
+    background-color: state-layer($on, "focus", $base);
   }
 
   @include focus-visible();
@@ -212,7 +217,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   }
 
   &:hover {
-    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+    background-color: state-layer(var(--md-sys-color-on-surface), "hover");
   }
 
   @include focus-visible;
@@ -272,12 +277,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 /// they grow a `box-shadow` from the control's edge out to the state layer
 /// size.
 @mixin state-layer-ring($outer, $inner, $color, $state) {
-  box-shadow: 0 0 0 calc((#{$outer} - #{$inner}) / 2)
-    color-mix(
-      in oklab,
-      #{$color} state-opacity($state),
-      transparent
-    );
+  box-shadow: 0 0 0 calc((#{$outer} - #{$inner}) / 2) state-layer($color, $state);
 }
 
 /// The button size tokens for one rung of `$button-sizes`.

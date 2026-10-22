@@ -89,11 +89,7 @@ $_accordion-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
     }
 
     &:hover {
-      background-color: color-mix(
-        in oklab,
-        var(--md-sys-color-on-surface) state-opacity("hover"),
-        transparent
-      );
+      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
     }
 
     > #{$icon} {

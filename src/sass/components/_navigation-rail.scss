@@ -117,7 +117,7 @@
     }
 
     &:hover {
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
     }
   }
 
@@ -187,7 +187,7 @@
     }
 
     &:hover:not(.active, [aria-current]) > #{$icon} {
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
     }
 
     &.active,
@@ -277,7 +277,7 @@
       }
 
       &:hover:not(.active, [aria-current]) {
-        background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+        background-color: state-layer(var(--md-sys-color-on-surface), "hover");
 
         > #{$icon} {
           background-color: transparent;
@@ -332,7 +332,7 @@
 // A destination whose panel is open keeps its hover state layer.
 .navigation-rail:not(.expanded) > button:has(+ .navigation-rail-panel:popover-open):not(.active, [aria-current]) > #{$icon},
 .navigation-rail.expanded > button:has(+ .navigation-rail-panel:popover-open):not(.active, [aria-current]) {
-  background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+  background-color: state-layer(var(--md-sys-color-on-surface), "hover");
 }
 
 // Docks against the trigger's inline end; the offset clears the rail's
@@ -384,7 +384,7 @@
     @include focus-visible;
 
     &:hover:not([aria-current]) {
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
     }
 
     &[aria-current] {

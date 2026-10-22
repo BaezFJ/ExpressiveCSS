@@ -185,20 +185,12 @@ $_extend-sizes: (
 
   &:hover {
     @include z-depth("4");
-    background-color: color-mix(
-      in oklab,
-      var(--md-comp-extended-fab-label-text-color) state-opacity("hover"),
-      var(--md-comp-extended-fab-container-color)
-    );
+    background-color: state-layer(var(--md-comp-extended-fab-label-text-color), "hover", var(--md-comp-extended-fab-container-color));
   }
 
   &:active,
   &:focus {
-    background-color: color-mix(
-      in oklab,
-      var(--md-comp-extended-fab-label-text-color) state-opacity("focus"),
-      var(--md-comp-extended-fab-container-color)
-    );
+    background-color: state-layer(var(--md-comp-extended-fab-label-text-color), "focus", var(--md-comp-extended-fab-container-color));
   }
 
   @include focus-visible;
@@ -282,20 +274,12 @@ $_extend-sizes: (
 
   &:hover {
     @include z-depth("4");
-    background-color: color-mix(
-      in oklab,
-      var(--md-sys-color-on-primary-container) state-opacity("hover"),
-      var(--md-sys-color-primary-container)
-    );
+    background-color: state-layer(var(--md-sys-color-on-primary-container), "hover", var(--md-sys-color-primary-container));
   }
 
   &:active,
   &:focus {
-    background-color: color-mix(
-      in oklab,
-      var(--md-sys-color-on-primary-container) state-opacity("focus"),
-      var(--md-sys-color-primary-container)
-    );
+    background-color: state-layer(var(--md-sys-color-on-primary-container), "focus", var(--md-sys-color-primary-container));
   }
 
   // Medium FAB: 80dp container, 26dp icon. The corner continues the size
@@ -461,11 +445,11 @@ $_shaped: ":where(#{$_btn}):where(:not(#{$_fixed}))";
   background-color: var(--_toggle-container);
 
   &:hover {
-    background-color: color-mix(in oklab, var(--_toggle-state) state-opacity("hover"), var(--_toggle-container));
+    background-color: state-layer(var(--_toggle-state), "hover", var(--_toggle-container));
   }
 
   &:is(:focus, :active) {
-    background-color: color-mix(in oklab, var(--_toggle-state) state-opacity("focus"), var(--_toggle-container));
+    background-color: state-layer(var(--_toggle-state), "focus", var(--_toggle-container));
   }
 }
 

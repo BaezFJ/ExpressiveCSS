@@ -649,11 +649,7 @@ article > aside > .reveal-actions > .reveal-action {
 }
 
 article > aside > .reveal-actions > .reveal-action:hover {
-  background-color: color-mix(
-    in oklab,
-    var(--md-sys-color-on-surface) state-opacity("hover"),
-    transparent
-  );
+  background-color: state-layer(var(--md-sys-color-on-surface), "hover");
 }
 
 article > aside > .reveal-actions > .reveal-action > :is(.material-symbols, .card-icon, svg) {

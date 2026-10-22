@@ -57,11 +57,7 @@
   cursor: pointer;
 
   &:hover {
-    background-color: color-mix(
-      in oklab,
-      var(--md-sys-color-on-surface-variant) state-opacity("hover"),
-      var(--md-sys-color-surface-container-low)
-    );
+    background-color: state-layer(var(--md-sys-color-on-surface-variant), "hover", var(--md-sys-color-surface-container-low));
   }
 }
 
@@ -131,7 +127,7 @@
 }
 
 .chip .close:hover {
-  background-color: color-mix(in oklab, var(--md-sys-color-on-surface-variant) state-opacity("hover"), transparent);
+  background-color: state-layer(var(--md-sys-color-on-surface-variant), "hover");
 }
 
 //--------------------------
