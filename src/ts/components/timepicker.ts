@@ -477,13 +477,15 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   /**
    * Read `minTime` and `maxTime` as seconds of the day. Without a seconds
-   * field the picker writes whole minutes, so the bounds round inward.
+   * field the picker writes whole minutes, so the bounds round inward to a
+   * whole minute: `maxTime` takes in every second of its minute, and the
+   * hidden seconds never clamp.
    */
   private _readLimits() {
     const { minTime, maxTime, showSeconds, fromNow } = this.options;
     const read = (time: string | null, fallback: number) => (time ? daySeconds(readTime(time, fromNow)) : fallback);
     let [min, max] = [read(minTime, 0), read(maxTime, DAY_END)];
-    if (!showSeconds) [min, max] = [Math.ceil(min / 60) * 60, Math.floor(max / 60) * 60];
+    if (!showSeconds) [min, max] = [Math.ceil(min / 60) * 60, Math.floor(max / 60) * 60 + 59];
     if (min > max) return console.warn('Timepicker ignored minTime and maxTime: minTime is after maxTime.', this.el);
     this._limits = [min, max];
   }

@@ -86,6 +86,16 @@ describe('Timepicker time range options', () => {
     }
   });
 
+  test('without seconds and bounds, the hidden seconds stay as read', () => {
+    const { picker } = open('23:59:30', { twelveHour: false });
+    try {
+      assert.equal(shown(picker), '23:59');
+      assert.equal(picker.seconds, 30);
+    } finally {
+      picker.destroy();
+    }
+  });
+
   test('without seconds the bounds round inward to whole minutes', () => {
     const bounds = { twelveHour: false, minTime: '09:00:30', maxTime: '17:29:45' };
     const cases = [
