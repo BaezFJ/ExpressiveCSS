@@ -2,8 +2,8 @@
 import { existsSync, closeSync, constants as fsConstants, fstatSync, lstatSync, openSync, readFileSync, realpathSync } from 'node:fs';
 import { lstat, readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
-import { createHash, randomUUID } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+import { createHash, randomUUID, hash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import * as z from 'zod/v4';
@@ -817,7 +817,7 @@ async function verifyLocalContractProvenance(projectRoot, contract, canonicalSou
     return { status: 'missing', expectedHash: contract.sourceHash, computedHash: null, missingSources };
   }
 
-  const hash = createHash('sha256');
+  const hasher = createHash('sha256');
   aggregateBytes = 0;
   for (const { source, sourcePath } of validatedSources) {
     const limit = Math.min(MAX_CONTRACT_SOURCE_BYTES, Math.max(0, MAX_CONTRACT_TOTAL_BYTES - aggregateBytes));
@@ -826,9 +826,9 @@ async function verifyLocalContractProvenance(projectRoot, contract, canonicalSou
       return { status: 'invalid', expectedHash: contract.sourceHash, computedHash: null, missingSources };
     }
     aggregateBytes += content.length;
-    hash.update(`${source}\0${content.toString('utf8')}\0`);
+    hasher.update(`${source}\0${content.toString('utf8')}\0`);
   }
-  const computedHash = hash.digest('hex');
+  const computedHash = hasher.digest('hex');
   return {
     status: computedHash === contract.sourceHash ? 'verified' : 'stale',
     expectedHash: contract.sourceHash,
@@ -1687,7 +1687,7 @@ export async function readInspectionFile(filePath, projectRoot, byteLimit) {
   const target = path.join(await realpath(path.dirname(path.resolve(filePath))), path.basename(filePath));
   if (!isPathInside(root, target)) throw new Error('opened file is outside projectRoot');
   const bytes = await readBoundedRegularFile(target, byteLimit, 'inspected', root, null);
-  return { text: bytes.toString('utf8'), bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') };
+  return { text: bytes.toString('utf8'), bytes: bytes.length, sha256: hash('sha256', bytes) };
 }
 
 async function findFileViolations(fileInfoList, projectRoot) {
@@ -2875,7 +2875,7 @@ async function startServer() {
 }
 
 // Only run as the entry point; lint.mjs imports the static checks without starting the server.
-if (process.argv[1] && pathToFileURL(realpathSync(process.argv[1])).href === import.meta.url) {
+if (import.meta.main) {
   startServer().catch((error) => {
     console.error('ExpressiveCSS MCP server failed to start:', error);
     process.exitCode = 1;

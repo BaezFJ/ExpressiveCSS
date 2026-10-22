@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import { hash } from 'node:crypto';
 import { readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -26,7 +26,7 @@ const INSTALLED_FILES = [
   'node_modules/playwright-core/browsers.json', 'node_modules/jsdom/package.json',
   'node_modules/smol-toml/package.json', 'mcp/expressivecss/node_modules/@modelcontextprotocol/sdk/package.json',
 ];
-const digest = (value) => `sha256:${createHash('sha256').update(value).digest('hex')}`;
+const digest = (value) => `sha256:${hash('sha256', value)}`;
 const fingerprint = (value) => digest(JSON.stringify(value));
 const validHash = (value) => typeof value === 'string' && /^sha256:[a-f0-9]{64}$/.test(value);
 const safeName = (value) => typeof value === 'string' && /^[a-z0-9][a-z0-9_-]{0,127}$/.test(value);

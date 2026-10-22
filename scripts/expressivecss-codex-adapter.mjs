@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 // Operator-owned bridge: model output is never execution evidence.
-import { createHash } from 'node:crypto';
+import { createHash, hash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { lstat, mkdir, readdir, realpath, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { parse as parseToml } from 'smol-toml';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import { redactValue } from './eval-expressivecss-skill.mjs';
 import { readBoundedRegularFile } from './lib/bounded-file.mjs';
@@ -72,20 +71,20 @@ async function walkFiles(root, visitFile, visitDirectory = () => {}) {
 }
 
 export async function snapshotProject(root) {
-  const hash = createHash('sha256');
+  const hasher = createHash('sha256');
   const manifest = Object.create(null);
   let bytes = 0;
   await walkFiles(root, async (filename, relative, resolvedRoot) => {
     const content = await readBoundedRegularFile(filename, 32 * 1024 * 1024, 'project file', resolvedRoot, null);
     bytes += content.length;
     if (bytes > 128 * 1024 * 1024) throw new Error('Project exceeds 128 MiB');
-    manifest[relative.split(path.sep).join('/')] = { type: 'file', sha256: createHash('sha256').update(content).digest('hex') };
-    hash.update('file\0').update(relative).update('\0').update(content).update('\0');
+    manifest[relative.split(path.sep).join('/')] = { type: 'file', sha256: hash('sha256', content) };
+    hasher.update('file\0').update(relative).update('\0').update(content).update('\0');
   }, (relative) => {
     manifest[relative.split(path.sep).join('/')] = { type: 'directory', sha256: null };
-    hash.update('directory\0').update(relative).update('\0');
+    hasher.update('directory\0').update(relative).update('\0');
   });
-  return { hash: `sha256:${hash.digest('hex')}`, manifest };
+  return { hash: `sha256:${hasher.digest('hex')}`, manifest };
 }
 
 export async function hashProject(root) { return (await snapshotProject(root)).hash; }
@@ -357,7 +356,7 @@ export async function runCodex(input, { executable = 'codex', timeoutMs = 600_00
   return envelope;
 }
 
-if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
+if (import.meta.main) {
   let input = '';
   process.stdin.setEncoding('utf8');
   for await (const chunk of process.stdin) {

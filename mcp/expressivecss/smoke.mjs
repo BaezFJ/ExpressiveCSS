@@ -3,7 +3,7 @@ import { access, copyFile, cp, mkdir, mkdtemp, readFile, realpath, rm, symlink, 
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
+import { createHash, hash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
@@ -49,13 +49,13 @@ async function writeLocalSourceFixture(projectRoot, { stale = false, contract = 
   assert.ok(buttonGuide, 'bundled buttons guide fixture missing');
   await writeFile(path.join(projectRoot, 'skills', 'expressivecss', 'components', buttonGuide.file), buttonGuide.content);
 
-  const hash = createHash('sha256');
-  for (const source of contractData.sources) hash.update(`${source}\0${sourceContents.get(source)}\0`);
+  const hasher = createHash('sha256');
+  for (const source of contractData.sources) hasher.update(`${source}\0${sourceContents.get(source)}\0`);
   if (contract) {
     await writeFile(path.join(projectRoot, 'skills', 'expressivecss', 'references', 'contract.json'), JSON.stringify({
       ...contractData,
       frameworkVersion,
-      sourceHash: hash.digest('hex'),
+      sourceHash: hasher.digest('hex'),
     }));
   }
   if (stale) await writeFile(path.join(projectRoot, 'llm.md'), '# stale local contract source\n');
@@ -2602,7 +2602,7 @@ try {
   // Recoverable verification: exact input evidence, no automatic restoration, and no later scripts after failure.
   const originalManifest = await readFile(path.join(matchingDir, 'package.json'));
   const originalMarkup = await readFile(path.join(matchingDir, 'clean.html'));
-  const digest = bytes => createHash('sha256').update(bytes).digest('hex');
+  const digest = bytes => hash('sha256', bytes);
   const qualityArgs = { projectRoot: matchingDir, files: ['clean.html'], runType: 'full', runCommands: true };
   const setScripts = async typecheck => writeFile(path.join(matchingDir, 'package.json'), JSON.stringify({
     ...JSON.parse(originalManifest), scripts: { typecheck, test: `node -e "require('fs').writeFileSync('later-script.txt','ran')"` },

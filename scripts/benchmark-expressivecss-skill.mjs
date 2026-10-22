@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { chromium } from '@playwright/test';
 import { JSDOM } from 'jsdom';
@@ -634,7 +634,7 @@ async function runTriggerEvaluations({ baseline, candidate = path.join(ROOT, 'sk
   return results;
 }
 
-if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
+if (import.meta.main) {
   const names = ['baseline', 'candidate', 'output', 'repetitions', 'case', 'resume', 'assistance', 'triggers'];
   const { values: args } = parseArgs({ options: Object.fromEntries(names.map((name) => [name, { type: 'string' }])) });
   if (args.triggers === 'true') await runTriggerEvaluations({ baseline: args.baseline, candidate: args.candidate, output: args.output });

@@ -2,7 +2,6 @@
 import assert from 'node:assert/strict';
 import { appendFileSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { parseSemver, compareSemver } from './lib/resolve-expressivecss-version.mjs';
 
@@ -52,7 +51,7 @@ function npmView(spec) {
     throw error;
   }
 }
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (import.meta.main) {
   const manifests = {
     framework: JSON.parse(readFileSync('package.json', 'utf8')),
     mcp: JSON.parse(readFileSync('mcp/expressivecss/package.json', 'utf8')),

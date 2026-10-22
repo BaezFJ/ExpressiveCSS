@@ -1,5 +1,5 @@
 import { mkdir, readFile, readdir, unlink, writeFile } from 'node:fs/promises';
-import { createHash } from 'node:crypto';
+import { createHash, hash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { transform } from 'esbuild';
@@ -42,8 +42,8 @@ async function contractProvenance() {
     source,
     await readFile(resolve(ROOT, source), 'utf8'),
   ]));
-  const hash = createHash('sha256');
-  for (const [source, content] of inputs) hash.update(`${source}\0${content}\0`);
+  const hasher = createHash('sha256');
+  for (const [source, content] of inputs) hasher.update(`${source}\0${content}\0`);
   const packageText = inputs.find(([source]) => source === 'package.json')[1];
   const changelog = inputs.find(([source]) => source === 'CHANGELOG.md')[1];
   const version = JSON.parse(packageText).version;
@@ -54,7 +54,7 @@ async function contractProvenance() {
     })
     .sort();
   const matchingTag = releaseTags.includes(`v${version}`) ? `v${version}` : null;
-  return { version, hash: hash.digest('hex'), releaseTags, matchingTag };
+  return { version, hash: hasher.digest('hex'), releaseTags, matchingTag };
 }
 
 // Each copy sits beside the resolver copy, so its relative imports resolve inside the same scripts/ directory.
@@ -113,12 +113,12 @@ function renderDecisionIndex(data) {
 }
 
 function renderDesignRules(guidelines) {
-  const hash = createHash('sha256').update(guidelines).digest('hex');
+  const digest = hash('sha256', guidelines);
   const sections = DESIGN_RULE_SECTIONS.map(([title, level]) => {
     const body = sectionFor(guidelines, title, level).replace(/\n---\s*$/u, '').trim();
     return `## ${title}\n\n${level === 1 ? body.replace(/^## /gmu, '### ') : body}`;
   });
-  return `${GENERATED_MARKER}\n\n# ExpressiveCSS design rules\n\nCopied from \`m3-guidelines.md\` (SHA-256 \`${hash}\`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.\n\nContents: ${DESIGN_RULE_SECTIONS.map(([title]) => title).join(' · ')}.\n\n${sections.join('\n\n')}\n`;
+  return `${GENERATED_MARKER}\n\n# ExpressiveCSS design rules\n\nCopied from \`m3-guidelines.md\` (SHA-256 \`${digest}\`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.\n\nContents: ${DESIGN_RULE_SECTIONS.map(([title]) => title).join(' · ')}.\n\n${sections.join('\n\n')}\n`;
 }
 
 async function contractManifest(provenance) {

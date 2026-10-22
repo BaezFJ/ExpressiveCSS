@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
+import { hash } from 'node:crypto';
 import path from 'node:path';
 import { readdir } from 'node:fs/promises';
 import { readBoundedRegularFile } from './bounded-file.mjs';
 
-export const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
+export const sha256 = (bytes) => hash('sha256', bytes);
 export const CAPABILITY_INPUT_DIRECTORIES = ['src', 'tests', 'dist', 'skills/expressivecss/assets/examples', 'scripts'];
 export const capabilityEntries = (data) => [...data.components, ...(data.foundations ?? [])];
 const safePath = (value) => typeof value === 'string' && /^(src|tests|scripts|skills|dist)\/[\w./-]+$|^(?:package(?:-lock)?|semantics)\.json$/u.test(value) && !value.split('/').includes('..');

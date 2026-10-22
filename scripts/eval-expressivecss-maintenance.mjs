@@ -253,7 +253,7 @@ export async function runMaintenance({ output, skill = path.join(ROOT, 'skills/e
   return results;
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (import.meta.main) {
   const { values } = parseArgs({ options: { output: { type: 'string' }, skill: { type: 'string' }, case: { type: 'string' } } });
   const rows = await runMaintenance({ output: values.output, skill: values.skill, caseName: values.case });
   process.exitCode = rows.every(row => row.status === 'passed') ? 0 : 1;

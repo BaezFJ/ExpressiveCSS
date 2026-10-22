@@ -5,7 +5,7 @@ import { cp, mkdir, mkdtemp, realpath, rm, writeFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
 
 const THIS_FILE = fileURLToPath(import.meta.url);
@@ -1322,7 +1322,7 @@ async function main() {
   if (report.status !== 'pass') process.exitCode = 1;
 }
 
-if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
+if (import.meta.main) {
   main().catch((error) => {
     console.error(redactValue(error.message));
     process.exitCode = 1;

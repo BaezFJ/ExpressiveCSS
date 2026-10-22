@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { cp, mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { materializeProjectFixture, redactValue } from './eval-expressivecss-skill.mjs';
 import { readBoundedRegularFile } from './lib/bounded-file.mjs';
@@ -117,7 +117,7 @@ export async function runNaturalDiscovery({ baseline, candidate = path.join(ROOT
   await save(path.join(output, 'benchmark.json'), benchmark); await prepareReviewOutputs(output); return benchmark;
 }
 
-if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
+if (import.meta.main) {
   const names = ['baseline', 'candidate', 'output', 'split', 'manifest', 'freeze', 'resume', 'timeout-ms', 'executable', 'configPath'];
   const { values: args } = parseArgs({ options: Object.fromEntries(names.map((name) => [name, { type: 'string' }])) });
   await runNaturalDiscovery({ ...args, freeze: args.freeze === 'true', resume: args.resume === 'true', timeoutMs: args['timeout-ms'] ? Number(args['timeout-ms']) : 180000 });
