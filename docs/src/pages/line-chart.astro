@@ -40,15 +40,14 @@ const [year, half] = [12, 6].map((count) => {
   return { total: money(now), change: `+${((now / sum(lastYear.slice(-count)) - 1) * 100).toFixed(1)}% from last year` };
 });
 const cardScript = `const card = document.getElementById('revenue-card');
-const figure = card.querySelector('.line-chart');
-const body = figure.querySelector('tbody');
+// The chart has data-watch, so it redraws itself when the rows change.
+const body = card.querySelector('.line-chart tbody');
 const rows = [...body.rows];
 card.querySelectorAll('[data-period]').forEach((button) => {
   button.addEventListener('click', () => {
     body.replaceChildren(...rows.slice(-Number(button.dataset.period)));
     card.querySelector('.stats dd').textContent = button.dataset.total;
     card.querySelector('.stat-change').textContent = button.dataset.change;
-    Expressive.LineChart.getInstance(figure).update();
   });
 });`;
 ---
@@ -284,7 +283,8 @@ card.querySelectorAll('[data-period]').forEach((button) => {
         <p>
           A chart goes in a card with the figures it explains. Put the period
           switch beside the stat; on a change, update the stat, swap the table
-          rows and call <code>update()</code> to redraw. The card adds no
+          rows. With <code>data-watch</code> on the figure the chart redraws
+          itself; without it, call <code>update()</code>. The card adds no
           chart styles; size a chart with its tokens. A card pads only its
           headings and paragraphs, so wrap the stat and chart in
           <code>&lt;div class="p-4"&gt;</code> to keep them off the border. A
@@ -304,7 +304,7 @@ card.querySelectorAll('[data-period]').forEach((button) => {
                 </div>
               </div>
             </div>
-            <figure class="line-chart area">
+            <figure class="line-chart area" data-watch>
               <figcaption class="visually-hidden">Revenue this year and last year</figcaption>
               <table>
                 <thead><tr><th>Month</th><th>This year</th><th>Last year</th></tr></thead>
@@ -337,7 +337,7 @@ card.querySelectorAll('[data-period]').forEach((button) => {
         </div>
       </div>
     </div>
-    <figure class="line-chart area">
+    <figure class="line-chart area" data-watch>
       <figcaption class="visually-hidden">Revenue this year and last year</figcaption>
       <table><!-- … --></table>
     </figure>
@@ -491,6 +491,18 @@ ${cardScript.replace(/^/gm, "  ")}
           stack from the series below. With reduced motion the new shape
           appears at once.
         </p>
+        <p>
+          With <code>data-watch</code> on the figure, or the
+          <code>watch</code> option, the chart calls <code>update()</code>
+          itself whenever its table changes: rows or cells added or removed,
+          cell text, or a <code>data-value</code>, <code>class</code> or
+          heatmap <code>data-label</code> inside the table. The edits a script
+          makes in one run redraw it once; edits on either side of an
+          <code>await</code> redraw twice. A replaced table is watched too.
+          The chart reads the attribute when it starts, and any value turns it
+          on. Changes to the figure itself, such as <code>data-min</code>, its
+          classes or its caption, still need <code>update()</code>. Every chart type takes <code>data-watch</code>.
+        </p>
 <Code code={`
 const chart = Expressive.LineChart.init(document.querySelector('.line-chart'), {
   min: 0
@@ -504,6 +516,7 @@ chart.destroy(); // remove the drawing and show the table again
           <tbody>
             <tr><td><code>min</code></td><td><code>null</code></td><td>Lowest y value. <code>data-min</code> overrides it.</td></tr>
             <tr><td><code>max</code></td><td><code>null</code></td><td>Highest y value. <code>data-max</code> overrides it.</td></tr>
+            <tr><td><code>watch</code></td><td><code>false</code></td><td>Redraw when the table changes. <code>data-watch</code> turns it on too.</td></tr>
           </tbody>
         </table>
   </Section>

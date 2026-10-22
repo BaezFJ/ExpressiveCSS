@@ -263,7 +263,8 @@ card.querySelectorAll('[data-period]').forEach((button) => {
         <p>
           A chart goes in a card with the figures it explains. Put the period
           switch beside the stat; on a change, update the stat, swap the table
-          rows and call <code>update()</code> to redraw. The card adds
+          rows and call <code>update()</code> to redraw, or put
+          <code>data-watch</code> on the figure and skip the call. The card adds
           no chart styles; size a chart with its tokens. A card pads only its
           headings and paragraphs, so wrap the stat and chart in
           <code>&lt;div class="p-4"&gt;</code> to keep them off the border. A
@@ -460,7 +461,8 @@ ${cardScript.replace(/^/gm, "  ")}
         <p>
           <code>AutoInit()</code> starts every <code>.column-chart</code>. To
           start one yourself, call <code>ColumnChart.init</code>. After changing its
-          table, call <code>update()</code> to redraw it in place. The columns
+          table, call <code>update()</code> to redraw it in place, or put
+          <code>data-watch</code> on the figure and it redraws itself. The columns
           move from their old values to the new ones, and a new column grows
           from zero; with reduced motion they appear at once. It takes the line
           chart's options and methods.

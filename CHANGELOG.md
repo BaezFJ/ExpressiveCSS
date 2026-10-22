@@ -50,6 +50,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   search returns a match. Arrow keys and Enter now move through
   `li[role="option"]` rows only. In Chips, Enter that adds the typed text
   as a chip now closes the list.
+- A chart with `data-watch` on its figure, or the `watch` option, redraws
+  itself when its table changes, so page script no longer calls `update()`.
+  It watches added and removed rows and cells, cell text, and `data-value`,
+  `class` and the heatmap's `data-label` inside the table, and it follows a
+  replaced table. The edits a script makes in one run redraw it once. Every
+  chart type takes it, and `destroy()` stops it. Charts without it behave as
+  before.
 - Autocomplete's `searchDelay` option waits that many milliseconds after
   typing pauses before calling `onSearch`, so a remote search runs once per
   pause instead of once per key. A text change aborts the running search's

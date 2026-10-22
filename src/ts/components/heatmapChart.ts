@@ -20,7 +20,8 @@ function band(level: number, steps: number) {
  * `data-mid` the scale diverges either side of that value, and with
  * `data-steps` the shades fall into that many bands.
  *
- * Call `update()` after changing the table.
+ * Call `update()` after changing the table, or start it with `watch` or
+ * `data-watch`.
  */
 export class HeatmapChart extends LineChart {
   // No initializers: LineChart's constructor draws before they would run.
