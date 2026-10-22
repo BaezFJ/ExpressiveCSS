@@ -106,9 +106,6 @@
   }
 }
 
-@media (forced-colors: active) {
-  .timeline > li::before {
-    forced-color-adjust: none;
-    background-color: CanvasText;
-  }
+.timeline > li::before {
+  @include forced-colors-fill;
 }

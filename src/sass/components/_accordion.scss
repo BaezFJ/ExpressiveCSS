@@ -149,9 +149,6 @@ $_accordion-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
   }
 }
 
-@media (forced-colors: active) {
-  .accordion > details > summary::after {
-    forced-color-adjust: none;
-    background-color: CanvasText;
-  }
+.accordion > details > summary::after {
+  @include forced-colors-fill;
 }
