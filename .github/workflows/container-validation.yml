@@ -33,9 +33,9 @@ jobs:
           if docker image inspect "mcr.microsoft.com/playwright:v$version-noble" >/dev/null 2>&1; then exit 1; fi
           docker version
           docker compose version
-      - run: npm run test:docker
-      - run: node scripts/check-container-reports.mjs
+      # verify's `node --test` includes the browser suites, so one run produces the reports.
       - run: npm run test:docker -- npm run verify
+      - run: node scripts/check-container-reports.mjs
       - run: npm run test:packages:docker
       - run: npm run test:visual:docker -- --grep buttons --workers 2
       - run: node scripts/check-container-docs.mjs
