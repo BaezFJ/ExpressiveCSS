@@ -6,7 +6,7 @@ ExpressiveCSS is a Material Design 3 Expressive framework built from Sass and Ty
 
 Page authors build interfaces from documented markup. They expect components to behave as the platform and the ARIA Authoring Practices describe, in every engine, without writing glue code. Agents that implement ExpressiveCSS interfaces need canonical component names, complete rules and the documented runtime options and methods, without guessing from an example.
 
-Components still miss behavior that comparable frameworks provide, such as a bounded time range in a time picker and components that start in markup added after load. Each gap leaves authors two choices: write their own script, or give up the pattern.
+When a component lacks behavior that comparable frameworks provide, the gap leaves authors two choices: write their own script, or give up the pattern.
 
 ## Core workflow
 
