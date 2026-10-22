@@ -38,8 +38,8 @@ These run in Chromium, Firefox and WebKit from a new file, proposed name `tests/
 | ID | Covers | Setup and action | Expected result | Result |
 | --- | --- | --- | --- | --- |
 | V14 | R1, R4 | After a build, run `tests/autoinit.test.js` (the fixture loop for every registered component), `tests/components.test.js` and `tests/bundle.test.js`, one file at a time. | All pass. A second `AutoInit()` without `watch` still replaces instances as before. | Pass. `tests/autoinit.test.js` 99, `tests/components.test.js` 66, `tests/bundle.test.js` 4, one file at a time. |
-| V15 | R9 | Read the docs section, the Alpine section, the `llm.md` text and the changelog entry. Run `npm run build:skill` then `npm run check:generated`. Run `node --test tests/docs-astro.test.js`. | The docs cover every rule in R9. `check:generated` and the docs test pass. | Pass. `npm run build:skill`, then `npm run check:generated` reports 84 guides current. `tests/docs-astro.test.js` 25 of 25. A Codex review found that both examples called `stop()` right after adding markup, which drops the pending records; the examples now stop on `pagehide`, and the docs state the limit. |
-| V16 | R10 | Add the budget line and run `node --test tests/selective-builds.test.js`. Run `npx fallow audit --base origin/master` with `node_modules/.bin` on `PATH`. | The budget test passes with a reviewed line, and fallow reports no new function at cyclomatic complexity 5 or more. | Pass. JavaScript gzip 93,011 bytes (+282), recorded in `tests/selective-builds.test.js`, 4 of 4. `npx fallow audit --base origin/master` with `node_modules/.bin` on `PATH`: complexity 0, no issues. |
+| V15 | R9 | Read the docs section, the Alpine section, the `llm.md` text and the changelog entry. Run `npm run build:skill` then `npm run check:generated`. Run `node --test tests/docs-astro.test.js`. | The docs cover every rule in R9. `check:generated` and the docs test pass. | Pass. `npm run build:skill`, then `npm run check:generated` reports 84 guides current. `tests/docs-astro.test.js` 25 of 25. A Codex review found that both examples called `stop()` right after adding markup, which drops the pending records; the examples first moved `stop()` to `pagehide`. A later review found that a page restored from the back/forward cache stays unwatched, so the examples now call `stop()` from a teardown function, and `stop()` handles pending changes itself (V19). |
+| V16 | R10 | Add the budget line and run `node --test tests/selective-builds.test.js`. Run `npx fallow audit --base origin/master` with `node_modules/.bin` on `PATH`. | The budget test passes with a reviewed line, and fallow reports no new function at cyclomatic complexity 5 or more. | Pass. JavaScript gzip 93,009 bytes (+280) after the review fixes (93,011 before), recorded in `tests/selective-builds.test.js`, 4 of 4. `npx fallow audit --base origin/master` with `node_modules/.bin` on `PATH`: complexity 0, no issues. |
 | V17 | All | `npm run verify` once near the end. Rerun a failing browser test in code this branch did not touch alone before debugging it. | Passes, or each failure is an unrelated flake shown by a passing solo rerun. | Pass. `npm run verify` ran 2,531 tests: 2,528 passed, 3 optional ones skipped, none failed. Its `check:generated` step then failed because `llm.md` was edited during the run. `build:skill`, `check:generated`, `docs:build:astro` and `docs:verify` (121 pages) passed when run again afterwards. |
 | V18 | R9 | `npm test --prefix mcp/expressivecss`, then `npm run verify:packages`, after `npm run build:skill`. | Both pass. | Pass after `npm ci --prefix mcp/expressivecss` in this worktree. The MCP smoke test passed, and `npm run verify:packages` verified the isolated packages. |
 
@@ -47,9 +47,15 @@ These run in Chromium, Firefox and WebKit from a new file, proposed name `tests/
 
 None planned. V12 and V13 cover the interactive behavior in real engines, and `npm run verify` builds and checks the docs page.
 
+### Review follow-up
+
+| ID | Covers | Setup and action | Expected result | Result |
+| --- | --- | --- | --- | --- |
+| V19 | R2, R3, R5 | jsdom. Add one tooltip and remove another, then call `stop()` in the same task. Watch a `div`, add a tooltip inside it, and move it to the body in the same task. Append and remove a text node, then add a tooltip with whitespace and a comment around it. Mutate the source: drop the `takeRecords()` flush, the `context.contains` check, and each `nodeType` guard. | The added tooltip starts and the removed one is destroyed by `stop()`. The moved tooltip does not start. The bare tooltip starts. Each mutation fails at least one test. | Pass. `node --test tests/autoinit.test.js`, 101 of 101. All four mutations fail a test; each was restored. |
+
 ## Merge conditions
 
-- V1 to V18 pass.
+- V1 to V19 pass.
 - Required CI checks on the pull request pass in all three engines.
 - Required repository reviews are done, and review findings are fixed or recorded as documented limits.
 - The roadmap is not edited on this branch.

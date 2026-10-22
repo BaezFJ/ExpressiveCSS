@@ -569,7 +569,12 @@ describe("AutoInit watch mode", () => {
         <a class="tooltipped" data-tooltip="Hi">Hi</a>
         <div class="field"><select id="s"><option value="1">One</option></select><label for="s">S</label></div>
       </div>`);
-      const bare = add(`<a class="tooltipped" data-tooltip="Bare">Bare</a>`);
+      // A text node added and removed first, then an element with whitespace and a comment around
+      // it: a watcher that trips on text nodes stops the batch before it starts the element.
+      const text = document.createTextNode(" ");
+      document.body.append(text);
+      text.remove();
+      const bare = add(` <a class="tooltipped" data-tooltip="Bare">Bare</a> <!-- note -->`);
       await settle();
       assert.ok(Expressive.Menubar.getInstance(box.querySelector(".menubar")));
       for (const id of ["file", "edit"]) {
@@ -617,6 +622,19 @@ describe("AutoInit watch mode", () => {
       await settle();
       assert.equal(Expressive.Tooltip.getInstance(plain), undefined);
       assert.equal(Expressive.Tooltip.getInstance(started), instance);
+    }));
+
+  test("stop() handles markup added just before it, then stops", () =>
+    watching(async (stop) => {
+      const added = add(`<a class="tooltipped" data-tooltip="Hi">Added</a>`);
+      const removed = add(`<a class="tooltipped" data-tooltip="Hi">Removed</a>`);
+      await settle();
+      const instance = Expressive.Tooltip.getInstance(removed);
+      removed.remove();
+      stop();
+      assert.ok(Expressive.Tooltip.getInstance(added), "stop() dropped an addition the observer had not delivered");
+      assert.equal(Expressive.Tooltip.getInstance(removed), undefined, "stop() dropped a removal the observer had not delivered");
+      assert.ok(instance);
     }));
 
   test("stop() ends watching and keeps the instances already started", () =>
@@ -683,6 +701,19 @@ describe("AutoInit watch mode", () => {
       const second = Expressive.Tooltip.getInstance(el);
       assert.ok(second && second !== first, "the element added back was not started again");
     }));
+
+  test("skips an element moved out of the watched element before the observer runs", async () => {
+    const box = add("<div></div>");
+    const stop = Expressive.AutoInit(box, {}, { watch: true });
+    try {
+      const el = add(`<a class="tooltipped" data-tooltip="Hi">Out</a>`, box);
+      document.body.append(el);
+      await settle();
+      assert.equal(Expressive.Tooltip.getInstance(el), undefined);
+    } finally {
+      stop();
+    }
+  });
 
   test("watches a shadow root only through its own call", () =>
     watching(async () => {

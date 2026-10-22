@@ -158,8 +158,10 @@ document.querySelector('main').insertAdjacentHTML('beforeend', \`
   <a class="button menu-trigger" data-target="more">More</a>
   <menu id="more"><li><a href="#!">Share</a></li></menu>\`);
 
-// Later, when the page tears down. Components already started keep running.
-window.addEventListener('pagehide', stop, { once: true });
+// In your view's teardown. Components already started keep running.
+function unmount() {
+  stop();
+}
 `} />
         <ul>
           <li>
@@ -182,6 +184,11 @@ window.addEventListener('pagehide', stop, { once: true });
             Only added and removed elements count. Adding <code>tooltipped</code> to an element already in the page does not start a Tooltip; call <code>init</code> for that.
           </li>
           <li>
+            Markup inserted at runtime becomes live components. If you insert user content, sanitize
+            it first and drop component classes and <code>data-<em>name</em>-options</code> attributes
+            you don't want started.
+          </li>
+          <li>
             Shadow roots are not entered. To watch markup inside one, call
             <code>AutoInit(shadowRoot, options, {"{ watch: true }"})</code> for that root.
           </li>
@@ -191,8 +198,8 @@ window.addEventListener('pagehide', stop, { once: true });
           </li>
         </ul>
         <p>
-          <code>stop()</code> also drops changes the browser has not reported yet, so markup added in
-          the same task as the call does not start. Without <code>watch</code>, <code>AutoInit()</code>
+          <code>stop()</code> first handles changes the browser has not reported yet, so markup added
+          just before the call still starts. Without <code>watch</code>, <code>AutoInit()</code>
           returns a function that does nothing.
         </p>
   </Section>

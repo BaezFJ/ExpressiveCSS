@@ -48,17 +48,17 @@ The interview did not cover these. They follow from the confirmed decisions and 
 - The observer watches `childList` with `subtree: true` on `context`, and handles each batch of records in one callback.
 - A node counts as moved when it is connected again by the time the callback runs. Removal destroys instances only in removed nodes that are no longer connected. Addition skips added nodes that are no longer inside `context`, which also covers a watched element that is itself detached. An element removed in one batch and added back in a later one is destroyed and then started again.
 - Added nodes are started in registry order, as the initial scan does, so Menubar still runs after Menu on markup added in one batch. Each added element is checked itself as well as its descendants.
-- Removed elements are destroyed in reverse registry order, so a Menubar is torn down before the Menus of its triggers.
+- Removed elements are destroyed in registry order. A review dropped the reverse order: Menubar's `destroy()` already skips Menus that are gone, so the order changes nothing.
 - Constructor errors are not caught, matching the Phase 20 decision. A throw in the callback stops the rest of that batch, and the observer stays connected for later batches. The docs record this limit.
 - Calling `AutoInit` with `watch` twice on the same root creates two observers. The second one finds every element already started or already destroyed and does nothing. The docs say to call it once per root.
-- `stop()` disconnects the observer and destroys nothing.
+- `stop()` handles the changes the observer has not delivered yet, then disconnects it. It destroys nothing that is still in the page. A review added the flush, because `disconnect()` alone dropped markup added just before the call.
 
 ## Requirements
 
 | ID | Expected behavior |
 | --- | --- |
 | R1 | `AutoInit(context, options, { watch: true })` runs the initial scan as today, then watches `context` for added and removed nodes. Without the third argument, or with `watch` false, `AutoInit` creates no observer and behaves as it does at the base commit. |
-| R2 | `AutoInit` returns a function. Calling it stops watching and leaves every existing instance in place. Without `watch` the function does nothing. |
+| R2 | `AutoInit` returns a function. Calling it handles the additions and removals not yet delivered, then stops watching and leaves every instance still in the page in place. Without `watch` the function does nothing. |
 | R3 | When nodes are added inside a watched `context`, each added element still inside `context` when the callback runs, and each of its descendants, is started in registry order with the same selector, `.no-autoinit` opt-out, `filter`, markup options (`data-<name>-options`) and `AutoInit` options as the initial scan. The added element itself is checked, not only its descendants. |
 | R4 | An added element that already has an instance of a component, from a direct `init()`, an earlier scan or the component that inserted it, is not started again for that component. Its instance and options stay as they were. |
 | R5 | When nodes are removed and are no longer connected when the callback runs, each element in the removed subtree that matches a registry selector, lacks `.no-autoinit`, passes the entry's `filter` and still has an instance of that component has that instance destroyed. Elements that are connected again by then keep their instances. Elements with `.no-autoinit` are never destroyed by the watcher. |

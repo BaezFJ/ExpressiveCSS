@@ -212,8 +212,6 @@ function markupOptions(el: Element, name: string, defaults: object) {
 // to a union TypeScript cannot call, so narrow it once, here.
 const entry = (name: keyof Registry) => AUTO_INIT_COMPONENTS[name] as unknown as AutoInitEntry;
 const NAMES = Object.keys(AUTO_INIT_COMPONENTS) as (keyof Registry)[];
-// Teardown runs last entry first, so a Menubar goes before its triggers' Menus.
-const REVERSED = [...NAMES].reverse();
 
 /** Starts component `name` on one element, with its markup options under `options`. */
 function initElement(name: keyof Registry, el: Element, options: object = {}) {
@@ -250,21 +248,26 @@ function startAdded(node: Node, options?: Partial<AutoInitOptions>) {
  */
 function stopRemoved(node: Node) {
   if (node.nodeType !== Node.ELEMENT_NODE || node.isConnected) return;
-  for (const name of REVERSED) {
+  for (const name of NAMES) {
     claimed(name, node as Element, true).forEach((el) => entry(name).component.getInstance(el)?.destroy());
   }
 }
 
 /** Watches `context`, starting components in added markup and destroying them in removed markup. */
 function watch(context: Node, options?: Partial<AutoInitOptions>) {
-  const observer = new MutationObserver((records) => {
+  const handle = (records: MutationRecord[]) => {
     for (const { addedNodes, removedNodes } of records) {
       removedNodes.forEach(stopRemoved);
       addedNodes.forEach((node) => context.contains(node) && startAdded(node, options));
     }
-  });
+  };
+  const observer = new MutationObserver(handle);
   observer.observe(context, { childList: true, subtree: true });
-  return () => observer.disconnect();
+  // Handle the changes not delivered yet first, so markup added just before stop() still starts.
+  return () => {
+    handle(observer.takeRecords());
+    observer.disconnect();
+  };
 }
 
 /**
