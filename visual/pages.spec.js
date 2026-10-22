@@ -41,7 +41,6 @@ for (const variant of VARIANTS) for (const direction of ['ltr', 'rtl']) {
   test(`side-sheet open ${direction} @ ${variant.name}`, async ({ page }) => {
     await page.setViewportSize({ width: variant.width, height: variant.height });
     await page.addInitScript(theme => localStorage.setItem('theme', theme), variant.theme);
-    await page.route('**/cdnjs.cloudflare.com/**', route => route.abort());
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/side-sheet.html');
     await page.evaluate(async direction => {
@@ -139,14 +138,9 @@ for (const entry of PAGES) {
         };
       });
 
-      // highlight.js comes from cdnjs and rewrites every code block after
-      // load. code-blocks.js already guards on `window.hljs`, so blocking it
-      // leaves the samples unhighlighted and identical on both sides -- far
-      // better than a page-sized diff whenever the CDN is slow. Google Fonts
-      // is deliberately *not* blocked: icon sizing is exactly the kind of
-      // regression this suite exists to catch, and both passes run minutes
-      // apart against the same font files.
-      await page.route('**/cdnjs.cloudflare.com/**', (r) => r.abort());
+      // Google Fonts is deliberately *not* blocked: icon sizing is exactly
+      // the kind of regression this suite exists to catch, and both passes run
+      // minutes apart against the same font files.
 
       // The 51 demo images come from picsum.photos, and their *arrival* is
       // what broke the first CI run: an image that lands between two

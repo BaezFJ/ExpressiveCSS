@@ -180,10 +180,8 @@ locally only; the pull request job was removed because nobody read its report.
   exception so both passes photograph the same canonical page into the same shot.
 - **Every non-font third party is stubbed.** picsum.photos serves 51 demo
   images and is fulfilled with an SVG of exactly the requested size; the live
-  YouTube iframe and MDN video on `media-css.html` are aborted; cdnjs is
-  aborted because highlight.js rewrites every code block after load and
-  `code-blocks.js` already guards on `window.hljs`. An image landing between
-  two stabilisation captures changes the page height, which is precisely how
+  YouTube iframe and MDN video on `media-css.html` are aborted. An image
+  landing between two stabilisation captures changes the page height, which is precisely how
   the first CI run failed (1440x8729 against 1440x8786). The icon font is the
   one exception: icon sizing is a regression this exists to catch (24px ->
   18px shipped once), so the self-hosted faces in the compiled sheet load and
@@ -715,8 +713,10 @@ and a page added to the catalogue is on the site with the next push to master.
   its entry cannot drift. `Section` throws on a missing id, because a mistyped
   key spreads *nothing* rather than failing.
 - **`<Code code={`…`} />` takes the sample as an explicit template literal**, so
-  its whitespace is the author's. It escapes angle brackets and ampersands and
-  leaves quotes alone. `check={false}` plus a `reason` opts one sample out, and
+  its whitespace is the author's. It guesses the language from the source and
+  hands the sample to Astro's `<Code>`, which highlights it with Shiki at build
+  time; the css-variables theme takes its colors from `docs.css`.
+  `check={false}` plus a `reason` opts one sample out, and
   `tests/semantics.test.js` reads it from the `docs/src` surface.
 - **Every page with sections goes through `<PageBody>`.** It renders the
   table of contents before the `docs-page-content` column, so keyboard and

@@ -412,60 +412,20 @@ pre code {
   margin: 0;
 }
 
-/* Syntax colors use system roles so highlighting follows light, dark, and seed themes. */
-.hljs-comment,
-.hljs-quote {
-  color: var(--md-sys-color-outline);
-  font-style: italic;
-}
-
-.hljs-keyword,
-.hljs-selector-tag,
-.hljs-literal,
-.hljs-name,
-.hljs-built_in,
-.hljs-type {
-  color: var(--md-sys-color-primary);
-}
-
-.hljs-string,
-.hljs-doctag,
-.hljs-regexp,
-.hljs-attribute,
-.hljs-template-tag,
-.hljs-template-variable {
-  color: var(--md-sys-color-tertiary);
-}
-
-.hljs-title,
-.hljs-title.function_,
-.hljs-section,
-.hljs-selector-class,
-.hljs-selector-id {
-  color: var(--md-sys-color-secondary);
-}
-
-.hljs-number,
-.hljs-symbol,
-.hljs-bullet,
-.hljs-variable,
-.hljs-meta {
-  color: var(--md-sys-color-error);
-}
-
-.hljs-tag,
-.hljs-selector-pseudo,
-.hljs-params,
-.hljs-property {
-  color: var(--md-sys-color-on-surface-variant);
-}
-
-.hljs-emphasis {
-  font-style: italic;
-}
-
-.hljs-strong {
-  font-weight: 700;
+/* Shiki's css-variables theme reads its colors from these, so highlighting
+   follows light, dark, and seed themes. */
+.astro-code {
+  --astro-code-foreground: var(--md-sys-color-on-surface);
+  --astro-code-background: var(--md-sys-color-surface-container-high);
+  --astro-code-token-comment: var(--md-sys-color-outline);
+  --astro-code-token-keyword: var(--md-sys-color-primary);
+  --astro-code-token-string: var(--md-sys-color-tertiary);
+  --astro-code-token-string-expression: var(--md-sys-color-tertiary);
+  --astro-code-token-function: var(--md-sys-color-secondary);
+  --astro-code-token-constant: var(--md-sys-color-primary);
+  --astro-code-token-parameter: var(--md-sys-color-on-surface);
+  --astro-code-token-punctuation: var(--md-sys-color-on-surface-variant);
+  --astro-code-token-link: var(--md-sys-color-primary);
 }
 
 /* Container-toggle demo. */

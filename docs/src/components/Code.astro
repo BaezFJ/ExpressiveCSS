@@ -15,6 +15,8 @@
  * The reason is required; the test fails on a bare opt-out, so an exemption
  * always says why it is still earned. Neither argument renders.
  */
+import { Code as Shiki } from "astro:components";
+
 interface Props {
   code: string;
   // fallow-ignore-next-line unused-component-props
@@ -24,13 +26,18 @@ interface Props {
 }
 
 const { code } = Astro.props;
+const source = code.trim();
 
-// Angle brackets and ampersands only -- quotes are left alone, which is how
-// every sample in these docs was written by hand.
-const escaped = code
-  .trim()
-  .replace(/&/g, "&amp;")
-  .replace(/</g, "&lt;")
-  .replace(/>/g, "&gt;");
+// Samples do not name their language, so it is guessed from the source.
+// Anything unrecognised stays plain text.
+const LANGUAGES = [
+  ["html", /^<[!/a-z]/i],
+  ["scss", /^@use\b/],
+  ["css", /^(?:@media\b|:root\b|(?:html|body)(?:\s|,|\{)|[.#][\w-]+[\s:{.#>[+~])/i],
+  ["bash", /^(?:npm|npx|pnpm|yarn)\s/],
+  ["javascript", /\b(?:const|let|var|function|import|new|document|Expressive)\b|^(?:instance|dialog|list)\./m],
+] as const;
+const lang = LANGUAGES.find(([, test]) => test.test(source))?.[0] ?? "plaintext";
 ---
-<pre><code set:html={escaped} /></pre>
+{/* Highlighted at build time. The css-variables theme leaves the colors to docs.css. */}
+<Shiki code={source} lang={lang} theme="css-variables" />
