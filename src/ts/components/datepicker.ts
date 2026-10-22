@@ -436,7 +436,6 @@ export class Datepicker extends Component<DatepickerOptions> {
   constructor(el: HTMLInputElement, options: Partial<DatepickerOptions>) {
     options = withLocale(el, options);
     super(el, options);
-    this.el['Expressive_Datepicker'] = this;
 
     // A modal calendar is always open in its dialog and writes on Ok.
     if (this.options.displayPlugin === 'modal') Object.assign(this.options, { openByDefault: true, autoSubmit: false });
@@ -567,9 +566,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     return a.getTime() === b.getTime();
   }
 
-  static getInstance(el: HTMLElement): Datepicker {
-    return el['Expressive_Datepicker'];
-  }
+  static key = 'Expressive_Datepicker';
 
   destroy() {
     this._removeEventHandlers();
@@ -579,7 +576,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.containerEl.remove();
     this.destroySelects();
     this._removeDateOverlay();
-    this.el['Expressive_Datepicker'] = undefined;
+    super.destroy();
   }
 
   // CSS paints data-date over a native date input's own text.

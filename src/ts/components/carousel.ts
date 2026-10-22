@@ -135,7 +135,6 @@ export class Carousel extends Component<CarouselOptions> {
 
   constructor(el: HTMLElement, options: Partial<CarouselOptions>) {
     super(el, options);
-    this.el['Expressive_Carousel'] = this;
 
     this._vertical = this.el.classList.contains('full-screen');
 
@@ -193,13 +192,11 @@ export class Carousel extends Component<CarouselOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Carousel {
-    return el['Expressive_Carousel'];
-  }
+  static key = 'Expressive_Carousel';
 
   destroy() {
     if (this._started) this._teardown();
-    this.el['Expressive_Carousel'] = undefined;
+    super.destroy();
   }
 
   private _collectItems(): HTMLElement[] {

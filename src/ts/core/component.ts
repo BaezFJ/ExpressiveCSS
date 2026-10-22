@@ -8,7 +8,7 @@ export interface BaseOptions {}
 export type InitElement = HTMLElement | Element;
 export type InitElements<T extends InitElement> = NodeListOf<T> | HTMLCollectionOf<T>;
 /** Any component class; `init` reads its element, options and instance types. */
-type ComponentClass = new (el: never, options: never) => Component<BaseOptions>;
+type ComponentClass = (new (el: never, options: never) => Component<BaseOptions>) & { key: string };
 /** The element a component class is constructed on. */
 type ElementOf<C extends ComponentClass> = C extends new (el: infer E, options: never) => unknown ? E : never;
 /** The options `init` accepts for a component class. */
@@ -31,6 +31,11 @@ export interface NotifyOptions {
  * Base class implementation for Expressive components.
  */
 export class Component<O extends BaseOptions> {
+  /**
+   * The element property that holds an instance, `Expressive_<Name>`, so page
+   * code can read `el.Expressive_Tabs` as well as call `Tabs.getInstance(el)`.
+   */
+  static key: string;
   /**
    * The DOM element the plugin was initialized with.
    */
@@ -56,6 +61,7 @@ export class Component<O extends BaseOptions> {
     const defaults: Partial<O> & { i18n?: object } = new.target.defaults;
     const i18n: object = defaults.i18n && { i18n: { ...defaults.i18n, ...(options as typeof defaults)?.i18n } };
     this.options = { ...defaults, ...options, ...i18n } as O;
+    el[new.target.key] = this;
   }
 
   /**
@@ -92,12 +98,11 @@ export class Component<O extends BaseOptions> {
   }
 
   /**
-   * Retrieves component instance for the given element.
+   * Retrieves the instance of the class it is called on for the given element.
    * @param el Associated HTML Element.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static getInstance(el: HTMLElement): Component<BaseOptions> {
-    throw new Error('This method must be implemented.');
+  static getInstance<C extends ComponentClass>(this: C, el: HTMLElement): InstanceType<C> {
+    return el[this.key];
   }
 
   /**
@@ -123,9 +128,10 @@ export class Component<O extends BaseOptions> {
   }
 
   /**
-   * Destroy plugin instance and teardown.
+   * Destroy plugin instance and teardown. A subclass tears down its own state
+   * and calls this to release the element.
    */
   destroy(): void {
-    throw new Error('This method must be implemented.');
+    this.el[(this.constructor as typeof Component).key] = undefined;
   }
 }

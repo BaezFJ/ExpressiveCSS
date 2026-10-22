@@ -586,14 +586,14 @@ Other things worth knowing:
 export interface XOptions extends BaseOptions { /* … */ }
 const _defaults = { /* … */ };
 export class X extends Component<XOptions> {
-  constructor(el, options) { super(el, options); this.el['Expressive_X'] = this; }   // super merges X.defaults
+  static key = 'Expressive_X';
+  constructor(el, options) { super(el, options); }   // super merges X.defaults and sets el.Expressive_X
   static get defaults() { return _defaults; }
-  static getInstance(el) { return el['Expressive_X']; }
-  destroy() { this.el['Expressive_X'] = undefined; /* remove handlers */ }
+  destroy() { /* remove handlers */ super.destroy(); }   // super clears el.Expressive_X
 }
 ```
 
-The base constructor destroys any pre-existing instance found via `getInstance`, so re-initializing an element is safe, then spreads `options` over `new.target.defaults`. `getInstance`/`destroy` throw by default — a subclass that omits them is broken. `X.init(el | els, options)` is inherited: the base `init` is typed on `this`, so it returns `X` or `X[]` and takes its element and options types from X's constructor and `options`.
+The base constructor destroys any pre-existing instance found via `getInstance`, so re-initializing an element is safe, then spreads `options` over `new.target.defaults` and stores the instance under `X.key`. `X.getInstance(el)` is inherited and typed on `this`, and the base `destroy()` clears the key. `X.init(el | els, options)` is inherited: the base `init` is typed on `this`, so it returns `X` or `X[]` and takes its element and options types from X's constructor and `options`.
 
 `src/ts/components/registry.ts` holds `AUTO_INIT_COMPONENTS`, a table of `{ component, selector }` keyed by name. It is the single source of truth: the exported `AutoInitOptions` type is a mapped type over it, and `AutoInit(context, options)` loops it (each entry gets a `.no-autoinit` opt-out). Components absent from the table are never auto-started (`Snackbar`, `CharacterCounter`).
 

@@ -21,7 +21,6 @@ export class Slider extends Component<SliderOptions> {
 
   constructor(el: HTMLInputElement, options: Partial<SliderOptions>) {
     super(el, options);
-    this.el['Expressive_Slider'] = this;
 
     this._pointerDown = false;
     this._setupThumb();
@@ -38,15 +37,13 @@ export class Slider extends Component<SliderOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLInputElement): Slider {
-    return el['Expressive_Slider'];
-  }
+  static key = 'Expressive_Slider';
 
   destroy() {
     this._resizeObserver?.disconnect();
     this._removeEventHandlers();
     this._removeThumb();
-    this.el['Expressive_Slider'] = undefined;
+    super.destroy();
     const host = this._host();
     for (const el of [this.el, host]) {
       for (const name in _authored.get(el)) el.style.setProperty(name, _authored.get(el)[name]);

@@ -51,10 +51,6 @@ export class ColumnChart extends LineChart {
     return 'column-chart';
   }
 
-  protected get _key() {
-    return 'Expressive_ColumnChart';
-  }
-
   protected get _fromZero() {
     return true;
   }
@@ -63,9 +59,7 @@ export class ColumnChart extends LineChart {
     return false;
   }
 
-  static getInstance(el: HTMLElement): ColumnChart {
-    return el['Expressive_ColumnChart'];
-  }
+  static key = 'Expressive_ColumnChart';
 
   /** A `range` series' low ends become its base; ranges do not stack. */
   protected _arrange(series: Series[]) {

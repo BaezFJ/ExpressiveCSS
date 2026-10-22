@@ -44,13 +44,7 @@ export class HeatmapChart extends LineChart {
     return false;
   }
 
-  protected get _key() {
-    return 'Expressive_HeatmapChart';
-  }
-
-  static getInstance(el: HTMLElement): HeatmapChart {
-    return el['Expressive_HeatmapChart'];
-  }
+  static key = 'Expressive_HeatmapChart';
 
   protected get _count() {
     return this.labels.length * this.series.length;

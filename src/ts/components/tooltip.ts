@@ -166,7 +166,6 @@ export class Tooltip extends Component<TooltipOptions> {
 
   constructor(el: HTMLElement, options: Partial<TooltipOptions>) {
     super(el, options);
-    this.el['Expressive_Tooltip'] = this;
 
     // Again, so the data-* options sit between the defaults and the options.
     this.options = {
@@ -186,9 +185,7 @@ export class Tooltip extends Component<TooltipOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Tooltip {
-    return el['Expressive_Tooltip'];
-  }
+  static key = 'Expressive_Tooltip';
 
   destroy() {
     clearTimeout(this._enterDelayTimeout);
@@ -218,7 +215,7 @@ export class Tooltip extends Component<TooltipOptions> {
     this.tooltipEl.remove();
     Utils.setAnchorName(this.el, `--${this.tooltipEl.id}`, false);
     this._removeEventHandlers();
-    this.el['Expressive_Tooltip'] = undefined;
+    super.destroy();
   }
 
   _appendTooltipEl() {

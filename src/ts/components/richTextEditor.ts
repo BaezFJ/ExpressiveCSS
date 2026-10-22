@@ -67,7 +67,6 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
 
   constructor(el: HTMLElement, options: Partial<RichTextEditorOptions>) {
     super(el, options);
-    this.el['Expressive_RichTextEditor'] = this;
     this.textarea = el.querySelector(':scope > textarea');
     if (!this.textarea || !this.options.Editor) {
       console.error('RichTextEditor needs a <textarea> child and the Tiptap Editor class in options.Editor.');
@@ -133,12 +132,10 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): RichTextEditor {
-    return el['Expressive_RichTextEditor'];
-  }
+  static key = 'Expressive_RichTextEditor';
 
   destroy() {
-    this.el['Expressive_RichTextEditor'] = undefined;
+    super.destroy();
     if (!this.editor) return;
     this.el.removeEventListener('click', this._handleClick);
     this._label?.removeEventListener('click', this._handleLabelClick);

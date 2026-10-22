@@ -391,13 +391,8 @@ export class LineChart extends Component<LineChartOptions> {
     return this.labels.length;
   }
 
-  protected get _key() {
-    return 'Expressive_LineChart';
-  }
-
   constructor(el: HTMLElement, options: Partial<LineChartOptions>) {
     super(el, options);
-    this.el[this._key] = this;
 
     this._build();
     this._listen();
@@ -458,9 +453,7 @@ export class LineChart extends Component<LineChartOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): LineChart {
-    return el['Expressive_LineChart'];
-  }
+  static key = 'Expressive_LineChart';
 
   destroy() {
     // The listeners live on the plot, which goes with the generated nodes.
@@ -468,7 +461,7 @@ export class LineChart extends Component<LineChartOptions> {
     this._generated = [];
     this._labelSizes?.disconnect();
     this._tableWatch?.disconnect();
-    this.el[this._key] = undefined;
+    super.destroy();
   }
 
   /**
@@ -477,7 +470,7 @@ export class LineChart extends Component<LineChartOptions> {
    * where the table still has it.
    */
   update() {
-    if (this.el[this._key] !== this) return;
+    if ((this.constructor as typeof LineChart).getInstance(this.el) !== this) return;
     const old = this._generated;
     // Inside a shadow root, the document's active element is the host.
     const active = (this.el.getRootNode() as Document | ShadowRoot).activeElement;

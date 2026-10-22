@@ -134,7 +134,6 @@ export class Keypad extends Component<KeypadOptions> {
 
   constructor(el: HTMLElement, options: Partial<KeypadOptions>) {
     super(el, options);
-    this.el['Expressive_Keypad'] = this;
     this._root = null;
     instances.add(this);
     this._attach();
@@ -169,9 +168,7 @@ export class Keypad extends Component<KeypadOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Keypad {
-    return el['Expressive_Keypad'];
-  }
+  static key = 'Expressive_Keypad';
 
   destroy() {
     instances.delete(this);
@@ -181,7 +178,7 @@ export class Keypad extends Component<KeypadOptions> {
     }
     this._waitForInsertion(false);
     this._listen('removeEventListener');
-    this.el['Expressive_Keypad'] = undefined;
+    super.destroy();
   }
 
   /** The text field named by `aria-controls`, if there is one. */

@@ -35,18 +35,18 @@ export interface ThingOptions extends BaseOptions { /* … */ }
 const _defaults = { /* … */ };
 
 export class Thing extends Component<ThingOptions> {
+  static key = 'Expressive_Thing';                            // instance lookup key
   constructor(el: HTMLElement, options: Partial<ThingOptions>) {
-    super(el, options);                                       // sets this.options
-    this.el['Expressive_Thing'] = this;                       // instance lookup key
+    super(el, options);                                       // sets this.options and el.Expressive_Thing
   }
   static get defaults() { return _defaults; }
-  static getInstance(el: HTMLElement): Thing { return el['Expressive_Thing']; }
-  destroy() { this.el['Expressive_Thing'] = undefined; /* remove handlers */ }
+  destroy() { /* remove handlers */ super.destroy(); }        // clears el.Expressive_Thing
 }
 ```
 
-`getInstance` and `destroy` throw in the base class — a subclass that omits
-them is broken, not defaulted. The base constructor destroys any existing
+The base class reads `key` to set, look up and clear the instance:
+`Thing.getInstance(el)` is inherited and typed on `this`, so it returns a
+`Thing`. The base constructor destroys any existing
 instance first, so re-initializing an element is safe, then spreads `options`
 over `new.target.defaults`. It also spreads `options.i18n` over the default
 `i18n`, so passing one string keeps the others. Options read from markup go
@@ -60,9 +60,8 @@ constructor's `el` as the widest element `init` should accept.
 The `el['Expressive_Thing']` stashing backs `Expressive.Thing.getInstance(el)`,
 and page code can read `el.Expressive_Thing` directly. The key was `M_Thing`
 in older versions, so anything written against the old
-property name needs updating. It is duplicated in every component; replacing it
-with a WeakMap in the base class would be cleaner, but would drop the
-read-it-off-the-element access that key provides.
+property name needs updating. A WeakMap in the base class would hide it, but
+would drop the read-it-off-the-element access that key provides.
 
 ## Gotchas
 

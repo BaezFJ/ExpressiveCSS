@@ -54,7 +54,6 @@ export class NavigationRail extends Component<NavigationRailOptions> {
 
   constructor(el: HTMLElement, options: Partial<NavigationRailOptions>) {
     super(el, options);
-    this.el['Expressive_NavigationRail'] = this;
 
     this._toggle = this._findToggle();
     this._mql = window.matchMedia(COMPACT);
@@ -70,9 +69,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): NavigationRail {
-    return el['Expressive_NavigationRail'];
-  }
+  static key = 'Expressive_NavigationRail';
 
   destroy() {
     this.el.removeEventListener('click', this._onClick);
@@ -80,7 +77,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     this.el.removeEventListener('pointerleave', this._onPointerLeave);
     document.removeEventListener('keydown', this._onKeyDown);
     clearTimeout(this._hoverTimer);
-    this.el['Expressive_NavigationRail'] = undefined;
+    super.destroy();
   }
 
   /**

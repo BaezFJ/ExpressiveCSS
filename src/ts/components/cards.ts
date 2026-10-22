@@ -76,7 +76,6 @@ export class Cards extends Component<CardsOptions> {
 
   constructor(el: HTMLElement, options: Partial<CardsOptions> = {}) {
     super(el, options);
-    this.el['Expressive_Cards'] = this;
 
     const cardReveals = this.el.querySelectorAll<HTMLElement>(':scope > aside');
     const cardReveal = cardReveals.length === 1 ? cardReveals[0] : null;
@@ -112,9 +111,7 @@ export class Cards extends Component<CardsOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Cards {
-    return el['Expressive_Cards'];
-  }
+  static key = 'Expressive_Cards';
 
   /**
    * {@inheritDoc}
@@ -135,7 +132,7 @@ export class Cards extends Component<CardsOptions> {
     this._activators = [];
     this._initialAriaControls.clear();
     this._lastActivator = null;
-    this.el['Expressive_Cards'] = undefined;
+    super.destroy();
   }
 
   _setupEventHandlers = () => {

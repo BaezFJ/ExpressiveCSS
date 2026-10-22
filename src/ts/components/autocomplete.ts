@@ -195,7 +195,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   constructor(el: HTMLInputElement, options: Partial<AutocompleteOptions>) {
     super(el, options);
-    this.el['Expressive_Autocomplete'] = this;
 
     this.isOpen = false;
     this.count = 0;
@@ -213,9 +212,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Autocomplete {
-    return el['Expressive_Autocomplete'];
-  }
+  static key = 'Expressive_Autocomplete';
 
   /**
    * The three-dot loading indicator, parsed once and cloned thereafter.
@@ -258,7 +255,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
     this._statusInfo.remove();
     this._announcer.remove();
-    this.el['Expressive_Autocomplete'] = undefined;
+    super.destroy();
   }
 
   _setupEventHandlers() {

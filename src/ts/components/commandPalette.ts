@@ -57,7 +57,6 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
   constructor(el: HTMLElement, options: Partial<CommandPaletteOptions>) {
     const shortcut = el.dataset.shortcut;
     super(el, { ...(shortcut !== undefined ? { shortcut: shortcut || null } : {}), ...options });
-    this.el['Expressive_CommandPalette'] = this;
     this.input = el.querySelector(':scope > input');
     this.list = el.querySelector(':scope > :is(ul, ol)');
     if (!this.input || !this.list) {
@@ -90,9 +89,7 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): CommandPalette {
-    return el['Expressive_CommandPalette'];
-  }
+  static key = 'Expressive_CommandPalette';
 
   /** If the palette is open. */
   get isOpen() {
@@ -137,7 +134,7 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
       const empty = this._empty();
       if (empty) empty.hidden = false;
     }
-    this.el['Expressive_CommandPalette'] = undefined;
+    super.destroy();
   }
 
   private _items() {

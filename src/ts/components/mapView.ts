@@ -182,7 +182,6 @@ export class MapView extends Component<MapViewOptions> {
 
   constructor(el: HTMLElement, options: Partial<MapViewOptions>) {
     super(el, options);
-    this.el['Expressive_MapView'] = this;
     const lib = this.options.maplibregl;
     if (!lib) {
       console.error('MapView needs the maplibre-gl module in options.maplibregl.');
@@ -233,12 +232,10 @@ export class MapView extends Component<MapViewOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): MapView {
-    return el['Expressive_MapView'];
-  }
+  static key = 'Expressive_MapView';
 
   destroy() {
-    this.el['Expressive_MapView'] = undefined;
+    super.destroy();
     if (!this.map) return;
     this.el.removeEventListener('click', this._handleClick);
     this.el.removeEventListener('keydown', this._handleKeydown);

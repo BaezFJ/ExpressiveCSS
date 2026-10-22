@@ -187,7 +187,6 @@ export class Chips extends Component<ChipsOptions> {
 
   constructor(el: HTMLElement, options: Partial<ChipsOptions>) {
     super(el, options);
-    this.el['Expressive_Chips'] = this;
 
     this.el.classList.add('chips');
     this.chipsData = [];
@@ -222,9 +221,7 @@ export class Chips extends Component<ChipsOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Chips {
-    return el['Expressive_Chips'];
-  }
+  static key = 'Expressive_Chips';
 
   getData() {
     return this.chipsData;
@@ -240,7 +237,7 @@ export class Chips extends Component<ChipsOptions> {
     this._chips.forEach((c) => c.remove());
     this._chips = [];
     this._giveNameBack();
-    this.el['Expressive_Chips'] = undefined;
+    super.destroy();
   }
 
   _setupEventHandlers() {

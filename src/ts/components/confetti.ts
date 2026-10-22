@@ -135,7 +135,6 @@ export class Confetti extends Component<ConfettiOptions> {
 
   constructor(el: HTMLElement, options: Partial<ConfettiOptions>) {
     super(el, options);
-    this.el['Expressive_Confetti'] = this;
     if (!(el instanceof HTMLCanvasElement)) el.addEventListener('click', this._onClick);
     else if (!this.options.manualStart) this.fire();
   }
@@ -144,9 +143,7 @@ export class Confetti extends Component<ConfettiOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Confetti {
-    return el['Expressive_Confetti'];
-  }
+  static key = 'Expressive_Confetti';
 
   /**
    * Bursts over the whole viewport. Resolves when the last piece is gone.
@@ -173,7 +170,7 @@ export class Confetti extends Component<ConfettiOptions> {
   destroy() {
     this.el.removeEventListener('click', this._onClick);
     if (this.el instanceof HTMLCanvasElement) stop(this.el);
-    this.el['Expressive_Confetti'] = undefined;
+    super.destroy();
   }
 }
 

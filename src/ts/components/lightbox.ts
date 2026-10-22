@@ -80,7 +80,6 @@ export class Lightbox extends Component<LightboxOptions> {
 
   constructor(el: HTMLElement, options: Partial<LightboxOptions>) {
     super(el, options);
-    this.el['Expressive_Lightbox'] = this;
 
     this.overlayActive = false;
     this.doneAnimating = true;
@@ -103,9 +102,7 @@ export class Lightbox extends Component<LightboxOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Lightbox {
-    return el['Expressive_Lightbox'];
-  }
+  static key = 'Expressive_Lightbox';
 
   destroy() {
     if (this._destroyed) return;
@@ -117,7 +114,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this.placeholder.replaceWith(this.el);
     if (focused) this._restoreFocus();
     restoreAttribute(this.el, 'tabindex', this._tabindex);
-    this.el['Expressive_Lightbox'] = undefined;
+    super.destroy();
   }
 
   // Back to the trigger when focus fell to the body (or the shadow host), as

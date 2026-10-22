@@ -237,7 +237,6 @@ export class Menu extends Component<MenuOptions> {
 
   constructor(el: HTMLElement, options: Partial<MenuOptions>) {
     super(el, { contextMenu: el.hasAttribute('data-context-menu'), ...options });
-    this.el['Expressive_Menu'] = this;
 
     Menu._menus.push(this);
     this.id = Utils.getIdFromTrigger(el);
@@ -276,9 +275,7 @@ export class Menu extends Component<MenuOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Menu {
-    return el['Expressive_Menu'];
-  }
+  static key = 'Expressive_Menu';
 
   destroy() {
     this._clearPendingTimers();
@@ -294,7 +291,7 @@ export class Menu extends Component<MenuOptions> {
     this._removeTemporaryEventHandlers();
     const index = Menu._menus.indexOf(this);
     if (index >= 0) Menu._menus.splice(index, 1);
-    this.el['Expressive_Menu'] = undefined;
+    super.destroy();
   }
 
   _setupEventHandlers() {

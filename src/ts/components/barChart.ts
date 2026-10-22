@@ -15,17 +15,11 @@ export class BarChart extends ColumnChart {
     return 'bar-chart';
   }
 
-  protected get _key() {
-    return 'Expressive_BarChart';
-  }
-
   protected get _horizontal() {
     return true;
   }
 
-  static getInstance(el: HTMLElement): BarChart {
-    return el['Expressive_BarChart'];
-  }
+  static key = 'Expressive_BarChart';
 
   /**
    * The column chart's spans; CSS reads their --top and --bottom across the

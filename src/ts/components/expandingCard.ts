@@ -28,7 +28,6 @@ export class ExpandingCard extends Component<ExpandingCardOptions> {
 
   constructor(el: HTMLElement, options: Partial<ExpandingCardOptions>) {
     super(el, options);
-    this.el["Expressive_ExpandingCard"] = this;
 
     this.dialog = this.el.querySelector(
       ":scope > dialog.expanding-card-dialog",
@@ -57,16 +56,14 @@ export class ExpandingCard extends Component<ExpandingCardOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): ExpandingCard {
-    return el["Expressive_ExpandingCard"];
-  }
+  static key = 'Expressive_ExpandingCard';
 
   destroy() {
     this._removeEventHandlers();
     this._collapse();
     if (this.dialog?.open) this.dialog.close();
     for (const [name, value] of Object.entries(this._initialTrigger)) restoreAttribute(this.trigger, name, value);
-    this.el["Expressive_ExpandingCard"] = undefined;
+    super.destroy();
   }
 
   private _setupEventHandlers = () => {

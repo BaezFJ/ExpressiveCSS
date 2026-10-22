@@ -89,7 +89,6 @@ export class Particles extends Component<ParticlesOptions> {
 
   constructor(el: HTMLElement, options: Partial<ParticlesOptions>) {
     super(el, options);
-    this.el['Expressive_Particles'] = this;
     this._ctx = this.el.getContext('2d');
     if (!this._ctx) return;
     this._style = getComputedStyle(this.el);
@@ -121,9 +120,7 @@ export class Particles extends Component<ParticlesOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Particles {
-    return el['Expressive_Particles'];
-  }
+  static key = 'Expressive_Particles';
 
   destroy() {
     this._stop();
@@ -136,7 +133,7 @@ export class Particles extends Component<ParticlesOptions> {
       this._ctx.setTransform(1, 0, 0, 1, 0, 0);
       this._ctx.clearRect(0, 0, this.el.width, this.el.height);
     }
-    this.el['Expressive_Particles'] = undefined;
+    super.destroy();
   }
 
   private _animate() {

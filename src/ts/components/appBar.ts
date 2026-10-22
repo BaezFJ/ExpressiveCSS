@@ -22,7 +22,6 @@ export class AppBar extends Component<BaseOptions> {
 
   constructor(el: HTMLElement, options: Partial<BaseOptions>) {
     super(el, options);
-    this.el['Expressive_AppBar'] = this;
     this._setupCollapse();
     this._setupSearch();
   }
@@ -31,9 +30,7 @@ export class AppBar extends Component<BaseOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): AppBar {
-    return el['Expressive_AppBar'];
-  }
+  static key = 'Expressive_AppBar';
 
   destroy() {
     this._observer?.disconnect();
@@ -49,7 +46,7 @@ export class AppBar extends Component<BaseOptions> {
       this._restore = null;
     }
     this.el.classList.remove('collapsed');
-    this.el['Expressive_AppBar'] = undefined;
+    super.destroy();
   }
 
   private _setupCollapse() {

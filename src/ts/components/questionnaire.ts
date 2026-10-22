@@ -148,7 +148,6 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
   constructor(el: HTMLElement, options: Partial<QuestionnaireOptions>) {
     const progressLabel = el.dataset.progressLabel;
     super(el, { ...(progressLabel ? { progressLabel } : {}), ...options });
-    this.el['Expressive_Questionnaire'] = this;
 
     this._progress = document.createElement('div');
     this._progress.className = 'questionnaire-progress';
@@ -194,9 +193,7 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Questionnaire {
-    return el['Expressive_Questionnaire'];
-  }
+  static key = 'Expressive_Questionnaire';
 
   /** The questions that apply: every fieldset child that is not disabled. */
   get items(): HTMLFieldSetElement[] {
@@ -279,7 +276,7 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
     for (const el of this._generatedIds) {
       el.removeAttribute(el instanceof HTMLFieldSetElement ? 'aria-describedby' : 'id');
     }
-    this.el['Expressive_Questionnaire'] = undefined;
+    super.destroy();
   }
 
   private _fieldsets() {

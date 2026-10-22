@@ -29,7 +29,6 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
 
   constructor(el: HTMLElement, options: Partial<ButtonGroupOptions> = {}) {
     super(el, options);
-    this.el["Expressive_ButtonGroup"] = this;
 
     if (this._selectionMode) {
       this._normalizeSelection();
@@ -48,9 +47,7 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): ButtonGroup {
-    return el["Expressive_ButtonGroup"];
-  }
+  static key = 'Expressive_ButtonGroup';
 
   destroy() {
     this._resetPress();
@@ -65,7 +62,7 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
     window.removeEventListener("blur", this._resetPress);
     for (const [item, value] of this._originalPressed) restoreAttribute(item, "aria-pressed", value);
     this._originalPressed.clear();
-    this.el["Expressive_ButtonGroup"] = undefined;
+    super.destroy();
   }
 
   private get _selectionMode(): "single" | "multiple" | null {

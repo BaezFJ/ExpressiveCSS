@@ -273,7 +273,6 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   constructor(el: HTMLInputElement, options: Partial<TimepickerOptions>) {
     super(el, { ...localeClock(el), ...options });
-    this.el['Expressive_Timepicker'] = this;
     // A modal clock writes on Ok, so it has the buttons.
     this.options.autoSubmit &&= this.options.displayPlugin !== 'modal';
     this.id = Utils.guid();
@@ -293,9 +292,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Timepicker {
-    return el['Expressive_Timepicker'];
-  }
+  static key = 'Expressive_Timepicker';
 
   destroy() {
     clearTimeout(this._autoSubmitTimer);
@@ -305,7 +302,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this._removeEventHandlers();
     this.displayPlugin?.destroy();
     this.containerEl.remove();
-    this.el['Expressive_Timepicker'] = undefined;
+    super.destroy();
   }
 
   _setupEventHandlers() {

@@ -15,7 +15,6 @@ export class FloatingActionButton extends Component<FloatingActionButtonOptions>
 
   constructor(el: HTMLElement, options: Partial<FloatingActionButtonOptions>) {
     super(el, options);
-    this.el['Expressive_FloatingActionButton'] = this;
     this.isOpen = false;
     this._anchor = this.el.querySelector(':scope > a, :scope > button');
     this._list = this.el.querySelector(':scope > ul, :scope > menu');
@@ -40,9 +39,7 @@ export class FloatingActionButton extends Component<FloatingActionButtonOptions>
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): FloatingActionButton {
-    return el['Expressive_FloatingActionButton'];
-  }
+  static key = 'Expressive_FloatingActionButton';
 
   destroy() {
     this.close();
@@ -51,7 +48,7 @@ export class FloatingActionButton extends Component<FloatingActionButtonOptions>
     this._anchor?.removeEventListener('keydown', this._handleAnchorKeydown);
     if (this._addedExpanded) this._anchor.removeAttribute('aria-expanded');
     if (this._anchorTabIndex !== undefined) restoreAttribute(this._anchor, 'tabindex', this._anchorTabIndex);
-    this.el['Expressive_FloatingActionButton'] = undefined;
+    super.destroy();
   }
 
   open = (): void => {

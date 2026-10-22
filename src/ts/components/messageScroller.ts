@@ -79,7 +79,6 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
 
   constructor(el: HTMLElement, options: Partial<MessageScrollerOptions>) {
     super(el, options);
-    this.el['Expressive_MessageScroller'] = this;
     this.viewport = el.querySelector(':scope > .message-scroller-viewport');
     this.button = el.querySelector(':scope > .message-scroller-button');
     if (!this.viewport) {
@@ -108,12 +107,10 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): MessageScroller {
-    return el['Expressive_MessageScroller'];
-  }
+  static key = 'Expressive_MessageScroller';
 
   destroy() {
-    this.el['Expressive_MessageScroller'] = undefined;
+    super.destroy();
     if (!this.viewport) return;
     this._resizeObserver?.disconnect();
     this._mutationObserver?.disconnect();

@@ -54,8 +54,11 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   constructor(el: HTMLSelectElement, options: FormSelectOptions) {
     super(el, options);
-    if (this.el.classList.contains('browser-default')) return;
-    this.el['Expressive_FormSelect'] = this;
+    // A browser-default select stays native, with no instance on it.
+    if (this.el.classList.contains('browser-default')) {
+      this.el[FormSelect.key] = undefined;
+      return;
+    }
 
     this.isMultiple = this.el.multiple;
     this.nativeTabIndex = this.el.tabIndex;
@@ -70,9 +73,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): FormSelect {
-    return el['Expressive_FormSelect'];
-  }
+  static key = 'Expressive_FormSelect';
 
   destroy() {
     this._removeEventHandlers();
@@ -83,7 +84,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.menu?.destroy();
     this._removeMenu();
     this.el.tabIndex = this.nativeTabIndex;
-    this.el['Expressive_FormSelect'] = undefined;
+    super.destroy();
   }
 
   /**

@@ -31,7 +31,6 @@ export class Menubar extends Component<MenubarOptions> {
 
   constructor(el: HTMLElement, options: Partial<MenubarOptions>) {
     super(el, options);
-    this.el['Expressive_Menubar'] = this;
     this._setAttribute(this.el, 'role', 'menubar');
     this._items.forEach((item, index) => {
       Menu.init(item, this.options.menuOptions);
@@ -47,9 +46,7 @@ export class Menubar extends Component<MenubarOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Menubar {
-    return el['Expressive_Menubar'];
-  }
+  static key = 'Expressive_Menubar';
 
   destroy() {
     this.el.removeEventListener('keydown', this._onBarKeydown);
@@ -61,7 +58,7 @@ export class Menubar extends Component<MenubarOptions> {
     });
     this._added.forEach(({ el, name }) => el.removeAttribute(name));
     this._added = [];
-    this.el['Expressive_Menubar'] = undefined;
+    super.destroy();
   }
 
   private get _items(): HTMLElement[] {

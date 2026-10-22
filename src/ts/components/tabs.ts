@@ -82,7 +82,6 @@ export class Tabs extends Component<TabsOptions> {
 
   constructor(el: HTMLElement, options: Partial<TabsOptions>) {
     super(el, options);
-    this.el['Expressive_Tabs'] = this;
 
     this._tabLinks = this._queryTabLinks();
     if (!this._tabLinks.length) {
@@ -145,9 +144,7 @@ export class Tabs extends Component<TabsOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Tabs {
-    return el['Expressive_Tabs'];
-  }
+  static key = 'Expressive_Tabs';
 
   destroy() {
     this._stripObserver?.disconnect();
@@ -170,7 +167,7 @@ export class Tabs extends Component<TabsOptions> {
       restoreAttribute(link, 'tabindex', original.tabindex);
     });
     restoreAttribute(this.el, 'tabindex', this._barTabindex);
-    this.el['Expressive_Tabs'] = undefined;
+    super.destroy();
   }
 
   /**

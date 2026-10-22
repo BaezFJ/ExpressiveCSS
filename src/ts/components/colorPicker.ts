@@ -79,7 +79,6 @@ export class ColorPicker extends Component<ColorPickerOptions> {
 
   constructor(el: HTMLElement, options: Partial<ColorPickerOptions>) {
     super(el, options);
-    this.el['Expressive_ColorPicker'] = this;
     this.input = el.querySelector<HTMLInputElement>(':scope > input[type="color"]');
     if (!this.input) return;
     this._hsv = toHsv(this.input.value) ?? this._hsv;
@@ -92,16 +91,14 @@ export class ColorPicker extends Component<ColorPickerOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): ColorPicker {
-    return el['Expressive_ColorPicker'];
-  }
+  static key = 'Expressive_ColorPicker';
 
   destroy() {
     this.input?.removeEventListener('input', this._onNativeInput);
     for (const part of [this._area, this._hue, this._hex]) part?.remove();
     this._area = this._thumb = this._hue = this._hex = null;
     this.el.style.removeProperty('--_color-picker-hue');
-    this.el['Expressive_ColorPicker'] = undefined;
+    super.destroy();
   }
 
   /** The current color as `#rrggbb`. Setting it fires no events, as with a native input. */
