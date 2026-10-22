@@ -1,4 +1,4 @@
-import { Utils, svgNode } from '../core/utils';
+import { Utils, pickerFooter, svgNode } from '../core/utils';
 import { Component, BaseOptions, I18nOptions } from '../core/component';
 import { DisplayPlugin, createDisplayPlugin, hideModal } from '../plugins/modalDisplayPlugin';
 
@@ -32,9 +32,6 @@ const DAY_END = 24 * 3600 - 1;
 /** A clock number as two digits. */
 const pad2 = (n: number) => String(n).padStart(2, '0');
 
-/** An hour on the 24-hour clock, from one written with AM or PM. */
-const hour24 = (hours: number, period?: string) => (period ? (hours % 12) + (period === 'PM' ? 12 : 0) : hours);
-
 /**
  * The hour on the 24-hour clock, minute and second of a written time such as
  * '14:30', '02:30:45 PM' or 'now'. A missing part reads as 0.
@@ -50,7 +47,7 @@ function readTime(text: string, fromNow: number): [number, number, number] {
   const [hours, minutes, seconds] = [0, 1, 2].map((i) => +parts[i] || 0);
   // A written AM or PM fixes the hour on either clock: "03:30 PM" is 15:30
   // on a 24-hour clock too.
-  return [hour24(hours, period), minutes, seconds];
+  return [period ? dayHour(hours, period === 'PM') : hours, minutes, seconds];
 }
 
 /** Seconds since midnight for an hour, minute and second. */
@@ -275,7 +272,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   private _limits: [number, number] = [0, DAY_END];
 
   constructor(el: HTMLInputElement, options: Partial<TimepickerOptions>) {
-    super(el, { ...localeClock(el), ...options, i18n: { ...Timepicker.defaults.i18n, ...options?.i18n } });
+    super(el, { ...localeClock(el), ...options });
     this.el['Expressive_Timepicker'] = this;
     // A modal clock writes on Ok, so it has the buttons.
     this.options.autoSubmit &&= this.options.displayPlugin !== 'modal';
@@ -515,23 +512,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   _pickerSetup() {
-    Utils.createButton(
-      this.footer,
-      this.options.i18n.clear,
-      ['timepicker-clear'],
-      this.options.showClearBtn,
-      this.clear
-    );
-
-    if (!this.options.autoSubmit) {
-      Utils.createConfirmationContainer(
-        this.footer,
-        this.options.i18n.done,
-        this.options.i18n.cancel,
-        this.confirm,
-        this.cancel
-      );
-    }
+    pickerFooter(this.footer, this.options, 'timepicker-clear', this.clear, this.confirm, this.cancel);
 
     this._updateTimeFromInput();
 
@@ -728,7 +709,7 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   /** The time as seconds of the day. */
   private _time() {
-    return daySeconds([this._hours24(), this.minutes, this.seconds]);
+    return daySeconds([this._dayValue('hours', this.hours), this.minutes, this.seconds]);
   }
 
   /** Move the time to the nearest allowed time, and say whether it moved. */
@@ -1036,13 +1017,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   // A time input accepts only 24-hour HH:mm or HH:mm:ss and empties itself
   // on anything else, so it never gets the AM/PM a text input shows.
   private _inputValue(time: string) {
-    if (this.el.type === 'time') return this._clockTime(this._hours24());
+    if (this.el.type === 'time') return this._clockTime(this._dayValue('hours', this.hours));
     return this.options.twelveHour ? `${time} ${this.amOrPm}` : time;
-  }
-
-  private _hours24() {
-    if (!this.options.twelveHour) return this.hours;
-    return (this.hours % 12) + (this.amOrPm === 'PM' ? 12 : 0);
   }
 
   confirm = () => {

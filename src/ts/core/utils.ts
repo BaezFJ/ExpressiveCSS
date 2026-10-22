@@ -4,6 +4,45 @@ type Bounding = Pick<DOMRect, 'left' | 'top' | 'width' | 'height'>;
 /** Which edges of a container a box has crossed. */
 type Edges = { top: boolean; right: boolean; bottom: boolean; left: boolean };
 
+/** Sets an attribute, or removes it for null, as when restoring a value read with getAttribute. */
+export function restoreAttribute(el: Element, name: string, value: string | null) {
+  if (value === null) el.removeAttribute(name);
+  else el.setAttribute(name, value);
+}
+
+/** A picker footer text button; a hidden one is also out of the tab order. */
+function footerButton(parent: HTMLElement, text: string, className: string, onClick: () => void, visible = true) {
+  const button = document.createElement('button');
+  button.className = `${className} text`;
+  button.style.visibility = visible ? 'visible' : 'hidden';
+  button.type = 'button';
+  button.tabIndex = visible ? 0 : -1;
+  button.innerText = text;
+  button.addEventListener('click', onClick);
+  parent.append(button);
+}
+
+/**
+ * Fills a picker's footer: a Clear button, hidden unless `showClearBtn`,
+ * then Cancel and Done unless the picker writes its value without them.
+ */
+export function pickerFooter(
+  footer: HTMLElement,
+  { i18n, showClearBtn, autoSubmit }: { i18n: Partial<Record<'clear' | 'cancel' | 'done', string>>; showClearBtn: boolean; autoSubmit: boolean },
+  clearClass: string,
+  onClear: () => void,
+  onConfirm: () => void,
+  onCancel: () => void
+) {
+  footerButton(footer, i18n.clear, clearClass, onClear, showClearBtn);
+  if (autoSubmit) return;
+  const buttons = document.createElement('div');
+  buttons.classList.add('confirmation-btns');
+  footer.append(buttons);
+  footerButton(buttons, i18n.cancel, 'btn-cancel', onCancel);
+  footerButton(buttons, i18n.done, 'btn-confirm', onConfirm);
+}
+
 /** An SVG element with its attributes. */
 export function svgNode(name: string, attributes: Record<string, string> = {}): SVGElement {
   const element = document.createElementNS('http://www.w3.org/2000/svg', name);
@@ -264,84 +303,6 @@ export class Utils {
    */
   static getIdFromTrigger(trigger: HTMLElement): string {
     return trigger.dataset.target || (trigger.getAttribute('href')?.slice(1) ?? '');
-  }
-
-  /**
-   * Renders confirm/close buttons with callback function
-   */
-  static createConfirmationContainer(
-    container: HTMLElement,
-    confirmText: string,
-    cancelText: string,
-    onConfirm: (Function: object) => void,
-    onCancel: (Function: object) => void
-  ): void {
-    const confirmationButtonsContainer = document.createElement('div');
-    confirmationButtonsContainer.classList.add('confirmation-btns');
-    container.append(confirmationButtonsContainer);
-
-    this.createButton(confirmationButtonsContainer, cancelText, ['btn-cancel'], true, onCancel);
-    this.createButton(confirmationButtonsContainer, confirmText, ['btn-confirm'], true, onConfirm);
-  }
-
-  /**
-   * Renders a button with optional callback function
-   */
-  static createButton(
-    container: HTMLElement,
-    text: string,
-    className: string[] = [],
-    visibility: boolean = true,
-    callback: (Function: object) => void = null
-  ): void {
-    const button = document.createElement('button');
-    button.className = className.concat(['text']).join(' ');
-    button.style.visibility = visibility ? 'visible' : 'hidden';
-    button.type = 'button';
-    button.tabIndex = visibility ? 0 : -1;
-    button.innerText = text;
-    if (typeof callback === 'function') button.addEventListener('click', callback);
-    container.append(button);
-  }
-
-  /**
-   * Places `container` below `origin`, kept on screen, and returns the offset
-   * it should transition in from.
-   */
-  static _setAbsolutePosition(
-    origin: HTMLElement,
-    container: HTMLElement,
-    margin: number,
-    transitionMovement: number,
-    align: string = 'center'
-  ) {
-    const originHeight = origin.offsetHeight,
-      originWidth = origin.offsetWidth,
-      containerHeight = container.offsetHeight,
-      containerWidth = container.offsetWidth,
-      originRect = origin.getBoundingClientRect();
-    const targetTop = originRect.top + window.scrollY + originHeight + margin;
-    let targetLeft = originRect.left + window.scrollX;
-
-    if (align === 'center') {
-      targetLeft += originWidth / 2 - containerWidth / 2;
-    } else if (align === 'right') {
-      targetLeft += originWidth - containerWidth - margin;
-    }
-
-    const newCoordinates = Utils._repositionWithinScreen(
-      targetLeft,
-      targetTop,
-      containerWidth,
-      containerHeight,
-      margin,
-      transitionMovement,
-      align
-    );
-
-    Utils._placeInOffsetParent(container, newCoordinates);
-
-    return {x: 0, y: transitionMovement};
   }
 
   /**

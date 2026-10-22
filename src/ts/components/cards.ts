@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 import { Component, BaseOptions, } from '../core/component';
 
 export interface CardsOptions extends BaseOptions {
@@ -129,10 +129,7 @@ export class Cards extends Component<CardsOptions> {
     this._activators.forEach((activator) => {
       activator.removeAttribute('aria-expanded');
       const initialAriaControls = this._initialAriaControls.get(activator);
-      if (initialAriaControls === null) activator.removeAttribute('aria-controls');
-      else if (initialAriaControls !== undefined) {
-        activator.setAttribute('aria-controls', initialAriaControls);
-      }
+      if (initialAriaControls !== undefined) restoreAttribute(activator, 'aria-controls', initialAriaControls);
     });
     this.isOpen = false;
     this._activators = [];

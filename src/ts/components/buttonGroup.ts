@@ -1,3 +1,4 @@
+import { restoreAttribute } from '../core/utils';
 import { Component, BaseOptions } from "../core/component";
 
 export interface ButtonGroupOptions extends BaseOptions {}
@@ -62,10 +63,7 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
     document.removeEventListener("pointercancel", this._resetPress);
     document.removeEventListener("keyup", this._handleKeyUp);
     window.removeEventListener("blur", this._resetPress);
-    for (const [item, value] of this._originalPressed) {
-      if (value === null) item.removeAttribute("aria-pressed");
-      else item.setAttribute("aria-pressed", value);
-    }
+    for (const [item, value] of this._originalPressed) restoreAttribute(item, "aria-pressed", value);
     this._originalPressed.clear();
     this.el["Expressive_ButtonGroup"] = undefined;
   }

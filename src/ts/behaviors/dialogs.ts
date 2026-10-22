@@ -1,7 +1,5 @@
 import { Utils } from '../core/utils';
 
-type ClosedBy = 'any' | 'closerequest' | 'none';
-
 /**
  * Light-dismiss for native `<dialog>` elements.
  *
@@ -37,7 +35,6 @@ export class Dialogs {
     const started = Dialogs._down;
     Dialogs._down = null;
     if (!started || started.pointerId !== event.pointerId) return;
-    if (!event.isPrimary) return;
     if (!started.dialog.isConnected || !started.dialog.open) return;
     if (!Dialogs._lightDismissible(started.dialog)) return;
     if (Dialogs._backdropDialog(event) !== started.dialog) return;
@@ -72,21 +69,14 @@ export class Dialogs {
     return event.pointerType !== 'mouse' || event.button === 0;
   }
 
-  private static _lightDismissible(dialog: HTMLDialogElement): boolean {
-    const value = Dialogs._closedBy(dialog);
-    if (value === 'none' || value === 'closerequest') return false;
-    // Native closedby="any" already light-dismisses with the same
-    // "both ends outside" rule. Don't race it.
-    if (value === 'any' && 'closedBy' in HTMLDialogElement.prototype) return false;
-    return true;
-  }
-
   // Read the attribute only. The IDL default for an unset closedby is
   // "closerequest" (Escape, no light dismiss) — treating that as an
   // author opt-out made every dialog undismissable from the scrim.
-  private static _closedBy(dialog: HTMLDialogElement): ClosedBy | null {
-    const attr = dialog.getAttribute('closedby');
-    if (attr === 'any' || attr === 'closerequest' || attr === 'none') return attr;
-    return null;
+  // Native closedby="any" already light-dismisses with the same "both ends
+  // outside" rule, so leave it to the browser where it has one.
+  private static _lightDismissible(dialog: HTMLDialogElement): boolean {
+    const value = dialog.getAttribute('closedby');
+    if (value === 'any') return !('closedBy' in HTMLDialogElement.prototype);
+    return value !== 'none' && value !== 'closerequest';
   }
 }

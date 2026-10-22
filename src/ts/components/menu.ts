@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 // CSS anchor positioning, where the browser has it. A menu opened from its
@@ -670,7 +670,7 @@ export class Menu extends Component<MenuOptions> {
   }
 
   _handleMenuKeydown = (e: KeyboardEvent) => {
-    if (!this.isOpen || e.ctrlKey || e.metaKey || e.altKey || Utils.isComposing(e)) return;
+    if (!this.isOpen || !Utils.plainKey(e) || Utils.isComposing(e)) return;
     const list = this._containingSubmenu(e) ?? this.menuEl;
     const rtl = getComputedStyle(list).direction === 'rtl';
     const openKey = rtl ? 'ArrowLeft' : 'ArrowRight';
@@ -774,8 +774,7 @@ export class Menu extends Component<MenuOptions> {
   };
 
   private _restoreInert() {
-    if (this._originalInert === null) this.menuEl?.removeAttribute('inert');
-    else this.menuEl?.setAttribute('inert', this._originalInert);
+    if (this.menuEl) restoreAttribute(this.menuEl, 'inert', this._originalInert);
   }
 
   // focusedIndex is reset on close and only covers one list, so clearing by

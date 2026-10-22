@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 import { Menu, MenuOptions } from './menu';
 import { Component, BaseOptions } from '../core/component';
 
@@ -465,10 +465,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     const hide = this.el.parentElement;
     if (hide?.classList.contains('hide-select')) hide.replaceWith(this.el);
     this._originalLabels.forEach((original, label) => {
-      for (const name of ['for', 'id'] as const) {
-        if (original[name] === null) label.removeAttribute(name);
-        else label.setAttribute(name, original[name]);
-      }
+      for (const name of ['for', 'id'] as const) restoreAttribute(label, name, original[name]);
     });
     this._labelPlaceholder?.replaceWith(this.labelEl);
     if (!this.wrapper) return;

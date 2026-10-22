@@ -1,3 +1,4 @@
+import { Utils } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 import { Menu, MenuOptions } from './menu';
 
@@ -106,7 +107,7 @@ export class Menubar extends Component<MenubarOptions> {
   };
 
   private _onBarKeydown = (e: KeyboardEvent) => {
-    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (!Utils.plainKey(e)) return;
     const items = this._items;
     const index = items.indexOf(e.target as HTMLElement);
     if (index < 0) return;
@@ -123,7 +124,7 @@ export class Menubar extends Component<MenubarOptions> {
   // Right only for submenus; whatever it leaves moves along the bar.
   private _onMenuKeydown = (e: KeyboardEvent) => {
     const step = this._step(e.key);
-    if (!step || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (!step || e.defaultPrevented || !Utils.plainKey(e)) return;
     const items = this._items;
     const path = e.composedPath();
     const index = items.findIndex((item) => {

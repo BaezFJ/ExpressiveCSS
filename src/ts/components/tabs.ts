@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 
 export interface TabsOptions extends BaseOptions {
   /**
@@ -50,12 +50,6 @@ const isShown = (a: Element) => a.checkVisibility?.() ?? true;
 
 /** A tab the keyboard can reach: enabled and shown. */
 const isUsable = (a: Element) => !isDisabled(a) && isShown(a);
-
-/** Puts back an attribute as the page wrote it; null means it was absent. */
-const restoreAttribute = (el: Element, name: string, value: string | null) => {
-  if (value === null) el.removeAttribute(name);
-  else el.setAttribute(name, value);
-};
 
 export class Tabs extends Component<TabsOptions> {
   _tabLinks: NodeListOf<HTMLAnchorElement>;

@@ -1,3 +1,4 @@
+import { restoreAttribute } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 export interface CarouselI18nOptions {
@@ -135,10 +136,6 @@ export class Carousel extends Component<CarouselOptions> {
   constructor(el: HTMLElement, options: Partial<CarouselOptions>) {
     super(el, options);
     this.el['Expressive_Carousel'] = this;
-
-    if (options?.i18n) {
-      this.options.i18n = { ...Carousel.defaults.i18n, ...options.i18n };
-    }
 
     this._vertical = this.el.classList.contains('full-screen');
 
@@ -355,10 +352,10 @@ export class Carousel extends Component<CarouselOptions> {
       if (this._generatedItemDescriptions.has(el)) el.removeAttribute('aria-roledescription');
       if (this._generatedItemSizes.has(el)) el.removeAttribute('data-carousel-size');
       const original = this._itemA11yOriginal.get(el);
-      if (original?.ariaHidden === null) el.removeAttribute('aria-hidden');
-      else if (original) el.setAttribute('aria-hidden', original.ariaHidden);
-      if (original?.tabIndex === null) el.removeAttribute('tabindex');
-      else if (original) el.setAttribute('tabindex', original.tabIndex);
+      if (original) {
+        restoreAttribute(el, 'aria-hidden', original.ariaHidden);
+        restoreAttribute(el, 'tabindex', original.tabIndex);
+      }
     });
     if (this._generatedContainerRole) this.el.removeAttribute('role');
     if (this._generatedContainerLabel) this.el.removeAttribute('aria-label');

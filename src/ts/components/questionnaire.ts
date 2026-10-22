@@ -96,14 +96,13 @@ function restoreControl(control: Control, saved: Saved) {
  * letter. Keys typed into a text field, or with a modifier, pick nothing.
  */
 function shortcut(e: KeyboardEvent) {
-  if (typingIn(e.target) || modified(e)) return -1;
+  if (typingIn(e.target) || !Utils.plainKey(e)) return -1;
   const digit = '123456789'.indexOf(e.key);
   return digit >= 0 ? digit : letterIndex(e.key);
 }
 
 const TYPING = 'textarea, select, [contenteditable], input:not([type="radio"], [type="checkbox"], [type="button"], [type="submit"], [type="reset"])';
 const typingIn = (target: EventTarget | null) => !!(target as Element).matches?.(TYPING);
-const modified = (e: KeyboardEvent) => e.ctrlKey || e.metaKey || e.altKey;
 
 const letterIndex = (key: string) => (key.length === 1 ? LETTERS.indexOf(key.toLowerCase()) : -1);
 

@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { svgNode } from '../core/utils';
+import { Utils, svgNode } from '../core/utils';
 
 export interface LineChartOptions extends BaseOptions {
   /**
@@ -204,11 +204,7 @@ export function steps(low: number, high: number, step: number) {
 
 /** A number format in the element's language, or the browser's for an invalid lang attribute. */
 export function numberFormat(el: Element, options: Intl.NumberFormatOptions) {
-  try {
-    return new Intl.NumberFormat(el.closest<HTMLElement>('[lang]')?.lang || undefined, options);
-  } catch {
-    return new Intl.NumberFormat(undefined, options);
-  }
+  return new Intl.NumberFormat(Utils.locale(el), options);
 }
 
 /** A y scale's ends, and with .axis the values its labels mark. */

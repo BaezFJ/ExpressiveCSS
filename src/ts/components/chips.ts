@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 import { Autocomplete, AutocompleteOptions } from './autocomplete';
 import { Component, BaseOptions } from '../core/component';
 
@@ -189,10 +189,6 @@ export class Chips extends Component<ChipsOptions> {
     super(el, options);
     this.el['Expressive_Chips'] = this;
 
-    // Spreading options over the defaults replaces the i18n object wholesale,
-    // so passing one string would drop the rest. Same fix as Datepicker.
-    if (options?.i18n) this.options.i18n = { ...Chips.defaults.i18n, ...options.i18n };
-
     this.el.classList.add('chips');
     this.chipsData = [];
     this._chips = [];
@@ -326,9 +322,7 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   private _copyAttribute(name: string) {
-    const value = this._source.getAttribute(name);
-    if (value === null) this._control.removeAttribute(name);
-    else this._control.setAttribute(name, value);
+    restoreAttribute(this._control, name, this._source.getAttribute(name));
   }
 
   /** After the chips change: give the form one value per chip and update a required field's validity. */
@@ -393,8 +387,7 @@ export class Chips extends Component<ChipsOptions> {
     this._source.setAttribute('name', this._name);
     if (!this._required) return;
     this._source.required = true;
-    if (this._ariaRequired === null) this._source.removeAttribute('aria-required');
-    else this._source.setAttribute('aria-required', this._ariaRequired);
+    restoreAttribute(this._source, 'aria-required', this._ariaRequired);
   }
 
   /** Whether only an autocomplete suggestion can become a chip. */

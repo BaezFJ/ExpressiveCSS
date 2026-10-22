@@ -135,7 +135,6 @@ export class Keypad extends Component<KeypadOptions> {
   constructor(el: HTMLElement, options: Partial<KeypadOptions>) {
     super(el, options);
     this.el['Expressive_Keypad'] = this;
-    this.options.i18n = { ...Keypad.defaults.i18n, ...options.i18n };
     this._root = null;
     instances.add(this);
     this._attach();

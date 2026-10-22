@@ -1,3 +1,4 @@
+import { restoreAttribute } from '../core/utils';
 import { Component, BaseOptions } from "../core/component";
 
 export type FloatingActionButtonOptions = BaseOptions;
@@ -49,8 +50,7 @@ export class FloatingActionButton extends Component<FloatingActionButtonOptions>
     this.el.removeEventListener('click', this._handleFABClick);
     this._anchor?.removeEventListener('keydown', this._handleAnchorKeydown);
     if (this._addedExpanded) this._anchor.removeAttribute('aria-expanded');
-    if (this._anchorTabIndex === null) this._anchor.removeAttribute('tabindex');
-    else if (this._anchorTabIndex !== undefined) this._anchor.setAttribute('tabindex', this._anchorTabIndex);
+    if (this._anchorTabIndex !== undefined) restoreAttribute(this._anchor, 'tabindex', this._anchorTabIndex);
     this.el['Expressive_FloatingActionButton'] = undefined;
   }
 

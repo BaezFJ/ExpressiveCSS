@@ -115,7 +115,7 @@ export class PaneResize {
 
   private static _onKeyDown(e: KeyboardEvent) {
     const handle = Utils.closestInPath(e, handleSelector);
-    if (!handle || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (!handle || !Utils.plainKey(e)) return;
     const current = PaneResize.width(handle);
     const [min, max] = PaneResize._bounds(handle);
     const amount = e.shiftKey ? step * 4 : step;

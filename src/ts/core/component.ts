@@ -42,8 +42,9 @@ export class Component<O extends BaseOptions> {
 
   /**
    * Destroys any instance already on `el`, then spreads `options` over the
-   * class defaults. A subclass deep-merges nested options such as `i18n`
-   * after `super()`, and passes options it reads from markup in `options`.
+   * class defaults, and `options.i18n` over the default strings, so passing
+   * one string keeps the rest. A subclass passes options it reads from
+   * markup in `options`.
    */
   constructor(el: HTMLElement, options: Partial<O>) {
     // Display error if el is not a valid HTML Element
@@ -52,7 +53,9 @@ export class Component<O extends BaseOptions> {
     }
     new.target.getInstance(el)?.destroy();
     this.el = el;
-    this.options = { ...new.target.defaults, ...options } as O;
+    const defaults: Partial<O> & { i18n?: object } = new.target.defaults;
+    const i18n: object = defaults.i18n && { i18n: { ...defaults.i18n, ...(options as typeof defaults)?.i18n } };
+    this.options = { ...defaults, ...options, ...i18n } as O;
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Utils } from "../core/utils";
+import { Utils, restoreAttribute } from "../core/utils";
 import { Component, BaseOptions } from "../core/component";
 
 export interface ExpandingCardOptions extends BaseOptions {
@@ -65,10 +65,7 @@ export class ExpandingCard extends Component<ExpandingCardOptions> {
     this._removeEventHandlers();
     this._collapse();
     if (this.dialog?.open) this.dialog.close();
-    for (const [name, value] of Object.entries(this._initialTrigger)) {
-      if (value === null) this.trigger.removeAttribute(name);
-      else this.trigger.setAttribute(name, value);
-    }
+    for (const [name, value] of Object.entries(this._initialTrigger)) restoreAttribute(this.trigger, name, value);
     this.el["Expressive_ExpandingCard"] = undefined;
   }
 

@@ -1,5 +1,5 @@
 import { BaseOptions } from '../core/component';
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 
 export interface SnackbarOptions extends BaseOptions {
   /**
@@ -422,10 +422,7 @@ export class Snackbar {
         .map(name => [name, snackbar.getAttribute(name)]);
       this._restoreElement = () => {
         snackbar.replaceChildren(...children);
-        for (const [name, value] of attributes) {
-          if (value === null) snackbar.removeAttribute(name);
-          else snackbar.setAttribute(name, value);
-        }
+        for (const [name, value] of attributes) restoreAttribute(snackbar, name, value);
         placeholder.replaceWith(snackbar);
       };
     }

@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 export type TooltipPosition = 'top' | 'right' | 'bottom' | 'left';
@@ -209,8 +209,7 @@ export class Tooltip extends Component<TooltipOptions> {
     if (this._originalContent) {
       const { el, marker, display, priority, hidden, contentClass } = this._originalContent;
       el.style.setProperty('display', display, priority);
-      if (hidden === null) el.removeAttribute('hidden');
-      else el.setAttribute('hidden', hidden);
+      restoreAttribute(el, 'hidden', hidden);
       el.classList.toggle('tooltip-content', contentClass);
       if (!el.className) el.removeAttribute('class');
       marker.replaceWith(el);

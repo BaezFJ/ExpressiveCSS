@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 import { BaseOptions, Component } from '../core/component';
 
 export interface LightboxOptions extends BaseOptions {
@@ -116,8 +116,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this._reset();
     this.placeholder.replaceWith(this.el);
     if (focused) this._restoreFocus();
-    if (this._tabindex === null) this.el.removeAttribute('tabindex');
-    else this.el.setAttribute('tabindex', this._tabindex);
+    restoreAttribute(this.el, 'tabindex', this._tabindex);
     this.el['Expressive_Lightbox'] = undefined;
   }
 
@@ -149,8 +148,7 @@ export class Lightbox extends Component<LightboxOptions> {
     if (this.attrHeight != null) this.el.setAttribute('height', this.attrHeight);
     this.el.classList.remove('active');
     this.placeholder.removeAttribute('style');
-    if (this.originInlineStyles === null) this.el.removeAttribute('style');
-    else this.el.setAttribute('style', this.originInlineStyles);
+    restoreAttribute(this.el, 'style', this.originInlineStyles);
     this.overlayActive = false;
     this._isOpen = false;
     this.doneAnimating = true;

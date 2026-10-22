@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 
 const _defaults: BaseOptions = {};
 // Keys that open a full-screen search view from its field.
@@ -45,8 +45,7 @@ export class AppBar extends Component<BaseOptions> {
     this._input?.removeEventListener('keydown', this._onSearchKeydown);
     if (this._restore) {
       this._view.hidden = this._restore.hidden;
-      if (this._restore.expanded === null) this._input.removeAttribute('aria-expanded');
-      else this._input.setAttribute('aria-expanded', this._restore.expanded);
+      restoreAttribute(this._input, 'aria-expanded', this._restore.expanded);
       this._restore = null;
     }
     this.el.classList.remove('collapsed');

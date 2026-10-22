@@ -48,9 +48,9 @@ export class Thing extends Component<ThingOptions> {
 `getInstance` and `destroy` throw in the base class — a subclass that omits
 them is broken, not defaulted. The base constructor destroys any existing
 instance first, so re-initializing an element is safe, then spreads `options`
-over `new.target.defaults`. Nested options (`i18n`) are the subclass's to
-deep-merge after `super()`; options read from markup go into the object passed
-to `super()`.
+over `new.target.defaults`. It also spreads `options.i18n` over the default
+`i18n`, so passing one string keeps the others. Options read from markup go
+into the object passed to `super()`.
 
 `Thing.init(el | els, options)` is inherited. The base `init` is typed on
 `this`, so `Thing.init(el)` returns a `Thing`, a list returns `Thing[]`, and the

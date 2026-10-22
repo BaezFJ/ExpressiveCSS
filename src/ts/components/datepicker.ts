@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, pickerFooter } from '../core/utils';
 import { FormSelect } from './select';
 import { BaseOptions, Component, I18nOptions } from '../core/component';
 import { DisplayPlugin, ModalDisplayPlugin, createDisplayPlugin, hideModal } from '../plugins/modalDisplayPlugin';
@@ -72,11 +72,6 @@ const READERS: Record<string, (i18n: Partial<DateI18nOptions>) => Reader> = {
   yyyy: () => ['(\\d{4})', (parts, text) => (parts.year = +text)]
 };
 
-/**
- * Reads a date written in a string format with the names it was written
- * in, so a German "Mär 15, 2026" reads back as Date.parse never would.
- * Null for text that does not fit the format, or a day the month lacks.
- */
 const pad = (n: number) => String(n).padStart(2, '0');
 /** What each `format` token writes for a date. */
 const FORMATS: Record<string, (date: Date, i18n: Partial<DateI18nOptions>) => string | number> = {
@@ -92,6 +87,11 @@ const FORMATS: Record<string, (date: Date, i18n: Partial<DateI18nOptions>) => st
   yyyy: (date) => date.getFullYear()
 };
 
+/**
+ * Reads a date written in a string format with the names it was written
+ * in, so a German "Mär 15, 2026" reads back as Date.parse never would.
+ * Null for text that does not fit the format, or a day the month lacks.
+ */
 export function readDate(value: string, format: string, i18n: Partial<DateI18nOptions>): Date | null {
   const readers: Reader[] = [];
   const pattern = format.split(/(d{1,4}|m{1,4}|y{4}|yy|!.)/g).map((token) => {
@@ -438,11 +438,6 @@ export class Datepicker extends Component<DatepickerOptions> {
     super(el, options);
     this.el['Expressive_Datepicker'] = this;
 
-    // make sure i18n defaults are not lost when only few i18n option properties are passed
-    if (!!options && options.hasOwnProperty('i18n') && typeof options.i18n === 'object') {
-      this.options.i18n = { ...Datepicker.defaults.i18n, ...options.i18n };
-    }
-
     // A modal calendar is always open in its dialog and writes on Ok.
     if (this.options.displayPlugin === 'modal') Object.assign(this.options, { openByDefault: true, autoSubmit: false });
 
@@ -626,11 +621,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       }
     }
 
-    Utils.createButton(this.footer, this.options.i18n.clear, ['datepicker-clear'], this.options.showClearBtn, this._handleClearClick);
-
-    if (!this.options.autoSubmit) {
-      Utils.createConfirmationContainer(this.footer, this.options.i18n.done, this.options.i18n.cancel, this._confirm, this._cancel);
-    }
+    pickerFooter(this.footer, this.options, 'datepicker-clear', this._handleClearClick, this._confirm, this._cancel);
 
     if (this.options.container) {
       const optEl = this.options.container;
@@ -1532,7 +1523,7 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   private _handleCalendarKeydown = (event: KeyboardEvent) => {
     const button = event.target as HTMLElement;
-    if (!button.matches('.datepicker-day-button') || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (!button.matches('.datepicker-day-button') || !Utils.plainKey(event)) return;
     const date = this._dayDate(button);
     const weekday = (date.getDay() - this.options.firstDay + 7) % 7;
     const offsets = { ArrowLeft: this.options.isRTL ? 1 : -1, ArrowRight: this.options.isRTL ? -1 : 1,

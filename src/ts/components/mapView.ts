@@ -125,7 +125,7 @@ function arc([x0, y0]: LngLat, [x2, y2]: LngLat, steps = 32): LngLat[] {
 
 // How far each arrow key nudges a focused draggable marker, in steps.
 const ARROWS: Record<string, [number, number]> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
-const plainArrow = (e: KeyboardEvent) => (e.altKey || e.ctrlKey || e.metaKey ? undefined : ARROWS[e.key]);
+const plainArrow = (e: KeyboardEvent) => (Utils.plainKey(e) ? ARROWS[e.key] : undefined);
 
 /**
  * An interactive map built on MapLibre: a `.map` holding `.map-marker`,

@@ -196,7 +196,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   constructor(el: HTMLInputElement, options: Partial<AutocompleteOptions>) {
     super(el, options);
     this.el['Expressive_Autocomplete'] = this;
-    this.options.i18n = { ...Autocomplete.defaults.i18n, ...options?.i18n };
 
     this.isOpen = false;
     this.count = 0;
