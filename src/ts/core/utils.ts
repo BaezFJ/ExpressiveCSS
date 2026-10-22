@@ -1,8 +1,6 @@
-/** The part of a `DOMRect` the positioning helpers below actually read. */
-type Bounding = Pick<DOMRect, 'left' | 'top' | 'width' | 'height'>;
-
-/** Which edges of a container a box has crossed. */
-type Edges = { top: boolean; right: boolean; bottom: boolean; left: boolean };
+/** One axis of a viewport clamp: `start` moved so `size` fits in `view`. */
+const fit = (start: number, size: number, view: number, offset: number) =>
+  start < offset ? offset : start + size > view - offset ? view - size : start;
 
 /** Sets an attribute, or removes it for null, as when restoring a value read with getAttribute. */
 export function restoreAttribute(el: Element, name: string, value: string | null) {
@@ -253,59 +251,6 @@ export class Utils {
   }
 
   /**
-   * Checks for exceeded edges
-   * @param container Container element.
-   * @param bounding Bounding rect.
-   * @param offset Element offset.
-   */
-  static checkWithinContainer(container: HTMLElement, bounding: Bounding, offset: number): Edges {
-    const edges = {
-      top: false,
-      right: false,
-      bottom: false,
-      left: false
-    };
-
-    const containerRect = container.getBoundingClientRect();
-    // If body element is smaller than viewport, use viewport height instead.
-    const containerBottom =
-      container === document.body
-        ? Math.max(containerRect.bottom, window.innerHeight)
-        : containerRect.bottom;
-
-    const scrollLeft = container.scrollLeft;
-    const scrollTop = container.scrollTop;
-
-    const scrolledX = bounding.left - scrollLeft;
-    const scrolledY = bounding.top - scrollTop;
-
-    // Check for container and viewport for each edge
-    if (scrolledX < containerRect.left + offset || scrolledX < offset) {
-      edges.left = true;
-    }
-
-    if (
-      scrolledX + bounding.width > containerRect.right - offset ||
-      scrolledX + bounding.width > window.innerWidth - offset
-    ) {
-      edges.right = true;
-    }
-
-    if (scrolledY < containerRect.top + offset || scrolledY < offset) {
-      edges.top = true;
-    }
-
-    if (
-      scrolledY + bounding.height > containerBottom - offset ||
-      scrolledY + bounding.height > window.innerHeight - offset
-    ) {
-      edges.bottom = true;
-    }
-
-    return edges;
-  }
-
-  /**
    * Retrieves target element id from trigger.
    * @param trigger Trigger element.
    */
@@ -332,6 +277,13 @@ export class Utils {
     el.style.left = x + 'px';
   }
 
+  /**
+   * Moves document coordinates so a `width` by `height` box stays in the
+   * viewport. A box past the left or top edge, or within `offset` of it,
+   * starts `offset` in; a box past the right or bottom edge, or within
+   * `offset` of it, ends at that edge. `offset` is the margin plus the slide
+   * distance, or minus it for right alignment.
+   */
   static _repositionWithinScreen(
     x: number,
     y: number,
@@ -341,38 +293,10 @@ export class Utils {
     transitionMovement: number,
     align: string
   ) {
-    const scrollLeft = window.scrollX;
-    const scrollTop = window.scrollY;
-    let newX = x - scrollLeft;
-    let newY = y - scrollTop;
-
-    const bounding: Bounding = {
-      left: newX,
-      top: newY,
-      width: width,
-      height: height
-    };
-    let offset: number;
-    if (align === 'left' || align == 'center') {
-      offset = margin + transitionMovement;
-    } else if (align === 'right') {
-      offset = margin - transitionMovement;
-    }
-    const edges = Utils.checkWithinContainer(document.body, bounding, offset);
-
-    if (edges.left) {
-      newX = offset;
-    } else if (edges.right) {
-      newX -= newX + width - window.innerWidth;
-    }
-    if (edges.top) {
-      newY = offset;
-    } else if (edges.bottom) {
-      newY -= newY + height - window.innerHeight;
-    }
+    const offset = margin + (align === 'right' ? -transitionMovement : transitionMovement);
     return {
-      x: newX + scrollLeft,
-      y: newY + scrollTop
+      x: window.scrollX + fit(x - window.scrollX, width, window.innerWidth, offset),
+      y: window.scrollY + fit(y - window.scrollY, height, window.innerHeight, offset)
     };
   }
 }

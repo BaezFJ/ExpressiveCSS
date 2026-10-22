@@ -479,6 +479,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A docked date or time picker, and a tooltip placed without CSS anchor
+  positioning, stay beside their trigger on a page scrolled sideways and
+  inside the body's margin. They used to be kept inside the body's box,
+  which scrolls with the page, so a picker that fit the viewport could jump
+  to its right edge. They are now kept inside the viewport only, and a
+  docked picker with an `align` other than `left`, `center` or `right` is
+  kept in view like a left-aligned one.
 - `@use "expressive" with ($text-color: …)` colors the page text. The
   variable was written on `html`, where the `body` rule's own on-surface
   color covered it, so it only took effect inside a shadow root. `body`

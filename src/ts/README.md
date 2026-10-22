@@ -3,7 +3,7 @@
 ```
 index.ts        public entry: re-exports, version, import-time side effects
 modular.ts      optional public entry: exports only, explicit initialization
-core/           Component base class, Utils, Bounding/Edges types
+core/           Component base class, Utils
 components/     per-element widgets, + index.ts (barrel) and registry.ts
 behaviors/      document-level enhancers (Forms, Dialogs) - no per-element instances
 plugins/        helpers that are not Components (DockedDisplayPlugin)

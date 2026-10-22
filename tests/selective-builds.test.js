@@ -218,7 +218,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Timepicker minTime and maxTime across the fields, AM/PM and dial: 92,729 gzip bytes (+748).
   // Reviewed AutoInit watch mode, which starts components in added markup and destroys them in removed markup: 93,009 gzip bytes (+280).
   // Reviewed the runtime audit: one AbortController per component, instance keys in Component and shared helpers: 89,842 gzip bytes (-3,167).
-  assert.ok(sizes(js).gzip <= 89842, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the viewport clamp that replaced the body-box edge check: 89,645 gzip bytes (-197).
+  assert.ok(sizes(js).gzip <= 89645, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
