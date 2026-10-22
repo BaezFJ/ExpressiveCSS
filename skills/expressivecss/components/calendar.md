@@ -9,7 +9,7 @@ Component ID: `calendar`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `72748d74bf09583e1a9755d065e7fa47ebba01b93ca451fe681c28bf69886503`
+Contract SHA-256: `834b98e97bc8b9a1f41c2ebeb47eae62caf5ca5ff9063faaaa593340b90661b4`
 
 #### Selection and adaptation
 

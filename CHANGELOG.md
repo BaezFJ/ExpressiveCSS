@@ -829,6 +829,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Removed
 
+- The version resolver's JSON output (`scripts/resolve-version.mjs` in the
+  skill and the MCP package) drops `declaredVersion`,
+  `skillContractVersion` and `matchingCommit`. The first two copied
+  `declaredRange` and `contractVersion`, which remain; `matchingCommit`
+  was always `null`. Read `declaredRange` and `contractVersion` instead.
 - **Breaking (1.0).** Most names kept for markup written before 0.8.0 are
   gone. Each one has a replacement that has been documented since 0.8.0;
   see Migration below. A few stay: `.breadcrumb` and `.breadcrumb-wrapper`,

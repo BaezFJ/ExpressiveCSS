@@ -48,9 +48,9 @@ describe('ExpressiveCSS version resolution', () => {
           assert.deepEqual(result[key], expected, `${fixture.name}: ${key}`);
         }
       }
-      assert.equal(result.declaredRange, result.declaredVersion);
+      for (const removed of ['declaredVersion', 'skillContractVersion', 'matchingCommit']) assert.equal(removed in result, false, removed);
       assert.equal(result.exactInstalledVersion, result.resolutionSource === 'installed-package' ? result.resolvedVersion : null);
-      assert.equal(result.skillContractVersion, fixture.contractVersion);
+      assert.equal(result.contractVersion, fixture.contractVersion);
       assert.equal(result.currentDocsSafe, false);
       assert.equal(result.documentationSources.current.available, false);
       assert.equal(result.bundledContractSafe, fixture.expected.bundledContractSafe ?? false);
@@ -555,7 +555,7 @@ describe('ExpressiveCSS version resolution', () => {
     ], { encoding: 'utf8' });
     assert.equal(result.status, 0, result.stderr);
     const output = JSON.parse(result.stdout);
-    assert.equal(output.skillContractVersion, frameworkVersion);
+    assert.equal(output.contractVersion, frameworkVersion);
     assert.equal(output.contractSourceHash, contracts[0].sourceHash);
     assert.equal(output.contractStatus, 'match');
     assert.equal(output.documentationMode, 'bundled');
