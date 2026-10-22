@@ -18,7 +18,8 @@ const geometry = (root, id) => {
   const menu = root.getElementById(id);
   const [t, m] = [root.getElementById(`${id}-trigger`).getBoundingClientRect(), menu.getBoundingClientRect()];
   const hit = root.elementFromPoint(m.right - 6, m.bottom - 6);
-  return { dx: Math.round(m.left - t.left), dy: Math.round(m.top - t.bottom), open: menu.matches(':popover-open'), visible: menu.contains(hit) };
+  // `+ 0` turns a rounded -0 from a subpixel offset into 0.
+  return { dx: Math.round(m.left - t.left) + 0, dy: Math.round(m.top - t.bottom) + 0, open: menu.matches(':popover-open'), visible: menu.contains(hit) };
 };
 
 async function page(browserType, body) {
@@ -177,8 +178,12 @@ for (const [engine, browserType, browserTest] of engines) {
       // The sheet rests at translate: 0px, which moves nothing, so its select
       // keeps CSS anchoring.
       const sheet = await tab.evaluate(async () => {
-        document.getElementById('sheet').showModal();
-        await new Promise((resolve) => setTimeout(resolve, 400));
+        const sheetEl = document.getElementById('sheet');
+        sheetEl.showModal();
+        // The sheet slides in on a translate transition; only at rest does it
+        // move nothing. A loaded runner can still be mid-slide after 400ms.
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        await Promise.all(sheetEl.getAnimations().map((animation) => animation.finished));
         const select = Expressive.FormSelect.init(document.getElementById('select'));
         select.menu.options.inDuration = 0;
         select.menu.open();
