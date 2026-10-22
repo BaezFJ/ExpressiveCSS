@@ -422,7 +422,7 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
     }
     assert.match(compiledCss, /\.visually-hidden-focusable:not\(:focus-within\)/);
-    for (const className of [...new Set([...visibilitySass.matchAll(/\.([a-z][\w-]+)/g)].map((match) => match[1]))]) {
+    for (const className of [...new Set([...visibilitySass.matchAll(/\.([a-z][\w-]+)|^\s+\("([a-z][\w-]+)",/gm)].map((match) => match[1] ?? match[2]))]) {
       assert.ok(helpers.includes(`\`.${className}\``), `helpers reference omits .${className}`);
       assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
     }
