@@ -38,14 +38,14 @@ const spent = sum(spending.map(([, value]) => value));
         <p class="flow-text">
           A <code>&lt;figure class="bar-chart"&gt;</code> draws a
           <code>&lt;table&gt;</code> of values as horizontal bars that grow
-          from zero. The first column of the table labels each row; each
+          from zero. The first column of the table labels each row. Each
           further column is a series named by its header cell.
         </p>
         <p>
           It takes the same markup as a <a href="column-chart.html">column
           chart</a>. Use bars when the labels are long, when the rows are a
           ranking, or when there are more rows than fit across the page. The
-          labels sit at the inline start of each row and the plot grows with
+          labels sit at the inline start of each row. The plot grows with
           the number of rows. A band and a tooltip follow the pointer, and the
           up and down arrows move them when the chart has focus.
         </p>
@@ -79,7 +79,7 @@ const spent = sum(spending.map(([, value]) => value));
           legend appears. Series take <code>primary</code>,
           <code>tertiary</code>, <code>secondary</code> and
           <code>on-surface-variant</code> in turn. Two or three series per row
-          stay readable. With <code>toggle</code> on the figure, each legend item is a button that shows or hides its series, as on the <a href="line-chart.html#toggle">line chart</a>.
+          stay readable. Add <code>toggle</code> to the figure to make each legend item a button that shows or hides its series, as on the <a href="line-chart.html#toggle">line chart</a>.
         </p>
         <figure class="bar-chart" data-markdown-ignore>
           <figcaption>Subscriptions by plan</figcaption>
@@ -105,10 +105,10 @@ const spent = sum(spending.map(([, value]) => value));
   </Section>
   <Section {...S.stacked}>
         <p>
-          <code>stacked</code> draws one bar per row with each series after
-          the ones before it, so the bar's length is the total. Only the last
-          segment rounds its end. Stack values that add up and keep them
-          positive; an empty cell leaves the total unknown, so the chart
+          Add <code>stacked</code> to draw one bar per row, with each series
+          after the ones before it. The bar's length is the total. Only the
+          last segment rounds its end. Stack values that add up, and keep them
+          positive. An empty cell leaves the total unknown, so the chart
           leaves out the segments after it.
         </p>
         <figure class="bar-chart stacked" data-markdown-ignore>
@@ -127,11 +127,11 @@ const spent = sum(spending.map(([, value]) => value));
   </Section>
   <Section {...S.values}>
         <p>
-          <code>track</code> draws a full-width track behind each row and
-          rounds both ends of its bars. <code>values</code> writes each cell's
-          text from its bar's base, so a ranking reads without the tooltip.
-          Over the bar the text takes the series' on-color; a value longer
-          than a short bar runs on past its end in the label color. Put the
+          Add <code>track</code> to draw a full-width track behind each row
+          and round both ends of its bars. Add <code>values</code> to write
+          each cell's text from its bar's base, so a ranking reads without the
+          tooltip. Over the bar, the text takes the series' on-color. A value
+          longer than a short bar runs on past its end in the label color. Put the
           number in <code>data-value</code> when the text is abbreviated.
         </p>
         <figure class="bar-chart track values" style="--md-comp-bar-chart-row-height: 48px; --md-comp-bar-chart-shape: 12px; --md-comp-bar-chart-grid-color: transparent" data-markdown-ignore>
@@ -163,10 +163,10 @@ const spent = sum(spending.map(([, value]) => value));
   <Section {...S.meter}>
         <p>
           One stacked row with a <code>track</code> and a
-          <code>data-max</code> is a meter: the segments are what is used and
-          the track is what is left. <code>split</code> separates the segments
-          with a gap and rounds them at each joint. The legend names them and
-          the tooltip lists every cell. In a stacked bar, <code>values</code>
+          <code>data-max</code> is a meter. The segments are what is used and
+          the track is what is left. Add <code>split</code> to separate the
+          segments with a gap and round them at each joint. The legend names
+          the segments, and the tooltip lists every cell. In a stacked bar, <code>values</code>
           keeps each segment's text inside it and cuts what does not fit.
         </p>
         <article class="outlined" data-markdown-ignore>
@@ -211,15 +211,15 @@ const spent = sum(spending.map(([, value]) => value));
 </article>
 `} />
         <p>
-          <code>sparkline</code> drops the label, grid, legend and tooltip,
-          for a bar beside a figure that already explains it.
+          Use <code>sparkline</code> for a bar beside a figure that already
+          explains it. It drops the label, grid, legend and tooltip.
         </p>
   </Section>
   <Section {...S.cards}>
         <p>
-          A chart goes in a card with the figures it explains. Labels take up
+          Put a chart in a card with the figures it explains. Labels take up
           to 40% of the width and end in an ellipsis past it. The card adds no
-          chart styles; size a chart with its tokens.
+          chart styles, so size a chart with its tokens.
         </p>
         <article class="outlined" data-markdown-ignore>
           <div class="p-4">
@@ -250,26 +250,27 @@ const spent = sum(spending.map(([, value]) => value));
   </Section>
   <Section {...S.scale}>
         <p>
-          Cells read as in a column chart: a cell's number is its text without
-          currency signs, percent signs or grouping commas, and text that is
-          not a single number is a gap. In a grouped chart a gap leaves an
-          empty slot, so the other series stay in place.
+          Cells read as in a column chart. A cell's number is its text without
+          currency signs, percent signs or grouping commas. Text that is not a
+          single number is a gap. In a grouped chart, a gap leaves an empty
+          slot, so the other series stay in place.
         </p>
         <p>
-          The value axis always includes zero, with 10% of the span to spare
-          past the longest bar and, when there are negative values, before the
-          shortest. Negative bars grow toward the inline start and round that
+          The value axis always includes zero. It leaves 10% of the span to
+          spare past the longest bar, and before the shortest when there are
+          negative values. Negative bars grow toward the inline start and round that
           end. Set <code>data-min</code> or <code>data-max</code> on the
           figure to fix either end.
         </p>
         <p>
-          <code>axis</code> labels the value axis at round values, under the plot with a grid line up from each, and
-          widens an end the chart chose to the next round value, so the labels
-          start and end on the plot's edges. The labels repeat any currency or
-          percent sign the cells are written with and shorten large numbers,
-          such as <code>$1.5K</code>. An end set with <code>data-min</code> or
-          <code>data-max</code> stays where it is. The labels are hidden from
-          assistive technology; the table still carries the values.
+          Add <code>axis</code> to label the value axis at round values. The
+          labels sit under the plot, with a grid line up from each. The chart
+          widens an end it chose to the next round value, so the labels start
+          and end on the plot's edges. An end set with <code>data-min</code>
+          or <code>data-max</code> stays where it is. The labels repeat any
+          currency or percent sign the cells are written with, and shorten
+          large numbers, such as <code>$1.5K</code>. They are hidden from
+          assistive technology, and the table still carries the values.
         </p>
         <figure class="bar-chart axis" data-markdown-ignore>
           <figcaption>Net cash flow, first half</figcaption>
@@ -301,10 +302,10 @@ const spent = sum(spending.map(([, value]) => value));
         </p>
         <p>
           The plot is one Tab stop named by the caption. Up and down arrows
-          move between rows, Home and End jump to the ends and Escape hides
+          move between rows. Home and End jump to the ends, and Escape hides
           the tooltip. On a touch screen, tap a row to show it. In a
-          right-to-left page the labels sit on the right and
-          the bars grow leftwards; the rows keep their order. The tooltip is a
+          right-to-left page, the labels sit on the right and the bars grow
+          leftwards. The rows keep their order. The tooltip is a
           polite live region, so a screen reader hears each row's values as it
           moves. A sparkline is not focusable. In forced colors the bars keep
           their series colors so the legend still keys them.
@@ -313,12 +314,12 @@ const spent = sum(spending.map(([, value]) => value));
   <Section {...S.javascript}>
         <p>
           <code>AutoInit()</code> starts every <code>.bar-chart</code>. To
-          start one yourself, call <code>BarChart.init</code>. After changing its
-          table, call <code>update()</code> to redraw it in place, or put
-          <code>data-watch</code> on the figure and it redraws itself. The bars move
-          from their old values to the new ones, and a new bar grows from zero;
-          with reduced motion they appear at once. It takes the column chart's
-          options and methods.
+          start one yourself, call <code>BarChart.init</code>. After you change
+          its table, call <code>update()</code> to redraw it in place. Or put
+          <code>data-watch</code> on the figure, and it redraws itself. The
+          bars move from their old values to the new ones, and a new bar grows
+          from zero. With reduced motion, they appear at once. The bar chart
+          takes the column chart's options and methods.
         </p>
 <Code code={`
 const chart = Expressive.BarChart.init(document.querySelector('.bar-chart'), {

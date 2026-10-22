@@ -78,8 +78,9 @@ for (const delay of [0, 100, 200]) {
         <p>
           A <code>&lt;canvas class="confetti" aria-hidden="true"&gt;</code>
           covers its nearest positioned ancestor and bursts inside it once
-          when it starts. Call <code>fire()</code> on its instance to burst
-          again, or set <code>manualStart</code> to wait for the first call.
+          when it starts. To burst again, call <code>fire()</code> on its
+          instance. To wait for the first call instead, set
+          <code>manualStart</code>.
           A small canvas needs a lower <code>startVelocity</code> to keep the
           pieces in view.
         </p>
@@ -138,7 +139,7 @@ Expressive.Confetti.fire({ particleCount: 100, spread: 70, origin: { y: 0.6 } })
         <ul class="browser-default">
           <li>Confetti is decoration. Say what happened in text as well, for example in a snackbar, and keep bursts for rare moments.</li>
           <li>Mark an authored canvas <code>aria-hidden="true"</code>. The page canvas hides itself.</li>
-          <li>Nothing is drawn when the reader prefers reduced motion, and <code>fire()</code> resolves at once.</li>
+          <li>The component draws nothing when the reader prefers reduced motion, and <code>fire()</code> resolves at once.</li>
           <li>The page canvas is a manual popover with pointer events off, so it draws above an open modal dialog without blocking clicks or moving focus.</li>
         </ul>
   </Section>

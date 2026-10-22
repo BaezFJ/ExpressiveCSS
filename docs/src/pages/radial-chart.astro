@@ -37,7 +37,7 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
           the top as a share of 100. A legend lists the rows and their cells
           when there is more than one. A tooltip follows the pointer across
           the rings, and the arrow keys move it when the chart has focus. Keep
-          a radial chart to about four rings; to compare more values, use a
+          a radial chart to about four rings. To compare more values, use a
           <a href="bar-chart.html">bar chart</a>.
         </p>
         <figure class="radial-chart" data-markdown-ignore>
@@ -71,9 +71,9 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
   </Section>
   <Section {...S.total}>
         <p>
-          A <code>&lt;tfoot&gt;</code> row shows in the middle: its value
-          large, with its label below. It is not drawn as a ring. A single
-          ring with a total is a progress dial.
+          Add a <code>&lt;tfoot&gt;</code> row to show a total in the middle,
+          with its value large and its label below. The chart does not draw it
+          as a ring. A single ring with a total is a progress dial.
         </p>
         <figure class="radial-chart" style="--md-comp-radial-chart-thickness: 14" data-markdown-ignore>
           <figcaption>Monthly sales target</figcaption>
@@ -102,7 +102,7 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
   </Section>
   <Section {...S.gauge}>
         <p>
-          <code>gauge</code> draws each ring as a half circle over the middle,
+          Add <code>gauge</code> to draw each ring as a half circle over the middle,
           filling from the left. The total sits on the gauge's base line.
           Here <code>data-max="25"</code> makes each value a share of 25 seats.
         </p>
@@ -137,10 +137,10 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
   </Section>
   <Section {...S.labels}>
         <p>
-          <code>labels</code> names each ring at its start, so a reader can
-          match rings to rows without the legend. The rings run three quarters
-          of the way round, from the top to the left, and each name sits in
-          the empty top left quarter, ending beside its ring's start. Names
+          Add <code>labels</code> to name each ring at its start, so a reader can
+          match rings to rows without the legend. The rings then run three quarters
+          of the way round, from the top to the left. Each name sits in
+          the empty top left quarter and ends beside its ring's start. Names
           shrink to fit between crowded rings, and long ones end in an
           ellipsis. A sparkline ignores <code>labels</code>.
         </p>
@@ -193,13 +193,13 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
   </Section>
   <Section {...S.fills}>
         <p>
-          <code>data-segments</code> splits each ring into that many
-          segments, with the ring gap between them, and fills whole segments
-          to the one nearest the value; a value under half a segment draws
+          Set <code>data-segments</code> to split each ring into that many
+          segments, with the ring gap between them. The chart fills whole segments
+          up to the one nearest the value, and a value under half a segment draws
           none. The tooltip shows the value as written.
-          <code>gradient</code> shades each fill along its ring, from a light
+          Add <code>gradient</code> to shade each fill along its ring, from a light
           tint of its color at the start to the full color where the fill
-          ends, on full rings, gauges and segments alike.
+          ends. It works on full rings, gauges and segments alike.
         </p>
         <figure class="radial-chart gauge gradient" data-segments="10" data-markdown-ignore>
           <figcaption>Customer satisfaction</figcaption>
@@ -251,9 +251,9 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
   </Section>
   <Section {...S.cards}>
         <p>
-          A chart goes in a card with the figures it explains. The card adds
-          no chart styles; size the rings with
-          <code>--md-comp-radial-chart-height</code>, their diameter.
+          Put a chart in a card with the figures it explains. The card adds
+          no chart styles. Size the rings with
+          <code>--md-comp-radial-chart-height</code>, which sets their diameter.
         </p>
         <article class="outlined" data-markdown-ignore>
           <div class="p-4">
@@ -294,11 +294,11 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
   </Section>
   <Section {...S.data}>
         <p>
-          Cells read as in a column chart: a cell's number is its
+          Cells read as in a column chart. A cell's number is its
           <code>data-value</code>, or its text without currency signs, percent
           signs or grouping commas. A ring's fill is its value's share of
-          <code>data-max</code>, 100 by default; a maximum of zero or less is
-          ignored. Values past the maximum close the ring. A value under
+          <code>data-max</code>, 100 by default. The chart ignores a maximum of
+          zero or less. Values past the maximum close the ring. A value under
           about one ring's width of arc draws as a dot at the start, and zero,
           negative and missing values leave only the track. Their rows stay in
           the legend and the tooltip. A chart whose cells are all gaps shows
@@ -306,8 +306,8 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
         </p>
         <p>
           Rings take <code>primary</code>, <code>tertiary</code>,
-          <code>secondary</code> and <code>on-surface-variant</code> in turn;
-          a fifth ring repeats the first color.
+          <code>secondary</code> and <code>on-surface-variant</code> in turn.
+          A fifth ring repeats the first color.
         </p>
   </Section>
   <Section {...S.accessibility}>
@@ -319,9 +319,9 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
         </p>
         <p>
           The plot is one Tab stop named by the caption. Down and right move
-          to the next ring inwards, up and left to the one before, wrapping
-          between the innermost ring and the outermost. Home and End jump to
-          the ends and Escape hides the tooltip. On a touch screen, tap a ring
+          to the next ring inwards. Up and left move to the one before. Both
+          wrap between the innermost ring and the outermost. Home and End jump to
+          the ends, and Escape hides the tooltip. On a touch screen, tap a ring
           to show it. In a right-to-left page the rings and the arrows still
           run clockwise. The tooltip is a
           polite live region, so a screen reader hears each row's values as it
@@ -334,7 +334,7 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
           <code>AutoInit()</code> starts every <code>.radial-chart</code>. To
           start one yourself, call <code>RadialChart.init</code>. After changing its
           ring tokens, or its table without <code>data-watch</code>, call <code>update()</code> to redraw it in place. It has the
-          line chart's methods; the <code>max</code> option sets the maximum
+          line chart's methods. The <code>max</code> option sets the maximum
           when the figure has no <code>data-max</code>, and <code>min</code>
           does not apply.
         </p>

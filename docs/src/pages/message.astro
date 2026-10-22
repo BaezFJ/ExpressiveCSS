@@ -24,15 +24,16 @@ const S = defineSections([
           A <code>.message</code> lays out one message in a conversation. It
           places an optional avatar, header and footer around a single
           surface, usually a <code>.message-bubble</code>. Messages sit on the
-          start side; add <code>end</code> for the sender's own messages.
+          start side. Add <code>end</code> for the sender's own messages.
         </p>
         <p>
-          Every child that is not the avatar, header or footer is the surface,
-          so a message has one. To keep a bubble and an attachment together,
-          wrap them in a <code>&lt;div&gt;</code>, or use a
-          <a href="#group">group</a>. The parts are <code>&lt;div&gt;</code>
-          elements, because a <code>&lt;header&gt;</code> or <code>&lt;footer&gt;</code>
-          outside sectioning content becomes a page landmark.
+          Every child that is not the avatar, header or footer counts as the
+          surface, so a message has one surface. To keep a bubble and an
+          attachment together, wrap them in a <code>&lt;div&gt;</code>, or use
+          a <a href="#group">group</a>. Write the parts as
+          <code>&lt;div&gt;</code> elements. A <code>&lt;header&gt;</code> or
+          <code>&lt;footer&gt;</code> outside sectioning content becomes a page
+          landmark.
         </p>
         <div class="flex flex-column gap-4 mb-3" role="log" aria-label="Conversation with Oliver" style="max-width: 32rem;">
           <div class="message end">
@@ -53,7 +54,7 @@ const S = defineSections([
 </div>
 `} />
         <p>
-          <code>role="log"</code> on the conversation makes screen readers
+          Put <code>role="log"</code> on the conversation so screen readers
           announce messages appended to it. Leave it off a transcript that
           does not change.
         </p>

@@ -18,7 +18,7 @@ const S = defineSections([
 ---
 <DocsLayout page="sliders">
 <p>Slider labels and track gaps align with native handles after resizing, including RTL and vertical layouts. Paired inputs accept track clicks and stay in order. In forced-colors mode, tracks use system colors.</p>
-<p>The native range inputs handle keyboard and pointer interaction. Vertical values increase from bottom to top. For precise entry, applications can pair a labeled number input with a range input, assign its value and dispatch an <code>input</code> event to update the slider. Use matching bounds and steps on paired ranges.</p>
+<p>The native range inputs handle keyboard and pointer interaction. Vertical values increase from bottom to top. For precise entry, pair a labeled number input with a range input. To update the slider, assign the range input's value and dispatch an <code>input</code> event. Use matching bounds and steps on paired ranges.</p>
 
 <PageBody sections={S}>
   <Section {...S.anatomy}>
@@ -29,9 +29,10 @@ const S = defineSections([
           <code>Expressive.Slider</code>.
         </p>
         <p>
-          There are three variants: <strong>standard</strong> (active from the start),
-          <strong>centered</strong> (active grows from the midpoint), and
-          <strong>range</strong> (two handles, active between them). A slider
+          A slider comes in three variants. In <strong>standard</strong>, the
+          active track fills from the start. In <strong>centered</strong>, it
+          grows from the midpoint. <strong>Range</strong> has two handles,
+          with the active track between them. A slider
           can be horizontal or vertical, and comes in five sizes: XS (the
           default), S, M, L, and XL. An inset icon, discrete stops, and a
           value indicator are optional.
@@ -40,14 +41,14 @@ const S = defineSections([
           Tokens follow the
           <a href="https://m3.material.io/components/sliders/specs">M3 slider spec</a>
           (Expressive). The handle is a 4dp stop with a 6dp gap to each
-          track. Active is <code>primary</code>; inactive is
-          <code>secondary-container</code>. The end of an inactive track
+          track. The active track is <code>primary</code> and the inactive
+          track is <code>secondary-container</code>. The end of an inactive track
           has a 4dp stop. The value label is a 40dp
           <code>inverse-surface</code> bubble.
         </p>
         <p>
           Slider is not in <code>AutoInit()</code>. Importing the IIFE
-          bundle calls <code>Expressive.Slider.Init()</code>, which
+          bundle calls <code>Expressive.Slider.Init()</code>. That call
           starts every <code>input[type=range]</code> already in the
           document and keeps the active track in sync.
         </p>
@@ -101,11 +102,11 @@ const S = defineSections([
 
   <Section {...S.sizes}>
         <p>
-          The default is XS (16dp track, 44dp handle).
-          <code>s</code> / <code>small</code> is S,
+          Set the size class on the host. The default is XS (16dp track, 44dp
+          handle). <code>s</code> / <code>small</code> is S,
           <code>m</code> / <code>medium</code> is M,
-          <code>l</code> / <code>large</code> is L,
-          <code>xl</code> is XL. Set the size class on the host.
+          <code>l</code> / <code>large</code> is L, and
+          <code>xl</code> is XL.
         </p>
         <form>
           <div class="slider">
@@ -134,9 +135,9 @@ const S = defineSections([
 
   <Section {...S.icon}>
         <p>
-          On M, L, and XL, which are tall enough, a leading icon sits in the
-          active track. <code>stops</code> plus a
-          numeric <code>step</code> paints a dot on the active track at
+          On M, L, and XL, a leading icon sits in the active track. Those
+          sizes are tall enough to hold it. Add <code>stops</code> and a
+          numeric <code>step</code> to paint a dot on the active track at
           each step from <code>min</code>, except under the icon. Without a
           <code>step</code>, or with <code>step="any"</code>, the track has
           no dots. Dragging shows the value in a 40dp bubble.
@@ -209,7 +210,7 @@ Expressive.Slider.init(document.querySelector('#volume'));
 const instance = Expressive.Slider.getInstance(elem);
 instance.destroy();
 `} />
-        <p>Destroy the plugin instance, remove the value label, tear down its event handlers, and restore the inline custom properties it changed.</p>
+        <p><code>destroy()</code> removes the plugin instance and the value label, tears down its event handlers, and restores the inline custom properties it changed.</p>
   </Section>
 
 </PageBody>

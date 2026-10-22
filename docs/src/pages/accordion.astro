@@ -18,17 +18,17 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          An <code>.accordion</code> stacks native <code>&lt;details&gt;</code>
-          items as joined tiles. Each item's <code>&lt;summary&gt;</code> is its
+          Wrap native <code>&lt;details&gt;</code> items in an <code>.accordion</code>
+          to stack them as joined tiles. Each item's <code>&lt;summary&gt;</code> is its
           header, and everything after the summary is its panel.
         </p>
         <p>
-          The browser handles the behavior. The summary is a button that reports
-          whether the item is open, Enter and Space toggle it, and the
-          <code>open</code> attribute sets the starting state. There is no
-          JavaScript. Opening animates where the engine can transition to
-          <code>auto</code> height, and opens at once elsewhere or under
-          reduced motion.
+          Add <code>open</code> to an item to show it expanded on load. The
+          browser handles the rest without JavaScript. The summary acts as a
+          button that reports whether its item is open, and Enter or Space
+          toggles it. Opening animates in engines that can transition to
+          <code>auto</code> height. Elsewhere, and under reduced motion, the
+          item opens at once.
         </p>
         <div class="accordion" style="max-width: 36rem;">
           <details open>
@@ -91,8 +91,8 @@ const S = defineSections([
   </Section>
   <Section {...S.icon}>
         <p>
-          A leading icon goes first in the summary. Hide it from assistive
-          technology; the summary text names the item.
+          Put a leading icon first in the summary. Hide it from assistive
+          technology, since the summary text already names the item.
         </p>
         <div class="accordion" style="max-width: 36rem;">
           <details>
@@ -124,14 +124,14 @@ const S = defineSections([
   </Section>
   <Section {...S.accessibility}>
         <p>
-          Leave the summary's role and expanded state to the browser. An
-          authored <code>role</code> or <code>aria-expanded</code> overrides
+          Leave the summary's role and expanded state to the browser. A
+          <code>role</code> or <code>aria-expanded</code> that you add overrides
           them and goes stale the first time the item toggles.
         </p>
         <p>
-          Keep links and buttons out of the summary. It is already a button,
-          so a control inside it is nested in another control, and pressing it
-          also toggles the item. Put actions in the panel.
+          Keep links and buttons out of the summary. The summary is already a
+          button, so a control inside it is nested in another control. Pressing
+          that control also toggles the item. Put actions in the panel.
         </p>
   </Section>
   <Section {...S.tokens}>

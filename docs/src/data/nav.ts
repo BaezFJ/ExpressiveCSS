@@ -91,7 +91,7 @@ export const NAV: DocsGroup[] = [
         label: "Color",
         route: "/color.html",
         description:
-          "One system: the Material Design 3 theme tokens.",
+          "Color roles from the Material Design 3 theme tokens.",
       },
       {
         id: "themes",
@@ -141,14 +141,14 @@ export const NAV: DocsGroup[] = [
         label: "Grid",
         route: "/grid.html",
         description:
-          "Use Expressive's CSS Grid system to format a page in an ordered, comfortable way.",
+          "Lay out a page with the ExpressiveCSS CSS Grid classes.",
       },
       {
         id: "helpers",
         label: "Helpers",
         route: "/helpers.html",
         description:
-          "An overview of the helper classes for alignment, visibility, spacing, and common CSS properties.",
+          "Helper classes for alignment, visibility, spacing, and common CSS properties.",
       },
       {
         id: "scroll-area",
@@ -170,7 +170,7 @@ export const NAV: DocsGroup[] = [
         title: "Media Styles",
         route: "/media-css.html",
         description:
-          "Responsive images and videos ready to be seen on many devices.",
+          "Images and videos that resize to fit the screen.",
       },
       {
         id: "table",
@@ -312,7 +312,7 @@ export const NAV: DocsGroup[] = [
         label: "Buttons",
         route: "/buttons.html",
         description:
-          "Material Design 3 common buttons, icon buttons, and FABs — from the HTML.",
+          "Material Design 3 common buttons, icon buttons, and FABs, from the HTML.",
       },
       {
         id: "icon_buttons",
@@ -500,7 +500,7 @@ export const NAV: DocsGroup[] = [
         label: "Dialogs",
         route: "/dialogs.html",
         description:
-          "Important prompts in a user flow. Dedicated to a single task.",
+          "Important prompts in a user flow, each for a single task.",
         aliases: ["/floating-sheet.html", "/modals.html"],
       },
       {
@@ -522,7 +522,7 @@ export const NAV: DocsGroup[] = [
         label: "Drag handle",
         route: "/drag-handle.html",
         description:
-          "The bar that says a thing can be dragged — and nothing that does the dragging.",
+          "The bar that marks a thing as draggable. It does not do the dragging.",
       },
       {
         id: "badges",
@@ -652,7 +652,7 @@ export const NAV: DocsGroup[] = [
         title: "Media",
         route: "/media.html",
         description:
-          "Lightbox for enlarge-on-click images.",
+          "Enlarge an image in a lightbox when it is clicked.",
       },
       {
         id: "map",
@@ -774,7 +774,7 @@ export const NAV: DocsGroup[] = [
         label: "Slider",
         route: "/slider.html",
         description:
-          "Selections from a range of values.",
+          "Select a value from a range.",
         aliases: ["/range.html"],
       },
       {

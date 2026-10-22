@@ -46,18 +46,18 @@ const S = defineSections([
   <Section {...S.dragging}>
         <p>
           This component is a bar. On its own it does not start a drag, move
-          anything, or reorder anything. Two layouts wire it: a handle written
+          anything, or reorder anything. These layouts wire it. A handle written
           as a <code>&lt;button&gt;</code> inside a
           <a href={route('bottom_sheet')}>bottom sheet</a> dismisses that
-          sheet, one between the two panes of a
-          <a href={route('panes')}>pane layout</a> resizes them, and a
+          sheet. One between the two panes of a
+          <a href={route('panes')}>pane layout</a> resizes them. A
           decorative one in a <a href={route('lists')}>sortable list</a>
           row drags the row. Everywhere else the bar is inert.
         </p>
         <p>
           Provide keyboard operation and a single-pointer alternative without
           dragging. Clickable "Move up" / "Move down" controls in a
-          <a href={route('menu')}>menu</a>, or a position input, can serve
+          <a href={route('menu')}>menu</a>, or a position input, can cover
           both paths. Arrow keys alone cover only keyboard operation.
           <a href="https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html">WCAG 2.2 SC 2.5.7</a>
           requires the pointer alternative unless dragging is essential or the
@@ -66,7 +66,7 @@ const S = defineSections([
         <p>
           A <a href={route('lists')}>sortable list</a> wires the handle for
           reordering and adds Move up and Move down buttons as the other two
-          paths. Anywhere else you supply those paths yourself; the handle
+          paths. Anywhere else, you supply those paths yourself. The handle
           only shows people who can drag that the gesture exists.
         </p>
   </Section>
@@ -74,7 +74,8 @@ const S = defineSections([
         <p>
           A handle draws a bar and contains no text, so it reports nothing to a
           screen reader. If you leave it exposed, a screen reader reaches it in
-          the reading order as an unlabelled blank. Hide it:
+          the reading order as an unlabelled blank. Hide it with
+          <code>aria-hidden</code>:
         </p>
 <Code code={`
 <span class="drag-handle" aria-hidden="true"></span>
@@ -93,18 +94,18 @@ const S = defineSections([
         <p>
           Do not write a hidden button. <code>aria-hidden</code>
           takes an element out of the accessibility tree without taking it out
-          of the tab order, so focus lands on something that, as far as
-          assistive technology is concerned, is not there.
+          of the tab order. Focus then lands on something that assistive
+          technology treats as missing.
         </p>
   </Section>
   <Section {...S.panes}>
         <p>
-          This is the shape Material tokenised: a vertical bar in the gutter of
-          a two-column layout, 4&times;48dp inside a 24dp hit target. You
+          Put the handle between the columns of a two-column layout. You
           provide the layout, either a flex or grid row of your own or a
-          <a href={route('panes')}>pane layout</a>. Put the handle
-          between the columns. It sets its own width and needs no wrapper
-          class.
+          <a href={route('panes')}>pane layout</a>. The handle sets its own
+          width and needs no wrapper class. This is the shape Material
+          tokenised, a vertical bar in the gutter, 4&times;48dp inside a 24dp
+          hit target.
         </p>
 <Code code={`
 <section aria-label="Editor">…</section>
@@ -116,8 +117,8 @@ const S = defineSections([
           <code>&lt;button class="drag-handle"&gt;</code> placed directly
           between the panes of a list-detail or supporting
           <a href={route('panes')}>pane layout</a> becomes a working splitter
-          with <code>cursor: col-resize</code>; the panes page describes it.
-          In a layout of your own, a splitter is yours to build.
+          with <code>cursor: col-resize</code>. The panes page describes it.
+          In a layout of your own, you build the splitter yourself.
         </p>
   </Section>
   <Section {...S["bottom-sheet"]}>
@@ -141,15 +142,15 @@ const S = defineSections([
         <p>
           A decorative handle needs a separate non-drag dismiss path, such as
           the close button above. Native Escape behavior depends on the opening
-          mode, browser, and <code>closedby</code> policy; Escape is not a pointer
+          mode, browser, and <code>closedby</code> policy. Escape is not a pointer
           alternative. Scrim dismissal also depends on the installed shared
           runtime and <code>closedby</code> policy. Test it before relying on it.
         </p>
         <p>
           Write a <code>&lt;button&gt;</code> there instead when you want a
-          visible dismiss control. In a sheet the handle button dismisses it:
-          the sheet closes on click, tap, <kbd>Enter</kbd>, or
-          <kbd>Space</kbd>. A drag that snaps back does not also dismiss because
+          visible dismiss control. In a sheet, the handle button dismisses it.
+          The sheet closes on click, tap, <kbd>Enter</kbd>, or
+          <kbd>Space</kbd>. A drag that snaps back does not also dismiss, because
           the runtime distinguishes the ending click from a tap.
         </p>
 <Code code={`
@@ -163,9 +164,9 @@ const S = defineSections([
   <Section {...S.tokens}>
         <p>
           Set these on the handle itself, or in a rule of your own that picks
-          out the handles you want to change. They are declared on the
-          component, so a value set on an ancestor <em>element</em> is shadowed
-          by the handle's own default rather than inherited.
+          out the handles you want to change. The component declares them on
+          the handle, so a value set on an ancestor <em>element</em> does not
+          inherit. The handle's own default shadows it.
         </p>
         <TokenTable>                <tr><td><code>--md-comp-drag-handle-container-width</code></td><td><code>24px</code></td></tr>
                 <tr><td><code>--md-comp-drag-handle-width</code></td><td><code>4px</code></td></tr>

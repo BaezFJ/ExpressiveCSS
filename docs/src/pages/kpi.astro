@@ -23,16 +23,16 @@ const days = revenue.map((_, i) => `Day ${i + 1}`);
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          An <code>&lt;article class="kpi"&gt;</code> is a card for one headline
-          figure: a label, the value, a trend chip, a sparkline and a line of
+          Use an <code>&lt;article class="kpi"&gt;</code> card to show one headline
+          figure. It holds a label, the value, a trend chip, a sparkline and a line of
           context.
         </p>
         <p>
-          The label and value sit in a <code>&lt;dl&gt;</code>, so a screen
+          Put the label and value in a <code>&lt;dl&gt;</code> so a screen
           reader reads them as a pair. The article is a card, so
           <code>filled</code> and <code>outlined</code> work as they do on
-          cards, and KPIs in a grid row stretch to the same height with their
-          footers aligned. The KPI itself is CSS only, and the chart component
+          cards. KPIs in a grid row stretch to the same height and line up their
+          footers. The KPI itself is CSS only. The chart component
           draws the chart with its own script.
         </p>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px" data-markdown-ignore>
@@ -114,10 +114,10 @@ const days = revenue.map((_, i) => `Day ${i + 1}`);
   </Section>
   <Section {...S.trend}>
         <p>
-          A <code>&lt;dd class="kpi-trend"&gt;</code> chip compares the value
+          Add a <code>&lt;dd class="kpi-trend"&gt;</code> chip to compare the value
           with an earlier one. <code>up</code> and <code>down</code> add an
           arrow. <code>negative</code> marks bad news in the error container
-          colors, whichever way the number moved, and turns the first series
+          colors, whichever way the number moved. It also turns the first series
           of a line, column, bar or mixed chart in the same KPI to the error
           color. The arrow is decoration, so the text has to give the
           direction, as in <code>+0.4 pts</code>.
@@ -162,18 +162,18 @@ const days = revenue.map((_, i) => `Day ${i + 1}`);
 </article>
 `} />
         <p>
-          For several figures without charts or actions, a row of
-          <a href="stat.html">stat tiles</a> is lighter.
+          For several figures without charts or actions, use a row of
+          <a href="stat.html">stat tiles</a> instead. They are lighter.
         </p>
   </Section>
   <Section {...S.accessibility}>
         <p>
           The <code>&lt;dt&gt;</code> and <code>&lt;dd&gt;</code> pairing names
-          the value; without it a screen reader reads a bare number. A
-          sparkline is not focusable and has no tooltip, but its table stays
+          the value. Without it, a screen reader reads a bare number. A
+          sparkline is not focusable and has no tooltip. Its table stays
           in the page, so give it a caption that names the measure and period.
-          Say the trend's direction and unit in its text, since the arrow and
-          the error colors are not announced.
+          Write the trend's direction and unit in its text, because screen readers
+          don't announce the arrow or the error colors.
         </p>
   </Section>
   <Section {...S.tokens}>

@@ -22,12 +22,12 @@ const S = defineSections([
                         you lay out your page.</p>
                     <h3>Container</h3>
                     <p>
-                        The container class is not strictly part of the grid, but it matters for laying out content. It
-                        centers the page and caps how wide it can grow, so a paragraph does not stretch across a 4K
-                        monitor. Width is a percentage of the viewport (90% on Compact, 85% from Medium, 70% from
-                        Expanded, 75% from Extra-large). A max-width token caps that percentage:
+                        Add the container class to center the page and cap how wide it can grow, so a paragraph
+                        does not stretch across a 4K monitor. It is not strictly part of the grid, but it matters for
+                        laying out content. Its width is a percentage of the viewport (90% on Compact, 85% from Medium, 70% from
+                        Expanded, 75% from Extra-large). A max-width token caps that percentage at
                         <code>1280px</code> by default and <code>1920px</code> from the extra-large breakpoint
-                        (1600px). Override the tokens, or pick a modifier:
+                        (1600px). To change the cap, override the tokens or pick a modifier:
                     </p>
                     <ul>
                         <li><code>container</code> is the default, capped at 1280px and then 1920px.</li>
@@ -69,7 +69,7 @@ const S = defineSections([
                     <p>
                         To add a container, put your content inside a
                         <code>&lt;div&gt;</code>
-                        tag with a <code>container</code> class. Here's an example of how your page might be set up.
+                        tag with a <code>container</code> class. A page might be set up like this:
                     </p>
 
                     <Code code={`
@@ -123,12 +123,12 @@ const S = defineSections([
 </div>
 `} />
                     <p>
-                        Note: <code>s1</code> is one column wide at the default Compact size and up.
+                        <code>s1</code> is one column wide at the default Compact size and up.
                     </p>
 
                     <h5>Columns live inside rows</h5>
                     <p>
-                        All columns must be inside a row. Size
+                        Put every column inside a row. Size
                         each inner div with a
                         screen-prefix class such as <code>s12</code> or <code>m6</code>.
                     </p>
@@ -470,18 +470,19 @@ const S = defineSections([
                     </table>
                     </div>
                     <p>
-                        Widescreen is Material's extra-large window class. The grid keeps twelve columns there. A 4K
-                        monitor gets a wider container and room to reflow, such as into three panes or four cards,
-                        instead of sixteen tracks. Use <code>xxl</code> for that. <code>container wide</code> raises
-                        the cap to 2400px; <code>container max</code> drops it.
+                        Use <code>xxl</code> for widescreen, which is Material's extra-large window class. The grid
+                        keeps twelve columns there instead of sixteen tracks. A 4K monitor gets a wider container and
+                        room to reflow, such as into three panes or four cards. <code>container wide</code> raises
+                        the cap to 2400px, and <code>container max</code> drops it.
                     </p>
 
                     <h5>Adding responsiveness</h5>
                     <p>
-                        The previous examples set only the default Compact size with <code>s12</code>.
-                        That works for a fixed layout, because the rules apply upward to larger sizes: s12 alone
+                        To make a layout responsive, set the other sizes explicitly. The previous examples set only
+                        the default Compact size with <code>s12</code>.
+                        That works for a fixed layout, because the rules apply upward to larger sizes. s12 alone
                         means <code>s12 m12
-                        l12</code>. Set the other sizes explicitly to make the layout responsive.
+                        l12</code>.
                     </p>
 
                     <div class="row">

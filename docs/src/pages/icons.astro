@@ -18,8 +18,8 @@ const S = defineSections([
   <li slot="toc-extra"><a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" rel="noopener">Catalog</a></li>
   <Section {...S.usage}>
         <p class="flow-text">
-          Icons are Material Symbols. The default class is
-          <code>material-symbols</code>; it uses the outlined family.
+          Icons use Material Symbols. The default class,
+          <code>material-symbols</code>, uses the outlined family.
           Ligature names come from the
           <a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" rel="noopener">Material Symbols catalog</a>.
         </p>
@@ -100,10 +100,10 @@ const S = defineSections([
   </Section>
   <Section {...S.axes}>
         <p>
-          These four are variable-font axes. They inherit, so set them on
-          <code>:root</code> or on a wrapper. A missing range in the Google
-          Fonts URL (a link without <code>opsz,wght,FILL,GRAD@…</code>)
-          serves a static instance, and the axes have no effect.
+          Set these four variable-font axes on <code>:root</code> or on a
+          wrapper. They inherit. If the Google Fonts URL has no axis range (a
+          link without <code>opsz,wght,FILL,GRAD@…</code>), Google Fonts serves
+          a static instance and the axes have no effect.
         </p>
         <table class="striped">
           <thead>

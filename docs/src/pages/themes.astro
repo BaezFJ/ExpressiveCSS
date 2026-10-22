@@ -45,12 +45,12 @@ const S = defineSections([
         </ol>
         <p>
           The attribute also sets <code>color-scheme</code> so native controls
-          follow the same scheme. Each of those three rules is paired with a
-          <code>:host([theme='&hellip;'])</code> twin, so a shadow host can be
-          pinned to a theme the same way <code>&lt;html&gt;</code> can. Every
-          token the sheet declares has that pairing, because the sheet is
-          supported as a shadow root's <em>only</em> stylesheet and
-          <code>:root</code> matches the document element and nothing else.
+          follow the same scheme. Each of those three rules has a
+          <code>:host([theme='&hellip;'])</code> twin, so you can pin a shadow
+          host to a theme the same way as <code>&lt;html&gt;</code>. The sheet
+          is supported as a shadow root's <em>only</em> stylesheet, and
+          <code>:root</code> matches the document element and nothing else, so
+          every token the sheet declares has that pairing.
         </p>
         <p>
           This site starts as
@@ -85,9 +85,9 @@ const S = defineSections([
   </Section>
   <Section {...S["reading-theme"]}>
         <p>
-          Put a short inline script in <code>&lt;head&gt;</code>, before the
-          stylesheet paints, if you want to restore a saved choice and avoid a
-          flash of the wrong scheme. The framework does not run this script.
+          To restore a saved choice without a flash of the wrong scheme, put a
+          short inline script in <code>&lt;head&gt;</code>, before the
+          stylesheet paints. The framework does not run this script.
           The theme switch below saves a choice, but restoring it before first
           paint is the page's job.
         </p>
@@ -131,10 +131,10 @@ document.documentElement.setAttribute('theme', 'dark');
           with <code>data-theme-set="light"</code>, <code>"dark"</code> or
           <code>"auto"</code> writes the attribute and saves the choice to
           <code>localStorage</code> under <code>theme</code>, the key the
-          snippet above reads. The root bundle starts it on load, and the
-          modular entry with <code>Theme.Init()</code>. It marks each theme
-          control as current or not: <code>aria-checked</code> on
-          <code>menuitemradio</code> and <code>radio</code> roles,
+          snippet above reads. The root bundle starts it on load. With the
+          modular entry, call <code>Theme.Init()</code>. It marks each theme
+          control as current or not, with <code>aria-checked</code> on
+          <code>menuitemradio</code> and <code>radio</code> roles and
           <code>aria-pressed</code> on anything else.
         </p>
 <Code code={`
@@ -244,7 +244,7 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
 </article>
 `} />
         <p>
-          In Sass, consume the live token. The values are hex, so
+          In Sass, read the live token. The values are hex, so
           <code>rgba(var(--md-sys-color-primary), 0.06)</code> is invalid and
           the browser drops it. Mix with transparency instead:
         </p>
@@ -259,13 +259,13 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
 }
 `} />
         <p>
-          <code>--md-source</code> is the seed for the generated ramps, and it
-          is live. Setting it recolors every generated ramp, and every system
-          color that resolves to one, at runtime without a rebuild.
-          Expressive ships <code>#c6a0f6</code>, Mist Iris. The palette icon in the
-          navbar opens a picker that writes this property and stores the choice
-          in <code>localStorage</code> so you can browse the rest of the docs
-          in the palette you picked.
+          Set <code>--md-source</code> to recolor every generated ramp, and
+          every system color that resolves to one, at runtime without a
+          rebuild. It is the live seed for the generated ramps. Expressive
+          ships <code>#c6a0f6</code>, Mist Iris. The palette icon in the navbar
+          opens a picker that writes this property. The picker stores the
+          choice in <code>localStorage</code> so you can browse the rest of the
+          docs in the palette you picked.
         </p>
 <Code code={`
 :root {
@@ -273,7 +273,7 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
 }
 `} />
         <p>
-          Five of the six ramps are derived this way with
+          Expressive derives five of the six ramps this way with
           <code>oklch(from var(--md-source) …)</code>. The
           <strong>error</strong> ramp is not derived. Material fixes the
           error hue because "this went wrong" should
@@ -336,11 +336,11 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
           restates the same mappings.
         </p>
         <p>
-          Expressive makes it a foundation instead. The
-          <code>vibrant</code> attribute remaps the surface family of
-          <code>--md-sys-color-*</code> roles inside its subtree, and every
+          Expressive makes it a foundation instead. Add the
+          <code>vibrant</code> attribute to remap the surface family of
+          <code>--md-sys-color-*</code> roles inside its subtree. Every
           component already reads those roles, so components need no
-          per-component styles, and nothing changes until you write the attribute.
+          per-component styles. Nothing changes until you write the attribute.
         </p>
 <Code code={`
 <article vibrant>
@@ -363,28 +363,28 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
           <a class="button outlined mr-2 mb-2">Outlined</a>
         </article>
         <p>
-          There is one ramp, tertiary, which is what Material uses for the
-          axis. Pointing the surfaces at primary or secondary instead would
-          hide every component whose own fill is that container: a tonal
-          button, a FAB, <code>.toolbar.vibrant</code> itself. If you want a
-          different one, set the surface tokens on your own wrapper the way
+          The attribute uses one ramp, tertiary, which is what Material uses
+          for the axis. Pointing the surfaces at primary or secondary would
+          hide every component whose own fill is that container, such as a
+          tonal button, a FAB, or <code>.toolbar.vibrant</code> itself. For a
+          different ramp, set the surface tokens on your own wrapper the way
           <a href="#creating-theme">Creating a theme</a> shows for any token.
         </p>
         <p>
           Inside a vibrant subtree, every <code>surface-container</code> level
           resolves to the one container color, because that is what a vibrant
-          surface is in Material, so you cannot tell nested surfaces apart
-          there. Put the attribute on the component you want emphasized, not
-          on the page. The remap also points at the live role names rather than a
-          <code>-light</code>/<code>-dark</code> pair, which is why a runtime
-          theme switch still reaches it.
+          surface is in Material. You cannot tell nested surfaces apart there.
+          Put the attribute on the component you want emphasized, not on the
+          page. The remap points at the live role names rather than a
+          <code>-light</code>/<code>-dark</code> pair, so a runtime theme
+          switch still reaches it.
         </p>
         <p>
           Menus and toolbars also have a <code>.vibrant</code> class. Those
           classes are Material's own per-component token sets, with the colors
           that spec gives each one. The attribute is the general axis and works
           on any element. A menu inside a vibrant subtree adopts its own vibrant
-          mapping automatically. A selected menu item is filled with
+          mapping automatically. A selected menu item fills with
           <code>tertiary-container</code>, the same color the attribute gives
           the menu, so the selection would not show against the surface.
           Material handles that by moving selection to solid
@@ -392,14 +392,20 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
         </p>
         <p>
           The attribute works in a shadow root too. A sheet loaded there cannot
-          reach its own host with a descendant selector, so
-          <code>:host([vibrant])</code> is matched alongside it. The token
+          reach its own host with a descendant selector, so it matches
+          <code>:host([vibrant])</code> alongside it. The token
           mapping carries <code>:host</code> for the same reason.
         </p>
   </Section>
   <Section {...S.contrast}>
     <p>
-      Material 3 has three contrast levels. Put <code>contrast="medium"</code> or <code>contrast="high"</code> on the root or on any subtree to use the medium or high scheme there. The accent roles, their containers, <code>on-surface-variant</code> and the outlines move to darker tones in the light scheme and lighter ones in the dark scheme, taken from the same ramps, so a runtime <code>--md-source</code> change still reaches them. Surfaces stay put. Medium brings accents to about 4.5:1 against the surface and high to 7:1, with outlines at 3:1 or more. When the user asks for more contrast (<code>prefers-contrast: more</code>), the page uses the high scheme unless a <code>contrast</code> attribute says otherwise; <code>contrast="standard"</code> opts a page or subtree out. The tones approximate Material's contrast curves rather than reproducing its color solver. A page that re-themes through the <code>-light</code> and <code>-dark</code> pairs should repeat those overrides inside its own <code>[contrast]</code> rule.
+      Material 3 has three contrast levels. Put <code>contrast="medium"</code> or <code>contrast="high"</code> on the root or on any subtree to use the medium or high scheme there. The accent roles, their containers, <code>on-surface-variant</code> and the outlines move to darker tones in the light scheme and lighter ones in the dark scheme. Those tones come from the same ramps, so a runtime <code>--md-source</code> change still reaches them. Surfaces stay put.
+    </p>
+    <p>
+      Medium brings accents to about 4.5:1 against the surface and high to 7:1, with outlines at 3:1 or more. When the user asks for more contrast (<code>prefers-contrast: more</code>), the page uses the high scheme unless a <code>contrast</code> attribute says otherwise. Set <code>contrast="standard"</code> to opt a page or subtree out.
+    </p>
+    <p>
+      The tones approximate Material's contrast curves rather than reproducing its color solver. A page that re-themes through the <code>-light</code> and <code>-dark</code> pairs should repeat those overrides inside its own <code>[contrast]</code> rule.
     </p>
 <Code code={`
 <html contrast="high">

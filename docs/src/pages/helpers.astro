@@ -39,9 +39,8 @@ const S = defineSections([
 
         <h5>Text align</h5>
         <p>
-          These classes are for horizontally aligning content:
-          <code>.left-align</code>, <code>.right-align</code> and <code>.center-align</code>.
-          Use <code>.start-align</code> and <code>.end-align</code> to follow the
+          Add <code>.left-align</code>, <code>.right-align</code> or <code>.center-align</code>
+          to align content horizontally. Use <code>.start-align</code> and <code>.end-align</code> to follow the
           text direction. The left and right classes stay physical and do not mirror in RTL.
         </p>
         <article class="surface-container-highest">
@@ -82,12 +81,14 @@ const S = defineSections([
           </tbody>
         </table>
         <p>
-          <code>.inline</code> is the row of checkboxes or radios, so there is no
-          <code>display: inline</code> class. A <code>.sticky-top</code> element sticks inside its
-          nearest scrolling ancestor; an ancestor with <code>overflow: hidden</code> stops it.
+          There is no <code>display: inline</code> class, because <code>.inline</code> is the row
+          of checkboxes or radios. A <code>.sticky-top</code> element sticks inside its nearest
+          scrolling ancestor. An ancestor with <code>overflow: hidden</code> stops it.
+        </p>
+        <p>
           Browsers have dropped the semantics of elements with <code>display: contents</code>, so
           put <code>.contents</code> on plain wrappers, not on buttons, lists, tables or headings.
-          A <code>.query-container</code> can no longer size itself from its content, so put it on
+          A <code>.query-container</code> can no longer size itself from its content. Put it on
           a wrapper that fills its parent, such as a sidebar column, not on an inline or
           shrink-to-fit box.
         </p>
@@ -116,8 +117,8 @@ const S = defineSections([
             <tr><td><code>.flex-none</code></td><td><code>flex: none</code> on a child, so it keeps its content size</td></tr>
             <tr><td><code>.shrink-0</code></td><td><code>flex-shrink: 0</code> on a child, so it never gets narrower than its basis</td></tr>
             <tr><td><code>.self-start</code>, <code>.self-center</code>, <code>.self-end</code>, <code>.self-stretch</code></td><td><code>align-self</code> on a child</td></tr>
-            <tr><td><code>.order-first</code>, <code>.order-last</code></td><td><code>order: -1</code>, <code>order: 1</code> on a child. Visual order only: keyboard and screen reader order still follow the source.</td></tr>
-            <tr><td><code>.gap-0</code> to <code>.gap-6</code></td><td><code>gap</code> on the spacing scale, <code>!important</code>; also works on grid containers</td></tr>
+            <tr><td><code>.order-first</code>, <code>.order-last</code></td><td><code>order: -1</code>, <code>order: 1</code> on a child. This changes the visual order only. Keyboard and screen reader order still follow the source.</td></tr>
+            <tr><td><code>.gap-0</code> to <code>.gap-6</code></td><td><code>gap</code> on the spacing scale, with <code>!important</code>. Also works on grid containers.</td></tr>
           </tbody>
         </table>
         <div class="flex align-center justify-between gap-3 surface-container p-4">
@@ -144,13 +145,13 @@ const S = defineSections([
   </Section>
   <Section {...S.prefixes}>
         <p>
-          The display, flex direction, wrap, <code>justify-*</code>, <code>align-*</code>, text
-          alignment (<code>.start-align</code>, <code>.center-align</code>, <code>.end-align</code>),
-          <code>.gap-*</code>, margin and padding classes, and <code>.hide</code>, also come with a
-          window-size prefix. Prefixed margin and padding cover all sides, <code>x</code>,
-          <code>y</code>, top, bottom, start and end; use start and end rather than left and right. A prefixed class
-          applies from that size class up and overrides the unprefixed one, the same way the grid's
-          <code>m6</code> and <code>l4</code> do.
+          These classes also come with a window-size prefix: display, flex direction, wrap,
+          <code>justify-*</code>, <code>align-*</code>, text alignment (<code>.start-align</code>,
+          <code>.center-align</code>, <code>.end-align</code>), <code>.gap-*</code>, margin,
+          padding and <code>.hide</code>. Prefixed margin and padding cover all sides,
+          <code>x</code>, <code>y</code>, top, bottom, start and end. Use start and end, not left
+          and right. A prefixed class applies from that size class up and overrides the unprefixed
+          one, the same way the grid's <code>m6</code> and <code>l4</code> do.
         </p>
         <table class="striped">
           <thead><tr><th>Prefix</th><th>Applies from</th></tr></thead>
@@ -175,7 +176,7 @@ const S = defineSections([
         <p>
           In a Sass selector, escape the colon: <code>.expanded\:flex-row</code>.
           <code>.medium:hide</code> hides from Medium up. To show something only from a size up,
-          use the <a href="#hiding">hide-on classes</a>; they are <code>!important</code>, so a
+          use the <a href="#hiding">hide-on classes</a>. They are <code>!important</code>, so a
           prefixed display class does not undo them.
         </p>
   </Section>
@@ -232,7 +233,7 @@ const S = defineSections([
             <tr><td><code>.border-top</code>, <code>.border-bottom</code></td><td>The same border on one side</td></tr>
             <tr><td><code>.border-start</code>, <code>.border-end</code></td><td>The same border on the inline start or end, which mirrors in RTL</td></tr>
             <tr><td><code>.corner-none</code>, <code>.corner-extra-small</code>, <code>.corner-small</code>, <code>.corner-medium</code>, <code>.corner-large</code>, <code>.corner-extra-large</code>, <code>.corner-full</code></td><td><code>border-radius</code> from the matching <a href="/shapes.html#corner-scale"><code>--md-sys-shape-corner-*</code></a> token</td></tr>
-            <tr><td><code>.corner-cut</code></td><td><code>corner-shape: bevel</code>: the element's corners become <a href="/shapes.html#cut-corners">straight cuts</a> of the same size. Rounded in browsers without <code>corner-shape</code>.</td></tr>
+            <tr><td><code>.corner-cut</code></td><td><code>corner-shape: bevel</code>. The element's corners become <a href="/shapes.html#cut-corners">straight cuts</a> of the same size. Browsers without <code>corner-shape</code> round them instead.</td></tr>
           </tbody>
         </table>
         <div class="bordered corner-large aspect-16x9 flex align-center justify-center" style="max-width: 20rem">16:9</div>
@@ -241,8 +242,8 @@ const S = defineSections([
 <img class="corner-medium aspect-1x1 object-cover" src="..." alt="..." width="160">
 `} />
         <p>
-          <code>.border</code> is the outlined card variant and <code>.rounded</code> is the pill
-          button, which is why these use other names. On a component, a corner class replaces the
+          These classes use other names because <code>.border</code> is the outlined card variant
+          and <code>.rounded</code> is the pill button. On a component, a corner class replaces the
           component's own shape, including its pressed and selected corner changes.
         </p>
   </Section>
@@ -335,9 +336,9 @@ const S = defineSections([
           </tbody>
         </table>
         <p>
-          Printing also uses the light scheme, hides navigation rails,
-          navigation bars, the FAB menu, snackbars and tooltips, prints the address after each
-          external link in running text, and keeps headings with the content that follows them.
+          Printing also uses the light scheme and hides navigation rails, navigation bars, the FAB
+          menu, snackbars and tooltips. It prints the address after each external link in running
+          text, and keeps headings with the content that follows them.
         </p>
         <h5>Usage</h5>
 <Code code={`
@@ -351,18 +352,21 @@ const S = defineSections([
         <p>
           The flex example is hidden below 600px and keeps its flex layout above that
           width. Show helpers set <code>display: block !important</code> within their
-          range; they do not hide content outside it. Use <code>.hide</code> with a
+          range. They do not hide content outside it. Use <code>.hide</code> with a
           show helper only when block display is appropriate.
         </p>
         <h5>Visually hidden</h5>
         <p>
-          <code>visually-hidden</code> removes an element from sight but keeps
-          it in the accessibility tree, so screen readers still announce it.
+          Add <code>visually-hidden</code> to remove an element from sight and
+          keep it in the accessibility tree, so screen readers still announce it.
           Use it for text the layout does not show, such as context that makes
           a repeated link unique or the text of a live region. Like
-          <code>.hide</code>, it is <code>!important</code>. A focused element
-          stays invisible, so do not put it on a focusable control unless focus
-          is drawn somewhere else, the way a filter chip draws it on its label.
+          <code>.hide</code>, it is <code>!important</code>.
+        </p>
+        <p>
+          A focused element with this class stays invisible. Do not put it on a
+          focusable control unless focus is drawn somewhere else, the way a
+          filter chip draws it on its label.
         </p>
 <Code code={`
 <a href="/orders/42">View<span class="visually-hidden"> order 42</span></a>
@@ -370,7 +374,7 @@ const S = defineSections([
         <h5>Reveal on focus</h5>
         <p>
           Use <code>.visually-hidden-focusable</code> for a skip link or a container
-          that should appear when it or a descendant receives focus. It uses the same
+          that should appear when it or a descendant receives focus. It applies the same
           hidden styles only while focus is outside. Do not combine it with
           <code>.visually-hidden</code>, which would keep it hidden.
         </p>
@@ -397,11 +401,11 @@ const S = defineSections([
           <tbody>
             <tr>
               <td><code><strong>m*</strong></code></td>
-              <td>Modifies the margin according to the infix and suffix values. With no infix, it applies to all directions.</td>
+              <td>Sets the margin from the infix and suffix. With no infix, it applies to all directions.</td>
             </tr>
             <tr>
               <td><code><strong>p*</strong></code></td>
-              <td>Modifies the padding according to the infix and suffix values. With no infix, it applies to all directions.</td>
+              <td>Sets the padding from the infix and suffix. With no infix, it applies to all directions.</td>
             </tr>
           </tbody>
         </table>
@@ -449,7 +453,7 @@ const S = defineSections([
           </tbody>
         </table>
         <h5>Suffix values</h5>
-        <p>Append a value suffix to each modifier. Values 0 through 6 work for margin and padding; <code>auto</code> is for margin only.</p>
+        <p>Append a value suffix to each modifier. Values 0 through 6 work for margin and padding. <code>auto</code> is for margin only.</p>
         <table class="striped">
           <thead>
             <tr>
@@ -495,8 +499,8 @@ const S = defineSections([
         <h5>Logical spacing</h5>
         <p>
           These helpers use the same scale and <code>!important</code> declarations.
-          Inline start and end mirror in RTL. Existing physical spacing classes remain available;
-          avoid combining physical and logical helpers that set the same side.
+          Inline start and end mirror in RTL. The physical spacing classes still work. Do not
+          combine physical and logical helpers that set the same side.
         </p>
         <table class="striped">
           <thead><tr><th>Property</th><th>Classes</th></tr></thead>
@@ -779,8 +783,8 @@ const S = defineSections([
 
         <h5>Hover</h5>
         <p>
-          The <code>hoverable</code> class animates the box shadow, as in the example below. It works on most elements but is meant
-          for cards.
+          Add <code>hoverable</code> to animate the box shadow, as in the example below. It works
+          on most elements, but it is meant for cards.
         </p>
         <article class="hoverable">Hoverable article</article>
 <Code code={`

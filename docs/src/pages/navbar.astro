@@ -23,31 +23,31 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          The bar is built from plain elements. A <code>&lt;header&gt;</code> whose child is a
-          <code>&lt;nav&gt;</code> is a top app bar. The heading is the headline.
+          Build a top app bar from plain elements, a <code>&lt;header&gt;</code> whose child is a
+          <code>&lt;nav&gt;</code>. The heading is the headline.
           Icon-only links and buttons are the leading and trailing actions.
           A <code>&lt;menu&gt;</code> (or <code>&lt;ul&gt;</code>) holds text
           destinations. There is no <code>navbar</code>, <code>nav-wrapper</code>,
-          or <code>brand-logo</code> class. Switching between app views at
-          the bottom of the screen is a
+          or <code>brand-logo</code> class. To switch between app views at
+          the bottom of the screen, use a
           <a href={route('navigation_bar')}>navigation bar</a>.
         </p>
         <p>
           Tokens follow the
           <a href="https://m3.material.io/components/app-bars/specs">M3 app bar spec</a>.
-          The container is <code>surface</code> at rest, the headline is
-          <code>on-surface</code> at <code>title-large</code>, and icons are
-          24dp in a 48dp target, inset 4dp. Icons inherit the header color
+          The container is <code>surface</code> at rest. The headline is
+          <code>on-surface</code> at <code>title-large</code>. Icons are
+          24dp in a 48dp target, inset 4dp, and inherit the header color,
           so a fill and <code>on-*</code> pair stays readable.
           The small bar is 64dp tall. Pair a fill utility with its
           <code>on-*</code> text class if you want a colored bar.
         </p>
         <p>
           Top app bars stay pinned to the top by default, without a helper class.
-          The bar is CSS for layout. <code>AppBar</code> collapses
-          <code>header.medium</code> and <code>header.large</code> on scroll,
-          and opens the related search view when a search field in the bar is
-          selected. Navigation rails and tabs are separate components. Do not
+          The layout is CSS. <code>AppBar</code> collapses
+          <code>header.medium</code> and <code>header.large</code> on scroll.
+          It also opens the related search view when the user selects a search
+          field in the bar. Navigation rails and tabs are separate components. Do not
           nest either one in the header.
         </p>
 
@@ -82,10 +82,11 @@ const S = defineSections([
   </Section>
   <Section {...S.destinations}>
         <p>
-          Text links go in a <code>&lt;menu&gt;</code>. Put the menu after the
-          heading to align it on the end; put it first to align it on the start.
-          Hide it below the Expanded breakpoint and use a full-screen navigation
-          dialog or modal expanded rail when the bar has to collapse.
+          Put text links in a <code>&lt;menu&gt;</code>. Place the menu after the
+          heading to align it on the end, or first to align it on the start.
+          When the bar has to collapse, hide the menu below the Expanded
+          breakpoint and use a full-screen navigation dialog or modal expanded
+          rail.
         </p>
         <header class="mb-3">
           <nav aria-label="Main — Destinations">
@@ -110,15 +111,15 @@ const S = defineSections([
 </header>
 `} />
         <p>
-          <code>active</code> goes on the link, not the list item. The state
+          Put <code>active</code> on the link, not the list item. The state
           layer mixes <code>currentColor</code> at 8% hover and 10% active, so
           it follows the theme and any fill you put on the header.
         </p>
   </Section>
   <Section {...S.center}>
         <p>
-          Add <code>center</code> to the header. The headline is taken out of
-          flow so the leading and trailing actions can sit on the edges without
+          Add <code>center</code> to the header. This takes the headline out of
+          flow, so the leading and trailing actions can sit on the edges without
           shifting it. Keep the title short enough that it does not run under
           the icons.
         </p>
@@ -145,16 +146,20 @@ const S = defineSections([
   </Section>
   <Section {...S.medium}>
         <p>
-          These use the same markup as the small bar. <code>medium</code> is the Expressive
-          medium-flexible bar: 112dp with a <code>headline-medium</code> title
-          on the second row. <code>large</code> is large-flexible: 120dp with
+          These use the same markup as the small bar. Add <code>medium</code>
+          for the Expressive medium-flexible bar, 112dp with a
+          <code>headline-medium</code> title on the second row. Add
+          <code>large</code> for large-flexible, 120dp with
           <code>display-small</code>. The deprecated medium and large bars used
-          <code>headline-small</code> at 152dp; do not recreate those. The title
-          wraps to two lines. It is <code>order</code>ed onto the bottom row
-          so the first row can hold the leading icon on the start and the
-          trailing icons on the end. Add <code>center</code> as well to
-          center that second-row title. On scroll, <code>AppBar</code> adds
-          <code>collapsed</code> and the bar becomes the small 64dp row.
+          <code>headline-small</code> at 152dp. Do not recreate those.
+        </p>
+        <p>
+          The title wraps to two lines. The <code>order</code> property moves
+          it onto the bottom row, so the first row can hold the leading icon on
+          the start and the trailing icons on the end. Add <code>center</code>
+          as well to center that second-row title. On scroll,
+          <code>AppBar</code> adds <code>collapsed</code> and the bar becomes
+          the small 64dp row.
         </p>
         <header class="medium mb-3">
           <nav aria-label="Main — Medium and large">
@@ -194,9 +199,9 @@ const S = defineSections([
   </Section>
   <Section {...S.subtitle}>
         <p>
-          A subtitle is an <code>&lt;hgroup&gt;</code> wrapping the heading
-          and a <code>&lt;p&gt;</code>. That is the HTML for a heading plus
-          a subheading; there is no <code>subtitle</code> class. Small uses
+          For a subtitle, wrap the heading and a <code>&lt;p&gt;</code> in an
+          <code>&lt;hgroup&gt;</code>. That is the HTML for a heading plus a
+          subheading. There is no <code>subtitle</code> class. Small uses
           <code>label-medium</code>. Medium-flexible grows to 136dp and uses
           <code>label-large</code>. Large-flexible grows to 152dp and uses
           <code>title-medium</code>.
@@ -231,11 +236,11 @@ const S = defineSections([
   <Section {...S.fixed}>
         <p>
           Every top app bar stays pinned with <code>position: sticky</code>
-          and <code>top: 0</code>. No helper class or wrapper is required.
+          and <code>top: 0</code>. You need no helper class or wrapper.
           At rest the bar is <code>surface</code>,
           the same as the page. Once content scrolls under it, supporting
-          browsers fill it with <code>surface-container</code> via
-          <code>animation-timeline: scroll()</code> so it stands apart from the
+          browsers fill it with <code>surface-container</code> through
+          <code>animation-timeline: scroll()</code>, so it stands apart from the
           body. M3 Expressive uses this fill instead of a shadow. In browsers
           without that API, the bar keeps its resting color.
         </p>
@@ -255,11 +260,10 @@ const S = defineSections([
   </Section>
   <Section {...S.color}>
         <p>
-          The default fill is <code>surface</code>. Color utilities win because
-          they live in the utilities layer. Put
-          <code>primary on-primary-text</code>, or any fill and
-          <code>on-*</code> pair, on the header. Icons inherit the header
-          color. Set
+          Put <code>primary on-primary-text</code>, or any fill and
+          <code>on-*</code> pair, on the header. The default fill is
+          <code>surface</code>, and color utilities win over it because they
+          live in the utilities layer. Icons inherit the header color. Set
           <code>--md-comp-top-app-bar-trailing-icon-color</code> to
           <code>var(--md-sys-color-on-surface-variant)</code> if you want the
           spec's muted trailing icons.
@@ -352,15 +356,18 @@ document.addEventListener('DOMContentLoaded', function() {
   </Section>
   <Section {...S["search-docs"]}>
         <p>
-          The search app bar is a <code>&lt;search class="search-bar"&gt;</code>
-          in the nav, in place of the headline. Icons beside it sit outside
-          the search; icons inside it stay on the search-bar. The input is
+          For a search app bar, put a <code>&lt;search class="search-bar"&gt;</code>
+          in the nav in place of the headline. Icons beside it sit outside
+          the search, and icons inside it stay on the search bar. The input is
           centered. Focusing or clicking the field opens a docked
-          <code>.search-view</code>. A full-screen <code>&lt;dialog&gt;</code> view
-          takes over the page, so it opens on a click, Enter or the Down arrow
-          rather than on focus: tabbing through the bar does not open it, and
-          focus coming back after it closes does not reopen it. Query text and
-          application-managed focus are preserved.
+          <code>.search-view</code>.
+        </p>
+        <p>
+          A full-screen <code>&lt;dialog&gt;</code> view takes over the page,
+          so it opens on a click, Enter or the Down arrow instead of on focus.
+          Tabbing through the bar does not open it, and focus coming back after
+          it closes does not reopen it. Query text and application-managed
+          focus are preserved.
         </p>
         <header class="mb-3">
           <nav aria-label="Main — Search">

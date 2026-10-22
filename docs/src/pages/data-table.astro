@@ -22,9 +22,9 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>.data-table</code> is a <code>&lt;div&gt;</code> around one
-          native <code>&lt;table&gt;</code>. The wrapper scrolls and draws the
-          outline, so the table keeps its table semantics.
+          Wrap one native <code>&lt;table&gt;</code> in a
+          <code>&lt;div class="data-table"&gt;</code>. The wrapper scrolls and
+          draws the outline, so the table keeps its table semantics.
         </p>
         <p>
           Add <code>numeric</code> to the header and body cells of a number
@@ -77,15 +77,15 @@ const S = defineSections([
         <p>
           Put a <code>&lt;button&gt;</code> in each sortable header cell. Set
           <code>aria-sort="ascending"</code> or <code>"descending"</code> on the
-          header of the sorted column and the framework draws its arrow; other
+          header of the sorted column, and the framework draws its arrow. Other
           sortable headers show a faint arrow on hover.
         </p>
         <p>
-          Add <code>data-sort</code> to the wrapper and the framework sorts
-          too: pressing a header button reorders the rows by that column and
-          moves <code>aria-sort</code>. A <code>numeric</code> header compares
-          numbers, so $1,200.00 sorts after $87.00; other columns compare text
-          in the page's language, with 9 before 10. A cell's
+          Add <code>data-sort</code> to the wrapper to have the framework sort
+          the rows too. Pressing a header button reorders the rows by that
+          column and moves <code>aria-sort</code>. A <code>numeric</code> header
+          compares numbers, so $1,200.00 sorts after $87.00. Other columns
+          compare text in the page's language, with 9 before 10. A cell's
           <code>data-value</code> stands in for its text, and a detail row
           moves with its row.
         </p>
@@ -122,9 +122,9 @@ const S = defineSections([
         <p>
           Each press fires a cancelable <code>expressive:sort</code> from the
           wrapper, with <code>{"{ header, column, direction }"}</code>. A
-          server-paged table cancels it and fetches the sorted page;
+          server-paged table cancels it and fetches the sorted page. By then,
           <code>aria-sort</code> has already moved. Without
-          <code>data-sort</code>, the header buttons are the page's.
+          <code>data-sort</code>, the page handles the header buttons itself.
         </p>
 <Code code={`
 table.addEventListener('expressive:sort', (event) => {
@@ -135,18 +135,18 @@ table.addEventListener('expressive:sort', (event) => {
   </Section>
   <Section {...S.selection}>
         <p>
-          A checked checkbox in a row's first cell selects the row and fills
-          it with <code>secondary-container</code>. Name each checkbox after
-          its row. <code>aria-selected</code> is not valid on the rows of a
+          Put a checkbox in a row's first cell. Checking it selects the row and
+          fills it with <code>secondary-container</code>. Name each checkbox
+          after its row. <code>aria-selected</code> is not valid on the rows of a
           plain table, so the checkbox carries the state.
         </p>
         <p>
-          A checkbox in the first header cell selects every row. It shows
-          mixed while only some rows are selected, and it skips disabled
+          Put a checkbox in the first header cell to select every row. It
+          shows mixed while only some rows are selected, and it skips disabled
           rows. Every change to the selection fires
           <code>expressive:change</code> from the wrapper with
-          <code>{"{ selected }"}</code>, the selected rows, so the page can
-          update a bulk action bar.
+          <code>{"{ selected }"}</code>, the selected rows. The page can use it
+          to update a bulk action bar.
         </p>
         <div class="data-table">
           <table>
@@ -174,12 +174,12 @@ table.addEventListener('expressive:sort', (event) => {
   </Section>
   <Section {...S["bulk-actions"]}>
         <p>
-          A <code>.data-table-actions</code> bar written just before the
-          <code>.data-table</code> joins its top edge. It takes the selected
-          color while any row is selected. A leading label, such as a count,
-          pushes the buttons to the end. The page keeps the count current
-          and decides which buttons apply; add <code>hidden</code> to remove
-          the bar.
+          Write a <code>.data-table-actions</code> bar just before the
+          <code>.data-table</code>, and it joins the table's top edge. It takes
+          the selected color while any row is selected. A leading label, such
+          as a count, pushes the buttons to the end. The page keeps the count
+          current and decides which buttons apply. Add <code>hidden</code> to
+          remove the bar.
         </p>
 <Code code={`
 <div class="data-table-actions">
@@ -194,13 +194,13 @@ table.addEventListener('expressive:sort', (event) => {
   </Section>
   <Section {...S.expansion}>
         <p>
-          A <code>tr.data-table-detail</code> right after a row shows only
-          while that row holds a button with <code>aria-expanded="true"</code>.
-          The page flips the attribute; the framework shows the row and turns
-          the button's icon. Put the toggle in a <code>&lt;td&gt;</code>,
-          because a button in a <code>&lt;th&gt;</code> is drawn as a sort
-          control, and give the detail cell a <code>colspan</code> across the
-          table.
+          Put a <code>tr.data-table-detail</code> right after a row. It shows
+          only while that row holds a button with
+          <code>aria-expanded="true"</code>. The page flips the attribute, and
+          the framework shows the row and turns the button's icon. Put the
+          toggle in a <code>&lt;td&gt;</code>, because the framework draws a
+          button in a <code>&lt;th&gt;</code> as a sort control. Give the
+          detail cell a <code>colspan</code> across the table.
         </p>
 <Code code={`
 <tr>
@@ -225,9 +225,9 @@ toggle.addEventListener('click', () => {
   </Section>
   <Section {...S.scrolling}>
         <p>
-          The header row sticks to the top of the wrapper once the wrapper
-          scrolls, so give a long table a <code>max-block-size</code>. A wrapper
-          that scrolls must be reachable from the keyboard: give it
+          Give a long table a <code>max-block-size</code>. Once the wrapper
+          scrolls, the header row sticks to its top. A wrapper that scrolls
+          must be reachable from the keyboard, so give it
           <code>tabindex="0"</code>, <code>role="region"</code> and a name,
           usually the caption.
         </p>
@@ -259,8 +259,8 @@ toggle.addEventListener('click', () => {
   </Section>
   <Section {...S.dense}>
         <p>
-          <code>dense</code> on the wrapper shortens rows to 40px and the
-          header to 48px, for tables people scan rather than read.
+          Add <code>dense</code> to the wrapper to shorten rows to 40px and the
+          header to 48px. Use it for tables people scan rather than read.
         </p>
         <div class="data-table dense">
           <table>

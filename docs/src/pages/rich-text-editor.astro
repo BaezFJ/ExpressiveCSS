@@ -37,12 +37,12 @@ const actions = [
           <a href="https://tiptap.dev/">Tiptap</a>, which the page supplies.
         </p>
         <p>
-          The frame holds a docked <a href={route('toolbars')}>toolbar</a> and
-          a <code>&lt;textarea&gt;</code> whose value is the starting HTML. The
-          component hides the textarea, mounts the editor in a
-          <code>.rich-text-editor-content</code> after it, and writes the
-          editor's HTML back on every change. Without JavaScript the textarea
-          stays visible and the toolbar is hidden.
+          Put a docked <a href={route('toolbars')}>toolbar</a> and a
+          <code>&lt;textarea&gt;</code> in the frame. The textarea's value is
+          the starting HTML. The component hides the textarea, mounts the
+          editor in a <code>.rich-text-editor-content</code> after it, and
+          writes the editor's HTML back on every change. Without JavaScript,
+          the textarea stays visible and the toolbar is hidden.
         </p>
         <div class="mb-3" style="max-width: 40rem;">
           <p><label for="demo-body">Release notes</label></p>
@@ -86,19 +86,24 @@ const actions = [
         <p>
           The editable area is a multi-line <code>textbox</code>. It takes its
           name from the textarea's <code>&lt;label&gt;</code>,
-          <code>aria-label</code> or <code>aria-labelledby</code>, and a click
-          on the label focuses it. Tiptap's keyboard shortcuts work, such as
+          <code>aria-label</code> or <code>aria-labelledby</code>. Clicking
+          the label focuses it. Tiptap's keyboard shortcuts work, such as
           <kbd>Ctrl</kbd>+<kbd>B</kbd> for bold and <kbd>Ctrl</kbd>+<kbd>Z</kbd>
           to undo. <kbd>Tab</kbd> moves to the toolbar buttons.
         </p>
   </Section>
   <Section {...S.setup}>
         <p>
-          ExpressiveCSS does not bundle Tiptap. Install it, then pass its
-          <code>Editor</code> class and your extensions to
-          <code>RichTextEditor.init()</code>. <code>AutoInit()</code> does not
-          start the editor.
+          ExpressiveCSS does not bundle Tiptap, and <code>AutoInit()</code>
+          does not start the editor. To set it up:
         </p>
+        <ol>
+          <li>Install Tiptap.</li>
+          <li>
+            Pass its <code>Editor</code> class and your extensions to
+            <code>RichTextEditor.init()</code>.
+          </li>
+        </ol>
 <Code code={`npm install @tiptap/core @tiptap/pm @tiptap/starter-kit`} />
 <Code code={`
 import { Editor } from '@tiptap/core';
@@ -121,19 +126,20 @@ RichTextEditor.init(document.querySelector('.rich-text-editor'), {
         <p>
           A button is disabled while its command cannot run, for example Undo
           with nothing to undo. Buttons for <code>toggle</code> commands also
-          show whether the selection is formatted: <code>toggleBold</code> sets
+          show whether the selection is formatted. <code>toggleBold</code> sets
           <code>aria-pressed</code> and <code>.active</code> while the
-          selection is bold, and <code>toggleHeading</code> with
-          <code>{`{"level":2}`}</code> while it is in a second-level heading.
+          selection is bold. <code>toggleHeading</code> with
+          <code>{`{"level":2}`}</code> sets them while the selection is in a
+          second-level heading.
         </p>
   </Section>
   <Section {...S.forms}>
         <p>
-          The textarea submits the editor's HTML with its form, and fires
+          The textarea submits the editor's HTML with its form and fires
           <code>input</code> on every change. An empty editor submits an empty
-          value. Tiptap drops markup its extensions do not know, but the value
-          comes from the browser, so sanitize it on the server before storing or
-          showing it. A <code>disabled</code> or <code>readonly</code>
+          value. Tiptap drops markup its extensions do not know. The value
+          still comes from the browser, so sanitize it on the server before you
+          store or show it. A <code>disabled</code> or <code>readonly</code>
           textarea makes the editor read-only and disables the toolbar.
         </p>
   </Section>

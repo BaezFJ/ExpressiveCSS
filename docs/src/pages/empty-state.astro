@@ -21,13 +21,14 @@ const S = defineSections([
           nothing to show yet. It says what is missing and what the user can do
           about it.
         </p>
-        <p>
-          In order, it holds an optional leading icon, which sits in a tonal
-          circle; a heading at the level the page outline needs; a
-          <code>&lt;p&gt;</code> of supporting text; and an
-          <code>.empty-state-actions</code> row of buttons. Everything is
-          centered.
-        </p>
+        <p>It holds these parts, in order:</p>
+        <ol>
+          <li>An optional leading icon, which sits in a tonal circle.</li>
+          <li>A heading at the level the page outline needs.</li>
+          <li>A <code>&lt;p&gt;</code> of supporting text.</li>
+          <li>An <code>.empty-state-actions</code> row of buttons.</li>
+        </ol>
+        <p>Everything is centered.</p>
         <div class="empty-state mb-3">
           <span class="material-symbols" aria-hidden="true">inbox</span>
           <h4>No messages yet</h4>
@@ -75,7 +76,7 @@ const S = defineSections([
   </Section>
   <Section {...S.illustration}>
         <p>
-          An <code>&lt;img&gt;</code> can lead instead of the icon. It keeps
+          To lead with a picture instead of the icon, use an <code>&lt;img&gt;</code>. It keeps
           its ratio up to 240px wide. Give it <code>alt=""</code> when the
           heading already says what it shows.
         </p>

@@ -19,27 +19,26 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>nav.navigation-bar</code> holds 3 to 5 destinations of equal
-          importance. Destinations do not change from screen to screen.
-          The bar needs no JavaScript. Mark the current view with
-          <code>aria-current="page"</code> (or <code>active</code>).
+          Put 3 to 5 destinations of equal importance in a
+          <code>nav.navigation-bar</code>. The destinations stay the same from screen to screen.
+          Mark the current view with <code>aria-current="page"</code> (or
+          <code>active</code>). The bar needs no JavaScript.
         </p>
         <p>
-          This is not the
-          <a href={route('navbar')}>app bar</a>.
-          The app bar names the current page and holds one or two actions.
-          The navigation bar switches between the app's top-level views.
-          Use it in compact and medium windows; a
+          The navigation bar switches between the app's top-level views. The
+          <a href={route('navbar')}>app bar</a> is a different component. It names
+          the current page and holds one or two actions.
+          Use the navigation bar in compact and medium windows. A
           <a href={route('navigation_rail')}>navigation rail</a>
-          can also serve medium windows. Prefer an expanded rail in wider windows.
-          Split larger or hierarchical destination sets into peer categories before using a rail.
+          also works in medium windows. In wider windows, use an expanded rail instead.
+          If you have more destinations, or they form a hierarchy, split them into peer categories before you use a rail.
         </p>
   </Section>
   <Section {...S.stacked}>
         <p>
-          This is the default, with the icon above the label. The selected destination puts a
-          pill behind the icon and fills the glyph. Use this in compact
-          windows.
+          The default layout puts the icon above the label. Use it in compact
+          windows. The selected destination gets a pill behind the icon and a
+          filled glyph.
         </p>
         <div class="primary-container py-5 px-3 mb-3">
           <nav class="navigation-bar" aria-label="Main — Stacked">
@@ -84,8 +83,8 @@ const S = defineSections([
   </Section>
   <Section {...S.horizontal}>
         <p>
-          Add <code>horizontal</code>. Icon and label sit on one row, and
-          the selected pill wraps both. Use this in medium windows.
+          Add <code>horizontal</code> for medium windows. The icon and label sit
+          on one row, and the selected pill wraps both.
         </p>
         <div class="primary-container py-5 px-3 mb-3">
           <nav class="navigation-bar horizontal" aria-label="Main — Horizontal">
@@ -120,7 +119,7 @@ const S = defineSections([
   <Section {...S.fixed}>
         <p>
           Add <code>fixed</code> to stick the bar to the bottom of the
-          viewport. Padding includes <code>safe-area-inset-bottom</code>
+          viewport. Its padding includes <code>safe-area-inset-bottom</code>,
           so the destinations clear a home indicator.
         </p>
 <Code code={`

@@ -55,7 +55,7 @@ const S = defineSections([
           <code>dual</code> sends two lights around the ring, primary and
           tertiary, on opposite sides. <code>rainbow</code> turns the whole hue
           wheel. <code>glow</code> draws a blurred halo behind the element in
-          place of a ring, so give the element an opaque container, such as a
+          place of a ring. Give that element an opaque container, such as a
           filled button or a card.
         </p>
         <div class="flex flex-wrap align-center gap-6 mb-3">
@@ -72,9 +72,9 @@ const S = defineSections([
   <Section {...S.custom}>
         <p>
           Set the tokens on the <code>.aura</code>. The ring takes its corners
-          from <code>--md-comp-aura-shape</code>: 12px to match a card, and
-          fully rounded when it wraps a button. Set it to the corner size of
-          anything else you wrap.
+          from <code>--md-comp-aura-shape</code>. It is 12px to match a card,
+          and fully rounded when it wraps a button. Set it to the corner size
+          of anything else you wrap.
         </p>
         <div class="flex flex-wrap align-center gap-6 mb-3">
           <div class="aura" style="--md-comp-aura-color: var(--md-sys-color-tertiary); --md-comp-aura-width: 4px; --md-comp-aura-duration: 2s;">
@@ -94,11 +94,11 @@ const S = defineSections([
   </Section>
   <Section {...S.accessibility}>
         <p>
-          The light is decoration. It is drawn by a pseudo-element, so the
-          wrapper adds nothing to the accessibility tree and the wrapped
-          element keeps its own name and role. Do not rely on the aura to say
-          that something is recommended; put that in the text, for example a
-          "Recommended" badge or heading. In forced colors the ring is a solid
+          Say in the text that something is recommended, for example with a
+          "Recommended" badge or heading. Do not rely on the aura for that. The
+          light is decoration. A pseudo-element draws it, so the wrapper adds
+          nothing to the accessibility tree. The wrapped element keeps its own
+          name and role. In forced colors the ring is a solid
           <code>Highlight</code> outline.
         </p>
   </Section>

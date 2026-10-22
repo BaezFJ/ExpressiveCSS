@@ -15,16 +15,18 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.scale}>
         <p class="flow-text">
-          We've made some custom animation classes that will transition your content with only CSS. Each CSS transition consists of a base class that applies the necessary
-          styles and additional classes that control the state of the transition.
+          These classes transition your content with only CSS. Each transition has a base class
+          that applies the styles it needs, plus state classes that control the transition.
         </p>
         <h5>Scale</h5>
         <p>
-          Use this to scale in and out elements. Make sure to add the base transition class
-          <code>scale-transition</code>. Then add the class <code>scale-out</code> to scale the element down until it is hidden.
-          To start something as hidden, add the class <code>scale-out</code> first, and then add the class
-          <code>scale-in</code> to scale the element up until it is shown.
-          With reduced motion requested, these state changes happen immediately.
+          Add the base class <code>scale-transition</code> to scale an element in and out. Then add
+          <code>scale-out</code> to scale the element down until it is hidden.
+          To start an element hidden, add <code>scale-out</code> first. Then add
+          <code>scale-in</code> to scale the element up until it shows.
+          With reduced motion requested, these state changes happen at once.
+        </p>
+        <p>
           Scaling out only hides the element visually. When you use it for disclosure, move focus and manage hidden controls yourself.
         </p>
 
@@ -68,7 +70,7 @@ const S = defineSections([
       curve, as Material's own web components do.
     </p>
     <p>
-      When the user asks for reduced motion, every duration token and every spring <code>-duration</code> token becomes <code>0s</code>, so each component that reads them changes state without moving. There is no <code>!important</code>, so a page can opt an element back in. Off-scale literal times are not tokens; their components cancel them in their own reduced-motion rules.
+      When the user asks for reduced motion, every duration token and every spring <code>-duration</code> token becomes <code>0s</code>. Each component that reads them then changes state without moving. The override has no <code>!important</code>, so a page can opt an element back in. Off-scale literal times are not tokens. Their components cancel them in their own reduced-motion rules.
     </p>
 <Code code={`
 <style>
@@ -79,7 +81,7 @@ const S = defineSections([
   </Section>
   <Section {...S.springs}>
     <p>
-      Material 3 Expressive describes motion as springs: a damping ratio and a stiffness. CSS has no spring timing function, so the framework solves each spring when the sheet is compiled and samples it into a <code>linear()</code> easing that runs for the time the spring takes to settle. Every spring has an easing token and a <code>-duration</code> token. Use the two together.
+      Material 3 Expressive describes motion as springs: a damping ratio and a stiffness. CSS has no spring timing function. The framework solves each spring when it compiles the sheet and samples it into a <code>linear()</code> easing. That easing runs for the time the spring takes to settle. Every spring has an easing token and a <code>-duration</code> token. Use the two together.
     </p>
     <table class="striped">
       <thead><tr><th>Token</th><th>Standard (damping, stiffness)</th><th>Expressive</th></tr></thead>
@@ -93,7 +95,7 @@ const S = defineSections([
       </tbody>
     </table>
     <p>
-      The standard motion scheme is the default. <code>motion="expressive"</code> on the root or on any subtree switches the spatial springs to the bouncier expressive ones; <code>motion="standard"</code> switches a subtree back. Effects springs, for color and opacity, never overshoot and are the same in both schemes.
+      Set <code>motion="expressive"</code> on the root or on any subtree to switch the spatial springs to the bouncier expressive ones. Set <code>motion="standard"</code> to switch a subtree back. The standard motion scheme is the default. Effects springs, for color and opacity, never overshoot and are the same in both schemes.
     </p>
 <Code code={`
 <style>
@@ -111,7 +113,10 @@ const S = defineSections([
 }
 `} />
     <p>
-      A <code>linear()</code> easing always starts from rest, so a transition interrupted part way restarts without the speed it had. Where that shows most, a dragged bottom or side sheet, the sheet solves its spring when it is released instead: it springs back from where the finger left it at the finger's speed, and a press while it moves catches it where it is. A sheet whose motion tokens a page overrode keeps the CSS transition they ask for. Each spring also has <code>-damping</code> and <code>-stiffness</code> tokens with its two numbers, following <code>motion</code>, for scripts that solve a spring themselves.
+      A <code>linear()</code> easing always starts from rest, so a transition interrupted part way restarts without the speed it had. This shows most on a dragged bottom or side sheet. So the sheet solves its spring when the user releases it instead. It springs back from where the finger left it, at the finger's speed, and a press while it moves catches it where it is. If a page overrides a sheet's motion tokens, the sheet keeps the CSS transition they ask for.
+    </p>
+    <p>
+      Each spring also has <code>-damping</code> and <code>-stiffness</code> tokens that hold its two numbers and follow <code>motion</code>. Scripts that solve a spring themselves can read them.
     </p>
   </Section>
 </PageBody>

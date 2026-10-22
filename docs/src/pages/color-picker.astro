@@ -27,9 +27,9 @@ const S = defineSections([
           <code>&lt;input type="color"&gt;</code>. Without JavaScript it is the native swatch.
         </p>
         <p>
-          <code>ColorPicker</code>, which AutoInit starts, adds a saturation and brightness area, a
-          hue slider and a hex field. The native input stays the form value and the preview, and
-          the browser's own picker still opens from it. The browser's color input only holds
+          AutoInit starts <code>ColorPicker</code>, which adds a saturation and brightness area, a
+          hue slider and a hex field. The native input stays the form value and the preview. The
+          browser's own picker still opens from it. The browser's color input only holds
           <code>#rrggbb</code>, so there is no alpha.
         </p>
         <div class="color-picker mb-3" role="group" aria-label="Accent color">
@@ -49,8 +49,9 @@ const S = defineSections([
         </p>
         <p>
           Safari leaves the native color swatch out of the Tab order, as it does for every
-          <code>&lt;input type="color"&gt;</code>. The area, the hue slider and the hex field still
-          set any color from the keyboard there; only the system color dialog is out of reach.
+          <code>&lt;input type="color"&gt;</code>. In Safari the area, the hue slider and the hex
+          field still set any color from the keyboard. Only the system color dialog is out of
+          reach.
         </p>
         <table class="striped">
           <thead><tr><th>Key</th><th>Effect</th></tr></thead>

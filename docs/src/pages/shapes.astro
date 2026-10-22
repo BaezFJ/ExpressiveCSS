@@ -43,8 +43,8 @@ const shapes = [
   <Section {...S.media}>
     <p>On an <code>&lt;img&gt;</code>, <code>&lt;video&gt;</code> or <code>&lt;canvas&gt;</code>,
       the class also sets <code>aspect-ratio: 1</code> and <code>object-fit: cover</code>,
-      so the picture is cropped to a square instead of stretching the shape. Set the width;
-      the height follows.</p>
+      so the browser crops the picture to a square instead of stretching the shape. Set the
+      width and the height follows.</p>
     <div class="flex flex-wrap gap-4 align-center">
       <img class="shape-scallop-9" width="160" src="https://picsum.photos/id/1025/400/300" alt="A pug wrapped in a blanket">
       <img class="shape-bloom-4" width="160" src="https://picsum.photos/id/1015/400/400" alt="A river between mountains">
@@ -75,23 +75,23 @@ const shapes = [
 </button>
 <button class="btn shape-flare" type="button" style="width: 96px; height: 96px">New</button>`} />
     <p>The mask would clip the usual focus outline, so a focused shape draws its ring inside
-      its own edge: a 3px band in the secondary color and a 2px gap. Press
+      its own edge. The ring is a 3px band in the secondary color with a 2px gap. Press
       <kbd>Tab</kbd> to see it. Forced-colors mode paints the band in <code>Highlight</code>.
       Clicks and taps on the cut-away parts of the box pass through to the page behind.</p>
   </Section>
   <Section {...S.notes}>
     <p>The class adds <code>contain: paint</code>, which clips overflowing content and makes
-      the element the containing block for absolutely positioned children. Shadows and
-      borders are cut with the rest of the element. Wrap the element if it needs a shadow
+      the element the containing block for absolutely positioned children. The mask cuts
+      shadows and borders along with the rest of the element. Wrap the element if it needs a shadow
       that follows the shape, and apply <code>filter: drop-shadow()</code> to the wrapper.</p>
     <p>For a selective Sass build, include <code>"shapes"</code> in <code>$utilities</code>.</p>
   </Section>
   <Section {...S["corner-scale"]}>
     <p>
       Rounded corners come from the Material 3 <code>md.sys.shape.corner</code> scale. Component
-      shape tokens on that scale read these, so one override changes every component on that
-      step. A component token, such as <code>--md-comp-card-container-shape</code>, still
-      changes one component. Off-scale corners stay literal.
+      shape tokens on that scale read these values, so one override changes every component on
+      that step. Set a component token, such as <code>--md-comp-card-container-shape</code>, to
+      change one component. Off-scale corners stay literal.
     </p>
     <table class="striped">
       <thead><tr><th>Token</th><th>Value</th></tr></thead>
@@ -110,7 +110,10 @@ const shapes = [
   </Section>
   <Section {...S["cut-corners"]}>
     <p>
-      Material shapes come in a rounded and a cut family. <code>corners="cut"</code> on the root or on any subtree turns the corners of cards, dialogs, sheets, menus, fieldsets, buttons, chips, alerts, snackbars, tooltips, popovers and outlined fields into straight bevels of the same size; <code>corners="round"</code> puts a subtree back. The switch sets <code>--md-sys-shape-corner-family</code> to <code>bevel</code> or <code>round</code>. <code>.corner-cut</code> cuts a single element, together with its own radius or a <code>.corner-*</code> class. Round indicators such as radios, switches, avatars and <code>.circle</code> stay round, because a cut 50% radius is a diamond. Cut corners use CSS <code>corner-shape</code>. Browsers without it, including Firefox 157, keep rounded corners.
+      Material shapes come in a rounded and a cut family. Set <code>corners="cut"</code> on the root or on any subtree to turn its corners into straight bevels of the same size. This covers cards, dialogs, sheets, menus, fieldsets, buttons, chips, alerts, snackbars, tooltips, popovers and outlined fields. Set <code>corners="round"</code> to put a subtree back. The switch sets <code>--md-sys-shape-corner-family</code> to <code>bevel</code> or <code>round</code>.
+    </p>
+    <p>
+      Add <code>.corner-cut</code> to cut a single element, together with its own radius or a <code>.corner-*</code> class. Round indicators such as radios, switches, avatars and <code>.circle</code> stay round, because a cut 50% radius is a diamond. Cut corners use CSS <code>corner-shape</code>. Browsers without it, including Firefox 157, keep rounded corners.
     </p>
     <div corners="cut" class="flex gap-3 align-center mb-3">
       <article class="outlined p-4">A cut card</article>

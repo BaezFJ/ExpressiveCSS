@@ -20,17 +20,18 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>&lt;dialog class="command-palette"&gt;</code> holds a search
-          input and a list of commands. Each command is a link or button, so
-          running one is an ordinary click. The palette picks up commands
-          added to the list later. A command the page hides with <code>hidden</code>
-          stays hidden, and a <code>disabled</code> one is dimmed and skipped.
+          Put a search input and a list of commands in a
+          <code>&lt;dialog class="command-palette"&gt;</code>. Each command is
+          a link or button, so running one is an ordinary click. The palette
+          picks up commands added to the list later. A command the page hides
+          with <code>hidden</code> stays hidden. A <code>disabled</code> one is
+          dimmed and skipped.
         </p>
         <p>
-          An <code>&lt;li class="label"&gt;</code> heads a group, and an
-          optional <code>.command-palette-empty</code> message shows when
+          Start a group with an <code>&lt;li class="label"&gt;</code>. Add an
+          optional <code>.command-palette-empty</code> message to show when
           nothing matches. <code>AutoInit()</code> starts every
-          <code>dialog.command-palette</code>. For searching content rather than
+          <code>dialog.command-palette</code>. To search content instead of
           running commands, use <a href={route('search')}>search</a>.
         </p>
         <p class="mb-3">
@@ -77,18 +78,19 @@ const S = defineSections([
   </Section>
   <Section {...S.keyboard}>
         <p>
-          Ctrl+K, or Command+K on Apple platforms, opens and closes the palette
-          from anywhere on the page, unless the page has already handled the
-          key, as an editor's own Ctrl+K does. Typing filters the commands by their text
-          and any <code>data-keywords</code>, ignoring case and accents. Focus
-          stays in the input: the arrow keys move the active command and Enter
-          runs it. Escape closes the dialog and returns focus. Each opening
-          starts with an empty search.
+          Press Ctrl+K, or Command+K on Apple platforms, to open or close the
+          palette from anywhere on the page. The shortcut does nothing when the
+          page has already handled the key, as an editor's own Ctrl+K does.
+          Typing filters the commands by their text and any
+          <code>data-keywords</code>, ignoring case and accents. Focus stays in
+          the input. The arrow keys move the active command, and Enter runs it.
+          Escape closes the dialog and returns focus. Each opening starts with
+          an empty search.
         </p>
         <p>
-          The component makes the input a combobox and the list a listbox, and
+          Name the dialog and the input with <code>aria-label</code>. The
+          component makes the input a combobox and the list a listbox, and
           reports the active command with <code>aria-activedescendant</code>.
-          Name the dialog and the input with <code>aria-label</code>.
         </p>
   </Section>
   <Section {...S.options}>

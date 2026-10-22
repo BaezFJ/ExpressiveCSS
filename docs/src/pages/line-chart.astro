@@ -57,13 +57,13 @@ card.querySelectorAll('[data-period]').forEach((button) => {
         <p class="flow-text">
           A <code>&lt;figure class="line-chart"&gt;</code> draws a
           <code>&lt;table&gt;</code> of values as smooth lines. The first column
-          labels the x axis; each further column is a series named by its
+          labels the x axis. Each further column is a series named by its
           header cell.
         </p>
         <p>
-          JavaScript draws the chart from the table and hides the table
+          JavaScript draws the chart from the table. It hides the table
           visually, so a screen reader still reads the data as a table. Without
-          JavaScript the table shows. Points, a cursor and a tooltip follow the
+          JavaScript, the table shows. Points, a cursor and a tooltip follow the
           pointer, and the arrow keys move them when the chart has focus.
         </p>
         <article class="outlined" data-markdown-ignore>
@@ -173,9 +173,9 @@ card.querySelectorAll('[data-period]').forEach((button) => {
   </Section>
   <Section {...S.points}>
         <p>
-          <code>points</code> marks every value with a dot, so a reader can
-          see where the measurements are, and <code>straight</code> draws
-          straight lines between them instead of a smooth curve. Both suit
+          Add <code>points</code> to mark every value with a dot, so a reader
+          can see where the measurements are. Add <code>straight</code> to
+          draw straight lines between them instead of a smooth curve. Both suit
           a few values read one by one, such as a week of visits.
         </p>
         <figure class="line-chart axis points straight" data-markdown-ignore>
@@ -202,11 +202,11 @@ card.querySelectorAll('[data-period]').forEach((button) => {
   </Section>
   <Section {...S.stacked}>
         <p>
-          <code>stacked</code> draws each series on top of the ones before it
-          and fills the band between them, so the top line is the total. The
-          y axis starts at zero, and the tooltip still shows each cell. Stack
-          values that add up, such as sales by channel, and keep them positive;
-          an empty cell leaves the total unknown, so it breaks that series and
+          Add <code>stacked</code> to draw each series on top of the ones
+          before it and fill the band between them. The top line is the total.
+          The y axis starts at zero, and the tooltip still shows each cell.
+          Stack values that add up, such as sales by channel, and keep them
+          positive. An empty cell leaves the total unknown, so it breaks that series and
           the ones above it at that row.
         </p>
         <figure class="line-chart stacked" data-markdown-ignore>
@@ -233,8 +233,8 @@ card.querySelectorAll('[data-period]').forEach((button) => {
   </Section>
   <Section {...S.sparkline}>
         <p>
-          <code>sparkline</code> is a 48px chart with no grid, labels, legend or
-          tooltip, for a trend beside a figure. Hide its caption with
+          Use <code>sparkline</code> for a trend beside a figure. It is a 48px
+          chart with no grid, labels, legend or tooltip. Hide its caption with
           <code>visually-hidden</code> when the tile already names it.
         </p>
         <dl class="stats" data-markdown-ignore>
@@ -281,13 +281,19 @@ card.querySelectorAll('[data-period]').forEach((button) => {
   </Section>
   <Section {...S.cards}>
         <p>
-          A chart goes in a card with the figures it explains. Put the period
-          switch beside the stat; on a change, update the stat, swap the table
-          rows. With <code>data-watch</code> on the figure the chart redraws
-          itself; without it, call <code>update()</code>. The card adds no
-          chart styles; size a chart with its tokens. A card pads only its
-          headings and paragraphs, so wrap the stat and chart in
-          <code>&lt;div class="p-4"&gt;</code> to keep them off the border. A
+          Put a chart in a card with the figures it explains. To add a period
+          switch:
+        </p>
+        <ol>
+          <li>Put the switch beside the stat.</li>
+          <li>On a change, update the stat and swap the table rows.</li>
+          <li>With <code>data-watch</code> on the figure, the chart redraws
+          itself. Without it, call <code>update()</code>.</li>
+        </ol>
+        <p>
+          The card adds no chart styles, so size a chart with its tokens. A
+          card pads only its headings and paragraphs. Wrap the stat and chart
+          in <code>&lt;div class="p-4"&gt;</code> to keep them off the border. A
           connected button group fills its container, so give it a
           <code>&lt;div&gt;</code> of its own to keep it beside the stat.
         </p>
@@ -429,13 +435,14 @@ ${cardScript.replace(/^/gm, "  ")}
           be read against zero.
         </p>
         <p>
-          <code>axis</code> labels the y axis at round values, with a grid line at each, and
-          widens an end the chart chose to the next round value, so the labels
-          start and end on the plot's edges. The labels repeat any currency or
-          percent sign the cells are written with and shorten large numbers,
-          such as <code>$1.5K</code>. An end set with <code>data-min</code> or
-          <code>data-max</code> stays where it is. The labels are hidden from
-          assistive technology; the table still carries the values.
+          Add <code>axis</code> to label the y axis at round values, with a
+          grid line at each. The chart widens an end it chose to the next round
+          value, so the labels start and end on the plot's edges. An end set
+          with <code>data-min</code> or <code>data-max</code> stays where it
+          is. The labels repeat any currency or percent sign the cells are
+          written with, and shorten large numbers, such as <code>$1.5K</code>.
+          They are hidden from assistive technology, and the table still
+          carries the values.
         </p>
         <figure class="line-chart axis" data-markdown-ignore>
           <figcaption>Monthly revenue, first half</figcaption>
@@ -469,39 +476,44 @@ ${cardScript.replace(/^/gm, "  ")}
           The table is the chart's text alternative. Give it a header row and
           a header cell per row, and name the chart with a
           <code>&lt;figcaption&gt;</code>. The drawn chart, its labels and its
-          legend are hidden from assistive technology, except a
-          <code>toggle</code> legend, whose buttons follow the plot in the tab
+          legend are hidden from assistive technology. The exception is a
+          <code>toggle</code> legend. Its buttons follow the plot in the tab
           order and say whether each series shows.
         </p>
         <p>
           The plot is one Tab stop named by the caption. Left and right arrows
-          move between rows, Home and End jump to the ends and Escape hides the
-          tooltip. In a right-to-left page the x axis runs from right to left,
-          and the arrows still move the cursor the way they point. The tooltip is a polite live region, so a screen reader
-          hears each row's values as it moves. A sparkline is not focusable.
+          move between rows. Home and End jump to the ends, and Escape hides
+          the tooltip. In a right-to-left page, the x axis runs from right to
+          left, and the arrows still move the cursor the way they point. The
+          tooltip is a polite live region, so a screen reader hears each row's
+          values as it moves. A sparkline is not focusable.
         </p>
   </Section>
   <Section {...S.javascript}>
         <p>
           <code>AutoInit()</code> starts every <code>.line-chart</code>. To
-          start one yourself, call <code>LineChart.init</code>. After changing its
-          table, call <code>update()</code> to redraw it in place. The lines,
-          areas and points move from their old values to the new ones, and a
-          series or value new to the chart rises from the plot bottom, or in a
-          stack from the series below. With reduced motion the new shape
-          appears at once.
+          start one yourself, call <code>LineChart.init</code>. After you
+          change its table, call <code>update()</code> to redraw it in place.
+          The lines, areas and points move from their old values to the new
+          ones. A series or value new to the chart rises from the plot bottom,
+          or in a stack from the series below. With reduced motion, the new
+          shape appears at once.
         </p>
         <p>
-          With <code>data-watch</code> on the figure, or the
-          <code>watch</code> option, the chart calls <code>update()</code>
-          itself whenever its table changes: rows or cells added or removed,
-          cell text, or a <code>data-value</code>, <code>class</code> or
-          heatmap <code>data-label</code> inside the table. The edits a script
-          makes in one run redraw it once; edits on either side of an
-          <code>await</code> redraw twice. A replaced table is watched too.
-          The chart reads the attribute when it starts, and any value turns it
-          on. Changes to the figure itself, such as <code>data-min</code>, its
-          classes or its caption, still need <code>update()</code>. Every chart type takes <code>data-watch</code>.
+          Add <code>data-watch</code> to the figure, or set the
+          <code>watch</code> option, and the chart calls <code>update()</code>
+          itself whenever its table changes. That covers rows or cells added
+          or removed, cell text, and a <code>data-value</code>,
+          <code>class</code> or heatmap <code>data-label</code> inside the
+          table. A replaced table is watched too. Every chart type takes
+          <code>data-watch</code>.
+        </p>
+        <p>
+          The edits a script makes in one run redraw the chart once. Edits on
+          either side of an <code>await</code> redraw it twice. The chart reads
+          the attribute when it starts, and any value turns it on. Changes to
+          the figure itself, such as <code>data-min</code>, its classes or its
+          caption, still need <code>update()</code>.
         </p>
 <Code code={`
 const chart = Expressive.LineChart.init(document.querySelector('.line-chart'), {

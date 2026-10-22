@@ -17,10 +17,10 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
                     <p class="flow-text">
-                        A <code>&lt;nav&gt;</code> whose child is an <code>&lt;ol&gt;</code>
-                        is a breadcrumb trail. There is no <code>breadcrumb</code> class on
-                        each crumb. Mark the last item, the current page, with
-                        <code>aria-current="page"</code>.
+                        Put an <code>&lt;ol&gt;</code> inside a <code>&lt;nav&gt;</code>
+                        to make a breadcrumb trail. The crumbs need no
+                        <code>breadcrumb</code> class. Mark the last item, the current
+                        page, with <code>aria-current="page"</code>.
                     </p>
                     <nav aria-label="Breadcrumb — Anatomy">
                         <ol>
@@ -39,11 +39,10 @@ const S = defineSections([
 </nav>
 `} />
                     <p>
-                        The separator is
-                        <code>--md-comp-breadcrumb-separator</code>, default
-                        <code>/</code>. It is not an icon-font glyph, so the trail
-                        still reads if Symbols are not loaded. Set the token to
-                        <code>"›"</code> if you want a chevron.
+                        Set <code>--md-comp-breadcrumb-separator</code> to change the
+                        separator. It defaults to <code>/</code>, which is not an
+                        icon-font glyph, so the trail still reads if Symbols are not
+                        loaded. Set the token to <code>"›"</code> for a chevron.
                     </p>
                     <p>
                         <code>.breadcrumb-wrapper</code> and <code>.breadcrumb</code>
@@ -86,7 +85,7 @@ const S = defineSections([
   <Section {...S.overflow}>
                     <p>
                         The trail wraps by default. Add <code>nowrap</code> to keep one
-                        row and scroll sideways; the current page does not shrink.
+                        row and scroll sideways. The current page does not shrink.
                     </p>
                     <nav class="nowrap" aria-label="Breadcrumb — Overflow" style="max-width: 16rem;">
                         <ol>

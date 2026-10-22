@@ -21,9 +21,9 @@ const S = defineSections([
           label and value pairs, such as an order's status, address and total.
         </p>
         <p>
-          Each <code>&lt;dt&gt;</code> is a label and the
-          <code>&lt;dd&gt;</code> after it is its value. Labels take the first
-          column from Medium widths up, and a divider runs above each pair. At
+          Each <code>&lt;dt&gt;</code> is a label, and the
+          <code>&lt;dd&gt;</code> after it is its value. From Medium widths up,
+          labels take the first column and a divider runs above each pair. At
           Compact widths, and inside a
           <a href="/helpers.html#display"><code>.query-container</code></a> narrower than 600px,
           each label sits above its value. For big numbers in
@@ -44,10 +44,10 @@ const S = defineSections([
   </Section>
   <Section {...S.groups}>
         <p>
-          A <code>&lt;div&gt;</code> may wrap each pair, as HTML allows; it
-          adds no box. A label with several values lists them as consecutive
-          <code>&lt;dd&gt;</code> elements, which stack in the value column
-          without a divider between them.
+          You can wrap each pair in a <code>&lt;div&gt;</code>, as HTML allows.
+          The wrapper adds no box. To give a label several values, list them as
+          consecutive <code>&lt;dd&gt;</code> elements. They stack in the value
+          column with no divider between them.
         </p>
 <Code code={`
 <dl class="description-list">

@@ -22,12 +22,12 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>.field</code> is the container. The
+          Wrap the control in a <code>.field</code>. The
           <code>&lt;label&gt;</code> after the control is the floating
-          label. An icon names its side with <code>prefix</code> or
-          <code>suffix</code> and is <code>aria-hidden</code>.
-          <code>&lt;small&gt;</code> is supporting text. The default is
-          the M3 filled field; add <code>outlined</code> for the outlined
+          label. Mark an icon <code>prefix</code> or <code>suffix</code> to
+          set its side, and make it <code>aria-hidden</code>. A
+          <code>&lt;small&gt;</code> holds supporting text. The default is
+          the M3 filled field. Add <code>outlined</code> for the outlined
           variant.
         </p>
         <p>
@@ -44,7 +44,7 @@ const S = defineSections([
           Add <code>placeholder=" "</code> (one space) so the label floats
           with CSS only. A missing placeholder, or any other string, keeps
           the label floated. Importing the bundle runs
-          <code>Forms.Init()</code>; it validates <code>.validate</code>
+          <code>Forms.Init()</code>. It validates <code>.validate</code>
           fields on <code>change</code> and starts textareas and file paths.
           Character Counter is not in <code>AutoInit()</code>.
         </p>
@@ -111,14 +111,18 @@ const S = defineSections([
   <Section {...S.types}>
         <p>
           <code>email</code>, <code>password</code>, and the other native
-          text-like types are styled the same way. <code>validate</code>
-          uses HTML5 constraint validation on <code>change</code> and
-          toggles <code>invalid</code> and <code>aria-invalid="true"</code> on
-          the input, so a screen reader hears the error state too. It adds the
-          field's <code>[data-error]</code> supporting text to the input's
-          <code>aria-describedby</code>, giving it an id if it has none and
-          keeping the ids already there, so the error the CSS shows is read
-          with the field. There is no green <code>valid</code> style.
+          text-like types get the same styling. Add <code>validate</code> to
+          check the value with HTML5 constraint validation on
+          <code>change</code>. It toggles <code>invalid</code> and
+          <code>aria-invalid="true"</code> on the input, so a screen reader
+          hears the error state too.
+        </p>
+        <p>
+          It also adds the field's <code>[data-error]</code> supporting text
+          to the input's <code>aria-describedby</code>, so the error the CSS
+          shows is read with the field. It gives that text an id if it has
+          none and keeps the ids already there. There is no green
+          <code>valid</code> style.
         </p>
         <form class="row">
           <div class="s12 m6 field">
@@ -168,9 +172,9 @@ This is an inline input field:
         <p>
           A trailing <code>.icon-button</code> with <code>suffix</code> is a
           control in the field. It keeps its 40dp target and takes clicks.
-          Add <code>password-toggle</code>, two icons and
+          Give it <code>password-toggle</code>, two icons and
           <code>aria-pressed="false"</code>, and pressing it shows the
-          password as text. The name stays "Show password" and
+          password as text. The name stays "Show password", and
           <code>aria-pressed</code> says which way it is. Submitting or
           resetting the form hides the password again.
         </p>
@@ -196,12 +200,13 @@ This is an inline input field:
   </Section>
   <Section {...S["number-stepper"]}>
         <p>
-          Two trailing icon buttons with <code>data-step="down"</code> and
-          <code>data-step="up"</code> step a number input, within its <code>min</code>,
-          <code>max</code> and <code>step</code>, the way the arrow keys do. Each press fires
-          <code>input</code> and <code>change</code>. The browser's own spin buttons are hidden, and a
-          disabled, read-only or <code>step="any"</code> input is left alone. The Forms behavior does
-          the stepping. Name each button with what it changes.
+          Add two trailing icon buttons with <code>data-step="down"</code> and
+          <code>data-step="up"</code> to step a number input the way the arrow
+          keys do, within its <code>min</code>, <code>max</code> and
+          <code>step</code>. Name each button with what it changes. The Forms
+          behavior does the stepping, and each press fires <code>input</code>
+          and <code>change</code>. The browser's own spin buttons are hidden.
+          A disabled, read-only or <code>step="any"</code> input is left alone.
         </p>
         <div class="field">
           <input id="demo-quantity" type="number" placeholder=" " value="1" min="1" max="10">
@@ -228,11 +233,11 @@ This is an inline input field:
   </Section>
   <Section {...S.otp}>
         <p>
-          <code>input.otp</code> draws one native input as a row of cells, so
-          paste, autofill from <code>autocomplete="one-time-code"</code> and
-          undo keep working and a screen reader hears one field. Give it
+          <code>input.otp</code> draws one native input as a row of cells.
+          Paste, autofill from <code>autocomplete="one-time-code"</code> and
+          undo keep working, and a screen reader hears one field. Give it
           <code>inputmode="numeric"</code> and a <code>maxlength</code> equal
-          to <code>--md-comp-otp-length</code> (6 by default), and label it
+          to <code>--md-comp-otp-length</code> (6 by default). Label it
           outside any <code>.field</code>.
         </p>
         <label for="demo-code" class="body-medium">Verification code</label>
@@ -309,8 +314,8 @@ Expressive.Forms.InitTextarea(document.querySelector('#textarea1'));
   <Section {...S.color}>
         <p>
           An <code>&lt;input type="color"&gt;</code> keeps the browser's
-          picker and is drawn as a 40px round swatch of the chosen color in a
-          48px target. Label it like any field. It sits outside a
+          picker and shows as a 40px round swatch of the chosen color in a
+          48px target. Label it like any field, and keep it outside a
           <code>.field</code>, which would give it the 56dp text well.
         </p>
         <p>

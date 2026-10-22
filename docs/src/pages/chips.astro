@@ -23,11 +23,11 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
-          A chip is a <code>.chip</code>, and its element sets which kind it is. The
-          four Material 3 chip types and a non-interactive display chip use three
-          root elements. Add <code>outlined</code> for a bordered style.
-          Static chips are CSS. The JavaScript plugin lives on a <code>.chips</code>
-          wrapper.
+          Add <code>.chip</code> to an element to make a chip. The element you pick
+          sets which kind it is. The four Material 3 chip types and a non-interactive
+          display chip use three root elements. Add <code>outlined</code> for a
+          bordered style. Static chips are CSS only. The JavaScript plugin attaches
+          to a <code>.chips</code> wrapper.
         </p>
         <p>
           A long label wraps and the chip grows from its 32dp minimum, with 4dp
@@ -56,7 +56,7 @@ const S = defineSections([
             <tr>
               <td>Input</td>
               <td><code>&lt;span class="chip"&gt;</code> + a nested <code>&lt;button class="close"&gt;</code></td>
-              <td>The chip is a token; the delete button is the control.</td>
+              <td>The chip is a token. The delete button is the control.</td>
             </tr>
           </tbody>
         </table>
@@ -108,14 +108,14 @@ const S = defineSections([
 `} />
         <p>
           The delete button needs its own <code>aria-label</code> naming the chip it
-          removes, because its only content is an icon. The icon is
-          <code>aria-hidden</code> in every chip: the ligature is real text and is
-          otherwise read out alongside the label.
+          removes, because its only content is an icon. Mark the icon
+          <code>aria-hidden</code> in every chip. The ligature is real text, and
+          screen readers would otherwise read it out alongside the label.
         </p>
         <p>
           A filter chip's selected state is <code>:checked</code> on its input, so it
-          needs no script. Everywhere else the selected look is the
-          <code>selected</code> class.
+          needs no script. Everywhere else, add the <code>selected</code> class for
+          the selected look.
         </p>
         <p>
           Clicking <code>.close</code> removes the chip only when it sits inside a
@@ -128,7 +128,7 @@ const S = defineSections([
           delete control was an <code>&lt;i class="close"&gt;</code>, focusable through
           <code>tabindex</code> but with no role or name. In 1.0 that
           <code>&lt;i&gt;</code> is no longer an icon and shows the word
-          "close"; write the <code>&lt;button class="close"&gt;</code> shown here.
+          "close". Use the <code>&lt;button class="close"&gt;</code> shown here instead.
         </p>
   </Section>
 
@@ -184,7 +184,7 @@ const S = defineSections([
           Backspace and Delete remove the focused chip and select the remaining chip
           before it, or else the first remaining chip or the input. Activating a delete
           button returns focus to the input. Deleting a chip from code does not move
-          focus that is elsewhere, and a deletion callback can move focus without the
+          focus that is elsewhere. A deletion callback can move focus without the
           plugin resetting it.
           Long labels wrap while the delete control keeps its size.
         </p>
@@ -193,36 +193,46 @@ const S = defineSections([
           is no text field and rendered chips have no delete button. Pass
           <code>allowUserInput: true</code> for the interactive field.
           <code>AutoInit()</code> starts every <code>.chips</code> except
-          <code>no-autoinit</code>, but it uses the defaults, so those wrappers stay
-          display-only until you call <code>init</code> with options.
+          those with <code>no-autoinit</code>. It uses the defaults, so those
+          wrappers stay display-only until you call <code>init</code> with options.
         </p>
         <p>
           In a form, give the field's <code>&lt;input&gt;</code> a <code>name</code>.
           The chips submit under it, one <code>id</code> per chip, as a multiple
           select does. <code>init</code> wraps the input in an
           <code>&lt;expressive-chips-control&gt;</code>, a form-associated custom
-          element with <code>display: contents</code>, and moves the name onto it, so
-          half-typed text is not submitted. The form treats the control as the field. A
-          disabled <code>fieldset</code> or a form reset applies to it at once, including
-          in a detached form or a shadow root, and a canceled reset changes nothing.
-          Setting <code>disabled</code>, <code>readonly</code> or <code>form</code> on
-          the input applies at the next microtask. A <code>required</code> input makes
-          the field valid once it has a chip, and says <code>i18n.required</code> until
-          then, unless the input is read-only. The control holds that validity apart
-          from any error the page sets on the input, and a blocked submit focuses the
-          input. The input itself stays valid and does not match <code>:invalid</code>, so
-          style or report the error from the control or the form. The input keeps
+          element with <code>display: contents</code>. It moves the name onto that
+          element, so half-typed text is not submitted. The form treats the control
+          as the field.
+        </p>
+        <p>
+          A disabled <code>fieldset</code> or a form reset applies to the control at
+          once, including in a detached form or a shadow root. A canceled reset
+          changes nothing. Setting <code>disabled</code>, <code>readonly</code> or
+          <code>form</code> on the input applies at the next microtask.
+        </p>
+        <p>
+          A <code>required</code> input makes the field valid once it has a chip.
+          Until then the field reports <code>i18n.required</code>, unless the input is
+          read-only. The control holds that validity apart from any error the page
+          sets on the input, and a blocked submit focuses the input. The input itself
+          stays valid and does not match <code>:invalid</code>, so style or report the
+          error from the control or the form. The input keeps
           <code>aria-required="true"</code>.
+        </p>
+        <p>
           <code>destroy()</code> unwraps the input and gives its name and
           <code>required</code> back. Without form-associated custom elements, as in
-          jsdom, the input is left as it is and submits its own text. Pasting text that
-          lists values, split by commas,
-          tabs or new lines, adds a chip for each, up to <code>limit</code>; an
-          <code>autocompleteOnly</code> field pastes as text. With
-          <code>allowCreate: true</code> in <code>autocompleteOptions</code>,
-          choosing the "Add" row adds the typed text as a chip, in an
-          <code>autocompleteOnly</code> field too, and then calls the page's own
-          <code>onCreate</code>.
+          jsdom, the plugin leaves the input as it is and the input submits its own
+          text.
+        </p>
+        <p>
+          Pasting text that lists values, split by commas, tabs or new lines, adds a
+          chip for each, up to <code>limit</code>. An <code>autocompleteOnly</code>
+          field pastes as text. With <code>allowCreate: true</code> in
+          <code>autocompleteOptions</code>, choosing the "Add" row adds the typed text
+          as a chip, in an <code>autocompleteOnly</code> field too. The plugin then
+          calls the page's own <code>onCreate</code>.
         </p>
 <Code code={`
 <form>
@@ -260,9 +270,9 @@ const S = defineSections([
   <Section {...S.initialization}>
         <p>
           The IIFE bundle exposes <code>Expressive.Chips</code>.
-          Call <code>init</code> with <code>allowUserInput: true</code> (and any other
-          options) for an editable field. Re-init after adding a container dynamically.
-          Autocomplete keeps the query while filtering and clears it after an item is selected.
+          Call <code>init</code> with <code>allowUserInput: true</code>, plus any other
+          options, for an editable field. Re-init after you add a container dynamically.
+          Autocomplete keeps the query while filtering and clears it after the user selects an item.
         </p>
 <Code code={`
 document.addEventListener('DOMContentLoaded', function() {
@@ -281,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 `} />
-        <p>Chip data object. <code>id</code> is required; a chip without an id is not rendered.</p>
+        <p>A chip data object looks like this. <code>id</code> is required, and the plugin does not render a chip without one.</p>
 <Code code={`
 const chip = {
   id: '4711',
@@ -394,7 +404,7 @@ instance.selectChip(2);
 `} />
 
         <h5 class="light">.getData();</h5>
-        <p>The current chips as an array of chip data objects.</p>
+        <p>Return the current chips as an array of chip data objects.</p>
 <Code code={`
 instance.getData();
 `} />

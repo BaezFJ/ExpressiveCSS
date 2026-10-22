@@ -55,16 +55,16 @@ card.querySelectorAll('[data-period]').forEach((button) => {
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>&lt;figure class="column-chart"&gt;</code> draws a
-          <code>&lt;table&gt;</code> of values as columns that grow from zero.
-          The first column of the table labels each group; each further column
-          is a series named by its header cell.
+          Put a <code>&lt;table&gt;</code> of values in a
+          <code>&lt;figure class="column-chart"&gt;</code> to draw them as
+          columns that grow from zero. The first column of the table labels
+          each group. Each further column is a series named by its header cell.
         </p>
         <p>
           It takes the same markup as a <a href="line-chart.html">line chart</a>.
           JavaScript draws the chart from the table and hides the table
           visually, so a screen reader still reads the data as a table. Without
-          JavaScript the table shows. A band and a tooltip follow the pointer,
+          JavaScript, the table shows. A band and a tooltip follow the pointer,
           and the arrow keys move them when the chart has focus.
         </p>
         <figure class="column-chart" data-markdown-ignore>
@@ -101,8 +101,8 @@ card.querySelectorAll('[data-period]').forEach((button) => {
           a legend appears. Series take <code>primary</code>,
           <code>tertiary</code>, <code>secondary</code> and
           <code>on-surface-variant</code> in turn. Keep a grouped chart to two
-          or three series; past that, the columns get too thin to compare.
-          With <code>toggle</code> on the figure, each legend item is a button that shows or hides its series, as on the <a href="line-chart.html#toggle">line chart</a>.
+          or three series. Past that, the columns get too thin to compare.
+          Add <code>toggle</code> to the figure to make each legend item a button that shows or hides its series, as on the <a href="line-chart.html#toggle">line chart</a>.
         </p>
         <figure class="column-chart" data-markdown-ignore>
           <figcaption>Subscriptions by plan, first half</figcaption>
@@ -129,10 +129,10 @@ card.querySelectorAll('[data-period]').forEach((button) => {
   <Section {...S.range}>
         <p>
           Give a series header the class <code>range</code> and each of its
-          cells two numbers, such as <code>120–480</code>: the column floats
+          cells two numbers, such as <code>120–480</code>. The column floats
           from the lower to the higher, rounded at both ends. Write the ends
           with an en dash, a spaced hyphen or "to", or put them in
-          <code>data-value="120 480"</code>; any other cell is a gap. The
+          <code>data-value="120 480"</code>. Any other cell is a gap. The
           tooltip shows the cell as written, and other series draw from zero
           beside the range as usual. A bar chart reads ranges the same way.
         </p>
@@ -160,11 +160,12 @@ card.querySelectorAll('[data-period]').forEach((button) => {
   </Section>
   <Section {...S.stacked}>
         <p>
-          <code>stacked</code> draws one column per group, with each series on
-          top of the ones before it, so the column's height is the total. Only
-          the top segment rounds its end. The tooltip still shows each cell.
-          Stack values that add up and keep them positive; an empty cell leaves
-          the total unknown, so the segments above it are left out.
+          Add <code>stacked</code> to draw one column per group, with each
+          series on top of the ones before it, so the column's height is the
+          total. Only the top segment rounds its end. The tooltip still shows
+          each cell. Stack values that add up and keep them positive. An empty
+          cell leaves the total unknown, so the chart leaves out the segments
+          above it.
         </p>
         <figure class="column-chart stacked" data-markdown-ignore>
           <figcaption>Subscriptions by plan, stacked</figcaption>
@@ -182,9 +183,9 @@ card.querySelectorAll('[data-period]').forEach((button) => {
   </Section>
   <Section {...S.styles}>
         <p>
-          <code>fade</code> fades each column toward its base.
-          <code>track</code> draws a full-height track behind each group and
-          rounds both ends of its columns; narrow the columns with
+          Add <code>fade</code> to fade each column toward its base. Add
+          <code>track</code> to draw a full-height track behind each group and
+          round both ends of its columns. Narrow the columns with
           <code>--md-comp-column-chart-column-width</code> to make them bars on
           a rail.
         </p>
@@ -225,8 +226,8 @@ card.querySelectorAll('[data-period]').forEach((button) => {
   </Section>
   <Section {...S.sparkline}>
         <p>
-          <code>sparkline</code> is a 48px chart with no grid, labels, legend or
-          tooltip, for a count beside a figure. Hide its caption with
+          <code>sparkline</code> makes a 48px chart with no grid, labels, legend
+          or tooltip. Use it for a count beside a figure. Hide its caption with
           <code>visually-hidden</code> when the tile already names it.
         </p>
         <dl class="stats" data-markdown-ignore>
@@ -261,14 +262,22 @@ card.querySelectorAll('[data-period]').forEach((button) => {
   </Section>
   <Section {...S.cards}>
         <p>
-          A chart goes in a card with the figures it explains. Put the period
-          switch beside the stat; on a change, update the stat, swap the table
-          rows and call <code>update()</code> to redraw, or put
-          <code>data-watch</code> on the figure and skip the call. The card adds
-          no chart styles; size a chart with its tokens. A card pads only its
-          headings and paragraphs, so wrap the stat and chart in
-          <code>&lt;div class="p-4"&gt;</code> to keep them off the border. A
-          connected button group fills its container, so give it a
+          Put a chart in a card with the figures it explains, and put the
+          period switch beside the stat. When the period changes:
+        </p>
+        <ol>
+          <li>Update the stat.</li>
+          <li>Swap the table rows.</li>
+          <li>
+            Call <code>update()</code> to redraw. If the figure has
+            <code>data-watch</code>, skip the call.
+          </li>
+        </ol>
+        <p>
+          The card adds no chart styles, so size a chart with its tokens. A
+          card pads only its headings and paragraphs, so wrap the stat and
+          chart in <code>&lt;div class="p-4"&gt;</code> to keep them off the
+          border. A connected button group fills its container, so give it a
           <code>&lt;div&gt;</code> of its own to keep it beside the stat.
         </p>
         <article class="outlined" id="profit-card" data-markdown-ignore>
@@ -395,28 +404,28 @@ ${cardScript.replace(/^/gm, "  ")}
   </Section>
   <Section {...S.scale}>
         <p>
-          Cells read as in a line chart: a cell's number is its text without
-          currency signs, percent signs or grouping commas, and text that is
-          not a single number is a gap. Put the number in
-          <code>data-value</code> for <code>4.4k</code> or
-          <code>4.400 €</code>. In a grouped chart a gap leaves an empty slot,
-          so the other series stay in place.
+          Cells read the same way as in a line chart. A cell's number is its
+          text without currency signs, percent signs or grouping commas. Text
+          that is not a single number is a gap. For values like
+          <code>4.4k</code> or <code>4.400 €</code>, put the number in
+          <code>data-value</code>. In a grouped chart, a gap leaves an empty
+          slot, so the other series stay in place.
         </p>
         <p>
           The y axis always includes zero, with 10% of the span to spare above
           and, when there are negative values, below. Negative columns hang
           below zero and round their lower end. Set <code>data-min</code> or
-          <code>data-max</code> on the figure to fix either end; when zero is
+          <code>data-max</code> on the figure to fix either end. When zero is
           off the scale, columns start at the bottom of the plot.
         </p>
         <p>
-          <code>axis</code> labels the y axis at round values, with a grid line at each, and
-          widens an end the chart chose to the next round value, so the labels
-          start and end on the plot's edges. The labels repeat any currency or
+          Add <code>axis</code> to label the y axis at round values, with a grid
+          line at each. It widens an end the chart chose to the next round
+          value, so the labels start and end on the plot's edges. The labels repeat any currency or
           percent sign the cells are written with and shorten large numbers,
           such as <code>$1.5K</code>. An end set with <code>data-min</code> or
           <code>data-max</code> stays where it is. The labels are hidden from
-          assistive technology; the table still carries the values.
+          assistive technology, and the table still carries the values.
         </p>
         <figure class="column-chart axis" data-markdown-ignore>
           <figcaption>Net cash flow, first half</figcaption>
@@ -448,12 +457,12 @@ ${cardScript.replace(/^/gm, "  ")}
         </p>
         <p>
           The plot is one Tab stop named by the caption. Left and right arrows
-          move between groups, Home and End jump to the ends and Escape hides
+          move between groups, Home and End jump to the ends, and Escape hides
           the tooltip. In a right-to-left page the groups run from right to
           left, and the arrows still move the band the way they point. The
           tooltip is a polite live region, so a screen reader hears each
           group's values as it moves. A sparkline is not focusable. In forced
-          colors the columns keep their series colors so the legend still
+          colors, the columns keep their series colors so the legend still
           matches them.
         </p>
   </Section>
@@ -464,8 +473,8 @@ ${cardScript.replace(/^/gm, "  ")}
           table, call <code>update()</code> to redraw it in place, or put
           <code>data-watch</code> on the figure and it redraws itself. The columns
           move from their old values to the new ones, and a new column grows
-          from zero; with reduced motion they appear at once. It takes the line
-          chart's options and methods.
+          from zero. With reduced motion, they appear at once. The column chart
+          takes the line chart's options and methods.
         </p>
 <Code code={`
 const chart = Expressive.ColumnChart.init(document.querySelector('.column-chart'), {

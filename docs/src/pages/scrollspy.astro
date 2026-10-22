@@ -21,16 +21,20 @@ const S = defineSections([
   <Section {...S.introduction}>
         <p class="flow-text">
           Scrollspy watches a set of sections and tracks which one is in view.
-          The table of contents on the right of every documentation page is the live demo.
           The matching link gets <code>active</code> and <code>aria-current="true"</code>.
+          The table of contents on the right of every documentation page is the live demo.
           Clicking a link is a normal hash jump.
           <code>scroll-margin</code> sets the offset and
           <code>scroll-behavior: smooth</code> sets the motion.
         </p>
+        <ol>
+          <li>Put <code>scrollspy</code> and an <code>id</code> on each section.</li>
+          <li>Wrap the TOC in a labelled <code>&lt;nav&gt;</code>, because it is a set of destinations within the page.</li>
+          <li>Put <code>table-of-contents</code> on its list and point each link at
+          <code>#that-id</code>.</li>
+        </ol>
         <p>
-          Put <code>scrollspy</code> and an <code>id</code> on each section.
-          The TOC is a set of destinations within the page, so it lives in a labelled <code>&lt;nav&gt;</code>; put <code>table-of-contents</code> on its list and point each link at
-          <code>#that-id</code>. <code>AutoInit()</code> starts every
+          <code>AutoInit()</code> starts every
           <code>.scrollspy</code> except those marked <code>no-autoinit</code>.
           Scrollspy uses <code>IntersectionObserver</code> and has no
           scroll listener.

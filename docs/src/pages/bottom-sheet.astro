@@ -16,10 +16,9 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>dialog.bottom-sheet</code> is the
-          surface. On compact and medium windows, use it for additional or
-          secondary content, not for the app's main view. People dismiss it to
-          get back to the page.
+          Use a <code>dialog.bottom-sheet</code> for additional or secondary
+          content on compact and medium windows, not for the app's main view.
+          The dialog is the surface. People dismiss it to get back to the page.
         </p>
         <p>
           Tokens follow the
@@ -95,23 +94,26 @@ const S = defineSections([
 </dialog>
 `} />
         <p>
-          The modal variant has no extra class. Calling <code>showModal()</code>
-          or <code>show()</code> picks the variant. A <code>::before</code>
-          pseudo-element draws the handle. Put a
-          <a href={route('drag_handle')}>drag handle</a> first if you
-          want a real element in that slot.
+          Pick the variant by calling <code>showModal()</code> or
+          <code>show()</code>. The modal variant has no extra class. A
+          <code>::before</code> pseudo-element draws the handle. If you want a
+          real element in that slot, put a
+          <a href={route('drag_handle')}>drag handle</a> first.
         </p>
   </Section>
   <Section {...S.handle}>
         <p>
           Drag the top 48dp (or an explicit
           <a href={route('drag_handle')}>drag handle</a>) down to
-          dismiss. A recent flick counts even if the pointer stops moving at release.
-          For short drags, pausing for at least 100ms or reversing direction lets
-          the sheet snap back. The rest of the sheet scrolls if the body overflows.
-          On touch screens, give the sheet an explicit drag handle: it sets
-          <code>touch-action: none</code>, and the browser takes a touch drag on
-          the built-in band as a scroll.
+          dismiss the sheet. A recent flick counts even if the pointer stops
+          moving at release. On a short drag, pausing for at least 100ms or
+          reversing direction lets the sheet snap back. If the body overflows,
+          the rest of the sheet scrolls.
+        </p>
+        <p>
+          On touch screens, give the sheet an explicit drag handle. The handle
+          sets <code>touch-action: none</code>. Without it, the browser takes a
+          touch drag on the built-in band as a scroll.
         </p>
 <Code code={`
 <dialog class="bottom-sheet" aria-labelledby="title-title">
@@ -121,18 +123,18 @@ const S = defineSections([
 </dialog>
 `} />
         <p>
-          A <code>&lt;span&gt;</code> there is decoration and does nothing on
-          its own. Dragging is a pointer gesture, and <kbd>Esc</kbd> already
-          dismisses the sheet from the keyboard, so keyboard users do not need
-          the bar.
+          A <code>&lt;span&gt;</code> in that slot is decoration and does
+          nothing on its own. Keyboard users do not need the bar. Dragging is a
+          pointer gesture, and <kbd>Esc</kbd> already dismisses the sheet from
+          the keyboard.
         </p>
         <p>
-          Make it a <code>&lt;button&gt;</code> when you want a visible dismiss
-          control, and give it a name. Activating it by pointer or by
-          <kbd>Enter</kbd> closes the sheet, so dragging is not the only way to
-          use it. A drag that snaps back does not also dismiss the sheet. The
-          component tells the click that ends a drag apart from a tap, so the
-          sheet stays open.
+          For a visible dismiss control, make the handle a
+          <code>&lt;button&gt;</code> and give it a name. Activating it with a
+          pointer or with <kbd>Enter</kbd> closes the sheet, so dragging is not
+          the only way to use it. A drag that snaps back does not also dismiss
+          the sheet. The component tells the click that ends a drag apart from
+          a tap, so the sheet stays open.
         </p>
 <Code code={`
 <dialog class="bottom-sheet" aria-labelledby="title-title">
@@ -142,7 +144,13 @@ const S = defineSections([
 </dialog>
 `} />
         <p>
-          <code>expandable</code> gives the sheet two heights. It opens partly expanded, at <code>--md-comp-bottom-sheet-partial-height</code> (50% of the viewport), and <code>.expanded</code> grows it to the full height, 72dp short of the top. A drag up on the handle, or a flick up, expands it; a drag down from expanded collapses it, and a drag down from the partial height dismisses as usual. A handle <code>&lt;button&gt;</code> switches between the heights instead of closing, and the component keeps its <code>aria-expanded</code> current, so name it for the height, not for dismissal. Closing the sheet puts it back to partial. The height moves on the sheet's spring. Give an expandable sheet an explicit close control, since the handle no longer closes it.
+          Add <code>expandable</code> to give the sheet two heights. It opens partly expanded, at <code>--md-comp-bottom-sheet-partial-height</code> (50% of the viewport). <code>.expanded</code> grows it to the full height, 72dp short of the top. The height moves on the sheet's spring.
+        </p>
+        <p>
+          A drag up on the handle, or a flick up, expands the sheet. A drag down from expanded collapses it. A drag down from the partial height dismisses it as usual. Closing the sheet puts it back to partial.
+        </p>
+        <p>
+          A handle <code>&lt;button&gt;</code> switches between the heights instead of closing. The component keeps its <code>aria-expanded</code> current, so name the button for the height, not for dismissal. Because the handle no longer closes the sheet, give an expandable sheet an explicit close control.
         </p>
 <Code code={`
 <dialog class="bottom-sheet expandable" aria-labelledby="filters-title">
@@ -163,11 +171,11 @@ const S = defineSections([
           side inset. It always stops 72dp short of the top. On large
           screens a
           <a href={route('side_sheet')}>side sheet</a>
-          or a basic dialog is usually a better fit; the bottom sheet still
-          lays out if you open one.
+          or a basic dialog is usually a better fit. The bottom sheet still
+          lays out if you open one there.
         </p>
         <p>
-          The sheet slides in, and snaps back after a short drag, on the default spatial spring: <code>--md-comp-bottom-sheet-motion</code> and <code>--md-comp-bottom-sheet-motion-duration</code> read <code>--md-sys-motion-spring-default-spatial</code> and its <code>-duration</code> token, so <code>motion="expressive"</code> gives it a slight bounce. The sheet runs on 24px below the viewport, so the bounce never uncovers the page under it. With reduced motion requested it appears without moving.
+          The sheet slides in, and snaps back after a short drag, on the default spatial spring. <code>--md-comp-bottom-sheet-motion</code> and <code>--md-comp-bottom-sheet-motion-duration</code> read <code>--md-sys-motion-spring-default-spatial</code> and its <code>-duration</code> token, so <code>motion="expressive"</code> gives it a slight bounce. The sheet extends 24px below the viewport, so the bounce never uncovers the page under it. With reduced motion requested, it appears without moving.
         </p>
   </Section>
 </PageBody>

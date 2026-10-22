@@ -58,14 +58,15 @@ const ROLE_GROUPS: RoleGroup[] = [
           container scale.
         </p>
         <p>
-          The 2014 Material palette that shipped with earlier versions
+          The 2014 Material palette from earlier versions
           (<code>.red</code>, <code>.blue.lighten-2</code>, <code>colorFunc()</code>)
-          has been removed. It generated 532 utility classes, 18% of the stylesheet, that
-          expressed a design opinion this framework does not hold, and it did not
-          follow the page theme. Replace a palette class with the role it was standing
-          in for: <code>.red</code> becomes <code>.error</code>, <code>.blue</code> becomes
-          <code>.primary</code>, and <code>.green</code> becomes <code>.tertiary</code>. Pair
-          each fill with its <code>on-*</code> text class.
+          is gone. It generated 532 utility classes, 18% of the stylesheet.
+          Those classes expressed a design opinion this framework does not hold,
+          and they did not follow the page theme. Replace a palette class with the
+          role it stood in for: <code>.red</code> becomes <code>.error</code>,
+          <code>.blue</code> becomes <code>.primary</code>, and <code>.green</code>
+          becomes <code>.tertiary</code>. Pair each fill with its <code>on-*</code>
+          text class.
         </p>
         <p>
           Token values follow the page theme. The docs site sets
@@ -118,7 +119,7 @@ const ROLE_GROUPS: RoleGroup[] = [
           <code>on-*</code> text class on its paired fill.
         </p>
         <p>
-          In Sass, consume the token directly. Do not write
+          In Sass, use the token directly. Do not write
           <code>rgba(var(--md-sys-color-primary), 0.06)</code>. The tokens hold hex
           colors, so that form is invalid. Mix with transparency instead:
         </p>
@@ -135,7 +136,7 @@ const ROLE_GROUPS: RoleGroup[] = [
         <p>
           Mix <code>in oklab</code>, not <code>in srgb</code>. sRGB interpolation dips in
           lightness through the midtones, so the same percentage reads muddier on some
-          hues than others; OKLab is perceptually uniform, so a 16% state layer looks
+          hues than others. OKLab is perceptually uniform, so a 16% state layer looks
           like 16% everywhere.
         </p>
   </Section>
@@ -170,23 +171,26 @@ const ROLE_GROUPS: RoleGroup[] = [
           </div>
         </div>
         <p>
-          <code>scrim</code> is the opaque neutral that the dimming layer behind a modal
-          surface is mixed from. The dimming layer itself is
-          <code>--md-comp-scrim-color</code>, the role at 32%, defined once at the
-          root and used by dialogs, both sheets, and the modal navigation
-          rail. Override it at the root to change every
-          scrim, or set it on one surface to change only that surface's scrim, since
-          <code>::backdrop</code> inherits from the element it belongs to. The
-          mix resolves at the root, so overriding
+          To change a scrim, override <code>--md-comp-scrim-color</code>. It is
+          the dimming layer behind a modal surface. Its value is the
+          <code>scrim</code> role at 32%, defined once at the root, and dialogs,
+          both sheets, and the modal navigation rail use it. Override it at the
+          root to change every scrim. Set it on one surface to change only that
+          surface's scrim, because <code>::backdrop</code> inherits from the
+          element it belongs to.
+        </p>
+        <p>
+          The <code>scrim</code> role is the opaque neutral that the dimming layer
+          is mixed from. The mix resolves at the root, so overriding
           <code>--md-sys-color-scrim</code> on a subtree does not reach a scrim
-          below it; override <code>--md-comp-scrim-color</code> instead.
+          below it. Override <code>--md-comp-scrim-color</code> instead.
         </p>
   </Section>
   <Section {...S.sass}>
         <p>
-          Do not <code>@extend</code> these classes across files. The old
-          stylesheet lost control of cascade order that way. In a component partial, read the
-          token directly.
+          In a component partial, read the token directly. Do not
+          <code>@extend</code> these classes across files. The old stylesheet
+          lost control of cascade order that way.
         </p>
 <Code code={`
 .my-panel {

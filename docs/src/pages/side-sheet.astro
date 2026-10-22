@@ -16,11 +16,10 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>dialog.side-sheet</code> is the surface, docked to the
-          trailing edge by default; add <code>.start</code> for the leading
-          edge. Use it for optional content and actions so the main
-          view stays put. People can move to another region inside the
-          sheet, and a back icon is the control for that.
+          Use a <code>dialog.side-sheet</code> for optional content and
+          actions so the main view stays put. It docks to the trailing edge
+          by default. Add <code>.start</code> to dock it to the leading edge.
+          A back icon lets people move to another region inside the sheet.
         </p>
         <p>
           Tokens follow the
@@ -115,13 +114,14 @@ const S = defineSections([
 </dialog>
 `} />
         <p>
-          The modal variant has no extra class. Calling
-          <code>showModal()</code> or <code>show()</code> picks the variant.
-          Add <code>.start</code> to dock to the logical start edge. The
-          default docks to the logical end edge.
-          All mirror in RTL, including dragging and opening motion.
-          A recent flick toward the docked edge dismisses the sheet. For short
-          drags, pausing for at least 100ms or reversing direction lets it snap back.
+          The modal variant has no extra class. Call
+          <code>showModal()</code> or <code>show()</code> to pick the variant.
+          The sheet docks to the logical end edge by default. Add
+          <code>.start</code> to dock it to the logical start edge.
+          Everything mirrors in RTL, including dragging and opening motion.
+          A recent flick toward the docked edge dismisses the sheet. On a
+          short drag, pause for at least 100ms or reverse direction and the
+          sheet snaps back.
         </p>
   </Section>
   <Section {...S.header}>
@@ -175,7 +175,7 @@ const S = defineSections([
           <form method="dialog"><button value="save">حفظ التغييرات</button><button class="outlined" value="cancel">إلغاء</button></form>
         </dialog>
         <p>
-          The sheet slides in, and snaps back after a short drag, on the default spatial spring: <code>--md-comp-side-sheet-motion</code> and <code>--md-comp-side-sheet-motion-duration</code> read <code>--md-sys-motion-spring-default-spatial</code> and its <code>-duration</code> token, so <code>motion="expressive"</code> gives it a slight bounce. The sheet runs on 24px past its docked edge, so the bounce never uncovers the page there. With reduced motion requested it appears without moving.
+          The sheet slides in, and snaps back after a short drag, on the default spatial spring. <code>--md-comp-side-sheet-motion</code> and <code>--md-comp-side-sheet-motion-duration</code> read <code>--md-sys-motion-spring-default-spatial</code> and its <code>-duration</code> token, so <code>motion="expressive"</code> gives it a slight bounce. The sheet extends 24px past its docked edge, so the bounce never uncovers the page there. When the user requests reduced motion, the sheet appears without moving.
         </p>
   </Section>
 </PageBody>

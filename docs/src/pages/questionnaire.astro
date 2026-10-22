@@ -25,19 +25,19 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>&lt;form class="questionnaire"&gt;</code> asks one question
-          at a time. Each <code>&lt;fieldset&gt;</code> child is a question,
-          and a <code>&lt;footer&gt;</code> holds the buttons that move
-          between them.
+          Put each question in a <code>&lt;fieldset&gt;</code> inside a
+          <code>&lt;form class="questionnaire"&gt;</code>, and add a
+          <code>&lt;footer&gt;</code> with the buttons that move between them.
+          The form asks one question at a time.
         </p>
         <p>
-          The <code>&lt;legend&gt;</code> is the prompt and a
-          <code>&lt;p&gt;</code> under it describes the question. Answers are
+          Use the <code>&lt;legend&gt;</code> for the prompt and a
+          <code>&lt;p&gt;</code> under it to describe the question. Answers are
           ordinary <a href={route('radio_buttons')}>radio buttons</a>,
           <a href={route('checkboxes')}>checkboxes</a> or
-          <a href={route('text_inputs')}>text fields</a>; a
+          <a href={route('text_inputs')}>text fields</a>. A
           <code>&lt;small&gt;</code> inside a choice's label describes that
-          choice. The footer buttons are marked by their <code>value</code>:
+          choice. Mark the footer buttons by their <code>value</code>:
           <code>previous</code>, <code>skip</code> and <code>next</code>,
           plus a submit button. The component adds the progress row and
           shows only the question and buttons that apply.
@@ -126,16 +126,16 @@ const S = defineSections([
   <Section {...S.questions}>
         <p>
           The answers decide the kind of question. Radio buttons with one
-          <code>name</code> make a single choice and checkboxes make a
+          <code>name</code> make a single choice, and checkboxes make a
           multiple choice. A text field or textarea takes a free answer, and a
           question can mix choices with a text field for "Other".
         </p>
         <p>
-          A question is required when one of its controls has
-          <code>required</code>. A group of checkboxes cannot say "at least
-          one" in HTML, so put <code>data-required</code> on its fieldset
-          instead. Any other question is optional. The Skip button appears
-          for it, and skipping clears whatever was answered so the form sends
+          Add <code>required</code> to one of a question's controls to make
+          the question required. HTML has no way for a group of checkboxes to
+          say "at least one", so put <code>data-required</code> on its fieldset
+          instead. Any other question is optional, and the Skip button appears
+          for it. Skipping clears whatever was answered, so the form sends
           nothing for that question. Leave out the Skip button to make people
           press Next instead.
         </p>
@@ -145,26 +145,27 @@ const S = defineSections([
           Next checks the shown question with the browser's own validation, so
           <code>required</code>, <code>pattern</code>, <code>minlength</code>
           and the input types all work. When the answer is missing or wrong,
-          the fieldset gets <code>invalid</code>, its controls get
-          <code>aria-invalid="true"</code>, its
-          <code>.questionnaire-error</code> shows and focus moves to the
+          the fieldset gets <code>invalid</code> and its controls get
+          <code>aria-invalid="true"</code>. Its
+          <code>.questionnaire-error</code> shows, and focus moves to the
           control to fix. Answering clears the error.
         </p>
         <p>
           Write the error text in the question so it can be specific and in
           the page's language. A question without one shows the browser's
           validation message, or the <code>requiredMessage</code> option for a
-          <code>data-required</code> group. Submitting, with the button, Enter
-          or <code>requestSubmit()</code>, checks every question and opens the
-          first one that still needs an answer. Only enabled checkboxes count
-          toward <code>data-required</code>, since a disabled one is not sent.
+          <code>data-required</code> group. Submitting checks every question
+          and opens the first one that still needs an answer, whether it comes
+          from the button, Enter or <code>requestSubmit()</code>. Only enabled
+          checkboxes count toward <code>data-required</code>, since the browser
+          does not send a disabled one.
         </p>
   </Section>
   <Section {...S.conditional}>
         <p>
-          A disabled fieldset is skipped, and the progress count leaves it out.
-          Enable or disable questions from earlier answers to branch; the
-          browser does not send the controls of a disabled fieldset.
+          To branch, enable or disable questions based on earlier answers. The
+          component skips a disabled fieldset, and the progress count leaves it
+          out. The browser does not send the controls of a disabled fieldset.
         </p>
 <Code code={`
 <fieldset>
@@ -187,12 +188,12 @@ const S = defineSections([
   <Section {...S.submitting}>
         <p>
           The submit button shows on the last question. Pressing it sends the
-          form like any other: to its <code>action</code>, or to a
+          form like any other, to its <code>action</code> or to a
           <code>submit</code> listener that reads the answers with
           <code>FormData</code>. Use <code>getAll()</code> for checkboxes.
-          Without JavaScript every question shows at once, the navigation
+          Without JavaScript, every question shows at once, the navigation
           buttons stay hidden, and the submit button still sends the form.
-          A <code>data-required</code> group is not checked in that case.
+          In that case nothing checks a <code>data-required</code> group.
         </p>
 <Code code={`
 form.addEventListener('submit', (event) => {
@@ -204,22 +205,29 @@ form.addEventListener('submit', (event) => {
 `} />
   </Section>
   <Section {...S.extras}>
-        <p>
-          Three attributes on the form add more. <code>data-shortcuts</code>
-          lets a letter or a digit pick the answer at that place in the shown
-          question, A or 1 for the first, and ends each choice with its
-          letter, which screen readers skip. Keys typed into a text field
-          stay text. <code>data-summary</code> adds a review step after the
-          last question: it lists every question with its answer and an Edit
-          button back to it, and the submit button shows there instead.
-          <code>data-save="key"</code> keeps the answers and the shown
-          question in <code>localStorage</code> under that key, restores them
-          when the page comes back, and forgets them once the form is
-          submitted. A restored answer fires <code>change</code>, so
-          conditional questions open as they did, and file inputs are not
-          saved. Keep personal answers out of saved questionnaires on
-          shared devices.
-        </p>
+        <p>Add any of these three attributes to the form:</p>
+        <ul>
+          <li>
+            <code>data-shortcuts</code> lets a letter or a digit pick the
+            answer at that place in the shown question, A or 1 for the first.
+            It ends each choice with its letter, which screen readers skip.
+            Keys typed into a text field stay text.
+          </li>
+          <li>
+            <code>data-summary</code> adds a review step after the last
+            question. It lists every question with its answer and an Edit
+            button back to it. The submit button shows there instead.
+          </li>
+          <li>
+            <code>data-save="key"</code> keeps the answers and the shown
+            question in <code>localStorage</code> under that key. It restores
+            them when the page comes back and forgets them once the form is
+            submitted. A restored answer fires <code>change</code>, so
+            conditional questions open as they did. File inputs are not
+            saved. Keep personal answers out of saved questionnaires on
+            shared devices.
+          </li>
+        </ul>
         <form class="questionnaire" aria-label="Shortcut survey" data-shortcuts data-summary data-markdown-ignore>
           <fieldset>
             <legend>How did you hear about us?</legend>
@@ -259,18 +267,18 @@ form.addEventListener('submit', (event) => {
   </Section>
   <Section {...S.accessibility}>
         <p>
-          Each question is a native group named by its legend, and the
-          description and any error are attached with
+          Each question is a native group named by its legend. The component
+          attaches the description and any error with
           <code>aria-describedby</code>. Hidden questions use
           <code>hidden</code>, so they are out of the tab order and the
           accessibility tree. After Next, Back or Skip, focus moves to the
           selected answer or the first control of the new question.
         </p>
         <p>
-          Enter in a field moves to the next question; on the last one it
-          submits. The progress row is a <code>&lt;progress&gt;</code> named
-          by its text, "Question 2 of 3". Name the form with
-          <code>aria-label</code> or a heading.
+          Name the form with <code>aria-label</code> or a heading. Enter in a
+          field moves to the next question, and on the last one it submits.
+          The progress row is a <code>&lt;progress&gt;</code> named by its
+          text, "Question 2 of 3".
         </p>
   </Section>
   <Section {...S.options}>

@@ -29,9 +29,9 @@ const S = defineSections([
       The root is a <code>&lt;div class="button-group"&gt;</code>. Common
       <a href={route("buttons")}>buttons</a> and
       <a href={route("icon_buttons")}>icon buttons</a> can be direct children.
-      <code>Expressive.AutoInit()</code> keeps standard-group width stable while
-      the pressed item grows; <code>data-selection</code> also enables
-      managed toggle state.
+      Call <code>Expressive.AutoInit()</code> to keep a standard group's width
+      stable while the pressed item grows. Add <code>data-selection</code> to
+      have it manage toggle state too.
     </p>
     <div>
       <div class="button-group" data-selection="multiple" role="group" aria-label="Text formatting">
@@ -81,7 +81,7 @@ const S = defineSections([
       <code>small</code>, and 8dp from <code>medium</code> through
       <code>xlarge</code>. Pressing an item widens it by 15% of its measured
       width and morphs its corners toward the square shape for that size. The
-      immediate neighbors provide the width, so the group's outer width stays
+      immediate neighbors give up that width, so the group's outer width stays
       fixed.
     </p>
     <div>
@@ -114,11 +114,11 @@ const S = defineSections([
 
   <Section {...S.connected}>
     <p>
-      Add <code>connected</code> to a selection group; do not use the connected
+      Add <code>connected</code> to a selection group. Do not use the connected
       treatment for one-shot actions. The group fills its container with equal
-      items separated by 2dp. The outer ends remain round while the joins are
-      squared off. The live M3 measurement keeps the <code>xsmall</code> join
-      at 4dp; pressing <code>small</code> and <code>medium</code> changes their
+      items separated by 2dp. The outer ends stay round and the joins are
+      square. The live M3 measurement keeps the <code>xsmall</code> join at
+      4dp. Pressing <code>small</code> and <code>medium</code> changes their
       inner corners from 8dp to 4dp. The larger pairs are 16dp to 12dp at
       <code>large</code> and 20dp to 16dp at <code>xlarge</code>.
     </p>
@@ -163,14 +163,15 @@ const S = defineSections([
       <code>data-selection="single"</code> when at most one item may be on, or
       <code>data-selection="multiple"</code> for independent toggles. Add
       <code>data-selection-required</code> when at least one must remain on.
-      Give every item its initial <code>aria-pressed</code> value;
-      <code>ButtonGroup</code> maintains it after <code>AutoInit()</code>.
+      Give every item its initial <code>aria-pressed</code> value. After
+      <code>AutoInit()</code>, <code>ButtonGroup</code> keeps it current.
     </p>
     <p>
-      Connected items stay equal in width. If unwrapped translated labels need
-      more room than the containing block, the group expands; place it in an
-      <code>overflow-x: auto; padding: 5px</code> container to keep every label
-      and keyboard focus ring reachable on narrow screens.
+      Connected items stay equal in width. If translated labels that do not
+      wrap need more room than the containing block, the group expands. To
+      keep every label and keyboard focus ring reachable on narrow screens,
+      place the group in an <code>overflow-x: auto; padding: 5px</code>
+      container.
     </p>
     <div>
       <div class="button-group connected"
@@ -198,8 +199,8 @@ const S = defineSections([
 `} />
     <p>
       Selection changes color, shape, and icon fill, so color is not the only
-      cue. Native buttons provide Enter and Space activation; all items remain
-      in the Tab order. Keep visible labels when space allows. Give an unfamiliar
+      cue. Native buttons handle Enter and Space, and all items stay in the
+      Tab order. Keep visible labels when space allows. Give an unfamiliar
       icon-only item a tooltip as well as an <code>aria-label</code>.
     </p>
   </Section>
@@ -256,7 +257,7 @@ const S = defineSections([
     <p>
       Give every icon-only item an accessible name because its decorative icon
       is <code>aria-hidden</code>. Avoid a standard icon button when its meaning
-      is not familiar; use a filled, tonal, or outlined container and a tooltip.
+      is not familiar. Use a filled, tonal, or outlined container and a tooltip.
       Reduced-motion preferences remove the width and shape transitions.
     </p>
   </Section>
@@ -264,7 +265,7 @@ const S = defineSections([
   <Section {...S.tokens}>
     <p>
       Set these properties on the group. The defaults describe a small standard
-      group; size and variant classes replace the values that differ.
+      group. Size and variant classes replace the values that differ.
     </p>
     <TokenTable>
       <tr><td><code>--md-comp-button-group-between-space</code></td><td><code>12px</code></td></tr>
@@ -280,7 +281,7 @@ const S = defineSections([
     <p>
       Child geometry and colors still come from the button or icon-button token
       family. Toggle groups map the selected and unselected Material button
-      colors onto <code>aria-pressed</code> and retain hover, focus, pressed,
+      colors onto <code>aria-pressed</code> and keep hover, focus, pressed,
       disabled, and focus-ring feedback.
     </p>
   </Section>

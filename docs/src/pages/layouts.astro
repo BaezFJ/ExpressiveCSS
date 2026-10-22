@@ -55,9 +55,13 @@ const S = defineSections([
     </div>
   </Section>
   <Section {...S.setup}>
-    <p>Download a template as <code>index.html</code>. Put the framework's complete
-      <code>dist/</code> directory beside it, including fonts, then open the HTML file.
-      From a built repository checkout:</p>
+    <p>To run a template:</p>
+    <ol>
+      <li>Download it as <code>index.html</code>.</li>
+      <li>Put the framework's complete <code>dist/</code> directory beside it, including fonts.</li>
+      <li>Open the HTML file.</li>
+    </ol>
+    <p>From a built repository checkout:</p>
     <Code code={`mkdir my-site
 cp docs/public/layout-rail.html my-site/index.html
 cp -R dist my-site/dist`} />

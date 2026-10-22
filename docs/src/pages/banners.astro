@@ -15,27 +15,27 @@ const S = defineSections([
 <DocsLayout page="banners">
   <PageBody sections={S}>
     <Section {...S.migration}>
-      <p>The banner component has been removed. This page remains available for existing links.</p>
+      <p>The framework no longer ships a banner component. This page stays up for existing links.</p>
       <p>
         Remove <code>.banner</code>, its <code>rich</code>, <code>vibrant</code> and
         <code>square</code> modifiers, and <code>--md-comp-banners-*</code> overrides
-        from former banner markup. Those modifiers remain valid on other components
-        that document them. Custom Sass builds must also remove the <code>banners</code> partial.
+        from former banner markup. The modifiers still work on other components
+        that document them. In a custom Sass build, also remove the <code>banners</code> partial.
       </p>
       <p>
         Banners were a framework pattern related to
         <a href="https://m2.material.io/components/banners">legacy Material 2 banners</a>.
-        The reviewed current Material 3 inventory has no dedicated banner entry;
-        this is not evidence that Google explicitly deprecated them.
+        The current Material 3 inventory we reviewed has no banner entry.
+        That absence does not show that Google deprecated them.
       </p>
     </Section>
     <Section {...S.when}>
       <ul>
-        <li>Persistent, nonblocking issues: an <a href={route("alert")}>alert</a> next to the affected content.</li>
-        <li>Temporary feedback after an action: <a href={route("snackbar")}>snackbar</a>.</li>
-        <li>Decisions that must block progress: <a href={route("dialogs")}>dialog</a>.</li>
+        <li>For a persistent issue that doesn't block the user, put an <a href={route("alert")}>alert</a> next to the affected content.</li>
+        <li>For temporary feedback after an action, use a <a href={route("snackbar")}>snackbar</a>.</li>
+        <li>For a decision that must block progress, use a <a href={route("dialogs")}>dialog</a>.</li>
       </ul>
-      <p>An offline message can remain in normal document flow while editing continues:</p>
+      <p>For example, an offline alert can sit in normal document flow while the user keeps editing:</p>
       <Code code={`
 <div class="alert">
   <span class="material-symbols" aria-hidden="true">cloud_off</span>
@@ -49,16 +49,16 @@ const S = defineSections([
     </Section>
     <Section {...S.semantics}>
       <p>
-        Static messages need no live region. For changes during use, create an empty
-        <code>role="status"</code> text node before updating its text. Keep action
-        buttons outside the live region. Do not move focus just to announce a status.
+        A static message needs no live region. To announce a change during use, create an empty
+        <code>role="status"</code> text node first, then update its text. Keep action
+        buttons outside the live region. Don't move focus only to announce a status.
       </p>
       <p>
         Use named buttons for commands, not a navigation landmark. The
-        <code>role="banner"</code> landmark identifies the page header, not a message.
-        If your application allows dismissal, restore logical focus when removing
-        the focused control. Let text and actions wrap instead of using fixed
-        heights, and check that narrow screens and enlarged text do not clip
+        <code>role="banner"</code> landmark marks the page header, so don't put it on a message.
+        If users can dismiss the message, move focus somewhere logical when you remove
+        the focused control. Let text and actions wrap instead of setting fixed
+        heights. Check that narrow screens and enlarged text don't clip
         controls.
       </p>
     </Section>

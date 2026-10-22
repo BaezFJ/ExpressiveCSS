@@ -68,7 +68,7 @@ const controls = `
         <p class="flow-text">
           A <code>.map</code> is an interactive map built on
           <a href="https://maplibre.org/">MapLibre</a>, which the page
-          supplies. Markers, popups and controls are HTML; routes, arcs and
+          supplies. Markers, popups and controls are HTML. Routes, arcs and
           clusters are data added from script.
         </p>
         <div id="demo-map" class="map mb-3" role="region" aria-label="Chicago stores">
@@ -112,12 +112,16 @@ const controls = `
 `} />
   </Section>
   <Section {...S.setup}>
+        <p>ExpressiveCSS does not bundle MapLibre. To set it up:</p>
+        <ol>
+          <li>Install MapLibre.</li>
+          <li>Load its stylesheet before ExpressiveCSS.</li>
+          <li>Pass the module to <code>MapView.init()</code>.</li>
+        </ol>
         <p>
-          ExpressiveCSS does not bundle MapLibre. Install it, load its
-          stylesheet before ExpressiveCSS, and pass the module to
-          <code>MapView.init()</code>. <code>AutoInit()</code> does not start
-          the map. The class is <code>MapView</code> so importing it does not
-          hide JavaScript's <code>Map</code>.
+          <code>AutoInit()</code> does not start the map. The class is
+          <code>MapView</code> so importing it does not hide JavaScript's
+          <code>Map</code>.
         </p>
 <Code code={`npm install maplibre-gl`} />
 <Code code={`
@@ -142,12 +146,12 @@ const map = MapView.init(document.querySelector('.map'), {
         <p>
           By default the map uses <a href="https://openfreemap.org/">OpenFreeMap</a>'s
           Positron style in the light theme and its Dark style in the dark
-          theme, which need no API key. The map changes style when the
+          theme. Neither needs an API key. The map changes style when the
           <code>theme</code> attribute or the system color scheme changes.
-          Pass <code>style</code> as a style URL or object to keep one style,
-          or as <code>{`{ light, dark }`}</code> to choose both. Any
-          MapLibre style works, such as MapTiler, Stadia Maps or Protomaps;
-          follow your provider's terms and keep its attribution visible.
+          To keep one style, pass <code>style</code> as a style URL or object.
+          To choose both, pass <code>{`{ light, dark }`}</code>. Any
+          MapLibre style works, such as MapTiler, Stadia Maps or Protomaps.
+          Follow your provider's terms and keep its attribution visible.
         </p>
 <Code code={`
 MapView.init(el, {
@@ -161,32 +165,35 @@ MapView.init(el, {
   </Section>
   <Section {...S.markers}>
         <p>
-          A <code>.map-marker</code> sits at its
-          <code>data-lng-lat</code>, written as longitude then latitude. A value
-          that is not two numbers with a latitude between -90 and 90 is skipped
-          with a console warning. One with no content of its own is a primary dot; put an
+          Set <code>data-lng-lat</code> on a <code>.map-marker</code> to place
+          it, written as longitude then latitude. The
+          script skips a value that is not two numbers with a latitude between
+          -90 and 90, and logs a console warning. A marker with no content of
+          its own is a primary dot. Put an
           <a href={route('avatar')}>avatar</a>, icon or image inside to
           replace the dot. A <code>.map-marker-label</code> shows below it, or
-          above with <code>.top</code>, and a child
+          above with <code>.top</code>. A child
           <a href={route('tooltips')}><code>.tooltip</code></a> shows on hover
           and focus.
         </p>
         <p>
           Make a marker a <code>&lt;button&gt;</code> with
-          <code>aria-controls</code> naming a <code>.map-popup</code> and it
-          opens that popup, setting <code>aria-expanded</code>. A click on the
+          <code>aria-controls</code> naming a <code>.map-popup</code>. The
+          marker then opens that popup and sets <code>aria-expanded</code>. A
+          click on the
           map or <kbd>Escape</kbd> closes it, and focus returns to the marker.
           A <code>.map-popup</code> with its own <code>data-lng-lat</code> and
           no marker opens when the map starts.
         </p>
         <p>
-          <code>data-draggable</code> lets the reader drag a marker. A drag
-          is not the only way: a tap picks the marker up and sets
-          <code>aria-pressed="true"</code>, the next tap on the map drops it
-          there, and <kbd>Escape</kbd> or a second tap on it puts it back.
-          The arrow keys nudge a focused one. Each move leaves the new
+          Add <code>data-draggable</code> to let the reader drag a marker, and
+          make the marker a named <code>&lt;button&gt;</code>. A drag is not
+          the only way to move it. A tap picks the marker up and sets
+          <code>aria-pressed="true"</code>. The next tap on the map drops it
+          there. <kbd>Escape</kbd> or a second tap on the marker puts it back.
+          The arrow keys nudge a focused marker. Each move leaves the new
           position in its <code>data-lng-lat</code> and fires
-          <code>change</code>. Make it a named <code>&lt;button&gt;</code>.
+          <code>change</code>.
         </p>
 <Code code={`
 <button type="button" class="map-marker" data-lng-lat="-87.62,41.88" data-draggable aria-label="Drop-off point">
@@ -224,11 +231,11 @@ instance.addArcs('flights', [
         <p>
           <code>addClusters(id, data, options)</code> draws GeoJSON points, or
           the URL of a GeoJSON file, and groups those close together. A
-          cluster shows its count when the style has fonts, and a click
-          zooms in until it splits. Its layers are
+          cluster shows its count when the style has fonts. A click on a
+          cluster zooms in until it splits. Its layers are
           <code>{`\${id}-clusters`}</code>, <code>{`\${id}-count`}</code> and
-          <code>{`\${id}-points`}</code>, so a click on a point can be handled
-          with <code>{`instance.map.on('click', \`\${id}-points\`, …)`}</code>.
+          <code>{`\${id}-points`}</code>. To handle a click on a point, use
+          <code>{`instance.map.on('click', \`\${id}-points\`, …)`}</code>.
         </p>
 <Code code={`
 instance.addClusters('stores', 'https://example.com/stores.geojson', { radius: 50, maxZoom: 14 });
@@ -238,22 +245,22 @@ instance.map.on('click', 'stores-points', (event) => {
 `} />
         <p>
           Lines and clusters take their colors from the theme tokens where the
-          map is, and the map redraws them in the new theme's colors when the
-          style changes. <code>removeOverlay(id)</code> removes one.
+          map is. When the style changes, the map redraws them in the new
+          theme's colors. <code>removeOverlay(id)</code> removes one.
         </p>
   </Section>
   <Section {...S.controls}>
         <p>
-          A <code>.map-controls</code> stacks
-          <a href={route('icon_buttons')}>icon buttons</a> in the top right
-          corner, or <code>.top-left</code>, <code>.bottom-left</code> or
-          <code>.bottom-right</code>. A <code>.map-control-group</code> joins
-          buttons on one surface. Each button's <code>data-action</code> is
-          what it does:
+          Put <a href={route('icon_buttons')}>icon buttons</a> in a
+          <code>.map-controls</code> to stack them in the top right corner.
+          Add <code>.top-left</code>, <code>.bottom-left</code> or
+          <code>.bottom-right</code> for another corner. A
+          <code>.map-control-group</code> joins buttons on one surface. Each
+          button's <code>data-action</code> sets what it does:
         </p>
         <ul>
-          <li><code>zoom-in</code> and <code>zoom-out</code>, disabled at the zoom limits.</li>
-          <li><code>compass</code> turns the map back to north; its icon points north as the map rotates.</li>
+          <li><code>zoom-in</code> and <code>zoom-out</code> zoom the map. They are disabled at the zoom limits.</li>
+          <li><code>compass</code> turns the map back to north. Its icon points north as the map rotates.</li>
           <li><code>locate</code> centers the map on the reader's location and marks it. It is disabled if the reader refuses.</li>
           <li><code>fullscreen</code> shows the map full screen and sets <code>aria-pressed</code>. It is hidden where full screen is unavailable.</li>
           <li><code>pan-up</code>, <code>pan-down</code>, <code>pan-left</code> and <code>pan-right</code> move the view a third of the map's size, so it pans without a drag.</li>
@@ -262,13 +269,13 @@ instance.map.on('click', 'stores-points', (event) => {
   <Section {...S.accessibility}>
         <p>
           Name the map with <code>aria-label</code> and
-          <code>role="region"</code>. MapLibre makes the canvas focusable: the
-          arrow keys pan, <kbd>+</kbd> and <kbd>-</kbd> zoom, and
+          <code>role="region"</code>. MapLibre makes the canvas focusable. On
+          it, the arrow keys pan, <kbd>+</kbd> and <kbd>-</kbd> zoom, and
           <kbd>Shift</kbd> with the arrows rotates. A marker that does
-          something should be a named <code>&lt;button&gt;</code>; a
-          decorative one can be a <code>&lt;span&gt;</code>. A map is hard to
-          use without sight, so put what matters, such as store addresses,
-          in text on the page as well.
+          something should be a named <code>&lt;button&gt;</code>. A
+          decorative one can be a <code>&lt;span&gt;</code>. Put what matters,
+          such as store addresses, in text on the page as well, because a map
+          is hard to use without sight.
         </p>
   </Section>
   <Section {...S.options}>

@@ -22,10 +22,10 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          The type scale is the HTML. <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code>
-          are display and headline roles, <code>&lt;p&gt;</code> is body-large,
-          <code>&lt;small&gt;</code> is body-small. You do not need a class
-          unless the element cannot carry the role, such as a
+          The HTML elements carry the type scale. <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code>
+          take display and headline roles, <code>&lt;p&gt;</code> takes body-large and
+          <code>&lt;small&gt;</code> takes body-small. Add a class only when the
+          element cannot carry the role, such as a
           <code>&lt;span class="label-large"&gt;</code> or a
           <code>&lt;p class="display-large"&gt;</code> used as a hero numeral.
         </p>
@@ -41,10 +41,15 @@ const S = defineSections([
         <p>
           M3's <code>--md-ref-typeface-brand</code> and
           <code>--md-ref-typeface-plain</code> tokens both default to Roboto.
-          Large display, headline, and title-large roles use brand; smaller
-          title, body, and label roles use plain. Noto Sans is the fallback
-          for characters Roboto cannot cover. Roboto ships Latin, Latin Extended, Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese, and Noto Sans adds Devanagari, each at 400, 500 and 700. Every subset is its own face with a <code>unicode-range</code>, so the browser downloads only the scripts and weights the page renders. Noto Sans Arabic, Noto Sans Hebrew and Noto Sans Thai come next in the fallback, with only their script's range, so a page fetches one only when it shows that script. CJK text falls through to the system font the browser picks for the element's <code>lang</code>, so set <code>lang</code> on Japanese, Chinese and Korean text. For another script, load its family and add it to <code>--md-ref-typeface-fallback</code> before <code>sans-serif</code>.
-          Override the reference tokens to use a different family.
+          Large display, headline, and title-large roles use brand. Smaller
+          title, body, and label roles use plain. Override the reference
+          tokens to use a different family.
+        </p>
+        <p>
+          Noto Sans is the fallback for characters Roboto cannot cover. Roboto ships Latin, Latin Extended, Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese. Noto Sans adds Devanagari. Each subset comes at 400, 500 and 700. Every subset is its own face with a <code>unicode-range</code>, so the browser downloads only the scripts and weights the page renders.
+        </p>
+        <p>
+          Noto Sans Arabic, Noto Sans Hebrew and Noto Sans Thai come next in the fallback. Each covers only its script's range, so a page fetches one only when it shows that script. CJK text falls through to the system font the browser picks for the element's <code>lang</code>. Set <code>lang</code> on Japanese, Chinese and Korean text. For another script, load its family and add it to <code>--md-ref-typeface-fallback</code> before <code>sans-serif</code>.
         </p>
 
         <h3>Semantic map</h3>
@@ -170,13 +175,14 @@ const S = defineSections([
           that is not a <code>&lt;p&gt;</code> or <code>&lt;small&gt;</code>.
         </p>
           <p>
-          Each of the fifteen roles has an emphasized counterpart from Material 3 Expressive: the
-          same family, size and spacing, heavier. Add <code>-emphasized</code> to the role class,
-          such as <code>.label-large-emphasized</code> or <code>.headline-small-emphasized</code>.
-          Display, headline, title-large and body roles go to <code>500</code>; title-medium,
-          title-small and label roles go to <code>700</code>. The weight is a token,
-          <code>--md-sys-typescale-emphasized-{"{role}"}-font-weight</code>. Roboto and Noto Sans are
-          bundled at <code>700</code> and load only when a page uses it.
+          Add <code>-emphasized</code> to a role class for its heavier Material 3 Expressive
+          counterpart, such as <code>.label-large-emphasized</code> or
+          <code>.headline-small-emphasized</code>. Each of the fifteen roles has one, with the same
+          family, size and spacing. Display, headline, title-large and body roles go to
+          <code>500</code>. Title-medium, title-small and label roles go to <code>700</code>. The
+          weight is a token, <code>--md-sys-typescale-emphasized-{"{role}"}-font-weight</code>. The
+          framework bundles Roboto and Noto Sans at <code>700</code>, and the browser loads that
+          weight only when a page uses it.
         </p>
         <p class="title-medium">Inbox <span class="title-medium-emphasized">Unread</span></p>
 <Code code={`
@@ -186,11 +192,11 @@ const S = defineSections([
   </Section>
   <Section {...S.links}>
         <p>
-          Links use the primary color. A link without a class inside a paragraph, a
-          <code>&lt;dd&gt;</code>, a blockquote, a figure caption or a table cell is also
-          underlined, because color alone does not mark a link for everyone. Links elsewhere, and
-          any link with a class, have no underline, so navigation lists, menus, tabs and buttons
-          made from <code>&lt;a&gt;</code> keep their own look.
+          Links use the primary color. A link without a class is also underlined when it sits in a
+          paragraph, a <code>&lt;dd&gt;</code>, a blockquote, a figure caption or a table cell.
+          Color alone does not mark a link for everyone. Links elsewhere, and any link with a class,
+          have no underline. That way navigation lists, menus, tabs and buttons made from
+          <code>&lt;a&gt;</code> keep their own look.
         </p>
 <Code code={`
 <p>Read the <a href="/themes.html">theme guide</a> first.</p>  <!-- underlined -->
@@ -213,7 +219,7 @@ const S = defineSections([
   </Section>
   <Section {...S["keyboard-keys"]}>
         <p>
-          <code>&lt;kbd&gt;</code> is drawn as a keycap. Wrap a combination in
+          The stylesheet draws <code>&lt;kbd&gt;</code> as a keycap. Wrap a combination in
           an outer <code>&lt;kbd&gt;</code>, which stays plain around the keys
           inside it. A trailing <code>&lt;kbd&gt;</code> in a menu or list item
           is quiet shortcut text instead.
@@ -263,9 +269,9 @@ CSS.highlights.set("mark", new Highlight(range));
   <Section {...S.prose}>
         <p>
           Add <code>.prose</code> to a container of bare HTML, such as rendered Markdown or CMS
-          output. It caps the line length at 70 characters, spaces out headings, indents lists,
-          underlines links in lists and headings, and gives inline <code>&lt;code&gt;</code> and
-          <code>&lt;pre&gt;</code> blocks a surface. Only elements without a class are styled, so a
+          output. It caps the line length at 70 characters, spaces out headings and indents lists.
+          It underlines links in lists and headings, and gives inline <code>&lt;code&gt;</code> and
+          <code>&lt;pre&gt;</code> blocks a surface. It styles only elements without a class, so a
           button or chip inside the content keeps its own look.
         </p>
         <div class="prose surface-container-low p-4 corner-large">
@@ -289,15 +295,14 @@ CSS.highlights.set("mark", new Highlight(range));
 `} />
         <p>
           Put <code>.prose</code> on a <code>&lt;div&gt;</code>, <code>&lt;section&gt;</code> or
-          <code>&lt;main&gt;</code>. Every <code>&lt;article&gt;</code> is a card, so an article with
-          <code>.prose</code> would be drawn as one.
+          <code>&lt;main&gt;</code>. The framework draws every <code>&lt;article&gt;</code> as a card,
+          so an article with <code>.prose</code> would look like one.
         </p>
   </Section>
   <Section {...S.fontstack}>
         <p>
-          Override the brand and plain reference tokens to customize the scale
-          while preserving each role's M3 size, weight, line height, and
-          tracking:
+          Override the brand and plain reference tokens to customize the scale.
+          Each role keeps its M3 size, weight, line height, and tracking.
         </p>
 <Code code={`
 :root {
@@ -307,9 +312,9 @@ CSS.highlights.set("mark", new Highlight(range));
 `} />
         <p>
           The default order is Roboto, Noto Sans, then the generic sans-serif
-          family. ExpressiveCSS leaves the root font size to the browser and
-          expresses the M3 scale in rem using the standard 16px conversion, so
-          browser text-size preferences continue to work.
+          family. ExpressiveCSS leaves the root font size to the browser. It
+          expresses the M3 scale in rem with the standard 16px conversion, so
+          browser text-size preferences keep working.
         </p>
   </Section>
 </PageBody>
