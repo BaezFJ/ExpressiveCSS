@@ -144,3 +144,141 @@ describe('Timepicker time range on open', () => {
     }
   });
 });
+
+const key = (el, k) => {
+  const event = new window.KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true });
+  el.dispatchEvent(event);
+  return event;
+};
+const type = (el, value) => {
+  el.value = value;
+  el.dispatchEvent(new window.InputEvent('input', { bubbles: true }));
+};
+const leave = (el) => el.dispatchEvent(new window.FocusEvent('focusout', { bubbles: true }));
+const ariaRange = (field) => [field.getAttribute('aria-valuemin'), field.getAttribute('aria-valuemax')].map(Number);
+
+describe('Timepicker time range in the fields', () => {
+  beforeEach(resetBody);
+
+  test('stepping stops at the bounds and wraps only a fully allowed field', () => {
+    const cases = [
+      ['17:00', 'inputHours', 'ArrowUp', '17:00'],
+      ['09:00', 'inputHours', 'ArrowDown', '09:00'],
+      ['17:30', 'inputMinutes', 'ArrowUp', '17:30'],
+      ['17:00', 'inputMinutes', 'ArrowDown', '17:00'],
+      ['15:00', 'inputHours', 'PageUp', '17:00'],
+      ['12:59', 'inputMinutes', 'ArrowUp', '12:00'],
+      ['16:45', 'inputHours', 'ArrowUp', '17:30']
+    ];
+    for (const [value, field, k, expected] of cases) {
+      const { picker } = open(value, { twelveHour: false, ...RANGE });
+      try {
+        assert.equal(key(picker[field], k).defaultPrevented, true);
+        assert.equal(shown(picker), expected, `${k} in ${field} at ${value}`);
+      } finally {
+        picker.destroy();
+      }
+    }
+  });
+
+  test('on a 12-hour clock hours step through noon within the range', () => {
+    const { picker } = open('11:00 AM', { twelveHour: true, ...RANGE });
+    try {
+      key(picker.inputHours, 'ArrowUp');
+      assert.equal(shown(picker), '12:00 PM');
+      key(picker.inputHours, 'PageUp');
+      key(picker.inputHours, 'PageUp');
+      assert.equal(shown(picker), '05:00 PM');
+    } finally {
+      picker.destroy();
+    }
+  });
+
+  test('a typed time outside the range is refused', () => {
+    const { picker } = open('16:45', { twelveHour: false, ...RANGE });
+    try {
+      for (const text of ['08', '18']) {
+        type(picker.inputHours, text);
+        assert.equal(picker.hours, 16, text);
+        leave(picker.inputHours);
+        assert.equal(picker.inputHours.value, '16');
+      }
+      type(picker.inputHours, '17');
+      assert.equal(shown(picker), '17:30');
+      type(picker.inputMinutes, '45');
+      assert.equal(picker.minutes, 30);
+      leave(picker.inputMinutes);
+      assert.equal(picker.inputMinutes.value, '30');
+    } finally {
+      picker.destroy();
+    }
+  });
+
+  test('a typed hour outside the range is refused on a 12-hour clock', () => {
+    for (const [value, text] of [['10:00 AM', '8'], ['02:00 PM', '6']]) {
+      const { picker } = open(value, { twelveHour: true, ...RANGE });
+      try {
+        type(picker.inputHours, text);
+        leave(picker.inputHours);
+        assert.equal(shown(picker), value, `${text} at ${value}`);
+      } finally {
+        picker.destroy();
+      }
+    }
+  });
+
+  test('each field announces its allowed range as the time changes', () => {
+    const cases = [
+      ['09:00', {}, [[9, 17], [0, 59]]],
+      ['12:00', {}, [[9, 17], [0, 59]]],
+      ['17:00', {}, [[9, 17], [0, 30]]],
+      ['17:30:00', { showSeconds: true }, [[9, 17], [0, 30], [0, 0]]],
+      ['17:29:00', { showSeconds: true }, [[9, 17], [0, 30], [0, 59]]],
+      ['02:00 PM', { twelveHour: true }, [[1, 12], [0, 59]]],
+      ['10:00 AM', { twelveHour: true }, [[9, 11], [0, 59]]]
+    ];
+    for (const [value, options, expected] of cases) {
+      const { picker } = open(value, { twelveHour: false, ...RANGE, ...options });
+      try {
+        const fields = [picker.inputHours, picker.inputMinutes, picker.inputSeconds].filter(Boolean);
+        assert.deepEqual(fields.map(ariaRange), expected, value);
+      } finally {
+        picker.destroy();
+      }
+    }
+    const { picker } = open('16:00', { twelveHour: false, ...RANGE });
+    try {
+      key(picker.inputHours, 'ArrowUp');
+      assert.deepEqual(ariaRange(picker.inputMinutes), [0, 30]);
+    } finally {
+      picker.destroy();
+    }
+  });
+
+  test('a period with no allowed time has its button disabled', () => {
+    const { picker } = open('', { twelveHour: true, minTime: '13:00', maxTime: '17:00', defaultTime: '14:00' });
+    try {
+      const [am, pm] = ['.am-btn', '.pm-btn'].map((s) => picker.containerEl.querySelector(s));
+      assert.equal(am.disabled, true);
+      assert.equal(pm.disabled, false);
+      picker._handleAmPmInteraction(am);
+      assert.equal(picker.amOrPm, 'PM');
+    } finally {
+      picker.destroy();
+    }
+  });
+
+  test('switching the period clamps the time into the range', () => {
+    const { picker } = open('05:00 PM', { twelveHour: true, ...RANGE });
+    try {
+      const am = picker.containerEl.querySelector('.am-btn');
+      assert.equal(am.disabled, false);
+      assert.equal(picker.containerEl.querySelector('.pm-btn').disabled, false);
+      fire(am, 'click');
+      assert.equal(shown(picker), '09:00 AM');
+      assert.deepEqual(ariaRange(picker.inputHours), [9, 11]);
+    } finally {
+      picker.destroy();
+    }
+  });
+});
