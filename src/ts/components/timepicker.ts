@@ -14,6 +14,9 @@ const STEPS: Record<string, number> = { ArrowUp: 1, ArrowDown: -1, PageUp: 5, Pa
 /** A 12-hour time's hour of the day, 0 to 23. */
 const dayHour = (hours: number, pm: boolean) => (hours % 12) + (pm ? 12 : 0);
 
+/** The last second of the day. */
+const DAY_END = 24 * 3600 - 1;
+
 /** An hour on the 24-hour clock, from one written with AM or PM. */
 const hour24 = (hours: number, period?: string) => (period ? (hours % 12) + (period === 'PM' ? 12 : 0) : hours);
 
@@ -34,6 +37,9 @@ function readTime(text: string, fromNow: number): [number, number, number] {
   // on a 24-hour clock too.
   return [hour24(hours, period), minutes, seconds];
 }
+
+/** Seconds since midnight for an hour, minute and second. */
+const daySeconds = ([hours, minutes, seconds]: number[]) => hours * 3600 + minutes * 60 + seconds;
 
 /**
  * With a `lang` on or around the input, whether that language tells the
@@ -114,6 +120,18 @@ export interface TimepickerOptions extends BaseOptions {
    */
   showSeconds: boolean;
   /**
+   * The earliest time a person can choose, as 24-hour `'HH:MM'` or
+   * `'HH:MM:SS'`. Without `showSeconds` it rounds up to a whole minute.
+   * @default null
+   */
+  minTime: string | null;
+  /**
+   * The latest time a person can choose, as 24-hour `'HH:MM'` or
+   * `'HH:MM:SS'`. Without `showSeconds` it rounds down to a whole minute.
+   * @default null
+   */
+  maxTime: string | null;
+  /**
    * Vibrate device when dragging clock hand.
    * @default true
    */
@@ -172,6 +190,8 @@ const _defaults: TimepickerOptions = {
   },
   twelveHour: true, // change to 12 hour AM/PM clock from 24 hour
   showSeconds: false,
+  minTime: null,
+  maxTime: null,
   vibrate: true, // vibrate the device when dragging clock hand
   // Callbacks
   onSelect: null,
@@ -234,6 +254,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   private displayPlugin: DisplayPlugin;
   /** Whether the dial (ticks + SVG + AM/PM buttons) has been built yet. */
   private _clockBuilt = false;
+  /** The first and last allowed second of the day. */
+  private _limits: [number, number] = [0, DAY_END];
 
   constructor(el: HTMLInputElement, options: Partial<TimepickerOptions>) {
     super(el, options, Timepicker);
@@ -247,6 +269,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     // A modal clock writes on Ok, so it has the buttons.
     this.options.autoSubmit &&= this.options.displayPlugin !== 'modal';
     this.id = Utils.guid();
+    this._readLimits();
     this._insertHTMLIntoDOM();
     this._setupVariables();
     this._setupEventHandlers();
@@ -432,6 +455,19 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.moved = false;
     this._removeDragListeners();
   };
+
+  /**
+   * Read `minTime` and `maxTime` as seconds of the day. Without a seconds
+   * field the picker writes whole minutes, so the bounds round inward.
+   */
+  private _readLimits() {
+    const { minTime, maxTime, showSeconds, fromNow } = this.options;
+    const read = (time: string | null, fallback: number) => (time ? daySeconds(readTime(time, fromNow)) : fallback);
+    let [min, max] = [read(minTime, 0), read(maxTime, DAY_END)];
+    if (!showSeconds) [min, max] = [Math.ceil(min / 60) * 60, Math.floor(max / 60) * 60];
+    if (min > max) return console.warn('Timepicker ignored minTime and maxTime: minTime is after maxTime.', this.el);
+    this._limits = [min, max];
+  }
 
   _insertHTMLIntoDOM() {
     const template = document.createElement('template');
@@ -664,14 +700,36 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   _updateTimeFromInput() {
     this._cancelClockReset();
-    [this.hours, this.minutes, this.seconds] = readTime(`${this.el.value || this.options.defaultTime || ''}`, this.options.fromNow);
-    if (this.options.twelveHour) {
-      this.amOrPm = this.hours >= 12 ? 'PM' : 'AM';
-      this.hours = this.hours % 12 || 12;
-    }
+    const [hours, minutes, seconds] = readTime(`${this.el.value || this.options.defaultTime || ''}`, this.options.fromNow);
+    [this.minutes, this.seconds] = [minutes, seconds];
+    this._setHours24(hours);
+    this._clamp();
     this._units().forEach((unit) => (this._input(unit).value = Timepicker._addLeadingZero(this[unit])));
 
     this._updateAmPmView();
+  }
+
+  /** The hour on the 24-hour clock, setting AM or PM on a 12-hour one. */
+  private _setHours24(hour: number) {
+    if (!this.options.twelveHour) return void (this.hours = hour);
+    this.amOrPm = hour >= 12 ? 'PM' : 'AM';
+    this.hours = hour % 12 || 12;
+    this._updateAmPmView();
+  }
+
+  /** The time as seconds of the day. */
+  private _time() {
+    return daySeconds([this._hours24(), this.minutes, this.seconds]);
+  }
+
+  /** Move the time to the nearest allowed time, and say whether it moved. */
+  private _clamp() {
+    const time = this._time();
+    const clamped = Math.min(Math.max(time, this._limits[0]), this._limits[1]);
+    if (clamped === time) return false;
+    this._setHours24(Math.floor(clamped / 3600));
+    [this.minutes, this.seconds] = [Math.floor(clamped / 60) % 60, clamped % 60];
+    return true;
   }
 
   /**
