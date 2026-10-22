@@ -880,6 +880,17 @@ so check generation again after initial-item focus and set closed ARIA before
 returning focus to a trigger that could reopen it. FormSelect and Autocomplete
 share this Menu implementation; keep their callback semantics intact.
 
+An open menu is a manual popover in the top layer, so it needs no clipping
+ancestor walk and its bounds are the viewport. Menu keeps its own outside
+click and Escape handling: an auto popover would close an Autocomplete list
+when its input is clicked, close any other open popover, and leave the top
+layer before the exit fade, since Firefox and WebKit lack `overlay`.
+Firefox anchors a top-layer element to its anchor's box before transforms,
+so a trigger under a transformed ancestor, such as a `.toolbar.fixed`
+centred with `translateX(-50%)`, gets the measured placement, which
+re-places on scroll. Anchored tooltips appended to the body have the same
+Firefox offset and no such fallback yet.
+
 Filled enhanced selects always float their associated label. A real label row
 lets translations wrap and text grow without colliding with the value. Keep
 leading-icon padding on that row and paint only the label/control, not supporting

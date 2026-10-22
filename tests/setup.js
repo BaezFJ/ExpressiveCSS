@@ -55,6 +55,10 @@ for (const name of ['ResizeObserver', 'IntersectionObserver']) {
   };
 }
 
+// jsdom has no popover API, and Menu shows and hides its surface with it.
+window.HTMLElement.prototype.showPopover ??= function () {};
+window.HTMLElement.prototype.hidePopover ??= function () {};
+
 // ...plus every element constructor jsdom exposes, so `instanceof` checks and
 // `new HTMLTemplateElement`-style lookups inside components resolve.
 for (const key of Object.getOwnPropertyNames(window)) {

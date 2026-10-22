@@ -148,7 +148,7 @@ const bounded = `<!doctype html><html lang="en"><head><style>${css} body { margi
 </main></body></html>`;
 
 for (const [name, engine, test] of engines) {
-  test(`${name}: context menus stay inside their container and the window, scroll when tall and open at the corner without a pointer`, { timeout: 30000 }, async (t) => {
+  test(`${name}: context menus leave their container for the top layer, stay inside the window, scroll when tall and open at the corner without a pointer`, { timeout: 30000 }, async (t) => {
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
@@ -166,8 +166,10 @@ for (const [name, engine, test] of engines) {
       await settle();
       const container = await box('box');
       let menu = await box('box-menu');
-      assert.ok(menu.right <= container.right + 0.5 && menu.bottom <= container.bottom + 0.5, 'the menu flips to stay inside its scrolling container');
-      assert.ok(Math.abs(menu.right - 330) < 1 && Math.abs(menu.bottom - 300) < 1, 'and ends at the pointer');
+      assert.ok(Math.abs(menu.left - 330) < 1 && Math.abs(menu.top - 300) < 1, 'the menu starts at the pointer');
+      assert.ok(menu.right > container.right + 20 && menu.bottom > container.bottom + 20, 'past the edges of its scrolling container');
+      const hit = await page.evaluate(([x, y]) => !!document.elementFromPoint(x, y)?.closest('#box-menu'), [menu.right - 5, menu.bottom - 5]);
+      assert.equal(hit, true, 'which does not clip it, since the open menu is in the top layer');
       await page.keyboard.press('Escape');
       await settle();
 

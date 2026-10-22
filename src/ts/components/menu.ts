@@ -4,19 +4,28 @@ import { Component, BaseOptions } from '../core/component';
 // CSS anchor positioning, where the browser has it. A menu opened from its
 // trigger is anchored there and flips at the viewport edges in CSS; context
 // menus open at a point and cover-trigger menus overlap their trigger, so
-// both keep the measured placement, as does every browser without anchors.
+// both keep the measured placement, as do menus under a transformed
+// ancestor and every browser without anchors.
+// Either way the open menu is a manual popover in the top layer, so no
+// ancestor clips it or contains it, and its bounds are the viewport's.
+
+/** An element's parent, or its shadow root's host. */
+const parentOf = (el: Element): Element | null => el.parentElement ?? ((el.getRootNode() as ShadowRoot).host || null);
+
 /**
- * Whether a style makes its element the containing block of fixed-position
- * descendants: a transform of any kind, even an identity translate, a
- * filter, perspective or backdrop filter, layout or paint containment, or
- * will-change for one of those. Size containment and query containers do
- * not, in any engine.
+ * Whether an ancestor of `el`, across shadow roots, moves it with a
+ * transform. Firefox anchors a top-layer menu to the trigger's box as laid
+ * out, before transforms, so a menu under one is measured instead, as in a
+ * floating toolbar centred with `translateX(-50%)`.
  */
-function containsFixed(style: CSSStyleDeclaration) {
-  const effects = [style.transform, style.translate, style.rotate, style.scale, style.filter, style.perspective, style.getPropertyValue('backdrop-filter')];
-  return effects.some((value) => value && value !== 'none') ||
-    /paint|layout|strict|content/.test(style.contain) ||
-    /transform|translate|rotate|scale|filter|perspective/.test(style.willChange);
+function transformed(el: Element) {
+  for (let node = parentOf(el); node; node = parentOf(node)) {
+    const style = getComputedStyle(node);
+    // An identity transform, often a translateZ(0) layer hint, moves nothing.
+    if (!new DOMMatrixReadOnly(style.transform).isIdentity) return true;
+    if ([style.translate, style.rotate, style.scale].some((value) => value !== 'none')) return true;
+  }
+  return false;
 }
 
 /** The shadow roots an element sits in, nearest first. */
@@ -26,51 +35,19 @@ function shadowRoots(el: Element) {
   return roots;
 }
 
-/** An element's parent, or its shadow root's host. */
-const parentOf = (el: Element): Element | null => el.parentElement ?? ((el.getRootNode() as ShadowRoot).host || null);
-
-/** The nearest ancestor that passes `test`, across shadow roots. */
-function ancestor(el: Element, test: (el: Element) => boolean) {
-  let found = parentOf(el);
-  while (found && !test(found)) found = parentOf(found);
-  return found;
-}
-
 /**
- * The top and bottom an anchored menu can use: those of its fixed-position
- * containing block, where an ancestor makes one, within the viewport.
+ * The room a measured menu has in the viewport when aligned at each edge of
+ * its trigger `el`. Aligned at `top` it starts `offset` below the trigger's
+ * top edge, and at `bottom` it ends `offset` above its bottom edge. Negative
+ * room means the menu does not fit that way.
  */
-function fixedBounds(menu: Element) {
-  const block = ancestor(menu, (el) => containsFixed(getComputedStyle(el)));
-  const rect = block?.getBoundingClientRect() ?? { top: 0, bottom: window.innerHeight };
-  return { top: Math.max(0, rect.top), bottom: Math.min(window.innerHeight, rect.bottom) };
-}
-
-/**
- * The room a measured menu has when aligned at each edge of its trigger
- * `el`, within `container` or, when it lets content overflow, the viewport.
- * Aligned at `top` it starts `offset` below the trigger's top edge, and at
- * `bottom` it ends `offset` above its bottom edge. Negative room means the
- * menu does not fit that way.
- */
-function room(el: HTMLElement, container: HTMLElement, menu: Pick<DOMRect, 'left' | 'top' | 'width' | 'height'>, offset: number) {
+function room(el: HTMLElement, menu: Pick<DOMRect, 'width' | 'height'>, offset: number) {
   const rect = el.getBoundingClientRect();
-  if (getComputedStyle(container).overflow === 'visible') {
-    return {
-      left: window.innerWidth - (rect.left + menu.width),
-      right: rect.right - menu.width,
-      top: window.innerHeight - (rect.top + menu.height + offset),
-      bottom: rect.bottom - (menu.height + offset)
-    };
-  }
-  const box = container.getBoundingClientRect();
-  const x = menu.left - container.scrollLeft;
-  const y = menu.top - container.scrollTop;
   return {
-    left: Math.min(box.width, window.innerWidth) - (x + menu.width),
-    right: x - menu.width + rect.width,
-    top: Math.min(box.height, window.innerHeight) - (y + menu.height + offset),
-    bottom: y + rect.height - (menu.height + offset)
+    left: window.innerWidth - (rect.left + menu.width),
+    right: rect.right - menu.width,
+    top: window.innerHeight - (rect.top + menu.height + offset),
+    bottom: rect.bottom - (menu.height + offset)
   };
 }
 
@@ -328,6 +305,11 @@ export class Menu extends Component<MenuOptions> {
     this.menuEl?.addEventListener('keydown', this._handleMenuKeydown, { signal });
     document.addEventListener('keydown', this._handleDocumentKeydown, { signal });
     window.addEventListener('resize', this._handleWindowResize, { signal });
+    // A scroll inside a shadow root stays there, so each root around the
+    // trigger is heard as well as the window.
+    for (const target of [window, ...shadowRoots(this.el)]) {
+      target.addEventListener('scroll', this._reanchor, { capture: true, passive: true, signal });
+    }
     // A right-click elsewhere fires no click, so it would leave the menu open.
     if (this.options.contextMenu) document.addEventListener('contextmenu', this._handleDocumentContextMenu, { signal });
   }
@@ -770,7 +752,8 @@ export class Menu extends Component<MenuOptions> {
   _resetMenuStyles() {
     // destroy() runs this even when the menu target was never found.
     if (!this.menuEl) return;
-    this.menuEl.style.display = '';
+    // A no-op unless open, so a removed menu does not throw.
+    this.menuEl.hidePopover();
     this._resetMenuPositioningStyles();
     this.menuEl.style.transform = '';
     this.menuEl.style.opacity = '';
@@ -793,7 +776,11 @@ export class Menu extends Component<MenuOptions> {
 
   _makeMenuFocusable() {
     if (!this.menuEl) return;
-    this.menuEl.popover = '';
+    // Manual: Menu keeps its own light dismiss and Escape. An auto popover
+    // would close an Autocomplete list when its input is clicked, close any
+    // other open popover, and leave the top layer before the exit fade where
+    // `overlay` is missing (Firefox, WebKit).
+    this.menuEl.popover = 'manual';
     // Focus moves directly to menu items; the surface itself is not a stop.
     this.menuEl.tabIndex = -1;
     // Only set tabindex if it hasn't been set by user
@@ -864,7 +851,7 @@ export class Menu extends Component<MenuOptions> {
     return space.top < 0 || (this.options.placement === 'top' && space.bottom >= 0);
   }
 
-  _getMenuPosition(closestOverflowParent: HTMLElement) {
+  _getMenuPosition() {
     const triggerBRect = this.el.getBoundingClientRect();
     const menuBRect = this.menuEl.getBoundingClientRect();
 
@@ -873,12 +860,7 @@ export class Menu extends Component<MenuOptions> {
     let idealXPos = triggerBRect.left - menuBRect.left;
     let idealYPos = triggerBRect.top - menuBRect.top;
 
-    const space = room(
-      this.el,
-      closestOverflowParent,
-      { left: idealXPos, top: idealYPos, height: idealHeight, width: idealWidth },
-      this.options.coverTrigger ? 0 : triggerBRect.height
-    );
+    const space = room(this.el, menuBRect, this.options.coverTrigger ? 0 : triggerBRect.height);
 
     let verticalAlignment = 'top';
     let horizontalAlignment = this.options.alignment;
@@ -998,24 +980,6 @@ export class Menu extends Component<MenuOptions> {
   }
 
   _placeMenu() {
-    // Container here will be closest ancestor with overflow: hidden. The walk
-    // steps over a shadow root to its host, since getComputedStyle() rejects a
-    // shadow root and the elements that clip the menu are above it.
-    let closestOverflowParent = ancestor(
-      this.menuEl,
-      (el) => !['HTML', 'BODY'].includes(el.tagName) && getComputedStyle(el).overflow !== 'visible'
-    ) as HTMLElement;
-    // Fallback
-    if (!closestOverflowParent) {
-      const parent = !!this.menuEl.offsetParent ? this.menuEl.offsetParent : this.menuEl.parentNode;
-      // Same hazard as the walk: the parent is a shadow root when the menu was
-      // moved into one, and the next line reads its computed style.
-      closestOverflowParent = <HTMLElement>((<ShadowRoot>parent).host ?? parent);
-    }
-
-    if (getComputedStyle(closestOverflowParent).position === 'static')
-      closestOverflowParent.style.position = 'relative';
-
     // Set width before calculating positionInfo. Both callers reset the
     // positioning styles first, so this reads the surface's natural width.
     const natural = this.menuEl.getBoundingClientRect().width;
@@ -1033,12 +997,12 @@ export class Menu extends Component<MenuOptions> {
     this.menuEl.style.width = idealWidth + 'px';
 
     if (this.options.contextMenu) {
-      this._placeMenuAtPoint(this._contextPoint ?? this._regionCorner(), closestOverflowParent);
+      this._placeMenuAtPoint(this._contextPoint ?? this._regionCorner());
       return;
     }
 
-    if (anchorSupported && !this.options.coverTrigger) this._anchorMenu();
-    else this._placeByCoordinates(closestOverflowParent);
+    if (anchorSupported && !this.options.coverTrigger && !transformed(this.el)) this._anchorMenu();
+    else this._placeByCoordinates();
   }
 
   /**
@@ -1048,8 +1012,8 @@ export class Menu extends Component<MenuOptions> {
    * flip-block fallback, and the choice is made here.
    */
   private _side(): 'top' | 'bottom' {
-    const [rect, bounds] = [this.el.getBoundingClientRect(), fixedBounds(this.menuEl)];
-    const room = { top: rect.top - bounds.top, bottom: bounds.bottom - rect.bottom };
+    const rect = this.el.getBoundingClientRect();
+    const room = { top: rect.top, bottom: window.innerHeight - rect.bottom };
     const [asked, other] = this.options.placement === 'top' ? ['top', 'bottom'] as const : ['bottom', 'top'] as const;
     return room[asked] >= this.menuEl.scrollHeight || room[asked] >= room[other] ? asked : other;
   }
@@ -1060,8 +1024,6 @@ export class Menu extends Component<MenuOptions> {
   // The height is capped to the room on the chosen side, so a long menu
   // scrolls there, as in the measured path.
   private _reanchorFrame = 0;
-  /** Where the open anchored menu hears scrolling. */
-  private _scrollTargets: EventTarget[] = [];
 
   private _anchorMenu() {
     const name = `--menu-${this.menuEl.id}`;
@@ -1072,27 +1034,24 @@ export class Menu extends Component<MenuOptions> {
     style.maxHeight = '100%';
     style.setProperty('position-anchor', name);
     this._placeAnchored();
-    // Scrolling can move the trigger so the other side has more room. A
-    // scroll inside a shadow root stays there, so each root around the
-    // trigger is heard as well as the window.
-    this._scrollTargets = [window, ...shadowRoots(this.el)];
-    this._scrollTargets.forEach((target) => target.addEventListener('scroll', this._reanchor, { capture: true, passive: true }));
-    window.addEventListener('resize', this._reanchor);
   }
 
-  /** At most once a frame while the anchored menu is open, chooses its side again. */
+  /**
+   * At most once a frame while the menu is open and something scrolls, an
+   * anchored menu chooses its side again and a measured one follows its
+   * trigger. A context menu stays where it opened.
+   */
   private _reanchor = () => {
-    if (this._reanchorFrame) return;
+    if (this._reanchorFrame || this.options.contextMenu) return;
     this._reanchorFrame = requestAnimationFrame(() => {
       this._reanchorFrame = 0;
-      if (this.isOpen) this._placeAnchored();
+      if (!this.isOpen) return;
+      if (this.menuEl.style.getPropertyValue('position-anchor')) this._placeAnchored();
+      else this.recalculateDimensions();
     });
   };
 
   private _stopReanchoring() {
-    this._scrollTargets.forEach((target) => target.removeEventListener('scroll', this._reanchor, { capture: true }));
-    this._scrollTargets = [];
-    window.removeEventListener('resize', this._reanchor);
     cancelAnimationFrame(this._reanchorFrame);
     this._reanchorFrame = 0;
   }
@@ -1107,8 +1066,8 @@ export class Menu extends Component<MenuOptions> {
     this.isScrollable = this.menuEl.scrollHeight > this.menuEl.clientHeight;
   }
 
-  private _placeByCoordinates(closestOverflowParent: HTMLElement) {
-    const positionInfo = this._getMenuPosition(closestOverflowParent);
+  private _placeByCoordinates() {
+    const positionInfo = this._getMenuPosition();
     this.menuEl.style.left = positionInfo.x + 'px';
     this.menuEl.style.top = positionInfo.y + 'px';
     this.menuEl.style.height = positionInfo.height + 'px';
@@ -1128,14 +1087,13 @@ export class Menu extends Component<MenuOptions> {
   /**
    * Places a context menu with its start corner on the point, flipping to
    * the other side of the point where it would not fit. The bounds are the
-   * viewport, narrowed to a scrolling or clipping ancestor the menu sits in;
-   * a menu taller than them gets their height and scrolls.
+   * viewport; a menu taller than it gets its height and scrolls.
    *
    * The menu rests at left/top 0 of its containing block, so its rect is the
    * offset to subtract - the same trick _getMenuPosition uses. It is measured
    * without the entry animation's scale, which a second right-click can catch.
    */
-  private _placeMenuAtPoint({ x, y }: { x: number; y: number }, container: HTMLElement) {
+  private _placeMenuAtPoint({ x, y }: { x: number; y: number }) {
     // A running transition would still report the interpolated scale, so it
     // is suspended for the read; the target transform is unchanged after.
     const { transform, transition } = this.menuEl.style;
@@ -1145,17 +1103,7 @@ export class Menu extends Component<MenuOptions> {
     this.menuEl.style.transform = transform;
     this.menuEl.style.transition = transition;
 
-    let bounds = { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight };
-    if (container && getComputedStyle(container).overflow !== 'visible') {
-      const clip = container.getBoundingClientRect();
-      bounds = {
-        left: Math.max(bounds.left, clip.left),
-        top: Math.max(bounds.top, clip.top),
-        right: Math.min(bounds.right, clip.right),
-        bottom: Math.min(bounds.bottom, clip.bottom)
-      };
-    }
-
+    const bounds = { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight };
     const width = menu.width;
     const height = Math.min(menu.height, bounds.bottom - bounds.top);
     this.isScrollable = height < menu.height;
@@ -1194,7 +1142,8 @@ export class Menu extends Component<MenuOptions> {
     if (!this._notify('open', this.options.onOpenStart, { current: () => transition === this._transition })) return;
     // Reset styles
     this._resetMenuStyles();
-    this.menuEl.style.display = 'block';
+    // The top layer: no ancestor clips or contains the open menu.
+    if (this.menuEl.isConnected) this.menuEl.showPopover();
     this._restoreInert();
     this._placeMenu();
     // Do this one frame later so that we don't bind an event handler that's immediately

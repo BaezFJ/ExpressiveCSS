@@ -263,7 +263,6 @@ export class FormSelect extends Component<FormSelectOptions> {
 
     this.menuEl = document.createElement('menu');
     this.menuEl.id = `select-options-${Utils.guid()}`;
-    this.menuEl.setAttribute('popover', 'auto');
     this.menuEl.setAttribute('role', 'listbox');
     this.menuEl.ariaMultiSelectable = this.isMultiple.toString();
     if (this.isMultiple) this.menuEl.classList.add('multiple-select-menu');

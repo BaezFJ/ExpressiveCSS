@@ -877,6 +877,24 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- An open menu is a popover in the browser's top layer. This covers Menu,
+  Select, Autocomplete, the menubar, Chips suggestions and the date
+  picker's menus. A container that clips or scrolls no longer cuts a menu
+  off, a modal dialog or sheet no longer covers it, and it draws above
+  every `z-index`, so `--expressive-z-menu` now only orders the docked date
+  and time pickers. Menu no longer sets `position: relative` on the
+  nearest clipping ancestor. The menu's `popover` attribute is `manual`,
+  and Menu still handles outside clicks and Escape itself. A context menu
+  is kept inside the window rather than its scrolling container, and stays
+  where it opened when that container scrolls. A `coverTrigger: true`
+  menu, or a menu whose trigger sits under a transformed ancestor, is
+  placed by measurement and follows its trigger when the page or a
+  container scrolls. Firefox would anchor a top-layer menu to the
+  trigger's box before transforms, which puts it beside a floating toolbar
+  centred with `translateX(-50%)` instead of under its button. Migration:
+  tests that run Menu in jsdom need `showPopover` and `hidePopover` stubs,
+  and CSS or script that read an open menu's inline `display: block`
+  should use `menu[id]:popover-open` or the instance's `isOpen`.
 - The `.mx-*`, `.my-*`, `.px-*` and `.py-*` helpers set `margin-inline`,
   `margin-block`, `padding-inline` and `padding-block`. Horizontal text
   renders as before. In a vertical writing mode, `.mx-*` and `.px-*` now
