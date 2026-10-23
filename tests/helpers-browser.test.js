@@ -70,6 +70,27 @@ browserTest('a plain fieldset drops its container and puts the legend at the con
 
 for (const [engine, browserType, utilityTest] of engines) {
 
+  utilityTest(`opacity helpers set their documented values and beat component opacity (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const steps = { 0: '0', 25: '0.25', 38: '0.38', 50: '0.5', 75: '0.75', 100: '1' };
+      await page.setContent(`<style>${css}</style>
+        ${Object.keys(steps).map(step => `<div id="step-${step}" class="opacity-${step}">Text</div>`).join('')}
+        <input id="disabled" type="range" disabled>
+        <input id="full" class="opacity-100" type="range" disabled>
+        <input id="half" class="opacity-50" type="range" disabled>`);
+      const opacity = id => page.locator(`#${id}`).evaluate(el => getComputedStyle(el).opacity);
+      for (const [step, value] of Object.entries(steps)) assert.equal(await opacity(`step-${step}`), value, `.opacity-${step}`);
+      assert.deepEqual([await opacity('disabled'), await opacity('full'), await opacity('half')], ['0.38', '1', '0.5']);
+      // Page CSS outside any layer still wins over the utility.
+      await page.addStyleTag({ content: '#full { opacity: 0.6; }' });
+      assert.equal(await opacity('full'), '0.6');
+    } finally {
+      await browser.close();
+    }
+  });
+
   utilityTest(`sizing helpers let nested flex and grid content shrink and scroll (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
