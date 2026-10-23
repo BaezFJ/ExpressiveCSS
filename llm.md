@@ -1201,9 +1201,13 @@ To center text on mobile only, add `center-on-small-only`.
 | `.contents` | `display: contents`; the element's box goes away and its children join the parent's layout |
 | `.relative` | `position: relative` |
 | `.sticky-top` | `position: sticky; top: 0` |
+| `.position-absolute`, `.position-fixed`, `.position-static` | `position: absolute`, `position: fixed`, `position: static` |
+| `.inset-0` | `inset: 0`; the element covers its containing block |
+| `.top-0`, `.bottom-0` | `top: 0`, `bottom: 0` |
+| `.start-0`, `.end-0` | `inset-inline-start: 0`, `inset-inline-end: 0`; they swap sides in RTL |
 | `.query-container` | `container-type: inline-size`. Horizontal cards and description lists inside it stack when it is narrower than 600px, on any window. |
 
-`.inline` is the row of checkboxes or radios, so there is no `display: inline` class. A `.sticky-top` element sticks inside its nearest scrolling ancestor; an ancestor with `overflow: hidden` stops it. Browsers have dropped the semantics of elements with `display: contents`, so put `.contents` on plain wrappers, not on buttons, lists, tables or headings. A `.query-container` can no longer size itself from its content, so put it on a wrapper that fills its parent, such as a sidebar column, not on an inline or shrink-to-fit box.
+`.inline` is the row of checkboxes or radios, so there is no `display: inline` class. A `.sticky-top` element sticks inside its nearest scrolling ancestor; an ancestor with `overflow: hidden` stops it. Give the parent of an absolute element `.relative`. There is no bare `.fixed` class, because the navigation bar, toolbar and table of contents use `.fixed` as a modifier. `.position-fixed` sets no `z-index`; to lift a fixed element above framework surfaces, give it a `--expressive-z-*` value. An ancestor with a `transform`, `filter` or `contain` becomes the containing block of a fixed element. No position class has a window-size prefix, and `.position-static` undoes `.relative` and `.sticky-top`. Browsers have dropped the semantics of elements with `display: contents`, so put `.contents` on plain wrappers, not on buttons, lists, tables or headings. A `.query-container` can no longer size itself from its content, so put it on a wrapper that fills its parent, such as a sidebar column, not on an inline or shrink-to-fit box.
 
 ### Flex
 

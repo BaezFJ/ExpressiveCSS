@@ -143,6 +143,8 @@ Never use display hiding as the only way to provide required content or actions.
 | `.center-align` | Centers text. | Use on the text container. `.center` is not the canonical helper. |
 | `.query-container` | `container-type: inline-size`. Horizontal cards and description lists inside it stack below 600px of container width. | Put it on a wrapper that fills its parent; inline-size containment stops the element sizing itself from its content. |
 | `.relative`, `.sticky-top` | `position: relative`; `position: sticky; top: 0`. | A sticky element stops at an ancestor with `overflow: hidden`. |
+| `.position-absolute`, `.position-fixed`, `.position-static` | The matching `position`. | Give an absolute element's parent `.relative`. There is no bare `.fixed`; that is a component modifier. `.position-fixed` sets no `z-index`, so add a `--expressive-z-*` value, and a transformed, filtered or contained ancestor captures it. `.position-static` undoes `.relative` and `.sticky-top`. |
+| `.inset-0`, `.top-0`, `.bottom-0`, `.start-0`, `.end-0` | `inset: 0`, or 0 on one edge. | `.start-0` and `.end-0` are logical and swap sides in RTL. None of the position classes take a window-size prefix. |
 | `.block`, `.inline-block`, `.grid`, `.inline-grid`, `.contents` | The matching `display`. | There is no `display: inline` class; `.inline` is the checkbox and radio row. Keep `.contents` off buttons, lists, tables and headings. |
 | `.divider` | Draws a 1px `outline-variant` divider. | Keep decorative dividers out of the accessibility tree; use semantic grouping or headings for real structure. |
 
