@@ -2289,13 +2289,17 @@ try {
     name: 'quality_inspector',
     arguments: {
       projectRoot: packageDir,
-      files: [outsideFile],
+      files: [outsideFile, path.join(outsideDir, 'missing.txt')],
       runType: 'quick',
       workflowId,
     },
   });
+  // A missing outside path gets the same reason, so the reply is no existence oracle.
   assert.deepEqual(confined.structuredContent.filesSkipped, [{
     file: outsideFile,
+    reason: 'file is outside projectRoot',
+  }, {
+    file: path.join(outsideDir, 'missing.txt'),
     reason: 'file is outside projectRoot',
   }]);
   assert.equal(confined.structuredContent.status, 'blocked');

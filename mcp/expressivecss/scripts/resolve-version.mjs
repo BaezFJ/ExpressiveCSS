@@ -47,10 +47,10 @@ async function readJson(filePath) {
 
 function cleanVersion(value) {
   if (typeof value !== 'string') return null;
-  const cleaned = value.trim().replace(/^['"]|['"]$/gu, '').replace(/\(.+\)$/u, '');
-  return /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/u.test(cleaned)
-    ? cleaned
-    : null;
+  // One anchored pass: a free-floating /\(.+\)$/ retried from every "(" and
+  // went quadratic on a long run of them.
+  const cleaned = value.trim().replace(/^['"]|['"]$/gu, '');
+  return /^(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)(?:\(.+\))?$/u.exec(cleaned)?.[1] ?? null;
 }
 
 export function parseSemver(value) {
@@ -283,8 +283,9 @@ function pnpmLockResolution(text, declaredRange) {
     if (targetLines[index].trim() && /^\s*/u.exec(targetLines[index])[0].length <= 6) break;
     dependencyLines.push(targetLines[index]);
   }
-  const specifier = /^\s+specifier:\s*['"]?([^'"\s]+)['"]?\s*$/mu.exec(dependencyLines.join('\n'))?.[1] ?? null;
-  const rawVersion = /^\s+version:\s*['"]?([^'"\s]+)['"]?\s*$/mu.exec(dependencyLines.join('\n'))?.[1] ?? null;
+  // [ \t], not \s: \s crossed newlines, so blank lines made the scan quadratic.
+  const specifier = /^[ \t]+specifier:[ \t]*['"]?([^'"\s]+)['"]?[ \t]*$/mu.exec(dependencyLines.join('\n'))?.[1] ?? null;
+  const rawVersion = /^[ \t]+version:[ \t]*['"]?([^'"\s]+)['"]?[ \t]*$/mu.exec(dependencyLines.join('\n'))?.[1] ?? null;
   if (specifier !== declaredRange) {
     return {
       version: null,

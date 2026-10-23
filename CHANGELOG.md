@@ -7,6 +7,35 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Line clamp utilities. `.line-clamp-1`, `.line-clamp-2` and
+  `.line-clamp-3` cut text to that many lines and end the last one in an
+  ellipsis, and `.line-clamp-none` shows every line again. All four take
+  the `medium:`, `expanded:`, `large:` and `extra-large:` prefixes.
+- Pointer helpers. `.pointer-events-none` lets clicks, taps and hovers
+  pass through an element to what lies beneath it, and
+  `.pointer-events-auto` gives them back to a child, such as a button in
+  a caption overlay. `.cursor-pointer` shows the pointer cursor and
+  changes nothing else. Neither pointer-events class affects focus or
+  keys; use `disabled` or `inert` to block all input.
+- `.opacity-0`, `.opacity-25`, `.opacity-38`, `.opacity-50`, `.opacity-75`
+  and `.opacity-100` set an element's opacity. 38 is the M3 opacity for
+  disabled content.
+- `.list-unstyled` removes a `<ul>` or `<ol>`'s markers and inline-start
+  padding and keeps its margins. A new semantics rule,
+  `list-unstyled-has-list-role`, flags one with no `role`, because WebKit
+  drops the list role from a list without markers. Add `role="list"`, or
+  the role the list should have.
+- Position and inset helpers: `.position-absolute`, `.position-fixed` and
+  `.position-static`, `.inset-0`, and the edge pins `.top-0`, `.bottom-0`,
+  `.start-0` and `.end-0`. The start and end pins use logical properties, so
+  they swap sides in right-to-left pages. The classes take a `position-`
+  prefix because the navigation bar, toolbar and table of contents already
+  use `.fixed` as a modifier. They have no window-size prefixes, and
+  `.position-fixed` sets no `z-index`.
+- `.grid-auto-fill` lays out as many columns as fit, each at least
+  `--grid-column-min` wide (15rem by default). Set the property on the grid or
+  an ancestor. A container narrower than the minimum gets one column, and the
+  last row keeps the column width. Pair it with `.gap-*`.
 - Calendar week, day and year views. `table.calendar.week` and
   `table.calendar.day` are hourly grids: a row per hour named by a
   `<th scope="row">`, and a column per day whose header can carry
@@ -479,6 +508,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Security: Autocomplete with `allowUnsafeHTML` renders only a script-supplied
+  `text` as HTML. A `selected` id that has no data entry, which
+  `data-autocomplete-options` can set, used to become HTML too, so sanitized
+  user markup that kept the component's class and options attribute could
+  run script once the menu showed no results.
+- Security: a questionnaire with `data-save` no longer stores password or
+  hidden inputs. It used to keep a password in `localStorage` as plain text
+  until submit, and to restore both into the next visitor's form, which
+  replaced the server's hidden values. Saved progress from an earlier
+  version no longer matches and starts fresh.
 - A docked date or time picker, and a tooltip placed without CSS anchor
   positioning, stay beside their trigger on a page scrolled sideways and
   inside the body's margin. They used to be kept inside the body's box,

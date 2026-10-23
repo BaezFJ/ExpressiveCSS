@@ -41,6 +41,10 @@ export function enforcedRules(data) {
     .flatMap(([name, c]) => c.rules.map((r) => ({ ...r, component: name })));
 }
 
+// ponytail: a fixed cap on aria-labelledby ids. A real label names a handful;
+// raise it if a page ever needs more.
+const MAX_LABEL_REFS = 32;
+
 /**
  * The name an element is given outright, by `aria-label` or `aria-labelledby`.
  * Empty when it has neither.
@@ -54,8 +58,10 @@ export function authoredName(el, document) {
   if (label && label.trim()) return label.trim();
   const ref = el.getAttribute('aria-labelledby');
   if (!ref) return '';
-  return ref
-    .split(/\s+/)
+  // Each id once, and only the first few: repeating one id thousands of times
+  // made a small snippet walk a large subtree thousands of times.
+  return [...new Set(ref.split(/\s+/))]
+    .slice(0, MAX_LABEL_REFS)
     .map((id) => document.getElementById(id)?.textContent ?? '')
     .join(' ')
     .trim();

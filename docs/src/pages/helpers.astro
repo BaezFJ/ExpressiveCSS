@@ -14,6 +14,7 @@ const S = defineSections([
   { id: "hiding", label: "Hiding and showing content" },
   { id: "spacing", label: "Spacing content", heading: "Spacing" },
   { id: "formatting", label: "Formatting" },
+  { id: "pointer", label: "Pointer" },
   { id: "browser-default", label: "Browser defaults" },
 ]);
 ---
@@ -72,9 +73,14 @@ const S = defineSections([
           <tbody>
             <tr><td><code>.block</code>, <code>.inline-block</code></td><td><code>display: block</code>, <code>display: inline-block</code></td></tr>
             <tr><td><code>.grid</code>, <code>.inline-grid</code></td><td><code>display: grid</code>, <code>display: inline-grid</code></td></tr>
+            <tr><td><code>.grid-auto-fill</code></td><td>A grid with as many columns as fit, each at least <code>--grid-column-min</code> wide (240px by default)</td></tr>
             <tr><td><code>.contents</code></td><td><code>display: contents</code>; the element's box goes away and its children join the parent's layout</td></tr>
             <tr><td><code>.relative</code></td><td><code>position: relative</code></td></tr>
             <tr><td><code>.sticky-top</code></td><td><code>position: sticky; top: 0</code></td></tr>
+            <tr><td><code>.position-absolute</code>, <code>.position-fixed</code>, <code>.position-static</code></td><td><code>position: absolute</code>, <code>position: fixed</code>, <code>position: static</code></td></tr>
+            <tr><td><code>.inset-0</code></td><td><code>inset: 0</code>; the element covers its containing block</td></tr>
+            <tr><td><code>.top-0</code>, <code>.bottom-0</code></td><td><code>top: 0</code>, <code>bottom: 0</code></td></tr>
+            <tr><td><code>.start-0</code>, <code>.end-0</code></td><td><code>inset-inline-start: 0</code>, <code>inset-inline-end: 0</code>; they swap sides in RTL</td></tr>
             <tr><td><code>.query-container</code></td><td><code>container-type: inline-size</code>. Horizontal cards and description lists inside it stack when it is narrower than 600px, on any window.</td></tr>
           </tbody>
         </table>
@@ -84,11 +90,53 @@ const S = defineSections([
           scrolling ancestor. An ancestor with <code>overflow: hidden</code> stops it.
         </p>
         <p>
+          An absolute element is placed against its nearest positioned ancestor, so give the
+          parent <code>.relative</code>. There is no bare <code>.fixed</code> class, because
+          the navigation bar, toolbar and table of contents use <code>.fixed</code> as a
+          modifier. <code>.position-fixed</code> sets no <code>z-index</code>. To lift a fixed
+          element above framework surfaces, give it a value from the
+          <code>--expressive-z-*</code> scale in <a href="shadow.html#stacking">Stacking order</a>. An
+          ancestor with a <code>transform</code>, <code>filter</code> or
+          <code>contain</code> becomes the containing block of a fixed element, so it stops
+          covering the viewport. Pad the content on the pinned side, as <code>.pe-6</code> does below, so text does not run under the pinned element. No position class has a window-size prefix, and
+          <code>.position-static</code> undoes <code>.relative</code> and <code>.sticky-top</code>.
+        </p>
+<Code code={`
+<article class="relative">
+  <p class="pe-6">Your storage is almost full. Delete old backups to keep syncing.</p>
+  <button class="icon-button position-absolute top-0 end-0" type="button" aria-label="Dismiss">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</article>
+`} />
+        <p>
           Browsers have dropped the semantics of elements with <code>display: contents</code>, so
           put <code>.contents</code> on plain wrappers, not on buttons, lists, tables or headings.
           A <code>.query-container</code> can no longer size itself from its content. Put it on
           a wrapper that fills its parent, such as a sidebar column, not on an inline or
           shrink-to-fit box.
+        </p>
+        <div class="grid-auto-fill gap-3" style="--grid-column-min: 10rem">
+          <div class="surface-container p-4">Orders</div>
+          <div class="surface-container p-4">Returns</div>
+          <div class="surface-container p-4">Refunds</div>
+          <div class="surface-container p-4">Payouts</div>
+          <div class="surface-container p-4">Disputes</div>
+        </div>
+<Code code={`
+<div class="grid-auto-fill gap-3" style="--grid-column-min: 10rem">
+  <article class="outlined">…</article>
+  <article class="outlined">…</article>
+  <article class="outlined">…</article>
+</div>
+`} />
+        <p>
+          <code>.grid-auto-fill</code> adds a column whenever another one of the minimum width
+          fits, and the columns share what is left. Set <code>--grid-column-min</code> on the
+          grid or on an ancestor. The last row keeps the same column width when it has fewer
+          items. A container narrower than the minimum gets one column as wide as itself. The
+          class sets no gap, so pair it with <code>.gap-*</code>. It has no window-size prefixes,
+          because the column count already follows the container's width.
         </p>
   </Section>
   <Section {...S.flex}>
@@ -145,8 +193,8 @@ const S = defineSections([
         <p>
           These classes also come with a window-size prefix: display, flex direction, wrap,
           <code>justify-*</code>, <code>align-*</code>, text alignment (<code>.start-align</code>,
-          <code>.center-align</code>, <code>.end-align</code>), <code>.gap-*</code>, margin,
-          padding and <code>.hide</code>. Prefixed margin and padding cover all sides,
+          <code>.center-align</code>, <code>.end-align</code>), <code>.line-clamp-*</code>,
+          <code>.gap-*</code>, margin, padding and <code>.hide</code>. Prefixed margin and padding cover all sides,
           <code>x</code>, <code>y</code>, top, bottom, start and end. Use start and end, not left
           and right. A prefixed class applies from that size class up and overrides the unprefixed
           one, the same way the grid's <code>m6</code> and <code>l4</code> do.
@@ -730,7 +778,7 @@ const S = defineSections([
 `} />
   </Section>
   <Section {...S.formatting}>
-        <p>These classes handle truncation, text wrapping and hover effects.</p>
+        <p>These classes handle truncation, line clamping, text wrapping, opacity, unstyled lists and hover effects.</p>
 
         <h5>Truncation</h5>
         <p>
@@ -749,6 +797,26 @@ const S = defineSections([
 <h4 class="truncate">This is an extremely long title that will be truncated</h4>
 `} />
 
+        <h5>Line clamp</h5>
+        <p>
+          To cut text to a few lines and end it in an ellipsis, add <code>line-clamp-1</code>,
+          <code>line-clamp-2</code> or <code>line-clamp-3</code>. <code>line-clamp-none</code> shows every line
+          again, so <code>line-clamp-2 expanded:line-clamp-none</code> clamps on compact and medium windows only.
+          The classes set <code>display</code>, so put them on a child of a flex or grid container, not on the
+          container. Pad a wrapper rather than the clamped element, because block-end padding shows the top of the
+          next line.
+        </p>
+        <div class="row">
+          <div class="s6 offset-s3">
+            <article>
+              <p class="line-clamp-2">This card description runs on for several lines, but the class cuts it after the second line and ends that line in an ellipsis, so cards in a row keep the same height.</p>
+            </article>
+          </div>
+        </div>
+<Code code={`
+<p class="line-clamp-2">This card description runs on for several lines…</p>
+`} />
+
         <h5>Text wrapping</h5>
         <table class="striped">
           <thead><tr><th>Class</th><th>Use</th></tr></thead>
@@ -762,6 +830,43 @@ const S = defineSections([
         </table>
         <p>Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.</p>
 
+        <h5>Opacity</h5>
+        <p>
+          <code>.opacity-0</code>, <code>.opacity-25</code>, <code>.opacity-38</code>, <code>.opacity-50</code>,
+          <code>.opacity-75</code> and <code>.opacity-100</code> set <code>opacity</code> to 0, 0.25, 0.38, 0.5, 0.75 and 1.
+          38 is the M3 opacity for disabled content. A class overrides a component's own opacity, and unlayered page CSS overrides the class.
+        </p>
+        <p>
+          Dimmed text still needs enough contrast unless it belongs to a disabled control. Opacity disables and hides nothing:
+          even at <code>.opacity-0</code> the element takes clicks and focus and stays in the accessibility tree.
+          Use <code>disabled</code>, <code>.hide</code> or <code>hidden</code> for that.
+        </p>
+        <div class="flex gap-3" aria-hidden="true">
+          {[25, 38, 50, 75, 100].map(step => <div class={`primary corner-medium opacity-${step}`} style="width: 48px; height: 48px"></div>)}
+        </div>
+<Code code={`
+<img class="opacity-50" src="pattern.svg" alt="">
+`} />
+
+        <h5>Unstyled lists</h5>
+        <p>
+          Add <code>list-unstyled</code> to a <code>&lt;ul&gt;</code> or <code>&lt;ol&gt;</code> to remove its markers
+          and its inline-start padding. The list keeps its margins, and a list nested inside it keeps its own markers.
+          WebKit drops the list role from a list without markers, so add <code>role="list"</code> as well. The
+          semantics checks flag a <code>.list-unstyled</code> list with no <code>role</code>; a list that sets another
+          role on purpose, such as <code>role="none"</code>, passes.
+        </p>
+        <ul class="list-unstyled" role="list">
+          <li>Invoices</li>
+          <li>Receipts</li>
+        </ul>
+<Code code={`
+<ul class="list-unstyled" role="list">
+  <li>Invoices</li>
+  <li>Receipts</li>
+</ul>
+`} />
+
 
         <h5>Hover</h5>
         <p>
@@ -772,6 +877,43 @@ const S = defineSections([
 <Code code={`
 <article class="hoverable">Hoverable article</article>
 `} />
+  </Section>
+  <Section {...S.pointer}>
+        <table class="striped">
+          <thead><tr><th>Class</th><th>Declaration</th></tr></thead>
+          <tbody>
+            <tr><td><code>.pointer-events-none</code></td><td><code>pointer-events: none</code>. Clicks, taps and hovers on the element and its children reach whatever lies beneath it.</td></tr>
+            <tr><td><code>.pointer-events-auto</code></td><td><code>pointer-events: auto</code>. A child of a <code>.pointer-events-none</code> element takes pointer input again.</td></tr>
+            <tr><td><code>.cursor-pointer</code></td><td><code>cursor: pointer</code></td></tr>
+          </tbody>
+        </table>
+<Code code={`
+<div class="relative">
+  <a href="/photos/42"><img class="w-full" src="..." alt="Fishing boats moored in a harbor at dusk"></a>
+  <div class="pointer-events-none flex align-end justify-between p-2" style="position: absolute; inset: 0">
+    <span class="label-large">Photo by Ana Ruiz</span>
+    <button type="button" class="pointer-events-auto">Hide caption</button>
+  </div>
+</div>
+
+<tr class="cursor-pointer">
+  <td><a href="/orders/42">Order 42</a></td>
+  <td>Shipped</td>
+</tr>
+`} />
+        <p>
+          A click on the caption opens the photo link beneath it, and the button still takes
+          its own clicks. <code>.pointer-events-none</code> stops the pointer only: the element
+          and its controls stay in the tab order and still respond to keys. To disable a control,
+          use <code>disabled</code>; to take a whole region out of use, use <code>inert</code>.
+        </p>
+        <p>
+          <code>.cursor-pointer</code> changes the cursor and nothing else. Links and buttons
+          already show it. In the table row above, a page script opens the row's link on a click
+          anywhere in the row, and keyboard users reach the same link by Tab. An element that
+          responds to clicks but isn't a link or button still needs a role, a tab stop and key
+          handling, so use a <code>&lt;button&gt;</code> or <code>&lt;a href&gt;</code> where one fits.
+        </p>
   </Section>
   <Section {...S["browser-default"]}>
         <p>

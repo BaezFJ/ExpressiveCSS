@@ -1198,12 +1198,27 @@ To center text on mobile only, add `center-on-small-only`.
 | --- | --- |
 | `.block`, `.inline-block` | `display: block`, `display: inline-block` |
 | `.grid`, `.inline-grid` | `display: grid`, `display: inline-grid` |
+| `.grid-auto-fill` | A grid with as many columns as fit, each at least `--grid-column-min` wide (240px by default) |
 | `.contents` | `display: contents`; the element's box goes away and its children join the parent's layout |
 | `.relative` | `position: relative` |
 | `.sticky-top` | `position: sticky; top: 0` |
+| `.position-absolute`, `.position-fixed`, `.position-static` | `position: absolute`, `position: fixed`, `position: static` |
+| `.inset-0` | `inset: 0`; the element covers its containing block |
+| `.top-0`, `.bottom-0` | `top: 0`, `bottom: 0` |
+| `.start-0`, `.end-0` | `inset-inline-start: 0`, `inset-inline-end: 0`; they swap sides in RTL |
 | `.query-container` | `container-type: inline-size`. Horizontal cards and description lists inside it stack when it is narrower than 600px, on any window. |
 
-`.inline` is the row of checkboxes or radios, so there is no `display: inline` class. A `.sticky-top` element sticks inside its nearest scrolling ancestor; an ancestor with `overflow: hidden` stops it. Browsers have dropped the semantics of elements with `display: contents`, so put `.contents` on plain wrappers, not on buttons, lists, tables or headings. A `.query-container` can no longer size itself from its content, so put it on a wrapper that fills its parent, such as a sidebar column, not on an inline or shrink-to-fit box.
+`.inline` is the row of checkboxes or radios, so there is no `display: inline` class. A `.sticky-top` element sticks inside its nearest scrolling ancestor; an ancestor with `overflow: hidden` stops it. Give the parent of an absolute element `.relative`. There is no bare `.fixed` class, because the navigation bar, toolbar and table of contents use `.fixed` as a modifier. `.position-fixed` sets no `z-index`; to lift a fixed element above framework surfaces, give it a `--expressive-z-*` value. An ancestor with a `transform`, `filter` or `contain` becomes the containing block of a fixed element. No position class has a window-size prefix, and `.position-static` undoes `.relative` and `.sticky-top`. Browsers have dropped the semantics of elements with `display: contents`, so put `.contents` on plain wrappers, not on buttons, lists, tables or headings. A `.query-container` can no longer size itself from its content, so put it on a wrapper that fills its parent, such as a sidebar column, not on an inline or shrink-to-fit box.
+
+`.grid-auto-fill` is `repeat(auto-fill, minmax(min(100%, var(--grid-column-min, 15rem)), 1fr))`. It adds a column whenever another one of the minimum width fits, and the columns share what is left. Set `--grid-column-min` on the grid or on an ancestor. The last row keeps the same column width when it has fewer items. A container narrower than the minimum gets one column as wide as itself. The class sets no gap, so pair it with `.gap-*`, and it has no window-size prefixes, because the column count already follows the container's width.
+
+```html
+<div class="grid-auto-fill gap-3" style="--grid-column-min: 10rem">
+  <article class="outlined">…</article>
+  <article class="outlined">…</article>
+  <article class="outlined">…</article>
+</div>
+```
 
 ### Flex
 
@@ -1240,7 +1255,7 @@ One class per declaration, applied to the container. Row direction and start ali
 
 ### Window-size prefixes
 
-The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`), `.gap-*`, margin and padding classes, and `.hide`, also come with a window-size prefix. Prefixed margin and padding cover all sides, `x`, `y`, top, bottom, start and end; use start and end rather than left and right. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
+The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`), `.line-clamp-*`, `.gap-*`, margin and padding classes, and `.hide`, also come with a window-size prefix. Prefixed margin and padding cover all sides, `x`, `y`, top, bottom, start and end; use start and end rather than left and right. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
 
 | Prefix | Applies from |
 | --- | --- |
@@ -1507,6 +1522,14 @@ To truncate long lines of text in an ellipsis, add the class `truncate` to the t
 <h4 class="truncate">This is an extremely long title that will be truncated</h4>
 ```
 
+#### Line clamp
+
+To cut text to a few lines and end it in an ellipsis, add `line-clamp-1`, `line-clamp-2` or `line-clamp-3`. `line-clamp-none` shows every line again, so `line-clamp-2 expanded:line-clamp-none` clamps on compact and medium windows only. The classes set `display`, so put them on a child of a flex or grid container, not on the container. Pad a wrapper rather than the clamped element, because block-end padding shows the top of the next line.
+
+```html
+<p class="line-clamp-2">This card description runs on for several lines…</p>
+```
+
 #### Text wrapping
 
 | Class | Use |
@@ -1519,6 +1542,27 @@ To truncate long lines of text in an ellipsis, add the class `truncate` to the t
 
 Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.
 
+#### Opacity
+
+`.opacity-0`, `.opacity-25`, `.opacity-38`, `.opacity-50`, `.opacity-75` and `.opacity-100` set `opacity` to 0, 0.25, 0.38, 0.5, 0.75 and 1. 38 is the M3 opacity for disabled content. A class overrides a component's own opacity, and unlayered page CSS overrides the class.
+
+```html
+<img class="opacity-50" src="pattern.svg" alt="">
+```
+
+Dimmed text still needs enough contrast unless it belongs to a disabled control. Opacity disables and hides nothing: even at `.opacity-0` the element takes clicks and focus and stays in the accessibility tree. Use `disabled`, `.hide` or `hidden` for that.
+
+#### Unstyled lists
+
+Add `list-unstyled` to a `<ul>` or `<ol>` to remove its markers and its inline-start padding (`list-style: none; padding-inline-start: 0`). The list keeps its margins, and a list nested inside it keeps its own markers. WebKit drops the list role from a list without markers, so add `role="list"` as well. The semantics checks flag a `.list-unstyled` list with no `role`; a list that sets another role on purpose, such as `role="none"`, passes.
+
+```html
+<ul class="list-unstyled" role="list">
+  <li>Invoices</li>
+  <li>Receipts</li>
+</ul>
+```
+
 #### Hover
 
 The `hoverable` class adds an animation for box shadow as seen below. It can be used on most elements, but is meant for use on cards.
@@ -1526,6 +1570,33 @@ The `hoverable` class adds an animation for box shadow as seen below. It can be 
 ```html
 <article class="hoverable">Hoverable Card</article>
 ```
+
+### Pointer
+
+| Class | Declaration |
+| --- | --- |
+| `.pointer-events-none` | `pointer-events: none`. Clicks, taps and hovers on the element and its children reach whatever lies beneath it. |
+| `.pointer-events-auto` | `pointer-events: auto`. A child of a `.pointer-events-none` element takes pointer input again. |
+| `.cursor-pointer` | `cursor: pointer` |
+
+```html
+<div class="relative">
+  <a href="/photos/42"><img class="w-full" src="..." alt="Fishing boats moored in a harbor at dusk"></a>
+  <div class="pointer-events-none flex align-end justify-between p-2" style="position: absolute; inset: 0">
+    <span class="label-large">Photo by Ana Ruiz</span>
+    <button type="button" class="pointer-events-auto">Hide caption</button>
+  </div>
+</div>
+
+<tr class="cursor-pointer">
+  <td><a href="/orders/42">Order 42</a></td>
+  <td>Shipped</td>
+</tr>
+```
+
+A click on the caption opens the photo link beneath it, and the button still takes its own clicks. `.pointer-events-none` stops the pointer only: the element and its controls stay in the tab order and still respond to keys. To disable a control, use `disabled`; to take a whole region out of use, use `inert`.
+
+`.cursor-pointer` changes the cursor and nothing else. Links and buttons already show it. In the table row above, a page script opens the row's link on a click anywhere in the row, and keyboard users reach the same link by Tab. An element that responds to clicks but isn't a link or button still needs a role, a tab stop and key handling, so use a `<button>` or `<a href>` where one fits.
 
 ### Browser defaults
 
@@ -7969,7 +8040,7 @@ The component adds a progress row ("Question 1 of 3" and a `<progress>` named by
 
 A disabled fieldset is skipped and left out of the count, so a page branches by enabling or disabling questions from earlier answers. The form submits normally: read the answers with `FormData`, using `getAll()` for checkboxes. Without JavaScript every question shows at once, the navigation buttons stay hidden and the submit button sends the form; a `data-required` group is not checked then. Name the form with `aria-label` or `aria-labelledby`.
 
-`data-shortcuts` on the form lets a letter or digit pick the answer at that place in the shown question (A or 1 for the first enabled choice) and ends each choice with its letter, hidden from screen readers; keys typed into a text field stay text, and keys with Ctrl, Alt or Meta pick nothing. `data-summary` adds a review step after the last question: a `.questionnaire-summary` lists each question that applies, its answer (or `skippedLabel`) and an Edit button back to it, and the submit button shows there instead of on the last question; Back returns to the last question. `data-save="key"` stores the answers and the shown question in `localStorage` as `questionnaire:key`, restores them on init when the questions are unchanged, and removes them on submit. A restored answer fires `change`, so a page that switches questions on from an answer sees it; file inputs are not saved.
+`data-shortcuts` on the form lets a letter or digit pick the answer at that place in the shown question (A or 1 for the first enabled choice) and ends each choice with its letter, hidden from screen readers; keys typed into a text field stay text, and keys with Ctrl, Alt or Meta pick nothing. `data-summary` adds a review step after the last question: a `.questionnaire-summary` lists each question that applies, its answer (or `skippedLabel`) and an Edit button back to it, and the submit button shows there instead of on the last question; Back returns to the last question. `data-save="key"` stores the answers and the shown question in `localStorage` as `questionnaire:key`, restores them on init when the questions are unchanged, and removes them on submit. A restored answer fires `change`, so a page that switches questions on from an answer sees it. File, password and hidden inputs are not saved or restored, so a secret never sits in storage and the server's hidden values stay as rendered. On a site where several people share a browser, put the account in the key.
 
 ```html
 <form class="questionnaire" aria-label="Product survey">
@@ -8967,7 +9038,7 @@ onCreate: function(text, autocomplete) {
 | `searchDelay` | Number | `0` | Milliseconds to wait after typing pauses before calling `onSearch`, so remote data is fetched once per pause. A search on focus runs at once. Blur, `destroy()` and choosing a single result cancel a pending search. `0` searches on every input. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
-| `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
+| `allowUnsafeHTML` | Boolean | `false` | If true, each data entry's `text` is inserted as HTML. Ids always stay text. Only use sanitized data. |
 | `selected` | Array | `[]` | Initial selected ids, strings or numbers. An id without loaded data displays the id. Pass the selected ids to `setMenuItems` with the loaded data to resolve their labels. |
 
 Autocomplete provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. `i18n.create(text)` labels the `Add` row and returns `Add "text"`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
