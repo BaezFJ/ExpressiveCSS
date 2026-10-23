@@ -167,10 +167,13 @@ for (const [engine, browserType, utilityTest] of engines) {
       const [one, two, three, none, full] = await page.locator('p').evaluateAll(els => els.map(el => ({
         height: el.getBoundingClientRect().height,
         clamp: getComputedStyle(el).getPropertyValue('-webkit-line-clamp'),
+        // The height alone can't tell: without hidden overflow the cut lines
+        // still paint below the clamped box.
+        overflow: getComputedStyle(el).overflow,
       })));
-      for (const [lines, { height, clamp }] of [one, two, three].entries()) {
+      for (const [lines, { height, clamp, overflow }] of [one, two, three].entries()) {
         assert.ok(Math.abs(height - 20 * (lines + 1)) <= 1, `line-clamp-${lines + 1} height ${height}`);
-        assert.equal(clamp, String(lines + 1));
+        assert.deepEqual([clamp, overflow], [String(lines + 1), 'hidden']);
       }
       assert.ok(full.height > 60, `unclamped height ${full.height}`);
       assert.deepEqual(none, full);
