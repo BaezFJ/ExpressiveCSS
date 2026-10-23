@@ -409,3 +409,85 @@ browserTest('corners="cut" bevels container surfaces and leaves round indicators
     await browser.close();
   }
 });
+
+for (const [engine, browserType, utilityTest] of engines) {
+  utilityTest(`inset and edge pins fill and pin to the padding box in LTR and RTL (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      for (const dir of ['ltr', 'rtl']) {
+        await page.setContent(`<html dir="${dir}"><style>${css} .pin { width: 20px; height: 20px; }</style>
+          <div id="parent" class="relative" style="width: 200px; height: 120px; padding: 12px; border: 3px solid">
+            <div id="fill" class="position-absolute inset-0"></div>
+            <div id="top" class="pin position-absolute top-0"></div>
+            <div id="bottom" class="pin position-absolute bottom-0"></div>
+            <div id="start" class="pin position-absolute start-0"></div>
+            <div id="end" class="pin position-absolute end-0"></div>
+          </div></html>`);
+        const boxes = await page.evaluate(() => {
+          const rect = (id) => document.getElementById(id).getBoundingClientRect();
+          const outer = rect('parent');
+          return {
+            padding: { top: outer.top + 3, right: outer.right - 3, bottom: outer.bottom - 3, left: outer.left + 3 },
+            fill: rect('fill'), top: rect('top'), bottom: rect('bottom'), start: rect('start'), end: rect('end'),
+            position: getComputedStyle(document.getElementById('fill')).position
+          };
+        });
+        const near = (a, b, what) => assert.ok(Math.abs(a - b) <= 0.5, `${dir} ${what}: ${a} vs ${b}`);
+        assert.equal(boxes.position, 'absolute');
+        for (const side of ['top', 'right', 'bottom', 'left']) near(boxes.fill[side], boxes.padding[side], `fill ${side}`);
+        near(boxes.top.top, boxes.padding.top, 'top-0');
+        near(boxes.bottom.bottom, boxes.padding.bottom, 'bottom-0');
+        const [startSide, endSide] = dir === 'ltr' ? ['left', 'right'] : ['right', 'left'];
+        near(boxes.start[startSide], boxes.padding[startSide], 'start-0');
+        near(boxes.end[endSide], boxes.padding[endSide], 'end-0');
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  utilityTest(`a fixed inset element covers the viewport after scrolling (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css}</style><div style="height: 3000px"></div><div id="cover" class="position-fixed inset-0"></div>`);
+      const read = () => page.locator('#cover').evaluate((el) => {
+        const box = el.getBoundingClientRect();
+        const style = getComputedStyle(el);
+        return [box.left, box.top, Math.round(box.width), Math.round(box.height), style.position, style.zIndex];
+      });
+      const viewport = await page.evaluate(() => [document.documentElement.clientWidth, innerHeight]);
+      const expected = [0, 0, ...viewport, 'fixed', 'auto'];
+      assert.deepEqual(await read(), expected);
+      await page.evaluate(() => scrollTo(0, 1000));
+      assert.equal(await page.evaluate(() => scrollY), 1000);
+      assert.deepEqual(await read(), expected);
+    } finally {
+      await browser.close();
+    }
+  });
+}
+
+browserTest('position helpers leave component .fixed modifiers alone and static undoes positioning', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style>
+      <nav id="bar" class="navigation-bar fixed" aria-label="Main"></nav>
+      <div id="toolbar" class="toolbar fixed"></div>
+      <ul id="toc" class="table-of-contents fixed"></ul>
+      <div id="relative" class="relative"></div>
+      <div id="sticky" class="sticky-top"></div>
+      <div id="static" class="relative sticky-top position-static"></div>`);
+    const styles = await page.evaluate(() => ['bar', 'toolbar', 'toc', 'relative', 'sticky', 'static']
+      .map((id) => getComputedStyle(document.getElementById(id)).position));
+    assert.deepEqual(styles, ['sticky', 'fixed', 'fixed', 'relative', 'sticky', 'static']);
+    assert.equal(await page.locator('#sticky').evaluate((el) => getComputedStyle(el).top), '0px');
+  } finally {
+    await browser.close();
+  }
+  // No window-size prefixed forms, though the layout classes have them.
+  assert.match(css, /\\:flex-row\b/);
+  assert.doesNotMatch(css, /\\:(position-(absolute|fixed|static)|inset-0|top-0|bottom-0|start-0|end-0)\b/);
+});

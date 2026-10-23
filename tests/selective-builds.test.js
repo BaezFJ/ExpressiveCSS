@@ -357,5 +357,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the open menu shown by :popover-open in place of an inline display: 84,789 gzip bytes (+11).
   // Reviewed the lightbox resets for the UA popover box: 84,819 gzip bytes (+30).
   // Reviewed the line clamp utilities and their window-size prefixes: 85,005 gzip bytes (+186).
-  assert.ok(sizes(css).gzip <= 85005, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed position and inset helpers with logical edge pins: 85,071 gzip bytes (+66).
+  assert.ok(sizes(css).gzip <= 85071, `CSS gzip: ${sizes(css).gzip}`);
 });
