@@ -96,12 +96,12 @@ const S = defineSections([
           <code>--expressive-z-*</code> scale in <a href="shadow.html#stacking">Stacking order</a>. An
           ancestor with a <code>transform</code>, <code>filter</code> or
           <code>contain</code> becomes the containing block of a fixed element, so it stops
-          covering the viewport. No position class has a window-size prefix, and
+          covering the viewport. Pad the content on the pinned side, as <code>.pe-6</code> does below, so text does not run under the pinned element. No position class has a window-size prefix, and
           <code>.position-static</code> undoes <code>.relative</code> and <code>.sticky-top</code>.
         </p>
 <Code code={`
 <article class="relative">
-  <p>Your storage is almost full.</p>
+  <p class="pe-6">Your storage is almost full. Delete old backups to keep syncing.</p>
   <button class="icon-button position-absolute top-0 end-0" type="button" aria-label="Dismiss">
     <span class="material-symbols" aria-hidden="true">close</span>
   </button>
