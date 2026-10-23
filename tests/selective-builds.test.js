@@ -362,5 +362,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the .list-unstyled helper: 85,097 gzip bytes (+20).
   // Reviewed position and inset helpers with logical edge pins: 85,161 gzip bytes (+64).
   // Reviewed the .grid-auto-fill utility: 85,232 gzip bytes (+71).
-  assert.ok(sizes(css).gzip <= 85232, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the .sticky-column data table pinning and its row-state fill: 85,400 gzip bytes (+168).
+  assert.ok(sizes(css).gzip <= 85400, `CSS gzip: ${sizes(css).gzip}`);
 });
