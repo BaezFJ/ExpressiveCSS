@@ -70,6 +70,27 @@ browserTest('a plain fieldset drops its container and puts the legend at the con
 
 for (const [engine, browserType, utilityTest] of engines) {
 
+  utilityTest(`opacity helpers set their documented values and beat component opacity (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const steps = { 0: '0', 25: '0.25', 38: '0.38', 50: '0.5', 75: '0.75', 100: '1' };
+      await page.setContent(`<style>${css}</style>
+        ${Object.keys(steps).map(step => `<div id="step-${step}" class="opacity-${step}">Text</div>`).join('')}
+        <input id="disabled" type="range" disabled>
+        <input id="full" class="opacity-100" type="range" disabled>
+        <input id="half" class="opacity-50" type="range" disabled>`);
+      const opacity = id => page.locator(`#${id}`).evaluate(el => getComputedStyle(el).opacity);
+      for (const [step, value] of Object.entries(steps)) assert.equal(await opacity(`step-${step}`), value, `.opacity-${step}`);
+      assert.deepEqual([await opacity('disabled'), await opacity('full'), await opacity('half')], ['0.38', '1', '0.5']);
+      // Page CSS outside any layer still wins over the utility.
+      await page.addStyleTag({ content: '#full { opacity: 0.6; }' });
+      assert.equal(await opacity('full'), '0.6');
+    } finally {
+      await browser.close();
+    }
+  });
+
   utilityTest(`sizing helpers let nested flex and grid content shrink and scroll (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
@@ -181,6 +202,59 @@ for (const [engine, browserType, utilityTest] of engines) {
     }
   });
 
+  utilityTest(`unstyled lists drop markers and indentation and stay lists (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const items = '<li>One</li><li>Two<ul><li>Inner</li></ul></li><li>Three</li>';
+      await page.setContent(`<style>${css}</style>
+        <div><ul id="ul" class="list-unstyled" role="list">${items}</ul></div>
+        <div><ol id="ol" class="list-unstyled" role="list">${items}</ol></div>
+        <div><ul id="bare" class="list-unstyled">${items}</ul></div>
+        <div><ul id="plain">${items}</ul></div>`);
+      const read = (id) => page.locator(`#${id}`).evaluate((list) => {
+        const style = getComputedStyle(list);
+        const items = [...list.children];
+        const box = list.getBoundingClientRect();
+        const first = items[0].getBoundingClientRect();
+        return {
+          padding: style.paddingInlineStart,
+          margins: [style.marginBlockStart, style.marginBlockEnd],
+          markers: items.map((li) => getComputedStyle(li).listStyleType),
+          display: items.map((li) => getComputedStyle(li).display),
+          startOffset: document.dir === 'rtl' ? box.right - first.right : first.left - box.left,
+        };
+      });
+      for (const direction of ['ltr', 'rtl']) {
+        await page.evaluate((dir) => document.documentElement.dir = dir, direction);
+        const plain = await read('plain');
+        assert.notEqual(plain.padding, '0px', 'a plain list keeps its indentation');
+        assert.deepEqual(plain.markers, ['disc', 'disc', 'disc']);
+        for (const id of ['ul', 'ol']) {
+          assert.deepEqual(await read(id), {
+            padding: '0px',
+            margins: plain.margins,
+            markers: ['none', 'none', 'none'],
+            display: ['list-item', 'list-item', 'list-item'],
+            startOffset: 0,
+          }, `${id} in ${direction}`);
+        }
+      }
+      // A nested list keeps the browser's own markers and indentation.
+      assert.deepEqual(await page.locator('#ul ul').evaluate((list) => [
+        getComputedStyle(list).paddingInlineStart !== '0px',
+        getComputedStyle(list.firstElementChild).listStyleType !== 'none',
+      ]), [true, true]);
+      // Playwright computes these roles itself, so this guards the markup, not
+      // the engine's own tree; WebKit may drop the role without role="list".
+      for (const id of ['ul', 'ol', 'bare']) {
+        assert.match(await page.locator(`#${id}`).ariaSnapshot(), /^- list:\n {2}- listitem: One\n {2}- listitem:/, id);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
   utilityTest(`focusable hidden content reveals for keyboard and descendant focus (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
@@ -211,6 +285,39 @@ for (const [engine, browserType, utilityTest] of engines) {
           }), ['none', 'relative', '8px', true, true], 'focus restores consumer styling');
         }
       }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  utilityTest(`pointer helpers pass clicks through an overlay to what lies beneath (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css}</style>
+        <div class="relative" style="width: 300px; height: 120px">
+          <button id="target" type="button" style="position: absolute; top: 10px; left: 10px; width: 100px; height: 40px">Beneath</button>
+          <div id="overlay" class="pointer-events-none" style="position: absolute; inset: 0">
+            <button id="child" type="button" class="pointer-events-auto" style="position: absolute; bottom: 10px; right: 10px; width: 100px; height: 40px">Close</button>
+          </div>
+        </div>`);
+      await page.evaluate(() => {
+        window.clicks = { target: 0, overlay: 0, child: 0 };
+        document.getElementById('target').addEventListener('click', () => window.clicks.target++);
+        document.getElementById('child').addEventListener('click', () => window.clicks.child++);
+        // Only clicks aimed at the overlay itself; the child's bubble up to it.
+        document.getElementById('overlay').addEventListener('click', (event) => {
+          if (event.target.id === 'overlay') window.clicks.overlay++;
+        });
+      });
+      // locator.click() refuses a covered element, so click at its center.
+      const center = async (id) => {
+        const box = await page.locator(`#${id}`).boundingBox();
+        return [box.x + box.width / 2, box.y + box.height / 2];
+      };
+      await page.mouse.click(...await center('target'));
+      await page.mouse.click(...await center('child'));
+      assert.deepEqual(await page.evaluate(() => window.clicks), { target: 1, overlay: 0, child: 1 });
     } finally {
       await browser.close();
     }

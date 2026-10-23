@@ -1531,6 +1531,27 @@ To cut text to a few lines and end it in an ellipsis, add `line-clamp-1`, `line-
 
 Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.
 
+#### Opacity
+
+`.opacity-0`, `.opacity-25`, `.opacity-38`, `.opacity-50`, `.opacity-75` and `.opacity-100` set `opacity` to 0, 0.25, 0.38, 0.5, 0.75 and 1. 38 is the M3 opacity for disabled content. A class overrides a component's own opacity, and unlayered page CSS overrides the class.
+
+```html
+<img class="opacity-50" src="pattern.svg" alt="">
+```
+
+Dimmed text still needs enough contrast unless it belongs to a disabled control. Opacity disables and hides nothing: even at `.opacity-0` the element takes clicks and focus and stays in the accessibility tree. Use `disabled`, `.hide` or `hidden` for that.
+
+#### Unstyled lists
+
+Add `list-unstyled` to a `<ul>` or `<ol>` to remove its markers and its inline-start padding (`list-style: none; padding-inline-start: 0`). The list keeps its margins, and a list nested inside it keeps its own markers. WebKit drops the list role from a list without markers, so add `role="list"` as well. The semantics checks flag a `.list-unstyled` list with no `role`; a list that sets another role on purpose, such as `role="none"`, passes.
+
+```html
+<ul class="list-unstyled" role="list">
+  <li>Invoices</li>
+  <li>Receipts</li>
+</ul>
+```
+
 #### Hover
 
 The `hoverable` class adds an animation for box shadow as seen below. It can be used on most elements, but is meant for use on cards.
@@ -1538,6 +1559,33 @@ The `hoverable` class adds an animation for box shadow as seen below. It can be 
 ```html
 <article class="hoverable">Hoverable Card</article>
 ```
+
+### Pointer
+
+| Class | Declaration |
+| --- | --- |
+| `.pointer-events-none` | `pointer-events: none`. Clicks, taps and hovers on the element and its children reach whatever lies beneath it. |
+| `.pointer-events-auto` | `pointer-events: auto`. A child of a `.pointer-events-none` element takes pointer input again. |
+| `.cursor-pointer` | `cursor: pointer` |
+
+```html
+<div class="relative">
+  <a href="/photos/42"><img class="w-full" src="..." alt="Fishing boats moored in a harbor at dusk"></a>
+  <div class="pointer-events-none flex align-end justify-between p-2" style="position: absolute; inset: 0">
+    <span class="label-large">Photo by Ana Ruiz</span>
+    <button type="button" class="pointer-events-auto">Hide caption</button>
+  </div>
+</div>
+
+<tr class="cursor-pointer">
+  <td><a href="/orders/42">Order 42</a></td>
+  <td>Shipped</td>
+</tr>
+```
+
+A click on the caption opens the photo link beneath it, and the button still takes its own clicks. `.pointer-events-none` stops the pointer only: the element and its controls stay in the tab order and still respond to keys. To disable a control, use `disabled`; to take a whole region out of use, use `inert`.
+
+`.cursor-pointer` changes the cursor and nothing else. Links and buttons already show it. In the table row above, a page script opens the row's link on a click anywhere in the row, and keyboard users reach the same link by Tab. An element that responds to clicks but isn't a link or button still needs a role, a tab stop and key handling, so use a `<button>` or `<a href>` where one fits.
 
 ### Browser defaults
 
