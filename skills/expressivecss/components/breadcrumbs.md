@@ -9,7 +9,7 @@ Component ID: `breadcrumbs`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `30d88697afd80afeb2b69d5232ad5da398532321377e27aea6b6fd79bd8a4956`
+Contract SHA-256: `f441a49f8ac56447c6993be62bed4c6a40fc5963e75ba4385a6ce7c7d63e4363`
 
 #### Selection and adaptation
 

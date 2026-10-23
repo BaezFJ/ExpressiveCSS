@@ -11,6 +11,18 @@
 .valign-wrapper { display: flex; align-items: center; }
 .relative { position: relative; }
 .sticky-top { position: sticky; top: 0; }
+// Not a bare `.fixed`: the navigation bar, toolbar and table of contents use
+// that as a modifier, and a utility would override them. No z-index either;
+// a fixed element takes a --expressive-z-* value from the page. Static comes
+// last so it beats .relative and .sticky-top on the same element.
+.position-absolute { position: absolute; }
+.position-fixed { position: fixed; }
+.position-static { position: static; }
+.inset-0 { inset: 0; }
+.top-0 { top: 0; }
+.bottom-0 { bottom: 0; }
+.start-0 { inset-inline-start: 0; }
+.end-0 { inset-inline-end: 0; }
 
 // Display and flex layout. One declaration each; combine on the container,
 // and pair with .gap-* from _spacing.scss for the space between items.

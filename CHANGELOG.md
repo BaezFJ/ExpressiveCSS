@@ -25,6 +25,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `list-unstyled-has-list-role`, flags one with no `role`, because WebKit
   drops the list role from a list without markers. Add `role="list"`, or
   the role the list should have.
+- Position and inset helpers: `.position-absolute`, `.position-fixed` and
+  `.position-static`, `.inset-0`, and the edge pins `.top-0`, `.bottom-0`,
+  `.start-0` and `.end-0`. The start and end pins use logical properties, so
+  they swap sides in right-to-left pages. The classes take a `position-`
+  prefix because the navigation bar, toolbar and table of contents already
+  use `.fixed` as a modifier. They have no window-size prefixes, and
+  `.position-fixed` sets no `z-index`.
 - Calendar week, day and year views. `table.calendar.week` and
   `table.calendar.day` are hourly grids: a row per hour named by a
   `<th scope="row">`, and a column per day whose header can carry
